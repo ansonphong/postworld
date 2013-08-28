@@ -1,0 +1,3 @@
+[submodule "submodules/handlebars.js"]
+	path = submodules/handlebars.js
+	url = https://github.com/wycats/handlebars.js.git
