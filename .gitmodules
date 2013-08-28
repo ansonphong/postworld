@@ -4,3 +4,6 @@
 [submodule "submodules/jquery-scrollspy"]
 	path = submodules/jquery-scrollspy
 	url = https://github.com/sxalexander/jquery-scrollspy.git
+[submodule "submodules/Aqua-Resizer"]
+	path = submodules/Aqua-Resizer
+	url = https://github.com/syamilmj/Aqua-Resizer.git
