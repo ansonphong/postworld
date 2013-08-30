@@ -22,36 +22,45 @@ function postworld_install() {
 
   $pw_prefix = "postworld_";
 
-  $meta_table_name = $wpdb->prefix . $pw_prefix . "meta";
+  $meta_table_name = $wpdb->prefix . $pw_prefix .  "meta";
   $points_table_name = $wpdb->prefix . $pw_prefix . "points";
   $user_meta_table_name = $wpdb->prefix . $pw_prefix . "user_meta";
+  $user_shares_table_name = $wpdb->prefix . $pw_prefix . "user_shares";
     
   $sql_postworld_meta = "CREATE TABLE $meta_table_name (
       id mediumint(9) NOT NULL,
-      class char(16) NOT NULL,
-      format char(16) NOT NULL,
-      url varchar(256) DEFAULT '' NOT NULL,
+      post_class char(16) NOT NULL,
+      post_format char(16) NOT NULL,
+      link_url varchar(512) DEFAULT '' NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
-      rank mediumint(4) DEFAULT '0' NOT NULL,
-      active binary(1) DEFAULT '0' NOT NULL,
+      rank_score mediumint(4) DEFAULT '0' NOT NULL,
       UNIQUE KEY id (id)
     );";
 
   $sql_postworld_points = "CREATE TABLE $points_table_name (
       id mediumint(9) NOT NULL,
       user_id mediumint(8) NOT NULL,
-      points mediumint(8) DEFAULT '0' NOT NULL
+      points mediumint(8) DEFAULT '0' NOT NULL,
+      time TIMESTAMP NOT NULL
     );";
 
   $sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
       user_id mediumint(9) NOT NULL,
       user_role char(16) NOT NULL,
+      viewed MEDIUMTEXT NOT NULL, 
+      favorites MEDIUMTEXT NOT NULL, 
+      location_city char(24) NOT NULL,
+      location_country char(24) NOT NULL,
       view_karma mediumint(8) DEFAULT '0' NOT NULL,
       share_karma mediumint(8) DEFAULT '0' NOT NULL,
-      
-      viewed mediumint(8) DEFAULT '0' NOT NULL,
-      
-      UNIQUE KEY user_id (user_id)
+      UNIQUE (user_id)
+    );";
+
+  $sql_postworld_user_shares = "CREATE TABLE $user_shares_table_name (
+      user_id mediumint(9) NOT NULL,
+      post_id mediumint(9) NOT NULL,
+      recent_ips varchar(8000) DEFAULT '' NOT NULL,
+      total_views mediumint(9) NOT NULL
     );";
 
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
@@ -59,6 +68,7 @@ function postworld_install() {
   dbDelta( $sql_postworld_meta );
   dbDelta( $sql_postworld_points );
   dbDelta( $sql_postworld_user_meta );
+  dbDelta( $sql_postworld_user_shares );
   
   add_option( "postworld_db_version", $postworld_db_version );
 }
