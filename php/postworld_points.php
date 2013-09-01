@@ -1,13 +1,13 @@
 <?php
 
-get_points ( $post_id ){
+function get_points ( $post_id ){
 	/*
 	• Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
 	return : integer
 	*/
 }
 
-set_points ( $post_id, $user_id, $add_points ){
+function set_points ( $post_id, $user_id, $add_points ){
 	/*
 	• $add_points is an integer
 	• Write row in wp_postworld_points
@@ -24,7 +24,7 @@ set_points ( $post_id, $user_id, $add_points ){
 
 
 
-calculate_points ( $post_id ){
+function calculate_points ( $post_id ){
 	/*
 	• Adds up the points from the specified post, stored in wp_postworld_points
 	• Stores the result in the points column in wp_postworld_meta
@@ -33,7 +33,7 @@ calculate_points ( $post_id ){
 }
 
 
-has_voted ( $post_id, $user_id ){
+function has_voted ( $post_id, $user_id ){
 	/*
 	• Check wp_postworld_points to see if the user has voted on the post
 	• Return the number of points
@@ -42,7 +42,7 @@ has_voted ( $post_id, $user_id ){
 }
 
 
-get_user_points ( $user_id ){
+function get_user_points ( $user_id ){
 	/*
 	• Get array of all posts by given user
 	• Get points of each post from wp_postworld_meta
@@ -53,7 +53,7 @@ get_user_points ( $user_id ){
 
 
 
-get_user_votes ( $user_id ){
+function get_user_votes ( $user_id ){
 	/*
 	• Returns the 'recent/active' points activity of the user
 	• Get all posts which user has recently voted on from wp_postworld_points ( total_posts )
@@ -67,7 +67,7 @@ get_user_votes ( $user_id ){
 }
 
 
-get_user_votes ( $user_id ){
+function get_user_votes_by_post ( $user_id ){ //Can't have duplicate names for functions
 	/*
 	• Get all posts which user has voted on from wp_postworld_points
 	return : Object
@@ -79,7 +79,7 @@ get_user_votes ( $user_id ){
 }
 
 
-cache_points () {
+function cache_points () {
 	/*
 	• Cycles through each post in each post_type with points enabled
 	• Calculates each post's current rank with calculate_points()
