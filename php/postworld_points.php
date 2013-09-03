@@ -1,10 +1,24 @@
 <?php
 
+/*require_once( '../../../wp-includes/wp-db.php' );
+if ( file_exists( '../../../wp-content/db.php' ) )
+    require_once( '../../../wp-content/db.php' );
+
+$wpdb = new wpdb( 'root', 'haidy', 'wp_postworld_a1', 'localhost:3308' );*/
+
 function get_points ( $post_id ){
 	/*
 	• Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
 	return : integer
 	*/
+	global $wpdb;
+
+	$query = "SELECT * FROM wp_postworld_meta Where id=".$post_id;
+	//echo ($query);
+	$postPoints= $wpdb->get_row( $query );
+		if($postPoints!=null)  return $postPoints->points;
+	else 
+		return  0;
 }
 
 function set_points ( $post_id, $user_id, $add_points ){
@@ -20,6 +34,22 @@ function set_points ( $post_id, $user_id, $add_points ){
 	     points_added : {{integer}} (points which were successfully added)
 	     points_total : {{integer}} (from wp_postworld_meta)
 	*/
+	
+	global $wpdb;
+	//check if it is required to delete the row and update cashed points (call calculate points)
+	if($add_points == 0){
+		$query = "delete from wp_postworld_points where id=" . $post_id ." and user_id=". $user_id;
+		$wpdb->query( $wpdb->prepare($query) );	
+		calculate_points($post_id);
+		return 0;
+	}else{
+		//check if row already present, else create and add unix timestamp
+
+		//update cashed points (call calculate points)
+
+	}
+
+
 }
 
 
@@ -30,6 +60,18 @@ function calculate_points ( $post_id ){
 	• Stores the result in the points column in wp_postworld_meta
 	return : integer (number of points)
 	*/
+	global $wpdb;
+	//first sum points
+	$query = "select SUM(points) from wp_postworld_points where id=" . $post_id ;
+	$points_count = $wpdb->get_var( $query );
+	echo ("points cal" . $points_count);
+	
+	//update wp_postworld_meta
+	$query = "update wp_postworld_meta set points=".$points_count." where id=" . $post_id ;
+	$wpdb->query( $wpdb->prepare($query) );	
+
+	return  $points_count;
+	
 }
 
 
