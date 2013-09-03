@@ -18,5 +18,8 @@ register_activation_hook( __FILE__, 'postworld_install' );
 include 'php/postworld_points.php';
 
 
+////////// FEED FUNCTIONS ///////////
+include 'php/postworld_feed.php';
+
 
 ?>
