@@ -2,10 +2,10 @@
 
 function pw_live_feed ( $args ){
 	/*
+	• Helper function for the pw_live_feed() JS method
 	• Used for custom search querying, etc.
 	• Does not access wp_postworld_feeds caches at all
-	• Helper function for the pw_live_feed() JS method
-	
+
 	INPUT :
 	$args = array (
 		'feed_id'		=> string,
@@ -23,6 +23,16 @@ function pw_live_feed ( $args ){
 	return compact( $feed_outline, $post_data );
 }
 
+
+
+function pw_feed_outline ( $pw_query_args ){
+	// • Uses pw_query() method to generate an array of post_ids based on the $pw_query_args
+
+	$pw_query_args['data_fields'] = array('id');
+	$post_array = pw_query($pw_query_args); // <<< TODO : Flatten from returned Object to Array of IDs
+
+	return $post_array; // Array of post IDs
+}
 
 
 ?>
