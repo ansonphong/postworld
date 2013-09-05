@@ -13,13 +13,17 @@ License: GPL2
 include 'php/postworld_install.php';
 register_activation_hook( __FILE__, 'postworld_install' );
 
+////////// WP OPTIONS ///////////
+include 'php/postworld_options.php';
 
 ////////// POINTS FUNCTIONS ///////////
 include 'php/postworld_points.php';
 
-
 ////////// FEED FUNCTIONS ///////////
 include 'php/postworld_feed.php';
+
+////////// CRON / SCHEDULED TASKS ///////////
+include 'php/postworld_con.php';
 
 
 ?>
