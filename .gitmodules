@@ -7,3 +7,6 @@
 [submodule "submodules/Aqua-Resizer"]
 	path = submodules/Aqua-Resizer
 	url = https://github.com/syamilmj/Aqua-Resizer.git
+[submodule "submodules/locache.js"]
+	path = submodules/locache.js
+	url = https://github.com/d0ugal/locache.git

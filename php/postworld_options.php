@@ -49,6 +49,37 @@ $pw_default_options = array(
 		'cron_logs'			=> 0,
 		),
 
+	'views'	=> array(
+		'post_types'	=>	array(),
+		'stats_page'	=>	0,
+		'description'	=>	"Views track which posts that you've already seen.",
+		'tracker'	=>	array(
+			'bottom'	=>	1000,	// How many pixels from the bottom
+			'time'		=>	60,		// How many seconds after page load
+			),
+		'labels'		=>	array(
+			'name'			=>	"Views",
+			'singular_name'	=>	"View",
+			'not_viewed'	=>	"View this",
+			'has_viewed'	=>	"You have already viewed this",
+			),
+		),
+
+	'shares'	=> array(
+		'post_types'	=>	array(),
+		'stats_page'	=>	0,
+		'description'	=>	"Views track which posts that you've already seen.",
+		'tracker'	=>	array(
+			'ip_history'	=>	100,	// How many unique IP addresses before re-count
+			),
+		'labels'		=>	array(
+			'name'			=>	"Views",
+			'singular_name'	=>	"View",
+			'not_viewed'	=>	"View this",
+			'has_viewed'	=>	"You have already viewed this",
+			),
+		),
+
 	'cleanup' => array(
 		'points'			=> array(
 			'interval'		=> 'daily',
