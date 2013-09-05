@@ -18,7 +18,7 @@ function pw_live_feed ( $args ){
 
 	$feed_outline = pw_feed_outline( $feed_query );
 	$bootload_posts = array_slice( $feed_outline, 0, $bootload );
-	$post_data = pw_get_posts( $bootload_posts, $feed_query['data_fields'] );
+	$post_data = pw_get_posts( $bootload_posts, $feed_query['fields'] );
 
 	return compact( $feed_outline, $post_data );
 }
@@ -28,7 +28,7 @@ function pw_live_feed ( $args ){
 function pw_feed_outline ( $pw_query_args ){
 	// • Uses pw_query() method to generate an array of post_ids based on the $pw_query_args
 
-	$pw_query_args['data_fields'] = array('id');
+	$pw_query_args['fields'] = array('id');
 	$post_array = pw_query($pw_query_args); // <<< TODO : Flatten from returned Object to Array of IDs
 
 	return $post_array; // Array of post IDs
