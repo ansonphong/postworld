@@ -17,6 +17,26 @@
 		 public $time =null;
 	}
 	
+	
+	class cron_logs_Object {
+		public $type;// {{feed/post_type}}
+		public $query_id;// {{feed id / post_type slug}}
+		public $time_start;// {{timestamp}}
+		public $time_end;// {{timestamp}}
+		public $timer;// {{milliseconds}}
+		public $posts;// {{number of posts}}
+		public $timer_average;// {{milliseconds}}
+		public $query_vars;// {{ query_vars Object }}
+	}
+	
+	class query_vars_Object  {
+		public $post_type;
+		public $class;
+		public $format;
+	
+	}
+	
+	
 	function get_points($post_id) {
 		/*
 		 • Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
@@ -56,13 +76,13 @@
 		$query = "SELECT * FROM wp_postworld_points Where id=" . $post_id . " and user_id=" . $user_id;
 		$postPointsRow = $wpdb -> get_row($query);
 	
-		//check if it is required to delete the row and update cashed points (call calculate points)
+		//check if it is required to delete the row and update cashed points (triggers)
 		if ($add_points == 0) {
 			if ($postPointsRow != null) {
 				$query = "delete from wp_postworld_points where id=" . $post_id . " and user_id=" . $user_id;
 				$wpdb -> query($wpdb -> prepare($query));
 				$add_points = -($postPointsRow -> points);
-				$points_total = calculate_points($post_id);
+				$points_total = get_points($post_id);
 			} else {
 				//nothing was done.
 				$points_total = get_points($post_id);
@@ -74,12 +94,12 @@
 			if ($postPointsRow != null) {
 				//echo ('NOTT NULL');
 				// TODO: check if user can add more points from wp-options ?????????????
-				$userCanAddPoints = false;
+				$userCanAddPoints = true;
 				if ($userCanAddPoints) {
-					$query = "Update wp_postworld_points set points=" . ($postPointsRow -> points + $add_points) . " Where id=" . $post_id . " and user_id=" . $user_id;
+					$query = "Update wp_postworld_points set points=points + ". $add_points . " Where id=" . $post_id . " and user_id=" . $user_id;
 					//echo($query);
 					$wpdb -> query($wpdb -> prepare($query));
-					$points_total = calculate_points($post_id);
+					$points_total = get_points($post_id);
 				} else {// set added points equal zero and call get points only
 					$add_points = 0;
 					// user can't add points and no points were added
@@ -92,7 +112,7 @@
 				//time stamp added automatically
 				//echo($query);
 				$wpdb -> query($wpdb -> prepare($query));
-				$points_total = calculate_points($post_id);
+				$points_total = get_points($post_id);
 			}
 	
 		}
@@ -240,10 +260,30 @@
 	function cache_points() {
 		/*
 		 • Cycles through each post in each post_type with points enabled
-		 • Calculates each post's current rank with calculate_points()
+		 • Calculates each post's current points with calculate_points()
 		 • Stores points it in wp_postworld_meta 'points' column
+		 • return : cron_logs Object (add to table wp_postworld_cron_logs)
 		 */
 		 
+		//Post_type = page/post, 
+		
+			 
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		//get wp_options Enable Points ( postworld_points ) field and get post types enabled for points - http://codex.wordpress.org/Function_Reference/get_option
+		
+		// select all post ids of posts that their post types are enabled for points
+		
+		//update postworld_meta
+		
+		//prepare cron_log object -- for each type create a cron_log option
+		
+		
+	
+		/*$query = "Update wp_postworld_meta set points = (select SUM(points) from wp_postworld_points where wp_postworld_meta.id = wp_postworld_points.id ) where wp_postworld_meta.id = wp_postworld_points.id";
+		$wpdb -> query($wpdb -> prepare($query));*/
+		
 		 
 		 
 	}
