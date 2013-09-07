@@ -1,6 +1,5 @@
 <?php
 
-
 function calculate_rank_score ( $post_id ) {
 	/*
 	• Calculates Rank Score based on rank equation
@@ -67,29 +66,25 @@ function calculate_rank_score ( $post_id ) {
 		$FREE_RANK_CURVE = pow( (1-($TIME/$FREE_RANK_PERIOD)), 0.9);
 		$FREE_RANK = $FREE_RANK_CURVE * $FREE_RANK_POINTS ;
 	}
-	else {
+	else
 		$FREE_RANK = 0;
-	}
 
 
 	//////////// CURRENTS ////////////
-
 	///// FRESH CURRENT /////
 	// ENABLE FRESH CURRENT
 	if ( $TIME > $FRESH_PERIOD )
 		$FRESH_CURRENT = 1; 
-	
+
 	///// ARCHIVE CURRENT /////
 	// ENABLE ARCHIVE CURRENT
 	if ( $TIME < $ARCHIVE_PERIOD )
 		$ARCHIVE_CURRENT = 1; 
 
-
 	//////////// COMMENTS ////////////
 	// KILL COMMENTS IF NO POINTS
 	if ($POINTS < 0)
 		$COMMENTS = 0;
-
 
 	////////// RANK SCORE EQUATION //////////
 	$RANK_SCORE_RANGE = 1000;
@@ -97,9 +92,7 @@ function calculate_rank_score ( $post_id ) {
 
 	$RANK_SCORE = ((( $POINTS*$POINTS_WEIGHT + $COMMENTS*$COMMENTS_WEIGHT ) / ($TIME * $TIME_WEIGHT)  ) * $RANK_SCORE_RANGE) * $FRESH_CURRENT * $ARCHIVE_CURRENT + $FREE_RANK;
 
-
 	////////// RETURN //////////
-
 	// IF RANK SCORE IS NEGATIVE
 	if ($RANK_SCORE < 0) $RANK_SCORE = 0;
 
@@ -109,6 +102,7 @@ function calculate_rank_score ( $post_id ) {
 	return round($RANK_SCORE);
 
 }
+
 
 
 ?>

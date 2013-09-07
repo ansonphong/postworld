@@ -11,28 +11,37 @@ function postworld_install() {
 
   $pw_prefix = "postworld_";
 
+
   $meta_table_name = $wpdb->prefix . $pw_prefix .  "meta";
-  $points_table_name = $wpdb->prefix . $pw_prefix . "points";
-  $user_meta_table_name = $wpdb->prefix . $pw_prefix . "user_meta";
-  $user_shares_table_name = $wpdb->prefix . $pw_prefix . "user_shares";
-    
   $sql_postworld_meta = "CREATE TABLE $meta_table_name (
-      id mediumint(9) NOT NULL,
+      post_id mediumint(9) NOT NULL,
       post_class char(16) NOT NULL,
       post_format char(16) NOT NULL,
       link_url varchar(512) DEFAULT '' NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
       rank_score mediumint(4) DEFAULT '0' NOT NULL,
-      UNIQUE KEY id (id)
+      UNIQUE KEY post_id (post_id)
     );";
 
+  $points_table_name = $wpdb->prefix . $pw_prefix . "points";
   $sql_postworld_points = "CREATE TABLE $points_table_name (
-      id mediumint(9) NOT NULL,
+      post_id mediumint(9) NOT NULL,
       user_id mediumint(8) NOT NULL,
+      author_id mediumint(8) NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
       time TIMESTAMP NOT NULL
     );";
 
+  $points_comments_table_name = $wpdb->prefix . $pw_prefix . "points_comments";
+  $sql_postworld_points_comments = "CREATE TABLE $points_comments_table_name (
+      user_id mediumint(8) NOT NULL,
+      comment_post_id mediumint(9) NOT NULL,
+      comment_author_id mediumint(8) NOT NULL,
+      points mediumint(8) DEFAULT '0' NOT NULL,
+      time TIMESTAMP NOT NULL
+    );";
+
+  $user_meta_table_name = $wpdb->prefix . $pw_prefix . "user_meta";
   $sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
       user_id mediumint(9) NOT NULL,
       user_role char(16) NOT NULL,
@@ -45,6 +54,7 @@ function postworld_install() {
       UNIQUE (user_id)
     );";
 
+  $user_shares_table_name = $wpdb->prefix . $pw_prefix . "user_shares";
   $sql_postworld_user_shares = "CREATE TABLE $user_shares_table_name (
       user_id mediumint(9) NOT NULL,
       post_id mediumint(9) NOT NULL,
@@ -56,6 +66,7 @@ function postworld_install() {
 
   dbDelta( $sql_postworld_meta );
   dbDelta( $sql_postworld_points );
+  dbDelta( $sql_postworld_points_comments );
   dbDelta( $sql_postworld_user_meta );
   dbDelta( $sql_postworld_user_shares );
   
