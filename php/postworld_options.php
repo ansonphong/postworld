@@ -1,6 +1,6 @@
 <?php
 
-
+global $pw_defaults;
 $pw_defaults = array(
 
 	'roles' 			=> array(
@@ -14,6 +14,9 @@ $pw_defaults = array(
 			'vote_points'	=> 2,
 			),
 		'Contributor' 		=> array(
+			'vote_points'	=> 1,
+			),
+		'Default'	 		=> array(
 			'vote_points'	=> 1,
 			),
 		),
