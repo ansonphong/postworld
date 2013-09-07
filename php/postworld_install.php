@@ -48,6 +48,7 @@ function postworld_install() {
       viewed MEDIUMTEXT NOT NULL, 
       favorites MEDIUMTEXT NOT NULL, 
       location_city char(24) NOT NULL,
+      location_region char(24) NOT NULL,
       location_country char(24) NOT NULL,
       view_karma mediumint(8) DEFAULT '0' NOT NULL,
       share_karma mediumint(8) DEFAULT '0' NOT NULL,
