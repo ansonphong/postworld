@@ -1,6 +1,7 @@
 <?php
 
-$pw_default_options = array(
+
+$pw_defaults = array(
 
 	'roles' 			=> array(
 		'Administrator' 	=> array(
@@ -33,12 +34,12 @@ $pw_default_options = array(
 				'time_weight'		=>	1,
 				'comments_weight'	=>	1,
 				'points_weight'		=>	1,
-				'fresh_period'		=>	1*$one_week,
+				'fresh_period'		=>	1*$ONE_WEEK,
 				'fresh_multiplier'	=>	2,
-				'archive_period'	=>	6*$one_month,
+				'archive_period'	=>	6*$ONE_MONTH,
 				'archive_multiplier'=>	0.2,
 				'free_rank_score'	=>	100,
-				'free_rank_period'	=>	3*$one_day,
+				'free_rank_period'	=>	3*$ONE_DAY,
 				),
 			),
 		),
@@ -87,6 +88,43 @@ $pw_default_options = array(
 		'cron_logs'			=> array(
 			'interval'		=> 'weekly',
 			),
+		),
+
+	'classes'	=>	array(
+		'post_types'	=>	array(),
+		'data'	=>	array(
+			'a_blog'	=>	array(
+				'name'			=>	"Blog",
+				'description'	=>	"Main Blog",
+				'roles'			=>	array('Administrator', 'Editor', 'Author'),
+				),
+			'a_feature'	=>	array(
+				'name'			=>	"Feature",
+				'description'	=>	"Main Feature",
+				'roles'			=>	array('Administrator', 'Editor', 'Author'),
+				),
+			'c_blog'	=>	array(
+				'name'			=>	"Community Blog",
+				'description'	=>	"Blog for community members.",
+				'roles'			=>	array('Contributor'),
+				),
+			'c_feature'	=>	array(
+				'name'			=>	"Community Feature",
+				'description'	=>	"Features for community members.",
+				'roles'			=>	array('Contributor'),
+				),
+			),
+		),
+
+	'formats'	=>	array(
+		'post'	=>	array(
+			'standard'	=>	array(),
+			),
+		),
+
+	'views'		=>	array(
+		'enable'	=>	"",
+		'grid'		=>	"",
 		),
 
 	);

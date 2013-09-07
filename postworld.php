@@ -9,6 +9,9 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 
+////////// POSTWORLD VARIABLES ///////////
+include 'php/postworld_variables.php';
+
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';
 register_activation_hook( __FILE__, 'postworld_install' );
@@ -19,11 +22,14 @@ include 'php/postworld_options.php';
 ////////// POINTS FUNCTIONS ///////////
 include 'php/postworld_points.php';
 
+////////// RANK FUNCTIONS ///////////
+include 'php/postworld_rank.php';
+
 ////////// FEED FUNCTIONS ///////////
-include 'php/postworld_feed.php';
+//include 'php/postworld_feed.php';
 
 ////////// CRON / SCHEDULED TASKS ///////////
-include 'php/postworld_con.php';
+//include 'php/postworld_cron.php';
 
 
 ?>
