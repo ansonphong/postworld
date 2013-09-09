@@ -55,4 +55,6 @@ include 'php/postworld_rank.php';
 //include 'php/postworld_cron.php';
 
 
+include 'php/postworld_users.php';
+
 ?>
