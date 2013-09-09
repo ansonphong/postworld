@@ -265,14 +265,16 @@
 		//return $_SERVER['HTTP_X_FORWARDED_FOR']; 
 		// if from proxy, we should save both.
 		//http://stackoverflow.com/questions/3003145/how-to-get-client-ip-address-in-php
-	}
-	
+	}	
 
-	function get_user_roles( $user_id )  {
-	$user = new WP_User( $user_id ); // this gives us access to all the useful methods and properties for this user
+	function get_user_role( $user_id, $return_array = false )  {
+		$user = new WP_User( $user_id ); // this gives us access to all the useful methods and properties for this user
 		if ( $user ) {
-			$roles = $user->roles; // returns an array of roles
-			return $roles;
+			$roles = $user->roles;	// returns an array of roles
+			if ($return_array == true)
+				return $roles;		// return the array
+			else
+				return $roles[0];	// return only a string of the first listed role
 		}  else {
 			return false;
 		}
