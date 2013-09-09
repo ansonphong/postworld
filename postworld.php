@@ -13,6 +13,7 @@ License: GPL2
 include 'php/postworld_variables.php';
 
 // GLOBAL VARIABLES
+global $pw_defaults;
 global $postworld_db_version;
 $postworld_db_version = "1.0";
 
@@ -34,13 +35,13 @@ $pw_table_names = array(
   'user_roles'      =>  $wppw_prefix . "user_roles",
   );
 
+////////// WP OPTIONS ///////////
+include 'php/postworld_options.php';
+
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';
 register_activation_hook( __FILE__, 'postworld_install' );
-//register_activation_hook( __FILE__, 'postworld_install_data' );
-
-////////// WP OPTIONS ///////////
-include 'php/postworld_options.php';
+register_activation_hook( __FILE__, 'postworld_install_data' );
 
 ////////// POINTS FUNCTIONS ///////////
 include 'php/postworld_points.php';
