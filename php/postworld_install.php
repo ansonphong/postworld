@@ -86,26 +86,13 @@ function postworld_install_data() {
   ///// USER ROLE DATA /////
   // Pre-populate data for each role in >>> $pw_defaults['roles'] <<<
   foreach ( $pw_defaults['roles'] as $key => $value) {
-
     $add_rows = $wpdb->insert( $pw_table_names['user_roles'],
     array(
       'user_role' => $key,
       'vote_points' => $value['vote_points']
       )
     );
-
   }
-
-  
-
-
-
-
-
-
-
-
-
 
 }
 
