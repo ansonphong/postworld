@@ -3,11 +3,25 @@
 /*
  * PHP / USER FUNCTIONS
  * */
+	class user_fields_names{
+ 		public static $USER_ID='user_id';
+		public static $USER_ROLE='user_role';
+		public static $VIEWED='viewed';
+		public static $FAVORITES='favorites';
+		public static $LOCATION_CITY='location_city';
+		public static $LOCATION_COUNTRY='location_country';
+		public static $VIEW_KARMA='view_karma';
+		public static $SHARE_KARMA='share_karma';
+			
+ 	}
+ 
  
 	class get_user_location_output{
 		public $city='';
 		public $country='';
 	} 
+	
+	
 	 
 	function get_user_data ( $user_id, $fields ){
 		/*
