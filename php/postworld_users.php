@@ -53,9 +53,15 @@
 	
 	function set_favorites ( $post_id, $user_id, $add_remove ){
 		/*
-		 • Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
-		 • If $addremove == 1, add it. If == 0, remove it
-			return : 1/-1
+		• Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
+		Parameters:
+		$add_remove
+		     •  1 - add it to favourites
+		     • -1 - remove it from favorites
+		return :
+		     1  - added successfully
+		     -1 - removed successfully
+		     0  - nothing happened
 		 * 
 		 */
 		$post_ids = get_favorites($user_id);

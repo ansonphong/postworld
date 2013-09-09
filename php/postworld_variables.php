@@ -8,6 +8,7 @@ $ONE_WEEK	= 	7*$ONE_DAY;		// seconds in one week
 $ONE_MONTH	= 	30*$ONE_DAY;	// seconds in one month
 $ONE_YEAR	= 	365*$ONE_DAY;	// seconds in one year
 
+global $TIME_UNITS;
 $TIME_UNITS	=	compact("ONE_MINUTE", "ONE_HOUR", "ONE_DAY", "ONE_WEEK", "ONE_MONTH", "ONE_YEAR");
 
 ?>
