@@ -19,6 +19,7 @@
 	class get_user_location_output{
 		public $city='';
 		public $country='';
+		public $region='';
 	} 
 	
 	
@@ -236,13 +237,14 @@
 			return : Object
 	     	city : {{city}}
 	     	country : {{country}}
+		 	region: {{region}}
 		 * */		
 			
 			
 		global $wpdb;
 		$wpdb -> show_errors();
 			
-		$query = "select location_city, location_country from wp_postworld_user_meta where user_id=".$user_id;
+		$query = "select location_city, location_country, location_region from wp_postworld_user_meta where user_id=".$user_id;
 		//echo($query);
 		$location_obj = $wpdb -> get_results($query);
 		
@@ -250,6 +252,7 @@
 			$output = new get_user_location_output();
 			$output->city = $row->location_city;
 			$output->country = $row->location_country;
+			$output->region = $row->location_region;
 			
 			return $output;
 		}
