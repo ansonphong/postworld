@@ -55,7 +55,10 @@ include 'php/postworld_rank.php';
 ////////// CRON / SCHEDULED TASKS ///////////
 //include 'php/postworld_cron.php';
 
-
+////////// USER FUNCTIONS ///////////
 include 'php/postworld_users.php';
+
+////////// GET POST FUNCTIONS ///////////
+include 'php/postworld_posts.php';
 
 ?>

@@ -45,7 +45,7 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT * FROM wp_postworld_meta Where id=" . $post_id;
+		$query = "SELECT * FROM wp_postworld_meta Where post_id=" . $post_id;
 		//echo ($query);
 		$postPoints = $wpdb -> get_row($query);
 		if ($postPoints != null)
