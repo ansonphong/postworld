@@ -159,7 +159,7 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT * FROM wp_postworld_points Where id=" . $post_id . " and user_id=" . $user_id;
+		$query = "SELECT * FROM wp_postworld_points Where post_id=" . $post_id . " and user_id=" . $user_id;
 		$postPointsRow = $wpdb -> get_row($query);
 	
 		if ($postPointsRow != null)

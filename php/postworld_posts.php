@@ -5,7 +5,7 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 
 	////////// FIELDS MODEL //////////
 	$preview_fields =	array('ID','post_title','post_excerpt', 'post_permalink', 'post_path', 'post_type', 'post_date', 'post_time_ago', 'comment_count', 'link_url', 'points' );
-	$detail_fields =	array('image_thumbnail', 'more');
+	$detail_fields =	array('image_thumbnail', 'more', 'has_voted');
 	$user_fields =		array('user_vote', 'user_data');
 
 	// Add Preview Fields
@@ -35,7 +35,6 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 			$post_data[$key] = $value;
 	}
 
-
 	////////// WP GET_POST_CUSTOM METHOD //////////
 	// Get post data from Wordpress standard function
 	$get_post_custom = get_post_custom($post_id);
@@ -49,10 +48,9 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 	if( in_array('points', $fields) )
 		$post_data['points'] = get_points( $post_id );
 
-	// Points
-	//if( in_array('points') )
-		//post_data['points'] = get_points( $post_id );
-
+	// User Has Voted
+	if( in_array('has_voted', $fields) )
+		$post_data['has_voted'] = has_voted( $post_id, $user_data->ID );
 
 
 	return json_encode($post_data);
