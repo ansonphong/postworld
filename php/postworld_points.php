@@ -5,13 +5,13 @@
 		public $points_added = 0;
 	}
 	
-	class get_user_votes_Output {
+	class get_user_votes_report_Output {
 		public $total_posts = 0;
 		public $total_points = 0;
 		public $average_points = 0.0;
 	}
 	
-	class get_user_votes_by_post_Output{
+	class get_user_votes_Output{
 		 public $post_id =0;
 		 public $votes =0;
 		 public $time =null;
@@ -191,7 +191,7 @@
 	
 	}
 	
-	function get_user_votes($user_id) {
+	function get_user_votes_report($user_id) {
 		/*
 		 • Returns the 'recent/active' points activity of the user
 		 • Get all posts which user has recently voted on from wp_postworld_points ( total_posts )
@@ -214,7 +214,7 @@
 			echo $row -> total_posts . ",";
 			echo($row -> total_points / $row -> total_posts);
 	
-			$output = new get_user_votes_Output();
+			$output = new get_user_votes_report_Output();
 			$output -> total_posts = $row -> total_posts;
 			$output -> total_points = $row -> total_points;
 			$output -> average_points = ($row -> total_points / $row -> total_posts);
@@ -223,7 +223,7 @@
 	
 	}
 	
-	function get_user_votes_by_post($user_id) {//Can't have duplicate names for functions
+	function get_user_votes($user_id) {
 		/*
 		 • Get all posts which user has voted on from wp_postworld_points
 		 return : Object
@@ -242,7 +242,7 @@
 	
 		$output = array();
 		foreach ($user_votes_per_post as $row) {
-			$singlePost = new get_user_votes_by_post_Output();
+			$singlePost = new get_user_votes_Output();
 			$singlePost->post_id = $row->id;
 			$singlePost->votes = $row->points;
 			$singlePost->time = $row->time;
