@@ -35,6 +35,31 @@ $pw_table_names = array(
   'user_roles'      =>  $wppw_prefix . "user_roles",
   );
 
+
+///// SET TEMPLATE PATHS /////
+function set_template_paths(){
+	$template_paths['PLUGINS_URL'] = plugins_url();
+	$template_paths['POSTWORLD_URL'] = $template_paths['PLUGINS_URL'].'/postworld';
+	$template_paths['POSTWORLD_PATH'] = plugin_dir_path(__FILE__);
+
+	$template_paths['THEME_URL'] = get_stylesheet_directory_uri(); 		// ABSOLUTE URI http://...
+	$template_paths['THEME_PATH'] = get_stylesheet_directory();			// ABSOLUTE PATH /home/user/... 
+
+	$template_paths['CSS_PATH'] = '/postworld/css/';
+	$template_paths['JS_PATH'] = '/postworld/js/';
+	$template_paths['IMAGES_PATH'] = '/postworld/images/';
+	$template_paths['TEMPLATES_PATH'] = '/postworld/templates/';
+
+	$template_paths['PW_CSS_URL'] = $template_paths['POSTWORLD_URL'].'/css/';
+	$template_paths['PW_JS_URL'] = $template_paths['POSTWORLD_URL'].'/js/';
+	$template_paths['PW_IMAGES_URL'] = $template_paths['POSTWORLD_URL'].'/images/';
+	$template_paths['PW_TEMPLATES_URL'] = $template_paths['POSTWORLD_URL'].'/templates/';
+
+
+	return $template_paths;
+}
+$template_paths = set_template_paths();
+
 ////////// WP OPTIONS ///////////
 include 'php/postworld_options.php';
 
@@ -59,6 +84,7 @@ include 'php/postworld_rank.php';
 include 'php/postworld_users.php';
 
 ////////// GET POST FUNCTIONS ///////////
+include 'php/postworld_images.php';
 include 'php/postworld_posts.php';
 
 ?>
