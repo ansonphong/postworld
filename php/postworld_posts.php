@@ -14,27 +14,33 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 		'post_title',
 		'post_excerpt',
 		'post_permalink',
-		'post_path',
 		'post_type',
 		'post_date',
 		'post_time_ago',
 		'comment_count',
 		'link_url',
-		'points',
 		'image(thumbnail)',
+		'points',
+
+		'edit_post_link',
+
+		'post_categories_list',
+		'post_tags_list',
+		'taxonomy_list(topic)',
+
 		);
 
 	$detail_fields =	array(
+		'post_path',
 		'image(medium)',
 		'image(large)',
 		'image(full)',
-		'image(topview,300,200,1)',
-		'has_voted',
 		);
 	
 	$user_fields =		array(
 		'user_vote',
-		'user_data'
+		'user_data',
+		'has_voted',
 		);
 
 	// Add Preview Fields
@@ -71,6 +77,26 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 		if( in_array($key, $fields) )
 			$post_data[$key] = $value;
 	} 
+
+	////////// WORDPRESS //////////
+	// Permalink
+	if( in_array('post_permalink', $fields) )
+		$post_data['post_permalink'] = get_permalink( $post_id );
+
+	// Post Path (Permalink without Home URL)
+	if( in_array('post_path', $fields) )
+		$post_data['post_path']	= str_replace( home_url(), '', get_permalink( $post_id ) );
+
+	// Category List
+	if( in_array('post_categories_list', $fields) )
+		$post_data["post_categories_list"] = get_the_category_list(' ','', $id );
+
+	// Tags List
+	if( in_array('post_tags_list', $fields) ){
+		$post_data["post_tags_list"] = get_the_term_list( $id, 'post_tag', '', '', '' );
+		if ( $post_data["post_tags_list"] == false ) $post_data["post_tags_list"] = '';
+	}
+
 
 	////////// POSTWORLD //////////
 	// Points
