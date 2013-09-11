@@ -28,10 +28,8 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 		'image(medium)',
 		'image(large)',
 		'image(full)',
-		
 		'image(topview,300,200,1)',
 		'has_voted',
-		//'image'	=> 'original',
 		);
 	
 	$user_fields =		array(
@@ -162,10 +160,16 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 
 			// Process each $image one at a time >> image(name,300,200,1) 
 			foreach ($images as $image) {
+
 				// Extract image attributes from (parenthesis) >> name,300,200,1
 				preg_match('#\((.*?)\)#', $image, $match);
+
 				// Split into an Array of $image_attributes >> array('name','300','200','1' )
 				$image_attributes = explode(',', $match[1]);
+
+				// Remove extra white spaces from values
+				foreach($image_attributes as $index => $value) 
+   					$image_attributes[$index] = trim($value);
 
 				// Set $image_handle to name of requested image
 				$image_handle = $image_attributes[0];
@@ -178,8 +182,8 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 					if ( $image_handle == 'full' ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
 						$post_data['images']['full']['URL']	= $thumbnail_url;
-						$post_data['images']['full']['width'] = $image_obj['width'];
-						$post_data['images']['full']['height'] = $image_obj['height'];
+						$post_data['images']['full']['width'] = (int)$image_obj['width'];
+						$post_data['images']['full']['height'] = (int)$image_obj['height'];
 					}
 
 					// Get registered image
@@ -187,8 +191,8 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 					elseif( array_key_exists($image_handle, $registered_images_obj) ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
 						$post_data['images'][$image_handle]['URL']	= $image_obj['URL'];
-						$post_data['images'][$image_handle]['width'] = $image_obj['width'];
-						$post_data['images'][$image_handle]['height'] = $image_obj['width'];
+						$post_data['images'][$image_handle]['width'] = (int)$image_obj['width'];
+						$post_data['images'][$image_handle]['height'] = (int)$image_obj['width'];
 					}
 
 				} 
@@ -202,8 +206,8 @@ function get_post_data( $post_id, $fields='all', $user_id ){
 
 					// Process custom image size, return URL
 					$post_data['images'][$image_handle]['URL'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
-					$post_data['images'][$image_handle]['width'] = $thumb_width;
-					$post_data['images'][$image_handle]['height'] = $thumb_height;
+					$post_data['images'][$image_handle]['width'] = (int)$thumb_width;
+					$post_data['images'][$image_handle]['height'] = (int)$thumb_height;
 				}
 
 			} // END foreeach
