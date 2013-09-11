@@ -6,6 +6,8 @@ function postworld_install() {
   global $wpdb;
   global $postworld_db_version;
   global $pw_table_names;
+  global $pw_queries;
+  $wpdb -> show_errors();
 
   $meta_table_name = $pw_table_names['meta'];
   $sql_postworld_meta = "CREATE TABLE $meta_table_name (
@@ -24,8 +26,9 @@ function postworld_install() {
       user_id mediumint(8) NOT NULL,
       author_id mediumint(8) NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
-      time TIMESTAMP NOT NULL
-    );";
+      time TIMESTAMP NOT NULL,
+      UNIQUE KEY post_id_user_id (post_id,user_id)
+     );";
 
   $points_comments_table_name = $pw_table_names['points_comments'];
   $sql_postworld_points_comments = "CREATE TABLE $points_comments_table_name (
@@ -38,7 +41,7 @@ function postworld_install() {
 
   $user_meta_table_name = $pw_table_names['user_meta'];
   $sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
-      user_id mediumint(9) NOT NULL,
+      user_id BIGINT(20) UNSIGNED NOT NULL,
       user_role char(16) NOT NULL,
       viewed MEDIUMTEXT NOT NULL, 
       favorites MEDIUMTEXT NOT NULL, 
@@ -47,7 +50,7 @@ function postworld_install() {
       location_country char(24) NOT NULL,
       view_karma mediumint(8) DEFAULT '0' NOT NULL,
       share_karma mediumint(8) DEFAULT '0' NOT NULL,
-      UNIQUE (user_id)
+	  UNIQUE KEY user_id(user_id)
     );";
 
   $user_shares_table_name = $pw_table_names['user_shares'];
@@ -96,6 +99,33 @@ function postworld_install_data() {
 
 }
 
+//////  Foreign Keys   //////
+function postworld_install_Foreign_keys(){
+	global $pw_queries;
+	global $wpdb;	
+		
+	$wpdb -> show_errors();
+ 	for ($i=0; $i < count($pw_queries['FK']); $i++) {
+     	$result = $wpdb -> get_var($pw_queries['FK'][$i]['contraint_check']);
+     	if($result == 0){
+     		$wpdb -> query($wpdb -> prepare($pw_queries['FK'][$i]['query']));
+     	}
+ 	}
+ 		
+	
+}
 
-
+function postworld_install_Triggers(){
+	
+	
+	global $pw_queries;
+	global $wpdb;	
+		
+	$wpdb -> show_errors();
+ 	for ($i=0; $i < count($pw_queries['Triggers']); $i++) {
+		$wpdb -> query($wpdb -> prepare($pw_queries['Triggers'][$i]['drop']));
+		$wpdb -> query($wpdb -> prepare($pw_queries['Triggers'][$i]['create']));
+ 	}
+	
+}
 ?>

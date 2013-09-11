@@ -11,10 +11,13 @@ License: GPL2
 
 ////////// POSTWORLD VARIABLES ///////////
 include 'php/postworld_variables.php';
+include 'php/postworld_install_queries.php';
+
 
 // GLOBAL VARIABLES
 global $pw_defaults;
 global $postworld_db_version;
+global $pw_queries;
 $postworld_db_version = "1.0";
 
 global $pw_prefix;
@@ -67,6 +70,8 @@ include 'php/postworld_options.php';
 include 'php/postworld_install.php';
 register_activation_hook( __FILE__, 'postworld_install' );
 register_activation_hook( __FILE__, 'postworld_install_data' );
+register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
+register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 
 ////////// POINTS FUNCTIONS ///////////
 include 'php/postworld_points.php';
