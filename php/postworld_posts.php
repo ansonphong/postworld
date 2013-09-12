@@ -212,7 +212,6 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
    			$post_data['avatar'][$avatar_handle]['height'] = $avatar_size;
 			$post_data['avatar'][$avatar_handle]['url'] = get_avatar_url( $author_id, $avatar_size );
 
-   			
    		}
 
 	} // END foreach

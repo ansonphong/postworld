@@ -30,9 +30,10 @@ $wppw_prefix = $wpdb->prefix . $pw_prefix;
 // TABLE NAMES
 global $pw_table_names;
 $pw_table_names = array(
-  'meta'            =>  $wppw_prefix . "meta",
-  'points'          =>  $wppw_prefix . "points",
-  'points_comments' =>  $wppw_prefix . "points_comments",
+  'post_meta'            =>  $wppw_prefix . "post_meta",
+  'post_points'          =>  $wppw_prefix . "post_points",
+  'comment_meta' =>  $wppw_prefix . "comment_meta",
+  'comment_points' =>  $wppw_prefix . "comment_points",
   'user_meta'       =>  $wppw_prefix . "user_meta",
   'user_shares'     =>  $wppw_prefix . "user_shares",
   'user_roles'      =>  $wppw_prefix . "user_roles",

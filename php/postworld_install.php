@@ -126,13 +126,11 @@ function postworld_install_Foreign_keys(){
      		$wpdb -> query($wpdb -> prepare($pw_queries['FK'][$i]['query']));
      	}
  	}
- 		
-	
+ 			
 }
 
+//////  Install Triggers   //////
 function postworld_install_Triggers(){
-	
-	
 	global $pw_queries;
 	global $wpdb;	
 		
