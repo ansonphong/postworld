@@ -42,6 +42,7 @@
 		 • Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
 		 return : integer
 		 */
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 	
@@ -67,7 +68,7 @@
 		 points_added : {{integer}} (points which were successfully added)
 		 points_total : {{integer}} (from wp_postworld_meta)
 		 */
-	
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 		$points_total = 0;
@@ -129,10 +130,11 @@
 	
 	function calculate_post_points($post_id) {
 		/*
-		 • Adds up the points from the specified post, stored in ".$pw_table_names['post_points']."
-		 • Stores the result in the points column in wp_postworld_meta
-		 return : integer (number of points)
-		 */
+		• Adds up the points from the specified post, stored in ".$pw_table_names['post_points']."
+		• Stores the result in the points column in wp_postworld_meta
+		return : integer (number of points)
+		*/
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 	
@@ -159,7 +161,7 @@
 		 • Return the number of points
 		 return : integer
 		 */
-	
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 	
@@ -180,6 +182,7 @@
 		 • Add all the points up
 		 return : integer (number of points)
 		 */
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 	
@@ -206,7 +209,7 @@
 		 total_points: {{integer}} (number of points cast by up/down votes)
 		 average_points: {{decimal}} (average number of points per post)
 		 */
-	
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 	
@@ -236,7 +239,7 @@
 		 votes : {{integer}}
 		 time : {{timestamp}}
 		 */
-		 
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 	
@@ -267,7 +270,7 @@
 			• Checks how many points the user's role can cast, from wp_postworld_user_roles table, under vote_points column
 			return : integer (the number of points the user can cast)
 		 */
-		
+		global $pw_table_names;
 		$current_user_role_output = get_user_role($user_id);
 		//echo(json_encode($current_user_role_output));
 
@@ -307,7 +310,7 @@
 		 
 		//Post_type = page/post, 
 		
-			 
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 		

@@ -177,12 +177,14 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 
 	////////// POSTWORLD //////////
 	// Points
-	if( in_array('points', $fields) )
-		$post_data['points'] = get_points( $post_id );
+	if( in_array('points', $fields) ){
+		//$post_data['points'] = set_post_points( $post_id );
+	}
 
 	// User Has Voted
-	if( in_array('has_voted', $fields) )
-		$post_data['has_voted'] = has_voted( $post_id, $viewer_user_data->ID );
+	if( in_array('has_voted', $fields) ){
+		$post_data['has_voted'] = has_voted_on_post( $post_id, $viewer_user_data->ID );
+	}
 
 
 	////////// DATE & TIME //////////
