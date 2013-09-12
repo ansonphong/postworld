@@ -130,7 +130,32 @@ $pw_defaults = array(
 		'grid'		=>	"",
 		),
 
+	'buddypress'	=>	array(
+		'avatar'	=>	array(
+			'size'	=>	array(
+				'full'		=>	'480',
+				'thumb'		=>	'120',
+				'original_max_width' => '640'
+				),
+			),
+		),
+
 	);
-    
+
+
+///// BUDDYPRESS OPTIONS /////
+$bp_avatar_full_size = $pw_defaults['buddypress']['avatar']['size']['full'];
+$bp_avatar_thumb_size = $pw_defaults['buddypress']['avatar']['size']['thumb'];
+$bp_avatar_original_max_width = $pw_defaults['buddypress']['avatar']['size']['original_max_width'];
+
+define( 'BP_AVATAR_ORIGINAL_MAX_WIDTH', $bp_avatar_original_max_width );
+define( 'BP_AVATAR_THUMB_WIDTH', $bp_avatar_thumb_size ); //change this with your desired thumb width
+define( 'BP_AVATAR_THUMB_HEIGHT', $bp_avatar_thumb_size ); //change this with your desired thumb height
+define( 'BP_AVATAR_FULL_WIDTH', $bp_avatar_full_size ); //change this with your desired full size,weel I changed it to 260 <img src="http://buddydev.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley"> 
+define( 'BP_AVATAR_FULL_HEIGHT', $bp_avatar_full_size ); //change this to default height for full avatar
+//define ( 'BP_AVATAR_DEFAULT', $img_url );
+//define ( 'BP_AVATAR_DEFAULT_THUMB', $img_url );
+
+
 
 ?>

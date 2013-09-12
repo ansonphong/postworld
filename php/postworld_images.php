@@ -19,7 +19,7 @@ function first_image_obj( $post_id ) {
 	if ( $attachments ) {
 		foreach ( $attachments as $attachment ) {
 			$image_attributes = wp_get_attachment_image_src( $attachment->ID, 'full' );
-			$first_image_obj['URL'] = $image_attributes[0];
+			$first_image_obj['url'] = $image_attributes[0];
 			$first_image_obj['width'] = $image_attributes[1];
 			$first_image_obj['height'] = $image_attributes[2];
 			$first_image_obj['ID'] = $attachment->ID;
@@ -34,7 +34,7 @@ function first_image_obj( $post_id ) {
 ///// GET OBJECT OF AN IMAGE ATTACHMENT ATTRIBUTES /////
 function image_obj( $attachment_id, $size = 'full' ){
 	$image_attributes = wp_get_attachment_image_src( $attachment_id, $size );
-	$first_image_obj['URL'] = $image_attributes[0];
+	$first_image_obj['url'] = $image_attributes[0];
 	$first_image_obj['width'] = $image_attributes[1];
 	$first_image_obj['height'] = $image_attributes[2];
 	$first_image_obj['ID'] = $attachment->ID;
