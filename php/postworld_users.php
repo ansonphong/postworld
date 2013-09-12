@@ -197,7 +197,6 @@
 		*/
 		global $wpdb;
 		$wpdb -> show_errors();
-			
 		$query = "select viewed from wp_postworld_user_meta where user_id=".$user_id;
 		//echo($query);
 		$viewed_array = $wpdb -> get_var($query);
@@ -271,6 +270,18 @@
 	}	
 
 	function get_user_role( $user_id, $return_array = false )  {
+		/*
+		  • Returns user role(s) for the specified user
+
+			Parameters:
+			$return_array : boolean
+			     • false (default) - Returns a string, with the first listed role
+			     • true - Returns an Array with all listed roles
+			
+			return : string / Array (set by $return_array)
+		 */
+		
+		
 		$user = new WP_User( $user_id ); // this gives us access to all the useful methods and properties for this user
 		if ( $user ) {
 			$roles = $user->roles;	// returns an array of roles
