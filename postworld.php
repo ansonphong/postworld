@@ -93,4 +93,17 @@ include 'php/postworld_users.php';
 include 'php/postworld_images.php';
 include 'php/postworld_posts.php';
 
+
+
+//TO get user id from wordpress
+require_once('/wp-config.php');
+require_once('/wp-includes/wp-db.php');
+require_once('/wp-includes/pluggable.php');
+
+
+
+
+
+
+
 ?>
