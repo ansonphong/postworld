@@ -52,7 +52,7 @@
 		
 	}
 	
-	function set_favorites ( $post_id, $user_id, $add_remove ){
+	function set_favorites ( $post_id, $add_remove ){
 		/*
 		• Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
 		Parameters:
@@ -65,6 +65,7 @@
 		     0  - nothing happened
 		 * 
 		 */
+		$user_id = get_current_user_id();
 		$post_ids = get_favorites($user_id);
 		echo (json_encode($post_ids));
 		
@@ -145,13 +146,15 @@
 		
 	}
 	
-	function set_viewed ( $user_id, $post_id, $viewed ){
+	function set_viewed ( $post_id, $viewed ){
 		/*
 		 • Adds to removes to the array in has_viewed in wp_postworld_user_meta 
 		 • If $viewed == true, check if the post_id is already in the array. If not, add it.
 		 • If $viewed == false, check if the post_id is already in the array. If so, remove it.
 			return : boolean (true) 
 		*/
+		
+		$user_id = get_current_user_id();
 		$post_ids = get_viewed($user_id);
 		//echo (json_encode($post_ids));
 		
@@ -297,5 +300,7 @@
 	/* Later*/
 	function has_shared ( $user_id, $post_id ){}
 
+
+	
 
 ?>
