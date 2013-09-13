@@ -1,0 +1,36 @@
+<!-- ANGULAR TEMPLATING TEST -->
+
+<div class="post standard full">
+	
+	<h1 style="font-size:21px;"><a href="{{post.post_permalink}}">{{post.post_title}}</a></h1>
+
+	<div ng-switch="post.post_format">
+		<ANY ng-switch-when="video">VIDEO EMBED : {{post.link_url}}</ANY>
+		<div ng-switch-default></div>
+	</div>
+
+	Points : {{post.post_points}} //
+	Rank Score : {{post.rank_score}} //
+	Post Format : {{post.post_format}} //
+	{{post.post_date}}<br>
+
+
+	<img src="{{post.avatar.small.url}}" width="{{post.avatar.small.width/2}}" height="{{post.avatar.small.height/2}}"><a href="{{post.author.profile_url}}">{{post.author.display_name}}</a>
+	<br><br>
+	<img src="{{post.image.medium.url}}" style="float:right; margin:0 0 20px 20px;">
+	{{post.post_content}}
+	<br><br>
+
+	Tags :
+	<span ng-repeat="tag in post.taxonomy.post_tag">
+		• <a href="{{tag.url}}">{{tag.term}}</a>
+	</span>
+	<br>
+	Categories :
+	<span ng-repeat="tag in post.taxonomy.category">
+		• <a href="{{tag.url}}">{{tag.term}}</a>
+	</span>
+
+	<div style="clear:both"></div>
+</div>
+<!-- END ANGULAR TEMPLATING TEST -->

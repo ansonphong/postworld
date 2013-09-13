@@ -39,14 +39,14 @@
 	
 	function get_post_points($post_id) {
 		/*
-		 • Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
-		 return : integer
-		 */
+		• Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
+		return : integer
+		*/
 		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT * FROM ".$pw_table_names['post_meta']." Where post_id=" . $post_id;
+		$query = "SELECT * FROM " . $pw_table_names['post_meta'] . " Where post_id=" . $post_id;
 		//echo ($query);
 		$postPoints = $wpdb -> get_row($query);
 		if ($postPoints != null)
@@ -264,13 +264,14 @@
 		 
 	}
 	
-	function get_user_vote_points ( $user_id ){
+	function get_user_vote_power ( $user_id ){
 		/*
 		 	• Checks to see user's WP roles with get_user_role()
 			• Checks how many points the user's role can cast, from wp_postworld_user_roles table, under vote_points column
 			return : integer (the number of points the user can cast)
 		 */
 		global $pw_table_names;
+		global $wpdb;
 		$current_user_role_output = get_user_role($user_id);
 		//echo(json_encode($current_user_role_output));
 
@@ -290,14 +291,13 @@
 		if($vote_points !=null) return $vote_points;
 		else 0;
 		
-	
 	}
+
 	function can_user_add_more_points($user_id,$current_number_of_points,$added_points){
-		$user_allowed_points = get_user_vote_points($user_id);
+		$user_allowed_points = get_user_vote_power($user_id);
 		if($user_allowed_points >=( $current_number_of_points + $added_points))
 		return true;
 		else return false;
-	
 	}
 	
 	function cache_post_points() {

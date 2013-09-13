@@ -6,13 +6,12 @@ function postworld_install() {
   global $wpdb;
   global $postworld_db_version;
   global $pw_table_names;
-  global $pw_queries;
-  $wpdb -> show_errors();
-
+//  global $pw_queries;
+//  $wpdb -> show_errors();
 
   /* POSTS */
-  $meta_table_name = $pw_table_names['post_meta'];
-  $sql_postworld_meta = "CREATE TABLE $meta_table_name (
+  $post_meta_table_name = $pw_table_names['post_meta'];
+  $sql_postworld_post_meta = "CREATE TABLE $post_meta_table_name (
       post_id mediumint(9) NOT NULL,
       author_id BIGINT(20) UNSIGNED NOT NULL,
       post_class char(16) NOT NULL,
@@ -23,8 +22,8 @@ function postworld_install() {
       UNIQUE KEY post_id (post_id)
     );";
 
-  $points_table_name = $pw_table_names['post_points'];
-  $sql_postworld_points = "CREATE TABLE $points_table_name (
+  $post_points_table_name = $pw_table_names['post_points'];
+  $sql_postworld_post_points = "CREATE TABLE $post_points_table_name (
       post_id mediumint(9) NOT NULL,
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
@@ -83,8 +82,8 @@ function postworld_install() {
 
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-  dbDelta( $sql_postworld_meta );
-  dbDelta( $sql_postworld_points );
+  dbDelta( $sql_postworld_post_meta );
+  dbDelta( $sql_postworld_post_points );
   dbDelta( $sql_postworld_comment_meta );
   dbDelta( $sql_postworld_comment_points );
   dbDelta( $sql_postworld_user_meta );

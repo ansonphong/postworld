@@ -1,8 +1,6 @@
 <?php
 
-
-
-function extract_parenthesis_values ( $input, $force_array = false ){
+function extract_parenthesis_values ( $input, $force_array = true ){
 	// Extracts comma deliniated values which are contained in parenthesis
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
@@ -39,6 +37,30 @@ function extract_fields( $fields_array, $query_string ){
 	return $values_array;
 }
 
+
+function extract_linear_fields( $fields_array, $query_string, $force_array = true ){
+	// Extracts nested comma deliniated values starting with $query_string from $fields_array
+	// and returns them in a new Array.
+	$fields_request = extract_fields( $fields_array, $query_string );
+
+	if (!empty($fields_request)){
+		$extract_fields = array();
+		// Process each request one at a time >> author(display_name,user_name,posts_url) 
+		foreach ($fields_request as $field_request) 
+			$extract_fields = array_merge( $extract_fields, extract_parenthesis_values($field_request, true) );
+
+		// If only one value, return string
+		if ( count($extract_fields) == 1 && $force_array == false )
+			return $extract_fields[0];
+		// If multiple values, return Array
+		else
+			return $extract_fields;
+	}
+	else
+		return false;
+}
+
+
 function get_avatar_url( $user_id, $avatar_size ){
 
 	// Get Buddypress Avatar Image
@@ -71,13 +93,39 @@ function get_avatar_url( $user_id, $avatar_size ){
 }
 
 
+function pw_get_posts( $post_ids, $fields='all', $viewer_user_id=null ) {
+	// • Run pw_post_data on each of the $post_ids, and return the given fields
+
+	// If $post_ids isn't an Array, return
+	if (!is_array($post_ids))
+		return false;
+
+	// Cycle though each $post_id
+	$posts = array();
+	foreach ($post_ids as $post_id) {
+		$post = pw_get_post($post_id, $fields, $viewer_user_id );
+		array_push($posts, $post);
+	}
+
+	// Return Array of post data
+	return $posts;
+
+}
+
 ////////// GET POST DATA //////////
-function get_post_data( $post_id, $fields='all', $viewer_user_id ){
+function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	//• Gets data fields for the specified post
-	global $template_paths;
+
+	// Check if the post exists
+	global $wpdb;
+	$post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $post_id . "'", 'ARRAY_A');
+	if (!$post_exists)
+		return false;
+
 
 	///// SETUP VARIABLES /////
-	//
+	global $template_paths;
+
 
 	////////// FIELDS MODEL //////////
 	$preview_fields =	array(
@@ -92,13 +140,19 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 		'comment_count',
 		'link_url',
 		'image(thumbnail)',
-		'points',
+		'post_points',
 		'edit_post_link',
 		'post_categories_list',
 		'post_tags_list',
-		'taxonomy_list(topic)',
+
+		'taxonomy(post_tag)',
+		'taxonomy(category)',
+
 		'author(ID,display_name,user_nicename,posts_url,profile_url)',
-		'avatar(small,48)'
+		'avatar(small,48)',
+
+		'post_format',
+
 		);
 
 	$detail_fields =	array(
@@ -108,10 +162,8 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 		'image(full)',
 		);
 	
-	$user_fields =		array(
-		'user_vote',
-		'user_data',
-		'has_voted',
+	$viewer_fields =		array(
+		'viewer(has_voted,vote_power)'
 		);
 
 	// Add Preview Fields
@@ -123,14 +175,19 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 		$fields = array_merge($preview_fields, $detail_fields);
 	}
 
-	
+	///// ADD VIEWER USER /////
+	// Check if the $viewer_user_id is supplied - if not, get it
+	if ( !$viewer_user_id ){
+		$viewer_user_id = get_current_user_id();
+	}
+
 	// Add User Fields of Current Logged in User who is viewing
-	if (is_int($viewer_user_id)){
+	if ( is_int($viewer_user_id) && $viewer_user_id != 0 ){
 		// Get User Data
 		$viewer_user_data = get_userdata( $viewer_user_id );
 		// If user exists, add user fields
 		if( $viewer_user_data != false ){
-			$fields = array_merge($fields, $user_fields);
+			$fields = array_merge($fields, $viewer_fields);
 		}
 	}
 	
@@ -155,87 +212,108 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 	// Set Author ID
 	$author_id = $get_post['post_author']; 
 
+
 	////////// WORDPRESS //////////
-	// Permalink
-	if( in_array('post_permalink', $fields) )
-		$post_data['post_permalink'] = get_permalink( $post_id );
 
-	// Post Path (Permalink without Home url)
-	if( in_array('post_path', $fields) )
-		$post_data['post_path']	= str_replace( home_url(), '', get_permalink( $post_id ) );
+		// Permalink
+		if( in_array('post_permalink', $fields) )
+			$post_data['post_permalink'] = get_permalink( $post_id );
 
-	// Category List
-	if( in_array('post_categories_list', $fields) )
-		$post_data["post_categories_list"] = get_the_category_list(' ','', $id );
+		// Post Path (Permalink without Home url)
+		if( in_array('post_path', $fields) )
+			$post_data['post_path']	= str_replace( home_url(), '', get_permalink( $post_id ) );
 
-	// Tags List
-	if( in_array('post_tags_list', $fields) ){
-		$post_data["post_tags_list"] = get_the_term_list( $id, 'post_tag', '', '', '' );
-		if ( $post_data["post_tags_list"] == false ) $post_data["post_tags_list"] = '';
-	}
+		// Category List
+		if( in_array('post_categories_list', $fields) )
+			$post_data["post_categories_list"] = get_the_category_list(' ','', $id );
+
+		// Tags List
+		if( in_array('post_tags_list', $fields) ){
+			$post_data["post_tags_list"] = get_the_term_list( $id, 'post_tag', '', '', '' );
+			if ( $post_data["post_tags_list"] == false ) $post_data["post_tags_list"] = '';
+		}
 
 
 	////////// POSTWORLD //////////
-	// Points
-	if( in_array('points', $fields) ){
-		//$post_data['points'] = set_post_points( $post_id );
-	}
 
-	// User Has Voted
-	if( in_array('has_voted', $fields) ){
-		$post_data['has_voted'] = has_voted_on_post( $post_id, $viewer_user_data->ID );
-	}
+		// Get post row from Postworld Meta table, as an Array
+		$pw_post_meta = pw_get_post_meta($post_id);
+		if ( !empty($pw_post_meta) ){
+			// Cycle though each PW $pw_post_meta value
+			// If it's in $fields, transfer it to $post_data
+			foreach($pw_post_meta as $key => $value ){
+				if( in_array($key, $fields) ){
+					$post_data[$key] = $pw_post_meta[$key];
+				}
+			}
+		}
+
+		// Points
+		if( in_array('post_points', $fields) ){
+			$post_data['post_points'] = get_post_points( $post_id );
+		}
+
+
+	////////// VIEWER FIELDS //////////
+
+		// Extract viewer() fields
+		$viewer_fields = extract_linear_fields( $fields, 'viewer', true );
+
+		if ( !empty($viewer_fields) ){
+			///// GET VIEWER DATA /////
+			// Has Viewer Voted?
+			if( in_array('has_voted', $viewer_fields) )
+				$post_data['viewer']['has_voted'] = has_voted_on_post( $post_id, $viewer_user_data->ID );
+
+			// View Vote Power
+			if( in_array('vote_power', $viewer_fields) )
+				$post_data['viewer']['vote_power'] = get_user_vote_power( $viewer_user_data->ID );
+		
+		}
+
 
 
 	////////// DATE & TIME //////////
 
-	// Post Time Ago
-	if ( in_array('post_time_ago', $fields) )
-		$post_data['time_ago'] = '';
+		// Post Time Ago
+		if ( in_array('post_time_ago', $fields) )
+			$post_data['time_ago'] = '';
+
 
 
 	////////// AVATAR IMAGES //////////
-	// Extract avatar() fields
-	$avatars = extract_fields( $fields, 'avatar' );
-	
-	// Get each avatar() image
-	foreach ($avatars as $avatar) {
-		// Extract image attributes from parenthesis
-   		$avatar_attributes = extract_parenthesis_values($avatar, true);
 
-   		// Check format
-   		if ( count($avatar_attributes) == 2 && !is_numeric( $avatar_attributes[0]) && is_numeric( $avatar_attributes[1]) ){
-   			// Setup Values
-   			$avatar_handle = $avatar_attributes[0];
-   			$avatar_size = $avatar_attributes[1];
+		// Extract avatar() fields
+		$avatars = extract_fields( $fields, 'avatar' );
+		
+		// Get each avatar() image
+		foreach ($avatars as $avatar) {
+			// Extract image attributes from parenthesis
+	   		$avatar_attributes = extract_parenthesis_values($avatar, true);
 
-   			// Set Avatar Size
-   			$post_data['avatar'][$avatar_handle]['width'] = $avatar_size;
-   			$post_data['avatar'][$avatar_handle]['height'] = $avatar_size;
-			$post_data['avatar'][$avatar_handle]['url'] = get_avatar_url( $author_id, $avatar_size );
+	   		// Check format
+	   		if ( count($avatar_attributes) == 2 && !is_numeric( $avatar_attributes[0]) && is_numeric( $avatar_attributes[1]) ){
+	   			// Setup Values
+	   			$avatar_handle = $avatar_attributes[0];
+	   			$avatar_size = $avatar_attributes[1];
 
-   		}
+	   			// Set Avatar Size
+	   			$post_data['avatar'][$avatar_handle]['width'] = $avatar_size;
+	   			$post_data['avatar'][$avatar_handle]['height'] = $avatar_size;
+				$post_data['avatar'][$avatar_handle]['url'] = get_avatar_url( $author_id, $avatar_size );
 
-	} // END foreach
+	   		}
+
+		} // END foreach
 
 
 
 	////////// AUTHOR DATA //////////
 
 		// Extract author() fields
-		$author_fields_request = extract_fields( $fields, 'author' );
+		$author_fields = extract_linear_fields( $fields, 'author', true );
 
-		///// PROCESS REQUESTED AUTHOR FIELDS /////
-		// Check if there are any author fields requested
-		if ( !empty($author_fields_request) ){
-
-			// Create empty Array
-			$author_fields = array();
-			
-			// Process each request one at a time >> author(display_name,user_name,posts_url) 
-			foreach ($author_fields_request as $author_field_request) 
-				$author_fields = array_merge( $author_fields, extract_parenthesis_values($author_field_request, true) );
-   			
+		if ( !empty($author_fields) ){
 
    			////////// GET AUTHOR FIELDS DATA //////////
 
@@ -252,6 +330,20 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 					$post_data['author'][$author_field] = get_the_author_meta( $author_field, $author_id );
 			}
 
+			///// WORDPRESS AUTHOR FIELDS /////
+			
+			// Author Posts URL
+			if( in_array('posts_url', $author_fields) )
+				$post_data['author']['posts_url'] = get_author_posts_url( $author_id );
+
+
+			///// BUDDYPRESS AUTHOR FIELDS : requires Buddypress /////
+
+			// Author Profile URL
+			if( in_array('profile_url', $author_fields) && function_exists('bp_core_get_userlink') )
+				$post_data['author']['profile_url'] = bp_core_get_userlink( $author_id, false, true );
+
+
 			///// POSTWORLD AUTHOR FIELDS /////
 			/*
 			if( in_array('posts_points', $author_fields) )
@@ -259,16 +351,6 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 			if( in_array('comments_points', $author_fields) )
 				$post_data['author']['comments_points'] = get_user_comments_points( $post_id );
 			*/
-
-			///// WORDPRESS AUTHOR FIELDS /////
-			
-			// Author Posts URL
-			if( in_array('posts_url', $author_fields) )
-				$post_data['author']['posts_url'] = get_author_posts_url( $author_id );
-
-			// Author Profile URL : requires Buddypress
-			if( in_array('profile_url', $author_fields) && function_exists('bp_core_get_userlink') )
-				$post_data['author']['profile_url'] = bp_core_get_userlink( $author_id, false, true );
 
 			// ++ ADD : twitter, facebook_url, 
 			
@@ -400,9 +482,34 @@ function get_post_data( $post_id, $fields='all', $viewer_user_id ){
 
 
 
-	return json_encode($post_data);
+	////////// TAXONOMIES //////////
+
+	// Extract taxonomy() fields
+	$taxonomy_fields = extract_linear_fields( $fields, 'taxonomy' );
+
+	// Get each Taxonomy 
+	foreach ($taxonomy_fields as $taxonomy_field) {
+
+		$taxonomy_terms = wp_get_object_terms( $post_id, $taxonomy_field );
+		if ( !empty($taxonomy_terms) && !is_wp_error( $taxonomy_terms ) ){
+
+			// Get each Term
+			foreach($taxonomy_terms as $term){
+				$term_obj['term'] = $term->name;
+				$term_obj['slug'] = $term->slug;
+				$term_obj['url'] = get_term_link($term->slug, $taxonomy_field);
+
+				$post_data['taxonomy'][$taxonomy_field][$term->slug] = $term_obj;
+			}
+
+		} // END if
+
+	} // END foreach
+
+
+
+	return $post_data;
 
 }
-
 
 ?>

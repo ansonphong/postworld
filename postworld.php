@@ -70,9 +70,12 @@ include 'php/postworld_options.php';
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';
 register_activation_hook( __FILE__, 'postworld_install' );
-register_activation_hook( __FILE__, 'postworld_install_data' );
-register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
-register_activation_hook( __FILE__, 'postworld_install_Triggers' );
+//register_activation_hook( __FILE__, 'postworld_install_data' );
+//register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
+//register_activation_hook( __FILE__, 'postworld_install_Triggers' );
+
+////////// META FUNCTIONS ///////////
+include 'php/postworld_meta.php';
 
 ////////// POINTS FUNCTIONS ///////////
 include 'php/postworld_points.php';
