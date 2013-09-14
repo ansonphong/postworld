@@ -55,7 +55,7 @@
 		
 	}
 	
-	function set_favorites ( $post_id, $add_remove ){
+	function set_favorite ( $post_id, $add_remove ){
 		/*
 		• Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
 		Parameters:
