@@ -10,6 +10,7 @@
 		public static $FAVORITES='favorites';
 		public static $LOCATION_CITY='location_city';
 		public static $LOCATION_COUNTRY='location_country';
+		public static $LOCATION_REGION ='location_region';
 		public static $VIEW_KARMA='view_karma';
 		public static $SHARE_KARMA='share_karma';
 			
@@ -39,11 +40,13 @@
 	
 		return : Array (keys: fields, values: values) */
 		
-		//assume that $fields is a  comma seperated string
+		//assume that $fields is an array
+		$fields_for_query = implode(",", $fields);
 		
+		global $pw_table_names;
 		global $wpdb;
 		$wpdb -> show_errors();
-		$query = "select ".$fields." from wp_postworld_user_meta where user_id=".$user_id;
+		$query = "select ".$fields_for_query." from ".$pw_table_names['user_meta']." where user_id=".$user_id;
 		//echo $query;
 		//esult will be output as an numerically indexed array of associative arrays, using column names as keys
 		$result = $wpdb->get_results( $query, ARRAY_A  );
@@ -67,41 +70,43 @@
 		 */
 		$user_id = get_current_user_id();
 		$post_ids = get_favorites($user_id);
-		echo (json_encode($post_ids));
+		//echo (json_encode($post_ids));
 		
 		
 		$key = array_search($post_id, $post_ids,true);
-		$changed = false;
+		$changed = 0;
 		
 		//echo("keyyy:".$key);
 		if($key !==FALSE){ // found
 			//echo 'founddd';
-			if($add_remove===0){
+			if($add_remove===-1){
 				//array_diff($post_ids, $post_id);
 				unset($post_ids[$key]);
-				$changed= true;	
+				$changed= -1;	
 			}
 			
 		}
 		else{
 			if($add_remove===1){
 				//echo 'NOTfounddd';
-				echo("ddddd".count($post_ids));
+				//echo("ddddd".count($post_ids));
 				$post_ids[count($post_ids)] = $post_id;
-				$changed= true;	
+				$changed= 1;	
 			}
 			
 		}
 		//echo(implode(',',$post_ids));
-		if($changed){
+		if($changed==1 || $changed==-1){
 			global $wpdb;
+			global $pw_table_names;
 			$wpdb -> show_errors();
-			$query ="update wp_postworld_user_meta set favorites ='".implode(',',$post_ids)."' where user_id=".$user_id;	
+			$query ="update ".$pw_table_names['user_meta']." set favorites ='".implode(',',$post_ids)."' where user_id=".$user_id;	
 			//echo($query);
 			$wpdb -> query($wpdb -> prepare($query));
-			return 1;
+			//return $changed;
 		}
-		else return -1;
+		//else return $changed;
+		return $changed;
 		
 		
 		
@@ -115,9 +120,10 @@
 			 */
 			
 			global $wpdb;
+			global $pw_table_names;
 			$wpdb -> show_errors();
 				
-			$query = "select favorites from wp_postworld_user_meta where user_id=".$user_id;
+			$query = "select favorites from ".$pw_table_names['user_meta']." where user_id=".$user_id;
 			//echo($query);
 			$favorites_array = $wpdb -> get_var($query);
 			//echo(json_encode($viewed_array));
@@ -131,17 +137,17 @@
 		
 		}
 	
-			function is_favorite ( $post_id, $user_id ){
+		function is_favorite ( $post_id, $user_id ){
 		/*
 		 • Checks the favorites column in wp_postworld_user_meta of the given user to see if the user has set the post as a favorite
 		 return : boolean 
 		 */
 		$post_ids = get_favorites($user_id);
 		$key = array_search($post_id, $post_ids,true);
-		echo('keey  : '.$key);
+		//echo('keey  : '.$key);
 		if($key !==FALSE)
-		return 'true';
-		else return 'false';
+		return true;
+		else return false;
 		
 		
 	}
@@ -155,6 +161,7 @@
 		*/
 		
 		$user_id = get_current_user_id();
+		//echo($user_id);
 		$post_ids = get_viewed($user_id);
 		//echo (json_encode($post_ids));
 		
@@ -183,8 +190,9 @@
 		//echo(implode(',',$post_ids));
 		if($changed){
 			global $wpdb;
+			global $pw_table_names;
 			$wpdb -> show_errors();
-			$query ="update wp_postworld_user_meta set viewed ='".implode(',',$post_ids)."' where user_id=".$user_id;	
+			$query ="update ".$pw_table_names['user_meta']." set viewed ='".implode(',',$post_ids)."' where user_id=".$user_id;	
 			//echo($query);
 			$wpdb -> query($wpdb -> prepare($query));
 			return true;
@@ -199,8 +207,9 @@
 			return : array
 		*/
 		global $wpdb;
+		global $pw_table_names;
 		$wpdb -> show_errors();
-		$query = "select viewed from wp_postworld_user_meta where user_id=".$user_id;
+		$query = "select viewed from ".$pw_table_names['user_meta']." where user_id=".$user_id;
 		//echo($query);
 		$viewed_array = $wpdb -> get_var($query);
 		//echo(json_encode($viewed_array));
@@ -227,7 +236,7 @@
 		
 		$key = array_search($post_id, $post_ids,true);
 		
-		echo('keey  : '.$key);
+		//echo('keey  : '.$key);
 		if($key !==FALSE)
 		return true;
 		else return false;
@@ -244,9 +253,10 @@
 			
 			
 		global $wpdb;
+		global $pw_table_names;
 		$wpdb -> show_errors();
-			
-		$query = "select location_city, location_country, location_region from wp_postworld_user_meta where user_id=".$user_id;
+		
+		$query = "select ".user_fields_names::$LOCATION_CITY.", ".user_fields_names::$LOCATION_COUNTRY.", ".user_fields_names::$LOCATION_REGION." from ".$pw_table_names['user_meta']." where user_id=".$user_id;
 		//echo($query);
 		$location_obj = $wpdb -> get_results($query);
 		
