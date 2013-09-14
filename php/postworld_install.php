@@ -19,6 +19,7 @@ function postworld_install() {
       link_url varchar(512) DEFAULT '' NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       rank_score mediumint(4) DEFAULT '0' NOT NULL,
+      favorites mediumint(9) DEFAULT '0' NOT NULL,
       UNIQUE KEY post_id (post_id)
     );";
 
@@ -80,6 +81,12 @@ function postworld_install() {
       vote_points mediumint(6) NOT NULL
     );";
 
+  $favorites_table_name = $pw_table_names['favorites'];
+  $sql_postworld_favorites = "CREATE TABLE $favorites_table_name (
+      user_id mediumint(6) NOT NULL,
+      post_id mediumint(6) NOT NULL
+    );";
+
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
   dbDelta( $sql_postworld_post_meta );
@@ -89,6 +96,7 @@ function postworld_install() {
   dbDelta( $sql_postworld_user_meta );
   dbDelta( $sql_postworld_user_shares );
   dbDelta( $sql_postworld_user_roles );
+  dbDelta( $sql_postworld_favorites );
   
   add_option( "postworld_db_version", $postworld_db_version );
 }
