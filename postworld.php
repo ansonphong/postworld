@@ -11,7 +11,7 @@ License: GPL2
 
 ////////// POSTWORLD VARIABLES ///////////
 include 'php/postworld_variables.php';
-include 'php/postworld_install_queries.php';
+
 
 // GLOBAL VARIABLES
 global $pw_defaults;
@@ -38,6 +38,9 @@ $pw_table_names = array(
 	'user_roles'      	=>  $wppw_prefix . "user_roles",
 	'favorites'      	=>  $wppw_prefix . "favorites",
   );
+  
+// INSTALL QUERIES
+include 'php/postworld_install_queries.php';
 
 ///// SET TEMPLATE PATHS /////
 function set_template_paths(){
