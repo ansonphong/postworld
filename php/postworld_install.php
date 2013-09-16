@@ -12,7 +12,7 @@ function postworld_install() {
   /* POSTS */
   $post_meta_table_name = $pw_table_names['post_meta'];
   $sql_postworld_post_meta = "CREATE TABLE $post_meta_table_name (
-      post_id mediumint(9) NOT NULL,
+      post_id BIGINT(20) unsigned NOT NULL,
       author_id BIGINT(20) UNSIGNED NOT NULL,
       post_class char(16) NOT NULL,
       post_format char(16) NOT NULL,
@@ -25,7 +25,7 @@ function postworld_install() {
 
   $post_points_table_name = $pw_table_names['post_points'];
   $sql_postworld_post_points = "CREATE TABLE $post_points_table_name (
-      post_id mediumint(9) NOT NULL,
+      post_id BIGINT(20) unsigned NOT NULL,
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       time TIMESTAMP NOT NULL,
@@ -37,7 +37,7 @@ function postworld_install() {
   $comment_meta_table_name = $pw_table_names['comment_meta'];
   $sql_postworld_comment_meta= "CREATE TABLE $comment_meta_table_name (
       comment_id mediumint(8) NOT NULL,
-      post_id mediumint(9) NOT NULL,
+      post_id BIGINT(20) unsigned NOT NULL,
       comment_points mediumint(8) DEFAULT '0' NOT NULL
     );";
   
@@ -70,7 +70,7 @@ function postworld_install() {
   $user_shares_table_name = $pw_table_names['user_shares'];
   $sql_postworld_user_shares = "CREATE TABLE $user_shares_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
-      post_id mediumint(9) NOT NULL,
+      post_id BIGINT(20) unsigned NOT NULL,
       recent_ips varchar(8000) DEFAULT '' NOT NULL,
       total_views mediumint(9) NOT NULL
     );";
@@ -83,8 +83,8 @@ function postworld_install() {
 
   $favorites_table_name = $pw_table_names['favorites'];
   $sql_postworld_favorites = "CREATE TABLE $favorites_table_name (
-      user_id mediumint(6) NOT NULL,
-      post_id mediumint(6) NOT NULL
+      user_id BIGINT(20) UNSIGNED NOT NULL,
+      post_id BIGINT(20) unsigned NOT NULL
     );";
 
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

@@ -101,7 +101,7 @@
 			//check if row already present, and user has the authority to add much points,else create and add unix timestamp
 			if ($postPointsRow != null) {
 				//echo ('NOTT NULL');
-				// TODO: check if user can add more points from wp-options ?????????????
+				// check if user can add more points from wp-options ?????????????
 				$userCanAddPoints = can_user_add_more_points($user_id,$postPointsRow->post_points,$add_points);
 				if ($userCanAddPoints) {
 					$query = "Update ".$pw_table_names['post_points']." set post_points=post_points + ". $add_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
@@ -153,14 +153,21 @@
 		//update wp_postworld_meta
 		$query = "update ".$pw_table_names['post_meta']." set post_points=" . $points_total . " where post_id=" . $post_id;
 		$result =$wpdb -> query($wpdb -> prepare($query));
-		//TODO
+		
 		if ($result === 0){
-			//insertt new row for this post in post_meta
+			//insertt new row for this post in post_meta, no points was added
+			
+			/*1- get post data
+			 2-  Insert new record into post_meta
+			 */
+			add_recored_to_post_meta($post_id,$points_total);
 			
 		}
 		return $points_total;
 	
 	}
+	
+	
 	
 	function has_voted_on_post($post_id, $user_id) {
 		/*
@@ -181,7 +188,7 @@
 			return 0;
 	
 	}
-	//TODO : remove the view
+	
 	function get_user_points_voted_to_posts($user_id) {
 		/*
 		 • Get array of all posts by given user
@@ -193,7 +200,7 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		//create view to combine both then select from the view
+		
 		//SELECT * FROM wp_postworld_a1.get_user_points_view;
 		$query = "SELECT SUM(post_points) as total_points FROM ".$pw_table_names['post_meta']." Where author_id=" . $user_id;
 		$total_points = $wpdb -> get_var($query);
@@ -338,7 +345,43 @@
 		 
 	}
 
-	
-
+	function add_recored_to_post_meta($post_id, $points=0,$rank_score=0,$favorites=0){
+		/*
+		 This function gets all post data and inserts a record in wp_postworld_post_meta table
+		 * Parameters:
+		 * -post_id
+		 * -optional : points (default value=0)
+		 *			   rankd_score(default value=0)
+		 * 				favorites(default value=0)
+		 * optional parameters are not sent if the function adds a new row
+		 */
+		
+			
+		global $pw_table_names;
+		global $wpdb;	
+		
+		
+		
+		$format = get_post_format();
+		if ( false === $format )
+		$format = 'standard';
+		
+		$post_data= get_post( $post_id, ARRAY_A );
+		echo json_encode($post_data);
+		$query = "insert into ".$pw_table_names['post_meta']." values("
+				.$post_id.","
+				.$post_data['post_author'].","
+				."'post_class'"."," //TODO
+				."'".$format."',"
+				."'".$post_data['guid']."',"
+				.$points.","
+				.$rank_score.","
+				.$favorites
+				.")";
+				
+		echo $query."<br>";
+		$wpdb -> query($wpdb -> prepare($query));
+		
+	}
 
 ?>
