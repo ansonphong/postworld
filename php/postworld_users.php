@@ -55,10 +55,52 @@
 		
 	}
 	
+	
+	function add_favorite($post_id,$user_id){
+		
+		// add favorite to wp_postworld_favorites
+		global $wpdb;
+		global $pw_table_names;
+		$wpdb -> show_errors();	
+		$query = "insert into ".$pw_table_names['favorites']." values (".$user_id.",".$post_id.")";
+		$wpdb -> query($wpdb -> prepare($query));
+		
+		
+		// increment post count in wp_postworld_post_meta	
+		$query = "update ".$pw_table_names['post_meta']." set favorites = favorites +1 where post_id=".$post_id;
+		$result = $wpdb -> query($wpdb -> prepare($query));
+		if($result == 0){
+			add_recored_to_post_meta($post_id,0,0,1); 	
+		}
+		
+	}
+	
+	function delete_favorite($post_id,$user_id){
+		global $wpdb;
+		global $pw_table_names;
+		$wpdb -> show_errors();	
+		$query = "delete from ".$pw_table_names['favorites']." where post_id=".$post_id." and user_id=".$user_id;
+		$wpdb -> query($wpdb -> prepare($query));
+		
+		
+		// increment post count in wp_postworld_post_meta	
+		$query = "update ".$pw_table_names['post_meta']." set favorites = favorites -1 where post_id=".$post_id;
+		$result = $wpdb -> query($wpdb -> prepare($query));
+		
+		if($result == 0){
+			add_recored_to_post_meta($post_id,0,0,0); 	
+		}
+		
+	}
+	
+	
 	function set_favorite ( $post_id, $add_remove ){
 		/*
 		• Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
-		Parameters:
+		• Add or remove row in pw_postworld_favorites, with user_id and post_id
+		• If it was added or removed, add 1 or subtract 1 from table wp_postworld_post_meta  in column 
+	 
+	 	Parameters:
 		$add_remove
 		     •  1 - add it to favourites
 		     • -1 - remove it from favorites
@@ -76,9 +118,8 @@
 		$key = array_search($post_id, $post_ids,true);
 		$changed = 0;
 		
-		//echo("keyyy:".$key);
-		if($key !==FALSE){ // found
-			//echo 'founddd';
+	
+		if($key !==FALSE){ // found		
 			if($add_remove===-1){
 				//array_diff($post_ids, $post_id);
 				unset($post_ids[$key]);
@@ -88,14 +129,12 @@
 		}
 		else{
 			if($add_remove===1){
-				//echo 'NOTfounddd';
-				//echo("ddddd".count($post_ids));
 				$post_ids[count($post_ids)] = $post_id;
 				$changed= 1;	
 			}
 			
 		}
-		//echo(implode(',',$post_ids));
+		
 		if($changed==1 || $changed==-1){
 			global $wpdb;
 			global $pw_table_names;
@@ -104,6 +143,16 @@
 			//echo($query);
 			$wpdb -> query($wpdb -> prepare($query));
 			//return $changed;
+			
+			if($changed ==1)//add fav
+				add_favorite($post_id, $user_id);
+			
+			if($changed ==-1)//add fav
+				delete_favorite($post_id, $user_id);
+			
+			
+			
+			
 		}
 		//else return $changed;
 		return $changed;
