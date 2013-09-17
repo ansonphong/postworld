@@ -99,7 +99,7 @@ include 'php/postworld_images.php';
 include 'php/postworld_posts.php';
 
 
-include 'php/PW_Query.php';
+include 'php/postworld_query.php';
 
 
 
