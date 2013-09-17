@@ -9,8 +9,9 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 
-////////// POSTWORLD VARIABLES ///////////
+////////// POSTWORLD VARIABLES & HELPER FUNCTIONS ///////////
 include 'php/postworld_variables.php';
+include 'php/postworld_utilities.php';
 
 
 // GLOBAL VARIABLES

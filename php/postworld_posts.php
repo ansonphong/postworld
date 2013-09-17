@@ -1,97 +1,5 @@
 <?php
 
-function extract_parenthesis_values ( $input, $force_array = true ){
-	// Extracts comma deliniated values which are contained in parenthesis
-	// Returns an Array of values that were previously comma deliniated,
-	// unless $force_array is set TRUE.
-
-	// Extract contents of (parenthesis)
-	preg_match('#\((.*?)\)#', $input, $match);
-
-	// Split into an Array
-	$value_array = explode(',', $match[1]);
-
-	// Remove extra white spaces from Array values
-	foreach($value_array as $index => $value) 
-			$value_array[$index] = trim($value);
-
-	// If $value_array has only 1 item
-	if ( count($value_array) == 1 && $force_array == false )
-		return $value_array[0];
-	// Otherwise, return array
-	else
-		return $value_array;
-}
-
-
-function extract_fields( $fields_array, $query_string ){
-	// Extracts values starting with $query_string from $fields_array
-	// and returns them in a new Array.
-
-	$values_array = array();
-	foreach ($fields_array as $field) {
-		if ( strpos( $field, $query_string ) !== FALSE )
-			// Push $field into $values_array
-		    array_push($values_array, $field);
-	}
-	return $values_array;
-}
-
-
-function extract_linear_fields( $fields_array, $query_string, $force_array = true ){
-	// Extracts nested comma deliniated values starting with $query_string from $fields_array
-	// and returns them in a new Array.
-	$fields_request = extract_fields( $fields_array, $query_string );
-
-	if (!empty($fields_request)){
-		$extract_fields = array();
-		// Process each request one at a time >> author(display_name,user_name,posts_url) 
-		foreach ($fields_request as $field_request) 
-			$extract_fields = array_merge( $extract_fields, extract_parenthesis_values($field_request, true) );
-
-		// If only one value, return string
-		if ( count($extract_fields) == 1 && $force_array == false )
-			return $extract_fields[0];
-		// If multiple values, return Array
-		else
-			return $extract_fields;
-	}
-	else
-		return false;
-}
-
-
-function get_avatar_url( $user_id, $avatar_size ){
-
-	// Get Buddypress Avatar Image
-	if ( function_exists(bp_core_fetch_avatar) ) {
-
-		// Set Buddypress Avatar 'Type' Attribute
-		if ( $avatar_size > $bp_avatar_thumb_size )
-			$bp_avatar_size = 'thumb';
-		else
-			$bp_avatar_size = 'full';
-
-		// Set Buddypress Avatar Settings
-		$bp_avatar_args = array(
-			'item_id' => $user_id,
-			'type' => $bp_avatar_size,
-			'html' => false
-			);
-
-		return bp_core_fetch_avatar( $bp_avatar_args );
-	}
-
-	// Get Avatar Image with Wordpress Method (embedded in an image tag)
-	else {
-		$avatar_img = get_avatar( $user_id, $avatar_size );
-		// Remove the image tag
-		preg_match("/src='(.*?)'/i", $avatar_img, $matches);
-	    return $matches[1];
-	}
-
-}
-
 
 function pw_get_posts( $post_ids, $fields='all', $viewer_user_id=null ) {
 	// • Run pw_post_data on each of the $post_ids, and return the given fields
@@ -136,7 +44,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_permalink',
 		'post_type',
 		'post_date',
-		'post_time_ago',
+		'post_date_gmt',
 		'comment_count',
 		'link_url',
 		'image(thumbnail)',
@@ -152,6 +60,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'avatar(small,48)',
 
 		'post_format',
+		'time_ago',
 
 		);
 
@@ -276,8 +185,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	////////// DATE & TIME //////////
 
 		// Post Time Ago
-		if ( in_array('post_time_ago', $fields) )
-			$post_data['time_ago'] = '';
+		if ( in_array('time_ago', $fields) )
+			$post_data['time_ago'] = time_ago( strtotime ( $post_data['post_date_gmt'] ) );
+
 
 
 
