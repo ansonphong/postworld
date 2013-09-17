@@ -1,0 +1,34 @@
+
+<!-- LOAD FEED DIRECTIVE -->
+<script>
+	var front_page_feed = {
+		preload : 10,
+		load_increment : 10,
+		view : {
+			current : 'detail',
+			options : ['list','detail','grid']
+		},
+		order_by : 'post_title',
+	};
+</script>
+<div ng-load-feed="front_page_feed"></div>
+
+
+<!-- LIVE FEED DIRECTIVE -->
+<script>
+	var search_results = {
+		preload : 10,
+		load_increment : 10,
+		view : {
+			current : 'detail',
+			options : ['list','detail','grid']
+		},
+		order_by : 'post_title',
+		panel : 'feed_top',
+		query_args : {
+
+		},
+	};
+</script>
+<div live-feed="search_results"></div>
+
