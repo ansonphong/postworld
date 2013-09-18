@@ -42,6 +42,8 @@ $pw_table_names = array(
 	'user_shares'     	=>  $wppw_prefix . "user_shares",
 	'user_roles'      	=>  $wppw_prefix . "user_roles",
 	'favorites'      	=>  $wppw_prefix . "favorites",
+	'feeds'      	=>  $wppw_prefix . "feeds",
+	'cron_logs'      	=>  $wppw_prefix . "cron_logs",
   );
   
 // INSTALL QUERIES
@@ -110,6 +112,7 @@ include 'php/postworld_query.php';
 
 //To get user id from wordpress
 require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php');
+
 
 
 ?>

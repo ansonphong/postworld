@@ -84,9 +84,38 @@ function postworld_install() {
   $favorites_table_name = $pw_table_names['favorites'];
   $sql_postworld_favorites = "CREATE TABLE $favorites_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
-      post_id BIGINT(20) unsigned NOT NULL
+      post_id BIGINT(20) unsigned NOT NULL,
+      UNIQUE KEY user_id_post_id (user_id,post_id)
     );";
+    
+    
+    
+  $feeds_table_name = $pw_table_names['feeds'];
+  $sql_postworld_feeds = "CREATE TABLE $feeds_table_name (
+      feed_id BIGINT(20) UNSIGNED NOT NULL,
+      feed_query TEXT NOT NULL,
+      feed_outline MEDIUMTEXT NOT NULL,
+      time_start TIMESTAMP NOT NULL,
+      time_end TIMESTAMP NOT NULL,
+      timer INT NOT NULL,
+      UNIQUE KEY feed_id (feed_id)
+    );"; 
 
+  $cron_logs_table_name = $pw_table_names['cron_logs'];
+  $sql_postworld_cron_logs = "CREATE TABLE $cron_logs_table_name (
+      cron_run_id BIGINT(20) UNSIGNED NOT NULL,
+      type char(16) NOT NULL,
+      process_id char(16) NOT NULL,
+      time_start TIMESTAMP NOT NULL,
+      time_end TIMESTAMP NOT NULL,
+      timer INT NOT NULL,
+      posts INT NOT NULL,
+      timer_average TIMESTAMP NOT NULL,
+      query_args MEDIUMTEXT NOT NULL,
+      UNIQUE KEY cron_run_id (cron_run_id)
+    );";  
+    
+    
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
   dbDelta( $sql_postworld_post_meta );
@@ -97,6 +126,8 @@ function postworld_install() {
   dbDelta( $sql_postworld_user_shares );
   dbDelta( $sql_postworld_user_roles );
   dbDelta( $sql_postworld_favorites );
+  dbDelta( $sql_postworld_feeds );
+  dbDelta( $sql_postworld_cron_logs );
   
   add_option( "postworld_db_version", $postworld_db_version );
 }
