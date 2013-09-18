@@ -1,3 +1,8 @@
+
+///// INITIALIZE /////
+var feed_init = {};
+var feed_data = {};
+
 ///// THE POSTWORLD MODULE /////
 var postworld = angular.module('postworld', []);
 
@@ -6,43 +11,14 @@ postworld.controller('postworld', function($scope) {
 	$scope.templates = templates;
 });
 
-
-///// POSTWORLD FEED CONTROLLER /////
-postworld.controller('postworld_feed', function($scope) {
-
-	// Define Posts
-    $scope.posts = feed_data[$scope.feed].posts; 
-
-    // Pull 'feed_data' Object for current feed into $scope
-    $scope.feed_data = feed_data[$scope.feed];
-
-    // Feed Template
-    $scope.get_template = function (post_type) {
-        return $scope.templates.posts[post_type][$scope.feed_data.view.current];
-    }
-
-});
-
-
-// Disable Template Cache for Development
-postworld.run(function($rootScope, $templateCache) {
-   $rootScope.$on('$viewContentLoaded', function() {
-      $templateCache.removeAll();
-   });
-});
-
-
-////////// LIVE FEED DIRECTIVE //////////
-// Takes the element with live-feed="feed_id" on it and turns it into a feed
+////////// TEST FEED DIRECTIVE //////////
+// Takes the element with test-feed="feed_id" on it and turns it into a feed
 postworld.directive( 'testFeed', ['$compile', function($compile, $scope){
 
 	return { 
 		restrict: 'A',
 		scope : function(){
-			//scope.feed_id = 'search_results'; // NOT WORKING
-			//parentFunc: '&'
-			//return feed_id = "search_results";
-			feed_id: '=feed_id'
+			// Scope functions here
 		},
 		link : function ($scope, elem, attrs){
 
@@ -52,27 +28,16 @@ postworld.directive( 'testFeed', ['$compile', function($compile, $scope){
 			$scope.feed_id = feed_id;
 
 			// Get the JSON Object associated with the feed_id
-			feed_object = window[feed_id];
 			feed_element = angular.element(elem);
 
-
 			///// TRANSFER SETTINGS /////
-			// Transfer Local Feed Data into global feed_data Object
+			// Transfer ['feed_init'] Object settings into ['feed_data'] Object
 			global_feed_object = window['feed_data'][feed_id];
-			local_feed_object = window[feed_id];
+			init_feed_object = window['feed_init'][feed_id];
 
-			angular.forEach(local_feed_object, function(value, key){
-				global_feed_object[key] = local_feed_object[key];
+			angular.forEach(init_feed_object, function(value, key){
+				global_feed_object[key] = init_feed_object[key];
 			});
-
-			/*
-			// Order By
-			global_feed_object['order_by'] = local_feed_object['order_by'];
-			// View
-			global_feed_object['view'] = local_feed_object['view'];
-			// Panel
-			global_feed_object['panel'] = local_feed_object['panel'];
-			*/
 
 			///// ADD CLASSES /////
 			// Add feed classes
@@ -96,7 +61,7 @@ postworld.directive( 'testFeed', ['$compile', function($compile, $scope){
 
 			///// ADD FEED /////
 			// Define Variables
-			feed_controller = "postworld_feed_dev";
+			feed_controller = "postworld_feed";
 			repeat_pattern = "post in feed_data.posts | orderBy:feed_data.order_by";
 			template_source = "get_template(post.post_type)";
 			
@@ -113,19 +78,27 @@ postworld.directive( 'testFeed', ['$compile', function($compile, $scope){
 }]);
 
 
+////////// POSTWORLD FEED CONTROLLER //////////
+postworld.controller('postworld_feed', function($scope) {
 
-///// POSTWORLD FEED CONTROLLER /////
-postworld.controller('postworld_feed_dev', function($scope) {
-
-	// Define Posts
-    // Pull 'feed_data' Object for current feed into $scope
+    // Pull feed_data[feed_id] Object for current feed into $scope
     $scope.feed_data = feed_data[ $scope.feed_id ];
 
-    // Feed Template
+    ///// SET VIEW TEMPLATE /////
     $scope.get_template = function (post_type) {
         return $scope.templates.posts[post_type][$scope.feed_data.view.current];
     }
 
+});
+
+
+////////// UTILITIES //////////
+
+// Disable Template Cache for Development
+postworld.run(function($rootScope, $templateCache) {
+   $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
 });
 
 

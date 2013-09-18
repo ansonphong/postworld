@@ -9,17 +9,23 @@ function pw_live_feed ( $args ){
 	INPUT :
 	$args = array (
 		'feed_id'		=> string,
-		'bootload'		=> integer,
+		'preload'		=> integer,
 		'feed_query'	=> array( pw_query )
 	)
 	*/
 
 	extract($args);
 
+	// Get the Feed Outline
 	$feed_outline = pw_feed_outline( $feed_query );
-	$bootload_posts = array_slice( $feed_outline, 0, $bootload );
-	$post_data = pw_get_posts( $bootload_posts, $feed_query['fields'] );
+	
+	// Select which posts to preload
+	$preload_posts = array_slice( $feed_outline, 0, $preload );
+	
+	// Preload selected posts
+	$post_data = pw_get_posts( $preload_posts, $feed_query['fields'] );
 
+	// Return Data
 	return compact( $feed_outline, $post_data );
 }
 
