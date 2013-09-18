@@ -379,7 +379,7 @@
 				.$favorites
 				.")";
 				
-		echo $query."<br>";
+		//echo $query."<br>";
 		$wpdb -> query($wpdb -> prepare($query));
 		
 	}

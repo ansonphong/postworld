@@ -44,12 +44,12 @@ class PW_Query extends WP_Query {
 		
 		$where =" WHERE ";	
 		$insertAnd= '0';
-		echo($insertAnd);
+		//echo($insertAnd);
 		if(gettype($this->query_vars['post_format']) == "array") {
 				if($insertAnd=='0'){
 					 //$where.=" and ";
 					 $insertAnd = '1';
-					 echo('dd');
+					
 				}	
 				$where.=" post_format in ('".implode("','", $this->query_vars['post_format'])."') ";
 				
@@ -58,7 +58,6 @@ class PW_Query extends WP_Query {
 				if($insertAnd==''){
 					// $where.=" and ";
 					 $insertAnd = '1';
-					 echo('ddd');
 				}	
 				$where.=" post_format = '".$this->query_vars['post_format']."' ";
 			}
@@ -67,7 +66,7 @@ class PW_Query extends WP_Query {
 				if($insertAnd=='1'){
 					 $where.=" and ";
 					 $insertAnd = '0';
-					 echo('dddd');
+					
 				}	
 				$where.=" post_class in ('".implode("','", $this->query_vars['post_class'])."') ";
 			}
@@ -75,7 +74,7 @@ class PW_Query extends WP_Query {
 				if($insertAnd=='1'){
 					 $where.=" and ";
 					 $insertAnd = '0';
-					 echo('ddddd');
+					 
 				}	
 				$where.=" post_class = '".$this->query_vars['post_class']."' ";
 			}
@@ -100,13 +99,13 @@ class PW_Query extends WP_Query {
 	
 	function get_posts() {
 		
-		echo($this->prepare_order_by()."<br>");
-		echo($this->prepare_where_query());
+		//echo($this->prepare_order_by()."<br>");
+		//echo($this->prepare_where_query());
 		
 		
-		//echo 'heeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeh';
+		//echo "inside get_posts"
 		global $wpdb, $user_ID, $_wp_using_ext_object_cache;
-
+		$wpdb -> show_errors();
 		$this->parse_query();
 
 		do_action_ref_array('pre_get_posts', array(&$this));
@@ -855,7 +854,7 @@ class PW_Query extends WP_Query {
 			$this->request =  substr($this->request ,0,$strposOfOrderBy);
 			$this->request.="ORDER BY wp_posts.post_date DESC LIMIT 0,10";*/
 			
-			echo("<br>".$this->request."<br>");
+			
 			
 			$this->posts = $wpdb->get_results( $this->request );
 			$this->post_count = count( $this->posts );
@@ -895,15 +894,21 @@ class PW_Query extends WP_Query {
 			$this->posts = $wpdb->get_results( $this->request );
 			$this->set_found_posts( $q, $limits );
 		}
-
+		
+		
+	
 		// Convert to WP_Post objects
 		if ( $this->posts )
-			$this->posts = array_map( 'get_post', $this->posts );
+			$this->posts = array_map( 'pw_get_post', $this->posts );
+		
+	
 
 		// Raw results filter. Prior to status checks.
 		if ( !$q['suppress_filters'] )
 			$this->posts = apply_filters_ref_array('posts_results', array( $this->posts, &$this ) );
 
+		
+			
 		if ( !empty($this->posts) && $this->is_comment_feed && $this->is_singular ) {
 			$cjoin = apply_filters_ref_array('comment_feed_join', array( '', &$this ) );
 			$cwhere = apply_filters_ref_array('comment_feed_where', array( "WHERE comment_post_ID = '{$this->posts[0]->ID}' AND comment_approved = '1'", &$this ) );
@@ -916,6 +921,7 @@ class PW_Query extends WP_Query {
 			$this->comments = $wpdb->get_results($comments_request);
 			$this->comment_count = count($this->comments);
 		}
+
 
 		// Check post status to determine if post should be displayed.
 		if ( !empty($this->posts) && ($this->is_single || $this->is_page) ) {
@@ -997,9 +1003,9 @@ class PW_Query extends WP_Query {
 		// of the type WP_Post and are filtered.
 		if ( $this->posts ) {
 			$this->post_count = count( $this->posts );
-
-			$this->posts = array_map( 'get_post', $this->posts );
-
+		
+			$this->posts = array_map( 'pw_get_post', $this->posts );
+			
 			if ( $q['cache_results'] )
 				update_post_caches($this->posts, $post_type, $q['update_post_term_cache'], $q['update_post_meta_cache']);
 

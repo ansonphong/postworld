@@ -24,6 +24,7 @@ function pw_get_posts( $post_ids, $fields='all', $viewer_user_id=null ) {
 function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	//• Gets data fields for the specified post
 
+	if(gettype($post_id) == "array") $post_id = $post_id['ID'];	
 	// Check if the post exists
 	global $wpdb;
 	$post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $post_id . "'", 'ARRAY_A');

@@ -18,6 +18,10 @@ include 'php/postworld_utilities.php';
 global $pw_defaults;
 global $postworld_db_version;
 global $pw_queries;
+global $wp_rewrite;
+$wp_rewrite = new WP_Rewrite();
+
+
 $postworld_db_version = "1.0";
 
 global $pw_prefix;

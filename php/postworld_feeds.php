@@ -41,4 +41,53 @@ function pw_feed_outline ( $pw_query_args ){
 }
 
 
+function pw_query($args) {
+	
+	/*
+	 * Description:
+		• Similar to the functionality of WP_Query : http://codex.wordpress.org/Class_Reference/WP_Query 
+		
+		• Query by Postworld data fields post_format & post_class
+		• Sort by points & rank_score
+		• Define which fields are returned using pw_get_posts() method
+		• Can determine the return_format as JSON, PHP Associative Array or WP post objects
+		
+		
+		Process:
+		• After querying and ordering is finished, if more than IDs are required to return, use pw_get_posts() method to return specified fields
+		
+		return : PHP Object / JSON / WP_Query
+	 
+	 * */
+	
+		
+		
+		$the_query = new PW_Query($args);
+	
+		return ("<br>".json_encode($the_query))."<br>";
+	
+}
+
+
+//convert object to array $array =  (array) $yourObject;
+	class pw_query_args{
+		public $post_type;
+		public $post_format;//pw
+		public $post_class;//pw
+		public $author;
+		public $author_name;
+		public $year;
+		public $month;
+		public $tax_query;
+		public $s;
+		public $orderby='date';
+		public $order='DESC';
+		public $posts_per_page="-1";
+		
+		
+		
+		
+	}
+
+
 ?>
