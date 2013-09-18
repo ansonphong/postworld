@@ -20,6 +20,17 @@ class PW_Query extends WP_Query {
 	 
 	    }*/
 	
+	function prepare_fields(){
+		
+		$fields = $this->query_vars['fields'];
+		if($fields == null || $fields=='' ) 
+			$fields='all';
+		else if($fields!='preview' && $fields!='ids' && gettype($fields)!='array')
+			$fields='all';
+		
+		return $fields;
+	}
+	
 	function prepare_order_by(){
 		$orderby = $this->query_vars['orderby'];
 		$orderby = str_replace("date", "wp_posts.post_date", $orderby);	
@@ -87,7 +98,7 @@ class PW_Query extends WP_Query {
 	function prepare_new_request($remove_tbl=false){
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
-		echo($this->query_vars['fields']);
+		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
 		$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
 			$this->request = str_replace('FROM wp_posts','FROM wp_posts right join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
@@ -897,10 +908,12 @@ class PW_Query extends WP_Query {
 		}
 		
 		
-	
+		$fields = $this->prepare_fields();
+		
 		// Convert to WP_Post objects
 		if ( $this->posts )
-			$this->posts = array_map( 'pw_get_post', $this->posts );
+		$this->posts = pw_get_posts($this->posts,$fields);
+			//$this->posts = array_map( 'pw_get_post', $this->posts );
 		
 	
 
@@ -1004,8 +1017,10 @@ class PW_Query extends WP_Query {
 		// of the type WP_Post and are filtered.
 		if ( $this->posts ) {
 			$this->post_count = count( $this->posts );
-		
-			$this->posts = array_map( 'pw_get_post', $this->posts );
+			$fields = $this->prepare_fields();
+			
+			$this->posts = pw_get_posts($this->posts,$fields);
+			//$this->posts = array_map( 'pw_get_post', $this->posts );
 			
 			if ( $q['cache_results'] )
 				update_post_caches($this->posts, $post_type, $q['update_post_term_cache'], $q['update_post_meta_cache']);
