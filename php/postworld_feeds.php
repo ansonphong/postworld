@@ -61,7 +61,7 @@ function pw_query($args) {
 	 * */
 	
 		
-		
+		$args->fields='ids';
 		$the_query = new PW_Query($args);
 	
 		return ("<br>".json_encode($the_query))."<br>";
@@ -83,6 +83,8 @@ function pw_query($args) {
 		public $orderby='date';
 		public $order='DESC';
 		public $posts_per_page="-1";
+		public $fields;
+		
 		
 		
 		

@@ -87,7 +87,8 @@ class PW_Query extends WP_Query {
 	function prepare_new_request($remove_tbl=false){
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
-		if($remove_tbl==false)
+		echo($this->query_vars['fields']);
+		if($remove_tbl==false )
 		$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
 			$this->request = str_replace('FROM wp_posts','FROM wp_posts right join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
 			$this->request = str_replace('WHERE', $where, $this->request);
@@ -835,7 +836,7 @@ class PW_Query extends WP_Query {
 		}
 
 		if ( 'ids' == $q['fields'] ) {
-			$this->prepare_new_request();
+			$this->prepare_new_request(true);
 			$this->posts = $wpdb->get_col( $this->request );
 			$this->post_count = count( $this->posts );
 			$this->set_found_posts( $q, $limits );
