@@ -41,7 +41,7 @@ function pw_feed_outline ( $pw_query_args ){
 }
 
 
-function pw_query($args) {
+function pw_query($args,$return_Type = 'JSON') {
 	
 	/*
 	 * Description:
@@ -59,10 +59,19 @@ function pw_query($args) {
 		return : PHP Object / JSON / WP_Query
 	 
 	 * */
+	 //• JSON (default) - Return a JSON Object
+     //• ARRAY_A - Return an Associative Array
+     //• WP_POST
 	
 		$the_query = new PW_Query($args);
-	
-		return ("<br>".json_encode($the_query))."<br>";
+		if($return_Type == 'ARRAY_A'){
+			return (array) $the_query;
+		}
+		else if($return_Type == 'JSON'){
+			return json_encode($the_query);
+		}
+		else
+		return $the_query;
 	
 }
 
