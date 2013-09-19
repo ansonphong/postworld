@@ -69,7 +69,7 @@
 		// increment post count in wp_postworld_post_meta	
 		$query = "update ".$pw_table_names['post_meta']." set favorites = favorites +1 where post_id=".$post_id;
 		$result = $wpdb -> query($wpdb -> prepare($query));
-		if($result == 0){
+		if($result === FALSE){
 			add_recored_to_post_meta($post_id,0,0,1); 	
 		}
 		
@@ -87,7 +87,7 @@
 		$query = "update ".$pw_table_names['post_meta']." set favorites = favorites -1 where post_id=".$post_id;
 		$result = $wpdb -> query($wpdb -> prepare($query));
 		
-		if($result == 0){
+		if($result === FALSE){
 			add_recored_to_post_meta($post_id,0,0,0); 	
 		}
 		
