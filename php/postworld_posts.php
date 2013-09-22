@@ -23,8 +23,12 @@ function pw_get_posts( $post_ids, $fields='all', $viewer_user_id=null ) {
 ////////// GET POST DATA //////////
 function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	//• Gets data fields for the specified post
-
+	
 	if(gettype($post_id) == "array") $post_id = $post_id['ID'];	
+	else if(gettype($post_id) == "object")  {
+		  $post_id =  $post_id->ID;
+			//echo $post_id;
+	}	
 	// Check if the post exists
 	global $wpdb;
 	$post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $post_id . "'", 'ARRAY_A');
@@ -135,11 +139,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		// Category List
 		if( in_array('post_categories_list', $fields) )
-			$post_data["post_categories_list"] = get_the_category_list(' ','', $id );
+			$post_data["post_categories_list"] = get_the_category_list(' ','', $post_id );
 
 		// Tags List
 		if( in_array('post_tags_list', $fields) ){
-			$post_data["post_tags_list"] = get_the_term_list( $id, 'post_tag', '', '', '' );
+			$post_data["post_tags_list"] = get_the_term_list( $post_id, 'post_tag', '', '', '' );
 			if ( $post_data["post_tags_list"] == false ) $post_data["post_tags_list"] = '';
 		}
 
@@ -288,7 +292,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			}
 			// If there is no set 'featured image', get fallback - first image in post
 			else {
-				$first_image_obj = first_image_obj($id);
+				$first_image_obj = first_image_obj($post_id);
 				// If there is an image in the post
 				if ($first_image_obj){
 					$thumbnail_url = $first_image_obj['url'];

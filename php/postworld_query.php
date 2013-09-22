@@ -33,21 +33,29 @@ class PW_Query extends WP_Query {
 	
 	function prepare_order_by(){
 		$orderby = $this->query_vars['orderby'];
+		
+		if($this->query_vars['orderby']!=null && $this->query_vars['orderby']!=''){
 		$orderby = str_replace("date", "wp_posts.post_date", $orderby);	
 		$orderby = str_replace("rank_score", "wp_postworld_post_meta.rank_score", $orderby);	
 		$orderby = str_replace("post_points", "wp_postworld_post_meta.post_points", $orderby);	
 		$orderby = str_replace("modified", "wp_posts.post_modified", $orderby);	
 		$orderby = str_replace("rand", "RAND()", $orderby);	
 		$orderby = str_replace("comment_count", "wp_posts.comment_count", $orderby);	
-	
-
-		
 		$orderby = "order by ".str_replace(' ', ',', $orderby);//." ".$args->order;
 		
 		$orderby.=" ".$this->query_vars['order'];
-		if($this->query_vars['posts_per_page']>-1)
+	
+		
+		}else{
+			$orderby = 'order by wp_posts.post_date '.$this->query_vars['order'];
+			
+		}
+			
+		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 )
 			$orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
-		return $orderby;;
+		
+		
+		return $orderby;
 				
 	}
 	
@@ -909,7 +917,7 @@ class PW_Query extends WP_Query {
 		
 		
 		$fields = $this->prepare_fields();
-		
+		log_me($this->request);
 		// Convert to WP_Post objects
 		if ( $this->posts )
 		$this->posts = pw_get_posts($this->posts,$fields);
@@ -1018,7 +1026,7 @@ class PW_Query extends WP_Query {
 		if ( $this->posts ) {
 			$this->post_count = count( $this->posts );
 			$fields = $this->prepare_fields();
-			
+			log_me($this->request);
 			$this->posts = pw_get_posts($this->posts,$fields);
 			//$this->posts = array_map( 'pw_get_post', $this->posts );
 			
