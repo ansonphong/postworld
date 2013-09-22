@@ -74,7 +74,7 @@ class PW_Query extends WP_Query {
 				
 			}
 			else if(gettype($this->query_vars['post_format']) == "string"){
-				if($insertAnd==''){
+				if($insertAnd=='0'){
 					// $where.=" and ";
 					 $insertAnd = '1';
 				}	
@@ -92,8 +92,7 @@ class PW_Query extends WP_Query {
 			else if(gettype($this->query_vars['post_class']) == "string"){
 				if($insertAnd=='1'){
 					 $where.=" and ";
-					 $insertAnd = '0';
-					 
+					 $insertAnd = '0'; 
 				}	
 				$where.=" post_class = '".$this->query_vars['post_class']."' ";
 			}
