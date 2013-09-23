@@ -102,5 +102,5 @@ See pw_get_templates() PHP method.
   - Same as pw_live_feed() PHP Method
 
 **return** : *Object*
-     feed_outline : [ … ]
-     post_data : { … } 
+  feed_outline : [ … ]
+  post_data : { … } 
