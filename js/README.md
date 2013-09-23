@@ -22,8 +22,8 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 - See : http://codex.wordpress.org/wp_oembed_get
 
 **return** : Object
-------
 
+------
 ## Functions
 
 
@@ -47,7 +47,6 @@ Equivalent to the `pw_get_post()` PHP Method parameters
 **return** : *boolean*
 
 ------
-
 ###**pw_get_templates** ( templates_object )
 
 ####Parameters:
@@ -64,7 +63,6 @@ See pw_get_templates() PHP method.
 **return** : *JSON* 
 
 ------
-
 ###**pw_scroll_feed** ( feed_id )
 
 
