@@ -105,6 +105,6 @@ See pw_get_templates() PHP method.
 ``` javascript
 {
 feed_outline : [1,3,5,8,12,16,24,64],
-post_data : { *Object* } 
+post_data : { Object } 
 }
 ```
