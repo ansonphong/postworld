@@ -10,3 +10,6 @@
 [submodule "submodules/locache.js"]
 	path = submodules/locache.js
 	url = https://github.com/d0ugal/locache.git
+[submodule "submodules/CanvasLoader"]
+	path = submodules/CanvasLoader
+	url = https://github.com/heartcode/CanvasLoader.git
