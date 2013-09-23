@@ -107,7 +107,16 @@
 			return : integer (number of points)
 		 
 		 * */
+		global $wpdb;
+		$wpdb -> show_errors();
 		
+		$query ="Select post_points from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
+		$user_votes_points = $wpdb -> get_var($query);
+		if ($user_votes_points != null) {
+			//echo("total_points:" . $total_points);
+			return $user_votes_points;
+		} else
+			return 0;
 		
 	}
 	
@@ -115,7 +124,7 @@
 		/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
 			• Stores the result in the post_points column in wp_postworld_user_meta
 		return : integer (number of points)*/
-		$total_user_points = get_user_points_voted_to_posts($user_id);
+		$total_user_points = get_user_posts_points($user_id);
 		
 		
 		global $wpdb;
