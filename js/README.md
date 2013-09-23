@@ -101,6 +101,6 @@ See pw_get_templates() PHP method.
 ####Parameters:
   - Same as pw_live_feed() PHP Method
 
-**return** : *Object*
+**return** : *Object*  
   feed_outline : [ … ]
   post_data : { … } 
