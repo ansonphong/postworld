@@ -113,8 +113,7 @@ post_data : { Object }
 ## Directives
 
 
-###live-feed
-**postworld.directive**
+###live-feed (**postworld.directive**)
 
 ####Description:
 Displays a live unregistered feed based on `feed_query pw_query()` args
@@ -166,8 +165,8 @@ feed_init['feed_id'] = {
 
 ------
 
-### load-feed 
-**postworld.directive**
+### load-feed (**postworld.directive**)
+
 
 #### Requires:
 - `pw_cache_feed()` PHP Method
