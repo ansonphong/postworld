@@ -101,6 +101,10 @@ See pw_get_templates() PHP method.
 ####Parameters:
   - Same as pw_live_feed() PHP Method
 
-**return** : *Object*  
-  feed_outline : [ … ]
-  post_data : { … } 
+**return** : *Object*
+``` javascript
+{
+feed_outline : [1,3,5,8,12,16,24,64],
+post_data : { *Object* } 
+}
+```
