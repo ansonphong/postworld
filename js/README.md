@@ -1,4 +1,4 @@
-Postworld // Angular & JS Functions
+Postworld // Angular / JS Functions
 =========
 
 
