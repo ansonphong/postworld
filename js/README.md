@@ -88,17 +88,19 @@ See pw_get_templates() PHP method.
   * Set `feed_data[feed_id]['status'] : 'loaded'`
 
 
-return : true
+**return** : *true*
 
 ------
 
 ###**pw_live_feed** ( args )
-• Access pw_live_feed() PHP Method via AJAX 
-• Use returned data to populate feed_data[feed_id] JS Object with feed_outline, loaded and post data
 
-Parameters:
-     • Same as pw_live_feed() PHP Method
+####Process:
+1. Access pw_live_feed() PHP Method via AJAX 
+2. Use returned data to populate feed_data[feed_id] JS Object with feed_outline, loaded and post data
 
-return : Object
+####Parameters:
+  - Same as pw_live_feed() PHP Method
+
+**return** : *Object*
      feed_outline : [ … ]
      post_data : { … } 
