@@ -75,17 +75,17 @@ See pw_get_templates() PHP method.
 - Pushes the next set of posts for infinite scroll
 
 ####Process:
-- Set feed_data[feed_id]['status'] : 'loading'
+1. Set `feed_data[feed_id]['status'] : 'loading'`
 
-- See which posts have already been loaded feed_data[feed_id]['loaded']
-- Compare loaded posts to feed_outline. If they're all already loaded, return 
-     feed_data[feed_id]['status'] : 'all_loaded'
+2. See which posts have already been loaded `feed_data[feed_id]['loaded']`
+3. Compare loaded posts to feed_outline.
+  * If they're all already loaded, return `feed_data[feed_id]['status'] : 'all_loaded'`
 
-1. If there are new posts to load:
-  * Make an array of the next set of posts to load by loading the next number of posts defined by feed_data[feed_id]['load_increment'] in sequence from feed_outline
-  * Get fields from : feed_data[feed_id]['feed_query']['fields']
-  * Run pw_get_posts ( feed_id, load_posts, fields )
-  * Set feed_data[feed_id]['status'] : 'loaded'
+4. If there are new posts to load:
+  * Make an array of the next set of posts to load by loading the next number of posts defined by `feed_data[feed_id]['load_increment']` in sequence from feed_outline
+  * Get fields from : `feed_data[feed_id]['feed_query']['fields']`
+  * Run `pw_get_posts ( feed_id, load_posts, fields )`
+  * Set `feed_data[feed_id]['status'] : 'loaded'`
 
 
 return : true
