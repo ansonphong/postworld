@@ -3,16 +3,16 @@ POSTWORLD
 
 A Wordpress Plugin used to display posts in creative ways.
 
-## Main Features
+## Features:
 
 ### Cached Feeds
-  - Quick loading
+  - Quickly display feeds from a massive database of posts
 
-### Search Feeds
-  - Dynamic search feeds
+### Dynamic Search
+  - Dynamicly search and sort posts in real-time according to search criteria
 
 ### Infinite Scrolling
-  - Display feeds with infinite scrolling
+  - Display any post list with infinite scrolling
 
 ### Templating
 #### Post Views
@@ -28,7 +28,7 @@ A Wordpress Plugin used to display posts in creative ways.
 - Adds new meta data fields to posts, including:
   - Post Class  
     Used to differentiate between unique classes of content (*ie.* **Community** or **Editorial**)
-  - Post Format
+  - Post Format  
   	Used to differentiate inique formats of content, and code templates accordingly (*ie.* **video**, **audio**, **standard**)
   - Link URL  
   	USed to attribute a default link URL for each post, generally used to denote an offsite page, video or audio file for custom embedding or formatting
