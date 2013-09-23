@@ -33,14 +33,11 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 **feed_id** : *string*
 - The ID of the Postworld feed
 
-
 **post_ids** : *array*
 - An array of post_ids to load from the outline
 
-
 **fields** : *object*
 - Equivalent to the `pw_get_post()` PHP Method parameters
-
 
 ####Process:
 - Run `pw_get_posts()` PHP method via AJAX
