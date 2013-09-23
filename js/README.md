@@ -48,7 +48,7 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 
 
 
-
+---
 
 ###**pw_get_templates** ( templates_object )
 
