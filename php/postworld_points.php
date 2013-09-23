@@ -124,7 +124,7 @@
 		/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
 			• Stores the result in the post_points column in wp_postworld_user_meta
 		return : integer (number of points)*/
-		$total_user_points = get_user_posts_points($user_id);
+		$total_user_points = get_user_points_voted_to_posts($user_id);
 		
 		
 		global $wpdb;
