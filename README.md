@@ -1,4 +1,4 @@
-postworld
+Postworld
 =========
 
 A Wordpress Plugin used to display posts in creative ways.
