@@ -108,6 +108,7 @@ post_data : { Object }
 }
 ```
 
+------
 
 ## Directives
 
@@ -163,7 +164,7 @@ feed_init['feed_id'] = {
 <div live-feed="feed_id"></div> 
 ```
 
-
+------
 
 ### load-feed 
 **postworld.directive**
@@ -189,7 +190,7 @@ feed_init['feed_id'] = {
 
 
 **JAVASCRIPT :**  
-1. Populate `feed_data[feed_id]` Object with settings Object 
+1. Populate `feed_data[feed_id]` Object with `feed_init[feed_id]` Object 
 
 **return** : *true*
 
@@ -230,6 +231,7 @@ feed_data = {
 }
 ```
 
+------
 
 ###feed_init *Object*
 + Used to initialize a feed directive
@@ -253,23 +255,15 @@ feed_init[feed_id] = {
 }
 ```
 
+------
 
+##RELATED NOTES : 
 
-
-
-
-
-
-
-RELATED NOTES : 
-
-Angular JS Template Structure
+**Angular JS Template Structure**  
 https://www.evernote.com/shard/s275/sh/08be24c4-0630-430b-b118-1e23138664fa/d5a2af40ae684188d12d7e4cc355090f
 
-
-
-PHP, MySQL, Wordpress Functions
+**PHP, MySQL, Wordpress Functions**  
 https://www.evernote.com/shard/s275/sh/7fd5bb62-0902-4050-9889-338f847d044c/5fe6f3da3510557663e8693251ac8557
 
-GitHub repo
+**GitHub repo**  
 https://github.com/phongmedia/postworld/ 
