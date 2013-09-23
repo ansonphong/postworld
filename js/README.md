@@ -12,13 +12,15 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 ###**wp_ajax** ( function, args )
 - A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
 - Sends 'function' command with args to Wordpress function which has been registered with `wp_ajax_` action hooks
-- See : http://codex.wordpress.org/AJAX_in_Plugins  
+- See : http://codex.wordpress.org/AJAX_in_Plugins
+
 **return** : JSON encoded DATA response
 
 
 ###**o_embed** ( url, args )
 - Uses `wp_oembed_get()` WP function via AJAX
-- See : http://codex.wordpress.org/wp_oembed_get  
+- See : http://codex.wordpress.org/wp_oembed_get
+
 **return** : Object
 
 
@@ -48,26 +50,23 @@ Equivalent to the `pw_get_post()` PHP Method parameters
 
 ###**pw_get_templates** ( templates_object )
 
-
-
-Parameters:
+####Parameters:
 See pw_get_templates() PHP method.
 
+####Description:
+- Javascript node for pw_get_templates() PHP method
+- Used by pw_load_feed() and pw_live_feed() JS methods
 
-Description:
-• Javascript node for pw_get_templates() PHP method
-• Used by pw_load_feed() and pw_live_feed() JS methods
+####Process:
+- Run pw_get_templates() PHP method via AJAX
+- Return the data
 
-Process:
-• Run pw_get_templates() PHP method via AJAX
-• Return the data
-
-return : JSON 
-
+**return** : *JSON* 
 
 
 
-pw_scroll_feed ( feed_id )
+------
+###**pw_scroll_feed** ( feed_id )
 
 
 Description:
@@ -91,7 +90,8 @@ Process:
 return : true
 
 
-pw_live_feed ( args )
+------
+###**pw_live_feed** ( args )
 • Access pw_live_feed() PHP Method via AJAX 
 • Use returned data to populate feed_data[feed_id] JS Object with feed_outline, loaded and post data
 
