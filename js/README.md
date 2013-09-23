@@ -167,10 +167,6 @@ feed_init['feed_id'] = {
 
 ### load-feed ( *postworld.directive* )
 
-
-#### Requires:
-- `pw_cache_feed()` PHP Method
-
 #### Description:
 - Loads a registered feed, which has been registered with the `pw_register_feed()` PHP method
 
@@ -193,7 +189,6 @@ feed_init['feed_id'] = {
 
 **return** : *true*
 
-
 ####Usage:
 
 ```javascript
@@ -209,6 +204,9 @@ feed_init['feed_id'] = {
 ```html
 <div live-feed="feed_id"></div> 
 ```
+
+#### Requires:
+- `pw_cache_feed()` PHP Method
 
 ------
 
