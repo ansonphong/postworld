@@ -43,10 +43,10 @@
 		//assume that $fields is an array
 		$fields_for_query = implode(",", $fields);
 		
-		global $pw_table_names;
+	
 		global $wpdb;
 		$wpdb -> show_errors();
-		$query = "select ".$fields_for_query." from ".$pw_table_names['user_meta']." where user_id=".$user_id;
+		$query = "select ".$fields_for_query." from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 		//echo $query;
 		//esult will be output as an numerically indexed array of associative arrays, using column names as keys
 		$result = $wpdb->get_results( $query, ARRAY_A  );
@@ -60,14 +60,14 @@
 		
 		// add favorite to wp_postworld_favorites
 		global $wpdb;
-		global $pw_table_names;
+	
 		$wpdb -> show_errors();	
-		$query = "insert into ".$pw_table_names['favorites']." values (".$user_id.",".$post_id.")";
+		$query = "insert into ".$wpdb->pw_prefix.'favorites'." values (".$user_id.",".$post_id.")";
 		$wpdb -> query($wpdb -> prepare($query));
 		
 		
 		// increment post count in wp_postworld_post_meta	
-		$query = "update ".$pw_table_names['post_meta']." set favorites = favorites +1 where post_id=".$post_id;
+		$query = "update ".$wpdb->pw_prefix.'post_meta'." set favorites = favorites +1 where post_id=".$post_id;
 		$result = $wpdb -> query($wpdb -> prepare($query));
 		if($result === FALSE){
 			add_recored_to_post_meta($post_id,0,0,1); 	
@@ -77,14 +77,14 @@
 	
 	function delete_favorite($post_id,$user_id){
 		global $wpdb;
-		global $pw_table_names;
+	
 		$wpdb -> show_errors();	
-		$query = "delete from ".$pw_table_names['favorites']." where post_id=".$post_id." and user_id=".$user_id;
+		$query = "delete from ".$wpdb->pw_prefix.'favorites'." where post_id=".$post_id." and user_id=".$user_id;
 		$wpdb -> query($wpdb -> prepare($query));
 		
 		
 		// increment post count in wp_postworld_post_meta	
-		$query = "update ".$pw_table_names['post_meta']." set favorites = favorites -1 where post_id=".$post_id;
+		$query = "update ".$wpdb->pw_prefix.'post_meta'." set favorites = favorites -1 where post_id=".$post_id;
 		$result = $wpdb -> query($wpdb -> prepare($query));
 		
 		if($result === FALSE){
@@ -137,9 +137,9 @@
 		
 		if($changed==1 || $changed==-1){
 			global $wpdb;
-			global $pw_table_names;
+		
 			$wpdb -> show_errors();
-			$query ="update ".$pw_table_names['user_meta']." set favorites ='".implode(',',$post_ids)."' where user_id=".$user_id;	
+			$query ="update ".$wpdb->pw_prefix.'user_meta'." set favorites ='".implode(',',$post_ids)."' where user_id=".$user_id;	
 			//echo($query);
 			$wpdb -> query($wpdb -> prepare($query));
 			//return $changed;
@@ -169,10 +169,10 @@
 			 */
 			
 			global $wpdb;
-			global $pw_table_names;
+		
 			$wpdb -> show_errors();
 				
-			$query = "select favorites from ".$pw_table_names['user_meta']." where user_id=".$user_id;
+			$query = "select favorites from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 			//echo($query);
 			$favorites_array = $wpdb -> get_var($query);
 			//echo(json_encode($viewed_array));
@@ -239,9 +239,9 @@
 		//echo(implode(',',$post_ids));
 		if($changed){
 			global $wpdb;
-			global $pw_table_names;
+		
 			$wpdb -> show_errors();
-			$query ="update ".$pw_table_names['user_meta']." set viewed ='".implode(',',$post_ids)."' where user_id=".$user_id;	
+			$query ="update ".$wpdb->pw_prefix.'user_meta'." set viewed ='".implode(',',$post_ids)."' where user_id=".$user_id;	
 			//echo($query);
 			$wpdb -> query($wpdb -> prepare($query));
 			return true;
@@ -256,9 +256,9 @@
 			return : array
 		*/
 		global $wpdb;
-		global $pw_table_names;
+	
 		$wpdb -> show_errors();
-		$query = "select viewed from ".$pw_table_names['user_meta']." where user_id=".$user_id;
+		$query = "select viewed from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 		//echo($query);
 		$viewed_array = $wpdb -> get_var($query);
 		//echo(json_encode($viewed_array));
@@ -302,10 +302,10 @@
 			
 			
 		global $wpdb;
-		global $pw_table_names;
+	
 		$wpdb -> show_errors();
 		
-		$query = "select ".user_fields_names::$LOCATION_CITY.", ".user_fields_names::$LOCATION_COUNTRY.", ".user_fields_names::$LOCATION_REGION." from ".$pw_table_names['user_meta']." where user_id=".$user_id;
+		$query = "select ".user_fields_names::$LOCATION_CITY.", ".user_fields_names::$LOCATION_COUNTRY.", ".user_fields_names::$LOCATION_REGION." from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 		//echo($query);
 		$location_obj = $wpdb -> get_results($query);
 		

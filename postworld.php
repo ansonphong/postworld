@@ -24,27 +24,12 @@ $wp_rewrite = new WP_Rewrite();
 
 $postworld_db_version = "1.0";
 
-global $pw_prefix;
-$pw_prefix = "postworld_";
+//global $pw_prefix;
+//$pw_prefix = "postworld_";
 
 global $wpdb;
-global $wppw_prefix;
-$wppw_prefix = $wpdb->prefix . $pw_prefix;
+$wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
-// TABLE NAMES
-global $pw_table_names;
-$pw_table_names = array(
-	'post_meta'         =>  $wppw_prefix . "post_meta",
-	'post_points'       =>  $wppw_prefix . "post_points",
-	'comment_meta' 		=>  $wppw_prefix . "comment_meta",
-	'comment_points' 	=>  $wppw_prefix . "comment_points",
-	'user_meta'       	=>  $wppw_prefix . "user_meta",
-	'user_shares'     	=>  $wppw_prefix . "user_shares",
-	'user_roles'      	=>  $wppw_prefix . "user_roles",
-	'favorites'      	=>  $wppw_prefix . "favorites",
-	'feeds'      	=>  $wppw_prefix . "feeds",
-	'cron_logs'      	=>  $wppw_prefix . "cron_logs",
-  );
   
 // INSTALL QUERIES
 include 'php/postworld_install_queries.php';
@@ -115,6 +100,7 @@ include 'php/postworld_query.php';
 
 //To get user id from wordpress
 require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php');
+
 
 
 

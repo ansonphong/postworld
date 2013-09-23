@@ -1,16 +1,15 @@
 <?php 
-
 ////////// INSTALL POSTWORLD ///////////
 
 function postworld_install() {
   global $wpdb;
   global $postworld_db_version;
-  global $pw_table_names;
+
 //  global $pw_queries;
 //  $wpdb -> show_errors();
 
   /* POSTS */
-  $post_meta_table_name = $pw_table_names['post_meta'];
+  $post_meta_table_name = $wpdb->pw_prefix.'post_meta';
   $sql_postworld_post_meta = "CREATE TABLE $post_meta_table_name (
       post_id BIGINT(20) unsigned NOT NULL,
       author_id BIGINT(20) UNSIGNED NOT NULL,
@@ -23,7 +22,7 @@ function postworld_install() {
       UNIQUE KEY post_id (post_id)
     );";
 
-  $post_points_table_name = $pw_table_names['post_points'];
+  $post_points_table_name = $wpdb->pw_prefix.'post_points';
   $sql_postworld_post_points = "CREATE TABLE $post_points_table_name (
       post_id BIGINT(20) unsigned NOT NULL,
       user_id BIGINT(20) UNSIGNED NOT NULL,
@@ -34,14 +33,14 @@ function postworld_install() {
 
 
  /* Comments */
-  $comment_meta_table_name = $pw_table_names['comment_meta'];
+  $comment_meta_table_name = $wpdb->pw_prefix.'comment_meta';
   $sql_postworld_comment_meta= "CREATE TABLE $comment_meta_table_name (
       comment_id mediumint(8) NOT NULL,
       post_id BIGINT(20) unsigned NOT NULL,
       comment_points mediumint(8) DEFAULT '0' NOT NULL
     );";
   
-  $comment_points_table_name = $pw_table_names['comment_points'];
+  $comment_points_table_name = $wpdb->pw_prefix.'comment_points';
   $sql_postworld_comment_points= "CREATE TABLE $comment_points_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       comment_post_id mediumint(9) NOT NULL,
@@ -51,7 +50,7 @@ function postworld_install() {
     );";
     
   
-  $user_meta_table_name = $pw_table_names['user_meta'];
+  $user_meta_table_name = $wpdb->pw_prefix.'user_meta';
   $sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       user_role char(16) NOT NULL,
@@ -67,7 +66,7 @@ function postworld_install() {
 	  UNIQUE KEY user_id(user_id)
     );";
 
-  $user_shares_table_name = $pw_table_names['user_shares'];
+  $user_shares_table_name = $wpdb->pw_prefix.'user_shares';
   $sql_postworld_user_shares = "CREATE TABLE $user_shares_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_id BIGINT(20) unsigned NOT NULL,
@@ -75,13 +74,13 @@ function postworld_install() {
       total_views mediumint(9) NOT NULL
     );";
 
-  $user_roles_table_name = $pw_table_names['user_roles'];
+  $user_roles_table_name = $wpdb->pw_prefix.'user_roles';
   $sql_postworld_user_roles = "CREATE TABLE $user_roles_table_name (
       user_role char(16) NOT NULL,
       vote_points mediumint(6) NOT NULL
     );";
 
-  $favorites_table_name = $pw_table_names['favorites'];
+  $favorites_table_name = $wpdb->pw_prefix.'favorites';
   $sql_postworld_favorites = "CREATE TABLE $favorites_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_id BIGINT(20) unsigned NOT NULL,
@@ -90,7 +89,7 @@ function postworld_install() {
     
     
     
-  $feeds_table_name = $pw_table_names['feeds'];
+  $feeds_table_name = $wpdb->pw_prefix.'feeds';
   $sql_postworld_feeds = "CREATE TABLE $feeds_table_name (
       feed_id BIGINT(20) UNSIGNED NOT NULL,
       feed_query TEXT NOT NULL,
@@ -101,7 +100,7 @@ function postworld_install() {
       UNIQUE KEY feed_id (feed_id)
     );"; 
 
-  $cron_logs_table_name = $pw_table_names['cron_logs'];
+  $cron_logs_table_name = $wpdb->pw_prefix.'cron_logs';
   $sql_postworld_cron_logs = "CREATE TABLE $cron_logs_table_name (
       cron_run_id BIGINT(20) UNSIGNED NOT NULL,
       type char(16) NOT NULL,
@@ -137,12 +136,12 @@ function postworld_install_data() {
   global $wpdb;
   global $pw_defaults;
   global $postworld_db_version;
-  global $pw_table_names;
+ 
 
   ///// USER ROLE DATA /////
   // Pre-populate data for each role in >>> $pw_defaults['roles'] <<<
   foreach ( $pw_defaults['roles'] as $key => $value) {
-    $add_rows = $wpdb->insert( $pw_table_names['user_roles'],
+    $add_rows = $wpdb->insert( $wpdb->pw_prefix.'user_roles',
     array(
       'user_role' => $key,
       'vote_points' => $value['vote_points']
@@ -179,4 +178,5 @@ function postworld_install_Triggers(){
  	}
 	
 }
+
 ?>

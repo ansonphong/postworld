@@ -43,11 +43,11 @@
 		• Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
 		return : integer
 		*/
-		global $pw_table_names;
+		
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT * FROM " . $pw_table_names['post_meta'] . " Where post_id=" . $post_id;
+		$query = "SELECT * FROM " . $wpdb->pw_prefix.'post_meta' . " Where post_id=" . $post_id;
 		//echo ($query);
 		$postPoints = $wpdb -> get_row($query);
 		if ($postPoints != null)
@@ -59,21 +59,21 @@
 	
 	function calculate_post_points($post_id) {
 		/*
-		• Adds up the points from the specified post, stored in ".$pw_table_names['post_points']."
+		• Adds up the points from the specified post, stored in ".$wpdb->pw_prefix.'post_points'."
 		• Stores the result in the points column in wp_postworld_meta
 		return : integer (number of points)
 		*/
-		global $pw_table_names;
+		
 		global $wpdb;
 		$wpdb -> show_errors();
 	
 		//first sum points
-		$query = "select SUM(post_points) from ".$pw_table_names['post_points']." where post_id=" . $post_id;
+		$query = "select SUM(post_points) from ".$wpdb->pw_prefix.'post_points'." where post_id=" . $post_id;
 		$points_total = $wpdb -> get_var($query);
 		//echo("\npoints cal" . $points_total);
 		if($points_total==null || $points_total =='') $points_total=0;
 		//update wp_postworld_meta
-		$query = "update ".$pw_table_names['post_meta']." set post_points=" . $points_total . " where post_id=" . $post_id;
+		$query = "update ".$wpdb->pw_prefix.'post_meta'." set post_points=" . $points_total . " where post_id=" . $post_id;
 		$result =$wpdb -> query($wpdb -> prepare($query));
 		
 		if ($result === FALSE){
@@ -107,19 +107,38 @@
 			return : integer (number of points)
 		 
 		 * */
+		
+		
 	}
 	
 	function calculate_user_posts_points( $user_id ){
-	/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
-		• Stores the result in the post_points column in wp_postworld_user_meta
-	return : integer (number of points)*/
+		/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
+			• Stores the result in the post_points column in wp_postworld_user_meta
+		return : integer (number of points)*/
+		$total_user_points = get_user_points_voted_to_posts($user_id);
 		
+		
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=".$total_user_points." where user_id=".$user_id;
+		$result = $wpdb->query($query);
+		if($result === FALSE){
+			//insert new Record
+
+						
+		}
+		
+		
+		return $total_user_points;
 	}
 	
 	function cache_user_posts_points ( $user_id ){
 	/*  • Runs calculate_user_post_points() Method
 		• Caches value in post_points column in wp_postworld_user_meta table
 		return : integer (number of points)*/
+		
+		return calculate_user_posts_points($user_id);
 	}
 	
 	///////////// COMMNET POINTS ////////////////////
@@ -129,18 +148,43 @@
 		/*• Get the number of points voted to comments authored by the given user
 		  • Get cached points of user from wp_postworld_user_meta table comment_points column
 		return : integer (number of points)*/
+		
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query ="select SUM(points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
+		$total_points = $wpdb -> get_var($query);
+		
+		if($total_points==null)
+			$total_points=0;
+		
+		return $total_points;
+
 	}
 	
 	function calculate_user_comments_points ( $user_id ){
 		/*• Adds up the points voted to given user's comments, stored in wp_postworld_comment_points
 		  • Stores the result in the post_points column in wp_postworld_user_meta
 		return : integer (number of points)*/
+		
+		global $wpdb;
+		$wpdb -> show_errors();		
+		
+		$total_comment_points = get_user_comments_points($user_id);
+		//????????????????????????????ASK about addition
+		$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=post_points+".$total_comment_points." where user_id=".$user_id;
+		$wpdb->query($query);
+		
+		return $total_user_points;
 	}
 
 	function cache_user_comments_points ( $user_id ){
 		/*• Runs calculate_user_comment_points() Method
 		  • Caches value in comment_points column in wp_postworld_user_meta table
 		return : integer (number of points)*/
+		return calculate_user_comments_points($user_id);
+		
+		
 	}
 	
 	
@@ -162,19 +206,19 @@
 		
 		$user_id = get_current_user_id();
 		
-		global $pw_table_names;
+
 		global $wpdb;
 		$wpdb -> show_errors();
 		$points_total = 0;
 	
 		//get row to check if found or not, also because when is going to be deleted to return reduced points
-		$query = "SELECT * FROM ".$pw_table_names['post_points']." Where post_id=" . $post_id . " and user_id=" . $user_id;
+		$query = "SELECT * FROM ".$wpdb->pw_prefix.'post_points'." Where post_id=" . $post_id . " and user_id=" . $user_id;
 		$postPointsRow = $wpdb -> get_row($query);
 	
 		//check if it is required to delete the row and update cashed points (triggers)
 		if ($add_points == 0) {
 			if ($postPointsRow != null) {
-				$query = "delete from ".$pw_table_names['post_points']." where post_id=" . $post_id . " and user_id=" . $user_id;
+				$query = "delete from ".$wpdb->pw_prefix.'post_points'." where post_id=" . $post_id . " and user_id=" . $user_id;
 				$wpdb -> query($wpdb -> prepare($query));
 				$add_points = -($postPointsRow -> post_points);
 				$points_total = get_post_points($post_id);
@@ -191,7 +235,7 @@
 				// check if user can add more points from wp-options
 				$userCanAddPoints = can_user_add_more_points($user_id,$postPointsRow->post_points,$add_points);
 				if ($userCanAddPoints) {
-					$query = "Update ".$pw_table_names['post_points']." set post_points=post_points + ". $add_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
+					$query = "Update ".$wpdb->pw_prefix.'post_points'." set post_points=post_points + ". $add_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
 					//echo($query);
 					$wpdb -> query($wpdb -> prepare($query));
 					$points_total = get_post_points($post_id);
@@ -203,7 +247,7 @@
 	
 			} else {// row not found, insert
 				//echo ('NULL');
-				$query = "insert into ".$pw_table_names['post_points']." values(" . $post_id . "," . $user_id . "," . $add_points . ",null)";
+				$query = "insert into ".$wpdb->pw_prefix.'post_points'." values(" . $post_id . "," . $user_id . "," . $add_points . ",null)";
 				//time stamp added automatically
 				//echo($query);
 				$wpdb -> query($wpdb -> prepare($query));
@@ -214,7 +258,7 @@
 		//prepare output format
 	
 		/*echo("total Pooints:".$points_total);
-		 echo("added points:" .$add_points);*/
+		 //echo("added points:" .$add_points);*/
 	
 		$output = new set_post_points_Output();
 		$output -> points_added = $add_points;
@@ -230,11 +274,11 @@
 		 • Return the number of points
 		 return : integer
 		 */
-		global $pw_table_names;
+		
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT * FROM ".$pw_table_names['post_points']." Where post_id=" . $post_id . " and user_id=" . $user_id;
+		$query = "SELECT * FROM ".$wpdb->pw_prefix.'post_points'." Where post_id=" . $post_id . " and user_id=" . $user_id;
 		$postPointsRow = $wpdb -> get_row($query);
 	
 		if ($postPointsRow != null)
@@ -249,6 +293,7 @@
 	/*	• Check wp_postworld_comment_points to see if the user has voted on the comment
 		• Return the number of points voted
 		return : integer*/
+		
 	}
 	
 	
@@ -259,13 +304,13 @@
 		 • Add all the points up
 		 return : integer (number of points)
 		 */
-		global $pw_table_names;
+	
 		global $wpdb;
 		$wpdb -> show_errors();
 	
 		
 		//SELECT * FROM wp_postworld_a1.get_user_points_view;
-		$query = "SELECT SUM(post_points) as total_points FROM ".$pw_table_names['post_meta']." Where author_id=" . $user_id;
+		$query = "SELECT SUM(post_points) as total_points FROM ".$wpdb->pw_prefix.'post_meta'." Where author_id=" . $user_id;
 		$total_points = $wpdb -> get_var($query);
 		if ($total_points != null) {
 			//echo("total_points:" . $total_points);
@@ -285,11 +330,11 @@
 		 votes : {{integer}}
 		 time : {{timestamp}}
 		 */
-		global $pw_table_names;
+	
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT * FROM ".$pw_table_names['post_points']." Where user_id=" . $user_id;
+		$query = "SELECT * FROM ".$wpdb->pw_prefix.'post_points'." Where user_id=" . $user_id;
 		//echo($query);
 		$user_votes_per_post = $wpdb -> get_results($query);
 	
@@ -322,17 +367,17 @@
 		 total_points: {{integer}} (number of points cast by up/down votes)
 		 average_points: {{decimal}} (average number of points per post)
 		 */
-		global $pw_table_names;
+	
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT SUM(post_points) as total_points, Count(*) as total_posts FROM ".$pw_table_names['post_points']." Where user_id=" . $user_id;
+		$query = "SELECT SUM(post_points) as total_points, Count(*) as total_posts FROM ".$wpdb->pw_prefix.'post_points'." Where user_id=" . $user_id;
 		$total_points = $wpdb -> get_results($query);
 	
 		foreach ($total_points as $row) {
-			echo $row -> total_points . ",";
-			echo $row -> total_posts . ",";
-			echo($row -> total_points / $row -> total_posts);
+		//	echo $row -> total_points . ",";
+		//	echo $row -> total_posts . ",";
+		//	echo($row -> total_points / $row -> total_posts);
 	
 			$output = new get_user_votes_report_Output();
 			$output -> total_posts = $row -> total_posts;
@@ -349,7 +394,7 @@
 			• Checks how many points the user's role can cast, from wp_postworld_user_roles table, under vote_points column
 			return : integer (the number of points the user can cast)
 		 */
-		global $pw_table_names;
+	
 		global $wpdb;
 		$current_user_role_output = get_user_role($user_id);
 		//echo(json_encode($current_user_role_output));
@@ -364,7 +409,7 @@
 			//echo("role :" .json_encode($current_user_role));
 		}
 		
-		$query = "select vote_points from ".$pw_table_names['user_roles']." where user_role='".$current_user_role."'";
+		$query = "select vote_points from ".$wpdb->pw_prefix.'user_roles'." where user_role='".$current_user_role."'";
 		$vote_points = $wpdb->get_var($query);
 		
 		if($vote_points !=null) return $vote_points;
@@ -392,7 +437,7 @@
 		 */
 		
 			
-		global $pw_table_names;
+	
 		global $wpdb;	
 		
 		
@@ -403,7 +448,7 @@
 		
 		$post_data= get_post( $post_id, ARRAY_A );
 		//echo json_encode($post_data);
-		$query = "insert into ".$pw_table_names['post_meta']." values("
+		$query = "insert into ".$wpdb->pw_prefix.'post_meta'." values("
 				.$post_id.","
 				.$post_data['post_author'].","
 				."'post_class'"."," //TODO
@@ -431,7 +476,7 @@
 		//Post_type = page/post, 
 					 
 		global $wpdb;
-		global $pw_table_names;
+	
 		$wpdb -> show_errors();
 		
 		//get wp_options Enable Points ( postworld_points ) field and get post types enabled for points - http://codex.wordpress.org/Function_Reference/get_option
@@ -454,7 +499,7 @@
 		//echo($number_of_post_types);
 		for($i=0;$i<$number_of_post_types;$i++){
 				$query = "select * from wp_posts where post_type ='".$post_types[$i]."'";
-				echo("<br>".$query."<br>");
+			//	echo("<br>".$query."<br>");
 				$posts = $wpdb -> get_results($query);
 				$current_cron_log_object = new cron_logs_Object();	
 				
@@ -479,10 +524,10 @@
 				$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
 				//echo(json_encode($current_cron_log_object));
 				$cron_logs[$current_cron_log_object->type][] = $current_cron_log_object;
-				echo json_encode($cron_logs);
+				//echo json_encode($cron_logs);
 		}
 	
-		echo json_encode(($cron_logs));
+		//echo json_encode(($cron_logs));
 			
 		
 		
