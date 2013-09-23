@@ -26,6 +26,7 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 
 ## Functions
 
+------
 ###**pw_get_posts** ( feed_id, post_ids, fields )
 - Used to access pw_get_post() PHP Method via AJAX
 
@@ -44,9 +45,6 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 - Merge data into JS object : `feed_data[feed_id]['posts']`
 
 **return** : *boolean*
-
-
-
 
 ------
 
