@@ -95,11 +95,11 @@ See pw_get_templates() PHP method.
 ###**pw_live_feed** ( args )
 
 ####Process:
-1. Access pw_live_feed() PHP Method via AJAX 
-2. Use returned data to populate feed_data[feed_id] JS Object with feed_outline, loaded and post data
+1. Access `pw_live_feed()` PHP Method via AJAX 
+2. Use returned data to populate `feed_data[feed_id]` JS Object with **feed_outline**, loaded and post data
 
 ####Parameters:
-  - Same as pw_live_feed() PHP Method
+  - Same as `pw_live_feed()` PHP Method
 
 **return** : *Object*
 ``` javascript
