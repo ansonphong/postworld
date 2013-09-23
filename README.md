@@ -26,9 +26,9 @@ A Wordpress Plugin used to display posts in creative ways.
 ### Indexed Post Meta
 - Adds new meta data fields to posts, including:
   - **Post Class**  
-    Used to differentiate between unique classes of content / ie. *Community* or *Editorial*
+    Used to differentiate between unique classes of content / ie. *Community* / *Editorial*
   - **Post Format**  
-  	Used to differentiate inique formats of content, and code templates accordingly / ie. *video*, *audio*, *standard*
+  	Used to differentiate inique formats of content, and code templates accordingly / ie. *video* / *audio*
   - **Link URL**    
   	USed to attribute a default link URL for each post, generally used to denote an offsite page, video or audio file for custom embedding or formatting
 
