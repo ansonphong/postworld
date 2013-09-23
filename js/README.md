@@ -116,37 +116,36 @@ post_data : { Object }
 **postworld.directive**
 
 ####Description:
-• Displays a live unregistered feed based on feed_query pw_query() args
+Displays a live unregistered feed based on `feed_query pw_query()` args
 
 ####Process:
-• Populate feed_data[feed_id] JS Object with feed_init[feed_id]
-• Setup DOM structure with ng-controller and ng-repeat for displaying the feed
-• Run JS method : pw_live_feed()
+
+1. Populate `feed_data[feed_id]` JS Object with `feed_init[feed_id]`
+2. Setup DOM structure with ng-controller and ng-repeat for displaying the feed
+3. Run JS method : `pw_live_feed()`
 
 
 ####Parameters:
+Parameters are passed via `feed_init[feed_id]`.
 
-Parameters are passed via an object with the same name as the 'feed_id'
-
-preload : integer
+**preload** : *integer*  
 Number of posts to load at the beginning, before infinite scrolling
 
-load_increment : integer
+**load_increment** : *integer*  
 Number of posts to load at a time when using infinite scroll
 
-order_by : string (optional)
+**order_by** : *string* (optional)
 
-panel : string (optional)
+**panel** : *string* (optional)
 
-view : object
+**view** : *object*
 
-feed_query : string / object
-     • object - an object of query args which is passed to pw_query()
+**feed_query** : *string / object*
+  - object - an object of query args which is passed to `pw_query()`
 
 
 ####Usage:
-````
-<script>
+````javascript
 feed_init['feed_id'] = {
      preload: 3,
      load_increment : 10,
@@ -159,7 +158,8 @@ feed_init['feed_id'] = {
      feed_query : {…}
 
 }
-</script>
+```
+```html
 <div live-feed="feed_id"></div> 
 ```
 
@@ -169,38 +169,34 @@ feed_init['feed_id'] = {
 **postworld.directive**
 
 #### Requires:
-- pw_cache_feed() PHP Method
+- `pw_cache_feed()` PHP Method
 
 #### Description:
-- Loads a registered feed, which has been registered with the pw_register_feed() PHP method
+- Loads a registered feed, which has been registered with the `pw_register_feed()` PHP method
 
 ####Process:
 
-**PHP / AJAX :**
-
-1. Run pw_get_feed( feed_id, preload ) PHP method via AJAX.
-     returns : 
-          feed_outline
-          post_data
-          feed_query
-          ...
-
+**PHP / AJAX :**  
+1. Run `pw_get_feed( feed_id, preload )` PHP method via AJAX.
+  **returns** : 
+    feed_outline
+    post_data
+    feed_query
+    ...
 
 2. Populate `feed_data[feed_id]` JS Object with **feed_outline**, and **feed_query**
 3. Populate `feed_data[feed_id][['posts']` Object with post_data posts
 
 
-**JAVASCRIPT :**
-
+**JAVASCRIPT :**  
 1. Populate `feed_data[feed_id]` Object with settings Object 
 
 **return** : *true*
 
 
-Usage:
+####Usage:
 
-```
-<script>
+```javascript
 feed_init['feed_id'] = {
      preload: 3,
      load_increment : 10,
@@ -209,7 +205,8 @@ feed_init['feed_id'] = {
           options : [ 'list', 'detail', 'grid' ],
      }
 }
-</script>
+```
+```html
 <div live-feed="feed_id"></div> 
 ```
 
