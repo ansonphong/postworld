@@ -33,13 +33,13 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 - Used to access pw_get_post() PHP Method via AJAX
 
 ####Parameters:
-**feed_id** : *string*
+**feed_id** : *string*  
 The ID of the Postworld feed
 
-**post_ids** : *array*
+**post_ids** : *array*  
 An array of post_ids to load from the outline
 
-**fields** : *object*
+**fields** : *object*  
 Equivalent to the `pw_get_post()` PHP Method parameters
 
 ####Process:
@@ -53,14 +53,14 @@ Equivalent to the `pw_get_post()` PHP Method parameters
 ###**pw_get_templates** ( templates_object )
 
 ####Parameters:
-See pw_get_templates() PHP method.
+See `pw_get_templates()` PHP method.
 
 ####Description:
-- Javascript node for pw_get_templates() PHP method
-- Used by pw_load_feed() and pw_live_feed() JS methods
+- Javascript node for `pw_get_templates()` PHP method
+- Used by `pw_load_feed()` and `pw_live_feed()` JS methods
 
 ####Process:
-- Run pw_get_templates() PHP method via AJAX
+- Run `pw_get_templates()` PHP method via AJAX
 - Return the data
 
 **return** : *JSON* 
@@ -173,7 +173,7 @@ feed_init['feed_id'] = {
 ####Process:
 
 **PHP / AJAX :**  
-1. Run `pw_get_feed( feed_id, preload )` PHP method via AJAX.
+1. Run `pw_get_feed( feed_id, preload )` PHP method via AJAX.  
   **returns** : 
     feed_outline
     post_data
