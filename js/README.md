@@ -8,25 +8,25 @@ POSTWORLD // Angular / JS Functions
 ##### AngularJS
 The Javascript methods for Postworld are build using the [AngularJS](http://angularjs.org/) framework.
 
-------
+
 ###**wp_ajax** ( function, args )
 - A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
 - Sends 'function' command with args to Wordpress function which has been registered with `wp_ajax_` action hooks
 - See : http://codex.wordpress.org/AJAX_in_Plugins
 
 **return** : JSON encoded DATA response
-
 ------
+
 ###**o_embed** ( url, args )
 - Uses `wp_oembed_get()` WP function via AJAX
 - See : http://codex.wordpress.org/wp_oembed_get
 
 **return** : Object
-
+------
 
 ## Functions
 
-------
+
 ###**pw_get_posts** ( feed_id, post_ids, fields )
 - Used to access pw_get_post() PHP Method via AJAX
 
@@ -63,28 +63,27 @@ See pw_get_templates() PHP method.
 
 **return** : *JSON* 
 
-
-
 ------
+
 ###**pw_scroll_feed** ( feed_id )
 
 
-Description:
+####Description:
 
-• Pushes the next set of posts for infinite scroll
+- Pushes the next set of posts for infinite scroll
 
-Process:
-• Set feed_data[feed_id]['status'] : 'loading'
+####Process:
+- Set feed_data[feed_id]['status'] : 'loading'
 
-• See which posts have already been loaded feed_data[feed_id]['loaded']
-• Compare loaded posts to feed_outline. If they're all already loaded, return 
+- See which posts have already been loaded feed_data[feed_id]['loaded']
+- Compare loaded posts to feed_outline. If they're all already loaded, return 
      feed_data[feed_id]['status'] : 'all_loaded'
 
-• If there are new posts to load,
-     • Make an array of the next set of posts to load by loading the next number of posts defined by feed_data[feed_id]['load_increment'] in sequence from feed_outline
-     • Get fields from : feed_data[feed_id]['feed_query']['fields']
-     • Run pw_get_posts ( feed_id, load_posts, fields )
-     • Set feed_data[feed_id]['status'] : 'loaded'
+- If there are new posts to load,
+	...* Make an array of the next set of posts to load by loading the next number of posts defined by feed_data[feed_id]['load_increment'] in sequence from feed_outline
+    ..* Get fields from : feed_data[feed_id]['feed_query']['fields']
+    ..* Run pw_get_posts ( feed_id, load_posts, fields )
+    ..* Set feed_data[feed_id]['status'] : 'loaded'
 
 
 return : true
