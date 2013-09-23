@@ -211,6 +211,7 @@ feed_init['feed_id'] = {
 <div live-feed="feed_id"></div> 
 ```
 
+------
 
 ## Object Anatomy
 
