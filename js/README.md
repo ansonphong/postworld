@@ -6,7 +6,7 @@ POSTWORLD // Angular / JS Functions
 
 
 #####AngularJS
-The Javascript methods for Postworld are build using the AngularJS framework.
+The Javascript methods for Postworld are build using the [AngularJS](http://angularjs.org/) framework.
 
 
 ###**wp_ajax** ( function, args )
