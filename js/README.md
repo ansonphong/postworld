@@ -15,6 +15,7 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 - See : http://codex.wordpress.org/AJAX_in_Plugins
 
 **return** : JSON encoded DATA response
+
 ------
 
 ###**o_embed** ( url, args )
@@ -24,6 +25,7 @@ The Javascript methods for Postworld are build using the [AngularJS](http://angu
 **return** : Object
 
 ------
+
 ## Functions
 
 
@@ -47,6 +49,7 @@ Equivalent to the `pw_get_post()` PHP Method parameters
 **return** : *boolean*
 
 ------
+
 ###**pw_get_templates** ( templates_object )
 
 ####Parameters:
@@ -63,6 +66,7 @@ See pw_get_templates() PHP method.
 **return** : *JSON* 
 
 ------
+
 ###**pw_scroll_feed** ( feed_id )
 
 
@@ -79,15 +83,15 @@ See pw_get_templates() PHP method.
 
 - If there are new posts to load,
 	...* Make an array of the next set of posts to load by loading the next number of posts defined by feed_data[feed_id]['load_increment'] in sequence from feed_outline
-    ..* Get fields from : feed_data[feed_id]['feed_query']['fields']
-    ..* Run pw_get_posts ( feed_id, load_posts, fields )
-    ..* Set feed_data[feed_id]['status'] : 'loaded'
+    ...* Get fields from : feed_data[feed_id]['feed_query']['fields']
+    ...* Run pw_get_posts ( feed_id, load_posts, fields )
+    ...* Set feed_data[feed_id]['status'] : 'loaded'
 
 
 return : true
 
-
 ------
+
 ###**pw_live_feed** ( args )
 • Access pw_live_feed() PHP Method via AJAX 
 • Use returned data to populate feed_data[feed_id] JS Object with feed_outline, loaded and post data
