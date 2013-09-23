@@ -219,7 +219,7 @@ feed_init['feed_id'] = {
 ### feed_data *Object*
 + A meta object which contains feed status and data of all feeds on the DOM
 
-```
+``` javascript
 feed_data = {
      feed_id : {
           feed_outline : [1,3,5,15,52,64],
@@ -238,7 +238,7 @@ feed_data = {
 + Used to initialize a feed directive
 + The contents of this object are then transferred into feed_data[feed_id] after initialization
 
-```
+``` javascript
 feed_init[feed_id] = {
      preload : 10,
      load_increment : 10,
