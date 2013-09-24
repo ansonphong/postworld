@@ -1,7 +1,7 @@
 Postworld // PHP / MySQL Functions
 =========
 
-## Post Meta Functions
+## Post Meta
 
 ### pw_get_post_meta( *$post_id* )
 
