@@ -864,7 +864,7 @@ class PW_Query extends WP_Query {
 
 		if ( 'id=>parent' == $q['fields'] ) {
 				
-			$this->prepare_new_request();	
+			$this->prepare_new_request(true);	
 				
 			/*$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
 			$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
