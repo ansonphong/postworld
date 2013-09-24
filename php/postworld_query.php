@@ -108,7 +108,7 @@ class PW_Query extends WP_Query {
 		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
 		$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
-			$this->request = str_replace('FROM wp_posts','FROM wp_posts right join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
+			$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
 			$this->request = str_replace('WHERE', $where, $this->request);
 			$strposOfOrderBy = strpos($this->request, "ORDER BY");
 			$this->request =  substr($this->request ,0,$strposOfOrderBy);
