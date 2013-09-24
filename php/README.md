@@ -3,7 +3,7 @@ Postworld // PHP / MySQL Functions
 
 ## Post Meta
 
-### pw_get_post_meta( *$post_id* )
+### pw_get_post_meta ( *$post_id* )
 
 #### Process:
 1. Get an Associative Array of all columns in the **wp_postworld_post_meta** table
@@ -18,6 +18,11 @@ Postworld // PHP / MySQL Functions
 	'link_url' => {{string}}
 	'post_points' => {{integer}}
 	'rank_score' => {{integer}}
+```
+
+#### Usage:
+```php
+$post_meta = pw_get_post_meta($post_id);
 ```
 
 ------
@@ -44,4 +49,5 @@ $post_meta = array(
      'post_format' => string,
      'link_url' => string
 );
+pw_set_post_meta($post_meta);
 ```
