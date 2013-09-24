@@ -27,7 +27,7 @@ $post_meta = pw_get_post_meta($post_id);
 
 ------
 
-### pw_set_post_meta ( *$post_meta* )
+### pw_set_post_meta ( *post_id*, *$post_meta* )
 
 #### Description
 Used to set Postworld values in the **wp_postworld_post_meta**
@@ -35,8 +35,9 @@ Used to set Postworld values in the **wp_postworld_post_meta**
 #### Parameters:
 All parameters, except post_id, are optional.
 
+**$post_id** : *string* (required)
+
 **$post_meta** : *Array*
-- post_id (required)
 - post_class
 - post_format
 - link_url
@@ -44,10 +45,9 @@ All parameters, except post_id, are optional.
 #### Usage:
 ```php
 $post_meta = array(
-     'post_id' => integer,
      'post_class' => string,
      'post_format' => string,
      'link_url' => string
 );
-pw_set_post_meta($post_meta);
+pw_set_post_meta($post_id, $post_meta);
 ```
