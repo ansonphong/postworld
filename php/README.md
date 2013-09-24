@@ -5,6 +5,9 @@ Postworld // PHP / MySQL Functions
 
 ### pw_get_post_meta ( *$post_id* )
 
+#### Description
+Used to get Postworld values in the **wp_postworld_post_meta** table
+
 #### Process:
 1. Get an Associative Array of all columns in the **wp_postworld_post_meta** table
 2. Keys are column names, values are values.
@@ -30,12 +33,12 @@ $post_meta = pw_get_post_meta($post_id);
 ### pw_set_post_meta ( *post_id*, *$post_meta* )
 
 #### Description
-Used to set Postworld values in the **wp_postworld_post_meta**
+Used to set Postworld values in the **wp_postworld_post_meta** table
 
 #### Parameters:
 All parameters, except post_id, are optional.
 
-**$post_id** : *string* (required)
+**$post_id** : *integer* (required)
 
 **$post_meta** : *Array*
 - post_class

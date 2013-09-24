@@ -255,7 +255,7 @@ feed_init[feed_id] = {
 
 ------
 
-##RELATED NOTES : 
+## Related Notes
 
 **Angular JS Template Structure**  
 https://www.evernote.com/shard/s275/sh/08be24c4-0630-430b-b118-1e23138664fa/d5a2af40ae684188d12d7e4cc355090f
