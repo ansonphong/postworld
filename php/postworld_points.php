@@ -152,7 +152,7 @@
 	
 	///////////// COMMNET POINTS ////////////////////
 	
-	
+	/*Later*/
 	function get_user_comments_points ( $user_id ){
 		/*• Get the number of points voted to comments authored by the given user
 		  • Get cached points of user from wp_postworld_user_meta table comment_points column
@@ -170,7 +170,7 @@
 		return $total_points;
 
 	}
-	
+	/*Later*/
 	function calculate_user_comments_points ( $user_id ){
 		/*• Adds up the points voted to given user's comments, stored in wp_postworld_comment_points
 		  • Stores the result in the post_points column in wp_postworld_user_meta
@@ -186,7 +186,7 @@
 		
 		return $total_user_points;
 	}
-
+/*Later*/
 	function cache_user_comments_points ( $user_id ){
 		/*• Runs calculate_user_comment_points() Method
 		  • Caches value in comment_points column in wp_postworld_user_meta table
