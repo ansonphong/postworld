@@ -382,7 +382,7 @@ Each function effectively also populates a Wordpress query session, so can be us
 
 ------
 
-**QUERYING**
+**QUERYING :**
 
 ------
 
@@ -401,109 +401,114 @@ Each function effectively also populates a Wordpress query session, so can be us
   - **string** - Return posts with that post_type
   - **Array* - Return posts in either post_type (IN/OR operator) 
 
-author : integer / Array
-Use author id.
-     • integer - Return posts only written by that author
-     • Array - Return posts written by any of the authors (IN/OR operator) 
+**author** : *integer / Array* 
+- Use author ID
+  - **integer** - Return posts only written by that author
+  - **Array** - Return posts written by any of the authors (IN/OR operator) 
 
-author_name : string / Array
-• Use 'user_nicename' in wp_users (NOT 'name')
-• Get author_id, then use author query method
+**author_name** : *string / Array*
+- Use 'user_nicename' in wp_users (NOT 'name')
+  - **string** - Return posts only written by that author
+  - **Array** - Return posts written by any of the authors (IN/OR operator) 
 
-year : integer
-• 4 digit year (e.g. 2011)
-• Return posts within that year
+**year** : *integer*
+- 4 digit year (e.g. 2011)
+- Return posts within that year
 
-month : integer
-• Month number (from 1 to 12)
-• Return posts within that month
+**month** : *integer*
+- Month number (from 1 to 12)
+- Return posts within that month
 
-tax_query : array
-Just like : http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters
+**tax_query** : *array*
+- Just like : http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters
 
-s : string
-• Search terms
-• Query post_content & post_title columns in wp_posts table
+**s** : *string*
+- Search terms
+- Query **post_content** & **post_title** columns in **wp_posts** table
+
+------
+
+**ORDERING :**
+
+------
+
+**orderby** : *string*
+- Options
+  - date (default)
+  - rank_score
+  - post_points
+  - modified
+  - rand
+  - comment_count
+
+**order** : *string*
+- Options
+  - DESC (default)
+  - ASC
+
+------
+
+**RETURNING :**
+
+------
+
+**offset** : *integer*
+- Number of post to displace or pass over. 
+
+**post_count** : *integer*
+- Maximum number of posts to return.
+  - 0 (default) - Return all
+
+**fields** : *string / Array*
+- Set return values. Uses pw_get_posts( $post_ids, $fields ) method
+- Pass this directly to `wp_get_posts()` method unless the value is 'id'
+  - **ids** (default) - Return an Array of post IDs
+  - **all** - Return all fields
+  - **preview** - Return basic fields
+  - `array( 'post_title', 'post_content', … )` - Array of fields which to return
+
+**$return_format** : *string*
+- Options
+  - **WP_QUERY** (default) - Return a [WP_Post Object](http://codex.wordpress.org/Class_Reference/WP_Post )
+  - **JSON** - Return a JSON Object
+  - **ARRAY_A** - Return an Associative Array
 
 
-ORDERING :
-
-orderby : string
-     • date (default)
-
-     • rank_score
-     • post_points
-     • modified
-     • rand
-     • comment_count
-
-order : string
-DESC (default) / ASC
-
-
-RETURNING :
-
-offset : integer
-• Number of post to displace or pass over. 
-
-post_count : integer
-• Maximum number of posts to return.
-     • 0 (default) - Return all
-
-fields : string / Array
-• Set return values. Uses pw_get_posts( $post_ids, $fields ) method
-• Pass this directly to wp_get_posts() method unless the value is 'id'
-     • ids (default) - Return an Array of post IDs
-     • all - Return all fields
-     • preview - Return basic fields
-     • array( 'post_title', 'post_content', … ) - Array of fields which to return
-
-
-return_format : string
-     • JSON (default) - Return a JSON Object
-     • ARRAY_A - Return an Associative Array
-     • WP_POST - Return a WP_Post Object : http://codex.wordpress.org/Class_Reference/WP_Post 
-
-
-Usage:
-
-
+####Usage:
+``` php
 $args = array(
-     post_type : {{string/Array}}
+	'post_type' => array('post'),
+	'year' => '2013',
+	'month' => '12',
+	'post_format' => 'standard',	// post_format column in wp_postworld_meta 
+	'post_class' => 'editorial',  	// post_class column in wp_postworld_meta
 
+	'author' => '1',
 
-     year : {{2013}}
-     month : {{12}}
+	'tax_query' => array(
+		array(
+			'taxonomy' => 'category',
+			'field' => 'slug',
+			'terms' => 'books'
+		)
+	),
+	's' => 'search string',
 
+	'orderby' => 'rank_score',
+	'order' => 'ASC'
 
+	'posts_per_page' : '20',
 
-     post_format : {{post_format}}  // post_format column in wp_postworld_meta 
-     post_class : {{post_class}}  // post_class column in wp_postworld_meta
-
-     author : {{id/login/slug}} // id : post_author in wp_posts, login/slug : cycle & keep both, lookup id via WP get_user_by 
-     author_role : {{role_slug}}
-
-     tax_query : {{tag/category/topic/section/etc}} // in wp_term_relationships
-     s : {{search_terms}}
-
-
-     orderby : {{points/rank/date}}
-     order : {{string}}
-
-
-     post_count : {{integer}}
-
-
-     fields : {{mixed}}
-     return_format : {{ARRAY / JSON / WP_POSTS}}
-
+	fields : array('ID','post_title','post_content','post_date'), // See pw_get_post() $fields method
 );
 
+$posts = pw_query( $args, 'JSON' );
 
+```
 
+------
 
-pw_user_query( $args )
-
+pw_user_query( $args );
 
 Description:
 
