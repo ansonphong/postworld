@@ -3,6 +3,11 @@ Postworld // PHP / MySQL Functions
 
 ## Post Meta
 
+**/php/postworld-meta.php**  
+Handles getting and setting date in the **post_meta** table.
+
+------
+
 ### pw_get_post_meta ( *$post_id* )
 
 #### Description
@@ -58,8 +63,10 @@ pw_set_post_meta($post_id, $post_meta);
 
 
 ## Points
-Here we have a series of functions which are used to read and write data in the wp_postworld_points table.
+**/php/postworld-points.php**  
+Handles getting and setting points data in the **points** and **post_meta** tables.
 
+------
 
 **POST POINTS**
 
