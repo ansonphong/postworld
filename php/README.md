@@ -700,151 +700,8 @@ array(
 
 ------
 
-## Feeds
-
-
-### pw_live_feed ( *$args* )
-
-#### Description:
-- Used for custom search querying, etc.
-- Does not access *wp_postworld_feeds* caches at all
-- Helper function for the `pw_live_feed()` JS method
-
-
-#### Parameters: $args
-
-**feed_id** : *string*
-
-
-**preload** : *integer*
-- Number of posts to fetch data and return as post_data
-
-**feed_query** : *Array*
-- `pw_query()` Query Variables
-
-
-#### Process:
-- Generate return feed_outline, with pw_feed_outline( $args[feed_query] ) method
-- Generate return post data by running the defined preload number of the first posts through
-`pw_get_posts( feed_outline, $args['feed_query']['fields'] )`
-
-
-#### Usage:
-``` php
-$args = array (
-     'feed_id' => string,
-     'preload'  => integer
-     'feed_query' => array(
-          // pw_query args    
-     )
-)
-$live_feed = pw_live_feed ( *$args* );
-```
-
-**return** : *Object*
-``` php
-array(
-	'feed_outline' => '12,356,3564,2362,236',
-	'post_data' => array() // Output from pw_get_posts() based on feed_query
-)
-```
-
-------
-
-### pw_register_feed ( *$args* )
-
-#### Description:
-- Registers the feed in **feeds** table
-
-#### Process:
-1. If the feed_id doesn't appear in the wp_postworld_feeds table :
-  1. Create a new row
-  2. Enable write_cache
-
-2. Store $args['feed_query'] in the feed_query column in wp_postworld_feeds table as a JSON Object
-
-3. If write_cache is true, run pw_cache_feed(feed_id)
-
-**return** : *$args* Array
-
-#### Parameters : $args
-
-**feed_id** : *string*
-
-**feed_query** : *array*
-- default : none
-- The query object which is stored in **feed_query** in **feeds** table, which is input directly into **pw_query**
-
-**write_cache** : *boolean*
-- If the **feed_id** is new to the **feeds** table, set `write_cache = true`
-  - false (default) - Wait for cron job to update feed outline later, just update feed_query
-  - true - Cache the feed with method : run pw_cache_feed( $feed_id )
-
-#### Usage :
-``` php
-$args = array (
-	'feed_id' => 'front_page_feed',
-	'write_cache'  => true,
-	'feed_query' => array(
-		// pw_query() $args    
-	)
-);
-pw_register_feed ($args);
-```
-
-------
-
-### pw_feed_outline ( *$pw_query_args* )
-- Uses `pw_query()` method to generate an array of **post_ids** based on the supplied `$pw_query_args`
-
-#### Parameters:
-
-**$pw_query_args** : *Array*
-- `pw_query()` Arguments
-
-#### Process:
-- Over-ride `feed_query['fields']` variable to **'id'**
-- Flatten `pw_query()` return to Array of **post_ids**
-
-**return** : *Array* (of post IDs)
-
-------
-
-### pw_cache_feed ( *$feed_id* )
-- Generates a new feed outline for a registered **feed_id** and caches it
-
-#### Process:
-- Run `pw_feed_outline( $args )` on the **args** in **feed_query** column in the row of the given **$feed_id**
-- Store as *comma delineated list of IDs* in the **feed_outline** column of *feeds* table
-
-**return** : *Array* (of post IDs) 
-
-------
-
-### pw_get_feed ( *$feed_id, [$preload]* )
-
-#### Parameters:
-
-**$feed_id** : *string*
-
-**$preload** : *integer* (optional)('0' default)
-- The number of posts to pre-load with post_data
-
-#### Process:
-- Return an object containing all the columns from the wp_postworld_feeds table
-- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the feed_outline, return in **post_data** Object
-- Use fields value from **feed_query** column under key fields 
-
-**return** : *Array*
-``` php
-	'feed_id' => {{string}}
-	'feed_query' => {{array}}
-	'time_start' => {{integer/timestamp}}
-	'time_end' => {{integer/timestamp}}
-	'timer' => {{milliseconds}}
-	'feed_outline' => {{array (of post IDs)}}
-	'post_data' => {{array (of post data)}}
-```
+## Get Posts
+**php/postworld_posts.php**
 
 ------
 
@@ -1020,6 +877,156 @@ array(
 
 ------
 
+## Feeds
+**php/postworld_feeds.php**
+
+------
+
+### pw_live_feed ( *$args* )
+
+#### Description:
+- Used for custom search querying, etc.
+- Does not access *wp_postworld_feeds* caches at all
+- Helper function for the `pw_live_feed()` JS method
+
+
+#### Parameters: $args
+
+**feed_id** : *string*
+
+
+**preload** : *integer*
+- Number of posts to fetch data and return as post_data
+
+**feed_query** : *Array*
+- `pw_query()` Query Variables
+
+
+#### Process:
+- Generate return feed_outline, with pw_feed_outline( $args[feed_query] ) method
+- Generate return post data by running the defined preload number of the first posts through
+`pw_get_posts( feed_outline, $args['feed_query']['fields'] )`
+
+
+#### Usage:
+``` php
+$args = array (
+     'feed_id' => string,
+     'preload'  => integer
+     'feed_query' => array(
+          // pw_query args    
+     )
+)
+$live_feed = pw_live_feed ( *$args* );
+```
+
+**return** : *Object*
+``` php
+array(
+	'feed_outline' => '12,356,3564,2362,236',
+	'post_data' => array() // Output from pw_get_posts() based on feed_query
+)
+```
+
+------
+
+### pw_register_feed ( *$args* )
+
+#### Description:
+- Registers the feed in **feeds** table
+
+#### Process:
+1. If the feed_id doesn't appear in the wp_postworld_feeds table :
+  1. Create a new row
+  2. Enable write_cache
+
+2. Store $args['feed_query'] in the feed_query column in wp_postworld_feeds table as a JSON Object
+
+3. If write_cache is true, run pw_cache_feed(feed_id)
+
+**return** : *$args* Array
+
+#### Parameters : $args
+
+**feed_id** : *string*
+
+**feed_query** : *array*
+- default : none
+- The query object which is stored in **feed_query** in **feeds** table, which is input directly into **pw_query**
+
+**write_cache** : *boolean*
+- If the **feed_id** is new to the **feeds** table, set `write_cache = true`
+  - false (default) - Wait for cron job to update feed outline later, just update feed_query
+  - true - Cache the feed with method : run pw_cache_feed( $feed_id )
+
+#### Usage :
+``` php
+$args = array (
+	'feed_id' => 'front_page_feed',
+	'write_cache'  => true,
+	'feed_query' => array(
+		// pw_query() $args    
+	)
+);
+pw_register_feed ($args);
+```
+
+------
+
+### pw_feed_outline ( *$pw_query_args* )
+- Uses `pw_query()` method to generate an array of **post_ids** based on the supplied `$pw_query_args`
+
+#### Parameters:
+
+**$pw_query_args** : *Array*
+- `pw_query()` Arguments
+
+#### Process:
+- Over-ride `feed_query['fields']` variable to **'id'**
+- Flatten `pw_query()` return to Array of **post_ids**
+
+**return** : *Array* (of post IDs)
+
+------
+
+### pw_cache_feed ( *$feed_id* )
+- Generates a new feed outline for a registered **feed_id** and caches it
+
+#### Process:
+- Run `pw_feed_outline( $args )` on the **args** in **feed_query** column in the row of the given **$feed_id**
+- Store as *comma delineated list of IDs* in the **feed_outline** column of *feeds* table
+
+**return** : *Array* (of post IDs) 
+
+------
+
+### pw_get_feed ( *$feed_id, [$preload]* )
+
+#### Parameters:
+
+**$feed_id** : *string*
+
+**$preload** : *integer* (optional)('0' default)
+- The number of posts to pre-load with post_data
+
+#### Process:
+- Return an object containing all the columns from the wp_postworld_feeds table
+- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the feed_outline, return in **post_data** Object
+- Use fields value from **feed_query** column under key fields 
+
+**return** : *Array*
+``` php
+	'feed_id' => {{string}}
+	'feed_query' => {{array}}
+	'time_start' => {{integer/timestamp}}
+	'time_end' => {{integer/timestamp}}
+	'timer' => {{milliseconds}}
+	'feed_outline' => {{array (of post IDs)}}
+	'post_data' => {{array (of post data)}}
+```
+
+------
+
 ### pw_get_templates ( *$templates_object* )
 - Gets an Object of template paths based on the provided object
 
@@ -1109,7 +1116,8 @@ panels : {
 
 ------
 
-## User Karma
+## User Karma << PHONG
+**php/postworld_karma.php**
 
 ### get_user_view_karma ( *$user_id* )
 - Gets current View Karma for given user
@@ -1118,10 +1126,15 @@ panels : {
 
 ------
 
-### get_user_share_karma ( *$user_id* )
+### get_user_share_karma ( *$user_id* ) << PHONG
 - Gets current Share Karma for given user
 - Calculate based on builtin **share_karma** equation
 **return** : *integer*
+
+------
+
+## Post Sharing
+**php/postworld_share.php**
 
 ------
 
@@ -1162,7 +1175,8 @@ array(
 
 ------
 
-## Post Creation
+## Post Insertion
+**php/postworld_insert.php**
 
 ------
 
