@@ -975,7 +975,7 @@ array(
 	'post_title' => 'Post Title',
 	'post_content' => 'The post content.',
 	'taxonomy' => array(
-		'taxonomy_slug' => array(
+		'taxonomy_slug' => array( // taxonomy name
 			array(
 				'term' => 'blue'
 				'url' => 'http://.../tags/blue/'
@@ -986,17 +986,17 @@ array(
 			),
 	),
 	'image' => array(
-		'thumbnail' => array( // handle
+		'thumbnail' => array( // registered image 'thumbnail'
 			'width' => 150,
 			'height' => 150,
 			'url' => 'http://../image-150.jpg'
 		),
-		'custom_handle' => array(
+		'custom_handle' => array( // custom image
 			'width' => 320,
 			'height' => 240,
 			'url' => 'http://../image-320.jpg'
 		),
-		'full' => array(
+		'full' => array( // full original image
 			'width' => 1280,
 			'height' => 1024,
 			'url' => 'http://../image.jpg'
@@ -1018,101 +1018,81 @@ array(
 )
 ```
 
+------
 
-pw_get_templates ( $templates_object )
-• Gets an Object of template paths based on the provided object
+### pw_get_templates ( *$templates_object* )
+- Gets an Object of template paths based on the provided object
 
-Parameters:
+#### Parameters:
 
+**$templates_object** : *Array* (optional)
 
-$templates_object : Object (optional)
+- **post_types** : *Array* (optional) - Array of post_types which to return template paths for
+  - **default** : Get all registered post types with `get_post_types()` WP Method :  
+	`get_post_types( array( array( 'public' => true, '_builtin' => false ) ), 'names' )`
 
-     • post_types : Array (optional) - Array of post_types which to return template paths for
-          default : Get all registered post types with get_post_types() WP Method :
-         get_post_types( array( array( 'public' => true, '_builtin' => false ) ), 'names' )
-
-     • post_views : Array (optional) - Array of 'feed views' which to retrieve templates for
-          default : ( list, detail, grid, full )
-
-
-Process:
+- **post_views** : *Array* (optional) - Array of 'feed views' which to retrieve templates for
+  - **default** : `array( 'list', 'detail', 'grid', 'full' )`
 
 
-POST TEMPLATES
+#### Process:
+
+**POST TEMPLATES**
+
+- **Default** posts template path :
+  - /plugins/postworld/templates/posts
+
+- **Over-ride** post template path:
+  - /theme_name/postworld/templates/posts
+
+1. Generate list of template names :
+  - {{post_type}}-{{post_view}}.html  
+  post-list.html  
+  post-detail.html  
+  etc…
+
+2. For each template name, check over-rides path for templates with `file_exists()` PHP Method
+
+3. If template **post_type** doesn't exist, fallback:
+- **post_type** = **post**  
+  link-list.html >> post-list.html
+
+4. If template **post_view** fallback doesn't exist, fallback to default templates path
+-  post_view >> defaults  
+  */theme_name/postworld/templates/post-list.html* >> */plugins/postworld/templates/post-list.html*
+
+5. Gather all the template files into an object
 
 
-• Default posts template path :
-     /plugins/postworld/templates/posts
+**PANEL TEMPLATES**
 
+- Default panels template path :
+  - /plugins/postworld/templates/panels
 
+- Over-ride panels template path:
+  - /theme_name/postworld/templates/panels
 
-• Over-ride post template path:
-     /theme_name/postworld/templates/posts
-
-• Generate list of template names
-     {{post_type}}-{{post_view}}.html
-     post-list.html
-     post-detail.html
-     etc…
-
-
-• For each template name, check over-rides path for templates with file_exists() PHP Method
-
-• If template post_type doesn't exist, fallback:
-     post_type >> post
-     link-list.html >> post-list.html
-
-• If template post_view fallback doesn't exist, fallback to default templates path
-     post_view >> defaults
-     /theme_name/postworld/templates/post-list.html >> /plugins/postworld/templates/post-list.html
-
-
-• Gather all the template files into an object
-
-
-
-
-PANEL TEMPLATES
-
-
-
-• Default panels template path :
-     /plugins/postworld/templates/panels
-
-
-
-• Over-ride panels template path:
-     /theme_name/postworld/templates/panels
-
-• Generate an Associative Array of all the .HTML files in both the Default and Over-ride template folders
-     • Key is file_name without the HTML extension, value is the path relative to base domain
+1. Generate an Associative Array of all the .HTML files in both the Default and Over-ride template folders
+  - Key is file_name without the HTML extension, value is the path relative to base domain
    
-• Merge the arrays, so that the Over-ride paths overwrites the Default paths
+2. Merge the arrays, so that the **Over-ride** paths overwrites the **Default** paths
 
+**return** : *Array* (with all template paths)
 
-
-
-return : Array (with all template paths)
-
-Usage:
-     
-pw_get_templates ($args);
-
-
+#### Usage:
+``` php
 $args = array(
-     'post_types' => array( 'post', 'link' ),
-     'post_views' => array( 'grid', 'list', 'detail', 'full' )
+	'post_types' => array( 'post', 'link' ),
+	'post_views' => array( 'grid', 'list', 'detail', 'full' )
 );
+pw_get_templates ($args);
+```
 
+#### Return:
 
+- **Array** - With post_views nested within post_types
 
-
-Return:
-
-Array - With post_views nested within post_types
-
-
-Example : 
+``` javascript
 {
 posts : {
      'post' : {
@@ -1126,17 +1106,11 @@ panels : {
      'front_page': '/wp-content/theme_name /postworld/templates/panels/front_page.html',
      },
 };
+```
 
+------
 
-
-
-
-
-
-
-
-
-PHP / USER KARMA FUNCTIONS
+User Karma
 
 
 get_user_view_karma ( $user_id )
