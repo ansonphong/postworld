@@ -503,7 +503,7 @@ $posts = pw_query( $args, 'JSON' );
 
 ------
 
-### pw_user_query( $args );
+### pw_user_query( *$args* );
 
 #### Description:
 - Similar to [WP_User_Query](http://codex.wordpress.org/Class_Reference/WP_User_Query)
@@ -757,76 +757,58 @@ array(
 - Registers the feed in **feeds** table
 
 #### Process:
-• If the feed_id doesn't appear in the wp_postworld_feeds table :
-     • Create a new row
-     • Enable write_cache
+1. If the feed_id doesn't appear in the wp_postworld_feeds table :
+  1. Create a new row
+  2. Enable write_cache
 
+2. Store $args['feed_query'] in the feed_query column in wp_postworld_feeds table as a JSON Object
 
-• Store $args['feed_query'] in the feed_query column in wp_postworld_feeds table as a JSON Object
+3. If write_cache is true, run pw_cache_feed(feed_id)
 
+**return** : *$args* Array
 
-• If write_cache is true, run pw_cache_feed(feed_id)
+#### Parameters : $args
 
-return : $args Object
+**feed_id** : *string*
 
+**feed_query** : *array*
+- default : none
+- The query object which is stored in **feed_query** in **feeds** table, which is input directly into **pw_query**
 
-Parameters : $args
+**write_cache** : *boolean*
+- If the **feed_id** is new to the **feeds** table, set `write_cache = true`
+  - false (default) - Wait for cron job to update feed outline later, just update feed_query
+  - true - Cache the feed with method : run pw_cache_feed( $feed_id )
 
-
-feed_id : string
-
-feed_query : object
-default : none
-The query object which is stored in feed_query in wp_postworld_feeds, which is input directly into postworld_query
-
-write_cache : boolean
-• If the feed_id is new to wp_postworld_feeds table, set write_cache = true
-
-
-     • true - Cache the feed with method : run pw_cache_feed( $feed_id )
-     • false (default) - Wait for cron job to update feed outline later, just update feed_query
-
-
-Usage :
-
-
+#### Usage :
+``` php
 $args = array (
-     'feed_id' => 'front_page_feed',
-     'write_cache'  => boolean
-     'feed_query' => array(
-          postworld_query args    
-     )
-)
+	'feed_id' => 'front_page_feed',
+	'write_cache'  => true,
+	'feed_query' => array(
+		// pw_query() $args    
+	)
+);
+pw_register_feed ($args);
+```
 
+------
 
+### pw_feed_outline ( *$pw_query_args* )
+- Uses `pw_query()` method to generate an array of **post_ids** based on the supplied `$pw_query_args`
 
+#### Parameters:
 
+**$pw_query_args** : *Array*
+- `pw_query()` Arguments
 
-pw_feed_outline ( $pw_query_args ) << REQUIRES pw_query
-• Uses pw_query() method to generate an array of post_ids based on the supplied $pw_query_args
+#### Process:
+- Over-ride `feed_query['fields']` variable to **'id'**
+- Flatten `pw_query()` return to Array of **post_ids**
 
+**return** : *Array* (of post IDs)
 
-Parameters:
-
-
-
-$pw_query_args : Array
-
-• pw_query() Arguments
-
-
-
-
-Process:
-
-
-
-• Over-ride feed_query['fields'] variable to 'id'
-• Flatten pw_query to Array of post_ids
-
-return : Array (of post IDs)
-
-
+------
 
 pw_cache_feed ( $feed_id ) << REQUIRES pw_query
 • Generates a new feed outline for a registered feed_id and caches it
