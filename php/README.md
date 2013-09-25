@@ -906,21 +906,21 @@ array(
 
 
 **WP GET_POST METHOD** : http://codex.wordpress.org/Function_Reference/get_post 
-- ID (default always)
-- post_author
-- post_date
-- post_date_gmt
-- post_title 
-- post_content
-- post_excerpt
-- post_path
-- post_name
-- post_type
-- post_status
+- **ID** (default always)
+- **post_author**
+- **post_date**
+- **post_date_gmt**
+- **post_title **
+- **post_content**
+- **post_excerpt**
+- **post_path**
+- **post_name**
+- **post_type**
+- **post_status**
 - (all **get_post** return values )
 
 **WORDPRESS**
-- post_permalink
+- **post_permalink**
   - Uses WP `get_post_permalink()` Method
 
 **POSTWORLD**
@@ -934,78 +934,89 @@ array(
 - **taxonomy(tax_slug)** - Returns taxonomy terms array for the post ie. *taxonomy(category)*
   - **return** : *array* - returns an Associative Array with each :
 
-``` php
-array(
-	array(
-		'term' => 'blue'
-		'url' => 'http://.../tags/blue/'
-	),
-	array(
-		'term' => 'red'
-		'url' => 'http://.../tags/red/'
-	)
-);
-```
 
 **VIEWER SPECIFIC**
 - **user_vote** - number of points the user has voted for this post
-- 
 
+**IMAGE**
 
+- Registered Image Sizes
+  - **image( registered_image_size_name[ thumbnail / medium / large / full ]  )**  
+  example : **image(medium)** - returns the registered 'medium' image size
+ 
+- Custom Image Sizes
+  - **image( handle, width, height, hard_crop )**  
+  example : **image(banner,700,100,1)**
 
-IMAGE
+**AVATAR**
+- Avatar Images -(Supports both Buddypress and Regular Wordpress Avatars)
+  - **avatar( handle, size )**
+  example : **avatar(small,48)**
 
+**AUTHOR**
+- **post_author_name**
+- **post_author_link**
+- **post_author_website**
+- **post_author_description**
+- **post_author_nicename**
+- **edit_post_link**
+- **post_author_social** <<< PHONG
 
-     Registered Image Sizes
-     • image( registered_image_size_name[ thumbnail / medium / large / full ]  )
-          example : image( medium ) - returns the registered 'medium' image size
-         
-     Custom Image Sizes
-     • image( handle, width, height, hard_crop )
-          example : image( banner, 700, 100, 1 )
+**DATE & TIME**
+- **post_time_ago** - "(2 minutes ago)" : http://www.devnetwork.net/viewtopic.php?f=50&t=113253 
 
+#### Process:
+- Mixed Methods for retrieving data
 
-AVATAR
-
-
-
-     Avatar Images
-     • avatar( handle, size )
-          example : avatar( small, 48 )
-
-
-
-
-AUTHOR
-
-
-
-     • post_author_name
-     • post_author_link
-     • post_author_website
-     • post_author_description
-     • post_author_social
-     • post_author_nicename
-     • edit_post_link
-
-
-DATE & TIME
-
-
-
-     • post_time_ago : http://www.devnetwork.net/viewtopic.php?f=50&t=113253 
-
-
-Process:
-
-• Mixed Methods for retrieving data
-
-
-return : OBJ / JSON
-
-
-
-
+**return** : *Array* (requested fields)
+``` php
+array(
+	'ID' => 24,
+	'post_title' => 'Post Title',
+	'post_content' => 'The post content.',
+	'taxonomy' => array(
+		'taxonomy_slug' => array(
+			array(
+				'term' => 'blue'
+				'url' => 'http://.../tags/blue/'
+			),
+			array(
+				'term' => 'red'
+				'url' => 'http://.../tags/red/'
+			),
+	),
+	'image' => array(
+		'thumbnail' => array( // handle
+			'width' => 150,
+			'height' => 150,
+			'url' => 'http://../image-150.jpg'
+		),
+		'custom_handle' => array(
+			'width' => 320,
+			'height' => 240,
+			'url' => 'http://../image-320.jpg'
+		),
+		'full' => array(
+			'width' => 1280,
+			'height' => 1024,
+			'url' => 'http://../image.jpg'
+		),
+	),
+	'avatar' => array(
+		'small' => array( // handle
+			'width' => 24,
+			'height' => 24,
+			'url' => 'http://../avatar-24.jpg'
+		),
+		'medium' => array( // handle
+			'width' => 48,
+			'height' => 48,
+			'url' => 'http://../avatar-48.jpg'
+		),
+	),
+	...
+)
+```
 
 
 pw_get_templates ( $templates_object )
