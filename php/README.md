@@ -1109,73 +1109,83 @@ panels : {
 
 ------
 
-User Karma
+## User Karma
 
+### get_user_view_karma ( *$user_id* )
+- Gets current View Karma for given user
+- Calculate based on builtin **view_karma** equation
+**return** : *integer*
 
-get_user_view_karma ( $user_id )
-• Gets current View Karma for given user
-• Calculate based on builtin view_karma equation
-return : integer
+------
 
+### get_user_share_karma ( *$user_id* )
+- Gets current Share Karma for given user
+- Calculate based on builtin **share_karma** equation
+**return** : *integer*
 
-get_user_share_karma ( $user_id )
-• Gets current Share Karma for given user
-• Calculate based on builtin share_karma equation
-return : integer
+------
 
+### set_shared ( *$user_id, $post_id, $ip_address* )
+- Check URL query_vars for user id
+- See if user id exists
+- Get selected post id
+- Check IP address against list of IPs stored in recent_ips in wp_postworld_user_shares
+- If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
+- If the IP is in the list, do nothing
+- If the array length of IPs is over {{100}}, remove old IPs
+**return** : *boolean*
+- **true** - if added share
+- **false** - if no share added
 
+------
 
+### user_share_report ( *$user_id* )
+- Lookup all post shared by user id
+- In **user_shares** table, return numerically ordered list of post IDs 
 
-set_shared ( $user_id, $post_id, $ip_address )
-• Check URL query_vars for user id
-• See if user id exists
-• Get selected post id
-• Check IP address against list of IPs stored in recent_ips in wp_postworld_user_shares
-• If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
-• If the IP is in the list, do nothing
-• If the array length of IPs is over {{100}}, remove old IPs
-return : boolean (true if added karma, false if not)
+- Run get_post_data method on each post ID, for (title, permalink)
+**return** : *Array*
+``` php
 
+array(
+	'id' => 24,
+	'title' => post_title,
+	'permalink' => 'http://...',
+	'views' => 35 // (number of views user has lead to this post)
+)
 
+------
 
-
-user_share_report ( $user_id )
-• Lookup all post shared by user id
-• In wp_postworld_user_shares, return numerically ordered list of post IDs 
-
-• Run get_post_data method on each post ID, for (title, permalink)
-return : Object
-     id : {{post_id}}
-     title : {{post_title}}
-     permalink : {{post_permalink}}
-     views : {{integer}} (number of views user has lead to this post)
-
-
-post_share_report ( $post_id )
+### post_share_report ( *$post_id* ) <<< PHONG
 …
 
+------
 
+## Post Creation
 
-PHP / POST CREATION FUNCTIONS
+------
 
-pw_insert_post ( $post )
-• Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post 
-• Include additional Postworld fields as inputs
+### pw_insert_post ( $post )
+- Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post 
+- Include additional Postworld fields as inputs
 
+#### Parameters : $post *Array*
+- All fields in `wp_insert_post()` Method
+- **post_class**
+- **post_format**
+- **link_url**
+- **external_image**
 
-Parameters : $post Object (In addition to wp_insert_post )
-• post_class
-• post_format
-• link_url
-• external_image
+**return** :
+- *post_id* - If added to the database, otherwise return *WP_Error Object*
 
-return : post_id (if added to the database, otherwise return WP_Error Object)
+------
 
+### pw_update_post ( *$post* ) 
+- Extends `wp_update_post()` : http://codex.wordpress.org/Function_Reference/wp_update_post
+- Include additional Postworld fields as inputs (see `pw_insert_post()` )
 
-pw_update_post ( $post )
-• Extends wp_update_post : http://codex.wordpress.org/Function_Reference/wp_update_post
-• Include additional Postworld fields as inputs
-
+------
 
 
 

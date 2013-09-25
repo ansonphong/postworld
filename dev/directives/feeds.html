@@ -16,17 +16,17 @@
 
 <!-- LIVE FEED DIRECTIVE -->
 <script>
-	var search_results = {
+	feed_init['search_results'] = {
 		preload : 10,
 		load_increment : 10,
 		view : {
 			current : 'detail',
 			options : ['list','detail','grid']
 		},
-		order_by : 'post_title',
-		panel : 'feed_top',
+		order_by : 'rank_score',
+		panel : 'search_results',
 		query_args : {
-
+			// populated from URL routing
 		},
 	};
 </script>
