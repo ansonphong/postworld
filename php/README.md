@@ -570,7 +570,7 @@ Here we have a series of functions which are used to read and write custom user 
 
 ------
 
-### get_user_data ( *$user_id, $fields* )
+### get_user_data ( *$user_id, [$fields]* )
 
 - Gets meta data from the wp_postworld_user_meta table
 
@@ -580,13 +580,22 @@ Here we have a series of functions which are used to read and write custom user 
 
 **$fields*** : *Array*
 - Options:
+  - all (default)
   - viewed
   - favorites
   - location_country
   - location_region
   - location_city
 
-**return** : *Array* (keys: fields, values: values)
+**return** : *Array* (requested fields)
+```php
+array(
+	'viewed' => '23,14,24,51,27,15',
+	'favorites' => '23,24,27',
+	'location_country' => 'Egypt',
+	... 
+)
+```
 
 ------
 
@@ -617,81 +626,79 @@ Here we have a series of functions which are used to read and write custom user 
 
 ------
 
-get_favorites ( $user_id )
-• Return array from the favourites column in wp_postworld_user_meta of the given user
-return : array (of post ids)
+### get_favorites ( *$user_id* )
+- Return array from the favourites column in wp_postworld_user_meta of the given user
 
+**return** : *array* (of post ids)
 
+------
 
-is_favorite ( $post_id, $user_id )
-• Checks the favorites column in wp_postworld_user_meta of the given user to see if the user has set the post as a favorite
-return : boolean
+### is_favorite ( *$post_id, $user_id* )
+- Checks the favorites column in **user_meta** table of the given user to see if the user has set the post as a favorite
 
+**return** : *boolean*
 
+------
 
+### set_viewed ( *$user_id, $post_id, $viewed* )
+- Adds to removes to the array in has_viewed in wp_postworld_user_meta 
 
-set_viewed ( $user_id, $post_id, $viewed )
-• Adds to removes to the array in has_viewed in wp_postworld_user_meta 
+#### Parameters:
 
+**$viewed** : *boolean*
+- **true** - check if the post_id is already in the array. If not, add it.
+- **false** - check if the post_id is already in the array. If so, remove it.
 
-Parameters:
+**return** : *boolean* (true)
 
-$viewed
-     • true - check if the post_id is already in the array. If not, add it.
-     • false - check if the post_id is already in the array. If so, remove it.
-return : boolean (true)
+------
 
+### get_viewed ( *$user_id* )
+- Gets list of posts by id which the user has viewed
+**return** : *Array*
 
+------
 
+### has_viewed ( *$user_id, $post_id* )
+- Checks to see if user has viewed a given post
+- Values stored in array in has_viewed in wp_postworld_user_meta
 
-get_viewed ( $user_id )
-• Gets list of posts by id which the user has viewed
-return : array
+**return** : *boolean* 
 
+------
 
+### get_user_location ( $user_id )
+- From 'location_' columns in wp_postworld_user_meta
 
+**return** : *Object*
+``` php
+array(
+	'city' => {{city}}
+	'region' => {{region}}
+	'country' => {{country}}
+)
+```
 
-has_viewed ( $user_id, $post_id )
-• Checks to see if user has viewed a given post
-• Values stored in array in has_viewed in wp_postworld_user_meta
-return : boolean 
+------
 
+### get_client_ip ()
+**return** : *string* (IP address of the client)
 
+------
 
+### get_user_role ( *$user_id, [$return_array]* )
+- Returns user role(s) for the specified user
 
-has_shared ( $user_id, $post_id )
-...
+####Parameters:
+**$user_id** : *integer*
 
+**$return_array** : *boolean*
+- **false** (default) - Returns a string, with the first listed role
+- **true** - Returns an Array with all listed roles
 
+**return** : *string / Array* (set by $return_array)
 
-
-get_user_location ( $user_id )
-• From 'location_' columns in wp_postworld_user_meta
-return : Object
-     city : {{city}}
-     region : {{country}}
-     country : {{country}}
-
-
-get_client_ip ()
-return : IP address of the client
-
-
-get_user_role ( $user_id, [$return_array] )
-• Returns user role(s) for the specified user
-
-
-Parameters:
-$return_array : boolean
-     • false (default) - Returns a string, with the first listed role
-     • true - Returns an Array with all listed roles
-
-
-return : string / Array (set by $return_array)
-
-
-
-
+------
 
 
 PHP / FEEDS
