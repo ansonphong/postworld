@@ -562,64 +562,60 @@ $users = pw_user_query( $args );
 
 ```
 
+------
 
-PHP / USER FUNCTIONS
+## Users
+**php/postworld_users.php**
 Here we have a series of functions which are used to read and write custom user meta data.
 
+------
+
+### get_user_data ( *$user_id, $fields* )
+
+- Gets meta data from the wp_postworld_user_meta table
+
+#### Parameters:
+**$user_id** : *integer*
 
 
+**$fields*** : *Array*
+- Options:
+  - viewed
+  - favorites
+  - location_country
+  - location_region
+  - location_city
 
+**return** : *Array* (keys: fields, values: values)
 
-get_user_data ( $user_id, $fields )
+------
 
-• Gets meta data from the wp_postworld_user_meta table
+### set_user_data ( *$user_id, $field, $value* )
+- Adds data to the wp_postworld_user_meta table, under column named '$meta_key'
+**return** : *boolean*
+- **true** - If successful
+- **false** - If user, or column doesn't exist or if value is wrong content type
 
-Parameters:
-$user_id : integer
+------
 
+### set_favorite ( *$post_id, $user_id, $add_remove* )
+- Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
+- Add or remove row in pw_postworld_favorites, with user_id and post_id
+- If it was added or removed, add 1 or subtract 1 from table wp_postworld_post_meta  in column favorites
 
-$fields : Array
+#### Parameters:
 
-• Possible values:
-     • viewed
-     • favorites
-     • location_country
-     • location_region
-     • location_city
+**$add_remove**
+- Options
+  - **1** - add it to favourites
+  - **-1** - remove it from favorites
 
+**return** :
+- **1**  - added successfully
+- **-1** - removed successfully
+- **0**  - nothing happened
 
-return : Array (keys: fields, values: values)
-
-
-
-set_user_data ( $user_id, $field, $value )
-• Adds data to the wp_postworld_user_meta table, under column named '$meta_key'
-return : boolean
-     • true - If successful
-     • false - If user, or column doesn't exist or if value is wrong content type
-
-
-
-set_favorite ( $post_id, $user_id, $add_remove )
-• Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
-• Add or remove row in pw_postworld_favorites, with user_id and post_id
-• If it was added or removed, add 1 or subtract 1 from table wp_postworld_post_meta  in column favorites
-
-
-
-Parameters:
-
-$add_remove
-     •  1 - add it to favourites
-     • -1 - remove it from favorites
-
-
-return :
-     1  - added successfully
-     -1 - removed successfully
-     0  - nothing happened
-
-
+------
 
 get_favorites ( $user_id )
 • Return array from the favourites column in wp_postworld_user_meta of the given user
