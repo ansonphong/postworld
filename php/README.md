@@ -1153,6 +1153,7 @@ array(
 	'permalink' => 'http://...',
 	'views' => 35 // (number of views user has lead to this post)
 )
+```
 
 ------
 
