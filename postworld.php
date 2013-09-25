@@ -99,7 +99,8 @@ include 'php/postworld_posts.php';
 
 include 'php/postworld_query.php';
 
-
+////////// GET AJAX FUNCTIONS AND ACTION ///////////
+include 'php/postworld_ajax.php';
 
 
 //To get user id from wordpress
