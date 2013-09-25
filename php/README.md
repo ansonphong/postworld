@@ -810,154 +810,146 @@ pw_register_feed ($args);
 
 ------
 
-pw_cache_feed ( $feed_id ) << REQUIRES pw_query
-• Generates a new feed outline for a registered feed_id and caches it
-
-Process:
-• Run pw_feed_outline( $args ) on the args in feed_query column in the row of the given $feed_id
-• Store as comma delineated list of IDs in the feed_outline column of wp_postworld_feeds table
-
-
-return : Array (of post IDs) 
-
-
-
-
-pw_get_feed ( $feed_id, [$preload] ) << REQUIRES pw_query
-
-Parameters:
-
-$feed_id : string
-
-$preload : integer (optional, default : 0)
-• The number of posts to pre-load with post_data
-
-
-Process:
-• Return an object containing all the columns from the wp_postworld_feeds table
-• If $preload (integer) is provided, then use pw_get_posts on that number of the first posts in the feed_outline, return in post_data Object
-• Use fields value from feed_query column under key fields 
-
-return : Array
-     feed_id
-     feed_query
-     time_start
-     time_end
-     timer
-     feed_outline
-     post_data
-
-
-
-
-
-pw_get_posts ( $post_ids, $fields )
-• Run pw_get_post on each of the $post_ids, and return the given fields in an Array
-
-
-Parameters:
-
-$post_ids : array
-
-• An array of post IDs
-
-
-$fields : array
-• Corresponds to pw_get_post() fields parameter
-
-
-Process:
-
-• Get the feed outline
-• Select which posts to preload
-• Preload selected posts
-
-
-return : Array
-     {"1":{"post_title":"Post Title","post_type":"post","post_format":"standard"},"3":{...}}
-
-
-Requirements:
-• pw_get_post() PHP Method
-• pw_query() PHP Method
-• pw_feed_outline() PHP Method
-
-
-
-
-pw_get_post ( $post_id, $fields, [$user_id] ) <<< PHONG
-• Gets data fields for the specified post, including post world meta data and custom sized thumbnails
-
-Parameters:
-$post_id : integer
-
-
-$user_id : integer
-• ID of the currently logged in user, for user-view specific data (points voted, etc)
-
-
-
-
-$fields : string / Array
-
-
-     • 'all' (default) 
-     • 'preview' - Returns a basic set of commonly usable fields
-          • ID, post_title, post_excerpt, post_permalink, post_path, post_type, post_date, post_time_ago, comment_count, link_url, 
-
-
-     • Array - Use any of the following values in an Array :
-
-
-WP GET_POST METHOD : http://codex.wordpress.org/Function_Reference/get_post 
-
-
-     • ID (default always)
-     • post_author
-
-     • post_date
-     • post_date_gmt
-
-     • post_title 
-     • post_content
-     • post_excerpt
-     • post_path
-     • post_name
-     • post_type
-     • post_status
-     • … ( all get_post return values )
-
-
-WORDPRESS
-
-
-     • post_permalink
-
-
-POSTWORLD
-
-
-     • post_points
-     • rank_score
-     • post_format
-     • post_class
-     • link_url
-
-
-TAXONOMIES
-
-     • taxonomy( tax_slug ) - Returns taxonomy terms array for the post
-          • return : array - returns an Associative Array with each :
-               term =>  {{string}}
-               url => {{string}}
-
-
-
-VIEWER SPECIFIC
-
-
-     • user_vote - number of points the user has voted for this post
-     • 
+### pw_cache_feed ( *$feed_id* )
+- Generates a new feed outline for a registered **feed_id** and caches it
+
+#### Process:
+- Run `pw_feed_outline( $args )` on the **args** in **feed_query** column in the row of the given **$feed_id**
+- Store as *comma delineated list of IDs* in the **feed_outline** column of *feeds* table
+
+**return** : *Array* (of post IDs) 
+
+------
+
+### pw_get_feed ( *$feed_id, [$preload]* )
+
+#### Parameters:
+
+**$feed_id** : *string*
+
+**$preload** : *integer* (optional)('0' default)
+- The number of posts to pre-load with post_data
+
+#### Process:
+- Return an object containing all the columns from the wp_postworld_feeds table
+- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the feed_outline, return in **post_data** Object
+- Use fields value from **feed_query** column under key fields 
+
+**return** : *Array*
+``` php
+	'feed_id' => {{string}}
+	'feed_query' => {{array}}
+	'time_start' => {{integer/timestamp}}
+	'time_end' => {{integer/timestamp}}
+	'timer' => {{milliseconds}}
+	'feed_outline' => {{array (of post IDs)}}
+	'post_data' => {{array (of post data)}}
+```
+
+------
+
+### pw_get_posts ( *$post_ids, $fields* )
+- Run `pw_get_post()` on each of the **$post_ids**, and return the given fields in an **Array**
+
+#### Parameters:
+
+**$post_ids** : *Array*
+- An array of post IDs
+
+**$fields** : *Array*
+- Corresponds to `pw_get_post()` fields parameter
+
+#### Process:
+- Get the feed outline
+- Select which posts to preload
+- Preload selected posts
+
+**return** : *Array*
+``` php
+array(
+	array(
+		'ID' => 24,
+		'post_title' => 'Post Title',
+		'post_content' => 'Content of the post.'
+		'post_type' => 'post',
+		'post_format' => 'standard',
+		...
+	),
+	array(
+	...
+	)
+)
+```
+
+#### Requirements:
+- `pw_get_post()` PHP Method
+- `pw_query()` PHP Method
+- `pw_feed_outline()` PHP Method
+
+------
+
+### pw_get_post ( *$post_id, $fields, [$user_id]* )
+- Gets data fields for the specified post, including post world meta data and custom sized thumbnails
+
+#### Parameters:
+**$post_id** : *integer*
+
+**$user_id** : *integer* (optional)
+- ID of the currently logged in user, for user-view specific data (points voted, etc)
+
+**$fields** : *string / Array*
+- Options :
+  - **'all'** (default) 
+  - **'preview'** - Returns a basic set of commonly usable fields
+    - ID, post_title, post_excerpt, post_permalink, post_path, post_type, post_date, post_time_ago, comment_count, link_url, 
+  - **Array** - Use any of the following values in an Array :
+
+
+**WP GET_POST METHOD** : http://codex.wordpress.org/Function_Reference/get_post 
+- ID (default always)
+- post_author
+- post_date
+- post_date_gmt
+- post_title 
+- post_content
+- post_excerpt
+- post_path
+- post_name
+- post_type
+- post_status
+- (all **get_post** return values )
+
+**WORDPRESS**
+- post_permalink
+  - Uses WP `get_post_permalink()` Method
+
+**POSTWORLD**
+- **post_points**
+- **rank_score**
+- **post_format**
+- **post_class**
+- **link_url**
+
+**TAXONOMIES**
+- **taxonomy(tax_slug)** - Returns taxonomy terms array for the post ie. *taxonomy(category)*
+  - **return** : *array* - returns an Associative Array with each :
+
+``` php
+array(
+	array(
+		'term' => 'blue'
+		'url' => 'http://.../tags/blue/'
+	),
+	array(
+		'term' => 'red'
+		'url' => 'http://.../tags/red/'
+	)
+);
+```
+
+**VIEWER SPECIFIC**
+- **user_vote** - number of points the user has voted for this post
+- 
 
 
 
