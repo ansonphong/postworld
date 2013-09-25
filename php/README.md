@@ -366,7 +366,7 @@ Each function effectively also populates a Wordpress query session, so can be us
 
 ####Description:
 
-- Similar to the functionality of WP_Query : http://codex.wordpress.org/Class_Reference/WP_Query 
+- Similar to the functionality of [WP_Query](http://codex.wordpress.org/Class_Reference/WP_Query )
 - Queries by Postworld data fields
 - Additionally sort by **post_points** & **rank_score**
 - Define which fields are returned using `pw_get_posts()` method
@@ -420,7 +420,7 @@ Each function effectively also populates a Wordpress query session, so can be us
 - Return posts within that month
 
 **tax_query** : *array*
-- Just like : http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters
+- Just like [tax_query in WP_Query](http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters)
 
 **s** : *string*
 - Search terms
@@ -503,92 +503,64 @@ $posts = pw_query( $args, 'JSON' );
 
 ------
 
-pw_user_query( $args );
+### pw_user_query( $args );
 
-Description:
+#### Description:
+- Similar to [WP_User_Query](http://codex.wordpress.org/Class_Reference/WP_User_Query)
+- Queries users in wp_users table
 
-• Similar to WP_User_Query : http://codex.wordpress.org/Class_Reference/WP_User_Query 
-• Queries users in wp_users table
+**return** : *ARRAY_A / JSON*
 
-return : PHP Associative Array / JSON Object
+#### Parameters:
 
+**role** : *string*
+- Use 'User Role'
 
+**s** : *string*
+- Query : table : wp_users, columns: user_login, user_nicename, user_email, user_url, display_name
 
+**location_country** : *string*
+- Query **wp_postworld_user_meta** table column **location_country**
 
-Parameters:
+**location_region** : *string*
+- Query **wp_postworld_user_meta** table column **location_region** 
 
-role : string
-• Use 'User Role'
+**location_city** : *string*
+- Query **wp_postworld_user_meta** table column **location_city**
 
+**location** : *string*
+- Query **location_country**, **location_city**, and **location_region**
 
-s : string
-• Query : table : wp_users, columns: user_login, user_nicename, user_email, user_url, display_name
+**orderby** : *string*
+- Options:
+  - **post_points** - Points to the user's posts
+  - **comment_points** - Points to user's comments
+  - **display_name** - Use Display Name, alphabetical
+  - **username** - Use *Nice Name*, alphabetical
+  - **date** - Date joined
 
+**order** : *string*
+- Options : 
+  - **ASC** (default)
+  - **DESC**
 
-location_country : string
-• Query wp_postworld_user_meta table column location_country
-
-location_region : string
-• Query wp_postworld_user_meta table column location_region 
-
-location_city : string
-• Query wp_postworld_user_meta table column location_city
-
-location : string
-• Query location_country, location_city, and location_region
-
-
-
-
-
-
-orderby : string
-     • 'post_points' - Points to the user's posts
-     • 'comment_points' - Points to user's comments
-     • 'display_name' - Use Display Name, alphabetical
-     • 'date' - Date joined
-
-     • 'location_country' - Alphabetical by Country
-
-
-
-
-order : string
-     • ASC (default)
-     • DESC
-
-
-
-Usage:
-
-
-
+#### Usage:
+``` php
 $args = array(
-     location_country : {{search_terms}}
-     location_region : {{search_terms}}
-     location_city : {{search_terms}}
-     location : {{search_terms}}
-
-
-     role : {{string}}
-
-
-     s : {{search_terms}}
-
-
-     orderby : {{string}}
-     order : {{string}}
-
-
-     fields : array(id) // default ids only // use get_user_data() method
-     return_format : {{ARRAY / JSON}}
-     
+     'location_country' => {{search_terms}}
+     'location_region' => {{search_terms}}
+     'location_city' => {{search_terms}}
+     'location' => {{search_terms}}
+     'role' => {{string}}
+     's' => {{search_terms}}
+     'orderby' => {{string}}
+     'order' => {{string}}
+     'fields' => array(id) // default ids only // use get_user_data() method
+     'return_format' => {{ARRAY / JSON}}
 );
+$users = pw_user_query( $args );
 
-
-
-
-
+```
 
 
 PHP / USER FUNCTIONS
