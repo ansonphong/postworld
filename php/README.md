@@ -1039,11 +1039,11 @@ array(
 
 **POST TEMPLATES**
 
-- **Default** posts template path :
-  - /plugins/postworld/templates/posts
+- **Default** posts template path :  
+  /plugins/postworld/templates/posts
 
-- **Over-ride** post template path:
-  - /theme_name/postworld/templates/posts
+- **Over-ride** post template path:  
+  /theme_name/postworld/templates/posts
 
 1. Generate list of template names :
   - {{post_type}}-{{post_view}}.html  
@@ -1059,18 +1059,17 @@ array(
 
 4. If template **post_view** fallback doesn't exist, fallback to default templates path
 -  post_view >> defaults  
-  ***/theme_name**/postworld/templates/post-list.html* >> ***/plugins**/postworld/templates/post-list.html*
+  **/theme_name**/postworld/templates/post-list.html* >> **/plugins**/postworld/templates/post-list.html*
 
 5. Gather all the template files into an object
 
-
 **PANEL TEMPLATES**
 
-- Default panels template path :
-  - **/plugins**/postworld/templates/panels
+- Default panels template path :  
+  **/plugins**/postworld/templates/panels
 
-- Over-ride panels template path:
-  - **/theme_name**/postworld/templates/panels
+- Over-ride panels template path:  
+  **/theme_name**/postworld/templates/panels
 
 1. Generate an Associative Array of all the .HTML files in both the Default and Over-ride template folders
   - Key is file_name without the HTML extension, value is the path relative to base domain
