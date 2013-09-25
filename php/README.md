@@ -196,7 +196,7 @@ Get the total number of points of the given post from the points column in **wp_
 - Get all posts which user has voted on from wp_postworld_points
 
 **return** : *Object*
-```
+``` php
 	#for_each
 	'post_id' => {{integer}}
 	'votes' => {{integer}}
@@ -229,7 +229,7 @@ Get the total number of points of the given post from the points column in **wp_
 
 **return** : *integer* (the number of points the user can cast)
 
-
+------
 
 ## Rank Scores
 
