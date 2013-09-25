@@ -228,3 +228,39 @@ Get the total number of points of the given post from the points column in **wp_
 - Checks how many points the user's role can cast, from wp_postworld_user_roles table, under vote_points column
 
 **return** : *integer* (the number of points the user can cast)
+
+
+
+## Rank Scores
+
+**php/postworld-rank.php**  
+Contains functions which are used to read and write Rank Scores for posts.
+
+Rank Scores, in brief, are calculated by an equation using the number of points and comments divided by the age of the post.
+
+The Rank Score equation also involves several other curves and 'Currents' which help sort posts based on popularity, similar to Reddit.
+
+------
+
+### get_rank_score ( *$post_id, [$method]* )
+- Gets the Rank Score of the given post, using calculate_rank_score()
+- Retrieves from the rank_score column in wp_postworld_meta
+
+**return** : *integer* (Rank Score)
+
+------
+
+### calculate_rank_score ( *$post_id* )
+- Calculates Rank Score based on rank equation
+- Returns the Rank Score 
+
+**return** : *integer* (Rank Score)
+
+------
+
+### cache_rank_score ( *$post_id* )
+- Calculate rank_score with calculate_rank_score() method
+- Cache the result in wp_postworld_meta in the rank_score column
+
+**return** :  *integer* (Rank Score) 
+
