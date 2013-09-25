@@ -197,10 +197,10 @@ Get the total number of points of the given post from the points column in **wp_
 
 **return** : *Object*
 ```
-     #for_each
-     post_id : {{integer}}
-     votes : {{integer}}
-     time : {{timestamp}}
+	#for_each
+	'post_id' => {{integer}}
+	'votes' => {{integer}}
+	'time' => {{timestamp}}
 ```
 
 ------
@@ -215,10 +215,10 @@ Get the total number of points of the given post from the points column in **wp_
 3. Generate average (total_points/total_posts) 
 
 **return** : *Object*
-```
-     total_posts: {{integer}} (number of posts voted on)
-     total_points: {{integer}} (number of points cast by up/down votes)
-     average_points: {{decimal}} (average number of points per post)
+``` php
+     'total_posts' => {{integer}} //(number of posts voted on)
+     'total_points' => {{integer}} //(number of points cast by up/down votes)
+     'average_points' => {{decimal}} //(average number of points per post)
 ```
 
 ------
