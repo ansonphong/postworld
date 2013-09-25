@@ -1,4 +1,21 @@
 <?php
+function get_rank_score( $post_id, $method ){
+	/*  • Gets the Rank Score of the given post, using calculate_rank_score()
+		• Retrieves from the rank_score column in wp_postworld_meta
+		return : integer (Rank Score)
+	 */
+	global $wpdb;
+	$wpdb->show_errors();
+	
+	$query ="select rank_score from $wpdb->pw_prefix"."post_meta where post_id=".$post_id;
+	echo($query);
+	$rank_score = $wpdb->get_var($query);
+	if($rank_score == null)
+		$rank_score = 0;
+	
+	return $rank_score;
+}
+
 
 function calculate_rank_score ( $post_id ) {
 	/*
@@ -103,22 +120,7 @@ function calculate_rank_score ( $post_id ) {
 
 }
 
-function get_rank_score( $post_id, $method ){
-	/*  • Gets the Rank Score of the given post, using calculate_rank_score()
-		• Retrieves from the rank_score column in wp_postworld_meta
-		return : integer (Rank Score)
-	 */
-	global $wpdb;
-	$wpdb->show_errors();
-	
-	$query ="select rank_score from $wpdb->pw_prefix"."post_meta where post_id=".$post_id;
-	echo($query);
-	$rank_score = $wpdb->get_var($query);
-	if($rank_score == null)
-		$rank_score = 0;
-	
-	return $rank_score;
-}
+
 
 
 

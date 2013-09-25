@@ -21,5 +21,25 @@ function pw_add_intervals($schedules) {
 	return $schedules;
 }
 add_filter( 'cron_schedules', 'pw_add_intervals'); 
+	
 
+
+class cron_logs_Object {
+	public $type;// {{feed/post_type}}
+	public $query_id;// {{feed id / post_type slug}}
+	public $time_start;// {{timestamp}}
+	public $time_end;// {{timestamp}}
+	public $timer;// {{milliseconds}}
+	public $posts;// {{number of posts}}
+	public $timer_average;// {{milliseconds}}
+	public $query_vars;// {{ query_vars Object }}
+}
+
+class query_vars_Object  {
+	public $post_type;
+	public $class;
+	public $format;
+
+}
+	
 ?>

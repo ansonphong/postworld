@@ -17,26 +17,7 @@
 		 public $votes =0;
 		 public $time =null;
 	}
-	
-	
-	class cron_logs_Object {
-		public $type;// {{feed/post_type}}
-		public $query_id;// {{feed id / post_type slug}}
-		public $time_start;// {{timestamp}}
-		public $time_end;// {{timestamp}}
-		public $timer;// {{milliseconds}}
-		public $posts;// {{number of posts}}
-		public $timer_average;// {{milliseconds}}
-		public $query_vars;// {{ query_vars Object }}
-	}
-	
-	class query_vars_Object  {
-		public $post_type;
-		public $class;
-		public $format;
-	
-	}
-	
+
 	/////////////// POST POINTS  ///////////////////
 	function get_post_points($post_id) {
 		/*
@@ -161,7 +142,7 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 		
-		$query ="select SUM(points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
+		$query ="select SUM(comment_points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
 		$total_points = $wpdb -> get_var($query);
 		
 		if($total_points==null)
@@ -180,13 +161,16 @@
 		$wpdb -> show_errors();		
 		
 		$total_comment_points = get_user_comments_points($user_id);
-		//????????????????????????????ASK about addition
-		$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=post_points+".$total_comment_points." where user_id=".$user_id;
+		
+		
+		$query = "update ".$wpdb->pw_prefix.'user_meta'." set comment_points=".$total_comment_points." where user_id=".$user_id;
 		$wpdb->query($query);
 		
-		return $total_user_points;
+		return $total_comment_points;
 	}
-/*Later*/
+	
+	 
+	 /*Later*/
 	function cache_user_comments_points ( $user_id ){
 		/*• Runs calculate_user_comment_points() Method
 		  • Caches value in comment_points column in wp_postworld_user_meta table
@@ -198,7 +182,6 @@
 	
 	
 	/////////////// GENERAL POINTS  ///////////////////
-	
 	function set_post_points($post_id, $add_points) {
 		/*
 		 • $add_points is an integer
@@ -472,76 +455,5 @@
 		$wpdb -> query($wpdb -> prepare($query));
 		
 	}
-	
-	
-	/////////// CACHE FUNCTIONS      ////////////////
-	function cache_all_post_points() {
-		/*
-		 • Cycles through each post in each post_type with points enabled
-		 • Calculates each post's current points with calculate_points()
-		 • Stores points it in wp_postworld_meta 'points' column
-		 • return : cron_logs Object (add to table wp_postworld_cron_logs)
-		 */
-		//Post_type = page/post, 
-					 
-		global $wpdb;
-	
-		$wpdb -> show_errors();
-		
-		//get wp_options Enable Points ( postworld_points ) field and get post types enabled for points - http://codex.wordpress.org/Function_Reference/get_option
-		//TODO : Use wp_options_api http://codex.wordpress.org/Options_API
-		
-		global $pw_defaults;
-		$points_options = $pw_defaults['points']; // array of post types
-		
-		//select all post ids of posts that their post types are enabled for points
-		//$post_types_string = implode(', ',$points_options['post_types']);
-		
-		
-		$post_types = $points_options['post_types'];
-		//echo(json_encode($post_types).'<br>');
-		$number_of_post_types = count($post_types);
-		$cron_logs;
-		//echo json_encode($cron_logs);
-		$cron_logs['points']= array();
-		//echo json_encode($cron_logs);
-		//echo($number_of_post_types);
-		for($i=0;$i<$number_of_post_types;$i++){
-				$query = "select * from wp_posts where post_type ='".$post_types[$i]."'";
-			//	echo("<br>".$query."<br>");
-				$posts = $wpdb -> get_results($query);
-				$current_cron_log_object = new cron_logs_Object();	
-				
-				$current_cron_log_object->time_start = date("Y-m-d H:i:s");// {{timestamp}}
-				//update postworld_meta
-				$current_cron_log_object->posts=count($posts);// {{number of posts}}
-				$current_cron_log_object->type = 'points';
-				$current_cron_log_object->query_id=$post_types[$i];// {{feed id / post_type slug}}
-				$current_cron_log_object->query_vars = array();
-				foreach ($posts as $row) {
-					
-					//check if already there is a record for this post , yes then calculate points
-					//else create a row with zero points
-					calculate_post_points($row->ID);
-					// {{feed/post_type}}
-					
-					//$current_cron_log_object->query_vars[] ="";// {{ query_vars Object: use pw_get_posts  }}
-				}
-				
-				$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
-				$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
-				$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
-				//echo(json_encode($current_cron_log_object));
-				$cron_logs[$current_cron_log_object->type][] = $current_cron_log_object;
-				//echo json_encode($cron_logs);
-		}
-	
-		//echo json_encode(($cron_logs));
-			
-		
-		
-		 
-	}
-	
 
 ?>

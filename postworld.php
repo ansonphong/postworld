@@ -88,6 +88,10 @@ include 'php/postworld_feeds.php';
 ////////// USER FUNCTIONS ///////////
 include 'php/postworld_users.php';
 
+
+////////// CACHE FUNCTIONS ///////////
+include 'php/postworld_cache.php';
+
 ////////// GET POST FUNCTIONS ///////////
 include 'php/postworld_images.php';
 include 'php/postworld_posts.php';
@@ -99,10 +103,7 @@ include 'php/postworld_query.php';
 
 
 //To get user id from wordpress
-require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php');
-
-
-
+require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 
 
 ?>
