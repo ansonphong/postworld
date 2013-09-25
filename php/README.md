@@ -1145,8 +1145,8 @@ panels : {
 
 - Run get_post_data method on each post ID, for (title, permalink)
 **return** : *Array*
-``` php
 
+``` php
 array(
 	'id' => 24,
 	'title' => post_title,
