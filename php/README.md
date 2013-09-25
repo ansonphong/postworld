@@ -700,70 +700,63 @@ array(
 
 ------
 
-
-PHP / FEEDS
-
+## Feeds
 
 
+### pw_live_feed ( *$args* )
 
-pw_live_feed ( $args ) << REQUIRES pw_query
-
-
-Description:
-
-• Used for custom search querying, etc.
-• Does not access wp_postworld_feeds caches at all
-• Helper function for the pw_live_feed() JS method
+#### Description:
+- Used for custom search querying, etc.
+- Does not access *wp_postworld_feeds* caches at all
+- Helper function for the `pw_live_feed()` JS method
 
 
-Parameters:
+#### Parameters: $args
+
+**feed_id** : *string*
 
 
+**preload** : *integer*
+- Number of posts to fetch data and return as post_data
 
-feed_id : string
-
-
-preload : integer
-• Number of posts to fetch data and return as post_data
-
-
-feed_query : Array
-• pw_query() Arguments
+**feed_query** : *Array*
+- `pw_query()` Query Variables
 
 
-Process:
-• Generate return feed_outline, with pw_feed_outline( $args[feed_query] ) method
-• Generate return post data by running the defined preload number of the first posts through pw_get_posts( feed_outline, $args['feed_query']['fields'] )
+#### Process:
+- Generate return feed_outline, with pw_feed_outline( $args[feed_query] ) method
+- Generate return post data by running the defined preload number of the first posts through
+`pw_get_posts( feed_outline, $args['feed_query']['fields'] )`
 
 
-Usage:
+#### Usage:
+``` php
 $args = array (
-
      'feed_id' => string,
      'preload'  => integer
      'feed_query' => array(
-          pw_query args    
+          // pw_query args    
      )
 )
+$live_feed = pw_live_feed ( *$args* );
+```
 
+**return** : *Object*
+``` php
+array(
+	'feed_outline' => '12,356,3564,2362,236',
+	'post_data' => array() // Output from pw_get_posts() based on feed_query
+)
+```
 
+------
 
-return : Object
-     feed_outline : [ … ]
-     post_data : { … }
+### pw_register_feed ( *$args* )
 
+#### Description:
+- Registers the feed in **feeds** table
 
-
-
-pw_register_feed ( $args )
-
-
-Description:
-
-• Registers the feed in wp_postworld_feeds table
-
-
-Process:
+#### Process:
 • If the feed_id doesn't appear in the wp_postworld_feeds table :
      • Create a new row
      • Enable write_cache
