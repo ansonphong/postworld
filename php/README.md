@@ -461,7 +461,7 @@ Each function effectively also populates a Wordpress query session, so can be us
 
 **fields** : *string / Array*
 - Set return values. Uses pw_get_posts( $post_ids, $fields ) method
-- Pass this directly to `wp_get_posts()` method unless the value is 'id'
+- Pass this directly to `wp_get_posts()` method unless the value is 'ids'
   - **ids** (default) - Return an Array of post IDs
   - **all** - Return all fields
   - **preview** - Return basic fields
@@ -480,11 +480,9 @@ $args = array(
 	'post_type' => array('post'),
 	'year' => '2013',
 	'month' => '12',
-	'post_format' => 'standard',	// post_format column in wp_postworld_meta 
-	'post_class' => 'editorial',  	// post_class column in wp_postworld_meta
-
+	'post_format' => 'standard',
+	'post_class' => 'editorial',
 	'author' => '1',
-
 	'tax_query' => array(
 		array(
 			'taxonomy' => 'category',
@@ -493,12 +491,9 @@ $args = array(
 		)
 	),
 	's' => 'search string',
-
 	'orderby' => 'rank_score',
 	'order' => 'ASC'
-
 	'posts_per_page' : '20',
-
 	fields : array('ID','post_title','post_content','post_date'), // See pw_get_post() $fields method
 );
 
