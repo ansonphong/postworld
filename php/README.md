@@ -381,7 +381,9 @@ Each function effectively also populates a Wordpress query session, so can be us
 #### Parameters: *$args*
 
 ------
-QUERYING
+
+**QUERYING**
+
 ------
 
 **post_type** : *string / Array*
@@ -389,17 +391,15 @@ QUERYING
   - **string** - Return posts with that post_type
   - **Array** - Return posts in either post_type (IN/OR operator)
 
-post_format : string / Array
-• post_format column in wp_postworld_post_meta 
+**post_format** : *string / Array*
+- post_format column in wp_postworld_post_meta 
+  - **string** - Return posts with that post_type
+  - **Array** - Return posts in either post_type (IN/OR operator) 
 
-     • string - Return posts with that post_type
-     • Array - Return posts in either post_type (IN/OR operator) 
-
-
-post_class : string / Array
-• post_class column in wp_postworld_post_meta
-     • string - Return posts with that post_type
-     • Array - Return posts in either post_type (IN/OR operator) 
+**post_class** : *string / Array*
+- post_class column in wp_postworld_post_meta
+  - **string** - Return posts with that post_type
+  - **Array* - Return posts in either post_type (IN/OR operator) 
 
 author : integer / Array
 Use author id.
