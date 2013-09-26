@@ -94,7 +94,27 @@ Get the total number of points of the given post from the points column in **wp_
 
 ------
 
-**USER POINTS**
+### set_post_points( *$post_id, $user_id, $add_points* )
+
+#### Process
+1. $add_points is an integer
+2. Write row in **wp_postworld_points** table
+3. Passing **0** deletes row
+4. Check that user role has permission to write that many points <<<< HAIDY
+5. Check that user has not voted too many times recently <<<< Concept method <<< PHONG
+6. Check is the user has already voted points on that post
+7. Also update cached points in **wp_postworld_post_meta** directly
+8. Add Unix timestamp to time column in **wp_postworld_post_points**
+
+**return** : *Object*
+``` php
+     'points_added' => {{integer}} // (points which were successfully added)
+     'points_total' => {{integer}} // (from wp_postworld_meta)
+```
+
+------
+
+**USER POST POINTS**
 
 ------
 
@@ -152,24 +172,6 @@ Get the total number of points of the given post from the points column in **wp_
 ------
 
 **GENERAL POINTS**
-
-### set_post_points( *$post_id, $user_id, $add_points* )
-
-#### Process
-1. $add_points is an integer
-2. Write row in **wp_postworld_points** table
-3. Passing **0** deletes row
-4. Check that user role has permission to write that many points <<<< HAIDY
-5. Check that user has not voted too many times recently <<<< Concept method <<< PHONG
-6. Check is the user has already voted points on that post
-7. Also update cached points in **wp_postworld_post_meta** directly
-8. Add Unix timestamp to time column in **wp_postworld_post_points**
-
-**return** : *Object*
-``` php
-     'points_added' => {{integer}} // (points which were successfully added)
-     'points_total' => {{integer}} // (from wp_postworld_meta)
-```
 
 ------
 
