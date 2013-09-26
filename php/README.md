@@ -163,10 +163,6 @@ Anatomy of **post_points_meta** column JSON object in **user_meta** table :
 }
 ```
 
-**TODO:**
-- Check that user has not voted too many times recently <<<< Concept method <<< PHONG
-  - Use post_points_meta to store points activity << PHONG
-
 **return** : *Array*
 ``` php
 array(
@@ -174,6 +170,11 @@ array(
      'points_total' => {{integer}} // (from wp_postworld_meta)
 )
 ```
+
+**TODO:**
+- Check that user has not voted too many times recently <<<< Concept method <<< PHONG
+  - Use post_points_meta to store points activity << PHONG
+
 
 ------
 
