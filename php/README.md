@@ -96,15 +96,23 @@ Get the total number of points of the given post from the points column in **wp_
 
 ### set_post_points( *$post_id, $user_id, $add_points* )
 
+#### Parameters
+
+**$post_id** : *integer*
+
+**$user_id** : *integer*
+
+**$add_points** : *integer*
+
+
 #### Process
-1. $add_points is an integer
-2. Write row in **wp_postworld_points** table
-3. Passing **0** deletes row
-4. Check that user role has permission to write that many points <<<< HAIDY
-5. Check that user has not voted too many times recently <<<< Concept method <<< PHONG
-6. Check is the user has already voted points on that post
-7. Also update cached points in **wp_postworld_post_meta** directly
-8. Add Unix timestamp to time column in **wp_postworld_post_points**
+1. Write row in **wp_postworld_points** table
+2. Passing **$add_points = 0**  deletes row
+3. Check that user role has permission to write that many points <<<< HAIDY
+4. Check that user has not voted too many times recently <<<< Concept method <<< PHONG
+5. Check is the user has already voted points on that post
+6. Also update cached points in **wp_postworld_post_meta** directly
+7. Add Unix timestamp to time column in **wp_postworld_post_points**
 
 **return** : *Object*
 ``` php
