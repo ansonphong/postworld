@@ -651,7 +651,7 @@ Here we have a series of functions which are used to read and write custom user 
 
 ### get_user_data ( *$user_id, [$fields]* )
 
-- Gets meta data from the wp_postworld_user_meta table
+- Gets meta data from the **user_meta** table
 
 #### Parameters:
 **$user_id** : *integer*
@@ -665,6 +665,9 @@ Here we have a series of functions which are used to read and write custom user 
   - location_country
   - location_region
   - location_city
+  - post_points
+  - post_points_meta
+  - comment_points
 
 **return** : *Array* (requested fields)
 ```php
