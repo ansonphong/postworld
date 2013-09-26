@@ -582,15 +582,15 @@ $posts = pw_query( $args, 'JSON' );
 
 ------
 
-### pw_user_query( *$args* );
+### pw_user_query( *$args, [$return_format]* );
 
 #### Description:
 - Similar to [WP_User_Query](http://codex.wordpress.org/Class_Reference/WP_User_Query)
 - Queries users in wp_users table
 
-**return** : *ARRAY_A / JSON*
-
 #### Parameters:
+
+**$args** : *Array*
 
 **role** : *string*
 - Use 'User Role'
@@ -623,6 +623,11 @@ $posts = pw_query( $args, 'JSON' );
   - **ASC** (default)
   - **DESC**
 
+**$return_format** : *string*
+- Options:
+  - ARRAY_A (default)
+  - JSON
+
 #### Usage:
 ``` php
 $args = array(
@@ -634,12 +639,11 @@ $args = array(
      's' => {{search_terms}}
      'orderby' => {{string}}
      'order' => {{string}}
-     'fields' => array(id) // default ids only // use get_user_data() method
-     'return_format' => {{ARRAY / JSON}}
+     'fields' => array(id) // default ids only // use pw_get_userdata() method
 );
-$users = pw_user_query( $args );
-
+$users = pw_user_query( $args, 'JSON' );
 ```
+**return** : *ARRAY_A / JSON* (Requested Fields)
 
 ------
 
@@ -651,7 +655,8 @@ Here we have a series of functions which are used to read and write custom user 
 
 ### pw_get_userdata ( *$user_id, [$fields]* )
 
-- Gets meta data from the **user_meta** table
+#### Description :
+- Extends `get_userdata()` WP Method to include meta data from the Postworld **user_meta** table
 
 #### Parameters:
 **$user_id** : *integer*
@@ -682,6 +687,9 @@ array(
 	... 
 )
 ```
+
+#### TODO :
+- Include WP method `get_userdata()` fields << PHONG
 
 ------
 
