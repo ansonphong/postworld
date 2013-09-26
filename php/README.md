@@ -194,7 +194,7 @@ array(
 - Add up the points voted to given user's posts, stored in **wp_postworld_post_points**
 - **NEW** : For each post, get the **post_type**, and also calculate value of points given to posts of each **post_type**
 - Cache the total result in the **post_points** column in **wp_postworld_user_meta**
-- Cache the **post_types** breakdown in the **post_points_meta** column in **wp_postworld_user_meta**
+- **NEW** : Cache the **post_types** breakdown in the **post_points_meta** column in **wp_postworld_user_meta**
 
 **return** : *Array* (number of points)
 ```php
