@@ -30,19 +30,27 @@
 		Parameters:
 		$user_id : integer
 		$fields : string / Array
-	• Possible values:
-	     • viewed
-	     • favorites
-	     • location_country
-	     • location_region
-	     • location_city
+		• Possible values:
+		     • viewed
+		     • favorites
+		     • location_country
+		     • location_region
+		     • location_city
 	
 		return : Array (keys: fields, values: values) */
 		
-		//assume that $fields is an array
-		$fields_for_query = implode(",", $fields);
-		
-	
+		// If no $fields defined
+		if (!$fields)
+			$fields_for_query = '*';
+
+		// If $fields is an Array 
+		elseif (is_array($fields)) // If it's an Array
+			$fields_for_query = implode(",", $fields);
+
+		// If $fields is a string
+		else 
+			$fields_for_query = $fields;
+
 		global $wpdb;
 		$wpdb -> show_errors();
 		$query = "select ".$fields_for_query." from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
@@ -50,8 +58,7 @@
 		//esult will be output as an numerically indexed array of associative arrays, using column names as keys
 		$result = $wpdb->get_results( $query, ARRAY_A  );
 		return $result;
-		
-		
+
 	}
 	
 	
