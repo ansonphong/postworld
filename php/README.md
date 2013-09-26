@@ -656,9 +656,9 @@ Here we have a series of functions which are used to read and write custom user 
 #### Parameters:
 **$user_id** : *integer*
 
-**$fields* : *Array*
+**$fields* : (optional) *string / Array*
+- Default : Return all fields
 - Options:
-  - all (default)
   - viewed
   - favorites
   - location_country
@@ -670,8 +670,7 @@ Here we have a series of functions which are used to read and write custom user 
 
 #### Usage
 ``` php
-$fields = array(viewed, favorites, post_points_meta);
-$user_data = get_user_data();
+$user_data = get_user_data('1', array('viewed', 'favorites', 'location_country'));
 ```
 
 **return** : *Array* (requested fields)
