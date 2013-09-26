@@ -1016,13 +1016,15 @@ pw_register_feed ($args);
 
 **return** : *Array*
 ``` php
-	'feed_id' => {{string}}
-	'feed_query' => {{array}}
-	'time_start' => {{integer/timestamp}}
-	'time_end' => {{integer/timestamp}}
-	'timer' => {{milliseconds}}
-	'feed_outline' => {{array (of post IDs)}}
+array(
+	'feed_id' => {{string}},
+	'feed_query' => {{array}},
+	'time_start' => {{integer/timestamp}},
+	'time_end' => {{integer/timestamp}},
+	'timer' => {{milliseconds}},
+	'feed_outline' => {{array (of post IDs)}},
 	'post_data' => {{array (of post data)}}
+)
 ```
 
 ------
