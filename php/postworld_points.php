@@ -182,9 +182,9 @@
 	
 	
 	/////////////// GENERAL POINTS  ///////////////////
-	function set_post_points($post_id, $add_points) {
+	function set_post_points($post_id, $set_points) {
 		/*
-		 • $add_points is an integer
+		 • $set_points is an integer
 		 • Write row in wp_postworld_points
 		 • Passing 0 deletes row
 		 • Check that user role has permission to write that many points (wp_options) <<<<HAIDY
@@ -208,16 +208,16 @@
 		$postPointsRow = $wpdb -> get_row($query);
 	
 		//check if it is required to delete the row and update cashed points (triggers)
-		if ($add_points == 0) {
+		if ($set_points == 0) {
 			if ($postPointsRow != null) {
 				$query = "delete from ".$wpdb->pw_prefix.'post_points'." where post_id=" . $post_id . " and user_id=" . $user_id;
 				$wpdb -> query($wpdb -> prepare($query));
-				$add_points = -($postPointsRow -> post_points);
+				$set_points = -($postPointsRow -> post_points);
 				$points_total = get_post_points($post_id);
 			} else {
 				//nothing was done.
 				$points_total = get_post_points($post_id);
-				$add_points = 0;
+				$set_points = 0;
 			}
 	
 		} else {
@@ -225,21 +225,21 @@
 			if ($postPointsRow != null) {
 				//echo ('NOTT NULL');
 				// check if user can add more points from wp-options
-				$userCanAddPoints = can_user_add_more_points($user_id,$postPointsRow->post_points,$add_points);
+				$userCanAddPoints = can_user_add_more_points($user_id,$postPointsRow->post_points,$set_points);
 				if ($userCanAddPoints) {
-					$query = "Update ".$wpdb->pw_prefix.'post_points'." set post_points=post_points + ". $add_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
+					$query = "Update ".$wpdb->pw_prefix.'post_points'." set post_points=post_points + ". $set_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
 					//echo($query);
 					$wpdb -> query($wpdb -> prepare($query));
 					$points_total = get_post_points($post_id);
 				} else {// set added points equal zero and call get points only
-					$add_points = 0;
+					$set_points = 0;
 					// user can't add points and no points were added
 					$points_total = get_post_points($post_id);
 				}
 	
 			} else {// row not found, insert
 				//echo ('NULL');
-				$query = "insert into ".$wpdb->pw_prefix.'post_points'." values(" . $post_id . "," . $user_id . "," . $add_points . ",null)";
+				$query = "insert into ".$wpdb->pw_prefix.'post_points'." values(" . $post_id . "," . $user_id . "," . $set_points . ",null)";
 				//time stamp added automatically
 				//echo($query);
 				$wpdb -> query($wpdb -> prepare($query));
@@ -250,10 +250,10 @@
 		//prepare output format
 	
 		/*echo("total Pooints:".$points_total);
-		 //echo("added points:" .$add_points);*/
+		 //echo("added points:" .$set_points);*/
 	
 		$output = new set_post_points_Output();
-		$output -> points_added = $add_points;
+		$output -> points_added = $set_points;
 		$output -> points_total = $points_total;
 		return $output;
 	}

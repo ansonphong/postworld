@@ -94,30 +94,84 @@ Get the total number of points of the given post from the points column in **wp_
 
 ------
 
-### set_post_points( *$post_id, $user_id, $add_points* )
+### set_post_points( *$post_id, $set_points* )
 
 #### Parameters
 
 **$post_id** : *integer*
 
-**$user_id** : *integer*
-
-**$add_points** : *integer*
-
+**$set_points** : *integer*
 
 #### Process
-1. Write row in **wp_postworld_points** table
-2. Passing **$add_points = 0**  deletes row
-3. Check that user role has permission to write that many points <<<< HAIDY
-4. Check that user has not voted too many times recently <<<< Concept method <<< PHONG
-5. Check is the user has already voted points on that post
-6. Also update cached points in **wp_postworld_post_meta** directly
-7. Add Unix timestamp to time column in **wp_postworld_post_points**
 
-**return** : *Object*
+- Check role of current user, and check how many points they can cast from **user_roles** table as **$vote_points**
+  - If **abs($set_points)** is greater than the user's role **vote_points**, reduce to **vote_points**
+
+**HINT:**
+```php
+	if ( abs($vote_points) > abs($set_points) )
+		$set_points = $vote_points * (abs($set_points)/$set_points)
+```
+
+- Check if row exists in **points** table for the given **$post_id** and **$user_id**
+  - If **no row**, add row to **points** table
+  - If **row exists**, update the row
+  - If **$set_points = 0**, delete row
+
+- Add Unix timestamp to **time** column in **post_points** table
+
+- Update cache in **post_meta** Table
+  1. If row doesn't exist for given **post_id** in **post_meta** table create new row
+  2. Update cached **post_points** row in **post_meta** table directly if there is a change in points
+
+**HINT:**
+```php
+$old_user_points = has_voted_on_post($post_id,$user_id);
+$update_points = $set_points - $old_user_points;
+
+$old_post_points = get_post_points($post_id);
+$new_post_points = $old_post_points + $update_points;
+
+// Set post_points column in post_meta table to $new_post_points
+
+```
+
+- Update cache in **user_meta** Table
+  1. Get value of **post_points_meta** column in **user_meta** table
+  2. Update the number of points in the **post_points_meta** object
+
+**HINT:**
 ``` php
+$post_type = get_post_type( $post_id ); // check post_type of given post
+$post_points_meta = // Get value of post_points_meta column in user_meta table
+$post_points_meta = json_decode( $post_points_meta ); // decode form JSON
+$post_type_points = $post_points_meta['post_type'][$post_type]; // Get the number of points in given post_type
+$post_points_meta['post_type'][$post_type] = $post_type_points + $update_points; // Add new points
+$post_points_meta = json_encode($post_points_meta); // encode back into JSON
+// Write new post_points_meta object
+```
+
+Anatomy of **post_points_meta** column JSON object in **user_meta** table :
+``` javascript
+{
+	post_type : {
+		post : 242,
+		link : 523,
+		blog : 123,
+		event : 12
+	}
+}
+```
+
+**TODO : **
+- Check that user has not voted too many times recently <<<< Concept method <<< PHONG
+
+**return** : *Array*
+``` php
+array(
      'points_added' => {{integer}} // (points which were successfully added)
      'points_total' => {{integer}} // (from wp_postworld_meta)
+)
 ```
 
 ------
@@ -143,7 +197,7 @@ Get the total number of points of the given post from the points column in **wp_
 ------
 
 ### cache_user_posts_points ( *$user_id* )
-- Runs calculate_user_post_points() Method
+- Runs `calculate_user_posts_points()` Method
 - Caches value in **post_points** column in **wp_postworld_user_meta** table
 
 **return** : *integer* (number of points)
