@@ -623,6 +623,12 @@ $posts = pw_query( $args, 'JSON' );
   - **ASC** (default)
   - **DESC**
 
+**fields** : *Array*
+- Options : 
+  - **All** (default)
+  - Any fields from `get_userdata()` Method : (http://codex.wordpress.org/Function_Reference/get_userdata)
+  - Any fields from `pw_get_userdata()` Method
+
 **$return_format** : *string*
 - Options:
   - ARRAY_A (default)
@@ -639,7 +645,7 @@ $args = array(
      's' => {{search_terms}}
      'orderby' => {{string}}
      'order' => {{string}}
-     'fields' => array(id) // default ids only // use pw_get_userdata() method
+     'fields' => array(ids) // default ids only // use pw_get_userdata() method
 );
 $users = pw_user_query( $args, 'JSON' );
 ```
