@@ -585,8 +585,8 @@ $posts = pw_query( $args, 'JSON' );
 ### pw_user_query( *$args, [$return_format]* );
 
 #### Description:
-- Similar to [WP_User_Query](http://codex.wordpress.org/Class_Reference/WP_User_Query)
-- Queries users in wp_users table
+- Similar to [WP_User_Query](http://codex.wordpress.org/Class_Reference/WP_User_Query), queries users in wp_users table
+- Extends Query fields to Postworld **user_meta** fields
 
 #### Parameters:
 
