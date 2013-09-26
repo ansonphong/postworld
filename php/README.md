@@ -105,12 +105,12 @@ Get the total number of points of the given post from the points column in **wp_
 #### Process
 
 - Check role of current user, and check how many points they can cast from **user_roles** table as **$vote_points**
-  - If **abs($set_points)** is greater than the user's role **vote_points**, reduce to **vote_points**
+  - If **$set_points** is greater than the user's role **vote_points**, reduce to **vote_points**
 
 **HINT:**
 ```php
 	if ( abs($vote_points) > abs($set_points) )
-		$set_points = $vote_points * (abs($set_points)/$set_points)
+		$set_points = $vote_points * (abs($set_points)/$set_points);
 ```
 
 - Check if row exists in **points** table for the given **$post_id** and **$user_id**
@@ -120,23 +120,23 @@ Get the total number of points of the given post from the points column in **wp_
 
 - Add Unix timestamp to **time** column in **post_points** table
 
-- Update cache in **post_meta** Table
+- Update cache in **post_meta** table
   1. If row doesn't exist for given **post_id** in **post_meta** table create new row
   2. Update cached **post_points** row in **post_meta** table directly if there is a change in points
 
 **HINT:**
 ```php
-$old_user_points = has_voted_on_post($post_id,$user_id);
-$update_points = $set_points - $old_user_points;
+$old_user_points = has_voted_on_post($post_id,$user_id); // get previous points user has voted on points
+$update_points = $set_points - $old_user_points; // calculate the difference in points
 
-$old_post_points = get_post_points($post_id);
-$new_post_points = $old_post_points + $update_points;
+$old_post_points = get_post_points($post_id); // get previous points of the post
+$new_post_points = $old_post_points + $update_points; // add the updated points
 
 // Set post_points column in post_meta table to $new_post_points
 
 ```
 
-- Update cache in **user_meta** Table
+- Update cache in **user_meta** table
   1. Get value of **post_points_meta** column in **user_meta** table
   2. Update the number of points in the **post_points_meta** object
 
@@ -144,11 +144,11 @@ $new_post_points = $old_post_points + $update_points;
 ``` php
 $post_type = get_post_type( $post_id ); // check post_type of given post
 $post_points_meta = // Get value of post_points_meta column in user_meta table
-$post_points_meta = json_decode( $post_points_meta ); // decode form JSON
+$post_points_meta = json_decode( $post_points_meta ); // decode from JSON
 $post_type_points = $post_points_meta['post_type'][$post_type]; // Get the number of points in given post_type
 $post_points_meta['post_type'][$post_type] = $post_type_points + $update_points; // Add new points
 $post_points_meta = json_encode($post_points_meta); // encode back into JSON
-// Write new post_points_meta object
+// Write new post_points_meta object to user_meta table
 ```
 
 Anatomy of **post_points_meta** column JSON object in **user_meta** table :
@@ -163,8 +163,9 @@ Anatomy of **post_points_meta** column JSON object in **user_meta** table :
 }
 ```
 
-**TODO : **
+**TODO:**
 - Check that user has not voted too many times recently <<<< Concept method <<< PHONG
+  - Use post_points_meta to store points activity << PHONG
 
 **return** : *Array*
 ``` php
