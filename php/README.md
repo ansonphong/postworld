@@ -1098,6 +1098,7 @@ pw_get_templates ($args);
 
 - **Array** - With post_views nested within post_types
 
+After JSON Encoded :
 ``` javascript
 {
 posts : {
