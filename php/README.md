@@ -656,7 +656,7 @@ Here we have a series of functions which are used to read and write custom user 
 #### Parameters:
 **$user_id** : *integer*
 
-**$fields* : (optional) *string / Array*
+**$fields** : (optional) *string / Array*
 - Default : Return all fields
 - Options:
   - viewed
