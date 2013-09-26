@@ -649,15 +649,14 @@ Here we have a series of functions which are used to read and write custom user 
 
 ------
 
-### get_user_data ( *$user_id, [$fields]* )
+### pw_get_userdata ( *$user_id, [$fields]* )
 
 - Gets meta data from the **user_meta** table
 
 #### Parameters:
 **$user_id** : *integer*
 
-
-**$fields*** : *Array*
+**$fields* : *Array*
 - Options:
   - all (default)
   - viewed
@@ -668,6 +667,12 @@ Here we have a series of functions which are used to read and write custom user 
   - post_points
   - post_points_meta
   - comment_points
+
+#### Usage
+``` php
+$fields = array(viewed, favorites, post_points_meta);
+$user_data = get_user_data();
+```
 
 **return** : *Array* (requested fields)
 ```php

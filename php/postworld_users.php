@@ -23,9 +23,8 @@
 		public $region='';
 	} 
 	
-	
-	 
-	function get_user_data ( $user_id, $fields ){
+
+	function pw_get_userdata ( $user_id, $fields ){
 		/*
 		 • Gets meta data from the wp_postworld_user_meta table
 		Parameters:
