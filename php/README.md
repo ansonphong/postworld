@@ -626,7 +626,7 @@ $posts = pw_query( $args, 'JSON' );
 **fields** : *Array*
 - Options : 
   - **All** (default)
-  - Any fields from `get_userdata()` Method : (http://codex.wordpress.org/Function_Reference/get_userdata)
+  - Any fields from `get_userdata()` Method : http://codex.wordpress.org/Function_Reference/get_userdata
   - Any fields from `pw_get_userdata()` Method
 
 **$return_format** : *string*
