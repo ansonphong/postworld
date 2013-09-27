@@ -668,8 +668,8 @@ Here we have a series of functions which are used to read and write custom user 
 **$user_id** : *integer*
 
 **$fields** : (optional) *string / Array*
-- Default : Return all fields
-- Standard Wordpress User Fields:
+- **all** : Default - Return all fields
+- Standard **Wordpress** User Fields:
   - user_login
   - user_nicename
   - user_email
@@ -689,7 +689,7 @@ Here we have a series of functions which are used to read and write custom user 
   - roles
   - capabilities
 
-- Custom Postworld User Fields:
+- Custom **Postworld** User Fields:
   - viewed
   - favorites
   - location_country
