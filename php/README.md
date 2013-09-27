@@ -1217,10 +1217,10 @@ $args = array(
 		'post_views' => array( 'grid', 'list', 'detail', 'full' )
 	),
 );
-pw_get_templates ($args);
+$post_templates = pw_get_templates ($args);
 
 // To get Panel Template Object
-pw_get_templates ( array( 'panels'=>'panel_id' ));
+$panel_template = pw_get_templates ( array( 'panels'=>'panel_id' ));
 
 ```
 
