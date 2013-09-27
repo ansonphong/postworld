@@ -1167,7 +1167,7 @@ Options:
 **Post Templates Object**
 
 ``` php
-	if(is_array($templates_object)) // If it's an array
+	if($templates_object['posts']) // If it's an array
 ```
 
 1. Generate list of template names :
@@ -1189,12 +1189,6 @@ Options:
 5. Gather all the template files into an object
 
 
-**Panel Template Object**
-
-``` php
-	if(is_string($templates_object)) // If it's a string
-```
-
 **PANEL TEMPLATES**
 
 - Default panels template path :  
@@ -1202,6 +1196,12 @@ Options:
 
 - Over-ride panels template path:  
   **/theme_name**/postworld/templates/panels
+
+**Panel Template Object**
+
+``` php
+	if($templates_object['panels']) // If it's a string
+```
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
   - Key is **file_name** without the HTML extension, value is the path relative to base domain
