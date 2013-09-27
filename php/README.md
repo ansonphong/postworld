@@ -1167,7 +1167,7 @@ Options:
 **Post Templates Object**
 
 ``` php
-	if($templates_object['posts']) // If it's an array
+	if($templates_object['posts']) // If it has a posts object
 ```
 
 1. Generate list of template names :
@@ -1200,7 +1200,7 @@ Options:
 **Panel Template Object**
 
 ``` php
-	if($templates_object['panels']) // If it's a string
+	if($templates_object['panels']) // If it has a templates object
 ```
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
