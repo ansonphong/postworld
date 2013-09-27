@@ -1179,11 +1179,11 @@ Options:
 2. For each template name, check over-rides path for templates with `file_exists()` PHP Method
 
 3. If template **post_type** doesn't exist, fallback:
-  - **post_type** = **post**  
+  - For **post_type** default to **post**  
   If ( **link-list.html** ) doesn't exist use ( **post-list.html** )
 
 4. If template **post_view** fallback doesn't exist, fallback to default templates path
-  -  **post_view** refert to plugin defaults  
+  -  For **post_view** default to plugin path  
   If ( **/theme_name**/.../post-list.html ) doesn't exist, use ( **/plugins**/.../post-list.html )
 
 5. Gather all the template files into an object
