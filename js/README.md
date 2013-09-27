@@ -213,7 +213,7 @@ feed_init['feed_id'] = {
 ### load-panel ( *postworld.directive* )
 
 #### Description:
-- Loads a panel
+- Loads a panel by **panel_id***
 
 ####Process:
 
@@ -242,7 +242,7 @@ feed_init['feed_id'] = {
 <div load-panel="ad_panel" width="300" height="100" class="panel_class" id="ad_panel_id"></div> 
 ```
 
-Designer can optionally add a custom **ng-controller*** to the html.
+- Designer can optionally add a custom **ng-controller*** to the html here.
 
 #### Requires:
 - `pw_cache_feed()` PHP Method
