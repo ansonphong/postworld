@@ -1037,7 +1037,7 @@ array(
 
 
 #### Process:
-- Generate return feed_outline, with pw_feed_outline( $args[feed_query] ) method
+- Generate return **feed_outline**, with `pw_feed_outline( $args[feed_query] )` method
 - Generate return post data by running the defined preload number of the first posts through
 `pw_get_posts( feed_outline, $args['feed_query']['fields'] )`
 
@@ -1045,8 +1045,8 @@ array(
 #### Usage:
 ``` php
 $args = array (
-     'feed_id' => string,
-     'preload'  => integer
+     'feed_id' => {{string}},
+     'preload'  => {{integer}}
      'feed_query' => array(
           // pw_query args    
      )
@@ -1057,8 +1057,11 @@ $live_feed = pw_live_feed ( *$args* );
 **return** : *Object*
 ``` php
 array(
+	'feed_id' => {{string}},
 	'feed_outline' => '12,356,3564,2362,236',
-	'post_data' => array() // Output from pw_get_posts() based on feed_query
+	'loaded' => '12,356,3564',
+	'preload' => {{integer}},
+	'post_data' => array(), // Output from pw_get_posts() based on feed_query
 )
 ```
 
