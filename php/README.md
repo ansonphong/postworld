@@ -1384,5 +1384,7 @@ array(
 ## Images
 **php/postworld_images.php**
 
+Contains functions for getting registered images, resizing images and post attachment images.
+
 ------
 
