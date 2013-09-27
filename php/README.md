@@ -1135,25 +1135,40 @@ array(
 
 #### Parameters:
 
-**$templates_object** : *Array* (optional)
+**$templates_object** : *Array/string* (optional)
 
-- **post_types** : *Array* (optional) - Array of post_types which to return template paths for
-  - **default** : Get all registered post types with `get_post_types()` WP Method :  
+Options:
+- **Array** : indicates to return a **post templates** object
+  - **post_types** : *Array* (optional) - Array of post_types which to return template paths for  
+    **default** : Get all registered post types with `get_post_types()` WP Method :  
 	`get_post_types( array( array( 'public' => true, '_builtin' => false ) ), 'names' )`
 
-- **post_views** : *Array* (optional) - Array of 'feed views' which to retrieve templates for
-  - **default** : `array( 'list', 'detail', 'grid', 'full' )`
+  - **post_views** : *Array* (optional) - Array of 'feed views' which to retrieve templates for  
+    **default** : `array( 'list', 'detail', 'grid', 'full' )`
+
+- **string** : indicates to return a **panel** object
+  - **panel_id** : Return the url for the given panel_id
+
+- **null** : *default*  
+  Returns object with all panels and templates in the default and over-ride folders.
 
 
 #### Process:
 
 **POST TEMPLATES**
 
-- **Default** posts template path :  
-  /plugins/postworld/templates/posts
+- **Default** post templates path :  
+  **/plugins**/postworld/templates/posts
 
-- **Over-ride** post template path:  
-  /theme_name/postworld/templates/posts
+- **Over-ride** post templates path :  
+  **/theme_name**/postworld/templates/posts
+
+
+** Post Templates Object**
+
+``` php
+	if(is_array($templates_object)) // If it's an array
+```
 
 1. Generate list of template names :
   - {{post_type}}-{{post_view}}.html  
@@ -1173,6 +1188,13 @@ array(
 
 5. Gather all the template files into an object
 
+
+** Panel Template Object**
+
+``` php
+	if(is_string($templates_object)) // If it's a string
+```
+
 **PANEL TEMPLATES**
 
 - Default panels template path :  
@@ -1181,25 +1203,30 @@ array(
 - Over-ride panels template path:  
   **/theme_name**/postworld/templates/panels
 
-1. Generate an Associative Array of all the .HTML files in both the Default and Over-ride template folders
-  - Key is file_name without the HTML extension, value is the path relative to base domain
+1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
+  - Key is **file_name** without the HTML extension, value is the path relative to base domain
    
-2. Merge the arrays, so that the **Over-ride** paths overwrites the **Default** paths
+2. If file exists in **over-ride** paths, overwrite the **default** paths
 
-**return** : *Array* (with all template paths)
+**return** : *Array* (with requested template paths)
 
 #### Usage:
 ``` php
+// To get Post Templates Object
 $args = array(
 	'post_types' => array( 'post', 'link' ),
 	'post_views' => array( 'grid', 'list', 'detail', 'full' )
 );
 pw_get_templates ($args);
+
+// To get Panel Template Object
+pw_get_templates ('panel_id');
+
 ```
 
 #### Return:
 
-- **Array** - With post_views nested within post_types
+- **Post Templates Object** : *Array* - With post_views nested within post_types
 
 After JSON Encoded :
 ``` javascript
@@ -1211,12 +1238,21 @@ posts : {
           'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
           },
      },
+};
+
+```
+
+- **Panel Template Object** : *Array* - With key as panel_id value as panel_url
+
+After JSON Encoded :
+``` javascript
+{
 panels : {
-     'feed_top': '/wp-content/plugins/postworld/templates/panels/feed_top.html',
-     'front_page': '/wp-content/theme_name /postworld/templates/panels/front_page.html',
-     },
+	'feed_top': '/wp-content/plugins/postworld/templates/panels/feed_top.html',
+	}
 };
 ```
+
 
 ------
 

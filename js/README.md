@@ -218,7 +218,7 @@ feed_init['feed_id'] = {
 ####Process:
 
 **PHP / AJAX :**  
-- Run `get_panel( panel_id )` PHP method via AJAX.  
+- Run `pw_get_templates( panel_id )` PHP method via AJAX.  
   **returns** : 
 ``` javascript
 {
