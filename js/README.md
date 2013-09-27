@@ -221,9 +221,7 @@ feed_init['feed_id'] = {
 - Run `pw_get_templates( panel_id )` PHP method via AJAX.  
   **returns** : 
 ``` javascript
-{
-	panel_id : "template_url.html"
-}
+{ panel_id : "template_url.html" }
 ```
 
 - Populate `templates.panels[feed_id]` JS Object with data object
