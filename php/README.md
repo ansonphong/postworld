@@ -2,10 +2,15 @@ Postworld // PHP / MySQL Functions
 =========
 
 ## Index
-1. [Post Meta : **postworld_meta.php**](#post-meta)
-2. 
-
-
+1. [ **Post Meta** : postworld_meta.php ](#post-meta)
+2. [ **Points** : postworld_points.php ](#points)
+3. [ **Rank Scores** : postworld_rank.php ](#rank-scores)
+4. [ **Caching & Cron Tasks** : postworld_cron.php + postworld_cache.php ](#caching--cron-tasks)
+5. [ **Query** : postworld_query.php ](#query)
+6. [ **Users** : postworld_users.php ](#users)
+7. [ **Posts** : postworld_posts.php ](#posts)
+8. [ **Feeds** : postworld_feeds.php ](#feeds)
+9. [ **Sharing** : postworld_share.php ](#sharing)
 
 ## Post Meta
 
@@ -840,7 +845,7 @@ array(
 
 ------
 
-## Get Posts
+## Posts
 **php/postworld_posts.php**
 
 ------
@@ -1014,6 +1019,29 @@ array(
 	...
 )
 ```
+
+------
+
+### pw_insert_post ( $post )
+- Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post 
+- Include additional Postworld fields as inputs
+
+#### Parameters : $post *Array*
+- All fields in `wp_insert_post()` Method
+- **post_class**
+- **post_format**
+- **link_url**
+- **external_image**
+
+**return** :
+- *post_id* - If added to the database, otherwise return *WP_Error Object*
+
+------
+
+### pw_update_post ( *$post* ) 
+- Extends `wp_update_post()` : http://codex.wordpress.org/Function_Reference/wp_update_post
+- Include additional Postworld fields as inputs (see `pw_insert_post()` )
+
 
 ------
 
@@ -1295,27 +1323,9 @@ panels : {
 };
 ```
 
-
 ------
 
-## User Karma << PHONG
-**php/postworld_karma.php**
-
-### get_user_view_karma ( *$user_id* )
-- Gets current View Karma for given user
-- Calculate based on builtin **view_karma** equation
-**return** : *integer*
-
-------
-
-### get_user_share_karma ( *$user_id* ) << PHONG
-- Gets current Share Karma for given user
-- Calculate based on builtin **share_karma** equation
-**return** : *integer*
-
-------
-
-## Post Sharing
+## Sharing
 **php/postworld_share.php**
 
 ------
@@ -1354,37 +1364,6 @@ array(
 
 ### post_share_report ( *$post_id* ) <<< PHONG
 …
-
-------
-
-## Post Insertion
-**php/postworld_insert.php**
-
-------
-
-### pw_insert_post ( $post )
-- Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post 
-- Include additional Postworld fields as inputs
-
-#### Parameters : $post *Array*
-- All fields in `wp_insert_post()` Method
-- **post_class**
-- **post_format**
-- **link_url**
-- **external_image**
-
-**return** :
-- *post_id* - If added to the database, otherwise return *WP_Error Object*
-
-------
-
-### pw_update_post ( *$post* ) 
-- Extends `wp_update_post()` : http://codex.wordpress.org/Function_Reference/wp_update_post
-- Include additional Postworld fields as inputs (see `pw_insert_post()` )
-
-------
-
-
 
 
 
