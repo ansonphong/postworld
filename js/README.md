@@ -222,7 +222,7 @@ feed_init['feed_id'] = {
   **returns** : 
 ``` javascript
 {
-    panel_id : "template_url.html"
+	panel_id : "template_url.html"
 }
 ```
 
