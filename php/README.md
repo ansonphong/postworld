@@ -1180,7 +1180,7 @@ Options:
 
 3. If template **post_type** doesn't exist, fallback:
   - **post_type** = **post**  
-  if **link-list.html** (doesn't exist) >> use >> *post-list.html*
+  If **link-list.html** doesn't exist use **post-list.html**
 
 4. If template **post_view** fallback doesn't exist, fallback to default templates path
 -  post_view >> defaults  
