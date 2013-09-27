@@ -5,7 +5,8 @@ Postworld // PHP / MySQL Functions
 1. [ **Post Meta** : postworld_meta.php ](#post-meta)
 2. [ **Points** : postworld_points.php ](#points)
 3. [ **Rank Scores** : postworld_rank.php ](#rank-scores)
-4. [ **Caching & Cron Tasks** : postworld_cron.php + postworld_cache.php ](#caching--cron-tasks)
+4. [ **Cron Tasks** : postworld_cron.php ](#cron-tasks)
+4. [ **Caching** : postworld_cache.php ](#caching)
 5. [ **Query** : postworld_query.php ](#query)
 6. [ **Users** : postworld_users.php ](#users)
 7. [ **Posts** : postworld_posts.php ](#posts)
@@ -360,8 +361,26 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 
 ------
 
-## Caching & Cron Tasks
+## Cron Tasks
 
+------
+
+**php/postworld_cron.php**
+
+------
+
+### pw_add_intervals($schedules)
+- Add intervals by which to perform cron tasks
+
+------
+
+## Caching
+
+------
+
+**php/postworld_cache.php**
+
+------
 
 ### cache_all_points ()
 - Runs cache_user_points() and cache_post_points()
