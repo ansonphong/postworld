@@ -1155,7 +1155,11 @@ Options:
 
 #### Process:
 
-**POST TEMPLATES**
+**POST TEMPLATES OBJECT**
+
+``` php
+	if($templates_object['posts']) // If it has a posts object
+```
 
 - **Default** post templates path :  
   **/plugins**/postworld/templates/posts
@@ -1163,12 +1167,6 @@ Options:
 - **Over-ride** post templates path :  
   **/theme_name**/postworld/templates/posts
 
-
-**Post Templates Object**
-
-``` php
-	if($templates_object['posts']) // If it has a posts object
-```
 
 1. Generate list of template names :
   - {{post_type}}-{{post_view}}.html  
@@ -1189,7 +1187,11 @@ Options:
 5. Gather all the template files into an object
 
 
-**PANEL TEMPLATES**
+**PANEL TEMPLATES OBJECT**
+
+``` php
+	if($templates_object['panels']) // If it has a templates object
+```
 
 - Default panels template path :  
   **/plugins**/postworld/templates/panels
@@ -1197,11 +1199,6 @@ Options:
 - Over-ride panels template path:  
   **/theme_name**/postworld/templates/panels
 
-**Panel Template Object**
-
-``` php
-	if($templates_object['panels']) // If it has a templates object
-```
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
   - {{panel_id}}.html  
