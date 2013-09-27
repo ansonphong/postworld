@@ -218,7 +218,7 @@ feed_init['feed_id'] = {
 ####Process:
 
 **PHP / AJAX :**  
-1. Run `get_panel( panel_id )` PHP method via AJAX.  
+- Run `get_panel( panel_id )` PHP method via AJAX.  
   **returns** : 
 ``` javascript
 {
@@ -226,10 +226,10 @@ feed_init['feed_id'] = {
 }
 ```
 
-2. Populate `templates.panels[feed_id]` JS Object with data object
+- Populate `templates.panels[feed_id]` JS Object with data object
 
 **JAVASCRIPT :**  
-1. Append and compile inner **ng-include** directive like:
+- Append and compile inner **ng-include** directive like:
 ``` html 
 <div ng-include="template_url.html" class="inner"></div>
 ```
