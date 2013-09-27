@@ -230,6 +230,7 @@ feed_init['feed_id'] = {
 
 **JAVASCRIPT :**  
 - Append and compile inner **ng-include** directive like:
+
 ``` html
 <div ng-include="template_url.html" class="inner"></div>
 ```
