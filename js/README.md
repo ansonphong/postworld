@@ -240,7 +240,7 @@ feed_init['feed_id'] = {
 ####Usage:
 
 ```html
-<div load-panel="ad_panel" width="300" height="100" class="panel_class" id="ad_panel_id"></div> 
+<div load-panel="ad_panel" class="panel_class"></div> 
 ```
 
 - Designer can optionally add a custom **ng-controller*** to the html here.
