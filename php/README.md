@@ -1164,7 +1164,7 @@ Options:
   **/theme_name**/postworld/templates/posts
 
 
-** Post Templates Object**
+**Post Templates Object**
 
 ``` php
 	if(is_array($templates_object)) // If it's an array
@@ -1189,7 +1189,7 @@ Options:
 5. Gather all the template files into an object
 
 
-** Panel Template Object**
+**Panel Template Object**
 
 ``` php
 	if(is_string($templates_object)) // If it's a string
