@@ -1182,7 +1182,7 @@ Options:
   - For **post_type** default to **post**  
   If ( **link-list.html** ) doesn't exist use ( **post-list.html** )
 
-4. If template **post_view** fallback doesn't exist, fallback to default templates path
+4. If template **post_view** over-ride doesn't exist, fallback to default templates path
   -  For **post_view** default to plugin path  
   If ( **/theme_name**/.../post-list.html ) doesn't exist, use ( **/plugins**/.../post-list.html )
 
