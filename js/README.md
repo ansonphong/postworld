@@ -238,7 +238,7 @@ feed_init['feed_id'] = {
 ####Usage:
 
 ```html
-<div load-panel="ad_panel"></div> 
+<div load-panel="panel_id"></div> 
 ```
 
 - Designer can optionally add a custom **ng-controller** to the html here.
