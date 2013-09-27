@@ -1073,15 +1073,15 @@ array(
 - Registers the feed in **feeds** table
 
 #### Process:
-1. If the feed_id doesn't appear in the wp_postworld_feeds table :
+1. If the **feed_id** doesn't appear in the **wp_postworld_feeds** table :
   1. Create a new row
   2. Enable write_cache
 
-2. Store $args['feed_query'] in the feed_query column in wp_postworld_feeds table as a JSON Object
+2. Store `$args['feed_query']` in the **feed_query** column in Postworld **feeds** table as a JSON Object
 
-3. If write_cache is true, run pw_cache_feed(feed_id)
+3. If write_cache is true, run `pw_cache_feed(feed_id)`
 
-**return** : *$args* Array
+**return** : **$args** *Array*
 
 #### Parameters : $args
 
