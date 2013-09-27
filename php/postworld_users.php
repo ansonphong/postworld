@@ -25,39 +25,92 @@
 	
 
 	function pw_get_userdata ( $user_id, $fields ){
-		/*
-		 • Gets meta data from the wp_postworld_user_meta table
-		Parameters:
-		$user_id : integer
-		$fields : string / Array
-		• Possible values:
-		     • viewed
-		     • favorites
-		     • location_country
-		     • location_region
-		     • location_city
-	
-		return : Array (keys: fields, values: values) */
 		
-		// If no $fields defined
-		if (!$fields)
-			$fields_for_query = '*';
+		$wordpress_user_fields = array(
+			'user_login',
+			'user_nicename',
+			'user_email',
+			'user_url',
+			'user_registered',
+			'display_name',
+			'user_firstname',
+			'user_lastname',
+			'nickname',
+			'user_description',
+			'wp_capabilities',
+			'admin_color',
+			'closedpostboxes_page',
+			'primary_blog',
+			'rich_editing',
+			'source_domain',
+			'roles',
+			'capabilities',
+			);
 
-		// If $fields is an Array 
-		elseif (is_array($fields)) // If it's an Array
-			$fields_for_query = implode(",", $fields);
+		$postworld_user_fields = array(
+			'viewed',
+			'favorites',
+			'location_city',
+			'location_region',
+			'location_country',
+			'post_points',
+			'comment_points',
+			'post_points_meta'
+			);
 
-		// If $fields is a string
-		else 
-			$fields_for_query = $fields;
+		$user_data = array();
 
-		global $wpdb;
-		$wpdb -> show_errors();
-		$query = "select ".$fields_for_query." from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
-		//echo $query;
-		//esult will be output as an numerically indexed array of associative arrays, using column names as keys
-		$result = $wpdb->get_results( $query, ARRAY_A  );
-		return $result;
+		// If Fields is empty or 'all', add all fields
+		if (!$fields || $fields == 'all'){
+			$fields = array_merge( $wordpress_user_fields, $postworld_user_fields );
+		}
+
+		// WORDPRESS USER FIELDS
+		// Check to see if any requested fields are standard Wordpress User Fields
+		foreach ($fields as $value) {
+			// If a requested field is provided by WP get_userdata() Method, collect all the data
+			if ( in_array($value, $wordpress_user_fields) ){
+				$wordpress_user_data = get_userdata($user_id);
+
+				// Transfer the user data into $user_data
+				foreach ( $wordpress_user_data->data as $key => $value)
+					$user_data[$key] = $value;
+				
+				// Get user Roles
+				if (in_array('roles', $fields))
+					$user_data['roles'] = $wordpress_user_data->roles;
+				
+				// Get user Capabilities
+				if (in_array('capabilities', $fields))
+					$user_data['capabilities'] = $wordpress_user_data->allcaps;
+				
+				// Break out of foreach
+				break;
+			}
+		}
+
+		// POSTWORLD USER FIELDS
+		// Check to see if requested fields are custom Postworld User Fields
+		foreach ($fields as $value) {
+			// If a requested field is custom Postworld, get the user's row in *user_meta* table
+			if ( in_array($value, $postworld_user_fields) ){
+
+				global $wpdb;
+				$wpdb -> show_errors();
+				$query = "select * from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
+				//echo $query;
+				//esult will be output as an numerically indexed array of associative arrays, using column names as keys
+				$postworld_user_data = $wpdb->get_results( $query, ARRAY_A  );
+
+				// Transfer the user data into $user_data
+				foreach ( $postworld_user_data as $key => $value)
+					$user_data[$key] = $value;
+
+				break;
+			}
+		}
+
+		return $user_data;
 
 	}
 	
