@@ -255,6 +255,28 @@ feed_init[feed_id] = {
 
 ------
 
+### templates *Object*
++ A meta object which contains urls to templates
+
+``` javascript
+templates = {
+	posts : {
+	     'post' : {
+	          'list' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
+	          'detail' : '/wp-content/plugins/postworld/templates/posts/post-detail.html',
+	          'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
+	          },
+	     },
+	panels : {
+	     'feed_top': '/wp-content/plugins/postworld/templates/panels/feed_top.html',
+	     'front_page': '/wp-content/theme_name /postworld/templates/panels/front_page.html',
+	     },
+};
+```
+
+------
+
+
 ## Related Notes
 
 **Angular JS Template Structure**  
