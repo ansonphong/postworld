@@ -1204,7 +1204,8 @@ Options:
 ```
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
-  - Key is **file_name** without the HTML extension, value is the path relative to base domain
+  - {{panel_id}}.html  
+  Key is **file_name** without the HTML extension, value is the path relative to base domain
    
 2. If file exists in **over-ride** paths, overwrite the **default** paths
 
