@@ -669,7 +669,27 @@ Here we have a series of functions which are used to read and write custom user 
 
 **$fields** : (optional) *string / Array*
 - Default : Return all fields
-- Options:
+- Standard Wordpress User Fields:
+  - user_login
+  - user_nicename
+  - user_email
+  - user_url
+  - user_registered
+  - display_name
+  - user_firstname
+  - user_lastname
+  - nickname
+  - user_description
+  - wp_capabilities
+  - admin_color
+  - closedpostboxes_page
+  - primary_blog
+  - rich_editing
+  - source_domain
+  - roles
+  - capabilities
+
+- Custom Postworld User Fields:
   - viewed
   - favorites
   - location_country
@@ -678,6 +698,7 @@ Here we have a series of functions which are used to read and write custom user 
   - post_points
   - post_points_meta
   - comment_points
+  - user_role
 
 #### Usage
 ``` php
@@ -699,11 +720,23 @@ array(
 
 ------
 
-### set_user_data ( *$user_id, $field, $value* )
-- Adds data to the wp_postworld_user_meta table, under column named '$meta_key'
+### pw_update_user ( *$userdata* )
+- Extends **wp_update_user()** to add data to the Postworld **user_meta** table
+- See **wp_update_user()** : http://codex.wordpress.org/Function_Reference/wp_update_user
+
+#### Usage
+``` php
+	$userdata = array(
+		'ID' => 1,
+		'user_url' => 'http://...com',
+		'user_description' => 'Description here.',
+		'favorites' => '23,24,27',
+		'location_country' => 'Egypt',
+	);
+```
 
 **return** : *boolean*
-- **true** - If successful
+- **user_id** - If successful
 - **false** - If user, or column doesn't exist or if value is wrong content type
 
 ------
