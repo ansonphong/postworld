@@ -1184,7 +1184,7 @@ Options:
 
 4. If template **post_view** fallback doesn't exist, fallback to default templates path
   -  **post_view** refert to plugin defaults  
-  If ( **/theme_name**/../post-list.html ) doesn't exist, use ( **/plugins**/postworld/templates/post-list.html )
+  If ( **/theme_name**/.../post-list.html ) doesn't exist, use ( **/plugins**/.../post-list.html )
 
 5. Gather all the template files into an object
 
