@@ -1179,7 +1179,7 @@ Options:
 2. For each template name, check over-rides path for templates with `file_exists()` PHP Method
 
 3. If template **post_type** doesn't exist, fallback:
-- **post_type** = **post**  
+  - **post_type** = **post**  
   link-list.html >> post-list.html
 
 4. If template **post_view** fallback doesn't exist, fallback to default templates path
