@@ -708,6 +708,7 @@ $user_data = get_user_data('1', array('viewed', 'favorites', 'location_country')
 **return** : *Array* (requested fields)
 ```php
 array(
+	'ID'=> '1',
 	'viewed' => '23,14,24,51,27,15',
 	'favorites' => '23,24,27',
 	'location_country' => 'Egypt',
@@ -735,9 +736,8 @@ array(
 	);
 ```
 
-**return** : *boolean*
+**return** : *integer*
 - **user_id** - If successful
-- **false** - If user, or column doesn't exist or if value is wrong content type
 
 ------
 
