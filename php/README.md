@@ -1138,7 +1138,7 @@ array(
 **$templates_object** : *Array/string* (optional)
 
 Options:
-- **Array** : indicates to return a **post templates** object
+- **Array** : indicates to return a **Post Templates Object**
   - **post_types** : *Array* (optional) - Array of post_types which to return template paths for  
     **default** : Get all registered post types with `get_post_types()` WP Method :  
 	`get_post_types( array( array( 'public' => true, '_builtin' => false ) ), 'names' )`
@@ -1146,7 +1146,7 @@ Options:
   - **post_views** : *Array* (optional) - Array of 'feed views' which to retrieve templates for  
     **default** : `array( 'list', 'detail', 'grid', 'full' )`
 
-- **string** : indicates to return a **panel** object
+- **string** : indicates to return a **Panel Templates Object**
   - **panel_id** : Return the url for the given panel_id
 
 - **null** : *default*  
@@ -1214,13 +1214,15 @@ Options:
 ``` php
 // To get Post Templates Object
 $args = array(
-	'post_types' => array( 'post', 'link' ),
-	'post_views' => array( 'grid', 'list', 'detail', 'full' )
+	'posts' => array(
+		'post_types' => array( 'post', 'link' ),
+		'post_views' => array( 'grid', 'list', 'detail', 'full' )
+	),
 );
 pw_get_templates ($args);
 
 // To get Panel Template Object
-pw_get_templates ('panel_id');
+pw_get_templates ( array( 'panels'=>'panel_id' ));
 
 ```
 
