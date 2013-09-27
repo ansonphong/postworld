@@ -210,6 +210,45 @@ feed_init['feed_id'] = {
 
 ------
 
+### load-panel ( *postworld.directive* )
+
+#### Description:
+- Loads a panel
+
+####Process:
+
+**PHP / AJAX :**  
+1. Run `get_panel( panel_id )` PHP method via AJAX.  
+  **returns** : 
+``` javascript
+{
+    panel_id : "template_url.html"
+}
+```
+
+2. Populate `templates.panels[feed_id]` JS Object with data object
+
+**JAVASCRIPT :**  
+1. Append and compile inner **ng-include** directive like:
+``` html 
+<div ng-include="template_url.html" class="inner"></div>
+```
+
+**return** : *scope*
+
+####Usage:
+
+```html
+<div load-panel="ad_panel" width="300" height="100" class="panel_class" id="ad_panel_id"></div> 
+```
+
+Designer can optionally add a custom **ng-controller*** to the html.
+
+#### Requires:
+- `pw_cache_feed()` PHP Method
+
+------
+
 ## Object Anatomy
 
 ### feed_data *Object*
@@ -275,7 +314,6 @@ templates = {
 ```
 
 ------
-
 
 ## Related Notes
 
