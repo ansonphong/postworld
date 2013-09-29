@@ -41,7 +41,7 @@ function pw_feed_outline ( $pw_query_args ){
 }
 
 
-function pw_query($args,$return_Type = 'JSON') {
+function pw_query($args,$return_Type = 'PW_QUERY') {
 	
 	/*
 	 * Description:
@@ -56,13 +56,13 @@ function pw_query($args,$return_Type = 'JSON') {
 		Process:
 		• After querying and ordering is finished, if more than IDs are required to return, use pw_get_posts() method to return specified fields
 		
-		return : PHP Object / JSON / WP_Query
+		return : PHP Object / JSON / PW_QUERY
 	 
-	 * */
-	 //• JSON (default) - Return a JSON Object
-     //• ARRAY_A - Return an Associative Array
-     //• WP_POST
-	
+	  
+		 • JSON - Return a JSON Object
+	     • ARRAY_A - Return an Associative Array
+	     • PW_QUERY (default) 
+	*/
 		$the_query = new PW_Query($args);
 		if($return_Type == 'ARRAY_A'){
 			return (array) $the_query;
