@@ -54,14 +54,15 @@ function postworld_install() {
   $sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       user_role char(16) NOT NULL,
-      viewed MEDIUMTEXT NOT NULL, 
-      favorites MEDIUMTEXT NOT NULL, 
+      viewed MEDIUMTEXT  NULL, 
+      favorites MEDIUMTEXT  NULL, 
       location_city char(24) NOT NULL,
       location_region char(24) NOT NULL,
       location_country char(24) NOT NULL,
       view_karma mediumint(8) DEFAULT '0' NOT NULL,
       share_karma mediumint(8) DEFAULT '0' NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
+      post_points_meta MEDIUMTEXT NULL,
       comment_points mediumint(8) DEFAULT '0' NOT NULL,
 	  UNIQUE KEY user_id(user_id)
     );";
