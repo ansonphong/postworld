@@ -114,6 +114,27 @@
 
 	}
 	
+	//TODO
+	function pw_update_user( $userdata ){
+		/*
+		 * 
+		 * Extends wp_update_user() to add data to the Postworld user_meta table
+		See wp_update_user() : http://codex.wordpress.org/Function_Reference/wp_update_user
+		Usage
+
+		    $userdata = array(
+		        'ID' => 1,
+		        'user_url' => 'http://...com',
+		        'user_description' => 'Description here.',
+		        'favorites' => '23,24,27',
+		        'location_country' => 'Egypt',
+		    );
+		return : integer
+		
+		user_id - If successful
+		 * 
+		 * */
+	}
 	
 	function add_favorite($post_id,$user_id){
 		

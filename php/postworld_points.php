@@ -90,7 +90,7 @@
 		 * */
 		global $wpdb;
 		$wpdb -> show_errors();
-		
+	
 		$query ="Select post_points from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 		$user_votes_points = $wpdb -> get_var($query);
 		if ($user_votes_points != null) {
@@ -98,6 +98,7 @@
 			return $user_votes_points;
 		} else
 			return 0;
+	
 		
 	}
 	
@@ -105,9 +106,7 @@
 		/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
 			• Stores the result in the post_points column in wp_postworld_user_meta
 		return : integer (number of points)*/
-		$total_user_points = get_user_points_voted_to_posts($user_id);
-		
-		
+	/*	$total_user_points = get_user_points_voted_to_posts($user_id);
 		global $wpdb;
 		$wpdb -> show_errors();
 		
@@ -118,9 +117,26 @@
 
 						
 		}
+		return $total_user_points;*/
+		
+		$total_user_points_breakdown = get_user_points_voted_to_posts($user_id,TRUE);
+		$total_user_points =0;
+		$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "event" => 0));
 		
 		
-		return $total_user_points;
+		foreach ($total_user_points_breakdown as $row) {
+			$total_user_points+= $row->total_points;
+			$post_points_meta['post_type'][$row->post_type] = $row->total_points;
+		}
+		
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."' where user_id=".$user_id;
+		$result = $wpdb->query($query);
+		
+		return array("total"=>$total_user_points,$post_points_meta);
+		
 	}
 	
 	function cache_user_posts_points ( $user_id ){
@@ -142,7 +158,7 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 		
-		$query ="select SUM(comment_points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
+		$query ="select comment_points from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 		$total_points = $wpdb -> get_var($query);
 		
 		if($total_points==null)
@@ -160,8 +176,12 @@
 		global $wpdb;
 		$wpdb -> show_errors();		
 		
-		$total_comment_points = get_user_comments_points($user_id);
+		//$total_comment_points = get_user_comments_points($user_id);
+		$query ="select SUM(comment_points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
+		$total_comment_points = $wpdb -> get_var($query);
 		
+		if($total_comment_points==null)
+			$total_comment_points=0;
 		
 		$query = "update ".$wpdb->pw_prefix.'user_meta'." set comment_points=".$total_comment_points." where user_id=".$user_id;
 		$wpdb->query($query);
@@ -182,6 +202,42 @@
 	
 	
 	/////////////// GENERAL POINTS  ///////////////////
+	
+	function get_post_points_meta($user_id){
+		global $wpdb;	
+		$wpdb-> show_errors();
+		$query = "select post_points_meta from $wpdb->pw_prefix"."user_meta where user_id=".$user_id;
+		return $wpdb -> get_var($query);
+	}
+	
+	
+	function cache_post_points_meta($user_id, $post_points_meta_object){
+		global $wpdb;	
+		$wpdb-> show_errors();
+		$query = "update  $wpdb->pw_prefix"."user_meta set post_points_meta ='".$post_points_meta_object ."' where user_id=".$user_id;
+		//echo $query;
+		$wpdb ->query($query);		
+	}
+
+	function update_post_points_meta($user_id,$post_id, $update_points){
+		//echo ("<br> update_points in cache " .$update_points);
+		$post_type = get_post_type( $post_id ); // check post_type of given post
+		$post_points_meta = get_post_points_meta($user_id);
+		
+		if($post_points_meta == null)
+			$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "event" => 0));
+		else
+			$post_points_meta = json_decode( $post_points_meta,true ); // decode from JSON
+		
+		$post_type_points = $post_points_meta['post_type'][$post_type]; // Get the number of points in given post_type
+		$post_points_meta['post_type'][$post_type] = ((int)$post_type_points + $update_points); // Add new points
+		$post_points_meta = json_encode($post_points_meta); // encode back into JSON
+		
+		//echo $post_points_meta;
+		// Write new post_points_meta object to user_meta table
+		cache_post_points_meta($user_id, $post_points_meta);
+	} 
+	
 	function set_post_points($post_id, $set_points) {
 		/*
 		 • $set_points is an integer
@@ -198,10 +254,19 @@
 		
 		$user_id = get_current_user_id();
 		
-
 		global $wpdb;
 		$wpdb -> show_errors();
 		$points_total = 0;
+		$output = new set_post_points_Output();
+		
+		$old_user_points = has_voted_on_post($post_id,$user_id); // get previous points user has voted on points
+		//echo "<br>Old user points = ".$old_user_points;
+		$vote_points;
+		$update_points ;
+		$old_post_points;
+		$new_post_points;	
+		
+		
 	
 		//get row to check if found or not, also because when is going to be deleted to return reduced points
 		$query = "SELECT * FROM ".$wpdb->pw_prefix.'post_points'." Where post_id=" . $post_id . " and user_id=" . $user_id;
@@ -209,54 +274,66 @@
 	
 		//check if it is required to delete the row and update cashed points (triggers)
 		if ($set_points == 0) {
-			if ($postPointsRow != null) {
+			if ($old_user_points != 0) {
 				$query = "delete from ".$wpdb->pw_prefix.'post_points'." where post_id=" . $post_id . " and user_id=" . $user_id;
 				$wpdb -> query($wpdb -> prepare($query));
-				$set_points = -($postPointsRow -> post_points);
-				$points_total = get_post_points($post_id);
+				$update_points = -($old_user_points);
+				$points_total = calculate_post_points($post_id);
 			} else {
 				//nothing was done.
 				$points_total = get_post_points($post_id);
-				$set_points = 0;
+				$update_points = 0;
 			}
 	
-		} else {
-			//check if row already present, and user has the authority to add much points,else create and add unix timestamp
-			if ($postPointsRow != null) {
+		} else { //set points not 0
+			$vote_points = get_user_vote_power($user_id);
+			if ( abs($vote_points) < abs($set_points) )
+    			$set_points = $vote_points * (abs($set_points)/$set_points); 
+	 
+			$update_points = $set_points - $old_user_points; // calculate the difference in points
+			$old_post_points = get_post_points($post_id); // get previous points of the post
+			$new_post_points = $old_post_points + $update_points; // add the updated points	
+			$output -> points_added = $update_points;
+		
+			//echo "<br>set_points = ".$set_points;
+			//echo "<br>vote_points = ".$vote_points;
+			//echo "<br>update_points = ".$update_points;
+			//echo "<br>old_post_points = ".$old_post_points;
+			//echo "<br>new_post_points = ".$new_post_points;
+			
+			
+			if ($old_user_points != 0) {
 				//echo ('NOTT NULL');
 				// check if user can add more points from wp-options
-				$userCanAddPoints = can_user_add_more_points($user_id,$postPointsRow->post_points,$set_points);
-				if ($userCanAddPoints) {
-					$query = "Update ".$wpdb->pw_prefix.'post_points'." set post_points=post_points + ". $set_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
-					//echo($query);
-					$wpdb -> query($wpdb -> prepare($query));
-					$points_total = get_post_points($post_id);
-				} else {// set added points equal zero and call get points only
-					$set_points = 0;
-					// user can't add points and no points were added
-					$points_total = get_post_points($post_id);
-				}
+				$query = "Update ".$wpdb->pw_prefix.'post_points'." set post_points=". $new_post_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
+				//$output -> points_added = $update_points;
+				//echo $query;
+				$wpdb -> query($wpdb -> prepare($query));
+				$points_total = calculate_post_points($post_id);
 	
 			} else {// row not found, insert
-				//echo ('NULL');
-				$query = "insert into ".$wpdb->pw_prefix.'post_points'." values(" . $post_id . "," . $user_id . "," . $set_points . ",null)";
-				//time stamp added automatically
+				$query = "insert into ".$wpdb->pw_prefix.'post_points'." values(" . $post_id . "," . $user_id . "," . $update_points . ",null)";
 				//echo($query);
+				//$output -> points_added = $update_points;
+				//echo "<br>".$query;
+			
 				$wpdb -> query($wpdb -> prepare($query));
-				$points_total = get_post_points($post_id);
+				$points_total = calculate_post_points($post_id);
 			}
 	
 		}
+		
+		
+		update_post_points_meta($user_id,$post_id, $update_points);
+		
 		//prepare output format
-	
-		/*echo("total Pooints:".$points_total);
-		 //echo("added points:" .$set_points);*/
-	
-		$output = new set_post_points_Output();
-		$output -> points_added = $set_points;
+		//echo("<br>total Pooints:".$points_total);
+		//echo("<br>added points:" .$update_points);
+		$output ->points_added = $update_points;
 		$output -> points_total = $points_total;
 		return $output;
 	}
+	
 	
 	
 	
@@ -272,7 +349,7 @@
 	
 		$query = "SELECT * FROM ".$wpdb->pw_prefix.'post_points'." Where post_id=" . $post_id . " and user_id=" . $user_id;
 		$postPointsRow = $wpdb -> get_row($query);
-	
+		//echo "<br>".$query;
 		if ($postPointsRow != null)
 			return $postPointsRow -> post_points;
 		else
@@ -285,14 +362,23 @@
 	/*	• Check wp_postworld_comment_points to see if the user has voted on the comment
 		• Return the number of points voted
 		return : integer*/
-		
-	}
+		global $wpdb;
+		$wpdb -> show_errors();
+	
+		$query = "SELECT * FROM ".$wpdb->pw_prefix.'comment_points'." Where comment_post_id=" . $comment_id . " and user_id=" . $user_id;
+		$commentPointsRow = $wpdb -> get_row($query);
+		//echo "<br>".$query;
+		if ($commentPointsRow != null)
+			return $commentPointsRow -> points;
+		else
+			return 0;
+}
 	
 	
-	function get_user_points_voted_to_posts($user_id) {
+	function get_user_points_voted_to_posts($user_id, $break_down=FALSE) {
 		/*
 		 • Get array of all posts by given user
-		 • Get points of each post from wp_postworld_meta
+		 • Get points of each post from wp_postworld_post_meta
 		 • Add all the points up
 		 return : integer (number of points)
 		 */
@@ -300,16 +386,23 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		
-		//SELECT * FROM wp_postworld_a1.get_user_points_view;
-		$query = "SELECT SUM(post_points) as total_points FROM ".$wpdb->pw_prefix.'post_meta'." Where author_id=" . $user_id;
-		$total_points = $wpdb -> get_var($query);
-		if ($total_points != null) {
-			//echo("total_points:" . $total_points);
-			return $total_points;
-		} else
-			return 0;
-	
+		if($break_down === FALSE){
+			//SELECT * FROM wp_postworld_a1.get_user_points_view;
+			$query = "SELECT SUM(post_points) as total_points FROM ".$wpdb->pw_prefix.'post_meta'." Where author_id=" . $user_id;
+			$total_points = $wpdb -> get_var($query);
+			if ($total_points != null) {
+				//echo("total_points:" . $total_points);
+				return $total_points;
+			} else
+				return 0;
+		}else{
+			
+			$query ="select post_id,author_id ,sum(post_points) as total_points, wp_posts.post_type from $wpdb->pw_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->pw_prefix"."post_meta.post_id AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id) group by post_type ";	
+			//echo $query;
+			$user_votes_points_breakdown = $wpdb -> get_results($query);
+			//echo json_encode($user_votes_points_breakdown);
+			return $user_votes_points_breakdown;	
+		}
 	}
 	
 	
@@ -431,7 +524,7 @@
 			
 	
 		global $wpdb;	
-		
+		$wpdb-> show_errors();
 		
 		
 		$format = get_post_format();
@@ -455,5 +548,7 @@
 		$wpdb -> query($wpdb -> prepare($query));
 		
 	}
+	
+	
 
 ?>
