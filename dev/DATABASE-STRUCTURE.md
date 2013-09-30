@@ -3,8 +3,12 @@ Postworld Database Structure
 
 ## Table Structure
 
+------
+
 ### Post Meta
 __Default Name:__ *wp_posworld_* __post_meta__
+
+------
 
 ### User Meta
 __Default Name:__ *wp_posworld_* __user_meta__
