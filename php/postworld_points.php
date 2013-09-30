@@ -106,7 +106,7 @@
 		/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
 			• Stores the result in the post_points column in wp_postworld_user_meta
 		return : integer (number of points)*/
-		$total_user_points = get_user_points_voted_to_posts($user_id);
+	/*	$total_user_points = get_user_points_voted_to_posts($user_id);
 		global $wpdb;
 		$wpdb -> show_errors();
 		
@@ -117,7 +117,25 @@
 
 						
 		}
-		return $total_user_points;
+		return $total_user_points;*/
+		
+		$total_user_points_breakdown = get_user_points_voted_to_posts($user_id,TRUE);
+		$total_user_points =0;
+		$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "event" => 0));
+		
+		
+		foreach ($total_user_points_breakdown as $row) {
+			$total_user_points+= $row->total_points;
+			$post_points_meta['post_type'][$row->post_type] = $row->total_points;
+		}
+		
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."' where user_id=".$user_id;
+		$result = $wpdb->query($query);
+		
+		return array("total"=>$total_user_points,$post_points_meta);
 		
 	}
 	
