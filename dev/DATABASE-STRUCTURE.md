@@ -1,36 +1,32 @@
 Postworld Database Structure
 ======
 
-## Table Structure
+## Post Meta
+__Default Table Name:__ *wp_posworld_* __post_meta__
 
 ------
 
-### Post Meta
-__Default Name:__ *wp_posworld_* __post_meta__
+## User Meta
+__Default Table Name:__ *wp_posworld_* __user_meta__
 
-------
+### Columns
 
-### User Meta
-__Default Name:__ *wp_posworld_* __user_meta__
-
-#### Columns
-
-##### __user_id__ : *integer*
+#### __user_id__ : *integer*
 - Wordpress User ID
 
-##### __post_points__ : *integer*
+#### __post_points__ : *integer*
 - Total points which have been voted to the user's posts
 
-##### __post_points_meta__ : *integer*
+#### __post_points_meta__ : *integer*
 - Cached data which breaks down the attribution of points by post_type
 
-##### __comment_points__ : *integer*
+#### __comment_points__ : *integer*
 - Total points which have been voted to the user's comments
 
-##### __share_points__ : *integer*
+#### __share_points__ : *integer*
 - Total number of share points of the user's shares (my_shares + my_post_shares)
 
-##### __share_points_meta__ : *integer*
+#### __share_points_meta__ : *integer*
 - Cached data which breaks down the user's share points by:
   - __my_shares__ : From posts that I have shared
   - __my_post_shares__ : Number of share points to my posts
@@ -98,7 +94,7 @@ __Default Name:__ *wp_posworld_* __user_meta__
 }
 ```
 
-##### __post_relationships__ : *JSON*
+#### __post_relationships__ : *JSON*
 ``` javascript
 {
 	viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
@@ -119,7 +115,7 @@ __Default Name:__ *wp_posworld_* __user_meta__
 }
 ```
 
-##### __comment_relationships__ : *JSON*
+#### __comment_relationships__ : *JSON*
 ``` javascript
 {
 	has_voted:{
