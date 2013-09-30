@@ -2,35 +2,35 @@ Postworld // PHP / MySQL Functions
 =========
 
 ## Index
-0. [ **Post Meta** : postworld_meta.php ](#post-meta)
-0. [ **Points** : postworld_points.php ](#points)
-0. [ **Rank Scores** : postworld_rank.php ](#rank-scores)
-0. [ **Cron Tasks** : postworld_cron.php ](#cron-tasks)
-0. [ **Caching** : postworld_cache.php ](#caching)
-0. [ **Query** : postworld_query.php ](#query)
-0. [ **Users** : postworld_users.php ](#users)
-0. [ **Posts** : postworld_posts.php ](#posts)
-0. [ **Feeds** : postworld_feeds.php ](#feeds)
-0. [ **Sharing** : postworld_share.php ](#sharing)
-0. [ **Images** : postworld_images.php ](#images)
+0. [ __Post Meta__ : postworld_meta.php ](#post-meta)
+0. [ __Points__ : postworld_points.php ](#points)
+0. [ __Rank Scores__ : postworld_rank.php ](#rank-scores)
+0. [ __Cron Tasks__ : postworld_cron.php ](#cron-tasks)
+0. [ __Caching__ : postworld_cache.php ](#caching)
+0. [ __Query__ : postworld_query.php ](#query)
+0. [ __Users__ : postworld_users.php ](#users)
+0. [ __Posts__ : postworld_posts.php ](#posts)
+0. [ __Feeds__ : postworld_feeds.php ](#feeds)
+0. [ __Sharing__ : postworld_share.php ](#sharing)
+0. [ __Images__ : postworld_images.php ](#images)
 
 ## Post Meta
 
-**/php/postworld-meta.php**  
-Handles getting and setting date in the **post_meta** table.
+__/php/postworld-meta.php__  
+Handles getting and setting date in the __post_meta__ table.
 
 ------
 
 ### pw_get_post_meta ( *$post_id* )
 
 #### Description
-Used to get Postworld values in the **wp_postworld_post_meta** table
+Used to get Postworld values in the __wp_postworld_post_meta__ table
 
 #### Process:
-1. Get an Associative Array of all columns in the **wp_postworld_post_meta** table
+1. Get an Associative Array of all columns in the __wp_postworld_post_meta__ table
 2. Keys are column names, values are values.
 
-**return** : *Array*
+__return__ : *Array*
 ```php
 	'post_id' => {{integer}}
 	'author_id'	=> {{integer}}
@@ -51,14 +51,14 @@ $post_meta = pw_get_post_meta($post_id);
 ### pw_set_post_meta ( *post_id*, *$post_meta* )
 
 #### Description
-Used to set Postworld values in the **wp_postworld_post_meta** table
+Used to set Postworld values in the __wp_postworld_post_meta__ table
 
 #### Parameters:
 All parameters, except post_id, are optional.
 
-**$post_id** : *integer* (required)
+__$post_id__ : *integer* (required)
 
-**$post_meta** : *Array*
+__$post_meta__ : *Array*
 - post_class
 - post_format
 - link_url
@@ -76,34 +76,34 @@ pw_set_post_meta($post_id, $post_meta);
 
 
 ## Points
-**/php/postworld-points.php**  
-Handles getting and setting points data in the **points** and **post_meta** tables.
+__/php/postworld-points.php__  
+Handles getting and setting points data in the __points__ and __post_meta__ tables.
 
 ------
 
-**POST POINTS**
+__POST POINTS__
 
 ------
 
 ### get_post_points( *$post_id* )
-Get the total number of points of the given post from the points column in **wp_postworld_post_meta**
+Get the total number of points of the given post from the points column in __wp_postworld_post_meta__
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
 ### calculate_post_points ( *$post_id* )
-- Adds up the points from the specified post, stored in **wp_postworld_post_points**
-- Stores the result in the points column in **wp_postworld_post_meta**
-**return** : *integer* (number of points)
+- Adds up the points from the specified post, stored in __wp_postworld_post_points__
+- Stores the result in the points column in __wp_postworld_post_meta__
+__return__ : *integer* (number of points)
 
 ------
 
 ### cache_post_points ( *$post_id* ) 
 - Calculates given post's current points with `calculate_post_points()`
-- Stores points it in **wp_postworld_post_meta** table in the **post_points** column
+- Stores points it in __wp_postworld_post_meta__ table_ in the __post_points__ column
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
@@ -111,33 +111,33 @@ Get the total number of points of the given post from the points column in **wp_
 
 #### Parameters
 
-**$post_id** : *integer*
+__$post_id__ : *integer*
 
-**$set_points** : *integer*
+__$set_points__ : *integer*
 
 #### Process
 
-- Check role of current user, and check how many points they can cast from **user_roles** table as **$vote_points**
-  - If **$set_points** is greater than the user's role **vote_points**, reduce to **vote_points**
+- Check role of current user, and check how many points they can cast from __user_roles__ table as __$vote_points__
+  - If __$set_points__ is greater than the user's role __vote_points__, reduce to __vote_points__
 
-**HINT:**
+__HINT:__
 ```php
 	if ( abs($vote_points) > abs($set_points) )
 		$set_points = $vote_points * (abs($set_points)/$set_points);
 ```
 
-- Check if row exists in **points** table for the given **$post_id** and **$user_id**
-  - If **no row**, add row to **points** table
-  - If **row exists**, update the row
-  - If **$set_points = 0**, delete row
+- Check if row exists in __points__ table for the given __$post_id__ and __$user_id__
+  - If __no row__, add row to __points__ table
+  - If __row exists__, update the row
+  - If __$set_points = 0__, delete row
 
-- Add Unix timestamp to **time** column in **post_points** table
+- Add Unix timestamp to __time__ column in __post_points__ table
 
-- Update cache in **post_meta** table
-  1. If row doesn't exist for given **post_id** in **post_meta** table create new row
-  2. Update cached **post_points** row in **post_meta** table directly if there is a change in points
+- Update cache in __post_meta__ table
+  1. If row doesn't exist for given __post_id__ in __post_meta__ table create new row
+  2. Update cached __post_points__ row in __post_meta__ table directly if there is a change in points
 
-**HINT:**
+__HINT:__
 ```php
 $old_user_points = has_voted_on_post($post_id,$user_id); // get previous points user has voted on points
 $update_points = $set_points - $old_user_points; // calculate the difference in points
@@ -149,11 +149,11 @@ $new_post_points = $old_post_points + $update_points; // add the updated points
 
 ```
 
-- Update cache in **user_meta** table
-  1. Get value of **post_points_meta** column in **user_meta** table
-  2. Update the number of points in the **post_points_meta** object
+- Update cache in __user_meta__ table
+  1. Get value of __post_points_meta__ column in __user_meta__ table
+  2. Update the number of points in the __post_points_meta__ object
 
-**HINT:**
+__HINT:__
 ``` php
 $post_type = get_post_type( $post_id ); // check post_type of given post
 $post_points_meta = // Get value of post_points_meta column in user_meta table
@@ -164,7 +164,7 @@ $post_points_meta = json_encode($post_points_meta); // encode back into JSON
 // Write new post_points_meta object to user_meta table
 ```
 
-Anatomy of **post_points_meta** column JSON object in **user_meta** table :
+Anatomy of __post_points_meta__ column JSON object in __user_meta__ table :
 ``` javascript
 {
 	post_type : {
@@ -176,7 +176,7 @@ Anatomy of **post_points_meta** column JSON object in **user_meta** table :
 }
 ```
 
-**return** : *Array*
+__return__ : *Array*
 ``` php
 array(
      'points_added' => {{integer}} // (points which were successfully added)
@@ -184,32 +184,32 @@ array(
 )
 ```
 
-**TODO:**
+__TODO:__
 - Check that user has not voted too many times recently <<<< Concept method <<< PHONG
   - Use post_points_meta to store points activity << PHONG
 
 
 ------
 
-**USER POST POINTS**
+__USER POST POINTS__
 
 ------
 
 ### get_user_posts_points ( *$user_id* )
 - Get the number of points voted to posts authored by the given user
-- Get cached points of user from **wp_postworld_user_meta** table **post_points** column
+- Get cached points of user from __wp_postworld_user_meta__ table __post_points__ column
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
 ### calculate_user_posts_points ( *$user_id* )
-- Add up the points voted to given user's posts, stored in **wp_postworld_post_points**
-- **NEW** : For each post, get the **post_type**, and also calculate value of points given to posts of each **post_type**
-- Cache the total result in the **post_points** column in **wp_postworld_user_meta**
-- **NEW** : Cache the **post_types** breakdown in the **post_points_meta** column in **wp_postworld_user_meta**
+- Add up the points voted to given user's posts, stored in __wp_postworld_post_points__
+- __NEW__ : For each post, get the __post_type__, and also calculate value of points given to posts of each __post_type__
+- Cache the total result in the __post_points__ column in __wp_postworld_user_meta__
+- __NEW__ : Cache the __post_types__ breakdown in the __post_points_meta__ column in __wp_postworld_user_meta__
 
-**return** : *Array* (number of points)
+__return__ : *Array* (number of points)
 ```php
 array(
 	'total' => 640,
@@ -226,74 +226,74 @@ array(
 
 ### cache_user_posts_points ( *$user_id* )
 - Runs `calculate_user_posts_points()` Method
-- Caches value in **post_points** column in **wp_postworld_user_meta** table
+- Caches value in __post_points__ column in __wp_postworld_user_meta__ table
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
-**COMMENT POINTS**
+__COMMENT POINTS__
 
 ------
 
 ### get_user_comments_points ( *$user_id* )
 
 - Get the number of points voted to comments authored by the given user
-- Get cached points of user from **wp_postworld_user_meta** table **comment_points** column
+- Get cached points of user from __wp_postworld_user_meta__ table __comment_points__ column
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
 ### calculate_user_comments_points ( *$user_id* )
-- Adds up the points voted to given user's comments, stored in **wp_postworld_comment_points** table
-- Stores the result in the **post_points** column in **wp_postworld_user_meta** table
+- Adds up the points voted to given user's comments, stored in __wp_postworld_comment_points__ table
+- Stores the result in the __post_points__ column in __wp_postworld_user_meta__ table
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
 ### cache_user_comments_points ( *$user_id* )
 - Runs `calculate_user_comment_points()` Method
-- Caches value in **comment_points** column in **wp_postworld_user_meta** table
+- Caches value in __comment_points__ column in __wp_postworld_user_meta__ table
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
-**GENERAL POINTS**
+__GENERAL POINTS__
 
 ------
 
 ### has_voted_on_post ( *$post_id, $user_id* ) 
-- Check **wp_postworld_points** to see if the user has voted on the post
+- Check __wp_postworld_points__ to see if the user has voted on the post
 - Return the number of points voted
 
-**return** : *integer* (number of points voted)
+__return__ : *integer* (number of points voted)
 
 ------
 
 ### has_voted_on_comment ( *$comment_id, $user_id* ) 
-- Check **wp_postworld_comment_points** to see if the user has voted on the comment
+- Check __wp_postworld_comment_points__ to see if the user has voted on the comment
 - Return the number of points voted
 
-**return** : *integer*
+__return__ : *integer*
 
 ------
 
 ### get_user_points_voted_to_posts ( *$user_id* )
 - Get total points voted to posts authored by the given user
-- Get points of each post from **wp_postworld_post_meta**
+- Get points of each post from __wp_postworld_post_meta__
 - Add all the points up
 
-**return** : *integer* (number of points)
+__return__ : *integer* (number of points)
 
 ------
 
 ### get_user_votes_on_posts ( *$user_id* )
-- Get all posts which user has voted on from **wp_postworld_post_points** table 
+- Get all posts which user has voted on from __wp_postworld_post_points__ table 
 
-**return** : *Object*
+__return__ : *Object*
 ``` php
 	#for_each
 	'post_id' => {{integer}}
@@ -312,7 +312,7 @@ array(
 2. Add up all points cast (total_points)
 3. Generate average (total_points/total_posts) 
 
-**return** : *Object*
+__return__ : *Object*
 ``` php
      'total_posts' => {{integer}} //(number of posts voted on)
      'total_points' => {{integer}} //(number of points cast by up/down votes)
@@ -323,14 +323,14 @@ array(
 
 ### get_user_vote_power ( *$user_id* )
 - Checks to see user's WP roles `with get_user_role()`
-- Checks how many points the user's role can cast, from **wp_postworld_user_roles** table, under **vote_points** column
+- Checks how many points the user's role can cast, from __wp_postworld_user_roles__ table, under __vote_points__ column
 
-**return** : *integer* (the number of points the user can cast)
+__return__ : *integer* (the number of points the user can cast)
 
 ------
 
 ## Rank Scores
-**php/postworld-rank.php**
+__php/postworld-rank.php__
 
 Contains functions which are used to read and write Rank Scores for posts.  
 Rank Scores, in brief, are calculated by an equation using the number of points and comments divided by the age of the post.  
@@ -340,9 +340,9 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 
 ### get_rank_score ( *$post_id, [$method]* )
 - Gets the Rank Score of the given post, using `calculate_rank_score()`
-- Retrieves from the **rank_score** column in **wp_postworld_meta**
+- Retrieves from the __rank_score__ column in __wp_postworld_meta__
 
-**return** : *integer* (Rank Score)
+__return__ : *integer* (Rank Score)
 
 ------
 
@@ -350,20 +350,20 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 - Calculates Rank Score based on rank equation
 - Returns the Rank Score 
 
-**return** : *integer* (Rank Score)
+__return__ : *integer* (Rank Score)
 
 ------
 
 ### cache_rank_score ( *$post_id* )
 - Calculate rank_score with `calculate_rank_score()` method
-- Cache the result in **wp_postworld_meta** in the **rank_score** column
+- Cache the result in __wp_postworld_meta__ in the __rank_score__ column
 
-**return** :  *integer* (Rank Score) 
+__return__ :  *integer* (Rank Score) 
 
 ------
 
 ## Cron Tasks
-**php/postworld_cron.php**
+__php/postworld_cron.php__
 
 ------
 
@@ -373,21 +373,21 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 ------
 
 ## Caching
-**php/postworld_cache.php**
+__php/postworld_cache.php__
 
 ------
 
 ### cache_all_points ()
 - Runs cache_user_points() and cache_post_points()
 
-**return** : *cron_logs Object* (add to table wp_postworld_cron_logs)
+__return__ : *cron_logs Object* (add to table wp_postworld_cron_logs)
 
 ------
 
 ### cache_all_user_points()
 - Cycles through all users with cache_user_points() method
 
-**return** : *cron_logs* Object (add to table wp_postworld_cron_logs)
+__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ------
 
@@ -395,7 +395,7 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 - Cycles through each post in each post_type with points enabled
 - Calculates and caches each post's current points with cache_post_points() method
 
-**return** : *cron_logs* Object (add to table wp_postworld_cron_logs)
+__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ------
 
@@ -403,20 +403,20 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 - Cycles through all columns
 - Calculates and caches each comment's current points with cache_comment_points() method
 
-**return** : *cron_logs* Object (add to table wp_postworld_cron_logs)
+__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ------
 
 ### cache_all_rank_scores ()
 - Cycles through each post in each post_type scheduled for Rank Score caching
 - Calculates and caches each post's current rank with cache_rank_score() method
-**return** : *cron_logs* Object (add to table wp_postworld_cron_logs)
+__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ------
 
 ### cache_all_feeds ()
 - Run pw_cache_feed() method for each feed registered for feed caching in WP Options
-**return** : *cron_logs* Object (store in table wp_postworld_cron_logs)
+__return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
 ------
 
@@ -425,7 +425,7 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 - Deletes all rows which are before the specified timestamp (rows_removed)
 - Count number of rows after clearing (rows_after)
 
-**return** : *Object*
+__return__ : *Object*
 ``` php
 	'rows_before' => {{integer}}
 	'rows_removed' => {{integer}}
@@ -459,7 +459,7 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 ------
 
 ## Query
-**php/postworld_query.php**
+__php/postworld_query.php__
 
 Here are custom querying functions. These greatly expand upon the WP_Query functions, and gives us access to all the wp_postworld database tables.   
 Each function effectively also populates a Wordpress query session, so can be used like WP_query, when 
@@ -472,71 +472,71 @@ Each function effectively also populates a Wordpress query session, so can be us
 
 - Similar to the functionality of [WP_Query](http://codex.wordpress.org/Class_Reference/WP_Query )
 - Queries by Postworld data fields
-- Additionally sort by **post_points** & **rank_score**
+- Additionally sort by __post_points__ & __rank_score__
 - Define which fields are returned using `pw_get_posts()` method
-- Can determine the **return_format** as **JSON, PHP Associative Array or WP Post Object**
+- Can determine the __return_format__ as __JSON, PHP Associative Array or WP Post Object__
 
 
 #### Process:
 1. After querying and ordering is finished, if more than IDs are required to return, use `pw_get_posts()` method to return specified fields
 
-**return** : *ARRAY_A / JSON / WP_Query*
+__return__ : *ARRAY_A / JSON / WP_Query*
 
 #### Parameters: *$args*
 
 ------
 
-**QUERYING :**
+__QUERYING :__
 
 ------
 
-**post_type** : *string / Array*
+__post_type__ : *string / Array*
 - post_type column in wp_posts
-  - **string** - Return posts with that post_type
-  - **Array** - Return posts in either post_type (IN/OR operator)
+  - __string__ - Return posts with that post_type
+  - __Array__ - Return posts in either post_type (IN/OR operator)
 
-**post_format** : *string / Array*
+__post_format__ : *string / Array*
 - post_format column in wp_postworld_post_meta 
-  - **string** - Return posts with that post_type
-  - **Array** - Return posts in either post_type (IN/OR operator) 
+  - __string__ - Return posts with that post_type
+  - __Array__ - Return posts in either post_type (IN/OR operator) 
 
-**post_class** : *string / Array*
+__post_class__ : *string / Array*
 - post_class column in wp_postworld_post_meta
-  - **string** - Return posts with that post_type
-  - **Array* - Return posts in either post_type (IN/OR operator) 
+  - __string__ - Return posts with that post_type
+  - __Array* - Return posts in either post_type (IN/OR operator) 
 
-**author** : *integer / Array* 
+__author__ : *integer / Array* 
 - Use author ID
-  - **integer** - Return posts only written by that author
-  - **Array** - Return posts written by any of the authors (IN/OR operator) 
+  - __integer__ - Return posts only written by that author
+  - __Array__ - Return posts written by any of the authors (IN/OR operator) 
 
-**author_name** : *string / Array*
+__author_name__ : *string / Array*
 - Use 'user_nicename' in wp_users (NOT 'name')
-  - **string** - Return posts only written by that author
-  - **Array** - Return posts written by any of the authors (IN/OR operator) 
+  - __string__ - Return posts only written by that author
+  - __Array__ - Return posts written by any of the authors (IN/OR operator) 
 
-**year** : *integer*
+__year__ : *integer*
 - 4 digit year (e.g. 2011)
 - Return posts within that year
 
-**month** : *integer*
+__month__ : *integer*
 - Month number (from 1 to 12)
 - Return posts within that month
 
-**tax_query** : *array*
+__tax_query__ : *array*
 - Just like [tax_query in WP_Query](http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters)
 
-**s** : *string*
+__s__ : *string*
 - Search terms
-- Query **post_content** & **post_title** columns in **wp_posts** table
+- Query __post_content__ & __post_title__ columns in __wp_posts__ table
 
 ------
 
-**ORDERING :**
+__ORDERING:__
 
 ------
 
-**orderby** : *string*
+__orderby__ : *string*
 - Options
   - date (default)
   - rank_score
@@ -545,37 +545,37 @@ Each function effectively also populates a Wordpress query session, so can be us
   - rand
   - comment_count
 
-**order** : *string*
+__order__ : *string*
 - Options
   - DESC (default)
   - ASC
 
 ------
 
-**RETURNING :**
+__RETURNING :__
 
 ------
 
-**offset** : *integer*
+__offset__ : *integer*
 - Number of post to displace or pass over. 
 
-**post_count** : *integer*
+__post_count__ : *integer*
 - Maximum number of posts to return.
   - 0 (default) - Return all
 
-**fields** : *string / Array*
+__fields__ : *string / Array*
 - Set return values. Uses pw_get_posts( $post_ids, $fields ) method
 - Pass this directly to `wp_get_posts()` method unless the value is 'ids'
-  - **ids** (default) - Return an Array of post IDs
-  - **all** - Return all fields
-  - **preview** - Return basic fields
+  - __ids__ (default) - Return an Array of post IDs
+  - __all__ - Return all fields
+  - __preview__ - Return basic fields
   - `array( 'post_title', 'post_content', … )` - Array of fields which to return
 
-**$return_format** : *string*
+__$return_format__ : *string*
 - Options
-  - **WP_QUERY** (default) - Return a [WP_Post Object](http://codex.wordpress.org/Class_Reference/WP_Post )
-  - **JSON** - Return a JSON Object
-  - **ARRAY_A** - Return an Associative Array
+  - __WP_QUERY__ (default) - Return a [WP_Post Object](http://codex.wordpress.org/Class_Reference/WP_Post )
+  - __JSON__ - Return a JSON Object
+  - __ARRAY_A__ - Return an Associative Array
 
 
 ####Usage:
@@ -611,50 +611,50 @@ $posts = pw_query( $args, 'JSON' );
 
 #### Description:
 - Similar to [WP_User_Query](http://codex.wordpress.org/Class_Reference/WP_User_Query), queries users in wp_users table
-- Extends Query fields to Postworld **user_meta** fields
+- Extends Query fields to Postworld __user_meta__ fields
 
 #### Parameters:
 
-**$args** : *Array*
+__$args__ : *Array*
 
-**role** : *string*
+__role__ : *string*
 - Use 'User Role'
 
-**s** : *string*
+__s__ : *string*
 - Query : table : wp_users, columns: user_login, user_nicename, user_email, user_url, display_name
 
-**location_country** : *string*
-- Query **wp_postworld_user_meta** table column **location_country**
+__location_country__ : *string*
+- Query __wp_postworld_user_meta__ table column __location_country__
 
-**location_region** : *string*
-- Query **wp_postworld_user_meta** table column **location_region** 
+__location_region__ : *string*
+- Query __wp_postworld_user_meta__ table column __location_region__ 
 
-**location_city** : *string*
-- Query **wp_postworld_user_meta** table column **location_city**
+__location_city__ : *string*
+- Query __wp_postworld_user_meta__ table column __location_city__
 
-**location** : *string*
-- Query **location_country**, **location_city**, and **location_region**
+__location__ : *string*
+- Query __location_country__, __location_city__, and __location_region__
 
-**orderby** : *string*
+__orderby__ : *string*
 - Options:
-  - **post_points** - Points to the user's posts
-  - **comment_points** - Points to user's comments
-  - **display_name** - Use Display Name, alphabetical
-  - **username** - Use *Nice Name*, alphabetical
-  - **date** - Date joined
+  - __post_points__ - Points to the user's posts
+  - __comment_points__ - Points to user's comments
+  - __display_name__ - Use Display Name, alphabetical
+  - __username__ - Use *Nice Name*, alphabetical
+  - __date__ - Date joined
 
-**order** : *string*
+__order__ : *string*
 - Options : 
-  - **ASC** (default)
-  - **DESC**
+  - __ASC__ (default)
+  - __DESC__
 
-**fields** : *Array*
+__fields__ : *Array*
 - Options : 
-  - **All** (default)
+  - __All__ (default)
   - Any fields from `get_userdata()` Method : http://codex.wordpress.org/Function_Reference/get_userdata
   - Any fields from `pw_get_userdata()` Method
 
-**$return_format** : *string*
+__$return_format__ : *string*
 - Options:
   - ARRAY_A (default)
   - JSON
@@ -674,12 +674,12 @@ $args = array(
 );
 $users = pw_user_query( $args, 'JSON' );
 ```
-**return** : *ARRAY_A / JSON* (Requested Fields)
+__return__ : *ARRAY_A / JSON* (Requested Fields)
 
 ------
 
 ## Users
-**php/postworld_users.php**
+__php/postworld_users.php__
 Here we have a series of functions which are used to read and write custom user meta data.
 
 ------
@@ -687,14 +687,14 @@ Here we have a series of functions which are used to read and write custom user 
 ### pw_get_userdata ( *$user_id, [$fields]* )
 
 #### Description :
-- Extends `get_userdata()` WP Method to include meta data from the Postworld **user_meta** table
+- Extends `get_userdata()` WP Method to include meta data from the Postworld __user_meta__ table
 
 #### Parameters:
-**$user_id** : *integer*
+__$user_id__ : *integer*
 
-**$fields** : (optional) *string / Array*
-- **all** : Default - Return all fields
-- Standard **Wordpress** User Fields:
+__$fields__ : (optional) *string / Array*
+- __all__ : Default - Return all fields
+- Standard __Wordpress__ User Fields:
   - user_login
   - user_nicename
   - user_email
@@ -714,7 +714,7 @@ Here we have a series of functions which are used to read and write custom user 
   - roles
   - capabilities
 
-- Custom **Postworld** User Fields:
+- Custom __Postworld__ User Fields:
   - viewed
   - favorites
   - location_country
@@ -730,7 +730,7 @@ Here we have a series of functions which are used to read and write custom user 
 $user_data = get_user_data('1', array('viewed', 'favorites', 'location_country'));
 ```
 
-**return** : *Array* (requested fields)
+__return__ : *Array* (requested fields)
 ```php
 array(
 	'ID'=> '1',
@@ -747,8 +747,8 @@ array(
 ------
 
 ### pw_update_user ( *$userdata* )
-- Extends **wp_update_user()** to add data to the Postworld **user_meta** table
-- See **wp_update_user()** : http://codex.wordpress.org/Function_Reference/wp_update_user
+- Extends __wp_update_user()__ to add data to the Postworld __user_meta__ table
+- See __wp_update_user()__ : http://codex.wordpress.org/Function_Reference/wp_update_user
 
 #### Usage
 ``` php
@@ -761,8 +761,8 @@ array(
 	);
 ```
 
-**return** : *integer*
-- **user_id** - If successful
+__return__ : *integer*
+- __user_id__ - If successful
 
 ------
 
@@ -773,29 +773,29 @@ array(
 
 #### Parameters:
 
-**$add_remove**
+__$add_remove__
 - Options
-  - **1** - add it to favourites
-  - **-1** - remove it from favorites
+  - __1__ - add it to favourites
+  - __-1__ - remove it from favorites
 
-**return** :
-- **1**  - added successfully
-- **-1** - removed successfully
-- **0**  - nothing happened
+__return__ :
+- __1__  - added successfully
+- __-1__ - removed successfully
+- __0__  - nothing happened
 
 ------
 
 ### get_favorites ( *$user_id* )
 - Return array from the favourites column in wp_postworld_user_meta of the given user
 
-**return** : *array* (of post ids)
+__return__ : *array* (of post ids)
 
 ------
 
 ### is_favorite ( *$post_id, $user_id* )
-- Checks the favorites column in **user_meta** table of the given user to see if the user has set the post as a favorite
+- Checks the favorites column in __user_meta__ table of the given user to see if the user has set the post as a favorite
 
-**return** : *boolean*
+__return__ : *boolean*
 
 ------
 
@@ -804,17 +804,17 @@ array(
 
 #### Parameters:
 
-**$viewed** : *boolean*
-- **true** - check if the post_id is already in the array. If not, add it.
-- **false** - check if the post_id is already in the array. If so, remove it.
+__$viewed__ : *boolean*
+- __true__ - check if the post_id is already in the array. If not, add it.
+- __false__ - check if the post_id is already in the array. If so, remove it.
 
-**return** : *boolean* (true)
+__return__ : *boolean* (true)
 
 ------
 
 ### get_viewed ( *$user_id* )
 - Gets list of posts by id which the user has viewed
-**return** : *Array*
+__return__ : *Array*
 
 ------
 
@@ -822,14 +822,14 @@ array(
 - Checks to see if user has viewed a given post
 - Values stored in array in has_viewed in wp_postworld_user_meta
 
-**return** : *boolean* 
+__return__ : *boolean* 
 
 ------
 
 ### get_user_location ( $user_id )
 - From 'location_' columns in wp_postworld_user_meta
 
-**return** : *Object*
+__return__ : *Object*
 ``` php
 array(
 	'city' => {{city}}
@@ -841,7 +841,7 @@ array(
 ------
 
 ### get_client_ip ()
-**return** : *string* (IP address of the client)
+__return__ : *string* (IP address of the client)
 
 ------
 
@@ -849,30 +849,30 @@ array(
 - Returns user role(s) for the specified user
 
 ####Parameters:
-**$user_id** : *integer*
+__$user_id__ : *integer*
 
-**$return_array** : *boolean*
-- **false** (default) - Returns a string, with the first listed role
-- **true** - Returns an Array with all listed roles
+__$return_array__ : *boolean*
+- __false__ (default) - Returns a string, with the first listed role
+- __true__ - Returns an Array with all listed roles
 
-**return** : *string / Array* (set by $return_array)
+__return__ : *string / Array* (set by $return_array)
 
 ------
 
 ## Posts
-**php/postworld_posts.php**
+__php/postworld_posts.php__
 
 ------
 
 ### pw_get_posts ( *$post_ids, $fields* )
-- Run `pw_get_post()` on each of the **$post_ids**, and return the given fields in an **Array**
+- Run `pw_get_post()` on each of the __$post_ids__, and return the given fields in an __Array__
 
 #### Parameters:
 
-**$post_ids** : *Array*
+__$post_ids__ : *Array*
 - An array of post IDs
 
-**$fields** : *Array*
+__$fields__ : *Array*
 - Corresponds to `pw_get_post()` fields parameter
 
 #### Process:
@@ -880,7 +880,7 @@ array(
 - Select which posts to preload
 - Preload selected posts
 
-**return** : *Array*
+__return__ : *Array*
 ``` php
 array(
 	array(
@@ -908,83 +908,83 @@ array(
 - Gets data fields for the specified post, including post world meta data and custom sized thumbnails
 
 #### Parameters:
-**$post_id** : *integer*
+__$post_id__ : *integer*
 
-**$user_id** : *integer* (optional)
+__$user_id__ : *integer* (optional)
 - ID of the currently logged in user, for user-view specific data (points voted, etc)
 
-**$fields** : *string / Array*
+__$fields__ : *string / Array*
 - Options :
-  - **'all'** (default) 
-  - **'preview'** - Returns a basic set of commonly usable fields
+  - __'all'__ (default) 
+  - __'preview'__ - Returns a basic set of commonly usable fields
     - ID, post_title, post_excerpt, post_permalink, post_path, post_type, post_date, post_time_ago, comment_count, link_url, 
-  - **Array** - Use any of the following values in an Array :
+  - __Array__ - Use any of the following values in an Array :
 
 
-**WP GET_POST METHOD** : http://codex.wordpress.org/Function_Reference/get_post 
-- **ID** (default always)
-- **post_author**
-- **post_date**
-- **post_date_gmt**
-- **post_title **
-- **post_content**
-- **post_excerpt**
-- **post_path**
-- **post_name**
-- **post_type**
-- **post_status**
-- (all **get_post** return values )
+__WP GET_POST METHOD__ : http://codex.wordpress.org/Function_Reference/get_post 
+- __ID__ (default always)
+- __post_author__
+- __post_date__
+- __post_date_gmt__
+- __post_title __
+- __post_content__
+- __post_excerpt__
+- __post_path__
+- __post_name__
+- __post_type__
+- __post_status__
+- (all __get_post__ return values )
 
-**WORDPRESS**
-- **post_permalink**
+__WORDPRESS__
+- __post_permalink__
   - Uses WP `get_post_permalink()` Method
 
-**POSTWORLD**
-- **post_points**
-- **rank_score**
-- **post_format**
-- **post_class**
-- **link_url**
+__POSTWORLD__
+- __post_points__
+- __rank_score__
+- __post_format__
+- __post_class__
+- __link_url__
 
-**TAXONOMIES**
-- **taxonomy(tax_slug)** - Returns taxonomy terms array for the post ie. *taxonomy(category)*
-  - **return** : *array* - returns an Associative Array with each :
+__TAXONOMIES__
+- __taxonomy(tax_slug)__ - Returns taxonomy terms array for the post ie. *taxonomy(category)*
+  - __return__ : *array* - returns an Associative Array with each :
 
 
-**VIEWER SPECIFIC**
-- **user_vote** - number of points the user has voted for this post
+__VIEWER SPECIFIC__
+- __user_vote__ - number of points the user has voted for this post
 
-**IMAGE**
+__IMAGE__
 
 - Registered Image Sizes
-  - **image( registered_image_size_name[ thumbnail / medium / large / full ]  )**  
-  example : **image(medium)** - returns the registered 'medium' image size
+  - __image( registered_image_size_name[ thumbnail / medium / large / full ]  )__  
+  example : __image(medium)__ - returns the registered 'medium' image size
  
 - Custom Image Sizes
-  - **image( handle, width, height, hard_crop )**  
-  example : **image(banner,700,100,1)**
+  - __image( handle, width, height, hard_crop )__  
+  example : __image(banner,700,100,1)__
 
-**AVATAR**
+__AVATAR__
 - Avatar Images -(Supports both Buddypress and Regular Wordpress Avatars)
-  - **avatar( handle, size )**
-  example : **avatar(small,48)**
+  - __avatar( handle, size )__
+  example : __avatar(small,48)__
 
-**AUTHOR**
-- **post_author_name**
-- **post_author_link**
-- **post_author_website**
-- **post_author_description**
-- **post_author_nicename**
-- **edit_post_link**
-- **post_author_social** <<< PHONG
+__AUTHOR__
+- __post_author_name__
+- __post_author_link__
+- __post_author_website__
+- __post_author_description__
+- __post_author_nicename__
+- __edit_post_link__
+- __post_author_social__ <<< PHONG
 
-**DATE & TIME**
-- **post_time_ago** - "(2 minutes ago)" : http://www.devnetwork.net/viewtopic.php?f=50&t=113253 
+__DATE & TIME__
+- __post_time_ago__ - "(2 minutes ago)" : http://www.devnetwork.net/viewtopic.php?f=50&t=113253 
 
 #### Process:
 - Mixed Methods for retrieving data
 
-**return** : *Array* (requested fields)
+__return__ : *Array* (requested fields)
 ``` php
 array(
 	'ID' => 24,
@@ -1042,12 +1042,12 @@ array(
 
 #### Parameters : $post *Array*
 - All fields in `wp_insert_post()` Method
-- **post_class**
-- **post_format**
-- **link_url**
-- **external_image**
+- __post_class__
+- __post_format__
+- __link_url__
+- __external_image__
 
-**return** :
+__return__ :
 - *post_id* - If added to the database, otherwise return *WP_Error Object*
 
 ------
@@ -1060,7 +1060,7 @@ array(
 ------
 
 ## Feeds
-**php/postworld_feeds.php**
+__php/postworld_feeds.php__
 
 ------
 
@@ -1074,18 +1074,18 @@ array(
 
 #### Parameters: $args
 
-**feed_id** : *string*
+__feed_id__ : *string*
 
 
-**preload** : *integer*
+__preload__ : *integer*
 - Number of posts to fetch data and return as post_data
 
-**feed_query** : *Array*
+__feed_query__ : *Array*
 - `pw_query()` Query Variables
 
 
 #### Process:
-- Generate return **feed_outline**, with `pw_feed_outline( $args[feed_query] )` method
+- Generate return __feed_outline__, with `pw_feed_outline( $args[feed_query] )` method
 - Generate return post data by running the defined preload number of the first posts through
 `pw_get_posts( feed_outline, $args['feed_query']['fields'] )`
 
@@ -1102,7 +1102,7 @@ $args = array (
 $live_feed = pw_live_feed ( *$args* );
 ```
 
-**return** : *Object*
+__return__ : *Object*
 ``` php
 array(
 	'feed_id' => {{string}},
@@ -1118,29 +1118,29 @@ array(
 ### pw_register_feed ( *$args* )
 
 #### Description:
-- Registers the feed in **feeds** table
+- Registers the feed in __feeds__ table
 
 #### Process:
-1. If the **feed_id** doesn't appear in the **wp_postworld_feeds** table :
+1. If the __feed_id__ doesn't appear in the __wp_postworld_feeds__ table :
   1. Create a new row
   2. Enable write_cache
 
-2. Store `$args['feed_query']` in the **feed_query** column in Postworld **feeds** table as a JSON Object
+2. Store `$args['feed_query']` in the __feed_query__ column in Postworld __feeds__ table as a JSON Object
 
 3. If write_cache is true, run `pw_cache_feed(feed_id)`
 
-**return** : **$args** *Array*
+__return__ : __$args__ *Array*
 
 #### Parameters : $args
 
-**feed_id** : *string*
+__feed_id__ : *string*
 
-**feed_query** : *array*
+__feed_query__ : *array*
 - default : none
-- The query object which is stored in **feed_query** in **feeds** table, which is input directly into **pw_query**
+- The query object which is stored in __feed_query__ in __feeds__ table, which is input directly into __pw_query__
 
-**write_cache** : *boolean*
-- If the **feed_id** is new to the **feeds** table, set `write_cache = true`
+__write_cache__ : *boolean*
+- If the __feed_id__ is new to the __feeds__ table, set `write_cache = true`
   - false (default) - Wait for cron job to update feed outline later, just update feed_query
   - true - Cache the feed with method : run pw_cache_feed( $feed_id )
 
@@ -1159,29 +1159,29 @@ pw_register_feed ($args);
 ------
 
 ### pw_feed_outline ( *$pw_query_args* )
-- Uses `pw_query()` method to generate an array of **post_ids** based on the supplied `$pw_query_args`
+- Uses `pw_query()` method to generate an array of __post_ids__ based on the supplied `$pw_query_args`
 
 #### Parameters:
 
-**$pw_query_args** : *Array*
+__$pw_query_args__ : *Array*
 - `pw_query()` Arguments
 
 #### Process:
-- Over-ride `feed_query['fields']` variable to **'id'**
-- Flatten `pw_query()` return to Array of **post_ids**
+- Over-ride `feed_query['fields']` variable to __'id'__
+- Flatten `pw_query()` return to Array of __post_ids__
 
-**return** : *Array* (of post IDs)
+__return__ : *Array* (of post IDs)
 
 ------
 
 ### pw_cache_feed ( *$feed_id* )
-- Generates a new feed outline for a registered **feed_id** and caches it
+- Generates a new feed outline for a registered __feed_id__ and caches it
 
 #### Process:
-- Run `pw_feed_outline( $args )` on the **args** in **feed_query** column in the row of the given **$feed_id**
-- Store as *comma delineated list of IDs* in the **feed_outline** column of *feeds* table
+- Run `pw_feed_outline( $args )` on the __args__ in __feed_query__ column in the row of the given __$feed_id__
+- Store as *comma delineated list of IDs* in the __feed_outline__ column of *feeds* table
 
-**return** : *Array* (of post IDs) 
+__return__ : *Array* (of post IDs) 
 
 ------
 
@@ -1189,17 +1189,17 @@ pw_register_feed ($args);
 
 #### Parameters:
 
-**$feed_id** : *string*
+__$feed_id__ : *string*
 
-**$preload** : *integer* (optional)('0' default)
+__$preload__ : *integer* (optional)('0' default)
 - The number of posts to pre-load with post_data
 
 #### Process:
 - Return an object containing all the columns from the wp_postworld_feeds table
-- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the feed_outline, return in **post_data** Object
-- Use fields value from **feed_query** column under key fields 
+- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the feed_outline, return in __post_data__ Object
+- Use fields value from __feed_query__ column under key fields 
 
-**return** : *Array*
+__return__ : *Array*
 ``` php
 array(
 	'feed_id' => {{string}},
@@ -1219,37 +1219,37 @@ array(
 
 #### Parameters:
 
-**$templates_object** : *Array* (optional)
+__$templates_object__ : *Array* (optional)
 
 Options:
-- *Array* containing **['posts']** : indicates to return a **Post Templates Object**
-  - **post_types** : *Array* (optional) - Array of post_types which to return template paths for  
-    **default** : Get all registered post types with `get_post_types()` WP Method :  
+- *Array* containing __['posts']__ : indicates to return a __Post Templates Object__
+  - __post_types__ : *Array* (optional) - Array of post_types which to return template paths for  
+    __default__ : Get all registered post types with `get_post_types()` WP Method :  
 	`get_post_types( array( array( 'public' => true, '_builtin' => false ) ), 'names' )`
 
-  - **post_views** : *Array* (optional) - Array of 'feed views' which to retrieve templates for  
-    **default** : `array( 'list', 'detail', 'grid', 'full' )`
+  - __post_views__ : *Array* (optional) - Array of 'feed views' which to retrieve templates for  
+    __default__ : `array( 'list', 'detail', 'grid', 'full' )`
 
-- *Array* containing **['panels']** : indicates to return a **Panel Templates Object**
-  - **panel_id** : Return the url for the given panel_id
+- *Array* containing __['panels']__ : indicates to return a __Panel Templates Object__
+  - __panel_id__ : Return the url for the given panel_id
 
-- **null** : *default*  
+- __null__ : *default*  
   Returns object with all panels and templates in the default and over-ride folders.
 
 
 #### Process:
 
-**POST TEMPLATES OBJECT**
+__POST TEMPLATES OBJECT__
 
 ``` php
 	if($templates_object['posts']) // If it has a posts object
 ```
 
-- **Default** post templates path :  
-  **/plugins**/postworld/templates/posts
+- __Default__ post templates path :  
+  __/plugins__/postworld/templates/posts
 
-- **Over-ride** post templates path :  
-  **/theme_name**/postworld/templates/posts
+- __Over-ride__ post templates path :  
+  __/theme_name__/postworld/templates/posts
 
 
 1. Generate list of template names :
@@ -1260,37 +1260,37 @@ Options:
 
 2. For each template name, check over-rides path for templates with `file_exists()` PHP Method
 
-3. If template **post_type** doesn't exist, fallback:
-  - For **post_type** default to **post**  
-  If ( **link-list.html** ) doesn't exist use ( **post-list.html** )
+3. If template __post_type__ doesn't exist, fallback:
+  - For __post_type__ default to __post__  
+  If ( __link-list.html__ ) doesn't exist use ( __post-list.html__ )
 
-4. If template **post_view** over-ride doesn't exist, fallback to default templates path
-  -  For **post_view** default to plugin path  
-  If ( **/theme_name**/.../post-list.html ) doesn't exist, use ( **/plugins**/.../post-list.html )
+4. If template __post_view__ over-ride doesn't exist, fallback to default templates path
+  -  For __post_view__ default to plugin path  
+  If ( __/theme_name__/.../post-list.html ) doesn't exist, use ( __/plugins__/.../post-list.html )
 
 5. Gather all the template files into an object
 
 
-**PANEL TEMPLATES OBJECT**
+__PANEL TEMPLATES OBJECT__
 
 ``` php
 	if($templates_object['panels']) // If it has a templates object
 ```
 
 - Default panels template path :  
-  **/plugins**/postworld/templates/panels
+  __/plugins__/postworld/templates/panels
 
 - Over-ride panels template path:  
-  **/theme_name**/postworld/templates/panels
+  __/theme_name__/postworld/templates/panels
 
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
   - {{panel_id}}.html  
-  Key is **file_name** without the HTML extension, value is the path relative to base domain
+  Key is __file_name__ without the HTML extension, value is the path relative to base domain
    
-2. If file exists in **over-ride** paths, overwrite the **default** paths
+2. If file exists in __over-ride__ paths, overwrite the __default__ paths
 
-**return** : *Array* (with requested template paths)
+__return__ : *Array* (with requested template paths)
 
 #### Usage:
 ``` php
@@ -1310,7 +1310,7 @@ $panel_template = pw_get_templates ( array( 'panels'=>'panel_id' ));
 
 #### Return:
 
-- **Post Templates Object** : *Array* - With post_views nested within post_types
+- __Post Templates Object__ : *Array* - With post_views nested within post_types
 
 After JSON Encoded :
 ``` javascript
@@ -1326,7 +1326,7 @@ posts : {
 
 ```
 
-- **Panel Template Object** : *Array* - With key as panel_id value as panel_url
+- __Panel Template Object__ : *Array* - With key as panel_id value as panel_url
 
 After JSON Encoded :
 ``` javascript
@@ -1340,7 +1340,7 @@ panels : {
 ------
 
 ## Sharing
-**php/postworld_share.php**
+__php/postworld_share.php__
 
 ------
 
@@ -1352,18 +1352,18 @@ panels : {
 - If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
 - If the IP is in the list, do nothing
 - If the array length of IPs is over {{100}}, remove old IPs
-**return** : *boolean*
-- **true** - if added share
-- **false** - if no share added
+__return__ : *boolean*
+- __true__ - if added share
+- __false__ - if no share added
 
 ------
 
 ### user_share_report ( *$user_id* )
 - Lookup all post shared by user id
-- In **user_shares** table, return numerically ordered list of post IDs 
+- In __user_shares__ table, return numerically ordered list of post IDs 
 
 - Run get_post_data method on each post ID, for (title, permalink)
-**return** : *Array*
+__return__ : *Array*
 
 ``` php
 array(
@@ -1382,7 +1382,7 @@ array(
 ------
 
 ## Images
-**php/postworld_images.php**
+__php/postworld_images.php__
 
 Contains functions for getting registered images, resizing images and post attachment images.
 

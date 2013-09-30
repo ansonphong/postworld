@@ -1,10 +1,13 @@
 Postworld Database Structure
 ======
 
-### wp_postworld_post_meta
+## Table Structure
 
+### Post Meta
+**Default Name:** *wp_posworld_* **post_meta**
 
-### wp_postworld_user_meta
+### User Meta
+**Default Name:** *wp_posworld_* **user_meta**
 
 #### Columns
 
