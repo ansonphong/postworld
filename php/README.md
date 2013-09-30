@@ -1358,7 +1358,7 @@ __return__ : *boolean*
 
 ------
 
-### user_share_report ( *$user_id* )
+### user_share_report ( *$user_id* ) <<<< UNDER CONSTRUCTION
 - Lookup all post shared by user id
 - In __user_shares__ table, return numerically ordered list of post IDs 
 
@@ -1373,6 +1373,13 @@ array(
 	'views' => 35 // (number of views user has lead to this post)
 )
 ```
+
+------
+
+### cache_user_share_report( *$user_id* )
+- Runs `user_share_report($user_id)` and saves the result in 
+
+__return__ : *Array* (same as return from user_share_report())
 
 ------
 
