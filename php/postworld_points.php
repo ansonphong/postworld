@@ -158,7 +158,7 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 		
-		$query ="select SUM(comment_points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
+		$query ="select comment_points from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 		$total_points = $wpdb -> get_var($query);
 		
 		if($total_points==null)
@@ -176,8 +176,12 @@
 		global $wpdb;
 		$wpdb -> show_errors();		
 		
-		$total_comment_points = get_user_comments_points($user_id);
+		//$total_comment_points = get_user_comments_points($user_id);
+		$query ="select SUM(comment_points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
+		$total_comment_points = $wpdb -> get_var($query);
 		
+		if($total_comment_points==null)
+			$total_comment_points=0;
 		
 		$query = "update ".$wpdb->pw_prefix.'user_meta'." set comment_points=".$total_comment_points." where user_id=".$user_id;
 		$wpdb->query($query);
@@ -358,8 +362,17 @@
 	/*	• Check wp_postworld_comment_points to see if the user has voted on the comment
 		• Return the number of points voted
 		return : integer*/
-		
-	}
+		global $wpdb;
+		$wpdb -> show_errors();
+	
+		$query = "SELECT * FROM ".$wpdb->pw_prefix.'comment_points'." Where comment_post_id=" . $comment_id . " and user_id=" . $user_id;
+		$commentPointsRow = $wpdb -> get_row($query);
+		//echo "<br>".$query;
+		if ($commentPointsRow != null)
+			return $commentPointsRow -> points;
+		else
+			return 0;
+}
 	
 	
 	function get_user_points_voted_to_posts($user_id, $break_down=FALSE) {

@@ -8,7 +8,7 @@
 		
 		return array($post_points_cron_log,$user_points_cron_log);
 	}
-
+	//TODO
 	function cache_all_user_points(){
 		/*• Cycles through all users with cache_user_points() method
 		return : cron_logs Object (add to table wp_postworld_cron_logs)*/
@@ -86,7 +86,7 @@
 	}
 	
 	
-	/*later*/
+	/*later*///TODO
 	function cache_all_comment_points(){
 		/*• Cycles through all columns
 		• Calculates and caches each comment's current points with cache_comment_points() method
@@ -96,7 +96,7 @@
 		
 		
 	}
-	
+	//TODO
 	function cache_all_rank_scores (){
 		/*• Cycles through each post in each post_type scheduled for Rank Score caching
 		• Calculates and caches each post's current rank with cache_rank_score() method
@@ -143,7 +143,7 @@
 	*/
 	}
 	
-	/*later*/
+	/*later*///TODO
 	function cache_all_feeds (){
 		/*• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
 		return : cron_logs Object (store in table wp_postworld_cron_logs)*/

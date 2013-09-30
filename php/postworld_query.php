@@ -1042,4 +1042,43 @@ class PW_Query extends WP_Query {
 	}
 }
 
+function pw_query($args,$return_Type = 'PW_QUERY') {
+	
+	/*
+	 * Description:
+		• Similar to the functionality of WP_Query : http://codex.wordpress.org/Class_Reference/WP_Query 
+		
+		• Query by Postworld data fields post_format & post_class
+		• Sort by points & rank_score
+		• Define which fields are returned using pw_get_posts() method
+		• Can determine the return_format as JSON, PHP Associative Array or WP post objects
+		
+		
+		Process:
+		• After querying and ordering is finished, if more than IDs are required to return, use pw_get_posts() method to return specified fields
+		
+		return : PHP Object / JSON / PW_QUERY
+	 
+	  
+		 • JSON - Return a JSON Object
+	     • ARRAY_A - Return an Associative Array
+	     • PW_QUERY (default) 
+	*/
+		$the_query = new PW_Query($args);
+		if($return_Type == 'ARRAY_A'){
+			return (array) $the_query;
+		}
+		else if($return_Type == 'JSON'){
+			return json_encode($the_query);
+		}
+		else
+		return $the_query;
+	
+}
+
+
+
+//TODO
+function pw_user_query( $args, $return_format ){}
+
 ?>
