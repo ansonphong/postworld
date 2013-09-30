@@ -90,7 +90,7 @@
 		 * */
 		global $wpdb;
 		$wpdb -> show_errors();
-		
+	
 		$query ="Select post_points from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
 		$user_votes_points = $wpdb -> get_var($query);
 		if ($user_votes_points != null) {
@@ -98,6 +98,7 @@
 			return $user_votes_points;
 		} else
 			return 0;
+	
 		
 	}
 	
@@ -105,9 +106,7 @@
 		/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
 			• Stores the result in the post_points column in wp_postworld_user_meta
 		return : integer (number of points)*/
-		$total_user_points = get_user_points_voted_to_posts($user_id);
-		
-		
+	/*	$total_user_points = get_user_points_voted_to_posts($user_id);
 		global $wpdb;
 		$wpdb -> show_errors();
 		
@@ -118,9 +117,26 @@
 
 						
 		}
+		return $total_user_points;*/
+		
+		$total_user_points_breakdown = get_user_points_voted_to_posts($user_id,TRUE);
+		$total_user_points =0;
+		$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "event" => 0));
 		
 		
-		return $total_user_points;
+		foreach ($total_user_points_breakdown as $row) {
+			$total_user_points+= $row->total_points;
+			$post_points_meta['post_type'][$row->post_type] = $row->total_points;
+		}
+		
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."' where user_id=".$user_id;
+		$result = $wpdb->query($query);
+		
+		return array("total"=>$total_user_points,$post_points_meta);
+		
 	}
 	
 	function cache_user_posts_points ( $user_id ){
@@ -346,10 +362,10 @@
 	}
 	
 	
-	function get_user_points_voted_to_posts($user_id) {
+	function get_user_points_voted_to_posts($user_id, $break_down=FALSE) {
 		/*
 		 • Get array of all posts by given user
-		 • Get points of each post from wp_postworld_meta
+		 • Get points of each post from wp_postworld_post_meta
 		 • Add all the points up
 		 return : integer (number of points)
 		 */
@@ -357,16 +373,23 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		
-		//SELECT * FROM wp_postworld_a1.get_user_points_view;
-		$query = "SELECT SUM(post_points) as total_points FROM ".$wpdb->pw_prefix.'post_meta'." Where author_id=" . $user_id;
-		$total_points = $wpdb -> get_var($query);
-		if ($total_points != null) {
-			//echo("total_points:" . $total_points);
-			return $total_points;
-		} else
-			return 0;
-	
+		if($break_down === FALSE){
+			//SELECT * FROM wp_postworld_a1.get_user_points_view;
+			$query = "SELECT SUM(post_points) as total_points FROM ".$wpdb->pw_prefix.'post_meta'." Where author_id=" . $user_id;
+			$total_points = $wpdb -> get_var($query);
+			if ($total_points != null) {
+				//echo("total_points:" . $total_points);
+				return $total_points;
+			} else
+				return 0;
+		}else{
+			
+			$query ="select post_id,author_id ,sum(post_points) as total_points, wp_posts.post_type from $wpdb->pw_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->pw_prefix"."post_meta.post_id AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id) group by post_type ";	
+			//echo $query;
+			$user_votes_points_breakdown = $wpdb -> get_results($query);
+			//echo json_encode($user_votes_points_breakdown);
+			return $user_votes_points_breakdown;	
+		}
 	}
 	
 	
