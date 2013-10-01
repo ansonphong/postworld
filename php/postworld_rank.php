@@ -133,5 +133,11 @@ function cache_rank_score ( $post_id ){
 	$post_rank_score = calculate_rank_score($post_id);
 	$query ="update $wpdb->pw_prefix"."post_meta set rank_score=".$post_rank_score." where post_id=".$post_id;
 	$result = $wpdb->query($query);
+	
+	if ($result === FALSE || $result === 0){
+			//echo 'false <br>';
+			//insertt new row for this comment in comment_meta, no points was added
+			//TODO update ad record like comments
+	}
 }
 ?>

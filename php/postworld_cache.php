@@ -151,12 +151,13 @@
 		• Calculates and caches each post's current rank with cache_rank_score() method
 		return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	
-	/*	global $wpdb;
+		global $wpdb;
 		$wpdb -> show_errors();
 		
 		global $pw_defaults;
 		$rank_options = $pw_defaults['rank']; // array of post types
-		$post_types = $points_options['post_types'];
+		//echo(json_encode($rank_options).'<br>');
+		$post_types = $rank_options['post_types'];
 		//echo(json_encode($post_types).'<br>');
 		$number_of_post_types = count($post_types);
 		$cron_logs;
@@ -175,8 +176,9 @@
 			$current_cron_log_object->type = 'rank';
 			$current_cron_log_object->query_id=$post_types[$i];// {{feed id / post_type slug}}
 			$current_cron_log_object->query_vars = array();
+			
 			foreach ($posts as $row) {
-				calculate_rank_score($row->ID);
+				cache_rank_score($row->ID);
 			}
 			
 			$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
@@ -189,7 +191,7 @@
 
 	echo json_encode(($cron_logs));
 	 
-	*/
+	
 	}
 	
 	/*later*///TODO
