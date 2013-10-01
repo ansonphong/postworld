@@ -1391,7 +1391,7 @@ array(
         array(
             'post_id' => 8723,
             'shares' => 385,
-            'last_time' : // UNIX Timestamp
+            'last_time' =>
         ),
         array(
             'post_id' => 3463,
