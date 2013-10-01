@@ -282,7 +282,7 @@ __Default Table Name:__ *wp_posworld_* __comment_points__
 ## User Roles
 __Default Table Name:__ *wp_posworld_* __user_roles__
 
-- Used to store meta data relating the user riles
+- Used to store meta data relating the user roles
 
 ### Columns
 
@@ -294,14 +294,24 @@ __Default Table Name:__ *wp_posworld_* __user_roles__
 
 ------
 
+## User Shares
+__Default Table Name:__ *wp_posworld_* __user_shares__
 
+- Used to store a record of all posts shared by users
 
+### Columns
 
+#### __user_id__ : *integer*
 
+#### __post_id__ : *integer*
 
+#### __recent_ips__ : *string*
 
+#### __shares__ : *integer*
 
+#### __last_time__ : *integer*
 
+------
 
 
 
