@@ -281,13 +281,29 @@ array(
 
 ------
 
-### get_user_points_voted_to_posts ( *$user_id* )
+### get_user_points_voted_to_posts ( *$user_id* ,*$break_down=FALSE*)
+If **$break_down=False** then : 
 - Get total points voted to posts authored by the given user
 - Get points of each post from **wp_postworld_post_meta**
 - Add all the points up
 
 **return** : *integer* (number of points)
 
+If **$break_down=True** then :
+Get total points voted to posts authored by the given user grouped by post_type
+return *array* 	
+
+for_each post type:
+post_id,author_id,total_points,post_type
+
+**output format:**
+
+```php 
+[
+         {"post_id":"13","author_id":"1","total_points":"10","post_type":"post"},
+         {"post_id":"19","author_id":"1","total_points":"10","post_type":"link"}
+]
+```
 ------
 
 ### get_user_votes_on_posts ( *$user_id* )

@@ -377,11 +377,23 @@
 	
 	function get_user_points_voted_to_posts($user_id, $break_down=FALSE) {
 		/*
+		 * 
+		 * Parameters: $user_id 
+		 * 			   $break_down =FALSE
+		 * If $break_down == false then
 		 • Get array of all posts by given user
 		 • Get points of each post from wp_postworld_post_meta
 		 • Add all the points up
 		 return : integer (number of points)
-		 */
+		 * If $break_down == true 
+		 Get total points voted to posts authored by the given user grouped by post_type
+
+		output :
+
+		[
+         {"post_id":"13","author_id":"1","total_points":"10","post_type":"post"},
+         {"post_id":"19","author_id":"1","total_points":"10","post_type":"link"}
+		]*/
 	
 		global $wpdb;
 		$wpdb -> show_errors();
