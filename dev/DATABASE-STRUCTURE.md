@@ -198,3 +198,81 @@ __Anatomy:__
 	}
 }
 ```
+
+#### __location_city__ : *string*
+- Used to display and query a user by city
+
+#### __location_region__ : *string*
+- Used to display and query a user by region (province/state/territory)
+
+#### __location_country__ : *string*
+- Used to display and query a user by country
+
+------
+
+## Comment Meta
+__Default Table Name:__ *wp_posworld_* __comment_meta__
+
+- Used to cache data for comments
+
+### Columns
+
+#### __comment_id__ : *integer*
+
+#### __post_id__ : *integer*
+
+#### __comment_points__ : *integer*
+
+------
+
+## Post Points
+__Default Table Name:__ *wp_posworld_* __post_points__
+
+- Used to store a record of all points cast to all posts
+
+### Columns
+
+#### __post_id__ : *integer*
+- The post ID of the post being voted on
+
+#### __author_id__ : *integer*
+- The user ID of the author who created the post
+
+#### __user_id__ : *integer*
+- The used ID of the user who is casting a vote
+
+#### __post_points__ : *integer*
+- The number of points cast in the vote
+
+#### __time__ : *integer*
+- The time which the vote was cast
+
+------
+
+## Comment Points
+__Default Table Name:__ *wp_posworld_* __comment_points__
+
+- Used to store a record of all points cast to all comments
+
+### Columns
+
+#### __comment_post_id__ : *integer*
+- The ID of the post that the comment is on
+
+#### __post_author_id__ : *integer*
+- The user ID of the author who created the post which the comment is on
+
+#### __comment_id__ : *integer*
+- The ID of the comment
+
+#### __comment_author_id__ : *integer*
+- The used ID of the author of the comment
+
+#### __user_id__ : *integer*
+- The ID of the user who is casting the vote
+
+#### __comment_points__ : *integer*
+- The number of points being voted to the comment
+
+#### __time__ : *integer*
+- The time that the vote was cast
