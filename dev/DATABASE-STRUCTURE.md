@@ -323,6 +323,54 @@ __Default Table Name:__ *wp_posworld_* __user_shares__
 
 ------
 
+## Favorites
+__Default Table Name:__ *wp_posworld_* __favorites__
+
+- Used to store a record of all favorites by user ID and post ID
+- Will be used to calculate 'reccomended pages' by favorites
+  - _'People who liked this, also liked this.'_
+- Will be used to reccomend friends of similar interests
+  - _'People who also favorited this : {{List Users}}'_
+
+### Columns
+
+#### __post_id__ : *integer*
+
+#### __user_id__ : *integer*
+
+------
+
+## Feeds
+__Default Table Name:__ *wp_posworld_* __feeds__
+- Stores registered query vars, cached feed outlines and performance data for feeds
+- Used by the __load-feed__ JS directive to load cached feeds
+
+
+### Columns
+
+#### __feed_id__ : *string*
+
+#### __feed_query__ : *string* (JSON)
+
+#### __feed_outline__ : *string*
+- Contains a list of _comma deliniated integers_ 
+- Describes the __post IDs__ in the order retured by `pw_query()`
+- `24,12,51,467,235,364,364,3453`
+
+#### __time_start__ : *integer* (UNIX Timestamp)
+- The starting time of the last run of `cache_feed()`
+
+#### __time_end__ : *integer* (UNIX Timestamp)
+- The ending time of the last run of `cache_feed()`
+
+#### __timer__ : *integer* (milliseconds)
+- The number of miliseconds it took to generate the current feed outline
+
+
+	
+
+
+
 
 
 
