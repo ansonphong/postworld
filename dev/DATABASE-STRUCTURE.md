@@ -1,7 +1,7 @@
 Postworld Database Structure
 ======
 
-## Index
+## Index of Tables
 
 0. [Post Meta](#post-meta)
 0. [User Meta](#user-meta)
