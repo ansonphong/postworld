@@ -20,7 +20,8 @@ __Default Table Name:__ *wp_posworld_* __user_meta__
 #### __post_points_meta__ : *integer* (cached)
 - Cached data which breaks down the attribution of points by post_type
 
-#####Anatomy:
+__Anatomy:__
+
 ``` javascript
 {
 	post_type : {
