@@ -138,6 +138,7 @@ __HINT:__
   2. Update cached __post_points__ row in __post_meta__ table directly if there is a change in points
 
 __HINT:__
+
 ```php
 $old_user_points = has_voted_on_post($post_id,$user_id); // get previous points user has voted on points
 $update_points = $set_points - $old_user_points; // calculate the difference in points
@@ -154,6 +155,7 @@ $new_post_points = $old_post_points + $update_points; // add the updated points
   2. Update the number of points in the __post_points_meta__ object
 
 __HINT:__
+
 ``` php
 $post_type = get_post_type( $post_id ); // check post_type of given post
 $post_points_meta = // Get value of post_points_meta column in user_meta table

@@ -63,7 +63,6 @@ __Anatomy:__
 }
 ```
 
-
 #### __comment_points__ : *integer* (cached)
 - Total points which have been voted to the user's comments
 
@@ -142,6 +141,7 @@ __Anatomy:__
 ```
 
 #### __post_relationships__ : *JSON*
+- Outlines the user's relationships to posts, in terms of votes that they have vast
 
 - __viewed__ : Used to generate a report of which content the user has viewed
 
@@ -173,6 +173,7 @@ __Anatomy:__
 ```
 
 #### __comment_relationships__ : *JSON*
+- Outlines the user's relationships to comments, in terms of votes that they have vast
 
 - __has_voted.recent__ : Used to calculate how often a user is commenting on the post
   - If the user is voting on comments too often, disable comment voting temporarily
