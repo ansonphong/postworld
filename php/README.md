@@ -1378,12 +1378,12 @@ __return__ : *boolean*
 
 #### Process
 - Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
-  - Compile into __my_shares__ Object
+  - Compile into __my_shares__ Object *(see return)*
 
 - Lookup all shared posts owned by the user ID from __User Shares__ table, column __author_id__
-  - Compile into __my_post_shares__ Object
+  - Compile into __my_post_shares__ Object *(see return)*
 
-__return__ : *Array*
+__return__ : *Array* (Same as __share_report__ column in __User Meta__ table)
 
 ``` php
 array(
