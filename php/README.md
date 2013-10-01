@@ -1463,7 +1463,8 @@ Default : *false*
 #### Process
 - Check value of `$real_time`
   - If __true__ : Load by running `generate_user_share_report()`
-  - If __false__ : Load by getting column __share_report__ in table __User Meta__
+  - If __false__ : Load by getting column __share_report__ in table __User Meta__  
+  - If the __share_report__ column is empty, run `cache_user_share_report()` and return the result
 
 __return__ : *Array* (same as `generate_user_share_report()`)  
 See : Database Structure on __share_report__ column in __User Meta__ table
