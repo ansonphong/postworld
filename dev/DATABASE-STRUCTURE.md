@@ -24,6 +24,16 @@ __Default__: *standard*
   - __video__ - On posts which have a primary _link_url_ which is a video
   - __audio__ - On posts which have a primary _link_url_ which is a audio
 
+#### __link_url__ : *string*
+- Used to associate a specific link URL with a post
+- Used by templates for featured links, videos and audio files for embedding
+
+#### __post_points__ : *integer*
+- The total number of points voted to a post
+
+#### __rank_score__ : *integer*
+- The real-time rank-score of a post, based on `calculate_rank_score()` Method
+
 ------
 
 ## User Meta
