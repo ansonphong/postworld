@@ -239,7 +239,7 @@ __Default Table Name:__ *wp_posworld_* __post_points__
 - The user ID of the author who created the post
 
 #### __user_id__ : *integer*
-- The used ID of the user who is casting a vote
+- The user ID of the user who is casting a vote
 
 #### __post_points__ : *integer*
 - The number of points cast in the vote
@@ -257,22 +257,54 @@ __Default Table Name:__ *wp_posworld_* __comment_points__
 ### Columns
 
 #### __comment_post_id__ : *integer*
-- The ID of the post that the comment is on
+- The post ID of the post that the comment is on
 
 #### __post_author_id__ : *integer*
 - The user ID of the author who created the post which the comment is on
 
 #### __comment_id__ : *integer*
-- The ID of the comment
+- The comment ID of the comment
 
 #### __comment_author_id__ : *integer*
-- The used ID of the author of the comment
+- The user ID of the author of the comment
 
 #### __user_id__ : *integer*
-- The ID of the user who is casting the vote
+- The user ID of the user who is casting the vote
 
 #### __comment_points__ : *integer*
 - The number of points being voted to the comment
 
 #### __time__ : *integer*
 - The time that the vote was cast
+
+------
+
+## User Roles
+__Default Table Name:__ *wp_posworld_* __user_roles__
+
+- Used to store meta data relating the user riles
+
+### Columns
+
+#### __role_name__ : *string*
+- The name of the role
+
+#### __vote_points__ : *integer*
+- The number of points which users with that role can cast
+
+------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
