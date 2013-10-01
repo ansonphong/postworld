@@ -1406,7 +1406,7 @@ __return__ : *Array* (same as return from `generate_user_share_report()`)
 
 ------
 
-### load_user_share_report( *$user_id, $real_time = false* )
+### load_user_share_report( *$user_id, [$real_time]* )
 
 #### Description
 - Load the user share report
@@ -1424,7 +1424,7 @@ Default : *false*
   - If __true__ : Load by running `generate_user_share_report()`
   - If __false__ : Load by getting column __share_report__ in table __User Meta__
 
-__return__ : *Array* (same as `generate_user_share_report()`)
+__return__ : *Array* (same as `generate_user_share_report()`)  
 See : Database Structure on __share_report__ column in __User Meta__ table
 
 ------
