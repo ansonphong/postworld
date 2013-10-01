@@ -164,17 +164,7 @@ $post_points_meta = json_encode($post_points_meta); // encode back into JSON
 // Write new post_points_meta object to user_meta table
 ```
 
-Anatomy of __post_points_meta__ column JSON object in __user_meta__ table :
-``` javascript
-{
-	post_type : {
-		post : 242,
-		link : 523,
-		blog : 123,
-		event : 12
-	}
-}
-```
+Anatomy of __post_points_meta__ column JSON object in __user_meta__ table : see *Database Structure* Document.
 
 __return__ : *Array*
 ``` php

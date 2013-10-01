@@ -20,6 +20,20 @@ __Default Table Name:__ *wp_posworld_* __user_meta__
 #### __post_points_meta__ : *integer* (cached)
 - Cached data which breaks down the attribution of points by post_type
 
+__Anatomy:__
+
+``` javascript
+{
+	post_type : {
+		post : 242,
+		link : 523,
+		blog : 123,
+		event : 12
+	}
+}
+```
+
+
 #### __comment_points__ : *integer* (cached)
 - Total points which have been voted to the user's comments
 
