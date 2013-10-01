@@ -9,48 +9,48 @@ Postworld // Angular / JS Functions
 The Javascript methods for Postworld are build using the [AngularJS](http://angularjs.org/) framework.
 
 
-###**wp_ajax** ( function, args )
+###__wp_ajax__ ( function, args )
 - A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
 - Sends 'function' command with args to Wordpress function which has been registered with `wp_ajax_` action hooks
 - See : http://codex.wordpress.org/AJAX_in_Plugins
 
-**return** : *JSON encoded DATA response*
+__return__ : *JSON encoded DATA response*
 
 ------
 
-###**o_embed** ( url, args )
+###__o_embed__ ( url, args )
 - Uses `wp_oembed_get()` WP function via AJAX
 - See : http://codex.wordpress.org/wp_oembed_get
 
-**return** : *Object*
+__return__ : *Object*
 
 ------
 
 ## Functions
 
 
-###**pw_get_posts** ( feed_id, post_ids, fields )
+###__pw_get_posts__ ( feed_id, post_ids, fields )
 - Used to access pw_get_post() PHP Method via AJAX
 
 ####Parameters:
-**feed_id** : *string*  
+__feed_id__ : *string*  
 The ID of the Postworld feed
 
-**post_ids** : *array*  
+__post_ids__ : *array*  
 An array of post_ids to load from the outline
 
-**fields** : *object*  
+__fields__ : *object*  
 Equivalent to the `pw_get_post()` PHP Method parameters
 
 ####Process:
 - Run `pw_get_posts()` PHP method via AJAX
 - Merge data into JS object : `feed_data[feed_id]['posts']`
 
-**return** : *boolean*
+__return__ : *boolean*
 
 ------
 
-###**pw_get_templates** ( templates_object )
+###__pw_get_templates__ ( templates_object )
 
 ####Parameters:
 See `pw_get_templates()` PHP method.
@@ -63,11 +63,11 @@ See `pw_get_templates()` PHP method.
 - Run `pw_get_templates()` PHP method via AJAX
 - Return the data
 
-**return** : *JSON* 
+__return__ : *JSON* 
 
 ------
 
-###**pw_scroll_feed** ( feed_id )
+###__pw_scroll_feed__ ( feed_id )
 
 
 ####Description:
@@ -87,20 +87,20 @@ See `pw_get_templates()` PHP method.
   * Run `pw_get_posts ( feed_id, load_posts, fields )`
   * Set `feed_data[feed_id]['status'] : 'loaded'`
 
-**return** : *true*
+__return__ : *true*
 
 ------
 
-###**pw_live_feed** ( args )
+###__pw_live_feed__ ( args )
 
 ####Process:
 1. Access `pw_live_feed()` PHP Method via AJAX 
-2. Use returned data to populate `feed_data[feed_id]` JS Object with **feed_outline**, loaded and post data
+2. Use returned data to populate `feed_data[feed_id]` JS Object with __feed_outline__, loaded and post data
 
 ####Parameters:
   - Same as `pw_live_feed()` PHP Method
 
-**return** : *Object*
+__return__ : *Object*
 ``` javascript
 {
 feed_outline : [1,3,5,8,12,16,24,64],
@@ -128,19 +128,19 @@ Displays a live unregistered feed based on `feed_query pw_query()` args
 ####Parameters:
 Parameters are passed via `feed_init[feed_id]`.
 
-**preload** : *integer*  
+__preload__ : *integer*  
 Number of posts to load at the beginning, before infinite scrolling
 
-**load_increment** : *integer*  
+__load_increment__ : *integer*  
 Number of posts to load at a time when using infinite scroll
 
-**order_by** : *string* (optional)
+__order_by__ : *string* (optional)
 
-**panel** : *string* (optional)
+__panel__ : *string* (optional)
 
-**view** : *object*
+__view__ : *object*
 
-**feed_query** : *string / object*
+__feed_query__ : *string / object*
   - object - an object of query args which is passed to `pw_query()`
 
 
@@ -172,22 +172,22 @@ feed_init['feed_id'] = {
 
 ####Process:
 
-**PHP / AJAX :**  
+__PHP / AJAX :__  
 1. Run `pw_get_feed( feed_id, preload )` PHP method via AJAX.  
-  **returns** : 
+  __returns__ : 
     feed_outline
     post_data
     feed_query
     ...
 
-2. Populate `feed_data[feed_id]` JS Object with **feed_outline**, and **feed_query**
+2. Populate `feed_data[feed_id]` JS Object with __feed_outline__, and __feed_query__
 3. Populate `feed_data[feed_id][['posts']` Object with post_data posts
 
 
-**JAVASCRIPT :**  
+__JAVASCRIPT :__  
 1. Populate `feed_data[feed_id]` Object with `feed_init[feed_id]` Object 
 
-**return** : *true*
+__return__ : *true*
 
 ####Usage:
 
@@ -213,27 +213,27 @@ feed_init['feed_id'] = {
 ### load-panel ( *postworld.directive* )
 
 #### Description:
-- Loads a panel by **panel_id**
+- Loads a panel by __panel_id__
 
 ####Process:
 
-**PHP / AJAX :**  
+__PHP / AJAX :__  
 - Run `pw_get_templates( panel_id )` PHP method via AJAX.  
-  **returns** : 
+  __returns__ : 
 ``` javascript
 { panel_id : "template_url.html" }
 ```
 
 - Populate `templates.panels[feed_id]` JS Object with data object
 
-**JAVASCRIPT :**  
-- Append and compile inner **ng-include** directive like:
+__JAVASCRIPT :__  
+- Append and compile inner __ng-include__ directive like:
 
 ``` html
 <div ng-include="template_url.html" class="inner"></div>
 ```
 
-**return** : *scope*
+__return__ : *scope*
 
 ####Usage:
 
@@ -241,7 +241,7 @@ feed_init['feed_id'] = {
 <div load-panel="panel_id"></div> 
 ```
 
-- Designer can optionally add a custom **ng-controller** to the html here.
+- Designer can optionally add a custom __ng-controller__ to the html here.
 
 #### Requires:
 - `pw_cache_feed()` PHP Method
@@ -316,13 +316,13 @@ templates = {
 
 ## Related Notes
 
-**Angular JS Template Structure**  
+__Angular JS Template Structure__  
 https://www.evernote.com/shard/s275/sh/08be24c4-0630-430b-b118-1e23138664fa/d5a2af40ae684188d12d7e4cc355090f
 
-**PHP, MySQL, Wordpress Functions**  
+__PHP, MySQL, Wordpress Functions__  
 https://github.com/phongmedia/postworld/tree/master/php
 
-**GitHub repo**  
+__GitHub repo__  
 https://github.com/phongmedia/postworld/ 
 
 
@@ -330,9 +330,9 @@ https://github.com/phongmedia/postworld/
 
 ## Related Articles
 
-**Retain scroll position on route change in AngularJS?**  
+__Retain scroll position on route change in AngularJS?__  
 http://stackoverflow.com/questions/14107531/retain-scroll-position-on-route-change-in-angularjs
 
-**WP Ajax Tips**  
+__WP Ajax Tips__  
 http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 
