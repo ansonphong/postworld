@@ -993,6 +993,7 @@ __DATE & TIME__
 - Mixed Methods for retrieving data
 
 __return__ : *Array* (requested fields)
+
 ``` php
 array(
 	'ID' => 24,
@@ -1111,6 +1112,7 @@ $live_feed = pw_live_feed ( *$args* );
 ```
 
 __return__ : *Object*
+
 ``` php
 array(
 	'feed_id' => {{string}},
@@ -1193,7 +1195,7 @@ __return__ : *Array* (of post IDs)
 
 ------
 
-### pw_get_feed ( *$feed_id, [$preload]* )
+### __pw_load_feed__ ( *$feed_id, [$preload]* )
 
 #### Parameters:
 
@@ -1203,12 +1205,13 @@ __$preload__ : *integer* (optional)('0' default)
 - The number of posts to pre-load with post_data
 
 #### Process:
-- Return an object containing all the columns from the wp_postworld_feeds table
-- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the feed_outline, return in __post_data__ Object
+- Return an object containing all the columns from the __Feeds__ table
+- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the __feed_outline__, return in __post_data__ Object
 - Use fields value from __feed_query__ column under key fields 
 
 __return__ : *Array*
-``` php
+
+```php
 array(
 	'feed_id' => {{string}},
 	'feed_query' => {{array}},

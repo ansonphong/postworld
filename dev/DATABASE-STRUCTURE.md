@@ -344,13 +344,18 @@ __Default Table Name:__ *wp_posworld_* __favorites__
 __Default Table Name:__ *wp_posworld_* __feeds__
 - Stores registered query vars, cached feed outlines and performance data for feeds
 - Used by the __load-feed__ JS directive to load cached feeds
-
+- Used by:
+  - `pw_register_feed()`
+  - `pw_load_feed()`
 
 ### Columns
 
 #### __feed_id__ : *string*
+- The ID of the feed, described by `pw_register_feed()`
 
 #### __feed_query__ : *string* (JSON)
+- The registered query args for `pw_query()` which generates the __feed_outline__
+- Stored in JSON format
 
 #### __feed_outline__ : *string*
 - Contains a list of _comma deliniated integers_ 
@@ -366,6 +371,18 @@ __Default Table Name:__ *wp_posworld_* __feeds__
 #### __timer__ : *integer* (milliseconds)
 - The number of miliseconds it took to generate the current feed outline
 
+
+------
+
+## Feeds
+__Default Table Name:__ *wp_posworld_* __feeds__
+- Stores registered query vars, cached feed outlines and performance data for feeds
+- Used by the __load-feed__ JS directive to load cached feeds
+
+
+### Columns
+
+#### __feed_id__ : *string*
 
 	
 
