@@ -429,6 +429,29 @@ __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
 ------
 
+### cache_shares ( [$cache_all] )
+
+#### Description
+- Caches user and post share reports
+
+#### Paramaters
+__$cache_all__ : *boolean*  
+Default : *false*
+
+#### Process
+- If `$cache_all = false`, just update the recently changed share reports
+  - Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
+  - Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, and run `cache_user_share_report($post_id)`
+  - Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, and run `cache_user_share_report($post_id)`
+
+- If `$cache_all = true`
+  - Cycle through every single post and run `cache_post_share_report($post_id)`
+  - Cycle through every single user and run `cache_user_share_report($post_id)`
+
+__return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
+
+------
+
 ### clear_cron_logs ( *$timestamp* )
 - Count number of rows in wp_postworld_cron_logs (rows_before)
 - Deletes all rows which are before the specified timestamp (rows_removed)
@@ -1356,14 +1379,31 @@ __php/postworld_share.php__
 
 ------
 
-### set_shared ( *$user_id, $post_id, $ip_address* )
-- Check URL query_vars for user id
-- See if user id exists
-- Get selected post id
-- Check IP address against list of IPs stored in recent_ips in wp_postworld_user_shares
-- If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
-- If the IP is in the list, do nothing
-- If the array length of IPs is over {{100}}, remove old IPs
+### set_share ( *$user_id, $post_id* )
+
+#### Description
+- Sets a record of a share in __Shares__ table
+- __Context__ : The URL leading to the share looks like : 
+  - `http://realitysandwich.com/?p=24&u=48`
+  - __p__ : The post ID
+  - __u__ : The user ID
+
+
+#### Process
+1. Setup
+  - Check if user ID exists
+  - Check if post ID exists
+  - Get the ID of the post author from __Posts__ table 
+  - Get the user's IP address with `get_client_ip()`
+2. Process IP
+  - Check IP address against list of IPs stored in `recent_ips` column in __Shares__ table
+  - If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
+  - If the IP is in the list, do nothing
+  - If the array length of IPs is over {{100}}, remove old IPs
+3. Add Share 
+  - If the IP is unique, add one point to the share
+  - Update __last_time__ with current GMT UNIX Timestamp
+
 __return__ : *boolean*
 - __true__ - if added share
 - __false__ - if no share added
