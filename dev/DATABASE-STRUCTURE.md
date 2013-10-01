@@ -106,7 +106,8 @@ __Data__ : *cached*
 ```
 
 
-#### __share_report__ : *JSON* (cached)
+#### __share_report__ : *JSON*
+__Data__ : *cached*
 - Cached JSON Object which documents all share activity on behalf of the user, including:
   - __my_shares__ : From posts that I have shared
   - __my_post_shares__ : Number of share points to my posts
