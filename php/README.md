@@ -1391,12 +1391,12 @@ array(
         array(
             'post_id' => 8723,
             'shares' => 385,
-            'last_time' =>
+            'last_time' => {{integer}}
         ),
         array(
             'post_id' => 3463,
             'shares' => 234,
-            'last_time' => 
+            'last_time' => {{integer}}
         ),
         ...
     ),
@@ -1409,12 +1409,12 @@ array(
                 array(
                     'user_id' => 843,
                     'shares' => 235,
-                    'last_time' => 
+                    'last_time' => {{integer}}
                 ),
                 array(
                     'user_id' => 733,
                     'shares' => 345,
-                    'last_time' => 
+                    'last_time' => {{integer}}
                 ),
                 ...
             )
@@ -1426,12 +1426,12 @@ array(
                 array(
                     'user_id' => 633,
                     'shares' => 785,
-                    'last_time' => 
+                    'last_time' => {{integer}}
                 ),
                 array(
                     'user_id' => 124,
                     'shares' => 573,
-                    'last_time' => 
+                    'last_time' => {{integer}}
                 ),
                 ...
             )
