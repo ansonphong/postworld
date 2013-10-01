@@ -302,14 +302,24 @@ __Default Table Name:__ *wp_posworld_* __user_shares__
 ### Columns
 
 #### __user_id__ : *integer*
+- The user ID of the user sharing
+- Tracked when a link like this is loaded :
+  - _http://realitysandwich.com/?p=2453&u=24 _ 
+  __p__ = page ID
+  __u__ = user ID
 
 #### __post_id__ : *integer*
+- The post ID of the post which is being shared
 
 #### __recent_ips__ : *string*
+- A list of the most recent 100 IP addesses which have loaded the share URL
+- Used to discount counting multiple hits from the same visitor
 
 #### __shares__ : *integer*
+- The number of shares by that user to that post
 
 #### __last_time__ : *integer*
+- The most recent time the share URL was loaded by a unique IP
 
 ------
 
