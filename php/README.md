@@ -1388,7 +1388,7 @@ array(
 ------
 
 ### cache_user_share_report( *$user_id* )
-- Runs `user_share_report($user_id)` and saves the result in 
+- Run `user_share_report($user_id)` and save the result in __User Meta__ table, __share_points_meta__ column
 
 __return__ : *Array* (same as return from user_share_report())
 
