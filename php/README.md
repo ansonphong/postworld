@@ -429,7 +429,7 @@ __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
 ------
 
-### cache_shares ( [$cache_all] )
+### cache_shares ( *[$cache_all]* )
 
 #### Description
 - Caches user and post share reports
