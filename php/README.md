@@ -441,12 +441,12 @@ Default : *false*
 #### Process
 - If `$cache_all = false`, just update the recently changed share reports
   - Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
-  - __POSTS :__
-  - Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column
-  - Run `cache_user_share_report($post_id)` for all recently updated shares
-  - __AUTHORS :__
-  - Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, and run `cache_user_share_report($post_id)`
-  - Run `cache_user_share_report($post_id)` for all recently updated shares
+  - __POSTS :__  
+  Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
+  Run `cache_user_share_report($post_id)` for all recently updated shares
+  - __AUTHORS :__  
+  Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, and run `cache_user_share_report($post_id)`  
+  Run `cache_user_share_report($post_id)` for all recently updated shares
  
 - If `$cache_all = true`
   - Cycle through every single post and run `cache_post_share_report($post_id)`
