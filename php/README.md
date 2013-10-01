@@ -445,9 +445,12 @@ Default : *false*
   Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
   Run `cache_user_share_report($post_id)` for all recently updated shares
   - __AUTHORS :__  
-  Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, and run `cache_user_share_report($post_id)`  
-  Run `cache_user_share_report($post_id)` for all recently updated shares
- 
+  Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, 
+  Run `cache_user_share_report($post_id)` for all recently updated user's shares
+   - __USERS :__  
+  Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column 
+  Run `cache_user_share_report($post_id)` for all recently updated user's shares
+
 - If `$cache_all = true`
   - Cycle through every single post and run `cache_post_share_report($post_id)`
   - Cycle through every single user and run `cache_user_share_report($post_id)`
