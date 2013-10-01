@@ -197,11 +197,12 @@ __return__ : *integer* (number of points)
 
 ### calculate_user_posts_points ( *$user_id* )
 - Add up the points voted to given user's posts, stored in __wp_postworld_post_points__
-- __NEW__ : For each post, get the __post_type__, and also calculate value of points given to posts of each __post_type__
+- __NEW__ : For each post, get the __post_type,__ and also calculate value of points given to posts of each post type
 - Cache the total result in the __post_points__ column in __wp_postworld_user_meta__
 - __NEW__ : Cache the __post_types__ breakdown in the __post_points_meta__ column in __wp_postworld_user_meta__
 
 __return__ : *Array* (number of points)
+
 ```php
 array(
 	'total' => 640,
@@ -218,7 +219,7 @@ array(
 
 ### cache_user_posts_points ( *$user_id* )
 - Runs `calculate_user_posts_points()` Method
-- Caches value in __post_points__ column in __wp_postworld_user_meta__ table
+- Caches value in __post_points_meta__ column in __wp_postworld_user_meta__ table
 
 __return__ : *integer* (number of points)
 
