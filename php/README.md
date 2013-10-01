@@ -1378,38 +1378,79 @@ __return__ : *boolean*
 
 #### Process
 - Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
-  - Compile all this into __my_shares__ Object
+  - Compile into __my_shares__ Object
 
-- Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
-  - Compile all this into __my_shares__ Object
+- Lookup all shared posts owned by the user ID from __User Shares__ table, column __author_id__
+  - Compile into __my_post_shares__ Object
 
-- In __user_shares__ table, return numerically ordered list of post IDs 
-
-- Run get_post_data method on each post ID, for (title, permalink)
 __return__ : *Array*
 
 ``` php
 array(
-	'id' => 24,
-	'title' => post_title,
-	'permalink' => 'http://...',
-	'views' => 35 // (number of views user has lead to this post)
+    'my_shares' => array(
+        array(
+            'post_id' => 8723,
+            'shares' => 385,
+            'last_time' : // UNIX Timestamp
+        ),
+        array(
+            'post_id' => 3463,
+            'shares' => 234,
+            'last_time' => 
+        ),
+        ...
+    ),
+
+    my_post_shares => array( // others who have shared my posts
+        array(
+            'post_id' => 9348,
+            'total_shares' => 385,
+            'users_shares' => array( 
+                array(
+                    'user_id' => 843,
+                    'shares' => 235,
+                    'last_time' => 
+                ),
+                array(
+                    'user_id' => 733,
+                    'shares' => 345,
+                    'last_time' => 
+                ),
+                ...
+            )
+        ),
+        array(
+            'post_id' => 623,
+            'total_shares' => 523,
+            'users_shares' => array( 
+                array(
+                    'user_id' => 633,
+                    'shares' => 785,
+                    'last_time' => 
+                ),
+                array(
+                    'user_id' => 124,
+                    'shares' => 573,
+                    'last_time' => 
+                ),
+                ...
+            )
+        ),
+    )
 )
 ```
 
 ------
 
 ### cache_user_share_report( *$user_id* )
-- Run `user_share_report($user_id)` and save the result in __User Meta__ table, __share_report__ column
+- Run `generate_user_share_report($user_id)` and save the result in __User Meta__ table, __share_report__ column
 
-__return__ : *Array* (same as return from `generate_user_share_report()`)
+__return__ : *Array* (same as `generate_user_share_report()`)
 
 ------
 
 ### load_user_share_report( *$user_id, [$real_time]* )
-
-#### Description
-- Load the user share report
+- Loads the user share report
 
 #### Parameters
 
