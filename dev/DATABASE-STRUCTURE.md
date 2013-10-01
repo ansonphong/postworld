@@ -113,6 +113,11 @@ __Anatomy:__
 
 #### __post_relationships__ : *JSON*
 
+- __viewed__ : Used to generate a report of which content the user has viewed
+
+- __has_voted.recent__ : Used to calculate how often a user is commenting on the post
+  - If the user is voting on comments too often, disable comment voting temporarily
+
 __Anatomy:__
 
 ``` javascript
@@ -121,7 +126,7 @@ __Anatomy:__
 	favorites:[12,16,25],
 	read_later:[58,78],
 	has_voted:{
-		recent : {
+		recent : { 
 			{
 				post_id:242,
 				points:1,
@@ -138,6 +143,9 @@ __Anatomy:__
 ```
 
 #### __comment_relationships__ : *JSON*
+
+- __has_voted.recent__ : Used to calculate how often a user is commenting on the post
+  - If the user is voting on comments too often, disable comment voting temporarily
 
 __Anatomy:__
 
