@@ -8,7 +8,7 @@ Postworld Database Structure
 0. [Comment Meta](#comment-meta)
 0. [Post Points](#post-points)
 0. [Comment Points](#comment-points)
-0. [User Shares](#user-shares)
+0. [Shares](#shares)
 0. [User Roles](#user-roles)
 0. [Favorites](#favorites)
 0. [Feeds](#feeds)
@@ -310,8 +310,8 @@ __Default Table Name:__ *wp_posworld_* __comment_points__
 
 ------
 
-## User Shares
-__Default Table Name:__ *wp_posworld_* __user_shares__
+## Shares
+__Default Table Name:__ *wp_posworld_* __shares__
 
 - Used to store a record of all posts shared by users
 

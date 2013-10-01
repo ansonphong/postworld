@@ -1370,7 +1370,7 @@ __return__ : *boolean*
 
 ------
 
-### generate_user_share_report ( *$user_id* ) <<<< UNDER CONSTRUCTION
+### generate_user_share_report ( *$user_id* )
 #### Description
 - Generate a report of all the shares relating to the current user by :
   - __my_shares__ : From posts that the given user has shared
