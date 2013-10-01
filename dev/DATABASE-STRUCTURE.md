@@ -304,9 +304,9 @@ __Default Table Name:__ *wp_posworld_* __user_shares__
 #### __user_id__ : *integer*
 - The user ID of the user sharing
 - Tracked when a link like this is loaded :
-  - _http://realitysandwich.com/?p=2453&u=24 _ 
-  __p__ = page ID
-  __u__ = user ID
+  - _http://realitysandwich.com/?p=2453&u=24  
+  __p__ = page ID  
+  __u__ = user ID  
 
 #### __post_id__ : *integer*
 - The post ID of the post which is being shared
