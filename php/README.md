@@ -1387,7 +1387,7 @@ __return__ : *Array* (Same as __share_report__ column in __User Meta__ table)
 
 ``` php
 array(
-    'my_shares' => array(
+    'my_shares' => array( // posts that the user has shared
         array(
             'post_id' => 8723,
             'shares' => 385,
@@ -1401,7 +1401,7 @@ array(
         ...
     ),
 
-    my_post_shares => array( // others who have shared my posts
+    my_post_shares => array( // others who have shared the user's posts
         array(
             'post_id' => 9348,
             'total_shares' => 385,
