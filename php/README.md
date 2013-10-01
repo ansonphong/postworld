@@ -1370,8 +1370,19 @@ __return__ : *boolean*
 
 ------
 
-### user_share_report ( *$user_id* ) <<<< UNDER CONSTRUCTION
-- Lookup all post shared by user id
+### generate_user_share_report ( *$user_id* ) <<<< UNDER CONSTRUCTION
+#### Description
+- Generate a report of all the shares relating to the current user by :
+  - __my_shares__ : From posts that the given user has shared
+  - __my_post_shares__ : Number of share points to the user's posts
+
+#### Process
+- Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
+  - Compile all this into __my_shares__ Object
+
+- Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
+  - Compile all this into __my_shares__ Object
+
 - In __user_shares__ table, return numerically ordered list of post IDs 
 
 - Run get_post_data method on each post ID, for (title, permalink)
@@ -1389,9 +1400,32 @@ array(
 ------
 
 ### cache_user_share_report( *$user_id* )
-- Run `user_share_report($user_id)` and save the result in __User Meta__ table, __share_points_meta__ column
+- Run `user_share_report($user_id)` and save the result in __User Meta__ table, __share_report__ column
 
-__return__ : *Array* (same as return from user_share_report())
+__return__ : *Array* (same as return from `generate_user_share_report()`)
+
+------
+
+### load_user_share_report( *$user_id, $real_time = false* )
+
+#### Description
+- Load the user share report
+
+#### Parameters
+
+__$user_id__ : *integer*
+- ID of the user of whose share report is being loaded
+
+__$real_time__ : *boolean*  
+Default : *false*
+
+#### Process
+- Check value of `$real_time`
+  - If __true__ : Load by running `generate_user_share_report()`
+  - If __false__ : Load by getting column __share_report__ in table __User Meta__
+
+__return__ : *Array* (same as `generate_user_share_report()`)
+See : Database Structure on __share_report__ column in __User Meta__ table
 
 ------
 
