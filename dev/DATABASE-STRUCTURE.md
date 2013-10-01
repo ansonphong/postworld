@@ -4,6 +4,26 @@ Postworld Database Structure
 ## Post Meta
 __Default Table Name:__ *wp_posworld_* __post_meta__
 
+### Columns
+
+#### __post_id__ : *integer*
+
+#### __post_class__ : *string*
+- Used by pw_query posts by __class__
+- Examples of classes:
+  - __editorial__ - On posts from approved authors and editors
+  - __community__ - On posts from community members
+
+#### __post_format__ : *string*
+__Default__: *standard*
+
+- Used by pw_query media by __format__
+- Used with _ng-switch_ on templates to change how post of various formats are displayed
+- Examples of formats:
+  - __standard__ - A regular post
+  - __video__ - On posts which have a primary _link_url_ which is a video
+  - __audio__ - On posts which have a primary _link_url_ which is a audio
+
 ------
 
 ## User Meta
