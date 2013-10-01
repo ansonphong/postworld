@@ -37,16 +37,19 @@ function postworld_install() {
   $sql_postworld_comment_meta= "CREATE TABLE $comment_meta_table_name (
       comment_id mediumint(8) NOT NULL,
       post_id BIGINT(20) unsigned NOT NULL,
-      comment_points mediumint(8) DEFAULT '0' NOT NULL
+      comment_points mediumint(8) DEFAULT '0' NOT NULL,
+      UNIQUE KEY comment_id (comment_id)
     );";
   
   $comment_points_table_name = $wpdb->pw_prefix.'comment_points';
   $sql_postworld_comment_points= "CREATE TABLE $comment_points_table_name (
+      comment_id BIGINT(20) UNSIGNED NOT NULL,
       user_id BIGINT(20) UNSIGNED NOT NULL,
       comment_post_id mediumint(9) NOT NULL,
       comment_author_id BIGINT(20) UNSIGNED NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
-      time TIMESTAMP NOT NULL
+      time TIMESTAMP NOT NULL,
+      UNIQUE KEY comment_id (comment_id)
     );";
     
   

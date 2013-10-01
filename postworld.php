@@ -83,7 +83,7 @@ include 'php/postworld_rank.php';
 include 'php/postworld_feeds.php';
 
 ////////// CRON / SCHEDULED TASKS ///////////
-//include 'php/postworld_cron.php';
+include 'php/postworld_cron.php';
 
 ////////// USER FUNCTIONS ///////////
 include 'php/postworld_users.php';
@@ -101,7 +101,7 @@ include 'php/postworld_query.php';
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
-
+include 'php/postworld_comments.php';
 
 //To get user id from wordpress
 require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );

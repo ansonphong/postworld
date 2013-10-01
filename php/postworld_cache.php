@@ -12,11 +12,33 @@
 	function cache_all_user_points(){
 		/*• Cycles through all users with cache_user_points() method
 		return : cron_logs Object (add to table wp_postworld_cron_logs)*/
-		//??????????????????????
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		//get all user ids
+		
+		$query ="select ID from wp_users";
+		$blogusers=$wpdb->get_results($query);
+		$blog_users_count = count($blogusers);
+		$current_cron_log_object = new cron_logs_Object();
+		
+		$current_cron_log_object->time_start = date("Y-m-d H:i:s");// {{timestamp}}
+		$current_cron_log_object->posts=$blog_users_count;// {{number of posts}}
+		$current_cron_log_object->type = 'user_points';
+		$current_cron_log_object->query_id='';// {{feed id / post_type slug}}
+		
+		for($i=0;$i<$blog_users_count;$i++){
+			
+			cache_user_posts_points($blogusers[$i]->ID);
+		}
 		
 		//loop for all users: get calculate_user_points and user_post_points?
 		
+		$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
+		$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
+		$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
 		
+		echo json_encode($current_cron_log_object);
 	}
 	
 	function cache_all_post_points() {
@@ -66,7 +88,7 @@
 					
 					//check if already there is a record for this post , yes then calculate points
 					//else create a row with zero points
-					calculate_post_points($row->ID);
+					cache_post_points($row->ID);
 					// {{feed/post_type}}
 					
 					//$current_cron_log_object->query_vars[] ="";// {{ query_vars Object: use pw_get_posts  }}
@@ -86,13 +108,40 @@
 	}
 	
 	
-	/*later*///TODO
+	
 	function cache_all_comment_points(){
 		/*• Cycles through all columns
 		• Calculates and caches each comment's current points with cache_comment_points() method
 		return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 		
+		global $wpdb;
+		$wpdb -> show_errors();
 		
+		//get all user ids
+		
+		$query ="select comment_ID from wp_comments";
+		$blog_comments=$wpdb->get_results($query);
+		//echo json_encode($blog_comments);
+		$blog_comments_count = count($blog_comments);
+		$current_cron_log_object = new cron_logs_Object();
+		
+		$current_cron_log_object->time_start = date("Y-m-d H:i:s");// {{timestamp}}
+		$current_cron_log_object->posts=$blog_comments_count;// {{number of posts}}
+		$current_cron_log_object->type = 'comments';
+		$current_cron_log_object->query_id='';// {{feed id / post_type slug}}
+		
+		for($i=0;$i<$blog_comments_count;$i++){
+			//echo 'inside loop';
+			cache_comment_points($blog_comments[$i]->comment_ID);
+		}
+		
+		//loop for all users: get calculate_user_points and user_post_points?
+		
+		$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
+		$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
+		$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
+		
+		echo json_encode($current_cron_log_object);
 		
 		
 	}
