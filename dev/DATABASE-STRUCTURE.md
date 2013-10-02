@@ -93,8 +93,8 @@ __Data__ : *cached*
 
 #### __share_points_meta__ : *JSON*
 - Cached JSON Object which breaks down the user's share points by:
-  - __shares__ : From posts that I have shared
-  - __post_shares__ : Number of share points to my posts
+  - __incoming__ : Number of share points to my posts
+  - __outgoing__ : From posts that I have shared
 
 - __Data__ : *cached*
   - Calculated by : `calculate_user_shares($user_id)`
