@@ -1009,45 +1009,7 @@ array(
 
 ------
 
-POST RELATIONSHIP : __GET__ ALIASES  
-- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
-
-------
-
-### get_favorites ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __favorite__ posts
-
-```php
-	get_post_relationships($user_id, 'favorites')
-```
-
-__return__ : *Array* (of post ids)
-
-------
-
-### get_viewed ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __viewed__ posts
-
-```php
-	get_post_relationships($user_id, 'viewed')
-```
-
-__return__ : *Array* (of post ids)
-
-------
-
-### get_view_later ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __view later__ posts
-
-```php
-	get_post_relationships($user_id, 'view_later')
-```
-
-__return__ : *Array* (of post ids)
-
-------
-
-POST RELATIONSHIP : __SET__ ALIASES
+__POST RELATIONSHIP : "SET" ALIASES__
 - If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
 - If no __$post_id__ is defined, use `$post->ID` method to get the post ID
 
@@ -1085,7 +1047,45 @@ __return__ : *boolean*
 
 ------
 
-POST RELATIONSHIP : __IS__ ALIASES
+__POST RELATIONSHIP : "GET" ALIASES__  
+- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
+
+------
+
+### get_favorites ( *[$user_id]* )
+- Use `get_post_relationships()` method to return just the __favorite__ posts
+
+```php
+	get_post_relationships($user_id, 'favorites')
+```
+
+__return__ : *Array* (of post ids)
+
+------
+
+### get_viewed ( *[$user_id]* )
+- Use `get_post_relationships()` method to return just the __viewed__ posts
+
+```php
+	get_post_relationships($user_id, 'viewed')
+```
+
+__return__ : *Array* (of post ids)
+
+------
+
+### get_view_later ( *[$user_id]* )
+- Use `get_post_relationships()` method to return just the __view later__ posts
+
+```php
+	get_post_relationships($user_id, 'view_later')
+```
+
+__return__ : *Array* (of post ids)
+
+------
+
+__POST RELATIONSHIP : "IS" ALIASES__
 - If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
 - If no __$post_id__ is defined, use `$post->ID` method to get the post ID
 
