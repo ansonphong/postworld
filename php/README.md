@@ -73,7 +73,7 @@ $post_meta = array(
 pw_set_post_meta($post_id, $post_meta);
 ```
 
-
+------
 
 ## Points
 __/php/postworld-points.php__  
@@ -118,7 +118,7 @@ __$set_points__ : *integer*
 #### Process
 
 - Check role of current user, and check how many points they can cast from __user_roles__ table as __$vote_points__
-  - If __$set_points__ is greater than the user's role __vote_points__, reduce to __vote_points__
+  - If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
 
 __HINT:__
 ```php
@@ -127,9 +127,9 @@ __HINT:__
 ```
 
 - Check if row exists in __points__ table for the given __$post_id__ and __$user_id__
-  - If __no row__, add row to __points__ table
-  - If __row exists__, update the row
-  - If __$set_points = 0__, delete row
+  - If __no row__ , add row to __points__ table
+  - If __row exists__ , update the row
+  - If __$set_points = 0__ , delete row
 
 - Add Unix timestamp to __time__ column in __post_points__ table
 
@@ -197,11 +197,12 @@ __return__ : *integer* (number of points)
 
 ### calculate_user_posts_points ( *$user_id* )
 - Add up the points voted to given user's posts, stored in __wp_postworld_post_points__
-- __NEW__ : For each post, get the __post_type__, and also calculate value of points given to posts of each __post_type__
-- Cache the total result in the __post_points__ column in __wp_postworld_user_meta__
-- __NEW__ : Cache the __post_types__ breakdown in the __post_points_meta__ column in __wp_postworld_user_meta__
+- __NEW__ : For each post, get the __post_type,__ and also calculate value of points given to posts of each post type
+- Cache the total result in the __post_points__ column in the __User Meta__ table
+- __NEW__ : Cache the __post_types__ breakdown in __post_points_meta__ column in the __User Meta__ table
 
 __return__ : *Array* (number of points)
+
 ```php
 array(
 	'total' => 640,
@@ -218,7 +219,7 @@ array(
 
 ### cache_user_posts_points ( *$user_id* )
 - Runs `calculate_user_posts_points()` Method
-- Caches value in __post_points__ column in __wp_postworld_user_meta__ table
+- Caches value in __post_points_meta__ column in __wp_postworld_user_meta__ table
 
 __return__ : *integer* (number of points)
 
@@ -425,6 +426,115 @@ __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 ### cache_all_feeds ()
 - Run pw_cache_feed() method for each feed registered for feed caching in WP Options
 __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
+
+------
+
+SHARES
+
+------
+
+### cache_shares ( *[$cache_all]* ) << UNDER CONSTRUCTION << 
+
+#### Description
+- Caches user and post share reports
+
+#### Paramaters
+__$cache_all__ : *boolean*  
+Default : *false*
+
+#### Process
+- If `$cache_all = false`, just update the recently changed share reports
+  - Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
+  - __POSTS :__  
+  Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
+  Run `cache_post_shares($post_id)` for all recently updated shares
+  - __AUTHORS :__  
+  Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, 
+  Run `cache_user_post_shares($user_id)` for all recently updated user's shares
+   - __USERS :__  
+  Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column 
+  Run `cache_user_shares($user_id)` for all recently updated user's shares
+
+- If `$cache_all = true`
+  - Cycle through every single post and run `cache_post_share_report($post_id)`
+  - Cycle through every single user and run `cache_user_share_report($user_id)`
+
+__return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
+
+------
+
+POST SHARES
+
+------
+
+### calculate_post_shares( *$post_id* )
+- Calculates the total number of shares to the given post
+
+#### Process
+- Lookup the given __post_id__ in the __Shares__ table
+- Add up ( *SUM* ) the total number in __shares__ column attributed to the post
+
+__return__ : *integer* (number of shares)
+
+------
+
+### cache_post_shares( *$post_id* )
+- Caches the total number of shares to the given post
+
+#### Process
+- Run `calculate_post_shares($post_id)`
+- Write the result to the __post_shares__ column in the __Post Meta__ table
+
+__return__ : *integer* (number of shares)
+
+------
+
+USER SHARES
+
+------
+
+### calculate_user_shares( *$post_id, [$mode]* )
+- Calculates the total number of shares relating to a given user
+
+#### Parameters
+__$post_id__ : *integer*
+
+__$mode__ : *string* (optional)
+- Options :
+  - __both__ (default) : Return both __incoming__ and __outgoing__ 
+  - __incoming__ : Return shares attributed to the user's posts  
+  - __outgoing__ : Return shares that the user has initiated
+
+#### Process
+- Lookup the given __user_id__ in the __Shares__ table
+- Modes :
+  - For __incoming__ : Match to __author_id__ column in __Shares__ table 
+  - For __outgoing__ : Match to __user_id__ column in __Shares__ table
+- Add up *(SUM)* the total number of the __shares__ column attributed to the user, according to `$mode`
+
+__return__ : *Array* (number of shares)
+
+```php
+array(
+	'incoming' => {{integer}},
+	'outgoing' => {{integer}}
+	)
+```
+
+------
+
+### cache_user_shares( *$user_id, [$mode]* )
+- Caches the total number of shares relating to a given user
+
+#### Process
+- Run `calculate_post_shares()`
+- Update the __post_shares__ column in the __Post Meta__ table
+
+__return__ : *integer* (number of shares)
+
+------
+
+CRON LOGS
 
 ------
 
@@ -641,7 +751,7 @@ __location_city__ : *string*
 - Query __wp_postworld_user_meta__ table column __location_city__
 
 __location__ : *string*
-- Query __location_country__, __location_city__, and __location_region__
+- Query __location_country__ , __location_city__ , and __location_region__
 
 __orderby__ : *string*
 - Options:
@@ -723,15 +833,20 @@ __$fields__ : (optional) *string / Array*
   - capabilities
 
 - Custom __Postworld__ User Fields:
-  - viewed
-  - favorites
-  - location_country
-  - location_region
-  - location_city
   - post_points
   - post_points_meta
   - comment_points
-  - user_role
+  - share_points
+  - share_points_meta
+  - post_votes
+  - comment_votes
+  - location_country
+  - location_region
+  - location_city
+  - post_relationships :  
+    viewed
+    favorites
+    view_later
 
 #### Usage
 ``` php
@@ -750,7 +865,7 @@ array(
 ```
 
 #### TODO :
-- Include WP method `get_userdata()` fields << PHONG
+- Include WP method `get_userdata()` fields << TODO : PHONG
 
 ------
 
@@ -771,6 +886,78 @@ array(
 
 __return__ : *integer*
 - __user_id__ - If successful
+
+------
+
+__USER / POST RELATIONSHIPS__
+
+------
+
+### set_post_relationship( *$relationship, $post_id, $user_id, $switch* )
+- Used to set a given user's relationship to a given post 
+
+### Parameters
+__$relationship__ : *string*
+- The type of relationship to set
+- __Options__ :
+  - viewed
+  - favorites
+  - view_later
+
+__$post_id__ : *integer*
+
+__$user_id__ : *integer*
+
+__$switch__ : *boolean*
+- *true* : Add the post_id to the relationship array
+- *false* : Remove the post_id from the relationship array
+
+### Process
+- Add/remove the given __post_id__ to the given relationship array in __post_relationships__ column in __User Meta__ table
+
+#### Usage
+``` php
+	set_post_relationship( 'favorites', '24', '101', true )
+```
+
+#### Anatomy
+- __JSON__ in __post_relationships__ column in __User Meta__ table
+
+``` javascript
+{
+    viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
+    favorites:[12,16,25],
+    read_later:[58,78],
+}
+```
+
+------
+
+### get_post_relationship( *$relationship, $post_id, $user_id, $all* )
+- Used to get a given user's relationship to a given post 
+
+### Parameters
+__$relationship__ : *string*
+- The type of relationship to set
+- __Options__ :
+  - all
+  - viewed
+  - favorites
+  - view_later
+
+__$post_id__ : *integer*
+
+__$user_id__ : *integer*
+
+### Process
+- Check to see if the __post_id__ is in the given relationship array in the __post_relationships__ column in __User Meta__ table
+
+__return__ : *boolean*
+- If `$relationship = all` : return an Array continaing all the relationships it's in
+
+``` php
+	array('viewed','favorites')
+```
 
 ------
 
@@ -873,7 +1060,7 @@ __php/postworld_posts.php__
 ------
 
 ### pw_get_posts ( *$post_ids, $fields* )
-- Run `pw_get_post()` on each of the __$post_ids__, and return the given fields in an __Array__
+- Run `pw_get_post()` on each of the __$post_ids__ , and return the given fields in an __Array__
 
 #### Parameters:
 
@@ -993,6 +1180,7 @@ __DATE & TIME__
 - Mixed Methods for retrieving data
 
 __return__ : *Array* (requested fields)
+
 ``` php
 array(
 	'ID' => 24,
@@ -1093,7 +1281,7 @@ __feed_query__ : *Array*
 
 
 #### Process:
-- Generate return __feed_outline__, with `pw_feed_outline( $args[feed_query] )` method
+- Generate return __feed_outline__ , with `pw_feed_outline( $args[feed_query] )` method
 - Generate return post data by running the defined preload number of the first posts through
 `pw_get_posts( feed_outline, $args['feed_query']['fields'] )`
 
@@ -1111,6 +1299,7 @@ $live_feed = pw_live_feed ( *$args* );
 ```
 
 __return__ : *Object*
+
 ``` php
 array(
 	'feed_id' => {{string}},
@@ -1193,7 +1382,7 @@ __return__ : *Array* (of post IDs)
 
 ------
 
-### pw_get_feed ( *$feed_id, [$preload]* )
+### __pw_load_feed__ ( *$feed_id, [$preload]* )
 
 #### Parameters:
 
@@ -1203,12 +1392,13 @@ __$preload__ : *integer* (optional)('0' default)
 - The number of posts to pre-load with post_data
 
 #### Process:
-- Return an object containing all the columns from the wp_postworld_feeds table
-- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the feed_outline, return in __post_data__ Object
+- Return an object containing all the columns from the __Feeds__ table
+- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the __feed_outline__ , return in __post_data__ Object
 - Use fields value from __feed_query__ column under key fields 
 
 __return__ : *Array*
-``` php
+
+```php
 array(
 	'feed_id' => {{string}},
 	'feed_query' => {{array}},
@@ -1352,47 +1542,146 @@ __php/postworld_share.php__
 
 ------
 
-### set_shared ( *$user_id, $post_id, $ip_address* )
-- Check URL query_vars for user id
-- See if user id exists
-- Get selected post id
-- Check IP address against list of IPs stored in recent_ips in wp_postworld_user_shares
-- If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
-- If the IP is in the list, do nothing
-- If the array length of IPs is over {{100}}, remove old IPs
+### set_share ( *$user_id, $post_id* )
+
+#### Description
+- Sets a record of a share in __Shares__ table
+- __Context__ : The URL leading to the share looks like : 
+  - `http://realitysandwich.com/?p=24&u=48`
+  - __p__ : The post ID
+  - __u__ : The user ID
+
+
+#### Process
+1. Setup
+  - Check if user ID exists
+  - Check if post ID exists
+  - Get the ID of the post author from __Posts__ table 
+  - Get the user's IP address with `get_client_ip()`
+2. Process IP
+  - Check IP address against list of IPs stored in `recent_ips` column in __Shares__ table
+  - If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
+  - If the IP is in the list, do nothing
+  - If the array length of IPs is over {{100}}, remove old IPs
+3. Add Share 
+  - If the IP is unique, add one point to the share
+  - Update __last_time__ with current GMT UNIX Timestamp
+
 __return__ : *boolean*
 - __true__ - if added share
 - __false__ - if no share added
 
 ------
 
-### user_share_report ( *$user_id* ) <<<< UNDER CONSTRUCTION
-- Lookup all post shared by user id
-- In __user_shares__ table, return numerically ordered list of post IDs 
+__SHARE REPORTS__
 
-- Run get_post_data method on each post ID, for (title, permalink)
+------
+
+### user_share_report ( *$user_id* )
+
+#### Description
+- Generate a report of all the shares relating to the current user __by posts that the given user has shared__
+
+#### Process
+- Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
+
 __return__ : *Array*
 
 ``` php
 array(
-	'id' => 24,
-	'title' => post_title,
-	'permalink' => 'http://...',
-	'views' => 35 // (number of views user has lead to this post)
-)
+    array(
+        'post_id' => 8723,
+        'shares' => 385,
+        'last_time' => {{integer}}
+    	),
+    array(
+        'post_id' => 3463,
+        'shares' => 234,
+        'last_time' => {{integer}}
+    	),
+    ...
+
+	)
 ```
 
 ------
 
-### cache_user_share_report( *$user_id* )
-- Runs `user_share_report($user_id)` and saves the result in 
+### user_posts_share_report ( *$user_id* )
 
-__return__ : *Array* (same as return from user_share_report())
+#### Description
+- Generate a report of all the shares relating to the current user __by shares to the given user's posts__
+
+#### Process
+- Lookup all shared posts owned by the user ID from __User Shares__ table, column __author_id__
+
+__return__ : *Array* 
+
+``` php
+array(
+    array(
+        'post_id' => 9348,
+        'total_shares' => 1385,
+        'users_shares' => array( 
+            array(
+                'user_id' => 843,
+                'shares' => 235,
+                'last_time' => {{integer}}
+            	),
+            array(
+                'user_id' => 733,
+                'shares' => 345,
+                'last_time' => {{integer}}
+            	),
+            ...
+        	)
+    	),
+    array(
+        'post_id' => 623,
+        'total_shares' => 4523,
+        'users_shares' => array( 
+            array(
+                'user_id' => 633,
+                'shares' => 785,
+                'last_time' => {{integer}}
+            	),
+            array(
+                'user_id' => 124,
+                'shares' => 573,
+                'last_time' => {{integer}}
+            	),
+            ...
+        	)
+    	),
+	)
+```
 
 ------
 
-### post_share_report ( *$post_id* ) <<< PHONG
-…
+### post_share_report ( *$post_id* )
+
+- Generate a report of all the shares relating to the current post
+
+#### Process
+- Collect data from __Shares__ table on the given post 
+
+__return__ : *Array*
+
+``` php
+array(
+	array(
+		'user_id' => '12',
+		'shares' => '434',
+		'last_time' => {{integer}}
+		),
+	array(
+		'user_id' => '53',
+		'shares' => '34',
+		'last_time' => {{integer}}
+		),
+	...
+	)
+
+```
 
 ------
 
