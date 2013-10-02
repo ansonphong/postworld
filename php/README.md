@@ -933,7 +933,7 @@ __$switch__ : *boolean*
 
 ------
 
-### get_post_relationship( *$relationship, $post_id, $user_id, $all* )
+### get_post_relationship( *$relationship, $post_id, $user_id* )
 - Used to get a given user's relationship to a given post 
 
 ### Parameters
@@ -1005,11 +1005,12 @@ array(
 
 ------
 
-POST RELATIONSHIP ALIASES
+POST RELATIONSHIP : __GET__ ALIASES  
+- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
 
 ------
 
-### get_favorites ( *$user_id* )
+### get_favorites ( *[$user_id]* )
 - Use `get_post_relationships()` method to return just the favorites
 
 ```php
@@ -1020,7 +1021,7 @@ __return__ : *Array* (of post ids)
 
 ------
 
-### get_viewed ( *$user_id* )
+### get_viewed ( *[$user_id]* )
 - Use `get_post_relationships()` method to return just the viewed posts
 
 ```php
@@ -1031,69 +1032,72 @@ __return__ : *Array* (of post ids)
 
 ------
 
-### get_view_later ( *$user_id* )
-- Use `get_post_relationships()` method to return just the viewed posts
+### get_view_later ( *[$user_id]* )
+- Use `get_post_relationships()` method to return just the view later posts
 
 ```php
-	get_post_relationships($user_id, 'viewed')
+	get_post_relationships($user_id, 'view_later')
 ```
 
 __return__ : *Array* (of post ids)
 
+
 ------
 
-### set_favorite ( *$post_id, $user_id, $add_remove* ) << PHONG REFACTOR DESCRIPTION
-- Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
-- Add or remove row in pw_postworld_favorites, with user_id and post_id
-- If it was added or removed, add 1 or subtract 1 from table wp_postworld_post_meta  in column favorites
-
-#### Parameters:
-
-__$add_remove__
-- Options
-  - __1__ - add it to favourites
-  - __-1__ - remove it from favorites
-
-__return__ :
-- __1__  - added successfully
-- __-1__ - removed successfully
-- __0__  - nothing happened
+POST RELATIONSHIP : __SET__ ALIASES
+- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
+- If no __$post_id__ is defined, use `$post->ID` method to get the post ID
 
 ------
 
 
 
-### is_favorite ( *$post_id, $user_id* )  << PHONG REFACTOR DESCRIPTION
-- Checks the favorites column in __user_meta__ table of the given user to see if the user has set the post as a favorite
+
+
+
+
+------
+
+POST RELATIONSHIP : __IS__ ALIASES
+- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
+- If no __$post_id__ is defined, use `$post->ID` method to get the post ID
+
+------
+
+### is_favorite( *[$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for 'favorites'
+
+``` php
+get_post_relationship( 'favorites', $post_id, $user_id )
+```
 
 __return__ : *boolean*
 
 ------
 
-### set_viewed ( *$user_id, $post_id, $viewed* )  << PHONG REFACTOR DESCRIPTION
-- Adds to removes to the array in has_viewed in wp_postworld_user_meta 
+### is_viewed( *[$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for 'viewed'
 
-#### Parameters:
+``` php
+get_post_relationship( 'viewed', $post_id, $user_id )
+```
 
-__$viewed__ : *boolean*
-- __true__ - check if the post_id is already in the array. If not, add it.
-- __false__ - check if the post_id is already in the array. If so, remove it.
-
-__return__ : *boolean* (true)
+__return__ : *boolean*
 
 ------
 
-### get_viewed ( *$user_id* )  << PHONG REFACTOR DESCRIPTION
-- Gets list of posts by id which the user has viewed
-__return__ : *Array*
+### is_view_later( *[$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for 'view_later'
+
+``` php
+get_post_relationship( 'view_later', $post_id, $user_id )
+```
+
+__return__ : *boolean*
 
 ------
 
-### has_viewed ( *$user_id, $post_id* )  << PHONG REFACTOR DESCRIPTION
-- Checks to see if user has viewed a given post
-- Values stored in array in has_viewed in wp_postworld_user_meta
-
-__return__ : *boolean* 
+__USER LOCATION__
 
 ------
 
