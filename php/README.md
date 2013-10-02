@@ -429,6 +429,10 @@ __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
 ------
 
+SHARES
+
+------
+
 ### cache_shares ( *[$cache_all]* ) << UNDER CONSTRUCTION << 
 
 #### Description
@@ -446,16 +450,92 @@ Default : *false*
   Run `cache_post_shares($post_id)` for all recently updated shares
   - __AUTHORS :__  
   Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, 
-  Run `cache_user_post_shares($post_id)` for all recently updated user's shares
+  Run `cache_user_post_shares($user_id)` for all recently updated user's shares
    - __USERS :__  
   Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column 
-  Run `cache_user_shares($post_id)` for all recently updated user's shares
+  Run `cache_user_shares($user_id)` for all recently updated user's shares
 
 - If `$cache_all = true`
   - Cycle through every single post and run `cache_post_share_report($post_id)`
-  - Cycle through every single user and run `cache_user_share_report($post_id)`
+  - Cycle through every single user and run `cache_user_share_report($user_id)`
 
 __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
+
+------
+
+POST SHARES
+
+------
+
+### calculate_post_shares( *$post_id* )
+- Calculates the total number of shares to the given post
+
+#### Process
+- Lookup the given __post_id__ in the __Shares__ table
+- Add up (SUM) the total number of shares attributed to the post
+
+__return__ : *integer* (number of shares)
+
+------
+
+### cache_post_shares( *$post_id* )
+- Caches the total number of shares to the given post
+
+#### Process
+- Run `calculate_post_shares($post_id)`
+- Write the result to the __post_shares__ column in the __Post Meta__ table
+
+__return__ : *integer* (number of shares)
+
+------
+
+USER SHARES
+
+------
+
+### calculate_user_shares( *$post_id, [$mode]* )
+- Calculates the total number of shares relating to a given user
+
+#### Parameters
+__$post_id__ : *integer*
+
+__$mode__ : *string* (optional)
+- Options :
+  - __both__ (default) : Return through both __incoming__ and __outgoing__ 
+  - __incoming__ : Return shares attributed to the user's posts  
+  - __outgoing__ : Return shares that the user has created
+
+#### Process
+- Lookup the given __user_id__ in the __Shares__ table
+- Add up *(SUM)* the total number of shares attributed to the user, according to `$mode`
+- Modes :
+  - For __incoming__ : Match to __author_id__ column in __Shares__ table 
+  - For __outgoing__ : Match to __user_id__ column in __Shares__ table
+
+__return__ : *Array* (number of shares)
+
+```php
+array(
+	'incoming' => {{integer}},
+	'outgoing' => {{integer}}
+	)
+```
+
+------
+
+### cache_user_shares( *$user_id, [$mode]* )
+- Caches the total number of shares relating to a given user
+
+#### Process
+- Run `calculate_post_shares()`
+- Write the result to the __post_shares__ column in the __Post Meta__ table
+
+__return__ : *integer* (number of shares)
+
+
+------
+
+CRON LOGS
 
 ------
 
