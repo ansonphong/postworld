@@ -1518,9 +1518,12 @@ See : Database Structure on __share_report__ column in __User Meta__ table
 
 ------
 
-### post_share_report ( *$post_id* ) <<< PHONG
+### post_share_report ( *$post_id* )
 
 - Generate a report of all the shares relating to the current post
+
+#### Process
+- Collect data from __Shares__ table on the given post, and generate the following object : 
 
 #### Return
 ``` php
@@ -1539,7 +1542,6 @@ array(
 	)
 
 ```
-
 
 ------
 
