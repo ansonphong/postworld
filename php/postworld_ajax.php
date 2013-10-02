@@ -26,15 +26,15 @@ function initAjaxResponse() {
 	if (!$params_text) {
 		ErrorReturn($response, 400, 'Error in parameters');	
 	}
-	$params = json_decode($params_text);
+	$params = json_decode($params_text,true);
 	if (!$params) {
 		ErrorReturn($response, 400, 'Error in parameters');	
 	}
-	if (!isset($params->nonce)) ErrorReturn($response, 400, 'Error in parameters');
-	$nonce = $params->nonce;
+	if (!isset($params['nonce'])) ErrorReturn($response, 400, 'Error in parameters');
+	$nonce = $params['nonce'];
 	// TODO check Nonce value
-	if (!isset($params->args)) ErrorReturn($response, 400, 'Error in parameters');
-	$args = $params->args;	
+	if (!isset($params['args'])) ErrorReturn($response, 400, 'Error in parameters');
+	$args = $params['args'];	
 	return array($response, $args, $nonce);
 }
 
@@ -43,9 +43,10 @@ function initAjaxResponse() {
 function pw_live_feed_anon() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
-	$pw_args = $args->args;
+	// $pw_args = $args['args']['feed_query'];
+	$pw_args = $args['args'];
 	// Get the results in array format, so that it is converted once to json along with the rest of the response
-	$results = pw_query($pw_args,'ARRAY_A');
+	$results = pw_live_feed ( $pw_args );
 	// TODO check results are ok
 	// TODO return success code or failure code , as well as version number with the results.
 	/* set the response type as JSON */
@@ -57,11 +58,40 @@ function pw_live_feed_anon() {
 	die();
 }
 
+
+/* Actions for pw_get_posts () */
+
+function pw_get_posts_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	// $pw_args = $args['args']['feed_query'];
+	$pw_args = $args['args'];
+	// Get the results in array format, so that it is converted once to json along with the rest of the response
+	$results = pw_get_posts ( $args['post_ids'],$args['fields'] );
+	
+	// TODO check results are ok
+	// TODO return success code or failure code , as well as version number with the results.
+	/* set the response type as JSON */
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+
 /* Action Hook for pw_live_feed() - Logged in users */
 add_action("wp_ajax_pw_live_feed", "pw_live_feed_anon");
 
 /* Action Hook for pw_live_feed() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_live_feed", "pw_live_feed_anon");
+
+/* Action Hook for pw_get_posts() - Logged in users */
+add_action("wp_ajax_pw_get_posts", "pw_get_posts_anon");
+
+/* Action Hook for pw_get_posts() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_posts", "pw_get_posts_anon");
 
 
 ?>
