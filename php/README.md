@@ -472,7 +472,7 @@ POST SHARES
 
 #### Process
 - Lookup the given __post_id__ in the __Shares__ table
-- Add up (SUM) the total number of shares attributed to the post
+- Add up ( *SUM* ) the total number in __shares__ column attributed to the post
 
 __return__ : *integer* (number of shares)
 
@@ -510,7 +510,7 @@ __$mode__ : *string* (optional)
 - Modes :
   - For __incoming__ : Match to __author_id__ column in __Shares__ table 
   - For __outgoing__ : Match to __user_id__ column in __Shares__ table
-- Add up *(SUM)* the total number of shares attributed to the user, according to `$mode`
+- Add up *(SUM)* the total number of the __shares__ column attributed to the user, according to `$mode`
 
 __return__ : *Array* (number of shares)
 
@@ -528,10 +528,9 @@ array(
 
 #### Process
 - Run `calculate_post_shares()`
-- Write the result to the __post_shares__ column in the __Post Meta__ table
+- Update the __post_shares__ column in the __Post Meta__ table
 
 __return__ : *integer* (number of shares)
-
 
 ------
 
