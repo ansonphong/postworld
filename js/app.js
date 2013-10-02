@@ -1,12 +1,14 @@
 'use strict';
 
-var pwApp = angular.module('pwApp', ['ngResource','ngRoute'])
+var feed_settings = [];
+
+var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
     .config(function ($routeProvider, $locationProvider) {
-        $routeProvider.when('/search-pw/',
+        $routeProvider.when('/livefeed/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/pages/pwList.html',				
-                controller: 'pwSearchController'
+                templateUrl: jsVars.pluginurl+'/postworld/templates/pages/pwLiveFeedWidget.html',				
+                // controller: 'pwSearchController'
             });
 		// this will be also the default route, or when no route is selected
-        $routeProvider.otherwise({redirectTo: '/search-pw/'});        
+        $routeProvider.otherwise({redirectTo: '/livefeed/'});
     });

@@ -51,9 +51,11 @@ class PW_Query extends WP_Query {
 			
 		}
 			
-		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 )
-			$orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
-		
+		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
+			if($this->query_vars["offset"])
+				$orderby.=" Limit ".$this->query_vars["offset"].", ".$this->query_vars['posts_per_page'];	
+			else $orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
+		}
 		
 		return $orderby;
 				
@@ -1077,8 +1079,5 @@ function pw_query($args,$return_Type = 'PW_QUERY') {
 }
 
 
-
-//TODO
-function pw_user_query( $args, $return_format ){}
 
 ?>
