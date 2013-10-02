@@ -958,6 +958,50 @@ __return__ : *boolean*
 ``` php
 	array('viewed','favorites')
 ```
+------
+
+### get_post_relationships( *$user_id, [$relationship]* )
+- Used to get a list of all post relationships of a specified user
+
+#### Paramaters
+
+__$user_id__ : *integer*
+
+__$relationship__ : *integer* (optional)
+
+
+#### Process
+- Reads the specified relationship *Array* from __post_relationships__ column in __User Meta__ table
+- If relationship is undefined, return entire __post_relationships__ object
+- Decode from stored JSON, return PHP Array
+
+#### Usage
+
+Specified post relationship :
+
+``` php
+	get_post_relationships( '1', 'favorites' )
+```
+__returns__ : *Array* of post IDs
+
+``` php
+	array(24,48,128,256,512)	
+```
+
+Un-specified post relationship :
+
+``` php
+	get_post_relationships( '1' )
+```
+__returns__ : Contents of __post_relationships__
+
+``` php
+array(
+	'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
+	'favorites' => [12,16,25],
+	'read_later' => [58,78]
+	)
+```
 
 ------
 
