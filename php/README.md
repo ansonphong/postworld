@@ -833,15 +833,20 @@ __$fields__ : (optional) *string / Array*
   - capabilities
 
 - Custom __Postworld__ User Fields:
-  - viewed
-  - favorites
-  - location_country
-  - location_region
-  - location_city
   - post_points
   - post_points_meta
   - comment_points
-  - user_role
+  - share_points
+  - share_points_meta
+  - post_votes
+  - comment_votes
+  - location_country
+  - location_region
+  - location_city
+  - post_relationships :  
+    viewed
+    favorites
+    view_later
 
 #### Usage
 ``` php
@@ -860,7 +865,7 @@ array(
 ```
 
 #### TODO :
-- Include WP method `get_userdata()` fields << PHONG
+- Include WP method `get_userdata()` fields << TODO : PHONG
 
 ------
 
