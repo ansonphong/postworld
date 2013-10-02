@@ -118,7 +118,7 @@ __$set_points__ : *integer*
 #### Process
 
 - Check role of current user, and check how many points they can cast from __user_roles__ table as __$vote_points__
-  - If __$set_points__ is greater than the user's role __vote_points__, reduce to __vote_points__
+  - If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
 
 __HINT:__
 ```php
@@ -127,9 +127,9 @@ __HINT:__
 ```
 
 - Check if row exists in __points__ table for the given __$post_id__ and __$user_id__
-  - If __no row__, add row to __points__ table
-  - If __row exists__, update the row
-  - If __$set_points = 0__, delete row
+  - If __no row__ , add row to __points__ table
+  - If __row exists__ , update the row
+  - If __$set_points = 0__ , delete row
 
 - Add Unix timestamp to __time__ column in __post_points__ table
 
@@ -672,7 +672,7 @@ __location_city__ : *string*
 - Query __wp_postworld_user_meta__ table column __location_city__
 
 __location__ : *string*
-- Query __location_country__, __location_city__, and __location_region__
+- Query __location_country__ , __location_city__ , and __location_region__
 
 __orderby__ : *string*
 - Options:
@@ -904,7 +904,7 @@ __php/postworld_posts.php__
 ------
 
 ### pw_get_posts ( *$post_ids, $fields* )
-- Run `pw_get_post()` on each of the __$post_ids__, and return the given fields in an __Array__
+- Run `pw_get_post()` on each of the __$post_ids__ , and return the given fields in an __Array__
 
 #### Parameters:
 
@@ -1125,7 +1125,7 @@ __feed_query__ : *Array*
 
 
 #### Process:
-- Generate return __feed_outline__, with `pw_feed_outline( $args[feed_query] )` method
+- Generate return __feed_outline__ , with `pw_feed_outline( $args[feed_query] )` method
 - Generate return post data by running the defined preload number of the first posts through
 `pw_get_posts( feed_outline, $args['feed_query']['fields'] )`
 
@@ -1237,7 +1237,7 @@ __$preload__ : *integer* (optional)('0' default)
 
 #### Process:
 - Return an object containing all the columns from the __Feeds__ table
-- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the __feed_outline__, return in __post_data__ Object
+- If $preload (integer) is provided, then use `pw_get_posts()` on that number of the first posts in the __feed_outline__ , return in __post_data__ Object
 - Use fields value from __feed_query__ column under key fields 
 
 __return__ : *Array*
