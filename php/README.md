@@ -1417,11 +1417,11 @@ __return__ : *boolean*
 
 ------
 
-__USER SHARE REPORT__
+__SHARE REPORTS__
 
 ------
 
-### generate_user_share_report ( *$user_id* )
+### user_share_report ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by posts that the given user has shared__
@@ -1451,7 +1451,7 @@ array(
 
 ------
 
-### generate_user_posts_share_report ( *$user_id* )
+### user_posts_share_report ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by number of share points to the user's posts__
