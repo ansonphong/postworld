@@ -931,6 +931,11 @@ __$switch__ : *boolean*
 }
 ```
 
+__return__ : *boolean*
+- *true* - If successful set on
+- *false* - If successful set off
+- *error* - If error
+
 ------
 
 ### get_post_relationship( *$relationship, $post_id, $user_id* )
@@ -1011,7 +1016,7 @@ POST RELATIONSHIP : __GET__ ALIASES
 ------
 
 ### get_favorites ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the favorites
+- Use `get_post_relationships()` method to return just the __favorite__ posts
 
 ```php
 	get_post_relationships($user_id, 'favorites')
@@ -1022,7 +1027,7 @@ __return__ : *Array* (of post ids)
 ------
 
 ### get_viewed ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the viewed posts
+- Use `get_post_relationships()` method to return just the __viewed__ posts
 
 ```php
 	get_post_relationships($user_id, 'viewed')
@@ -1033,14 +1038,13 @@ __return__ : *Array* (of post ids)
 ------
 
 ### get_view_later ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the view later posts
+- Use `get_post_relationships()` method to return just the __view later__ posts
 
 ```php
 	get_post_relationships($user_id, 'view_later')
 ```
 
 __return__ : *Array* (of post ids)
-
 
 ------
 
@@ -1050,11 +1054,35 @@ POST RELATIONSHIP : __SET__ ALIASES
 
 ------
 
+### set_favorite( *$switch, [$post_id], [$user_id]* )
+- Use `set_post_relationship()` to set the post relationship for __favorites__
+- __$switch__ is a *boolean*
 
+``` php
+	set_post_relationship( 'favorites', $post_id, $user_id, $switch )
+```
 
+__return__ : *boolean*
 
+### set_viewed( *$switch, [$post_id], [$user_id]* )
+- Use `set_post_relationship()` to set the post relationship for __viewed__
+- __$switch__ is a *boolean*
 
+``` php
+	set_post_relationship( 'viewed', $post_id, $user_id, $switch )
+```
 
+__return__ : *boolean*
+
+### set_view_later( *$switch, [$post_id], [$user_id]* )
+- Use `set_post_relationship()` to set the post relationship for __view_later__
+- __$switch__ is a *boolean*
+
+``` php
+	set_post_relationship( 'view_later', $post_id, $user_id, $switch )
+```
+
+__return__ : *boolean*
 
 ------
 
@@ -1065,7 +1093,7 @@ POST RELATIONSHIP : __IS__ ALIASES
 ------
 
 ### is_favorite( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for 'favorites'
+- Use `get_post_relationship()` method to return the post relationship status for __favorites__
 
 ``` php
 get_post_relationship( 'favorites', $post_id, $user_id )
@@ -1076,7 +1104,7 @@ __return__ : *boolean*
 ------
 
 ### is_viewed( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for 'viewed'
+- Use `get_post_relationship()` method to return the post relationship status for __viewed__
 
 ``` php
 get_post_relationship( 'viewed', $post_id, $user_id )
@@ -1087,7 +1115,7 @@ __return__ : *boolean*
 ------
 
 ### is_view_later( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for 'view_later'
+- Use `get_post_relationship()` method to return the post relationship status for __view_later__
 
 ``` php
 get_post_relationship( 'view_later', $post_id, $user_id )
