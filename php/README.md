@@ -1529,41 +1529,6 @@ array(
 
 ------
 
-### cache_post_share_report ( *$post_id* )
-
-- Run `post_share_report()`
-- Store the result in __post_shares_meta__ column in __Post Meta__ table
-
-__return__ : *Array* (same as `post_share_report()`)
-
-------
-
-
-------
-
-### load_post_share_report( *$post_id, [$real_time]* )
-- Loads the post share report
-
-#### Parameters
-
-__$post_id__ : *integer*
-- ID of the post of whose share report is being loaded
-
-__$real_time__ : *boolean*  
-Default : *false*
-
-#### Process
-- Check value of `$real_time`
-  - If __true__ : Load by running `generate_post_share_report()`
-  - If __false__ : Load by getting column __shares_meta__ in table __User Meta__  
-  - If the __share_report__ column is empty, run `cache_user_share_report()` and return the result
-
-__return__ : *Array* (same as `generate_user_share_report()`)  
-See : Database Structure on __share_report__ column in __User Meta__ table
-
-
-------
-
 ## Images
 __php/postworld_images.php__
 
