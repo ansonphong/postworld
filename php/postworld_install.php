@@ -107,14 +107,13 @@ function postworld_install() {
   $cron_logs_table_name = $wpdb->pw_prefix.'cron_logs';
   $sql_postworld_cron_logs = "CREATE TABLE $cron_logs_table_name (
       cron_run_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-      type char(16) NOT NULL,
-      process_id char(16) NOT NULL,
+      function_type char(16) NOT NULL,
+      process_id char(16) NULL,
       time_start TIMESTAMP NOT NULL,
       time_end TIMESTAMP NOT NULL,
       timer INT NOT NULL,
-      posts INT NOT NULL,
-      timer_average TIMESTAMP NOT NULL,
-      query_args MEDIUMTEXT NOT NULL,
+      posts INT NULL,
+      query_args MEDIUMTEXT  NULL,
       UNIQUE KEY cron_run_id (cron_run_id)
     );";  
     

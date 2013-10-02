@@ -20,24 +20,16 @@
 		$query ="select ID from wp_users";
 		$blogusers=$wpdb->get_results($query);
 		$blog_users_count = count($blogusers);
-		$current_cron_log_object = new cron_logs_Object();
-		
-		$current_cron_log_object->time_start = date("Y-m-d H:i:s");// {{timestamp}}
-		$current_cron_log_object->posts=$blog_users_count;// {{number of posts}}
-		$current_cron_log_object->type = 'user_points';
-		$current_cron_log_object->query_id='';// {{feed id / post_type slug}}
-		
+		$time_start = date("Y-m-d H:i:s");
 		for($i=0;$i<$blog_users_count;$i++){
 			
 			cache_user_posts_points($blogusers[$i]->ID);
 		}
 		
 		//loop for all users: get calculate_user_points and user_post_points?
-		
-		$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
-		$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
-		$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
-		
+		$time_end = date("Y-m-d H:i:s");
+	//	$current_cron_log_object = create_cron_log_object($time_start, $time_end, $blog_users_count, 'user_points','');
+		$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_all_user_points',null,null);
 		echo json_encode($current_cron_log_object);
 	}
 	
@@ -76,14 +68,7 @@
 				$query = "select * from wp_posts where post_type ='".$post_types[$i]."'";
 			//	echo("<br>".$query."<br>");
 				$posts = $wpdb -> get_results($query);
-				$current_cron_log_object = new cron_logs_Object();	
-				
-				$current_cron_log_object->time_start = date("Y-m-d H:i:s");// {{timestamp}}
-				//update postworld_meta
-				$current_cron_log_object->posts=count($posts);// {{number of posts}}
-				$current_cron_log_object->type = 'points';
-				$current_cron_log_object->query_id=$post_types[$i];// {{feed id / post_type slug}}
-				$current_cron_log_object->query_vars = array();
+				$time_start = date("Y-m-d H:i:s");
 				foreach ($posts as $row) {
 					
 					//check if already there is a record for this post , yes then calculate points
@@ -94,16 +79,16 @@
 					//$current_cron_log_object->query_vars[] ="";// {{ query_vars Object: use pw_get_posts  }}
 				}
 				
-				$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
-				$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
-				$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
-				//echo(json_encode($current_cron_log_object));
-				$cron_logs[$current_cron_log_object->type][] = $current_cron_log_object;
+				$time_end = date("Y-m-d H:i:s");
+				//$current_cron_log_object = create_cron_log_object($time_start, $time_end, count($posts), 'points', $post_types[$i],'');
+				$current_cron_log_object = create_cron_log_object($time_start, $time_end, count($posts), 'cache_all_post_points',$post_types[$i],null);
+				
+				$cron_logs['points'][] = $current_cron_log_object;
 				//echo json_encode($cron_logs);
 		}
 	
-		//echo json_encode(($cron_logs));
-		add_new_cron_log($cron_logs);
+		echo json_encode(($cron_logs));
+		//echo($cron_logs);
 		 
 	}
 	
@@ -116,31 +101,17 @@
 		
 		global $wpdb;
 		$wpdb -> show_errors();
-		
-		//get all user ids
-		
 		$query ="select comment_ID from wp_comments";
 		$blog_comments=$wpdb->get_results($query);
-		//echo json_encode($blog_comments);
 		$blog_comments_count = count($blog_comments);
-		$current_cron_log_object = new cron_logs_Object();
 		
-		$current_cron_log_object->time_start = date("Y-m-d H:i:s");// {{timestamp}}
-		$current_cron_log_object->posts=$blog_comments_count;// {{number of posts}}
-		$current_cron_log_object->type = 'comments';
-		$current_cron_log_object->query_id='';// {{feed id / post_type slug}}
-		
+		$time_start = date("Y-m-d H:i:s");
 		for($i=0;$i<$blog_comments_count;$i++){
-			//echo 'inside loop';
 			cache_comment_points($blog_comments[$i]->comment_ID);
 		}
-		
-		//loop for all users: get calculate_user_points and user_post_points?
-		
-		$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
-		$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
-		$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
-		
+		$time_end =  date("Y-m-d H:i:s");
+		//$current_cron_log_object = create_cron_log_object($time_start, $time_end, $blog_comments_count, 'comments', '');	
+		$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_all_comment_points',null,null);
 		echo json_encode($current_cron_log_object);
 		
 		
@@ -151,51 +122,41 @@
 		• Calculates and caches each post's current rank with cache_rank_score() method
 		return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	
-	/*	global $wpdb;
+		global $wpdb;
 		$wpdb -> show_errors();
 		
 		global $pw_defaults;
 		$rank_options = $pw_defaults['rank']; // array of post types
-		$post_types = $points_options['post_types'];
-		//echo(json_encode($post_types).'<br>');
+		$post_types = $rank_options['post_types'];
 		$number_of_post_types = count($post_types);
 		$cron_logs;
-		
 		$cron_logs['rank']= array();
 		
 		for($i=0;$i<$number_of_post_types;$i++){
 			$query = "select * from wp_posts where post_type ='".$post_types[$i]."'";
-		//	echo("<br>".$query."<br>");
 			$posts = $wpdb -> get_results($query);
-			$current_cron_log_object = new cron_logs_Object();	
-			
-			$current_cron_log_object->time_start = date("Y-m-d H:i:s");// {{timestamp}}
-			//update postworld_meta
-			$current_cron_log_object->posts=count($posts);// {{number of posts}}
-			$current_cron_log_object->type = 'rank';
-			$current_cron_log_object->query_id=$post_types[$i];// {{feed id / post_type slug}}
-			$current_cron_log_object->query_vars = array();
+			$time_start = date("Y-m-d H:i:s");
 			foreach ($posts as $row) {
-				calculate_rank_score($row->ID);
+				cache_rank_score($row->ID);
 			}
-			
-			$current_cron_log_object->time_end=date("Y-m-d H:i:s");// {{timestamp}}
-			$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
-			$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}
-			
-			$cron_logs[$current_cron_log_object->type][] = $current_cron_log_object;
+			$time_end= date("Y-m-d H:i:s");	
+			$current_cron_log_object = create_cron_log_object($time_start, $time_end, count($posts), 'cache_all_rank_scores', $post_types[$i],'');
+			$cron_logs['rank'][] = $current_cron_log_object;
 			
 	}
 
 	echo json_encode(($cron_logs));
 	 
-	*/
+	
 	}
 	
 	/*later*///TODO
 	function cache_all_feeds (){
 		/*• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
 		return : cron_logs Object (store in table wp_postworld_cron_logs)*/
+		
+		
+		
 	}
 	
 	function clear_cron_logs ( $timestamp ){
@@ -244,6 +205,20 @@
 			
 		}
 		
+	}
+	
+	function create_cron_log_object($time_start,$time_end,$number_of_posts=null,$function_type,$process_id=null,$query_args=null){
+			$current_cron_log_object = new cron_logs_Object();	
+			$current_cron_log_object->function_type = $function_type;
+			$current_cron_log_object->time_start =$time_start;// {{timestamp}}
+			$current_cron_log_object->posts=$number_of_posts;// {{number of posts}}
+			$current_cron_log_object->process_id=$process_id;// {{feed id / post_type slug}}
+			$current_cron_log_object->query_args = $query_args;
+			$current_cron_log_object->time_end=$time_end;// {{timestamp}}
+			$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
+			//$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}	
+			
+			return $current_cron_log_object;
 	}
     
   
