@@ -953,7 +953,7 @@ __$user_id__ : *integer*
 - Check to see if the __post_id__ is in the given relationship array in the __post_relationships__ column in __User Meta__ table
 
 __return__ : *boolean*
-- If `$relationship = all` : return an Array continaing all the relationships it's in
+- If `$relationship = all` : return an *Array* containing all the relationships it's in
 
 ``` php
 	array('viewed','favorites')
@@ -961,7 +961,7 @@ __return__ : *boolean*
 
 ------
 
-### set_favorite ( *$post_id, $user_id, $add_remove* )
+### set_favorite ( *$post_id, $user_id, $add_remove* ) << PHONG REFACTOR DESCRIPTION
 - Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
 - Add or remove row in pw_postworld_favorites, with user_id and post_id
 - If it was added or removed, add 1 or subtract 1 from table wp_postworld_post_meta  in column favorites
@@ -980,21 +980,21 @@ __return__ :
 
 ------
 
-### get_favorites ( *$user_id* )
+### get_favorites ( *$user_id* )  << PHONG REFACTOR DESCRIPTION
 - Return array from the favourites column in wp_postworld_user_meta of the given user
 
 __return__ : *array* (of post ids)
 
 ------
 
-### is_favorite ( *$post_id, $user_id* )
+### is_favorite ( *$post_id, $user_id* )  << PHONG REFACTOR DESCRIPTION
 - Checks the favorites column in __user_meta__ table of the given user to see if the user has set the post as a favorite
 
 __return__ : *boolean*
 
 ------
 
-### set_viewed ( *$user_id, $post_id, $viewed* )
+### set_viewed ( *$user_id, $post_id, $viewed* )  << PHONG REFACTOR DESCRIPTION
 - Adds to removes to the array in has_viewed in wp_postworld_user_meta 
 
 #### Parameters:
@@ -1007,13 +1007,13 @@ __return__ : *boolean* (true)
 
 ------
 
-### get_viewed ( *$user_id* )
+### get_viewed ( *$user_id* )  << PHONG REFACTOR DESCRIPTION
 - Gets list of posts by id which the user has viewed
 __return__ : *Array*
 
 ------
 
-### has_viewed ( *$user_id, $post_id* )
+### has_viewed ( *$user_id, $post_id* )  << PHONG REFACTOR DESCRIPTION
 - Checks to see if user has viewed a given post
 - Values stored in array in has_viewed in wp_postworld_user_meta
 
