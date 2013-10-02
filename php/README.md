@@ -933,9 +933,31 @@ __$switch__ : *boolean*
 
 ------
 
-### get_post_relationship()
+### get_post_relationship( *$relationship, $post_id, $user_id, $all* )
+- Used to get a given user's relationship to a given post 
 
-__return__ : *Array / false*
+### Parameters
+__$relationship__ : *string*
+- The type of relationship to set
+- __Options__ :
+  - all
+  - viewed
+  - favorites
+  - view_later
+
+__$post_id__ : *integer*
+
+__$user_id__ : *integer*
+
+### Process
+- Check to see if the __post_id__ is in the given relationship array in the __post_relationships__ column in __User Meta__ table
+
+__return__ : *boolean*
+- If `$relationship = all` : return an Array continaing all the relationships it's in
+
+``` php
+	array('viewed','favorites')
+```
 
 ------
 
