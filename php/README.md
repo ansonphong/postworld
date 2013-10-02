@@ -999,9 +999,46 @@ __returns__ : Contents of __post_relationships__
 array(
 	'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
 	'favorites' => [12,16,25],
-	'read_later' => [58,78]
+	'view_later' => [58,78]
 	)
 ```
+
+------
+
+POST RELATIONSHIP ALIASES
+
+------
+
+### get_favorites ( *$user_id* )
+- Use `get_post_relationships()` method to return just the favorites
+
+```php
+	get_post_relationships($user_id, 'favorites')
+```
+
+__return__ : *Array* (of post ids)
+
+------
+
+### get_viewed ( *$user_id* )
+- Use `get_post_relationships()` method to return just the viewed posts
+
+```php
+	get_post_relationships($user_id, 'viewed')
+```
+
+__return__ : *Array* (of post ids)
+
+------
+
+### get_view_later ( *$user_id* )
+- Use `get_post_relationships()` method to return just the viewed posts
+
+```php
+	get_post_relationships($user_id, 'viewed')
+```
+
+__return__ : *Array* (of post ids)
 
 ------
 
@@ -1024,12 +1061,7 @@ __return__ :
 
 ------
 
-### get_favorites ( *$user_id* )  << PHONG REFACTOR DESCRIPTION
-- Return array from the favourites column in wp_postworld_user_meta of the given user
 
-__return__ : *array* (of post ids)
-
-------
 
 ### is_favorite ( *$post_id, $user_id* )  << PHONG REFACTOR DESCRIPTION
 - Checks the favorites column in __user_meta__ table of the given user to see if the user has set the post as a favorite
