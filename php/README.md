@@ -501,16 +501,16 @@ __$post_id__ : *integer*
 
 __$mode__ : *string* (optional)
 - Options :
-  - __both__ (default) : Return through both __incoming__ and __outgoing__ 
+  - __both__ (default) : Return both __incoming__ and __outgoing__ 
   - __incoming__ : Return shares attributed to the user's posts  
-  - __outgoing__ : Return shares that the user has created
+  - __outgoing__ : Return shares that the user has initiated
 
 #### Process
 - Lookup the given __user_id__ in the __Shares__ table
-- Add up *(SUM)* the total number of shares attributed to the user, according to `$mode`
 - Modes :
   - For __incoming__ : Match to __author_id__ column in __Shares__ table 
   - For __outgoing__ : Match to __user_id__ column in __Shares__ table
+- Add up *(SUM)* the total number of shares attributed to the user, according to `$mode`
 
 __return__ : *Array* (number of shares)
 
