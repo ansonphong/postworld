@@ -1428,7 +1428,6 @@ __SHARE REPORTS__
 
 #### Process
 - Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
-  - Compile into __shares__ Object *(see return)*
 
 __return__ : *Array*
 
@@ -1454,11 +1453,10 @@ array(
 ### user_posts_share_report ( *$user_id* )
 
 #### Description
-- Generate a report of all the shares relating to the current user __by number of share points to the user's posts__
+- Generate a report of all the shares relating to the current user __by shares to the given user's posts__
 
 #### Process
 - Lookup all shared posts owned by the user ID from __User Shares__ table, column __author_id__
-  - Compile into __post_shares__ Object *(see return)*
 
 __return__ : *Array* 
 
@@ -1508,7 +1506,7 @@ array(
 - Generate a report of all the shares relating to the current post
 
 #### Process
-- Collect data from __Shares__ table on the given post, and generate the following object : 
+- Collect data from __Shares__ table on the given post 
 
 __return__ : *Array*
 
