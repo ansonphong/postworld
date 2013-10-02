@@ -123,27 +123,34 @@ __Anatomy:__
 	viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
 	favorites:[12,16,25],
 	read_later:[58,78],
-	has_voted:{
-		recent : { 
-			{
-				post_id:242,
-				points:1,
-				time_voted:{{UNIX TIMESTAMP}}
-			},
-			{
-				post_id:942,
-				points:-1,
-				time_voted:{{UNIX TIMESTAMP}}
-			},
-		}
-	}
 }
 ```
 
-#### __comment_relationships__ : *JSON*
-- Outlines the user's relationships to comments, in terms of votes that they have vast
+#### __post_votes__ : *JSON*
 
-- __has_voted.recent__ : Used to calculate how often a user is commenting on the post
+- Outlines the recent 10 votes the user has cast to posts
+- Used to calculate how often a user is commenting on the post
+  - If the user is voting on comments too often, disable comment voting temporarily
+
+``` php
+recent : { 
+	{
+		post_id:242,
+		points:1,
+		time_voted:{{UNIX TIMESTAMP}}
+	},
+	{
+		post_id:942,
+		points:-1,
+		time_voted:{{UNIX TIMESTAMP}}
+	},
+}
+```
+
+#### __comment_votes__ : *JSON*
+
+- Outlines the recent 10 votes the user has cast to comments
+- Used to calculate how often a user is commenting on the post
   - If the user is voting on comments too often, disable comment voting temporarily
 
 __Anatomy:__
