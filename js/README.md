@@ -28,6 +28,7 @@ __return__ : *Object*
 
 ## Functions
 
+------
 
 ###__pw_get_posts__ ( feed_id, post_ids, fields )
 - Used to access pw_get_post() PHP Method via AJAX

@@ -180,7 +180,6 @@ __TODO:__
 - Check that user has not voted too many times recently <<<< Concept method <<< PHONG
   - Use post_points_meta to store points activity << PHONG
 
-
 ------
 
 __USER POST POINTS__
