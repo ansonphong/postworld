@@ -1417,104 +1417,89 @@ __return__ : *boolean*
 
 ------
 
+__USER SHARE REPORT__
+
+------
+
 ### generate_user_share_report ( *$user_id* )
+
 #### Description
-- Generate a report of all the shares relating to the current user by :
-  - __shares__ : From posts that the given user has shared
-  - __post_shares__ : Number of share points to the user's posts
+- Generate a report of all the shares relating to the current user __by posts that the given user has shared__
 
 #### Process
 - Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
   - Compile into __shares__ Object *(see return)*
 
-- Lookup all shared posts owned by the user ID from __User Shares__ table, column __author_id__
-  - Compile into __post_shares__ Object *(see return)*
-
-__return__ : *Array* (Same as __share_report__ column in __User Meta__ table)
+__return__ : *Array*
 
 ``` php
 array(
-    'shares' => array( // posts that the user has shared
-        array(
-            'post_id' => 8723,
-            'shares' => 385,
-            'last_time' => {{integer}}
-        ),
-        array(
-            'post_id' => 3463,
-            'shares' => 234,
-            'last_time' => {{integer}}
-        ),
-        ...
-    ),
+    array(
+        'post_id' => 8723,
+        'shares' => 385,
+        'last_time' => {{integer}}
+    	),
+    array(
+        'post_id' => 3463,
+        'shares' => 234,
+        'last_time' => {{integer}}
+    	),
+    ...
 
-    post_shares => array( // others who have shared the user's posts
-        array(
-            'post_id' => 9348,
-            'total_shares' => 385,
-            'users_shares' => array( 
-                array(
-                    'user_id' => 843,
-                    'shares' => 235,
-                    'last_time' => {{integer}}
-                	),
-                array(
-                    'user_id' => 733,
-                    'shares' => 345,
-                    'last_time' => {{integer}}
-                	),
-                ...
-            	)
-        	),
-        array(
-            'post_id' => 623,
-            'total_shares' => 523,
-            'users_shares' => array( 
-                array(
-                    'user_id' => 633,
-                    'shares' => 785,
-                    'last_time' => {{integer}}
-                	),
-                array(
-                    'user_id' => 124,
-                    'shares' => 573,
-                    'last_time' => {{integer}}
-                	),
-                ...
-            	)
-        	),
-    	)
 	)
 ```
 
 ------
 
-### cache_user_share_report( *$user_id* )
-- Run `generate_user_share_report($user_id)` and save the result in __User Meta__ table, __share_report__ column
+### generate_user_posts_share_report ( *$user_id* )
 
-__return__ : *Array* (same as `generate_user_share_report()`)
-
-------
-
-### load_user_share_report( *$user_id, [$real_time]* )
-- Loads the user share report
-
-#### Parameters
-
-__$user_id__ : *integer*
-- ID of the user of whose share report is being loaded
-
-__$real_time__ : *boolean*  
-Default : *false*
+#### Description
+- Generate a report of all the shares relating to the current user __by number of share points to the user's posts__
 
 #### Process
-- Check value of `$real_time`
-  - If __true__ : Load by running `generate_user_share_report()`
-  - If __false__ : Load by getting column __share_report__ in table __User Meta__  
-  - If the __share_report__ column is empty, run `cache_user_share_report()` and return the result
+- Lookup all shared posts owned by the user ID from __User Shares__ table, column __author_id__
+  - Compile into __post_shares__ Object *(see return)*
 
-__return__ : *Array* (same as `generate_user_share_report()`)  
-See : Database Structure on __share_report__ column in __User Meta__ table
+__return__ : *Array* 
+
+``` php
+array(
+    array(
+        'post_id' => 9348,
+        'total_shares' => 385,
+        'users_shares' => array( 
+            array(
+                'user_id' => 843,
+                'shares' => 235,
+                'last_time' => {{integer}}
+            	),
+            array(
+                'user_id' => 733,
+                'shares' => 345,
+                'last_time' => {{integer}}
+            	),
+            ...
+        	)
+    	),
+    array(
+        'post_id' => 623,
+        'total_shares' => 523,
+        'users_shares' => array( 
+            array(
+                'user_id' => 633,
+                'shares' => 785,
+                'last_time' => {{integer}}
+            	),
+            array(
+                'user_id' => 124,
+                'shares' => 573,
+                'last_time' => {{integer}}
+            	),
+            ...
+        	)
+    	),
+	)
+```
 
 ------
 
