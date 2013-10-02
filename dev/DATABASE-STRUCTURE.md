@@ -109,14 +109,6 @@ __Data__ : *cached*
 ```
 
 #### __post_relationships__ : *JSON*
-- Outlines the user's relationships to posts, in terms of votes that they have vast
-
-- __viewed__ : Used to generate a report of which content the user has viewed
-
-- __has_voted.recent__ : Used to calculate how often a user is commenting on the post
-  - If the user is voting on comments too often, disable comment voting temporarily
-
-__Anatomy:__
 
 ``` javascript
 {
@@ -129,8 +121,8 @@ __Anatomy:__
 #### __post_votes__ : *JSON*
 
 - Outlines the recent 10 votes the user has cast to posts
-- Used to calculate how often a user is commenting on the post
-  - If the user is voting on comments too often, disable comment voting temporarily
+- Used to calculate how often a user is voting on posts
+  - If the user is voting on posts too often, disable comment voting temporarily
 
 ``` php
 recent : { 
@@ -150,7 +142,7 @@ recent : {
 #### __comment_votes__ : *JSON*
 
 - Outlines the recent 10 votes the user has cast to comments
-- Used to calculate how often a user is commenting on the post
+- Used to calculate how often a user is voting on comments
   - If the user is voting on comments too often, disable comment voting temporarily
 
 __Anatomy:__
