@@ -429,7 +429,7 @@ __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
 ------
 
-### cache_shares ( *[$cache_all]* )
+### cache_shares ( *[$cache_all]* ) << UNDER CONSTRUCTION
 
 #### Description
 - Caches user and post share reports
@@ -1457,15 +1457,15 @@ array(
                     'user_id' => 843,
                     'shares' => 235,
                     'last_time' => {{integer}}
-                ),
+                	),
                 array(
                     'user_id' => 733,
                     'shares' => 345,
                     'last_time' => {{integer}}
-                ),
+                	),
                 ...
-            )
-        ),
+            	)
+        	),
         array(
             'post_id' => 623,
             'total_shares' => 523,
@@ -1474,17 +1474,17 @@ array(
                     'user_id' => 633,
                     'shares' => 785,
                     'last_time' => {{integer}}
-                ),
+                	),
                 array(
                     'user_id' => 124,
                     'shares' => 573,
                     'last_time' => {{integer}}
-                ),
+                	),
                 ...
-            )
-        ),
-    )
-)
+            	)
+        	),
+    	)
+	)
 ```
 
 ------
@@ -1519,7 +1519,27 @@ See : Database Structure on __share_report__ column in __User Meta__ table
 ------
 
 ### post_share_report ( *$post_id* ) <<< PHONG
-…
+
+- Generate a report of all the shares relating to the current post
+
+#### Return
+``` php
+array(
+	array(
+		'user_id' => '12',
+		'shares' => '434',
+		'last_time' => {{integer}}
+		),
+	array(
+		'user_id' => '53',
+		'shares' => '34',
+		'last_time' => {{integer}}
+		),
+	...
+	)
+
+```
+
 
 ------
 
