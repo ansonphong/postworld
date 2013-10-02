@@ -310,6 +310,7 @@ __Default Table Name:__ *wp_posworld_* __favorites__
 
 #### __time__ : *integer*
 - __Format__ : *UNIX Timestamp*
+- Time that the favorite was added
 
 ------
 
