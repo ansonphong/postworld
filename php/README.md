@@ -889,6 +889,45 @@ __return__ : *integer*
 
 ------
 
+USER / POST RELATIONSHIPS
+
+------
+
+### set_post_relationship( *$relationship, $post_id, $user_id, $switch* )
+- Used to set a given user's relationship to a given post 
+
+### Parameters
+__$relationship__ : *string*
+- The type of relationship to set
+- __Options__ :
+  - viewed
+  - favorites
+  - view_later
+
+__$post_id__ : *integer*
+
+__$user_id__ : *integer*
+
+__$switch__ : *boolean*
+- *true* : Add the post_id to the relationship array
+- *false* : Remove the post_id from the relationship array
+
+### Process
+- Add/remove the given __post_id__ to the given relationship array in __post_relationships__ column in __User Meta__ table
+
+#### Usage
+``` php
+	set_post_relationship( 'favorites', '24', '101', true )
+```
+
+------
+
+### get_post_relationship()
+
+__return__ : *Array / false*
+
+------
+
 ### set_favorite ( *$post_id, $user_id, $add_remove* )
 - Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
 - Add or remove row in pw_postworld_favorites, with user_id and post_id
