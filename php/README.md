@@ -889,7 +889,7 @@ __return__ : *integer*
 
 ------
 
-USER / POST RELATIONSHIPS
+__USER / POST RELATIONSHIPS__
 
 ------
 
@@ -918,6 +918,17 @@ __$switch__ : *boolean*
 #### Usage
 ``` php
 	set_post_relationship( 'favorites', '24', '101', true )
+```
+
+#### Anatomy
+- __JSON__ in __post_relationships__ column in __User Meta__ table
+
+``` javascript
+{
+    viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
+    favorites:[12,16,25],
+    read_later:[58,78],
+}
 ```
 
 ------
