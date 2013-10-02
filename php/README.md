@@ -73,7 +73,7 @@ $post_meta = array(
 pw_set_post_meta($post_id, $post_meta);
 ```
 
-
+------
 
 ## Points
 __/php/postworld-points.php__  
@@ -198,8 +198,8 @@ __return__ : *integer* (number of points)
 ### calculate_user_posts_points ( *$user_id* )
 - Add up the points voted to given user's posts, stored in __wp_postworld_post_points__
 - __NEW__ : For each post, get the __post_type,__ and also calculate value of points given to posts of each post type
-- Cache the total result in the __post_points__ column in __wp_postworld_user_meta__
-- __NEW__ : Cache the __post_types__ breakdown in the __post_points_meta__ column in __wp_postworld_user_meta__
+- Cache the total result in the __post_points__ column in the __User Meta__ table
+- __NEW__ : Cache the __post_types__ breakdown in __post_points_meta__ column in the __User Meta__ table
 
 __return__ : *Array* (number of points)
 
