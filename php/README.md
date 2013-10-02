@@ -1420,21 +1420,21 @@ __return__ : *boolean*
 ### generate_user_share_report ( *$user_id* )
 #### Description
 - Generate a report of all the shares relating to the current user by :
-  - __my_shares__ : From posts that the given user has shared
-  - __my_post_shares__ : Number of share points to the user's posts
+  - __shares__ : From posts that the given user has shared
+  - __post_shares__ : Number of share points to the user's posts
 
 #### Process
 - Lookup all posts shared by user ID in __User Shares__ table, column __user_id__
-  - Compile into __my_shares__ Object *(see return)*
+  - Compile into __shares__ Object *(see return)*
 
 - Lookup all shared posts owned by the user ID from __User Shares__ table, column __author_id__
-  - Compile into __my_post_shares__ Object *(see return)*
+  - Compile into __post_shares__ Object *(see return)*
 
 __return__ : *Array* (Same as __share_report__ column in __User Meta__ table)
 
 ``` php
 array(
-    'my_shares' => array( // posts that the user has shared
+    'shares' => array( // posts that the user has shared
         array(
             'post_id' => 8723,
             'shares' => 385,
@@ -1448,7 +1448,7 @@ array(
         ...
     ),
 
-    my_post_shares => array( // others who have shared the user's posts
+    post_shares => array( // others who have shared the user's posts
         array(
             'post_id' => 9348,
             'total_shares' => 385,
@@ -1525,7 +1525,8 @@ See : Database Structure on __share_report__ column in __User Meta__ table
 #### Process
 - Collect data from __Shares__ table on the given post, and generate the following object : 
 
-#### Return
+__return__ : *Array*
+
 ``` php
 array(
 	array(
@@ -1542,6 +1543,41 @@ array(
 	)
 
 ```
+
+------
+
+### cache_post_share_report ( *$post_id* )
+
+- Run `post_share_report()`
+- Store the result in __post_shares_meta__ column in __Post Meta__ table
+
+__return__ : *Array* (same as `post_share_report()`)
+
+------
+
+
+------
+
+### load_post_share_report( *$post_id, [$real_time]* )
+- Loads the post share report
+
+#### Parameters
+
+__$post_id__ : *integer*
+- ID of the post of whose share report is being loaded
+
+__$real_time__ : *boolean*  
+Default : *false*
+
+#### Process
+- Check value of `$real_time`
+  - If __true__ : Load by running `generate_post_share_report()`
+  - If __false__ : Load by getting column __shares_meta__ in table __User Meta__  
+  - If the __share_report__ column is empty, run `cache_user_share_report()` and return the result
+
+__return__ : *Array* (same as `generate_user_share_report()`)  
+See : Database Structure on __share_report__ column in __User Meta__ table
+
 
 ------
 
