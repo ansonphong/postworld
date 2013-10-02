@@ -429,7 +429,7 @@ __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
 ------
 
-### cache_shares ( *[$cache_all]* ) << UNDER CONSTRUCTION
+### cache_shares ( *[$cache_all]* ) << UNDER CONSTRUCTION << 
 
 #### Description
 - Caches user and post share reports
@@ -443,13 +443,13 @@ Default : *false*
   - Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
   - __POSTS :__  
   Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
-  Run `cache_user_share_report($post_id)` for all recently updated shares
+  Run `cache_post_shares($post_id)` for all recently updated shares
   - __AUTHORS :__  
   Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, 
-  Run `cache_user_share_report($post_id)` for all recently updated user's shares
+  Run `cache_user_post_shares($post_id)` for all recently updated user's shares
    - __USERS :__  
   Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column 
-  Run `cache_user_share_report($post_id)` for all recently updated user's shares
+  Run `cache_user_shares($post_id)` for all recently updated user's shares
 
 - If `$cache_all = true`
   - Cycle through every single post and run `cache_post_share_report($post_id)`
@@ -1464,7 +1464,7 @@ __return__ : *Array*
 array(
     array(
         'post_id' => 9348,
-        'total_shares' => 385,
+        'total_shares' => 1385,
         'users_shares' => array( 
             array(
                 'user_id' => 843,
@@ -1481,7 +1481,7 @@ array(
     	),
     array(
         'post_id' => 623,
-        'total_shares' => 523,
+        'total_shares' => 4523,
         'users_shares' => array( 
             array(
                 'user_id' => 633,

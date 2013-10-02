@@ -89,7 +89,7 @@ __Data__ : *cached*
 
 #### __share_points__ : *integer*
 __Data__ : *cached*
-- Total number of share points of the user's shares (*shares + post_shares*)
+- Total number of share points of the user's shares ( *incoming + outgoing* )
 
 #### __share_points_meta__ : *JSON*
 - Cached JSON Object which breaks down the user's share points by:
@@ -102,8 +102,8 @@ __Data__ : *cached*
 
 ``` javascript
 {
-	shares : 312,
-	post_shares : 512
+	outgoing : 312,
+	incoming : 512
 }
 
 ```
