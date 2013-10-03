@@ -1,6 +1,5 @@
 /**
  * Created by Michel on 9/22/13.
- * 0127 024 3367
  * 	Development Note:-
  *	To make Ajax request work as a form post, we need to do 3 things:
  *	1- Use AngularJS version 1.2
@@ -12,16 +11,31 @@
  *	$args = json_decode($args_text);
  * */
 
-pwApp.factory('pwData', function ($resource, $q, $log) {
-	
+pwApp.factory('pwData', function ($resource, $q, $log) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
+	// Check feed_settigns to confirm we have valid settings
+	var validSettings = true;
+	// Set feed_settings and feed_data in pwData Singleton
+	var feed_settings = window['feed_settings'];
+	// TODO check mandatory fields
+	if (feed_settings == null) {
+		validSettings = false;
+		$log.error('Service: pwData Method:Constructor  no valid feed_settings defined');
+	}
 	
+	var feed_data = {};
+	
+	$log.info('pwData: Constructor: Registering feed_settings', feed_settings);
+	$log.info('pwData: Constructor: Registering feed_data', feed_data);
 	// for Ajax Calls
     var resource = $resource(jsVars.ajaxurl, {action:'wp_action'}, 
     							{	wp_ajax: { method: 'POST', isArray: false, },	}
 							);
+							
     return {
+    	feed_settings: feed_settings,
+    	feed_data: feed_data,
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
     		nonce = val;
@@ -43,20 +57,57 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
                     deferred.reject(response);
                 });
             return deferred.promise;		
-		},		
+		},
 		pw_live_feed: function(args) {
-			$log.info('Service: pwData Method:pw_live_feed Arguments: ',args);
+			// get additional params from feed_settings
+			// ensure that feed_query exists
+			if(!args.feed_query) args.feed_query = {};
+			// shortcut
+			var feed = feed_settings[args.feed_id];
+			// TODO use constants
+			// TODO Sanity check for values, max, min, positive, negative, etc...
+			if (feed.preload != null) args.preload = feed.preload; else args.preload = 10;  
+			// Set a hard Max for performance consideration - use constant
+			if (feed.max_posts != null) args.feed_query.posts_per_page = feed.max_posts; else args.feed_query.posts_per_page = 1000;
+			 
+			// TODO check for +/- values for asc/desc
+			if (feed.order_by != null) args.feed_query.orderby = feed.order_by;
+			if (feed.offset != null) args.feed_query.offset = feed.offset;
+			 
+			// QUESTION: Which overrides which, order_by, offset, max_posts, or other query_args in the query args field?
+			// TODO add query args [don't we already get them from UI? but we need to get them from feed_settings too]
+			   
 			var params = {args:args};
+			$log.info('Service: pwData Method:pw_live_feed Arguments: ',args);
 			return this.wp_ajax('pw_live_feed',params);
+		},
+		pw_scroll_feed: function(args) {
+			$log.info('Service: pwData Method:pw_scroll_feed Arguments: ',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_scroll_feed',params);
 		},
 		o_embed: function(url,args) {
 			$log.info('Service: pwData Method:o_embed Arguments: ',args);
 			var params = { url:url, args:args};
 			return this.wp_ajax('o_embed',params);
 		},
-		pw_get_posts: function(feed_id, post_ids, fields) {
-			$log.info('Service: pwData Method:pw_get_posts Arguments: ',feed_id, post_ids, fields);
-			var params = { feed_id:feed_id, post_ids:post_ids, fields:fields};
+		pw_get_posts: function(args) {
+			var feedSettings = feed_settings[args.feed_id];
+			var feedData = feed_data[args.feed_id];
+			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
+			// Slice Outline Array
+			var idBegin = feedData.loaded.length;
+			var idEnd = idBegin+feedSettings.load_increment;
+			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);
+			var fields;
+			// TODO check that query_args exists first
+			if (feedSettings.query_args.fields != null) {
+				fields = feedSettings.query_args.fields;
+			}
+			$log.info('Service: pwData Method:pw_get_posts BeginID, EndID: ',idBegin, idEnd);
+			// Set Fields
+			var params = { feed_id:args.feed_id, post_ids:postIDs, fields:fields};
+			$log.info('Service: pwData Method:pw_get_posts Arguments: ',params);
 			return this.wp_ajax('pw_get_posts',params);
 		},
 		pw_get_templates: function(templates_object) {

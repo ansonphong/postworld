@@ -1,0 +1,16 @@
+<script>
+	var feed_init = [];
+	feed_init['front_page_feature'] = {
+		preload : 10,
+		load_increment : 10,
+		view : {
+			current : 'detail',
+			options : ['list','detail','full']
+		},
+		order_by : '-post_points',
+		panel : 'feed_top',
+		query_args : {
+		},
+	};
+</script>
+<div live-feed='front_page_feature'></div>

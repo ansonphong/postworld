@@ -180,7 +180,6 @@ __TODO:__
 - Check that user has not voted too many times recently <<<< Concept method <<< PHONG
   - Use post_points_meta to store points activity << PHONG
 
-
 ------
 
 __USER POST POINTS__
@@ -931,9 +930,14 @@ __$switch__ : *boolean*
 }
 ```
 
+__return__ : *boolean*
+- *true* - If successful set on
+- *false* - If successful set off
+- *error* - If error
+
 ------
 
-### get_post_relationship( *$relationship, $post_id, $user_id, $all* )
+### get_post_relationship( *$relationship, $post_id, $user_id* )
 - Used to get a given user's relationship to a given post 
 
 ### Parameters
@@ -958,66 +962,169 @@ __return__ : *boolean*
 ``` php
 	array('viewed','favorites')
 ```
+------
+
+### get_post_relationships( *$user_id, [$relationship]* )
+- Used to get a list of all post relationships of a specified user
+
+#### Paramaters
+
+__$user_id__ : *integer*
+
+__$relationship__ : *integer* (optional)
+
+
+#### Process
+- Reads the specified relationship *Array* from __post_relationships__ column in __User Meta__ table
+- If relationship is undefined, return entire __post_relationships__ object
+- Decode from stored JSON, return PHP Array
+
+#### Usage
+
+Specified post relationship :
+
+``` php
+	get_post_relationships( '1', 'favorites' )
+```
+__returns__ : *Array* of post IDs
+
+``` php
+	array(24,48,128,256,512)	
+```
+
+Un-specified post relationship :
+
+``` php
+	get_post_relationships( '1' )
+```
+__returns__ : Contents of __post_relationships__
+
+``` php
+array(
+	'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
+	'favorites' => [12,16,25],
+	'view_later' => [58,78]
+	)
+```
 
 ------
 
-### set_favorite ( *$post_id, $user_id, $add_remove* ) << PHONG REFACTOR DESCRIPTION
-- Add or remove the given post id, from the array in favourites column in wp_postworld_user_meta of the given user
-- Add or remove row in pw_postworld_favorites, with user_id and post_id
-- If it was added or removed, add 1 or subtract 1 from table wp_postworld_post_meta  in column favorites
-
-#### Parameters:
-
-__$add_remove__
-- Options
-  - __1__ - add it to favourites
-  - __-1__ - remove it from favorites
-
-__return__ :
-- __1__  - added successfully
-- __-1__ - removed successfully
-- __0__  - nothing happened
+__POST RELATIONSHIP : "SET" ALIASES__
+- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
+- If no __$post_id__ is defined, use `$post->ID` method to get the post ID
 
 ------
 
-### get_favorites ( *$user_id* )  << PHONG REFACTOR DESCRIPTION
-- Return array from the favourites column in wp_postworld_user_meta of the given user
+### set_favorite( *$switch, [$post_id], [$user_id]* )
+- Use `set_post_relationship()` to set the post relationship for __favorites__
+- __$switch__ is a *boolean*
 
-__return__ : *array* (of post ids)
+``` php
+	set_post_relationship( 'favorites', $post_id, $user_id, $switch )
+```
 
-------
+__return__ : *boolean*
 
-### is_favorite ( *$post_id, $user_id* )  << PHONG REFACTOR DESCRIPTION
-- Checks the favorites column in __user_meta__ table of the given user to see if the user has set the post as a favorite
+### set_viewed( *$switch, [$post_id], [$user_id]* )
+- Use `set_post_relationship()` to set the post relationship for __viewed__
+- __$switch__ is a *boolean*
+
+``` php
+	set_post_relationship( 'viewed', $post_id, $user_id, $switch )
+```
+
+__return__ : *boolean*
+
+### set_view_later( *$switch, [$post_id], [$user_id]* )
+- Use `set_post_relationship()` to set the post relationship for __view_later__
+- __$switch__ is a *boolean*
+
+``` php
+	set_post_relationship( 'view_later', $post_id, $user_id, $switch )
+```
 
 __return__ : *boolean*
 
 ------
 
-### set_viewed ( *$user_id, $post_id, $viewed* )  << PHONG REFACTOR DESCRIPTION
-- Adds to removes to the array in has_viewed in wp_postworld_user_meta 
-
-#### Parameters:
-
-__$viewed__ : *boolean*
-- __true__ - check if the post_id is already in the array. If not, add it.
-- __false__ - check if the post_id is already in the array. If so, remove it.
-
-__return__ : *boolean* (true)
+__POST RELATIONSHIP : "GET" ALIASES__  
+- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
 
 ------
 
-### get_viewed ( *$user_id* )  << PHONG REFACTOR DESCRIPTION
-- Gets list of posts by id which the user has viewed
-__return__ : *Array*
+### get_favorites ( *[$user_id]* )
+- Use `get_post_relationships()` method to return just the __favorite__ posts
+
+```php
+	get_post_relationships($user_id, 'favorites')
+```
+
+__return__ : *Array* (of post ids)
 
 ------
 
-### has_viewed ( *$user_id, $post_id* )  << PHONG REFACTOR DESCRIPTION
-- Checks to see if user has viewed a given post
-- Values stored in array in has_viewed in wp_postworld_user_meta
+### get_viewed ( *[$user_id]* )
+- Use `get_post_relationships()` method to return just the __viewed__ posts
 
-__return__ : *boolean* 
+```php
+	get_post_relationships($user_id, 'viewed')
+```
+
+__return__ : *Array* (of post ids)
+
+------
+
+### get_view_later ( *[$user_id]* )
+- Use `get_post_relationships()` method to return just the __view later__ posts
+
+```php
+	get_post_relationships($user_id, 'view_later')
+```
+
+__return__ : *Array* (of post ids)
+
+------
+
+__POST RELATIONSHIP : "IS" ALIASES__
+- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
+- If no __$post_id__ is defined, use `$post->ID` method to get the post ID
+
+------
+
+### is_favorite( *[$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for __favorites__
+
+``` php
+get_post_relationship( 'favorites', $post_id, $user_id )
+```
+
+__return__ : *boolean*
+
+------
+
+### is_viewed( *[$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for __viewed__
+
+``` php
+get_post_relationship( 'viewed', $post_id, $user_id )
+```
+
+__return__ : *boolean*
+
+------
+
+### is_view_later( *[$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for __view_later__
+
+``` php
+get_post_relationship( 'view_later', $post_id, $user_id )
+```
+
+__return__ : *boolean*
+
+------
+
+__USER LOCATION__
 
 ------
 
