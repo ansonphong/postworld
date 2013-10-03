@@ -92,6 +92,7 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 		scope : function(){
 			// Scope functions here
 		},
+		template : '',
 		link : function (scope, elem, attrs){
 
 			////////// PARSE INPUT FIELDS //////////
