@@ -5,7 +5,7 @@ pwApp.directive('loadPanel', function($log, pwData) {
         restrict: 'A',
         templateUrl: function(tElement,tAttrs) {
         	pwData.setNonce(78);
-        	return '/wordpress/wp-content/plugins/postworld/templates/panels/feed_header.html';
+        	return jsVars.pluginurl+'/postworld/templates/panels/feed_header.html';
         	/*
         	// Get Template from ID
         	var templates = pwData.pw_get_templates({'name':'name'}).then(
