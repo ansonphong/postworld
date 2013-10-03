@@ -94,7 +94,116 @@ function pw_feed_outline ( $pw_query_args ){
 5-pw_get_feed
 */
 
-function pw_load_feed ( $feed_id, $preload ){
+function add_new_feed($feed_id,$feed_query){
+	global $wpdb;
+	$wpdb->show_errors(); 
+	$query = "insert into $wpdb->pw_prefix"."feeds values('$feed_id','".json_encode($feed_query)."',null,null,null,null)";
+	echo $query;
+	$wpdb->query($query);
+}
+function pw_register_feed ( $args ){
+	/*
+		Description:
+		
+		Registers the feed in feeds table
+		Process:
+		
+		If the feed_id doesn't appear in the wp_postworld_feeds table :
+		
+		Create a new row
+		Enable write_cache
+		Store $args['feed_query'] in the feed_query column in Postworld feeds table as a JSON Object
+		
+		If write_cache is true, run pw_cache_feed(feed_id)
+		
+		return : $args Array
+		
+		Parameters : $args
+		
+		feed_id : string
+		
+		feed_query : array
+		
+		default : none
+		The query object which is stored in feed_query in feeds table, which is input directly into pw_query
+		write_cache : boolean
+		
+		If the feed_id is new to the feeds table, set write_cache = true
+		false (default) - Wait for cron job to update feed outline later, just update feed_query
+		true - Cache the feed with method : run pw_cache_feed( $feed_id )
+		Usage :
+		
+		$args = array (
+		    'feed_id' => 'front_page_feed',
+		    'write_cache'  => true,
+		    'feed_query' => array(
+		        // pw_query() $args    
+		    )
+		);
+		pw_register_feed ($args);
+	 
+	 */
+	global $wpdb;
+	$wpdb->show_errors(); 
+	
+	
+	 if($args['feed_id']){
+	 	$feed_row = pw_get_feed($args['feed_id']);
+		echo json_encode($feed_row);
+		if(!$feed_row){
+			add_new_feed($args['feed_id'],$args['feed_query']);
+				$args['write_cache'] =  TRUE;
+				pw_cache_feed($args['feed_id']);
+			
+		}else{
+			echo ($args['write_cache']);
+			//update feed query
+			update_feed_query($args['feed_id'], $args['feed_query']);
+			if($args['write_cache'] ===  TRUE){
+				pw_cache_feed($args['feed_id']);
+			}
+		}
+	 }
+	return $args;
+}
+
+function update_feed_query($feed_id, $feed_query){
+		
+	global $wpdb;	
+	$wpdb->show_errors(); 
+	$query = "update $wpdb->pw_prefix"."feeds set feed_query='".json_encode($feed_query)."' where feed_id='".$feed_id."'";
+	echo $query;
+	$wpdb->query($query);
+}
+
+function pw_cache_feed ( $feed_id ){
+	
+	$feed_row = pw_get_feed($feed_id);
+	if($feed_row){
+		echo "getting feed outline :)";	
+		echo ($feed_row->feed_query);
+		$feed_outline = pw_feed_outline((array)json_decode($feed_row->feed_query));
+		echo json_encode($feed_outline);
+		global $wpdb;
+		$wpdb->show_errors(); 
+		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."' where feed_id='".$feed_id."'";
+		echo $query;
+		$wpdb->query($query);
+	} 
+}
+
+function pw_get_feed ( $feed_id ){
+	global $wpdb;
+	$wpdb->show_errors(); 
+	
+	$query = "select * from $wpdb->pw_prefix"."feeds where feed_id='".$feed_id."'";
+	$feed_row = $wpdb->get_row($query);
+	
+	return $feed_row;
+	
+}
+  
+function pw_load_feed ( $feed_id, $preload=0 ){
 	/*
 	 Parameters:
 
@@ -120,6 +229,25 @@ function pw_load_feed ( $feed_id, $preload ){
 		    'post_data' => {{array (of post data)}}
 		)
 	 */
+	
+	$feed_row = pw_get_feed($feed_id);
+	print_r($feed_row);
+	if($feed_row){
+		if($preload>0){
+			$feed_outline = array_map("intval", explode(",", $feed_row->feed_outline));
+			//print_r($feed_outline);
+			$preload_posts = array_slice( $feed_outline, 0, $preload ); // to get top post ids
+			//print_r($preload_posts);
+			$feed_query_feeds = (array)json_decode($feed_row->feed_query);//["fields"];
+			//print_r($feed_query_feeds);
+			//print_r($feed_query_feeds["fields"]);
+			$post_array = pw_get_posts($preload_posts,$feed_query_feeds["fields"]); 
+			//print_r($post_array);
+			$feed_row->post_data = $post_array;
+		}
+	}
+	return (array)$feed_row;
+	
 }
 
 

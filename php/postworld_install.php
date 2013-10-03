@@ -95,12 +95,12 @@ function postworld_install() {
     
   $feeds_table_name = $wpdb->pw_prefix.'feeds';
   $sql_postworld_feeds = "CREATE TABLE $feeds_table_name (
-      feed_id BIGINT(20) UNSIGNED NOT NULL,
+      feed_id char(24) NOT NULL,
       feed_query TEXT NOT NULL,
-      feed_outline MEDIUMTEXT NOT NULL,
-      time_start TIMESTAMP NOT NULL,
-      time_end TIMESTAMP NOT NULL,
-      timer INT NOT NULL,
+      feed_outline MEDIUMTEXT  NULL,
+      time_start TIMESTAMP  NULL,
+      time_end TIMESTAMP  NULL,
+      timer INT  NULL,
       UNIQUE KEY feed_id (feed_id)
     );"; 
 
