@@ -320,6 +320,8 @@ templates = {
 ------
 
 ### edit-field ( *postworld.directive* )
+- __File__ : *js/postworld.js*
+- __Status__ : In development (phongmedia) 
 
 #### Description
 - Loads a field on the Edit/Publish Post page
