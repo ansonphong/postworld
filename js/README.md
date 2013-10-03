@@ -330,7 +330,7 @@ templates = {
 
 ------
 
-INPUTS
+INPUTS : __data-input__ Attribute
 
 ------
 
