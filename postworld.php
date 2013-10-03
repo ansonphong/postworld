@@ -106,5 +106,8 @@ include 'php/postworld_comments.php';
 //To get user id from wordpress
 require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 
+// ADMIN
+include 'admin/postworld_admin.php';
+
 
 ?>

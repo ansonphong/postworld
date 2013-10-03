@@ -1010,7 +1010,7 @@ array(
 ------
 
 __POST RELATIONSHIP : "SET" ALIASES__
-- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
+- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
 - If no __$post_id__ is defined, use `$post->ID` method to get the post ID
 
 ------
@@ -1048,7 +1048,7 @@ __return__ : *boolean*
 ------
 
 __POST RELATIONSHIP : "GET" ALIASES__  
-- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
+- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
 
 ------
 
@@ -1086,7 +1086,7 @@ __return__ : *Array* (of post ids)
 ------
 
 __POST RELATIONSHIP : "IS" ALIASES__
-- If no __$user_id__ is defined, use __wp_get_current_user()__ method to get user ID
+- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
 - If no __$post_id__ is defined, use `$post->ID` method to get the post ID
 
 ------

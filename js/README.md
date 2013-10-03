@@ -315,6 +315,49 @@ templates = {
 
 ------
 
+## Edit Post
+
+------
+
+### edit-field ( *postworld.directive* )
+
+#### Description
+- Loads a field on the Edit/Publish Post page
+- Renders the input field in the DOM
+- Pre-populates it with default/saved data
+
+#### Usage
+
+------
+
+INPUTS
+
+------
+
+__Input : Text__
+- Renders a text input box
+
+```html
+<div edit-field="post_title" data-input="input-text" data-value="Default Title"></div>
+```
+
+__Input : Select__
+- Renders a select input dropdown with 'blog' selected
+
+```html
+<div edit-field="post_type" data-input="select" data-value="blog"></div>
+```
+
+__Input : Multiple Select__
+- Renders a multiple select input box, with 'blog' and 'feature' both selected
+
+```html
+<div edit-field="post_type" data-input="select-multiple" data-value="blog,feature" data-size="3"></div>
+```
+
+
+------
+
 ## Related Notes
 
 __Angular JS Template Structure__  

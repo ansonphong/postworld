@@ -11,6 +11,11 @@ postworld.controller('postworld', function($scope) {
 	$scope.templates = templates;
 });
 
+////////// HELPERS ////////
+window.isInArray =  function(value, array) {
+  return array.indexOf(value) > -1 ? true : false;
+}
+
 ////////// TEST FEED DIRECTIVE //////////
 // Takes the element with test-feed="feed_id" on it and turns it into a feed
 postworld.directive( 'testFeed', ['$compile', function($compile, $scope){
@@ -72,6 +77,81 @@ postworld.directive( 'testFeed', ['$compile', function($compile, $scope){
 			
 			// Compile DOM into Angular Scope
 			$compile( feed_element )( $scope );
+
+		}
+	}
+}]);
+
+
+////////// PROTOTYPE EDIT FIELD DIRECTIVE //////////
+// Takes the element with test-feed="feed_id" on it and turns it into a feed
+postworld.directive( 'editField', ['$compile', function($compile, $scope){
+
+	return { 
+		restrict: 'A',
+		scope : function(){
+			// Scope functions here
+		},
+		link : function (scope, elem, attrs){
+
+			////////// PARSE INPUT FIELDS //////////
+
+			///// TEXT INPUTS //////
+			if ( attrs.input.indexOf("input-") > -1){
+				input_text_fields = ['text','password','hidden','url'];
+				input_extension = attrs.input.replace("input-", ""); // strip "input-"
+				if (input_text_fields.indexOf( input_extension ) > -1){
+					input_html = "<input type='" + input_extension + "' name='" + attrs.editField + "' id='" + attrs.editField + "' value='"+ attrs.value +"'>";
+					input_element = angular.element( input_html );
+					elem.append( input_element );
+					//$compile( input_element )( scope );
+				}
+			}
+
+			///// DROPDOWN SELECT //////
+			if ( attrs.input.indexOf("select") > -1){
+
+				// Check for "-multiple" extension
+				input_extension = attrs.input.replace("select-", ""); // strip "input-"
+				if (input_extension == 'multiple'){
+					multiple = ' multiple ';
+					// Split the value attribute into an Array
+					oValue = attrs.value.split(',');
+				}
+				else{
+					multiple = '';
+					oValue = attrs.value;
+				}
+				
+				// Get the size of the select area
+				if ( attrs.size )
+					size = " size='"+attrs.size+"' ";
+				else
+					size = '';
+
+				// Parse the HTML
+				select_head = "<select id='"+attrs.editField+"' name='"+attrs.editField+"' " + multiple + " " + size + ">";
+				select_foot = "</select>";
+				select_items = "";
+
+				// Loop through each item in the editField object
+				angular.forEach( window[attrs.editField], function(value, key){
+					// Check to see if current key in oValue
+					if( key == oValue || isInArray(key, oValue) )
+						selected = 'selected';
+					else
+						selected = '';
+
+					// Add option
+					select_items += "<option value='"+key+"' "+selected+">"+value+"</option>";
+				});
+				
+				input_element = angular.element( select_head + select_items + select_foot );
+				elem.append( input_element );
+				//$compile( input_element )( scope );
+				
+			}
+
 
 		}
 	}
