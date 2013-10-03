@@ -41,10 +41,12 @@ pwApp.controller('pwLiveFeedController',
 		$scope.pwLiveFeed = function() {
 			$log.info('Controller: pwLiveFeedController Method:pwLiveFeed invoked');	    	
 			// easy shortcut, for readability in the directive html
-			// $scope.args.feed_query = $scope.feed_query;
+			$scope.args.feed_query = $scope.feed_query;
 	    	// identify the feed_settings feed_id
 			
-			$log.info('Controller: pwLiveFeedController: Method:Constructor: feed_id=',$scope.args.feed_id);
+			$log.info('Controller: pwLiveFeedController: Method:pwLiveFeed: feed_id=',$scope.args.feed_id);
+			$log.info('Controller: pwLiveFeedController: Method:pwLiveFeed: Scope=',$scope);
+			//return;
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
         	pwData.pw_live_feed($scope.args).then(
@@ -77,8 +79,8 @@ pwApp.controller('pwLiveFeedController',
 						$log.info('Controller: pwLiveFeedController Method:pw_live_feed Success pwData.feed_data:',pwData.feed_data[$attrs.liveFeed]);
 						
 						// Clear Items from $scope 
-						$scope.posts = response.data.post_data;
-						$scope.items = $scope.posts;
+						// $scope.posts = response.data.post_data;
+						$scope.items = response.data.post_data;
 						
 						$scope.busy = false;							
 						// TODO Do we need to return something?
@@ -128,15 +130,18 @@ pwApp.controller('pwLiveFeedController',
 					if (response.status==200) {
 						$log.info('Controller: pwLiveFeedController Method:pwScrollFeed Success with data:',response.data);
 						// Add Results to controller items						
-						$scope.posts = response.data;
-						var items = $scope.posts;
-						for (var i = 0; i < items.length; i++) {
-							$scope.items.push(items[i]);
-							//pwData.feed_data[$scope.args.feed_id].posts.push(items[i]);
-							pwData.feed_data[$scope.args.feed_id].loaded.push(items[i].ID);							
+						//$scope.posts = response.data;
+						var newItems = response.data;
+						for (var i = 0; i < newItems.length; i++) {
+							// $log.info('Looping :',i,newItems[i].ID);
+							//$scope.items.push(newItems[i]);
+							// TODO check why when adding an item here, it affects also $scope.items !
+							pwData.feed_data[$scope.args.feed_id].posts.push(newItems[i]);
+							pwData.feed_data[$scope.args.feed_id].loaded.push(newItems[i].ID);							
+							// $log.info('$scope.items has',$scope.items.length,' items');							
 						  }
-						// this.after = "t3_" + this.items[this.items.length - 1].id;
 						// Update feed data with newly loaded posts
+						$log.info('Controller: pwLiveFeedController Method:pwScrollFeed Success feed_data:',pwData.feed_data[$scope.args.feed_id]);
 						$scope.busy = false;							
 						return response.data;
 						

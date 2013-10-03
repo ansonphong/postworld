@@ -1,0 +1,33 @@
+<div style="padding:10px; background:#f2f2f2">
+	<form role="form" ng-submit="pwLiveFeed()">
+		<div class="row">
+			<div class="form-group input-group col-md-8">
+			  <input type="text" class="form-control" placeholder="Search Keyword" ng-model="feed_query.s" >
+			  <span class="input-group-addon">@</span>
+			</div>		
+		</div>
+		<div class="row">		
+			<div class="col-md-3 form-group">
+				<select class="form-control" ng-model="feed_query.order_by" ng-init="feed_query.order_by='rank_score'">
+					<option selected value="rank_score" >Rank</option>
+					<option value="post_points" >Points</option>
+					<option value="modified">Modified</option>
+					<option value="rand">Random</option>
+					<option value="comment_count">Comment Count</option>
+					<option value="date">Date</option>
+				</select>
+			</div>
+			<div class="col-md-1 form-group">
+				<button type="button" class="btn btn-default glyphicon" ng-class="clsOrder" ng-click="toggleOrder()" ng-model="feed_query.order"></button>
+			</div>
+			<div class="col-md-4 form-group">
+				<div class="btn-group">
+				  <button type="button" class="btn btn-default">S1</button>
+				  <button type="button" class="btn btn-default">S2</button>
+				  <button type="button" class="btn btn-default">S3</button>
+				</div>		
+				<button type="submit" class="btn btn-primary">Submit</button>
+			</div>
+		</div>
+	</form>	
+</div>

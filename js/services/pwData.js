@@ -61,8 +61,10 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 		pw_live_feed: function(args) {
 			// get additional params from feed_settings
 			// ensure that feed_query exists
-			if(!args.feed_query) args.feed_query = {};
+			//if(!args.feed_query) args.feed_query = {};
 			// shortcut
+			$log.info('Service: pwData Method:pw_live_feed argsTest: ',args);
+			//return;
 			var feed = feed_settings[args.feed_id];
 			// TODO use constants
 			// TODO Sanity check for values, max, min, positive, negative, etc...

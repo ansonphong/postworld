@@ -81,6 +81,37 @@ function pw_get_posts_anon() {
 }
 
 
+/* Actions for pw_get_templates () */
+
+function pw_get_templates_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	// TODO extract real arguments and execute function
+	$pw_args = $args['args'];
+	$templates_object = new StdClass;
+	$templates_object->posts = array (
+						'list' => WP_PLUGIN_URL.'/postworld/templates/posts/post-list.html',
+			          	'detail' => WP_PLUGIN_URL.'/postworld/templates/posts/post-detail.html',
+			          	'full' => WP_PLUGIN_URL.'/postworld/templates/posts/post-full.html',
+						);
+	$templates_object->panels = array (
+						'feed_top' 		=> 	WP_PLUGIN_URL.'/postworld/templates/panels/feed_top.html',
+						'feed_header'	=> WP_PLUGIN_URL.'/postworld/templates/panels/feed_header.html',
+						'feed_search'	=> WP_PLUGIN_URL.'/postworld/templates/panels/feed_search.html',
+						);
+						
+	// TODO check results are ok
+	// TODO return success code or failure code , as well as version number with the results.
+	/* set the response type as JSON */
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $templates_object;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+
 /* Action Hook for pw_live_feed() - Logged in users */
 add_action("wp_ajax_pw_live_feed", "pw_live_feed_anon");
 
@@ -93,5 +124,10 @@ add_action("wp_ajax_pw_get_posts", "pw_get_posts_anon");
 /* Action Hook for pw_get_posts() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_get_posts", "pw_get_posts_anon");
 
+/* Action Hook for pw_get_templates() - Logged in users */
+add_action("wp_ajax_pw_get_templates", "pw_get_templates_anon");
+
+/* Action Hook for pw_get_templates() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_templates", "pw_get_templates_anon");
 
 ?>
