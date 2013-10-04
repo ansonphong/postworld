@@ -180,15 +180,19 @@ function pw_cache_feed ( $feed_id ){
 	
 	$feed_row = pw_get_feed($feed_id);
 	if($feed_row){
-		echo "getting feed outline :)";	
-		echo ($feed_row->feed_query);
+			
+		//echo ($feed_row->feed_query);
+		$time_start = date("Y-m-d H:i:s");
 		$feed_outline = pw_feed_outline((array)json_decode($feed_row->feed_query));
-		echo json_encode($feed_outline);
+		$time_end = date("Y-m-d H:i:s");
+		$timer = (strtotime( $time_end )-strtotime( $time_start))*1000;
+		//echo json_encode($feed_outline);
 		global $wpdb;
 		$wpdb->show_errors(); 
-		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."' where feed_id='".$feed_id."'";
-		echo $query;
+		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."',time_start='$time_start',time_end='$time_end',timer='$timer' where feed_id='".$feed_id."'";
+		//echo $query;
 		$wpdb->query($query);
+		return array('number_of_posts'=>count($feed_outline), 'feed_query'=> $feed_row->feed_query);
 	} 
 }
 
@@ -231,7 +235,7 @@ function pw_load_feed ( $feed_id, $preload=0 ){
 	 */
 	
 	$feed_row = pw_get_feed($feed_id);
-	print_r($feed_row);
+	//print_r($feed_row);
 	if($feed_row){
 		if($preload>0){
 			$feed_outline = array_map("intval", explode(",", $feed_row->feed_outline));
