@@ -1886,25 +1886,65 @@ Contains utility helper functions.
 
 ------
 
+### branch ( *$object, $parent, $depth, $settings* )
+
+#### Parameters : $settings
+
+__object__ : *Array / Array of Objects*
+- The object / Array which to process from a flat structure into a tree
+
+__fields__ : *Array*
+Default : `array('name')`
+- The fields which to preserve into the new structure
+
+__id_key__ : *string*
+- Default : *id*
+- The key which to use to deliniate the ID of an object
+
+__parent_key__ : *string*
+- Default : *parent*
+- The key which to use to define the parent ID of an object
+
+__child_key__ : *string*
+- Default : *children*
+- The key under which to nest the children
+
+__max_depth__ : *integer*
+- Default : *10*
+- The maximum depth of branches to parse
+
+__callback__ : *string* (optional)
+- The callback helper function which to call while populating the fields
+
+__callback_array__ : *array* (optional)
+- The localized field values to pass to the callback function
+
+
+------
+
+
 ### wp_obj_tree ( *$args* )
 
-__Status__ : Under Development (phongmedia)
-
+#### Description
+- A wrapper for `branch()` Method for taking WP Objects
 
 #### Usage
 
 ``` php
 $args = array(
-	'object' =>
-	'fields' =>
-	'child_key' =>
-	'depth' =>
-	'function' =>
-	'variable' =>
+	'object' => $object,
+	'fields' => $fields,
+	'id_key' => $id_key,
+	'parent_key' => $parent_key,
+	'child_key' => $child_key,
+	'max_depth' => $max_depth,
+	'callback' => $callback,
+	'callback_fields' => $callback_fields,
 )
 $heirarchy = wp_obj_organize_hierarchical( $args );
 
 ```
+
 
 #### Notes
 - Pass a WP object with 'parent' values

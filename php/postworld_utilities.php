@@ -1,13 +1,9 @@
 <?php
 
-
-function object_to_array($data)
-{
-    if (is_array($data) || is_object($data))
-    {
+function object_to_array($data){
+    if (is_array($data) || is_object($data)){
         $result = array();
-        foreach ($data as $key => $value)
-        {
+        foreach ($data as $key => $value){
             $result[$key] = object_to_array($value);
         }
         return $result;
@@ -15,53 +11,102 @@ function object_to_array($data)
     return $data;
 }
 
-
-function wp_obj_tree($args){
-	extract($args);
-	$object = object_to_array($object);
-
-		// BRANCH : Create a recursive branch
-		function branch( $object, $parent = 0, $depth = 0 ){
-			 if($depth > 10) return ''; // Make sure not to have an endless recursion
-
-			 // Setup Local Branch
-			 $branch = array();
-
-			 // Cycle through each item in the Object
-			 for($i=0, $ni=count($object); $i < $ni; $i++){
-
-			 	// If the current item is the same as the current cycling parent, add the data
-			 	if( $object[$i]['parent'] == $parent ){
-
-					// Transfer data
-			 		$branch_child['name'] = 	$object[$i]['name'];
-			 		$branch_child['slug'] = 	$object[$i]['slug'];
-			 		$branch_child['term_id'] = 	$object[$i]['term_id'];
-			 		$branch_child['parent'] = 	$object[$i]['parent'];
-
-			 		// Run Branch recursively and find children
-			 		$children = branch($object, $object[$i]['term_id'], $depth+1);
-
-			 		// If there are children, merge them into the branch_child as sub Array
-			 		if (!empty($children)){
-				 		$branch_child['children'] = $children;
-			 		}
-
-			 		// Push Branch Child data to Local Branch
-				 	array_push($branch, $branch_child);
-			 	}
-			 }
-			 return $branch;
-		}
-	
-		// ROOT
-		$tree_obj = branch($object);
-
-	return $tree_obj;
-
+function tax_term_meta( $input ){
+	return array('input'=> json_encode($input) );
 }
 
 
+//////////// BRANCH : Create a recursive branch from a flat object ////////////
+function branch( $object, $parent = 0, $depth = 0, $settings ){
+	extract($settings);
+
+	///// DEFAULTS /////
+	if (empty($max_depth))	$max_depth = 10;
+	if (empty($fields))		$fields = array('name');
+	if (empty($id_key))		$id_key = 'id';
+	if (empty($parent_key))	$parent_key = 'parent';
+	if (empty($child_key))	$child_key = 'children';
+
+	///// LOCAL BRANCH /////
+	// Check Depth
+	if($depth > $max_depth) return ''; // Make sure not to have an endless recursion
+
+	 // Setup Local Branch
+	 $branch = array();
+
+	 // Cycle through each item in the Object
+	 for($i=0, $ni=count($object); $i < $ni; $i++){
+
+	 	// If the current item is the same as the current cycling parent, add the data
+	 	if( $object[$i][$parent_key] == $parent ){
+
+			// Transfer data
+			foreach ($fields as $field) {
+				$branch_child[$field] = $object[$i][$field];
+			}
+
+			// Perform callback
+			if ( $callback ){
+				// If $callback_fields is included, pass that to the callback
+				if (is_array($callback_fields)){
+
+					// Get the live variable values of the callback array inputs 
+					for($ii=0, $nii=count($callback_fields); $ii < $nii; $ii++){
+						// Replace field request with the actual value. Example : id >> 24
+						$callback_fields[$ii] = $branch_child[ $callback_fields[$ii] ];
+					}
+
+					$callback_data = call_user_func_array($callback,array($callback_fields));
+
+				}
+				// Otherwise run the callback with no inputs
+				else {
+					$callback_data = call_user_func($callback);
+				}
+
+				// Merge back the result of the callback
+				$branch_child = array_merge($branch_child, $callback_data);
+			}
+
+	 		// Run Branch recursively and find children
+	 		$children = branch($object, $object[$i][$id_key], $depth+1, $settings);
+
+	 		// If there are children, merge them into the branch_child as sub Array
+	 		if (!empty($children)){
+		 		$branch_child[$child_key] = $children;
+	 		}
+
+	 		// Push Branch Child data to Local Branch
+		 	array_push($branch, $branch_child);
+	 	}
+	 }
+	 return $branch;
+}
+
+
+// WP OBJECT TREE : Generates a hierarchical tree from a flat Wordpress object
+function wp_obj_tree($args){
+	extract($args);
+
+	// OBJECT -> ARRAY()
+	if ( is_object($object[0]) )
+		$object = object_to_array($object);
+
+		// ROOT
+		$settings = array(
+			'fields' => $fields,
+			'id_key' => $id_key,
+			'parent_key' => $parent_key,
+			'child_key' => $child_key,
+			'max_depth' => $max_depth,
+			'callback' => $callback,
+			'callback_fields' => $callback_fields,
+			);
+
+		$tree_obj = branch( $object, 0, 0, $settings, $fields );
+
+	return $tree_obj;
+}
 
 
 function extract_parenthesis_values ( $input, $force_array = true ){
