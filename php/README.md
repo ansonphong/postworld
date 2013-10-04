@@ -14,6 +14,7 @@ Postworld // PHP / MySQL Functions
 0. [ __Sharing__ : postworld_share.php ](#sharing)
 0. [ __Images__ : postworld_images.php ](#images)
 0. [ __Taxonomies__ : postworld_taxonomies.php ](#taxonomies)
+0. [ __Utilities__ : postworld_utilities.php ](#utilities)
 
 ## Post Meta
 
@@ -1875,4 +1876,46 @@ array(
 #### Todo
 - Add option to limit/extend fields ($fields parameter)
   - Include toggle for 'capabilities, url, description...'
+
+------
+
+## Utilities
+__php/postworld_utilities.php__
+
+Contains utility helper functions.
+
+------
+
+### wp_obj_tree ( *$args* )
+
+__Status__ : Under Development (phongmedia)
+
+
+#### Usage
+
+``` php
+$args = array(
+	'object' =>
+	'fields' =>
+	'child_key' =>
+	'depth' =>
+	'function' =>
+	'variable' =>
+)
+$heirarchy = wp_obj_organize_hierarchical( $args );
+
+```
+
+#### Notes
+- Pass a WP object with 'parent' values
+- Organize into hierarchical object
+- Used to organize comments, posts or terms heirarchically into an object
+
+- Make way to get meta data, such as comment points or term_link, etc. with action hook at per item level
+- takes helper Function which returns an object which is merged into each item
+
+
+
+
+
 
