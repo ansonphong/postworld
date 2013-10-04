@@ -9,8 +9,6 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
 		// QUERY TAXONOMIES
 		$taxonomy_args = array('public'   => true ); 
         $taxonomies = get_taxonomies($taxonomy_args, 'names');
-		
-   		// TODO : REMOVE post_tags
 	}
 
 	// Setup Taxonomy Outline Object
@@ -21,6 +19,7 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
 		// Get the Taxnomy Object
 		$tax_obj = get_taxonomy($taxonomy);
 
+		// If it's not hierarchical, skip it
 		if(!$tax_obj->hierarchical)
 			continue;
 
@@ -45,7 +44,6 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
 				$term_obj['name'] = $value->name;
 				$term_obj['slug'] = $value->slug;
 				$term_obj['description'] = $value->description;
-				
 				
 				///// CHILD TERMS : Cycle through each Term searching for children /////
 				if ($depth > 1){
@@ -73,17 +71,11 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
 				// Push Taxonomy Array to Main Array
 				array_push( $tax_outline[$taxonomy]['terms'], $term_obj);
 
-
 			}
-
-
 		}
 
-		//$get_terms_ouput[$taxonomy] = $terms;
-
-
 	}
-	
+
 	return $tax_outline;
 
 }
