@@ -66,8 +66,7 @@ function postworld_install() {
       share_karma mediumint(8) DEFAULT '0' NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       post_points_meta MEDIUMTEXT NULL,
-      comment_points mediumint(8) DEFAULT '0' NOT NULL,
-	  UNIQUE KEY user_id(user_id)
+      comment_points mediumint(8) DEFAULT '0' NOT NULL
     );";
 
   $user_shares_table_name = $wpdb->pw_prefix.'user_shares';
@@ -162,8 +161,10 @@ function postworld_install_Foreign_keys(){
 	$wpdb -> show_errors();
  	for ($i=0; $i < count($pw_queries['FK']); $i++) {
      	$result = $wpdb -> get_var($pw_queries['FK'][$i]['contraint_check']);
+		//log_me($result);
      	if($result == 0){
-     		$wpdb -> query($wpdb -> prepare($pw_queries['FK'][$i]['query']));
+     	//	log_me('here');
+     		$wpdb -> query($pw_queries['FK'][$i]['query']);
      	}
  	}
  			
@@ -176,8 +177,8 @@ function postworld_install_Triggers(){
 		
 	$wpdb -> show_errors();
  	for ($i=0; $i < count($pw_queries['Triggers']); $i++) {
-		$wpdb -> query($wpdb -> prepare($pw_queries['Triggers'][$i]['drop']));
-		$wpdb -> query($wpdb -> prepare($pw_queries['Triggers'][$i]['create']));
+		$wpdb -> query($pw_queries['Triggers'][$i]['drop']);
+		$wpdb -> query($pw_queries['Triggers'][$i]['create']);
  	}
 	
 }

@@ -97,7 +97,7 @@
 					.")";
 					
 			echo $query."<br>";
-			$wpdb -> query($wpdb -> prepare($query));
+			$wpdb -> query($query);
 		}
 	}
 	
