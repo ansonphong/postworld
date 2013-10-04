@@ -13,6 +13,7 @@ Postworld // PHP / MySQL Functions
 0. [ __Feeds__ : postworld_feeds.php ](#feeds)
 0. [ __Sharing__ : postworld_share.php ](#sharing)
 0. [ __Images__ : postworld_images.php ](#images)
+0. [ __Taxonomies__ : postworld_taxonomies.php ](#taxonomies)
 
 ## Post Meta
 
@@ -1798,4 +1799,71 @@ __php/postworld_images.php__
 Contains functions for getting registered images, resizing images and post attachment images.
 
 ------
+
+## Taxonomies
+__php/postworld_taxonomies.php__
+
+Contains functions for working with Taxonomies.
+
+------
+
+### taxonomies_outline ( $taxonomies )
+__Status__ : Under Development (phongmedia)
+
+#### Description
+- Generate an object outlining the requested Taxonomies
+
+#### Parameters
+
+__$taxonomies__ : *string/Array* 
+- Options
+  - __all__ (default) - Returns all public taxonomies, minus __post_tags__
+  - Array of taxonomy names which to receive a term outline for
+
+#### Return
+```php
+array(
+	'topics' => array( // Taxonomy Name
+		'label' => 'Topics',
+		'singular_label' => 'Topic',
+		'cap' => {{ stdClass Object }}
+		'terms' => array(
+			array(
+				'term' => 'Eco',
+				'slug' => 'eco',
+				'term_id' => '1',
+				'url' => {{string}},
+				'terms' => array(
+					array(
+						'term' => 'Environmental',
+						'slug' => 'environment',
+						'term_id' => '3',
+						'url' => {{string}},
+						),
+					array(
+						'term' => 'Global',
+						'slug' => 'global',
+						'term_id' => '4',
+						'url' => {{string}},
+						),
+					...
+					)
+				),
+			array(
+				'term' => 'Tech',
+				'slug' => 'tech',
+				'term_id' => '2',
+				'url' => {{string}}
+				),
+		),
+	'sections' => array(
+		...
+		)
+)
+```
+
+
+
+
+
 

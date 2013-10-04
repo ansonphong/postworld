@@ -328,6 +328,42 @@ templates = {
 - Renders the input field in the DOM
 - Pre-populates it with default/saved data
 
+#### Attributes
+
+__edit-field__ : *string* (required)
+- The __name__ and __id__ of the input element
+- If a coorosponding value in `window['edit-fields']` exists, this will be used by default
+
+__data-input__ : *string* (required)
+- The type of input field
+- Options :
+  - __input__ (input-text, input-password, input-hidden, input-url)
+  - __select__ (select-multiple)
+
+__data-size__ : *integer* (optional)
+- The 
+
+__data-value__ : *string* (optional)
+- The over-ride value of the field
+
+__data-placeholder__ : *string* (optional)
+- The __placeholder__ value for an text input box
+
+__data-object__ : *string* (optional)
+- __Default__ : *edit_fields*
+- Defines the object from which to pre-populate from
+- Uses the key with name of edit-field value
+- *Example*
+
+``` javascript 
+	var post = { post_title:'This is the Post Title', ...}
+```
+```html
+	<div edit-field="post_title" data-field="input-text" data-object="post" >
+```
+Will output an text input box with the value : *"This is the Post Title"*
+
+
 #### Usage
 
 ------
