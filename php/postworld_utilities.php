@@ -1,5 +1,69 @@
 <?php
 
+
+function object_to_array($data)
+{
+    if (is_array($data) || is_object($data))
+    {
+        $result = array();
+        foreach ($data as $key => $value)
+        {
+            $result[$key] = object_to_array($value);
+        }
+        return $result;
+    }
+    return $data;
+}
+
+
+function wp_obj_tree($args){
+	extract($args);
+	$object = object_to_array($object);
+
+		// BRANCH : Create a recursive branch
+		function branch( $object, $parent = 0, $depth = 0 ){
+			 if($depth > 10) return ''; // Make sure not to have an endless recursion
+
+			 // Setup Local Branch
+			 $branch = array();
+
+			 // Cycle through each item in the Object
+			 for($i=0, $ni=count($object); $i < $ni; $i++){
+
+			 	// If the current item is the same as the current cycling parent, add the data
+			 	if( $object[$i]['parent'] == $parent ){
+
+					// Transfer data
+			 		$branch_child['name'] = 	$object[$i]['name'];
+			 		$branch_child['slug'] = 	$object[$i]['slug'];
+			 		$branch_child['term_id'] = 	$object[$i]['term_id'];
+			 		$branch_child['parent'] = 	$object[$i]['parent'];
+
+			 		// Run Branch recursively and find children
+			 		$children = branch($object, $object[$i]['term_id'], $depth+1);
+
+			 		// If there are children, merge them into the branch_child as sub Array
+			 		if (!empty($children)){
+				 		$branch_child['children'] = $children;
+			 		}
+
+			 		// Push Branch Child data to Local Branch
+				 	array_push($branch, $branch_child);
+			 	}
+			 }
+			 return $branch;
+		}
+	
+		// ROOT
+		$tree_obj = branch($object);
+
+	return $tree_obj;
+
+}
+
+
+
+
 function extract_parenthesis_values ( $input, $force_array = true ){
 	// Extracts comma deliniated values which are contained in parenthesis
 	// Returns an Array of values that were previously comma deliniated,
