@@ -88,6 +88,8 @@ include 'php/postworld_cron.php';
 ////////// USER FUNCTIONS ///////////
 include 'php/postworld_users.php';
 
+////////// TAXONOMY FUNCTIONS ///////////
+include 'php/postworld_taxonomies.php';
 
 ////////// CACHE FUNCTIONS ///////////
 include 'php/postworld_cache.php';

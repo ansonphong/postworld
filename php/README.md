@@ -1807,22 +1807,27 @@ Contains functions for working with Taxonomies.
 
 ------
 
-### taxonomies_outline ( *$taxonomies, [$depth]* )
-__Status__ : Under Development (phongmedia)
+### taxonomies_outline ( *[$taxonomies], [$depth]* )
 
 #### Description
-- Generate an object outlining the requested Taxonomies
+- Generate a heirarchical object outlining the requested Taxonomies
+- Only goes to depth limit of __2__
 
 #### Parameters
-
-__$taxonomies__ : *string/Array* 
+__$taxonomies__ : *string/Array* (optional) 
 - Options
-  - __all__ (default) - Returns all public taxonomies, minus __post_tags__
-  - Array of taxonomy names which to receive a term outline for
+  - __all__ (default) - Returns all hierarchical public taxonomies
+  - *Array* - Array of taxonomy names which to receive a term outline for
 
-__$depth__ : *integer*
+__$depth__ : *integer* (optional)
 - Default : __2__
-- The depth of childten to parse
+- Max : __2__
+- The depth of children to parse
+
+#### Usage
+``` php
+	$toplevel_category_outline = taxonomies_outline( array('category'), 1 );
+```
 
 #### Return
 ```php
@@ -1865,9 +1870,6 @@ array(
 		)
 )
 ```
-
-
-
 
 
 
