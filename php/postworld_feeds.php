@@ -192,6 +192,7 @@ function pw_cache_feed ( $feed_id ){
 		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."',time_start='$time_start',time_end='$time_end',timer='$timer' where feed_id='".$feed_id."'";
 		//echo $query;
 		$wpdb->query($query);
+		return array('number_of_posts'=>count($feed_outline), 'feed_query'=> $feed_row->feed_query);
 	} 
 }
 

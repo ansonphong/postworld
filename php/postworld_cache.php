@@ -154,8 +154,18 @@
 	function cache_all_feeds (){
 		/*• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
 		return : cron_logs Object (store in table wp_postworld_cron_logs)*/
-		
-		
+		global $pw_defaults;
+		$feeds_options = $pw_defaults['feeds']['cache_feeds'];
+		$cron_logs=array();
+		$number_of_feeds = count($feeds_options);
+		for ($i=0; $i <$number_of_feeds ; $i++) {
+			$time_start = date("Y-m-d H:i:s"); 
+			$cache_output = pw_cache_feed($feeds_options[$i]);
+			$time_end = date("Y-m-d H:i:s");
+			$current_cron_log_object = create_cron_log_object($time_start, $time_end,$cache_output['number_of_posts'] , 'cache_all_feeds', $feeds_options[$i],$cache_output['feed_query']);
+			$cron_logs[]=$current_cron_log_object;
+		}
+		return $cron_logs;	
 		
 	}
 	

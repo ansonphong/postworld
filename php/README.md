@@ -1482,6 +1482,8 @@ __return__ : *Array* (of post IDs)
 
 ### pw_cache_feed ( *$feed_id* )
 - Generates a new feed outline for a registered __feed_id__ and caches it
+ __return__ : *Array* (number of posts in this feed , feed_query) - to be added to cron_logs
+
 
 #### Process:
 - Run `pw_feed_outline( $args )` on the __args__ in __feed_query__ column in the row of the given __$feed_id__
