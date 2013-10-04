@@ -26,7 +26,6 @@ wp_enqueue_script( 'AngularJS', WP_PLUGIN_URL.'/postworld/lib/angular/angular.mi
 wp_enqueue_script( 'AngularJS-Resource', WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
 wp_enqueue_script( 'AngularJS-Route', WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
 
-
 // All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 $jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
 				  'pluginurl' => WP_PLUGIN_URL,
@@ -35,7 +34,6 @@ $jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
 wp_register_script( "pw-app-JS", WP_PLUGIN_URL.'/postworld/js/app.js' );
 wp_localize_script( 'pw-app-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-app-JS' );
-
 
 wp_register_script( "pw-LiveFeedController-JS", WP_PLUGIN_URL.'/postworld/js/controllers/pwLiveFeedController.js' );
 wp_localize_script( 'pw-LiveFeedController-JS', 'jsVars', $jsVars);
@@ -56,6 +54,10 @@ wp_enqueue_script( 'pw-LiveFeed-JS' );
 wp_register_script( "pw-LoadPanel-JS", WP_PLUGIN_URL.'/postworld/js/directives/loadPanel.js' );
 wp_localize_script( 'pw-LoadPanel-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-LoadPanel-JS' );
+
+wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/directives/feedItem.js' );
+wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
+wp_enqueue_script( 'pw-FeedItem-JS' );
 
 wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js' );
 wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
