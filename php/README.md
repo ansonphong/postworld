@@ -1807,7 +1807,7 @@ Contains functions for working with Taxonomies.
 
 ------
 
-### taxonomies_outline ( $taxonomies )
+### taxonomies_outline ( *$taxonomies, [$depth]* )
 __Status__ : Under Development (phongmedia)
 
 #### Description
@@ -1820,22 +1820,26 @@ __$taxonomies__ : *string/Array*
   - __all__ (default) - Returns all public taxonomies, minus __post_tags__
   - Array of taxonomy names which to receive a term outline for
 
+__$depth__ : *integer*
+- Default : __2__
+- The depth of childten to parse
+
 #### Return
 ```php
 array(
-	'topics' => array( // Taxonomy Name
+	'topics' => array( // Taxonomy
 		'label' => 'Topics',
 		'singular_label' => 'Topic',
 		'cap' => {{ stdClass Object }}
 		'terms' => array(
 			array(
-				'term' => 'Eco',
+				'term' => 'Eco', // Term
 				'slug' => 'eco',
 				'term_id' => '1',
 				'url' => {{string}},
 				'terms' => array(
 					array(
-						'term' => 'Environmental',
+						'term' => 'Environmental', // Sub-term
 						'slug' => 'environment',
 						'term_id' => '3',
 						'url' => {{string}},
