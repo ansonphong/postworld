@@ -139,6 +139,8 @@ $pw_defaults = array(
 				),
 			),
 		),
+	'post_views'	=> array('list', 'detail', 'grid', 'full'),
+	'panel_ids' => array('feed_top','feed_search'),
 
 	);
 

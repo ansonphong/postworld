@@ -319,23 +319,37 @@ function pw_get_templates ( $templates_object ){
 			/*null : default
 				Returns object with all panels and templates in the default and over-ride folders.
 			 */
+			$args = array(
+  			 'public'   => true,
+  			// '_builtin' => false
+			);
+			//$output = 'names'; // names or objects, note names is the default
+			$operator = 'and'; // 'and' or 'or'
+			
+			$post_types = get_post_types( $args, 'names', $operator );
+			//echo json_encode($post_types); 
+			$post_types_final=array();
+			foreach ( $post_types as $post_type ) {
+
+   				$post_types_final[]= $post_type ;
+			}
+			global $pw_defaults;
 			
 			
+			$post_views = $pw_defaults['post_views'];//array( 'list', 'detail', 'grid', 'full' );
+			$templates_object['posts']=array();
+			$templates_object['posts']['post_types']=$post_types_final;
+			$templates_object['posts']['post_views']=$post_views; 
 			
+			$panel_ids = $pw_defaults['panel_ids'];//array('feed_top','feed_search');
 			
-			$output['templates']= array();
-			$output['templates']['default']= list_dir_file_names($default_posts_template_abs_path,$default_posts_template_url);
-			$output['templates']['override']= list_dir_file_names($override_posts_template_abs_path,$override_posts_template_url);
+			$templates_object['panels']= $panel_ids;
 			
-			
-			
-			$output['panels'] = array();
-			$output['panels']['default']= list_dir_file_names($default_panel_template_abs_path,$default_panel_template_url);
-			$output['panels']['override']= list_dir_file_names($override_panel_template_abs_path,$override_panel_template_url);
+			//print_r($templates_object);
 		}
 		
 		
-		else if($templates_object['posts']){
+		if($templates_object['posts']){
 			
 			 $output['posts'] = array(); 
 			 for ($i=0; $i < count($templates_object['posts']['post_types']) ; $i++) {
@@ -371,17 +385,19 @@ function pw_get_templates ( $templates_object ){
 		}
 
 		/* array( 'panels'=>'panel_id' )*/
-		else if($templates_object['panels' ]) {
-			$output=array();
+		if($templates_object['panels' ]) {
+			
 			$output['panels']=array();
 
-			
-			if(file_exists($override_panel_template_abs_path.$templates_object['panels']).".html"){
-				$output['panels'][$templates_object['panels']] =  $override_panel_template_url.$templates_object['panels'].".html";
+			 for ($i=0; $i < count($templates_object['panels']) ; $i++) {
+			if(file_exists($override_panel_template_abs_path.$templates_object['panels'][$i].".html")){
+				//echo $override_panel_template_abs_path.$templates_object['panels'][$i].".html";
+				$output['panels'][$templates_object['panels'][$i]] =  $override_panel_template_url.$templates_object['panels'].".html";
 			}
 			else {
-				$output['panels'][$templates_object['panels']] =  $default_panel_template_url.$templates_object['panels'].".html";
+				$output['panels'][$templates_object['panels'][$i]] =  $default_panel_template_url.$templates_object['panels'][$i].".html";
 			}
+		}
 		}
 		return $output;
 	}
