@@ -1840,18 +1840,21 @@ array(
 				'slug' => 'eco',
 				'term_id' => '1',
 				'url' => {{string}},
+				'description' => {{string}},
 				'terms' => array(
 					array(
 						'term' => 'Environmental', // Sub-term
 						'slug' => 'environment',
 						'term_id' => '3',
 						'url' => {{string}},
+						'description' => {{string}},
 						),
 					array(
 						'term' => 'Global',
 						'slug' => 'global',
 						'term_id' => '4',
 						'url' => {{string}},
+						'description' => {{string}},
 						),
 					...
 					)
@@ -1860,7 +1863,8 @@ array(
 				'term' => 'Tech',
 				'slug' => 'tech',
 				'term_id' => '2',
-				'url' => {{string}}
+				'url' => {{string}},
+				'description' => {{string}},
 				),
 		),
 	'sections' => array(
@@ -1868,6 +1872,7 @@ array(
 		)
 )
 ```
-
-
+#### Todo
+- Add option to limit/extend fields ($fields parameter)
+  - Include toggle for 'capabilities, url, description...'
 

@@ -44,6 +44,7 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
 				$term_obj['name'] = $value->name;
 				$term_obj['slug'] = $value->slug;
 				$term_obj['description'] = $value->description;
+				$term_obj['url'] = get_term_link( $value );
 				
 				///// CHILD TERMS : Cycle through each Term searching for children /////
 				if ($depth > 1){
@@ -58,6 +59,7 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
 							$child_term_obj['name'] = $child_value->name;
 							$child_term_obj['slug'] = $child_value->slug;
 							$child_term_obj['description'] = $child_value->description;
+							$child_term_obj['url'] = get_term_link( $child_value );
 							array_push( $child_terms, $child_term_obj);
 						}
 					}
