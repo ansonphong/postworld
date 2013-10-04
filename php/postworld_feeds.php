@@ -182,11 +182,14 @@ function pw_cache_feed ( $feed_id ){
 	if($feed_row){
 		echo "getting feed outline :)";	
 		echo ($feed_row->feed_query);
+		$time_start = date("Y-m-d H:i:s");
 		$feed_outline = pw_feed_outline((array)json_decode($feed_row->feed_query));
+		$time_end = date("Y-m-d H:i:s");
+		$timer = (strtotime( $time_end )-strtotime( $time_start))*1000;
 		echo json_encode($feed_outline);
 		global $wpdb;
 		$wpdb->show_errors(); 
-		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."' where feed_id='".$feed_id."'";
+		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."',time_start='$time_start',time_end='$time_end',timer='$timer' where feed_id='".$feed_id."'";
 		echo $query;
 		$wpdb->query($query);
 	} 
