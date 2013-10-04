@@ -17,6 +17,13 @@ pwApp.controller('pwLoadPanelController',
 				$scope.feed_query.order = 'DESC';
 			}
 		};
+		
+		$scope.getTemplate = function(view) {
+	    	// should this code be in the feedItem directive?
+	    	$scope.templateView = view;
+	    	// TODO use get template function
+	    	$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-'+$scope.templateView+'.html';
+		};
     	
     }
 );

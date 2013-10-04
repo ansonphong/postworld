@@ -35,10 +35,26 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	if (!$post_exists)
 		return false;
 
-
 	///// SETUP VARIABLES /////
 	global $template_paths;
 
+	$edit_fields = array(
+		'ID',
+		'post_title',
+		'post_content',
+		'post_excerpt',
+		'post_name',
+		'post_type',
+		'post_date',
+		'post_date_gmt',
+		'post_class',
+		'post_format',
+		'link_url',
+		'image(id)',
+		'taxonomy(all)',
+		'comment_status',
+		'post_status',
+		);
 
 	////////// FIELDS MODEL //////////
 	$preview_fields =	array(
@@ -76,7 +92,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'image(full)',
 		);
 	
-	$viewer_fields =		array(
+	$viewer_fields =array(
 		'viewer(has_voted,vote_power)'
 		);
 
@@ -88,6 +104,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	if ($fields == 'all'){
 		$fields = array_merge($preview_fields, $detail_fields);
 	}
+
+	// Add Edit Fields
+	if ($fields == 'edit')
+		$fields = $edit_fields;
 
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
@@ -402,6 +422,20 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	// Extract taxonomy() fields
 	$taxonomy_fields = extract_linear_fields( $fields, 'taxonomy' );
 
+	// ALL : If *all* taxonomies requested via taxonomy(all)
+	if (in_array('all', $taxonomy_fields)){
+		// QUERY TAXONOMIES
+		$taxonomy_args = array('public'   => true ); 
+        $the_taxonomies = get_taxonomies($taxonomy_args);
+		
+		// EXTRACT TAXONOMY NAMES
+        $taxonomy_names = array();
+        foreach( $the_taxonomies as $key => $value){
+            array_push($taxonomy_names, $key);
+        }
+        $taxonomy_fields = $taxonomy_names;
+	}
+		
 	// Get each Taxonomy 
 	foreach ($taxonomy_fields as $taxonomy_field) {
 
@@ -412,6 +446,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			foreach($taxonomy_terms as $term){
 				$term_obj['term'] = $term->name;
 				$term_obj['slug'] = $term->slug;
+				$term_obj['term_id'] = $term->term_id;
 				$term_obj['url'] = get_term_link($term->slug, $taxonomy_field);
 
 				$post_data['taxonomy'][$taxonomy_field][$term->slug] = $term_obj;

@@ -16,6 +16,11 @@ window.isInArray =  function(value, array) {
   return array.indexOf(value) > -1 ? true : false;
 }
 
+window.isEmpty = function(value){
+  return value[0].value ? true : false;	
+}
+
+
 ////////// TEST FEED DIRECTIVE //////////
 // Takes the element with test-feed="feed_id" on it and turns it into a feed
 postworld.directive( 'testFeed', ['$compile', function($compile, $scope){
@@ -97,19 +102,44 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 
 			////////// PARSE INPUT FIELDS //////////
 
+			// OBJECT : Define the object which has with default values
+			if (attrs.object)
+				object = attrs.object;
+			else
+				object = 'edit_fields'; // Default object name : window['edit_fields']
+
+			// FIELD : Define the field which is being edited
+			field = attrs.editField;
+
 			///// TEXT INPUTS //////
 			if ( attrs.input.indexOf("input-") > -1){
 				input_text_fields = ['text','password','hidden','url'];
 				input_extension = attrs.input.replace("input-", ""); // strip "input-"
 				if (input_text_fields.indexOf( input_extension ) > -1){
-					input_html = "<input type='" + input_extension + "' name='" + attrs.editField + "' id='" + attrs.editField + "' value='"+ attrs.value +"'>";
+
+					// Placeholder
+					if(attrs.placeholder)
+						placeholder = attrs.placeholder;
+					else
+						placeholder = '';
+					
+					// Set Original Value : oValue
+					if( attrs.value )
+						oValue = attrs.value;
+					else if ( window[object] )
+						oValue = window[object][field];
+					else
+						oValue = '';
+
+					// Generate HTML
+					input_html = "<input type='" + input_extension + "' name='" + attrs.editField + "' id='" + attrs.editField + "' value='"+ oValue +"' placeholder='"+placeholder+"'>";
 					input_element = angular.element( input_html );
 					elem.append( input_element );
 					//$compile( input_element )( scope );
 				}
 			}
 
-			///// DROPDOWN SELECT //////
+			///// SELECT / MULTIPLE SELECT //////
 			if ( attrs.input.indexOf("select") > -1){
 
 				// Check for "-multiple" extension
@@ -135,14 +165,16 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 				select_foot = "</select>";
 				select_items = "";
 
+				// Define select options object
+				select_options = window[attrs.editField];
+
 				// Loop through each item in the editField object
-				angular.forEach( window[attrs.editField], function(value, key){
+				angular.forEach( select_options, function(value, key){
 					// Check to see if current key in oValue
 					if( key == oValue || isInArray(key, oValue) )
 						selected = 'selected';
 					else
 						selected = '';
-
 					// Add option
 					select_items += "<option value='"+key+"' "+selected+">"+value+"</option>";
 				});
@@ -181,8 +213,5 @@ postworld.run(function($rootScope, $templateCache) {
       $templateCache.removeAll();
    });
 });
-
-
-
 
 

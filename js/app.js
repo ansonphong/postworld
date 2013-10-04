@@ -12,7 +12,6 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
         $routeProvider.otherwise({redirectTo: '/livefeed/'});
     });
 
-
 /*
  * Getting Organized (Michel):
  * 
@@ -22,20 +21,19 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
  * Create Advanced Search Panel
  * Create Post Directive
  * Use Get Templates for Panels and Posts
- *
- * 
- * 
- *  
+ * Create Post Views Directive
+ * Do we need Directives for non-post types?
+ *   
  * TODO List
  * *********
  * 
  * 
- * 
+ * Adding Feed Item Directive, Update Feed Search with Post Templates Switch
  * 
  * 
  * Refactoring Needed
  * ******************
- * 
+ * Use App Constants
  * 
  * Issues
  * ******
@@ -46,6 +44,8 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
  * 
  * Testing
  * *******
+ * Test Multiple Panels in same page
+ * Test Multiple Feeds in same page
  * 
  * UI Enhancements
  * ***************

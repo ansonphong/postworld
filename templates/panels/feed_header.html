@@ -3,7 +3,7 @@
 		<div class="row">
 			<div class="form-group input-group col-md-8">
 			  <input type="text" class="form-control" placeholder="Search Keyword" ng-model="feed_query.s" >
-			  <span class="input-group-addon">@</span>
+			  <span class="input-group-addon glyphicon glyphicon-search"></span>
 			</div>		
 		</div>
 		<div class="row">		
@@ -22,9 +22,9 @@
 			</div>
 			<div class="col-md-4 form-group">
 				<div class="btn-group">
-				  <button type="button" class="btn btn-default">S1</button>
-				  <button type="button" class="btn btn-default">S2</button>
-				  <button type="button" class="btn btn-default">S3</button>
+				  <button type="button" class="btn btn-default glyphicon glyphicon-th" ng-click="getTemplate('detail')"></button>
+				  <button type="button" class="btn btn-default glyphicon glyphicon-th-large" ng-click="getTemplate('list')"></button>
+				  <button type="button" class="btn btn-default glyphicon glyphicon-th-list" ng-click="getTemplate('full')"></button>
 				</div>		
 				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>

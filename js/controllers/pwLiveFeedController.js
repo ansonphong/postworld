@@ -7,6 +7,14 @@ pwApp.controller('pwLiveFeedController',
     function pwLiveFeedController($scope, $location, $log, $attrs, pwData) {
     	//$scope.args.year = '2007';
     	//$scope.args.monthnum= '1';
+    	
+    	// should this code be in the feedItem directive?
+    	$scope.templateView = 'list';
+    	// TODO use get template function
+    	$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-'+$scope.templateView+'.html';
+    	
+    	
+    	
 		$scope.args = {};
 		$scope.feed_query = {};
     	$scope.items = [];
