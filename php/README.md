@@ -1834,8 +1834,6 @@ __$depth__ : *integer* (optional)
 array(
 	'topics' => array( // Taxonomy
 		'label' => 'Topics',
-		'singular_label' => 'Topic',
-		'cap' => {{ stdClass Object }}
 		'terms' => array(
 			array(
 				'term' => 'Eco', // Term
