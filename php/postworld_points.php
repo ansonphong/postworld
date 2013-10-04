@@ -55,7 +55,7 @@
 		if($points_total==null || $points_total =='') $points_total=0;
 		//update wp_postworld_meta
 		$query = "update ".$wpdb->pw_prefix.'post_meta'." set post_points=" . $points_total . " where post_id=" . $post_id;
-		$result =$wpdb -> query($wpdb -> prepare($query));
+		$result =$wpdb -> query($query);
 		
 		if ($result === FALSE){
 			//insertt new row for this post in post_meta, no points was added
@@ -276,7 +276,7 @@
 		if ($set_points == 0) {
 			if ($old_user_points != 0) {
 				$query = "delete from ".$wpdb->pw_prefix.'post_points'." where post_id=" . $post_id . " and user_id=" . $user_id;
-				$wpdb -> query($wpdb -> prepare($query));
+				$wpdb -> query($query);
 				$update_points = -($old_user_points);
 				$points_total = calculate_post_points($post_id);
 			} else {
@@ -308,7 +308,7 @@
 				$query = "Update ".$wpdb->pw_prefix.'post_points'." set post_points=". $new_post_points . " Where post_id=" . $post_id . " and user_id=" . $user_id;
 				//$output -> points_added = $update_points;
 				//echo $query;
-				$wpdb -> query($wpdb -> prepare($query));
+				$wpdb -> query($query);
 				$points_total = calculate_post_points($post_id);
 	
 			} else {// row not found, insert
@@ -317,7 +317,7 @@
 				//$output -> points_added = $update_points;
 				//echo "<br>".$query;
 			
-				$wpdb -> query($wpdb -> prepare($query));
+				$wpdb -> query($query);
 				$points_total = calculate_post_points($post_id);
 			}
 	
@@ -557,7 +557,7 @@
 				.")";
 				
 		//echo $query."<br>";
-		$wpdb -> query($wpdb -> prepare($query));
+		$wpdb -> query($query);
 		
 	}
 	

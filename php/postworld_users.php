@@ -143,12 +143,12 @@
 	
 		$wpdb -> show_errors();	
 		$query = "insert into ".$wpdb->pw_prefix.'favorites'." values (".$user_id.",".$post_id.")";
-		$wpdb -> query($wpdb -> prepare($query));
+		$wpdb -> query($query);
 		
 		
 		// increment post count in wp_postworld_post_meta	
 		$query = "update ".$wpdb->pw_prefix.'post_meta'." set favorites = favorites +1 where post_id=".$post_id;
-		$result = $wpdb -> query($wpdb -> prepare($query));
+		$result = $wpdb -> query($query);
 		if($result === FALSE){
 			add_recored_to_post_meta($post_id,0,0,1); 	
 		}
@@ -160,12 +160,12 @@
 	
 		$wpdb -> show_errors();	
 		$query = "delete from ".$wpdb->pw_prefix.'favorites'." where post_id=".$post_id." and user_id=".$user_id;
-		$wpdb -> query($wpdb -> prepare($query));
+		$wpdb -> query($query);
 		
 		
 		// increment post count in wp_postworld_post_meta	
 		$query = "update ".$wpdb->pw_prefix.'post_meta'." set favorites = favorites -1 where post_id=".$post_id;
-		$result = $wpdb -> query($wpdb -> prepare($query));
+		$result = $wpdb -> query($query);
 		
 		if($result === FALSE){
 			add_recored_to_post_meta($post_id,0,0,0); 	
@@ -221,7 +221,7 @@
 			$wpdb -> show_errors();
 			$query ="update ".$wpdb->pw_prefix.'user_meta'." set favorites ='".implode(',',$post_ids)."' where user_id=".$user_id;	
 			//echo($query);
-			$wpdb -> query($wpdb -> prepare($query));
+			$wpdb -> query($query);
 			//return $changed;
 			
 			if($changed ==1)//add fav
@@ -323,7 +323,7 @@
 			$wpdb -> show_errors();
 			$query ="update ".$wpdb->pw_prefix.'user_meta'." set viewed ='".implode(',',$post_ids)."' where user_id=".$user_id;	
 			//echo($query);
-			$wpdb -> query($wpdb -> prepare($query));
+			$wpdb -> query($query);
 			return true;
 		}
 		else return false;
