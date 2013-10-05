@@ -1890,10 +1890,10 @@ Contains utility helper functions.
 
 ### tree_obj ( *$object, $parent, $depth, $settings* )
 
-#### Parameters : $settings
+#### Parameters :
 
-__$object__ : *Array / Array of Objects*
-- The object / Array which to process from a flat structure into a tree
+__$object__ : *Array*
+- The flat Array which to process into a hierarchical tree structure
 
 __$parent__ : *integer*
 - Default : __0__
@@ -2016,9 +2016,7 @@ array(
 
 ```
 
-
 ------
-
 
 ### wp_tree_obj ( *$args* )
 
@@ -2029,7 +2027,7 @@ array(
 
 ``` php
 $args = array(
-	'object' => $object,
+	'object' => $object // Array or Array of WP Objects,
 	'fields' => $fields,
 	'id_key' => $id_key,
 	'parent_key' => $parent_key,
