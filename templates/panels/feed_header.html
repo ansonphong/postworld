@@ -1,7 +1,26 @@
 <div style="padding:10px; background:#f2f2f2">
-	<form role="form" ng-submit="pwLiveFeed()">
+	<form role="form" ng-submit="UpdateArguments()">
 		<div class="row">
-			<div class="form-group input-group col-md-8">
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.year"  placeholder="Year (YYYY)">
+			</div>
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.monthnum"  placeholder="Month (1-12)">
+			</div>
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.author_name"  placeholder="Author Name">
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.post_class"  placeholder="Post Class">
+			</div>
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.posts_per_page"  placeholder="Posts Per Page">
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group input-group col-md-9">
 			  <input type="text" class="form-control" placeholder="Search Keyword" ng-model="feed_query.s" >
 			  <span class="input-group-addon glyphicon glyphicon-search"></span>
 			</div>		
@@ -26,8 +45,9 @@
 				  <button type="button" class="btn btn-default glyphicon glyphicon-th-large" ng-click="getTemplate('list')"></button>
 				  <button type="button" class="btn btn-default glyphicon glyphicon-th-list" ng-click="getTemplate('full')"></button>
 				</div>		
-				<button type="submit" class="btn btn-primary">Submit</button>
 			</div>
 		</div>
-	</form>	
+		<br>
+		<button type="submit" class="btn btn-default">Refresh</button>
+	</form>					
 </div>

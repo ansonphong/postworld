@@ -1,19 +1,33 @@
-/**
- * Created by Michel on 9/22/13.
- */
 'use strict';
+
+pwApp.directive('liveFeed', function() {
+    return {
+        restrict: 'A',
+        templateUrl: jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html',
+        replace: true,
+        controller: 'pwLiveFeedController',
+    };
+});
 
 pwApp.controller('pwLiveFeedController',
     function pwLiveFeedController($scope, $location, $log, $attrs, pwData) {
     	//$scope.args.year = '2007';
     	//$scope.args.monthnum= '1';
     	
+    	// TODO move getting templates to app startup
+    	pwData.pw_get_templates(null).then(function(value) {
+		    // TODO should we create success/failure responses here?
+		    console.log('pwData templates=',value);
+		    // resolve pwData.templates
+		    pwData.templates.resolve(value.data);
+		    pwData.templatesFinal = value.data;
+		    console.log('pwData templates=',pwData.templates);
+		  });		  
+    	
     	// should this code be in the feedItem directive?
     	$scope.templateView = 'list';
     	// TODO use get template function
     	$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-'+$scope.templateView+'.html';
-    	
-    	
     	
 		$scope.args = {};
 		$scope.feed_query = {};
@@ -26,7 +40,18 @@ pwApp.controller('pwLiveFeedController',
     	// firstRun is true until we run pw_live_feed once, then it turns to false;
     	$scope.firstRun = true;
     	
-		$scope.getNext = function() {
+		//Handle Emitted Arguments from LoadPanel Children
+		$scope.$on("UPDATE_PARENT", function(event, message){
+		   $log.info('Controller: pwLiveFeedController: ON:UPDATE_PARENT: ',message);
+		   $scope.args.feed_query = message;
+		   });
+		
+		$scope.$on("EXEC_PARENT", function(event, message){
+		   $log.info('Controller: pwLiveFeedController: ON:EXEC_PARENT: ',message);
+		   $scope.pwLiveFeed();
+		   });
+		   
+   		$scope.getNext = function() {
 			// If already getting results, do not run again.
 			if ($scope.busy) {
 				$log.info('Controller: pwLiveFeedController: Method:getNext: Scrolling trigger but the controller is already busy getting data');
@@ -47,13 +72,11 @@ pwApp.controller('pwLiveFeedController',
 			}
 		};
 		$scope.pwLiveFeed = function() {
-			$log.info('Controller: pwLiveFeedController Method:pwLiveFeed invoked');	    	
-			// easy shortcut, for readability in the directive html
-			$scope.args.feed_query = $scope.feed_query;
+			$log.info('Controller: pwLiveFeedController Method:pwLiveFeed invoked');
+			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
 	    	// identify the feed_settings feed_id
 			
 			$log.info('Controller: pwLiveFeedController: Method:pwLiveFeed: feed_id=',$scope.args.feed_id);
-			$log.info('Controller: pwLiveFeedController: Method:pwLiveFeed: Scope=',$scope);
 			//return;
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
@@ -173,4 +196,3 @@ pwApp.controller('pwLiveFeedController',
 		  };
     }
 );
-

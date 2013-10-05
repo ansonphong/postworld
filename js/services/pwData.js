@@ -28,14 +28,46 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 	
 	$log.info('pwData: Constructor: Registering feed_settings', feed_settings);
 	$log.info('pwData: Constructor: Registering feed_data', feed_data);
+	
+	var	getTemplate = function(pwData,grp,type,name) {
+			var template;
+			// TODO can we make this lookup dynamic?
+			switch (grp) {
+				case 'posts':
+					switch (type) {
+						case 'post':
+							template = pwData.templatesFinal.posts[type][name];
+							$log.info('post template:',template);
+							// template = jsVars.pluginurl+'/postworld/templates/posts/'+type+'-'+name+'.html';
+							break;
+						default:
+							template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';
+							break;
+					}
+					break;
+				case 'panels':
+					template = pwData.templatesFinal.panels[name];
+					//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
+					break;
+				default:
+					template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
+					break;
+			}
+			// $log.info('Service: pwData Method:getTemplate template=',template);
+			return template;			
+	};
+	
+	
 	// for Ajax Calls
     var resource = $resource(jsVars.ajaxurl, {action:'wp_action'}, 
     							{	wp_ajax: { method: 'POST', isArray: false, },	}
 							);
-							
+	
     return {
     	feed_settings: feed_settings,
     	feed_data: feed_data,
+    	templates: $q.defer(),
+    	templatesFinal:{},
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
     		nonce = val;
@@ -63,7 +95,6 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			// ensure that feed_query exists
 			//if(!args.feed_query) args.feed_query = {};
 			// shortcut
-			$log.info('Service: pwData Method:pw_live_feed argsTest: ',args);
 			//return;
 			var feed = feed_settings[args.feed_id];
 			// TODO use constants
@@ -113,9 +144,15 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			return this.wp_ajax('pw_get_posts',params);
 		},
 		pw_get_templates: function(templates_object) {
+			// TODO Optimize by running it once and caching it
 			$log.info('Service: pwData Method:pw_get_templates Arguments: ',templates_object);
 			var params = { templates_object:templates_object};			
 			return this.wp_ajax('pw_get_templates',params);
 		},
-    };
+		pw_get_template: function(grp,type,name) {
+			// if templates object already exists, then get value, if not, then retrieve it first
+			var template = getTemplate(this,grp,type,name);
+		    return template;
+		}, // END OF pw_get_template
+   }; // END OF pwData return value
 });

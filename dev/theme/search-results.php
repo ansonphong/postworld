@@ -35,27 +35,15 @@ wp_register_script( "pw-app-JS", WP_PLUGIN_URL.'/postworld/js/app.js' );
 wp_localize_script( 'pw-app-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-app-JS' );
 
-wp_register_script( "pw-LiveFeedController-JS", WP_PLUGIN_URL.'/postworld/js/controllers/pwLiveFeedController.js' );
-wp_localize_script( 'pw-LiveFeedController-JS', 'jsVars', $jsVars);
-wp_enqueue_script( 'pw-LiveFeedController-JS' );
-
-wp_register_script( "pw-LoadPanelController-JS", WP_PLUGIN_URL.'/postworld/js/controllers/pwLoadPanelController.js' );
-wp_localize_script( 'pw-LoadPanelController-JS', 'jsVars', $jsVars);
-wp_enqueue_script( 'pw-LoadPanelController-JS' );
-
-wp_register_script( "pw-PostDetails-JS", WP_PLUGIN_URL.'/postworld/js/directives/PostDetails.js' );
-wp_localize_script( 'pw-PostDetails-JS', 'jsVars', $jsVars);
-wp_enqueue_script( 'pw-PostDetails-JS' );
-
-wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/directives/liveFeed.js' );
+wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js' );
 wp_localize_script( 'pw-LiveFeed-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-LiveFeed-JS' );
 
-wp_register_script( "pw-LoadPanel-JS", WP_PLUGIN_URL.'/postworld/js/directives/loadPanel.js' );
+wp_register_script( "pw-LoadPanel-JS", WP_PLUGIN_URL.'/postworld/js/components/loadPanel.js' );
 wp_localize_script( 'pw-LoadPanel-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-LoadPanel-JS' );
 
-wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/directives/feedItem.js' );
+wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/components/feedItem.js' );
 wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-FeedItem-JS' );
 
@@ -63,7 +51,7 @@ wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData
 wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-pwData-JS' );
 
-wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/directives/ng-infinite-scroll-tcard.js' );
+wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js' );
 
 get_header(); ?>
 <div id="primary" class="site-content" style="width:100%">

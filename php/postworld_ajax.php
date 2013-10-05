@@ -88,6 +88,7 @@ function pw_get_templates_anon() {
 	// $args has all function arguments. in this case it has only one argument
 	// TODO extract real arguments and execute function
 	$pw_args = $args['args'];
+	/*
 	$templates_object = new StdClass;
 	$templates_object->posts = array (
 						'list' => WP_PLUGIN_URL.'/postworld/templates/posts/post-list.html',
@@ -99,13 +100,14 @@ function pw_get_templates_anon() {
 						'feed_header'	=> WP_PLUGIN_URL.'/postworld/templates/panels/feed_header.html',
 						'feed_search'	=> WP_PLUGIN_URL.'/postworld/templates/panels/feed_search.html',
 						);
-						
+	*/					
 	// TODO check results are ok
 	// TODO return success code or failure code , as well as version number with the results.
 	/* set the response type as JSON */
+	$results = pw_get_templates($args['templates_object']);
 	header('Content-Type: application/json');
 	$response['status'] = 200;
-	$response['data'] = $templates_object;
+	$response['data'] = $results;
 	echo json_encode($response);
 	// documentation says that die() should be the end...
 	die();

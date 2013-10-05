@@ -23,10 +23,11 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
  * Use Get Templates for Panels and Posts
  * Create Post Views Directive
  * Do we need Directives for non-post types?
+ * Create Post Types in Search Panel Dynamic
  *   
  * TODO List
  * *********
- * 
+ * Create Startup code that runs at app startup, and put getting templates into it
  * 
  * Adding Feed Item Directive, Update Feed Search with Post Templates Switch
  * 
@@ -41,6 +42,9 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
  * Enhancements
  * *************
  *  Submitting on Enter of any input field related to the loadPanel Directive - http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs
+ * Fix Bootstrap field alignment
+ * Shouldnt we get all templates in pw_get_templates, and cache them to be used across the whole session? this will save many uneeded calls as long as we're on the same SPA session?
+ * we need to add pw_get_template, to get a single template
  * 
  * Testing
  * *******
@@ -52,6 +56,9 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
  * Add Animation
  * Add Scrollbar like Facebook
  * 
+ * Questions
+ * *********
+ * How will the Search and Other Pages be presented? Templates? Pages? Widgets? other?
  * 
  * 
  */

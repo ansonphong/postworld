@@ -1,23 +1,21 @@
-<form role="form" class="form-inline" ng-submit="searchPW()">
-  <div class="form-group">
-	<label class="sr-only" for="Year">Year</label>
-	<input type="text" class="form-control" ng-model="feed_query.year"  ng-blur="pwLiveFeed()" placeholder="Year (YYYY)">
-  </div>
-  <div class="form-group">
-	<label class="sr-only" for="Month">Month</label>
-	<input type="text" class="form-control" ng-model="feed_query.monthnum"  placeholder="Month (1-12)">
-  </div>
-  <div class="form-group">
-	<label class="sr-only" for="Author Name">Author Name</label>
-	<input type="text" class="form-control" ng-model="feed_query.author_name"  placeholder="Autor Name">
-  </div><br/>
-  <div class="form-group">
-	<label class="sr-only" for="Post Class">Post Class</label>
-	<input type="text" class="form-control" ng-model="feed_query.post_class"  placeholder="Post Class">
-  </div>
-  <div class="form-group">
-	<label class="sr-only" for="Posts Per Page">Post Per Page</label>
-	<input type="text" class="form-control" ng-model="feed_query.posts_per_page"  placeholder="Posts Per Page">
-  </div>
-  <button type="submit" class="btn btn-default">Submit</button>
-</form>			
+<div style="padding:10px; background:#f2f2f2">
+		<div class="row">
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.year"  placeholder="Year (YYYY)">
+			</div>
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.monthnum"  placeholder="Month (1-12)">
+			</div>
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.author_name"  placeholder="Autor Name">
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.post_class"  placeholder="Post Class">
+			</div>
+			<div class="form-group input-group col-md-3">
+				<input type="text" class="form-control" ng-model="feed_query.posts_per_page"  placeholder="Posts Per Page">
+			</div>
+		</div>
+</div>
