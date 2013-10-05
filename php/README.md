@@ -1920,6 +1920,7 @@ __callback__ : *string* (optional)
 
 __callback_array__ : *array* (optional)
 - The localized field values to pass to the callback function
+- Derived directly from __object__ key of the same name
 
 
 ------

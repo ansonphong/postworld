@@ -11,8 +11,12 @@ function object_to_array($data){
     return $data;
 }
 
+////////// HELPER FUNCTIONS //////////
 function tax_term_meta( $input ){
-	return array('input'=> json_encode($input) );
+	$term_id = (int)$input[0];
+	$taxonomy = $input[1];
+	$term_meta['url'] = get_term_link( $term_id, $taxonomy );
+	return $term_meta;
 }
 
 
@@ -33,49 +37,44 @@ function branch( $object, $parent = 0, $depth = 0, $settings ){
 
 	 // Setup Local Branch
 	 $branch = array();
-
+	 
 	 // Cycle through each item in the Object
 	 for($i=0, $ni=count($object); $i < $ni; $i++){
-
 	 	// If the current item is the same as the current cycling parent, add the data
 	 	if( $object[$i][$parent_key] == $parent ){
-
 			// Transfer data
 			foreach ($fields as $field) {
 				$branch_child[$field] = $object[$i][$field];
 			}
-
 			// Perform callback
 			if ( $callback ){
 				// If $callback_fields is included, pass that to the callback
 				if (is_array($callback_fields)){
 
 					// Get the live variable values of the callback array inputs 
-					for($ii=0, $nii=count($callback_fields); $ii < $nii; $ii++){
-						// Replace field request with the actual value. Example : id >> 24
-						$callback_fields[$ii] = $branch_child[ $callback_fields[$ii] ];
+					$callback_fields_live = array();
+					foreach( $callback_fields as $field_name ){
+						// Replace field request with the actual value.
+						// Example : id >> 24
+						// Derived from the original $object
+						$field_value = $object[ $i ][ $field_name ];
+						array_push( $callback_fields_live, $field_value );
 					}
-
-					$callback_data = call_user_func_array($callback,array($callback_fields));
-
+					$callback_data = call_user_func_array($callback,array($callback_fields_live));
 				}
 				// Otherwise run the callback with no inputs
 				else {
 					$callback_data = call_user_func($callback);
 				}
-
 				// Merge back the result of the callback
 				$branch_child = array_merge($branch_child, $callback_data);
 			}
-
 	 		// Run Branch recursively and find children
 	 		$children = branch($object, $object[$i][$id_key], $depth+1, $settings);
-
 	 		// If there are children, merge them into the branch_child as sub Array
 	 		if (!empty($children)){
 		 		$branch_child[$child_key] = $children;
 	 		}
-
 	 		// Push Branch Child data to Local Branch
 		 	array_push($branch, $branch_child);
 	 	}
@@ -84,7 +83,8 @@ function branch( $object, $parent = 0, $depth = 0, $settings ){
 }
 
 
-// WP OBJECT TREE : Generates a hierarchical tree from a flat Wordpress object
+////////// WP OBJECT TREE //////////
+// Generates a hierarchical tree from a flat Wordpress object
 function wp_obj_tree($args){
 	extract($args);
 
