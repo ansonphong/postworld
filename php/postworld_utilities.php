@@ -11,7 +11,9 @@ function object_to_array($data){
     return $data;
 }
 
-////////// HELPER FUNCTIONS //////////
+////////// BRANCH HELPER FUNCTIONS //////////
+
+// Get Taxonomy Term Meta
 function tax_term_meta( $input ){
 	$term_id = (int)$input[0];
 	$taxonomy = $input[1];
@@ -19,9 +21,8 @@ function tax_term_meta( $input ){
 	return $term_meta;
 }
 
-
 //////////// BRANCH : Create a recursive branch from a flat object ////////////
-function branch( $object, $parent = 0, $depth = 0, $settings ){
+function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 	extract($settings);
 
 	///// DEFAULTS /////
@@ -37,7 +38,7 @@ function branch( $object, $parent = 0, $depth = 0, $settings ){
 
 	 // Setup Local Branch
 	 $branch = array();
-	 
+
 	 // Cycle through each item in the Object
 	 for($i=0, $ni=count($object); $i < $ni; $i++){
 	 	// If the current item is the same as the current cycling parent, add the data
@@ -50,7 +51,6 @@ function branch( $object, $parent = 0, $depth = 0, $settings ){
 			if ( $callback ){
 				// If $callback_fields is included, pass that to the callback
 				if (is_array($callback_fields)){
-
 					// Get the live variable values of the callback array inputs 
 					$callback_fields_live = array();
 					foreach( $callback_fields as $field_name ){
@@ -70,7 +70,7 @@ function branch( $object, $parent = 0, $depth = 0, $settings ){
 				$branch_child = array_merge($branch_child, $callback_data);
 			}
 	 		// Run Branch recursively and find children
-	 		$children = branch($object, $object[$i][$id_key], $depth+1, $settings);
+	 		$children = tree_obj($object, $object[$i][$id_key], $depth+1, $settings);
 	 		// If there are children, merge them into the branch_child as sub Array
 	 		if (!empty($children)){
 		 		$branch_child[$child_key] = $children;
@@ -85,7 +85,7 @@ function branch( $object, $parent = 0, $depth = 0, $settings ){
 
 ////////// WP OBJECT TREE //////////
 // Generates a hierarchical tree from a flat Wordpress object
-function wp_obj_tree($args){
+function wp_tree_obj($args){
 	extract($args);
 
 	// OBJECT -> ARRAY()
@@ -103,7 +103,7 @@ function wp_obj_tree($args){
 			'callback_fields' => $callback_fields,
 			);
 
-		$tree_obj = branch( $object, 0, 0, $settings, $fields );
+		$tree_obj = tree_obj( $object, 0, 0, $settings );
 
 	return $tree_obj;
 }
