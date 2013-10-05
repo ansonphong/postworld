@@ -38,6 +38,7 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
  * 
  * Issues
  * ******
+ * Make the Infinite Scroller reset scrolling up when refreshing
  * 
  * Enhancements
  * *************

@@ -19,6 +19,10 @@ pwApp.controller('pwFeedItemController',
     	// Load Template URL
 		pwData.templates.promise.then(function(value) {
 	    	$scope.templateUrl = pwData.pw_get_template('posts','post',$attrs.view);
-		  });		      	
+		  });
+		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feedTemplateUrl){
+		   $log.info('Directive:feedItem Controller: pwFeedItemController: ON:FEED_TEMPLATE_UPDATE - EMIT Received: ',feedTemplateUrl);
+		   $scope.templateUrl = feedTemplateUrl;
+		   });		  		      	
     }
 );

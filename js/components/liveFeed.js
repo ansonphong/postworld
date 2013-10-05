@@ -42,13 +42,19 @@ pwApp.controller('pwLiveFeedController',
     	
 		//Handle Emitted Arguments from LoadPanel Children
 		$scope.$on("UPDATE_PARENT", function(event, message){
-		   $log.info('Controller: pwLiveFeedController: ON:UPDATE_PARENT: ',message);
+		   $log.info('Controller: pwLiveFeedController: ON:UPDATE_PARENT - EMIT Received: ',message);
 		   $scope.args.feed_query = message;
 		   });
 		
 		$scope.$on("EXEC_PARENT", function(event, message){
-		   $log.info('Controller: pwLiveFeedController: ON:EXEC_PARENT: ',message);
+		   $log.info('Controller: pwLiveFeedController: ON:EXEC_PARENT - EMIT Received: ',message);
 		   $scope.pwLiveFeed();
+		   });
+		   
+		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, feedTemplateUrl){
+		   $log.info('Controller: pwLiveFeedController: ON:CHANGE_FEED_TEMPLATE - EMIT Received: ',feedTemplateUrl);
+		   // Broadcast to all children
+			$scope.$broadcast("FEED_TEMPLATE_UPDATE", feedTemplateUrl);		   		   
 		   });
 		   
    		$scope.getNext = function() {
@@ -77,7 +83,8 @@ pwApp.controller('pwLiveFeedController',
 	    	// identify the feed_settings feed_id
 			
 			$log.info('Controller: pwLiveFeedController: Method:pwLiveFeed: feed_id=',$scope.args.feed_id);
-			//return;
+			// TODO should we clear everything now, or after the ajax returns?
+			$scope.items = {};
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
         	pwData.pw_live_feed($scope.args).then(

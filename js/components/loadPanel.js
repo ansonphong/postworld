@@ -34,7 +34,10 @@ pwApp.controller('pwLoadPanelController',
 		$scope.clsOrder = 'glyphicon-arrow-up';
 		$scope.feed_query.order = 'ASC';
 		
-		$scope.changeTemplate = function(template) {
+		$scope.changeTemplate = function(view) {
+			$log.info('Directive:LoadPanel Controller:pwLoadPanelController ChangeTemplate:',view);
+	    	var feedTemplateUrl = pwData.pw_get_template('posts','post',view);
+    		this.$emit("CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	
 		};		
 
 		$scope.toggleOrder = function() {
