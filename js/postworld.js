@@ -166,7 +166,8 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 				select_items = "";
 
 				// Define select options object
-				select_options = window[attrs.editField];
+				sub_object = attrs.editField;
+				select_options = window[object];
 
 				// Loop through each item in the editField object
 				angular.forEach( select_options, function(value, key){

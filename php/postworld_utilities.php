@@ -11,6 +11,22 @@ function object_to_array($data){
     return $data;
 }
 
+////////// EDIT POST HELP FUNCTIONS //////////
+
+function get_user_post_types(){
+	//$user_role = get_user_role();
+
+	$args = array(
+	   'public'   => true,
+	   //'_builtin' => false,
+	   'capability_type' => 'post',
+	);
+	$post_types = get_post_types( $args, 'names');
+
+	return $post_types;
+
+}
+
 ////////// BRANCH HELPER FUNCTIONS //////////
 
 // Get Taxonomy Term Meta
