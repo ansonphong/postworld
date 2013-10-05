@@ -2021,7 +2021,8 @@ array(
 ### wp_tree_obj ( *$args* )
 
 #### Description
-- A wrapper for `branch()` Method for taking WP Objects
+- A wrapper for `tree_obj()` Method for taking WP Objects
+- Used to organize __comments__, __posts__ or __terms__ heirarchically
 
 #### Usage
 
@@ -2039,16 +2040,7 @@ $args = array(
 $heirarchy = wp_obj_organize_hierarchical( $args );
 
 ```
-
-
-#### Notes
-- Pass a WP object with 'parent' values
-- Organize into hierarchical object
-- Used to organize comments, posts or terms heirarchically into an object
-
-- Make way to get meta data, such as comment points or term_link, etc. with action hook at per item level
-- takes helper Function which returns an object which is merged into each item
-
+------
 
 
 
