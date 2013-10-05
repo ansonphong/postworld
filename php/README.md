@@ -2037,7 +2037,7 @@ $args = array(
 	'callback' => $callback,
 	'callback_fields' => $callback_fields,
 )
-$heirarchy = wp_obj_organize_hierarchical( $args );
+$heirarchy = wp_tree_obj( $args );
 
 ```
 ------
