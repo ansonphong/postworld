@@ -29,6 +29,7 @@ pwApp.controller('pwFeedItemController',
 			   if (pwData.feed_settings[FeedID].view.current)
 			   		view = pwData.feed_settings[FeedID].view.current;
 		    	$scope.templateUrl = pwData.pw_get_template('posts','post',view);
+				// $log.info('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
 		});
 		  
 		// Template Update Event

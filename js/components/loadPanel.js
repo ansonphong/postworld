@@ -14,16 +14,27 @@ pwApp.directive('loadPanel', function($log, pwData) {
 
 pwApp.controller('pwLoadPanelController',
     function pwLoadPanelController($scope, $location, $log, pwData, $attrs) {    	
-    	// Test Code, remove
-	    $log.info('Directive:LoadPanel Controller: pwLoadPanelController: feed_id - outside watch =',$scope.feedId);            
-    	// Test Code, remove
     	
+		
+		
+		// TODO Get Default Values from Settings 
 		$scope.feed_query = {};
-    	// Load Template URL
+		
+		
+		// Set Panel Template
 		pwData.templates.promise.then(function(value) {
-			// $log.info('Directive:LoadPanel Controller:pwLoadPanelController Can we get this',$attrs.liveFeed);
-	    	$scope.templateUrl = pwData.pw_get_template('panels','panel',$attrs.loadPanel);
-		  });
+				var FeedID = $scope.feedId;
+				var template = 'feed_top';	// TODO get from Constant values
+				if (!$scope.feedId) {
+					$log.info('no valid Feed ID provided in Feed Settings');
+					return;
+				}
+			   // Get Default View Name
+			   if (pwData.feed_settings[FeedID].panels[$attrs.loadPanel])
+			   		template = pwData.feed_settings[FeedID].panels[$attrs.loadPanel];
+		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
+				$log.info('Directive:LoadPanel Controller:pwLoadPanelController Set Initial Panel Template to ',template, $scope.templateUrl);
+		});		
 
 		$scope.UpdateArguments= function() {
 			$log.info('Directive:LoadPanel Controller:pwLoadPanelController UpdateArguments',$scope);
@@ -40,7 +51,7 @@ pwApp.controller('pwLoadPanelController',
 		$scope.clsOrder = 'glyphicon-arrow-up';
 		$scope.feed_query.order = 'ASC';
 		
-		$scope.changeTemplate = function(view) {
+		$scope.changeFeedTemplate = function(view) {
 			$log.info('Directive:LoadPanel Controller:pwLoadPanelController ChangeTemplate:',view);
 	    	var feedTemplateUrl = pwData.pw_get_template('posts','post',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	

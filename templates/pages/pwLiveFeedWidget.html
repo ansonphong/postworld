@@ -5,7 +5,10 @@
 		offset: 0,
 		max_posts:200,
 		// order_by : '-post_points',
-		panel : 'feed_top',
+		panels : {
+			'panel1'	: 'feed_header',	
+			'panel2'	: 'feed_search',	
+		},
 		view : {
 			current : 'detail',
 			options : ['list','detail', 'grid','full']

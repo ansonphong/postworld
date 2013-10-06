@@ -102,7 +102,6 @@ pwApp.controller('pwLiveFeedController',
         	pwData.pw_live_feed($scope.args).then(
 				// Success
 				function(response) {	
-					$log.info('Controller: pwLiveFeedController Method:pw_live_feed ServiceReturned');
 					// TODO should we set busy to false when error is returned?
 					$scope.busy = false;
 					if (response.status === undefined) {
@@ -110,7 +109,6 @@ pwApp.controller('pwLiveFeedController',
 						return;
 					}
 					if (response.status==200) {
-						$log.info('Controller: pwLiveFeedController Method:pw_live_feed Success with data:',response.data);
 						// Reset Feed Data
 						pwData.feed_data[$attrs.liveFeed] = {};
 						// Insert Response in Feed Data
