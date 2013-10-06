@@ -25,7 +25,7 @@ pwApp.controller('pwFeedItemController',
 					$log.info('no valid Feed ID provided in Feed Settings');
 					return;
 				}
-			   // Get Default View Name
+			   // Get Default View Name - TODO if the default view changes, then we need to get it from live feed directive instead
 			   if (pwData.feed_settings[FeedID].view.current)
 			   		view = pwData.feed_settings[FeedID].view.current;
 		    	$scope.templateUrl = pwData.pw_get_template('posts','post',view);

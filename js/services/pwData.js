@@ -91,27 +91,15 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
             return deferred.promise;		
 		},
 		pw_live_feed: function(args) {
-			// get additional params from feed_settings
-			// ensure that feed_query exists
-			//if(!args.feed_query) args.feed_query = {};
-			// shortcut
-			//return;
-			var feed = feed_settings[args.feed_id];
-			// TODO use constants
-			// TODO Sanity check for values, max, min, positive, negative, etc...
-			if (feed.preload != null) args.preload = feed.preload; else args.preload = 10;  
-			// Set a hard Max for performance consideration - use constant
-			if (feed.max_posts != null) args.feed_query.posts_per_page = feed.max_posts; else args.feed_query.posts_per_page = 1000;
-			 
-			// TODO check for +/- values for asc/desc
-			if (feed.order_by != null) args.feed_query.orderby = feed.order_by;
-			if (feed.offset != null) args.feed_query.offset = feed.offset;
-			 
-			// QUESTION: Which overrides which, order_by, offset, max_posts, or other query_args in the query args field?
-			// TODO add query args [don't we already get them from UI? but we need to get them from feed_settings too]
+			// args: arguments received from Panel. fargs: is the final args sent along the ajax call.
+			// fargs will be filled initially with data from feed settings, 
+			// fargs will be filled next from data in the args parameters
+			
+			var fargs = this.convertFeedSettings(args.feed_id); // will read settings and put them in fargs
+			fargs = this.mergeFeedQuery(fargs,args); // will read args and override fargs
 			   
-			var params = {args:args};
-			$log.info('Service: pwData Method:pw_live_feed Arguments: ',args);
+			var params = {args:fargs};
+			$log.info('Service: pwData Method:pw_live_feed Arguments: ',fargs);
 			return this.wp_ajax('pw_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {
@@ -130,6 +118,7 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
 			var idBegin = feedData.loaded.length;
+			// TODO Check if load_increment exists
 			var idEnd = idBegin+feedSettings.load_increment;
 			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);
 			var fields;
@@ -154,5 +143,42 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			var template = getTemplate(this,grp,type,name);
 		    return template;
 		}, // END OF pw_get_template
+		convertFeedSettings: function (feedID) {
+			var fargs = {};
+			fargs.feed_query = {};
+			//if(!args.feed_query) args.feed_query = {};
+			// TODO use constants from app settings
+			// Get Feed_Settings Parameters
+			var feed = feed_settings[feedID];
+			// Query Args will fill in the feed_query first, then any other parameter in the feed will override it, then any user parameter will override all
+			if (feed.query_args != null) fargs.feed_query = feed.query_args;  
+			if (feed.preload != null) fargs.preload = feed.preload; else fargs.preload = 10;  
+			if (feed.offset	!= null) fargs.offset = feed.offset; else fargs.offset = 0;  
+			if (feed.max_posts != null) fargs.feed_query.posts_per_page = feed.max_posts; else fargs.feed_query.posts_per_page = 1000;
+			 
+			if (feed.order_by != null) {
+				// if + sort Ascending
+				if (feed.order_by.charAt(0)=='+') fargs.feed_query.order = 'ASC';
+				// if - sort Descending				
+				else  if (feed.order_by.charAt(0)=='-') fargs.feed_query.order = 'DESC';
+				else fargs.feed_query.order = 'ASC';
+				// If + or - then remove the first character
+				if ((feed.order_by.charAt(0)=='+') || (feed.order_by.charAt(0)=='-')) {
+					fargs.feed_query.order_by = feed.order_by.slice(1);
+				}
+			}	// else the default whatever it is, is used
+			if (feed.offset != null) fargs.feed_query.offset = feed.offset; // else the default is zero 
+			fargs.feed_id = feedID;
+			return fargs;			
+		},
+		mergeFeedQuery: function (fargs,args) {
+			if (args.feed_query) {
+				for (var prop in args.feed_query) {
+				    fargs.feed_query[prop] = args.feed_query[prop];
+				    //$log.info("args.feed_query",prop,args.feed_query[prop],fargs.feed_query[prop]);
+				}
+			}
+			return fargs;
+		}
    }; // END OF pwData return value
 });

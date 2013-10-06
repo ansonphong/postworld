@@ -32,10 +32,10 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
  * 
  * Issues
  * ******
- * Make the Infinite Scroller reset scrolling up when refreshing
- * Get Default Post View and Default Panel View from settings
  * populate panel defaults from feed_settings
  * Button for Feed Templates need to be toggled
+ * Feed_Settings: 
+ * NONCE - not active yet
  * 
  * Enhancements
  * *************

@@ -14,12 +14,8 @@ pwApp.directive('loadPanel', function($log, pwData) {
 
 pwApp.controller('pwLoadPanelController',
     function pwLoadPanelController($scope, $location, $log, pwData, $attrs) {    	
-    	
-		
-		
-		// TODO Get Default Values from Settings 
+	
 		$scope.feed_query = {};
-		
 		
 		// Set Panel Template
 		pwData.templates.promise.then(function(value) {
@@ -29,6 +25,9 @@ pwApp.controller('pwLoadPanelController',
 					$log.info('no valid Feed ID provided in Feed Settings');
 					return;
 				}
+				// Get Default Argument Values
+				$scope.feed_query = pwData.convertFeedSettings($scope.feedId).feed_query;
+				$log.info("LoadPanel Scope",$scope.feed_query);
 			   // Get Default View Name
 			   if (pwData.feed_settings[FeedID].panels[$attrs.loadPanel])
 			   		template = pwData.feed_settings[FeedID].panels[$attrs.loadPanel];
@@ -43,30 +42,26 @@ pwApp.controller('pwLoadPanelController',
     		this.$emit("EXEC_PARENT", $scope.feed_query);
 		};
 		  
-    	//if (!$scope.feed_query) $scope.feed_query = {};
-    	// On Change trigger LiveFeed Controller to search again
-		
-    	// should this code be in the feedItem directive?
-		var order = true; // true is ascending and false is descending
-		$scope.clsOrder = 'glyphicon-arrow-up';
-		$scope.feed_query.order = 'ASC';
-		
+
+
+    	// TODO check best location for that code, should we create a panel child?
+		$scope.toggleOrder = function() {
+			if ($scope.feed_query.order == 'ASC') {
+				$scope.feed_query.order = 'DESC';
+			} else $scope.feed_query.order = 'ASC';
+		};		
+		$scope.$watch('feed_query.order', function(value) {
+ 			if (value == 'DESC') {
+				$scope.clsOrder ='glyphicon-arrow-down'; 				
+ 			} else if (value == 'ASC') {
+				$scope.clsOrder ='glyphicon-arrow-up';		
+ 			}
+		}); 
+				
 		$scope.changeFeedTemplate = function(view) {
 			$log.info('Directive:LoadPanel Controller:pwLoadPanelController ChangeTemplate:',view);
 	    	var feedTemplateUrl = pwData.pw_get_template('posts','post',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	
-		};		
-
-		$scope.toggleOrder = function() {
-			order = !order;
-			if (order==true) {
-				$scope.clsOrder ='glyphicon-arrow-up';
-				$scope.feed_query.order = 'ASC';
-			}
-			else  {
-				$scope.clsOrder ='glyphicon-arrow-down';
-				$scope.feed_query.order = 'DESC';
-			}
 		};		
     	
     }

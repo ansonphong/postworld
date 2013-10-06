@@ -11,22 +11,15 @@ pwApp.directive('liveFeed', function() {
 
 pwApp.controller('pwLiveFeedController',
     function pwLiveFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
-    	//$scope.args.year = '2007';
-    	//$scope.args.monthnum= '1';
-		$scope.feedid = $attrs.liveFeed;
-    	
-		// Emit FEED_ID to children
-		$scope.$on("GET_FEED_ID", function(event, message){
-		   $log.info('Controller: pwLiveFeedController: ON:GET_FEED_ID - EMIT Received: ',message);
-		   //$scope.$broadcast("FEED_ID", $attrs.liveFeed);
-		   });
-    	/*
-    	// Broadcast Feed ID After getting Templates
-		var broadcastFeedID = $timeout(function() {
-					    		console.log('Directive:LiveFeed Controller: pwLiveFeedController: Broadcasting FEED_ID',$attrs.liveFeed);
-								$scope.$broadcast("FEED_ID", $attrs.liveFeed);		   		   	      
-				    		}, 1000);
-		*/
+    	// Initialize
+    	$scope.busy = false; 				// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
+    	$scope.firstRun = true; 			// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
+		$scope.args = {};
+		$scope.feed_query = {};
+    	$scope.items = [];					// List of Post Items displayed in Scroller
+    	$scope.args.feed_id = $attrs.liveFeed; // This Scope variable will propagate to all directives inside Live Feed
+    	// Get Data from Feed_Settings
+			   
     	// TODO move getting templates to app startup
     	pwData.pw_get_templates(null).then(function(value) {
 		    // TODO should we create success/failure responses here?
@@ -34,32 +27,17 @@ pwApp.controller('pwLiveFeedController',
 		    pwData.templates.resolve(value.data);
 		    pwData.templatesFinal = value.data;
 		    console.log('Directive:LiveFeed Controller: pwLiveFeedController: templates=',pwData.templatesFinal);
-		  });		  
-    	
-    	// should this code be in the feedItem directive?
-    	$scope.templateView = 'list';
-    	// TODO use get template function
-    	$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-'+$scope.templateView+'.html';
-    	
-		$scope.args = {};
-		$scope.feed_query = {};
-    	$scope.items = [];
-    	$scope.args.feed_id = $attrs.liveFeed;
-    	
-    	// busy means that the service is now running to get data for this controller
-    	$scope.busy = false;
-    	
-    	// firstRun is true until we run pw_live_feed once, then it turns to false;
-    	$scope.firstRun = true;
+		  });		      	    	
     	
 		//Handle Emitted Arguments from LoadPanel Children
 		$scope.$on("UPDATE_PARENT", function(event, message){
 		   $log.info('Controller: pwLiveFeedController: ON:UPDATE_PARENT - EMIT Received: ',message);
 		   $scope.args.feed_query = message;
+		   $log.info('Controller: pwLiveFeedController: ON:UPDATE_PARENT - EMIT Received: args=',$scope.args.feed_query);
 		   });
 		
 		$scope.$on("EXEC_PARENT", function(event, message){
-		   $log.info('Controller: pwLiveFeedController: ON:EXEC_PARENT - EMIT Received: ',message);
+		   $log.info('Controller: pwLiveFeedController: ON:EXEC_PARENT - EMIT Received: args=',$scope.args.feed_query);
 		   $scope.pwLiveFeed();
 		   });
 		   
@@ -89,20 +67,17 @@ pwApp.controller('pwLiveFeedController',
 				$scope.pwScrollFeed();				
 			}
 		};
+		
 		$scope.pwLiveFeed = function() {
-			$log.info('Controller: pwLiveFeedController Method:pwLiveFeed invoked');
 			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
 	    	// identify the feed_settings feed_id
 			
-			$log.info('Controller: pwLiveFeedController: Method:pwLiveFeed: feed_id=',$scope.args.feed_id);
-			// TODO should we clear everything now, or after the ajax returns?
 			$scope.items = {};
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
         	pwData.pw_live_feed($scope.args).then(
 				// Success
 				function(response) {	
-					// TODO should we set busy to false when error is returned?
 					$scope.busy = false;
 					if (response.status === undefined) {
 						console.log('response format is not recognized');
@@ -142,13 +117,11 @@ pwApp.controller('pwLiveFeedController',
 				},
 				// Failure
 				function(response) {
+					$scope.busy = false;
 					$log.error('Controller: pwLiveFeedController Method:pw_live_feed Failure with response:',response);
-					// console.log('failure',response);
-					// TODO how to handle error?
+					// TODO Show User Friendly Message
 				}
 			);
-			// $scope.args = {};
-			// $scope.feed_query = {};
 		  };
 		$scope.pwScrollFeed = function() {
 			$log.info('Controller: pwLiveFeedController Method:pwScrollFeed invoked');
@@ -168,11 +141,10 @@ pwApp.controller('pwLiveFeedController',
         	pwData.pw_get_posts($scope.args).then(
 				// Success
 				function(response) {
-					$log.info('Controller: pwLiveFeedController Method:pwScrollFeed ServiceReturned');
-					// TODO should we set busy to false when error is returned?
 					$scope.busy = false;
 					if (response.status === undefined) {
 						console.log('response format is not recognized');
+						// TODO Show User Friendly Error Message
 						return;
 					}
 					if (response.status==200) {
@@ -190,26 +162,21 @@ pwApp.controller('pwLiveFeedController',
 						  }
 						// Update feed data with newly loaded posts
 						$log.info('Controller: pwLiveFeedController Method:pwScrollFeed Success feed_data:',pwData.feed_data[$scope.args.feed_id]);
-						$scope.busy = false;							
 						return response.data;
 						
 					} else {
 						// handle error
 						console.log('error',response.status,response.message);
-						// TODO should we set busy to false when error is returned?
+						// TODO Show User Friendly Error Message
 					}
-					// return response.posts;
 				},
 				// Failure
 				function(response) {
 					$log.error('Controller: pwLiveFeedController Method:pwScrollFeed Failure with response:',response);
-					// console.log('failure',response);
-					// TODO how to handle error?
+					$scope.busy = false;
+					// TODO Show User Friendly Error Message
 				}
 			);
-			// TODO we need to find a way to remove this workaround of resetting the args
-			// $scope.args = {};
-			// $scope.feed_query = {};
 		  };
     }
 );
