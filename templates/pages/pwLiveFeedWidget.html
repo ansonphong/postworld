@@ -4,10 +4,10 @@
 		load_increment : 5,
 		offset: 0,
 		max_posts:200,
-		order_by : '+post_points',
+		xorder_by : '+post_points',
 		panels : {
-			'panel1'	: 'feed_header',	
-			'panel2'	: 'feed_search',	
+			'panel1'	: 'feed_search',	
+			'panel2'	: 'feed_header',	
 		},
 		view : {
 			current : 'detail',
@@ -15,6 +15,9 @@
 		},
 		query_args : {
 			// query args in JSON format
+			'order_by': 'date',
+			'year'	: '2009',
+			's'	: 'h',
 		},
 	};
 </script>

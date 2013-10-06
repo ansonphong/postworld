@@ -1,5 +1,8 @@
 <div>
-	<div load-panel="panel1" ng-include="templateUrl" feed-id='args.feed_id'></div>
+	<div load-panel="panel1" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwLiveFeed()"></div>
+	<br>
+	<div load-panel="panel2" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwLiveFeed()"></div>
+	<input type="hidden">	
 	<br/>
     <div id="scrollMe" style="height: 600px; overflow-y: scroll;">
 	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
