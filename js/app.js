@@ -60,7 +60,6 @@ pwApp.directive('ngEnter', function() {
  * 
  * Testing
  * *******
- * Test Multiple Panels in same page
  * Test Multiple Feeds in same page
  * 
  * UI Enhancements

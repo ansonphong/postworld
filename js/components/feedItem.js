@@ -34,7 +34,7 @@ pwApp.controller('pwFeedItemController',
 		  
 		// Template Update Event
 		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feedTemplateUrl){
-		   $log.info('Directive:feedItem Controller: pwFeedItemController: ON:FEED_TEMPLATE_UPDATE - EMIT Received: ',feedTemplateUrl);
+		   $log.info('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
 		   $scope.templateUrl = feedTemplateUrl;
 		   });		  		      	
     }

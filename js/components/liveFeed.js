@@ -6,6 +6,9 @@ pwApp.directive('liveFeed', function() {
         templateUrl: jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html',
         replace: true,
         controller: 'pwLiveFeedController',
+        scope : {
+        	
+        }
     };
 });
 
@@ -19,16 +22,15 @@ pwApp.controller('pwLiveFeedController',
 		$scope.feed_query = {};
     	$scope.items = [];					// List of Post Items displayed in Scroller
     	$scope.args.feed_id = $attrs.liveFeed; // This Scope variable will propagate to all directives inside Live Feed
-	    console.log('feed_id =',$scope.args.feed_id);
-    	// Get Data from Feed_Settings
-			   
+    	
+    	// Get Data from Feed_Settings			   
     	// TODO move getting templates to app startup
     	pwData.pw_get_templates(null).then(function(value) {
 		    // TODO should we create success/failure responses here?
 		    // resolve pwData.templates
 		    pwData.templates.resolve(value.data);
 		    pwData.templatesFinal = value.data;
-		    console.log('Directive:LiveFeed Controller: pwLiveFeedController: templates=',pwData.templatesFinal);
+		    console.log('pwLiveFeedController templates=',pwData.templatesFinal);
 		  });		      	    	
     	
     	
@@ -53,28 +55,28 @@ pwApp.controller('pwLiveFeedController',
 		   });
 		 */ 
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, feedTemplateUrl){
-		   $log.info('Controller: pwLiveFeedController: ON:CHANGE_FEED_TEMPLATE - EMIT Received: ',feedTemplateUrl);
+		   $log.info('pwLiveFeedController: Event Received:CHANGE_FEED_TEMPLATE',feedTemplateUrl);
 		   // Broadcast to all children
-			$scope.$broadcast("FEED_TEMPLATE_UPDATE", feedTemplateUrl);		   		   
+			$scope.$broadcast("pwLiveFeedController: Broadcast: FEED_TEMPLATE_UPDATE", feedTemplateUrl);		   
 		   });
 		   
    		$scope.getNext = function() {
 			// If already getting results, do not run again.
 			if ($scope.busy) {
-				$log.info('Controller: pwLiveFeedController: Method:getNext: Scrolling trigger but the controller is already busy getting data');
+				$log.info('pwLiveFeedController.getNext: We\'re Busy, Wait!');
 				return;
 				}
 			$scope.busy = true;
 			// if running for the first time, do this
 			if ($scope.firstRun) {
-				$log.info('Controller: pwLiveFeedController: Method:getNext: Running for the first time');
+				$log.info('pwLiveFeedController.getNext: Running for the first time');
 				$scope.firstRun = false;
 				$scope.pwLiveFeed();
 			}
 			// otherwise, do this
 			else {
 				// Run Search
-				$log.info('Controller: pwLiveFeedController: Method:getNext: Running for next time');
+				$log.info('pwLiveFeedController.getNext: Scrolling More');
 				$scope.pwScrollFeed();				
 			}
 		};
@@ -110,7 +112,7 @@ pwApp.controller('pwLiveFeedController',
 						} else
 							pwData.feed_data[$attrs.liveFeed].status = 'loaded';						
 						
-						$log.info('Controller: pwLiveFeedController Method:pw_live_feed Success pwData.feed_data:',pwData.feed_data[$attrs.liveFeed]);
+						$log.info('pwLiveFeedController.pw_live_feed Success',pwData.feed_data[$attrs.liveFeed]);
 						
 						// Clear Items from $scope 
 						// $scope.posts = response.data.post_data;
@@ -129,23 +131,22 @@ pwApp.controller('pwLiveFeedController',
 				// Failure
 				function(response) {
 					$scope.busy = false;
-					$log.error('Controller: pwLiveFeedController Method:pw_live_feed Failure with response:',response);
+					$log.error('pwLiveFeedController.pw_live_feed Failure',response);
 					// TODO Show User Friendly Message
 				}
 			);
 		  };
 		$scope.pwScrollFeed = function() {
-			$log.info('Controller: pwLiveFeedController Method:pwScrollFeed invoked');
 			// Check if all Loaded, then return and do nothing
 			if (pwData.feed_data[$attrs.liveFeed].status == 'all_loaded') {
-				$log.info('Controller: pwLiveFeedController Method:pwScrollFeed ALL LOADED - NO MORE POSTS');				
+				$log.info('pwLiveFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
 				return;
 			};		
 			// TODO do we need to set the loading status? or just use the busy flag?
 			pwData.feed_data[$attrs.liveFeed].status = 'loading';
 			
 			
-			$log.info('Controller: pwLiveFeedController: Method:pwScrollFeed: feed_id=',$scope.args.feed_id);
+			$log.info('pwLiveFeedController.pwScrollFeed For',$scope.args.feed_id);
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
 			// console.log('Params=',$scope.args);
@@ -159,7 +160,7 @@ pwApp.controller('pwLiveFeedController',
 						return;
 					}
 					if (response.status==200) {
-						$log.info('Controller: pwLiveFeedController Method:pwScrollFeed Success with data:',response.data);
+						$log.info('pwLiveFeedController.pwScrollFeed Success',response.data);
 						// Add Results to controller items						
 						//$scope.posts = response.data;
 						var newItems = response.data;
@@ -172,7 +173,7 @@ pwApp.controller('pwLiveFeedController',
 							// $log.info('$scope.items has',$scope.items.length,' items');							
 						  }
 						// Update feed data with newly loaded posts
-						$log.info('Controller: pwLiveFeedController Method:pwScrollFeed Success feed_data:',pwData.feed_data[$scope.args.feed_id]);
+						$log.info('pwLiveFeedController.pwScrollFeed Success feed_data:',pwData.feed_data[$scope.args.feed_id]);
 						return response.data;
 						
 					} else {
@@ -183,7 +184,7 @@ pwApp.controller('pwLiveFeedController',
 				},
 				// Failure
 				function(response) {
-					$log.error('Controller: pwLiveFeedController Method:pwScrollFeed Failure with response:',response);
+					$log.error('pwLiveFeedController.pwScrollFeed Failure',response);
 					$scope.busy = false;
 					// TODO Show User Friendly Error Message
 				}

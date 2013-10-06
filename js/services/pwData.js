@@ -26,8 +26,7 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 	
 	var feed_data = {};
 	
-	$log.info('pwData: Constructor: Registering feed_settings', feed_settings);
-	$log.info('pwData: Constructor: Registering feed_data', feed_data);
+	$log.info('pwData() Registering feed_settings', feed_settings);
 	
 	var	getTemplate = function(pwData,grp,type,name) {
 			var template;
@@ -78,7 +77,7 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
     	},
     	// A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
 		wp_ajax: function(fname, args) {
-			$log.info('Service: pwData Method:wp_ajax Arguments: ','fname: ', fname, 'args: ',args);
+			$log.info('pwData.wp_ajax', fname, 'args: ',args);
             var deferred = $q.defer();
             // works only for non array returns
             resource.wp_ajax({action:fname},{args:args,nonce:this.getNonce()},
@@ -99,16 +98,16 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			fargs = this.mergeFeedQuery(fargs,args); // will read args and override fargs
 			   
 			var params = {args:fargs};
-			$log.info('Service: pwData Method:pw_live_feed Arguments: ',fargs);
+			$log.info('pwData.pw_live_feed',fargs);
 			return this.wp_ajax('pw_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {
-			$log.info('Service: pwData Method:pw_scroll_feed Arguments: ',args);
+			$log.info('pwData.pw_scroll_feed',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_scroll_feed',params);
 		},
 		o_embed: function(url,args) {
-			$log.info('Service: pwData Method:o_embed Arguments: ',args);
+			$log.info('pwData.o_embed',args);
 			var params = { url:url, args:args};
 			return this.wp_ajax('o_embed',params);
 		},
@@ -126,15 +125,15 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			if (feedSettings.query_args.fields != null) {
 				fields = feedSettings.query_args.fields;
 			}
-			$log.info('Service: pwData Method:pw_get_posts BeginID, EndID: ',idBegin, idEnd);
+			$log.info('pwData.pw_get_posts range:',idBegin, idEnd);
 			// Set Fields
 			var params = { feed_id:args.feed_id, post_ids:postIDs, fields:fields};
-			$log.info('Service: pwData Method:pw_get_posts Arguments: ',params);
+			$log.info('pwData.pw_get_posts',params);
 			return this.wp_ajax('pw_get_posts',params);
 		},
 		pw_get_templates: function(templates_object) {
 			// TODO Optimize by running it once and caching it
-			$log.info('Service: pwData Method:pw_get_templates Arguments: ',templates_object);
+			$log.info('pwData.pw_get_templates',templates_object);
 			var params = { templates_object:templates_object};			
 			return this.wp_ajax('pw_get_templates',params);
 		},

@@ -31,9 +31,8 @@ pwApp.controller('pwLoadPanelController',
 			   if (pwData.feed_settings[FeedID].panels[$attrs.loadPanel])
 			   		template = pwData.feed_settings[FeedID].panels[$attrs.loadPanel];
 		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-				$log.info('Directive:LoadPanel Controller:pwLoadPanelController Set Initial Panel Template to ',template, $scope.templateUrl);
-		});
-				
+				$log.info('pwLoadPanelController() Set Initial Panel Template',FeedID, template, $scope.templateUrl);
+		});				
 
     	// the below is not needed since we are using args.feed_query from parent directive live-feed into load-panel 
 		/*
@@ -65,9 +64,9 @@ pwApp.controller('pwLoadPanelController',
 		
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function(view) {
-			$log.info('Directive:LoadPanel Controller:pwLoadPanelController ChangeTemplate:',view);
+			$log.info('pwLoadPanelController.changeFeedTemplate ChangeTemplate',view);
 	    	var feedTemplateUrl = pwData.pw_get_template('posts','post',view);
-    		this.$emit("CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	
+    		this.$emit("pwLoadPanelController.changeFeedTemplate Emit CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	
 		};		
     	
     }
