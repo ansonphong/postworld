@@ -115,7 +115,16 @@ function postworld_install() {
       query_args MEDIUMTEXT  NULL,
       UNIQUE KEY cron_run_id (cron_run_id)
     );";  
-    
+  
+  $shares_table_name = $wpdb->pw_prefix.'shares';
+  $sql_postworld_shares = "CREATE TABLE $shares_table_name (
+      user_id BIGINT(20) UNSIGNED NOT NULL,
+      post_id BIGINT(20) UNSIGNED NOT NULL,
+      author_id BIGINT(20) UNSIGNED NOT NULL,
+      recent_ips TEXT NULL,
+      shares INT NULL,
+      last_time TIMESTAMP NULL
+    );";    
     
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
@@ -129,6 +138,7 @@ function postworld_install() {
   dbDelta( $sql_postworld_favorites );
   dbDelta( $sql_postworld_feeds );
   dbDelta( $sql_postworld_cron_logs );
+  dbDelta( $sql_postworld_shares );
   
   add_option( "postworld_db_version", $postworld_db_version );
 }
