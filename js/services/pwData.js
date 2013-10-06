@@ -26,16 +26,47 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 	
 	var feed_data = {};
 	
-	$log.info('pwData: Constructor: Registering feed_settings', feed_settings);
-	$log.info('pwData: Constructor: Registering feed_data', feed_data);
+	$log.info('pwData() Registering feed_settings', feed_settings);
+	
+	var	getTemplate = function(pwData,grp,type,name) {
+			var template;
+			// TODO can we make this lookup dynamic?
+			switch (grp) {
+				case 'posts':
+					switch (type) {
+						case 'post':
+							template = pwData.templatesFinal.posts[type][name];
+							$log.info('post template:',template);
+							// template = jsVars.pluginurl+'/postworld/templates/posts/'+type+'-'+name+'.html';
+							break;
+						default:
+							template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';
+							break;
+					}
+					break;
+				case 'panels':
+					template = pwData.templatesFinal.panels[name];
+					//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
+					break;
+				default:
+					template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
+					break;
+			}
+			// $log.info('Service: pwData Method:getTemplate template=',template);
+			return template;			
+	};
+	
+	
 	// for Ajax Calls
     var resource = $resource(jsVars.ajaxurl, {action:'wp_action'}, 
     							{	wp_ajax: { method: 'POST', isArray: false, },	}
 							);
-							
+	
     return {
     	feed_settings: feed_settings,
     	feed_data: feed_data,
+    	templates: $q.defer(),
+    	templatesFinal:{},
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
     		nonce = val;
@@ -46,7 +77,7 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
     	},
     	// A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
 		wp_ajax: function(fname, args) {
-			$log.info('Service: pwData Method:wp_ajax Arguments: ','fname: ', fname, 'args: ',args);
+			$log.info('pwData.wp_ajax', fname, 'args: ',args);
             var deferred = $q.defer();
             // works only for non array returns
             resource.wp_ajax({action:fname},{args:args,nonce:this.getNonce()},
@@ -59,37 +90,24 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
             return deferred.promise;		
 		},
 		pw_live_feed: function(args) {
-			// get additional params from feed_settings
-			// ensure that feed_query exists
-			//if(!args.feed_query) args.feed_query = {};
-			// shortcut
-			$log.info('Service: pwData Method:pw_live_feed argsTest: ',args);
-			//return;
-			var feed = feed_settings[args.feed_id];
-			// TODO use constants
-			// TODO Sanity check for values, max, min, positive, negative, etc...
-			if (feed.preload != null) args.preload = feed.preload; else args.preload = 10;  
-			// Set a hard Max for performance consideration - use constant
-			if (feed.max_posts != null) args.feed_query.posts_per_page = feed.max_posts; else args.feed_query.posts_per_page = 1000;
-			 
-			// TODO check for +/- values for asc/desc
-			if (feed.order_by != null) args.feed_query.orderby = feed.order_by;
-			if (feed.offset != null) args.feed_query.offset = feed.offset;
-			 
-			// QUESTION: Which overrides which, order_by, offset, max_posts, or other query_args in the query args field?
-			// TODO add query args [don't we already get them from UI? but we need to get them from feed_settings too]
+			// args: arguments received from Panel. fargs: is the final args sent along the ajax call.
+			// fargs will be filled initially with data from feed settings, 
+			// fargs will be filled next from data in the args parameters
+			
+			var fargs = this.convertFeedSettings(args.feed_id); // will read settings and put them in fargs
+			fargs = this.mergeFeedQuery(fargs,args); // will read args and override fargs
 			   
-			var params = {args:args};
-			$log.info('Service: pwData Method:pw_live_feed Arguments: ',args);
+			var params = {args:fargs};
+			$log.info('pwData.pw_live_feed',fargs);
 			return this.wp_ajax('pw_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {
-			$log.info('Service: pwData Method:pw_scroll_feed Arguments: ',args);
+			$log.info('pwData.pw_scroll_feed',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_scroll_feed',params);
 		},
 		o_embed: function(url,args) {
-			$log.info('Service: pwData Method:o_embed Arguments: ',args);
+			$log.info('pwData.o_embed',args);
 			var params = { url:url, args:args};
 			return this.wp_ajax('o_embed',params);
 		},
@@ -99,6 +117,7 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
 			var idBegin = feedData.loaded.length;
+			// TODO Check if load_increment exists
 			var idEnd = idBegin+feedSettings.load_increment;
 			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);
 			var fields;
@@ -106,16 +125,59 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			if (feedSettings.query_args.fields != null) {
 				fields = feedSettings.query_args.fields;
 			}
-			$log.info('Service: pwData Method:pw_get_posts BeginID, EndID: ',idBegin, idEnd);
+			$log.info('pwData.pw_get_posts range:',idBegin, idEnd);
 			// Set Fields
 			var params = { feed_id:args.feed_id, post_ids:postIDs, fields:fields};
-			$log.info('Service: pwData Method:pw_get_posts Arguments: ',params);
+			$log.info('pwData.pw_get_posts',params);
 			return this.wp_ajax('pw_get_posts',params);
 		},
 		pw_get_templates: function(templates_object) {
-			$log.info('Service: pwData Method:pw_get_templates Arguments: ',templates_object);
+			// TODO Optimize by running it once and caching it
+			$log.info('pwData.pw_get_templates',templates_object);
 			var params = { templates_object:templates_object};			
 			return this.wp_ajax('pw_get_templates',params);
 		},
-    };
+		pw_get_template: function(grp,type,name) {
+			// if templates object already exists, then get value, if not, then retrieve it first
+			var template = getTemplate(this,grp,type,name);
+		    return template;
+		}, // END OF pw_get_template
+		convertFeedSettings: function (feedID) {
+			var fargs = {};
+			fargs.feed_query = {};
+			//if(!args.feed_query) args.feed_query = {};
+			// TODO use constants from app settings
+			// Get Feed_Settings Parameters
+			var feed = feed_settings[feedID];
+			// Query Args will fill in the feed_query first, then any other parameter in the feed will override it, then any user parameter will override all
+			if (feed.query_args != null) fargs.feed_query = feed.query_args;  
+			if (feed.preload != null) fargs.preload = feed.preload; else fargs.preload = 10;  
+			if (feed.offset	!= null) fargs.offset = feed.offset; else fargs.offset = 0;  
+			if (feed.max_posts != null) fargs.feed_query.posts_per_page = feed.max_posts; else fargs.feed_query.posts_per_page = 1000;
+			 
+			if (feed.order_by != null) {
+				// if + sort Ascending
+				if (feed.order_by.charAt(0)=='+') fargs.feed_query.order = 'ASC';
+				// if - sort Descending				
+				else  if (feed.order_by.charAt(0)=='-') fargs.feed_query.order = 'DESC';
+				else fargs.feed_query.order = 'ASC';
+				// If + or - then remove the first character
+				if ((feed.order_by.charAt(0)=='+') || (feed.order_by.charAt(0)=='-')) {
+					fargs.feed_query.order_by = feed.order_by.slice(1);
+				}
+			}	// else the default whatever it is, is used
+			if (feed.offset != null) fargs.feed_query.offset = feed.offset; // else the default is zero 
+			fargs.feed_id = feedID;
+			return fargs;			
+		},
+		mergeFeedQuery: function (fargs,args) {
+			if (args.feed_query) {
+				for (var prop in args.feed_query) {
+				    fargs.feed_query[prop] = args.feed_query[prop];
+				    //$log.info("args.feed_query",prop,args.feed_query[prop],fargs.feed_query[prop]);
+				}
+			}
+			return fargs;
+		}
+   }; // END OF pwData return value
 });

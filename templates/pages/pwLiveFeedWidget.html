@@ -1,18 +1,44 @@
 <script>
 	feed_settings['feed1'] = {
-		preload : 5,
-		load_increment : 3,
+		preload : 10,
+		load_increment : 5,
 		offset: 0,
-		max_posts:80,
-		// order_by : '-post_points',
-		panel : 'feed_top',
+		max_posts:100,
+		order_by : '+rank_score',
+		panels : {
+			'panel1'	: 'feed_search',	
+			'panel2'	: 'feed_header',	
+		},
 		view : {
 			current : 'list',
 			options : ['list','detail', 'grid','full']
 		},
 		query_args : {
 			// query args in JSON format
+			'year'	: '2009',
+			's'	: 'two',
+		},
+	};
+	feed_settings['feed2'] = {
+		preload : 14,
+		load_increment : 5,
+		offset: 0,
+		max_posts:200,
+		order_by : '+post_points',
+		panels : {
+			'panel1'	: 'feed_search',	
+			'panel2'	: 'feed_header',	
+		},
+		view : {
+			current : 'detail',
+			options : ['list','detail', 'grid','full']
+		},
+		query_args : {
+			// query args in JSON format
+			'year'	: '2010',
+			's'	: 'two',
 		},
 	};
 </script>
 <div live-feed='feed1'></div>
+<div live-feed='feed2'></div>

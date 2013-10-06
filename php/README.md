@@ -1888,34 +1888,159 @@ Contains utility helper functions.
 
 ------
 
-### wp_obj_tree ( *$args* )
+### tree_obj ( *$object, $parent, $depth, $settings* )
 
-__Status__ : Under Development (phongmedia)
+#### Parameters :
 
+__$object__ : *Array*
+- The flat Array which to process into a hierarchical tree structure
+
+__$parent__ : *integer*
+- Default : __0__
+- Current operating parent
+- Used by recursions
+
+__$depth__ : *integer*
+- Default : __0__
+- Current operating depth
+- Used by recursions
+
+__$settings__ : __Array__
+
+- __fields__ : *Array*
+  - Default : `array('name')`
+  - The fields which to preserve into the new structure
+
+- __id_key__ : *string*
+  - Default : *id*
+  - The key which to use to deliniate the ID of an object
+
+- __parent_key__ : *string*
+  - Default : *parent*
+  - The key which to use to define the parent ID of an object
+
+- __child_key__ : *string*
+  - Default : *children*
+  - The key under which to nest the children
+
+- __max_depth__ : *integer*
+  - Default : *10*
+  - The maximum depth of branches to parse
+
+- __callback__ : *string* (optional)
+  - The callback helper function which to call while populating the fields
+
+- __callback_array__ : *array* (optional)
+  - The localized field values to pass to the callback function
+  - Derived directly from __object__ key of the same name
+  - Passes live values of the named keys in given order to __callback__ function
+
+#### Usage
+
+``` php
+$settings = array(
+	'fields' => array('name','id'),
+	'id_key' => $id_key,
+	'parent_key' => $parent_key,
+	'child_key' => $child_key,
+	'max_depth' => $max_depth,
+	'callback' => $callback,
+	'callback_fields' => $callback_fields,
+	);
+
+$tree_obj = tree_obj( $object, 0, 0, $settings );
+```
+
+#### Input : $object
+``` php
+$object = array(
+	array(
+		'name' => 'Blue',
+		'id' => 1,
+		'parent' => 0
+		),
+	array(
+		'name' => 'Navy Blue',
+		'id' => 2,
+		'parent' => 1
+		),
+	array(
+		'name' => 'Aqua Marine',
+		'id' => 3,
+		'parent' => 1
+		),
+	array(
+		'name' => 'Red',
+		'id' => 4,
+		'parent' => 0
+		),
+	array(
+		'name' => 'Maroon',
+		'id' => 5,
+		'parent' => 4
+		),
+	)
+
+```
+
+#### Return
+
+``` php
+array(
+	array(
+		'name' => 'Blue',
+		'id' => 1,
+		'children' => array(
+			array(
+				'name' => 'Navy Blue',
+				'id' => 2,
+				),
+			array(
+				'name' => 'Aqua Marine',
+				'id' => 3,
+				),
+			)
+		),
+	
+	array(
+		'name' => 'Red',
+		'id' => 4,
+		'children' => array(
+			array(
+				'name' => 'Maroon',
+				'id' => 5,
+				),
+			)
+		),
+	)
+
+```
+
+------
+
+### wp_tree_obj ( *$args* )
+
+#### Description
+- A wrapper for `tree_obj()` Method for taking WP Objects
+- Used to organize __comments__, __posts__ or __terms__ heirarchically
 
 #### Usage
 
 ``` php
 $args = array(
-	'object' =>
-	'fields' =>
-	'child_key' =>
-	'depth' =>
-	'function' =>
-	'variable' =>
+	'object' => $object // Array or Array of WP Objects,
+	'fields' => $fields,
+	'id_key' => $id_key,
+	'parent_key' => $parent_key,
+	'child_key' => $child_key,
+	'max_depth' => $max_depth,
+	'callback' => $callback,
+	'callback_fields' => $callback_fields,
 )
-$heirarchy = wp_obj_organize_hierarchical( $args );
+$heirarchy = wp_tree_obj( $args );
 
 ```
-
-#### Notes
-- Pass a WP object with 'parent' values
-- Organize into hierarchical object
-- Used to organize comments, posts or terms heirarchically into an object
-
-- Make way to get meta data, such as comment points or term_link, etc. with action hook at per item level
-- takes helper Function which returns an object which is merged into each item
-
+------
 
 
 

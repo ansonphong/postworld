@@ -423,6 +423,8 @@
 			return : string / Array (set by $return_array)
 		 */
 		
+		if(!$user_id)
+			$user_id = get_current_user_id();
 		
 		$user = new WP_User( $user_id ); // this gives us access to all the useful methods and properties for this user
 		if ( $user ) {
