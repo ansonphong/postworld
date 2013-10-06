@@ -7,15 +7,21 @@ pwApp.directive('loadPanel', function($log, pwData) {
         controller: 'pwLoadPanelController',
         // Must use an isolated scope, to allow for using multiple panel directives in the same page
         scope: {
+        	feedId : '=',
         }
     };
 });
 
 pwApp.controller('pwLoadPanelController',
-    function pwLoadPanelController($scope, $location, $log, pwData, $attrs) {
+    function pwLoadPanelController($scope, $location, $log, pwData, $attrs) {    	
+    	// Test Code, remove
+	    $log.info('Directive:LoadPanel Controller: pwLoadPanelController: feed_id - outside watch =',$scope.feedId);            
+    	// Test Code, remove
+    	
 		$scope.feed_query = {};
     	// Load Template URL
 		pwData.templates.promise.then(function(value) {
+			// $log.info('Directive:LoadPanel Controller:pwLoadPanelController Can we get this',$attrs.liveFeed);
 	    	$scope.templateUrl = pwData.pw_get_template('panels','panel',$attrs.loadPanel);
 		  });
 

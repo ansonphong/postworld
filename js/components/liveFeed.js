@@ -10,18 +10,30 @@ pwApp.directive('liveFeed', function() {
 });
 
 pwApp.controller('pwLiveFeedController',
-    function pwLiveFeedController($scope, $location, $log, $attrs, pwData) {
+    function pwLiveFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
     	//$scope.args.year = '2007';
     	//$scope.args.monthnum= '1';
+		$scope.feedid = $attrs.liveFeed;
     	
+		// Emit FEED_ID to children
+		$scope.$on("GET_FEED_ID", function(event, message){
+		   $log.info('Controller: pwLiveFeedController: ON:GET_FEED_ID - EMIT Received: ',message);
+		   //$scope.$broadcast("FEED_ID", $attrs.liveFeed);
+		   });
+    	/*
+    	// Broadcast Feed ID After getting Templates
+		var broadcastFeedID = $timeout(function() {
+					    		console.log('Directive:LiveFeed Controller: pwLiveFeedController: Broadcasting FEED_ID',$attrs.liveFeed);
+								$scope.$broadcast("FEED_ID", $attrs.liveFeed);		   		   	      
+				    		}, 1000);
+		*/
     	// TODO move getting templates to app startup
     	pwData.pw_get_templates(null).then(function(value) {
 		    // TODO should we create success/failure responses here?
-		    console.log('pwData templates=',value);
 		    // resolve pwData.templates
 		    pwData.templates.resolve(value.data);
 		    pwData.templatesFinal = value.data;
-		    console.log('pwData templates=',pwData.templates);
+		    console.log('Directive:LiveFeed Controller: pwLiveFeedController: templates=',pwData.templatesFinal);
 		  });		  
     	
     	// should this code be in the feedItem directive?

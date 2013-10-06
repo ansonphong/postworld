@@ -1,10 +1,10 @@
 <div>
-	<div load-panel="feed_header" ng-include="templateUrl"></div>
+	<div load-panel="feed_header" ng-include="templateUrl" feed-id='feedid'></div>
 	<br/>
     <div id="scrollMe" style="height: 600px; overflow-y: scroll;">
 	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
-	    <div ng-repeat='post in items'>
-	    	<div feed-item='post-list' ng-include="templateUrl" view="list" post="post"></div>
+	    <div ng-repeat='post in items' >
+	    	<div feed-item ng-include="templateUrl" post="post" feed-id='feedid'></div>
 			<hr>
 	      <div style='clear: both;'></div>
 	    </div>
