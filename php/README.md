@@ -1810,11 +1810,11 @@ Contains functions for working with Taxonomies.
 
 ------
 
-### taxonomies_outline ( *[$taxonomies], [$depth]* )
+### taxonomies_outline ( *[$taxonomies], [$max_depth], [$fields]* )
 
 #### Description
 - Generate a heirarchical object outlining the requested Taxonomies
-- Only goes to depth limit of __2__
+- Wrapper for `wp_tree_obj()` Method customized for taxonomies
 
 #### Parameters
 __$taxonomies__ : *string/Array* (optional) 
@@ -1822,10 +1822,21 @@ __$taxonomies__ : *string/Array* (optional)
   - __all__ (default) - Returns all hierarchical public taxonomies
   - *Array* - Array of taxonomy names which to receive a term outline for
 
-__$depth__ : *integer* (optional)
+__$max_depth__ : *integer* (optional)
 - Default : __2__
-- Max : __2__
-- The depth of children to parse
+- The maximum depth of children to parse
+
+__$fields__ : *Array* (optional)
+- Default : *all*
+- Options :
+  - term_id
+  - name
+  - slug
+  - description
+  - parent
+  - count
+  - taxonomy
+  - url
 
 #### Usage
 ``` php

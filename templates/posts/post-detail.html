@@ -1,10 +1,8 @@
 <div class="post standard detail" >
 <!-- ANGULAR TEMPLATING TEST -->
 	
-	<h1 style="font-size:21px;"><a href="{{post.post_permalink}}">{{post.post_title}}</a></h1>
-	Points : {{post.post_points}} //
-	Rank Score : {{post.rank_score}} //
-	Post Format : {{post.post_format}} <br>
+	<h2 style="font-size:24px;"><a href="{{post.post_permalink}}">{{post.post_title}}</a></h2>
+	Points : {{post.post_points}} // Rank Score : {{post.rank_score}} // Post Format : {{post.post_format}} <br>
 	{{post.time_ago}}<br>
 	<img src="{{post.avatar.small.url}}" width="{{post.avatar.small.width/2}}" height="{{post.avatar.small.height/2}}"><a href="{{post.author.profile_url}}">{{post.author.display_name}}</a>
 	<br><br>

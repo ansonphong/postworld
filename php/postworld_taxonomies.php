@@ -1,9 +1,8 @@
 <?php
 
+function taxonomies_outline( $taxonomies, $max_depth = 2, $fields = 'all' ){
 
-function taxonomies_outline( $taxonomies, $depth = 2 ){
-
-	// If Taxonomies is not defined
+	// If Taxonomies is not defined or 'all'
 	// Get all Public Taxonomies
 	if(!$taxonomies || $taxonomies == 'all'){
 		// QUERY TAXONOMIES
@@ -11,9 +10,27 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
         $taxonomies = get_taxonomies($taxonomy_args, 'names');
 	}
 
+	// Default Fields
+	if (!$fields or $fields == 'all')
+		$fields = array('term_id','name','slug','description','parent','count', 'taxonomy', 'url');
+
+	////////// CALLBACK FUNCTION //////////
+	// Get Taxonomy Term Meta
+	function tax_term_meta( $input ){
+		$term_id = (int)$input[0];
+		$taxonomy = $input[1];
+		$term_meta['url'] = get_term_link( $term_id, $taxonomy );
+		return $term_meta;
+	}
+
+	// Define Callback to get URL
+	if( in_array('url',$fields) ){
+		$callback = 'tax_term_meta';
+		$callback_fields = array( 'term_id', 'taxonomy' );
+	}
+
 	// Setup Taxonomy Outline Object
 	$tax_outline = array();
-
 	///// TAXONOMIES : Cycle through each Taxonomy //////
 	foreach ($taxonomies as $taxonomy) {
 		// Get the Taxnomy Object
@@ -33,54 +50,30 @@ function taxonomies_outline( $taxonomies, $depth = 2 ){
 		// Setup Terms Array
 		$tax_outline[$taxonomy]['terms'] = array();
 
-		///// TERMS : Cycle through each Term /////
-		foreach ( $tax_terms as $term => $value ){
+		// WP TREE_OBJ COMMAND
+		$tax_terms =  get_terms( $taxonomy , 'hide_empty=0');
+		$args = array(
+			'object' => $tax_terms,
+			'fields' => $fields,
+			'id_key' => 'term_id',
+			'parent_key' => 'parent',
+			'child_key' => 'terms',
+			'max_depth' => $max_depth,
+			'callback' => $callback,
+			'callback_fields' => $callback_fields,
+		);
 
-			// Setup Terms Array
-			$term_obj = array();
-			// If Term has no parent
-			if ( $value->parent == '0' ){
-				// Get Term Values
-				$term_obj['name'] = $value->name;
-				$term_obj['slug'] = $value->slug;
-				$term_obj['description'] = $value->description;
-				$term_obj['url'] = get_term_link( $value );
-				
-				///// CHILD TERMS : Cycle through each Term searching for children /////
-				if ($depth > 1){
-					// Setup Child Terms Array
-					$child_terms = array();
-					///// CHILDREN : Cycle through to find it's Children /////
-					foreach( $tax_terms as $child_term => $child_value ){
-						
-						// If child has set parent as this term_id
-						if ($child_value->parent == $value->term_id){
-							// Get Child Term Values
-							$child_term_obj['name'] = $child_value->name;
-							$child_term_obj['slug'] = $child_value->slug;
-							$child_term_obj['description'] = $child_value->description;
-							$child_term_obj['url'] = get_term_link( $child_value );
-							array_push( $child_terms, $child_term_obj);
-						}
-					}
-
-					// If there were Child terms, add them to 'terms' Array
-					if(!empty($child_terms)){
-						$term_obj['terms'] = $child_terms;
-					}
-				}
-
-				// Push Taxonomy Array to Main Array
-				array_push( $tax_outline[$taxonomy]['terms'], $term_obj);
-
-			}
-		}
+		$tax_outline[$taxonomy] = wp_tree_obj( $args );
 
 	}
 
 	return $tax_outline;
 
 }
+
+
+
+
 
 
 ?>

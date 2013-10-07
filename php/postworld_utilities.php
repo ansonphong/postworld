@@ -27,15 +27,7 @@ function get_user_post_types(){
 
 }
 
-////////// BRANCH HELPER FUNCTIONS //////////
 
-// Get Taxonomy Term Meta
-function tax_term_meta( $input ){
-	$term_id = (int)$input[0];
-	$taxonomy = $input[1];
-	$term_meta['url'] = get_term_link( $term_id, $taxonomy );
-	return $term_meta;
-}
 
 //////////// BRANCH : Create a recursive branch from a flat object ////////////
 function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
@@ -59,6 +51,8 @@ function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 	 for($i=0, $ni=count($object); $i < $ni; $i++){
 	 	// If the current item is the same as the current cycling parent, add the data
 	 	if( $object[$i][$parent_key] == $parent ){
+	 		// Setup / Clear Branch Child Array
+			$branch_child = array();
 			// Transfer data
 			foreach ($fields as $field) {
 				$branch_child[$field] = $object[$i][$field];
