@@ -1429,9 +1429,9 @@ array(
 #### Process:
 1. If the __feed_id__ doesn't appear in the __wp_postworld_feeds__ table :
   1. Create a new row
-  2. Enable write_cache
+  2. Enable `write_cache = true`
 
-2. Store `$args['feed_query']` in the __feed_query__ column in Postworld __feeds__ table as a JSON Object
+2. Store `$args['feed_query']` in the __feed_query__ column in Postworld __Feeds__ table as a JSON Object
 
 3. If write_cache is true, run `pw_cache_feed(feed_id)`
 
@@ -1439,22 +1439,22 @@ __return__ : __$args__ *Array*
 
 #### Parameters : $args
 
-__feed_id__ : *string*
+__feed_id__ : *string* (required)
+- The id of the feed by which is it loaded
 
-__feed_query__ : *array*
-- default : none
+__feed_query__ : *array* (required)
 - The query object which is stored in __feed_query__ in __feeds__ table, which is input directly into __pw_query__
 
-__write_cache__ : *boolean*
+__write_cache__ : *boolean* (optional)
 - If the __feed_id__ is new to the __feeds__ table, set `write_cache = true`
-  - false (default) - Wait for cron job to update feed outline later, just update feed_query
-  - true - Cache the feed with method : run pw_cache_feed( $feed_id )
+  - **false** (default) - Wait for cron job to update feed outline later, just update feed_query
+  - **true** - Cache the feed outline with method : run `pw_cache_feed( $feed_id )`
 
 #### Usage :
 ``` php
 $args = array (
 	'feed_id' => 'front_page_feed',
-	'write_cache'  => true,
+	'write_cache'  => false,
 	'feed_query' => array(
 		// pw_query() $args    
 	)
