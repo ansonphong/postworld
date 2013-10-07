@@ -57,7 +57,7 @@ pwApp.controller('pwLiveFeedController',
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, feedTemplateUrl){
 		   $log.info('pwLiveFeedController: Event Received:CHANGE_FEED_TEMPLATE',feedTemplateUrl);
 		   // Broadcast to all children
-			$scope.$broadcast("pwLiveFeedController: Broadcast: FEED_TEMPLATE_UPDATE", feedTemplateUrl);		   
+			$scope.$broadcast("FEED_TEMPLATE_UPDATE", feedTemplateUrl);		   
 		   });
 		   
    		$scope.getNext = function() {
