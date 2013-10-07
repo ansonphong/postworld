@@ -53,14 +53,12 @@ pwApp.directive('ngEnter', function() {
  * 
  * Enhancements
  * *************
- * Submitting on Enter of any input field related to the loadPanel Directive - http://stackoverflow.com/questions/15417125/submit-form-on-pressing-enter-with-angularjs
  * Submitting on Field Change
  * Fix Bootstrap field alignment
  * Shouldnt we get all templates in pw_get_templates, and cache them to be used across the whole session? this will save many uneeded calls as long as we're on the same SPA session?
  * 
  * Testing
  * *******
- * Test Multiple Feeds in same page
  * 
  * UI Enhancements
  * ***************
