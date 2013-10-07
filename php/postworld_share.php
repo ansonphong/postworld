@@ -205,15 +205,15 @@ function user_posts_share_report ( $user_id ){
 	$output=array();
 	$query = "select post_id, sum(shares) as total_shares from $wpdb->pw_prefix"."shares where author_id=".$user_id." group by post_id";
 	$results = $wpdb->get_results($query);
-	echo 'dd';
-	print_r($results);
+	
+	//print_r($results);
 	$output = array();
 	if($results){
 		foreach ($results as $row ) {
 			
 			$query="select * from $wpdb->pw_prefix"."shares where post_id=".$row->post_id;
 			$posts_shares_by_id=$wpdb->get_results($query); 
-			print_r($posts_shares_by_id);
+			//print_r($posts_shares_by_id);
 			$generalData = array('post_id'=>$row->post_id,'total_shares'=>$row->total_shares);
 			$generalData['user_shares']=array();	
 			foreach ($posts_shares_by_id as $post_share) {

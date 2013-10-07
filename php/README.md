@@ -528,8 +528,8 @@ array(
 - Caches the total number of shares relating to a given user
 
 #### Process
-- Run `calculate_post_shares()`
-- Update the __post_shares__ column in the __Post Meta__ table
+- Run `calculate_user_shares()`
+- Update the __user_shares__ column in the __User Meta__ table
 
 __return__ : *integer* (number of shares)
 

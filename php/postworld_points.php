@@ -522,7 +522,7 @@
 	}
 	
 	
-	function add_recored_to_post_meta($post_id, $points=0,$rank_score=0,$favorites=0){
+	function add_recored_to_post_meta($post_id, $points=0,$rank_score=0,$favorites=0,$post_shares=0){
 		/*
 		 This function gets all post data and inserts a record in wp_postworld_post_meta table
 		 * Parameters:
@@ -553,7 +553,8 @@
 				."'".$post_data['guid']."',"
 				.$points.","
 				.$rank_score.","
-				.$favorites
+				.$favorites.","
+				.$post_shares
 				.")";
 				
 		//echo $query."<br>";

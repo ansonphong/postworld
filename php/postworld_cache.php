@@ -205,12 +205,164 @@
 		}
 	}
 
+
+	function cache_shares ( $cache_all ){ //<< UNDER CONSTRUCTION <<
+		/*
+		 Description
+			Caches user and post share reports
+			Paramaters
+			-$cache_all : boolean
+			-Default : false
+			
+			Process
+			
+			-If $cache_all = false, just update the recently changed share reports
+			
+			-Check Cron Logs table for the most recent start time of the last cache_shares() operation
+			
+		 * POSTS :
+			-Get an array of all post_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column
+			-Run cache_post_shares($post_id) for all recently updated shares
+			
+		 * AUTHORS :
+			-Get an array of all post_author_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column, Run cache_user_post_shares($user_id) for all recently updated user's shares
+			
+		 * USERS :
+			-Get an array of all user_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column Run cache_user_shares($user_id) for all recently updated user's shares
+			-If $cache_all = true
+			
+			-Cycle through every single post and run cache_post_share_report($post_id)
+			-Cycle through every single user and run cache_user_share_report($user_id)
+			
+		 * return : cron_logs Object (store in table wp_postworld_cron_logs) 
+		 */	
+		 
+		 
+	
+	}
+	
+	//////////////// POST SHARES /////////////////////
+	function calculate_post_shares($post_id){
+		/*Calculates the total number of shares to the given post
+		Process
+		-Lookup the given post_id in the Shares table
+		-Add up ( SUM ) the total number in shares column attributed to the post
+		-return : integer (number of shares)*/
+		
+		
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query = "select SUM(shares) FROM $wpdb->pw_prefix"."shares where post_id=".$post_id;
+		$total_shares = $wpdb->get_var($query);
+		if($total_shares)
+			return $total_shares;
+		else return 0;
+	}
+	
+	function cache_post_shares( $post_id ){
+	
+		/*Caches the total number of shares to the given post
+		Process
+		-Run calculate_post_shares($post_id)
+		-Write the result to the post_shares column in the Post Meta table
+		-return : integer (number of shares)*/
+		$total_shares = calculate_post_shares($post_id);
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query = "update $wpdb->pw_prefix"."post_meta set post_shares=".$total_shares." where post_id=".$post_id;
+		$wpdb->query($query);
+		return $total_shares;
+	}
+	
+	
+	////////////////// USER SHARES /////////////////////////
+	function calculate_user_shares( $user_id, $mode='both' ){
+		/*
+		Calculates the total number of shares relating to a given user
+		
+		
+		 * Parameters
+		-$post_id : integer
+		-$mode : string (optional)
+		
+		
+		 * Options :
+		-both (default) : Return both incoming and outgoing
+		-incoming : Return shares attributed to the user's posts
+		-outgoing : Return shares that the user has initiated
+		
+		 * Process
+		-Lookup the given user_id in the Shares table
+		-Modes :
+		 -For incoming : Match to author_id column in Shares table
+		 -For outgoing : Match to user_id column in Shares table
+		-Add up (SUM) the total number of the shares column attributed to the user, according to $mode
+		
+		 * return : Array (number of shares)
+		
+		array(
+		    'incoming' => {{integer}},
+		    'outgoing' => {{integer}}
+		    )
+		*/
+		
+		
+		$output = array();
+		global $wpdb;
+		$wpdb -> show_errors();
+		if($mode =='incoming' || $mode=='both'){
+			$user_share_report = user_share_report($user_id);
+			//print_r($user_share_report);
+			$incoming = 0;
+			for ($i=0; $i <count($user_share_report) ; $i++) { 
+				$incoming=$incoming + $user_share_report[$i]['shares'];
+			}
+			$output['incoming'] = $incoming;
+		}
+		
+		if($mode == 'outgoing' || $mode =='both'){
+			$user_posts_share_report = user_posts_share_report($user_id);
+			//print_r($user_posts_share_report);
+			$outgoing = 0;
+			for ($i=0; $i <count($user_posts_share_report) ; $i++) { 
+				$outgoing=$outgoing + $user_posts_share_report[$i]['total_shares'];
+			}
+			$output['outgoing'] = $outgoing;
+		}
+		return $output;
+	}
+	
+	function cache_user_shares( $user_id, $mode ){
+		/*
+		Caches the total number of shares relating to a given user
+		Process
+		
+		Run calculate_user_shares()
+		Update the post_shares column in the user Meta table
+		return : integer (number of shares)
+		 */
+		 
+		 //ask? total shares or incoming or outgoing?
+		 
+		$user_shares = calculate_user_shares($user_id,'both');
+		//print_r($user_shares);
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);
+		$query = "update $wpdb->pw_prefix"."user_meta set share_points=".$total_user_shares." where user_id=".$user_id;
+		$wpdb->query($query);
+		
+		return $total_user_shares;
+		 
+	}
     ////////////////  HELPER FUNCTIONS  //////////////////////
 	function add_new_cron_logs($cron_logs_array){
 		$cron_logs_count = count($cron_logs_array);
 		
 		for ($i=0; $i <$cron_logs_count ; $i++) {
-			
 			$query = "insert into " ;
 			
 		}

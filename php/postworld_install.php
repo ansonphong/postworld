@@ -19,6 +19,7 @@ function postworld_install() {
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       rank_score mediumint(4) DEFAULT '0' NOT NULL,
       favorites mediumint(9) DEFAULT '0' NOT NULL,
+      post_shares mediumint(9) DEFAULT '0' NOT NULL,
       UNIQUE KEY post_id (post_id)
     );";
 
@@ -66,7 +67,8 @@ function postworld_install() {
       share_karma mediumint(8) DEFAULT '0' NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       post_points_meta MEDIUMTEXT NULL,
-      comment_points mediumint(8) DEFAULT '0' NOT NULL
+      comment_points mediumint(8) DEFAULT '0' NOT NULL,
+      share_points mediumint(8) DEFAULT '0' NOT NULL
     );";
 
   $user_shares_table_name = $wpdb->pw_prefix.'user_shares';
