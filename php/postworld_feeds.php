@@ -254,13 +254,35 @@ function pw_load_feed ( $feed_id, $preload=0 ){
 	
 }
 
+function get_panel_ids(){
+	global $pw_defaults;
+	$override_file_names = list_dir_file_names( $pw_defaults['template_paths']['override_panel_template_abs_path']);
+	$default_file_names = list_dir_file_names( $pw_defaults['template_paths']['default_panel_template_abs_path']);
+	print_r($pw_defaults['template_paths']['override_panel_template_url']);
+	print_r($pw_defaults['template_paths']['default_panel_template_url']);
+	print_r($override_file_names);
+	print_r($default_file_names);
+	
+	$final_panel_names = array();
+	for ($i=0; $i <count($default_file_names) ; $i++) { 
+		$final_panel_names[] = str_replace(".html", "", $default_file_names[$i]);
+	}
+	
+	for ($i=0; $i < count($override_file_names); $i++) {
+		$name = str_replace(".html", "", $override_file_names[$i] );
+		if(!in_array($name,$final_panel_names)){
+			$final_panel_names[] = $name;
+		}
+	}
+	
+	return $final_panel_names;
+}
 
-
-function list_dir_file_names($directory, $url_path){
+function list_dir_file_names($directory){
 		
 	$names_array=array();
 	if (is_dir($directory)){
-		
+		echo 'is directoruuu';
 	
 	$dir = new RecursiveDirectoryIterator($directory,
 			    FilesystemIterator::SKIP_DOTS);
@@ -277,7 +299,8 @@ function list_dir_file_names($directory, $url_path){
 			foreach ($it as $fileinfo) {
 			    if ($fileinfo->isFile()) {
 			    	//echo $fileinfo->getFilename();
-			        $names_array[]= $url_path.($fileinfo->getFilename());
+			        //$names_array[]= $url_path.($fileinfo->getFilename());
+					$names_array[]= $fileinfo->getFilename();
 			    }
 			}
 	}
@@ -304,18 +327,18 @@ function pw_get_templates ( $templates_object ){
 		null : default
 		Returns object with all panels and templates in the default and over-ride folders
 			 * */
-		
+		global $pw_defaults;
 		//abs paths
-		$default_posts_template_abs_path = ABSPATH . "wp-content/plugins/postworld/templates/posts/" ;
-		$override_posts_template_abs_path = get_template_directory()."\\postworld\\templates\\posts\\";
-		$default_panel_template_abs_path = ABSPATH . "wp-content/plugins/postworld/templates/panels/" ;
-		$override_panel_template_abs_path = get_template_directory()."\\postworld\\templates\\panels\\";
+		$default_posts_template_abs_path = $pw_defaults['template_paths']['default_posts_template_abs_path'];
+		$override_posts_template_abs_path = $pw_defaults['template_paths']['override_posts_template_abs_path'];
+		$default_panel_template_abs_path = $pw_defaults['template_paths']['default_panel_template_abs_path'] ;
+		$override_panel_template_abs_path =$pw_defaults['template_paths']['override_panel_template_abs_path'];
 		
 		//urls
-		$default_posts_template_url = plugins_url()."/postworld/templates/posts/";
-		$override_posts_template_url = get_template_directory_uri()."/postworld/templates/posts/";			 
-		$default_panel_template_url = plugins_url()."/postworld/templates/panels/";
-		$override_panel_template_url = get_template_directory_uri()."/postworld/templates/panels/";
+		$default_posts_template_url = $pw_defaults['template_paths']['default_posts_template_url'];
+		$override_posts_template_url = $pw_defaults['template_paths']['override_posts_template_url'];			 
+		$default_panel_template_url = $pw_defaults['template_paths']['default_panel_template_url'];
+		$override_panel_template_url = $pw_defaults['template_paths']['override_panel_template_url'];
 		
 		
 		$output = array();	 
@@ -345,9 +368,9 @@ function pw_get_templates ( $templates_object ){
 			$templates_object['posts']['post_types']=$post_types_final;
 			$templates_object['posts']['post_views']=$post_views; 
 			
-			$panel_ids = $pw_defaults['panel_ids'];//array('feed_top','feed_search');
+			//$panel_ids = $pw_defaults['panel_ids'];//array('feed_top','feed_search');
 			
-			$templates_object['panels']= $panel_ids;
+			$templates_object['panels']= get_panel_ids();
 			
 			//print_r($templates_object);
 		}
