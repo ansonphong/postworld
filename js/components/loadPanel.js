@@ -66,7 +66,7 @@ pwApp.controller('pwLoadPanelController',
 		$scope.changeFeedTemplate = function(view) {
 			$log.info('pwLoadPanelController.changeFeedTemplate ChangeTemplate',view);
 	    	var feedTemplateUrl = pwData.pw_get_template('posts','post',view);
-    		this.$emit("pwLoadPanelController.changeFeedTemplate Emit CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	
+    		this.$emit("CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	
 		};		
     	
     }
