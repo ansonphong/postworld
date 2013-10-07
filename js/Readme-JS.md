@@ -1,12 +1,12 @@
 Postworld // Angular / JS Functions
 =========
 
-##Index
-##Services
+###Index
+####Services
 0. [__pwData Service__](#service-pwData)
 
 
-##Directives
+####Directives
 Live Feed
 Load Panel
 Feed Item
