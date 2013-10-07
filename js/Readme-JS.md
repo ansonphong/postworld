@@ -1,17 +1,17 @@
 Postworld // Angular / JS Functions
 =========
 
-###Index
-###Services
+### Index
+### Services
 0. [pwData Service](#service-pwData)
-###Directives
+### Directives
 0. [__Live Feed Directive__](#directive-live-feed)
 0. [__Load Panel Directive__](#directive-load-panel)
 0. [__Feed Item Directive__](#directive-feed-item)
 0. [__Infinite Scroll Directive__](#directive-infinite-scroll)
 
 
-#service-pwData pwData Service
+###service-pwData pwData Service
 
 # Directives
 ## Live Feed Directive
