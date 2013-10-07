@@ -258,10 +258,10 @@ function get_panel_ids(){
 	global $pw_defaults;
 	$override_file_names = list_dir_file_names( $pw_defaults['template_paths']['override_panel_template_abs_path']);
 	$default_file_names = list_dir_file_names( $pw_defaults['template_paths']['default_panel_template_abs_path']);
-	print_r($pw_defaults['template_paths']['override_panel_template_url']);
-	print_r($pw_defaults['template_paths']['default_panel_template_url']);
-	print_r($override_file_names);
-	print_r($default_file_names);
+	//print_r($pw_defaults['template_paths']['override_panel_template_url']);
+	//print_r($pw_defaults['template_paths']['default_panel_template_url']);
+	//print_r($override_file_names);
+	//print_r($default_file_names);
 	
 	$final_panel_names = array();
 	for ($i=0; $i <count($default_file_names) ; $i++) { 
@@ -282,7 +282,7 @@ function list_dir_file_names($directory){
 		
 	$names_array=array();
 	if (is_dir($directory)){
-		echo 'is directoruuu';
+		//echo 'is directoruuu';
 	
 	$dir = new RecursiveDirectoryIterator($directory,
 			    FilesystemIterator::SKIP_DOTS);
