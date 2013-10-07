@@ -3,7 +3,7 @@ Postworld // Angular / JS Functions
 
 ###Index
 ####Services
-0. [__pwData Service__](#service-pwData)
+0. [pwData Service](#service-pwData)
 ####Directives
 0. [__Live Feed Directive__](#directive-live-feed)
 0. [__Load Panel Directive__](#directive-load-panel)
