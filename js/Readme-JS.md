@@ -10,7 +10,7 @@ Postworld // Angular / JS Functions
 0. [__Feed Item Directive__](#directive-feed-item)
 0. [__Infinite Scroll Directive__](#directive-infinite-scroll)
 
-### [service-pwData] service-pwData pwData Service
+### [service-pwData]
 
 # Directives
 ## Live Feed Directive
