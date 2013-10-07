@@ -11,7 +11,7 @@ Postworld // Angular / JS Functions
 0. [__Infinite Scroll Directive__](#directive-infinite-scroll)
 
 
-(#service-pwData) pwData Service
+#service-pwData pwData Service
 
 # Directives
 ## Live Feed Directive
