@@ -114,6 +114,17 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 		pw_get_posts: function(args) {
 			var feedSettings = feed_settings[args.feed_id];
 			var feedData = feed_data[args.feed_id];
+			// If already all loaded, then return
+			if (feedData.status == 'all_loaded')  {
+				$log.info('pwData.pw_get_posts ALL LOADED');
+				// TODO should we return or set promise.?
+				 //var results = {'status':200,'data':[]};
+				 var response = $q.defer();
+				 response.promise.resolve(1);				
+				return response.promise;
+			};
+			// else, get posts and recalculate
+			
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
 			var idBegin = feedData.loaded.length;

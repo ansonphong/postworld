@@ -150,7 +150,7 @@ pwApp.controller('pwLiveFeedController',
 						pwData.feed_data[$scope.feed].count_loaded = response.data.post_data.length;						
 						pwData.feed_data[$scope.feed].count_feed_outline = response.data.feed_outline.length;
 						// Set Feed load Status
-						if (pwData.feed_data[$scope.feed].count_loaded == pwData.feed_data[$scope.feed].count_feed_outline) {
+						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
 							pwData.feed_data[$scope.feed].status = 'all_loaded';													
 						} else
 							pwData.feed_data[$scope.feed].status = 'loaded';						
@@ -209,7 +209,7 @@ pwApp.controller('pwLiveFeedController',
 						pwData.feed_data[$scope.feed].count_loaded = response.data.post_data.length;						
 						pwData.feed_data[$scope.feed].count_feed_outline = response.data.feed_outline.length;
 						// Set Feed load Status
-						if (pwData.feed_data[$scope.feed].count_loaded == pwData.feed_data[$scope.feed].count_feed_outline) {
+						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
 							pwData.feed_data[$scope.feed].status = 'all_loaded';													
 						} else
 							pwData.feed_data[$scope.feed].status = 'loaded';						
@@ -240,19 +240,21 @@ pwApp.controller('pwLiveFeedController',
 			// Check if all Loaded, then return and do nothing
 			if (pwData.feed_data[$scope.feed].status == 'all_loaded') {
 				$log.info('pwLiveFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
+				$scope.busy = false;
 				return;
 			};		
 			// TODO do we need to set the loading status? or just use the busy flag?
 			pwData.feed_data[$scope.feed].status = 'loading';
 			
 			
-			$log.info('pwLiveFeedController.pwScrollFeed For',$scope.feed,$scope);
+			$log.info('pwLiveFeedController.pwScrollFeed For',$scope.feed);
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
 			// console.log('Params=',$scope.args);
         	pwData.pw_get_posts($scope.args).then(
 				// Success
 				function(response) {
+					// console.log('alo');
 					$scope.busy = false;
 					if (response.status === undefined) {
 						console.log('response format is not recognized');
@@ -263,19 +265,28 @@ pwApp.controller('pwLiveFeedController',
 						$log.info('pwLiveFeedController.pwScrollFeed Success',response.data);
 						// Add Results to controller items						
 						//$scope.posts = response.data;
+						
 						var newItems = response.data;
 						for (var i = 0; i < newItems.length; i++) {
 							// $log.info('Looping :',i,newItems[i].ID);
 							//$scope.items.push(newItems[i]);
 							// TODO check why when adding an item here, it affects also $scope.items !
 							pwData.feed_data[$scope.feed].posts.push(newItems[i]);
-							pwData.feed_data[$scope.feed].loaded.push(newItems[i].ID);							
+							pwData.feed_data[$scope.feed].loaded.push(newItems[i].ID);
 							// $log.info('$scope.items has',$scope.items.length,' items');							
-						  }
+						 }
+						  
+						// Count Length of loaded
+						pwData.feed_data[$scope.feed].count_loaded = pwData.feed_data[$scope.feed].posts.length;					
+						// Set Feed load Status
+						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
+							pwData.feed_data[$scope.feed].status = 'all_loaded';													
+						} else
+							pwData.feed_data[$scope.feed].status = 'loaded';						
+						  
 						// Update feed data with newly loaded posts
 						$log.info('pwLiveFeedController.pwScrollFeed Success feed_data:',pwData.feed_data[$scope.feed]);
-						return response.data;
-						
+						return response.data;						
 					} else {
 						// handle error
 						console.log('error',response.status,response.message);
