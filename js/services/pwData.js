@@ -137,6 +137,16 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			var params = { templates_object:templates_object};			
 			return this.wp_ajax('pw_get_templates',params);
 		},
+		pw_register_feed: function(args) {
+			$log.info('pwData.pw_register_feed',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_register_feed',params);
+		},
+		pw_load_feed: function(args) {
+			$log.info('pwData.pw_load_feed',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_load_feed',params);
+		},
 		pw_get_template: function(grp,type,name) {
 			// if templates object already exists, then get value, if not, then retrieve it first
 			var template = getTemplate(this,grp,type,name);

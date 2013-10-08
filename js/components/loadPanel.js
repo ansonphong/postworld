@@ -29,9 +29,9 @@ pwApp.controller('pwLoadPanelController',
 				$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
 			   // Get Default View Name
 			   if (pwData.feed_settings[FeedID].panels[$attrs.loadPanel])
-			   		template = pwData.feed_settings[FeedID].panels[$attrs.loadPanel];
+			   		template = pwData.feed_settings[FeedID].panels[$attrs.loadPanel];			   	
 		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-				$log.info('pwLoadPanelController() Set Initial Panel Template',FeedID, template, $scope.templateUrl);
+				$log.info('pwLoadPanelController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
 		});				
 
     	// the below is not needed since we are using args.feed_query from parent directive live-feed into load-panel 

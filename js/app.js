@@ -12,7 +12,6 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
         $routeProvider.otherwise({redirectTo: '/livefeed/'});
     });
 
-
 // Submit on Enter, without a real form
 pwApp.directive('ngEnter', function() {
         return function(scope, element, attrs) {
@@ -50,6 +49,7 @@ pwApp.directive('ngEnter', function() {
  * ******
  * Button for Feed Templates need to be toggled and populated from Feed Settings
  * NONCE - not active yet
+ * Feed_settings must have a template URL for feed []
  * 
  * Enhancements
  * *************
