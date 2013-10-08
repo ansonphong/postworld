@@ -1252,7 +1252,11 @@ __POSTWORLD__
 
 __TAXONOMIES__
 - __taxonomy(tax_slug)[fields]__ - Returns taxonomy terms array for the post
-  - Usage : `taxonomy(category)` || `taxonomy(category, post_tag)` || `taxonomy(category)[slug]` || `taxonomy(category,post_tag)[slug,name]`
+  - Usage :  
+    `taxonomy(category)`  
+    `taxonomy(category, post_tag)`  
+    `taxonomy(category)[slug]`  
+    `taxonomy(category,post_tag)[slug,name]`
   - __return__ : *Array* - returns an Associative Array with each term in the given taxonomy
   - __[fields]__ : (optional)(Default : *all*) - The fields to return. If only one, will return flat array.  
   Options : *term_id, name, slug, description, parent, count, taxonomy, url*
