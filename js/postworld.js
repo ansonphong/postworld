@@ -13,11 +13,34 @@ postworld.controller('postworld', function($scope) {
 
 ////////// HELPERS ////////
 window.isInArray =  function(value, array) {
-  return array.indexOf(value) > -1 ? true : false;
+	if (array)
+		return array.indexOf(value) > -1 ? true : false;
+	else
+		return false;
+}
+
+window.varExists = function(value){
+	if ( typeof value === 'undefined' )
+		return false;
+	else
+		return true;
 }
 
 window.isEmpty = function(value){
-  return value[0].value ? true : false;	
+	if ( typeof value === 'undefined' )
+		return false;
+	else
+		return value[0].value ? true : false;	
+}
+
+function extract_parentheses(string){
+	var pattern = /\((.+?)\)/g,
+	    match,
+	    matches = [];
+	while (match = pattern.exec(string)) {
+	    matches.push(match[1]);
+	}
+	return matches;
 }
 
 
@@ -112,10 +135,11 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 			field = attrs.editField;
 
 			///// TEXT INPUTS //////
-			if ( attrs.input.indexOf("input-") > -1){
+			if ( isInArray('input-', attrs.input) ){
 				input_text_fields = ['text','password','hidden','url'];
 				input_extension = attrs.input.replace("input-", ""); // strip "input-"
-				if (input_text_fields.indexOf( input_extension ) > -1){
+
+				if ( isInArray(input_extension, input_text_fields) ){
 
 					// Placeholder
 					if(attrs.placeholder)
@@ -139,48 +163,114 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 				}
 			}
 
+			
+
 			///// SELECT / MULTIPLE SELECT //////
-			if ( attrs.input.indexOf("select") > -1){
+			if ( isInArray( 'select', attrs.input ) ){
+
 
 				// Check for "-multiple" extension
-				input_extension = attrs.input.replace("select-", ""); // strip "input-"
+				var input_extension = attrs.input.replace("select-", ""); // strip "input-"
 				if (input_extension == 'multiple'){
-					multiple = ' multiple ';
+					var multiple = ' multiple ';
+					
 					// Split the value attribute into an Array
-					oValue = attrs.value.split(',');
+					if ( typeof attrs.value !== 'undefined' )
+						var oValue = attrs.value.split(',');
+
 				}
 				else{
-					multiple = '';
-					oValue = attrs.value;
+					var multiple = '';
+					var oValue = attrs.value;
 				}
 				
 				// Get the size of the select area
 				if ( attrs.size )
-					size = " size='"+attrs.size+"' ";
+					var size = " size='"+attrs.size+"' ";
 				else
-					size = '';
+					var size = '';
+
+
+				// Process Taxonomy Edit Field
+				if ( isInArray( 'taxonomy', attrs.editField ) ){
+
+					//current_taxonomy = window[object].taxonomy; // Current setting of current post
+					//taxonomy_options = 
+
+					//select_options = taxonomy_select_options( object.taxonomy );
+					
+					// PARSE SELECT ITEMS
+					// Produces a series of HTML <options> from a given object
+					function parse_select_items( items, selected, depth, child_key ){
+						var select_items = '';
+
+						// ROOT LEVEL ITEMS
+						angular.forEach( items, function( item ){
+							if ( isInArray( item.slug, selected ) )
+								selected_attribute = ' selected ';
+							else
+								selected_attribute = '';
+							select_items += "<option value='" + item.slug + "' "+selected_attribute+" >" + item.name + "</option>";
+
+							// CHILD ITEMS
+							if ( typeof item.terms !== 'undefined' && depth == 2 ){
+								angular.forEach( item[child_key], function( item ){
+									select_items += "<option value='" + item.slug + "' "+selected_attribute+" > - " + item.name + "</option>";
+								});
+							}
+
+						});
+						return select_items;
+					}
+
+					// Extract Selected Terms from Object > Slug to Flat Array
+					function extract_selected_terms_from_object( terms ){
+						var selected = [];
+						angular.forEach( terms, function( term ){
+							selected.push(term.slug);
+						});
+						return selected; // ["eco","life"]
+					}
+
+					// Get the name of the requested taxonomy
+					var tax_name = extract_parentheses( attrs.editField );
+					var terms = window['taxonomy'][tax_name];
+					var post_terms = window[object].taxonomy[tax_name];
+					var selected = extract_selected_terms_from_object( post_terms );
+					var select_items = parse_select_items( terms, selected, 2, 'terms' ); // window[object].taxonomy[tax_name]
+
+				}
+
+				// Process Standard Edit Fields
+				else{
+
+					// Get Object from object the same name as the editField value
+					var select_options = window[object];
+
+					var select_items = "";
+					// Loop through each item in the editField object
+					angular.forEach( select_options, function(value, key){
+						// Check to see if current key in oValue
+						if( key == oValue || isInArray( key, oValue) )
+							selected = 'selected';
+						else
+							selected = '';
+						// Add option
+						select_items += "<option value='"+key+"' "+selected+">"+value+"</option>";
+					});
+
+				}					
+
+
 
 				// Parse the HTML
-				select_head = "<select id='"+attrs.editField+"' name='"+attrs.editField+"' " + multiple + " " + size + ">";
-				select_foot = "</select>";
-				select_items = "";
+				var select_head = "<select id='"+attrs.editField+"' name='"+attrs.editField+"' " + multiple + " " + size + ">";
+				var select_foot = "</select>";
 
-				// Define select options object
-				sub_object = attrs.editField;
-				select_options = window[object];
+				//if ( typeof select_items === 'undefined' ){
+				//}
 
-				// Loop through each item in the editField object
-				angular.forEach( select_options, function(value, key){
-					// Check to see if current key in oValue
-					if( key == oValue || isInArray(key, oValue) )
-						selected = 'selected';
-					else
-						selected = '';
-					// Add option
-					select_items += "<option value='"+key+"' "+selected+">"+value+"</option>";
-				});
-				
-				input_element = angular.element( select_head + select_items + select_foot );
+				var input_element = angular.element( select_head + select_items + select_foot );
 				elem.append( input_element );
 				//$compile( input_element )( scope );
 				

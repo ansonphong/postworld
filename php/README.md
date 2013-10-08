@@ -1251,8 +1251,11 @@ __POSTWORLD__
 - __link_url__
 
 __TAXONOMIES__
-- __taxonomy(tax_slug)__ - Returns taxonomy terms array for the post ie. *taxonomy(category)*
-  - __return__ : *array* - returns an Associative Array with each :
+- __taxonomy(tax_slug)[fields]__ - Returns taxonomy terms array for the post
+  - Usage : `taxonomy(category)` || `taxonomy(category, post_tag)` || `taxonomy(category)[slug]` || `taxonomy(category,post_tag)[slug,name]`
+  - __return__ : *Array* - returns an Associative Array with each term in the given taxonomy
+  - __[fields]__ : (optional)(Default : *all*) - The fields to return. If only one, will return flat array.  
+  Options : *term_id, name, slug, description, parent, count, taxonomy, url*
 
 
 __VIEWER SPECIFIC__
@@ -2052,6 +2055,96 @@ $heirarchy = wp_tree_obj( $args );
 
 ```
 ------
+
+
+### extract_hierarchical_fields ( *$fields_array, $query_string* )
+
+#### Description :
+- Extracts nested comma deliniated values starting with `$query_string` from `$fields_array`
+- Returns an *Array*
+
+
+#### Parameters :
+
+__$fields_array__ : *Array*
+- The array which you want to search through
+
+__$query_string__ : *string*
+- The term which you want the value to match the beginning of
+
+__return__ : *Array*
+
+#### Example / Usage :
+
+``` php
+$fields = array(
+	"taxonomy(category)",
+	"taxonomy(topic,section)",
+	"taxonomy(post_tag)"
+	);
+
+$linear_fields = json_encode( extract_linear_fields( $fields,'taxonomy' ) );
+
+```
+
+Result :
+
+``` javascript
+
+[ "category", "topic", "section", "post_tag" ]
+
+```
+
+------
+
+### extract_hierarchical_fields ( *$fields_array, $query_string* )
+
+#### Description :
+- Extracts nested comma deliniated values starting with `$query_string` from `$fields_array`
+- Nests inside each value the fields which are with it in square brackets
+- Returns an *Associative Array*
+
+
+#### Parameters :
+
+__$fields_array__ : *Array*
+- The array which you want to search through
+
+__$query_string__ : *string*
+- The term which you want the value to match the beginning of
+
+__return__ : *Array*
+
+#### Example / Usage :
+
+``` php
+$fields = array(
+	"taxonomy(category)[id,name]",
+	"taxonomy(topic,section)[id,slug]",
+	"taxonomy(post_tag)"
+	);
+
+$hierarchical_fields = json_encode( extract_hierarchical_fields( $fields, 'taxonomy' ) );
+
+```
+
+Result :
+
+``` javascript
+{
+	"category":["id","name"],
+	"topic":["id","slug"],
+	"section":["id","slug"],
+	"post_tag":[""]
+}
+
+```
+
+
+
+
+
+
 
 
 

@@ -143,6 +143,31 @@ function extract_parenthesis_values ( $input, $force_array = true ){
 }
 
 
+function extract_bracket_values ( $input, $force_array = true ){
+	// Extracts comma deliniated values which are contained in square brackets
+	// Returns an Array of values that were previously comma deliniated,
+	// unless $force_array is set TRUE.
+
+	// Extract contents of (parenthesis)
+	preg_match('#\[(.*?)\]#', $input, $match);
+
+	// Split into an Array
+	$value_array = explode(',', $match[1]);
+
+	// Remove extra white spaces from Array values
+	foreach($value_array as $index => $value) 
+			$value_array[$index] = trim($value);
+
+	// If $value_array has only 1 item
+	if ( count($value_array) == 1 && $force_array == false )
+		return $value_array[0];
+	// Otherwise, return array
+	else
+		return $value_array;
+}
+
+
+
 function extract_fields( $fields_array, $query_string ){
 	// Extracts values starting with $query_string from $fields_array
 	// and returns them in a new Array.
@@ -178,6 +203,45 @@ function extract_linear_fields( $fields_array, $query_string, $force_array = tru
 	else
 		return false;
 }
+
+
+
+function extract_hierarchical_fields( $fields_array, $query_string ){
+	// Extracts nested comma deliniated values starting with $query_string from $fields_array
+	// And nests inside it fields which are with it in square brackets
+	// and returns them in a new Array.
+
+	$fields_request = extract_fields( $fields_array, $query_string );
+	// RESULT : ["taxonomy(category)[id,name]","taxonomy(topic,section)[id,slug]"]
+
+	if (!empty($fields_request)){
+
+		$extract_fields = array();
+
+		///// ROOT VALUES /////
+		// Process each request one at a time >> author(display_name,user_name,posts_url) 
+		foreach ($fields_request as $field_request){
+
+			$root_values = extract_parenthesis_values($field_request, true);
+
+			///// PROCESS SUB-VALUES /////
+			// If there are sub-fields defined inside [square,brackets]
+				$sub_values = extract_bracket_values($field_request, true);
+
+				// Cycle through each sub-value and apply it to the root field
+				foreach ($root_values as $value) {
+					$hierarchical_values[$value] = $sub_values;					
+				}
+				$extract_fields = array_merge( $extract_fields, $hierarchical_values);
+		}
+
+		return $extract_fields;
+
+	}
+	else
+		return false;
+}
+
 
 
 function get_avatar_url( $user_id, $avatar_size ){
