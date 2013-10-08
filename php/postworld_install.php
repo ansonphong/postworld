@@ -60,15 +60,16 @@ function postworld_install() {
       user_role char(16) NOT NULL,
       viewed MEDIUMTEXT  NULL, 
       favorites MEDIUMTEXT  NULL, 
-      location_city char(24) NOT NULL,
-      location_region char(24) NOT NULL,
-      location_country char(24) NOT NULL,
-      view_karma mediumint(8) DEFAULT '0' NOT NULL,
-      share_karma mediumint(8) DEFAULT '0' NOT NULL,
-      post_points mediumint(8) DEFAULT '0' NOT NULL,
+      location_city char(24) NULL,
+      location_region char(24) NULL,
+      location_country char(24) NULL,
+      view_karma mediumint(8) DEFAULT '0' NULL,
+      share_karma mediumint(8) DEFAULT '0' NULL,
+      post_points mediumint(8) DEFAULT '0' NULL,
       post_points_meta MEDIUMTEXT NULL,
-      comment_points mediumint(8) DEFAULT '0' NOT NULL,
-      share_points mediumint(8) DEFAULT '0' NOT NULL
+      comment_points mediumint(8) DEFAULT '0' NULL,
+      share_points mediumint(8) DEFAULT '0' NULL,
+      post_relationships TEXT NULL
     );";
 
   $user_shares_table_name = $wpdb->pw_prefix.'user_shares';

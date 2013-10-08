@@ -13,6 +13,7 @@
 		public static $LOCATION_REGION ='location_region';
 		public static $VIEW_KARMA='view_karma';
 		public static $SHARE_KARMA='share_karma';
+		public static $POST_RELATIONSHIP='post_relationships';
 			
  	}
  
@@ -441,7 +442,235 @@
 	/* Later*/
 	function has_shared ( $user_id, $post_id ){}
 
+	function set_post_relationship( $relationship, $post_id, $user_id, $switch ){
+		/*Used to set a given user's relationship to a given post
+		Parameters
+		------------
+		
+		 * $relationship : string
+		The type of relationship to set
+		 Options :
+		 viewed
+		 favorites
+		 view_later
+		
+		 * $post_id : integer
+		 * $user_id : integer
+		 * $switch : boolean
+		
+		true : Add the post_id to the relationship array
+		false : Remove the post_id from the relationship array
+		Process
+		
+		Add/remove the given post_id to the given relationship array in post_relationships column in User Meta table
+		Usage
+		
+		    set_post_relationship( 'favorites', '24', '101', true )
+		Anatomy
+		
+		JSON in post_relationships column in User Meta table
+		{
+		    viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
+		    favorites:[12,16,25],
+		    read_later:[58,78],
+		}
+		return : boolean
+		
+		true - If successful set on
+		false - If successful set off
+		error - If error*/
+		
+		
+		$relashionship_db = get_relationship_from_user_meta($user_id);
+		$relashionship_db_array =  (array)json_decode($relashionship_db);
+		if($relashionship_db){
+			if($switch){
+				if(!in_array($post_id,$relashionship_db_array[$relationship])){
+			 		$relashionship_db_array[$relationship][]=$post_id;
+					update_post_relationship($user_id, $relashionship_db_array);
+				}
+				return TRUE;
+			}else{
+				if(in_array($post_id,$relashionship_db_array[$relationship])){
+					unset($post_id,$relashionship_db_array[$relationship][$post_id]);
+					update_post_relationship($user_id, $relashionship_db_array);
+				}
+				return FALSE;
+			}
+		}else{
+			//add record to user meta or add relationship
+			
+			add_record_to_user_meta($user_id);
+			if($switch){
+				$relashionship_db_array= array('viewed'=>array(),"favorites"=>array(),'read_later'=>array());
+			 	$relashionship_db_array[$relationship][]=$post_id;
+				update_post_relationship($user_id, $relashionship_db_array);
+				return TRUE;
+			}
+			else
+				return FALSE;	
+			}
+		return 'error';
+		
+	}
 
+	function update_post_relationship($user_id,$relationship){
+		global $wpdb;
+		$wpdb -> show_errors();
+		$query  = "update $wpdb->pw_prefix"."user_meta set post_relationships='".json_encode($relationship)."' where user_id=".$user_id;
+		$wpdb->query($query);
+	}
 	
+	function add_record_to_user_meta($user_id){
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		$query = "select * from ".$wpdb->pw_prefix."user_meta where user_id=".$user_id;
+		$row = $wpdb->get_row($query);
+		
+		if($row ==null){
+		
+			$user_role = get_user_role($user_id);
+			
+			$query = "insert into $wpdb->pw_prefix"."user_meta (`user_id`,
+					`user_role`,
+					`viewed`,
+					`favorites`,
+					`location_city`,
+					`location_region`,
+					`location_country`,
+					`view_karma`,
+					`share_karma`,
+					`post_points`,
+					`comment_points`,
+					`post_points_meta`,
+					`share_points`) values($user_id,'$user_role',null,null,null,null,null,0,0,0,0,null,0)";
+	
+			$wpdb->query($query);}
+	}
+	
+	function get_post_relationship( $relationship, $post_id, $user_id ){
+		
+		/*
+		 Used to get a given user's relationship to a given post
+		Parameters
+		
+		$relationship : string
+		
+		The type of relationship to set
+		Options :
+		all
+		viewed
+		favorites
+		view_later
+		$post_id : integer
+		
+		$user_id : integer
+		
+		Process
+		
+		Check to see if the post_id is in the given relationship array in the post_relationships column in User Meta table
+		return : boolean
+		
+		If $relationship = all : return an Array containing all the relationships it's in
+		    array('viewed','favorites')
+		 * */
+		$relationship_array = get_relationship_from_user_meta($user_id);
+		print_r($relationship_array);
+		if($relationship_array){
+			/*array(
+			    'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
+			    'favorites' => [12,16,25],
+			    'view_later' => [58,78]
+			    )*/
+			 $relationship_array =  (array) json_decode($relationship_array);  
+			 print_r($relationship_array);
+			 if($relationship != 'all'){
+				 if(in_array($post_id, $relationship_array[$relationship])){
+				 	return TRUE;
+				 }else return FALSE;
+			 }// not all
+		else{
+			$output = array();
+			if(in_array($post_id, $relationship_array['viewed']))
+				$output[]='viewed';
+			if(in_array($post_id, $relationship_array['favorites']))
+				$output[]='favorites';
+			if(in_array($post_id, $relationship_array['view_later']))
+				$output[]='view_later';	
+			
+			return $output;
+			}
+		}else{
+			if($relationship != 'all') return FALSE;
+			else return array();
+		}
+		
+	}
+	
+	function get_post_relationships( $user_id=null, $relationship=null ){
+		/*
+		 Used to get a list of all post relationships of a specified user
+			Paramaters
+			
+			$user_id : integer
+			
+			$relationship : integer (optional)
+			
+			Process
+			
+			Reads the specified relationship Array from post_relationships column in User Meta table
+			If relationship is undefined, return entire post_relationships object
+			Decode from stored JSON, return PHP Array
+			Usage
+			
+			Specified post relationship :
+			
+			    get_post_relationships( '1', 'favorites' )
+			returns : Array of post IDs
+			
+			    array(24,48,128,256,512)    
+			Un-specified post relationship :
+			
+			    get_post_relationships( '1' )
+			returns : Contents of post_relationships
+			
+			array(
+			    'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
+			    'favorites' => [12,16,25],
+			    'view_later' => [58,78]
+			    )
+			POST RELATIONSHIP : "SET" ALIASES
+			
+			If no $user_id is defined, use get_current_user_id() method to get user ID
+			If no $post_id is defined, use $post->ID method to get the post ID
+					 * 
+					 */
+			if(!$user_id){
+				$user_id = get_current_user_id();
+			}
+			
+			$relationships_db = get_relationship_from_user_meta($user_id);
+			$relationships_db_array = (array) json_decode($relationships_db);
+			if($relationships_db){
+				if($relationship){
+					return $relationships_db_array[$relationship];
+				}else{
+					return $relationships_db_array;
+				}
+			}
+			
+			return array();
+	}
+
+function get_relationship_from_user_meta($user_id){
+		global $wpdb;
+		$wpdb -> show_errors();
+		$query = "select ".user_fields_names::$POST_RELATIONSHIP." from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
+		//echo($query);
+		$relationshp = $wpdb->get_var($query);
+		return $relationshp;
+		
+}
 
 ?>
