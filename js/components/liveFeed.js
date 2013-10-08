@@ -290,38 +290,5 @@ pwApp.controller('pwLiveFeedController',
 				}
 			);
 		  };
-		$scope.pwRegisterFeed = function() {
-			$log.info('pwLiveFeedController.pwRegisterFeed For',$scope.feed);
-			// TODO set Nonce from UI
-			pwData.setNonce(78);
-			$scope.args.write_cache = $scope.args.feed_query.pw_write_cache; 
-			$scope.args.feed_id = $scope.args.feed_query.pw_register_id; 
-        	pwData.pw_register_feed($scope.args).then(
-				// Success
-				function(response) {
-					if (response.status === undefined) {
-						console.log('response format is not recognized');
-						$scope.message = "Error in Feed Registration";
-						// TODO Show User Friendly Error Message
-						return;
-					}
-					if (response.status==200) {
-						$log.info('pwLiveFeedController.pwRegisterFeed Success',response.data);
-						$scope.message = "Feed Registered Successfully";
-						return response.data;						
-					} else {
-						// handle error
-						console.log('error',response.status,response.message);
-						$scope.message = "Error in Feed Registration"+response.message;
-						// TODO Show User Friendly Error Message
-					}
-				},
-				// Failure
-				function(response) {
-					$log.error('pwLiveFeedController.pwRegisterFeed Failure',response);
-					// TODO Show User Friendly Error Message
-				}
-			);
-		  };
     }
 );

@@ -27,6 +27,11 @@ pwApp.directive('ngEnter', function() {
         };
     });
     
+pwApp.run(function($rootScope, $templateCache) {
+   $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
+});
     
 /*
  * Getting Organized (Michel):
