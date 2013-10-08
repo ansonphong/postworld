@@ -35,7 +35,7 @@ pwApp.directive('ngEnter', function() {
  ******************
  * Create Advanced Search Panel [complete missing boxes]
  * Do we need Directives for non-post types?
- * Create Post Types Toggles in Search Panel Dynamically
+ * Create Post Types Toggles in Search Panel Dynamically http://jsfiddle.net/BtrZH/5/
  *   
  * TODO List
  * *********
@@ -50,6 +50,7 @@ pwApp.directive('ngEnter', function() {
  * Button for Feed Templates need to be toggled and populated from Feed Settings
  * NONCE - not active yet
  * Feed_settings must have a template URL for feed []
+ * Remove additional fields added to args and saved with register_feed()
  * 
  * Enhancements
  * *************

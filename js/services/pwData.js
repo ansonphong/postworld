@@ -121,9 +121,10 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			var idEnd = idBegin+feedSettings.load_increment;
 			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);
 			var fields;
-			// TODO check that query_args exists first
-			if (feedSettings.query_args.fields != null) {
-				fields = feedSettings.query_args.fields;
+			if (feedSettings.query_args) {
+				if (feedSettings.query_args.fields != null) {
+					fields = feedSettings.query_args.fields;
+				}				
 			}
 			$log.info('pwData.pw_get_posts range:',idBegin, idEnd);
 			// Set Fields

@@ -34,20 +34,6 @@ pwApp.controller('pwLoadPanelController',
 				$log.info('pwLoadPanelController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
 		});				
 
-    	// the below is not needed since we are using args.feed_query from parent directive live-feed into load-panel 
-		/*
-		$scope.UpdateArguments1= function() {
-			$log.info('Directive:LoadPanel Controller:pwLoadPanelController UpdateArguments',$scope);
-			//Emit Arguments to Parent [liveFeed Controller]
-    		this.$emit("UPDATE_PARENT", $scope.feed_query);
-    		this.$emit("EXEC_PARENT", $scope.feed_query);
-		};
-		$scope.submitForm= function() {
-			$log.info('Directive:LoadPanel Controller:pwLoadPanelController Submit Form',$scope.feedQuery);
-    		this.$emit("SUBMIT_FORM_PARENT");
-		};
-		*/
-
     	// TODO check best location for that code, should we create a panel child?
 		$scope.toggleOrder = function() {
 			if ($scope.feedQuery.order == 'ASC') {
@@ -65,8 +51,7 @@ pwApp.controller('pwLoadPanelController',
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function(view) {
 			$log.info('pwLoadPanelController.changeFeedTemplate ChangeTemplate',view);
-	    	var feedTemplateUrl = pwData.pw_get_template('posts','post',view);
-    		this.$emit("CHANGE_FEED_TEMPLATE", feedTemplateUrl);		    	
+    		this.$emit("CHANGE_FEED_TEMPLATE", view);		    	
 		};		
     	
     }

@@ -16,25 +16,12 @@ pwApp.directive('feedItem', function() {
 
 pwApp.controller('pwFeedItemController',
     function pwFeedItemController($scope, $location, $log, pwData, $attrs) {
-    	
-		// Get Initial Template from Live Feed Directive on Startup
-		pwData.templates.promise.then(function(value) {
-				var FeedID = $scope.feedId;
-				var view = 'list';	// TODO get from Constant values
-				if (!$scope.feedId) {
-					$log.info('no valid Feed ID provided in Feed Settings',$scope);
-					return;
-				}
-			   // Get Default View Name - TODO if the default view changes, then we need to get it from live feed directive instead
-			   if (pwData.feed_settings[FeedID].view.current)
-			   		view = pwData.feed_settings[FeedID].view.current;
-		    	$scope.templateUrl = pwData.pw_get_template('posts','post',view);
-				// $log.info('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
-		});
-		  
+    	$scope.templateUrl = $scope.$parent.feed_item_template;
+    	$log.info('pwFeedItemController New Template=',$scope.templateUrl);    	
+		// TODO set templateURL?		  
 		// Template Update Event
 		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feedTemplateUrl){
-		   $log.info('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
+		   // $log.info('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
 		   $scope.templateUrl = feedTemplateUrl;
 		   });		  		      	
     }

@@ -47,9 +47,8 @@ pwApp.controller('pwLiveFeedController',
     		$scope.directive = 'loadFeed';
     		$scope.feed		= $attrs.loadFeed;
 	    	$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
-    	}; 
+    	};
     	
-    	// Get Data from Feed_Settings			   
     	// TODO move getting templates to app startup
     	pwData.pw_get_templates(null).then(function(value) {
 		    // TODO should we create success/failure responses here?
@@ -57,19 +56,26 @@ pwApp.controller('pwLiveFeedController',
 		    pwData.templates.resolve(value.data);
 		    pwData.templatesFinal = value.data;
 		    console.log('pwLiveFeedController templates=',pwData.templatesFinal);
-		  });
-    	
+		  });    	
+    	    	
+    	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
-				var FeedID = $scope.feed;
-				if (!FeedID) {
+				if (!$scope.feed) {
 					$log.info('no valid Feed ID provided in Feed Settings',$scope);
 					return;
 				}
-			   // Get Default View Name - TODO if the default view changes, then we need to get it from live feed directive instead
-			   if (pwData.feed_settings[FeedID].feed_template) {
-			   		var template = pwData.feed_settings[FeedID].feed_template;			   	
+				var view = 'list';	// TODO get from Constant values
+				// Get Feed Item Template from Feed Settings by default
+			   if (pwData.feed_settings[$scope.feed].view.current)
+			   		view = pwData.feed_settings[$scope.feed].view.current;
+		    	$scope.feed_item_template = pwData.pw_get_template('posts','post',view);
+				$log.info('pwLiveFeedController Set Initial Feed Item Template to ',view, $scope.feed_item_template);
+				
+			   // Get Feed Template from feed_settings if it exists, otherwise get it from default path
+			   if (pwData.feed_settings[$scope.feed].feed_template) {
+			   		var template = pwData.feed_settings[$scope.feed].feed_template;			   	
 			    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-					$log.info('LiveFeed() Set Initial Feed Template to ',FeedID, template, $scope.templateUrl);
+					$log.info('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
 			   }
 			   else {
 			   		if ($scope.directive=='liveFeed')
@@ -82,10 +88,17 @@ pwApp.controller('pwLiveFeedController',
 				// $log.info('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
 		});
     	
-		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, feedTemplateUrl){
-		   $log.info('pwLiveFeedController: Event Received:CHANGE_FEED_TEMPLATE',feedTemplateUrl);
+    	// Broadcast Feed Template Value when it changes
+		$scope.$watch('feed_item_template', function(newValue, oldValue) { 
+			// $scope.feed_item_template = 
+				// scope.counter = scope.counter + 1; 
+			});			
+			
+		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
+		   $log.info('pwLiveFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
+	    	$scope.feed_item_template = pwData.pw_get_template('posts','post',view); 
 		   // Broadcast to all children
-			$scope.$broadcast("FEED_TEMPLATE_UPDATE", feedTemplateUrl);		   
+			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_template);
 		   });
 		   
    		$scope.getNext = function() {
@@ -191,7 +204,7 @@ pwApp.controller('pwLiveFeedController',
 						// Insert Response in Feed Data
 						pwData.feed_data[$scope.feed].feed_outline = response.data.feed_outline;						
 						pwData.feed_data[$scope.feed].posts = response.data.post_data;						
-						// pwData.feed_data[$scope.feed].loaded = response.data.loaded;						
+						pwData.feed_data[$scope.feed].loaded = response.data.post_data;						
 						// Count Length of loaded and feed_outline
 						pwData.feed_data[$scope.feed].count_loaded = response.data.post_data.length;						
 						pwData.feed_data[$scope.feed].count_feed_outline = response.data.feed_outline.length;
@@ -233,7 +246,7 @@ pwApp.controller('pwLiveFeedController',
 			pwData.feed_data[$scope.feed].status = 'loading';
 			
 			
-			$log.info('pwLiveFeedController.pwScrollFeed For',$scope.feed);
+			$log.info('pwLiveFeedController.pwScrollFeed For',$scope.feed,$scope);
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
 			// console.log('Params=',$scope.args);
