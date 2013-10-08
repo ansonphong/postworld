@@ -21,12 +21,16 @@ function get_user_post_types(){
 	   //'_builtin' => false,
 	   'capability_type' => 'post',
 	);
-	$post_types = get_post_types( $args, 'names');
+	$post_types_obj = get_post_types( $args, 'objects');
 
+	$post_types = array();
+	foreach ( $post_types_obj as $key => $value) {
+		$slug = $key;
+		$name = $value->labels->name;
+		$post_types[$slug] = $name;
+	}
 	return $post_types;
-
 }
-
 
 
 //////////// BRANCH : Create a recursive branch from a flat object ////////////
