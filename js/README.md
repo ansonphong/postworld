@@ -114,7 +114,7 @@ post_data : { Object }
 ## Directives
 
 
-###live-feed ( *postworld.directive* )
+###live-feed ( *postworld[ directive ]* )
 
 ####Description:
 Displays a live unregistered feed based on `feed_query pw_query()` args
@@ -166,7 +166,7 @@ feed_init['feed_id'] = {
 
 ------
 
-### load-feed ( *postworld.directive* )
+### load-feed ( *postworld[ directive ]* )
 
 #### Description:
 - Loads a registered feed, which has been registered with the `pw_register_feed()` PHP method
@@ -211,7 +211,7 @@ feed_init['feed_id'] = {
 
 ------
 
-### load-panel ( *postworld.directive* )
+### load-panel ( postworld[ directive ]* )
 
 #### Description:
 - Loads a panel by __panel_id__
@@ -319,9 +319,44 @@ templates = {
 
 ------
 
-### edit-field ( *postworld.directive* )
+### edit-form ( *postworld [ controller ]* )
 - __File__ : *js/postworld.js*
-- __Status__ : In development (phongmedia) 
+- __Status__ : In concepting 
+
+#### Description
+- Sits ontop of a form
+- Controls and manages input and output for the value of form fields
+
+
+#### Methods
+
+__Load__ : *$args*
+- Pull in new form data from server 
+- Parameters:
+  - 
+
+__Poll__ : *args*
+- Polls a value from the DB and updates the model
+- Parameters:
+  - 
+
+
+__Submit__
+- Submits callback function($args) via AJAX
+- Parameters:
+  - 
+
+__Filter__
+- Make a syntax or format transformation between model and DOM
+- Parameters:
+  - 
+
+
+------
+
+### edit-field ( *postworld [ directive ]* )
+- __File__ : *js/postworld.js*
+- __Status__ : In development (phongmedia) Date : October 8, 2013
 
 #### Description
 - Loads a field on the Edit/Publish Post page
