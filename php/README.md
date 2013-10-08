@@ -1253,6 +1253,7 @@ __POSTWORLD__
 __TAXONOMIES__
 - __taxonomy(tax_slug)[fields]__ - Returns taxonomy terms array for the post
   - Usage :  
+    `taxonomy(all)`  
     `taxonomy(category)`  
     `taxonomy(category, post_tag)`  
     `taxonomy(category)[slug]`  
