@@ -356,7 +356,7 @@ __Filter__
 
 ### edit-field ( *postworld [ directive ]* )
 - __File__ : *js/postworld.js*
-- __Status__ : In development (phongmedia) Date : October 8, 2013
+- __Status__ : In development (phongmedia) // October 8, 2013
 
 #### Description
 - Loads a field on the Edit/Publish Post page
