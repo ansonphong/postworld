@@ -1,6 +1,15 @@
 Postworld // Angular / JS Functions
 =========
 
+## Index
+0. [ __General Functions__ ](#general-functions)
+0. [ __Functions__ ](#functions)
+0. [ __Directives__ ](#directives)
+0. [ __Edit Post__ ](#edit-post)
+0. [ __Related Notes__ ](#related-notes)
+
+
+------
 
 ## General Functions
 
@@ -113,6 +122,7 @@ post_data : { Object }
 
 ## Directives
 
+------
 
 ###live-feed ( *[ directive ]* )
 
