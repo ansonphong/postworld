@@ -1,0 +1,13 @@
+<div>
+	<h1>Load Feed - Feed 3</h1>
+    <div id="scrollMe" style="height: 600px; overflow-y: scroll;">
+	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
+	    <div ng-repeat='post in items' >
+	    	<div feed-item ng-include="templateUrl" post="post" feed-id='args.feed_id'></div>
+			<hr>
+	      <div style='clear: both;'></div>
+	    </div>
+	    <div ng-show='busy'>Loading data...</div>
+	  </div>
+  	</div>
+</div>

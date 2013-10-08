@@ -22,7 +22,7 @@ pwApp.controller('pwFeedItemController',
 				var FeedID = $scope.feedId;
 				var view = 'list';	// TODO get from Constant values
 				if (!$scope.feedId) {
-					$log.info('no valid Feed ID provided in Feed Settings');
+					$log.info('no valid Feed ID provided in Feed Settings',$scope);
 					return;
 				}
 			   // Get Default View Name - TODO if the default view changes, then we need to get it from live feed directive instead

@@ -8,6 +8,7 @@
 		panels : {
 			'panel1'	: 'feed_search',	
 			'panel2'	: 'feed_header',	
+			'panel3'	: 'feed_register',	
 		},
 		view : {
 			current : 'list',
@@ -18,7 +19,8 @@
 			'year'	: '2009',
 			's'	: 'two',
 		},
-	};
+		feed_template: 'feed_widget1',	// Optional, needed in case of different widgets [having different panels for example] 
+	};	
 	feed_settings['feed2'] = {
 		preload : 14,
 		load_increment : 5,
@@ -38,7 +40,25 @@
 			'year'	: '2010',
 			's'	: 'two',
 		},
+		feed_template: 'feed_widget2',	// Optional, needed in case of different widgets [having different panels for example] 
+	};
+	feed_settings['myfeed'] = {
+		preload : 14,
+		load_increment : 5,
+		offset: 0,
+		max_posts:200,
+		view : {
+			current : 'detail',
+			options : ['list','detail', 'grid','full']
+		},
+		feed_template: 'feed_widget3',	// Optional, needed in case of different widgets [having different panels for example] 
 	};
 </script>
+<<<<<<< HEAD
+<div load-feed='myfeed' ng-include="templateUrl"></div>
+<div live-feed='feed1' ng-include="templateUrl"></div>
+<div live-feed='feed2' ng-include="templateUrl"></div>
+=======
 <div live-feed='feed1'></div>
 
+>>>>>>> fc5333033ecbb4199abfca58bab90b419f8a7410

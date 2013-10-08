@@ -98,7 +98,7 @@ function add_new_feed($feed_id,$feed_query){
 	global $wpdb;
 	$wpdb->show_errors(); 
 	$query = "insert into $wpdb->pw_prefix"."feeds values('$feed_id','".json_encode($feed_query)."',null,null,null,null)";
-	echo $query;
+	//echo $query;
 	$wpdb->query($query);
 }
 function pw_register_feed ( $args ){
@@ -149,14 +149,14 @@ function pw_register_feed ( $args ){
 	
 	 if($args['feed_id']){
 	 	$feed_row = pw_get_feed($args['feed_id']);
-		echo json_encode($feed_row);
+		// echo json_encode($feed_row);
 		if(!$feed_row){
 			add_new_feed($args['feed_id'],$args['feed_query']);
 				$args['write_cache'] =  TRUE;
 				pw_cache_feed($args['feed_id']);
 			
 		}else{
-			echo ($args['write_cache']);
+			// echo ($args['write_cache']);
 			//update feed query
 			update_feed_query($args['feed_id'], $args['feed_query']);
 			if($args['write_cache'] ===  TRUE){
@@ -172,7 +172,7 @@ function update_feed_query($feed_id, $feed_query){
 	global $wpdb;	
 	$wpdb->show_errors(); 
 	$query = "update $wpdb->pw_prefix"."feeds set feed_query='".json_encode($feed_query)."' where feed_id='".$feed_id."'";
-	echo $query;
+	//echo $query;
 	$wpdb->query($query);
 }
 
