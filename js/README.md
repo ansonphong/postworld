@@ -114,7 +114,7 @@ post_data : { Object }
 ## Directives
 
 
-###live-feed ( *postworld[ directive ]* )
+###live-feed ( *[ directive ]* )
 
 ####Description:
 Displays a live unregistered feed based on `feed_query pw_query()` args
@@ -166,7 +166,7 @@ feed_init['feed_id'] = {
 
 ------
 
-### load-feed ( *postworld[ directive ]* )
+### load-feed ( *[ directive ]* )
 
 #### Description:
 - Loads a registered feed, which has been registered with the `pw_register_feed()` PHP method
@@ -211,7 +211,7 @@ feed_init['feed_id'] = {
 
 ------
 
-### load-panel ( postworld[ directive ]* )
+### load-panel ( *[ directive ]* )
 
 #### Description:
 - Loads a panel by __panel_id__
@@ -319,7 +319,7 @@ templates = {
 
 ------
 
-### edit-form ( *postworld [ controller ]* )
+### edit-form ( *[ controller ]* )
 - __File__ : *js/postworld.js*
 - __Status__ : In concepting 
 
@@ -354,7 +354,7 @@ __Filter__
 
 ------
 
-### edit-field ( *postworld [ directive ]* )
+### edit-field ( *[ directive ]* )
 - __File__ : *js/postworld.js*
 - __Status__ : In development (phongmedia) // October 8, 2013
 
