@@ -539,4 +539,69 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 }
 
+
+function pw_insert_post ( $postarr, $wp_error = TRUE ){
+	/*
+	  
+	 * Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post
+		Include additional Postworld fields as inputs
+		
+	 * Parameters : $post Array
+		All fields in wp_insert_post() Method
+		post_class
+		post_format
+		link_url
+		external_image
+		 
+	return :
+	post_id - If added to the database, otherwise return WP_Error Object
+	 
+	 * */
+	
+	$post_ID = wp_insert_post($postarr,$wp_error);
+	if(gettype($post_ID) == 'integer'){ // successful
+		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"]||$postarr["external_image"])	{
+			global $wpdb;
+			$wpdb -> show_errors();
+			add_recored_to_post_meta($post_ID);
+				$query = "update $wpdb->pw_prefix"."post_meta set ";
+				 $insertComma = FALSE;
+				if($postarr["post_class"]){
+					$query.="post_class='".$postarr["post_class"]."'";
+					 $insertComma= TRUE;
+				} 
+				if($postarr["post_format"]){
+					if($insertComma === TRUE) $query.=" , ";
+					$query.="post_format='".$postarr["post_format"]."'";
+					 $insertComma= TRUE;
+				} 
+			/*	if($postarr["external_image"]){
+					if($insertComma === TRUE) $query.=" , ";
+					$query.="external_image='".$postarr["external_image"]."'";
+					 $insertComma= TRUE;
+				} */
+				if($postarr["link_url"]){
+					if($insertComma === TRUE) $query.=" , ";
+					$query.="link_url='".$postarr["link_url"]."'";
+					 $insertComma= TRUE;
+				} 
+				
+			 	if($insertComma === FALSE ){return "insufficient Parameters";}
+				else{
+					$query.=" where post_id=".$post_ID ;
+					//echo $query;
+	 				$wpdb->query($query);
+					
+				}
+			
+			
+		}
+	}
+		
+	return $post_ID;
+
+	 
+	
+}
+
 ?>

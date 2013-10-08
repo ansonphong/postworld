@@ -521,7 +521,19 @@
 		else return false;
 	}
 	
-	
+	function does_post_meta_exist($post_id){
+		global $wpdb;	
+		$wpdb-> show_errors();
+		
+		 
+		$query = "select * from ".$wpdb->pw_prefix."post_meta where post_id=".$post_id;
+		$row = $wpdb->get_row($query);
+		
+		if($row ==null){
+			return false;
+		}
+		else return true;
+	}
 	function add_recored_to_post_meta($post_id, $points=0,$rank_score=0,$favorites=0,$post_shares=0){
 		/*
 		 This function gets all post data and inserts a record in wp_postworld_post_meta table
@@ -539,10 +551,9 @@
 		$wpdb-> show_errors();
 		
 		 
-		$query = "select * from ".$wpdb->pw_prefix."post_meta where post_id=".$post_id;
-		$row = $wpdb->get_row($query);
 		
-		if($row ==null){
+		
+		if(!does_post_meta_exist($post_id)){
 			$format = get_post_format();
 			if ( false === $format )
 			$format = 'standard';
