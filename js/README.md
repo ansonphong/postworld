@@ -5,6 +5,7 @@ Postworld // Angular / JS Functions
 0. [ __General Functions__ ](#general-functions)
 0. [ __Functions__ ](#functions)
 0. [ __Directives__ ](#directives)
+0. [ __Controllers__ ](#controllers)
 0. [ __Edit Post__ ](#edit-post)
 0. [ __Related Notes__ ](#related-notes)
 
@@ -322,6 +323,14 @@ templates = {
 	     },
 };
 ```
+
+------
+
+## Controllers
+
+------
+
+> Controllers go here...
 
 ------
 
