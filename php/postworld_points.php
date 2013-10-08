@@ -538,28 +538,32 @@
 		global $wpdb;	
 		$wpdb-> show_errors();
 		
+		 
+		$query = "select * from ".$wpdb->pw_prefix."post_meta where post_id=".$post_id;
+		$row = $wpdb->get_row($query);
 		
-		$format = get_post_format();
-		if ( false === $format )
-		$format = 'standard';
-		
-		$post_data= get_post( $post_id, ARRAY_A );
-		//echo json_encode($post_data);
-		$query = "insert into ".$wpdb->pw_prefix.'post_meta'." values("
-				.$post_id.","
-				.$post_data['post_author'].","
-				."'post_class'"."," //TODO
-				."'".$format."',"
-				."'".$post_data['guid']."',"
-				.$points.","
-				.$rank_score.","
-				.$favorites.","
-				.$post_shares
-				.")";
-				
-		//echo $query."<br>";
-		$wpdb -> query($query);
-		
+		if($row ==null){
+			$format = get_post_format();
+			if ( false === $format )
+			$format = 'standard';
+			
+			$post_data= get_post( $post_id, ARRAY_A );
+			//echo json_encode($post_data);
+			$query = "insert into ".$wpdb->pw_prefix.'post_meta'." values("
+					.$post_id.","
+					.$post_data['post_author'].","
+					."'post_class'"."," //TODO
+					."'".$format."',"
+					."'".$post_data['guid']."',"
+					.$points.","
+					.$rank_score.","
+					.$favorites.","
+					.$post_shares
+					.")";
+					
+			//echo $query."<br>";
+			$wpdb -> query($query);
+		}
 	}
 	
 	
