@@ -237,10 +237,10 @@ function pw_load_feed ( $feed_id, $preload=0 ){
 	$feed_row = pw_get_feed($feed_id);
 	//print_r($feed_row);
 	if($feed_row){
+		$feed_row->feed_outline = array_map("intval", explode(",", $feed_row->feed_outline));
 		if($preload>0){
-			$feed_outline = array_map("intval", explode(",", $feed_row->feed_outline));
 			//print_r($feed_outline);
-			$preload_posts = array_slice( $feed_outline, 0, $preload ); // to get top post ids
+			$preload_posts = array_slice( $feed_row->feed_outline, 0, $preload ); // to get top post ids
 			//print_r($preload_posts);
 			$feed_query_feeds = (array)json_decode($feed_row->feed_query);//["fields"];
 			//print_r($feed_query_feeds);
