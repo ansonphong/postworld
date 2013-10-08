@@ -339,6 +339,7 @@ __data-input__ : *string* (required)
 - Options :
   - __input__ (input-text, input-password, input-hidden, input-url)
   - __select__ (select-multiple)
+  - __textarea__
 
 __data-size__ : *integer* (optional)
 - The 
