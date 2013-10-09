@@ -192,6 +192,15 @@ __return__ : *integer* (number of points voted)
 
 ------
 
+__COMMENT POINTS__
+
+------
+
+### get_comment_points( $comment_id )
+### set_comment_points( $comment_id, $set_points )
+
+------
+
 __USER POST POINTS__
 
 ------
