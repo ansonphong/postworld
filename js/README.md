@@ -125,7 +125,7 @@ post_data : { Object }
 
 ------
 
-###live-feed ( *[ directive ]* )
+###live-feed *[ directive ]*
 
 ####Description:
 Displays a live unregistered feed based on `feed_query pw_query()` args
@@ -177,7 +177,7 @@ feed_init['feed_id'] = {
 
 ------
 
-### load-feed ( *[ directive ]* )
+### load-feed *[ directive ]*
 
 #### Description:
 - Loads a registered feed, which has been registered with the `pw_register_feed()` PHP method
@@ -222,7 +222,7 @@ feed_init['feed_id'] = {
 
 ------
 
-### load-panel ( *[ directive ]* )
+### load-panel *[ directive ]*
 
 #### Description:
 - Loads a panel by __panel_id__
@@ -338,7 +338,7 @@ templates = {
 
 ------
 
-### edit-form ( *[ controller ]* )
+### edit-form *[ controller ]*
 - __File__ : *js/postworld.js*
 - __Status__ : In concepting 
 
@@ -373,7 +373,7 @@ __Filter__
 
 ------
 
-### edit-field ( *[ directive ]* )
+### edit-field *[ directive ]*
 - __File__ : *js/postworld.js*
 - __Status__ : In development (phongmedia) // October 8, 2013
 
@@ -447,6 +447,82 @@ __Input : Multiple Select__
 ```html
 <div edit-field="post_type" data-input="select-multiple" data-value="blog,feature" data-size="3"></div>
 ```
+
+------
+
+## Voting
+
+------
+
+### vote-panel *[ directive ]*
+
+#### Description
+- Makes it easy to embed a voting panel onto a post template
+- Allows user to vote on the panel
+
+#### Attributes
+
+__vote-panel__ : *integer*
+- The ID of the post voting on
+
+__data-user__ : *integer* (optional)
+- The ID of the current user
+
+__data-type__ : *string* (optional)
+- Default : *post*
+- Options :
+  - post
+  - comment
+
+
+#### Usage
+``` html
+<div vote-panel="{{post_id}}" data-type="post"></div>
+```
+
+#### Return
+``` html
+<div vote-panel="2" ng-controller="vote-controller">
+	<div class="vote_up"></div>
+	<div class="post_points" data-voted="{{user_vote}}">{{ post_points }}</div>
+	<div class="vote_down"></div>
+</div>
+```
+
+------
+
+### vote-panel *[ controller ]*
+
+#### Description
+- Sends and receives input for voting on posts and comments
+
+#### Process
+- Sit ontop of *vote-panel*
+- Watch for change in __user_vote__ model
+- AJAX Methods :
+  - When __user_vote__ changes, update the database with `set_post_points()` / `set_comment_points()`
+  - Get the updated number of points with `get_post_points()`
+
+------
+
+## Users
+
+------
+
+### user-feed *[ directive ]*
+
+__Status__ : In Concepting (phongmedia)
+
+#### Description
+
+- Displays a list of users from a user query
+- Similar to **live-feed** directive - instead of showing posts, show users
+
+#### Process
+
+- Access `pw_user_query()` method via AJAX
+- Return an outline of USER IDs
+- Display users according to template and feed settings
 
 
 ------

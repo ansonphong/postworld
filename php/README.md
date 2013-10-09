@@ -184,6 +184,14 @@ __TODO:__
 
 ------
 
+### has_voted_on_post ( *$post_id, $user_id* ) 
+- Check __wp_postworld_points__ to see if the user has voted on the post
+- Return the number of points voted
+
+__return__ : *integer* (number of points voted)
+
+------
+
 __USER POST POINTS__
 
 ------
@@ -226,7 +234,7 @@ __return__ : *integer* (number of points)
 
 ------
 
-__COMMENT POINTS__
+__USER COMMENT POINTS__
 
 ------
 
@@ -256,14 +264,6 @@ __return__ : *integer* (number of points)
 ------
 
 __GENERAL POINTS__
-
-------
-
-### has_voted_on_post ( *$post_id, $user_id* ) 
-- Check __wp_postworld_points__ to see if the user has voted on the post
-- Return the number of points voted
-
-__return__ : *integer* (number of points voted)
 
 ------
 
