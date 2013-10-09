@@ -560,6 +560,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	
 	$post_ID = wp_insert_post($postarr,$wp_error);
 	if(gettype($post_ID) == 'integer'){ // successful
+		print_r($post_ID);
 		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"]||$postarr["external_image"])	{
 			global $wpdb;
 			$wpdb -> show_errors();
@@ -586,7 +587,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 					 $insertComma= TRUE;
 				} 
 				
-			 	if($insertComma === FALSE ){return "insufficient Parameters";}
+			 	if($insertComma === FALSE ){}
 				else{
 					$query.=" where post_id=".$post_ID ;
 					//echo $query;

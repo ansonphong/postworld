@@ -135,10 +135,72 @@
 		user_id - If successful
 		 * 
 		 * */
+		 $set='';
+		 $insertComma= FALSE;
+		 $user_id = wp_update_user($userdata);
+		 global $wpdb;
+		 $wpdb -> show_errors();
+		 if(gettype($user_id) == 'integer'){ // successful
+		 	add_record_to_user_meta($user_id);
+			if ($userdata[user_fields_names::$FAVORITES]) {
+				$set .= " ".user_fields_names::$FAVORITES."='".$userdata[user_fields_names::$FAVORITES]."'";
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$LOCATION_CITY]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$LOCATION_CITY."='".$userdata[user_fields_names::$LOCATION_CITY]."'";
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$LOCATION_COUNTRY]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$LOCATION_COUNTRY."='".$userdata[user_fields_names::$LOCATION_COUNTRY]."'";
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$LOCATION_REGION]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$LOCATION_REGION."='".$userdata[user_fields_names::$LOCATION_REGION]."'";
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$POST_RELATIONSHIP]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$POST_RELATIONSHIP."='".$userdata[user_fields_names::$POST_RELATIONSHIP]."'";	
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$SHARE_KARMA]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$SHARE_KARMA."='".$userdata[user_fields_names::$SHARE_KARMA]."'";	
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$USER_ROLE]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$USER_ROLE."='".$userdata[user_fields_names::$USER_ROLE]."'";	
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$VIEWED]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$VIEWED."='".$userdata[user_fields_names::$VIEWED]."'";	
+				$insertComma= TRUE;
+			}
+			if ($userdata[user_fields_names::$VIEW_KARMA]) {
+				if($insertComma === TRUE) $set.=" , ";
+				$set .= " ".user_fields_names::$VIEW_KARMA."='".$userdata[user_fields_names::$VIEW_KARMA]."'";	
+				$insertComma= TRUE;
+			}
+			
+			if($insertComma === FALSE ){}
+			else{
+				$query="update $wpdb->pw_prefix"."user_meta set $set where user_id=".$user_id ;
+				//echo $query;
+	 			$wpdb->query($query);
+					
+				}
+
+		}
+		return $user_id;
+
 	}
-	
+
 	function add_favorite($post_id,$user_id){
-		
 		// add favorite to wp_postworld_favorites
 		global $wpdb;
 	
