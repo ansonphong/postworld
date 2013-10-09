@@ -1078,6 +1078,383 @@ function pw_query($args,$return_Type = 'PW_QUERY') {
 	
 }
 
+/***********************************************************************************/
+class PW_User_Query extends WP_User_Query {
+	function prepare_fields(){
+		
+		$fields = $this->query_vars['fields'];
+		if($fields == null || $fields=='' ) 
+			$fields='all';
+		else if($fields!='preview' && $fields!='ids' && gettype($fields)!='array')
+			$fields='all';
+		
+		return $fields;
+	}
+	
+	function prepare_order_by($orderBy_Query){
+		
+		 
+		$orderby = $this->query_vars['orderby'];
+		 
+		//print_r($this->query_vars['order']);
+		global $wpdb;
+		if($orderby!=null && $orderby!=''){
+			
+			$order_by_string = '';
+		
+			
+			if ($orderby=='comment_points'){
+				$order_by_string.= "$wpdb->pw_prefix"."user_meta.comment_points";
+			}
+			
+			
+			if ($orderby=='post_points'){	
+				$order_by_string.= "$wpdb->pw_prefix"."user_meta.post_points";
+			}
+			
+			if ($orderby=='display_name'){
+				$order_by_string.= "wp_users.display_name";
+			}
+			
+			
+			if($order_by_string===''){ return $orderBy_Query;}
+			else return "order by $order_by_string ".$this->query_vars['order'];
+			
+				
+	}
+}
+	
+	function prepare_where_query($where_query){
+		
+		$where =" WHERE ";	
+		$insertAnd= FALSE;
+		//echo($insertAnd);
+		
+		global $wpdb;
+		
+		
+		if($this->query_vars['location']){
+				$location = explode(",", $this->query_vars['location']);
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[0]."' and ";
+				
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[1]."' and ";
+				
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[2]."' ";
+		}else{
+	
+		
+			if($this->query_vars['location_country']){
+				$insertAnd =TRUE;
+				$where .=" $wpdb->pw_prefix"."user_meta.location_country='".$this->query_vars["location_country"]."' ";
+			}
+			
+			if($this->query_vars['location_region']){
+					if($insertAnd ===TRUE) $where.=" and ";
+					$where .=" $wpdb->pw_prefix"."user_meta.location_region='".$this->query_vars["location_region"]."' ";
+			}
+			
+			if($this->query_vars['location_city']){
+					if($insertAnd ===TRUE) $where.=" and ";
+					$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$this->query_vars["location_city"]."' ";
+			}
+		
+		}
+		if($where ==" WHERE ") return $where;	
+		return $where."  and ";
+	}
+	
+	
+	function prepare_new_request($remove_tbl=false){
+		
+		//echo($this->query_vars['fields']);
+		
+		$this->query_orderby = $this->prepare_order_by($this->query_orderby);
+		echo "<br><br>".$this->query_orderby."<br><br>";
+		$this->query_where = str_replace('WHERE', $this->prepare_where_query(), $this->query_where);
+		$this->query_from = str_replace('FROM wp_users','FROM wp_users left join  wp_postworld_user_meta on wp_users.ID = wp_postworld_user_meta.user_id ', $this->query_from);
+		
+		
+		
+		if($remove_tbl===false )
+		$this->query_fields = str_replace('SELECT', 'SELECT wp_postworld_user_meta.* , ', $this->query_fields);
+			
+			/*$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
+			$this->request = str_replace('WHERE', $where, $this->request);
+			$strposOfOrderBy = strpos($this->request, "ORDER BY");
+			$this->request =  substr($this->request ,0,$strposOfOrderBy);
+			$this->request.=$orderBy;*/
+		
+	}
+	function prepare_query() {
+		global $wpdb;
 
+		$qv =& $this->query_vars;
+
+		if ( is_array( $qv['fields'] ) ) {
+			$qv['fields'] = array_unique( $qv['fields'] );
+
+			$this->query_fields = array();
+			foreach ( $qv['fields'] as $field ) {
+				$field = 'ID' === $field ? 'ID' : sanitize_key( $field );
+				$this->query_fields[] = "$wpdb->users.$field";
+			}
+			$this->query_fields = implode( ',', $this->query_fields );
+		} elseif ( 'all' == $qv['fields'] ) {
+			$this->query_fields = "$wpdb->users.*";
+		} else {
+			$this->query_fields = "$wpdb->users.ID";
+		}
+
+		if ( $qv['count_total'] )
+			$this->query_fields = 'SQL_CALC_FOUND_ROWS ' . $this->query_fields;
+
+		$this->query_from = "FROM $wpdb->users";
+		$this->query_where = "WHERE 1=1";
+
+		// sorting
+		if ( in_array( $qv['orderby'], array('nicename', 'email', 'url', 'registered') ) ) {
+			$orderby = 'user_' . $qv['orderby'];
+		} elseif ( in_array( $qv['orderby'], array('user_nicename', 'user_email', 'user_url', 'user_registered') ) ) {
+			$orderby = $qv['orderby'];
+		} elseif ( 'name' == $qv['orderby'] || 'display_name' == $qv['orderby'] ) {
+			$orderby = 'display_name';
+		} elseif ( 'post_count' == $qv['orderby'] ) {
+			// todo: avoid the JOIN
+			$where = get_posts_by_author_sql('post');
+			$this->query_from .= " LEFT OUTER JOIN (
+				SELECT post_author, COUNT(*) as post_count
+				FROM $wpdb->posts
+				$where
+				GROUP BY post_author
+			) p ON ({$wpdb->users}.ID = p.post_author)
+			";
+			$orderby = 'post_count';
+		} elseif ( 'ID' == $qv['orderby'] || 'id' == $qv['orderby'] ) {
+			$orderby = 'ID';
+		} else {
+			$orderby = 'user_login';
+		}
+
+		$qv['order'] = strtoupper( $qv['order'] );
+		if ( 'ASC' == $qv['order'] )
+			$order = 'ASC';
+		else
+			$order = 'DESC';
+		$this->query_orderby = "ORDER BY $orderby $order";
+
+		// limit
+		if ( $qv['number'] ) {
+			if ( $qv['offset'] )
+				$this->query_limit = $wpdb->prepare("LIMIT %d, %d", $qv['offset'], $qv['number']);
+			else
+				$this->query_limit = $wpdb->prepare("LIMIT %d", $qv['number']);
+		}
+
+		$search = trim( $qv['search'] );
+		if ( $search ) {
+			$leading_wild = ( ltrim($search, '*') != $search );
+			$trailing_wild = ( rtrim($search, '*') != $search );
+			if ( $leading_wild && $trailing_wild )
+				$wild = 'both';
+			elseif ( $leading_wild )
+				$wild = 'leading';
+			elseif ( $trailing_wild )
+				$wild = 'trailing';
+			else
+				$wild = false;
+			if ( $wild )
+				$search = trim($search, '*');
+
+			$search_columns = array();
+			if ( $qv['search_columns'] )
+				$search_columns = array_intersect( $qv['search_columns'], array( 'ID', 'user_login', 'user_email', 'user_url', 'user_nicename' ) );
+			if ( ! $search_columns ) {
+				if ( false !== strpos( $search, '@') )
+					$search_columns = array('user_email');
+				elseif ( is_numeric($search) )
+					$search_columns = array('user_login', 'ID');
+				elseif ( preg_match('|^https?://|', $search) && ! ( is_multisite() && wp_is_large_network( 'users' ) ) )
+					$search_columns = array('user_url');
+				else
+					$search_columns = array('user_login', 'user_nicename');
+			}
+
+			$search_columns = apply_filters( 'user_search_columns', $search_columns, $search, $this );
+
+			$this->query_where .= $this->get_search_sql( $search, $search_columns, $wild );
+		}
+
+		$blog_id = absint( $qv['blog_id'] );
+
+		if ( 'authors' == $qv['who'] && $blog_id ) {
+			$qv['meta_key'] = $wpdb->get_blog_prefix( $blog_id ) . 'user_level';
+			$qv['meta_value'] = 0;
+			$qv['meta_compare'] = '!=';
+			$qv['blog_id'] = $blog_id = 0; // Prevent extra meta query
+		}
+
+		$role = trim( $qv['role'] );
+
+		if ( $blog_id && ( $role || is_multisite() ) ) {
+			$cap_meta_query = array();
+			$cap_meta_query['key'] = $wpdb->get_blog_prefix( $blog_id ) . 'capabilities';
+
+			if ( $role ) {
+				$cap_meta_query['value'] = '"' . $role . '"';
+				$cap_meta_query['compare'] = 'like';
+			}
+
+			$qv['meta_query'][] = $cap_meta_query;
+		}
+
+		$meta_query = new WP_Meta_Query();
+		$meta_query->parse_query_vars( $qv );
+
+		if ( !empty( $meta_query->queries ) ) {
+			$clauses = $meta_query->get_sql( 'user', $wpdb->users, 'ID', $this );
+			$this->query_from .= $clauses['join'];
+			$this->query_where .= $clauses['where'];
+
+			if ( 'OR' == $meta_query->relation )
+				$this->query_fields = 'DISTINCT ' . $this->query_fields;
+		}
+
+		if ( !empty( $qv['include'] ) ) {
+			$ids = implode( ',', wp_parse_id_list( $qv['include'] ) );
+			$this->query_where .= " AND $wpdb->users.ID IN ($ids)";
+		} elseif ( !empty($qv['exclude']) ) {
+			$ids = implode( ',', wp_parse_id_list( $qv['exclude'] ) );
+			$this->query_where .= " AND $wpdb->users.ID NOT IN ($ids)";
+		}
+
+		do_action_ref_array( 'pre_user_query', array( &$this ) );
+	}
+	
+
+	function query() {
+		global $wpdb;
+
+		$qv =& $this->query_vars;
+		
+		
+		if ( is_array( $qv['fields'] ) || 'all' == $qv['fields'] ) {
+			$this->prepare_new_request(false);	
+			$query  = "SELECT $this->query_fields $this->query_from $this->query_where $this->query_orderby $this->query_limit";
+			//echo ("<br>".$query."<br><br>");
+			$this->results = $wpdb->get_results($query);
+		} else {
+			$this->prepare_new_request(true);	
+			$query ="SELECT $this->query_fields $this->query_from $this->query_where $this->query_orderby $this->query_limit"; 
+			//echo ("<br>".$query."<br>");
+			$this->results = $wpdb->get_col($query);
+		}
+
+		if ( $qv['count_total'] )
+			$this->total_users = $wpdb->get_var( apply_filters( 'found_users_query', 'SELECT FOUND_ROWS()' ) );
+
+		if ( !$this->results )
+			return;
+
+		if ( 'all_with_meta' == $qv['fields'] ) {
+			cache_users( $this->results );
+
+			$r = array();
+			foreach ( $this->results as $userid )
+				$r[ $userid ] = new WP_User( $userid, '', $qv['blog_id'] );
+
+			$this->results = $r;
+		} elseif ( 'all' == $qv['fields'] ) {
+			foreach ( $this->results as $key => $user ) {
+				$this->results[ $key ] = pw_get_userdata($user->ID,'all');//new WP_User( $user );
+			}
+		}
+	}
+
+}
+
+
+function pw_user_query( $args, $args,$return_Type = 'PW_User_Query' ){
+		/*
+		 
+		  Description:
+	
+			Similar to WP_User_Query, queries users in wp_users table
+			Extends Query fields to Postworld user_meta fields
+			Parameters:
+			
+			$args : Array
+			
+			role : string
+			
+			Use 'User Role'
+			s : string
+			
+			Query : table : wp_users, columns: user_login, user_nicename, user_email, user_url, display_name
+			location_country : string
+			
+			Query wp_postworld_user_meta table column location_country
+			location_region : string
+			
+			Query wp_postworld_user_meta table column location_region
+			location_city : string
+			
+			Query wp_postworld_user_meta table column location_city
+			location : string
+			
+			Query location_country , location_city , and location_region
+			orderby : string
+			
+			Options:
+			post_points - Points to the user's posts
+			comment_points - Points to user's comments
+			display_name - Use Display Name, alphabetical
+			username - Use Nice Name, alphabetical
+			date - Date joined
+			order : string
+			
+			Options :
+			ASC (default)
+			DESC
+			fields : Array
+			
+			Options :
+			All (default)
+			Any fields from get_userdata() Method : http://codex.wordpress.org/Function_Reference/get_userdata
+			Any fields from pw_get_userdata() Method
+			$return_format : string
+			
+			Options:
+			ARRAY_A (default)
+			JSON
+			Usage:
+			
+			$args = array(
+			     'location_country' => {{search_terms}}
+			     'location_region' => {{search_terms}}
+			     'location_city' => {{search_terms}}
+			     'location' => {{search_terms}}
+			     'role' => {{string}}
+			     's' => {{search_terms}}
+			     'orderby' => {{string}}
+			     'order' => {{string}}
+			     'fields' => array(ids) // default ids only // use pw_get_userdata() method
+			);
+			$users = pw_user_query( $args, 'JSON' );
+			return : ARRAY_A / JSON (Requested Fields)
+	
+			 
+		 */
+		 
+		$the_query = new PW_User_Query($args);
+		if($return_Type == 'ARRAY_A'){
+			return (array) $the_query;
+		}
+		else if($return_Type == 'JSON'){
+			return json_encode($the_query);
+		}
+		else
+		return $the_query;
+	
+}
 
 ?>
