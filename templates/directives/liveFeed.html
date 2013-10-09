@@ -1,9 +1,9 @@
 <div>
-	<div load-panel="panel3" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwRegisterFeed()"></div>
+	<div filter-feed="panel3" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query"></div>
 	<br>
-	<div load-panel="panel1" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwLiveFeed()"></div>
+	<div filter-feed="panel1" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwLiveFeed()"></div>
 	<br>
-	<div load-panel="panel2" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwLiveFeed()"></div>
+	<div filter-feed="panel2" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwLiveFeed()"></div>
 	<input type="hidden">	
 	<br/>
     <div id="scrollMe" style="height: 600px; overflow-y: scroll;">

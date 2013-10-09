@@ -127,7 +127,7 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
-			var idBegin = feedData.loaded.length;
+			var idBegin = feedData.loaded;
 			// TODO Check if load_increment exists
 			var idEnd = idBegin+feedSettings.load_increment;
 			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);

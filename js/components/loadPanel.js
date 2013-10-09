@@ -1,10 +1,10 @@
 'use strict';
 
-pwApp.directive('loadPanel', function($log, pwData) {
+pwApp.directive('filterFeed', function($log, pwData) {
     return {
         restrict: 'EA',
         replace: true,
-        controller: 'pwLoadPanelController',
+        controller: 'pwFilterFeedController',
         // Must use an isolated scope, to allow for using multiple panel directives in the same page
         scope: {
         	feedId : '=',
@@ -14,8 +14,8 @@ pwApp.directive('loadPanel', function($log, pwData) {
     };
 });
 
-pwApp.controller('pwLoadPanelController',
-    function pwLoadPanelController($scope, $location, $log, pwData, $attrs) {    	
+pwApp.controller('pwFilterFeedController',
+    function pwFilterFeedController($scope, $location, $log, pwData, $attrs) {    	
 		
 		// Set Panel Template
 		pwData.templates.promise.then(function(value) {
@@ -28,10 +28,10 @@ pwApp.controller('pwLoadPanelController',
 				// Get Default Argument Values
 				$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
 			   // Get Default View Name
-			   if (pwData.feed_settings[FeedID].panels[$attrs.loadPanel])
-			   		template = pwData.feed_settings[FeedID].panels[$attrs.loadPanel];			   	
+			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
+			   		template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
 		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-				$log.info('pwLoadPanelController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
+				$log.info('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
 		});				
 
     	// TODO check best location for that code, should we create a panel child?
@@ -50,22 +50,22 @@ pwApp.controller('pwLoadPanelController',
 		
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function(view) {
-			$log.info('pwLoadPanelController.changeFeedTemplate ChangeTemplate',view);
+			$log.info('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", view);		    	
 		};		
     	
     }
 );
 
-pwApp.directive('registerPanel', function($log, pwData) {
+pwApp.directive('registerFeed', function($log, pwData) {
     return {
         restrict: 'A',
         replace: true,
-        controller: 'pwRegisterPanelController',
+        controller: 'pwRegisterFeedController',
     };
 });
 
-pwApp.controller('pwRegisterPanelController',
+pwApp.controller('pwRegisterFeedController',
     function pwRegisterPanelController($scope, $location, $log, pwData, $attrs) {
     	$scope.args= {};
     	$scope.args.write_cache = false;

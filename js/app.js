@@ -2,7 +2,7 @@
 var feed_settings = [];
 
 var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
-    .config(function ($routeProvider, $locationProvider) {
+    .config(function ($routeProvider, $locationProvider) {    	    	
         $routeProvider.when('/livefeed/',
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/pages/pwLiveFeedWidget.html',				
@@ -28,16 +28,22 @@ pwApp.directive('ngEnter', function() {
     });
     
     
-/*
- * TODO remove in production
- */
 
-pwApp.run(function($rootScope, $templateCache) {
+pwApp.run(function($rootScope, $templateCache,pwData) {	
+    	// TODO move getting templates to app startup
+    	pwData.pw_get_templates(null).then(function(value) {
+		    // TODO should we create success/failure responses here?
+		    // resolve pwData.templates
+		    pwData.templates.resolve(value.data);
+		    pwData.templatesFinal = value.data;
+		    console.log('pwApp RUN getTemplates=',pwData.templatesFinal);
+		  });    	
+// TODO remove in production
    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();
    });
 });
-    
+   
 /*
  * Getting Organized (Michel):
  * 
