@@ -122,12 +122,6 @@ __$set_points__ : *integer*
 - Check role of current user, and check how many points they can cast from __user_roles__ table as __$vote_points__
   - If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
 
-__HINT:__
-```php
-	if ( abs($vote_points) > abs($set_points) )
-		$set_points = $vote_points * (abs($set_points)/$set_points);
-```
-
 - Check if row exists in __points__ table for the given __$post_id__ and __$user_id__
   - If __no row__ , add row to __points__ table
   - If __row exists__ , update the row
@@ -139,34 +133,10 @@ __HINT:__
   1. If row doesn't exist for given __post_id__ in __post_meta__ table create new row
   2. Update cached __post_points__ row in __post_meta__ table directly if there is a change in points
 
-__HINT:__
-
-```php
-$old_user_points = has_voted_on_post($post_id,$user_id); // get previous points user has voted on points
-$update_points = $set_points - $old_user_points; // calculate the difference in points
-
-$old_post_points = get_post_points($post_id); // get previous points of the post
-$new_post_points = $old_post_points + $update_points; // add the updated points
-
-// Set post_points column in post_meta table to $new_post_points
-
-```
-
 - Update cache in __user_meta__ table
   1. Get value of __post_points_meta__ column in __user_meta__ table
   2. Update the number of points in the __post_points_meta__ object
 
-__HINT:__
-
-``` php
-$post_type = get_post_type( $post_id ); // check post_type of given post
-$post_points_meta = // Get value of post_points_meta column in user_meta table
-$post_points_meta = json_decode( $post_points_meta ); // decode from JSON
-$post_type_points = $post_points_meta['post_type'][$post_type]; // Get the number of points in given post_type
-$post_points_meta['post_type'][$post_type] = $post_type_points + $update_points; // Add new points
-$post_points_meta = json_encode($post_points_meta); // encode back into JSON
-// Write new post_points_meta object to user_meta table
-```
 
 Anatomy of __post_points_meta__ column JSON object in __user_meta__ table : see *Database Structure* Document.
 
@@ -197,7 +167,10 @@ __COMMENT POINTS__
 ------
 
 ### get_comment_points( $comment_id )
+### calculate_comment_points ( $comment_id )
+### cache_comment_points ( $comment_id )
 ### set_comment_points( $comment_id, $set_points )
+### has_voted_on_comment ( $comment_id, $user_id )
 
 ------
 
