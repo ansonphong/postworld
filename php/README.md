@@ -82,7 +82,70 @@ __/php/postworld-points.php__
 Handles getting and setting points data in the __points__ and __post_meta__ tables.
 
 ### set_points ( $point_type, $id, $points )
-- Meta function for `set_post_points()` and `set_comment_points()`
+
+#### Description
+
+- A meta function for `set_post_points()` and `set_comment_points()`
+
+#### Parameters
+
+__$point_type__ : *string*
+- Which type of points to set
+- Options :
+  - __post__ - Will set points for a *post_id*
+  - __comment__ - Will set points for *comment_id*
+
+__$id__ : *integer*
+- The __post_id__ or __comment_id__
+
+__$set_points__ : *integer*
+- How many points to set for the user
+
+#### Process
+
+- Get the User ID
+- Get the user's vote power : `get_user_vote_power()`
+  - If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
+
+- Define the table and column names to work with :
+  - __Points Table__ : *post_points / comment_points*
+  - __ID Column__ : *post_id / comment_id*
+  - __Points Column__ : *post_points / comment_points*
+
+- Check if row exists in __Points Table__ for the given __ID Column__ and __User ID__
+  - If __no row__ , add row to coorosponding __Points Table__
+  - If __row exists__ , update the row
+  - If __$set_points = 0__ , delete row
+
+- Add Unix timestamp to __time__ column in __Points Table__
+
+- If `$point_type == post` , Update cache in __Post Meta__ table
+  1. If row doesn't exist for given __post_id__ in __Post Meta__ table, create new row
+  2. Update cached __post_points__ row in __Post Meta__ table directly if there is a change in points
+
+- Update cache in __User Meta__ table, under the post/comment author, under coorosponding __Points Column__
+  1. `$point_type == post` update the value of __post_points_meta__ column in __user_meta__ table
+
+
+Anatomy of __post_points_meta__ column JSON object in __user_meta__ table : see *Database Structure* Document.
+
+__return__ : *Array*
+
+``` php
+array(
+     'point_type' => {{$point_type}} // (post/comment) << NEW
+     'user_id' => {{$user_id}} // (user ID) << NEW
+     'id' => {{$id}} // (post/comment ID) << NEW
+
+     'points_added' => {{integer}} // (points which were successfully added)
+     'points_total' => {{integer}} // (from wp_postworld_meta)
+)
+```
+
+__TODO:__
+- Check that user has not voted too many times recently <<<< Concept method <<< PHONG
+  - Use post_points_meta to store points activity << PHONG
+
 
 ------
 
@@ -114,6 +177,9 @@ __return__ : *integer* (number of points)
 
 ### set_post_points( *$post_id, $set_points* )
 
+#### Description
+- Wrapper for `set_points()` Method for setting post points
+
 #### Parameters
 
 __$post_id__ : *integer*
@@ -122,38 +188,9 @@ __$set_points__ : *integer*
 
 #### Process
 
-- Check role of current user, and check how many points they can cast from __user_roles__ table as __$vote_points__
-  - If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
+- Run `set_points( 'post', $post_id, $set_points )`
 
-- Check if row exists in __points__ table for the given __$post_id__ and __$user_id__
-  - If __no row__ , add row to __points__ table
-  - If __row exists__ , update the row
-  - If __$set_points = 0__ , delete row
-
-- Add Unix timestamp to __time__ column in __post_points__ table
-
-- Update cache in __post_meta__ table
-  1. If row doesn't exist for given __post_id__ in __post_meta__ table create new row
-  2. Update cached __post_points__ row in __post_meta__ table directly if there is a change in points
-
-- Update cache in __user_meta__ table
-  1. Get value of __post_points_meta__ column in __user_meta__ table
-  2. Update the number of points in the __post_points_meta__ object
-
-
-Anatomy of __post_points_meta__ column JSON object in __user_meta__ table : see *Database Structure* Document.
-
-__return__ : *Array*
-``` php
-array(
-     'points_added' => {{integer}} // (points which were successfully added)
-     'points_total' => {{integer}} // (from wp_postworld_meta)
-)
-```
-
-__TODO:__
-- Check that user has not voted too many times recently <<<< Concept method <<< PHONG
-  - Use post_points_meta to store points activity << PHONG
+__return__ : *Array* (same as `set_points()` )
 
 ------
 
@@ -172,7 +209,29 @@ __COMMENT POINTS__
 ### get_comment_points( $comment_id )
 ### calculate_comment_points ( $comment_id )
 ### cache_comment_points ( $comment_id )
+
+------
+
 ### set_comment_points( $comment_id, $set_points )
+
+#### Description
+- Wrapper for `set_points()` Method for setting comment points
+
+#### Parameters
+
+__$comment_id__ : *integer*
+
+__$set_points__ : *integer*
+
+#### Process
+
+- Run `set_points( 'comment', $post_id, $set_points )`
+
+__return__ : *Array* (same as `set_points()` )
+
+------
+
+
 ### has_voted_on_comment ( $comment_id, $user_id )
 
 ------
