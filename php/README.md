@@ -79,7 +79,13 @@ pw_set_post_meta($post_id, $post_meta);
 
 ## Points
 __/php/postworld-points.php__  
-Handles getting and setting points data in the __points__ and __post_meta__ tables.
+Handles getting and setting points data in the __Post Points__ , __Comment Points__ , __User Meta__ and __Post Meta__ tables.
+
+------
+
+__META POINTS FUNCTIONS__
+
+------
 
 ### set_points ( $point_type, $id, $points )
 
@@ -154,22 +160,20 @@ __POST POINTS__
 ------
 
 ### get_post_points( *$post_id* )
-Get the total number of points of the given post from the points column in __wp_postworld_post_meta__
-
+Get the total number of points of the given post from the points column in the __Post Meta__ table
 __return__ : *integer* (number of points)
 
 ------
 
 ### calculate_post_points ( *$post_id* )
-- Adds up the points from the specified post, stored in __wp_postworld_post_points__
-- Stores the result in the points column in __wp_postworld_post_meta__
+- Adds up the points from the specified post, stored in __Post Points__ table
 __return__ : *integer* (number of points)
 
 ------
 
 ### cache_post_points ( *$post_id* ) 
 - Calculates given post's current points with `calculate_post_points()`
-- Stores points it in __wp_postworld_post_meta__ table_ in the __post_points__ column
+- Stores the result in the __post_points__ column in __Post Meta__ table
 
 __return__ : *integer* (number of points)
 
