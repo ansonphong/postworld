@@ -36,6 +36,7 @@ pwApp.controller('pwLiveFeedController',
 		$scope.args = {};
 		$scope.args.feed_query = {};
 		$scope.feed_query = {};
+		$scope.scrollMessage = "";
     	$scope.items = [];					// List of Post Items displayed in Scroller
     	// is this a live feed or a load feed?
     	if ($attrs.liveFeed)    { 
@@ -152,15 +153,17 @@ pwApp.controller('pwLiveFeedController',
 						// Set Feed load Status
 						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
 							pwData.feed_data[$scope.feed].status = 'all_loaded';													
-						} else
+							$scope.scrollMessage = "no more posts to load";						
+						} else {							
 							pwData.feed_data[$scope.feed].status = 'loaded';						
+							$scope.scrollMessage = "Scroll down to load more";						
+						}
 						
 						$log.info('pwLiveFeedController.pw_live_feed Success',pwData.feed_data[$scope.feed]);
 						
 						// Clear Items from $scope 
 						// $scope.posts = response.data.post_data;
 						$scope.items = response.data.post_data;
-						
 						$scope.busy = false;							
 						// TODO Do we need to return something?
 						return response.data;
@@ -210,9 +213,12 @@ pwApp.controller('pwLiveFeedController',
 						pwData.feed_data[$scope.feed].count_feed_outline = response.data.feed_outline.length;
 						// Set Feed load Status
 						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
-							pwData.feed_data[$scope.feed].status = 'all_loaded';													
-						} else
+							pwData.feed_data[$scope.feed].status = 'all_loaded';	
+							$scope.scrollMessage = "no more posts to load";																									
+						} else {							
 							pwData.feed_data[$scope.feed].status = 'loaded';						
+							$scope.scrollMessage = "Scroll down to load more";						
+						}
 						
 						$log.info('pwLiveFeedController.pw_load_feed Success',pwData.feed_data[$scope.feed]);
 						
@@ -277,12 +283,14 @@ pwApp.controller('pwLiveFeedController',
 						 }
 						  
 						// Count Length of loaded
-						pwData.feed_data[$scope.feed].count_loaded = pwData.feed_data[$scope.feed].posts.length;					
-						// Set Feed load Status
+						pwData.feed_data[$scope.feed].count_loaded = pwData.feed_data[$scope.feed].posts.length;
 						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
-							pwData.feed_data[$scope.feed].status = 'all_loaded';													
-						} else
+							pwData.feed_data[$scope.feed].status = 'all_loaded';	
+							$scope.scrollMessage = "no more posts to load";																									
+						} else {							
 							pwData.feed_data[$scope.feed].status = 'loaded';						
+							$scope.scrollMessage = "Scroll down to load more";						
+						}
 						  
 						// Update feed data with newly loaded posts
 						$log.info('pwLiveFeedController.pwScrollFeed Success feed_data:',pwData.feed_data[$scope.feed]);

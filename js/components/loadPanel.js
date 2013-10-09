@@ -105,3 +105,27 @@ pwApp.controller('pwRegisterPanelController',
 		
     }
 );
+
+pwApp.directive('loadPanel2', function() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        controller: 'pwLoadPanel2Controller',
+        // transclude: true,
+        // Must use an isolated scope, to allow for using multiple panel directives in the same page
+        scope: {
+        	
+        }
+    };
+});
+
+pwApp.controller('pwLoadPanel2Controller',
+    function pwLoadPanel2Controller($scope,$timeout, $log ) {
+    	 $scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
+	    $log.info('setting loadpanel2 url first time',$scope.templateUrl);
+	    var loadMe = $timeout( function() {
+	      $scope.templateUrl =  jsVars.pluginurl+'/postworld/templates/loadpaneltest.html';
+	      $log.info('setting loadpanel2 url',$scope.templateUrl);
+	    }, 5000);
+	}
+);

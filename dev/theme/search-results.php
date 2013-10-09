@@ -11,9 +11,10 @@
   * then upon release, put all together minified and in one file, to minimize the number of http requests
   use this http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/ to modify script inclusion
   */
+
   
 /* TODO - Bootstrap style included for testing purposes, remove in final version, add ,array('twentytwelve-style') if you want to place after style.css */
-wp_enqueue_style( 'Bootstrap', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css' );
+wp_enqueue_style( 'Bootstrap', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css', array('twentytwelve-style') );
 
 
 /* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */

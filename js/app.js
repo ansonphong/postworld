@@ -27,6 +27,11 @@ pwApp.directive('ngEnter', function() {
         };
     });
     
+    
+/*
+ * TODO remove in production
+ */
+
 pwApp.run(function($rootScope, $templateCache) {
    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();

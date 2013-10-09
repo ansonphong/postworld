@@ -14,7 +14,9 @@
 			<hr>
 	      <div style='clear: both;'></div>
 	    </div>
-	    <div ng-show='busy'>Loading data...</div>
+	    <div ng-show='busy' class="text-center"><img src="http://www.showoffimports.nl/sandbox/live/ajaxLoad.gif"></div>
+	    <div ng-show='!busy' class="text-center"><strong>{{scrollMessage}}</strong></div>
+	    <br><br><br>
 	  </div>
   	</div>
 </div>
