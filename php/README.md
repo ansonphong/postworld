@@ -81,6 +81,9 @@ pw_set_post_meta($post_id, $post_meta);
 __/php/postworld-points.php__  
 Handles getting and setting points data in the __points__ and __post_meta__ tables.
 
+### set_points ( $point_type, $id, $points )
+- Meta function for `set_post_points()` and `set_comment_points()`
+
 ------
 
 __POST POINTS__
