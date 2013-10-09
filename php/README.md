@@ -2062,7 +2062,7 @@ $heirarchy = wp_tree_obj( $args );
 ------
 
 
-### extract_hierarchical_fields ( *$fields_array, $query_string* )
+### extract_linear_fields ( *$fields_array, $query_string* )
 
 #### Description :
 - Extracts nested comma deliniated values starting with `$query_string` from `$fields_array`
