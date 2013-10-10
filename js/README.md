@@ -133,7 +133,7 @@ post_data : { Object }
 
 #### Parameters :
 
-__post_settings[ *name* ]__ : *object*
+__load_post[ *name* ]__ : *object*
 - A JS Object which defines the settings for the post display
 
 - __post_id__ : *integer*
