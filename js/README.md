@@ -125,19 +125,49 @@ post_data : { Object }
 
 ------
 
+### load-post *[ directive ]*
+
+#### Description : 
+- Loads a single post into the DOM
+- Used for displaying single posts and features
+
+#### Parameters :
+
+__post_settings[ *name* ]__ : *object* (required)
+- A JS Object which defines the settings for the post display
+
+- __post_id__ : *integer*
+- __view__ : *string* (required)
+
+
+#### Usage :
+
+``` javascript
+post_settings['single_post'] = {
+	post_id : 24,
+	view : 'full',
+}
+```
+
+``` html
+<div load-post="single_post"></div>
+```
+
+------
+
 ###live-feed *[ directive ]*
 
-####Description:
+#### Description:
 Displays a live unregistered feed based on `feed_query pw_query()` args
 
-####Process:
+#### Process:
 
 1. Populate `feed_data[feed_id]` JS Object with `feed_init[feed_id]`
 2. Setup DOM structure with ng-controller and ng-repeat for displaying the feed
 3. Run JS method : `pw_live_feed()`
 
 
-####Parameters:
+#### Parameters:
 Parameters are passed via `feed_init[feed_id]`.
 
 __preload__ : *integer*  

@@ -1604,6 +1604,42 @@ array(
 
 ------
 
+### pw_get_post_template ( *$post_id, $post_view* )
+- Returns an template paths based on the provided post
+
+#### Process
+- Check the __post_type__ of the post as __$post_type__ with `get_post_type( $post_id )`
+- Using `pw_get_templates()`, get the template object
+
+Input : 
+
+``` php
+$args = array(
+	'posts' => array(
+		'post_types' => array( 'post' ),
+		'post_views' => array( 'full' )
+	),
+);
+$post_template = pw_get_templates ($args);
+```
+
+Output : 
+
+``` javascript
+{
+posts : {
+     'post' : {
+          'full' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
+          },
+     },
+}
+
+```
+
+__return__ : *string* (The single template path)
+
+------
+
 ### pw_get_templates ( *$templates_object* )
 - Gets an Object of template paths based on the provided object
 
@@ -1683,7 +1719,9 @@ __PANEL TEMPLATES OBJECT__
 __return__ : *Array* (with requested template paths)
 
 #### Usage:
+
 ``` php
+
 // To get Post Templates Object
 $args = array(
 	'posts' => array(
@@ -1703,7 +1741,9 @@ $panel_template = pw_get_templates ( array( 'panels'=>'panel_id' ));
 - __Post Templates Object__ : *Array* - With post_views nested within post_types
 
 After JSON Encoded :
+
 ``` javascript
+
 {
 posts : {
      'post' : {
@@ -1716,9 +1756,10 @@ posts : {
 
 ```
 
-- __Panel Template Object__ : *Array* - With key as panel_id value as panel_url
+- __Panel Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
 
 After JSON Encoded :
+
 ``` javascript
 {
 panels : {
