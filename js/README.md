@@ -146,7 +146,7 @@ __post_settings[ *name* ]__ : *object*
 #### Usage :
 
 ``` javascript
-post_settings['single_post'] = {
+load_post['single_post'] = {
 	post_id : 24,
 	view : 'full',
 }
