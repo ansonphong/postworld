@@ -1633,7 +1633,6 @@ posts : {
           },
      },
 }
-
 ```
 
 __return__ : *string* (The single template path) : `/wp-content/plugins/postworld/templates/posts/post-full.html`
