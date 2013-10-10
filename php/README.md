@@ -160,13 +160,15 @@ __POST POINTS__
 ------
 
 ### get_post_points( *$post_id* )
-Get the total number of points of the given post from the points column in the __Post Meta__ table
+- Get the total number of points of the given post from the __post_points__ column in the __Post Meta__ table
+
 __return__ : *integer* (number of points)
 
 ------
 
 ### calculate_post_points ( *$post_id* )
 - Adds up the points from the specified post, stored in __Post Points__ table
+
 __return__ : *integer* (number of points)
 
 ------
@@ -199,7 +201,7 @@ __return__ : *Array* (same as `set_points()` )
 ------
 
 ### has_voted_on_post ( *$post_id, $user_id* ) 
-- Check __wp_postworld_points__ to see if the user has voted on the post
+- Check __Post Points__ to see if the user has voted on the post
 - Return the number of points voted
 
 __return__ : *integer* (number of points voted)
@@ -210,9 +212,25 @@ __COMMENT POINTS__
 
 ------
 
-### get_comment_points( $comment_id )
+### get_comment_points ( $comment_id )
+- Get the total number of points of the given comment from the __comment_points__ column in the __Comment Meta__ table
+
+__return__ : *integer* (number of points)
+
+------
+
 ### calculate_comment_points ( $comment_id )
+- Adds up the points from the specified comment, stored in __Comment Points__ table
+
+__return__ : *integer* (number of points)
+
+------
+
 ### cache_comment_points ( $comment_id )
+- Calculates given post's current points with `calculate_comment_points()`
+- Stores the result in the __comment_points__ column in __Comment Meta__ table
+
+__return__ : *integer* (number of points)
 
 ------
 
@@ -235,8 +253,11 @@ __return__ : *Array* (same as `set_points()` )
 
 ------
 
-
 ### has_voted_on_comment ( $comment_id, $user_id )
+- Check __Comment Points__ table to see if the user has voted on the comment
+- Return the number of points voted
+
+__return__ : *integer* (number of points voted)
 
 ------
 

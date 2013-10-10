@@ -158,7 +158,7 @@ __feed_query__ : *string / object*
 
 ####Usage:
 ````javascript
-feed_init['feed_id'] = {
+feed_settings['feed_id'] = {
      preload: 3,
      load_increment : 10,
      order_by : 'rank_score',
