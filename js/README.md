@@ -373,7 +373,7 @@ __Filter__
 
 #### Filter Methods
 
-##### Input Filters :
+##### INPUT FILTERS
 Query filters condition a model for submission to `wp_insert_post()` : [WP Insert Post Parameters](http://codex.wordpress.org/Function_Reference/wp_insert_post#Parameters)
 
 
@@ -426,7 +426,7 @@ post_obj = {
 
 ```
 
-##### Query Filters :
+##### QUERY FILTERS
 Query filters condition a model for submission to `pw_query()`  
 
 __tax_query__ : *input - select / multiple select*
