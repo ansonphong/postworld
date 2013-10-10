@@ -133,11 +133,12 @@ post_data : { Object }
 
 #### Parameters :
 
-__post_settings[ *name* ]__ : *object* (required)
+__post_settings[ *name* ]__ : *object*
 - A JS Object which defines the settings for the post display
 
 - __post_id__ : *integer*
-- __view__ : *string* (required)
+- __view__ : *string*
+  - The template view to display the post in
 
 #### Process :
 - Get the template path with `pw_post_template( $post_id, $post_view )` PHP Method via AJAX
