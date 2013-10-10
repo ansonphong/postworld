@@ -139,6 +139,8 @@ __post_settings[ *name* ]__ : *object* (required)
 - __post_id__ : *integer*
 - __view__ : *string* (required)
 
+#### Process :
+- Get the template path with `pw_post_template( $post_id, $post_view )` PHP Method via AJAX
 
 #### Usage :
 
