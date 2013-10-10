@@ -368,7 +368,9 @@ __Submit__
 __Filter__
 - Make a syntax or format transformation between model and DOM
 - Types:
-  - taxonomy-query
+  - __tax-input__ - Conditions a *select* form element into the `pw_insert_post()` data model
+  - __tags-input__ - Conditions a *text input* form element into the `pw_insert_post()` data model
+  - __tax-query__ - Conditions a *select* form element into the `pw_query()` data model
 
 
 #### Filter Methods
