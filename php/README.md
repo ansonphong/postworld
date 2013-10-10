@@ -1629,7 +1629,7 @@ Output :
 {
 posts : {
      'post' : {
-          'full' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
+          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
           },
      },
 }
