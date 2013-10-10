@@ -145,12 +145,16 @@ __post_settings[ *name* ]__ : *object*
 
 #### Usage :
 
+Javascript:
+
 ``` javascript
 load_post['single_post'] = {
 	post_id : 24,
 	view : 'full',
 }
 ```
+
+HTML :
 
 ``` html
 <div load-post="single_post"></div>
