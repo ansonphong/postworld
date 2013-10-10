@@ -372,6 +372,7 @@ __Filter__
   - __tags-input__ - Conditions a *text input* form element into the `pw_insert_post()` data model
   - __tax-query__ - Conditions a *select* form element into the `pw_query()` data model
 
+------
 
 #### Filter Methods
 
