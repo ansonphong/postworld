@@ -367,8 +367,118 @@ __Submit__
 
 __Filter__
 - Make a syntax or format transformation between model and DOM
-- Parameters:
-  - 
+- Types:
+  - taxonomy-query
+
+
+#### Filter Methods
+
+##### Input Filters :
+- Query filters condition a model for submission to `wp_insert_post()`  
+- [WP Insert Post Parameters](http://codex.wordpress.org/Function_Reference/wp_insert_post#Parameters)
+
+
+__tax_input__ : *input - select / multiple select*
+- Conditions the input select effect on the attributed model for __tax_input__ field on `wp_insert_post()`
+- HTML View:
+  
+``` html
+<div edit-field="taxonomy(category)" data-object="post_obj">
+	<select multiple name="category" data-bind="post_obj.tax_input.category">
+		<option value="term1" selected>Term One</option>
+		<option value="term2">Term Two</option>
+		<option value="term3" selected>Term Three</option>
+		<option value="term4">Term Four</option>
+	</select>
+</div>
+```
+
+- Model Output:
+
+``` javascript
+
+post_obj = {
+	...,
+	'tax_input' : {
+		'category' : [ 'term1', 'term3' ],
+		'topic' : [ 'term8', 'term12' ],
+	}
+}
+
+```
+
+__tags_input__ : *text input*
+
+- HTML View:
+  
+``` html
+<div edit-field="tags_input" data-input="input-text" data-object="post_obj">
+	<input name="tags_input" data-bind="post_obj.tax_input.tags_input" value="tag1,tag2,tag3">
+</div>
+```
+
+- Model Output:
+
+``` javascript
+post_obj = {
+	...,
+	'tags_input' : [ 'tag1', 'tag2', 'tag3' ]
+}
+
+```
+
+##### Query Filters :
+
+- Query filters condition a model for submission to `pw_query()`  
+
+__tax_query__ : *input - select / multiple select*
+- Conditions the input select effect on the attributed model for __tax_query__ field on `pw_query()`  
+- [WP Query Taxonomy Parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters)
+
+- Model Output:
+
+``` html
+<div edit-field="taxonomy(topic)" data-object="query_obj">
+	<select multiple name="category" data-bind="query_obj.tax_query">
+		<option value="term1" selected>Term One</option>
+		<option value="term2">Term Two</option>
+		<option value="term3" selected>Term Three</option>
+		<option value="term4">Term Four</option>
+	</select>
+</div>
+
+<div edit-field="taxonomy(section)" data-object="query_obj">
+	<select multiple name="category" data-bind="query_obj.tax_query">
+		<option value="term1">Term One</option>
+		<option value="term2" selected>Term Two</option>
+		<option value="term3">Term Three</option>
+	</select>
+</div>
+
+```
+
+``` javascript
+
+query_obj = {
+	...,
+	'tax_query' : {
+		'relation' => 'AND',
+		{
+			'taxonomy' : 'topic',
+			'field' : 'slug',
+			'terms' : ['term1','term3']
+			'operator' => 'AND'
+		},
+		{
+			'taxonomy' : 'section',
+			'field' : 'slug',
+			'terms' : ['term2']
+			'operator' => 'AND'
+		},
+	}
+}
+
+```
 
 
 ------
@@ -378,7 +488,9 @@ __Filter__
 - __Status__ : In development (phongmedia) // October 8, 2013
 
 #### Description
-- Loads a field on the Edit/Publish Post page
+- Loads a form field on
+  - Edit/Publish Post page
+  - Search Panel
 - Renders the input field in the DOM
 - Pre-populates it with default/saved data
 
@@ -450,6 +562,45 @@ __Input : Multiple Select__
 
 ------
 
+### edit-field *[ controller ]*
+
+__Status__ : In concepting (phongmedia)
+
+#### Descriptions
+
+- Controls form field's input in relation to a given model
+
+#### Models
+
+__QUERY MODEL__
+
+__taxonomy__ : *input - select / multiple select*
+- Conditions the input select effect on the attributed model
+- Input:  
+  
+``` html
+
+<div ng-controller="edit-form">
+	
+	<div>
+		<select >
+			<option></option>
+			<option></option>
+		</select>
+	</div>
+
+</div>
+
+```
+
+
+
+__EDIT POST MODEL__
+
+
+
+------
+
 ## Voting
 
 ------
@@ -482,9 +633,10 @@ __data-type__ : *string* (optional)
 
 #### Return
 ``` html
-<div vote-panel="2" ng-controller="vote-controller">
+<div vote-panel="2" ng-controller="vote-panel">
 	<div class="vote_up"></div>
-	<div class="post_points" data-voted="{{user_vote}}">{{ post_points }}</div>
+	<div class="post_points">{{ post_points }}</div>
+	<input type="hidden" class="user_vote" name="user_vote" value="{{user_vote}}" ng-bind="post.user_vote">
 	<div class="vote_down"></div>
 </div>
 ```
