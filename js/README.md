@@ -349,7 +349,7 @@ templates = {
 
 #### Methods
 
-__Load__ : *$args*
+__Load__ : *args*
 - Pull in new form data from server 
 - Parameters:
   - 
@@ -378,8 +378,9 @@ __INPUT FILTERS__ : Query filters condition a model for submission to `wp_insert
 
 __tax_input__ : *input - select / multiple select*
 - Conditions the input select effect on the attributed model for __tax_input__ field on `wp_insert_post()`
-- HTML View:
-  
+
+HTML View:
+
 ``` html
 <div edit-field="taxonomy(category)" data-object="post_obj">
 	<select multiple name="category" data-bind="post_obj.tax_input.category">
@@ -391,7 +392,7 @@ __tax_input__ : *input - select / multiple select*
 </div>
 ```
 
-- Model Output:
+Model Output:
 
 ``` javascript
 
@@ -407,7 +408,7 @@ post_obj = {
 
 __tags_input__ : *text input*
 
-- HTML View:
+HTML View:
   
 ``` html
 <div edit-field="tags_input" data-input="input-text" data-object="post_obj">
@@ -415,7 +416,7 @@ __tags_input__ : *text input*
 </div>
 ```
 
-- Model Output:
+Model Output:
 
 ``` javascript
 post_obj = {
@@ -431,7 +432,7 @@ __tax_query__ : *input - select / multiple select*
 - Conditions the input select effect on the attributed model for __tax_query__ field on `pw_query()`  
 - [WP Query Taxonomy Parameters](http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters)
 
-- Model Output:
+HTML View
 
 ``` html
 <div edit-field="taxonomy(topic)" data-object="query_obj">
@@ -452,6 +453,8 @@ __tax_query__ : *input - select / multiple select*
 </div>
 
 ```
+
+Model Output:
 
 ``` javascript
 
