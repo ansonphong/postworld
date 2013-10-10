@@ -1605,7 +1605,7 @@ array(
 ------
 
 ### pw_get_post_template ( *$post_id, $post_view* )
-- Returns an template paths based on the provided post
+- Returns an template path based on the provided post ID and view
 
 #### Process
 - Check the __post_type__ of the post as __$post_type__ with `get_post_type( $post_id )`
@@ -1616,11 +1616,11 @@ Input :
 ``` php
 $args = array(
 	'posts' => array(
-		'post_types' => array( 'post' ),
-		'post_views' => array( 'full' )
+		'post_types' => array( $post_type ),	// 'post'
+		'post_views' => array( $post_view )		// 'full'
 	),
 );
-$post_template = pw_get_templates ($args);
+$post_template_object = pw_get_templates ($args);
 ```
 
 Output : 
