@@ -1608,7 +1608,7 @@ array(
 - Returns an template path based on the provided post ID and view
 
 #### Process
-- Check the __post_type__ of the post as __$post_type__ with `get_post_type( $post_id )`
+- Check the __post type__ of the post as `$post_type` with `get_post_type( $post_id )`
 - Using `pw_get_templates()`, get the template object
 
 Input : 
