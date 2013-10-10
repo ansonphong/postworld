@@ -482,10 +482,10 @@ SHARES
 
 ------
 
-### cache_shares ( *[$cache_all]* ) << UNDER CONSTRUCTION << 
+### cache_shares ( *[$cache_all]* )
 
 #### Description
-- Caches user and post share reports
+- Caches user and post share reports from the __Shares__ table
 
 #### Paramaters
 __$cache_all__ : *boolean*  
@@ -494,19 +494,23 @@ Default : *false*
 #### Process
 - If `$cache_all = false`, just update the recently changed share reports
   - Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
+
   - __POSTS :__  
   Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
   Run `cache_post_shares($post_id)` for all recently updated shares
+
   - __AUTHORS :__  
-  Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column, 
+  Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the last cache.  
   Run `cache_user_post_shares($user_id)` for all recently updated user's shares
+
    - __USERS :__  
-  Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column 
+  Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the last cache.
   Run `cache_user_shares($user_id)` for all recently updated user's shares
 
 - If `$cache_all = true`
-  - Cycle through every single post and run `cache_post_share_report($post_id)`
-  - Cycle through every single user and run `cache_user_share_report($user_id)`
+  - Cycle through every post and run `cache_post_shares($post_id)`
+  - Cycle through every author and run `cache_user_post_shares($user_id)`
+  - Cycle through every user and run `cache_user_shares($user_id)`
 
 __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
