@@ -1,11 +1,16 @@
 <div>
-	<h1>Live Feed - Feed 2</h1>
-	<div filter-feed="panel1" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwRestart()"></div>
-	<br>
-	<div filter-feed="panel2" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwRestart()"></div>
+	<div class="row" >
+			<div class="form-group input-group col-md-12">		
+				<h2>Live Feed - 1 Panel </h2>
+			</div>
+	</div>
+	<div class="row" >
+			<div class="form-group input-group col-md-12">		
+				<div filter-feed="panel2" ng-include="templateUrl" feed-id="args.feed_id" feed_query="args.feed_query" submit="pwRestart()"></div>
+			</div>
+	</div>	
 	<input type="hidden">	
-	<br/>
-    <div id="scrollMe" style="height: 600px; overflow-y: scroll;">
+    <div id="scrollMe"  class="infinite-scroll">
 	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
 	    <div ng-repeat='post in items' >
 	    	<div feed-item ng-include="templateUrl" post="post" feed-id='args.feed_id'></div>

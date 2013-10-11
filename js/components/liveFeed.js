@@ -143,10 +143,13 @@ pwApp.controller('pwFeedController',
 			$scope.items = {};
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
-        	pwData.pw_live_feed($scope.args).then(
+			// We need to work with a clone of the args value
+			var argsValue = JSON.parse(JSON.stringify($scope.args));
+        	pwData.pw_live_feed(argsValue).then(
 				// Success
 				function(response) {	
 					$scope.busy = false;
+					// $log.info('pwFeedController.pwLiveFeed',$scope.args.feed_query.order_by,$scope.args.feed_query.order);						
 					if (response.status === undefined) {
 						console.log('response format is not recognized');
 						return;

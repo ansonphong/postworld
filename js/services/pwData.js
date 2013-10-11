@@ -94,10 +94,10 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			// fargs will be filled initially with data from feed settings, 
 			// fargs will be filled next from data in the args parameters
 			
-			var fargs = this.convertFeedSettings(args.feed_id); // will read settings and put them in fargs
+			var fargs = this.convertFeedSettings(args.feed_id,args); // will read settings and put them in fargs
 			fargs = this.mergeFeedQuery(fargs,args); // will read args and override fargs
 			   
-			var params = {args:fargs};
+			var params = {'args':fargs};
 			$log.info('pwData.pw_live_feed',fargs);
 			return this.wp_ajax('pw_live_feed',params);
 		},
@@ -164,7 +164,7 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			var template = getTemplate(this,grp,type,name);
 		    return template;
 		}, // END OF pw_get_template
-		convertFeedSettings: function (feedID) {
+		convertFeedSettings: function (feedID,args1) {
 			var fargs = {};
 			fargs.feed_query = {};
 			//if(!args.feed_query) args.feed_query = {};
