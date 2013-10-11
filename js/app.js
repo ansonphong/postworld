@@ -3,13 +3,40 @@ var feed_settings = [];
 
 var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
     .config(function ($routeProvider, $locationProvider) {    	    	
-        $routeProvider.when('/livefeed/',
+        $routeProvider.when('/live-feed-1/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/pages/pwLiveFeedWidget.html',				
-                // controller: 'pwSearchController'
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',				
+            });
+        $routeProvider.when('/live-feed-2/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',				
+            });
+        $routeProvider.when('/live-feed-3/',
+            {
+                template: '<h2>Coming Soon</h2>',				
+            });
+        $routeProvider.when('/load-feed-1/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed1Widget.html',				
+            });
+        $routeProvider.when('/load-feed-2/',
+            {
+                template: '<h2>Coming Soon</h2>',				
+            });
+        $routeProvider.when('/load-panel/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPanelWidget.html',				
+            });
+        $routeProvider.when('/register-feed/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwRegisterFeedWidget.html',				
+            });
+        $routeProvider.when('/home/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',				
             });
 		// this will be also the default route, or when no route is selected
-        $routeProvider.otherwise({redirectTo: '/livefeed/'});
+        $routeProvider.otherwise({redirectTo: '/home/'});
     });
 
 // Submit on Enter, without a real form
@@ -52,7 +79,14 @@ pwApp.run(function($rootScope, $templateCache,pwData) {
  * Create Advanced Search Panel [complete missing boxes]
  * Do we need Directives for non-post types?
  * Create Post Types Toggles in Search Panel Dynamically http://jsfiddle.net/BtrZH/5/
- *   
+ * 
+ * Create Edit Fields for Radio, checkbox, TinMCE (WP has an hook for it), Buttons
+ * 	Add Validations
+ * 	Add Dynamic Sub Forms [ng-switch]
+ * 	Add Embedding of URLs [embed.ly?]
+ * 	Will be used in URL like #/post/edit/id, #/post/new, etc...
+ * 	Will Switch between forms dynamically
+ * 
  * TODO List
  * *********
  * Create Startup code that runs at app startup, and put getting templates into it
@@ -67,6 +101,7 @@ pwApp.run(function($rootScope, $templateCache,pwData) {
  * NONCE - not active yet
  * Feed_settings must have a template URL for feed []
  * Remove additional fields added to args and saved with register_feed()
+ * Add Parameters to URL of the Live Feed / Search parameters - add that to our menu as an example
  * 
  * Enhancements
  * *************
