@@ -9,7 +9,6 @@ Postworld // Angular / JS Functions
 0. [ __Edit Post__ ](#edit-post)
 0. [ __Related Notes__ ](#related-notes)
 
-
 ------
 
 ## General Functions
@@ -114,8 +113,8 @@ __return__ : *true*
 __return__ : *Object*
 ``` javascript
 {
-feed_outline : [1,3,5,8,12,16,24,64],
-post_data : { Object } 
+	feed_outline : [1,3,5,8,12,16,24,64],
+	post_data : { Object } 
 }
 ```
 
@@ -169,13 +168,13 @@ Displays a live unregistered feed based on `feed_query pw_query()` args
 
 #### Process:
 
-1. Populate `feed_data[feed_id]` JS Object with `feed_init[feed_id]`
+1. Populate `feed_data[feed_id]` JS Object with `feed_settings[feed_id]`
 2. Setup DOM structure with ng-controller and ng-repeat for displaying the feed
 3. Run JS method : `pw_live_feed()`
 
 
 #### Parameters:
-Parameters are passed via `feed_init[feed_id]`.
+Parameters are passed via `feed_settings[feed_id]`.
 
 __preload__ : *integer*  
 Number of posts to load at the beginning, before infinite scrolling
@@ -234,14 +233,14 @@ __PHP / AJAX :__
 
 
 __JAVASCRIPT :__  
-1. Populate `feed_data[feed_id]` Object with `feed_init[feed_id]` Object 
+1. Populate `feed_data[feed_id]` Object with `feed_settings[feed_id]` Object 
 
 __return__ : *true*
 
 ####Usage:
 
 ```javascript
-feed_init['feed_id'] = {
+feed_settings['feed_id'] = {
      preload: 3,
      load_increment : 10,
      view : {
@@ -318,12 +317,12 @@ feed_data = {
 
 ------
 
-###feed_init *Object*
+###feed_settings *Object*
 + Used to initialize a feed directive
 + The contents of this object are then transferred into feed_data[feed_id] after initialization
 
 ``` javascript
-feed_init[feed_id] = {
+feed_settings[feed_id] = {
      preload : 10,
      load_increment : 10,
      offset : 0,
