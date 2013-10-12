@@ -363,9 +363,16 @@ templates = {
 ------
 
 ### load-comments *[ directive ]*
+
+__Status__ : In concepting (phongmedia)
+
+#### Description
+
 - Loads in the comments for a given post
 - Template :
   - `templates/comments/comment-single.html`
+
+#### Usage
 
 Javascript :
 
@@ -396,22 +403,26 @@ HTML :
 __Status__ : In concepting (phongmedia)
 
 #### Description
+
 - Produces an add comment form
 - Template :
-  - `templates/comments/comment-add-text.html`
+  - `templates/comments/comment-add-{{type}}.html`
 
 #### Attributes
+
 __add-comment__ : *string*
-- The type of comment form
+- The *type* of comment form
 - Options:
   - __text__
-  - *rich* (for future implimentation)
+  - *rich* (future implimentation)
 
 __post-id__ : *integer*
 - The post ID of the post to add the comment to
 
 __comment-parent__ : *integer*
 - The comment ID of the comment to which it is a response
+
+#### Usage
 
 ``` HTML
 <div add-comment="text" data-post-id="24" data-comment-parent="45324"></div>
