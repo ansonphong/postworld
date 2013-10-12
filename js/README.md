@@ -364,6 +364,8 @@ templates = {
 
 ### load-comments *[ directive ]*
 - Loads in the comments for a given post
+- Template :
+  - `templates/comments/comment-single.html`
 
 Javascript :
 
@@ -372,7 +374,7 @@ load_comments['post_single'] = {
 	post_id : 24,
 	sort_by : 'rank_score',
 	sort_options : {
-		'rank_score' : "Rank Score",
+		'comment_points' : "Points",
 		'date' : "Date"
 		},
 	max_points : 0,
@@ -387,20 +389,36 @@ HTML :
 <div load-comments="post_single"></div>
 ```
 
-   * By Post - hierarchical - expandable - sortable (points/date)
-   * By User - flat - sortable (points/date)
+------
 
-   * Set settings
-   * Add / edit comment / Reply to comment - on success - append self to object - show green check 
+### add-comment *[ directive ]*
 
+__Status__ : In concepting (phongmedia)
 
+#### Description
+- Produces an add comment form
+- Template :
+  - `templates/comments/comment-add-text.html`
 
-Templates : 
-- Show Comment : templates/comments/comment-single.html
-- Add Comment : templates/comments/comment-add.html
-   * add-Comment directive
-   * add_comment php method
+#### Attributes
+__add-comment__ : *string*
+- The type of comment form
+- Options:
+  - __text__
+  - *rich* (for future implimentation)
 
+__post-id__ : *integer*
+- The post ID of the post to add the comment to
+
+__comment-parent__ : *integer*
+- The comment ID of the comment to which it is a response
+
+``` HTML
+<div add-comment="text" data-post-id="24" data-comment-parent="45324"></div>
+```
+
+#### Notes
+- Add / edit comment / Reply to comment - on success - append self to object - show green check 
 
 ------
 
