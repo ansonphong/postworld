@@ -10,6 +10,7 @@ Postworld // PHP / MySQL Functions
 0. [ __Query__ : postworld_query.php ](#query)
 0. [ __Users__ : postworld_users.php ](#users)
 0. [ __Posts__ : postworld_posts.php ](#posts)
+0. [ __Comments__ : postworld_comments.php ](#comments)
 0. [ __Feeds__ : postworld_feeds.php ](#feeds)
 0. [ __Sharing__ : postworld_share.php ](#sharing)
 0. [ __Images__ : postworld_images.php ](#images)
@@ -1442,6 +1443,47 @@ __return__ :
 - Extends `wp_update_post()` : http://codex.wordpress.org/Function_Reference/wp_update_post
 - Include additional Postworld fields as inputs (see `pw_insert_post()` )
 
+
+------
+
+## Comments
+__php/postworld_comments.php__
+
+------
+
+### pw_get_comment ( $comment_id, $fields, $viewer_user_id* )
+- Gets data for a particular comment
+
+#### Parameters
+
+__$comment_id__
+- The ID of the comment
+
+__$fields__ : *Array*
+- __Worpress Comment Fields__ : All return fields from [WP get_comment()](http://codex.wordpress.org/Function_Reference/get_comment)
+  - comment_ID
+  - comment_post_ID
+  - comment_author
+  - comment_author_email
+  - comment_author_url
+  - comment_author_IP
+  - comment_date
+  - comment_date_gmt
+  - comment_content
+  - comment_karma
+  - comment_approved
+  - comment_agent
+  - comment_type
+  - comment_parent
+  - user_id
+- __Postworld Comment Fields__
+  - comment_points
+  - viewer_voted
+
+__$viewer_user_id__
+- The user ID of a user to return vote data by
+
+__return__ : *Array*
 
 ------
 

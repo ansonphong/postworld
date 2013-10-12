@@ -100,5 +100,172 @@
 			$wpdb -> query($query);
 		}
 	}
+
+
+	function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null ){
+
+		// Access the Comment Data
+		$wp_comment_data = get_comment( $comment_id, 'ARRAY_A' );
+		if (!$wp_comment_data) return false;
+
+		///// FIELDS /////
+		// WORDPRESS FIELD MODEL
+		$wp_comment_fields = array(
+			'comment_ID',
+			'comment_post_ID',
+			'comment_author',
+			'comment_author_email',
+			'comment_author_url',
+			'comment_author_IP',
+			'comment_date',
+			'comment_date_gmt',
+			'comment_content',
+			'comment_karma',
+			'comment_approved',
+			'comment_agent',
+			'comment_type',
+			'comment_parent',
+			'user_id'
+			);
+
+		// POSTWORLD FIELD MODEL
+		$pw_comment_fields = array(
+			'comment_points',
+			'user_voted'
+			);
+
+		// All Fields
+		if ($fields == 'all'){
+			$all_fields = array_merge($wp_comment_fields, $pw_comment_fields);
+			$fields = $all_fields;
+		}
+
+		// COMMENT DATA OBJECT
+		$comment_data = array();
+
+		// TRANSFER FIELD DATA FROM WORDPRESS OBJECT
+		foreach ($fields as $field) {
+			if( in_array($field, $wp_comment_fields) )
+				$comment_data[$field] = $wp_comment_data[$field];
+		}
+
+		return $wp_comment_data;
+		
+	}
+
+
+
+	function pw_get_comments( $query, $fields = 'all', $tree = true ){
+
+		$wp_comments = get_comments( $query );
+		if (!$wp_comments) return false;
+
+		$wp_comments = (array) $wp_comments;
+
+		///// FIELDS /////
+		// WORDPRESS FIELD MODEL
+		$wp_comment_fields = array(
+			'comment_ID',
+			'comment_post_ID',
+			'comment_author',
+			'comment_author_email',
+			'comment_author_url',
+			'comment_author_IP',
+			'comment_date',
+			'comment_date_gmt',
+			'comment_content',
+			'comment_karma',
+			'comment_approved',
+			'comment_agent',
+			'comment_type',
+			'comment_parent',
+			'user_id'
+			);
+
+		// POSTWORLD FIELD MODEL
+		$pw_comment_fields = array(
+			'comment_points',
+			'user_voted'
+			);
+
+		// All Fields
+		if ($fields == 'all'){
+			$all_fields = array_merge($wp_comment_fields,$pw_comment_fields);
+			$fields = $all_fields;
+		}
+
+		// New Comments Array
+		$comments_data = array();
+
+		///// FOR EACH COMMENT /////
+		foreach ($wp_comments as $comment) {
+
+			// Cast as Array
+			$comment = (array) $comment;
+
+			// New Comment Array
+			$comment_data = array();
+
+			///// FOR EACH FIELD /////
+			foreach ($fields as $field) {
+
+				///// WORDPRESS COMMMENT FIELDS /////
+				// If the current field is requested, move the data
+				if( in_array( $field, $wp_comment_fields ) ){
+					$comment_data[$field] = $comment[$field];
+				}
+
+				///// POSTWORLD COMMMENT FIELDS /////
+				else if( $field == 'comment_points' ){
+					$comment_data[$field] = get_comment_points( $comment['comment_ID'] );
+				}
+				else if( $field == 'user_voted' ){
+					$comment_data[$field] = 0; //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+				}
+
+			}
+
+			array_push($comments_data, $comment_data);
+
+		}
+
+		///// RETURN AS HIERARCHICAL TREE /////
+		/*
+		if ( $tree == true ){
+			$settings = array(
+			    'fields' => $fields,
+			    'id_key' => 'comment_ID',
+			    'parent_key' => 'comment_parent',
+			    'child_key' => 'children',
+			    'max_depth' => '5',
+			    //'callback' => $callback,
+			    //'callback_fields' => $callback_fields,
+			    );
+
+			$comments_tree = tree_obj( $comments_data, 0, 0, $settings );
+			if ($comments_tree){
+				//$comments_data = $comments_tree;
+			}
+
+		}
+		*/
+
+		return $comments_data; //$comments_data;
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	
 ?>

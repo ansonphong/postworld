@@ -73,13 +73,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'edit_post_link',
 		'post_categories_list',
 		'post_tags_list',
-
 		'taxonomy(post_tag)',
 		'taxonomy(category)',
-
 		'author(ID,display_name,user_nicename,posts_url,profile_url)',
 		'avatar(small,48)',
-
 		'post_format',
 		'time_ago',
 

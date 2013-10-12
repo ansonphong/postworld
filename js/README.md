@@ -362,6 +362,42 @@ templates = {
 
 ------
 
+### live-comments *[ directive ]*
+- Loads in the comments for a given post
+
+
+``` javascript
+
+load_comments['comments'] = {
+	post_id : 24,
+	sort_by : 'rank_score',
+	sort_options : {
+		'rank_score' : "Rank Score",
+		'date' : "Date"
+		},
+	max_points : 0,
+	min_points : -10, 
+};
+
+```
+
+   * By Post - hierarchical - expandable - sortable (points/date)
+   * By User - flat - sortable (points/date)
+
+   * Set settings
+   * Add / edit comment / Reply to comment - on success - append self to object - show green check 
+
+
+
+Templates : 
+- Show Comment : templates/comments/comment-single.html
+- Add Comment : templates/comments/comment-add.html
+   * add-Comment directive
+   * add_comment php method
+
+
+------
+
 ## Controllers
 
 ------
