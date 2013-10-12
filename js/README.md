@@ -362,13 +362,13 @@ templates = {
 
 ------
 
-### live-comments *[ directive ]*
+### load-comments *[ directive ]*
 - Loads in the comments for a given post
 
+Javascript :
 
 ``` javascript
-
-load_comments['comments'] = {
+load_comments['post_single'] = {
 	post_id : 24,
 	sort_by : 'rank_score',
 	sort_options : {
@@ -379,6 +379,12 @@ load_comments['comments'] = {
 	min_points : -10, 
 };
 
+```
+
+HTML : 
+
+``` HTML
+<div load-comments="post_single"></div>
 ```
 
    * By Post - hierarchical - expandable - sortable (points/date)
