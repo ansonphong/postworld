@@ -1086,13 +1086,23 @@ array(
 ------
 
 __POST RELATIONSHIP : "SET" ALIASES__
-- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
-- If no __$post_id__ is defined, use `$post->ID` method to get the post ID
+
+__$post_id__ : *integer* (optional)
+- If undefined, get the current __post_id__ like:
+  
+  ``` php
+  global $post;
+  $post_id = $post->ID;
+  ```
+
+__$user_id__ : *integer* (optional)
+- If undefined, use: `$user_id = get_current_user_id();`
 
 ------
 
 ### set_favorite( *$switch, [$post_id], [$user_id]* )
 - Use `set_post_relationship()` to set the post relationship for __favorites__
+- If __$post_id__ is undefined
 - __$switch__ is a *boolean*
 
 ``` php
@@ -1124,7 +1134,9 @@ __return__ : *boolean*
 ------
 
 __POST RELATIONSHIP : "GET" ALIASES__  
-- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
+
+__$user_id__ : *integer* (optional)
+- If undefined, use: `$user_id = get_current_user_id();`
 
 ------
 
@@ -1162,8 +1174,17 @@ __return__ : *Array* (of post ids)
 ------
 
 __POST RELATIONSHIP : "IS" ALIASES__
-- If no __$user_id__ is defined, use __get_current_user_id()__ method to get user ID
-- If no __$post_id__ is defined, use `$post->ID` method to get the post ID
+
+__$post_id__ : *integer* (optional)
+- If undefined, get the current __post_id__ like:
+  
+  ``` php
+  global $post;
+  $post_id = $post->ID;
+  ```
+
+__$user_id__ : *integer* (optional)
+- If undefined, use: `$user_id = get_current_user_id();`
 
 ------
 
