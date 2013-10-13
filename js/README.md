@@ -35,6 +35,44 @@ __return__ : *Object*
 
 ------
 
+###__embedly_extract__ ( *url, [object]* )
+
+#### Description
+- Uses embed.ly extract service : http://embed.ly/extract
+- Input the URL into embed.ly, return with extracted data object
+- Translate / rename field object into Wordpress `wp_insert_post()` format
+  -  
+
+#### Parameters
+__url__ : *string*
+- The URL which to submit to Emebed.ly Extract
+
+__object__ : *string* (optional)
+- The Javascript object which to inject the data into on success
+
+__return__ : *Object* (embed.ly extract data)
+
+------
+
+###__pw_embedly_extract__ ( *url, [object]* )
+
+#### Description
+- A wrapper for `embedly_extract()` JS Method which conditions / remaps the object for Postworld/Wordpress input fields
+
+#### Process
+
+__FILTERS__
+- __title__ ›rename› __post_title__
+- __description__ ›rename› __post_excerpt__
+
+__POST_FORMAT__
+
+- If link_url contrains
+
+__return__ : *Object*
+
+------
+
 ## Functions
 
 ------
@@ -283,16 +321,51 @@ __JAVASCRIPT :__
 
 __return__ : *scope*
 
-####Usage:
+#### Basic Usage:
 
 ```html
 <div load-panel="panel_id"></div> 
 ```
-
 - Designer can optionally add a custom __ng-controller__ to the html here.
 
-#### Requires:
-- `pw_cache_feed()` PHP Method
+#### Parameters & Usage
+
+__load_panel__ : *object*
+- Default : *null*
+- Sub-object is the __panel_id__
+- An Object which is transplanted into the scope of the template
+- First level keys are attributed to `window[]` context object of the same name
+
+- Example :
+
+Javascript :
+
+``` javascript
+load_panel['post_link'] = {
+	'post_object' : {
+		'tax_input' : {'topic':['eco']},
+		'post_image' : 'default_image.jpg',
+	},
+	'feed_id' : 'front_page_blog'
+};
+```
+HTML:
+
+``` HTML
+<div load-panel="post_link"></div>
+```
+
+- Inner scope: 
+
+```javascript
+var post_object = {
+		'tax_input' : {'topic':['eco']},
+		'post_image' : 'default_image.jpg',
+	};
+var feed_id = 'front_page_blog';
+
+```
+
 
 ------
 
@@ -359,6 +432,8 @@ templates = {
 	     },
 };
 ```
+
+
 
 ------
 
@@ -429,7 +504,7 @@ __comment-parent__ : *integer*
 ```
 
 #### Notes
-- Add / edit comment / Reply to comment - on success - append self to object - show green check 
+- Add / edit comment / Reply to comment - on success - append self to object - show green check/ok icon
 
 ------
 
@@ -493,7 +568,7 @@ HTML View:
 
 ``` html
 <div edit-field="taxonomy(category)" data-object="post_obj">
-	<select multiple name="category" data-bind="post_obj.tax_input.category">
+	<select multiple name="category" data-object="post_obj.tax_input">
 		<option value="term1" selected>Term One</option>
 		<option value="term2">Term Two</option>
 		<option value="term3" selected>Term Three</option>
@@ -522,7 +597,7 @@ HTML View:
   
 ``` html
 <div edit-field="tags_input" data-input="input-text" data-object="post_obj">
-	<input name="tags_input" data-bind="post_obj.tax_input.tags_input" value="tag1,tag2,tag3">
+	<input name="tags_input" data-object="post_obj.tags_input" value="tag1,tag2,tag3">
 </div>
 ```
 
@@ -546,7 +621,7 @@ HTML View
 
 ``` html
 <div edit-field="taxonomy(topic)" data-object="query_obj">
-	<select multiple name="category" data-bind="query_obj.tax_query">
+	<select multiple name="category" data-object="query_obj.tax_query">
 		<option value="term1" selected>Term One</option>
 		<option value="term2">Term Two</option>
 		<option value="term3" selected>Term Three</option>
@@ -555,7 +630,7 @@ HTML View
 </div>
 
 <div edit-field="taxonomy(section)" data-object="query_obj">
-	<select multiple name="category" data-bind="query_obj.tax_query">
+	<select multiple name="category" data-object="query_obj.tax_query">
 		<option value="term1">Term One</option>
 		<option value="term2" selected>Term Two</option>
 		<option value="term3">Term Three</option>
@@ -617,10 +692,16 @@ __data-input__ : *string* (required)
   - __textarea__
 
 __data-size__ : *integer* (optional)
-- The 
+- The size of an select field
+
+__data-size__ : *integer* (optional)
+- The size of an select field
 
 __data-value__ : *string* (optional)
 - The over-ride value of the field
+
+__data-maxlength__ : *integer* (optional)
+- The maximum length of the field data
 
 __data-placeholder__ : *string* (optional)
 - The __placeholder__ value for an text input box
