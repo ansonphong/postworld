@@ -919,9 +919,9 @@ __$fields__ : (optional) *string / Array*
   - location_region
   - location_city
   - post_relationships :  
-    viewed
-    favorites
-    view_later
+    • viewed  
+    • favorites  
+    • view_later  
 
 #### Usage
 ``` php
