@@ -38,10 +38,8 @@ __return__ : *Object*
 ###__embedly_extract__ ( *url, [object]* )
 
 #### Description
-- Uses embed.ly extract service : http://embed.ly/extract
-- Input the URL into embed.ly, return with extracted data object
-- Translate / rename field object into Wordpress `wp_insert_post()` format
-  -  
+- Uses __embed.ly__ extract service : http://embed.ly/extract
+- Input the URL into __embed.ly__ API, return with extracted data object
 
 #### Parameters
 __url__ : *string*
@@ -50,11 +48,46 @@ __url__ : *string*
 __object__ : *string* (optional)
 - The Javascript object which to inject the data into on success
 
+
+#### Usage
+
+- __Method__ : 1
+
+``` javascript
+var url = 'http://www.youtube.com/watch?v=38peWm76l-U';
+var post_data = {};
+embedly_extract( url, post_data.embedly_extract );
+
+// Produces :
+
+post_data = {
+	'embedly_extract' : {
+	    "url": "http://www.youtube.com/watch?v=38peWm76l-U", 
+	    "title": "Earth From Space HD 1080p / Nova"
+	    "provider_name": "YouTube", 
+	    "description": "The groundbreaking two-hour special that reveals a spectacular new space-based vision of our planet. Produced in extensive consultation with NASA scientists, NOVA takes data from earth-observing satellites and transforms it into dazzling visual sequences, each one exposing the intricate and surprising web of forces that sustains life on earth.", 
+		}
+	};
+
+```
+
+- __Method__ : 2
+
+``` javascript
+
+var url = 'http://www.youtube.com/watch?v=38peWm76l-U';
+var post_data = {
+	'embedly_extract' : embedly_extract( url );
+	};
+
+```
 __return__ : *Object* (embed.ly extract data)
 
 ------
 
 ###__pw_embedly_extract__ ( *url, [object]* )
+
+Status : In concepting... (phongmedia)
 
 #### Description
 - A wrapper for `embedly_extract()` JS Method which conditions / remaps the object for Postworld/Wordpress input fields
@@ -66,8 +99,22 @@ __FILTERS__
 - __description__ ›rename› __post_excerpt__
 
 __POST_FORMAT__
+- Value : __video__
+  - If link_url contrains :  
+    youtube/
+    youtu.be/
+    vimeo.com/
+    hulu.com/
+    ustream.com/
+    dailymotion.com/
+    ted.com/
+    dotsub.com/
 
-- If link_url contrains
+- Value : __audio__
+  - If link_url contrains :  
+    mixcloud.com/
+    soundcloud.com/
+    rdio.com/
 
 __return__ : *Object*
 
