@@ -321,14 +321,14 @@ __JAVASCRIPT :__
 
 __return__ : *scope*
 
-#### Basic Usage:
+#### Usage : Basic
 
 ```html
 <div load-panel="panel_id"></div> 
 ```
 - Designer can optionally add a custom __ng-controller__ to the html here.
 
-#### Parameters & Usage
+#### Usage : With Parameters
 
 __load_panel__ : *object*
 - Default : *null*
