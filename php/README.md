@@ -88,7 +88,7 @@ __META POINTS FUNCTIONS__
 
 ------
 
-### set_points ( $point_type, $id, $points )
+### set_points ( $point_type, $id, $set_points )
 
 #### Description
 

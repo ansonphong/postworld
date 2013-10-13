@@ -50,7 +50,7 @@ function postworld_install() {
       comment_author_id BIGINT(20) UNSIGNED NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
       time TIMESTAMP NOT NULL,
-      UNIQUE KEY comment_id (comment_id)
+      UNIQUE KEY comment_id_user_id (comment_id,user_id)
     );";
     
   

@@ -416,17 +416,58 @@ function pw_get_templates ( $templates_object ){
 			
 			$output['panels']=array();
 
-			 for ($i=0; $i < count($templates_object['panels']) ; $i++) {
-			if(file_exists($override_panel_template_abs_path.$templates_object['panels'][$i].".html")){
-				//echo $override_panel_template_abs_path.$templates_object['panels'][$i].".html";
-				$output['panels'][$templates_object['panels'][$i]] =  $override_panel_template_url.$templates_object['panels'].".html";
+			for ($i=0; $i < count($templates_object['panels']) ; $i++) {
+				if(file_exists($override_panel_template_abs_path.$templates_object['panels'][$i].".html")){
+					//echo $override_panel_template_abs_path.$templates_object['panels'][$i].".html";
+					$output['panels'][$templates_object['panels'][$i]] =  $override_panel_template_url.$templates_object['panels'].".html";
+				}
+				else {
+					$output['panels'][$templates_object['panels'][$i]] =  $default_panel_template_url.$templates_object['panels'][$i].".html";
+				}
 			}
-			else {
-				$output['panels'][$templates_object['panels'][$i]] =  $default_panel_template_url.$templates_object['panels'][$i].".html";
-			}
-		}
 		}
 		return $output;
+	}
+
+
+	function  pw_get_post_template ( $post_id, $post_view ){
+		
+		/* Returns an template path based on the provided post ID and view
+			Process
+			
+			Check the post type of the post as $post_type with get_post_type( $post_id )
+			Using pw_get_templates(), get the template object
+			Input :
+			
+			$args = array(
+			    'posts' => array(
+			        'post_types' => array( $post_type ),    // 'post'
+			        'post_views' => array( $post_view )     // 'full'
+			    ),
+			);
+			$post_template_object = pw_get_templates ($args);
+			Output :
+			
+			{
+			posts : {
+			     'post' : {
+			          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
+			          },
+			     },
+			}
+			return : string (The single template path) : /wp-content/plugins/postworld/templates/posts/post-full.html
+		 */
+		 $post_type=  get_post_type( $post_id );
+		 $args = array(
+    			'posts' => array(
+        		'post_types' => array( $post_type ),    // 'post'
+        		'post_views' => array( $post_view )     // 'full'
+    		),
+		);
+		return pw_get_templates($args);
+		 
+		 
+		
 	}
 		//convert object to array $array =  (array) $yourObject;
 	class pw_query_args{
