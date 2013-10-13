@@ -40,7 +40,11 @@ pwApp.controller('pwFilterFeedController',
 				$scope.feedQuery.order = 'DESC';
 			} else $scope.feedQuery.order = 'ASC';
 		};		
+		$scope.$watch('feedQuery.order_by', function(value) {
+			$log.info('pwFilterFeedController.changeFeedTemplate order by changed',$scope.feedQuery.order_by);
+		}); 
 		$scope.$watch('feedQuery.order', function(value) {
+			$log.info('pwFilterFeedController.changeFeedTemplate order changed',$scope.feedQuery.order);
  			if (value == 'DESC') {
 				$scope.clsOrder ='glyphicon-arrow-down'; 				
  			} else  {

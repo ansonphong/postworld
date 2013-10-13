@@ -16,7 +16,6 @@
 /* TODO - Bootstrap style included for testing purposes, remove in final version, add ,array('twentytwelve-style') if you want to place after style.css */
 wp_enqueue_style( 'Bootstrap', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css', array('twentytwelve-style') );
 
-
 /* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
 wp_deregister_script('jquery');
 wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
@@ -40,9 +39,9 @@ wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/li
 wp_localize_script( 'pw-LiveFeed-JS', 'jsVars', $jsVars);
 wp_enqueue_script( 'pw-LiveFeed-JS' );
 
-wp_register_script( "pw-LoadPanel-JS", WP_PLUGIN_URL.'/postworld/js/components/loadPanel.js' );
-wp_localize_script( 'pw-LoadPanel-JS', 'jsVars', $jsVars);
-wp_enqueue_script( 'pw-LoadPanel-JS' );
+wp_register_script( "pw-FilterFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/filterFeed.js' );
+wp_localize_script( 'pw-FilterFeed-JS', 'jsVars', $jsVars);
+wp_enqueue_script( 'pw-FilterFeed-JS' );
 
 wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/components/feedItem.js' );
 wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
@@ -54,15 +53,13 @@ wp_enqueue_script( 'pw-pwData-JS' );
 
 wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js' );
 
-get_header(); ?>
-<div id="primary" class="site-content" style="width:100%">
-	<div id="content" role="main">
-		<div class="container">
-			<div ng-app='pwApp' data-nonce="<?php echo wp_create_nonce("postworld_nonce");?>" >
-				<ng-view></ng-view>
-			</div>
-		</div>
-	</div><!-- #content -->
-</div><!-- #primary -->
+wp_register_script( "BootStrap-JS", '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js' );
+wp_enqueue_script( 'BootStrap-JS' );
 
-<?php get_footer(); ?>
+
+get_header('postworld'); ?>
+<div ng-app='pwApp' data-nonce="<?php echo wp_create_nonce("postworld_nonce");?>" >
+	<ng-view></ng-view>
+</div>
+
+<?php get_footer('postworld'); ?>

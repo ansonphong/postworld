@@ -9,7 +9,6 @@ Postworld // Angular / JS Functions
 0. [ __Edit Post__ ](#edit-post)
 0. [ __Related Notes__ ](#related-notes)
 
-
 ------
 
 ## General Functions
@@ -31,6 +30,91 @@ __return__ : *JSON encoded DATA response*
 ###__o_embed__ ( url, args )
 - Uses `wp_oembed_get()` WP function via AJAX
 - See : http://codex.wordpress.org/wp_oembed_get
+
+__return__ : *Object*
+
+------
+
+###__embedly_extract__ ( *url, [object]* )
+
+#### Description
+- Uses __embed.ly__ extract service : http://embed.ly/extract
+- Input the URL into __embed.ly__ API, return with extracted data object
+
+#### Parameters
+__url__ : *string*
+- The URL which to submit to Emebed.ly Extract
+
+__object__ : *string* (optional)
+- The Javascript object which to inject the data into on success
+
+
+#### Usage
+
+- __Method__ : 1
+
+``` javascript
+var url = 'http://www.youtube.com/watch?v=38peWm76l-U';
+var post_data = {};
+embedly_extract( url, post_data.embedly_extract );
+
+// Produces :
+
+post_data = {
+	'embedly_extract' : {
+	    "url": "http://www.youtube.com/watch?v=38peWm76l-U", 
+	    "title": "Earth From Space HD 1080p / Nova"
+	    "provider_name": "YouTube", 
+	    "description": "The groundbreaking two-hour special that reveals a spectacular new space-based vision of our planet. Produced in extensive consultation with NASA scientists, NOVA takes data from earth-observing satellites and transforms it into dazzling visual sequences, each one exposing the intricate and surprising web of forces that sustains life on earth.", 
+		}
+	};
+
+```
+
+- __Method__ : 2
+
+``` javascript
+
+var url = 'http://www.youtube.com/watch?v=38peWm76l-U';
+var post_data = {
+	'embedly_extract' : embedly_extract( url );
+	};
+
+```
+__return__ : *Object* (embed.ly extract data)
+
+------
+
+###__pw_embedly_extract__ ( *url, [object]* )
+
+Status : In concepting... (phongmedia)
+
+#### Description
+- A wrapper for `embedly_extract()` JS Method which conditions / remaps the object for Postworld/Wordpress input fields
+
+#### Process
+
+__FILTERS__
+- __title__ ›rename› __post_title__
+- __description__ ›rename› __post_excerpt__
+
+__POST_FORMAT__
+- Value : __video__
+  - If link_url contrains :  
+    youtube/
+    youtu.be/
+    vimeo.com/
+    hulu.com/
+    ustream.com/
+    dailymotion.com/
+    ted.com/
+    dotsub.com/
+
+- Value : __audio__
+  - If link_url contrains :  
+    mixcloud.com/
+    soundcloud.com/
+    rdio.com/
 
 __return__ : *Object*
 
@@ -114,8 +198,8 @@ __return__ : *true*
 __return__ : *Object*
 ``` javascript
 {
-feed_outline : [1,3,5,8,12,16,24,64],
-post_data : { Object } 
+	feed_outline : [1,3,5,8,12,16,24,64],
+	post_data : { Object } 
 }
 ```
 
@@ -125,20 +209,57 @@ post_data : { Object }
 
 ------
 
+### load-post *[ directive ]*
+
+#### Description : 
+- Loads a single post into the DOM
+- Used for displaying single posts and features
+
+#### Parameters :
+
+__load_post[ *name* ]__ : *object*
+- A JS Object which defines the settings for the post display
+
+- __post_id__ : *integer*
+- __view__ : *string*
+  - The template view to display the post in
+
+#### Process :
+- Get the template path with `pw_post_template( $post_id, $post_view )` PHP Method via AJAX
+
+#### Usage :
+
+Javascript:
+
+``` javascript
+load_post['single_post'] = {
+	post_id : 24,
+	view : 'full',
+}
+```
+
+HTML :
+
+``` html
+<div load-post="single_post"></div>
+```
+
+------
+
 ###live-feed *[ directive ]*
 
-####Description:
+#### Description:
 Displays a live unregistered feed based on `feed_query pw_query()` args
 
-####Process:
+#### Process:
 
-1. Populate `feed_data[feed_id]` JS Object with `feed_init[feed_id]`
+1. Populate `feed_data[feed_id]` JS Object with `feed_settings[feed_id]`
 2. Setup DOM structure with ng-controller and ng-repeat for displaying the feed
 3. Run JS method : `pw_live_feed()`
 
 
-####Parameters:
-Parameters are passed via `feed_init[feed_id]`.
+#### Parameters:
+Parameters are passed via `feed_settings[feed_id]`.
 
 __preload__ : *integer*  
 Number of posts to load at the beginning, before infinite scrolling
@@ -197,14 +318,14 @@ __PHP / AJAX :__
 
 
 __JAVASCRIPT :__  
-1. Populate `feed_data[feed_id]` Object with `feed_init[feed_id]` Object 
+1. Populate `feed_data[feed_id]` Object with `feed_settings[feed_id]` Object 
 
 __return__ : *true*
 
 ####Usage:
 
 ```javascript
-feed_init['feed_id'] = {
+feed_settings['feed_id'] = {
      preload: 3,
      load_increment : 10,
      view : {
@@ -247,16 +368,51 @@ __JAVASCRIPT :__
 
 __return__ : *scope*
 
-####Usage:
+#### Usage : Basic
 
 ```html
 <div load-panel="panel_id"></div> 
 ```
-
 - Designer can optionally add a custom __ng-controller__ to the html here.
 
-#### Requires:
-- `pw_cache_feed()` PHP Method
+#### Usage : With Parameters
+
+__load_panel__ : *object*
+- Default : *null*
+- Sub-object is the __panel_id__
+- An Object which is transplanted into the scope of the template
+- First level keys are attributed to `window[]` context object of the same name
+
+- Example :
+
+Javascript :
+
+``` javascript
+load_panel['post_link'] = {
+	'post_object' : {
+		'tax_input' : {'topic':['eco']},
+		'post_image' : 'default_image.jpg',
+	},
+	'feed_id' : 'front_page_blog'
+};
+```
+HTML:
+
+``` HTML
+<div load-panel="post_link"></div>
+```
+
+- Inner scope: 
+
+```javascript
+var post_object = {
+		'tax_input' : {'topic':['eco']},
+		'post_image' : 'default_image.jpg',
+	};
+var feed_id = 'front_page_blog';
+
+```
+
 
 ------
 
@@ -281,12 +437,12 @@ feed_data = {
 
 ------
 
-###feed_init *Object*
+###feed_settings *Object*
 + Used to initialize a feed directive
 + The contents of this object are then transferred into feed_data[feed_id] after initialization
 
 ``` javascript
-feed_init[feed_id] = {
+feed_settings[feed_id] = {
      preload : 10,
      load_increment : 10,
      offset : 0,
@@ -323,6 +479,79 @@ templates = {
 	     },
 };
 ```
+
+
+
+------
+
+### load-comments *[ directive ]*
+
+__Status__ : In concepting (phongmedia)
+
+#### Description
+
+- Loads in the comments for a given post
+- Template :
+  - `templates/comments/comment-single.html`
+
+#### Usage
+
+Javascript :
+
+``` javascript
+load_comments['post_single'] = {
+	post_id : 24,
+	sort_by : 'rank_score',
+	sort_options : {
+		'comment_points' : "Points",
+		'date' : "Date"
+		},
+	max_points : 0,
+	min_points : -10, 
+};
+
+```
+
+HTML : 
+
+``` HTML
+<div load-comments="post_single"></div>
+```
+
+------
+
+### add-comment *[ directive ]*
+
+__Status__ : In concepting (phongmedia)
+
+#### Description
+
+- Produces an add comment form
+- Template :
+  - `templates/comments/comment-add-{{type}}.html`
+
+#### Attributes
+
+__add-comment__ : *string*
+- The *type* of comment form
+- Options:
+  - __text__
+  - *rich* (future implimentation)
+
+__post-id__ : *integer*
+- The post ID of the post to add the comment to
+
+__comment-parent__ : *integer*
+- The comment ID of the comment to which it is a response
+
+#### Usage
+
+``` HTML
+<div add-comment="text" data-post-id="24" data-comment-parent="45324"></div>
+```
+
+#### Notes
+- Add / edit comment / Reply to comment - on success - append self to object - show green check/ok icon
 
 ------
 
@@ -386,7 +615,7 @@ HTML View:
 
 ``` html
 <div edit-field="taxonomy(category)" data-object="post_obj">
-	<select multiple name="category" data-bind="post_obj.tax_input.category">
+	<select multiple name="category" data-object="post_obj.tax_input">
 		<option value="term1" selected>Term One</option>
 		<option value="term2">Term Two</option>
 		<option value="term3" selected>Term Three</option>
@@ -415,7 +644,7 @@ HTML View:
   
 ``` html
 <div edit-field="tags_input" data-input="input-text" data-object="post_obj">
-	<input name="tags_input" data-bind="post_obj.tax_input.tags_input" value="tag1,tag2,tag3">
+	<input name="tags_input" data-object="post_obj.tags_input" value="tag1,tag2,tag3">
 </div>
 ```
 
@@ -439,7 +668,7 @@ HTML View
 
 ``` html
 <div edit-field="taxonomy(topic)" data-object="query_obj">
-	<select multiple name="category" data-bind="query_obj.tax_query">
+	<select multiple name="category" data-object="query_obj.tax_query">
 		<option value="term1" selected>Term One</option>
 		<option value="term2">Term Two</option>
 		<option value="term3" selected>Term Three</option>
@@ -448,7 +677,7 @@ HTML View
 </div>
 
 <div edit-field="taxonomy(section)" data-object="query_obj">
-	<select multiple name="category" data-bind="query_obj.tax_query">
+	<select multiple name="category" data-object="query_obj.tax_query">
 		<option value="term1">Term One</option>
 		<option value="term2" selected>Term Two</option>
 		<option value="term3">Term Three</option>
@@ -510,10 +739,16 @@ __data-input__ : *string* (required)
   - __textarea__
 
 __data-size__ : *integer* (optional)
-- The 
+- The size of an select field
+
+__data-size__ : *integer* (optional)
+- The size of an select field
 
 __data-value__ : *string* (optional)
 - The over-ride value of the field
+
+__data-maxlength__ : *integer* (optional)
+- The maximum length of the field data
 
 __data-placeholder__ : *string* (optional)
 - The __placeholder__ value for an text input box

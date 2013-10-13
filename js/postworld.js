@@ -212,7 +212,7 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 						oValue = '';
 
 					// Generate HTML
-					input_html = "<input type='" + input_extension + "' name='" + attrs.editField + "' id='" + attrs.editField + "' value='"+ oValue +"' placeholder='"+placeholder+"'>";
+					input_html = "<input type='" + input_extension + "' name='" + attrs.editField + "' id='" + attrs.editField + "' class='" + attrs.editField + "' value='"+ oValue +"' placeholder='"+placeholder+"'>";
 					input_element = angular.element( input_html );
 					elem.append( input_element );
 					//$compile( input_element )( scope );
@@ -244,7 +244,7 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 					oValue = '';
 
 				// Generate HTML
-				input_html = "<textarea name='" + attrs.editField + "' id='" + attrs.editField + "' placeholder='"+placeholder+"' " + wrap + ">"+oValue+"</textarea>";
+				input_html = "<textarea name='" + attrs.editField + "' id='" + attrs.editField + "' class='" + attrs.editField + "' placeholder='"+placeholder+"' " + wrap + ">"+oValue+"</textarea>";
 				input_element = angular.element( input_html );
 				elem.append( input_element );
 				//$compile( input_element )( scope );
@@ -333,3 +333,31 @@ postworld.run(function($rootScope, $templateCache) {
 });
 
 
+
+// ADDS THE ABILITY FOR || OR OPERATOR IN NG-SWITCH
+angular.module('postworld', []).
+	config(function($routeProvider, $provide) {
+	  /**
+	   * overwrite angular's directive ngSwitchWhen
+	   * can handle ng-switch-when="value1 || value2 || value3"
+	   */
+	  $provide.decorator('ngSwitchWhenDirective', function($delegate) {
+	    $delegate[0].compile = function(element, attrs, transclude) {
+	    return function(scope, element, attr, ctrl) {
+	      var subCases = [attrs.ngSwitchWhen];
+	      if(attrs.ngSwitchWhen && attrs.ngSwitchWhen.length > 0 && attrs.ngSwitchWhen.indexOf('||') != -1) {
+	      subCases = attrs.ngSwitchWhen.split('||');
+	      }
+	      var i=0;
+	      var casee;
+	      var len = subCases.length;
+	      while(i<len) {
+	        casee = $.trim(subCases[i++]);
+	        ctrl.cases['!' + casee] = (ctrl.cases['!' + casee] || []);
+	        ctrl.cases['!' + casee].push({ transclude: transclude, element: element });
+	      }
+	    }
+	    }
+	    return $delegate;
+	  });
+	});

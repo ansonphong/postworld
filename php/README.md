@@ -10,6 +10,7 @@ Postworld // PHP / MySQL Functions
 0. [ __Query__ : postworld_query.php ](#query)
 0. [ __Users__ : postworld_users.php ](#users)
 0. [ __Posts__ : postworld_posts.php ](#posts)
+0. [ __Comments__ : postworld_comments.php ](#comments)
 0. [ __Feeds__ : postworld_feeds.php ](#feeds)
 0. [ __Sharing__ : postworld_share.php ](#sharing)
 0. [ __Images__ : postworld_images.php ](#images)
@@ -1445,6 +1446,47 @@ __return__ :
 
 ------
 
+## Comments
+__php/postworld_comments.php__
+
+------
+
+### pw_get_comment ( $comment_id, $fields, $viewer_user_id* )
+- Gets data for a particular comment
+
+#### Parameters
+
+__$comment_id__
+- The ID of the comment
+
+__$fields__ : *Array*
+- __Worpress Comment Fields__ : All return fields from [WP get_comment()](http://codex.wordpress.org/Function_Reference/get_comment)
+  - comment_ID
+  - comment_post_ID
+  - comment_author
+  - comment_author_email
+  - comment_author_url
+  - comment_author_IP
+  - comment_date
+  - comment_date_gmt
+  - comment_content
+  - comment_karma
+  - comment_approved
+  - comment_agent
+  - comment_type
+  - comment_parent
+  - user_id
+- __Postworld Comment Fields__
+  - comment_points
+  - viewer_voted
+
+__$viewer_user_id__
+- The user ID of a user to return vote data by
+
+__return__ : *Array*
+
+------
+
 ## Feeds
 __php/postworld_feeds.php__
 
@@ -1604,6 +1646,41 @@ array(
 
 ------
 
+### pw_get_post_template ( *$post_id, $post_view* )
+- Returns an template path based on the provided post ID and view
+
+#### Process
+- Check the __post type__ of the post as `$post_type` with `get_post_type( $post_id )`
+- Using `pw_get_templates()`, get the template object
+
+Input : 
+
+``` php
+$args = array(
+	'posts' => array(
+		'post_types' => array( $post_type ),	// 'post'
+		'post_views' => array( $post_view )		// 'full'
+	),
+);
+$post_template_object = pw_get_templates ($args);
+```
+
+Output : 
+
+``` javascript
+{
+posts : {
+     'post' : {
+          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
+          },
+     },
+}
+```
+
+__return__ : *string* (The single template path) : `/wp-content/plugins/postworld/templates/posts/post-full.html`
+
+------
+
 ### pw_get_templates ( *$templates_object* )
 - Gets an Object of template paths based on the provided object
 
@@ -1683,7 +1760,9 @@ __PANEL TEMPLATES OBJECT__
 __return__ : *Array* (with requested template paths)
 
 #### Usage:
+
 ``` php
+
 // To get Post Templates Object
 $args = array(
 	'posts' => array(
@@ -1703,7 +1782,9 @@ $panel_template = pw_get_templates ( array( 'panels'=>'panel_id' ));
 - __Post Templates Object__ : *Array* - With post_views nested within post_types
 
 After JSON Encoded :
+
 ``` javascript
+
 {
 posts : {
      'post' : {
@@ -1716,9 +1797,10 @@ posts : {
 
 ```
 
-- __Panel Template Object__ : *Array* - With key as panel_id value as panel_url
+- __Panel Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
 
 After JSON Encoded :
+
 ``` javascript
 {
 panels : {
