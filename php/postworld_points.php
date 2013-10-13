@@ -53,19 +53,7 @@
 		$points_total = $wpdb -> get_var($query);
 		//echo("\npoints cal" . $points_total);
 		if($points_total==null || $points_total =='') $points_total=0;
-		//update wp_postworld_meta
-		$query = "update ".$wpdb->pw_prefix.'post_meta'." set post_points=" . $points_total . " where post_id=" . $post_id;
-		$result =$wpdb -> query($query);
 		
-		if ($result === FALSE){
-			//insertt new row for this post in post_meta, no points was added
-			
-			/*1- get post data
-			 2-  Insert new record into post_meta
-			 */
-			add_recored_to_post_meta($post_id,$points_total);
-			
-		}
 		return $points_total;
 	
 	}
@@ -75,9 +63,24 @@
 		/*• Calculates given post's current points with calculate_post_points()	
 		• Stores points it in wp_postworld_post_meta table in the post_points column
 		return : integer (number of points)*/
-		return calculate_post_points($post_id);
-		
+		$total_points = calculate_post_points($post_id);
+		//update wp_postworld_meta
+		global $wpdb;
+		$wpdb -> show_errors();
 	
+		$query = "update ".$wpdb->pw_prefix.'post_meta'." set post_points=" . $total_points . " where post_id=" . $post_id;
+		$result =$wpdb -> query($query);
+		
+		if ($result === FALSE || $result === 0){
+			//insertt new row for this post in post_meta, no points was added
+			
+			/*1- get post data
+			 2-  Insert new record into post_meta
+			 */
+			add_recored_to_post_meta($post_id,$total_points);
+			
+		}
+		return $total_points;
 	}
 	
 	/////////////// USER POINTS  ///////////////////
@@ -237,6 +240,268 @@
 		// Write new post_points_meta object to user_meta table
 		cache_post_points_meta($user_id, $post_points_meta);
 	} 
+	
+	function set_points ( $point_type, $id, $set_points ){
+		
+		/*
+		 Description
+		A meta function for set_post_points() and set_comment_points()
+		
+		 * Parameters
+		
+		$point_type : string
+		---------------
+		 * Which type of points to set
+		 * options :
+			post - Will set points for a post_id
+			comment - Will set points for comment_id
+	 
+		$id : integer
+		--------------
+		 * The post_id or comment_id
+		 
+		
+		$set_points : integer
+		----------------
+		 * How many points to set for the user
+		
+	 
+	Process
+		
+		-Get the User ID
+		-Get the user's vote power : get_user_vote_power()
+				If $set_points is greater than the user's role vote_points , reduce to vote_points
+		
+		 */
+		 $user_id = get_current_user_id();
+		 $user_vote_power = get_user_vote_power($user_id);
+		 if ( abs($user_vote_power) < abs($set_points) )
+    		$set_points = $user_vote_power * (abs($set_points)/$set_points); 
+	 
+	 
+	 	
+	 
+	 /*
+	 	$update_points = $set_points - $old_user_points; // calculate the difference in points
+		$old_post_points = get_post_points($post_id); // get previous points of the post
+		$new_post_points = $old_post_points + $update_points; // add the updated points	
+		$output -> points_added = $update_points;*/
+	
+		  
+		 /*
+		-Define the table and column names to work with :
+			Points Table : post_points / comment_points
+			ID Column : post_id / comment_id
+			Points Column : post_points / comment_points
+		
+		 */
+		global $wpdb;	
+		$wpdb-> show_errors();
+		
+		  $table_name;
+		  $points_column='' ;
+		  $column_id ='';
+		  if($point_type == 'post') {
+		  	$table_name ="$wpdb->pw_prefix"."post_points";
+		  	$points_column = 'post_points';
+			$column_id ='post_id';  
+			
+		  }
+		  else{
+		  	$table_name ="$wpdb->pw_prefix"."comment_points";
+		  	$points_column = 'points';
+			$column_id ='comment_id';  
+		  }
+		  
+		  
+		 
+		  /*
+		-Check if row exists in Points Table for the given ID Column and User ID
+			If no row , add row to coorosponding Points Table
+			If row exists , update the row
+			If $set_points = 0 , delete row
+		  */
+		    
+		//$query = "SELECT * FROM ".$table_name." Where $column_id=" . $id . " and user_id=" . $user_id;
+		//$points_row = $wpdb -> get_row($query);
+		
+		if($point_type =='post') 
+			$points_row = does_post_points_row_exist($id, $user_id);
+		else 
+			$points_row = does_comment_points_row_exist($id, $user_id);
+		
+		
+		
+		//print_r($points_row);
+		
+		if($points_row){ //update
+			$points_row =  get_object_vars($points_row);
+			$old_points = $points_row[$points_column];
+			$update_points =  $set_points - $old_points;
+			
+			//print_r($points_row);
+			//echo("oldPOints:".$old_points);
+			//echo("update_points:".$update_points);	
+		}
+		
+		//check if it is required to delete the row and update cashed points (triggers)
+		if ($set_points == 0) {
+			if($points_row){
+				$query = "delete from ".$table_name." where $column_id=" . $id . " and user_id=" . $user_id;
+				$wpdb -> query($query);
+			}else{
+				$update_points = 0;
+			}
+			
+		} else { //set points not 0
+			
+			if($points_row){
+				if($point_type =='post') {
+					update_post_points($id, $user_id, $set_points);
+					//$points_total = cache_post_points($id);
+				}
+				else{
+					update_comment_points($id, $user_id, $set_points);
+					//$points_total = cache_comment_points($id);
+				}
+			}
+			else{
+			//	echo "row not founddd";
+				if($point_type =='post') {
+				//	echo "postt";
+					add_record_to_post_points($id, $user_id, $set_points);
+					//$points_total = cache_post_points($id);
+				}else{
+					//echo "commment";
+					add_record_to_comment_points($id, $user_id, $set_points);
+					//$points_total = cache_comment_points($id);
+				}
+				$update_points= $set_points;
+			}
+			
+		}
+		if($point_type =='post') {
+				
+				$points_total = cache_post_points($id);
+		}
+		else{ 
+				$points_total = cache_comment_points($id);
+		}
+		
+		 
+		/*
+		-Add Unix timestamp to time column in Points Table
+		
+		-If $point_type == post , Update cache in Post Meta table
+		
+			If row doesn't exist for given post_id in Post Meta table, create new row
+			Update cached post_points row in Post Meta table directly if there is a change in points
+		-Update cache in User Meta table, under the post/comment author, under coorosponding Points Column
+		
+			$point_type == post update the value of post_points_meta column in user_meta table
+		
+		Anatomy of post_points_meta column JSON object in user_meta table : see Database Structure Document.
+		
+		
+		return : Array
+		
+		array(
+		     'point_type' => {{$point_type}} // (post/comment) << NEW
+		     'user_id' => {{$user_id}} // (user ID) << NEW
+		     'id' => {{$id}} // (post/comment ID) << NEW
+		
+		     'points_added' => {{integer}} // (points which were successfully added)
+		 * 
+		     'points_total' => {{integer}} // (from wp_postworld_meta)
+		)
+		TODO:
+		
+		Check that user has not voted too many times recently <<<< Concept method <<< PHONG
+			-Use post_points_meta to store points activity << PHONG
+		 * 
+		 */
+		 
+		 	
+		$output = array(
+		     'point_type' =>$point_type,// (post/comment) << NEW
+		     'user_id' => $user_id, // (user ID) << NEW
+		     'id' => $id, // (post/comment ID) << NEW
+		
+		     'points_added' => $update_points, // (points which were successfully added)
+		
+		     'points_total' => $points_total // (from wp_postworld_meta)
+		);
+		 
+		return $output;
+	}
+	
+	function add_record_to_post_points($post_id,$user_id, $points){
+			global $wpdb;
+			$wpdb -> show_errors();
+			$query = "insert into ".$wpdb->pw_prefix.'post_points'." values(" . $post_id . "," . $user_id . "," . $points . ",null)";
+			$wpdb->query($query);
+	}
+	
+	function update_post_points($post_id, $user_id, $points){
+			global $wpdb;
+			$wpdb -> show_errors();
+			$query="update $wpdb->pw_prefix"."post_points set post_points=".$points ." where post_id=".$post_id." and user_id=".$user_id;
+			$wpdb->query($query);
+	}
+	function update_comment_points($comment_id, $user_id, $points){
+			global $wpdb;
+			$wpdb -> show_errors();
+			$query="update $wpdb->pw_prefix"."comment_points set points=".$points ." where comment_id=".$comment_id." and user_id=".$user_id;
+			$wpdb->query($query);
+	}
+	
+	function does_post_points_row_exist($post_id,$user_id){
+			global $wpdb;
+			$wpdb -> show_errors();
+			$query = "SELECT * FROM ".$wpdb->pw_prefix.'post_points'." Where post_id=" . $post_id . " and user_id=" . $user_id;
+			$points_row = $wpdb -> get_row($query);
+			
+			if($points_row) return $points_row;
+			else return FALSE;
+	}
+	
+	function add_record_to_comment_points($comment_id,$user_id, $points){
+			global $wpdb;
+			$wpdb -> show_errors();
+			$comment_author = get_comment_author_id($comment_id);
+			//echo "<br>add_record_to_comment_points";
+		//	$query = "insert into ".$wpdb->pw_prefix.'comment_points'." values(" . $comment_id . ",".get_comment_post_id($comment_id)."," . $user_id . ",".$comment_author."," . $points . ",null)";
+			
+			$query="INSERT INTO `wp_postworld_a1`.`wp_postworld_comment_points`
+					(`comment_id`,
+					`user_id`,
+					`comment_post_id`,
+					`comment_author_id`,
+					`points`,
+					`time`)
+					VALUES
+					($comment_id,
+					$user_id,".
+					get_comment_post_id($comment_id).",
+					$comment_author,
+					$points,
+					null)";
+								
+		//	echo "<br> teeeeeeeeeeeeeeeeeet $query";
+			$wpdb->query($query);
+	}
+	
+	function does_comment_points_row_exist($comment_id,$user_id){
+			global $wpdb;
+			$wpdb -> show_errors();
+		//	echo "<br>does_comment_points_row_exist";
+			$query = "SELECT * FROM ".$wpdb->pw_prefix.'comment_points'." Where comment_id=" . $comment_id . " and user_id=" . $user_id;
+		//	echo $query;
+			$commentPointsRow = $wpdb -> get_row($query);
+		//	print_r($commentPointsRow);
+			if($commentPointsRow) return $commentPointsRow;
+			else return FALSE;
+	}
 	
 	function set_post_points($post_id, $set_points) {
 		/*
@@ -572,7 +837,7 @@
 					.$post_shares
 					.")";
 					
-			//echo $query."<br>";
+			echo $query."<br>";
 			$wpdb -> query($query);
 		}
 	}

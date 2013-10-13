@@ -21,17 +21,17 @@ $pw_queries = array(
 		0 => array( 
 			"description"=>"wp_postworld_post_points_AfterInsert",
 			"drop" =>"DROP TRIGGER IF EXISTS wp_postworld_a1.wp_postworld_post_points_AfterInsert;",
-			"create" =>"CREATE TRIGGER `wp_postworld_post_points_AfterInsert` AFTER INSERT ON `".$wpdb->pw_prefix.'post_points'."` FOR EACH ROW update ".$wpdb->pw_prefix.'post_meta'." set post_points = (select Sum(post_points) from ".$wpdb->pw_prefix.'post_points'." where post_id = NEW.post_id) where post_id = NEW.post_id;"
+			"create" =>"CREATE TRIGGER `wp_postworld_post_points_AfterInsert` AFTER INSERT ON `".$wpdb->pw_prefix.'post_points'."` FOR EACH ROW update ".$wpdb->pw_prefix.'post_meta'." set post_points = (select COALESCE(SUM(post_points),0) from ".$wpdb->pw_prefix.'post_points'." where post_id = NEW.post_id) where post_id = NEW.post_id;"
 		),
 		1 => array(
 			"description"=>"wp_postworld_post_points_AfterDelete",
 			"drop" =>"DROP TRIGGER IF EXISTS wp_postworld_a1.wp_postworld_post_points_AfterDelete;",
-			"create" =>"CREATE TRIGGER `wp_postworld_post_points_AfterDelete` AFTER DELETE ON `".$wpdb->pw_prefix.'post_points'."` FOR EACH ROW update ".$wpdb->pw_prefix.'post_meta'." set post_points = (select Sum(post_points) from ".$wpdb->pw_prefix.'post_points'." where post_id = OLD.post_id) where post_id = OLD.post_id;"
+			"create" =>"CREATE TRIGGER `wp_postworld_post_points_AfterDelete` AFTER DELETE ON `".$wpdb->pw_prefix.'post_points'."` FOR EACH ROW update ".$wpdb->pw_prefix.'post_meta'." set post_points = (select COALESCE(SUM(post_points),0) from ".$wpdb->pw_prefix.'post_points'." where post_id = OLD.post_id) where post_id = OLD.post_id;"
 		),
 		2 => array(
 			"description"=>"wp_postworld_post_points_AfterUpdate",
 			"drop" =>"DROP TRIGGER IF EXISTS wp_postworld_a1.wp_postworld_post_points_AfterUpdate;",
-			"create" =>"CREATE TRIGGER `wp_postworld_post_points_AfterUpdate` AFTER UPDATE ON `".$wpdb->pw_prefix.'post_points'."` FOR EACH ROW update ".$wpdb->pw_prefix.'post_meta'." set post_points = (select Sum(post_points) from ".$wpdb->pw_prefix.'post_points'." where post_id = NEW.post_id) where post_id = NEW.post_id;"
+			"create" =>"CREATE TRIGGER `wp_postworld_post_points_AfterUpdate` AFTER UPDATE ON `".$wpdb->pw_prefix.'post_points'."` FOR EACH ROW update ".$wpdb->pw_prefix.'post_meta'." set post_points = (select COALESCE(SUM(post_points),0) from ".$wpdb->pw_prefix.'post_points'." where post_id = NEW.post_id) where post_id = NEW.post_id;"
 		)
 	
 	)

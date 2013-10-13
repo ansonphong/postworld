@@ -1169,7 +1169,7 @@ class PW_User_Query extends WP_User_Query {
 		//echo($this->query_vars['fields']);
 		
 		$this->query_orderby = $this->prepare_order_by($this->query_orderby);
-		echo "<br><br>".$this->query_orderby."<br><br>";
+		//echo "<br><br>".$this->query_orderby."<br><br>";
 		$this->query_where = str_replace('WHERE', $this->prepare_where_query(), $this->query_where);
 		$this->query_from = str_replace('FROM wp_users','FROM wp_users left join  wp_postworld_user_meta on wp_users.ID = wp_postworld_user_meta.user_id ', $this->query_from);
 		

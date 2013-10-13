@@ -52,7 +52,7 @@
 		 //update wp_postworld_meta
 		$query = "update ".$wpdb->pw_prefix.'comment_meta'." set comment_points=" . $total_points . " where comment_id=" . $comment_id;
 		$result =$wpdb -> query($query);
-		echo(json_encode($result));
+		//echo(json_encode($result));
 		
 		if ($result === FALSE || $result === 0){
 			//echo 'false <br>';
@@ -83,22 +83,31 @@
 		
 		if($row ==null){
 			
-			$comment_data = get_comment($comment_id);
+			//$comment_data = get_comment($comment_id);
 			//echo("<br>".json_encode($comment_data)); 
 			//print_r($comment_data);
 		
 			
-			$comment_data =  get_comment( $comment_id, ARRAY_A );
+			//$comment_data =  get_comment( $comment_id, ARRAY_A );
 			//echo json_encode($post_data);
 			$query = "insert into ".$wpdb->pw_prefix.'comment_meta'." values("
 					.$comment_id.","
-					.$comment_data['comment_post_ID'].","
+					.get_comment_post_id($comment_id).","
 					.$total_points
 					.")";
 					
-			echo $query."<br>";
+			//echo $query."<br>";
 			$wpdb -> query($query);
 		}
+	}
+	
+	function get_comment_author_id($comment_id){
+		$comment_data = get_comment($comment_id,ARRAY_A);		
+		return $comment_data['user_id'];
+	}
+	function get_comment_post_id($comment_id){
+		$comment_data = get_comment($comment_id,ARRAY_A);
+		return $comment_data['comment_post_ID'];
 	}
 	
 ?>
