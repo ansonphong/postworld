@@ -202,7 +202,24 @@
 		
 		
 	}
-	
+	function set_comment_points($comment_id,$set_poinst){
+		/*Description
+
+		Wrapper for set_points() Method for setting comment points
+		Parameters
+		
+		$comment_id : integer
+		
+		$set_points : integer
+		
+		Process
+		
+		Run set_points( 'comment', $post_id, $set_points )
+		return : Array (same as set_points() )
+		 * */	
+		return set_points( 'comment', $post_id, $set_points );
+		
+	}
 	
 	/////////////// GENERAL POINTS  ///////////////////
 	
@@ -505,19 +522,25 @@
 	
 	function set_post_points($post_id, $set_points) {
 		/*
-		 • $set_points is an integer
-		 • Write row in wp_postworld_points
-		 • Passing 0 deletes row
-		 • Check that user role has permission to write that many points (wp_options) <<<<HAIDY
-		 • Check is the user has already voted points on that post
-		 • Also update cached points in wp_postworld_meta directly
-		 • Add Unix timestamp to time column in wp_postworld_points
-		 return : Object
-		 points_added : {{integer}} (points which were successfully added)
-		 points_total : {{integer}} (from wp_postworld_meta)
+		Description
+
+		Wrapper for set_points() Method for setting post points
+		Parameters
+		
+		$post_id : integer
+		
+		$set_points : integer
+		
+		Process
+		
+		Run set_points( 'post', $post_id, $set_points )
+		return : Array (same as set_points() )
 		 */
 		
-		$user_id = get_current_user_id();
+		
+		return set_points( 'post', $post_id, $set_points );
+		
+		/*$user_id = get_current_user_id();
 		
 		global $wpdb;
 		$wpdb -> show_errors();
@@ -596,7 +619,7 @@
 		//echo("<br>added points:" .$update_points);
 		$output ->points_added = $update_points;
 		$output -> points_total = $points_total;
-		return $output;
+		return $output;*/
 	}
 	
 	

@@ -42,7 +42,7 @@
 	function cache_comment_points($comment_id){
 		
 		/*
-			Calculates given post's current points with calculate_post_points()
+			Calculates given post's current points with calculate_comment_points()
 			Stores points it in wp_postworld_post_meta table_ in the post_points column
 			return : integer (number of points)
 		*/
