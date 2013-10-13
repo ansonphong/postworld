@@ -990,6 +990,9 @@ __$switch__ : *boolean*
 ### Process
 - Add/remove the given __post_id__ to the given relationship array in __post_relationships__ column in __User Meta__ table
 
+- __Favorites__
+  - If `$relationship == favorite` : Add / remove a row to __Favorites__ table
+
 #### Usage
 ``` php
 	set_post_relationship( 'favorites', '24', '101', true )
