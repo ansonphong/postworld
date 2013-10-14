@@ -1318,8 +1318,8 @@ __$user_id__ : *integer* (optional)
 __$fields__ : *string / Array*
 - Options :
   - __'all'__ (default) 
-  - __'preview'__ - Returns a basic set of commonly usable fields
-    - ID, post_title, post_excerpt, post_permalink, post_path, post_type, post_date, post_time_ago, comment_count, link_url, 
+  - __'preview'__ - Returns a basic set of commonly usable fields  
+  - __'edit'__ - Returns a basic set of standard fields for editing a post
   - __Array__ - Use any of the following values in an Array :
 
 
