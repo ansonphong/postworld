@@ -1511,7 +1511,7 @@ __return__ : *Array*
 
 ------
 
-### pw_get_comments ( *$query, $fields, $tree* )
+### pw_get_comments ( *$query, [$fields, $tree]* )
 - Gets data for queries comments
 
 #### Parameters
@@ -1520,6 +1520,8 @@ __$query__ : *Associative Array*
 - Same as Wordpress __get_comments__ Parameters : [Function Reference / get_comments](http://codex.wordpress.org/Function_Reference/get_comments#Parameters)
 
 __$fields__ : *Array*
+- Comment data fields to return
+- Same as __pw_get_comment__ fields
 
 __$tree__ : *boolean*
 - Default : __true__

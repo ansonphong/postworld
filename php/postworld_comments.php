@@ -145,11 +145,19 @@
 
 		// TRANSFER FIELD DATA FROM WORDPRESS OBJECT
 		foreach ($fields as $field) {
-			if( in_array($field, $wp_comment_fields) )
+			if( in_array($field, $wp_comment_fields) ){
 				$comment_data[$field] = $wp_comment_data[$field];
+			}
+			// POSTWORLD COMMMENT FIELDS 
+			else if( $field == 'comment_points' ){
+				$comment_data[$field] = get_comment_points( $comment['comment_ID'] );
+			}
+			else if( $field == 'user_voted' ){
+				$comment_data[$field] = 0; //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+			}
 		}
 
-		return $wp_comment_data;
+		return $comment_data;
 		
 	}
 
