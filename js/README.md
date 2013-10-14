@@ -485,8 +485,6 @@ templates = {
 
 ### load-comments *[ directive ]*
 
-__Status__ : In concepting (phongmedia)
-
 #### Description
 
 - Loads in the comments for a given post
@@ -496,8 +494,7 @@ __Status__ : In concepting (phongmedia)
 
 #### Process
 - Takes a hierarchical object of comments and displays them in a nested structure
-- Use `pw_get_comments()` PHP Method via AJAX to get comments
-- For each comment, use
+- Use [__pw_get_comments__](https://github.com/phongmedia/postworld/tree/master/php#pw_get_comments--query-fields-tree-) PHP Method via AJAX to get comments object
 
 #### Parameters
 
