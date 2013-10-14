@@ -592,13 +592,14 @@ __comment-parent__ : *integer*
 
 #### Routing Parameters
 
-__Routing__ : *URL Parameters*
-- Two methods for routing:
-  - __/#/new/{{post_type}}__
-    • Sets up a __new post form__ with the __post_type__ pre-selected  
-    • After successful creation of new post, reload to */#/edit/{{post_id}}* 
-  - __/#/edit/{{post_id}}__
-    • Sets up an __edit post form__, pre-populated with the data from the given post id
+__Routing__ : *URL Parameters*  
+Two methods for routing:
+- __/#/new/{{post_type}}__  
+  - Sets up a new __edit post object__ with the __post_type__ pre-selected  
+  - After successful creation of new post, reload to */#/edit/{{post_id}}* 
+- __/#/edit/{{post_id}}__  
+  - Sets up an __edit post object__, pre-populated with the data from the given __post_id__  
+  - Use `pw_get_post($post_id, 'edit')` via AJAX
 
 ------
 
