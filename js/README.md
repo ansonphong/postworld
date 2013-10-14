@@ -617,20 +617,20 @@ Two methods for routing:
 __Load__ : *args*
 - Pull in new form data from server 
 - Parameters:
-  - 
-
-__Poll__ : *args*
-- Polls a value from the DB and updates the model
-- Parameters:
-  - 
+  - __function__ - The JS function which to call to load
+  - __parameters__ - Parameters to pass to the function
+  - __callback__ - The function which to call with the reponse
 
 __Submit__
 - Submits callback function($args) via AJAX
 - Parameters:
-  - 
+  - __function__ - The JS function which to call to submit the data
+  - __parameters__ - Parameters to pass to the function
+  - __callback__ - The function which to call with the response
 
 __Filter__
 - Make a syntax or format transformation between model and DOM
+- Optionally added as services (?)
 - Types: *(optionally applied to the controller)*
   - __tax_input__ - Conditions a *select* form element into the `pw_insert_post()` data model
   - __tags_input__ - Conditions a *text input* form element into the `pw_insert_post()` data model
@@ -641,8 +641,11 @@ __Filter__
 
 #### Filter Methods
 
+------
+
 __INPUT FILTERS__ : Query filters condition a model for submission to `wp_insert_post()` : [WP Insert Post Parameters](http://codex.wordpress.org/Function_Reference/wp_insert_post#Parameters)
 
+------
 
 __tax_input__ : *input - select / multiple select*
 - Conditions the input select effect on the attributed model for __tax_input__ field on `wp_insert_post()`
@@ -674,6 +677,8 @@ post_obj = {
 
 ```
 
+------
+
 __tags_input__ : *text input*
 
 HTML View:
@@ -694,31 +699,38 @@ post_obj = {
 
 ```
 
+------
+
 __post_format__ : *text input ('link_url' field)*
 - Keep a watch on __link_url__ field
 
 Values : 
 - Value : __video__
   - If `link_url` contains :  
-    youtube/
-    youtu.be/
-    vimeo.com/
-    hulu.com/
-    ustream.com/
-    dailymotion.com/
-    ted.com/
-    dotsub.com/
-    blip.tv/
-- Value : __audio__
-  - If `link_url` contains :  
-    mixcloud.com/
-    soundcloud.com/
-    rdio.com/
-- Value : __link__
-  - Anything else
+    youtube/  
+    youtu.be/  
+    vimeo.com/  
+    hulu.com/  
+    ustream.com/  
+    dailymotion.com/  
+    ted.com/  
+    dotsub.com/  
+    blip.tv/  
+- Value : __audio__  
+  - If `link_url` contains :    
+    mixcloud.com/  
+    soundcloud.com/  
+    rdio.com/  
+- Value : __link__  
+  - Other value  
+- Value : __standard__  
+  - *Empty*
 
+------
 
 __QUERY FILTERS__ : Query filters condition a model for submission to `pw_query()`  
+
+------
 
 __tax_query__ : *input - select / multiple select*
 - Conditions the input select effect on the attributed model for __tax_query__ field on `pw_query()`  
@@ -770,11 +782,6 @@ query_obj = {
 }
 
 ```
-
-------
-
-### switch-form *[ controller ]*
-- 
 
 ------
 

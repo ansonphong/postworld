@@ -1328,7 +1328,7 @@ __WP GET_POST METHOD__ : http://codex.wordpress.org/Function_Reference/get_post
 - __post_author__
 - __post_date__
 - __post_date_gmt__
-- __post_title __
+- __post_title__
 - __post_content__
 - __post_excerpt__
 - __post_path__
