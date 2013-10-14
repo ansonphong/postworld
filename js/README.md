@@ -13,7 +13,6 @@ Postworld // Angular / JS Functions
 
 ## General Functions
 
-
 ##### AngularJS
 The Javascript methods for Postworld are build using the [AngularJS](http://angularjs.org/) framework.
 
@@ -491,8 +490,46 @@ __Status__ : In concepting (phongmedia)
 #### Description
 
 - Loads in the comments for a given post
-- Template :
+- Templates :
+  - `templates/comments/comments-header.html`
   - `templates/comments/comment-single.html`
+
+#### Process
+- Takes a hierarchical object of comments and displays them in a nested structure
+- Use `pw_get_comments()` PHP Method via AJAX to get comments
+- For each comment, use
+
+#### Parameters
+
+__query__ : *Object*
+- Query arguments for which comments to return
+- This is passed to __pw_get_comments()__ `$query` parameter
+- Same as Wordpress __get_comments($args)__ Parameters : [Function Reference / get_comments](http://codex.wordpress.org/Function_Reference/get_comments#Parameters) 
+
+__fields__ : *Array*
+- Default : __all__
+- Which comment fields to return for access in the template
+- Options defined in __pw_get_comment()__ PHP Method documentation : [Comment Fields](https://github.com/phongmedia/postworld/tree/master/php#pw_get_comment--comment_id-fields-viewer_user_id-)  
+- This is passed to the __pw_get_comments()__ `$tree` parameter
+
+__tree__ : *boolean*
+- Default : __true__
+- Whether or not to display 
+- This is passed to the __pw_get_comments()__ `$tree` parameter
+
+__sort_by__ : *string*
+- Options :
+  - comment_points
+  - comment_date
+
+__sort_options__ : *Object*
+- An object which defines the select options for sorting
+- Structure for *key:value* is  __sort_field:description__
+
+__min_points__ : *integer*
+- Minimum points a comment must have to appear maximized by default
+- Comments with less than this will appear minimized by default
+
 
 #### Usage
 
@@ -500,16 +537,19 @@ Javascript :
 
 ``` javascript
 load_comments['post_single'] = {
-	post_id : 24,
-	sort_by : 'rank_score',
+	query : {
+		post_id : 24,
+		status : 'approve'
+		},
+	fields : 'all',
+	tree : true,
+	sort_by : 'comment_points',
 	sort_options : {
-		'comment_points' : "Points",
-		'date' : "Date"
+		'comment_points' : 'Points',
+		'comment_date' : 'Date'
 		},
 	max_points : 0,
-	min_points : -10, 
 };
-
 ```
 
 HTML : 
@@ -912,7 +952,6 @@ __Status__ : In Concepting (phongmedia)
 - Access `pw_user_query()` method via AJAX
 - Return an outline of USER IDs
 - Display users according to template and feed settings
-
 
 ------
 

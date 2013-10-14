@@ -1475,7 +1475,7 @@ __php/postworld_comments.php__
 
 ------
 
-### pw_get_comment ( $comment_id, $fields, $viewer_user_id* )
+### pw_get_comment ( *$comment_id, $fields, $viewer_user_id* )
 - Gets data for a particular comment
 
 #### Parameters
@@ -1508,6 +1508,30 @@ __$viewer_user_id__
 - The user ID of a user to return vote data by
 
 __return__ : *Array*
+
+------
+
+### pw_get_comments ( *$query, $fields, $tree* )
+- Gets data for a particular comment
+
+#### Parameters
+
+__$query__ : *Associative Array*
+- Same as Wordpress __get_comments__ Parameters : [Function Reference / get_comments](http://codex.wordpress.org/Function_Reference/get_comments#Parameters)
+
+__$fields__ : *Array*
+
+__$tree__ : *boolean*
+- Default : __true__
+- Whether or not to return the comments in a hierarchical structure
+
+#### Process
+- Submit `$query` to Wordpress `get_comments()` function
+  - Preserve the selected fields
+- If there are custom Postworld Comment fields defined, get their values
+- If `$tree == true` organize them into a hierarchical structure with `tree_obj()` function
+
+__return__ : *Array* (of comments)
 
 ------
 

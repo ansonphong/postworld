@@ -230,7 +230,7 @@
 		}
 
 		///// RETURN AS HIERARCHICAL TREE /////
-		/*
+		
 		if ( $tree == true ){
 			$settings = array(
 			    'fields' => $fields,
@@ -244,11 +244,11 @@
 
 			$comments_tree = tree_obj( $comments_data, 0, 0, $settings );
 			if ($comments_tree){
-				//$comments_data = $comments_tree;
+				$comments_data = $comments_tree;
 			}
 
 		}
-		*/
+		
 
 		return $comments_data; //$comments_data;
 
