@@ -603,30 +603,12 @@ Two methods for routing:
 
 ------
 
-### edit-form *[ controller ]*
+### filter-form *[ controller ]*
 - __File__ : *js/postworld.js*
-- __Status__ : In concepting... (phongmedia)
 
 #### Description
 - Sits ontop of a form
 - Controls and manages input and output for the value of form fields
-
-
-#### Methods
-
-__Load__ : *args*
-- Pull in new form data from server 
-- Parameters:
-  - __function__ - The JS function which to call to load
-  - __parameters__ - Parameters to pass to the function
-  - __callback__ - The function which to call with the reponse
-
-__Submit__
-- Submits callback function($args) via AJAX
-- Parameters:
-  - __function__ - The JS function which to call to submit the data
-  - __parameters__ - Parameters to pass to the function
-  - __callback__ - The function which to call with the response
 
 __Filter__
 - Make a syntax or format transformation between model and DOM
@@ -637,7 +619,6 @@ __Filter__
   - __tax_query__ - Conditions a *select* form element into the `pw_query()` data model
   - __post_format__ - Conditions a field for __post_format__ depending on the contents of __link_url__ field
 
-------
 
 #### Filter Methods
 
