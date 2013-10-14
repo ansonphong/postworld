@@ -494,7 +494,7 @@ templates = {
 
 #### Process
 - Takes a hierarchical object of comments and displays them in a nested structure
-- Use [__pw_get_comments__](https://github.com/phongmedia/postworld/tree/master/php#pw_get_comments--query-fields-tree-) PHP Method via AJAX to get comments object
+- Use [__pw_get_comments()__](https://github.com/phongmedia/postworld/tree/master/php#pw_get_comments--query-fields-tree-) PHP Method via AJAX to get comments object
 
 #### Parameters
 
