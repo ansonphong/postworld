@@ -177,7 +177,7 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 		scope : function(){
 			// Scope functions here
 		},
-		template : '',
+		//template : '',
 		link : function (scope, elem, attrs){
 
 			////////// PARSE INPUT FIELDS //////////
@@ -189,7 +189,7 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 				object = 'edit_fields'; // Default object name : window['edit_fields']
 
 			// FIELD : Define the field which is being edited
-			field = attrs.editField;
+			var field = attrs.editField;
 
 			///// TEXT INPUTS //////
 			if ( isInArray('input-', attrs.input) ){
@@ -283,11 +283,18 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 					var select_items = parse_hierarchical_select_items( terms, selected, 'slug', 'name', 'terms', 2, '- ' ); // window[object].taxonomy[tax_name]
 				}
 
+				// Use provided options
+				else if(attrs.options){
+					var options = attrs.options;
+					var selected = oValue;
+					var select_items = parse_linear_select_items( options, selected );
+				}
+
 				// Process Standard Edit Fields
 				else{
 					var select_options = window[object];
 					var selected = oValue;
-					var select_items = parse_linear_select_items( select_options, selected, 1, 'terms' );
+					var select_items = parse_linear_select_items( select_options, selected );
 				}					
 
 

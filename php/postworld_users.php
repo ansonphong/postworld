@@ -59,6 +59,10 @@
 			'post_points_meta'
 			);
 
+		$buddypress_user_fields = array(
+			'user_profile_url',
+			);
+
 		$user_data = array();
 
 		// If Fields is empty or 'all', add all fields
@@ -108,6 +112,17 @@
 					$user_data[$key] = $value;
 
 				break;
+			}
+		}
+
+		// BUDDYPRESS USER FIELDS
+		// Check to see if requested fields are Buddypress User Fields
+		foreach ($fields as $value) {
+			// If a requested field is Buddypress
+			if ( in_array($value, $buddypress_user_fields) ){
+				// Author Profile URL
+				if( $value == 'user_profile_url' && function_exists('bp_core_get_userlink') )
+					$user_data['user_profile_url'] = bp_core_get_userlink( $user_id, false, true );
 			}
 		}
 
@@ -290,7 +305,7 @@
 			if($changed ==1)//add fav
 				add_favorite($post_id, $user_id);
 			
-			if($changed ==-1)//add fav
+			if($changed ==-1)//delete fav
 				delete_favorite($post_id, $user_id);
 			
 			

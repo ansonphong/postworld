@@ -1,0 +1,15 @@
+<h3>Comments</h3>
+
+Sort by :
+<!-- edit-Field Directive for Dropdown Select -->
+<span edit-field="sort_by" data-input="select" data-value="{{order_by}}" data-options="{{order_options}}"></span>
+
+<!-- add-comment Directive -->
+<div add-comment="text" data-post-id="{{post_id}}"></div>
+
+<hr>
+
+<!-- Insert Comments -->
+<div ng-repeat="comment in comments | orderBy: order_by ">
+	<div ng-include="comment-single.html"></div>
+</div>

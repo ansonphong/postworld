@@ -517,12 +517,12 @@ __tree__ : *boolean*
 - Whether or not to display 
 - This is passed to the __pw_get_comments()__ `$tree` parameter
 
-__sort_by__ : *string*
+__order_by__ : *string*
 - Options :
   - comment_points
   - comment_date
 
-__sort_options__ : *Object*
+__order_options__ : *Object*
 - An object which defines the select options for sorting
 - Structure for *key:value* is  __sort_field:description__
 
@@ -543,12 +543,12 @@ load_comments['post_single'] = {
 		},
 	fields : 'all',
 	tree : true,
-	sort_by : 'comment_points',
-	sort_options : {
+	order_by : 'comment_points',
+	order_options : {
 		'comment_points' : 'Points',
 		'comment_date' : 'Date'
 		},
-	max_points : 0,
+	min_points : 0,
 };
 ```
 
@@ -756,7 +756,7 @@ query_obj = {
 
 ### edit-field *[ directive ]*
 - __File__ : *js/postworld.js*
-- __Status__ : In development (phongmedia) // October 8, 2013
+- __Status__ : In development (phongmedia) // October 13, 2013
 
 #### Description
 - Loads a form field on
@@ -792,6 +792,10 @@ __data-maxlength__ : *integer* (optional)
 
 __data-placeholder__ : *string* (optional)
 - The __placeholder__ value for an text input box
+
+__data-options__ : *string* (optional)
+- Used to define options for select inputs
+- The object to use to provide the select options
 
 __data-object__ : *string* (optional)
 - __Default__ : *edit_fields*

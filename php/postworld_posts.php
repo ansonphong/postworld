@@ -75,11 +75,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_tags_list',
 		'taxonomy(post_tag)',
 		'taxonomy(category)',
-		'author(ID,display_name,user_nicename,posts_url,profile_url)',
+		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		'avatar(small,48)',
 		'post_format',
 		'time_ago',
-
 		);
 
 	$detail_fields =	array(
@@ -272,9 +271,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			///// BUDDYPRESS AUTHOR FIELDS : requires Buddypress /////
 
 			// Author Profile URL
-			if( in_array('profile_url', $author_fields) && function_exists('bp_core_get_userlink') )
-				$post_data['author']['profile_url'] = bp_core_get_userlink( $author_id, false, true );
-
+			if( in_array('user_profile_url', $author_fields) && function_exists('bp_core_get_userlink') )
+				$post_data['author']['user_profile_url'] = bp_core_get_userlink( $author_id, false, true );
 
 			///// POSTWORLD AUTHOR FIELDS /////
 			/*

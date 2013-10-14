@@ -190,15 +190,24 @@
 			'user_id'
 			);
 
-		// POSTWORLD FIELD MODEL
+		// POSTWORLD COMMENT FIELD MODEL
 		$pw_comment_fields = array(
 			'comment_points',
-			'user_voted'
+			'user_voted',
+			);
+
+		// POSTWORLD PW_GET_USERDATA() FIELD MODEL
+		$pw_userdata_fields = array(
+			'user_profile_url',
+			'location_city',
+			'location_region',
+			'location_country',
+			'display_name'
 			);
 
 		// All Fields
 		if ($fields == 'all'){
-			$all_fields = array_merge($wp_comment_fields,$pw_comment_fields);
+			$all_fields = array_merge($wp_comment_fields,$pw_comment_fields,$pw_userdata_fields);
 			$fields = $all_fields;
 		}
 
@@ -230,8 +239,35 @@
 				else if( $field == 'user_voted' ){
 					$comment_data[$field] = 0; //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
 				}
+			}
+
+			///// CUSTOM AUTHOR FIELDS /////
+			foreach ($fields as $field) {
+				// If the current field is a custom author data field
+				// Use pw_get_userdata() to get the data
+				if ( in_array( $field, $pw_userdata_fields ) ){
+
+					// EXTRACT THE FIELDS WHICH ARE
+					$get_pw_userdata_fields = array();
+					foreach ($fields as $field) {
+						if( in_array($field, $pw_userdata_fields) ){
+							array_push($get_pw_userdata_fields, $field);
+						}
+					}
+
+					// GET THE USER ID FROM THE SLUG
+					$comment_data = get_comment($comment['comment_ID'],'ARRAY_A');
+					$user_id = $comment_data['user_id'];
+
+					// GET THE USER FIELD DATA
+					$pw_userdata = pw_get_userdata( $user_id, $get_pw_userdata_fields );
+					$comment_data = array_merge( $comment_data, $pw_userdata );					
+
+					break;
+				}
 
 			}
+
 
 			array_push($comments_data, $comment_data);
 
