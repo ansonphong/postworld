@@ -1512,7 +1512,7 @@ __return__ : *Array*
 ------
 
 ### pw_get_comments ( *$query, $fields, $tree* )
-- Gets data for a particular comment
+- Gets data for queries comments
 
 #### Parameters
 
