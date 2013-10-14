@@ -97,23 +97,6 @@ __FILTERS__
 - __title__ ›rename› __post_title__
 - __description__ ›rename› __post_excerpt__
 
-__POST_FORMAT__
-- Value : __video__
-  - If link_url contrains :  
-    youtube/
-    youtu.be/
-    vimeo.com/
-    hulu.com/
-    ustream.com/
-    dailymotion.com/
-    ted.com/
-    dotsub.com/
-
-- Value : __audio__
-  - If link_url contrains :  
-    mixcloud.com/
-    soundcloud.com/
-    rdio.com/
 
 __return__ : *Object*
 
@@ -604,9 +587,24 @@ __comment-parent__ : *integer*
 
 ------
 
+### edit-post *[ route ]*
+- Setup an environment for creating or editing posts
+
+#### Routing Parameters
+
+__Routing__ : *URL Parameters*
+- Two methods for routing:
+  - __/#/new/{{post_type}}__
+    • Sets up a __new post form__ with the __post_type__ pre-selected  
+    • After successful creation of new post, reload to */#/edit/{{post_id}}* 
+  - __/#/edit/{{post_id}}__
+    • Sets up an __edit post form__, pre-populated with the data from the given post id
+
+------
+
 ### edit-form *[ controller ]*
 - __File__ : *js/postworld.js*
-- __Status__ : In concepting 
+- __Status__ : In concepting... (phongmedia)
 
 #### Description
 - Sits ontop of a form
@@ -625,7 +623,6 @@ __Poll__ : *args*
 - Parameters:
   - 
 
-
 __Submit__
 - Submits callback function($args) via AJAX
 - Parameters:
@@ -633,10 +630,11 @@ __Submit__
 
 __Filter__
 - Make a syntax or format transformation between model and DOM
-- Types:
-  - __tax-input__ - Conditions a *select* form element into the `pw_insert_post()` data model
-  - __tags-input__ - Conditions a *text input* form element into the `pw_insert_post()` data model
-  - __tax-query__ - Conditions a *select* form element into the `pw_query()` data model
+- Types: *(optionally applied to the controller)*
+  - __tax_input__ - Conditions a *select* form element into the `pw_insert_post()` data model
+  - __tags_input__ - Conditions a *text input* form element into the `pw_insert_post()` data model
+  - __tax_query__ - Conditions a *select* form element into the `pw_query()` data model
+  - __post_format__ - Conditions a field for __post_format__ depending on the contents of __link_url__ field
 
 ------
 
@@ -695,6 +693,30 @@ post_obj = {
 
 ```
 
+__post_format__ : *text input ('link_url' field)*
+- Keep a watch on __link_url__ field
+
+Values : 
+- Value : __video__
+  - If `link_url` contains :  
+    youtube/
+    youtu.be/
+    vimeo.com/
+    hulu.com/
+    ustream.com/
+    dailymotion.com/
+    ted.com/
+    dotsub.com/
+    blip.tv/
+- Value : __audio__
+  - If `link_url` contains :  
+    mixcloud.com/
+    soundcloud.com/
+    rdio.com/
+- Value : __link__
+  - Anything else
+
+
 __QUERY FILTERS__ : Query filters condition a model for submission to `pw_query()`  
 
 __tax_query__ : *input - select / multiple select*
@@ -748,6 +770,10 @@ query_obj = {
 
 ```
 
+------
+
+### switch-form *[ controller ]*
+- 
 
 ------
 
