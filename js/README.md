@@ -106,6 +106,43 @@ __return__ : *Object*
 
 ------
 
+### load_post_data ( post_id, fields, callback )
+
+- Pull in new post data from server 
+
+#### Parameters:
+__post_id__
+- The post to load via __pw_get_post()__
+
+__fields__
+- Default : *edit*
+- The fields to pass to __pw_get_post()__
+
+__callback__
+- The function which to call with the reponse
+
+
+------
+
+### save_post_data ( post_id, object, callback )
+
+- Save post data to the server
+- Use `pw_save_post()` via AJAX
+
+#### Parameters:
+
+__post_id__
+- Default : *null* (creates a new post)
+
+__object__
+- Default : *edit_post*
+- The object to pass which contains the post data
+
+__callback__
+- The function which to call with the reponse
+
+------
+
 ###__pw_get_posts__ ( feed_id, post_ids, fields )
 - Used to access pw_get_post() PHP Method via AJAX
 
