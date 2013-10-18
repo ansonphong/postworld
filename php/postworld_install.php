@@ -12,16 +12,16 @@ function postworld_install() {
   $post_meta_table_name = $wpdb->pw_prefix.'post_meta';
   $sql_postworld_post_meta = "CREATE TABLE $post_meta_table_name (
       post_id BIGINT(20) unsigned NOT NULL,
-      author_id BIGINT(20) UNSIGNED NOT NULL,
       post_class char(16) NOT NULL,
       post_format char(16) NOT NULL,
       link_url varchar(512) DEFAULT '' NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       rank_score mediumint(4) DEFAULT '0' NOT NULL,
-      favorites mediumint(9) DEFAULT '0' NOT NULL,
       post_shares mediumint(9) DEFAULT '0' NOT NULL,
       UNIQUE KEY post_id (post_id)
     );";
+    //author_id BIGINT(20) UNSIGNED NOT NULL,
+    //favorites mediumint(9) DEFAULT '0' NOT NULL,
 
   $post_points_table_name = $wpdb->pw_prefix.'post_points';
   $sql_postworld_post_points = "CREATE TABLE $post_points_table_name (
