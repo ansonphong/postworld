@@ -1,5 +1,15 @@
 <?php
 
+function post_exists ($post_id){
+	// Check if a post exists
+	global $wpdb;
+	$post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $post_id . "'", 'ARRAY_A');
+	if ($post_exists)
+	    return true;
+	else
+	    return false;
+}
+
 
 function pw_get_posts( $post_ids, $fields='all', $viewer_user_id=null ) {
 	// • Run pw_post_data on each of the $post_ids, and return the given fields
@@ -523,13 +533,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			
 		}
 
-
-		
-
 	} // END foreach
 	
-
-
 	return $post_data;
 
 }
@@ -656,7 +661,86 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 	//print_r($postarr);
 	return pw_insert_post( $postarr, $wp_error );
 
-	 
 }
+
+
+function pw_set_post_thumbnail( $post_id, $image ){
+
+	///// UNDER DEVELOPMENT ///// <<< phongmedia
+	
+	$upload_dir = wp_upload_dir();
+	$image_data = file_get_contents($image_url);
+	$filename = basename($image_url);
+	if(wp_mkdir_p($upload_dir['path']))
+	    $file = $upload_dir['path'] . '/' . $filename;
+	else
+	    $file = $upload_dir['basedir'] . '/' . $filename;
+	file_put_contents($file, $image_data);
+
+	$wp_filetype = wp_check_filetype($filename, null );
+	$attachment = array(
+	    'post_mime_type' => $wp_filetype['type'],
+	    'post_title' => sanitize_file_name($filename),
+	    'post_content' => '',
+	    'post_status' => 'inherit'
+	);
+	$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+	require_once(ABSPATH . 'wp-admin/includes/image.php');
+	$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+	wp_update_attachment_metadata( $attach_id, $attach_data );
+
+	set_post_thumbnail( $post_id, $attach_id );
+
+
+}
+
+function pw_save_post($post_data){
+	
+	///// UNDER DEVELOPMENT ///// <<< phongmedia
+
+	extract($post_data);
+	
+	$current_user_id = get_current_user_id();
+	$current_userdata = (array) get_userdata( $current_user_id );
+
+	///// SECURITY & SET METHOD /////
+	// If there is a post_id and it exists
+	if ( !empty($ID) && post_exists($ID) ){
+		// Get the post
+		$current_post_data = get_post( $ID, 'ARRAY_A');
+
+		///// SECURITY /////
+		// Check to see who owns the post
+		$author_id = $current_post_data['author_id'];
+
+		// Is the current user the author of the post?
+		( $current_post_data['author_id'] == $current_user_id ) ? $user_is_author = true : $user_is_author = false;
+
+		// Does the current user have the ability to edit others posts?
+		( $current_userdata['allcaps']['edit_others_posts'] ) ? $edit_others_posts = true : $edit_others_posts = false;
+
+		// If user doesn't own post and can't edit other's posts
+		if( $user_is_author == false && $edit_others_posts == false ){
+			// Return false
+			return false;
+		}
+		
+		$method = 'update';
+
+	}
+	else{
+		$method = 'insert';
+	}
+
+
+	///// INSERT POST METHOD /////
+
+	///// UPDATE POST METHOD /////
+
+
+}
+
+
+
 
 ?>

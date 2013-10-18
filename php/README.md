@@ -1514,19 +1514,20 @@ $post_data = array(
   'tax_input'      => [ array( 'taxonomy_name' => array( 'term', 'term2', 'term3' ) ) ] // support for custom taxonomies. 
 
   ///// IMAGE INPUTS /////
-
-  'image_'
+  'thumbnail_url'  => [ <URL> ], // The URL of an image to be imported into the library
+  'thumbnail_id'   => [ <ID> ], // The ID of the item in the media library
 
   ///// POSTWORLD INPUTS /////
-
   'link_url'       => [ <URL> ],
   'post_class'     => [ 'author' | 'contributor' ],
   'post_format'    => [ 'standard' | 'video' | 'audio' ]
-
 );
+
+pw_save_post($post_data);
 
 ```
 
+__return__ : *integer* (the ID of the post which was added / updated)
 
 ------
 
