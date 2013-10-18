@@ -1,10 +1,11 @@
 <?php
 
-function post_exists ($post_id){
+
+function pw_post_exists ( $post_id ){
 	// Check if a post exists
 	global $wpdb;
 	$post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $post_id . "'", 'ARRAY_A');
-	if ($post_exists)
+	if ( !empty($post_exists) )
 	    return true;
 	else
 	    return false;
@@ -666,7 +667,22 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 
 function pw_set_post_thumbnail( $post_id, $image ){
 
-	///// UNDER DEVELOPMENT ///// <<< phongmedia
+	///// ADD ID FROM MEDIA LIBRARY /////
+	// If $image is an ID of an attachment in the Media Library
+	if ( is_int($image) || is_numeric($image) ){
+		$image_set = set_post_thumbnail( $post_id, $image );
+		if ($image_set == true)
+			return $image;
+		else
+			return array( 'error' => 'Not a valid Media Library ID.' );
+	}
+
+	///// ADD IMAGE FROM REMOTE URL /////
+	$image_url = $image;
+	// Check if it's a URL string
+	if ( strpos($image_url,'://') == false ) {
+	    return array( 'error' => 'Not a URL.' );
+	}
 
 	$upload_dir = wp_upload_dir();
 	$image_data = file_get_contents($image_url);
@@ -677,10 +693,13 @@ function pw_set_post_thumbnail( $post_id, $image ){
 	    $file = $upload_dir['basedir'] . '/' . $filename;
 	file_put_contents($file, $image_data);
 
+	// Strip off the file extension
+	$file_title =preg_replace("/\\.[^.\\s]{3,4}$/", "", $filename);
+
 	$wp_filetype = wp_check_filetype($filename, null );
 	$attachment = array(
 	    'post_mime_type' => $wp_filetype['type'],
-	    'post_title' => sanitize_file_name($filename),
+	    'post_title' => $file_title, //sanitize_file_name($filename),
 	    'post_content' => '',
 	    'post_status' => 'inherit'
 	);
@@ -688,9 +707,9 @@ function pw_set_post_thumbnail( $post_id, $image ){
 	require_once(ABSPATH . 'wp-admin/includes/image.php');
 	$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
 	wp_update_attachment_metadata( $attach_id, $attach_data );
-
 	set_post_thumbnail( $post_id, $attach_id );
 
+	return $attach_id;
 
 }
 
@@ -705,7 +724,7 @@ function pw_save_post($post_data){
 
 	///// SECURITY CHECK & SET METHOD /////
 	// If there is a post_id and it exists
-	if ( !empty($ID) && post_exists($ID) ){
+	if ( !empty($ID) && pw_post_exists($ID) ){
 		
 		// Get the post
 		$current_post_data = get_post( $ID, 'ARRAY_A');
@@ -722,8 +741,9 @@ function pw_save_post($post_data){
 
 		// If user doesn't own post and can't edit other's posts
 		if( $user_is_author == false && $edit_others_posts == false ){
-			// Return false
-			return false;
+			// Return false, exit out of the function
+			
+			return array( 'error' => 'No permissions to edit post.' );
 		}
 		
 		$method = 'update';

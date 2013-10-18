@@ -1535,8 +1535,27 @@ __return__ : *integer* (the ID of the post which was added / updated)
 
 ### pw_set_post_thumbnail( *$post_id, $image, [$image_meta]* )
 
+#### Description
+
 - Takes URL or integer / ID and sets as post thumbnail
 - Optionally insert image title, excerpt, body, etc.
+
+#### Parameters
+
+__$post_id__ : *integer*
+- The ID of the post which is having the thumbnail set
+
+__$image__ : *integer / string*
+- Options :
+  - *integer* - The ID of the media library item to 
+  - *string* - The URL of the image which to import into the Media Library and then set
+
+#### Process
+- Check if `$image` is an integer or a string
+- If it's an image, use `set_post_thumbnail()`
+- If it's a URL, import it into the Media Library and then set it with `set_post_thumbnail()`
+
+__return__ :  *integer* (The ID of the item in the Media Library)
 
 ------
 
