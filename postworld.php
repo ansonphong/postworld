@@ -10,6 +10,7 @@ License: GPL2
 ******************************************/
 
 ////////// POSTWORLD VARIABLES & HELPER FUNCTIONS ///////////
+
 include 'php/postworld_variables.php';
 include 'php/postworld_utilities.php';
 
@@ -30,7 +31,7 @@ $postworld_db_version = "1.0";
 global $wpdb;
 $wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
-  
+
 // INSTALL QUERIES
 include 'php/postworld_install_queries.php';
 
@@ -69,9 +70,10 @@ register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
 register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 
 
-include 'php/postworld_debugger.php';
+//include 'php/postworld_debugger.php';
 ////////// META FUNCTIONS ///////////
-include 'php/postworld_meta.php';
+//include 'php/postworld_meta.php';
+
 
 ////////// POINTS FUNCTIONS ///////////
 include 'php/postworld_points.php';
@@ -110,7 +112,7 @@ include 'php/postworld_share.php';
 require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 
 // ADMIN
-include 'admin/postworld_admin.php';
+//include 'admin/postworld_admin.php';
 
 
 ?>

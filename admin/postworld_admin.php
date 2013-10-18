@@ -54,7 +54,7 @@ function postworld_admin_menu_page(){
 }
 
 ///// REGISTER STYLES /////
-wp_register_style( 'pw_admin_css', plugins_url() . '/postworld/admin/css/pw-admin.css' );
+//wp_register_style( 'pw_admin_css', plugins_url() . '/postworld/admin/css/pw-admin.css' );
 
 
 ?>
