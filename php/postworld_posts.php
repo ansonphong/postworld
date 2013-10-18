@@ -667,7 +667,7 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 function pw_set_post_thumbnail( $post_id, $image ){
 
 	///// UNDER DEVELOPMENT ///// <<< phongmedia
-	
+
 	$upload_dir = wp_upload_dir();
 	$image_data = file_get_contents($image_url);
 	$filename = basename($image_url);
@@ -703,9 +703,10 @@ function pw_save_post($post_data){
 	$current_user_id = get_current_user_id();
 	$current_userdata = (array) get_userdata( $current_user_id );
 
-	///// SECURITY & SET METHOD /////
+	///// SECURITY CHECK & SET METHOD /////
 	// If there is a post_id and it exists
 	if ( !empty($ID) && post_exists($ID) ){
+		
 		// Get the post
 		$current_post_data = get_post( $ID, 'ARRAY_A');
 
@@ -735,7 +736,9 @@ function pw_save_post($post_data){
 
 	///// INSERT POST METHOD /////
 
+
 	///// UPDATE POST METHOD /////
+
 
 
 }

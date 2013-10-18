@@ -1471,6 +1471,8 @@ __return__ :
 
 ### pw_save_post ( *$post* ) 
 
+Status : In development... (phongmedia)
+
 #### Description
 - Uses both `pw_update_post()` and `pw_insert_post()` as needed
   - When post ID is *not* supplied, use __Insert Post__ : `pw_insert_post()`
@@ -1528,6 +1530,13 @@ pw_save_post($post_data);
 ```
 
 __return__ : *integer* (the ID of the post which was added / updated)
+
+------
+
+### pw_set_post_thumbnail( *$post_id, $image, [$image_meta]* )
+
+- Takes URL or integer / ID and sets as post thumbnail
+- Optionally insert image title, excerpt, body, etc.
 
 ------
 
