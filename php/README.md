@@ -1635,6 +1635,17 @@ __return__ : *Array* (of comments)
 
 ------
 
+### pw_save_comment( $comment_data )
+
+#### Description
+- If `comment_ID` parameter is supplied (and comment exists), use `wp_update_comment`
+  - Otherwise use `wp_insert_comment()`
+- Includes various security measures
+
+__return__ : *integer* (Comment ID of new / updated comment)
+
+------
+
 ## Feeds
 __php/postworld_feeds.php__
 

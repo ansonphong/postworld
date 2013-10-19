@@ -1,0 +1,25 @@
+<!-- SWITCH BASED ON STATE -->
+<div ng-switch="state" class="comment">
+
+	<!-- WHEN COMMENT IS MINIMIZED -->
+	<div ng-switch-when="min">
+		<button onClick="javascript:max_comment({{comment_ID}})">+</button>
+		<a href="{{user_profile_url}}">{{display_name}}</a> - <b>{{comment_points}}</b> points
+	</div>
+
+	<!-- WHEN COMMENT IS MAXIMIZED -->
+	<div ng-switch-when="max">
+		<div class="header">
+			<button onClick="javascript:min_comment({{comment_ID}})">-</button>
+			<a href="{{user_profile_url}}">{{display_name}}</a> - <b>{{comment_points}}</b> points
+			<div class="comment_content">
+				{{comment_content}}
+			</div>
+		</div>
+		<div ng-repeat="comment in children">
+			<!-- RECURSIVE CHILDREN -->
+			<div ng-include="comment-single.html"></div>
+		</div>
+	</div>
+
+</div>
