@@ -1,5 +1,7 @@
 <div>
 	<h2>Load Feed</h2>
+	<div ng-show="message" class="alert alert-warning">{{message}}</div>
+	
     <div id="scrollMe"  class="infinite-scroll">
 	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
 	    <div ng-repeat='post in items' >

@@ -108,6 +108,8 @@ include 'php/postworld_ajax.php';
 include 'php/postworld_comments.php';
 include 'php/postworld_share.php';
 
+include 'php/postworld_meta.php';
+
 //To get user id from wordpress
 require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 

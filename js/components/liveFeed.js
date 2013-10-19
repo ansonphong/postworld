@@ -37,7 +37,9 @@ pwApp.controller('pwFeedController',
 		$scope.args.feed_query = {};
 		$scope.feed_query = {};
 		$scope.scrollMessage = "";
-    	$scope.items = [];					// List of Post Items displayed in Scroller
+    	$scope.items = [];	
+    	$scope.message = "";
+    	// List of Post Items displayed in Scroller
     	// is this a live feed or a load feed?
     	if ($attrs.liveFeed)    { 
     		$scope.directive = 'liveFeed';
@@ -108,6 +110,7 @@ pwApp.controller('pwFeedController',
    		};
    		
    		$scope.getNext = function() {
+	    	$scope.message = "";   			
 			// If already getting results, do not run again.
 			if ($scope.busy) {
 				$log.info('pwFeedController.getNext: We\'re Busy, Wait!');
@@ -155,10 +158,16 @@ pwApp.controller('pwFeedController',
 						return;
 					}
 					if (response.status==200) {
-						// Insert Response in Feed Data
-						$scope.fillFeedData(response);												
-						$log.info('pwFeedController.pw_live_feed Success',pwData.feed_data[$scope.feed]);						
-						$scope.items = response.data.post_data;
+						// Check if data exists
+						if (response.data.length) {
+							// Insert Response in Feed Data						
+							$log.info('pwFeedController.pw_live_feed Success',response.data);						
+							$scope.fillFeedData(response);																			
+							$scope.items = response.data.post_data;
+						} else {
+							$scope.message = "No Data Returned";
+							$log.info('pwFeedController.pw_live_feed No Data Received');						
+						}
 						$scope.busy = false;							
 						return response.data;
 					} else {
@@ -195,10 +204,16 @@ pwApp.controller('pwFeedController',
 						return;
 					}
 					if (response.status==200) {
-						// Insert Response in Feed Data
-						$scope.fillFeedData(response);												
-						$log.info('pwFeedController.pw_load_feed Success',pwData.feed_data[$scope.feed]);
-						$scope.items = response.data.post_data;
+						$log.info('pwFeedController.pw_load_feed Success',response.data);						
+						// Check if data exists
+						if (!(response.data instanceof Array) ) {
+							// Insert Response in Feed Data						
+							$scope.fillFeedData(response);																			
+							$scope.items = response.data.post_data;
+						} else {
+							$scope.message = "No Data Returned";
+							$log.info('pwFeedController.pw_load_feed No Data Received');						
+						}
 						$scope.busy = false;							
 						return response.data;						
 					} else {

@@ -1,15 +1,15 @@
 <script>
-	feed_settings['hellotest2'] = {
-		preload : 14,
-		load_increment : 5,
-		offset: 0,
-		max_posts:50,
-		view : {
-			current : 'detail',
-			options : ['list','detail', 'grid','full']
-		},
-		feed_template: 'load_feed_1',	// Optional, needed in case of different widgets [having different panels for example] 
-	};
+	feed_settings['front_page_features'] = {
+            preload : 10,
+            load_increment : 5,
+            offset: 0,
+            max_posts:200,
+            view : {
+                current : 'detail',
+                options : ['list','detail']
+            },
+			feed_template: 'load_feed_1',	// Optional, needed in case of different widgets [having different panels for example] 
+        };	
 </script>
 
-<div load-feed='hellotest2' ng-include="templateUrl"></div>
+<div load-feed="front_page_features" ng-include="templateUrl"></div>

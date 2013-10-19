@@ -135,6 +135,41 @@ function pw_load_feed_anon() {
 	die();
 }
 
+function pw_test_code_admin() {
+	// list($response, $args, $nonce) = initAjaxResponse();
+	global $postworld_api_version;
+	// Create Response JSON Object, to include api version, status, error code if any, data results
+	$response = array();
+	$response['version'] = $postworld_api_version;
+	
+	$args1 = array (
+        'feed_id' => 'front_page_features',
+        'write_cache'  => false,
+        'feed_query' => array(
+            'post_count' => 200,
+            'fields' => 'all',
+            'post_type' => 'post',
+            'orderby' => 'date',
+            'offset' => 3,
+            'post_format' => null,
+            'post_class' => null,
+            'posts_per_page' => 200
+        )
+    );    
+		
+	// TODO check results are ok
+	/* set the response type as JSON */
+	// TODO check values are correct
+	$results = pw_register_feed ($args1);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+	
+	
 /* Action Hook for pw_live_feed() - Logged in users */
 add_action("wp_ajax_pw_live_feed", "pw_live_feed_anon");
 
@@ -162,6 +197,10 @@ add_action("wp_ajax_nopriv_pw_get_templates", "pw_get_templates_anon");
 
 /* Action Hook for pw_register_feed() - Logged in users */
 add_action("wp_ajax_pw_register_feed", "pw_register_feed_admin");
+
+
+/* Action Hook for pw_test_code() - Logged in users */
+add_action("wp_ajax_pw_test_code", "pw_test_code_admin");
 
 /* Action Hook for pw_register_feed() - Anonymous users */
 // add_action("wp_ajax_nopriv_pw_register_feed", "pw_register_feed_anon");
