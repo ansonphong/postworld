@@ -1635,14 +1635,79 @@ __return__ : *Array* (of comments)
 
 ------
 
-### pw_save_comment( $comment_data )
+### pw_save_comment( *$comment_data, [$return]* )
 
 #### Description
 - If `comment_ID` parameter is supplied (and comment exists), use `wp_update_comment`
   - Otherwise use `wp_insert_comment()`
 - Includes various security measures
 
-__return__ : *integer* (Comment ID of new / updated comment)
+#### Parameters
+
+__$comment_data__ : *Array A*
+
+__$return__ : *string*
+- How to return on a successful add
+- Options:
+  - __data__ (default) - Return with the post object from `pw_get_comment()`
+  - __id__ - Return just the ID of the new / updated comment
+
+
+#### Usage
+
+New Comment:
+
+``` php
+$comment_data = array(
+  'comment_content' => "Hello world.",
+  'comment_post_ID' => 27,
+  'comment_parent' => 0,
+  );
+
+pw_save_comment($comment_data,'id');
+```
+__return__ : *integer* (New / Updated Comment ID)
+- When `$return = 'id'`
+
+
+Edit Comment:
+
+``` php
+$comment_data = array(
+  'comment_ID' => 1,
+  'comment_content' => "Hello universe.",
+  );
+
+pw_save_comment($comment_data,'data');
+```
+
+__return__ : *integer* (New / Updated Comment ID)
+- When `$return = 'data'`
+
+``` php
+Array (
+  // WORDPRESS FIELDS
+  [comment_ID] => 1
+  [comment_post_ID] => 1
+  [comment_author] =>
+  [comment_author_email] =>
+  [comment_author_url] =>
+  [comment_author_IP] =>
+  [comment_date] => 2013-10-19 19:41:02
+  [comment_date_gmt] => 2013-10-19 19:41:02
+  [comment_content] => Hello universe.
+  [comment_approved] => 1
+  [comment_agent] =>
+  [comment_type] =>
+  [comment_parent] => 0
+  [user_id] => 1
+  
+  // POSTWORLD FIELDS
+  [comment_points] => 0
+  [user_voted] => 0
+  )
+```
+
 
 ------
 

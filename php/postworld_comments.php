@@ -310,7 +310,7 @@ function get_comment_post_id($comment_id){
 }
 
 
-function pw_save_comment($comment_data){
+function pw_save_comment($comment_data, $return = 'data'){
 	//extract($comment_data);
 
 	// Get the Current User's Data
@@ -371,7 +371,11 @@ function pw_save_comment($comment_data){
 		}
 	}
 
-	return $comment_ID;
+	if ($return == 'data')
+		return pw_get_comment($comment_ID);
+	
+	else if ($return == 'id')
+		return $comment_ID; 
 
 }
 
