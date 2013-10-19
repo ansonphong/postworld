@@ -667,8 +667,10 @@ To edit a comment:
 ```
 
 
-#### Notes
-- Add / edit comment / Reply to comment - on success - append self to object - show green check/ok icon
+#### Callback
+
+__update_comments_object__ : *function*
+- On successful add / edit comment - append self to comments object
 
 ------
 
