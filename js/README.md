@@ -435,8 +435,7 @@ var feed_id = 'front_page_blog';
 
 ### post-link *[ controller ]*
 
-- Sits inside __edit-form__ controller in the __post_link__ panel template
-- Controls the status and image selection
+- Controls the __status__ and __image selection__ in the __post_link__ panel template
 
 #### Process
 

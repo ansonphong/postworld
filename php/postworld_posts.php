@@ -174,6 +174,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			if ( $post_data["post_tags_list"] == false ) $post_data["post_tags_list"] = '';
 		}
 
+		// Excerpt Filter
+		if( in_array('post_excerpt', $fields) ){
+			$post_data['post_excerpt'] = wp_filter_nohtml_kses( $post_data['post_excerpt'] );
+		}
+
 
 	////////// POSTWORLD //////////
 

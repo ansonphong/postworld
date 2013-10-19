@@ -1,8 +1,7 @@
+
 <div>
-	<div ng-show="message" class="alert alert-warning">{{message}}</div>
-	
     <div id="scrollMe"  class="infinite-scroll">
-	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-distance="3">
+	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
 	    <div ng-repeat='post in items' >
 	    	<div feed-item ng-include="templateUrl" post="post" feed-id='args.feed_id'></div>
 			<hr>

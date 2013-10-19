@@ -1,7 +1,7 @@
 'use strict';
 var feed_settings = [];
 
-var pwApp = angular.module('pwApp', ['ngResource','ngRoute','infinite-scroll'])
+var pwApp = angular.module('pwApp', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll'])
     .config(function ($routeProvider, $locationProvider) {    	    	
         $routeProvider.when('/live-feed-1/',
             {
@@ -71,6 +71,8 @@ pwApp.run(function($rootScope, $templateCache,pwData) {
    });
 });
    
+
+
 /*
  * Getting Organized (Michel):
  * 
