@@ -144,9 +144,9 @@ $pw_defaults = array(
 	'template_paths' =>array(
 	
 		'default_posts_template_abs_path' => ABSPATH . "wp-content/plugins/postworld/templates/posts/" ,
-		'override_posts_template_abs_path' => get_template_directory()."\\postworld\\templates\\posts\\",
+		'override_posts_template_abs_path' => get_template_directory()."/postworld/templates/posts/",
 		'default_panel_template_abs_path' => ABSPATH . "wp-content/plugins/postworld/templates/panels/" ,
-		'override_panel_template_abs_path' => get_template_directory()."\\postworld\\templates\\panels\\",
+		'override_panel_template_abs_path' => get_template_directory()."/postworld/templates/panels/",
 		
 		//urls
 		'default_posts_template_url' => plugins_url()."/postworld/templates/posts/",
