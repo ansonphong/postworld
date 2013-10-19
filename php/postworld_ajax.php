@@ -85,7 +85,7 @@ function pw_get_posts_anon() {
 function pw_get_templates_anon() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
-	$pw_args = $args['args'];
+	// $pw_args = $args['args'];
 	// TODO check results are ok
 	// TODO return success code or failure code , as well as version number with the results.
 	/* set the response type as JSON */
