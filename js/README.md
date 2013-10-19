@@ -670,7 +670,7 @@ To edit a comment:
 
 - `pw_get_comment( $comment_id )` - Get the data array for an existing comment
 - `pw_save_comment( $comment_data, [$return] )` - Save the data array for an new / edited comment
-  - Returns by default the result of `pw_get_comment( $comment_id )` for the new / edited comment
+  - Returns by default the result of `pw_get_comment( $comment_id )` (comment data *Array*) for the new / edited comment
 
 
 #### Callback
