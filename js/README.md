@@ -65,7 +65,8 @@ post_data = {
 	    "title": "Earth From Space HD 1080p / Nova"
 	    "provider_name": "YouTube", 
 	    "description": "The groundbreaking two-hour special that reveals a spectacular new space-based vision of our planet. Produced in extensive consultation with NASA scientists, NOVA takes data from earth-observing satellites and transforms it into dazzling visual sequences, each one exposing the intricate and surprising web of forces that sustains life on earth.", 
-		}
+		  ...
+    }
 	};
 
 ```
@@ -96,7 +97,6 @@ Status : In concepting... (phongmedia)
 __FILTERS__
 - __title__ ›rename› __post_title__
 - __description__ ›rename› __post_excerpt__
-
 
 __return__ : *Object*
 
@@ -431,7 +431,49 @@ var post_object = {
 var feed_id = 'front_page_blog';
 
 ```
+------
 
+### post-link *[ controller ]*
+
+- Sits inside __edit-form__ controller in the __post_link__ panel template
+- Controls the status and image selection
+
+#### Process
+
+__Status__
+- Conditions a state for the __post_link__ template to change state depending on the value of various fields
+- __status__ = 
+  - __url_input__ - *(default)*
+  - __post_input__ - When current form's __post_title__ has a value (populated by `pw_embedly_extract()` )
+  - __success__ - After a successful response from `pw_save_post()` 
+
+__Image Selection__
+- Watch object of Embed.ly Extract function `pw_embedly_extract()`, which will populate an object with image properties
+- Track of the current cycle through with `pw_next_image()` & `pw_prev_image()`
+- Update hidden field `thumbnail_url` in post object to the coorosponding image
+
+Example of images object from Embed.ly:
+
+``` javacript
+
+"images": [
+        {
+            "width": 480, 
+            "url": "http://i1.ytimg.com/vi/38peWm76l-U/hqdefault.jpg", 
+            "height": 360, 
+            "size": 44269,
+            ...
+        }, 
+        {
+            "width": 48, 
+            "url": "https://lh5.googleusercontent.com/-LBcQruSPiVE/AAAAAAAAAAI/AAAAAAAAAAA/ZZy901nR234/s48-c-k/photo.jpg", 
+            "height": 48, 
+            "size": 2316,
+            ...
+        }
+    ], 
+
+```
 
 ------
 
