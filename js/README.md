@@ -618,15 +618,13 @@ HTML :
 
 ------
 
-### add-comment *[ directive ]*
-
-__Status__ : In concepting (phongmedia)
+### edit-comment *[ directive ]*
 
 #### Description
 
-- Produces an add comment form
+- Produces an edit comment form
 - Template :
-  - `templates/comments/comment-add-{{type}}.html`
+  - `templates/comments/comment-edit.html`
 
 #### Attributes
 
@@ -634,19 +632,38 @@ __add-comment__ : *string*
 - The *type* of comment form
 - Options:
   - __text__
-  - *rich* (future implimentation)
+  - *rich* - (future implimentation)
 
 __post-id__ : *integer*
 - The post ID of the post to add the comment to
 
-__comment-parent__ : *integer*
+__comment-parent__ : *integer* (optional)
 - The comment ID of the comment to which it is a response
 
+__comment-id__ : *integer* (optional)
+- Provide the comment ID of the comment to which it is a response
+
+__mode__ : *string*
+- Set `mode` in scope
+- Options:
+  - __add__ - If no `comment-id` is provided
+  - __edit__ - If `comment-id` is provided, pre-populate `comment_content` with data from comments object
+
+
 #### Usage
+
+For a new comment:
 
 ``` HTML
 <div add-comment="text" data-post-id="24" data-comment-parent="45324"></div>
 ```
+
+To edit a comment:
+
+``` HTML
+<div add-comment="text" comment-id="435"></div>
+```
+
 
 #### Notes
 - Add / edit comment / Reply to comment - on success - append self to object - show green check/ok icon

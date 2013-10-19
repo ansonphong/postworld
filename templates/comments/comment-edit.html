@@ -1,25 +1,16 @@
 <!-- SWITCH BASED ON STATE -->
-<div ng-switch="state" class="comment">
+<div ng-switch="mode" class="comment edit">
 
-	<!-- WHEN COMMENT IS MINIMIZED -->
-	<div ng-switch-when="min">
-		<button onClick="javascript:max_comment({{comment_ID}})">+</button>
-		<a href="{{user_profile_url}}">{{display_name}}</a> - <b>{{comment_points}}</b> points
+	<div edit-field="comment_content" data-input="textarea"></div>
+
+	<!-- ADD COMMENT -->
+	<div ng-switch-when="add">
+		<button onClick="javascript:save_comment()">Add Comment</button>
 	</div>
 
-	<!-- WHEN COMMENT IS MAXIMIZED -->
-	<div ng-switch-when="max">
-		<div class="header">
-			<button onClick="javascript:min_comment({{comment_ID}})">-</button>
-			<a href="{{user_profile_url}}">{{display_name}}</a> - <b>{{comment_points}}</b> points
-			<div class="comment_content">
-				{{comment_content}}
-			</div>
-		</div>
-		<div ng-repeat="comment in children">
-			<!-- RECURSIVE CHILDREN -->
-			<div ng-include="comment-single.html"></div>
-		</div>
+	<!-- SAVE COMMENT -->
+	<div ng-switch-when="edit">
+		<button onClick="javascript:save_comment()">Save Comment</button>
 	</div>
 
 </div>
