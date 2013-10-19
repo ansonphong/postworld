@@ -1707,10 +1707,9 @@ $comment_data = array(
 pw_save_comment($comment_data,'data');
 ```
 
-__return__ : *integer* (New / Updated Comment ID)
+__return__ : *Array A* (New / Updated Comment Data)
 - When `$return = 'data'`
 - See `pw_get_comment()` Return
-
 
 ------
 
