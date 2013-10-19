@@ -147,6 +147,10 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 	foreach ($fields as $field) {
 		if( in_array($field, $wp_comment_fields) ){
 			$comment_data[$field] = $wp_comment_data[$field];
+
+			// Apply Content Filters
+			if ( $field == 'comment_content' )
+				$comment_data[$field] = apply_filters('the_content', $comment_data[$field] );
 		}
 		// POSTWORLD COMMMENT FIELDS 
 		else if( $field == 'comment_points' ){
@@ -234,6 +238,10 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			// If the current field is requested, move the data
 			if( in_array( $field, $wp_comment_fields ) ){
 				$comment_data[$field] = $comment[$field];
+	
+				// Apply Content Filters
+				if ( $field == 'comment_content' )
+					$comment_data[$field] = apply_filters('the_content', $comment_data[$field] );
 			}
 
 			///// POSTWORLD COMMMENT FIELDS /////
@@ -309,6 +317,7 @@ function get_comment_author_id($comment_id){
 	$comment_data = get_comment($comment_id,ARRAY_A);		
 	return $comment_data['user_id'];
 }
+
 function get_comment_post_id($comment_id){
 	$comment_data = get_comment($comment_id,ARRAY_A);
 	return $comment_data['comment_post_ID'];
@@ -383,13 +392,6 @@ function pw_save_comment($comment_data, $return = 'data'){
 		return $comment_ID; 
 
 }
-
-
-
-
-
-
-
 
 
 
