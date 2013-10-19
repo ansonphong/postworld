@@ -650,6 +650,7 @@ __mode__
 - Options:
   - __add__ - If no `comment-id` is provided
   - __edit__ - If `comment-id` is provided, pre-populate `comment_content` with data from comments object
+  - __reply__ - If `data-comment-parent` is provided
 
 
 #### Usage
