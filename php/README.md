@@ -1671,6 +1671,17 @@ __return__ : *Array* (of comments)
 #### Parameters
 
 __$comment_data__ : *Array A*
+- Fields:
+  - comment_post_ID
+  - comment_content
+  - comment_type
+  - comment_parent
+  - user_id
+  - comment_author_IP
+  - comment_agent
+  - comment_date_gmt
+  - comment_date
+  - comment_approved
 
 __$return__ : *string*
 - How to return on a successful add

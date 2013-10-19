@@ -666,6 +666,12 @@ To edit a comment:
 <div add-comment="text" comment-id="435"></div>
 ```
 
+#### PHP Helper Functions
+
+- `pw_get_comment( $comment_id )` - Get the data array for an existing comment
+- `pw_save_comment( $comment_data, [$return] )` - Save the data array for an new / edited comment
+  - Returns by default the result of `pw_get_comment( $comment_id )` for the new / edited comment
+
 
 #### Callback
 
