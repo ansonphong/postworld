@@ -130,7 +130,8 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 	// POSTWORLD FIELD MODEL
 	$pw_comment_fields = array(
 		'comment_points',
-		'user_voted'
+		'user_voted',
+		'time_ago'
 		);
 
 	// All Fields
@@ -153,6 +154,10 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 		}
 		else if( $field == 'user_voted' ){
 			$comment_data[$field] = 0; //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+		}
+		else if( $field == 'time_ago' ){
+			$timestamp = strtotime($wp_comment_data['comment_date_gmt']);
+			$comment_data[$field] = time_ago($timestamp); //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
 		}
 	}
 
@@ -373,7 +378,7 @@ function pw_save_comment($comment_data, $return = 'data'){
 
 	if ($return == 'data')
 		return pw_get_comment($comment_ID);
-	
+
 	else if ($return == 'id')
 		return $comment_ID; 
 

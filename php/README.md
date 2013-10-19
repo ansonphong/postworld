@@ -1601,11 +1601,37 @@ __$fields__ : *Array*
 - __Postworld Comment Fields__
   - comment_points
   - viewer_voted
+  - time_ago
 
 __$viewer_user_id__
 - The user ID of a user to return vote data by
 
 __return__ : *Array*
+
+``` php
+Array (
+  // WORDPRESS FIELDS
+  [comment_ID] => 1
+  [comment_post_ID] => 1
+  [comment_author] =>
+  [comment_author_email] =>
+  [comment_author_url] =>
+  [comment_author_IP] =>
+  [comment_date] => 2013-10-19 19:41:02
+  [comment_date_gmt] => 2013-10-19 19:41:02
+  [comment_content] => Hello universe.
+  [comment_approved] => 1
+  [comment_agent] =>
+  [comment_type] =>
+  [comment_parent] => 0
+  [user_id] => 1
+  
+  // POSTWORLD FIELDS
+  [comment_points] => 0
+  [user_voted] => 0
+  [time_ago] => 1 second ago
+  )
+```
 
 ------
 
@@ -1655,7 +1681,7 @@ __$return__ : *string*
 
 #### Usage
 
-New Comment:
+__New Comment:__
 
 ``` php
 $comment_data = array(
@@ -1670,7 +1696,7 @@ __return__ : *integer* (New / Updated Comment ID)
 - When `$return = 'id'`
 
 
-Edit Comment:
+__Edit Comment:__
 
 ``` php
 $comment_data = array(
@@ -1683,30 +1709,7 @@ pw_save_comment($comment_data,'data');
 
 __return__ : *integer* (New / Updated Comment ID)
 - When `$return = 'data'`
-
-``` php
-Array (
-  // WORDPRESS FIELDS
-  [comment_ID] => 1
-  [comment_post_ID] => 1
-  [comment_author] =>
-  [comment_author_email] =>
-  [comment_author_url] =>
-  [comment_author_IP] =>
-  [comment_date] => 2013-10-19 19:41:02
-  [comment_date_gmt] => 2013-10-19 19:41:02
-  [comment_content] => Hello universe.
-  [comment_approved] => 1
-  [comment_agent] =>
-  [comment_type] =>
-  [comment_parent] => 0
-  [user_id] => 1
-  
-  // POSTWORLD FIELDS
-  [comment_points] => 0
-  [user_voted] => 0
-  )
-```
+- See `pw_get_comment()` Return
 
 
 ------
