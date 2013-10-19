@@ -577,17 +577,11 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 					$query.="post_format='".$postarr["post_format"]."'";
 					 $insertComma= TRUE;
 				} 
-			/*	if($postarr["external_image"]){
-					if($insertComma === TRUE) $query.=" , ";
-					$query.="external_image='".$postarr["external_image"]."'";
-					 $insertComma= TRUE;
-				} */
 				if($postarr["link_url"]){
 					if($insertComma === TRUE) $query.=" , ";
 					$query.="link_url='".$postarr["link_url"]."'";
 					 $insertComma= TRUE;
 				} 
-				
 			 	if($insertComma === FALSE ){}
 				else{
 					$query.=" where post_id=".$post_ID ;
@@ -595,15 +589,11 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	 				$wpdb->query($query);
 					
 				}
-			
-			
 		}
 	}
 		
 	return $post_ID;
 
-	 
-	
 }
 
 function pw_update_post ( $postarr ,$wp_error = TRUE){
@@ -658,7 +648,6 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 	if ($postarr['post_type'] == 'attachment')
 		return wp_insert_attachment($postarr);
 
-	
 	//print_r($postarr);
 	return pw_insert_post( $postarr, $wp_error );
 
@@ -699,7 +688,7 @@ function pw_set_post_thumbnail( $post_id, $image ){
 	$wp_filetype = wp_check_filetype($filename, null );
 	$attachment = array(
 	    'post_mime_type' => $wp_filetype['type'],
-	    'post_title' => $file_title, //sanitize_file_name($filename),
+	    'post_title' => sanitize_file_name($file_title),
 	    'post_content' => '',
 	    'post_status' => 'inherit'
 	);
@@ -719,12 +708,18 @@ function pw_save_post($post_data){
 
 	extract($post_data);
 	
+	// Create forgeign keys
+	if ( !empty($ID) ){
+		$ID = (int) $ID;
+		$post_id = $ID;
+	}
+	
 	$current_user_id = get_current_user_id();
 	$current_userdata = (array) get_userdata( $current_user_id );
 
 	///// SECURITY CHECK & SET METHOD /////
 	// If there is a post_id and it exists
-	if ( !empty($ID) && pw_post_exists($ID) ){
+	if ( !empty( $ID ) && pw_post_exists( $ID ) ){
 		
 		// Get the post
 		$current_post_data = get_post( $ID, 'ARRAY_A');
@@ -742,7 +737,6 @@ function pw_save_post($post_data){
 		// If user doesn't own post and can't edit other's posts
 		if( $user_is_author == false && $edit_others_posts == false ){
 			// Return false, exit out of the function
-			
 			return array( 'error' => 'No permissions to edit post.' );
 		}
 		
@@ -753,13 +747,29 @@ function pw_save_post($post_data){
 		$method = 'insert';
 	}
 
-
 	///// INSERT POST METHOD /////
-
+	if( $method == 'insert' ){
+		$post_id = pw_insert_post($post_data);
+	}
 
 	///// UPDATE POST METHOD /////
+	else if ( $method == 'update' ) {
+		$post_id = pw_update_post($post_data);
+	}
 
+	///// ADD / UPDATE POST META /////
 
+	// IMAGE FIELDS
+	// THUMBNAIL ID : If there is a thumbnail ID
+	if ( !empty($thumbnail_id) && !empty($post_id) )
+		pw_set_post_thumbnail( $post_id, $thumbnail_id );
+	// THUMBNAIL URL : If there is a thumbnail URL
+	elseif ( !empty($thumbnail_url) && !empty($post_id) )
+		pw_set_post_thumbnail( $post_id, $thumbnail_url );
+	
+	if ( !empty($post_class)  ){
+		
+	}
 
 }
 

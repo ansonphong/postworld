@@ -51,7 +51,7 @@ $post_meta = pw_get_post_meta($post_id);
 
 ------
 
-### pw_set_post_meta ( *post_id*, *$post_meta* )
+### pw_set_post_meta ( *$post_id*, *$post_meta* )
 
 #### Description
 Used to set Postworld values in the __wp_postworld_post_meta__ table
@@ -1448,15 +1448,15 @@ array(
 ------
 
 ### pw_insert_post ( $post )
-- Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post 
-- Include additional Postworld fields as inputs
+- Extends `wp_insert_post` : http://codex.wordpress.org/Function_Reference/wp_insert_post 
+- Include additional Postworld __Post Meta__ fields as inputs
 
 #### Parameters : $post *Array*
 - All fields in `wp_insert_post()` Method
-- __post_class__
-- __post_format__
-- __link_url__
-- __external_image__
+- Postworld __Post Meta__ Fields:
+  - __post_class__
+  - __post_format__
+  - __link_url__
 
 __return__ :
 - *post_id* - If added to the database, otherwise return *WP_Error Object*
@@ -1466,6 +1466,9 @@ __return__ :
 ### pw_update_post ( *$post* ) 
 - Extends `wp_update_post()` : http://codex.wordpress.org/Function_Reference/wp_update_post
 - Include additional Postworld fields as inputs (see `pw_insert_post()` )
+
+__return__ : *integer*
+- The ID of the post if the post is successfully updated in the database. Otherwise returns 0.
 
 ------
 
@@ -1484,10 +1487,14 @@ Status : In development... (phongmedia)
  
 #### Process
 
+__WP & PW Fields__
 1. Check if there is a Post ID.
 2. Check if that Post ID exists
 3. Check if the user owns that Post ID, or if they have permissions to edit other's posts
 4. Pass the values to the cooroponding function: `pw_update_post()` and `pw_insert_post()`
+
+__Image Meta__
+- Use `$thumbnail_id` in priority over `$thumbnail_url` if both are provided
 
 
 #### Usage
@@ -1515,14 +1522,15 @@ $post_data = array(
   'to_ping'        => [ ? ] //?
   'tax_input'      => [ array( 'taxonomy_name' => array( 'term', 'term2', 'term3' ) ) ] // support for custom taxonomies. 
 
-  ///// IMAGE INPUTS /////
-  'thumbnail_url'  => [ <URL> ], // The URL of an image to be imported into the library
-  'thumbnail_id'   => [ <ID> ], // The ID of the item in the media library
-
   ///// POSTWORLD INPUTS /////
   'link_url'       => [ <URL> ],
   'post_class'     => [ 'author' | 'contributor' ],
   'post_format'    => [ 'standard' | 'video' | 'audio' ]
+
+  ///// IMAGE INPUTS /////
+  'thumbnail_url'  => [ <URL> ], // The URL of an image to be imported into the library
+  'thumbnail_id'   => [ <ID> ],  // The ID of the item in the media library
+
 );
 
 pw_save_post($post_data);
@@ -1549,6 +1557,7 @@ __$image__ : *integer / string*
 - Options :
   - *integer* - The ID of the media library item to 
   - *string* - The URL of the image which to import into the Media Library and then set
+
 
 #### Process
 - Check if `$image` is an integer or a string
