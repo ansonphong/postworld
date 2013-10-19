@@ -703,8 +703,6 @@ function pw_set_post_thumbnail( $post_id, $image ){
 }
 
 function pw_save_post($post_data){
-	
-	///// UNDER DEVELOPMENT ///// <<< phongmedia
 
 	extract($post_data);
 	
@@ -772,8 +770,6 @@ function pw_save_post($post_data){
 	}
 
 }
-
-
 
 
 ?>
