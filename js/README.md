@@ -643,7 +643,9 @@ __comment-parent__ : *integer* (optional)
 __comment-id__ : *integer* (optional)
 - Provide the comment ID of the comment to which it is a response
 
-__mode__ : *string*
+#### Scope Variables
+
+__mode__
 - Set `mode` in scope
 - Options:
   - __add__ - If no `comment-id` is provided
