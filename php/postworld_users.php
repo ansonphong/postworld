@@ -23,7 +23,16 @@
 		public $country='';
 		public $region='';
 	} 
-	
+
+	function get_current_userdata( $field ){
+		$user_data = pw_get_userdata( get_current_user_id(), 'all' );
+		echo $user_data[$field];
+	}	
+
+	function get_current_userdata_obj( $fields ){
+		$user_data = pw_get_userdata( get_current_user_id(), $fields );
+		echo $user_data;
+	}
 
 	function pw_get_userdata ( $user_id, $fields ){
 		
@@ -67,7 +76,7 @@
 
 		// If Fields is empty or 'all', add all fields
 		if (!$fields || $fields == 'all'){
-			$fields = array_merge( $wordpress_user_fields, $postworld_user_fields );
+			$fields = array_merge( $wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields );
 		}
 
 		// WORDPRESS USER FIELDS

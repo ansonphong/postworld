@@ -1,7 +1,7 @@
 
 ///// INITIALIZE /////
-var feed_init = {};
-var feed_data = {};
+//var feed_init = {};
+//var feed_data = {};
 
 ///// THE POSTWORLD MODULE /////
 var postworld = angular.module('postworld', []);
@@ -341,6 +341,7 @@ postworld.run(function($rootScope, $templateCache) {
 
 
 
+////////// NG-SWITCH : 'OR' OPERATOR //////////
 // ADDS THE ABILITY FOR || OR OPERATOR IN NG-SWITCH
 angular.module('postworld', []).
 	config(function($routeProvider, $provide) {

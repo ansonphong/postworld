@@ -1386,6 +1386,7 @@ __AUTHOR__
 - __post_author_description__
 - __post_author_nicename__
 - __edit_post_link__
+- __user_profile_url__ - *Requires Buddypress*
 - __post_author_social__ <<< PHONG
 
 __DATE & TIME__

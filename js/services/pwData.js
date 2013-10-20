@@ -200,6 +200,11 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 				}
 			}
 			return fargs;
-		}
+		},
+		pw_get_post_types: function(args) {
+			//$log.info('pwData.pw_load_feed',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_post_types', params);
+		},
    }; // END OF pwData return value
 });

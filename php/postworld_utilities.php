@@ -55,13 +55,13 @@ function object_to_array($data){
 
 ////////// EDIT POST HELP FUNCTIONS //////////
 
-function get_user_post_types(){
+function pw_get_post_types( $options ){
 	//$user_role = get_user_role();
 
 	$args = array(
 	   'public'   => true,
-	   //'_builtin' => false,
-	   'capability_type' => 'post',
+	   '_builtin' => false,
+	   //'capability_type' => 'post',
 	);
 	$post_types_obj = get_post_types( $args, 'objects');
 
@@ -378,6 +378,7 @@ function time_ago($timestamp){
         return $diff == 1 ? $diff . ' year ago' : $diff . ' years ago';
     }
 }
+
 
 
 

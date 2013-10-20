@@ -899,9 +899,6 @@ __data-input__ : *string* (required)
 __data-size__ : *integer* (optional)
 - The size of an select field
 
-__data-size__ : *integer* (optional)
-- The size of an select field
-
 __data-value__ : *string* (optional)
 - The over-ride value of the field
 
