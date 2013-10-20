@@ -39,6 +39,7 @@ postworld.controller('pwFeedController',
 		$scope.scrollMessage = "";
     	$scope.items = [];	
     	$scope.message = "";
+    	
     	// List of Post Items displayed in Scroller
     	// is this a live feed or a load feed?
     	if ($attrs.liveFeed)    { 
@@ -51,6 +52,7 @@ postworld.controller('pwFeedController',
     		$scope.feed		= $attrs.loadFeed;
 	    	$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
     	};
+    	
     	    	    	
     	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
@@ -58,6 +60,13 @@ postworld.controller('pwFeedController',
 					$log.info('no valid Feed ID provided in Feed Settings',$scope);
 					return;
 				}
+				
+		    	// Set Title
+		    	if (pwData.feed_settings[$scope.feed].title) {
+		    		$scope.title = pwData.feed_settings[$scope.feed].title;
+		    	} else {
+		    		$scope.title = '';
+		    	}				
 				var view = 'list';	// TODO get from Constant values
 				// Get Feed Item Template from Feed Settings by default
 			   if (pwData.feed_settings[$scope.feed].view.current)

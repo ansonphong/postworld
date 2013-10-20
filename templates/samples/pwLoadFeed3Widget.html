@@ -1,0 +1,35 @@
+<script>
+	feed_settings['feed2009'] = {
+		title: 'Feed of 2009',
+		preload : 14,
+		load_increment : 5,
+		offset: 0,
+		max_posts:100,
+		view : {
+			current : 'list',
+			options : ['list','detail', 'grid','full']
+		},
+		feed_template: 'load_feed_2',	// Optional, needed in case of different widgets [having different panels for example] 
+	};
+	feed_settings['feed2012'] = {
+		title: 'Feed of 2012',
+		preload : 14,
+		load_increment : 5,
+		offset: 0,
+		max_posts:100,
+		view : {
+			current : 'list',
+			options : ['list','detail', 'grid','full']
+		},
+		feed_template: 'load_feed_2',	// Optional, needed in case of different widgets [having different panels for example] 
+	};
+</script>
+
+<div class="row">
+	<div class="col-md-6">
+		<div load-feed='feed2009' ng-include="templateUrl"></div>
+	</div>		
+	<div class="col-md-6">
+		<div load-feed='feed2012' ng-include="templateUrl"></div>
+	</div>		
+</div>

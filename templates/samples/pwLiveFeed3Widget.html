@@ -1,0 +1,50 @@
+<script>
+	feed_settings['feed1'] = {
+		title: 'Left Side Feed',
+		preload : 10,
+		load_increment : 5,
+		offset: 0,
+		max_posts:200,
+		order_by : '+post_points',
+		panels : {
+			'panel2'	: 'feed_header',	
+		},
+		view : {
+			current : 'list',
+			options : ['list','detail', 'grid','full']
+		},
+		query_args : {
+			// query args in JSON format
+			'year'	: '2010',
+		},
+		feed_template: 'live_feed_2', 
+	};
+	feed_settings['feed2'] = {
+		title: 'Right Side Feed',
+		preload : 20,
+		load_increment : 5,
+		offset: 0,
+		max_posts:200,
+		order_by : '+modified',
+		panels : {
+			'panel2'	: 'feed_header',	
+		},
+		view : {
+			current : 'list',
+			options : ['list','detail', 'grid','full']
+		},
+		query_args : {
+			// query args in JSON format
+			'year'	: '2011',
+		},
+		feed_template: 'live_feed_2', 
+	};
+</script>
+<div class="row">
+	<div class="col-md-6">
+		<div live-feed='feed1' ng-include="templateUrl"></div>
+	</div>		
+	<div class="col-md-6">
+		<div live-feed='feed2' ng-include="templateUrl"></div>
+	</div>		
+</div>

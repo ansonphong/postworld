@@ -11,6 +11,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',				
             });
+        $routeProvider.when('/live-feed-2-feeds/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed3Widget.html',				
+            });
         $routeProvider.when('/live-feed-3/',
             {
                 template: '<h2>Coming Soon</h2>',				
@@ -22,6 +26,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         $routeProvider.when('/load-feed-2/',
             {
                 template: '<h2>Coming Soon</h2>',				
+            });
+        $routeProvider.when('/load-feed-2-feeds/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed3Widget.html',				
             });
         $routeProvider.when('/load-panel/',
             {
