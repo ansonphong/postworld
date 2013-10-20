@@ -1,6 +1,6 @@
 'use strict';
 
-pwApp.directive('liveFeed', function() {
+postworld.directive('liveFeed', function() {
     return {
         restrict: 'A',
         // DO not set url here and in nginclude at the same time, so many errors!
@@ -14,7 +14,7 @@ pwApp.directive('liveFeed', function() {
 });
 
 
-pwApp.directive('loadFeed', function() {
+postworld.directive('loadFeed', function() {
     return {
         restrict: 'A',
         // DO not set url here and in nginclude at the same time, so many errors!
@@ -28,7 +28,7 @@ pwApp.directive('loadFeed', function() {
 });
 
 
-pwApp.controller('pwFeedController',
+postworld.controller('pwFeedController',
     function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
     	// Initialize
     	$scope.busy = false; 				// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
@@ -159,7 +159,7 @@ pwApp.controller('pwFeedController',
 					}
 					if (response.status==200) {
 						// Check if data exists
-						if (response.data.length) {
+						if (!(response.data instanceof Array) ) {
 							// Insert Response in Feed Data						
 							$log.info('pwFeedController.pw_live_feed Success',response.data);						
 							$scope.fillFeedData(response);																			

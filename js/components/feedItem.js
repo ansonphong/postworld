@@ -1,6 +1,6 @@
 'use strict';
 
-pwApp.directive('feedItem', function() {
+postworld.directive('feedItem', function() {
     return {
         restrict: 'A',
         replace: true,
@@ -14,7 +14,7 @@ pwApp.directive('feedItem', function() {
     };
 });
 
-pwApp.controller('pwFeedItemController',
+postworld.controller('pwFeedItemController',
     function pwFeedItemController($scope, $location, $log, pwData, $attrs) {
     	$scope.templateUrl = $scope.$parent.feed_item_template;
     	$log.info('pwFeedItemController New Template=',$scope.templateUrl);    	

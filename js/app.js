@@ -1,7 +1,7 @@
 'use strict';
 var feed_settings = [];
 
-var pwApp = angular.module('pwApp', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll'])
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll'])
     .config(function ($routeProvider, $locationProvider) {    	    	
         $routeProvider.when('/live-feed-1/',
             {
@@ -40,7 +40,7 @@ var pwApp = angular.module('pwApp', ['ngResource','ngRoute', 'ngSanitize', 'infi
     });
 
 // Submit on Enter, without a real form
-pwApp.directive('ngEnter', function() {
+postworld.directive('ngEnter', function() {
         return function(scope, element, attrs) {
             element.bind("keydown keypress", function(event) {
                 if(event.which === 13) {
@@ -56,14 +56,14 @@ pwApp.directive('ngEnter', function() {
     
     
 
-pwApp.run(function($rootScope, $templateCache, pwData) {	
+postworld.run(function($rootScope, $templateCache, pwData) {	
     	// TODO move getting templates to app startup
     	pwData.pw_get_templates(null).then(function(value) {
 		    // TODO should we create success/failure responses here?
 		    // resolve pwData.templates
 		    pwData.templates.resolve(value.data);
 		    pwData.templatesFinal = value.data;
-		    console.log('pwApp RUN getTemplates=',pwData.templatesFinal);
+		    console.log('postworld RUN getTemplates=',pwData.templatesFinal);
 		  });    	
 // TODO remove in production
    $rootScope.$on('$viewContentLoaded', function() {
@@ -221,7 +221,7 @@ function parse_linear_select_items( items, selected ){
 
 
 ////////// EDIT FIELD DIRECTIVE //////////
-pwApp.directive( 'editField', ['$compile', function($compile, $scope){
+postworld.directive( 'editField', ['$compile', function($compile, $scope){
 
     return { 
         restrict: 'A',
