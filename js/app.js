@@ -376,53 +376,32 @@ pwApp.directive( 'editField', ['$compile', function($compile, $scope){
 }]);
 
 
-
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
 
-    $scope.post_title = "Hello Universe";
-    $scope.post_name = "hello_universe";
-
-    $scope.post_type_linear = "link";    
-
-    $scope.post_types_linear = {
-        "feature":"Features",
-        "blog":"Blog",
-        "link":"Links",
-        "announcement":"Announcements",
-        "tribe_events":"Events"
+    // POST DATA OBJECT
+    $scope.post_data = {
+        post_title : "Hello Space",
+        post_name : "hello_space",
+        post_type : "feature",
+        post_status : "publish",
+        tax_input : {
+            topic : ["life"],
+            section : ["psi"],
+        },
+        tags_input : "tag1, tag2, tag3",
     };
 
-    $scope.post_types = [
-        {
-            slug:"feature",
-            name:"Feature",
-            access:true
-        },
-        {
-            slug:"blog",
-            name:"Blog",
-            access:true
-        },
-        {
-            slug:"link",
-            name:"Link",
-            access:true
-        },
-        {
-            slug:"announcement",
-            name:"Announcements",
-            access:false
-        },
-        {
-            slug:"tribe_events",
-            name:"Events",
-            access:false
-        }
-    ];
+    // POST TYPE OPTIONS
+    $scope.post_types_linear = {
+        feature : "Features",
+        blog : "Blog",
+        link : "Links",
+        announcement : "Announcements",
+        tribe_events : "Events"
+    };
 
-    $scope.post_type = $scope.post_types[2];
-
+    // TAXONOMY TERMS
     $scope.tax_terms = {
         'topic' : [
             {
@@ -470,22 +449,47 @@ function editPost($scope) {
         ],
         
     };
-    
-    $scope.taxonomies = {
-        topic : "life",
-        section : "psi",
-        type : "",
+
+    // POST STATUS OPTIONS
+    $scope.post_status_options = {
+        publish : "Published",
+        draft : "Draft",
+        pending : "Pending",
     };
 
-    $scope.post_tags = "tag1, tag2, tag3";
 
-    $scope.post_statuses = {
-        "publish":"Published",
-        "draft":"Draft",
-        "pending":"Pending",
-    };
+    // DEV
+    $scope.post_types = [
+        {
+            slug:"feature",
+            name:"Feature",
+            access:true
+        },
+        {
+            slug:"blog",
+            name:"Blog",
+            access:true
+        },
+        {
+            slug:"link",
+            name:"Link",
+            access:true
+        },
+        {
+            slug:"announcement",
+            name:"Announcements",
+            access:false
+        },
+        {
+            slug:"tribe_events",
+            name:"Events",
+            access:false
+        }
+    ];
 
-    $scope.post_status = "pending";
+    $scope.post_type = $scope.post_types[2];
+
+
 
 }
 
