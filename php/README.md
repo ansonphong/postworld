@@ -2299,6 +2299,12 @@ Contains utility helper functions.
 
 ------
 
+### postworld_includes()
+- Will includes and que all the files neccessary to run Postworld
+- Run this in every PHP template where Postworld is used
+
+------
+
 ### tree_obj ( *$object, $parent, $depth, $settings* )
 
 #### Parameters :
