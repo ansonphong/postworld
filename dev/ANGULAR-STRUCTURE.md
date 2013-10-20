@@ -5,7 +5,7 @@ The following describes the structure of the service/ajax part and the chain of 
 
 **search-results.php** - a page template that creates an ngApp with a form that takes search parameters and returns back search results.
 
-**app.js** - contains pwApp - the postworld AngularJS Application and Modules. A single route is created that routes this app by default to a test page with a test Search Controller.
+**app.js** - contains postworld - the postworld AngularJS Application and Modules. A single route is created that routes this app by default to a test page with a test Search Controller.
 
 **pwSearchController.js** - contains pwSearchController - a sandbox Controller for testing the service and the Search UI. This controller gets search parameters from a form and initiates pwData service to get search results back to the page.
 

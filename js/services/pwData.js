@@ -11,7 +11,7 @@
  *	$args = json_decode($args_text);
  * */
 
-pwApp.factory('pwData', function ($resource, $q, $log) {	  
+postworld.factory('pwData', function ($resource, $q, $log) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
