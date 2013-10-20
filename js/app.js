@@ -158,7 +158,7 @@ window.varExists = function(value){
 }
 
 window.isEmpty = function(value){
-    if ( typeof value === 'undefined' )
+    if ( typeof value === 'undefined' || value == '' )
         return true;
     else
         return false; //value[0].value ? true : false;  
@@ -388,21 +388,31 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 }]);
 
 
+
+
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
 
+    $scope.pw_get_post = function(){
+        var post_data = {
+            post_id : 24,
+            post_title : "Hello Space",
+            post_name : "hello_space",
+            post_type : "feature",
+            post_status : "publish",
+            post_format : "video",
+            link_url : "",
+            tax_input : {
+                topic : ["life"],
+                section : ["psi"],
+            },
+            tags_input : "tag1, tag2, tag3",
+        }
+        return post_data;
+    }
+
     // POST DATA OBJECT
-    $scope.post_data = {
-        post_title : "Hello Space",
-        post_name : "hello_space",
-        post_type : "feature",
-        post_status : "publish",
-        tax_input : {
-            topic : ["life"],
-            section : ["psi"],
-        },
-        tags_input : "tag1, tag2, tag3",
-    };
+    $scope.post_data = $scope.pw_get_post();
 
     // POST TYPE OPTIONS
     $scope.post_types_linear = {
@@ -469,10 +479,106 @@ function editPost($scope) {
         pending : "Pending",
     };
 
+    // POST FORMAT OPTIONS
+    $scope.post_format_options = {
+        standard : "Standard",
+        video : "Video",
+        audio : "Audio",
+    };
+
+    // POST FORMAT META
+    $scope.post_format_meta = [
+        {
+            name:"Standard",
+            slug:"standard",
+            domains:[],
+            icon:"<i class='icon-circle-blank'></i>"
+        },
+        {
+            name:"Video",
+            slug:"video",
+            domains:["youtube.com","youtu.be","vimeo.com"],
+            icon:"<i class='icon-youtube-play'></i>"
+        },
+        {
+            name:"Audio",
+            slug:"audio",
+            domains:["soundcloud.com"],
+            icon:"<i class='icon-headphones'></i>"
+        },
+    ];
+
+
+    ///// EVALUATE AND SET POST_FORMAT DEPENDING ON LINK_URL /////
+    evalPostFormat();
+    function evalPostFormat(){
+        var default_format = "standard";
+        var link_url = $scope.post_data.link_url;
+        var post_format_meta = $scope.post_format_meta;
+        var set = "";
+        function set_default_post_format(){
+            $scope.post_data.post_format = default_format;
+        }
+        // If link_url has a value
+        if ( !isEmpty( link_url ) && !isEmpty(post_format_meta) ){
+            ///// FOR EACH POST FORMAT : Go through each post format
+            angular.forEach( post_format_meta, function( post_format ){
+                ///// FOR EACH DOMAIN : Go through each domain
+                angular.forEach( post_format.domains, function( domain ){
+                // If domain exists in the link_url, set that format
+                    if ( isInArray( domain, link_url ) ){
+                        //alert("post_format :" + post_format.slug);
+                        $scope.post_data.post_format = post_format.slug;
+                        set = post_format.slug;
+                    }
+                });
+            });
+            // If no matches, set default
+            if ( set == "" )
+                set_default_post_format();
+        }
+        // Otherwise, set default
+        else {
+            set_default_post_format();
+        }
+    };
+
+
+    // LINK_URL WATCH : Watch for changes in link_url
+    // Evaluate the post_format
+    //$scope.$watch( "post_data.link_url",
+    $scope.$watchCollection('[post_data.link_url, post_data.post_format]',
+        function ( newValue, oldValue ){
+            evalPostFormat();
+        });
+
+    // NG-CHANGE LINK_URL : Add this to link_url for optional method
+    // ng-change="changeLinkUrl"
+    $scope.changeLinkUrl = function(){
+        evalPostFormat();
+    };
+
+
+    /*
+    angular.forEach( items, function( value, key ){
+        var id = key;
+        var label = items[key];
+        if ( isInArray( id, selected ) )
+            var selected_attribute = ' selected ';
+        else
+            var selected_attribute = '';
+        select_items += "<option value='" + id + "' "+selected_attribute+" >" + label + "</option>";
+
+        //$rootScope.$apply();
+    
+    });
+    */
+
     // SAVE POST FUNCTION
     $scope.savePost = function(){
         alert( JSON.stringify( $scope.post_data ) );
     }
+
 
     // DEV
     $scope.post_types = [
