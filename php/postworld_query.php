@@ -32,9 +32,12 @@ class PW_Query extends WP_Query {
 	}
 	
 	function prepare_order_by(){
-		$orderby = $this->query_vars['orderby'];
-		
-		if($this->query_vars['orderby']!=null && $this->query_vars['orderby']!=''){
+		if(array_key_exists('orderby',  $this->query_vars)){
+			$orderby = $this->query_vars['orderby'];
+		}else{
+			$orderby=null;
+		}
+		if($orderby!=null && $orderby!=''){
 		$orderby = str_replace("date", "wp_posts.post_date", $orderby);	
 		$orderby = str_replace("rank_score", "wp_postworld_post_meta.rank_score", $orderby);	
 		$orderby = str_replace("post_points", "wp_postworld_post_meta.post_points", $orderby);	
@@ -52,7 +55,8 @@ class PW_Query extends WP_Query {
 		}
 			
 		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
-			if($this->query_vars["offset"])
+			//if($this->query_vars["offset"])
+			if(array_key_exists('offset',  $this->query_vars))
 				$orderby.=" Limit ".$this->query_vars["offset"].", ".$this->query_vars['posts_per_page'];	
 			else $orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
 		}
@@ -66,37 +70,41 @@ class PW_Query extends WP_Query {
 		$where =" WHERE ";	
 		$insertAnd= '0';
 		//echo($insertAnd);
-		if(gettype($this->query_vars['post_format']) == "array") {
-				if($insertAnd=='0'){
-					 //$where.=" and ";
-					 $insertAnd = '1';
-					
-				}	
-				$where.=" post_format in ('".implode("','", $this->query_vars['post_format'])."') ";
-				
+		if(array_key_exists('post_format',  $this->query_vars)){
+				if(gettype($this->query_vars['post_format']) == "array") {
+						if($insertAnd=='0'){
+							 //$where.=" and ";
+							 $insertAnd = '1';
+							
+						}	
+						$where.=" post_format in ('".implode("','", $this->query_vars['post_format'])."') ";
+						
+					}
+					else if(gettype($this->query_vars['post_format']) == "string"){
+						if($insertAnd=='0'){
+							// $where.=" and ";
+							 $insertAnd = '1';
+						}	
+						$where.=" post_format = '".$this->query_vars['post_format']."' ";
+					}
 			}
-			else if(gettype($this->query_vars['post_format']) == "string"){
-				if($insertAnd=='0'){
-					// $where.=" and ";
-					 $insertAnd = '1';
-				}	
-				$where.=" post_format = '".$this->query_vars['post_format']."' ";
-			}
-			
-			if(gettype($this->query_vars['post_class']) == "array") {
-				if($insertAnd=='1'){
-					 $where.=" and ";
-					 $insertAnd = '0';
-					
-				}	
-				$where.=" post_class in ('".implode("','", $this->query_vars['post_class'])."') ";
-			}
-			else if(gettype($this->query_vars['post_class']) == "string"){
-				if($insertAnd=='1'){
-					 $where.=" and ";
-					 $insertAnd = '0'; 
-				}	
-				$where.=" post_class = '".$this->query_vars['post_class']."' ";
+		
+			if(array_key_exists('post_class',  $this->query_vars)){
+					if(gettype($this->query_vars['post_class']) == "array") {
+						if($insertAnd=='1'){
+							 $where.=" and ";
+							 $insertAnd = '0';
+							
+						}	
+						$where.=" post_class in ('".implode("','", $this->query_vars['post_class'])."') ";
+					}
+					else if(gettype($this->query_vars['post_class']) == "string"){
+						if($insertAnd=='1'){
+							 $where.=" and ";
+							 $insertAnd = '0'; 
+						}	
+						$where.=" post_class = '".$this->query_vars['post_class']."' ";
+					}
 			}
 		
 		if($where ==" WHERE ") return $where;	
