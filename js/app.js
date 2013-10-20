@@ -457,6 +457,10 @@ function editPost($scope) {
         pending : "Pending",
     };
 
+    // SAVE POST FUNCTION
+    $scope.savePost = function(){
+        alert( JSON.stringify( $scope.post_data ) );
+    }
 
     // DEV
     $scope.post_types = [
