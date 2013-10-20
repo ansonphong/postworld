@@ -179,6 +179,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			$post_data['post_excerpt'] = wp_filter_nohtml_kses( $post_data['post_excerpt'] );
 		}
 
+		// Edit Post Link
+		if( in_array('edit_post_link', $fields) ){
+			$post_data["edit_post_link"] = get_edit_post_link($post_id);
+			if ( $post_data["edit_post_link"] == false ) $post_data["edit_post_link"] = '#';
+		}
+
 
 	////////// POSTWORLD //////////
 
