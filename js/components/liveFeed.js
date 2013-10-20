@@ -97,7 +97,20 @@ postworld.controller('pwFeedController',
 		   // Broadcast to all children
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_template);
 		   });
-		   
+		
+		$scope.resetFeedData = function () {
+			// Reset Feed Data
+			pwData.feed_data[$scope.feed] = {};
+			if (pwData.feed_settings[$scope.feed].feed_outline) {
+				pwData.feed_data[$scope.feed].feed_outline = pwData.feed_settings[$scope.feed].feed_outline;
+				pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_settings[$scope.feed].feed_outline.length;														
+			};						
+			pwData.feed_data[$scope.feed].loaded = 0;						
+			pwData.feed_data[$scope.feed].count_loaded = 0;						
+			pwData.feed_data[$scope.feed].posts = [];
+			$scope.items = pwData.feed_data[$scope.feed].posts;
+		},
+		
    		$scope.fillFeedData = function(response) {
 			// Reset Feed Data
 			pwData.feed_data[$scope.feed] = {};
@@ -204,6 +217,15 @@ postworld.controller('pwFeedController',
 			var args = {};
 			args.feed_id = $scope.feed;
 			args.preload = pwData.feed_settings[$scope.feed].preload;
+			// If that feed already has an outline, then do not load feed, just go get new posts(scroll) and ignore
+			if (pwData.feed_settings[$scope.feed].feed_outline) {
+				$scope.resetFeedData();				
+				// Set loaded = 0, 
+				// pwData.feed_settings[$scope.feed].loaded = 0;
+				// Run Scroll Feed
+				$scope.pwScrollFeed();
+				return;
+			}
         	pwData.pw_load_feed(args).then(
 				// Success
 				function(response) {
@@ -258,7 +280,6 @@ postworld.controller('pwFeedController',
         	pwData.pw_get_posts($scope.args).then(
 				// Success
 				function(response) {
-					// console.log('alo');
 					$scope.busy = false;
 					if (response.status === undefined) {
 						console.log('response format is not recognized');

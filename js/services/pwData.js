@@ -128,8 +128,15 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
 			var idBegin = feedData.loaded;
-			// TODO Check if load_increment exists
 			var idEnd = idBegin+feedSettings.load_increment;
+			// TODO Check if load_increment exists
+			// Only when feed_outline exists and this is the first run, load from preload value, not from auto increment value
+			if (feedData.loaded==0) {
+				if (feedSettings.preload)
+					idEnd = idBegin+feedSettings.preload;
+					// TODO, use constant here
+				else idEnd = idBegin+10;
+			}
 			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);
 			var fields;
 			if (feedSettings.query_args) {
