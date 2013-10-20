@@ -307,7 +307,7 @@ function list_dir_file_names($directory){
 			
 	return $names_array;
 }
-function pw_get_templates ( $templates_object ){
+function pw_get_templates ( $templates_object =null){
 	/*
 	 
 	 $templates_object : Array (optional)
@@ -341,7 +341,8 @@ function pw_get_templates ( $templates_object ){
 		$override_panel_template_url = $pw_defaults['template_paths']['override_panel_template_url'];
 		
 		
-		$output = array();	 
+		$output = array();
+		//if(isset($templates_object))	{ 
 		if(!$templates_object){
 			/*null : default
 				Returns object with all panels and templates in the default and over-ride folders.
@@ -375,8 +376,8 @@ function pw_get_templates ( $templates_object ){
 			//print_r($templates_object);
 		}
 		
-		
-		if($templates_object['posts']){
+		if(array_key_exists('posts', $templates_object)){
+		//if($templates_object['posts']){
 			
 			 $output['posts'] = array(); 
 			 for ($i=0; $i < count($templates_object['posts']['post_types']) ; $i++) {
@@ -412,14 +413,14 @@ function pw_get_templates ( $templates_object ){
 		}
 
 		/* array( 'panels'=>'panel_id' )*/
-		if($templates_object['panels' ]) {
-			
+		//if($templates_object['panels' ]) {
+		if(array_key_exists('panels', $templates_object)){
 			$output['panels']=array();
 
 			for ($i=0; $i < count($templates_object['panels']) ; $i++) {
 				if(file_exists($override_panel_template_abs_path.$templates_object['panels'][$i].".html")){
 					//echo $override_panel_template_abs_path.$templates_object['panels'][$i].".html";
-					$output['panels'][$templates_object['panels'][$i]] =  $override_panel_template_url.$templates_object['panels'].".html";
+					$output['panels'][$templates_object['panels'][$i]] =  $override_panel_template_url.$templates_object['panels'][$i].".html";
 				}
 				else {
 					$output['panels'][$templates_object['panels'][$i]] =  $default_panel_template_url.$templates_object['panels'][$i].".html";
