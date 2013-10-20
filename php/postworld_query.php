@@ -918,7 +918,7 @@ class PW_Query extends WP_Query {
 		
 		
 		$fields = $this->prepare_fields();
-		log_me($this->request);
+		//log_me($this->request);
 		// Convert to WP_Post objects
 		if ( $this->posts )
 		$this->posts = pw_get_posts($this->posts,$fields);
@@ -1027,7 +1027,6 @@ class PW_Query extends WP_Query {
 		if ( $this->posts ) {
 			$this->post_count = count( $this->posts );
 			$fields = $this->prepare_fields();
-			log_me($this->request);
 			$this->posts = pw_get_posts($this->posts,$fields);
 			//$this->posts = array_map( 'pw_get_post', $this->posts );
 			
