@@ -1,5 +1,52 @@
 <?php
 
+function postworld_includes(){
+
+	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
+	wp_deregister_script('jquery');
+	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
+	wp_enqueue_script('jquery');
+	
+	  
+	wp_enqueue_script( 'AngularJS', WP_PLUGIN_URL.'/postworld/lib/angular/angular.min.js');
+	wp_enqueue_script( 'AngularJS-Resource', WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
+	wp_enqueue_script( 'AngularJS-Route', WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
+	wp_enqueue_script( 'AngularJS-Sanitize', WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
+	
+	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
+	$jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
+					  'pluginurl' => WP_PLUGIN_URL,
+					);
+
+	$angularDep = array('AngularJS','AngularJS-Resource','AngularJS-Route');
+
+	wp_register_script( "pw-app-JS", WP_PLUGIN_URL.'/postworld/js/app.js' );
+	wp_localize_script( 'pw-app-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-app-JS','', $angularDep );
+
+	wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js' );
+	wp_localize_script( 'pw-LiveFeed-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-LiveFeed-JS','', $angularDep );
+
+	wp_register_script( "pw-filterFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/filterFeed.js' );
+	wp_localize_script( 'pw-filterFeed-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-filterFeed-JS','', $angularDep );
+
+	wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/components/feedItem.js' );
+	wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-FeedItem-JS','', $angularDep );
+
+	wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js' );
+	wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
+
+	wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
+
+	//pw_modals();
+
+}
+
+
 function object_to_array($data){
     if (is_array($data) || is_object($data)){
         $result = array();
@@ -13,13 +60,13 @@ function object_to_array($data){
 
 ////////// EDIT POST HELP FUNCTIONS //////////
 
-function get_user_post_types(){
+function pw_get_post_types( $options ){
 	//$user_role = get_user_role();
 
 	$args = array(
 	   'public'   => true,
-	   //'_builtin' => false,
-	   'capability_type' => 'post',
+	   '_builtin' => false,
+	   //'capability_type' => 'post',
 	);
 	$post_types_obj = get_post_types( $args, 'objects');
 
@@ -338,44 +385,6 @@ function time_ago($timestamp){
 }
 
 
-function postworld_includes(){
-
-	wp_enqueue_script( 'jquery');
-	wp_enqueue_script( 'AngularJS', WP_PLUGIN_URL.'/postworld/lib/angular/angular.min.js');
-	wp_enqueue_script( 'AngularJS-Resource', WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
-	wp_enqueue_script( 'AngularJS-Route', WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
-	wp_enqueue_script( 'AngularJS-Sanitize', WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
-
-	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
-	$jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
-	          'pluginurl' => WP_PLUGIN_URL,
-	        );
-
-	$angularDep = array('AngularJS','AngularJS-Resource','AngularJS-Route');
-
-	wp_register_script( "pw-app-JS", WP_PLUGIN_URL.'/postworld/js/app.js' );
-	wp_localize_script( 'pw-app-JS', 'jsVars', $jsVars);
-	wp_enqueue_script( 'pw-app-JS','', $angularDep );
-
-	wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js' );
-	wp_localize_script( 'pw-LiveFeed-JS', 'jsVars', $jsVars);
-	wp_enqueue_script( 'pw-LiveFeed-JS','', $angularDep );
-
-	wp_register_script( "pw-filterFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/filterFeed.js' );
-	wp_localize_script( 'pw-filterFeed-JS', 'jsVars', $jsVars);
-	wp_enqueue_script( 'pw-filterFeed-JS','', $angularDep );
-
-	wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/components/feedItem.js' );
-	wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
-	wp_enqueue_script( 'pw-FeedItem-JS','', $angularDep );
-
-	wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js' );
-	wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
-	wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
-
-	wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
-
-}
 
 
 

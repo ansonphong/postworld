@@ -179,6 +179,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			$post_data['post_excerpt'] = wp_filter_nohtml_kses( $post_data['post_excerpt'] );
 		}
 
+		// Edit Post Link
+		if( in_array('edit_post_link', $fields) ){
+			$post_data["edit_post_link"] = get_edit_post_link($post_id);
+			if ( $post_data["edit_post_link"] == false ) $post_data["edit_post_link"] = '#';
+		}
+
 
 	////////// POSTWORLD //////////
 
@@ -333,8 +339,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					///// DEFAULT FALLBACK IMAGES /////
 
 					// SETUP DEFAULT IMAGE FILE NAMES : ...jpg
-					$default_type_format_thumb_filename = 	'default-'.$post_data['post_type'].'-'.$post_data['post_format'].'-thumb.jpg';
-					$default_format_thumb_filename = 		'default-'.$post_data['post_format'].'-thumb.jpg';
+					$post_format =  get_post_format( $post_id );
+					$default_type_format_thumb_filename = 	'default-'.$post_data['post_type'].'-'.$post_format.'-thumb.jpg';
+					$default_format_thumb_filename = 		'default-'.$post_format.'-thumb.jpg';
 					$default_thumb_filename = 				'default-thumb.jpg';
 
 					// SETUP DEFAULT IMAGE PATHS : /home/user/...
@@ -565,6 +572,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	 * */
 	
 	$post_ID = wp_insert_post($postarr,$wp_error);
+	
 	if(gettype($post_ID) == 'integer'){ // successful
 		print_r($post_ID);
 		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"]||$postarr["external_image"])	{

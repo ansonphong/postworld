@@ -168,8 +168,33 @@ function pw_test_code_admin() {
 	// documentation says that die() should be the end...
 	die();
 }
+
+
+/* Actions for pw_get_post_types () */
+
+function pw_get_post_types_admin() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	// $pw_args = $args['args']['feed_query'];
 	
+	$pw_args = $args['args'];
 	
+	// Get the results in array format, so that it is converted once to json along with the rest of the response
+	
+	//$results = pw_get_posts ( $args['post_ids'],$args['fields'] );
+	
+	// TODO check results are ok
+	/* set the response type as JSON */
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = 'hello universe!'; //$results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+
+
 /* Action Hook for pw_live_feed() - Logged in users */
 add_action("wp_ajax_pw_live_feed", "pw_live_feed_anon");
 
@@ -188,7 +213,6 @@ add_action("wp_ajax_pw_load_feed", "pw_load_feed_anon");
 /* Action Hook for pw_load_feed() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_load_feed", "pw_load_feed_anon");
 
-
 /* Action Hook for pw_get_templates() - Logged in users */
 add_action("wp_ajax_pw_get_templates", "pw_get_templates_anon");
 
@@ -198,9 +222,12 @@ add_action("wp_ajax_nopriv_pw_get_templates", "pw_get_templates_anon");
 /* Action Hook for pw_register_feed() - Logged in users */
 add_action("wp_ajax_pw_register_feed", "pw_register_feed_admin");
 
-
 /* Action Hook for pw_test_code() - Logged in users */
 add_action("wp_ajax_pw_test_code", "pw_test_code_admin");
+
+/* Action Hook for pw_get_post_types() - Logged in users */
+add_action("wp_ajax_pw_get_post_types", "pw_get_post_types_admin");
+
 
 /* Action Hook for pw_register_feed() - Anonymous users */
 // add_action("wp_ajax_nopriv_pw_register_feed", "pw_register_feed_anon");

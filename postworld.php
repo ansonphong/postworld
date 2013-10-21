@@ -70,7 +70,7 @@ register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
 register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 
 
-//include 'php/postworld_debugger.php';
+include 'php/postworld_debugger.php';
 ////////// META FUNCTIONS ///////////
 //include 'php/postworld_meta.php';
 

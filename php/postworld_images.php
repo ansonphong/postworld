@@ -2,7 +2,7 @@
 
 ///// INCLUDES /////
 // AQ RESIZER : Module for resizing images 
-$aq_resizer_include = $template_paths['POSTWORLD_PATH'].'submodules/Aqua-Resizer/aq_resizer.php';
+$aq_resizer_include = $template_paths['POSTWORLD_PATH'].'lib/wordpress/aq_resizer.php';
 include_once $aq_resizer_include;
 
 ///// GET FIRST IMAGE : FULL SIZE : URL, WIDTH, HEIGHT & ID /////

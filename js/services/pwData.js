@@ -11,7 +11,7 @@
  *	$args = json_decode($args_text);
  * */
 
-pwApp.factory('pwData', function ($resource, $q, $log) {	  
+postworld.factory('pwData', function ($resource, $q, $log) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
@@ -128,8 +128,15 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
 			var idBegin = feedData.loaded;
-			// TODO Check if load_increment exists
 			var idEnd = idBegin+feedSettings.load_increment;
+			// TODO Check if load_increment exists
+			// Only when feed_outline exists and this is the first run, load from preload value, not from auto increment value
+			if (feedData.loaded==0) {
+				if (feedSettings.preload)
+					idEnd = idBegin+feedSettings.preload;
+					// TODO, use constant here
+				else idEnd = idBegin+10;
+			}
 			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);
 			var fields;
 			if (feedSettings.query_args) {
@@ -200,6 +207,11 @@ pwApp.factory('pwData', function ($resource, $q, $log) {
 				}
 			}
 			return fargs;
-		}
+		},
+		pw_get_post_types: function(args) {
+			//$log.info('pwData.pw_load_feed',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_post_types', params);
+		},
    }; // END OF pwData return value
 });

@@ -1,6 +1,10 @@
 'use strict';
 
-pwApp.directive('liveFeed', function() {
+postworld.config(function($locationProvider){
+    // $locationProvider.html5Mode(true).hashPrefix('!');
+});
+
+postworld.directive('liveFeed', function() {
     return {
         restrict: 'A',
         // DO not set url here and in nginclude at the same time, so many errors!
@@ -14,7 +18,7 @@ pwApp.directive('liveFeed', function() {
 });
 
 
-pwApp.directive('loadFeed', function() {
+postworld.directive('loadFeed', function() {
     return {
         restrict: 'A',
         // DO not set url here and in nginclude at the same time, so many errors!
@@ -28,8 +32,31 @@ pwApp.directive('loadFeed', function() {
 });
 
 
-pwApp.controller('pwFeedController',
+postworld.controller('pwFeedController',
     function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
+    	
+    	// Definitions
+  		$scope.convertQueryString2FeedQuery= function (params) {
+  			for(var key in params){
+			    // The value is obj[key]
+			    $scope.args.feed_query[key] = params[key];
+			}			
+  		};
+
+  		$scope.getQueryStringArgs= function () {
+  			// TODO Should query string work with live feed only?
+  			if ($attrs.laodFeed) {
+  				return;
+  			}
+    		// Get Query String Parameters
+    		// TODO Check if location.search work on all browsers.
+    		var params = $location.search();
+    		console.log('query string is ',params);    	
+  			$scope.convertQueryString2FeedQuery(params);  			
+    		console.log('query params =',$scope.args.feed_query);    	
+  		};
+    	
+    	
     	// Initialize
     	$scope.busy = false; 				// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
     	$scope.firstRun = true; 			// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
@@ -37,8 +64,9 @@ pwApp.controller('pwFeedController',
 		$scope.args.feed_query = {};
 		$scope.feed_query = {};
 		$scope.scrollMessage = "";
-    	$scope.items = [];	
-    	$scope.message = "";
+    	$scope.items = [];
+    	$scope.message = "";    	
+    	
     	// List of Post Items displayed in Scroller
     	// is this a live feed or a load feed?
     	if ($attrs.liveFeed)    { 
@@ -50,14 +78,21 @@ pwApp.controller('pwFeedController',
     		$scope.directive = 'loadFeed';
     		$scope.feed		= $attrs.loadFeed;
 	    	$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
-    	};
-    	    	    	
+    	};    	
+    	    	    	  	
     	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
 				if (!$scope.feed) {
 					$log.info('no valid Feed ID provided in Feed Settings',$scope);
 					return;
 				}
+				
+		    	// Set Title
+		    	if (pwData.feed_settings[$scope.feed].title) {
+		    		$scope.title = pwData.feed_settings[$scope.feed].title;
+		    	} else {
+		    		$scope.title = '';
+		    	}				
 				var view = 'list';	// TODO get from Constant values
 				// Get Feed Item Template from Feed Settings by default
 			   if (pwData.feed_settings[$scope.feed].view.current)
@@ -88,7 +123,20 @@ pwApp.controller('pwFeedController',
 		   // Broadcast to all children
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_template);
 		   });
-		   
+		
+		$scope.resetFeedData = function () {
+			// Reset Feed Data
+			pwData.feed_data[$scope.feed] = {};
+			if (pwData.feed_settings[$scope.feed].feed_outline) {
+				pwData.feed_data[$scope.feed].feed_outline = pwData.feed_settings[$scope.feed].feed_outline;
+				pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_settings[$scope.feed].feed_outline.length;														
+			};						
+			pwData.feed_data[$scope.feed].loaded = 0;						
+			pwData.feed_data[$scope.feed].count_loaded = 0;						
+			pwData.feed_data[$scope.feed].posts = [];
+			$scope.items = pwData.feed_data[$scope.feed].posts;
+		},
+		
    		$scope.fillFeedData = function(response) {
 			// Reset Feed Data
 			pwData.feed_data[$scope.feed] = {};
@@ -140,7 +188,9 @@ pwApp.controller('pwFeedController',
 			this.getNext();
 		};
 		$scope.pwLiveFeed = function() {
+			$scope.getQueryStringArgs();    				
 			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
+    		console.log('$scope.args.feed_query2',$scope.args.feed_query);    	
 	    	// identify the feed_settings feed_id
 			
 			$scope.items = {};
@@ -148,6 +198,8 @@ pwApp.controller('pwFeedController',
 			pwData.setNonce(78);
 			// We need to work with a clone of the args value
 			var argsValue = JSON.parse(JSON.stringify($scope.args));
+    		console.log('argsValue.feed_query',argsValue.feed_query);    	
+    		console.log('$scope.args.feed_query',$scope.args.feed_query);    	
         	pwData.pw_live_feed(argsValue).then(
 				// Success
 				function(response) {	
@@ -159,7 +211,7 @@ pwApp.controller('pwFeedController',
 					}
 					if (response.status==200) {
 						// Check if data exists
-						if (response.data.length) {
+						if (!(response.data instanceof Array) ) {
 							// Insert Response in Feed Data						
 							$log.info('pwFeedController.pw_live_feed Success',response.data);						
 							$scope.fillFeedData(response);																			
@@ -195,6 +247,15 @@ pwApp.controller('pwFeedController',
 			var args = {};
 			args.feed_id = $scope.feed;
 			args.preload = pwData.feed_settings[$scope.feed].preload;
+			// If that feed already has an outline, then do not load feed, just go get new posts(scroll) and ignore
+			if (pwData.feed_settings[$scope.feed].feed_outline) {
+				$scope.resetFeedData();				
+				// Set loaded = 0, 
+				// pwData.feed_settings[$scope.feed].loaded = 0;
+				// Run Scroll Feed
+				$scope.pwScrollFeed();
+				return;
+			}
         	pwData.pw_load_feed(args).then(
 				// Success
 				function(response) {
@@ -249,7 +310,6 @@ pwApp.controller('pwFeedController',
         	pwData.pw_get_posts($scope.args).then(
 				// Success
 				function(response) {
-					// console.log('alo');
 					$scope.busy = false;
 					if (response.status === undefined) {
 						console.log('response format is not recognized');

@@ -1,7 +1,7 @@
 
 <div>
     <div id="scrollMe"  class="infinite-scroll">
-	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy'>
+	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' >
 	    <div ng-repeat='post in items' >
 	    	<div feed-item ng-include="templateUrl" post="post" feed-id='args.feed_id'></div>
 			<hr>

@@ -1,6 +1,6 @@
 'use strict';
 
-pwApp.directive('filterFeed', function($log, pwData) {
+postworld.directive('filterFeed', function($log, pwData) {
     return {
         restrict: 'EA',
         replace: true,
@@ -14,7 +14,7 @@ pwApp.directive('filterFeed', function($log, pwData) {
     };
 });
 
-pwApp.controller('pwFilterFeedController',
+postworld.controller('pwFilterFeedController',
     function pwFilterFeedController($scope, $location, $log, pwData, $attrs) {    	
 		
 		// Set Panel Template
@@ -61,7 +61,7 @@ pwApp.controller('pwFilterFeedController',
     }
 );
 
-pwApp.directive('registerFeed', function($log, pwData) {
+postworld.directive('registerFeed', function($log, pwData) {
     return {
         restrict: 'A',
         replace: true,
@@ -69,7 +69,7 @@ pwApp.directive('registerFeed', function($log, pwData) {
     };
 });
 
-pwApp.controller('pwRegisterFeedController',
+postworld.controller('pwRegisterFeedController',
     function pwRegisterPanelController($scope, $location, $log, pwData, $attrs) {
     	$scope.args= {};
     	$scope.args.write_cache = false;
@@ -110,7 +110,34 @@ pwApp.controller('pwRegisterFeedController',
     }
 );
 
-pwApp.directive('loadPanel2', function() {
+///// LOAD PANEL /////
+postworld.directive('loadPanel', function() {
+    return {
+        restrict: 'EA',
+        replace: true,
+        controller: 'pwLoadPanelController',
+        // transclude: true,
+        // Must use an isolated scope, to allow for using multiple panel directives in the same page
+        scope: {
+        	
+        }
+    };
+});
+
+postworld.controller('pwLoadPanelController',
+    function pwLoadPanelController($scope, $timeout, $log ) {
+    	$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
+	    $log.info('setting loadpanel url first time',$scope.templateUrl);
+	    var loadMe = $timeout( function() {
+	      $scope.templateUrl =  jsVars.pluginurl+'/postworld/templates/loadpaneltest.html';
+	      $log.info('setting loadpanel url',$scope.templateUrl);
+	    }, 1000);
+	}
+);
+
+
+///// LOAD PANEL 2 /////
+postworld.directive('loadPanel2', function() {
     return {
         restrict: 'EA',
         replace: true,
@@ -123,7 +150,7 @@ pwApp.directive('loadPanel2', function() {
     };
 });
 
-pwApp.controller('pwLoadPanel2Controller',
+postworld.controller('pwLoadPanel2Controller',
     function pwLoadPanel2Controller($scope,$timeout, $log ) {
     	 $scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
 	    $log.info('setting loadpanel2 url first time',$scope.templateUrl);

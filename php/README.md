@@ -1386,6 +1386,7 @@ __AUTHOR__
 - __post_author_description__
 - __post_author_nicename__
 - __edit_post_link__
+- __user_profile_url__ - *Requires Buddypress*
 - __post_author_social__ <<< PHONG
 
 __DATE & TIME__
@@ -2296,6 +2297,12 @@ array(
 __php/postworld_utilities.php__
 
 Contains utility helper functions.
+
+------
+
+### postworld_includes()
+- Will includes and que all the files neccessary to run Postworld
+- Run this in every PHP template where Postworld is used
 
 ------
 

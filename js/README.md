@@ -343,27 +343,53 @@ __PHP / AJAX :__
 2. Populate `feed_data[feed_id]` JS Object with __feed_outline__, and __feed_query__
 3. Populate `feed_data[feed_id][['posts']` Object with post_data posts
 
-
 __JAVASCRIPT :__  
 1. Populate `feed_data[feed_id]` Object with `feed_settings[feed_id]` Object 
 
-__return__ : *true*
 
-####Usage:
+#### Parameters
+
+__title__ : *string* (optional)
+- Populates the template title
+
+__feed_outline__ : *Array* (optional)
+- An array of posts to show in order
+- If no `feed_outline` is supplied, will load the registered feed with the same feed ID
+
+__preload__ : *integer*
+- How many posts to load before infinite scrolling
+
+__load_incremenet__ : *integer*
+- How many posts to load at a time with infinite scrolling
+
+__view__ : *Object*
+- __current__ : *string* 
+- __options__ : *Array*
+
+__feed_template__ : *string* (panel ID)
+- Optional, needed in case of different widgets [having different panels for example]
+
+
+####Usage
 
 ```javascript
 feed_settings['feed_id'] = {
+     title: "Load Feed",
+     feed_outline : ["166725","166713","166716","166359","165840","166241","165969",...],
      preload: 3,
      load_increment : 10,
+     max_posts : 50,
      view : {
           current : 'detail',
           options : [ 'list', 'detail', 'grid' ],
-     }
+     },
+     feed_template : 'load_feed_1'
 }
 ```
 ```html
-<div live-feed="feed_id"></div> 
+<div live-feed="feed_id" ng-include="templateUrl"></div> 
 ```
+
 
 #### Requires:
 - `pw_cache_feed()` PHP Method
@@ -903,9 +929,6 @@ __data-input__ : *string* (required)
   - __input__ (input-text, input-password, input-hidden, input-url)
   - __select__ (select-multiple)
   - __textarea__
-
-__data-size__ : *integer* (optional)
-- The size of an select field
 
 __data-size__ : *integer* (optional)
 - The size of an select field

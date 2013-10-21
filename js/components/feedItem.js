@@ -1,6 +1,6 @@
 'use strict';
 
-pwApp.directive('feedItem', function() {
+postworld.directive('feedItem', function() {
     return {
         restrict: 'A',
         replace: true,
@@ -14,11 +14,18 @@ pwApp.directive('feedItem', function() {
     };
 });
 
-pwApp.controller('pwFeedItemController',
+postworld.controller('pwFeedItemController',
     function pwFeedItemController($scope, $location, $log, pwData, $attrs) {
     	$scope.templateUrl = $scope.$parent.feed_item_template;
     	$log.info('pwFeedItemController New Template=',$scope.templateUrl);    	
-		// TODO set templateURL?		  
+		
+        // Decodes Special characters in URIs
+        $scope.decodeURI = function(URI) {
+            URI = URI.replace("&amp;","&");
+            return decodeURIComponent( URI );
+         }
+
+        // TODO set templateURL?		  
 		// Template Update Event
 		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feedTemplateUrl){
 		   // $log.info('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);

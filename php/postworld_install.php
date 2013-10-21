@@ -28,7 +28,7 @@ function postworld_install() {
       post_id BIGINT(20) unsigned NOT NULL,
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
-      time TIMESTAMP NOT NULL,
+      time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       UNIQUE KEY post_id_user_id (post_id,user_id)
      );";
 
@@ -49,12 +49,12 @@ function postworld_install() {
       comment_post_id mediumint(9) NOT NULL,
       comment_author_id BIGINT(20) UNSIGNED NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
-      time TIMESTAMP NOT NULL,
+      time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       UNIQUE KEY comment_id_user_id (comment_id,user_id)
     );";
     
   
-  $user_meta_table_name = $wpdb->pw_prefix.'user_meta';
+ /* $user_meta_table_name = $wpdb->pw_prefix.'user_meta';
   $sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       user_role char(16) NOT NULL,
@@ -70,8 +70,27 @@ function postworld_install() {
       comment_points mediumint(8) DEFAULT '0' NULL,
       share_points mediumint(8) DEFAULT '0' NULL,
       post_relationships TEXT NULL
-    );";
+    );";*/
 
+  $user_meta_table_name = $wpdb->pw_prefix.'user_meta';
+  $sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
+      user_id BIGINT(20) UNSIGNED NOT NULL,
+      post_points mediumint(8) DEFAULT '0' NULL,
+      post_points_meta MEDIUMTEXT NULL,
+      comment_points mediumint(8) DEFAULT '0' NULL,
+      share_points mediumint(8) DEFAULT '0' NULL,
+      share_points_meta MEDIUMTEXT NULL,
+      post_relationships TEXT NULL,
+      post_votes TEXT NULL,
+      comment_votes TEXT NULL,
+      location_city char(24) NULL,
+      location_region char(24) NULL,
+      location_country char(24) NULL,
+      UNIQUE KEY user_id (user_id)
+    );";
+    
+    
+    
   $user_shares_table_name = $wpdb->pw_prefix.'user_shares';
   $sql_postworld_user_shares = "CREATE TABLE $user_shares_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
@@ -90,6 +109,7 @@ function postworld_install() {
   $sql_postworld_favorites = "CREATE TABLE $favorites_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_id BIGINT(20) unsigned NOT NULL,
+      time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       UNIQUE KEY user_id_post_id (user_id,post_id)
     );";
     
