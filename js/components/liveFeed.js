@@ -79,9 +79,7 @@ postworld.controller('pwFeedController',
     		$scope.feed		= $attrs.loadFeed;
 	    	$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
     	};    	
-    	    	    	
-		$scope.getQueryStringArgs();    	
-  	
+    	    	    	  	
     	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
 				if (!$scope.feed) {
@@ -190,9 +188,9 @@ postworld.controller('pwFeedController',
 			this.getNext();
 		};
 		$scope.pwLiveFeed = function() {
+			$scope.getQueryStringArgs();    				
 			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
-    		console.log('query params 2 =',$scope.args.feed_query);    	
-			
+    		console.log('$scope.args.feed_query2',$scope.args.feed_query);    	
 	    	// identify the feed_settings feed_id
 			
 			$scope.items = {};
@@ -200,6 +198,8 @@ postworld.controller('pwFeedController',
 			pwData.setNonce(78);
 			// We need to work with a clone of the args value
 			var argsValue = JSON.parse(JSON.stringify($scope.args));
+    		console.log('argsValue.feed_query',argsValue.feed_query);    	
+    		console.log('$scope.args.feed_query',$scope.args.feed_query);    	
         	pwData.pw_live_feed(argsValue).then(
 				// Success
 				function(response) {	

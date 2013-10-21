@@ -19,9 +19,9 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed4Widget.html',				
             });
-        $routeProvider.when('/live-feed-3/',
+        $routeProvider.when('/live-feed-params/',
             {
-                template: '<h2>Coming Soon</h2>',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed5Widget.html',				
             });
         $routeProvider.when('/load-feed-1/',
             {
