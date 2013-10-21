@@ -389,7 +389,6 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 
 
 
-
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
 
@@ -403,7 +402,7 @@ function editPost($scope) {
             post_format : "video",
             link_url : "",
             tax_input : {
-                topic : ["eco","animal_rights"],
+                topic : ["healing","body"],
                 section : ["psi"],
             },
             tags_input : "tag1, tag2, tag3",
@@ -493,65 +492,38 @@ function editPost($scope) {
         ],
         'type' : [
             {
-            slug:"psychedelic",
-            name:"Psychedelic Culture",
+            slug:"song_week",
+            name:"Song of the Week",
+            parent_name:"Hilight",
+            parent:"hilight",
             },
             {
-            slug:"psi",
-            name:"Psi Frontiers",
+            slug:"video_week",
+            name:"Video of the Week",
+            parent_name:"Hilight",
+            parent:"hilight"
             },
             {
-            slug:"video",
-            name:"Videos",
+            slug:"event_feature",
+            name:"Featured Event",
+            parent_name:"Events",
+            parent:"events"
             },
             {
-            slug:"edm",
-            name:"Evolver EDM",
+            slug:"event_evolver",
+            name:"Evolver Event",
+            parent_name:"Events",
+            parent:"events"
             },
         ],
         
     };
 
 
-    /*
-    ///// TOPIC WATCH PROTOTYPE /////
-    $scope.selected_topic_obj = {};
-    // Get the selected Topic Object
-    function selected_topic_term_obj(){
-        $scope.selected_topic_slug = $scope.post_data.tax_input.topic[0];
-
-        // Clear the Subtopic
-        $scope.post_data.tax_input.topic.splice(1,1);
-
-        var topic_terms = $scope.tax_terms.topic;
-        // Cycle through each Topic Term
-        angular.forEach( topic_terms, function( term ){
-            // If the term is the one that is selected, set it
-            if( term.slug == $scope.selected_topic_slug ){
-                $scope.selected_topic_obj = term;
-            }
-        });
-    };
-
-    selected_topic_term_obj();
-    // TOPIC TERM WATCH : Watch for changes in topic tern
-    // Evaluate the post_format
-    $scope.$watch( "post_data.tax_input.topic[0]",
-    //$scope.$watchCollection('[post_data.link_url, post_data.post_format]',
-        function ( newValue, oldValue ){
-            selected_topic_term_obj();
-        });
-    */
-
-
-    ///// TOPIC WATCH PROTOTYPE /////
-
-
-    ///// SELECTED TAXONOMY TERMS : OBJECT /////
-    // Contains an object with singular term data
-    // So that they can be referred to to define subtopics
-
-    
+    ///// SELECTED TAXONOMY TERMS /////
+    // • Creates an object with singular term data
+    //    So that they can be referred to to define subtopics
+    // • Manages the values of tax_input
     function selected_tax_terms(){
 
         // Create selected_tax_terms
@@ -623,8 +595,6 @@ function editPost($scope) {
             //alert("taxonomy change!");
             selected_tax_terms();
         }, 1 );
-
-
 
 
     // POST STATUS OPTIONS
