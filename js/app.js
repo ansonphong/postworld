@@ -392,37 +392,6 @@ postworld.directive( 'editField', ['$compile', function($compile, $scope){
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
 
-    $scope.pw_get_post = function(){
-        var post_data = {
-            post_id : 24,
-            post_title : "Hello Space",
-            post_name : "hello_space",
-            post_type : "feature",
-            post_status : "publish",
-            post_format : "video",
-            link_url : "",
-            tax_input : {
-                topic : ["healing","body"],
-                section : ["psi"],
-            },
-            tags_input : "tag1, tag2, tag3",
-        }
-        return post_data;
-    }
-
-    // POST DATA OBJECT
-    $scope.post_data = $scope.pw_get_post();
-
-    // POST TYPE OPTIONS
-    $scope.post_types_linear = {
-        feature : "Features",
-        blog : "Blog",
-        link : "Links",
-        announcement : "Announcements",
-        tribe_events : "Events"
-    };
-
-
 
     // TAXONOMY TERMS
     $scope.tax_terms = {
@@ -519,6 +488,62 @@ function editPost($scope) {
         
     };
 
+    $scope.pw_get_post_object = function(){
+        var post_data = {
+            post_id : 24,
+            post_title : "Hello Space",
+            post_name : "hello_space",
+            post_type : "feature",
+            post_status : "publish",
+            post_format : "video",
+            link_url : "",
+            tax_input : {
+                topic : ["healing","body"],
+                section : ["psi"],
+            },
+            tags_input : "tag1, tag2, tag3",
+        }
+
+        // SORT TAXONOMIES
+        // FOR EACH SELECTED TAXONOMY TERM SET
+        // So that the taxonomy[0] is the main term and taxonomy[1] is the sub-term
+        // ie. { topic : ["healing","body"] }
+        angular.forEach( post_data.tax_input, function( selected_terms, taxonomy ){
+            if ( selected_terms.length > 1 ){
+                // FOR EACH TAXONOMY TERM OPTION
+                // Go through each top level term for taxonomy in tax_terms
+                // If it equals the first value of terms, leave it as is
+                // If it isn't found, then swap order
+                var reorder = true;
+                angular.forEach( $scope.tax_terms[taxonomy], function( term_option ){
+                    // Compare each term option to the selected terms
+                    // If they're the same, do not reorder
+                    if ( term_option.slug == selected_terms[0] ){
+                        // If the term is the first term
+                        reorder = false;
+                    }
+                });
+                if ( reorder == true ){
+                    post_data.tax_input[taxonomy].reverse();
+                }
+            }
+        });
+
+        return post_data;   
+    }
+
+    // POST DATA OBJECT
+    $scope.post_data = $scope.pw_get_post_object();
+
+    // POST TYPE OPTIONS
+    $scope.post_types_linear = {
+        feature : "Features",
+        blog : "Blog",
+        link : "Links",
+        announcement : "Announcements",
+        tribe_events : "Events"
+    };
+
 
     ///// SELECTED TAXONOMY TERMS /////
     // • Creates an object with singular term data
@@ -595,6 +620,12 @@ function editPost($scope) {
             //alert("taxonomy change!");
             selected_tax_terms();
         }, 1 );
+
+
+    // TAXONOMY SILO
+    $scope.tax_term_silo = {
+
+    };
 
 
     // POST STATUS OPTIONS
