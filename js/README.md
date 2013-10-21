@@ -249,8 +249,7 @@ __load_post[ *name* ]__ : *object*
   - `pw_get_templates` Object : `posts[post_type][post_view]`
 
 #### Process :
-- Get the template path with `pw_post_template( $post_id, $post_view )` PHP Method via AJAX
-- Used `pw_get_post()` via AJAX to get post data
+- Use `pw_get_post()` via AJAX to get post data
 - Populate view template with localized post data object
 
 #### Usage :
