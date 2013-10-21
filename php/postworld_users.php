@@ -498,7 +498,7 @@
 		//http://stackoverflow.com/questions/3003145/how-to-get-client-ip-address-in-php
 	}	
 
-	function get_user_role( $user_id, $return_array = false )  {
+	function get_user_role( $user_id, $return_array = FALSE )  {
 		/*
 		  • Returns user role(s) for the specified user
 
@@ -518,8 +518,10 @@
 			$roles = $user->roles;	// returns an array of roles
 			if ($return_array == true)
 				return $roles;		// return the array
-			else
-				return $roles[0];	// return only a string of the first listed role
+			else{
+				//print_r($roles);
+				return $roles[0];
+			}	// return only a string of the first listed role
 		}  else {
 			return false;
 		}
@@ -549,8 +551,14 @@
 		Process
 		
 		Add/remove the given post_id to the given relationship array in post_relationships column in User Meta table
+		
+		-Favorites
+
+		If $relationship == favorite : Add / remove a row to Favorites table
+		
 		Usage
 		
+		 * 
 		    set_post_relationship( 'favorites', '24', '101', true )
 		Anatomy
 		
@@ -574,12 +582,18 @@
 				if(!in_array($post_id,$relashionship_db_array[$relationship])){
 			 		$relashionship_db_array[$relationship][]=$post_id;
 					update_post_relationship($user_id, $relashionship_db_array);
+					if($relationship =='favorites')
+						add_favorite($post_id, $user_id);
 				}
 				return TRUE;
 			}else{
 				if(in_array($post_id,$relashionship_db_array[$relationship])){
-					unset($post_id,$relashionship_db_array[$relationship][$post_id]);
+					
+					$relashionship_db_array[$relationship] = array_diff($relashionship_db_array[$relationship], array($post_id));
+					//unset($post_id,$relashionship_db_array[$relationship][$post_id]);
 					update_post_relationship($user_id, $relashionship_db_array);
+					if($relationship =='favorites')
+						delete_favorite($post_id, $user_id);
 				}
 				return FALSE;
 			}
@@ -591,15 +605,24 @@
 				$relashionship_db_array= array('viewed'=>array(),"favorites"=>array(),'read_later'=>array());
 			 	$relashionship_db_array[$relationship][]=$post_id;
 				update_post_relationship($user_id, $relashionship_db_array);
+				if($relationship =='favorites')
+					add_favorite($post_id, $user_id);
 				return TRUE;
 			}
-			else
+			else{
+				if($relationship =='favorites')
+					delete_favorite($post_id, $user_id);	
 				return FALSE;	
 			}
+		}
 		return 'error';
 		
 	}
 
+
+	
+	
+	
 	function update_post_relationship($user_id,$relationship){
 		global $wpdb;
 		$wpdb -> show_errors();
