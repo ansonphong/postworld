@@ -520,7 +520,9 @@
 				return $roles;		// return the array
 			else{
 				//print_r($roles);
-				return $roles[0];
+				if(count($roles)>0)
+					return $roles[0];
+				else return '';
 			}	// return only a string of the first listed role
 		}  else {
 			return false;
@@ -623,12 +625,14 @@
 	
 	
 	
-	function update_post_relationship($user_id,$relationship){
+	function update_post_relationship($user_id,$relationship=null){
 		global $wpdb;
 		$wpdb -> show_errors();
 		$query  = "update $wpdb->pw_prefix"."user_meta set post_relationships='".json_encode($relationship)."' where user_id=".$user_id;
 		$wpdb->query($query);
 	}
+	
+	
 	
 	function add_record_to_user_meta($user_id){
 		global $wpdb;
@@ -639,8 +643,28 @@
 		
 		if($row ==null){
 		
-			$user_role = get_user_role($user_id);
+			//$user_role = get_user_role($user_id);
+			//if($relationship === null) $relationship='null';
 			
+			$query = "INSERT INTO `wp_postworld_a1`.`wp_postworld_user_meta`
+					(`user_id`,
+					`post_points`,
+					`post_points_meta`,
+					`comment_points`,
+					`share_points`,
+					`share_points_meta`,
+					`post_relationships`,
+					`post_votes`,
+					`comment_votes`,
+					`location_city`,
+					`location_region`,
+					`location_country`)
+					VALUES
+					($user_id,0,null,0,0,null,null,null,null,null,null,null);
+								";
+			
+			
+		/*	
 			$query = "insert into $wpdb->pw_prefix"."user_meta (`user_id`,
 					`user_role`,
 					`viewed`,
@@ -654,7 +678,7 @@
 					`comment_points`,
 					`post_points_meta`,
 					`share_points`) values($user_id,'$user_role',null,null,null,null,null,0,0,0,0,null,0)";
-	
+	*/
 			$wpdb->query($query);}
 	}
 	
