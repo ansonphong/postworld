@@ -1,0 +1,127 @@
+
+<div ng-controller="editPost as post">
+  <h3>Quick Edit // ID : {{post_data.post_id}}</h3>
+
+  <!-- POST TYPE -->
+  <h5>Post Type :
+    <select ng-model="post_data.post_type" ng-options="key as value for (key,value) in post_types_linear">
+      </select>
+    {{post_data.post_type}}
+  </h5>
+    
+  <hr>
+  <div class="well">
+    
+
+    <!-- POST TITLE -->
+    <h5>Post Title :
+      <input type="text" ng-model="post_data.post_title" placeholder="Post Title"> {{post_data.post_title}}
+    </h5>
+
+    <!-- POST NAME -->
+    <h5>Slug : <input type="text" ng-model="post_data.post_name" placeholder="post_name">
+      {{post_data.post_name}}
+    </h5>
+
+    <!-- POST STATUS -->
+    <h5>Post Status :
+      <select ng-model="post_data.post_status" ng-options="key as value for (key,value) in post_status_options">
+        </select>
+      {{post_data.post_status}}
+    </h5>
+    
+
+    <hr>
+
+    <!-- LINK URL -->
+    <h5>Link URL :
+      <input type="url" ng-model="post_data.link_url" placeholder="http://">
+      {{post_data.link_url}}
+    </h5>
+    
+
+    <!-- POST FORMAT -->
+    <h5>Post Format : {{post_data.post_format}}
+      <div ng-repeat="format in post_format_meta" class="row-fluid">
+        <label>
+          <input type="radio" name="post_format" value="{{format.slug}}" ng-model="post_data.post_format" disabled />
+          &nbsp;<span ng-bind-html="format.icon"></span>&nbsp;<span ng-bind="format.name"></span>
+        </label>
+      </div>
+    </h5>
+
+    
+    <hr>
+
+    <!-- TAXONOMY : TOPIC -->
+    <h5>Topic : {{post_data.tax_input.topic[0]}} // Sub-topic : {{post_data.tax_input.topic[1]}}</h5>
+    <select ng-model="post_data.tax_input.topic[0]"
+      ng-options="value.slug as value.name for value in tax_terms.topic"></select>
+
+    <select ng-model="post_data.tax_input.topic[1]"
+      ng-options="key as value for (key,value) in selected_tax_terms.topic.children">
+    </select>
+
+    <!-- TAXONOMY : TAGS -->
+    <h5>Tags : {{post_data.tags_input}}</h5>
+    <textarea ng-model="post_data.tags_input"></textarea>
+
+
+    <!-- EXTRA FIELDS -->
+    <div ng-switch="post_data.post_type">
+      <div ng-switch-default></div>
+
+      <!-- EVENTS FIELDS -->
+      <div ng-switch-when="tribe_events">
+        <hr>
+        <h3>Event Details</h3>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <h3>Editors Only</h3>
+
+    <!-- TAXONOMY : SECTION -->
+    <h5>Section :
+      <select ng-model="post_data.tax_input.section[0]"
+        ng-options="value.slug as value.name for value in tax_terms.section">
+        <option value="">None</option>
+      </select>
+      {{post_data.tax_input.section[0]}}
+    </h5>
+    
+    <!-- TAXONOMY : TYPE -->
+    <h5>Type :
+      <select ng-model="post_data.tax_input.type[0]"
+        ng-options="term.slug as term.name group by term.parent_name for term in tax_terms.type">
+        <option value="">None</option>
+      </select>
+      {{post_data.tax_input.type[0]}}
+    </h5>
+    
+    <!-- POST CLASS -->
+    <h5>Post Class : {{post_class}}</h5>
+
+    <hr>
+
+    <button ng-click="savePost()">Save Post</button>
+
+    </div>
+
+    <h3>$scope.post_data</h3>
+    {{post_data}}
+
+    <hr>
+
+    <h3>Prototypes</h3>
+    <h5>Post Type Object : {{post_type}}</h5>
+    <select ng-model="post_type" ng-options="post_type.name for post_type in post_types">   <!-- post_type.slug as c.name for c in post_types -->
+    </select>
+
+    <hr>
+  
+</div>
+
+<!-- ////////////////////// END PETRI DISH ////////////////////////// -->

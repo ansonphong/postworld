@@ -51,6 +51,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',				
             });
+        $routeProvider.when('/edit-post/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
+            });
 		// this will be also the default route, or when no route is selected
         $routeProvider.otherwise({redirectTo: '/home/'});
     });
