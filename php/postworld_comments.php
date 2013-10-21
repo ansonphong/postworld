@@ -166,7 +166,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 	}
 
 	return $comment_data;
-	
+
 }
 
 

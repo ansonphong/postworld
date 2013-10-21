@@ -240,11 +240,18 @@ __load_post[ *name* ]__ : *object*
 - A JS Object which defines the settings for the post display
 
 - __post_id__ : *integer*
+- __fields__ : *string* (optional)
+  - Default: __all__
+  - Pass to `pw_get_post()` › `$fields` parameter 
 - __view__ : *string*
   - The template view to display the post in
+  - Path : *templates/posts/{{post_type}}-{{view}}.html*
+  - `pw_get_templates` Object : `posts[post_type][post_view]`
 
 #### Process :
 - Get the template path with `pw_post_template( $post_id, $post_view )` PHP Method via AJAX
+- Used `pw_get_post()` via AJAX to get post data
+- Populate view template with localized post data object
 
 #### Usage :
 
@@ -253,6 +260,7 @@ Javascript:
 ``` javascript
 load_post['single_post'] = {
 	post_id : 24,
+  fields : 'all',
 	view : 'full',
 }
 ```
