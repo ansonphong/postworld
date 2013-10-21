@@ -124,7 +124,7 @@ __callback__
 
 ------
 
-### save_post_data ( post_id, object, callback )
+### save_post_data ( *post_id, object, callback* )
 
 - Save post data to the server
 - Use `pw_save_post()` via AJAX
@@ -143,8 +143,8 @@ __callback__
 
 ------
 
-###__pw_get_posts__ ( feed_id, post_ids, fields )
-- Used to access pw_get_post() PHP Method via AJAX
+###__pw_get_posts__ ( *feed_id, post_ids, fields* )
+- Used to access `pw_get_post()` PHP Method via AJAX
 
 ####Parameters:
 __feed_id__ : *string*  
