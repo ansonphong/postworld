@@ -403,7 +403,7 @@ function editPost($scope) {
             post_format : "video",
             link_url : "",
             tax_input : {
-                topic : ["life"],
+                topic : ["eco","animal_rights"],
                 section : ["psi"],
             },
             tags_input : "tag1, tag2, tag3",
@@ -423,32 +423,54 @@ function editPost($scope) {
         tribe_events : "Events"
     };
 
+
+
     // TAXONOMY TERMS
     $scope.tax_terms = {
-        'topic' : [
+        "topic" : [
             {
-            slug:"psyche",
-            name:"/psyche",
+                slug:"psyche",
+                name:"/psyche",
+                children:{
+                    ancient:"Ancient Mysteries",
+                    astrology:"Astrology",
+                    consciousness:"Consciousness",
+                    dreams:"Dreams",
+                    ets:"Extraterrestrials",
+                    indigenous:"Indigenous Cultures",
+                    },
             },
             {
-            slug:"arts",
-            name:"/Arts",
+                slug:"eco",
+                name:"/eco",
+                children:{
+                    animal_rights:"Animal Rights",
+                    climate_change:"Climate Change",
+                    conservation:"Conservation",
+                    energy:"Energy",
+                    environment:"Environment",
+                    extinction:"Extinction",
+                    },
             },
             {
-            slug:"life",
-            name:"/life",
+                slug:"body",
+                name:"/body",
+                children:{
+                    energy_medicine:"Energy Medicine",
+                    food_nutrition:"Food & Nutrition",
+                    healing:"Healing",
+                    herbalism:"Herbalism",
+                    homeopathy:"Homeopathy",
+                    sexuality:"Sexuality",
+                    },
             },
             {
-            slug:"eco",
-            name:"/eco",
+                slug:"tech",
+                name:"/tech",
             },
             {
-            slug:"tech",
-            name:"/tech",
-            },
-            {
-            slug:"commons",
-            name:"/commons",
+                slug:"commons",
+                name:"/commons",
             },
         ],
         'section' : [
@@ -469,8 +491,141 @@ function editPost($scope) {
             name:"Evolver EDM",
             },
         ],
+        'type' : [
+            {
+            slug:"psychedelic",
+            name:"Psychedelic Culture",
+            },
+            {
+            slug:"psi",
+            name:"Psi Frontiers",
+            },
+            {
+            slug:"video",
+            name:"Videos",
+            },
+            {
+            slug:"edm",
+            name:"Evolver EDM",
+            },
+        ],
         
     };
+
+
+    /*
+    ///// TOPIC WATCH PROTOTYPE /////
+    $scope.selected_topic_obj = {};
+    // Get the selected Topic Object
+    function selected_topic_term_obj(){
+        $scope.selected_topic_slug = $scope.post_data.tax_input.topic[0];
+
+        // Clear the Subtopic
+        $scope.post_data.tax_input.topic.splice(1,1);
+
+        var topic_terms = $scope.tax_terms.topic;
+        // Cycle through each Topic Term
+        angular.forEach( topic_terms, function( term ){
+            // If the term is the one that is selected, set it
+            if( term.slug == $scope.selected_topic_slug ){
+                $scope.selected_topic_obj = term;
+            }
+        });
+    };
+
+    selected_topic_term_obj();
+    // TOPIC TERM WATCH : Watch for changes in topic tern
+    // Evaluate the post_format
+    $scope.$watch( "post_data.tax_input.topic[0]",
+    //$scope.$watchCollection('[post_data.link_url, post_data.post_format]',
+        function ( newValue, oldValue ){
+            selected_topic_term_obj();
+        });
+    */
+
+
+    ///// TOPIC WATCH PROTOTYPE /////
+
+
+    ///// SELECTED TAXONOMY TERMS : OBJECT /////
+    // Contains an object with singular term data
+    // So that they can be referred to to define subtopics
+
+    
+    function selected_tax_terms(){
+
+        // Create selected_tax_terms
+        if ( isEmpty( $scope.selected_tax_terms ) )
+            $scope.selected_tax_terms = {};
+        
+        // Simplify variable for tax_input
+        var tax_input = $scope.post_data.tax_input;
+
+        // EACH TAXONOMY : Cycle through each taxonomy
+        angular.forEach( $scope.tax_terms, function( terms, taxonomy ){
+            
+            // Setup Object
+            if ( isEmpty( tax_input[taxonomy] ) )
+                tax_input[taxonomy] = [];
+
+            // SET TERM : Cycle through each term
+            // Set the selected taxonomy terms object
+            angular.forEach( terms, function( term ){
+                // If the term is selected, add it to the selected object
+                if ( term.slug == $scope.post_data.tax_input[taxonomy][0] ){
+                    $scope.selected_tax_terms[taxonomy] = term;
+                }
+            });
+
+            ///// CLEAR SUBTERM /////
+            // If there is a sub-term defined and it has children
+            // Check to see if that child term exists in the main term
+            
+            // The set term object of the current taxonomy
+            var term_set = $scope.selected_tax_terms[taxonomy];
+
+            // Does the currently selected term of this taxonomy have children
+            if ( typeof term_set !== 'undefined' ){
+                if ( typeof term_set.children !== 'undefined' )
+                    var term_has_children = true;
+                else
+                    var term_has_children = false; 
+            }
+            else
+                var term_has_children = false;
+            // Is the child term set for this taxonomy in tax_input?
+            var child_term_is_set = !isEmpty( tax_input[taxonomy][1] );
+            if ( term_has_children ){
+                // Default
+                var is_subterm = false;
+                // Cycle through current sub-terms, and see if it exists
+                angular.forEach( term_set.children, function( child_term_value, child_term_key ){
+                    if ( child_term_key == tax_input[taxonomy][1] )
+                        is_subterm = true;
+                });
+                // If it doesn't exist as a sub-term, clear it
+                if ( is_subterm == false )
+                    tax_input[taxonomy].splice(1,1);
+            }
+            // Otherwise clear it
+            else if ( child_term_is_set )
+                tax_input[taxonomy].splice(1,1);
+        });
+    };
+    
+
+    //selected_tax_terms();
+    // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
+    // Make a new object which contains only the selected sub-objects
+    $scope.$watch( "post_data.tax_input",
+    //$scope.$watchCollection('[post_data.link_url, post_data.post_format]',
+        function (){
+            //alert("taxonomy change!");
+            selected_tax_terms();
+        }, 1 );
+
+
+
 
     // POST STATUS OPTIONS
     $scope.post_status_options = {
