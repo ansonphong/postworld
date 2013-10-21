@@ -1,5 +1,9 @@
 'use strict';
 
+postworld.config(function($locationProvider){
+    // $locationProvider.html5Mode(true).hashPrefix('!');
+});
+
 postworld.directive('liveFeed', function() {
     return {
         restrict: 'A',
@@ -30,6 +34,29 @@ postworld.directive('loadFeed', function() {
 
 postworld.controller('pwFeedController',
     function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
+    	
+    	// Definitions
+  		$scope.convertQueryString2FeedQuery= function (params) {
+  			for(var key in params){
+			    // The value is obj[key]
+			    $scope.args.feed_query[key] = params[key];
+			}			
+  		};
+
+  		$scope.getQueryStringArgs= function () {
+  			// TODO Should query string work with live feed only?
+  			if ($attrs.laodFeed) {
+  				return;
+  			}
+    		// Get Query String Parameters
+    		// TODO Check if location.search work on all browsers.
+    		var params = $location.search();
+    		console.log('query string is ',params);    	
+  			$scope.convertQueryString2FeedQuery(params);  			
+    		console.log('query params =',$scope.args.feed_query);    	
+  		};
+    	
+    	
     	// Initialize
     	$scope.busy = false; 				// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
     	$scope.firstRun = true; 			// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
@@ -37,8 +64,8 @@ postworld.controller('pwFeedController',
 		$scope.args.feed_query = {};
 		$scope.feed_query = {};
 		$scope.scrollMessage = "";
-    	$scope.items = [];	
-    	$scope.message = "";
+    	$scope.items = [];
+    	$scope.message = "";    	
     	
     	// List of Post Items displayed in Scroller
     	// is this a live feed or a load feed?
@@ -51,9 +78,10 @@ postworld.controller('pwFeedController',
     		$scope.directive = 'loadFeed';
     		$scope.feed		= $attrs.loadFeed;
 	    	$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
-    	};
-    	
+    	};    	
     	    	    	
+		$scope.getQueryStringArgs();    	
+  	
     	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
 				if (!$scope.feed) {
@@ -163,6 +191,8 @@ postworld.controller('pwFeedController',
 		};
 		$scope.pwLiveFeed = function() {
 			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
+    		console.log('query params 2 =',$scope.args.feed_query);    	
+			
 	    	// identify the feed_settings feed_id
 			
 			$scope.items = {};
