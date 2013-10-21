@@ -568,7 +568,7 @@
 		{
 		    viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
 		    favorites:[12,16,25],
-		    read_later:[58,78],
+		    view_later:[58,78],
 		}
 		return : boolean
 		
@@ -604,7 +604,7 @@
 			
 			add_record_to_user_meta($user_id);
 			if($switch){
-				$relashionship_db_array= array('viewed'=>array(),"favorites"=>array(),'read_later'=>array());
+				$relashionship_db_array= array('viewed'=>array(),"favorites"=>array(),'view_later'=>array());
 			 	$relashionship_db_array[$relationship][]=$post_id;
 				update_post_relationship($user_id, $relashionship_db_array);
 				if($relationship =='favorites')
@@ -709,15 +709,16 @@
 		    array('viewed','favorites')
 		 * */
 		$relationship_array = get_relationship_from_user_meta($user_id);
-		print_r($relationship_array);
-		if($relationship_array){
+		//print_r($relationship_array);
+		if(!is_null($relationship_array)){
+			
 			/*array(
 			    'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
 			    'favorites' => [12,16,25],
 			    'view_later' => [58,78]
 			    )*/
 			 $relationship_array =  (array) json_decode($relationship_array);  
-			 print_r($relationship_array);
+			// print_r($relationship_array);
 			 if($relationship != 'all'){
 				 if(in_array($post_id, $relationship_array[$relationship])){
 				 	return TRUE;
@@ -735,6 +736,7 @@
 			return $output;
 			}
 		}else{
+			
 			if($relationship != 'all') return FALSE;
 			else return array();
 		}
