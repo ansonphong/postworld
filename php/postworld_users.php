@@ -229,7 +229,7 @@
 		global $wpdb;
 	
 		$wpdb -> show_errors();	
-		$query = "insert into ".$wpdb->pw_prefix.'favorites'." values (".$user_id.",".$post_id.")";
+		$query = "insert into ".$wpdb->pw_prefix.'favorites'." values (".$user_id.",".$post_id.",null)";
 		$wpdb -> query($query);
 		
 		

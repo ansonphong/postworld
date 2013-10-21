@@ -28,7 +28,7 @@ function postworld_install() {
       post_id BIGINT(20) unsigned NOT NULL,
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
-      time TIMESTAMP NOT NULL,
+      time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       UNIQUE KEY post_id_user_id (post_id,user_id)
      );";
 
@@ -49,7 +49,7 @@ function postworld_install() {
       comment_post_id mediumint(9) NOT NULL,
       comment_author_id BIGINT(20) UNSIGNED NOT NULL,
       points mediumint(8) DEFAULT '0' NOT NULL,
-      time TIMESTAMP NOT NULL,
+      time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       UNIQUE KEY comment_id_user_id (comment_id,user_id)
     );";
     
@@ -90,6 +90,7 @@ function postworld_install() {
   $sql_postworld_favorites = "CREATE TABLE $favorites_table_name (
       user_id BIGINT(20) UNSIGNED NOT NULL,
       post_id BIGINT(20) unsigned NOT NULL,
+      time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       UNIQUE KEY user_id_post_id (user_id,post_id)
     );";
     
