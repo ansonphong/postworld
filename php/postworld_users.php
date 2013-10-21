@@ -781,14 +781,14 @@
 			If no $post_id is defined, use $post->ID method to get the post ID
 					 * 
 					 */
-			if(!$user_id){
+			if(is_null($user_id)){
 				$user_id = get_current_user_id();
 			}
 			
 			$relationships_db = get_relationship_from_user_meta($user_id);
 			$relationships_db_array = (array) json_decode($relationships_db);
-			if($relationships_db){
-				if($relationship){
+			if(!is_null($relationships_db)){
+				if(!is_null($relationship)){
 					return $relationships_db_array[$relationship];
 				}else{
 					return $relationships_db_array;
