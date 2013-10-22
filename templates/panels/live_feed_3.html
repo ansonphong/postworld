@@ -19,7 +19,7 @@
 	</div>	
 	<input type="hidden">	
     <div id="scrollMe"  class="infinite-scroll1">
-	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-container='scrollDiv' ng-init="scrollDiv='#scrollDiv';">
+	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' >
 	    <div ng-repeat='post in items' >
 	    	<div feed-item ng-include="templateUrl" post="post" feed-id='args.feed_id'></div>
 			<hr>
