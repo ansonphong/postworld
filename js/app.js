@@ -1,6 +1,8 @@
 'use strict';
 var feed_settings = [];
 
+
+
 var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll'])
     .config(function ($routeProvider, $locationProvider) {    	    	
         $routeProvider.when('/live-feed-1/',
@@ -186,6 +188,9 @@ function extract_parentheses(string){
     return matches;
 }
 
+function isNumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
 
 ////////// ADVANCED HELPERS ////////
 
@@ -244,166 +249,8 @@ function parse_linear_select_items( items, selected ){
 
 
 
-////////// EDIT FIELD DIRECTIVE //////////
-postworld.directive( 'editField', ['$compile', function($compile, $scope){
-
-    return { 
-        restrict: 'A',
-        scope : function(){
-            // Scope functions here
-        },
-        //template : '',
-        link : function (scope, elem, attrs){
-
-            ////////// PARSE INPUT FIELDS //////////
-
-            // OBJECT : Define the object which has with default values
-            
-            if (attrs.object)
-                var object = attrs.object;
-            else
-                var object = 'edit_fields'; // Default object name : window['edit_fields']
-            
-            // FIELD : Define the field which is being edited
-            var field = attrs.editField;
-
-            ////////// TEXT INPUTS //////////
-            if ( isInArray('input-', attrs.input) ){
-                var input_text_fields = ['text','password','hidden','url'];
-                var input_extension = attrs.input.replace("input-", ""); // strip "input-"
-
-                if ( isInArray(input_extension, input_text_fields) ){
-
-                    ///// PLACEHOLDER /////
-                    if(attrs.placeholder)
-                        var placeholder = attrs.placeholder;
-                    else
-                        var placeholder = '';
-
-                    // Set Original Value : oValue
-                    if( attrs.value )
-                        var oValue = attrs.value;
-                    else if ( window[object] )
-                        var oValue = window[object][field];
-                    else
-                        var oValue = '';
-
-                    // Generate HTML
-                    var input_html = "<input type='" + input_extension + "' name='" + attrs.editField + "' id='" + attrs.editField + "' class='" + attrs.editField + "' value='"+ oValue +"' placeholder='"+placeholder+"'>";
-                    var input_element = angular.element( input_html );
-                    elem.append( input_element );
-                    //$compile( input_element )( scope );
-                }
-            }
-
-
-            ////////// TEXT AREA //////////
-            if ( isInArray('textarea', attrs.input) ){
-
-                // Placeholder
-                if(attrs.placeholder)
-                    var placeholder = attrs.placeholder;
-                else
-                    var placeholder = 'Placeholder';
-
-                // Wrap
-                if(attrs.wrap)
-                    var wrap = attrs.wrap;
-                else
-                    var wrap = '';
-
-                // Set Original Value : oValue
-                if( attrs.value )
-                    var oValue = attrs.value;
-                else if ( window[object] )
-                    var oValue = window[object][field];
-                else
-                    var oValue = '';
-
-                // Generate HTML
-                var input_html = "<textarea name='" + attrs.editField + "' id='" + attrs.editField + "' class='" + attrs.editField + "' placeholder='"+placeholder+"' " + wrap + ">"+oValue+"</textarea>";
-                var input_element = angular.element( input_html );
-                elem.append( input_element );
-                //$compile( input_element )( scope );
-                
-            }
-
-            ////////// SELECT / MULTIPLE SELECT //////////
-            if ( isInArray( 'select', attrs.input ) ){
-
-                // Check for "-multiple" extension
-                var input_extension = attrs.input.replace("select-", ""); // strip "input-"
-                if (input_extension == 'multiple'){
-                    var multiple = ' multiple ';
-                    
-                    // Split the value attribute into an Array
-                    if ( typeof attrs.value !== 'undefined' )
-                        var oValue = attrs.value.split(',');
-                }
-                else{
-                    var multiple = '';
-                    // If DATA-VALUE attribute is defined 
-                    if ( !isEmpty(attrs.value) )
-                        var oValue = attrs.value;
-                    // Otherwise, use the value coorosponding to the key equal to the edit-field value
-                    else
-                        var oValue = window[object][attrs.editField];
-                }
-                
-                // Get the size of the select area
-                if ( attrs.size )
-                    var size = " size='"+attrs.size+"' ";
-                else
-                    var size = '';
-
-                ///// TAXONOMY OPTIONS /////
-                // Process Taxonomy Edit Field
-                if ( isInArray( 'taxonomy', attrs.editField ) ){
-                    // Get the name of the requested taxonomy
-                    var tax_name = extract_parentheses( attrs.editField );
-                    var terms = window['taxonomy'][tax_name];
-                    var selected = window[object].taxonomy[tax_name];
-                    var select_items = parse_hierarchical_select_items( terms, selected, 'slug', 'name', 'terms', 2, '- ' ); // window[object].taxonomy[tax_name]
-                }
-
-                ///// PROVIDED OPTIONS /////
-                // Use provided options
-                else if(attrs.options){
-                    var options = window[attrs.options];
-                    var selected = oValue;
-                    var select_items = parse_linear_select_items( options, selected );
-                }
-
-                ///// DEFAULT OPTIONS /////
-                // Process Standard Edit Fields
-                else{
-                    var select_options = window[object];
-                    var selected = oValue;
-                    var select_items = parse_linear_select_items( select_options[field], selected );
-                }                   
-
-                // Parse the HTML
-                var select_head = "<select id='"+attrs.editField+"' name='"+attrs.editField+"' " + multiple + " " + size + " >";
-                var select_foot = "</select>";
-
-                //if ( typeof select_items === 'undefined' ){
-                //}
-
-                var input_element = angular.element( select_head + select_items + select_foot );
-                elem.append( input_element );
-                //$compile( input_element )( scope );
-                
-            }
-
-        }
-    }
-}]);
-
-
-
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
-
 
     // TAXONOMY TERMS
     $scope.tax_terms = {
@@ -503,6 +350,7 @@ function editPost($scope) {
     $scope.pw_get_post_object = function(){
         var post_data = {
             post_id : 24,
+            post_date_gmt:"2013-09-16 18:24:16",
             post_title : "Hello Space",
             post_name : "hello_space",
             post_type : "feature",
@@ -780,30 +628,213 @@ function editPost($scope) {
     $scope.post_type = $scope.post_types[2];
 
 
+    ////////// DATE & TIME PROCESSING //////////
+    // The date format takes in the post_date_gmt, GMT/UTC
+    // It is converted it to the local time zone
+    // The user transforms the time in local time zone
+    // Then it is saved to the model in GMT/UTC
+
+    function clientTimeZoneAbbr (dateInput) {
+    // Friendly timezone abbreviations in client-side JavaScript
+        var dateObject = dateInput || new Date(),
+            dateString = dateObject + "",
+            tzAbbr = (
+                // Works for the majority of modern browsers
+                dateString.match(/\(([^\)]+)\)$/) ||
+                // IE outputs date strings in a different format:
+                dateString.match(/([A-Z]+) [\d]{4}$/)
+            );
+     
+        if (tzAbbr) {
+            // Old Firefox uses the long timezone name (e.g., "Central
+            // Daylight Time" instead of "CDT")
+            tzAbbr = tzAbbr[1].match(/[A-Z]/g).join("");
+        }
+        return tzAbbr;
+    };
+
+    // SET UTC TIME OBJECT
+    // Casts a time object from the specified time zone into UTC time
+    // ie. timeString = 2013-09-16 18:24:16
+    // ie. timezone = PDT (optional) (default:UTC)
+    function setTimeObjectUTC ( timeString, timezone ){
+        if( typeof timezone === "undefined" )
+            var timezone = " UTC";
+        else
+            var timezone = " " + timezone;
+        var timeString = timeString + timezone;
+        var timeObject = new Date( timeString );
+        return timeObject;
+    }
+
+    // TIME OBJECT TO WORDPRESS TIME STRING : ie. 2013-10-12 18:24:16
+    // Converts a JS time object into a WP string in local time
+    // timeObject = a Javascript time object
+    // type = 'array'/'string' - how to return the result
+    // UTC = boolean (optional) - return the UTC time, if false returns the local time
+    function timeObjectToWP ( timeObject, returnType, UTC ){
+
+        if( UTC == true ){
+            var year = timeObject.getUTCFullYear();
+            var month = (timeObject.getUTCMonth() +1) ;
+            var date = timeObject.getUTCDate();
+            var hours = timeObject.getUTCHours();
+            var minutes = timeObject.getUTCMinutes();
+            var seconds = timeObject.getUTCSeconds();
+        } else {
+            var year = timeObject.getFullYear();
+            var month = (timeObject.getMonth() +1) ;
+            var date = timeObject.getDate();
+            var hours = timeObject.getHours();
+            var minutes = timeObject.getMinutes();
+            var seconds = timeObject.getSeconds();
+        }
+
+        if( typeof returnType === "undefined" )
+            var returnType = "string";
+
+        if( returnType == "string" ){
+            return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
+        }
+        else if( returnType == "array" ){
+            var timeArray = [];
+            timeArray.push( year, month, date, hours, minutes, seconds );
+            return timeArray;
+        }
+
+    }
+
+    function getPostDate( dateField ){ // post_date_gmt / post_date
+        if ( typeof dateField === 'undefined' ){
+            // RETURN THE CURRENT DATE
+            var currentDate = new Date();
+            return currentDate;
+        }
+        else
+            // RETURN THE GIVEN DATE
+            return new Date( dateField );
+    }
+
+    //var gmt_time = "2013-09-16 18:24:16";
+    // Get the post's time in GMT/UTC
+    $scope.post_date_gmt = getPostDate( $scope.post_data.post_date_gmt );
+
+    // TIME IN : local time zone
+    $scope.timeString = timeObjectToWP( $scope.post_date_gmt, 'string' );
+    $scope.timeArray = timeObjectToWP( $scope.post_date_gmt, 'array' );
+
+    // TIME IN : UTC
+    $scope.timeStringUTC = timeObjectToWP ( setTimeObjectUTC( $scope.timeString, clientTimeZoneAbbr() ), "string", 1 );
+
+    // SANITIZE THE UPDATED FIELDS TO POST OBJECT
+    $scope.$watch( "timeArray",
+        function (){
+            var timeArray = $scope.timeArray;
+            var dateObj = $scope.post_date_gmt;
+
+            // YEAR
+            timeArray[0] = parseInt(timeArray[0]);
+            if ( timeArray[0] > 9999 )
+                timeArray[0] = timeArray[0].slice(0,4);
+            if ( timeArray[0] < 1 || isNaN( timeArray[0] ) )
+                timeArray[0] = dateObj.getUTCFullYear();
+
+            // MONTH
+            timeArray[1] = parseInt(timeArray[1]);
+            if ( timeArray[1] > 12 )
+                timeArray[1] = 12;
+            if ( timeArray[1] < 1 || isNaN( timeArray[1] ) )
+                timeArray[1] = (dateObj.getUTCMonth()+1);
+
+            // DATE
+            timeArray[2] = parseInt(timeArray[2]);
+            if ( timeArray[2] > 31 )
+                timeArray[2] = 31;
+            if ( timeArray[2] < 1 || isNaN( timeArray[2] ) )
+                timeArray[2] = 1;
+
+            // HOURS
+            timeArray[3] = parseInt(timeArray[3]);
+            if ( timeArray[3] > 23 )
+                timeArray[3] = 23;
+            if ( timeArray[3] < 0 || isNaN( timeArray[3] ) )
+                timeArray[3] = 0;
+
+            // MINUTES
+            timeArray[4] = parseInt(timeArray[4]);
+            if ( timeArray[4] > 59 )
+                timeArray[4] = 59;
+            if ( timeArray[4] < 0 || isNaN( timeArray[4] ) )
+                timeArray[4] = 0;
+
+            // SECONDS
+            timeArray[5] = parseInt(timeArray[5]);
+            if ( timeArray[5] > 59 )
+                timeArray[5] = 59;
+            if ( timeArray[5] < 0 || isNaN( timeArray[5] ) )
+                timeArray[5] = 0;
+
+            // TIME IN : local time zone
+            $scope.timeArray = timeArray;
+            $scope.timeString = timeArray[0] + "-" + timeArray[1] + "-" + timeArray[2] + " " + timeArray[3] + ":" + timeArray[4] + ":" + timeArray[5];
+
+            // TIME IN : UTC
+            $scope.timeStringUTC = timeObjectToWP ( setTimeObjectUTC( $scope.timeString, clientTimeZoneAbbr() ), "string", 1 );
+
+        },1);
+
+
+        // WRITE THE UPDATED DATE TO POST OBJECT
+        $scope.$watch( "timeStringUTC",
+            function ( newValue, oldValue ){
+                $scope.post_data.post_date_gmt = $scope.timeStringUTC;
+            });
 
 }
 
 
+var blurFocusDirective = function () {
+    return {
+        restrict: 'E',
+        require: '?ngModel',
+        link: function (scope, elm, attr, ctrl) {
+            if (!ctrl) {
+                return;
+            }
 
+            elm.on('focus', function () {
+                elm.addClass('has-focus');
 
+                scope.$apply(function () {
+                    ctrl.hasFocus = true;
+                });
+            });
 
+            elm.on('blur', function () {
+                elm.removeClass('has-focus');
+                elm.addClass('has-visited');
 
+                scope.$apply(function () {
+                    ctrl.hasFocus = false;
+                    ctrl.hasVisited = true;
+                });
+            });
 
+            elm.closest('form').on('submit', function () {
+                elm.addClass('has-visited');
 
+                scope.$apply(function () {
+                    ctrl.hasFocus = false;
+                    ctrl.hasVisited = true;
+                });
+            });
 
+        }
+    };
+};
 
-
-
-
-
-
-
-
-
-
-
-
-
+postworld.directive('input', blurFocusDirective);
+postworld.directive('select', blurFocusDirective);
 
 
 

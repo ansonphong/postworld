@@ -7,17 +7,19 @@ function postworld_includes(){
 	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery');
 	
-	  
+	// ANGULAR & SERVICES
 	wp_enqueue_script( 'AngularJS', WP_PLUGIN_URL.'/postworld/lib/angular/angular.min.js');
 	wp_enqueue_script( 'AngularJS-Resource', WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
 	wp_enqueue_script( 'AngularJS-Route', WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
 	wp_enqueue_script( 'AngularJS-Sanitize', WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
+
+	// ANGULAR STRAP
+	wp_enqueue_script( 'AngularJS-Bootstrap', WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.min.js');
 	
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					  'pluginurl' => WP_PLUGIN_URL,
 					);
-
 	$angularDep = array('AngularJS','AngularJS-Resource','AngularJS-Route');
 
 	wp_register_script( "pw-app-JS", WP_PLUGIN_URL.'/postworld/js/app.js' );
