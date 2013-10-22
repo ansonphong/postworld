@@ -55,6 +55,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
             });
+        $routeProvider.when('/load-comments/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',				
+            });            
 		// this will be also the default route, or when no route is selected
         $routeProvider.otherwise({redirectTo: '/home/'});
     });

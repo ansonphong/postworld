@@ -36,13 +36,17 @@ function postworld_includes(){
 	wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-FeedItem-JS','', $angularDep );
 
-	wp_register_script( "pw-LoadComments-JS", WP_PLUGIN_URL.'/postworld/js/components/laodComments.js' );
+	wp_register_script( "pw-LoadComments-JS", WP_PLUGIN_URL.'/postworld/js/components/loadComments.js' );
 	wp_localize_script( 'pw-LoadComments-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-LoadComments-JS','', $angularDep );
 
-	wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js' );
+	wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js');
 	wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
+	
+	wp_register_script( "pw-pwCommentsService-JS", WP_PLUGIN_URL.'/postworld/js/services/postworld_comments_service.js');
+	wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-pwCommentsService-JS','', $angularDep );
 
 	wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
 
