@@ -159,8 +159,10 @@ function pw_register_feed ( $args ){
 			// echo ($args['write_cache']);
 			//update feed query
 			update_feed_query($args['feed_id'], $args['feed_query']);
-			if($args['write_cache'] ===  TRUE){
-				pw_cache_feed($args['feed_id']);
+			if (array_key_exists('write_cache', $args)){
+				if( $args['write_cache'] ===  TRUE){
+					pw_cache_feed($args['feed_id']);
+				}
 			}
 		}
 	 }
