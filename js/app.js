@@ -1,5 +1,7 @@
 'use strict';
 var feed_settings = [];
+var load_comments = [];
+
 
 
 
