@@ -12,9 +12,6 @@ function postworld_includes(){
 	wp_enqueue_script( 'AngularJS-Resource', WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
 	wp_enqueue_script( 'AngularJS-Route', WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
 	wp_enqueue_script( 'AngularJS-Sanitize', WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
-
-	// ANGULAR STRAP
-	wp_enqueue_script( 'AngularJS-Bootstrap', WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.min.js');
 	
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
