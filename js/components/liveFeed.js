@@ -51,9 +51,7 @@ postworld.controller('pwFeedController',
     		// Get Query String Parameters
     		// TODO Check if location.search work on all browsers.
     		var params = $location.search();
-    		console.log('query string is ',params);    	
   			$scope.convertQueryString2FeedQuery(params);  			
-    		console.log('query params =',$scope.args.feed_query);    	
   		};
     	
     	
@@ -198,8 +196,6 @@ postworld.controller('pwFeedController',
 			pwData.setNonce(78);
 			// We need to work with a clone of the args value
 			var argsValue = JSON.parse(JSON.stringify($scope.args));
-    		console.log('argsValue.feed_query',argsValue.feed_query);    	
-    		console.log('$scope.args.feed_query',$scope.args.feed_query);    	
         	pwData.pw_live_feed(argsValue).then(
 				// Success
 				function(response) {	

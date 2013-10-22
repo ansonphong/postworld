@@ -1,0 +1,20 @@
+<script>
+
+load_comments['post_single'] = {
+    query : {
+        post_id : 24,
+        status : 'approve'
+        },
+    fields : 'all',
+    tree : true,
+    order_by : 'comment_points',
+    order_options : {
+        'comment_points' : 'Points',
+        'comment_date' : 'Date'
+        },
+    min_points : 0,
+};
+
+</script>
+
+<div load-comments="post_single"></div>

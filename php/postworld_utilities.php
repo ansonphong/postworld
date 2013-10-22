@@ -38,6 +38,10 @@ function postworld_includes(){
 	wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-FeedItem-JS','', $angularDep );
 
+	wp_register_script( "pw-LoadComments-JS", WP_PLUGIN_URL.'/postworld/js/components/laodComments.js' );
+	wp_localize_script( 'pw-LoadComments-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-LoadComments-JS','', $angularDep );
+
 	wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js' );
 	wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-pwData-JS','', $angularDep );

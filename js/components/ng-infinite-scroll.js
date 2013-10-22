@@ -45,7 +45,7 @@ mod.directive('infiniteScroll', [
         }
         handler = function() {
           var containerBottom, elementBottom, remaining, shouldScroll;
-          if (container === $window) {
+          if (container[0] === $window[0]) {
             containerBottom = container.height() + container.scrollTop();
             elementBottom = elem.offset().top + elem.height();
           } else {
@@ -54,6 +54,7 @@ mod.directive('infiniteScroll', [
           }
           remaining = elementBottom - containerBottom;
           shouldScroll = remaining <= container.height() * scrollDistance;
+          // console.log('elementBottom,containerBottom',elementBottom,containerBottom);
           // console.log('scrolling shouldScroll,remaining, container.height(),scrollDistance',shouldScroll,remaining, container.height(),scrollDistance);
           if (shouldScroll && scrollEnabled) {
             if ($rootScope.$$phase) {
