@@ -2401,7 +2401,7 @@ $json_terms = "{
         },
     ";
 
-pw_insert_terms($json_terms,"JSON");
+pw_insert_terms($json_terms,"JSON", true);
 
 ```
 
