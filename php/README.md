@@ -2351,6 +2351,8 @@ __$force_slugs__ : *boolean*
 - If a **term*** with the same `slug` already exists within __*a different taxonomy*__
   - If `$force_slugs == true`, change the other slug - appending an incremental number 
 
+__return__ : *true*
+
 #### Usage
 
 ```php
@@ -2404,8 +2406,6 @@ $json_terms = "{
 pw_insert_terms($json_terms,"JSON", true);
 
 ```
-
-__return__ : *true*
 
 ------
 
