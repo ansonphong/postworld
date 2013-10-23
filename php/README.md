@@ -2288,8 +2288,123 @@ array(
 )
 ```
 #### Todo
+
 - Add option to limit/extend fields ($fields parameter)
   - Include toggle for 'capabilities, url, description...'
+
+------
+
+### pw_insert_terms ( *$terms_array, [$input_format],[$force_slugs]* )
+- Inserts an array of terms into the DB from an Array or JSON Object
+
+#### Parameters
+__$terms_array__ : *(JSON)string/Array*
+- Structure is up to two levels deep
+- __First level__ key is the name of the taxonomy.
+- __Second Level__ Object is key:value array with slug and name of term, optionally contains an object __children__ with terms which will have their parent set as the second level slug
+- __Third Level__ Array (optional) is key:value pairs of children as `"slug" => "name"`
+
+``` php
+$terms = array(
+	"taxonomy_slug" => array(
+		array(
+			"slug" => "the_slug",
+			"name" => "The Name",
+			"children" => array(
+				"the_slug"=>"The Name",
+				"the_slug"=>"The Name",
+				"the_slug"=>"The Name",
+				...
+			)
+		)
+		array(
+			"slug" => "the_slug",
+			"name" => "The Name",
+			"children" => array(
+				"the_slug"=>"The Name",
+				"the_slug"=>"The Name",
+				"the_slug"=>"The Name",
+				...
+			)
+		)
+		...
+	)
+	...
+);
+```
+
+__$input_format__ : *string*
+- Options:
+  - __ARRAY_A__ (default)
+  - __JSON__
+
+__$force_slugs__ : *boolean*
+  - Default : __false__
+
+#### Process
+- Uses `wp_insert_term()` - [Wordpress Codex](http://codex.wordpress.org/Function_Reference/wp_insert_term) - to insert a hierarchical array of terms
+- Cycle through each level, adding terms
+- If a **term** of the same `slug` already exists within __*the same taxonomy*__
+  - Do not add the term
+  - Update the name of the existing term
+  - Continue to add children if any, with the parent of the already existing term
+- If a **term*** with the same `slug` already exists within __*a different taxonomy*__
+  - If `$force_slugs == true`, change the other slug - appending an incremental number 
+
+#### Usage
+
+```php
+$json_terms = "{
+    "topic" : [
+        {
+            slug:"psyche",
+            name:"/psyche",
+            children:{
+                ancient:"Ancient Mysteries",
+                astrology:"Astrology",
+                consciousness:"Consciousness",
+                dreams:"Dreams",
+                },
+        },
+        {
+            slug:"arts",
+            name:"/arts",
+            children:{
+                conferences:"Conferences",
+                digital_art:"Digital Art",
+                world_art:"World Art",
+                },
+        },
+        {
+            slug:"body",
+            name:"/body",
+            children:{
+                energy_medicine:"Energy Medicine",
+                food_nutrition:"Food & Nutrition",
+                healing:"Healing",
+                herbalism:"Herbalism",
+                },
+        },
+    ],
+    'section' : [
+        {
+            slug:"psychedelic",
+            name:"Psychedelic Culture",
+        },
+        {
+            slug:"conscious_convergences",
+            name:"Conscious Convergences",
+        },
+        {
+            slug:"psi",
+            name:"Psi Frontiers",
+        },
+    ";
+
+pw_insert_terms($json_terms,"JSON");
+
+```
+
 
 ------
 
