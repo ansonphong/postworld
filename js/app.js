@@ -254,6 +254,14 @@ function parse_linear_select_items( items, selected ){
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
 
+    $scope.mode = "edit";
+
+    // POST CLASS
+    $scope.post_class_options = {
+        contributor:"Contributor",
+        author:"Author"
+    };
+
     // TAXONOMY TERMS
     $scope.tax_terms = {
         "topic" : [
@@ -437,6 +445,7 @@ function editPost($scope) {
             post_type : "feature",
             post_status : "publish",
             post_format : "video",
+            post_class : "contributor",
             link_url : "",
             tax_input : {
                 topic : ["healing","body"],
