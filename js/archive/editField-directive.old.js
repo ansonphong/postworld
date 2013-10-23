@@ -1,4 +1,60 @@
 
+////////// ADVANCED HELPERS ////////
+
+///// PARSE HIERARCHICAL SELECT ITEMS : FUNCTION /////
+// Produces a series of HTML <options> from a given hierarchical object
+function parse_hierarchical_select_items( items, selected, id_key, label_key, child_key, depth, indent ){
+    // SET DEFAULTS
+    if ( isEmpty(id_key) ) var id_key = 0;
+    if ( isEmpty(label_key) ) var label_key = 'name';
+    if ( isEmpty(child_key) ) var child_key = 'children';
+    if ( isEmpty(depth) ) var depth = 1;
+    if ( isEmpty(indent) ) var indent = ' - ';
+    
+    var select_items = '';
+
+    // ROOT LEVEL ITEMS
+    angular.forEach( items, function( item ){
+        var id = item[id_key];
+        var label = item[label_key];
+        if ( isInArray( id, selected ) )
+            var selected_attribute = ' selected ';
+        else
+            var selected_attribute = '';
+        select_items += "<option value='" + id + "' "+selected_attribute+" >" + label + "</option>";
+
+        // CHILD ITEMS
+        var child = item[child_key];
+        if ( typeof child !== 'undefined' && depth == 2 ){
+            angular.forEach( item[child_key], function( item ){
+                var id = item[id_key];
+                var label = item[label_key];
+                select_items += "<option value='" + id + "' "+selected_attribute+" > " + indent + label+ "</option>";
+            });
+        }
+
+    });
+    return select_items;
+}
+
+///// PARSE LINEAR SELECT ITEMS : FUNCTION /////
+// Produces a series of HTML <options> from a given flat object
+function parse_linear_select_items( items, selected ){
+    var select_items = '';
+    // ROOT LEVEL ITEMS
+    angular.forEach( items, function( value, key ){
+        var id = key;
+        var label = items[key];
+        if ( isInArray( id, selected ) )
+            var selected_attribute = ' selected ';
+        else
+            var selected_attribute = '';
+        select_items += "<option value='" + id + "' "+selected_attribute+" >" + label + "</option>";
+    });
+    return select_items;
+}
+
+
 ////////// EDIT FIELD DIRECTIVE //////////
 postworld.directive( 'editField', ['$compile', function($compile, $scope){
 

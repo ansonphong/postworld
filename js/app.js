@@ -2,58 +2,55 @@
 var feed_settings = [];
 var load_comments = [];
 
-
-
-
 var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll'])
-    .config(function ($routeProvider, $locationProvider) {    	    	
+    .config(function ($routeProvider, $locationProvider) {              
         $routeProvider.when('/live-feed-1/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',                
             });
         $routeProvider.when('/live-feed-2/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
             });
         $routeProvider.when('/live-feed-2-feeds/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed3Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
             });
         $routeProvider.when('/live-feed-2-feeds-auto/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed4Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
             });
         $routeProvider.when('/live-feed-params/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed5Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed5Widget.html',                
             });
         $routeProvider.when('/load-feed-1/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed1Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed1Widget.html',                
             });
         $routeProvider.when('/load-feed-2/',
             {
-                template: '<h2>Coming Soon</h2>',				
+                template: '<h2>Coming Soon</h2>',               
             });
         $routeProvider.when('/load-feed-2-feeds/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed3Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed3Widget.html',                
             });
         $routeProvider.when('/load-feed-cached-outline/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed4Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
             });
         $routeProvider.when('/load-panel/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPanelWidget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPanelWidget.html',                
             });
         $routeProvider.when('/register-feed/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwRegisterFeedWidget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwRegisterFeedWidget.html',             
             });
         $routeProvider.when('/home/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
             });
         $routeProvider.when('/edit-post/',
             {
@@ -61,9 +58,9 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
             });
         $routeProvider.when('/load-comments/',
             {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',				
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
             });            
-		// this will be also the default route, or when no route is selected
+        // this will be also the default route, or when no route is selected
         $routeProvider.otherwise({redirectTo: '/home/'});
     });
 
@@ -84,15 +81,15 @@ postworld.directive('ngEnter', function() {
     
     
 
-postworld.run(function($rootScope, $templateCache, pwData) {	
-    	// TODO move getting templates to app startup
-    	pwData.pw_get_templates(null).then(function(value) {
-		    // TODO should we create success/failure responses here?
-		    // resolve pwData.templates
-		    pwData.templates.resolve(value.data);
-		    pwData.templatesFinal = value.data;
-		    console.log('postworld RUN getTemplates=',pwData.templatesFinal);
-		  });    	
+postworld.run(function($rootScope, $templateCache, pwData) {    
+        // TODO move getting templates to app startup
+        pwData.pw_get_templates(null).then(function(value) {
+            // TODO should we create success/failure responses here?
+            // resolve pwData.templates
+            pwData.templates.resolve(value.data);
+            pwData.templatesFinal = value.data;
+            console.log('postworld RUN getTemplates=',pwData.templatesFinal);
+          });       
 // TODO remove in production
    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();
@@ -111,11 +108,11 @@ postworld.run(function($rootScope, $templateCache, pwData) {
  * Create Post Types Toggles in Search Panel Dynamically http://jsfiddle.net/BtrZH/5/
  * 
  * Create Edit Fields for Radio, checkbox, TinMCE (WP has an hook for it), Buttons
- * 	Add Validations
- * 	Add Dynamic Sub Forms [ng-switch]
- * 	Add Embedding of URLs [embed.ly?]
- * 	Will be used in URL like #/post/edit/id, #/post/new, etc...
- * 	Will Switch between forms dynamically
+ *  Add Validations
+ *  Add Dynamic Sub Forms [ng-switch]
+ *  Add Embedding of URLs [embed.ly?]
+ *  Will be used in URL like #/post/edit/id, #/post/new, etc...
+ *  Will Switch between forms dynamically
  * 
  * TODO List
  * *********
@@ -193,63 +190,6 @@ function extract_parentheses(string){
 function isNumber(n) {
     return !isNaN(parseFloat(n)) && isFinite(n);
 }
-
-////////// ADVANCED HELPERS ////////
-
-///// PARSE HIERARCHICAL SELECT ITEMS : FUNCTION /////
-// Produces a series of HTML <options> from a given hierarchical object
-function parse_hierarchical_select_items( items, selected, id_key, label_key, child_key, depth, indent ){
-    // SET DEFAULTS
-    if ( isEmpty(id_key) ) var id_key = 0;
-    if ( isEmpty(label_key) ) var label_key = 'name';
-    if ( isEmpty(child_key) ) var child_key = 'children';
-    if ( isEmpty(depth) ) var depth = 1;
-    if ( isEmpty(indent) ) var indent = ' - ';
-    
-    var select_items = '';
-
-    // ROOT LEVEL ITEMS
-    angular.forEach( items, function( item ){
-        var id = item[id_key];
-        var label = item[label_key];
-        if ( isInArray( id, selected ) )
-            var selected_attribute = ' selected ';
-        else
-            var selected_attribute = '';
-        select_items += "<option value='" + id + "' "+selected_attribute+" >" + label + "</option>";
-
-        // CHILD ITEMS
-        var child = item[child_key];
-        if ( typeof child !== 'undefined' && depth == 2 ){
-            angular.forEach( item[child_key], function( item ){
-                var id = item[id_key];
-                var label = item[label_key];
-                select_items += "<option value='" + id + "' "+selected_attribute+" > " + indent + label+ "</option>";
-            });
-        }
-
-    });
-    return select_items;
-}
-
-///// PARSE LINEAR SELECT ITEMS : FUNCTION /////
-// Produces a series of HTML <options> from a given flat object
-function parse_linear_select_items( items, selected ){
-    var select_items = '';
-    // ROOT LEVEL ITEMS
-    angular.forEach( items, function( value, key ){
-        var id = key;
-        var label = items[key];
-        if ( isInArray( id, selected ) )
-            var selected_attribute = ' selected ';
-        else
-            var selected_attribute = '';
-        select_items += "<option value='" + id + "' "+selected_attribute+" >" + label + "</option>";
-    });
-    return select_items;
-}
-
-
 
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
