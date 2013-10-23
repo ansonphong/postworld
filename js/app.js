@@ -254,13 +254,137 @@ function parse_linear_select_items( items, selected ){
 ////////// EDIT POST CONTROLLER //////////
 function editPost($scope) {
 
+    $scope.pw_get_post_object = function(){
+        var post_data = {
+            post_id : 24,
+            post_title : "Hello Space",
+            post_name : "hello_space",
+            post_type : "feature",
+            post_status : "publish",
+            post_format : "video",
+            post_class : "contributor",
+            link_url : "",
+            tax_input : {
+                topic : ["healing","body"],
+                section : ["psi"],
+            },
+            tags_input : "tag1, tag2, tag3",
+        }
+
+        // SORT TAXONOMIES
+        // FOR EACH SELECTED TAXONOMY TERM SET
+        // So that the taxonomy[0] is the main term and taxonomy[1] is the sub-term
+        // ie. { topic : ["healing","body"] }
+        angular.forEach( post_data.tax_input, function( selected_terms, taxonomy ){
+            if ( selected_terms.length > 1 ){
+                // FOR EACH TAXONOMY TERM OPTION
+                // Go through each top level term for taxonomy in tax_terms
+                // If it equals the first value of terms, leave it as is
+                // If it isn't found, then swap order
+                var reorder = true;
+                angular.forEach( $scope.tax_terms[taxonomy], function( term_option ){
+                    // Compare each term option to the selected terms
+                    // If they're the same, do not reorder
+                    if ( term_option.slug == selected_terms[0] ){
+                        // If the term is the first term
+                        reorder = false;
+                    }
+                });
+                if ( reorder == true ){
+                    post_data.tax_input[taxonomy].reverse();
+                }
+            }
+        });
+
+        return post_data;   
+    }
+
+
+    // MODE : ( new | edit )
     $scope.mode = "edit";
 
-    // POST CLASS
+    // POST CLASS OPTIONS
     $scope.post_class_options = {
         contributor:"Contributor",
         author:"Author"
     };
+
+    // POST TYPE OPTIONS
+    $scope.post_type_options = {
+        feature : "Features",
+        blog : "Blog",
+        link : "Links",
+        announcement : "Announcements",
+        tribe_events : "Events"
+    };
+
+    // POST TYPE OPTIONS
+    $scope.post_type_options_obj = [
+        {
+            slug:"feature",
+            name:"Feature",
+            access:true
+        },
+        {
+            slug:"blog",
+            name:"Blog",
+            access:true
+        },
+        {
+            slug:"link",
+            name:"Link",
+            access:true
+        },
+        {
+            slug:"announcement",
+            name:"Announcements",
+            access:false
+        },
+        {
+            slug:"tribe_events",
+            name:"Events",
+            access:false
+        }
+    ];
+
+
+
+    // POST STATUS OPTIONS
+    $scope.post_status_options = {
+        publish : "Published",
+        draft : "Draft",
+        pending : "Pending",
+    };
+
+    // POST FORMAT OPTIONS
+    $scope.post_format_options = {
+        standard : "Standard",
+        video : "Video",
+        audio : "Audio",
+    };
+
+    // POST FORMAT META
+    $scope.post_format_meta = [
+        {
+            name:"Standard",
+            slug:"standard",
+            domains:[],
+            icon:"<i class='icon-circle-blank'></i>"
+        },
+        {
+            name:"Video",
+            slug:"video",
+            domains:["youtube.com","youtu.be","vimeo.com"],
+            icon:"<i class='icon-youtube-play'></i>"
+        },
+        {
+            name:"Audio",
+            slug:"audio",
+            domains:["soundcloud.com"],
+            icon:"<i class='icon-headphones'></i>"
+        },
+    ];
+
 
     // TAXONOMY TERMS
     $scope.tax_terms = {
@@ -436,63 +560,9 @@ function editPost($scope) {
         
     };
 
-    $scope.pw_get_post_object = function(){
-        var post_data = {
-            post_id : 24,
-            post_date_gmt:"2013-09-16 18:24:16",
-            post_title : "Hello Space",
-            post_name : "hello_space",
-            post_type : "feature",
-            post_status : "publish",
-            post_format : "video",
-            post_class : "contributor",
-            link_url : "",
-            tax_input : {
-                topic : ["healing","body"],
-                section : ["psi"],
-            },
-            tags_input : "tag1, tag2, tag3",
-        }
-
-        // SORT TAXONOMIES
-        // FOR EACH SELECTED TAXONOMY TERM SET
-        // So that the taxonomy[0] is the main term and taxonomy[1] is the sub-term
-        // ie. { topic : ["healing","body"] }
-        angular.forEach( post_data.tax_input, function( selected_terms, taxonomy ){
-            if ( selected_terms.length > 1 ){
-                // FOR EACH TAXONOMY TERM OPTION
-                // Go through each top level term for taxonomy in tax_terms
-                // If it equals the first value of terms, leave it as is
-                // If it isn't found, then swap order
-                var reorder = true;
-                angular.forEach( $scope.tax_terms[taxonomy], function( term_option ){
-                    // Compare each term option to the selected terms
-                    // If they're the same, do not reorder
-                    if ( term_option.slug == selected_terms[0] ){
-                        // If the term is the first term
-                        reorder = false;
-                    }
-                });
-                if ( reorder == true ){
-                    post_data.tax_input[taxonomy].reverse();
-                }
-            }
-        });
-
-        return post_data;   
-    }
 
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
-
-    // POST TYPE OPTIONS
-    $scope.post_types_linear = {
-        feature : "Features",
-        blog : "Blog",
-        link : "Links",
-        announcement : "Announcements",
-        tribe_events : "Events"
-    };
 
     ///// SELECTED TAXONOMY TERMS /////
     // • Creates an object with singular term data
@@ -571,49 +641,6 @@ function editPost($scope) {
         }, 1 );
 
 
-    // TAXONOMY SILO
-    $scope.tax_term_silo = {
-
-    };
-
-
-    // POST STATUS OPTIONS
-    $scope.post_status_options = {
-        publish : "Published",
-        draft : "Draft",
-        pending : "Pending",
-    };
-
-    // POST FORMAT OPTIONS
-    $scope.post_format_options = {
-        standard : "Standard",
-        video : "Video",
-        audio : "Audio",
-    };
-
-    // POST FORMAT META
-    $scope.post_format_meta = [
-        {
-            name:"Standard",
-            slug:"standard",
-            domains:[],
-            icon:"<i class='icon-circle-blank'></i>"
-        },
-        {
-            name:"Video",
-            slug:"video",
-            domains:["youtube.com","youtu.be","vimeo.com"],
-            icon:"<i class='icon-youtube-play'></i>"
-        },
-        {
-            name:"Audio",
-            slug:"audio",
-            domains:["soundcloud.com"],
-            icon:"<i class='icon-headphones'></i>"
-        },
-    ];
-
-
     ///// EVALUATE AND SET POST_FORMAT DEPENDING ON LINK_URL /////
     evalPostFormat();
     function evalPostFormat(){
@@ -664,220 +691,10 @@ function editPost($scope) {
     };
 
 
-    /*
-    angular.forEach( items, function( value, key ){
-        var id = key;
-        var label = items[key];
-        if ( isInArray( id, selected ) )
-            var selected_attribute = ' selected ';
-        else
-            var selected_attribute = '';
-        select_items += "<option value='" + id + "' "+selected_attribute+" >" + label + "</option>";
-
-        //$rootScope.$apply();
-    
-    });
-    */
-
     // SAVE POST FUNCTION
     $scope.savePost = function(){
         alert( JSON.stringify( $scope.post_data ) );
     }
-
-
-    // DEV
-    $scope.post_types = [
-        {
-            slug:"feature",
-            name:"Feature",
-            access:true
-        },
-        {
-            slug:"blog",
-            name:"Blog",
-            access:true
-        },
-        {
-            slug:"link",
-            name:"Link",
-            access:true
-        },
-        {
-            slug:"announcement",
-            name:"Announcements",
-            access:false
-        },
-        {
-            slug:"tribe_events",
-            name:"Events",
-            access:false
-        }
-    ];
-
-    $scope.post_type = $scope.post_types[2];
-
-
-    ////////// DATE & TIME PROCESSING //////////
-    // The date format takes in the post_date_gmt, GMT/UTC
-    // It is converted it to the local time zone
-    // The user transforms the time in local time zone
-    // Then it is saved to the model in GMT/UTC
-
-    function clientTimeZoneAbbr (dateInput) {
-    // Friendly timezone abbreviations in client-side JavaScript
-        var dateObject = dateInput || new Date(),
-            dateString = dateObject + "",
-            tzAbbr = (
-                // Works for the majority of modern browsers
-                dateString.match(/\(([^\)]+)\)$/) ||
-                // IE outputs date strings in a different format:
-                dateString.match(/([A-Z]+) [\d]{4}$/)
-            );
-     
-        if (tzAbbr) {
-            // Old Firefox uses the long timezone name (e.g., "Central
-            // Daylight Time" instead of "CDT")
-            tzAbbr = tzAbbr[1].match(/[A-Z]/g).join("");
-        }
-        return tzAbbr;
-    };
-
-    // SET UTC TIME OBJECT
-    // Casts a time object from the specified time zone into UTC time
-    // ie. timeString = 2013-09-16 18:24:16
-    // ie. timezone = PDT (optional) (default:UTC)
-    function setTimeObjectUTC ( timeString, timezone ){
-        if( typeof timezone === "undefined" )
-            var timezone = " UTC";
-        else
-            var timezone = " " + timezone;
-        var timeString = timeString + timezone;
-        var timeObject = new Date( timeString );
-        return timeObject;
-    }
-
-    // TIME OBJECT TO WORDPRESS TIME STRING : ie. 2013-10-12 18:24:16
-    // Converts a JS time object into a WP string in local time
-    // timeObject = a Javascript time object
-    // type = 'array'/'string' - how to return the result
-    // UTC = boolean (optional) - return the UTC time, if false returns the local time
-    function timeObjectToWP ( timeObject, returnType, UTC ){
-
-        if( UTC == true ){
-            var year = timeObject.getUTCFullYear();
-            var month = (timeObject.getUTCMonth() +1) ;
-            var date = timeObject.getUTCDate();
-            var hours = timeObject.getUTCHours();
-            var minutes = timeObject.getUTCMinutes();
-            var seconds = timeObject.getUTCSeconds();
-        } else {
-            var year = timeObject.getFullYear();
-            var month = (timeObject.getMonth() +1) ;
-            var date = timeObject.getDate();
-            var hours = timeObject.getHours();
-            var minutes = timeObject.getMinutes();
-            var seconds = timeObject.getSeconds();
-        }
-
-        if( typeof returnType === "undefined" )
-            var returnType = "string";
-
-        if( returnType == "string" ){
-            return year + "-" + month + "-" + date + " " + hours + ":" + minutes + ":" + seconds;
-        }
-        else if( returnType == "array" ){
-            var timeArray = [];
-            timeArray.push( year, month, date, hours, minutes, seconds );
-            return timeArray;
-        }
-
-    }
-
-    function getPostDate( dateField ){ // post_date_gmt / post_date
-        if ( typeof dateField === 'undefined' ){
-            // RETURN THE CURRENT DATE
-            var currentDate = new Date();
-            return currentDate;
-        }
-        else
-            // RETURN THE GIVEN DATE
-            return new Date( dateField );
-    }
-
-    //var gmt_time = "2013-09-16 18:24:16";
-    // Get the post's time in GMT/UTC
-    $scope.post_date_gmt = getPostDate( $scope.post_data.post_date_gmt );
-
-    // TIME IN : local time zone
-    $scope.timeString = timeObjectToWP( $scope.post_date_gmt, 'string' );
-    $scope.timeArray = timeObjectToWP( $scope.post_date_gmt, 'array' );
-
-    // TIME IN : UTC
-    $scope.timeStringUTC = timeObjectToWP ( setTimeObjectUTC( $scope.timeString, clientTimeZoneAbbr() ), "string", 1 );
-
-    // SANITIZE THE UPDATED FIELDS TO POST OBJECT
-    $scope.$watch( "timeArray",
-        function (){
-            var timeArray = $scope.timeArray;
-            var dateObj = $scope.post_date_gmt;
-
-            // YEAR
-            timeArray[0] = parseInt(timeArray[0]);
-            if ( timeArray[0] > 9999 )
-                timeArray[0] = timeArray[0].slice(0,4);
-            if ( timeArray[0] < 1 || isNaN( timeArray[0] ) )
-                timeArray[0] = dateObj.getUTCFullYear();
-
-            // MONTH
-            timeArray[1] = parseInt(timeArray[1]);
-            if ( timeArray[1] > 12 )
-                timeArray[1] = 12;
-            if ( timeArray[1] < 1 || isNaN( timeArray[1] ) )
-                timeArray[1] = (dateObj.getUTCMonth()+1);
-
-            // DATE
-            timeArray[2] = parseInt(timeArray[2]);
-            if ( timeArray[2] > 31 )
-                timeArray[2] = 31;
-            if ( timeArray[2] < 1 || isNaN( timeArray[2] ) )
-                timeArray[2] = 1;
-
-            // HOURS
-            timeArray[3] = parseInt(timeArray[3]);
-            if ( timeArray[3] > 23 )
-                timeArray[3] = 23;
-            if ( timeArray[3] < 0 || isNaN( timeArray[3] ) )
-                timeArray[3] = 0;
-
-            // MINUTES
-            timeArray[4] = parseInt(timeArray[4]);
-            if ( timeArray[4] > 59 )
-                timeArray[4] = 59;
-            if ( timeArray[4] < 0 || isNaN( timeArray[4] ) )
-                timeArray[4] = 0;
-
-            // SECONDS
-            timeArray[5] = parseInt(timeArray[5]);
-            if ( timeArray[5] > 59 )
-                timeArray[5] = 59;
-            if ( timeArray[5] < 0 || isNaN( timeArray[5] ) )
-                timeArray[5] = 0;
-
-            // TIME IN : local time zone
-            $scope.timeArray = timeArray;
-            $scope.timeString = timeArray[0] + "-" + timeArray[1] + "-" + timeArray[2] + " " + timeArray[3] + ":" + timeArray[4] + ":" + timeArray[5];
-
-            // TIME IN : UTC
-            $scope.timeStringUTC = timeObjectToWP ( setTimeObjectUTC( $scope.timeString, clientTimeZoneAbbr() ), "string", 1 );
-
-        },1);
-
-
-        // WRITE THE UPDATED DATE TO POST OBJECT
-        $scope.$watch( "timeStringUTC",
-            function ( newValue, oldValue ){
-                $scope.post_data.post_date_gmt = $scope.timeStringUTC;
-            });
 
 }
 
