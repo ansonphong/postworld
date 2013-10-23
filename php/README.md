@@ -2405,6 +2405,7 @@ pw_insert_terms($json_terms,"JSON", true);
 
 ```
 
+__return__ : *true*
 
 ------
 
