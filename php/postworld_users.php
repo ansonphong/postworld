@@ -108,7 +108,7 @@ function pw_get_userdata($user_id, $fields) {
 
 }
 
-//TODO
+//TODO: change to new schema
 function pw_update_user($userdata) {
 	/*
 	 *

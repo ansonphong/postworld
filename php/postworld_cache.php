@@ -158,6 +158,7 @@
 		$feeds_options = $pw_defaults['feeds']['cache_feeds'];
 		$cron_logs=array();
 		$number_of_feeds = count($feeds_options);
+		//print_r($number_of_feeds);
 		for ($i=0; $i <$number_of_feeds ; $i++) {
 			$time_start = date("Y-m-d H:i:s"); 
 			$cache_output = pw_cache_feed($feeds_options[$i]);
@@ -206,39 +207,150 @@
 	}
 
 
-	function cache_shares ( $cache_all ){ //<< UNDER CONSTRUCTION <<
+	function cache_shares ( $cache_all = FALSE){ 
 		/*
-		 Description
-			Caches user and post share reports
-			Paramaters
+		
+		 *  Description
+		Caches user and post share reports from the Shares table
+		
+		 * Paramaters
+		
 			-$cache_all : boolean
 			-Default : false
-			
-			Process
-			
+		
+		 * Process
+		
 			-If $cache_all = false, just update the recently changed share reports
-			
-			-Check Cron Logs table for the most recent start time of the last cache_shares() operation
-			
-		 * POSTS :
-			-Get an array of all post_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column
-			-Run cache_post_shares($post_id) for all recently updated shares
-			
-		 * AUTHORS :
-			-Get an array of all post_author_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column, Run cache_user_post_shares($user_id) for all recently updated user's shares
-			
-		 * USERS :
-			-Get an array of all user_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column Run cache_user_shares($user_id) for all recently updated user's shares
-			-If $cache_all = true
-			
-			-Cycle through every single post and run cache_post_share_report($post_id)
-			-Cycle through every single user and run cache_user_share_report($user_id)
-			
-		 * return : cron_logs Object (store in table wp_postworld_cron_logs) 
+				-Check Cron Logs table for the most recent start time of the last cache_shares() operation
+				-POSTS :
+					Get an array of all post_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column
+					Run cache_post_shares($post_id) for all recently updated shares
+				-AUTHORS :
+					Get an array of all post_author_IDs from Shares table which have been updated since the last cache.
+					Run cache_user_post_shares($user_id) for all recently updated user's shares
+				-USERS :
+					Get an array of all user_IDs from Shares table which have been updated since the last cache. Run cache_user_shares($user_id) for all recently updated user's shares
+		
+		 	-If $cache_all = true
+				-Cycle through every post and run cache_post_shares($post_id)
+				-Cycle through every author and run cache_user_post_shares($user_id)
+				-Cycle through every user and run cache_user_shares($user_id)
+		return : cron_logs Object (store in table wp_postworld_cron_logs)
 		 */	
-		 
+		
+		
+		
+				
+		 $cron_logs=array();
+		 if(!$cache_all){
+		 	
+			$recent_log = get_most_recent_cache_shares_log();
+			 
+			 if(!is_null($recent_log)){
+			 	$time_start = date("Y-m-d H:i:s");
+				$post_ids = get_recent_shares_post_ids($recent_log->last_time);
+				foreach ($post_ids as $post_id) {
+					cache_user_post_shares($post_id->$post_id);
+				}
+				
+				$user_ids = get_recent_shares_user_ids($recent_log->last_time);
+				foreach ($user_ids as $user_id) {
+					cache_user_shares($user_id->$user_id);
+				}
+				
+				$author_ids = get_recent_shares_post_ids($recent_log->last_time);
+				foreach ($post_ids as $post_id) {
+					 cache_user_post_shares($post_id->$post_id);
+				}
+				
+				
+				$time_end = date("Y-m-d H:i:s");
+				$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_shares',null,null);
+				return $current_cron_log_object;
+			 }else{
+			 	
+			 }
+			
+			
+		 }else{
+	 		//-If $cache_all = true
+	 		$time_start = date("Y-m-d H:i:s");
+	 		/*-Cycle through every post and run cache_post_shares($post_id) */
+	 		$post_ids = get_all_post_ids_as_array();
+			foreach ($post_ids as $post_id) {
+				cache_post_shares($post_id->ID);
+			}
+			/*-Cycle through every author and run cache_user_post_shares($user_id)*/
+			/*-Cycle through every user and run cache_user_shares($user_id)*/
+			$user_ids = get_all_user_ids_as_array();
+			foreach ($user_ids as $user_id) {
+				cache_user_post_shares($user_id->ID);
+				cache_user_shares($user_id->ID);	
+			}
+				 
+			$time_end = date("Y-m-d H:i:s");
+			$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_shares',null,null);
+			return $current_cron_log_object;
+				
+		 }
 		 
 	
+	}
+
+	//TODO : to be specified
+	function cache_user_post_shares(){}
+
+	function get_most_recent_cache_shares_log(){
+		global $wpdb;
+		$wpdb->show_errors();
+		$query="SELECT * FROM wp_postworld_a1. wp_postworld_cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'cache_shares')";
+		$row = $wpdb->get_row($query);	
+	}
+	
+	function get_recent_shares_post_ids($last_time){
+		 global $wpdb;	
+		 $wpdb->show_errors();
+		 $query = "select DISTINCT  post_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+		 $post_ids = $wpdb->query($query);
+		 return $post_ids;
+	}	
+	
+	function get_recent_shares_author_ids($last_time){
+		 global $wpdb;	
+		 $wpdb->show_errors();
+		 $query = "select DISTINCT  user_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+		 $user_ids = $wpdb->query($query);
+		 return $user_ids;
+	}	
+	
+	function get_recent_shares_user_ids($last_time){
+		 global $wpdb;	
+		 $wpdb->show_errors();
+		 $query = "select DISTINCT author_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+		 $author_ids = $wpdb->query($query);
+		 return $author_ids;
+	}	
+
+
+	function get_all_post_ids_as_array(){
+		 global $wpdb;
+		 $wpdb->show_errors();
+		 
+		 $query = "select ID from wp_posts";
+		 $post_ids_array = $wpdb->get_results($query);
+		 
+		 return ($post_ids_array);
+	}
+	function get_all_user_ids_as_array(){
+		
+		global $wpdb;
+		$wpdb->show_errors();
+
+		$query = "select ID from wp_users";
+		$user_ids_array = $wpdb->get_results($query);
+
+		return $user_ids_array;
+		
 	}
 	
 	//////////////// POST SHARES /////////////////////
@@ -379,9 +491,38 @@
 			$current_cron_log_object->time_end=$time_end;// {{timestamp}}
 			$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
 			//$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}	
-			
+			insert_cron_log_to_db($current_cron_log_object);
 			return $current_cron_log_object;
 	}
+	
+	function insert_cron_log_to_db($cron_log_object){
+		global $wpdb;
+		$wpdb -> show_errors();
+		
+		if(is_null($cron_log_object->posts) )$cron_log_object->posts = 'null';
+		$query = "INSERT INTO `wp_postworld_a1`.`wp_postworld_cron_logs`
+					(
+					`function_type`,
+					`process_id`,
+					`time_start`,
+					`time_end`,
+					`timer`,
+					`posts`,
+					`query_args`)
+					VALUES
+					(
+					'".$cron_log_object->function_type."',
+					'".$cron_log_object->process_id."',
+					'".$cron_log_object->time_start."',
+					'".$cron_log_object->time_end."',
+					'".$cron_log_object->timer."',
+					".$cron_log_object->posts.",
+					'".$cron_log_object->query_args."')";
+					
+		$wpdb->query($query);
+	}
+	
+	
     
   
 ?>
