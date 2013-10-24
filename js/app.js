@@ -163,13 +163,6 @@ window.isInArray =  function(value, array) {
         return false;
 }
 
-window.varExists = function(value){
-    if ( typeof value === 'undefined' )
-        return false;
-    else
-        return true;
-}
-
 window.isEmpty = function(value){
     if ( typeof value === 'undefined' || value == '' )
         return true;
@@ -177,37 +170,278 @@ window.isEmpty = function(value){
         return false; //value[0].value ? true : false;  
 }
 
-function extract_parentheses(string){
-    var pattern = /\((.+?)\)/g,
-        match,
-        matches = [];
-    while (match = pattern.exec(string)) {
-        matches.push(match[1]);
-    }
-    return matches;
-}
 
-function isNumber(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-}
 
-/*
-postworld.service('pwEditPost', function ($resource) {   
-//postworld.factory('notify', ['$window', function(win) {
-    //var msgs = [];
-    //alert("I am service.");
-    return {
-        theMessage: function() {
-            return "I am service.";
+
+
+
+
+postworld.service('ext', ['$log', function ($log) {
+    // JS FUNCTION EXTENDORS
+    return{
+        varExists: function(value){
+            if ( typeof value === 'undefined' )
+                return false;
+            else
+                return true;
         },
-    };
-  //}]);
 
-  });
-*/
+        extract_parentheses: function(string){
+            var pattern = /\((.+?)\)/g,
+                match,
+                matches = [];
+            while (match = pattern.exec(string)) {
+                matches.push(match[1]);
+            }
+            return matches;
+        },
+        isNumber: function(n) {
+            return !isNaN(parseFloat(n)) && isFinite(n);
+        }
+
+    }
+
+}]);
+
+
+
+postworld.service('pwPostOptions', ['$log', function ($log) {
+
+    // Do one AJAX call here which returns all the options
+
+    return{
+        pwGetPostTypeOptions: function(){
+        return {
+            feature : "Features",
+            blog : "Blog",
+            link : "Links",
+            announcement : "Announcements",
+            tribe_events : "Events"
+            };
+        },
+        pwGetPostStatusOptions: function(){
+            return {
+                publish : "Published",
+                draft : "Draft",
+                pending : "Pending",
+            };
+        },
+        pwGetPostFormatOptions: function(){
+            return {
+                standard : "Standard",
+                video : "Video",
+                audio : "Audio",
+            };
+        },
+        pwGetPostClassOptions: function(){
+            return {
+                contributor:"Contributor",
+                author:"Author"
+            };
+        },
+        pwGetPostFormatMeta: function(){
+            return [
+                {
+                    name:"Standard",
+                    slug:"standard",
+                    domains:[],
+                    icon:"<i class='icon-circle-blank'></i>"
+                },
+                {
+                    name:"Video",
+                    slug:"video",
+                    domains:["youtube.com","youtu.be","vimeo.com"],
+                    icon:"<i class='icon-youtube-play'></i>"
+                },
+                {
+                    name:"Audio",
+                    slug:"audio",
+                    domains:["soundcloud.com"],
+                    icon:"<i class='icon-headphones'></i>"
+                },
+            ];
+        },
+        pwGetTaxTerms: function(){
+            return {
+                "topic" : [
+                    {
+                        slug:"psyche",
+                        name:"/psyche",
+                        children:{
+                            ancient:"Ancient Mysteries",
+                            astrology:"Astrology",
+                            consciousness:"Consciousness",
+                            dreams:"Dreams",
+                            ets:"Extraterrestrials",
+                            indigenous:"Indigenous Cultures",
+                            occult:"Occult",
+                            psi:"Psi",
+                            psychedelics:"Psychedelics",
+                            psychology:"Psychology",
+                            shamanism:"Shamanism",
+                            spirituality:"Spirituality",
+                            transformation:"Transformation",
+                            psyche_misc:"Misc"
+                            },
+                    },
+                    {
+                        slug:"arts",
+                        name:"/arts",
+                        children:{
+                            conferences:"Conferences",
+                            digital_art:"Digital Art",
+                            world_art:"World Art",
+                            festival_culture:"Festival Culture",
+                            games:"Games",
+                            music:"Music",
+                            performance:"Performance",
+                            publications:"Publications",
+                            video:"Video",
+                            film:"Film",
+                            misc:"Misc"
+                            },
+                    },
+                    {
+                        slug:"body",
+                        name:"/body",
+                        children:{
+                            energy_medicine:"Energy Medicine",
+                            food_nutrition:"Food & Nutrition",
+                            healing:"Healing",
+                            herbalism:"Herbalism",
+                            homeopathy:"Homeopathy",
+                            sexuality:"Sexuality",
+                            slow_living:"Slow Living",
+                            tantra:"Tantra",
+                            yoga:"Yoga",
+                            body_misc:"Misc",
+                            },
+                    },
+                    {
+                        slug:"eco",
+                        name:"/eco",
+                        children:{
+                            animal_rights:"Animal Rights",
+                            climate_change:"Climate Change",
+                            conservation:"Conservation",
+                            energy:"Energy",
+                            environment:"Environment",
+                            extinction:"Extinction",
+                            gardening:"Gardening",
+                            permaculture:"Permaculture",
+                            sustainability:"Sustainability",
+                            water:"Water",
+                            eco_misc:"Misc",
+                            },
+                    },
+                    {
+                        slug:"tech",
+                        name:"/tech",
+                        children:{
+                            biomimicry:"Biomimicry",
+                            cosmology:"Cosmology",
+                            design_science:"Design Science",
+                            digital:"Digital",
+                            diy:"DIY",
+                            networks:"Networks",
+                            privacy:"Privacy",
+                            robotics:"Robotics",
+                            singularity:"Singularity",
+                            tech_misc:"Misc"
+                        }
+                    },
+                    {
+                        slug:"commons",
+                        name:"/commons",
+                        children:{
+                            action_alerts:"Action Alerts",
+                            activism:"Activism",
+                            alternative_economics:"Alternative Economics",
+                            collaboration:"Collaboration",
+                            community:"Community",
+                            crowdfunding:"Crowdfunding",
+                            democracy:"Democracy",
+                            drug_laws:"Drug Laws",
+                            evolver:"Evolver",
+                            evolver_spores:"Evolver Spores",
+                            open_source:"Open Source",
+                            peer_to_peer:"Peer to Peer",
+                            retreats:"Retreats",
+                            commons_misc:"Misc"
+                        }
+                    },
+                ],
+                'section' : [
+                    {
+                        slug:"psychedelic",
+                        name:"Psychedelic Culture",
+                    },
+                    {
+                        slug:"conscious_convergences",
+                        name:"Conscious Convergences",
+                    },
+                    {
+                        slug:"psi",
+                        name:"Psi Frontiers",
+                    },
+                    {
+                        slug:"video",
+                        name:"Videos",
+                    },
+                    {
+                        slug:"podcast",
+                        name:"Podcasts",
+                    },
+                    {
+                        slug:"edm",
+                        name:"Evolver EDM",
+                    },
+                    {
+                        slug:"evo_network",
+                        name:"Evolver Network",
+                    },
+                    {
+                        slug:"evo_learning_lab",
+                        name:"Evolver Learning Lab",
+                    },
+
+                ],
+                'type' : [
+                    {
+                        slug:"song_week",
+                        name:"Song of the Week",
+                        parent_name:"Hilight",
+                        parent:"hilight",
+                    },
+                    {
+                        slug:"video_week",
+                        name:"Video of the Week",
+                        parent_name:"Hilight",
+                        parent:"hilight"
+                    },
+                    {
+                        slug:"event_feature",
+                        name:"Featured Event",
+                        parent_name:"Events",
+                        parent:"events"
+                    },
+                    {
+                        slug:"event_evolver",
+                        name:"Evolver Event",
+                        parent_name:"Events",
+                        parent:"events"
+                    },
+                ],
+                
+            };
+        },
+
+    }
+}]);
 
 
 postworld.service('pwEditPost', ['$log', function ($log) {
+
         return {
             pwGetPost: function(){
                 return {
@@ -227,282 +461,105 @@ postworld.service('pwEditPost', ['$log', function ($log) {
                     tags_input : "tag1, tag2, tag3",
                 };
             },
-            pwGetPostTypeOptions: function(){
-                return {
-                    feature : "Features",
-                    blog : "Blog",
-                    link : "Links",
-                    announcement : "Announcements",
-                    tribe_events : "Events"
-                };
-            },
-            pwGetPostStatusOptions: function(){
-                return {
-                    publish : "Published",
-                    draft : "Draft",
-                    pending : "Pending",
-                };
-            },
-            pwGetPostFormatOptions: function(){
-                return {
-                    standard : "Standard",
-                    video : "Video",
-                    audio : "Audio",
-                };
-            },
-            pwGetPostClassOptions: function(){
-                return {
-                    contributor:"Contributor",
-                    author:"Author"
-                };
-            },
-            pwGetPostFormatMeta: function(){
-                return [
-                    {
-                        name:"Standard",
-                        slug:"standard",
-                        domains:[],
-                        icon:"<i class='icon-circle-blank'></i>"
-                    },
-                    {
-                        name:"Video",
-                        slug:"video",
-                        domains:["youtube.com","youtu.be","vimeo.com"],
-                        icon:"<i class='icon-youtube-play'></i>"
-                    },
-                    {
-                        name:"Audio",
-                        slug:"audio",
-                        domains:["soundcloud.com"],
-                        icon:"<i class='icon-headphones'></i>"
-                    },
-                ];
-            },
-            pwGetTaxTerms: function(){
-                return {
-                    "topic" : [
-                        {
-                            slug:"psyche",
-                            name:"/psyche",
-                            children:{
-                                ancient:"Ancient Mysteries",
-                                astrology:"Astrology",
-                                consciousness:"Consciousness",
-                                dreams:"Dreams",
-                                ets:"Extraterrestrials",
-                                indigenous:"Indigenous Cultures",
-                                occult:"Occult",
-                                psi:"Psi",
-                                psychedelics:"Psychedelics",
-                                psychology:"Psychology",
-                                shamanism:"Shamanism",
-                                spirituality:"Spirituality",
-                                transformation:"Transformation",
-                                psyche_misc:"Misc"
-                                },
-                        },
-                        {
-                            slug:"arts",
-                            name:"/arts",
-                            children:{
-                                conferences:"Conferences",
-                                digital_art:"Digital Art",
-                                world_art:"World Art",
-                                festival_culture:"Festival Culture",
-                                games:"Games",
-                                music:"Music",
-                                performance:"Performance",
-                                publications:"Publications",
-                                video:"Video",
-                                film:"Film",
-                                misc:"Misc"
-                                },
-                        },
-                        {
-                            slug:"body",
-                            name:"/body",
-                            children:{
-                                energy_medicine:"Energy Medicine",
-                                food_nutrition:"Food & Nutrition",
-                                healing:"Healing",
-                                herbalism:"Herbalism",
-                                homeopathy:"Homeopathy",
-                                sexuality:"Sexuality",
-                                slow_living:"Slow Living",
-                                tantra:"Tantra",
-                                yoga:"Yoga",
-                                body_misc:"Misc",
-                                },
-                        },
-                        {
-                            slug:"eco",
-                            name:"/eco",
-                            children:{
-                                animal_rights:"Animal Rights",
-                                climate_change:"Climate Change",
-                                conservation:"Conservation",
-                                energy:"Energy",
-                                environment:"Environment",
-                                extinction:"Extinction",
-                                gardening:"Gardening",
-                                permaculture:"Permaculture",
-                                sustainability:"Sustainability",
-                                water:"Water",
-                                eco_misc:"Misc",
-                                },
-                        },
-                        {
-                            slug:"tech",
-                            name:"/tech",
-                            children:{
-                                biomimicry:"Biomimicry",
-                                cosmology:"Cosmology",
-                                design_science:"Design Science",
-                                digital:"Digital",
-                                diy:"DIY",
-                                networks:"Networks",
-                                privacy:"Privacy",
-                                robotics:"Robotics",
-                                singularity:"Singularity",
-                                tech_misc:"Misc"
-                            }
-                        },
-                        {
-                            slug:"commons",
-                            name:"/commons",
-                            children:{
-                                action_alerts:"Action Alerts",
-                                activism:"Activism",
-                                alternative_economics:"Alternative Economics",
-                                collaboration:"Collaboration",
-                                community:"Community",
-                                crowdfunding:"Crowdfunding",
-                                democracy:"Democracy",
-                                drug_laws:"Drug Laws",
-                                evolver:"Evolver",
-                                evolver_spores:"Evolver Spores",
-                                open_source:"Open Source",
-                                peer_to_peer:"Peer to Peer",
-                                retreats:"Retreats",
-                                commons_misc:"Misc"
-                            }
-                        },
-                    ],
-                    'section' : [
-                        {
-                            slug:"psychedelic",
-                            name:"Psychedelic Culture",
-                        },
-                        {
-                            slug:"conscious_convergences",
-                            name:"Conscious Convergences",
-                        },
-                        {
-                            slug:"psi",
-                            name:"Psi Frontiers",
-                        },
-                        {
-                            slug:"video",
-                            name:"Videos",
-                        },
-                        {
-                            slug:"podcast",
-                            name:"Podcasts",
-                        },
-                        {
-                            slug:"edm",
-                            name:"Evolver EDM",
-                        },
-                        {
-                            slug:"evo_network",
-                            name:"Evolver Network",
-                        },
-                        {
-                            slug:"evo_learning_lab",
-                            name:"Evolver Learning Lab",
-                        },
-
-                    ],
-                    'type' : [
-                        {
-                            slug:"song_week",
-                            name:"Song of the Week",
-                            parent_name:"Hilight",
-                            parent:"hilight",
-                        },
-                        {
-                            slug:"video_week",
-                            name:"Video of the Week",
-                            parent_name:"Hilight",
-                            parent:"hilight"
-                        },
-                        {
-                            slug:"event_feature",
-                            name:"Featured Event",
-                            parent_name:"Events",
-                            parent:"events"
-                        },
-                        {
-                            slug:"event_evolver",
-                            name:"Evolver Event",
-                            parent_name:"Events",
-                            parent:"events"
-                        },
-                    ],
-                    
-                };
-            }
+            
         };
-    }])
+    }]);
 
+postworld.service('pwEditPostFilters', ['$log', function ($log) {
+
+        return {
+        
+            sortTaxTermsInput: function(post_data, tax_terms, sub_object){
+                // SORT TAXONOMIES
+                // FOR EACH SELECTED TAXONOMY TERM SET
+                // The order of the taxonomy terms & sub-terms control is sensitive to order in the terms array
+                // tax_input[taxonomy][0/1] : [0] is the primary term, and [1] is a sub/child-term of that term in the database
+                // So In case the taxonomy terms were not returned in the right order
+                // Confirm that the order is ['parent', 'child'], otherwise re-arrange based on the supplied tax_terms hierarchy
+                // So that the taxonomy[0] is the primary term and taxonomy[1] is the sub/child-term
+                // ie. If it's returned : { topic : ["healing","body"] }
+                //     and "healing" term is in fact a child of "body" term,
+                //     then re-arrange to { topic : ["body","healing"] }
+                
+                angular.forEach( post_data[sub_object], function( selected_terms, taxonomy ){
+                    if ( selected_terms.length > 1 ){
+                        // FOR EACH TAXONOMY TERM OPTION
+                        // Go through each top level term for taxonomy in tax_terms
+                        // If it equals the first value of terms, leave it as is
+                        // If it isn't found, then swap order
+                        var reorder = true;
+                        angular.forEach( tax_terms[taxonomy], function( term_option ){
+                            // Compare each term option to the selected terms
+                            // If they're the same, do not reorder
+                            if ( term_option.slug == selected_terms[0] ){
+                                // If the term is the first term
+                                reorder = false;
+                            }
+                        });
+                        if ( reorder == true ){
+                            post_data[sub_object][taxonomy].reverse();
+                        }
+                    }
+                });
+                return post_data;
+            },
+            ///// EVALUATE AND SET POST_FORMAT DEPENDING ON LINK_URL /////
+            evalPostFormat: function( link_url, post_format_meta ){
+                var default_format = "standard";
+                var set = "";
+                //alert(post_format_meta);
+                // If link_url has a value
+                if ( !isEmpty( link_url ) && !isEmpty( post_format_meta ) ){
+                    ///// FOR EACH POST FORMAT : Go through each post format
+                    angular.forEach( post_format_meta, function( post_format ){
+                        ///// FOR EACH DOMAIN : Go through each domain
+                        angular.forEach( post_format.domains, function( domain ){
+                        // If domain exists in the link_url, set that format
+                            if ( isInArray( domain, link_url ) ){
+                                set = post_format.slug;
+                            }
+                        });
+                    });
+                    // If no matches, set default
+                    if ( set == "" )
+                        return default_format;
+                    else
+                        return set;
+                }
+                // Otherwise, set default
+                else {
+                    return default_format;
+                }
+                
+            },
+            
+        };
+    }]);
 
 ////////// EDIT POST CONTROLLER //////////
-postworld.controller('editPost', ['$scope', 'pwEditPost', function($scope, $pwEditPost) {
+postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
 
     $scope.pw_get_post_object = function(){
         var post_data = $pwEditPost.pwGetPost();
 
-        // SORT TAXONOMIES
-        // FOR EACH SELECTED TAXONOMY TERM SET
-        // So that the taxonomy[0] is the main term and taxonomy[1] is the sub-term
-        // ie. { topic : ["healing","body"] }
-        angular.forEach( post_data.tax_input, function( selected_terms, taxonomy ){
-            if ( selected_terms.length > 1 ){
-                // FOR EACH TAXONOMY TERM OPTION
-                // Go through each top level term for taxonomy in tax_terms
-                // If it equals the first value of terms, leave it as is
-                // If it isn't found, then swap order
-                var reorder = true;
-                angular.forEach( $scope.tax_terms[taxonomy], function( term_option ){
-                    // Compare each term option to the selected terms
-                    // If they're the same, do not reorder
-                    if ( term_option.slug == selected_terms[0] ){
-                        // If the term is the first term
-                        reorder = false;
-                    }
-                });
-                if ( reorder == true ){
-                    post_data.tax_input[taxonomy].reverse();
-                }
-            }
-        });
-
+        // CHECK TERMS ORDER
+        post_data = $pwEditPostFilters.sortTaxTermsInput( post_data, $scope.tax_terms, 'tax_input' );
+        
         return post_data;   
     }
 
-
     // POST TYPE OPTIONS
-    $scope.post_type_options = $pwEditPost.pwGetPostTypeOptions();
+    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
     // POST STATUS OPTIONS
-    $scope.post_status_options = $pwEditPost.pwGetPostStatusOptions();
+    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
     // POST FORMAT OPTIONS
-    $scope.post_format_options = $pwEditPost.pwGetPostFormatOptions();
+    $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
-    $scope.post_format_meta = $pwEditPost.pwGetPostFormatMeta();
+    $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
-    $scope.post_class_options = $pwEditPost.pwGetPostClassOptions();
+    $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
     // TAXONOMY TERMS
-    $scope.tax_terms = $pwEditPost.pwGetTaxTerms();
+    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
 
@@ -587,6 +644,7 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', function($scope, $pwEd
         }, 1 );
 
 
+    /*
     ///// EVALUATE AND SET POST_FORMAT DEPENDING ON LINK_URL /////
     //evalPostFormat();
     function evalPostFormat(){
@@ -620,21 +678,23 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', function($scope, $pwEd
             set_default_post_format();
         }
     };
+    */
 
     // LINK_URL WATCH : Watch for changes in link_url
     // Evaluate the post_format
     //$scope.$watch( "post_data.link_url",
     $scope.$watchCollection('[post_data.link_url, post_data.post_format]',
         function ( newValue, oldValue ){
-            evalPostFormat();
+            $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
 
+    /*
     // NG-CHANGE LINK_URL : Add this to link_url for optional method
     // ng-change="changeLinkUrl"
     $scope.changeLinkUrl = function(){
         evalPostFormat();
     };
-
+    */
 
     // SAVE POST FUNCTION
     $scope.savePost = function(){
