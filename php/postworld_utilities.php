@@ -12,13 +12,19 @@ function postworld_includes(){
 	wp_enqueue_script( 'AngularJS-Resource', WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
 	wp_enqueue_script( 'AngularJS-Route', WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
 	wp_enqueue_script( 'AngularJS-Sanitize', WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
+	wp_enqueue_script( 'AngularJS-UI-Utils', WP_PLUGIN_URL.'/postworld/lib/angular/angular-ui-utils.min.js');
 	
+	// ANGULAR UI : BOOTSTRAP
+	wp_enqueue_script( 'AngularJS-UI-Bootstrap', plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
+
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
 					  'pluginurl' => WP_PLUGIN_URL,
 					);
-	$angularDep = array('AngularJS','AngularJS-Resource','AngularJS-Route');
+	$angularDep = array('AngularJS','AngularJS-Resource','AngularJS-Route', 'AngularJS-UI-Utils', 'AngularJS-UI-Bootstrap');
 
+	wp_enqueue_script( 'pw-app-JS','', $angularDep );
+	
 	wp_register_script( "pw-app-JS", WP_PLUGIN_URL.'/postworld/js/app.js' );
 	wp_localize_script( 'pw-app-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-app-JS','', $angularDep );
@@ -48,6 +54,7 @@ function postworld_includes(){
 	wp_enqueue_script( 'pw-pwCommentsService-JS','', $angularDep );
 
 	wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
+
 
 	//pw_modals();
 

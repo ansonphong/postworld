@@ -34,7 +34,7 @@ postworld.directive('loadFeed', function() {
 
 postworld.controller('pwFeedController',
     function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
-    	
+
     	// Definitions
   		$scope.convertQueryString2FeedQuery= function (params) {
   			for(var key in params){

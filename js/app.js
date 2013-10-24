@@ -2,7 +2,7 @@
 var feed_settings = [];
 var load_comments = [];
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll'])
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap' ])
     .config(function ($routeProvider, $locationProvider) {              
         $routeProvider.when('/live-feed-1/',
             {
@@ -244,6 +244,85 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
                 contributor:"Contributor",
                 author:"Author"
             };
+        },
+        pwGetPostYearOptions: function(){
+            return [
+                2007,
+                2008,
+                2009,
+                2010,
+                2011,
+                2012,
+                2013,
+            ];
+        },
+        pwGetPostMonthOptionsPrimary: function(){
+            return {
+                1:"January",
+                2:"Fabruary",
+                3:"March",
+                4:"April",
+                5:"May",
+                6:"June",
+                7:"July",
+                8:"August",
+                9:"September",
+                10:"October",
+                11:"November",
+                12:"December",
+            };
+        },
+        pwGetPostMonthOptions: function(){
+            return [
+                {
+                    name:"January",
+                    number:1
+                },
+                {
+                    name:"February",
+                    number:2
+                },
+                {
+                    name:"March",
+                    number:3
+                },
+                {
+                    name:"April",
+                    number:4
+                },
+                {
+                    name:"May",
+                    number:5
+                },
+                {
+                    name:"June",
+                    number:6
+                },
+                {
+                    name:"July",
+                    number:7
+                },
+                {
+                    name:"August",
+                    number:8
+                },
+                {
+                    name:"September",
+                    number:9
+                },
+                {
+                    name:"October",
+                    number:10
+                },
+                {
+                    name:"November",
+                    number:11
+                },
+                {
+                    name:"December",
+                    number:12
+                },
+            ];
         },
         pwGetPostFormatMeta: function(){
             return [
@@ -602,7 +681,30 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
     }]);
 
 
-////////// EDIT POST CONTROLLER //////////
+////////// ------------ SEARCH FIELDS CONTROLLER ------------ //////////
+postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
+
+    // POST TYPE OPTIONS
+    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
+    // POST YEAR OPTIONS
+    $scope.post_year_options = $pwPostOptions.pwGetPostYearOptions();
+    // POST MONTH OPTIONS
+    $scope.post_month_options = $pwPostOptions.pwGetPostMonthOptions();
+    // POST STATUS OPTIONS
+    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
+    // POST FORMAT OPTIONS
+    $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    // POST FORMAT META
+    $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    // POST CLASS OPTIONS
+    $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+    // TAXONOMY TERMS
+    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+
+}]);
+
+
+////////// ------------ EDIT POST CONTROLLER ------------ //////////
 postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
 
     $scope.pw_get_post_object = function(){
@@ -659,6 +761,13 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
 }]);
 
 
+function AuthorAutocomplete($scope) {
+  $scope.selected = undefined;
+  $scope.authors = ['Erik Davis', 'Daniel Pinchbeck', 'Ken Jordan', 'Starhawk', 'Faye', 'Alex Grey', 'Nick Meador', 'Maureen Dawn Healy', 'Jonathon Miller Weisberger', 'Adam Elenbaas', 'Dan Phiffer', 'Michael Garfield', 'Jay Michaelson', 'Nathan Walters', 'Carolyn Elliott', 'Gary Lachman', 'Kourosh Ziabari', 'Adam Sommer'];
+}
+
+
+////////// ------------ DIRECTIVES ------------ //////////
 
 ///// BLUR FOCUS DIRECTIVE /////
 // Adds 'has-focus' class to form items in focus
