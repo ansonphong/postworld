@@ -156,6 +156,7 @@ postworld.run(function($rootScope, $templateCache, pwData) {
 //////////////////// CONSTRUCTION ZONE < (phongmedia) ////////////////////
 
 ////////// SIMPLE HELPERS ////////
+/*
 window.isInArray =  function(value, array) {
     if (array)
         return array.indexOf(value) > -1 ? true : false;
@@ -169,15 +170,13 @@ window.isEmpty = function(value){
     else
         return false; //value[0].value ? true : false;  
 }
-
-
-
-
-
+*/
 
 
 postworld.service('ext', ['$log', function ($log) {
-    // JS FUNCTION EXTENDORS
+    // SIMPLE JS FUNCTION HELPERS
+    // Extends the function vocabulary of JS
+
     return{
         varExists: function(value){
             if ( typeof value === 'undefined' )
@@ -185,7 +184,6 @@ postworld.service('ext', ['$log', function ($log) {
             else
                 return true;
         },
-
         extract_parentheses: function(string){
             var pattern = /\((.+?)\)/g,
                 match,
@@ -197,18 +195,26 @@ postworld.service('ext', ['$log', function ($log) {
         },
         isNumber: function(n) {
             return !isNaN(parseFloat(n)) && isFinite(n);
-        }
-
+        },
+        isInArray: function(value, array) {
+            if (array)
+                return array.indexOf(value) > -1 ? true : false;
+            else
+                return false;
+        },
+        isEmpty: function(value){
+            if ( typeof value === 'undefined' || value == '' )
+                return true;
+            else
+                return false; //value[0].value ? true : false;  
+        },
     }
-
 }]);
 
 
 
 postworld.service('pwPostOptions', ['$log', function ($log) {
-
     // Do one AJAX call here which returns all the options
-
     return{
         pwGetPostTypeOptions: function(){
         return {
@@ -441,7 +447,6 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
 
 
 postworld.service('pwEditPost', ['$log', function ($log) {
-
         return {
             pwGetPost: function(){
                 return {
@@ -465,10 +470,8 @@ postworld.service('pwEditPost', ['$log', function ($log) {
         };
     }]);
 
-postworld.service('pwEditPostFilters', ['$log', function ($log) {
-
+postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
         return {
-        
             sortTaxTermsInput: function(post_data, tax_terms, sub_object){
                 // SORT TAXONOMIES
                 // FOR EACH SELECTED TAXONOMY TERM SET
@@ -509,13 +512,13 @@ postworld.service('pwEditPostFilters', ['$log', function ($log) {
                 var set = "";
                 //alert(post_format_meta);
                 // If link_url has a value
-                if ( !isEmpty( link_url ) && !isEmpty( post_format_meta ) ){
+                if ( !ext.isEmpty( link_url ) && !ext.isEmpty( post_format_meta ) ){
                     ///// FOR EACH POST FORMAT : Go through each post format
                     angular.forEach( post_format_meta, function( post_format ){
                         ///// FOR EACH DOMAIN : Go through each domain
                         angular.forEach( post_format.domains, function( domain ){
                         // If domain exists in the link_url, set that format
-                            if ( isInArray( domain, link_url ) ){
+                            if ( ext.isInArray( domain, link_url ) ){
                                 set = post_format.slug;
                             }
                         });
@@ -532,19 +535,80 @@ postworld.service('pwEditPostFilters', ['$log', function ($log) {
                 }
                 
             },
-            
+            selected_tax_terms: function(tax_terms, tax_input){
+                ///// SELECTED TAXONOMY TERMS /////
+                // • Extracts an object with singular sub-term data
+                //   so that they can be referred to to define subtopics
+
+                // EACH TAXONOMY : Cycle through each taxonomy
+                var selected_tax_terms = {};
+                angular.forEach( tax_terms, function( terms, taxonomy ){
+                    // Setup Object
+                    if ( ext.isEmpty( tax_input[taxonomy] ) )
+                        tax_input[taxonomy] = [];
+                    // SET TERM : Cycle through each term
+                    // Set the selected taxonomy terms object
+                    angular.forEach( terms, function( term ){
+                        // If the term is selected, add it to the selected object
+                        if ( term.slug == tax_input[taxonomy][0] ){
+                            selected_tax_terms[taxonomy] = term;
+                        }
+                    });
+                });// END FOREACH
+                return selected_tax_terms;
+            },
+            clear_sub_terms: function( tax_terms, tax_input, selected_tax_terms ){
+                // • Manages the values of tax_input by
+                //   clearing irrelivant sub-term selections
+
+                // EACH TAXONOMY : Cycle through each taxonomy
+                angular.forEach( tax_terms, function( terms, taxonomy ){
+                    ///// CLEAR SUBTERM /////
+                    // If there is a sub-term defined and it has children
+                    // Check to see if that child term exists in the main term
+                    // The set term object of the current taxonomy
+                    var term_set = selected_tax_terms[taxonomy];
+
+                    // Does the currently selected term of this taxonomy have children
+                    if ( typeof term_set !== 'undefined' ){
+                        if ( typeof term_set.children !== 'undefined' )
+                            var term_has_children = true;
+                        else
+                            var term_has_children = false; 
+                    }
+                    else
+                        var term_has_children = false;
+                    // Is the child term set for this taxonomy in tax_input?
+                    var child_term_is_set = !ext.isEmpty( tax_input[taxonomy][1] );
+                    if ( term_has_children ){
+                        // Default
+                        var is_subterm = false;
+                        // Cycle through current sub-terms, and see if it exists
+                        angular.forEach( term_set.children, function( child_term_value, child_term_key ){
+                            if ( child_term_key == tax_input[taxonomy][1] )
+                                is_subterm = true;
+                        });
+                        // If it doesn't exist as a sub-term, clear it
+                        if ( is_subterm == false )
+                            tax_input[taxonomy].splice(1,1);
+                    }
+                    // Otherwise clear it
+                    else if ( child_term_is_set )
+                        tax_input[taxonomy].splice(1,1);
+                });// END FOREACH
+                return tax_input;
+            },
         };
     }]);
+
 
 ////////// EDIT POST CONTROLLER //////////
 postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
 
     $scope.pw_get_post_object = function(){
         var post_data = $pwEditPost.pwGetPost();
-
         // CHECK TERMS ORDER
         post_data = $pwEditPostFilters.sortTaxTermsInput( post_data, $scope.tax_terms, 'tax_input' );
-        
         return post_data;   
     }
 
@@ -569,132 +633,23 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
     else
         $scope.mode = "new";
 
-    ///// SELECTED TAXONOMY TERMS /////
-    // • Creates an object with singular term data
-    //    So that they can be referred to to define subtopics
-    // • Manages the values of tax_input
-    //selected_tax_terms();
-    function selected_tax_terms(){
-        // Create selected_tax_terms
-        if ( isEmpty( $scope.selected_tax_terms ) )
-            $scope.selected_tax_terms = {};
-        
-        // Simplify variable for tax_input
-        var tax_input = $scope.post_data.tax_input;
-
-        // EACH TAXONOMY : Cycle through each taxonomy
-        angular.forEach( $scope.tax_terms, function( terms, taxonomy ){
-            
-            // Setup Object
-            if ( isEmpty( tax_input[taxonomy] ) )
-                tax_input[taxonomy] = [];
-
-            // SET TERM : Cycle through each term
-            // Set the selected taxonomy terms object
-            angular.forEach( terms, function( term ){
-                // If the term is selected, add it to the selected object
-                if ( term.slug == $scope.post_data.tax_input[taxonomy][0] ){
-                    $scope.selected_tax_terms[taxonomy] = term;
-                }
-            });
-
-            ///// CLEAR SUBTERM /////
-            // If there is a sub-term defined and it has children
-            // Check to see if that child term exists in the main term
-            
-            // The set term object of the current taxonomy
-            var term_set = $scope.selected_tax_terms[taxonomy];
-
-            // Does the currently selected term of this taxonomy have children
-            if ( typeof term_set !== 'undefined' ){
-                if ( typeof term_set.children !== 'undefined' )
-                    var term_has_children = true;
-                else
-                    var term_has_children = false; 
-            }
-            else
-                var term_has_children = false;
-            // Is the child term set for this taxonomy in tax_input?
-            var child_term_is_set = !isEmpty( tax_input[taxonomy][1] );
-            if ( term_has_children ){
-                // Default
-                var is_subterm = false;
-                // Cycle through current sub-terms, and see if it exists
-                angular.forEach( term_set.children, function( child_term_value, child_term_key ){
-                    if ( child_term_key == tax_input[taxonomy][1] )
-                        is_subterm = true;
-                });
-                // If it doesn't exist as a sub-term, clear it
-                if ( is_subterm == false )
-                    tax_input[taxonomy].splice(1,1);
-            }
-            // Otherwise clear it
-            else if ( child_term_is_set )
-                tax_input[taxonomy].splice(1,1);
-        });
-    };
-
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects
+    $scope.selected_tax_terms = {};
     $scope.$watch( "post_data.tax_input",
-    //$scope.$watchCollection('[post_data.link_url, post_data.post_format]',
         function (){
-            //alert("Taxonomy term change!");
-            selected_tax_terms();
+            // Create selected terms object
+            $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post_data.tax_input);
+            // Clear irrelivent sub-terms
+            $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
         }, 1 );
-
-
-    /*
-    ///// EVALUATE AND SET POST_FORMAT DEPENDING ON LINK_URL /////
-    //evalPostFormat();
-    function evalPostFormat(){
-        var default_format = "standard";
-        var link_url = $scope.post_data.link_url;
-        var post_format_meta = $scope.post_format_meta;
-        var set = "";
-        function set_default_post_format(){
-            $scope.post_data.post_format = default_format;
-        }
-        // If link_url has a value
-        if ( !isEmpty( link_url ) && !isEmpty(post_format_meta) ){
-            ///// FOR EACH POST FORMAT : Go through each post format
-            angular.forEach( post_format_meta, function( post_format ){
-                ///// FOR EACH DOMAIN : Go through each domain
-                angular.forEach( post_format.domains, function( domain ){
-                // If domain exists in the link_url, set that format
-                    if ( isInArray( domain, link_url ) ){
-                        //alert("post_format :" + post_format.slug);
-                        $scope.post_data.post_format = post_format.slug;
-                        set = post_format.slug;
-                    }
-                });
-            });
-            // If no matches, set default
-            if ( set == "" )
-                set_default_post_format();
-        }
-        // Otherwise, set default
-        else {
-            set_default_post_format();
-        }
-    };
-    */
 
     // LINK_URL WATCH : Watch for changes in link_url
     // Evaluate the post_format
-    //$scope.$watch( "post_data.link_url",
     $scope.$watchCollection('[post_data.link_url, post_data.post_format]',
         function ( newValue, oldValue ){
             $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
-
-    /*
-    // NG-CHANGE LINK_URL : Add this to link_url for optional method
-    // ng-change="changeLinkUrl"
-    $scope.changeLinkUrl = function(){
-        evalPostFormat();
-    };
-    */
 
     // SAVE POST FUNCTION
     $scope.savePost = function(){
@@ -702,6 +657,7 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
     }
 
 }]);
+
 
 
 ///// BLUR FOCUS DIRECTIVE /////
