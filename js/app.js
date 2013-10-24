@@ -1,86 +1,96 @@
+/*
+  ____           _                      _     _ 
+ |  _ \ ___  ___| |___      _____  _ __| | __| |
+ | |_) / _ \/ __| __\ \ /\ / / _ \| '__| |/ _` |
+ |  __/ (_) \__ \ |_ \ V  V / (_) | |  | | (_| |
+ |_|   \___/|___/\__| \_/\_/ \___/|_|  |_|\__,_|
+                                                
+Developed by : Innuva & Phong Media
+Framework by : AngularJS
+GitHub Repo  : https://github.com/phongmedia/postworld/
+ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
+
+"AS SEEN ON REALITY SANDWICH!"
+
+*/
+
 'use strict';
 var feed_settings = [];
 var load_comments = [];
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap' ])
-    .config(function ($routeProvider, $locationProvider) {              
-        $routeProvider.when('/live-feed-1/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',                
-            });
-        $routeProvider.when('/live-feed-2/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
-            });
-        $routeProvider.when('/live-feed-2-feeds/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
-            });
-        $routeProvider.when('/live-feed-2-feeds-auto/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
-            });
-        $routeProvider.when('/live-feed-params/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed5Widget.html',                
-            });
-        $routeProvider.when('/load-feed-1/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed1Widget.html',                
-            });
-        $routeProvider.when('/load-feed-2/',
-            {
-                template: '<h2>Coming Soon</h2>',               
-            });
-        $routeProvider.when('/load-feed-2-feeds/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed3Widget.html',                
-            });
-        $routeProvider.when('/load-feed-cached-outline/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
-            });
-        $routeProvider.when('/load-panel/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPanelWidget.html',                
-            });
-        $routeProvider.when('/register-feed/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwRegisterFeedWidget.html',             
-            });
-        $routeProvider.when('/home/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
-            });
-        $routeProvider.when('/edit-post/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
-            });
-        $routeProvider.when('/load-comments/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
-            });            
-        // this will be also the default route, or when no route is selected
-        $routeProvider.otherwise({redirectTo: '/home/'});
-    });
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap' ]);
 
-// Submit on Enter, without a real form
-postworld.directive('ngEnter', function() {
-        return function(scope, element, attrs) {
-            element.bind("keydown keypress", function(event) {
-                if(event.which === 13) {
-                    scope.$apply(function(){
-                        //scope.$eval(attrs.ngEnter);
-                        scope.$eval("submit()");
-                    });
-                    event.preventDefault();
-                }
-            });
-        };
-    });
-    
-    
 
+postworld.config(function ($routeProvider, $locationProvider) {              
+    $routeProvider.when('/live-feed-1/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',                
+        });
+    $routeProvider.when('/live-feed-2/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
+        });
+    $routeProvider.when('/live-feed-2-feeds/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
+        });
+    $routeProvider.when('/live-feed-2-feeds-auto/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
+        });
+    $routeProvider.when('/live-feed-params/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed5Widget.html',                
+        });
+    $routeProvider.when('/load-feed-1/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed1Widget.html',                
+        });
+    $routeProvider.when('/load-feed-2/',
+        {
+            template: '<h2>Coming Soon</h2>',               
+        });
+    $routeProvider.when('/load-feed-2-feeds/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed3Widget.html',                
+        });
+    $routeProvider.when('/load-feed-cached-outline/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
+        });
+    $routeProvider.when('/load-panel/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPanelWidget.html',                
+        });
+    $routeProvider.when('/register-feed/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwRegisterFeedWidget.html',             
+        });
+    $routeProvider.when('/home/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
+        });
+    $routeProvider.when('/edit-post/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
+        });
+    $routeProvider.when('/load-comments/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
+        });            
+    // this will be also the default route, or when no route is selected
+    $routeProvider.otherwise({redirectTo: '/home/'});
+});
+
+ 
+/*
+  ____              
+ |  _ \ _   _ _ __  
+ | |_) | | | | '_ \ 
+ |  _ <| |_| | | | |
+ |_| \_\\__,_|_| |_|
+                    
+*/
 postworld.run(function($rootScope, $templateCache, pwData) {    
         // TODO move getting templates to app startup
         pwData.pw_get_templates(null).then(function(value) {
@@ -172,7 +182,15 @@ window.isEmpty = function(value){
 }
 */
 
+/*
+   _                  _   
+  | |   _    _____  _| |_ 
+ / __) (_)  / _ \ \/ / __|
+ \__ \  _  |  __/>  <| |_ 
+ (   / (_)  \___/_/\_\\__|
+  |_|                     
 
+////////// ------------ JAVASCRIPT EXTENTION SERVICE ------------ //////////*/ 
 postworld.service('ext', ['$log', function ($log) {
     // SIMPLE JS FUNCTION HELPERS
     // Extends the function vocabulary of JS
@@ -212,7 +230,15 @@ postworld.service('ext', ['$log', function ($log) {
 }]);
 
 
+/*
+   _        ____           _      ___        _   _                 
+  | |   _  |  _ \ ___  ___| |_   / _ \ _ __ | |_(_) ___  _ __  ___ 
+ / __) (_) | |_) / _ \/ __| __| | | | | '_ \| __| |/ _ \| '_ \/ __|
+ \__ \  _  |  __/ (_) \__ \ |_  | |_| | |_) | |_| | (_) | | | \__ \
+ (   / (_) |_|   \___/|___/\__|  \___/| .__/ \__|_|\___/|_| |_|___/
+  |_|                                 |_|                          
 
+////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
 postworld.service('pwPostOptions', ['$log', function ($log) {
     // Do one AJAX call here which returns all the options
     return{
@@ -524,7 +550,14 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
     }
 }]);
 
-
+/*
+   _        _____    _ _ _     ____           _   
+  | |   _  | ____|__| (_) |_  |  _ \ ___  ___| |_ 
+ / __) (_) |  _| / _` | | __| | |_) / _ \/ __| __|
+ \__ \  _  | |__| (_| | | |_  |  __/ (_) \__ \ |_ 
+ (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__|
+  |_|                                             
+////////// ------------ EDIT POST SERVICE ------------ //////////*/  
 postworld.service('pwEditPost', ['$log', function ($log) {
         return {
             pwGetPost: function(){
@@ -549,6 +582,14 @@ postworld.service('pwEditPost', ['$log', function ($log) {
         };
     }]);
 
+/*
+   _        _____    _ _ _     ____           _     _____ _ _ _                
+  | |   _  | ____|__| (_) |_  |  _ \ ___  ___| |_  |  ___(_) | |_ ___ _ __ ___ 
+ / __) (_) |  _| / _` | | __| | |_) / _ \/ __| __| | |_  | | | __/ _ \ '__/ __|
+ \__ \  _  | |__| (_| | | |_  |  __/ (_) \__ \ |_  |  _| | | | ||  __/ |  \__ \
+ (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__| |_|   |_|_|\__\___|_|  |___/
+  |_|                                                                          
+////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
 postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
         return {
             sortTaxTermsInput: function(post_data, tax_terms, sub_object){
@@ -681,7 +722,14 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
     }]);
 
 
-////////// ------------ SEARCH FIELDS CONTROLLER ------------ //////////
+/*
+  ____                      _       _____ _      _     _     
+ / ___|  ___  __ _ _ __ ___| |__   |  ___(_) ___| | __| |___ 
+ \___ \ / _ \/ _` | '__/ __| '_ \  | |_  | |/ _ \ |/ _` / __|
+  ___) |  __/ (_| | | | (__| | | | |  _| | |  __/ | (_| \__ \
+ |____/ \___|\__,_|_|  \___|_| |_| |_|   |_|\___|_|\__,_|___/
+                                                             
+////////// ------------ SEARCH FIELDS CONTROLLER ------------ //////////*/
 postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
@@ -704,7 +752,14 @@ postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', '
 }]);
 
 
-////////// ------------ EDIT POST CONTROLLER ------------ //////////
+/*
+  _____    _ _ _     ____           _   
+ | ____|__| (_) |_  |  _ \ ___  ___| |_ 
+ |  _| / _` | | __| | |_) / _ \/ __| __|
+ | |__| (_| | | |_  |  __/ (_) \__ \ |_ 
+ |_____\__,_|_|\__| |_|   \___/|___/\__|
+
+////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
 
     $scope.pw_get_post_object = function(){
@@ -760,13 +815,47 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
 
 }]);
 
+/*
+     _         _   _                     _         _                                  _      _       
+    / \  _   _| |_| |__   ___  _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
+   / _ \| | | | __| '_ \ / _ \| '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
+  / ___ \ |_| | |_| | | | (_) | |     / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
+ /_/   \_\__,_|\__|_| |_|\___/|_|    /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
+                                                                               |_|                   
+////////// ------------ AUTHOR AUTOCOMPLETE CONTROLLER ------------ //////////*/
+
+///// AUTHOR AUTOCOMPLETE /////
 postworld.controller('AuthorAutocomplete', ['$scope', function($scope) {
     $scope.selected = undefined;
     $scope.authors = ['Erik Davis', 'Daniel Pinchbeck', 'Ken Jordan', 'Starhawk', 'Faye', 'Alex Grey', 'Nick Meador', 'Maureen Dawn Healy', 'Jonathon Miller Weisberger', 'Adam Elenbaas', 'Dan Phiffer', 'Michael Garfield', 'Jay Michaelson', 'Nathan Walters', 'Carolyn Elliott', 'Gary Lachman', 'Kourosh Ziabari', 'Adam Sommer'];
 }]);
 
 
-////////// ------------ DIRECTIVES ------------ //////////
+/*
+  ____           _     _     _       _    
+ |  _ \ ___  ___| |_  | |   (_)_ __ | | __
+ | |_) / _ \/ __| __| | |   | | '_ \| |/ /
+ |  __/ (_) \__ \ |_  | |___| | | | |   < 
+ |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
+
+////////// ------------ POST LINK CONTROLLER ------------ //////////*/                                                                           
+                                           
+///// POST LINK /////
+postworld.controller('postLink', ['$scope', function($scope) {
+    
+
+}]);
+
+
+
+/*
+  ____  _               _   _                
+ |  _ \(_)_ __ ___  ___| |_(_)_   _____  ___ 
+ | | | | | '__/ _ \/ __| __| \ \ / / _ \/ __|
+ | |_| | | | |  __/ (__| |_| |\ V /  __/\__ \
+ |____/|_|_|  \___|\___|\__|_| \_/ \___||___/
+                                             
+////////// ------------ DIRECTIVES ------------ //////////*/
 
 ///// BLUR FOCUS DIRECTIVE /////
 // Adds 'has-focus' class to form items in focus
@@ -810,9 +899,31 @@ var blurFocusDirective = function () {
     };
 
 };
-
-
 postworld.directive('input', blurFocusDirective);
 postworld.directive('select', blurFocusDirective);
 
+///// SUBMIT ON ENTER /////
+// Submit on Enter, without a real form
+postworld.directive('ngEnter', function() {
+        return function(scope, element, attrs) {
+            element.bind("keydown keypress", function(event) {
+                if(event.which === 13) {
+                    scope.$apply(function(){
+                        //scope.$eval(attrs.ngEnter);
+                        scope.$eval("submit()");
+                    });
+                    event.preventDefault();
+                }
+            });
+        };
+    });
 
+
+/*
+     __     __  ____    _    _   _ ____  ____   _____  __     __     __
+    / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
+   / /    / /  \___ \ / _ \ |  \| | | | |  _ \| | | \  /    / /    / / 
+  / /    / /    ___) / ___ \| |\  | |_| | |_) | |_| /  \   / /    / /  
+ /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
+                                                                       
+*/

@@ -148,10 +148,10 @@ postworld.controller('pwFeedController',
 			// Set Feed load Status
 			if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
 				pwData.feed_data[$scope.feed].status = 'all_loaded';													
-				$scope.scrollMessage = "no more posts to load";						
+				$scope.scrollMessage = "No more posts to load.";						
 			} else {							
 				pwData.feed_data[$scope.feed].status = 'loaded';						
-				$scope.scrollMessage = "Scroll down to load more";						
+				$scope.scrollMessage = "Scroll down to load more.";						
 			}   			
    		};
    		
@@ -159,7 +159,7 @@ postworld.controller('pwFeedController',
 	    	$scope.message = "";   			
 			// If already getting results, do not run again.
 			if ($scope.busy) {
-				$log.info('pwFeedController.getNext: We\'re Busy, Wait!');
+				$log.info('pwFeedController.getNext: We\'re Busy, wait!');
 				return;
 				}
 			$scope.busy = true;
@@ -330,7 +330,7 @@ postworld.controller('pwFeedController',
 						pwData.feed_data[$scope.feed].count_loaded = pwData.feed_data[$scope.feed].posts.length;
 						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
 							pwData.feed_data[$scope.feed].status = 'all_loaded';	
-							$scope.scrollMessage = "no more posts to load";																									
+							$scope.scrollMessage = "No more posts to load!";																									
 						} else {							
 							pwData.feed_data[$scope.feed].status = 'loaded';						
 							$scope.scrollMessage = "Scroll down to load more";						
