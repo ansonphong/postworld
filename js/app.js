@@ -18,10 +18,8 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 var feed_settings = [];
 var load_comments = [];
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap' ]);
-
-
-postworld.config(function ($routeProvider, $locationProvider) {              
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap' ])
+.config(function ($routeProvider, $locationProvider) {              
     $routeProvider.when('/live-feed-1/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',                
@@ -226,6 +224,13 @@ postworld.service('ext', ['$log', function ($log) {
             else
                 return false; //value[0].value ? true : false;  
         },
+        isEmptyObj: function(obj){
+                for(var prop in obj) {
+                    if(obj.hasOwnProperty(prop))
+                        return false;
+                }
+                return true;
+        }
     }
 }]);
 
@@ -550,6 +555,8 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
     }
 }]);
 
+
+
 /*
    _        _____    _ _ _     ____           _   
   | |   _  | ____|__| (_) |_  |  _ \ ___  ___| |_ 
@@ -581,6 +588,9 @@ postworld.service('pwEditPost', ['$log', function ($log) {
             
         };
     }]);
+
+
+
 
 /*
    _        _____    _ _ _     ____           _     _____ _ _ _                
@@ -838,13 +848,306 @@ postworld.controller('AuthorAutocomplete', ['$scope', function($scope) {
  |  __/ (_) \__ \ |_  | |___| | | | |   < 
  |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
 
-////////// ------------ POST LINK CONTROLLER ------------ //////////*/                                                                           
-                                           
-///// POST LINK /////
-postworld.controller('postLink', ['$scope', function($scope) {
+////////// ------------ POST LINK CONTROLLER ------------ //////////*/
+postworld.controller('postLink', ['$scope','pwPostOptions','pwEditPostFilters', 'embedly', 'ext', function($scope, $pwPostOptions, $pwEditPostFilters, $embedly, $ext) {
+
+    // POST TYPE OPTIONS
+    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
+    // POST STATUS OPTIONS
+    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
+    // POST FORMAT OPTIONS
+    $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    // POST FORMAT META
+    $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    // POST CLASS OPTIONS
+    $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+    // TAXONOMY TERMS
+    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+
+    // DEFAULT POST DATA
+    $scope.post_data = {
+        post_title:"Link Title",
+        link_url:"",
+        post_format:"standard",
+        post_class:"",
+        tags_input:"",
+        post_status:"publish",
+        tax_input : {
+            topic : [],
+            section : [],
+            type : []
+        }
+    };
+
+    $scope.mode = "url_input";
+
+    // GET URL EXTRACT
+    // 1. On detect paste
+    // 2. On click
+
+    $scope.extract_url = function() {
+        $scope.embedly_extract = $embedly.embedly_extract( $scope.link_url );
+        //alert(JSON.stringify($scope.embedly_extract));
+        //alert('extract');
+    }
+    $scope.reset_extract = function() {
+        $scope.embedly_extract = {};
+        //alert(JSON.stringify($scope.embedly_extract));
+        //alert('extract');
+    }
     
 
+    // EMBEDLY OBJECT WATCH : Watch for any changes to the embedly data
+    $scope.embedly_extract = {};
+    $scope.$watch( "embedly_extract",
+        function (){
+            // CHANGE MODE 
+            // SET MODE : ( new | edit )
+            if ( typeof $scope.embedly_extract.title == 'undefined' )
+                $scope.mode = "url_input";
+            else
+                $scope.mode = "post_input";
+        }, 1 );
+
+
+    // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
+    // Make a new object which contains only the selected sub-objects
+    $scope.selected_tax_terms = {};
+    $scope.$watch( "post_data.tax_input",
+        function (){
+            // Create selected terms object
+            $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post_data.tax_input);
+            // Clear irrelivent sub-terms
+            $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
+        }, 1 );
+
+    // LINK_URL WATCH : Watch for changes in link_url
+    // Evaluate the post_format
+    $scope.$watchCollection('[post_data.link_url, post_data.post_format]',
+        function ( newValue, oldValue ){
+            $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
+        });
+
+
+
+
 }]);
+
+
+/*
+   _                       _              _   _       
+  | |   _    ___ _ __ ___ | |__   ___  __| | | |_   _ 
+ / __) (_)  / _ \ '_ ` _ \| '_ \ / _ \/ _` | | | | | |
+ \__ \  _  |  __/ | | | | | |_) |  __/ (_| |_| | |_| |
+ (   / (_)  \___|_| |_| |_|_.__/ \___|\__,_(_)_|\__, |
+  |_|                                           |___/ 
+////////// ------------ EDIT POST SERVICE ------------ //////////*/  
+postworld.service('embedly', ['$log', function ($log) {
+        return {
+            embedly_extract: function(){
+                return {
+                    "provider_url": "http://www.youtube.com/", 
+                    "authors": [], 
+                    "provider_display": "www.youtube.com", 
+                    "related": [], 
+                    "favicon_url": "http://s.ytimg.com/yts/img/favicon-vfldLzJxy.ico", 
+                    "keywords": [
+                        {
+                            "score": 32, 
+                            "name": "google"
+                        }, 
+                        {
+                            "score": 30, 
+                            "name": "picasa"
+                        }, 
+                        {
+                            "score": 30, 
+                            "name": "orkut"
+                        }, 
+                        {
+                            "score": 30, 
+                            "name": "mavireck"
+                        }, 
+                        {
+                            "score": 26, 
+                            "name": "chrome"
+                        }, 
+                        {
+                            "score": 26, 
+                            "name": "nova"
+                        }, 
+                        {
+                            "score": 20, 
+                            "name": "earth"
+                        }, 
+                        {
+                            "score": 20, 
+                            "name": "gmail"
+                        }, 
+                        {
+                            "score": 17, 
+                            "name": "video"
+                        }, 
+                        {
+                            "score": 16, 
+                            "name": "youtube"
+                        }
+                    ], 
+                    "lead": null, 
+                    "original_url": "http://www.youtube.com/watch?v=38peWm76l-U", 
+                    "media": {
+                        "duration": 6862, 
+                        "width": 500, 
+                        "html": "<iframe width=\"500\" height=\"281\" src=\"http://www.youtube.com/embed/38peWm76l-U?feature=oembed\" frameborder=\"0\" allowfullscreen></iframe>", 
+                        "type": "video", 
+                        "height": 281
+                    }, 
+                    "content": null, 
+                    "entities": [
+                        {
+                            "count": 3, 
+                            "name": "Google"
+                        }, 
+                        {
+                            "count": 3, 
+                            "name": "Picasa"
+                        }, 
+                        {
+                            "count": 3, 
+                            "name": "Google Account"
+                        }, 
+                        {
+                            "count": 1, 
+                            "name": "PBS NOVA Finding Life Beyond Earth 2011 Legendado \\*\\* Beatiful Nature Around The World"
+                        }, 
+                        {
+                            "count": 1, 
+                            "name": "NASA"
+                        }, 
+                        {
+                            "count": 1, 
+                            "name": "Earth"
+                        }
+                    ], 
+                    "provider_name": "YouTube", 
+                    "type": "html", 
+                    "description": "The groundbreaking two-hour special that reveals a spectacular new space-based vision of our planet. Produced in extensive consultation with NASA scientists, NOVA takes data from earth-observing satellites and transforms it into dazzling visual sequences, each one exposing the intricate and surprising web of forces that sustains life on earth.", 
+                    "embeds": [], 
+                    "images": [
+                        {
+                            "width": 480, 
+                            "url": "http://i1.ytimg.com/vi/38peWm76l-U/hqdefault.jpg", 
+                            "height": 360, 
+                            "caption": null, 
+                            "colors": [
+                                {
+                                    "color": [
+                                        45, 
+                                        70, 
+                                        75
+                                    ], 
+                                    "weight": 0.279296875
+                                }, 
+                                {
+                                    "color": [
+                                        0, 
+                                        2, 
+                                        4
+                                    ], 
+                                    "weight": 0.25537109375
+                                }, 
+                                {
+                                    "color": [
+                                        84, 
+                                        104, 
+                                        111
+                                    ], 
+                                    "weight": 0.16455078125
+                                }, 
+                                {
+                                    "color": [
+                                        111, 
+                                        136, 
+                                        149
+                                    ], 
+                                    "weight": 0.1259765625
+                                }, 
+                                {
+                                    "color": [
+                                        144, 
+                                        173, 
+                                        190
+                                    ], 
+                                    "weight": 0.118896484375
+                                }
+                            ], 
+                            "entropy": 5.90822075866, 
+                            "size": 44269
+                        }, 
+                        {
+                            "width": 48, 
+                            "url": "https://lh5.googleusercontent.com/-LBcQruSPiVE/AAAAAAAAAAI/AAAAAAAAAAA/ZZy901nR234/s48-c-k/photo.jpg", 
+                            "height": 48, 
+                            "caption": null, 
+                            "colors": [
+                                {
+                                    "color": [
+                                        172, 
+                                        188, 
+                                        206
+                                    ], 
+                                    "weight": 0.162353515625
+                                }, 
+                                {
+                                    "color": [
+                                        113, 
+                                        146, 
+                                        179
+                                    ], 
+                                    "weight": 0.141357421875
+                                }, 
+                                {
+                                    "color": [
+                                        55, 
+                                        102, 
+                                        146
+                                    ], 
+                                    "weight": 0.10546875
+                                }, 
+                                {
+                                    "color": [
+                                        53, 
+                                        79, 
+                                        82
+                                    ], 
+                                    "weight": 0.09716796875
+                                }, 
+                                {
+                                    "color": [
+                                        0, 
+                                        44, 
+                                        114
+                                    ], 
+                                    "weight": 0.05615234375
+                                }
+                            ], 
+                            "entropy": 6.59194584276, 
+                            "size": 2316
+                        }
+                    ], 
+                    "safe": true, 
+                    "offset": null, 
+                    "cache_age": 86400, 
+                    "language": "English", 
+                    "url": "http://www.youtube.com/watch?v=38peWm76l-U", 
+                    "title": "Earth From Space HD 1080p / Nova", 
+                    "published": null
+
+                };
+            },
+            
+        };
+    }]);
 
 
 
