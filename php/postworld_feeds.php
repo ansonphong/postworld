@@ -76,12 +76,18 @@ function pw_live_feed ( $args ){
 
 function pw_feed_outline ( $pw_query_args ){
 	// • Uses pw_query() method to generate an array of post_ids based on the $pw_query_args
-
+	
 	$pw_query_args["fields"] = "ids";
+	//echo "<br><br>";
+	//print_r($pw_query_args);
+	//echo json_encode($pw_query_args);
+	//echo "<br><br>";
 	$post_array = pw_query($pw_query_args); // <<< TODO : Flatten from returned Object to Array of IDs
+	//echo "<br><br>";
+	//print_r($post_array);
 	$post_ids  = $post_array->posts;
 	
-
+	//print_r($post_ids);
 	return $post_ids; // Array of post IDs
 }
 
@@ -181,11 +187,14 @@ function update_feed_query($feed_id, $feed_query){
 function pw_cache_feed ( $feed_id ){
 	
 	$feed_row = pw_get_feed($feed_id);
-	if($feed_row){
+	if(!is_null($feed_row)){
 			
 		//echo ($feed_row->feed_query);
 		$time_start = date("Y-m-d H:i:s");
-		$feed_outline = pw_feed_outline((array)json_decode($feed_row->feed_query));
+		
+		$feed_query_finalized  = finalize_feed_query($feed_row->feed_query);
+		
+		$feed_outline = pw_feed_outline($feed_query_finalized);
 		$time_end = date("Y-m-d H:i:s");
 		$timer = (strtotime( $time_end )-strtotime( $time_start))*1000;
 		//echo json_encode($feed_outline);
@@ -196,6 +205,14 @@ function pw_cache_feed ( $feed_id ){
 		$wpdb->query($query);
 		return array('number_of_posts'=>count($feed_outline), 'feed_query'=> $feed_row->feed_query);
 	} 
+}
+
+function finalize_feed_query($feed_query_stringified){
+	$pw_query_args = (array)json_decode($feed_query_stringified);
+	if(isset($pw_query_args["tax_query"]))
+		$pw_query_args["tax_query"][0]= get_object_vars(($pw_query_args["tax_query"][0])) ;
+	
+	return $pw_query_args;
 }
 
 function pw_get_feed ( $feed_id ){
