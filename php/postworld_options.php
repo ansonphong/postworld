@@ -48,7 +48,7 @@ $pw_defaults = array(
 		),
 
 	'feeds' => array(
-		'cache_feeds'		=> array('feed_1','feed_2'),
+		'cache_feeds'		=> array(),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		),
