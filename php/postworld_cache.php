@@ -255,12 +255,12 @@
 				
 				$user_ids = get_recent_shares_user_ids($recent_log->last_time);
 				foreach ($user_ids as $user_id) {
-					cache_user_shares($user_id->$user_id);
+					cache_user_shares($user_id->$user_id,'outgoing');
 				}
 				
-				$author_ids = get_recent_shares_post_ids($recent_log->last_time);
-				foreach ($post_ids as $post_id) {
-					 cache_user_post_shares($post_id->$post_id);
+				$author_ids = get_recent_shares_author_ids($recent_log->last_time);
+				foreach ($author_ids as $author_id) {
+					 cache_user_shares($author_id->$author_id,'incoming');
 				}
 				
 				
@@ -284,8 +284,7 @@
 			/*-Cycle through every user and run cache_user_shares($user_id)*/
 			$user_ids = get_all_user_ids_as_array();
 			foreach ($user_ids as $user_id) {
-				cache_user_post_shares($user_id->ID);
-				cache_user_shares($user_id->ID);	
+				cache_user_shares($user_id->ID,'both');
 			}
 				 
 			$time_end = date("Y-m-d H:i:s");
@@ -297,8 +296,11 @@
 	
 	}
 
+/*	
 	//TODO : to be specified
-	function cache_user_post_shares(){}
+	function cache_user_post_shares($user_id){
+		cache_user_shares($user_id, 'incoming');
+	}*/
 
 	function get_most_recent_cache_shares_log(){
 		global $wpdb;
@@ -380,13 +382,22 @@
 		-Write the result to the post_shares column in the Post Meta table
 		-return : integer (number of shares)*/
 		$total_shares = calculate_post_shares($post_id);
+		
+		add_recored_to_post_meta($post_id);
+		
 		global $wpdb;
 		$wpdb -> show_errors();
+		
+		
 		
 		$query = "update $wpdb->pw_prefix"."post_meta set post_shares=".$total_shares." where post_id=".$post_id;
 		$wpdb->query($query);
 		return $total_shares;
 	}
+	
+	
+	
+
 	
 	
 	////////////////// USER SHARES /////////////////////////
@@ -419,8 +430,6 @@
 		    'outgoing' => {{integer}}
 		    )
 		*/
-		
-		
 		$output = array();
 		global $wpdb;
 		$wpdb -> show_errors();
@@ -456,19 +465,53 @@
 		return : integer (number of shares)
 		 */
 		 
-		 //ask? total shares or incoming or outgoing?
 		 
-		$user_shares = calculate_user_shares($user_id,'both');
+		 
+		$user_shares = calculate_user_shares($user_id,$mode);
 		//print_r($user_shares);
 		global $wpdb;
 		$wpdb -> show_errors();
 		
-		$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);
-		$query = "update $wpdb->pw_prefix"."user_meta set share_points=".$total_user_shares." where user_id=".$user_id;
+		$total_user_shares=0;
+		if(isset($user_shares['incoming'])) $total_user_shares = $user_shares['incoming'];
+		if(isset($user_shares['outgoing'])) $total_user_shares = $user_shares['outgoing'];
+		
+		//check if cached before and replace json values
+		$old_shares = get_user_shares($user_id);
+		//print_r($old_shares);
+		//print_r($user_shares);
+		
+		if(!is_null($old_shares))
+		{
+			
+			$old_shares = (array)json_decode($old_shares);
+			if($mode =='incoming' || $mode='both')
+				if(isset($user_shares['incoming'])) $old_shares['incoming'] = $user_shares['incoming'];
+			if($mode =='outgoing' || $mode='both')
+				if(isset($user_shares['outgoing'])) $old_shares['outgoing'] = $user_shares['outgoing'];
+			
+		}else{
+			add_record_to_user_meta($user_id);	
+			$old_shares = $user_shares;		
+		}
+		//$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);
+		$query = "update $wpdb->pw_prefix"."user_meta set share_points=".$total_user_shares.",share_points_meta='".json_encode($old_shares)."' where user_id=".$user_id;
+		//print_r($query);
 		$wpdb->query($query);
 		
 		return $total_user_shares;
 		 
+	}
+	
+	
+	function get_user_shares($user_id){
+			
+		global $wpdb;
+		$wpdb -> show_errors();
+			
+		$query = "select share_points_meta from $wpdb->pw_prefix"."user_meta where user_id=".$user_id;
+		return $wpdb->get_var($query);
+		
 	}
     ////////////////  HELPER FUNCTIONS  //////////////////////
 	function add_new_cron_logs($cron_logs_array){
