@@ -860,7 +860,7 @@
 					.$post_shares
 					.")";
 					
-			echo $query."<br>";
+			//echo $query."<br>";
 			$wpdb -> query($query);
 		}
 	}
