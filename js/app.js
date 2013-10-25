@@ -922,6 +922,9 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
         //alert(JSON.stringify($scope.embedly_extract));
         //alert('extract');
     }
+    $scope.ok = function() {
+        $scope.mode = "url_input";
+    }
     
     // EMBEDLY OBJECT WATCH : Watch for any changes to the embedly data
     $scope.embedly_extract = {};
@@ -970,9 +973,6 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
             $scope.selected_image ++;
     };
 
-    // WATCH $scope.selected_image
-    // UPDATE : $scope.post_data.image_url 
-
     // UPDATE SELECTED IMAGE
     $scope.$watch( "selected_image",
         function ( newValue, oldValue ){
@@ -1000,18 +1000,15 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
             $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
 
-
+    ///// SUBMIT /////
     function timeoutStatus(){
         $scope.mode =  "success";
         $scope.submit_status = "ready";
         };
-
     $scope.submit_status = "ready";
     $scope.savePost = function(){
-        
         //alert(JSON.stringify($scope.post_data));
         $scope.submit_status = "busy";
-        //$scope.mode = $timeout( timeoutStatus, 1000);
         $timeout( timeoutStatus, 1000);
 
     }
@@ -2118,8 +2115,13 @@ postworld.directive('ngEnter', function() {
 
 
 
-
 /*
+  _____ _           _   _        _____         _                       
+ | ____| | __ _ ___| |_(_) ___  |_   _|____  _| |_ __ _ _ __ ___  __ _ 
+ |  _| | |/ _` / __| __| |/ __|   | |/ _ \ \/ / __/ _` | '__/ _ \/ _` |
+ | |___| | (_| \__ \ |_| | (__    | |  __/>  <| || (_| | | |  __/ (_| |
+ |_____|_|\__,_|___/\__|_|\___|   |_|\___/_/\_\\__\__,_|_|  \___|\__,_|
+
  * angular-elastic v2.1.0
  * (c) 2013 Monospaced http://monospaced.com
  * License: MIT
