@@ -575,7 +575,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	
 	if(gettype($post_ID) == 'integer'){ // successful
 		print_r($post_ID);
-		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"]||$postarr["external_image"])	{
+		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"])	{
 			global $wpdb;
 			$wpdb -> show_errors();
 			add_recored_to_post_meta($post_ID);

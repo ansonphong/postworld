@@ -354,7 +354,7 @@ angular.module('postworld', []).
 	    return function(scope, element, attr, ctrl) {
 	      var subCases = [attrs.ngSwitchWhen];
 	      if(attrs.ngSwitchWhen && attrs.ngSwitchWhen.length > 0 && attrs.ngSwitchWhen.indexOf('||') != -1) {
-	      subCases = attrs.ngSwitchWhen.split('||');
+	      	subCases = attrs.ngSwitchWhen.split('||');
 	      }
 	      var i=0;
 	      var casee;
@@ -368,4 +368,6 @@ angular.module('postworld', []).
 	    }
 	    return $delegate;
 	  });
+
+
 	});
