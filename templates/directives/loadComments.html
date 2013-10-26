@@ -1,7 +1,7 @@
 <div>	  
 	<!-- Temporarily show Post ID  -->
 	<div> 
-		view comments for post # {{data4.children[0].comment_post_ID}}
+		view comments for post # {{treedata.children[0].comment_post_ID}}
 	</div>
 	<!-- Select Order By Options  -->
 	<div>
@@ -15,7 +15,7 @@
 	<!-- Show Comments Tree After Loading -->
 	<!-- This UL is wholly replicated every time there is a child Comment  -->
 	<ul ng-show="commentsLoaded">
-		<div streeviewmodel ya-tree="child in data4.children at ul" ng-class="{minimized:child.minimized}" ng-init="OpenClose(child)">
+		<div streeviewmodel ya-tree="child in treedata.children at ul" ng-class="{minimized:child.minimized}" ng-init="OpenClose(child)">
 		  <div>			      	
 			<!-- Maximize/Minimize Icon based on Karma Points -->
 		  	<span ng-switch on="child.minimized">			      	
@@ -98,7 +98,6 @@
 				  	</div>
 				</div>
 				<div style='clear: both;'></div>												
-				<!-- Place Holder for Children -->				
 			    <ul data-ng-show="!child.minimized" ng-class="{pregnant:child.children.length, indent:true}">
 			    </ul>						
 			</div>
@@ -107,12 +106,12 @@
 	</ul>
 	<!-- Add a new comment to the Post - Top Level Comment Only -->
 	<div ng-show="commentsLoaded">
-	  	<textarea class="form-control margin-bottom" rows="3" ng-model="data4.replyText" placeholder="What do you think..." ng-disabled="data4.replyInProgress"></textarea>
-	  	<div ng-show="data4.replyError" class="pull-left alert alert-danger error" >
-	  		{{data4.replyError}}
+	  	<textarea class="form-control margin-bottom" rows="3" ng-model="treedata.replyText" placeholder="What do you think..." ng-disabled="treedata.replyInProgress"></textarea>
+	  	<div ng-show="treedata.replyError" class="pull-left alert alert-danger error" >
+	  		{{treedata.replyError}}
 	  	</div>
 	  	<div class=pull-right>
-		  	<button type="button" class="btn btn-primary btn-sm" ng-click="replyComment(data4)" ng-disabled="data4.replyInProgress">New Comment</button>
+		  	<button type="button" class="btn btn-primary btn-sm" ng-click="replyComment(treedata)" ng-disabled="treedata.replyInProgress">New Comment</button>
 	  	</div>
 		<div style='clear: both;'></div>												
 	</div>	  

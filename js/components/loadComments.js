@@ -27,20 +27,19 @@
  * Show as Tree or linear [OK]
  * Show Loading Icon while loading data [OK]
  * Permissions, you can only edit and delete your own comments [OK]
+ * Show More - when exceeding 600 characters show only the first 4 lines of the comment [OK]
+ * encapsulate in a simple directive with a template [OK]
  * 
  *  - show control bar on hover only
  *  - show icons for control bar
  *  - highlight selected function of the control bar [reply, edit, delete, etc...]
  *  
- *  - Show More [in progress]
  * add Timezone to date
- * encapsulate in a simple directive
  * 
  * when adding new comments they should be open by default?
  * Can we use the html returned directly?
 
  * Cleanup UI
- * Refactor a bit
  * Cleanup CSS
  * Animation? Performance Limitations
  * If we can show the comments with tree=false, what happens when users reply? it will become a tree? no?
@@ -65,7 +64,15 @@ postworld.directive('loadComments', function() {
 postworld.directive('ngShowMore', function ($timeout,$animate) {
 	//console.log('at least we got in directive');
 	function link(scope, element, attrs) {
-      		/* TODO this needs to perform better
+      		scope.child.showMore = false;
+      		scope.child.tall = false;
+      		//console.log(scope.child.comment_ID,scope.child.comment_content.length);
+			if (scope.child.comment_content.length>600) {
+	      			scope.child.showMore = true;
+	      			scope.child.tall = true;				
+			} ;
+      		// TODO this needs to perform better
+      		/*
 	      $timeout(function(){
 	      		scope.child.showMore = false;
 	      		scope.child.tall = false;
@@ -75,7 +82,8 @@ postworld.directive('ngShowMore', function ($timeout,$animate) {
 	      			scope.child.tall = true;
 	      			} 
     		});
-    		*/       
+    		*/
+    		       
 	    }	
   return {
     restrict: 'A',
@@ -89,7 +97,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
     $scope.isAdmin = jsVars.is_admin;
     $scope.startTime = 0;
     $scope.endTime = 0;
-    $scope.data4 = {children: []};
+    $scope.treedata = {children: []};
     $scope.minimized = false;
     $scope.treeUpdated = false;
     $scope.commentsLoaded = false;
@@ -108,7 +116,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
     	settings.query.orderby = $scope.orderBy;
 		pwCommentsService.pw_get_comments($scope.feed).then(function(value){
 			console.log('Got Comments', value.data.length);
-			$scope.data4 = {children: value.data};
+			$scope.treedata = {children: value.data};
 			$scope.commentsLoaded = true;
 	        $scope.treeUpdated = !$scope.treeUpdated;			      
 			$scope.commentsCount = value.data.length;
@@ -118,7 +126,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 		    		  for (var i=0;i<20;i++) {
 					      if ($scope.key<$scope.commentsCount) {
 					    	  // console.log('loading data', $scope.key);
-						      $scope.data4.children[$scope.key] = value.data[$scope.key];
+						      $scope.treedata.children[$scope.key] = value.data[$scope.key];
 						      $scope.key++;
 					      }
 		    		  }
@@ -217,7 +225,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   		args.comment_data.comment_date = new Date(); // should we do it here? security?
   		// args.comment_data.comment_date_gmt = ;
   		// args.comment_data.comment_type = 'comment';  	// in documentation, this is not added in wordpress insert/add functions	  			
-  		if (child == $scope.data4) {
+  		if (child == $scope.treedata) {
 	  		args.comment_data.comment_parent = 0;  			
   		} else {
 	  		args.comment_data.comment_parent = child.comment_ID;  			
@@ -351,12 +359,12 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
           if (children[i] === child) {
             return children.splice(i, 1);
           } else {
-            walk(children[i])
+            walk(children[i]);
           }
         }
       }
     }
-    walk($scope.data4);
+    walk($scope.treedata);
     $scope.treeUpdated = !$scope.treeUpdated;			      
   };
 

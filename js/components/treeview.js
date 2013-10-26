@@ -33,7 +33,7 @@ postworld.directive('yaTree', function () {
         function treeChange(root) {
 		    // console.log('inserting...');
         	if (!scope.commentsLoaded) return;
-        	root = scope.data4.children;
+        	root = scope.treedata.children;
           var currentCache = [];
 	      // console.log('rootExpr changed...', rootExpr, root.length);
 
