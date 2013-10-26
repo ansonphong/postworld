@@ -1,6 +1,22 @@
 'use strict';
 angular.module('TimeAgoFilter', []).
     filter('timeago', function() {
+    	
+	    	function pad(number, length){
+			    var str = "" + number;
+			    while (str.length < length) {
+			        str = '0'+str;
+			    };
+			    return str;
+			};
+
+			var offset = new Date().getTimezoneOffset();
+			offset = ((offset<0? '+':'-')+ // Note the reversed sign!
+			          pad(parseInt(Math.abs(offset/60)), 2)+
+			          pad(Math.abs(offset%60), 2));
+    		console.log('offset',offset);
+    		var thedate = "2013-10-26T20:00:32.000Z";
+    		console.log('time',new Date(thedate));
         return function(input, p_allowFuture) {
             var substitute = function (stringOrFunction, number, strings) {
                     var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, dateDifference) : stringOrFunction;
@@ -8,7 +24,7 @@ angular.module('TimeAgoFilter', []).
                     return string.replace(/%d/i, value);
                 },
                 nowTime = (new Date()).getTime(),
-                date = (new Date(input)).getTime(),
+                date = (new Date(input+"Z")).getTime(),
                 //refreshMillis= 6e4, //A minute
                 allowFuture = p_allowFuture || false,
                 strings= {
@@ -40,7 +56,8 @@ angular.module('TimeAgoFilter', []).
                 // var strings = this.settings.strings;
                 prefix = strings.prefixAgo,
                 suffix = strings.suffixAgo;
-                
+                // console.log('time=',input);
+
             if (allowFuture) {
                 if (dateDifference < 0) {
                     prefix = strings.prefixFromNow;
