@@ -53,5 +53,15 @@ postworld.factory('pwCommentsService', function ($resource, $q, $log,pwData) {
 			// will pass settings as is, which will include few more parameters that will not be used in php
 			return pwData.wp_ajax('pw_get_comments',settings);
 		},
+		pw_save_comment: function(args) {
+			if (!args.comment_data) throw {message:'pw_save_comment - argument comment_data not initialized properly'};
+			$log.info('pwCommentsService.pw_save_comment',args);
+			return pwData.wp_ajax('pw_save_comment',args);
+		},
+		pw_delete_comment: function(args) {
+			if (!args.comment_id) throw {message:'pw_delete_comment - argument comment_id not initialized properly'};
+			$log.info('pwCommentsService.pw_delete_comment',args);
+			return pwData.wp_ajax('pw_delete_comment',args);
+		},
    };
 });

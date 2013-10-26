@@ -16,9 +16,9 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 
 'use strict';
 var feed_settings = [];
-var load_comments = [];
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic' ])
+
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter' ])
 .config(function ($routeProvider, $locationProvider, $provide) {   
 
     ////////// ROUTE PROVIDERS //////////
@@ -68,16 +68,16 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         });
     $routeProvider.when('/home/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
+                template: '<h2>Coming Soon</h2>',               
         });
     $routeProvider.when('/edit-post/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
         });
-    $routeProvider.when('/load-comments/',
-        {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
-        });          
+        $routeProvider.when('/load-comments/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
+            });            
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
 
@@ -119,20 +119,6 @@ postworld.run(function($rootScope, $templateCache, pwData) {
  * 
  * Whole Components
  ******************
- * Create Advanced Search Panel [complete missing boxes]
- * Do we need Directives for non-post types?
- * Create Post Types Toggles in Search Panel Dynamically http://jsfiddle.net/BtrZH/5/
- * 
- * Create Edit Fields for Radio, checkbox, TinMCE (WP has an hook for it), Buttons
- *  Add Validations
- *  Add Dynamic Sub Forms [ng-switch]
- *  Add Embedding of URLs [embed.ly?]
- *  Will be used in URL like #/post/edit/id, #/post/new, etc...
- *  Will Switch between forms dynamically
- * 
- * TODO List
- * *********
- * Create Startup code that runs at app startup, and put getting templates into it
  *  * 
  * Refactoring Needed
  * ******************
@@ -140,16 +126,10 @@ postworld.run(function($rootScope, $templateCache, pwData) {
  * 
  * Issues
  * ******
- * Button for Feed Templates need to be toggled and populated from Feed Settings
  * NONCE - not active yet
- * Feed_settings must have a template URL for feed []
- * Remove additional fields added to args and saved with register_feed()
- * Add Parameters to URL of the Live Feed / Search parameters - add that to our menu as an example
  * 
  * Enhancements
  * *************
- * Submitting on Field Change
- * Fix Bootstrap field alignment
  * Shouldnt we get all templates in pw_get_templates, and cache them to be used across the whole session? this will save many uneeded calls as long as we're on the same SPA session?
  * 
  * Testing

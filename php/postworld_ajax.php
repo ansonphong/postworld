@@ -256,9 +256,101 @@ function pw_get_comments_anon() {
 	// documentation says that die() should be the end...
 	die();
 }
+
+ /* Actions for pw_save_comment () */
+
+function pw_save_comment_loggedIn() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	if($args['comment_data']) $commentdata = $args['comment_data'];
+	else ErrorReturn($response, 400, 'missing argument comment_data');
+	// had to rename it to return_value, since return in ajax javascript is a reserved word 
+	if ($args['return_value']) $return = $args['return_value'];
+	else $return = null;
+	
+	// TODO should we use wp_new_comment instead of wp_insert_comment http://codex.wordpress.org/Function_Reference/wp_new_comment?
+	// Sanitize
+	$commentdata = apply_filters('preprocess_comment', $commentdata);
+	
+	
+	// Get User ID, it must be real, since this function is called for logged in users only
+	$user_ID = get_current_user_id();
+	if (!$user_ID) ErrorReturn($response, 400, 'User must be authenticated to perform this action');
+	$commentdata['user_id'] = $user_ID;
+	
+	// Get Author Info
+	 $user_data = get_userdata( $user_ID );
+	if ($user_data->display_name) {
+		$commentdata['comment_author'] = $user_data->display_name; 
+	} else if ($user_data->user_nicename) {
+		$commentdata['comment_author'] = $user_data->user_nicename; 
+	} else 
+		$commentdata['comment_author'] = $user_data->user_login; 
+	
+	if ($user_data->user_email) {
+		$commentdata['comment_author_email'] = $user_data->user_email; 
+	}
+	  
+	if ($user_data->user_url) {
+		$commentdata['comment_author_url'] = $user_data->user_url; 
+	}  	
+	
+	// Get IP, Agent
+	$commentdata['comment_author_IP'] = preg_replace( '/[^0-9a-fA-F:., ]/', '',$_SERVER['REMOTE_ADDR'] );
+	$commentdata['comment_agent']     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 ) : '';
+	// Get Date
+	// $commentdata['comment_date']     = current_time('mysql');
+	$commentdata['comment_date_gmt'] = current_time('mysql', 1);
+
+	// Sanitize
+	$commentdata = wp_filter_comment($commentdata);
+	$commentdata['comment_approved'] = wp_allow_comment($commentdata);	
+			
+	
+	$results = pw_save_comment($commentdata,$return);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+ /* Actions for pw_delete_comment () */
+
+function pw_delete_comment_loggedIn() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	if($args['comment_id']) $comment_id = $args['comment_id'];
+	else ErrorReturn($response, 400, 'missing argument comment_id');
+		
+	// Get User ID, it must be real, since this function is called for logged in users only
+//	$user_ID = get_current_user_id();
+//	if (!$user_ID) ErrorReturn($response, 400, 'User must be authenticated to perform this action');
+//	$commentdata['user_id'] = $user_ID;					
+	
+	// $results = pw_save_comment($commentdata,$return);
+	$results = wp_delete_comment( $comment_id);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+
+
+/* Action Hook for pw_delete_comment() - Logged in users */
+add_action("wp_ajax_pw_delete_comment", "pw_delete_comment_loggedIn");
+
  
-/* Action Hook for pw_get_comments() - Logged in users */
-//add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
+/* Action Hook for pw_save_comment() - Logged in users */
+add_action("wp_ajax_pw_save_comment", "pw_save_comment_loggedIn");
+
+
+/* Action Hook for pw_get_comments() - Logged In users */
+add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
 
 /* Action Hook for pw_get_comments() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
@@ -278,7 +370,7 @@ add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
 	$response['version'] = $postworld_api_version;
 	
 	$query = array(
-            'post_id' => 40519,            
+            'post_id' => 166220,            
     	);
 		
 	// TODO check results are ok

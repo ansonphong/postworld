@@ -54,18 +54,19 @@ function pw_get_userdata($user_id, $fields) {
 		// If a requested field is provided by WP get_userdata() Method, collect all the data
 		if (in_array($value, $wordpress_user_fields)) {
 			$wordpress_user_data = get_userdata($user_id);
-
-			// Transfer the user data into $user_data
-			foreach ($wordpress_user_data->data as $key => $value)
-				$user_data[$key] = $value;
-
-			// Get user Roles
-			if (in_array('roles', $fields))
-				$user_data['roles'] = $wordpress_user_data -> roles;
-
-			// Get user Capabilities
-			if (in_array('capabilities', $fields))
-				$user_data['capabilities'] = $wordpress_user_data -> allcaps;
+			if ((isset($wordpress_user_data))&&($wordpress_user_data)) {
+				// Transfer the user data into $user_data
+				foreach ($wordpress_user_data->data as $key => $value)
+					$user_data[$key] = $value;
+	
+				// Get user Roles
+				if (in_array('roles', $fields))
+					$user_data['roles'] = $wordpress_user_data -> roles;
+	
+				// Get user Capabilities
+				if (in_array('capabilities', $fields))
+					$user_data['capabilities'] = $wordpress_user_data -> allcaps;
+			}
 
 			// Break out of foreach
 			break;
