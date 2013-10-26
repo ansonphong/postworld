@@ -2408,15 +2408,7 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
         pwData.wp_ajax('ajax_oembed_get', args ).then(
             // Success
             function(response) {    
-                $scope.oEmbed = response;
-
-                // MANUAL DECODE (???) This seems like a hack.
-                var oEmbedDecode = "";
-                angular.forEach( response, function( value, key ){
-                    if( !isNaN(key) )
-                    oEmbedDecode = oEmbedDecode + value;
-                });
-                $scope.oEmbedDecode = $sce.trustAsHtml( oEmbedDecode );
+                $scope.oEmbed = $sce.trustAsHtml(response.data);
             },
             // Failure
             function(response) {

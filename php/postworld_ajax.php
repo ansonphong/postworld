@@ -11,7 +11,12 @@ function ajax_oembed_get(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$pw_args = $args;
 	$oEmbed = wp_oembed_get( $pw_args['link_url'] );
-	die ( $oEmbed );
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $oEmbed;
+	echo json_encode($response);
+	// die ( $oEmbed );
+	die;
 }
 add_action("wp_ajax_nopriv_ajax_oembed_get", "ajax_oembed_get");
 add_action("wp_ajax_ajax_oembed_get", "ajax_oembed_get");
