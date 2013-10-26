@@ -49,6 +49,19 @@
  * Performance http://tech.small-improvements.com/2013/09/10/angularjs-performance-with-large-lists/
  */
 
+postworld.directive('loadComments', function() {
+    return {
+        restrict: 'A',
+        // DO not set url here and in nginclude at the same time, so many errors!
+        templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadComments.html',
+        replace: true,
+        controller: 'pwTreeController',
+        scope: {
+        	
+        }
+    };
+});
+
 postworld.directive('ngShowMore', function ($timeout,$animate) {
 	//console.log('at least we got in directive');
 	function link(scope, element, attrs) {
@@ -70,7 +83,7 @@ postworld.directive('ngShowMore', function ($timeout,$animate) {
   };
 });
 
-postworld.controller('TreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs) {
+postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs) {
     $scope.json = '';
     $scope.user_id = jsVars.user_id;
     $scope.isAdmin = jsVars.is_admin;

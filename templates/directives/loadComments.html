@@ -1,0 +1,119 @@
+<div>	  
+	<!-- Temporarily show Post ID  -->
+	<div> 
+		view comments for post # {{data4.children[0].comment_post_ID}}
+	</div>
+	<!-- Select Order By Options  -->
+	<div>
+		<select class="form-control" ng-model="orderBy" ng-options="code as name for (code,name) in orderOptions" ng-change="loadComments()" ng-init="loadComments()">
+		</select>
+	</div>
+	<!-- Show Loading Icon While Loading  -->
+	<div ng-hide="commentsLoaded" class="text-center">
+		Loading Comments &nbsp; <img src="{{pluginUrl}}/postworld/images/misc/ajax-loader.gif">
+	</div>			
+	<!-- Show Comments Tree After Loading -->
+	<!-- This UL is wholly replicated every time there is a child Comment  -->
+	<ul ng-show="commentsLoaded">
+		<div streeviewmodel ya-tree="child in data4.children at ul" ng-class="{minimized:child.minimized}" ng-init="OpenClose(child)">
+		  <div>			      	
+			<!-- Maximize/Minimize Icon based on Karma Points -->
+		  	<span ng-switch on="child.minimized">			      	
+				<i ng-switch-when="true" class="icon-large glyphicon glyphicon-plus-sign" data-ng-click="toggleMinimized(child)"></i>
+				<i ng-switch-when="false" class="icon-large glyphicon glyphicon-minus-sign" data-ng-click="toggleMinimized(child)"></i>
+			</span>
+			<!-- Add/Remove Points  -->
+			<span>
+				<div class="glyphicon glyphicon-chevron-up" ng-click="karmaAdd(child)"></div>
+				<div class="glyphicon glyphicon-chevron-down" ng-click="karmaRemove(child)"></div>
+			</span>
+			<!-- Author / Date / Points -->
+			<span class="cm_author">{{child.comment_author}}</span>
+			<span >&nbsp;.&nbsp;</span>
+			<span title="{{ child.comment_date | date:'medium' }}">{{child.comment_date|timeago}}</span>
+			<span >&nbsp;.&nbsp;</span>					
+			<span ><strong>{{child.karmaPoints}}</strong> karma</span>					 
+			<span >&nbsp;.&nbsp;</span>					
+			<span ><strong>{{child.comment_ID}}</strong></span>					 
+			<div class="indent" ng-show="!child.minimized">
+				<!-- Comment Body Text -->				
+		      	<span ng-switch on="child.editMode" ng-init="child.editMode=false">			      	
+					<!-- Edit Mode, Show a Text Box -->				
+					<div ng-switch-when="true" >
+					  	<textarea class="form-control margin-bottom" rows=6 ng-model="child.editText" ng-init="child.editText=child.comment_content" placeholder="What do you think..." ng-disabled="child.editInProgress"></textarea>
+					  	<div ng-show="child.editError" class="pull-left alert alert-danger error" >
+					  		{{child.editError}}
+					  	</div>
+					  	<div class=pull-right>
+						  	<button type="button" class="btn btn-primary btn-sm" ng-click="editComment(child)" ng-disabled="child.editInProgress">Save</button>
+						  	<button type="button" class="btn btn-default btn-sm" ng-click="child.editMode=false" ng-disabled="child.editInProgress">Cancel</button>
+					  	</div>
+						<div style='clear: both;'></div>												
+					</div>
+					<!-- View Mode, Show Formatted Text -->				
+					<div ng-switch-when="false" id="profile-description">
+			            <div ng-show-more class="text" class="showMoreHeight" ng-class={showMoreHeight:child.showMore} ng-bind-html="child.trustedContent" ng-init="trustHtml(child)">					            							            							               
+			            </div>	
+						<!-- More/Less Directive - In Progress -->				
+			            <div ng-show="child.showMore" class='show-more' ng-click="child.showMore=false;">More</div>					            
+			            <div ng-show="!child.showMore && child.tall" class='show-less' ng-click="child.showMore=true;">Less</div>					            
+					</div>
+				</span>
+				<!-- Control Bar: Edit/Delete/Reply -->				
+				<div class="pull-right">
+					<!-- Edit if This is your comment -->				
+					<span ng-if="child.user_id==user_id">
+						<span ng-click="toggleEditBox(child)" >edit</span>
+						<span >&nbsp;.&nbsp;</span>								
+					</span>
+					<!-- Delete if This is your comment -->				
+					<span ng-if="child.user_id==user_id">
+						<span ng-click="toggleDeleteBox(child)">delete</span>
+						<span >&nbsp;.&nbsp;</span>
+					</span>
+					<!-- Reply -->				
+					<span ng-click="toggleReplyBox(child)" >reply</span>								
+				</div>
+				<hr>
+				<!-- Reply Box -->				
+			  	<div ng-show="child.replyBox">
+				  	<textarea class="form-control margin-bottom" rows="3" ng-model="child.replyText" placeholder="What do you think..." ng-disabled="child.replyInProgress"></textarea>
+				  	<div ng-show="child.replyError" class="pull-left alert alert-danger error" >
+				  		{{child.replyError}}
+				  	</div>
+				  	<div class=pull-right>
+					  	<button type="button" class="btn btn-primary btn-sm" ng-click="replyComment(child)" ng-disabled="child.replyInProgress">Reply</button>
+					  	<button type="button" class="btn btn-default btn-sm" ng-click="child.replyBox=false" ng-disabled="child.replyInProgress">Cancel</button>
+				  	</div>
+				</div>
+				<!-- Delete Box -->				
+			  	<div ng-show="child.deleteBox">
+				  	<div class=pull-right>
+					  	<span class="alert-danger error" >Are you sure you want to delete this comment?</span>
+					  	<button type="button" class="btn btn-primary btn-sm" ng-click="deleteComment(child)" ng-disabled="child.deleteInProgress">Delete</button>
+					  	<button type="button" class="btn btn-default btn-sm" ng-click="child.deleteBox=false" ng-disabled="child.deleteInProgress">Cancel</button>
+				  	</div>
+				  	<div ng-show="child.deleteError" class="pull-left alert alert-danger error" >
+				  		{{child.deleteError}}
+				  	</div>
+				</div>
+				<div style='clear: both;'></div>												
+				<!-- Place Holder for Children -->				
+			    <ul data-ng-show="!child.minimized" ng-class="{pregnant:child.children.length, indent:true}">
+			    </ul>						
+			</div>
+		  </div>
+		</div>
+	</ul>
+	<!-- Add a new comment to the Post - Top Level Comment Only -->
+	<div ng-show="commentsLoaded">
+	  	<textarea class="form-control margin-bottom" rows="3" ng-model="data4.replyText" placeholder="What do you think..." ng-disabled="data4.replyInProgress"></textarea>
+	  	<div ng-show="data4.replyError" class="pull-left alert alert-danger error" >
+	  		{{data4.replyError}}
+	  	</div>
+	  	<div class=pull-right>
+		  	<button type="button" class="btn btn-primary btn-sm" ng-click="replyComment(data4)" ng-disabled="data4.replyInProgress">New Comment</button>
+	  	</div>
+		<div style='clear: both;'></div>												
+	</div>	  
+</div>
