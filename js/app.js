@@ -2355,7 +2355,7 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 };
 
 
-var ModalInstanceCtrl = function ($scope, $modalInstance, post) {
+var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
     $scope.post = post;
     /*
     $scope.ok = function () {
@@ -2363,6 +2363,35 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, post) {
         // RETURN THIS VALUE TO PAGE
     };
     */
+
+    $scope.oEmbedDecode = "LOADING";
+    var link_url = post.link_url;
+    var args = { "link_url": link_url };
+
+    // MEDIA GET
+    pwData.wp_ajax('ajax_oembed_get', args ).then(
+        // Success
+        function(response) {    
+            //$scope.oEmbed = response;
+
+            // MANUAL DECODE (???) This seems like a hack.
+            var oEmbedDecode = "";
+            angular.forEach( response, function( value, key ){
+                if( !isNaN(key) )
+                oEmbedDecode = oEmbedDecode + value;
+            });
+            $scope.oEmbedDecode = $sce.trustAsHtml( oEmbedDecode );
+        },
+        // Failure
+        function(response) {
+            alert("error");
+        }
+    );
+
+    //$scope.oEmbedDecode = oEmbedGet(post.link_url);
+
+
+
     $scope.close = function () {
         $modalInstance.dismiss('close');
     };
@@ -2390,7 +2419,6 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
         //JSON.parse(JSON.stringify($scope.args))
         //oEmbed = pwData.wp_ajax('ajax_oembed_get', args );
         //$scope.oEmbed = oEmbed;
-
         pwData.wp_ajax('ajax_oembed_get', args ).then(
             // Success
             function(response) {    
@@ -2409,8 +2437,6 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
                 alert("error");
             }
         );
-
-
         
     };
 };
