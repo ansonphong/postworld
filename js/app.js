@@ -2355,7 +2355,6 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 };
 
 
-
 var ModalInstanceCtrl = function ($scope, $modalInstance, post) {
     $scope.post = post;
     /*
@@ -2370,10 +2369,31 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, post) {
 };
 
 
+/*
+  __  __          _ _         _____           _              _ 
+ |  \/  | ___  __| (_) __ _  | ____|_ __ ___ | |__   ___  __| |
+ | |\/| |/ _ \/ _` | |/ _` | |  _| | '_ ` _ \| '_ \ / _ \/ _` |
+ | |  | |  __/ (_| | | (_| | | |___| | | | | | |_) |  __/ (_| |
+ |_|  |_|\___|\__,_|_|\__,_| |_____|_| |_| |_|_.__/ \___|\__,_|
 
+////////// ------------ MEDIA EMBED ------------ //////////*/   
 
+var mediaEmbed = function ( $scope, pwData ) {
 
+    $scope.oEmbed = "";
+    $scope.oEmbedGet = function (link_url) {
+        var args = { "link_url":link_url };
+        var oEmbed = pwData.wp_ajax('ajax_oembed_get', args );
+        $scope.oEmbed = oEmbed;
 
+        // Attempt to decode
+        var oEmbedDecode = "";
+        angular.forEach( $scope.oEmbed, function( value, key ){
+           oEmbedDecode = oEmbedDecode + value;
+        });
+        $scope.oEmbedDecode = oEmbedDecode;
+    };
+};
 
 
 

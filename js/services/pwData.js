@@ -213,5 +213,10 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('pw_get_post_types', params);
 		},
+		ajax_oembed_get: function(args) {
+			$log.info('pwData.ajax_oembed_get',args);
+			var params = {args:args};
+			return this.wp_ajax('ajax_oembed_get', params);
+		},
    }; // END OF pwData return value
 });
