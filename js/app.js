@@ -2321,6 +2321,63 @@ angular.module('monospaced.elastic', [])
 
   }]);
 
+
+/*
+  __  __          _ _         __  __           _       _ 
+ |  \/  | ___  __| (_) __ _  |  \/  | ___   __| | __ _| |
+ | |\/| |/ _ \/ _` | |/ _` | | |\/| |/ _ \ / _` |/ _` | |
+ | |  | |  __/ (_| | | (_| | | |  | | (_) | (_| | (_| | |
+ |_|  |_|\___|\__,_|_|\__,_| |_|  |_|\___/ \__,_|\__,_|_|
+
+////////// ------------ MEDIA MODAL ------------ //////////*/                                                         
+
+
+var mediaModalCtrl = function ($scope, $modal, $log) {
+
+  $scope.openMediaModal = function (post) {
+    var modalInstance = $modal.open({
+      templateUrl: '/wp-content/themes/RSV2/postworld/templates/modals/media_modal.html',
+      controller: ModalInstanceCtrl,
+      resolve: {
+        post: function(){
+            return post;
+        }
+      }
+    });
+    modalInstance.result.then(function (selectedItem) {
+        //$scope.post_title = post_title;
+    }, function () {
+        // WHEN CLOSE MODAL
+        $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+
+};
+
+
+
+var ModalInstanceCtrl = function ($scope, $modalInstance, post) {
+    $scope.post = post;
+    /*
+    $scope.ok = function () {
+        $modalInstance.close($scope.selected.item);
+        // RETURN THIS VALUE TO PAGE
+    };
+    */
+    $scope.close = function () {
+        $modalInstance.dismiss('close');
+    };
+};
+
+
+
+
+
+
+
+
+
+
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
