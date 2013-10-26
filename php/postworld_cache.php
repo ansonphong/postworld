@@ -238,29 +238,35 @@
 		return : cron_logs Object (store in table wp_postworld_cron_logs)
 		 */	
 		
-		
-		
 				
 		 $cron_logs=array();
-		 if(!$cache_all){
+		 if($cache_all===FALSE){
 		 	
 			$recent_log = get_most_recent_cache_shares_log();
+			// print_r($recent_log);
 			 
 			 if(!is_null($recent_log)){
 			 	$time_start = date("Y-m-d H:i:s");
-				$post_ids = get_recent_shares_post_ids($recent_log->last_time);
+				 //print_r($recent_log->time_start);
+				$post_ids = get_recent_shares_post_ids($recent_log->time_start);
+			
 				foreach ($post_ids as $post_id) {
-					cache_user_post_shares($post_id->$post_id);
+			//		print_r($post_id);
+				
+					cache_post_shares($post_id->post_id);
 				}
 				
-				$user_ids = get_recent_shares_user_ids($recent_log->last_time);
+				$user_ids = get_recent_shares_user_ids($recent_log->time_start);
+				print_r($user_ids);
 				foreach ($user_ids as $user_id) {
-					cache_user_shares($user_id->$user_id,'outgoing');
+					print_r($user_id);
+					cache_user_shares($user_id->user_id,'outgoing');
 				}
 				
-				$author_ids = get_recent_shares_author_ids($recent_log->last_time);
+				$author_ids = get_recent_shares_author_ids($recent_log->time_start);
+				//print_r($author_ids);
 				foreach ($author_ids as $author_id) {
-					 cache_user_shares($author_id->$author_id,'incoming');
+					 cache_user_shares($author_id->author_id,'incoming');
 				}
 				
 				
@@ -307,29 +313,33 @@
 		$wpdb->show_errors();
 		$query="SELECT * FROM wp_postworld_a1. wp_postworld_cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'cache_shares')";
 		$row = $wpdb->get_row($query);	
+		return $row;
 	}
 	
 	function get_recent_shares_post_ids($last_time){
 		 global $wpdb;	
 		 $wpdb->show_errors();
 		 $query = "select DISTINCT  post_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
-		 $post_ids = $wpdb->query($query);
+		 //echo $query;
+		
+		 $post_ids = $wpdb->get_results($query);
+		  
 		 return $post_ids;
 	}	
 	
 	function get_recent_shares_author_ids($last_time){
 		 global $wpdb;	
 		 $wpdb->show_errors();
-		 $query = "select DISTINCT  user_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
-		 $user_ids = $wpdb->query($query);
+		 $query = "select DISTINCT  author_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+		 $user_ids = $wpdb->get_results($query);
 		 return $user_ids;
 	}	
 	
 	function get_recent_shares_user_ids($last_time){
 		 global $wpdb;	
 		 $wpdb->show_errors();
-		 $query = "select DISTINCT author_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
-		 $author_ids = $wpdb->query($query);
+		 $query = "select DISTINCT user_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+		 $author_ids = $wpdb->get_results($query);
 		 return $author_ids;
 	}	
 

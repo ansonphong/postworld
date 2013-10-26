@@ -523,16 +523,16 @@ Default : *false*
 
   - __AUTHORS :__  
   Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the last cache.  
-  Run `cache_user_post_shares($user_id)` for all recently updated user's shares
+  Run `cache_user_shares($user_id,'incoming')` for all recently updated user's shares
 
    - __USERS :__  
   Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the last cache.
-  Run `cache_user_shares($user_id)` for all recently updated user's shares
+  Run `cache_user_shares($user_id,'outgoing')` for all recently updated user's shares
 
 - If `$cache_all = true`
   - Cycle through every post and run `cache_post_shares($post_id)`
-  - Cycle through every author and run `cache_user_post_shares($user_id)`
-  - Cycle through every user and run `cache_user_shares($user_id)`
+  - Cycle through every author and run `cache_user_shares($user_id,'incoming')`
+  - Cycle through every user and run `cache_user_shares($user_id,'outgoing')`
 
 __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
