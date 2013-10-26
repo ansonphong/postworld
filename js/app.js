@@ -2378,20 +2378,40 @@ var ModalInstanceCtrl = function ($scope, $modalInstance, post) {
 
 ////////// ------------ MEDIA EMBED ------------ //////////*/   
 
-var mediaEmbed = function ( $scope, pwData ) {
+var mediaEmbed = function ( $scope, $sce, pwData ) {
 
+    //$scope.oEmbedDecode = '<iframe width="500" height="281" src="http://www.youtube.com/embed/38peWm76l-U?feature=oembed" frameborder="0" allowfullscreen></iframe> ';
+    $scope.oEmbedDecode = $sce.trustAsHtml( $scope.oEmbedDecode );
     $scope.oEmbed = "";
     $scope.oEmbedGet = function (link_url) {
         var args = { "link_url":link_url };
-        var oEmbed = pwData.wp_ajax('ajax_oembed_get', args );
-        $scope.oEmbed = oEmbed;
+        var oEmbed = "";
 
-        // Attempt to decode
-        var oEmbedDecode = "";
-        angular.forEach( $scope.oEmbed, function( value, key ){
-           oEmbedDecode = oEmbedDecode + value;
-        });
-        $scope.oEmbedDecode = oEmbedDecode;
+        //JSON.parse(JSON.stringify($scope.args))
+        //oEmbed = pwData.wp_ajax('ajax_oembed_get', args );
+        //$scope.oEmbed = oEmbed;
+
+        pwData.wp_ajax('ajax_oembed_get', args ).then(
+            // Success
+            function(response) {    
+                $scope.oEmbed = response;
+
+                // MANUAL DECODE (???) This seems like a hack.
+                var oEmbedDecode = "";
+                angular.forEach( response, function( value, key ){
+                    if( !isNaN(key) )
+                    oEmbedDecode = oEmbedDecode + value;
+                });
+                $scope.oEmbedDecode = $sce.trustAsHtml( oEmbedDecode );
+            },
+            // Failure
+            function(response) {
+                alert("error");
+            }
+        );
+
+
+        
     };
 };
 
