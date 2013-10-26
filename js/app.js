@@ -78,6 +78,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
             });            
+        $routeProvider.when('/o-embed/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
+            });            
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
 
