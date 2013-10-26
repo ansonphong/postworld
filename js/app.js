@@ -2363,8 +2363,9 @@ var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
         // RETURN THIS VALUE TO PAGE
     };
     */
+    $scope.status = "loading";
 
-    $scope.oEmbedDecode = "LOADING";
+    $scope.oEmbedDecode = '';
     var link_url = post.link_url;
     var args = { "link_url": link_url };
 
@@ -2381,6 +2382,7 @@ var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
                 oEmbedDecode = oEmbedDecode + value;
             });
             $scope.oEmbedDecode = $sce.trustAsHtml( oEmbedDecode );
+            $scope.status = "done";
         },
         // Failure
         function(response) {
