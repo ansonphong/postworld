@@ -580,7 +580,7 @@ postworld.service('pwEditPost', ['$log', function ($log) {
                     post_id : 24,
                     post_title : "Hello Space",
                     post_name : "hello_space",
-                    post_type : "feature",
+                    post_type : "tribe_events",
                     post_status : "publish",
                     post_format : "video",
                     post_class : "contributor",
@@ -862,6 +862,12 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
     // Setup the intermediary Link URL
     $scope.link_url = '';
 
+    // Set the default statuss
+    $scope.loaded = 'false';
+
+    // Set the default mode
+    $scope.mode = "url_input";
+
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
     // POST STATUS OPTIONS
@@ -890,7 +896,6 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
         }
     };
 
-    $scope.mode = "url_input";
 
     // GET URL EXTRACT
     // 1. On detect paste
@@ -933,6 +938,8 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
                 // Default Selected Image
                 $scope.selected_image = 0;
             }
+
+        $scope.loaded = 'true';
 
         }, 1 );
 
@@ -2349,7 +2356,7 @@ var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
     */
     $scope.status = "loading";
 
-    $scope.oEmbedDecode = '';
+    $scope.oEmbed = '';
     var link_url = post.link_url;
     var args = { "link_url": link_url };
 
@@ -2357,27 +2364,16 @@ var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
     pwData.wp_ajax('ajax_oembed_get', args ).then(
         // Success
         function(response) {    
-            //$scope.oEmbed = response;
-
-            // MANUAL DECODE (???) This seems like a hack.
-            var oEmbedDecode = "";
-            angular.forEach( response, function( value, key ){
-                if( !isNaN(key) )
-                oEmbedDecode = oEmbedDecode + value;
-            });
-            $scope.oEmbedDecode = $sce.trustAsHtml( oEmbedDecode );
+            $scope.oEmbed = $sce.trustAsHtml( response.data );
             $scope.status = "done";
         },
         // Failure
         function(response) {
-            alert("error");
+            $scope.status = "error";
         }
     );
 
-    //$scope.oEmbedDecode = oEmbedGet(post.link_url);
-
-
-
+    // MODAL CLOSE
     $scope.close = function () {
         $modalInstance.dismiss('close');
     };
@@ -2401,10 +2397,6 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
     $scope.oEmbedGet = function (link_url) {
         var args = { "link_url":link_url };
         var oEmbed = "";
-
-        //JSON.parse(JSON.stringify($scope.args))
-        //oEmbed = pwData.wp_ajax('ajax_oembed_get', args );
-        //$scope.oEmbed = oEmbed;
         pwData.wp_ajax('ajax_oembed_get', args ).then(
             // Success
             function(response) {    
