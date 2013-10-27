@@ -621,6 +621,16 @@ __min_points__ : *integer*
 - Minimum points a comment must have to appear maximized by default
 - Comments with less than this will appear minimized by default
 
+__live_poll__ : *integer*
+- Default : __0__ (No Polling)
+- Updates the comment feed on time set in the directive setting
+- Integer defines the number of seconds between polls
+
+__live_poll_while_writing__ : *boolean*
+- Default : __false__ (no polling while writing a comment)
+- Whether to poll while user is currently editing a comment (which might disturb the commenting process)
+
+
 
 #### Usage
 
@@ -628,18 +638,20 @@ Javascript :
 
 ``` javascript
 load_comments['post_single'] = {
-	query : {
-		post_id : 24,
-		status : 'approve'
-		},
-	fields : 'all',
-	tree : true,
-	order_by : 'comment_points',
-	order_options : {
-		'comment_points' : 'Points',
-		'comment_date' : 'Date'
-		},
-	min_points : 0,
+    query : {
+        post_id : 133925, // 21853, // 133925, // 166220, // 21853, // 166220,
+        status: 'approve',
+      orderby : 'comment_date',
+        },
+    fields : 'all',
+    tree : true,
+    order_options : {
+        'comment_points' : 'Points',
+        'comment_date' : 'Date'
+        },
+    min_points : 0,
+    live_poll: 60,
+   live_poll_while_writing: false,
 };
 ```
 
