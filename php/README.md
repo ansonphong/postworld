@@ -1997,6 +1997,31 @@ __PANEL TEMPLATES OBJECT__
 
 __return__ : *Array* (with requested template paths)
 
+
+__COMMENTS TEMPLATE OBJECT__ *(Clone of "Panel Templates Object")*
+
+``` php
+  if($templates_object['comments']) // If it has a 'comments' object
+```
+
+- Default panels template path :  
+  __/plugins__/postworld/templates/comments
+
+- Over-ride panels template path:  
+  __/theme_name__/postworld/templates/comments
+
+
+1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
+  - {{panel_id}}.html  
+  Key is __file_name__ without the HTML extension, value is the path relative to base domain
+   
+2. If file exists in __over-ride__ paths, overwrite the __default__ paths
+
+__return__ : *Array* (with requested template paths)
+
+
+
+
 #### Usage:
 
 ``` php
@@ -2046,6 +2071,21 @@ panels : {
 	}
 };
 ```
+
+- __Comments Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
+
+After JSON Encoded :
+
+``` javascript
+{
+panels : {
+  'comment-edit': '/wp-content/plugins/postworld/templates/panels/comment-edit.html',
+  'comment-single': '/wp-content/plugins/postworld/templates/panels/comment-edit.html',
+  'comment-header': '/wp-content/plugins/postworld/templates/panels/comment-header.html',
+  }
+};
+```
+
 
 ------
 
