@@ -2038,6 +2038,9 @@ $post_templates = pw_get_templates ($args);
 // To get Panel Template Object
 $panel_template = pw_get_templates ( array( 'panels'=>'panel_id' ));
 
+// To get Comments Template Object
+$panel_template = pw_get_templates ( array( 'comments' ));
+
 ```
 
 #### Return:
