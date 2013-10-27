@@ -96,23 +96,13 @@ $pw_defaults = array(
 	'classes'	=>	array(
 		'post_types'	=>	array(),
 		'data'	=>	array(
-			'a_blog'	=>	array(
+			'author'	=>	array(
 				'name'			=>	"Blog",
 				'description'	=>	"Main Blog",
 				'roles'			=>	array('Administrator', 'Editor', 'Author'),
 				),
-			'a_feature'	=>	array(
-				'name'			=>	"Feature",
-				'description'	=>	"Main Feature",
-				'roles'			=>	array('Administrator', 'Editor', 'Author'),
-				),
-			'c_blog'	=>	array(
-				'name'			=>	"Community Blog",
-				'description'	=>	"Blog for community members.",
-				'roles'			=>	array('Contributor'),
-				),
-			'c_feature'	=>	array(
-				'name'			=>	"Community Feature",
+			'contributor'	=>	array(
+				'name'			=>	"Contributer",
 				'description'	=>	"Features for community members.",
 				'roles'			=>	array('Contributor'),
 				),
@@ -139,7 +129,7 @@ $pw_defaults = array(
 				),
 			),
 		),
-	'post_views'	=> array('list', 'detail', 'grid', 'full'),
+	'post_views'	=> array('list', 'detail', 'grid', 'full', ),
 	//'panel_ids' => array('feed_top','feed_search','feed_header'),
 	'template_paths' =>array(
 	
