@@ -18,6 +18,13 @@ function postworld_includes(){
 	// wp_enqueue_script( 'AngularJS-Animate', WP_PLUGIN_URL.'/postworld/lib/angular/angular-animate.min.js');
 	wp_enqueue_script( 'AngularJS-UI-Utils', WP_PLUGIN_URL.'/postworld/lib/angular/angular-ui-utils.min.js');
 	
+	//BOOTSTRAP
+	wp_enqueue_style( "bootstrap-CSS", "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" );
+	wp_enqueue_script( "bootstrap-JS", "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js" );
+
+	// FONT AWESOME
+	wp_enqueue_style( "Font-Awsome", "//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" );
+
 	// ANGULAR UI : BOOTSTRAP
 	wp_enqueue_script( 'AngularJS-UI-Bootstrap', plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 

@@ -85,6 +85,14 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         $routeProvider.when('/o-embed/',
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
+            });       
+        $routeProvider.when('/media-modal/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/mediaModal.html',             
+            });  
+        $routeProvider.when('/post-link/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
             });            
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
@@ -1459,8 +1467,8 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 
   $scope.openMediaModal = function (post) {
     var modalInstance = $modal.open({
-      templateUrl: '/wp-content/themes/RSV2/postworld/templates/modals/media_modal.html',
-      controller: ModalInstanceCtrl,
+      templateUrl: '/wp-content/plugins/postworld/templates/panels/media_modal.html',
+      controller: MediaModalInstanceCtrl,
       resolve: {
         post: function(){
             return post;
@@ -1478,7 +1486,7 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 };
 
 
-var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
+var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
     
     // Import the passed post object into the Modal Scope
     $scope.post = post;
@@ -1513,6 +1521,50 @@ var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
         $modalInstance.dismiss('close');
     };
 };
+
+//---------- MODAL DEMO ----------//
+var ModalDemoCtrl = function ($scope, $modal, $log) {
+
+  $scope.items = ['item1', 'item2', 'item3'];
+
+  $scope.open = function () {
+
+    var modalInstance = $modal.open({
+      templateUrl: '/wp-content/plugins/postworld/templates/panels/modal_demo.html',
+      controller: ModalInstanceCtrl,
+      resolve: {
+        items: function () {
+          return $scope.items;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+};
+
+var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
+
+  $scope.items = items;
+  $scope.selected = {
+    item: $scope.items[0]
+  };
+
+  $scope.ok = function () {
+    $modalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
+
+
 
 
 /*
