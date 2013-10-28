@@ -311,7 +311,7 @@
 	function get_most_recent_cache_shares_log(){
 		global $wpdb;
 		$wpdb->show_errors();
-		$query="SELECT * FROM wp_postworld_a1. wp_postworld_cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'cache_shares')";
+		$query="SELECT * FROM $wpdb->pw_prefix"."cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'cache_shares')";
 		$row = $wpdb->get_row($query);	
 		return $row;
 	}
@@ -553,7 +553,7 @@
 		$wpdb -> show_errors();
 		
 		if(is_null($cron_log_object->posts) )$cron_log_object->posts = 'null';
-		$query = "INSERT INTO `wp_postworld_a1`.`wp_postworld_cron_logs`
+		$query = "INSERT INTO `$wpdb->pw_prefix"."cron_logs`
 					(
 					`function_type`,
 					`process_id`,

@@ -489,7 +489,7 @@
 			//echo "<br>add_record_to_comment_points";
 		//	$query = "insert into ".$wpdb->pw_prefix.'comment_points'." values(" . $comment_id . ",".get_comment_post_id($comment_id)."," . $user_id . ",".$comment_author."," . $points . ",null)";
 			
-			$query="INSERT INTO `wp_postworld_a1`.`wp_postworld_comment_points`
+			$query="INSERT INTO `$wpdb->pw_prefix"."comment_points`
 					(`comment_id`,
 					`user_id`,
 					`comment_post_id`,

@@ -597,7 +597,7 @@ function add_record_to_user_meta($user_id) {
 		//$user_role = get_user_role($user_id);
 		//if($relationship === null) $relationship='null';
 
-		$query = "INSERT INTO `wp_postworld_a1`.`wp_postworld_user_meta`
+		$query = "INSERT INTO `$wpdb->pw_prefix"."user_meta`
 					(`user_id`,
 					`post_points`,
 					`post_points_meta`,
