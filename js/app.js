@@ -955,7 +955,7 @@ postworld.controller('AuthorAutocomplete', ['$scope', function($scope) {
  |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
 
 ////////// ------------ POST LINK CONTROLLER ------------ //////////*/
-postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext',function($scope, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext) {
+postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext',function($scope, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, pwData) {
 
     // Setup the intermediary Link URL
     $scope.link_url = '';
@@ -1000,7 +1000,20 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
     // 2. On click
 
     $scope.extract_url = function() {
-        $scope.embedly_extract = $embedly.embedly_extract( $scope.link_url );
+
+        $embedly.liveEmbedlyExtract( $scope.link_url ).then( // 
+                // Success
+                function(response) {
+                    console.log(response);    
+                    $scope.embedly_extract = response;
+                },
+                // Failure
+                function(response) {
+                    alert('Could not find URL.');
+                    throw {message:'Embedly Error'+response};
+                }
+            );
+
         //alert(JSON.stringify($scope.embedly_extract));
         //alert('extract');
     }
@@ -1624,6 +1637,105 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
   };
 
 };
+
+
+'use strict';
+
+/*
+   _                       _              _   _       
+  | |   _    ___ _ __ ___ | |__   ___  __| | | |_   _ 
+ / __) (_)  / _ \ '_ ` _ \| '_ \ / _ \/ _` | | | | | |
+ \__ \  _  |  __/ | | | | | |_) |  __/ (_| |_| | |_| |
+ (   / (_)  \___|_| |_| |_|_.__/ \___|\__,_(_)_|\__, |
+  |_|                                           |___/ 
+////////// ------------ Embedly SERVICE ------------ //////////*/  
+postworld.factory('embedly', function ($resource, $q, $log) {     
+        // TODO Replace this with your Production Key
+                // http://api.embed.ly/1/extract?key=:key&url=:url&maxwidth=:maxwidth&maxheight=:maxheight&format=:format&callback=:callback
+        var embedlyKey = "512f7d063fc1490d9bcc7504c764a6dd";
+        var embedlyUrl = "http://api.embed.ly/1/:action";
+        var resource = $resource(embedlyUrl, {key:embedlyKey, url:''}, 
+                                    {   embedly_call: { method: 'GET', isArray: false, params: {action:'extract'} },    }
+                                );
+        
+        return {
+            // A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
+            embedly_call: function(action,url, options) {
+                $log.info('embedly.embedly_call', action, url, options);
+                var deferred = $q.defer();
+                // works only for non array returns
+                resource.embedly_call({action:action, url:url, options:options},
+                    function (data) {
+                        deferred.resolve(data);
+                    },
+                    function (response) {
+                        deferred.reject(response);
+                    });
+                return deferred.promise;        
+            },          
+            liveEmbedlyExtract: function( link_url, options ){
+                // LIVE EMBEDLY EXTRACT
+                // API : http://embed.ly/docs/extract/api
+                if (!link_url) throw {message:'embedly:link_url not provided'};
+                // Escape the URL
+                escape(link_url);
+                // if there are options, add them to the url here.
+                // call the service
+                return this.embedly_call('extract',link_url,options);
+                // for Ajax Calls
+
+                //return: embedly_extract_obj;
+            },
+            translateToPostData: function( embedly_extract ){
+                if (typeof embedly_extract.images[0] !== 'undefined' )
+                    var link_url_set = embedly_extract.images[0].url;
+                else
+                    var link_url_set = ""; // defult image_url
+
+                return{
+                    post_title: embedly_extract.title,
+                    post_excerpt: embedly_extract.description,
+                    link_url: embedly_extract.url,
+                    image_url: link_url_set,
+                };
+            },
+            embedlyExtractImageMeta: function( embedly_extract ){
+                
+                if ( embedly_extract.images.length >= 1 )
+                    var image_status_set = true;
+                else
+                    var image_status_set = false;
+
+                return{
+                    image_status: image_status_set,
+                    image_count: embedly_extract.images.length,
+                    images: embedly_extract.images,
+                };
+            },
+                       
+        };
+
+    });
+
+    
+postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pwData, $attrs, embedly) {
+        $scope.embedlyGet = function () {
+            
+            embedly.liveEmbedlyExtract( $scope.link_url).then(
+                // Success
+                function(response) {
+                    console.log(response);    
+                    $scope.embedlyResponse = response;
+                },
+                // Failure
+                function(response) {
+                    throw {message:'Embedly Error'+response};
+                }
+            );
+                  
+        };      
+    }
+);
 
 
 
