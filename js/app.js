@@ -82,6 +82,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedlyWidget.html',             
             });            
+        $routeProvider.when('/load-post/',
+            {
+                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPostWidget.html',             
+            });            
         $routeProvider.when('/o-embed/',
             {
                 templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
