@@ -1,10 +1,48 @@
 'use strict';
 
-postworld.service('embedly2', ['$log', function ($log) {
+/*
+   _                       _              _   _       
+  | |   _    ___ _ __ ___ | |__   ___  __| | | |_   _ 
+ / __) (_)  / _ \ '_ ` _ \| '_ \ / _ \/ _` | | | | | |
+ \__ \  _  |  __/ | | | | | |_) |  __/ (_| |_| | |_| |
+ (   / (_)  \___|_| |_| |_|_.__/ \___|\__,_(_)_|\__, |
+  |_|                                           |___/ 
+////////// ------------ Embedly SERVICE ------------ //////////*/  
+postworld.factory('embedly', function ($resource, $q, $log) {	  
+//postworld.service('embedly2', ['$log','$resource', function ($resource, $q, $log) {
+		// TODO Replace this with your Production Key
+                // http://api.embed.ly/1/extract?key=:key&url=:url&maxwidth=:maxwidth&maxheight=:maxheight&format=:format&callback=:callback
+		var embedlyKey = "512f7d063fc1490d9bcc7504c764a6dd";
+		var embedlyUrl = "http://api.embed.ly/1/:action";
+	    var resource = $resource(embedlyUrl, {key:embedlyKey, url:''}, 
+	    							{	embedly_call: { method: 'GET', isArray: false, params: {action:'extract'} },	}
+								);
+		
         return {
-            liveEmbedlyExtract: function( link_url ){
+	    	// A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
+			embedly_call: function(action,url, options) {
+				$log.info('embedly.embedly_call', action, url, options);
+	            var deferred = $q.defer();
+	            // works only for non array returns
+	            resource.embedly_call({action:action, url:url, options:options},
+					function (data) {
+	                    deferred.resolve(data);
+	                },
+	                function (response) {
+	                    deferred.reject(response);
+	                });
+	            return deferred.promise;		
+			},        	
+            liveEmbedlyExtract: function( link_url, options ){
                 // LIVE EMBEDLY EXTRACT
                 // API : http://embed.ly/docs/extract/api
+				if (!link_url) throw {message:'embedly:link_url not provided'};
+                // Escape the URL
+                escape(link_url);
+            	// if there are options, add them to the url here.
+            	// call the service
+                return this.embedly_call('extract',link_url,options);
+				// for Ajax Calls
 
                 //return: embedly_extract_obj;
             },
@@ -943,29 +981,24 @@ postworld.service('embedly2', ['$log', function ($log) {
                 
                 // Return Random
                 return embedly_extract_multi_object[Math.floor(Math.random() * embedly_extract_multi_object.length)];
-
-            },
-            
+            },            
         };
-    }]);
+//    }]);
+    });
+
     
-postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pwData, $attrs, embedly2) {
-	    //$scope.oEmbedDecode = $sce.trustAsHtml( $scope.oEmbedDecode );
-	    //$scope.oEmbed = "";
-	    // console.log('embedly');
-	    $scope.embedlyGet = function (link_url) {
-	    	// console.log('embedly');
+postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pwData, $attrs, embedly) {
+	    $scope.embedlyGet = function () {
 	    	
-	        var args = { "link_url":link_url };
-	        var oEmbed = "";
-	        pwData.wp_ajax('ajax_oembed_get', args ).then(
+            embedly.liveEmbedlyExtract( $scope.link_url).then(
 	            // Success
-	            function(response) {    
-	                $scope.oEmbed = $sce.trustAsHtml(response.data);
+	            function(response) {
+	            	console.log(response);    
+	                $scope.embedlyResponse = response;
 	            },
 	            // Failure
 	            function(response) {
-	                alert("error");
+					throw {message:'Embedly Error'+response};
 	            }
 	        );
 	              
