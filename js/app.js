@@ -2438,7 +2438,10 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 
 
 var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
+    
+    // Import the passed post object into the Modal Scope
     $scope.post = post;
+
     /*
     $scope.ok = function () {
         $modalInstance.close($scope.selected.item);
