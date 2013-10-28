@@ -1,6 +1,6 @@
 'use strict';
 
-postworld.service('embedly', ['$log', function ($log) {
+postworld.service('embedly2', ['$log', function ($log) {
         return {
             liveEmbedlyExtract: function( link_url ){
                 // LIVE EMBEDLY EXTRACT
@@ -949,11 +949,12 @@ postworld.service('embedly', ['$log', function ($log) {
         };
     }]);
     
-postworld.controller('pwEmbedly', ['embedly2',     function pwEmbedly($scope, $location, $log, pwData, $attrs, embedly2) {
+postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pwData, $attrs, embedly2) {
 	    //$scope.oEmbedDecode = $sce.trustAsHtml( $scope.oEmbedDecode );
 	    //$scope.oEmbed = "";
+	    // console.log('embedly');
 	    $scope.embedlyGet = function (link_url) {
-	    	console.log('embedly');
+	    	// console.log('embedly');
 	    	
 	        var args = { "link_url":link_url };
 	        var oEmbed = "";
@@ -970,5 +971,4 @@ postworld.controller('pwEmbedly', ['embedly2',     function pwEmbedly($scope, $l
 	              
 	    };    	
     }
-]
 );
