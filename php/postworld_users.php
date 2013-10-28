@@ -3,7 +3,7 @@
 /*
  * PHP / USER FUNCTIONS
  * */
-class user_fields_names {
+/*class user_fields_names {
 	public static $USER_ID = 'user_id';
 	public static $USER_ROLE = 'user_role';
 	public static $VIEWED = 'viewed';
@@ -15,6 +15,22 @@ class user_fields_names {
 	public static $SHARE_KARMA = 'share_karma';
 	public static $POST_RELATIONSHIP = 'post_relationships';
 
+}*/
+
+class user_fields_names {
+	public static $USER_ID = 'user_id';
+	public static $POST_POINTS='post_points';
+	public static $POST_POINTS_META='post_points_meta';
+	public static $COMMENT_POINTS = 'comment_points';
+	//public static $COMMENT_POINTS_META='comment_points_meta';
+	public static $SHARE_POINTS = 'share_points';
+	public static $SHARE_POINTS_META = 'share_points_meta';
+	public static $POST_RELATIONSHIPS='post_relationships';
+	public static $POST_VOTES='post_votes';
+	public static $COMMENT_VOTES='comment_votes';
+	public static $LOCATION_CITY = 'location_city';
+	public static $LOCATION_COUNTRY = 'location_country';
+	public static $LOCATION_REGION = 'location_region';
 }
 
 class get_user_location_output {
@@ -136,56 +152,77 @@ function pw_update_user($userdata) {
 	$wpdb -> show_errors();
 	if (gettype($user_id) == 'integer') {// successful
 		add_record_to_user_meta($user_id);
-		if ($userdata[user_fields_names::$FAVORITES]) {
+		/*if ($userdata[user_fields_names::$FAVORITES]) {
 			$set .= " " . user_fields_names::$FAVORITES . "='" . $userdata[user_fields_names::$FAVORITES] . "'";
 			$insertComma = TRUE;
-		}
-		if ($userdata[user_fields_names::$LOCATION_CITY]) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
+		}*/
+		if (isset($userdata[user_fields_names::$LOCATION_CITY])) {
 			$set .= " " . user_fields_names::$LOCATION_CITY . "='" . $userdata[user_fields_names::$LOCATION_CITY] . "'";
 			$insertComma = TRUE;
 		}
-		if ($userdata[user_fields_names::$LOCATION_COUNTRY]) {
+		if (isset($userdata[user_fields_names::$LOCATION_COUNTRY])) {
 			if ($insertComma === TRUE)
 				$set .= " , ";
 			$set .= " " . user_fields_names::$LOCATION_COUNTRY . "='" . $userdata[user_fields_names::$LOCATION_COUNTRY] . "'";
 			$insertComma = TRUE;
 		}
-		if ($userdata[user_fields_names::$LOCATION_REGION]) {
+		if (isset($userdata[user_fields_names::$LOCATION_REGION])) {
 			if ($insertComma === TRUE)
 				$set .= " , ";
 			$set .= " " . user_fields_names::$LOCATION_REGION . "='" . $userdata[user_fields_names::$LOCATION_REGION] . "'";
 			$insertComma = TRUE;
 		}
-		if ($userdata[user_fields_names::$POST_RELATIONSHIP]) {
+		if (isset($userdata[user_fields_names::$POST_RELATIONSHIPS])) {
 			if ($insertComma === TRUE)
 				$set .= " , ";
-			$set .= " " . user_fields_names::$POST_RELATIONSHIP . "='" . $userdata[user_fields_names::$POST_RELATIONSHIP] . "'";
+			$set .= " " . user_fields_names::$POST_RELATIONSHIPS . "='" . $userdata[user_fields_names::$POST_RELATIONSHIPS] . "'";
 			$insertComma = TRUE;
 		}
-		if ($userdata[user_fields_names::$SHARE_KARMA]) {
+		if (isset($userdata[user_fields_names::$SHARE_POINTS_META])) {
 			if ($insertComma === TRUE)
 				$set .= " , ";
-			$set .= " " . user_fields_names::$SHARE_KARMA . "='" . $userdata[user_fields_names::$SHARE_KARMA] . "'";
+			$set .= " " . user_fields_names::$SHARE_POINTS_META . "='" . $userdata[user_fields_names::$SHARE_POINTS_META] . "'";
 			$insertComma = TRUE;
 		}
-		if ($userdata[user_fields_names::$USER_ROLE]) {
+		if (isset($userdata[user_fields_names::$POST_VOTES])) {
 			if ($insertComma === TRUE)
 				$set .= " , ";
-			$set .= " " . user_fields_names::$USER_ROLE . "='" . $userdata[user_fields_names::$USER_ROLE] . "'";
+			$set .= " " . user_fields_names::$POST_VOTES . "='" . $userdata[user_fields_names::$POST_VOTES] . "'";
 			$insertComma = TRUE;
 		}
-		if ($userdata[user_fields_names::$VIEWED]) {
+		
+		if (isset($userdata[user_fields_names::$COMMENT_VOTES])) {
 			if ($insertComma === TRUE)
 				$set .= " , ";
-			$set .= " " . user_fields_names::$VIEWED . "='" . $userdata[user_fields_names::$VIEWED] . "'";
+			$set .= " " . user_fields_names::$COMMENT_VOTES . "='" . $userdata[user_fields_names::$COMMENT_VOTES] . "'";
 			$insertComma = TRUE;
 		}
-		if ($userdata[user_fields_names::$VIEW_KARMA]) {
+		
+		if (isset($userdata[user_fields_names::$POST_POINTS_META])) {
 			if ($insertComma === TRUE)
 				$set .= " , ";
-			$set .= " " . user_fields_names::$VIEW_KARMA . "='" . $userdata[user_fields_names::$VIEW_KARMA] . "'";
+			$set .= " " . user_fields_names::$POST_POINTS_META . "='" . $userdata[user_fields_names::$POST_POINTS_META] . "'";
+			$insertComma = TRUE;
+		}
+		
+		if (isset($userdata[user_fields_names::$POST_POINTS])) {
+			if ($insertComma === TRUE)
+				$set .= " , ";
+			$set .= " " . user_fields_names::$POST_POINTS . "=" . $userdata[user_fields_names::$POST_POINTS] . "";
+			$insertComma = TRUE;
+		}
+		
+		if (isset($userdata[user_fields_names::$SHARE_POINTS])) {
+			if ($insertComma === TRUE)
+				$set .= " , ";
+			$set .= " " . user_fields_names::$SHARE_POINTS . "=" . $userdata[user_fields_names::$SHARE_POINTS] . "";
+			$insertComma = TRUE;
+		}
+		
+		if (isset($userdata[user_fields_names::$COMMENT_POINTS])) {
+			if ($insertComma === TRUE)
+				$set .= " , ";
+			$set .= " " . user_fields_names::$COMMENT_POINTS . "=" . $userdata[user_fields_names::$COMMENT_POINTS] . "";
 			$insertComma = TRUE;
 		}
 
@@ -597,7 +634,7 @@ function add_record_to_user_meta($user_id) {
 		//$user_role = get_user_role($user_id);
 		//if($relationship === null) $relationship='null';
 
-		$query = "INSERT INTO `wp_postworld_a1`.`wp_postworld_user_meta`
+		$query = "INSERT INTO `$wpdb->pw_prefix"."user_meta`
 					(`user_id`,
 					`post_points`,
 					`post_points_meta`,
@@ -755,7 +792,7 @@ function get_post_relationships($user_id = null, $relationship = null) {
 function get_relationship_from_user_meta($user_id) {
 	global $wpdb;
 	$wpdb -> show_errors();
-	$query = "select " . user_fields_names::$POST_RELATIONSHIP . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
+	$query = "select " . user_fields_names::$POST_RELATIONSHIPS . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
 	//echo($query);
 	$relationshp = $wpdb -> get_var($query);
 	return $relationshp;

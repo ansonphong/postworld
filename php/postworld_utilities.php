@@ -58,7 +58,11 @@ function postworld_includes(){
 	wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
 	
-	wp_register_script( "pw-pwCommentsService-JS", WP_PLUGIN_URL.'/postworld/js/services/postworld_comments_service.js');
+	wp_register_script( "pw-Embedly-JS", WP_PLUGIN_URL.'/postworld/js/services/embedly.js');
+	wp_localize_script( 'pw-Embedly-JS', 'jsVars', $jsVars);
+	wp_enqueue_script( 'pw-Embedly-JS','', $angularDep );
+	
+		wp_register_script( "pw-pwCommentsService-JS", WP_PLUGIN_URL.'/postworld/js/services/postworld_comments_service.js');
 	wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
 	wp_enqueue_script( 'pw-pwCommentsService-JS','', $angularDep );
 

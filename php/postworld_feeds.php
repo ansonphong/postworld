@@ -297,9 +297,34 @@ function get_panel_ids(){
 	return $final_panel_names;
 }
 
+
+
+function get_comment_ids(){
+	global $pw_defaults;
+	$override_file_names = list_dir_file_names( $pw_defaults['template_paths']['override_comment_template_abs_path']);
+	$default_file_names = list_dir_file_names( $pw_defaults['template_paths']['default_comment_template_abs_path']);
+	
+	
+	$final_comment_names = array();
+	for ($i=0; $i <count($default_file_names) ; $i++) { 
+		$final_comment_names[] = str_replace(".html", "", $default_file_names[$i]);
+	}
+	
+	for ($i=0; $i < count($override_file_names); $i++) {
+		$name = str_replace(".html", "", $override_file_names[$i] );
+		if(!in_array($name,$final_comment_names)){
+			$final_comment_names[] = $name;
+		}
+	}
+	
+	return $final_comment_names;
+}
+
+
 function list_dir_file_names($directory){
 		
 	$names_array=array();
+	//echo("<br>".$directory."<br>");
 	if (is_dir($directory)){
 		//echo 'is directoruuu';
 	
@@ -352,12 +377,16 @@ function pw_get_templates ( $templates_object =null){
 		$override_posts_template_abs_path = $pw_defaults['template_paths']['override_posts_template_abs_path'];
 		$default_panel_template_abs_path = $pw_defaults['template_paths']['default_panel_template_abs_path'] ;
 		$override_panel_template_abs_path =$pw_defaults['template_paths']['override_panel_template_abs_path'];
+		$default_comment_template_abs_path = $pw_defaults['template_paths']['default_comment_template_abs_path'] ;
+		$override_comment_template_abs_path =$pw_defaults['template_paths']['override_comment_template_abs_path'];
 		
 		//urls
 		$default_posts_template_url = $pw_defaults['template_paths']['default_posts_template_url'];
 		$override_posts_template_url = $pw_defaults['template_paths']['override_posts_template_url'];			 
 		$default_panel_template_url = $pw_defaults['template_paths']['default_panel_template_url'];
 		$override_panel_template_url = $pw_defaults['template_paths']['override_panel_template_url'];
+		$default_comment_template_url = $pw_defaults['template_paths']['default_comment_template_url'];
+		$override_comment_template_url = $pw_defaults['template_paths']['override_comment_template_url'];
 		
 		
 		$output = array();
@@ -391,6 +420,7 @@ function pw_get_templates ( $templates_object =null){
 			//$panel_ids = $pw_defaults['panel_ids'];//array('feed_top','feed_search');
 			
 			$templates_object['panels']= get_panel_ids();
+			$templates_object['comments']= get_comment_ids();
 			
 			//print_r($templates_object);
 		}
@@ -446,6 +476,23 @@ function pw_get_templates ( $templates_object =null){
 				}
 			}
 		}
+		
+		//echo 'gfde';
+		if(array_key_exists('comments', $templates_object)){
+			$output['comments']=array();
+
+			for ($i=0; $i < count($templates_object['comments']) ; $i++) {
+				if(file_exists($override_comment_template_abs_path.$templates_object['comments'][$i].".html")){
+					//echo $override_comment_template_abs_path.$templates_object['comments'][$i].".html";
+					$output['comments'][$templates_object['comments'][$i]] =  $override_comment_template_url.$templates_object['comments'][$i].".html";
+				}
+				else {
+					$output['comments'][$templates_object['comments'][$i]] =  $default_comment_template_url.$templates_object['comments'][$i].".html";
+				}
+			}
+			
+		}
+		
 		return $output;
 	}
 
