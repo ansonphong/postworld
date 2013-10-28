@@ -1484,7 +1484,7 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 
   $scope.openMediaModal = function (post) {
     var modalInstance = $modal.open({
-      templateUrl: '/wp-content/plugins/postworld/templates/panels/media_modal.html',
+      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
       controller: MediaModalInstanceCtrl,
       resolve: {
         post: function(){
@@ -1547,7 +1547,7 @@ var ModalDemoCtrl = function ($scope, $modal, $log) {
   $scope.open = function () {
 
     var modalInstance = $modal.open({
-      templateUrl: '/wp-content/plugins/postworld/templates/panels/modal_demo.html',
+      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/modal_demo.html',
       controller: ModalInstanceCtrl,
       resolve: {
         items: function () {

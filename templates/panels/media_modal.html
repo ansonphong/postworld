@@ -55,7 +55,7 @@
 			var load_comments = [];
 			load_comments['post_single'] = {
 			    query : {
-			        post_id : 133925, // 21853, // 133925, // 166220, // 21853, // 166220,
+			        post_id : 0, //{{post.post_id}},// 133925, // 21853, // 133925, // 166220, // 21853, // 166220,
 			        status: 'approve',
 				    orderby : 'comment_points',
 			        },
@@ -73,7 +73,7 @@
 			</script>
 			<div class="row" style="display:block">
 				<div class="col-md-12">
-					<div streeview load-comments="post_single"></div>
+					<div streeview load-comments="post_single" post="post"></div>
 				</div>	
 			</div>
 

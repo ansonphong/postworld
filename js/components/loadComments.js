@@ -34,7 +34,7 @@
  *  - show icons for control bar
  *  - highlight selected function of the control bar [reply, edit, delete, etc...]
  *  
- * add Timezone to date
+ * add Timezone to date [OK]
  * 
  * when adding new comments they should be open by default?
  * Can we use the html returned directly?
@@ -56,7 +56,7 @@ postworld.directive('loadComments', function() {
         replace: true,
         controller: 'pwTreeController',
         scope: {
-        	
+        	post : '=',
         }
     };
 });
@@ -105,7 +105,11 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
     $scope.commentsCount = 0;
     $scope.feed = $attrs.loadComments;
     $scope.pluginUrl = jsVars.pluginurl;
+    console.log('post is',$scope.post);
     var settings = pwCommentsService.comments_settings[$scope.feed];
+    if ($scope.post) {
+    	settings.query.post_id = $scope.post.ID; // setting the post id here    	
+    }
     $scope.minPoints = settings.min_points;
     if (settings.query.orderby) $scope.orderBy = settings.query.orderby;
     else $scope.orderBy = 'comment_date_gmt'; 
