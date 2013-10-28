@@ -137,12 +137,16 @@ $pw_defaults = array(
 		'override_posts_template_abs_path' => get_template_directory()."/postworld/templates/posts/",
 		'default_panel_template_abs_path' => ABSPATH . "wp-content/plugins/postworld/templates/panels/" ,
 		'override_panel_template_abs_path' => get_template_directory()."/postworld/templates/panels/",
+		'default_comment_template_abs_path' => ABSPATH . "wp-content/plugins/postworld/templates/comments/" ,
+		'override_comment_template_abs_path' => get_template_directory()."/postworld/templates/comments/",
 		
 		//urls
 		'default_posts_template_url' => plugins_url()."/postworld/templates/posts/",
 		'override_posts_template_url' => get_template_directory_uri()."/postworld/templates/posts/",			 
 		'default_panel_template_url' => plugins_url()."/postworld/templates/panels/",
 		'override_panel_template_url' => get_template_directory_uri()."/postworld/templates/panels/",
+		'default_comment_template_url' => plugins_url()."/postworld/templates/comments/",
+		'override_comment_template_url' => get_template_directory_uri()."/postworld/templates/comments/",
 	),
 
 	);
