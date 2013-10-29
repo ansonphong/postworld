@@ -242,17 +242,22 @@ function pw_update_user($userdata) {
 function add_favorite($post_id, $user_id) {
 	// add favorite to wp_postworld_favorites
 	global $wpdb;
-
 	$wpdb -> show_errors();
-	$query = "insert into " . $wpdb -> pw_prefix . 'favorites' . " values (" . $user_id . "," . $post_id . ",null)";
-	$wpdb -> query($query);
-
-	// increment post count in wp_postworld_post_meta
-	$query = "update " . $wpdb -> pw_prefix . 'post_meta' . " set favorites = favorites +1 where post_id=" . $post_id;
-	$result = $wpdb -> query($query);
-	if ($result === FALSE) {
-		add_recored_to_post_meta($post_id, 0, 0, 1);
+	$query = "select * from  $wpdb->pw_prefix". "favorites where post_id=$post_id  and  user_id=$user_id";
+	//echo $query;
+	$results=$wpdb->get_results($query);
+	//echo "huhulh";
+	print_r($results);
+	if(is_null($results) || count($results)===0){
+		$query = "insert into " . $wpdb -> pw_prefix . 'favorites' . " values (" . $user_id . "," . $post_id . ",null)";
+		$wpdb -> query($query);
 	}
+	// increment post count in wp_postworld_post_meta
+	//$query = "update " . $wpdb -> pw_prefix . 'post_meta' . " set favorites = favorites +1 where post_id=" . $post_id;
+	//$result = $wpdb -> query($query);
+	//if ($result === FALSE) {
+	//	add_recored_to_post_meta($post_id, 0, 0, 1);
+	//}
 
 }
 
@@ -264,16 +269,16 @@ function delete_favorite($post_id, $user_id) {
 	$wpdb -> query($query);
 
 	// increment post count in wp_postworld_post_meta
-	$query = "update " . $wpdb -> pw_prefix . 'post_meta' . " set favorites = favorites -1 where post_id=" . $post_id;
-	$result = $wpdb -> query($query);
+//	$query = "update " . $wpdb -> pw_prefix . 'post_meta' . " set favorites = favorites -1 where post_id=" . $post_id;
+//	$result = $wpdb -> query($query);
 
-	if ($result === FALSE) {
-		add_recored_to_post_meta($post_id, 0, 0, 0);
-	}
+//	if ($result === FALSE) {
+//		add_recored_to_post_meta($post_id, 0, 0, 0);
+//	}
 
 }
 
-function set_favorite($switch, $post_id = null, $user_id = null) {
+function set_favorite($switch=TRUE, $post_id = null, $user_id = null) {
 	/*
 	 Use set_post_relationship() to set the post relationship for favorites
 	 If $post_id is undefined
@@ -370,7 +375,7 @@ function is_view_later($post_id = null, $user_id = null) {
 
 }
 
-function set_viewed($switch, $post_id = null, $user_id = null) {
+function set_viewed($switch=TRUE, $post_id = null, $user_id = null) {
 	/*
 	 Use set_post_relationship() to set the post relationship for viewed
 	 $switch is a boolean
@@ -392,13 +397,24 @@ function set_viewed($switch, $post_id = null, $user_id = null) {
 
 }
 
-function set_view_later($switch, $post_id = null, $user_id = null) {
+function set_view_later($switch=TRUE, $post_id = null, $user_id = null) {
 
 	/*Use set_post_relationship() to set the post relationship for view_later
 	 $switch is a boolean
 	 set_post_relationship( 'view_later', $post_id, $user_id, $switch )
 	 return : boolean
 	 */
+	 
+	 if (is_null($post_id)) {
+		global $post;
+		$post_id = $post -> ID;
+
+	}
+
+	if (is_null($user_id)) {
+		$user_id = get_current_user_id();
+	}
+	 
 	return set_post_relationship('view_later', $post_id, $user_id, $switch);
 
 }
@@ -571,16 +587,21 @@ function set_post_relationship($relationship, $post_id, $user_id, $switch) {
 	 true - If successful set on
 	 false - If successful set off
 	 error - If error*/
-
+//echo ($post_id);
 	$relashionship_db = get_relationship_from_user_meta($user_id);
 	$relashionship_db_array = (array)json_decode($relashionship_db);
+	
+	//print_r($relashionship_db_array);
 	if ($relashionship_db) {
 		if ($switch) {
 			if (!in_array($post_id, $relashionship_db_array[$relationship])) {
 				$relashionship_db_array[$relationship][] = $post_id;
 				update_post_relationship($user_id, $relashionship_db_array);
-				if ($relationship == 'favorites')
+				//echo ($relationship);
+				if ($relationship == 'favorites'){
+					//echo "addinggggggggggggggggg";	
 					add_favorite($post_id, $user_id);
+				}
 			}
 			return TRUE;
 		} else {
@@ -596,7 +617,7 @@ function set_post_relationship($relationship, $post_id, $user_id, $switch) {
 		}
 	} else {
 		//add record to user meta or add relationship
-
+		
 		add_record_to_user_meta($user_id);
 		if ($switch) {
 			$relashionship_db_array = array('viewed' => array(), "favorites" => array(), 'view_later' => array());
@@ -666,6 +687,7 @@ function add_record_to_user_meta($user_id) {
 		 `post_points_meta`,
 		 `share_points`) values($user_id,'$user_role',null,null,null,null,null,0,0,0,0,null,0)";
 		 */
+		 print_r($query);
 		$wpdb -> query($query);
 	}
 }
