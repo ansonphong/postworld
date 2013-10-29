@@ -48,19 +48,6 @@
  * Performance http://tech.small-improvements.com/2013/09/10/angularjs-performance-with-large-lists/
  */
 
-postworld.directive('loadComments', function() {
-    return {
-        restrict: 'A',
-        // DO not set url here and in nginclude at the same time, so many errors!
-        templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadComments.html',
-        replace: true,
-        controller: 'pwTreeController',
-        scope: {
-        	post : '=',
-        }
-    };
-});
-
 postworld.directive('ngShowMore', function ($timeout,$animate) {
 	//console.log('at least we got in directive');
 	function link(scope, element, attrs) {
@@ -71,7 +58,7 @@ postworld.directive('ngShowMore', function ($timeout,$animate) {
 	      			scope.child.showMore = true;
 	      			scope.child.tall = true;				
 			} ;
-      		// TODO this needs to perform better
+      		//  this needs to perform better, so it is replaced with the above function
       		/*
 	      $timeout(function(){
 	      		scope.child.showMore = false;
@@ -91,7 +78,21 @@ postworld.directive('ngShowMore', function ($timeout,$animate) {
   };
 });
 
-postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs) {
+
+postworld.directive('loadComments', function() {
+    return {
+        restrict: 'A',
+        // DO not set url here and in nginclude at the same time, so many errors!
+        // templateUrl: jsVars.pluginurl+'/postworld/templates/comments/comments-default.html',
+        replace: true,
+        controller: 'pwTreeController',
+        scope: {
+        	post : '=',
+        }
+    };
+});
+
+postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs,pwData,$log) {
     $scope.json = '';
     $scope.user_id = jsVars.user_id;
     $scope.isAdmin = jsVars.is_admin;
@@ -105,6 +106,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
     $scope.commentsCount = 0;
     $scope.feed = $attrs.loadComments;
     $scope.pluginUrl = jsVars.pluginurl;
+    $scope.templateLoaded = false;
     console.log('post is',$scope.post);
     var settings = pwCommentsService.comments_settings[$scope.feed];
     if ($scope.post) {
@@ -113,7 +115,20 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
     $scope.minPoints = settings.min_points;
     if (settings.query.orderby) $scope.orderBy = settings.query.orderby;
     else $scope.orderBy = 'comment_date_gmt'; 
-    if (settings.order_options) $scope.orderOptions = settings.order_options; 
+    if (settings.order_options) $scope.orderOptions = settings.order_options;
+     
+	pwData.templates.promise.then(function(value) {
+		   if (settings.view) {
+		   		var template = 'comment-'+settings.view;
+		    	$scope.templateUrl = pwData.pw_get_template('comments','comment',template);
+				$log.info('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
+		   }
+		   else {
+	   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/comments/comments-default.html';
+	   			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
+		   }
+	   		return;
+	});
     
     $scope.loadComments = function () {
     	$scope.commentsLoaded = false;
@@ -124,6 +139,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 			$scope.commentsLoaded = true;
 	        $scope.treeUpdated = !$scope.treeUpdated;			      
 			$scope.commentsCount = value.data.length;
+			/*
 			// not used here, but can be used for progressive element loading
 		    var recursiveTimeout = function() {
 		    	var load = $timeout( function loadComments() {	    		  
@@ -140,8 +156,8 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 				      }
 				    }, 50); 
 		    };
-		    // recursiveTimeout(); 
-		    
+		    recursiveTimeout(); 
+		    */
 		});
     };
 	// $scope.loadComments();

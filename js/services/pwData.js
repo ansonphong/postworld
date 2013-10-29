@@ -48,6 +48,10 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 					template = pwData.templatesFinal.panels[name];
 					//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
 					break;
+				case 'comments':
+					template = pwData.templatesFinal.comments[name];
+					//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
+					break;
 				default:
 					template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
 					break;

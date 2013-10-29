@@ -13,10 +13,11 @@ load_comments['post_single'] = {
         'comment_date' : 'Date'
         },
     min_points : 50,
+    view: 'default', // Optional, default value is default
 };
 </script>
 <div class="row">
 	<div class="col-md-8">
-		<div streeview load-comments="post_single"></div>
+		<div streeview load-comments="post_single" ng-include="templateUrl"></div>
 	</div>		
 </div>
