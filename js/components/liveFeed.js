@@ -382,17 +382,15 @@ postworld.controller('pwLoadPostController',
 		$scope.args.fields = $scope.postArgs.fields;    	     	    	    	  	
     	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
-			/*				
-			   if (pwData.feed_settings[$scope.feed].feed_template) {
-			   		var template = pwData.feed_settings[$scope.feed].feed_template;			   	
-			    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-					$log.info('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
+			   if ($scope.postArgs.view) {
+			   		var template = $scope.postArgs.view;
+			    	$scope.templateUrl = pwData.pw_get_template('posts','post',template);
+					$log.info('pwLoadPostController Set Post Template to ',$scope.templateUrl);
 			   }
 			   else {
-		   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html';
+		   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
 			   }
 		   		return;
-		   	*/			   	
 		});
     	   				
 		$scope.pwLoadPost = function() {
@@ -408,10 +406,12 @@ postworld.controller('pwLoadPostController',
 					if (response.status==200) {
 						$log.info('pwPostLoadController.pw_load_post Success',response.data);						
 						console.log('post data',response.data);
+						$scope.post = response.data;
 						return response.data;						
 					} else {
 						// handle error
-						console.log('error',response.status,response.message);
+						// throw {message:"error: "+response.status+"- "+response.message};
+						// console.log('error',response.status,response.message);
 						// TODO should we set busy to false when error is returned?
 					}
 					// return response.posts;

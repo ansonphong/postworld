@@ -254,7 +254,7 @@ function pw_get_post_anon() {
 	list($response, $args, $nonce) = initAjaxResponse();	
 	// pw_get_post ( $post_id, $fields, [$user_id] );
 	
-	if($args['post_id']) $query = $args['post_id'];
+	if($args['post_id']) $post_id = $args['post_id'];
 	else ErrorReturn($response, 400, 'missing argument post_id'); 
 	if ($args['fields']) $fields = $args['fields'];
 	else $fields = 'all';
