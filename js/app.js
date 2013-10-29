@@ -809,7 +809,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
  |____/ \___|\__,_|_|  \___|_| |_| |_|   |_|\___|_|\__,_|___/
                                                              
 ////////// ------------ SEARCH FIELDS CONTROLLER ------------ //////////*/
-postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
+postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
@@ -843,7 +843,7 @@ postworld.controller('editPost',
     ['$scope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
     'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 
     function($scope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http, post_type ) {
+        $pwData, $log, $route, $routeParams, $location, $http ) {
 
     //alert( JSON.stringify( $route.current.action ) );
 
