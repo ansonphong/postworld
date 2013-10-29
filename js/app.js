@@ -98,7 +98,54 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
     $routeProvider.when('/post-link/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
-        });            
+        });  
+
+
+
+    $routeProvider.when('/new/:post_type',
+        {
+            action: "new_post",
+        });
+
+
+    $routeProvider.when('/edit/:post_id',
+        {
+            //templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
+            //mode:'new';
+
+            action: "edit_post",
+
+            //controller: 'editPost',
+            //resolve: { post_type:"link" }
+
+            /*
+            resolve: { post_type: function($route){
+                return $route.current.params.post_type;
+            }}
+            */
+            /*
+            resolve: {
+                resolvedprop: [function () {
+                    var apiObject = {url: 'phong.com' };                      
+                    return apiObject;
+                }],
+            }
+            */
+            /*
+
+            resolve: {
+                resolvedprop: ['$route', '$q', function ($route, $q) {
+                   var apiObject = {url: 'abc.com' };                      
+                   return apiObject     
+                         }],
+            }
+
+            */
+
+
+        });
+
+
 
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
@@ -586,6 +633,7 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
  (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__|
   |_|                                             
 ////////// ------------ EDIT POST SERVICE ------------ //////////*/  
+/*
 postworld.service('pwEditPost', ['$log', function ($log) {
         return {
             pwGetPost: function(){
@@ -610,7 +658,7 @@ postworld.service('pwEditPost', ['$log', function ($log) {
             
         };
     }]);
-
+*/
 
 
 /*
@@ -791,10 +839,100 @@ postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', '
  |_____\__,_|_|\__| |_|   \___/|___/\__|
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
-postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter', 'embedly', 'pwData', '$log', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly, $pwData, $log ) {
+postworld.controller('editPost',
+    ['$scope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 
+    function($scope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
+        $pwData, $log, $route, $routeParams, $location, $http, post_type ) {
+
+    //alert( JSON.stringify( $route.current.action ) );
+
+    $scope.default_post_data = {
+        //post_id : 24,
+        post_author: 1,
+        post_title : "",
+        post_name : "",
+        post_type : "blog",
+        post_status : "publish",
+        post_format : "standard",
+        post_class : "contributor",
+        link_url : "",
+        post_permalink : "",
+        tax_input : {
+            topic : [],
+            section : [],
+            type : []
+        },
+        tags_input : "",
+    };
+
+
+    // WATCH THE ROUTE
+    $scope.$on(
+        "$routeChangeSuccess",
+        function( $currentRoute, $previousRoute ){
+            // Update the rendering.
+            //alert( JSON.stringify( $currentRoute ) );
+            
+            var post_type = ($routeParams.post_type || "");
+            if ( post_type != "" )
+                $scope.post_data.post_type = post_type;
+
+
+            // SET MODE : ( new | edit )
+            if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
+                $scope.mode = "edit";
+
+                // GET THE POST DATA
+                $pwData.pw_get_post_edit( $routeParams.post_id ).then(
+                    // Success
+                    function(response) {    
+                        $log.info('pwData.pw_get_post : RESPONSE : ', response.data);
+
+                        // FILTER FOR INPUT
+                        var get_post_data = response.data;
+                        
+                        Object.defineProperty(get_post_data, 'tax_input',
+                            Object.getOwnPropertyDescriptor(get_post_data, 'taxonomy'));
+                        delete get_post_data['taxonomy'];
+
+                        // SET THE POST CONTENT
+                        tinyMCE.get('post_content').setContent( get_post_data.post_content );
+
+                        $scope.post_data = get_post_data;
+                    },
+                    // Failure
+                    function(response) {
+                        alert('error');
+                        $scope.status = "error";
+                    }
+                );      
+
+
+            }
+            else {
+                // Switching from Edit to New >> Clear post Data
+                if($scope.mode == "edit"){
+                    $scope.clear_post_data();
+                }
+
+                $scope.mode = "new";
+            }
+
+
+            //alert( JSON.stringify( $route.current.action ) + " : " + post_type );
+            //render();
+
+        }
+    );
+
+    $scope.clear_post_data = function(){
+        $scope.post_data = {};
+        tinyMCE.get('post_content').setContent( "" );
+    }
 
     $scope.pw_get_post_object = function(){
-        var post_data = $pwEditPost.pwGetPost();
+        var post_data = $scope.default_post_data;
         // CHECK TERMS ORDER
         post_data = $pwEditPostFilters.sortTaxTermsInput( post_data, $scope.tax_terms, 'tax_input' );
         return post_data;   
@@ -815,11 +953,6 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
 
-    // SET MODE : ( new | edit )
-    if ( typeof $scope.post_data.post_id !== 'undefined'  )
-        $scope.mode = "edit";
-    else
-        $scope.mode = "new";
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects
@@ -852,6 +985,8 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
             }
         }, 1 );
 
+    $scope.status = "done";
+
     // SAVE POST FUNCTION
     $scope.savePost = function(pwData){
 
@@ -863,19 +998,33 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
         var post_data = $scope.post_data;
         //alert(JSON.stringify(post_data));
 
+        $scope.status = "saving";
         $pwData.pw_save_post( post_data ).then(
         //pwData.pw_save_post( post_data ).then(
             // Success
             function(response) {    
                 //alert( "RESPONSE : " + response.data );
                 $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
-                //$scope.oEmbed = $sce.trustAsHtml( response.data );
-                //$scope.status = "done";
+
+                var post_id = response.data;
+                $scope.status = "success";
+                $timeout(function() {
+                  $scope.status = "done";
+                }, 2000);
+
+                // If created a new post, forwart to edit page
+                if ( $scope.mode == "new" )
+                    $location.path('/edit/' + post_id);
+
             },
             // Failure
             function(response) {
-                alert('error');
+                //alert('error');
                 $scope.status = "error";
+                $timeout(function() {
+                  $scope.status = "done";
+                }, 2000);
+
             }
         );        
         
@@ -986,6 +1135,7 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
         
     }
 
+    
 
 }]);
 

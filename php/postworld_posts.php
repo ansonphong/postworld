@@ -769,7 +769,6 @@ function pw_save_post($post_data){
 		$post_id = pw_update_post($post_data);
 	}
 	
-
 	///// ADD / UPDATE POST META /////
 
 	// IMAGE FIELDS
