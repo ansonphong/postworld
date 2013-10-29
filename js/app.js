@@ -74,26 +74,27 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
         });
-        $routeProvider.when('/load-comments/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
-            });            
-        $routeProvider.when('/embedly/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedlyWidget.html',             
-            });            
-        $routeProvider.when('/o-embed/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
-            });       
-        $routeProvider.when('/media-modal/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/mediaModal.html',             
-            });  
-        $routeProvider.when('/post-link/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
-            });            
+    $routeProvider.when('/load-comments/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
+        });            
+    $routeProvider.when('/embedly/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedlyWidget.html',             
+        });            
+    $routeProvider.when('/o-embed/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
+        });       
+    $routeProvider.when('/media-modal/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/mediaModal.html',             
+        });  
+    $routeProvider.when('/post-link/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
+        });
+    
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
 });
@@ -266,9 +267,9 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
         return {
             feature : "Features",
             blog : "Blog",
-            link : "Links",
-            announcement : "Announcements",
-            tribe_events : "Events"
+            // link : "Link",
+            announcement : "Announcement",
+            tribe_events : "Event"
             };
         },
         pwGetPostStatusOptions: function(){
@@ -584,10 +585,11 @@ postworld.service('pwEditPost', ['$log', function ($log) {
         return {
             pwGetPost: function(){
                 return {
-                    post_id : 24,
+                    //post_id : 24,
+                    post_author: 1,
                     post_title : "Hello Space",
                     post_name : "hello_space",
-                    post_type : "tribe_events",
+                    post_type : "blog",
                     post_status : "publish",
                     post_format : "video",
                     post_class : "contributor",
@@ -784,7 +786,7 @@ postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', '
  |_____\__,_|_|\__| |_|   \___/|___/\__|
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
-postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters, $timeout, $filter) {
+postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter', 'embedly', 'pwData', '$log', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly, $pwData, $log ) {
 
     $scope.pw_get_post_object = function(){
         var post_data = $pwEditPost.pwGetPost();
@@ -846,8 +848,37 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
         }, 1 );
 
     // SAVE POST FUNCTION
-    $scope.savePost = function(){
+    $scope.savePost = function(pwData){
 
+        ///// GET POST_DATA FROM TINYMCE /////
+        if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
+            $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+
+        ///// SAVE POST VIA AJAX /////
+        var post_data = $scope.post_data;
+        //alert(JSON.stringify(post_data));
+
+        $pwData.pw_save_post( post_data ).then(
+        //pwData.pw_save_post( post_data ).then(
+            // Success
+            function(response) {    
+                //alert( "RESPONSE : " + response.data );
+                $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
+                //$scope.oEmbed = $sce.trustAsHtml( response.data );
+                //$scope.status = "done";
+            },
+            // Failure
+            function(response) {
+                alert('error');
+                $scope.status = "error";
+            }
+        );        
+        
+        
+
+        // ADD AJAX SAVING OF POST HERE
+
+        /*
         ///// EXTRACT THE DATE FOR TRIBE EVENTS ///// 
         var EventStartHour = $filter('date')( $scope.EventStartDateObject, 'HH'); 
         var EventStartMinute = $filter('date')( $scope.EventStartDateObject, 'mm'); 
@@ -862,7 +893,7 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
             "Start Date : " + EventStartDate  + "\n" + 
             " End Date :  " + EventEndDate + "\n" 
             );
-        
+        */
         //alert( JSON.stringify( $scope.post_data ) );
     }
 
@@ -929,7 +960,32 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
     };
 
 
+    ///// FEATURED IMAGE /////
+    // Media Upload Window
+    $scope.updateFeaturedImage = function(image_object){
+        //alert( JSON.stringify(image_object) );
+        $scope.featured_image = image_object;
+        $scope.post_data.thumbnail_id = image_object.id;
+        if( typeof image_object !== 'undefined' ){
+            $scope.has_featured_image = 'true';
+        }
+    }
+    $scope.removeFeaturedImage = function(){
+        $scope.featured_image = {};
+        $scope.has_featured_image = 'false';
+        $scope.post_data.thumbnail_id = '';
+    }
+
+    ///// GET POST_CONTENT FROM TINY MCE /////
+    $scope.getTinyMCEContent = function(){        
+        
+    }
+
+
 }]);
+
+
+
 
 /*
      _         _   _                     _         _                                  _      _       
@@ -1158,11 +1214,16 @@ postworld.directive('ngTextareaFilter', function() {
                         
                         
                         // If it's over the maxLength, trim it
-                        if ( textarea_contents.length > maxChars && textarea_contents.length > (maxChars-readMore.length) ){
-                            textarea_contents = textarea_contents.slice(0, (maxChars-readMore.length)) + readMore;
+
+                        if ( typeof textarea_contents !== 'undefined' ){
+                            if ( textarea_contents.length > maxChars && textarea_contents.length > (maxChars-readMore.length) ){
+                                textarea_contents = textarea_contents.slice(0, (maxChars-readMore.length)) + readMore;
+                            }
+
+                            // Insert new textarea_contents;
+                            $scope[modelObjArray[0]][modelObjArray[1]] = textarea_contents;
                         }
-                        // Insert new textarea_contents;
-                        $scope[modelObjArray[0]][modelObjArray[1]] = textarea_contents;
+
                     }, 1 );
         };
     });

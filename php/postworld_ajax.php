@@ -7,6 +7,25 @@
 
 
 //---------- oEMBED GET ----------//
+function pw_save_post_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$pw_args = $args['args'];
+	$pw_save_post = pw_save_post( $pw_args ); //wp_insert_post($pw_args);//
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_save_post; //$pw_args;//$pw_save_post;
+	echo json_encode( $response );
+	//echo json_encode("roger that.");
+	// die ( $oEmbed );
+	die;
+}
+add_action("wp_ajax_nopriv_pw_save_post_admin", "pw_save_post_admin");
+add_action("wp_ajax_pw_save_post_admin", "pw_save_post_admin");
+
+
+
+//---------- oEMBED GET ----------//
 function ajax_oembed_get(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$pw_args = $args;

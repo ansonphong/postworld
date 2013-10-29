@@ -574,7 +574,6 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	$post_ID = wp_insert_post($postarr,$wp_error);
 	
 	if(gettype($post_ID) == 'integer'){ // successful
-		print_r($post_ID);
 		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"])	{
 			global $wpdb;
 			$wpdb -> show_errors();
@@ -604,7 +603,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 				}
 		}
 	}
-		
+	
+
 	return $post_ID;
 
 }
@@ -759,6 +759,7 @@ function pw_save_post($post_data){
 	}
 
 	///// INSERT POST METHOD /////
+	
 	if( $method == 'insert' ){
 		$post_id = pw_insert_post($post_data);
 	}
@@ -767,6 +768,7 @@ function pw_save_post($post_data){
 	else if ( $method == 'update' ) {
 		$post_id = pw_update_post($post_data);
 	}
+	
 
 	///// ADD / UPDATE POST META /////
 
@@ -781,6 +783,8 @@ function pw_save_post($post_data){
 	if ( !empty($post_class)  ){
 		
 	}
+
+	return $post_id;
 
 }
 
