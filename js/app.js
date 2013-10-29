@@ -74,6 +74,7 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
         });
+
     $routeProvider.when('/load-comments/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
@@ -81,6 +82,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
     $routeProvider.when('/embedly/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedlyWidget.html',             
+        });            
+    $routeProvider.when('/load-post/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPostWidget.html',             
         });            
     $routeProvider.when('/o-embed/',
         {
@@ -93,8 +98,8 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
     $routeProvider.when('/post-link/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
-        });
-    
+        });            
+
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
 });
@@ -1541,7 +1546,7 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 
   $scope.openMediaModal = function (post) {
     var modalInstance = $modal.open({
-      templateUrl: '/wp-content/plugins/postworld/templates/panels/media_modal.html',
+      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
       controller: MediaModalInstanceCtrl,
       resolve: {
         post: function(){
@@ -1604,7 +1609,7 @@ var ModalDemoCtrl = function ($scope, $modal, $log) {
   $scope.open = function () {
 
     var modalInstance = $modal.open({
-      templateUrl: '/wp-content/plugins/postworld/templates/panels/modal_demo.html',
+      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/modal_demo.html',
       controller: ModalInstanceCtrl,
       resolve: {
         items: function () {

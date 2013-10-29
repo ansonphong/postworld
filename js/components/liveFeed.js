@@ -32,6 +32,20 @@ postworld.directive('loadFeed', function() {
 });
 
 
+postworld.directive('loadPost', function() {
+    return {
+        restrict: 'A',
+        // DO not set url here and in nginclude at the same time, so many errors!
+        // templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
+        replace: true,
+        controller: 'pwLoadPostController',
+        scope : {
+        	
+        }
+    };
+});
+
+
 postworld.controller('pwFeedController',
     function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
 
@@ -353,5 +367,62 @@ postworld.controller('pwFeedController',
 				}
 			);
 		  };
+    }
+);
+
+postworld.controller('pwLoadPostController',
+    function pwLoadPostController($scope, $location, $log, $attrs, $timeout, pwData) {
+    	// Initialize
+    	$scope.postSettings = window['load_post'];
+    	if (!$scope.postSettings) throw {message:'pwLoadPostController: no post settings defined'};
+    	$scope.postArgs = $scope.postSettings[$attrs.loadPost];
+    	if (!$scope.postSettings[$attrs.loadPost]) throw {message:'pwLoadPostController: no post settings for '+$attrs.loadPost+'defined'};
+		$scope.args = {};
+		$scope.args.post_id = $scope.postArgs.post_id;    	     	    	    	  	
+		$scope.args.fields = $scope.postArgs.fields;    	     	    	    	  	
+    	// Set Default Feed Template and Default Feed Item Template
+		pwData.templates.promise.then(function(value) {
+			/*				
+			   if (pwData.feed_settings[$scope.feed].feed_template) {
+			   		var template = pwData.feed_settings[$scope.feed].feed_template;			   	
+			    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
+					$log.info('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
+			   }
+			   else {
+		   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html';
+			   }
+		   		return;
+		   	*/			   	
+		});
+    	   				
+		$scope.pwLoadPost = function() {
+			
+        	pwData.pw_get_post($scope.args).then(
+				// Success
+				function(response) {
+					$scope.busy = false;
+					if (response.status === undefined) {
+						console.log('response format is not recognized');
+						return;
+					}
+					if (response.status==200) {
+						$log.info('pwPostLoadController.pw_load_post Success',response.data);						
+						console.log('post data',response.data);
+						return response.data;						
+					} else {
+						// handle error
+						console.log('error',response.status,response.message);
+						// TODO should we set busy to false when error is returned?
+					}
+					// return response.posts;
+				},
+				// Failure
+				function(response) {
+					// $log.error('pwFeedController.pw_live_feed Failure',response);
+					// TODO Show User Friendly Message
+				}
+			);
+		  };
+		  $scope.pwLoadPost();
     }
 );
