@@ -74,18 +74,79 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
         });
-        $routeProvider.when('/load-comments/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
-            });            
-        $routeProvider.when('/embedly/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedlyWidget.html',             
-            });            
-        $routeProvider.when('/o-embed/',
-            {
-                templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
-            });            
+
+    $routeProvider.when('/load-comments/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
+        });            
+    $routeProvider.when('/embedly/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedlyWidget.html',             
+        });            
+    $routeProvider.when('/load-post/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPostWidget.html',             
+        });            
+    $routeProvider.when('/o-embed/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
+        });       
+    $routeProvider.when('/media-modal/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/mediaModal.html',             
+        });  
+    $routeProvider.when('/post-link/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
+        });  
+
+
+
+    $routeProvider.when('/new/:post_type',
+        {
+            action: "new_post",
+        });
+
+
+    $routeProvider.when('/edit/:post_id',
+        {
+            //templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
+            //mode:'new';
+
+            action: "edit_post",
+
+            //controller: 'editPost',
+            //resolve: { post_type:"link" }
+
+            /*
+            resolve: { post_type: function($route){
+                return $route.current.params.post_type;
+            }}
+            */
+            /*
+            resolve: {
+                resolvedprop: [function () {
+                    var apiObject = {url: 'phong.com' };                      
+                    return apiObject;
+                }],
+            }
+            */
+            /*
+
+            resolve: {
+                resolvedprop: ['$route', '$q', function ($route, $q) {
+                   var apiObject = {url: 'abc.com' };                      
+                   return apiObject     
+                         }],
+            }
+
+            */
+
+
+        });
+
+
+
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
 });
@@ -258,9 +319,9 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
         return {
             feature : "Features",
             blog : "Blog",
-            link : "Links",
-            announcement : "Announcements",
-            tribe_events : "Events"
+            // link : "Link",
+            announcement : "Announcement",
+            tribe_events : "Event"
             };
         },
         pwGetPostStatusOptions: function(){
@@ -572,14 +633,16 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
  (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__|
   |_|                                             
 ////////// ------------ EDIT POST SERVICE ------------ //////////*/  
+/*
 postworld.service('pwEditPost', ['$log', function ($log) {
         return {
             pwGetPost: function(){
                 return {
-                    post_id : 24,
+                    //post_id : 24,
+                    post_author: 1,
                     post_title : "Hello Space",
                     post_name : "hello_space",
-                    post_type : "tribe_events",
+                    post_type : "blog",
                     post_status : "publish",
                     post_format : "video",
                     post_class : "contributor",
@@ -595,7 +658,7 @@ postworld.service('pwEditPost', ['$log', function ($log) {
             
         };
     }]);
-
+*/
 
 
 /*
@@ -746,7 +809,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
  |____/ \___|\__,_|_|  \___|_| |_| |_|   |_|\___|_|\__,_|___/
                                                              
 ////////// ------------ SEARCH FIELDS CONTROLLER ------------ //////////*/
-postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters) {
+postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
@@ -776,10 +839,100 @@ postworld.controller('searchFields', ['$scope', 'pwEditPost', 'pwPostOptions', '
  |_____\__,_|_|\__| |_|   \___/|___/\__|
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
-postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter', function($scope, $pwEditPost, $pwPostOptions, $pwEditPostFilters, $timeout, $filter) {
+postworld.controller('editPost',
+    ['$scope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 
+    function($scope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
+        $pwData, $log, $route, $routeParams, $location, $http ) {
+
+    //alert( JSON.stringify( $route.current.action ) );
+
+    $scope.default_post_data = {
+        //post_id : 24,
+        post_author: 1,
+        post_title : "",
+        post_name : "",
+        post_type : "blog",
+        post_status : "publish",
+        post_format : "standard",
+        post_class : "contributor",
+        link_url : "",
+        post_permalink : "",
+        tax_input : {
+            topic : [],
+            section : [],
+            type : []
+        },
+        tags_input : "",
+    };
+
+
+    // WATCH THE ROUTE
+    $scope.$on(
+        "$routeChangeSuccess",
+        function( $currentRoute, $previousRoute ){
+            // Update the rendering.
+            //alert( JSON.stringify( $currentRoute ) );
+            
+            var post_type = ($routeParams.post_type || "");
+            if ( post_type != "" )
+                $scope.post_data.post_type = post_type;
+
+
+            // SET MODE : ( new | edit )
+            if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
+                $scope.mode = "edit";
+
+                // GET THE POST DATA
+                $pwData.pw_get_post_edit( $routeParams.post_id ).then(
+                    // Success
+                    function(response) {    
+                        $log.info('pwData.pw_get_post : RESPONSE : ', response.data);
+
+                        // FILTER FOR INPUT
+                        var get_post_data = response.data;
+                        
+                        Object.defineProperty(get_post_data, 'tax_input',
+                            Object.getOwnPropertyDescriptor(get_post_data, 'taxonomy'));
+                        delete get_post_data['taxonomy'];
+
+                        // SET THE POST CONTENT
+                        tinyMCE.get('post_content').setContent( get_post_data.post_content );
+
+                        $scope.post_data = get_post_data;
+                    },
+                    // Failure
+                    function(response) {
+                        alert('error');
+                        $scope.status = "error";
+                    }
+                );      
+
+
+            }
+            else {
+                // Switching from Edit to New >> Clear post Data
+                if($scope.mode == "edit"){
+                    $scope.clear_post_data();
+                }
+
+                $scope.mode = "new";
+            }
+
+
+            //alert( JSON.stringify( $route.current.action ) + " : " + post_type );
+            //render();
+
+        }
+    );
+
+    $scope.clear_post_data = function(){
+        $scope.post_data = {};
+        tinyMCE.get('post_content').setContent( "" );
+    }
 
     $scope.pw_get_post_object = function(){
-        var post_data = $pwEditPost.pwGetPost();
+        var post_data = $scope.default_post_data;
         // CHECK TERMS ORDER
         post_data = $pwEditPostFilters.sortTaxTermsInput( post_data, $scope.tax_terms, 'tax_input' );
         return post_data;   
@@ -800,11 +953,6 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
 
-    // SET MODE : ( new | edit )
-    if ( typeof $scope.post_data.post_id !== 'undefined'  )
-        $scope.mode = "edit";
-    else
-        $scope.mode = "new";
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects
@@ -837,9 +985,54 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
             }
         }, 1 );
 
-    // SAVE POST FUNCTION
-    $scope.savePost = function(){
+    $scope.status = "done";
 
+    // SAVE POST FUNCTION
+    $scope.savePost = function(pwData){
+
+        ///// GET POST_DATA FROM TINYMCE /////
+        if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
+            $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+
+        ///// SAVE POST VIA AJAX /////
+        var post_data = $scope.post_data;
+        //alert(JSON.stringify(post_data));
+
+        $scope.status = "saving";
+        $pwData.pw_save_post( post_data ).then(
+        //pwData.pw_save_post( post_data ).then(
+            // Success
+            function(response) {    
+                //alert( "RESPONSE : " + response.data );
+                $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
+
+                var post_id = response.data;
+                $scope.status = "success";
+                $timeout(function() {
+                  $scope.status = "done";
+                }, 2000);
+
+                // If created a new post, forwart to edit page
+                if ( $scope.mode == "new" )
+                    $location.path('/edit/' + post_id);
+
+            },
+            // Failure
+            function(response) {
+                //alert('error');
+                $scope.status = "error";
+                $timeout(function() {
+                  $scope.status = "done";
+                }, 2000);
+
+            }
+        );        
+        
+        
+
+        // ADD AJAX SAVING OF POST HERE
+
+        /*
         ///// EXTRACT THE DATE FOR TRIBE EVENTS ///// 
         var EventStartHour = $filter('date')( $scope.EventStartDateObject, 'HH'); 
         var EventStartMinute = $filter('date')( $scope.EventStartDateObject, 'mm'); 
@@ -854,7 +1047,7 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
             "Start Date : " + EventStartDate  + "\n" + 
             " End Date :  " + EventEndDate + "\n" 
             );
-        
+        */
         //alert( JSON.stringify( $scope.post_data ) );
     }
 
@@ -921,7 +1114,33 @@ postworld.controller('editPost', ['$scope', 'pwEditPost', 'pwPostOptions', 'pwEd
     };
 
 
+    ///// FEATURED IMAGE /////
+    // Media Upload Window
+    $scope.updateFeaturedImage = function(image_object){
+        //alert( JSON.stringify(image_object) );
+        $scope.featured_image = image_object;
+        $scope.post_data.thumbnail_id = image_object.id;
+        if( typeof image_object !== 'undefined' ){
+            $scope.has_featured_image = 'true';
+        }
+    }
+    $scope.removeFeaturedImage = function(){
+        $scope.featured_image = {};
+        $scope.has_featured_image = 'false';
+        $scope.post_data.thumbnail_id = '';
+    }
+
+    ///// GET POST_CONTENT FROM TINY MCE /////
+    $scope.getTinyMCEContent = function(){        
+        
+    }
+
+    
+
 }]);
+
+
+
 
 /*
      _         _   _                     _         _                                  _      _       
@@ -947,7 +1166,7 @@ postworld.controller('AuthorAutocomplete', ['$scope', function($scope) {
  |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
 
 ////////// ------------ POST LINK CONTROLLER ------------ //////////*/
-postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext',function($scope, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext) {
+postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext',function($scope, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, pwData) {
 
     // Setup the intermediary Link URL
     $scope.link_url = '';
@@ -992,7 +1211,20 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
     // 2. On click
 
     $scope.extract_url = function() {
-        $scope.embedly_extract = $embedly.embedly_extract( $scope.link_url );
+
+        $embedly.liveEmbedlyExtract( $scope.link_url ).then( // 
+                // Success
+                function(response) {
+                    console.log(response);    
+                    $scope.embedly_extract = response;
+                },
+                // Failure
+                function(response) {
+                    alert('Could not find URL.');
+                    throw {message:'Embedly Error'+response};
+                }
+            );
+
         //alert(JSON.stringify($scope.embedly_extract));
         //alert('extract');
     }
@@ -1137,11 +1369,16 @@ postworld.directive('ngTextareaFilter', function() {
                         
                         
                         // If it's over the maxLength, trim it
-                        if ( textarea_contents.length > maxChars && textarea_contents.length > (maxChars-readMore.length) ){
-                            textarea_contents = textarea_contents.slice(0, (maxChars-readMore.length)) + readMore;
+
+                        if ( typeof textarea_contents !== 'undefined' ){
+                            if ( textarea_contents.length > maxChars && textarea_contents.length > (maxChars-readMore.length) ){
+                                textarea_contents = textarea_contents.slice(0, (maxChars-readMore.length)) + readMore;
+                            }
+
+                            // Insert new textarea_contents;
+                            $scope[modelObjArray[0]][modelObjArray[1]] = textarea_contents;
                         }
-                        // Insert new textarea_contents;
-                        $scope[modelObjArray[0]][modelObjArray[1]] = textarea_contents;
+
                     }, 1 );
         };
     });
@@ -1459,8 +1696,8 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 
   $scope.openMediaModal = function (post) {
     var modalInstance = $modal.open({
-      templateUrl: '/wp-content/themes/RSV2/postworld/templates/modals/media_modal.html',
-      controller: ModalInstanceCtrl,
+      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
+      controller: MediaModalInstanceCtrl,
       resolve: {
         post: function(){
             return post;
@@ -1478,8 +1715,11 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
 };
 
 
-var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
+var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
+    
+    // Import the passed post object into the Modal Scope
     $scope.post = post;
+
     /*
     $scope.ok = function () {
         $modalInstance.close($scope.selected.item);
@@ -1510,6 +1750,50 @@ var ModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
         $modalInstance.dismiss('close');
     };
 };
+
+//---------- MODAL DEMO ----------//
+var ModalDemoCtrl = function ($scope, $modal, $log) {
+
+  $scope.items = ['item1', 'item2', 'item3'];
+
+  $scope.open = function () {
+
+    var modalInstance = $modal.open({
+      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/modal_demo.html',
+      controller: ModalInstanceCtrl,
+      resolve: {
+        items: function () {
+          return $scope.items;
+        }
+      }
+    });
+
+    modalInstance.result.then(function (selectedItem) {
+      $scope.selected = selectedItem;
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
+  };
+};
+
+var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
+
+  $scope.items = items;
+  $scope.selected = {
+    item: $scope.items[0]
+  };
+
+  $scope.ok = function () {
+    $modalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+};
+
+
+
 
 
 /*
@@ -1569,6 +1853,105 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
   };
 
 };
+
+
+'use strict';
+
+/*
+   _                       _              _   _       
+  | |   _    ___ _ __ ___ | |__   ___  __| | | |_   _ 
+ / __) (_)  / _ \ '_ ` _ \| '_ \ / _ \/ _` | | | | | |
+ \__ \  _  |  __/ | | | | | |_) |  __/ (_| |_| | |_| |
+ (   / (_)  \___|_| |_| |_|_.__/ \___|\__,_(_)_|\__, |
+  |_|                                           |___/ 
+////////// ------------ Embedly SERVICE ------------ //////////*/  
+postworld.factory('embedly', function ($resource, $q, $log) {     
+        // TODO Replace this with your Production Key
+                // http://api.embed.ly/1/extract?key=:key&url=:url&maxwidth=:maxwidth&maxheight=:maxheight&format=:format&callback=:callback
+        var embedlyKey = "512f7d063fc1490d9bcc7504c764a6dd";
+        var embedlyUrl = "http://api.embed.ly/1/:action";
+        var resource = $resource(embedlyUrl, {key:embedlyKey, url:''}, 
+                                    {   embedly_call: { method: 'GET', isArray: false, params: {action:'extract'} },    }
+                                );
+        
+        return {
+            // A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
+            embedly_call: function(action,url, options) {
+                $log.info('embedly.embedly_call', action, url, options);
+                var deferred = $q.defer();
+                // works only for non array returns
+                resource.embedly_call({action:action, url:url, options:options},
+                    function (data) {
+                        deferred.resolve(data);
+                    },
+                    function (response) {
+                        deferred.reject(response);
+                    });
+                return deferred.promise;        
+            },          
+            liveEmbedlyExtract: function( link_url, options ){
+                // LIVE EMBEDLY EXTRACT
+                // API : http://embed.ly/docs/extract/api
+                if (!link_url) throw {message:'embedly:link_url not provided'};
+                // Escape the URL
+                escape(link_url);
+                // if there are options, add them to the url here.
+                // call the service
+                return this.embedly_call('extract',link_url,options);
+                // for Ajax Calls
+
+                //return: embedly_extract_obj;
+            },
+            translateToPostData: function( embedly_extract ){
+                if (typeof embedly_extract.images[0] !== 'undefined' )
+                    var link_url_set = embedly_extract.images[0].url;
+                else
+                    var link_url_set = ""; // defult image_url
+
+                return{
+                    post_title: embedly_extract.title,
+                    post_excerpt: embedly_extract.description,
+                    link_url: embedly_extract.url,
+                    image_url: link_url_set,
+                };
+            },
+            embedlyExtractImageMeta: function( embedly_extract ){
+                
+                if ( embedly_extract.images.length >= 1 )
+                    var image_status_set = true;
+                else
+                    var image_status_set = false;
+
+                return{
+                    image_status: image_status_set,
+                    image_count: embedly_extract.images.length,
+                    images: embedly_extract.images,
+                };
+            },
+                       
+        };
+
+    });
+
+    
+postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pwData, $attrs, embedly) {
+        $scope.embedlyGet = function () {
+            
+            embedly.liveEmbedlyExtract( $scope.link_url).then(
+                // Success
+                function(response) {
+                    console.log(response);    
+                    $scope.embedlyResponse = response;
+                },
+                // Failure
+                function(response) {
+                    throw {message:'Embedly Error'+response};
+                }
+            );
+                  
+        };      
+    }
+);
 
 
 

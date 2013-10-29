@@ -1,0 +1,12 @@
+<h2>Angular UI Bootstrap Modal Demo</h2>
+<div ng-controller="ModalDemoCtrl">
+    <button class="btn" ng-click="open()">Open me!</button>
+    <div ng-show="selected">Selection from a modal: {{ selected }}</div>
+</div>
+
+<hr>
+<h2>Media Modal</h2>
+<!-- FORMAT : VIDEO -->
+<div ng-controller="mediaModalCtrl">
+	<button ng-click="openMediaModal({ post_title:'Post Title',post_format:'video',link_url:'http://www.youtube.com/watch?v=38peWm76l-U'})">Launch Media Modal</button>
+</div>

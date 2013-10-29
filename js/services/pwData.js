@@ -166,6 +166,11 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('pw_load_feed',params);
 		},
+		pw_get_post: function(args) {
+			$log.info('pwData.pw_get_post',args);
+			//var params = {args:args};
+			return this.wp_ajax('pw_get_post',args);
+		},
 		pw_get_template: function(grp,type,name) {
 			// if templates object already exists, then get value, if not, then retrieve it first
 			var template = getTemplate(this,grp,type,name);
@@ -218,5 +223,16 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('ajax_oembed_get', params);
 		},
+		pw_save_post: function(args) {
+			$log.info('pwData.pw_save_post',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_save_post_admin', params);
+		},
+		pw_get_post_edit: function(args) {
+			$log.info('pwData.pw_get_post_edit',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_post_edit',params);
+		},
+
    }; // END OF pwData return value
 });

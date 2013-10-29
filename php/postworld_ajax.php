@@ -6,6 +6,76 @@
 */
 
 
+//---------- SAVE POST ADMIN ----------//
+function pw_save_post_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$pw_args = $args['args'];
+	$pw_save_post = pw_save_post( $pw_args ); //wp_insert_post($pw_args);//
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_save_post; //$pw_args;//$pw_save_post;
+	echo json_encode( $response );
+	//echo json_encode("roger that.");
+	// die ( $oEmbed );
+	die;
+}
+//add_action("wp_ajax_nopriv_pw_save_post_admin", "pw_save_post_admin");
+add_action("wp_ajax_pw_save_post_admin", "pw_save_post_admin");
+
+
+//---------- GET POST ADMIN ----------//
+
+function pw_get_post_edit_admin() {
+	list($response, $args, $nonce) = initAjaxResponse();	
+	// pw_get_post ( $post_id, $fields, [$user_id] );
+	$pw_args = $args['args'];
+
+
+	/* ADD SECURITY CHECK */
+
+	/*
+	if($args['post_id']) $query = $args['post_id'];
+	else ErrorReturn($response, 400, 'missing argument post_id'); 
+	if ($args['fields']) $fields = $args['fields'];
+	else $fields = 'all';
+	// Get User Id
+	$user_ID = get_current_user_id();
+	*/
+
+	$fields = array(
+		"ID",
+		"post_type",
+		"post_id",
+		"post_title",
+		"post_excerpt",
+		"post_content",
+		"post_format",
+		"post_class",
+		"link_url",
+		"taxonomy(topic,section,type,post_tag)"
+		);
+
+	/* set the response type as JSON */
+	$results = pw_get_post( $pw_args, $fields ); //$post_id,$fields,$user_ID
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Action Hook for pw_get_post_types() - Logged in users */
+add_action("wp_ajax_pw_get_post_edit", "pw_get_post_edit_admin");
+
+
+
+
+
+
+
+
 //---------- oEMBED GET ----------//
 function ajax_oembed_get(){
 	list($response, $args, $nonce) = initAjaxResponse();
@@ -172,6 +242,42 @@ function pw_get_posts_anon() {
 	die();
 }
 
+/* Action Hook for pw_get_posts() - Logged in users */
+add_action("wp_ajax_pw_get_posts", "pw_get_posts_anon");
+
+/* Action Hook for pw_get_posts() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_posts", "pw_get_posts_anon");
+
+
+
+function pw_get_post_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();	
+	// pw_get_post ( $post_id, $fields, [$user_id] );
+	
+	if($args['post_id']) $query = $args['post_id'];
+	else ErrorReturn($response, 400, 'missing argument post_id'); 
+	if ($args['fields']) $fields = $args['fields'];
+	else $fields = 'all';
+	// Get User Id
+	$user_ID = get_current_user_id();
+	/* set the response type as JSON */
+	$results = pw_get_post($post_id,$fields,$user_ID);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Action Hook for pw_get_post() - Logged in users */
+add_action("wp_ajax_pw_get_post", "pw_get_post_anon");
+
+/* Action Hook for pw_get_post() - Anonymous Users */
+add_action("wp_ajax_nopriv_pw_get_post", "pw_get_post_anon");
+
+
+
 
 /* Actions for pw_get_post_types () */
 
@@ -196,14 +302,11 @@ function pw_get_post_types_admin() {
 	die();
 }
 
-/* Action Hook for pw_get_posts() - Logged in users */
-add_action("wp_ajax_pw_get_posts", "pw_get_posts_anon");
-
-/* Action Hook for pw_get_posts() - Anonymous users */
-add_action("wp_ajax_nopriv_pw_get_posts", "pw_get_posts_anon");
-
 /* Action Hook for pw_get_post_types() - Logged in users */
 add_action("wp_ajax_pw_get_post_types", "pw_get_post_types_admin");
+
+
+
 
 
 /* *************************

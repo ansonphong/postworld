@@ -1,0 +1,89 @@
+<div class="media-modal">
+	
+	<div class="modal-body">
+		<!-- LOADING -->
+		<div ng-switch="status">
+			<div ng-switch-when="loading" style="text-align:center;">
+				<i class="icon-spinner icon-spin icon-large" style="font-size:48px;"></i>
+			</div>
+			<div ng-switch-when="error">
+				<i class="icon-asterisk icon-spin icon-large" style="font-size:24px;"></i> Media Not loaded. Please Try again.
+			</div>
+		</div>
+
+		<!-- MEDIA EMBED -->
+		<div ng-switch="post.post_format">
+			<span ng-switch-when="video" class="video">
+				<div ng-bind-html="oEmbed"></div>
+			</span>
+			<span ng-switch-when="audio" class="audio">
+				<div ng-bind-html="oEmbed"></div>
+			</span>
+		</div>
+
+	</div>
+
+	<div class="modal-header" ng-switch="post.post_format">
+		<h3>
+			<span ng-switch-when="video" class="video"><i class="icon-youtube-play"></i></span>
+			<span ng-switch-when="audio" class="audio"><i class="icon-headphones"></i></span>
+			<a href="{{post.post_permalink}}">{{post.post_title}}</a> // {{post.post_id}}
+			<a href="{{post.link_url}}" target="_blank"><i class="icon-external-link"></i></a>
+			<button class="btn close" ng-click="close()" style="color:#ccc;"><i class="icon-remove"></i></button>
+		</h3>
+		Favorite / Share / View Later
+	</div>
+
+	<div class="modal-footer">
+		<div class="footer" style="float:left">
+			<img src="{{post.avatar.small.url}}" width="{{post.avatar.small.width/2}}" height="{{post.avatar.small.height/2}}">
+			<a href="{{ post.author.user_profile_url }}">{{post.author.display_name}}</a>
+				• {{post.time_ago}}
+				• <a href="{{post.post_permalink}}#comments"><i class="icon-comment"></i> 56 Comments</a>
+		</div>
+		<div>
+			Like Facebook / Tweet / etc...
+		</div>
+		
+		<hr>
+
+		<div style="text-align:left;">
+			<h3 style="padding:20px 20px; border-bottom:2px solid #666;"><i class="icon-comment"></i> Comments</h3>
+
+			<script type="text/javascript" charset="utf-8">
+
+			var load_comments = [];
+			load_comments['post_single'] = {
+			    query : {
+			        post_id : 0, //{{post.post_id}},// 133925, // 21853, // 133925, // 166220, // 21853, // 166220,
+			        status: 'approve',
+				    orderby : 'comment_points',
+			        },
+			    fields : 'all',
+			    tree : true,
+			    order_options : {
+			        'comment_points' : 'Points',
+			        'comment_date' : 'Date'
+			        },
+			    min_points : 50,
+			};
+
+			console.log('check',load_comments['post_single'].query.post_id)
+
+			</script>
+			<div class="row" style="display:block">
+				<div class="col-md-12">
+					<div streeview load-comments="post_single" post="post"></div>
+				</div>	
+			</div>
+
+
+		</div>
+
+
+
+
+
+	</div>
+
+</div>
