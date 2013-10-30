@@ -1749,49 +1749,6 @@ var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwDat
     };
 };
 
-//---------- MODAL DEMO ----------//
-var ModalDemoCtrl = function ($scope, $modal, $log) {
-
-  $scope.items = ['item1', 'item2', 'item3'];
-
-  $scope.open = function () {
-
-    var modalInstance = $modal.open({
-      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/modal_demo.html',
-      controller: ModalInstanceCtrl,
-      resolve: {
-        items: function () {
-          return $scope.items;
-        }
-      }
-    });
-
-    modalInstance.result.then(function (selectedItem) {
-      $scope.selected = selectedItem;
-    }, function () {
-      $log.info('Modal dismissed at: ' + new Date());
-    });
-  };
-};
-
-var ModalInstanceCtrl = function ($scope, $modalInstance, items) {
-
-  $scope.items = items;
-  $scope.selected = {
-    item: $scope.items[0]
-  };
-
-  $scope.ok = function () {
-    $modalInstance.close($scope.selected.item);
-  };
-
-  $scope.cancel = function () {
-    $modalInstance.dismiss('cancel');
-  };
-};
-
-
-
 
 
 /*
@@ -1824,6 +1781,65 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
         
     };
 };
+
+
+
+/*
+              _____           _              _ 
+   ___       | ____|_ __ ___ | |__   ___  __| |
+  / _ \ _____|  _| | '_ ` _ \| '_ \ / _ \/ _` |
+ | (_) |_____| |___| | | | | | |_) |  __/ (_| |
+  \___/      |_____|_| |_| |_|_.__/ \___|\__,_|
+
+////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
+
+postworld.directive( 'oEmbed', ['$sce', 'pwData', function($scope, $sce, pwData){
+
+    return { 
+        //restrict: 'A',
+        //scope : function(){
+        //},
+        //template : '',
+        link : function ($scope, element, attributes, pwData){
+            
+            //alert( attributes.oEmbed );
+            $scope.status = "loading";
+            $scope.oEmbed = "embed code for : " + attributes.oEmbed;
+
+            var link_url = attributes.oEmbed;
+            var args = { "link_url": link_url };
+
+            // MEDIA GET
+            $scope.oEmbedGet = function(){
+                pwData.wp_ajax('ajax_oembed_get', args ).then(
+                    // Success
+                    function(response) {    
+                        $scope.status = "done";
+                        return $sce.trustAsHtml( response.data );
+                        
+                    },
+                    // Failure
+                    function(response) {
+                        $scope.status = "error";
+                    }
+                );
+            }
+
+            $scope.oEmbed = $scope.oEmbedGet();
+
+        }
+    }
+
+}]);
+
+
+postworld.run(function($rootScope, $templateCache) {
+   $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
+});
+
+
 
 /*
   ____        _         ____  _      _             
