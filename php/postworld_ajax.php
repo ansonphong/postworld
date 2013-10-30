@@ -53,6 +53,8 @@ function pw_get_post_edit_admin() {
 		"post_format",
 		"post_class",
 		"link_url",
+		"post_name",
+		"post_permalink",
 		"taxonomy(topic,section,type,post_tag)"
 		);
 

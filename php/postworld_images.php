@@ -37,7 +37,7 @@ function image_obj( $attachment_id, $size = 'full' ){
 	$first_image_obj['url'] = $image_attributes[0];
 	$first_image_obj['width'] = $image_attributes[1];
 	$first_image_obj['height'] = $image_attributes[2];
-	$first_image_obj['ID'] = $attachment->ID;
+	$first_image_obj['ID'] = $attachment_id; //$attachment->ID;
 	return $first_image_obj;
 }
 

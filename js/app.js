@@ -625,41 +625,6 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
 
 
 
-/*
-   _        _____    _ _ _     ____           _   
-  | |   _  | ____|__| (_) |_  |  _ \ ___  ___| |_ 
- / __) (_) |  _| / _` | | __| | |_) / _ \/ __| __|
- \__ \  _  | |__| (_| | | |_  |  __/ (_) \__ \ |_ 
- (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__|
-  |_|                                             
-////////// ------------ EDIT POST SERVICE ------------ //////////*/  
-/*
-postworld.service('pwEditPost', ['$log', function ($log) {
-        return {
-            pwGetPost: function(){
-                return {
-                    //post_id : 24,
-                    post_author: 1,
-                    post_title : "Hello Space",
-                    post_name : "hello_space",
-                    post_type : "blog",
-                    post_status : "publish",
-                    post_format : "video",
-                    post_class : "contributor",
-                    link_url : "http://youtube.com/",
-                    post_permalink : "http://realitysandwich.com/",
-                    tax_input : {
-                        topic : ["healing","body"],
-                        section : ["psi"],
-                    },
-                    tags_input : "tag1, tag2, tag3",
-                };
-            },
-            
-        };
-    }]);
-*/
-
 
 /*
    _        _____    _ _ _     ____           _     _____ _ _ _                
@@ -867,64 +832,165 @@ postworld.controller('editPost',
     };
 
 
-    // WATCH THE ROUTE
+    // WATCH : ROUTE
     $scope.$on(
         "$routeChangeSuccess",
         function( $currentRoute, $previousRoute ){
-            // Update the rendering.
             //alert( JSON.stringify( $currentRoute ) );
-            
-            var post_type = ($routeParams.post_type || "");
-            if ( post_type != "" )
-                $scope.post_data.post_type = post_type;
 
-
-            // SET MODE : ( new | edit )
-            if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
-                $scope.mode = "edit";
-
-                // GET THE POST DATA
-                $pwData.pw_get_post_edit( $routeParams.post_id ).then(
-                    // Success
-                    function(response) {    
-                        $log.info('pwData.pw_get_post : RESPONSE : ', response.data);
-
-                        // FILTER FOR INPUT
-                        var get_post_data = response.data;
-                        
-                        Object.defineProperty(get_post_data, 'tax_input',
-                            Object.getOwnPropertyDescriptor(get_post_data, 'taxonomy'));
-                        delete get_post_data['taxonomy'];
-
-                        // SET THE POST CONTENT
-                        tinyMCE.get('post_content').setContent( get_post_data.post_content );
-
-                        $scope.post_data = get_post_data;
-                    },
-                    // Failure
-                    function(response) {
-                        alert('error');
-                        $scope.status = "error";
-                    }
-                );      
-
-
-            }
-            else {
-                // Switching from Edit to New >> Clear post Data
+            ///// ROUTE : NEW POST /////
+            if ( $route.current.action == "new_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
+                
+                // SWITCH FROM MODE : EDIT > NEW
+                // If we're coming to 'new' mode from 'edit' mode
                 if($scope.mode == "edit"){
+                    // Clear post Data
                     $scope.clear_post_data();
                 }
-
+                // Set the new mode
                 $scope.mode = "new";
+
+                // Get the post type
+                var post_type = ($routeParams.post_type || "");
+                // If post type is supplied
+                if ( post_type != "" )
+                    // Set the post type
+                    $scope.post_data.post_type = post_type;
             }
 
-
-            //alert( JSON.stringify( $route.current.action ) + " : " + post_type );
-            //render();
-
+            ///// ROUTE : EDIT POST /////
+            if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
+                // Load the specified post data
+                $scope.load_post_data();
+            }
+           
         }
     );
+
+
+    $scope.load_post_data = function(){
+        $scope.mode = "edit";
+
+        // GET THE POST DATA
+        $pwData.pw_get_post_edit( $routeParams.post_id ).then(
+            // Success
+            function(response) {    
+                $log.info('pwData.pw_get_post : RESPONSE : ', response.data);
+
+                // FILTER FOR INPUT
+                var get_post_data = response.data;
+                
+                Object.defineProperty(get_post_data, 'tax_input',
+                    Object.getOwnPropertyDescriptor(get_post_data, 'taxonomy'));
+                delete get_post_data['taxonomy'];
+
+                // SET THE POST CONTENT
+                tinyMCE.get('post_content').setContent( get_post_data.post_content );
+
+                $scope.post_data = get_post_data;
+            },
+            // Failure
+            function(response) {
+                alert('error');
+                $scope.status = "error";
+            }
+        );  
+    }
+
+
+
+    $scope.status = "done";
+
+    // SAVE POST FUNCTION
+    $scope.savePost = function(pwData){
+
+        // VALIDATE THE FORM
+        if ($scope.post_data.post_title != '' || typeof $scope.post_data.post_title !== 'undefined'){
+            //alert(JSON.stringify($scope.post_data));
+
+            ///// GET POST_DATA FROM TINYMCE /////
+            if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
+                $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+
+            ///// SANITIZE FIELDS /////
+            if ( typeof $scope.post_data.link_url === 'undefined' )
+                $scope.post_data.link_url = '';
+
+            ///// SAVE POST VIA AJAX /////
+            var post_data = $scope.post_data;
+            //alert(JSON.stringify(post_data));
+
+            $scope.status = "saving";
+            $pwData.pw_save_post( post_data ).then(
+            //pwData.pw_save_post( post_data ).then(
+                // Success
+                function(response) {    
+                    //alert( "RESPONSE : " + response.data );
+                    $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
+
+                    // VERIFY POST CREATION
+                    // If it was created, it's an integer
+                    if( response.data === parseInt(response.data) ){
+                        var post_id = response.data;
+                        $scope.status = "success";
+                        $timeout(function() {
+                          $scope.status = "done";
+                        }, 2000);
+
+                        // If created a new post
+                        if ( $scope.mode == "new" )
+                            // Forward to edit page
+                            $location.path('/edit/' + post_id);
+                        else
+                            // Otherwise, reload the data from server
+                            $scope.load_post_data();
+                    }
+                    else{
+                        alert("Post not saved : " + JSON.stringify(response.data) );
+                        $scope.status = "done";
+                    }
+                    
+
+                },
+                // Failure
+                function(response) {
+                    //alert('error');
+                    $scope.status = "error";
+                    $timeout(function() {
+                      $scope.status = "done";
+                    }, 2000);
+
+                }
+            );
+
+        } else {
+            alert("Post not saved : missing fields.");
+        }
+        
+
+        
+
+        // ADD AJAX SAVING OF POST HERE
+
+        /*
+        ///// EXTRACT THE DATE FOR TRIBE EVENTS ///// 
+        var EventStartHour = $filter('date')( $scope.EventStartDateObject, 'HH'); 
+        var EventStartMinute = $filter('date')( $scope.EventStartDateObject, 'mm'); 
+        //EventStartMaridian
+        var EventEndHour = $filter('date')( $scope.EventEndDateObject, 'HH');
+        var EventEndMinute = $filter('date')( $scope.EventEndDateObject, 'mm'); 
+        //EventEndMaridian
+        var EventStartDate = $filter('date')( $scope.EventStartDateObject, 'yyyy-MM-dd HH:mm Z');
+        var EventEndDate = $filter('date')( $scope.EventEndDateObject, 'yyyy-MM-dd HH:mm Z');
+
+        alert(
+            "Start Date : " + EventStartDate  + "\n" + 
+            " End Date :  " + EventEndDate + "\n" 
+            );
+        */
+        //alert( JSON.stringify( $scope.post_data ) );
+    }
+
 
     $scope.clear_post_data = function(){
         $scope.post_data = {};
@@ -985,76 +1051,8 @@ postworld.controller('editPost',
             }
         }, 1 );
 
-    $scope.status = "done";
-
-    // SAVE POST FUNCTION
-    $scope.savePost = function(pwData){
-
-        ///// GET POST_DATA FROM TINYMCE /////
-        if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
-            $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
-
-        ///// SAVE POST VIA AJAX /////
-        var post_data = $scope.post_data;
-        //alert(JSON.stringify(post_data));
-
-        $scope.status = "saving";
-        $pwData.pw_save_post( post_data ).then(
-        //pwData.pw_save_post( post_data ).then(
-            // Success
-            function(response) {    
-                //alert( "RESPONSE : " + response.data );
-                $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
-
-                var post_id = response.data;
-                $scope.status = "success";
-                $timeout(function() {
-                  $scope.status = "done";
-                }, 2000);
-
-                // If created a new post, forwart to edit page
-                if ( $scope.mode == "new" )
-                    $location.path('/edit/' + post_id);
-
-            },
-            // Failure
-            function(response) {
-                //alert('error');
-                $scope.status = "error";
-                $timeout(function() {
-                  $scope.status = "done";
-                }, 2000);
-
-            }
-        );        
-        
-        
-
-        // ADD AJAX SAVING OF POST HERE
-
-        /*
-        ///// EXTRACT THE DATE FOR TRIBE EVENTS ///// 
-        var EventStartHour = $filter('date')( $scope.EventStartDateObject, 'HH'); 
-        var EventStartMinute = $filter('date')( $scope.EventStartDateObject, 'mm'); 
-        //EventStartMaridian
-        var EventEndHour = $filter('date')( $scope.EventEndDateObject, 'HH');
-        var EventEndMinute = $filter('date')( $scope.EventEndDateObject, 'mm'); 
-        //EventEndMaridian
-        var EventStartDate = $filter('date')( $scope.EventStartDateObject, 'yyyy-MM-dd HH:mm Z');
-        var EventEndDate = $filter('date')( $scope.EventEndDateObject, 'yyyy-MM-dd HH:mm Z');
-
-        alert(
-            "Start Date : " + EventStartDate  + "\n" + 
-            " End Date :  " + EventEndDate + "\n" 
-            );
-        */
-        //alert( JSON.stringify( $scope.post_data ) );
-    }
-
     ////////// EVENT DATE PICKER //////////
     
-
-
 
     // DATE CHANGE : Watch the date objects for a change
     $scope.updateDate = function(){

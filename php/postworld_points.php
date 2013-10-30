@@ -77,7 +77,7 @@
 			/*1- get post data
 			 2-  Insert new record into post_meta
 			 */
-			add_recored_to_post_meta($post_id,$total_points);
+			add_record_to_post_meta($post_id,$total_points);
 			
 		}
 		return $total_points;
@@ -822,7 +822,7 @@
 		}
 		else return true;
 	}
-	function add_recored_to_post_meta($post_id, $points=0,$rank_score=0,$favorites=0,$post_shares=0){
+	function add_record_to_post_meta($post_id, $points=0,$rank_score=0,$favorites=0,$post_shares=0){
 		/*
 		 This function gets all post data and inserts a record in wp_postworld_post_meta table
 		 * Parameters:

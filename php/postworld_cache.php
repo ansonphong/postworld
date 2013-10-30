@@ -393,7 +393,7 @@
 		-return : integer (number of shares)*/
 		$total_shares = calculate_post_shares($post_id);
 		
-		add_recored_to_post_meta($post_id);
+		add_record_to_post_meta($post_id);
 		
 		global $wpdb;
 		$wpdb -> show_errors();

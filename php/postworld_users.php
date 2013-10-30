@@ -256,7 +256,7 @@ function add_favorite($post_id, $user_id) {
 	//$query = "update " . $wpdb -> pw_prefix . 'post_meta' . " set favorites = favorites +1 where post_id=" . $post_id;
 	//$result = $wpdb -> query($query);
 	//if ($result === FALSE) {
-	//	add_recored_to_post_meta($post_id, 0, 0, 1);
+	//	add_record_to_post_meta($post_id, 0, 0, 1);
 	//}
 
 }
@@ -273,7 +273,7 @@ function delete_favorite($post_id, $user_id) {
 //	$result = $wpdb -> query($query);
 
 //	if ($result === FALSE) {
-//		add_recored_to_post_meta($post_id, 0, 0, 0);
+//		add_record_to_post_meta($post_id, 0, 0, 0);
 //	}
 
 }
