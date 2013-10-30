@@ -2058,8 +2058,12 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
         //},
         //template : '',
         controller: 'pwOEmbedController',
-        link : function ($scope, element, attributes){            
-        	// Do stuff related to the rendering of the element here - only if needed
+        link : function ($scope, element, attributes){
+        	// When the oEmbed Value changes, then change the html here
+        	$scope.$watch('oEmbed', function(value) {
+        		console.log('test',value);
+        		element.html(value);
+        	});          
         }
     };
 
@@ -2082,8 +2086,7 @@ postworld.controller('pwOEmbedController',
                     function(response) {    
                         $scope.status = "done";
                         console.log('return',response.data);
-                        $scope.oEmbed = $sce.trustAsHtml( response.data );
-                        
+                        $scope.oEmbed = response.data; // $sce.trustAsHtml( response.data );                        
                     },
                     // Failure
                     function(response) {
