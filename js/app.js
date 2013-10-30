@@ -2011,14 +2011,14 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 
 ////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
 
-postworld.directive( 'oEmbed', ['$sce', 'pwData', function($scope, $sce, pwData){
+postworld.directive( 'oEmbed-old', ['$sce','pwData', function($scope, $sce, pwData){
 
     return { 
         //restrict: 'A',
         //scope : function(){
         //},
         //template : '',
-        link : function ($scope, element, attributes, pwData){
+        link : function ($scope, element, attributes){
             
             //alert( attributes.oEmbed );
             $scope.status = "loading";
@@ -2041,15 +2041,58 @@ postworld.directive( 'oEmbed', ['$sce', 'pwData', function($scope, $sce, pwData)
                         $scope.status = "error";
                     }
                 );
-            }
+            };
 
             $scope.oEmbed = $scope.oEmbedGet();
 
         }
-    }
+    };
 
 }]);
 
+postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
+
+    return { 
+        //restrict: 'A',
+        //scope : function(){
+        //},
+        //template : '',
+        controller: 'pwOEmbedController',
+        link : function ($scope, element, attributes){            
+        	// Do stuff related to the rendering of the element here - only if needed
+        }
+    };
+
+}]);
+
+
+postworld.controller('pwOEmbedController',
+    function pwOEmbedController($scope, $attrs, $sce, pwData) {
+            //alert( attributes.oEmbed );
+            $scope.status = "loading";
+            $scope.oEmbed = "embed code for : " + $attrs.oEmbed;
+
+            var link_url = $attrs.oEmbed;
+            var args = { "link_url": link_url };
+
+            // MEDIA GET
+            $scope.oEmbedGet = function(){
+                pwData.wp_ajax('ajax_oembed_get', args ).then(
+                    // Success
+                    function(response) {    
+                        $scope.status = "done";
+                        console.log('return',response.data);
+                        $scope.oEmbed = $sce.trustAsHtml( response.data );
+                        
+                    },
+                    // Failure
+                    function(response) {
+                        $scope.status = "error";
+                    }
+                );
+            };
+            $scope.oEmbedGet();
+});
 
 postworld.run(function($rootScope, $templateCache) {
    $rootScope.$on('$viewContentLoaded', function() {
