@@ -6,6 +6,28 @@
 */
 
 
+
+//---------- TAXONOMIES OUTLINE MIXED ----------//
+function taxonomies_outline_mixed_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$pw_args = $args['args'];
+
+	$taxonomies_outline_mixed = taxonomies_outline_mixed( $pw_args ); //wp_insert_post($pw_args);//
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $taxonomies_outline_mixed; //$pw_args;//$pw_save_post;
+	echo json_encode( $response );
+	//echo json_encode("roger that.");
+	// die ( $oEmbed );
+	die;
+}
+add_action("wp_ajax_nopriv_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
+add_action("wp_ajax_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
+
+
+
+
 //---------- SAVE POST ADMIN ----------//
 function pw_save_post_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();

@@ -237,6 +237,11 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('pw_get_post_edit',params);
 		},
+		taxonomies_outline_mixed: function(args) {
+			$log.info('pwData.taxonomies_outline_mixed',args);
+			var params = {args:args};
+			return this.wp_ajax('taxonomies_outline_mixed',params);
+		},
 
    }; // END OF pwData return value
 });

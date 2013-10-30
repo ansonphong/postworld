@@ -232,6 +232,63 @@ window.isEmpty = function(value){
 }
 */
 
+
+
+/*
+   _        ____  _ _          ___        _   _                 
+  | |   _  / ___|(_) |_ ___   / _ \ _ __ | |_(_) ___  _ __  ___ 
+ / __) (_) \___ \| | __/ _ \ | | | | '_ \| __| |/ _ \| '_ \/ __|
+ \__ \  _   ___) | | ||  __/ | |_| | |_) | |_| | (_) | | | \__ \
+ (   / (_) |____/|_|\__\___|  \___/| .__/ \__|_|\___/|_| |_|___/
+  |_|                              |_|                          
+////////// ------------ CUSTOM SITE CONFIGURATIONS ------------ //////////*/
+// This should be broken off into another seperate file and included seperately
+// In the website theme folder, as it contains custom options for Postworld Configuration
+
+postworld.service('siteOptions', ['$log', function ($log) {
+    // Do one AJAX call here which returns all the options
+    return{
+        taxOutlineMixed : function(){
+            return {
+               "topic":{
+                  "max_depth":2,
+                  "fields":[
+                     "term_id",
+                     "name",
+                     "slug"
+                  ],
+                  "filter":""
+               },
+               "section":{
+                  "max_depth":1,
+                  "fields":[
+                     "term_id",
+                     "name",
+                     "slug"
+                  ],
+                  "filter":""
+               },
+               "type":{
+                  "max_depth":2,
+                  "fields":[
+                     "term_id",
+                     "name",
+                     "slug"
+                  ],
+                  "filter":"label_group"
+               }
+            }
+        },
+    }
+
+}]);
+
+
+
+
+
+
+
 /*
    _                  _   
   | |   _    _____  _| |_ 
@@ -858,7 +915,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
 
                     // Does the currently selected term of this taxonomy have children
                     if ( typeof term_set !== 'undefined' ){
-                        if ( typeof term_set.children !== 'undefined' )
+                        if ( typeof term_set.terms !== 'undefined' )
                             var term_has_children = true;
                         else
                             var term_has_children = false; 
@@ -871,7 +928,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                         // Default
                         var is_subterm = false;
                         // Cycle through current sub-terms, and see if it exists
-                        angular.forEach( term_set.children, function( child_term ){
+                        angular.forEach( term_set.terms, function( child_term ){
                             if ( child_term.slug == tax_input[taxonomy][1] )
                                 is_subterm = true;
                         });
@@ -929,9 +986,9 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
     ['$scope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 
     function($scope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http ) {
+        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions ) {
 
     //alert( JSON.stringify( $route.current.action ) );
 
@@ -1003,13 +1060,6 @@ postworld.controller('editPost',
                 // FILTER FOR INPUT
                 var get_post_data = response.data;
 
-                /*
-                Object.defineProperty(get_post_data, 'tax_input',
-                    Object.getOwnPropertyDescriptor(get_post_data, 'taxonomy'));
-                delete get_post_data['taxonomy'];
-                */
-                
-
                 // BREAK OUT THE TAGS INTO TAGS_INPUT
                 if ( typeof get_post_data.taxonomy.post_tag !== 'undefined'  ){
                     get_post_data['tags_input'] = "";
@@ -1031,23 +1081,6 @@ postworld.controller('editPost',
                 delete get_post_data['taxonomy'];
                 get_post_data['tax_input'] = tax_input; 
 
-                //alert(JSON.stringify(get_post_data.tax_input));
-
-                /*
-                // Cycle through each taxonomy
-                angular.forEach( get_post_data.tax_input, function( terms, taxonomy ){
-                    var flat_terms = []; 
-                    // Cycle through each term in the array
-                    angular.forEach( terms, function( term ){
-                        // Generate new array with just the slugs
-                        flat_terms.push( term.slug );
-                    });
-
-                    // Replace the original terms array from array of objects to simple strings
-                    get_post_data.tax_input[taxonomy] = flat_terms;
-
-                });
-                */
                 
                 // SET THE POST CONTENT
                 tinyMCE.get('post_content').setContent( get_post_data.post_content );
@@ -1133,11 +1166,8 @@ postworld.controller('editPost',
         }
         
 
-        
-
-        // ADD AJAX SAVING OF POST HERE
-
         /*
+        ///// EVENTS DATE & TIME /////
         ///// EXTRACT THE DATE FOR TRIBE EVENTS ///// 
         var EventStartHour = $filter('date')( $scope.EventStartDateObject, 'HH'); 
         var EventStartMinute = $filter('date')( $scope.EventStartDateObject, 'mm'); 
@@ -1179,8 +1209,28 @@ postworld.controller('editPost',
     $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+
     // TAXONOMY TERMS
-    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+    // Gets dummy terms form testing models : $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+    // Gets live set of terms from the DB :
+    $scope.getTaxTerms = function(){
+        var args = $siteOptions.taxOutlineMixed();
+        $pwData.taxonomies_outline_mixed( args ).then(
+            // Success
+            function(response) {    
+                //alert(JSON.stringify(response.data));
+                $scope.tax_terms = response.data;
+                //return response.data;
+            },
+            // Failure
+            function(response) {
+                alert('Error loading terms.');
+            }
+        );
+    }
+    $scope.getTaxTerms();
+
+
 
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
@@ -1197,7 +1247,6 @@ postworld.controller('editPost',
             // Clear irrelivent sub-terms
             $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
         
-
         }, 1 );
 
     // LINK_URL WATCH : Watch for changes in link_url
@@ -2036,6 +2085,99 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
   };
 
 };
+
+
+
+
+
+/*
+             _                         _            _   
+ __  __  _  | |_ ___ _ __ ___  _ __   | |_ ___  ___| |_ 
+ \ \/ / (_) | __/ _ \ '_ ` _ \| '_ \  | __/ _ \/ __| __|
+  >  <   _  | ||  __/ | | | | | |_) | | ||  __/\__ \ |_ 
+ /_/\_\ (_)  \__\___|_| |_| |_| .__/   \__\___||___/\__|
+                              |_|                       
+////////// ------------ TEMP TEST CONTROLLER ------------ //////////*/   
+var testController = function ( $scope, pwData, siteOptions, pwPostOptions2 ) {
+
+    /*
+    $scope.getTaxOutlineMixed = function() {
+        var args = siteOptions.taxOutlineMixed();
+        pwData.taxonomies_outline_mixed( args ).then(
+            // Success
+            function(response) {    
+                alert(JSON.stringify(response.data));
+            },
+            // Failure
+            function(response) {
+                alert("error");
+            }
+        );
+    };
+    */
+    $scope.promise = "empty";
+    $scope.getTaxOutlineMixed = function() {
+        
+        $scope.promise = pwPostOptions2.taxOutlineMixed();
+
+    };
+
+
+};
+
+
+
+postworld.service('pwPostOptions2', ['$log', '$q', 'pwData', 'siteOptions', function ($log, $q, pwData, siteOptions, $scope) {
+    // Do one AJAX call here which returns all the options
+    return{
+        taxOutlineMixed : function(){
+            
+            function get_tax_outline_mixed(){
+                var deferred = $q.defer();
+
+
+                var args = siteOptions.taxOutlineMixed();
+                pwData.taxonomies_outline_mixed( args ).then(
+                    // Success
+                    function(response) {    
+                        //alert(JSON.stringify(response.data));
+                        deferred.resolve( response.data );
+                    },
+                    // Failure
+                    function(response) {
+                        deferred.reject( "error" ); 
+                    }
+                );
+
+
+                return deferred.promise;
+            }
+
+            var promise = get_tax_outline_mixed();
+
+            promise.then(function(result) {
+              alert('Success: ' + JSON.stringify(result));
+              //return result;
+            }, function(reason) {
+              alert('Failed: ' + reason);
+            }, function(update) {
+              alert('Got notification: ' + update);
+            });
+
+
+        },
+    }
+
+}]);
+
+
+
+
+
+
+
+
+
 
 
 'use strict';
