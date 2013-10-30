@@ -575,27 +575,30 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	if(gettype($post_ID) == 'integer'){ // successful
 
 		// ADD TERMS / TAXONOMIES
-		foreach ( $postarr["tax_input"] as $taxonomy => $terms) {
-			wp_set_object_terms( $post_ID, $terms, $taxonomy, false );
+		if(isset($postarr["tax_input"])){
+			foreach ( $postarr["tax_input"] as $taxonomy => $terms) {
+				wp_set_object_terms( $post_ID, $terms, $taxonomy, false );
+			}
 		}
-
+	
+		print_r($postarr);
 		// ADD POSTWORLD FIELDS
-		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"])	{
+		if(isset($postarr["post_class"]) || isset($postarr["post_format"])|| isset($postarr["link_url"]))	{
 			global $wpdb;
 			$wpdb -> show_errors();
 			add_record_to_post_meta($post_ID);
 				$query = "update $wpdb->pw_prefix"."post_meta set ";
 				 $insertComma = FALSE;
-				if($postarr["post_class"]){
+				if(isset($postarr["post_class"])){
 					$query.="post_class='".$postarr["post_class"]."'";
 					 $insertComma= TRUE;
 				} 
-				if($postarr["post_format"]){
+				if(isset($postarr["post_format"])){
 					if($insertComma === TRUE) $query.=" , ";
 					$query.="post_format='".$postarr["post_format"]."'";
 					 $insertComma= TRUE;
 				} 
-				if($postarr["link_url"]){
+				if(isset($postarr["link_url"])){
 					if($insertComma === TRUE) $query.=" , ";
 					$query.="link_url='".$postarr["link_url"]."'";
 					 $insertComma= TRUE;

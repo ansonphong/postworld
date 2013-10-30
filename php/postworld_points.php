@@ -850,13 +850,13 @@
 			//echo json_encode($post_data);
 			$query = "insert into ".$wpdb->pw_prefix.'post_meta'." values("
 					.$post_id.","
-					.$post_data['post_author'].","
+					//.$post_data['post_author'].","
 					."'post_class'"."," //TODO
 					."'".$format."',"
-					."'".$post_data['guid']."',"
+					."'"."',"
 					.$points.","
 					.$rank_score.","
-					.$favorites.","
+					//.$favorites.","
 					.$post_shares
 					.")";
 					
