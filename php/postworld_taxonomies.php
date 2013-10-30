@@ -1,6 +1,6 @@
 <?php
 
-function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all') {
+function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filter = false ) {
 
 	// If Taxonomies is not defined or 'all'
 	// Get all Public Taxonomies
@@ -55,6 +55,67 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all') {
 		$args = array('object' => $tax_terms, 'fields' => $fields, 'id_key' => 'term_id', 'parent_key' => 'parent', 'child_key' => 'terms', 'max_depth' => $max_depth, 'callback' => $callback, 'callback_fields' => $callback_fields, );
 
 		$tax_outline[$taxonomy] = wp_tree_obj($args);
+
+	}
+
+	////////// OUTLINE FILTERS //////////
+	if ($filter != false){
+		
+		///// LABEL GROUP FILTER /////
+		// Filters up to one level of children
+		// Strips the tree down to linear level
+		// With terms having an additional 'parent_[key]':'value' pair
+		// For each included $field, ie. parent_slug, parent_name, parent_term_id, etc.
+		// For use with AngularJS "label group" <select> <options> comprehension expression 
+		if ( $filter == "label_group" ){
+			// FOR EACH TAXONOMY
+			foreach ( $tax_outline as $taxonomy => $root_terms ) {
+				
+				// SETUP FLAT TERMS CONTAINER STRUCTURE
+				$flat_terms = array();
+
+				// FOR EACH ROOT TERM
+				foreach ( $root_terms as $root_term ) {
+
+					// IF THE TERM HAS CHILD TERMS
+					if ( !empty($root_term["terms"]) ){
+
+						// FOR EACH CHILD TERM
+						foreach ( $root_term["terms"] as $term ) {
+							
+							// SETUP FLAT TERM
+							$flat_term = array();
+
+							// FOR EACH FIELD
+							foreach ( $fields as $field ) {
+								// PREPENDING "parent_"
+								$parent_field = "parent_".$field;
+								// TRANSFER THE PARENT TERM FIELDS TO THE FLAT TERM
+								$flat_term[$parent_field] = $root_term[$field];
+								// TRANSFER THE TERM FIELDS TO THE FLAT TERM
+								$flat_term[$field] = $term[$field];
+								
+							} // END FOR EACH FIELD
+
+							// PUSH THE FLAT TERM TO THE STACK
+							array_push( $flat_terms, $flat_term );
+
+						} // END FOR EACH CHILD TERM
+
+
+					} // END IF CHILD TERMS
+
+
+				} // END FOR EACH ROOT TERM
+				
+				// REWRITE THE ORIGINAL OUTLINE
+				$tax_outline[$taxonomy] = $flat_terms;
+
+			} // END FOR EACH TAXONOMY
+
+
+		} // END LABEL GROUP FILTER
+
 
 	}
 

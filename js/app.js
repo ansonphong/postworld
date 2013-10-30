@@ -445,7 +445,7 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
                 },
             ];
         },
-        pwGetTaxTerms: function(){
+        pwGetTaxTerms_old: function(){
             return {
                 "topic" : [
                     {
@@ -554,6 +554,129 @@ postworld.service('pwPostOptions', ['$log', function ($log) {
                             commons_misc:"Misc"
                         }
                     },
+                ],
+                'section' : [
+                    {
+                        slug:"psychedelic",
+                        name:"Psychedelic Culture",
+                    },
+                    {
+                        slug:"conscious_convergences",
+                        name:"Conscious Convergences",
+                    },
+                    {
+                        slug:"psi",
+                        name:"Psi Frontiers",
+                    },
+                    {
+                        slug:"video",
+                        name:"Videos",
+                    },
+                    {
+                        slug:"podcast",
+                        name:"Podcasts",
+                    },
+                    {
+                        slug:"edm",
+                        name:"Evolver EDM",
+                    },
+                    {
+                        slug:"evo_network",
+                        name:"Evolver Network",
+                    },
+                    {
+                        slug:"evo_learning_lab",
+                        name:"Evolver Learning Lab",
+                    },
+
+                ],
+                'type' : [
+                    {
+                        slug:"song_week",
+                        name:"Song of the Week",
+                        parent_name:"Hilight",
+                        parent:"hilight",
+                    },
+                    {
+                        slug:"video_week",
+                        name:"Video of the Week",
+                        parent_name:"Hilight",
+                        parent:"hilight"
+                    },
+                    {
+                        slug:"event_feature",
+                        name:"Featured Event",
+                        parent_name:"Events",
+                        parent:"events"
+                    },
+                    {
+                        slug:"event_evolver",
+                        name:"Evolver Event",
+                        parent_name:"Events",
+                        parent:"events"
+                    },
+                ],
+                
+            };
+        },
+        pwGetTaxTerms: function(){
+            return {
+                "topic" : [
+                    {
+                        slug:"psyche",
+                        name:"/psyche",
+                        children:[
+                            {
+                                name:"Ancient Mysteries",                     
+                                slug: "ancient",
+                            },
+                            {
+                                name:"Astrology",                     
+                                slug: "astrology",
+                            },
+                            {
+                                name:"Consciousness",                     
+                                slug: "consciousness",
+                            },
+                        ],
+                    },
+                    {
+                        slug:"arts",
+                        name:"/arts",
+                        children:[
+                            {
+                                name:"Conferences",                     
+                                slug: "conferences",
+                            },
+                            {
+                                name:"Digital Art",                     
+                                slug: "digital_art",
+                            },
+                            {
+                                name:"World Art",                     
+                                slug: "world_art",
+                            },
+                        ],
+                    },
+                    {
+                        slug:"body",
+                        name:"/body",
+                        children:[
+                            {
+                                name:"Energy Medicine",                     
+                                slug: "energy_medicine",
+                            },
+                            {
+                                name:"Food & Nutrition",                     
+                                slug: "food_nutrition",
+                            },
+                            {
+                                name:"Healing",                     
+                                slug: "healing",
+                            },
+                        ],
+                    },
+                    
                 ],
                 'section' : [
                     {
@@ -748,8 +871,8 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                         // Default
                         var is_subterm = false;
                         // Cycle through current sub-terms, and see if it exists
-                        angular.forEach( term_set.children, function( child_term_value, child_term_key ){
-                            if ( child_term_key == tax_input[taxonomy][1] )
+                        angular.forEach( term_set.children, function( child_term ){
+                            if ( child_term.slug == tax_input[taxonomy][1] )
                                 is_subterm = true;
                         });
                         // If it doesn't exist as a sub-term, clear it
@@ -1041,7 +1164,7 @@ postworld.controller('editPost',
 
     $scope.pw_get_post_object = function(){
         var post_data = $scope.default_post_data;
-        // CHECK TERMS ORDER
+        // CHECK TERMS CATEGORY / SUBCATEGORY ORDER
         post_data = $pwEditPostFilters.sortTaxTermsInput( post_data, $scope.tax_terms, 'tax_input' );
         return post_data;   
     }
@@ -1058,6 +1181,7 @@ postworld.controller('editPost',
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
     // TAXONOMY TERMS
     $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
 
@@ -1069,8 +1193,11 @@ postworld.controller('editPost',
         function (){
             // Create selected terms object
             $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post_data.tax_input);
+            
             // Clear irrelivent sub-terms
             $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
+        
+
         }, 1 );
 
     // LINK_URL WATCH : Watch for changes in link_url
