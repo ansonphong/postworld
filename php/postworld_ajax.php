@@ -55,7 +55,7 @@ function pw_get_post_edit_admin() {
 		"link_url",
 		"post_name",
 		"post_permalink",
-		"taxonomy(topic,section,type,post_tag)"
+		"taxonomy(all)"
 		);
 
 	/* set the response type as JSON */

@@ -879,11 +879,53 @@ postworld.controller('editPost',
 
                 // FILTER FOR INPUT
                 var get_post_data = response.data;
-                
+
+                /*
                 Object.defineProperty(get_post_data, 'tax_input',
                     Object.getOwnPropertyDescriptor(get_post_data, 'taxonomy'));
                 delete get_post_data['taxonomy'];
+                */
+                
 
+                // BREAK OUT THE TAGS INTO TAGS_INPUT
+                if ( typeof get_post_data.taxonomy.post_tag !== 'undefined'  ){
+                    get_post_data['tags_input'] = "";
+                    angular.forEach( get_post_data.taxonomy.post_tag, function( tag ){
+                        get_post_data['tags_input'] += tag.slug + ", ";
+                    });
+                    delete get_post_data.taxonomy.post_tag;
+                }
+                
+                // RENAME THE KEY : TAXONOMY > TAX_INPUT
+                var tax_input = {};
+                var tax_obj = get_post_data['taxonomy'];
+                angular.forEach( tax_obj, function( terms, taxonomy ){
+                    tax_input[taxonomy] = [];
+                    angular.forEach( terms, function( term ){
+                        tax_input[taxonomy].push(term.slug);
+                    });
+                });
+                delete get_post_data['taxonomy'];
+                get_post_data['tax_input'] = tax_input; 
+
+                //alert(JSON.stringify(get_post_data.tax_input));
+
+                /*
+                // Cycle through each taxonomy
+                angular.forEach( get_post_data.tax_input, function( terms, taxonomy ){
+                    var flat_terms = []; 
+                    // Cycle through each term in the array
+                    angular.forEach( terms, function( term ){
+                        // Generate new array with just the slugs
+                        flat_terms.push( term.slug );
+                    });
+
+                    // Replace the original terms array from array of objects to simple strings
+                    get_post_data.tax_input[taxonomy] = flat_terms;
+
+                });
+                */
+                
                 // SET THE POST CONTENT
                 tinyMCE.get('post_content').setContent( get_post_data.post_content );
 

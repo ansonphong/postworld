@@ -84,8 +84,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'edit_post_link',
 		'post_categories_list',
 		'post_tags_list',
-		'taxonomy(post_tag)',
-		'taxonomy(category)',
+		'taxonomy(all)',
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		'avatar(small,48)',
 		'post_format',
@@ -574,6 +573,13 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	$post_ID = wp_insert_post($postarr,$wp_error);
 	
 	if(gettype($post_ID) == 'integer'){ // successful
+
+		// ADD TERMS / TAXONOMIES
+		foreach ( $postarr["tax_input"] as $taxonomy => $terms) {
+			wp_set_object_terms( $post_ID, $terms, $taxonomy, false );
+		}
+
+		// ADD POSTWORLD FIELDS
 		if($postarr["post_class"] || $postarr["post_format"]||$postarr["link_url"])	{
 			global $wpdb;
 			$wpdb -> show_errors();
