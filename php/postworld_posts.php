@@ -581,7 +581,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			}
 		}
 	
-		print_r($postarr);
+		//print_r($postarr);
 		// ADD POSTWORLD FIELDS
 		if(isset($postarr["post_class"]) || isset($postarr["post_format"])|| isset($postarr["link_url"]))	{
 			global $wpdb;
