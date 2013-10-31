@@ -1037,6 +1037,9 @@ function userAutocomplete($scope, pwData) {
             $scope.$emit('updateUsername', $scope.username);
         }, 1 );
     
+    // Catch broadcast of username change
+    $scope.$on('updateUsername', function(event, data) { $scope.username = data; });
+
 }
 
 
@@ -1145,10 +1148,17 @@ postworld.controller('editPost',
                 delete get_post_data['taxonomy'];
                 get_post_data['tax_input'] = tax_input; 
 
-                
                 // SET THE POST CONTENT
                 tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
+                // EXTRACT AUTHOR NAME
+                get_post_data['post_author_name'] = get_post_data['author']['user_nicename'];
+                delete get_post_data['author'];
+
+                // BROADCAST TO USERNAME AUTOCOMPLETE FIELD
+                $scope.$broadcast('updateUsername', get_post_data['post_author_name']);
+
+                // SET DATA INTO THE SCOPE
                 $scope.post_data = get_post_data;
             },
             // Failure
@@ -1282,6 +1292,12 @@ postworld.controller('editPost',
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
 
+    // UPDATE AUTHOR NAME FROM AUTOCOMPLETE
+    // Interacts with userAutocomplete() controller
+    // Catches the recent value of the auto-complete
+    $scope.$on('updateUsername', function( event, data ) { 
+        $scope.post_data.post_author_name = data;
+    });
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects

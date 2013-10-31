@@ -582,8 +582,6 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			}
 		}
 	
-		
-		
 		//print_r($postarr);
 		// ADD POSTWORLD FIELDS
 		if(isset($postarr["post_class"]) || isset($postarr["post_format"])|| isset($postarr["link_url"]))	{
@@ -614,6 +612,16 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	 				$wpdb->query($query);
 					
 				}
+		}
+
+		// Author Name Field
+		// Adds support for an `author_name` parameter
+		if( isset($postarr["post_author_name"]) ){
+			$user = get_user_by( 'slug', $postarr["post_author_name"] );
+			if( is_int($user->data->ID) ){
+				wp_update_post( array( "ID" => $post_ID, "post_author" => $user->data->ID ) );
+			}
+
 		}
 		
 		

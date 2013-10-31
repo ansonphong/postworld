@@ -98,7 +98,8 @@ function pw_get_post_edit_admin() {
 		"link_url",
 		"post_name",
 		"post_permalink",
-		"taxonomy(all)"
+		"taxonomy(all)",
+		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		);
 
 	/* set the response type as JSON */
