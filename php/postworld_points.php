@@ -836,10 +836,7 @@
 			
 	
 		global $wpdb;	
-		$wpdb-> show_errors();
-		
-		 
-		
+		//$wpdb-> show_errors();
 		
 		if(!does_post_meta_exist($post_id)){
 			$format = get_post_format();

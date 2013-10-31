@@ -27,12 +27,25 @@ postworld.controller('pwFilterFeedController',
 				}
 				// Get Default Argument Values
 				$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
+			   
+
+			   	// UPDATE USERNAME HERE
+				$scope.feedQuery.author_name = "";
+
+
 			   // Get Default View Name
 			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
 			   		template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
 		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
 				$log.info('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
-		});				
+		});		
+
+		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
+		// Interacts with userAutocomplete() controller
+		// Catches the recent value of the auto-complete
+		$scope.$on('updateUsername', function( event, data ) { 
+	        $scope.feedQuery.author_name = data;
+	    });
 
     	// TODO check best location for that code, should we create a panel child?
 		$scope.toggleOrder = function() {
@@ -56,7 +69,12 @@ postworld.controller('pwFilterFeedController',
 		$scope.changeFeedTemplate = function(view) {
 			$log.info('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", view);		    	
-		};		
+		};	
+
+
+
+
+
     	
     }
 );

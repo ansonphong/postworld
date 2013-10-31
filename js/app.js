@@ -232,6 +232,63 @@ window.isEmpty = function(value){
 }
 */
 
+
+
+/*
+   _        ____  _ _          ___        _   _                 
+  | |   _  / ___|(_) |_ ___   / _ \ _ __ | |_(_) ___  _ __  ___ 
+ / __) (_) \___ \| | __/ _ \ | | | | '_ \| __| |/ _ \| '_ \/ __|
+ \__ \  _   ___) | | ||  __/ | |_| | |_) | |_| | (_) | | | \__ \
+ (   / (_) |____/|_|\__\___|  \___/| .__/ \__|_|\___/|_| |_|___/
+  |_|                              |_|                          
+////////// ------------ CUSTOM SITE CONFIGURATIONS ------------ //////////*/
+// This should be broken off into another seperate file and included seperately
+// In the website theme folder, as it contains custom options for Postworld Configuration
+
+postworld.service('siteOptions', ['$log', function ($log) {
+    // Do one AJAX call here which returns all the options
+    return{
+        taxOutlineMixed : function(){
+            return {
+               "topic":{
+                  "max_depth":2,
+                  "fields":[
+                     "term_id",
+                     "name",
+                     "slug"
+                  ],
+                  "filter":""
+               },
+               "section":{
+                  "max_depth":1,
+                  "fields":[
+                     "term_id",
+                     "name",
+                     "slug"
+                  ],
+                  "filter":""
+               },
+               "type":{
+                  "max_depth":2,
+                  "fields":[
+                     "term_id",
+                     "name",
+                     "slug"
+                  ],
+                  "filter":"label_group"
+               }
+            }
+        },
+    }
+
+}]);
+
+
+
+
+
+
+
 /*
    _                  _   
   | |   _    _____  _| |_ 
@@ -312,9 +369,24 @@ postworld.service('ext', ['$log', function ($log) {
   |_|                                 |_|                          
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
-postworld.service('pwPostOptions', ['$log', function ($log) {
+postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
+                            function ($log, $siteOptions, $pwData) {
     // Do one AJAX call here which returns all the options
     return{
+        getTaxTerms: function($scope){
+            var args = $siteOptions.taxOutlineMixed();
+            $pwData.taxonomies_outline_mixed( args ).then(
+                // Success
+                function(response) {    
+                    $scope.tax_terms = response.data;
+                    //alert(JSON.stringify(response.data));
+                },
+                // Failure
+                function(response) {
+                    alert('Error loading terms.');
+                }
+            );
+        },
         pwGetPostTypeOptions: function(){
         return {
             feature : "Features",
@@ -858,7 +930,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
 
                     // Does the currently selected term of this taxonomy have children
                     if ( typeof term_set !== 'undefined' ){
-                        if ( typeof term_set.children !== 'undefined' )
+                        if ( typeof term_set.terms !== 'undefined' )
                             var term_has_children = true;
                         else
                             var term_has_children = false; 
@@ -871,7 +943,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                         // Default
                         var is_subterm = false;
                         // Cycle through current sub-terms, and see if it exists
-                        angular.forEach( term_set.children, function( child_term ){
+                        angular.forEach( term_set.terms, function( child_term ){
                             if ( child_term.slug == tax_input[taxonomy][1] )
                                 is_subterm = true;
                         });
@@ -913,10 +985,149 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
-    // TAXONOMY TERMS
-    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
 
+    // TAXONOMY TERMS
+    //$scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+
+    // TAXONOMY TERMS
+    // Gets live set of terms from the DB
+    // as $scope.tax_terms
+    $pwPostOptions.getTaxTerms($scope);
+
+    // USERNAME FIELD
+    //$scope.usernameField = 
+    
+    //$scope.feedQuery.author_name = "empty";
+
+    /*
+    $scope.$on('updateUsername', function(username) { 
+        $scope.feedQuery.author_name = username;
+    });
+    */
 }]);
+
+
+/*
+  _   _                    _         _                                  _      _       
+ | | | |___  ___ _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
+ | | | / __|/ _ \ '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
+ | |_| \__ \  __/ |     / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
+  \___/|___/\___|_|    /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
+                                                                 |_|                   
+////////// ------------ USER AUTOCOMPLETE CONTROLLER ------------ //////////*/
+function userAutocomplete($scope, pwData) {
+    $scope.username = undefined;
+    $scope.queryList = function () {
+        var searchTerm = $scope.username + "*";            
+        var query_args = {
+            number:20,
+            fields:['user_nicename', 'display_name'],
+            search: searchTerm,
+        };
+        pwData.user_query_autocomplete( query_args ).then(
+            // Success
+            function(response) {
+                //console.log(response);    
+                $scope.authors = response.data.results;
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+    };
+
+    // Watch on the value of username
+    $scope.$watch( "username",
+        function (){
+            // When it changes, emit it's value to the parent controller
+            $scope.$emit('updateUsername', $scope.username);
+        }, 1 );
+    
+    // Catch broadcast of username change
+    $scope.$on('updateUsername', function(event, data) { $scope.username = data; });
+
+}
+
+/*
+  _____                    _         _                                  _      _       
+ |_   _|_ _  __ _ ___     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
+   | |/ _` |/ _` / __|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
+   | | (_| | (_| \__ \  / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
+   |_|\__,_|\__, |___/ /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
+            |___/                                                |_|                   
+////////// ------------ TAGS AUTOCOMPLETE CONTROLLER ------------ //////////*/
+function tagsAutocomplete($scope, $filter, pwData) {
+
+    $scope.tags_input = [];     // Array
+    $scope.tags_input_obj = []; // Object
+
+    $scope.queryTags = function () {
+        var queryTag = $scope.queryTag;
+
+        var args = {
+            search: $scope.queryTag,
+            taxonomy:"post_tag"
+        }
+
+        pwData.tags_autocomplete( args ).then(
+            // Success
+            function(response) {
+                console.log(response.data);    
+                $scope.tagOptions = response.data;
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+    };
+
+    $scope.addTag = function(){
+        // Cycle through the tagOptions Object
+        angular.forEach( $scope.tagOptions, function( tag ){
+            if( tag.slug == $scope.queryTag ){
+                $scope.tags_input_obj.push(tag);
+                $scope.queryTag = "";
+            }           
+        });
+    }
+
+    $scope.removeTag = function(removeSlug){
+        $scope.tags_input_obj = $filter('filter')($scope.tags_input_obj, function(item) {
+            return !(item.slug == removeSlug);
+         });
+    }
+
+    $scope.newTag = function(){
+        var newTag = {
+            name: $scope.queryTag,
+            slug: $scope.queryTag,
+            };
+
+        $scope.tags_input_obj.push(newTag);
+        $scope.queryTag = "";
+    }
+
+    // Watch on the object with input tags
+    $scope.$watch( "tags_input_obj",
+        function (){
+            // When it changes, modify the tags_input object
+            $scope.tags_input = [];
+            angular.forEach( $scope.tags_input_obj, function( tag ){
+                $scope.tags_input.push(tag.slug);
+            });
+
+            // Emit it's value to the parent controller
+            $scope.$emit('updateTagsInput', $scope.tags_input);
+        }, 1 );
+    
+    // Catch broadcast of load in tags
+    $scope.$on('postTagsObject', function(event, data) { $scope.tags_input_obj = data; });
+
+}
+
+
 
 
 /*
@@ -929,9 +1140,9 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
     ['$scope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 
     function($scope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http ) {
+        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions ) {
 
     //alert( JSON.stringify( $route.current.action ) );
 
@@ -941,7 +1152,7 @@ postworld.controller('editPost',
         post_title : "",
         post_name : "",
         post_type : "blog",
-        post_status : "publish",
+        post_status : "draft",
         post_format : "standard",
         post_class : "contributor",
         link_url : "",
@@ -949,7 +1160,8 @@ postworld.controller('editPost',
         tax_input : {
             topic : [],
             section : [],
-            type : []
+            type : [],
+            post_tag : [],
         },
         tags_input : "",
     };
@@ -1003,14 +1215,8 @@ postworld.controller('editPost',
                 // FILTER FOR INPUT
                 var get_post_data = response.data;
 
-                /*
-                Object.defineProperty(get_post_data, 'tax_input',
-                    Object.getOwnPropertyDescriptor(get_post_data, 'taxonomy'));
-                delete get_post_data['taxonomy'];
-                */
-                
-
                 // BREAK OUT THE TAGS INTO TAGS_INPUT
+                /*
                 if ( typeof get_post_data.taxonomy.post_tag !== 'undefined'  ){
                     get_post_data['tags_input'] = "";
                     angular.forEach( get_post_data.taxonomy.post_tag, function( tag ){
@@ -1018,40 +1224,43 @@ postworld.controller('editPost',
                     });
                     delete get_post_data.taxonomy.post_tag;
                 }
-                
+                */
+
+                ///// LOAD TAXONOMIES /////
+
                 // RENAME THE KEY : TAXONOMY > TAX_INPUT
                 var tax_input = {};
                 var tax_obj = get_post_data['taxonomy'];
+                // BOIL DOWN SELECTED TERMS
                 angular.forEach( tax_obj, function( terms, taxonomy ){
                     tax_input[taxonomy] = [];
                     angular.forEach( terms, function( term ){
                         tax_input[taxonomy].push(term.slug);
                     });
+
+                    // BROADCAST TAX OBJECT TO AUTOCOMPLETE CONTROLLER
+                    if( taxonomy == "post_tag")
+                        $scope.$broadcast('postTagsObject', terms);
+
                 });
                 delete get_post_data['taxonomy'];
                 get_post_data['tax_input'] = tax_input; 
 
-                //alert(JSON.stringify(get_post_data.tax_input));
-
-                /*
-                // Cycle through each taxonomy
-                angular.forEach( get_post_data.tax_input, function( terms, taxonomy ){
-                    var flat_terms = []; 
-                    // Cycle through each term in the array
-                    angular.forEach( terms, function( term ){
-                        // Generate new array with just the slugs
-                        flat_terms.push( term.slug );
-                    });
-
-                    // Replace the original terms array from array of objects to simple strings
-                    get_post_data.tax_input[taxonomy] = flat_terms;
-
-                });
-                */
+                ///// LOAD POST CONTENT /////
                 
                 // SET THE POST CONTENT
                 tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
+                ///// LOAD AUTHOR /////
+
+                // EXTRACT AUTHOR NAME
+                get_post_data['post_author_name'] = get_post_data['author']['user_nicename'];
+                delete get_post_data['author'];
+
+                // BROADCAST TO USERNAME AUTOCOMPLETE FIELD
+                $scope.$broadcast('updateUsername', get_post_data['post_author_name']);
+
+                // SET DATA INTO THE SCOPE
                 $scope.post_data = get_post_data;
             },
             // Failure
@@ -1087,7 +1296,6 @@ postworld.controller('editPost',
 
             $scope.status = "saving";
             $pwData.pw_save_post( post_data ).then(
-            //pwData.pw_save_post( post_data ).then(
                 // Success
                 function(response) {    
                     //alert( "RESPONSE : " + response.data );
@@ -1111,7 +1319,7 @@ postworld.controller('editPost',
                             $scope.load_post_data();
                     }
                     else{
-                        alert("Post not saved : " + JSON.stringify(response.data) );
+                        alert("Error : " + JSON.stringify(response) );
                         $scope.status = "done";
                     }
                     
@@ -1133,11 +1341,8 @@ postworld.controller('editPost',
         }
         
 
-        
-
-        // ADD AJAX SAVING OF POST HERE
-
         /*
+        ///// EVENTS DATE & TIME /////
         ///// EXTRACT THE DATE FOR TRIBE EVENTS ///// 
         var EventStartHour = $filter('date')( $scope.EventStartDateObject, 'HH'); 
         var EventStartMinute = $filter('date')( $scope.EventStartDateObject, 'mm'); 
@@ -1179,11 +1384,31 @@ postworld.controller('editPost',
     $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+
+
     // TAXONOMY TERMS
-    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+    // Gets live set of terms from the DB
+    // as $scope.tax_terms
+    $pwPostOptions.getTaxTerms($scope);
+
 
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
+
+    // UPDATE AUTHOR NAME FROM AUTOCOMPLETE
+    // Interacts with userAutocomplete() controller
+    // Catches the recent value of the auto-complete
+    $scope.$on('updateUsername', function( event, data ) { 
+        $scope.post_data.post_author_name = data;
+    });
+
+
+    // UPDATE POST TAGS FROM AUTOCOMPLETE MODULE
+    // Interacts with tagsAutocomplete() controller
+    // Catches the recent value of the tags_input and inject into tax_input
+    $scope.$on('updateTagsInput', function( event, data ) { 
+        $scope.post_data.tax_input.post_tag = data;
+    });
 
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
@@ -1197,7 +1422,6 @@ postworld.controller('editPost',
             // Clear irrelivent sub-terms
             $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
         
-
         }, 1 );
 
     // LINK_URL WATCH : Watch for changes in link_url
@@ -1962,14 +2186,14 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 
 ////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
 
-postworld.directive( 'oEmbed', ['$sce', 'pwData', function($scope, $sce, pwData){
+postworld.directive( 'oEmbed-old', ['$sce','pwData', function($scope, $sce, pwData){
 
     return { 
         //restrict: 'A',
         //scope : function(){
         //},
         //template : '',
-        link : function ($scope, element, attributes, pwData){
+        link : function ($scope, element, attributes){
             
             //alert( attributes.oEmbed );
             $scope.status = "loading";
@@ -1992,15 +2216,61 @@ postworld.directive( 'oEmbed', ['$sce', 'pwData', function($scope, $sce, pwData)
                         $scope.status = "error";
                     }
                 );
-            }
+            };
 
             $scope.oEmbed = $scope.oEmbedGet();
 
         }
-    }
+    };
 
 }]);
 
+postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
+
+    return { 
+        //restrict: 'A',
+        //scope : function(){
+        //},
+        //template : '',
+        controller: 'pwOEmbedController',
+        link : function ($scope, element, attributes){
+        	// When the oEmbed Value changes, then change the html here
+        	$scope.$watch('oEmbed', function(value) {
+        		console.log('test',value);
+        		element.html(value);
+        	});          
+        }
+    };
+
+}]);
+
+
+postworld.controller('pwOEmbedController',
+    function pwOEmbedController($scope, $attrs, $sce, pwData) {
+            //alert( attributes.oEmbed );
+            $scope.status = "loading";
+            $scope.oEmbed = "embed code for : " + $attrs.oEmbed;
+
+            var link_url = $attrs.oEmbed;
+            var args = { "link_url": link_url };
+
+            // MEDIA GET
+            $scope.oEmbedGet = function(){
+                pwData.wp_ajax('ajax_oembed_get', args ).then(
+                    // Success
+                    function(response) {    
+                        $scope.status = "done";
+                        console.log('return',response.data);
+                        $scope.oEmbed = response.data; // $sce.trustAsHtml( response.data );                        
+                    },
+                    // Failure
+                    function(response) {
+                        $scope.status = "error";
+                    }
+                );
+            };
+            $scope.oEmbedGet();
+});
 
 postworld.run(function($rootScope, $templateCache) {
    $rootScope.$on('$viewContentLoaded', function() {
@@ -2036,6 +2306,99 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
   };
 
 };
+
+
+
+
+
+/*
+             _                         _            _   
+ __  __  _  | |_ ___ _ __ ___  _ __   | |_ ___  ___| |_ 
+ \ \/ / (_) | __/ _ \ '_ ` _ \| '_ \  | __/ _ \/ __| __|
+  >  <   _  | ||  __/ | | | | | |_) | | ||  __/\__ \ |_ 
+ /_/\_\ (_)  \__\___|_| |_| |_| .__/   \__\___||___/\__|
+                              |_|                       
+////////// ------------ TEMP TEST CONTROLLER ------------ //////////*/   
+var testController = function ( $scope, pwData, siteOptions, pwPostOptions2 ) {
+
+    /*
+    $scope.getTaxOutlineMixed = function() {
+        var args = siteOptions.taxOutlineMixed();
+        pwData.taxonomies_outline_mixed( args ).then(
+            // Success
+            function(response) {    
+                alert(JSON.stringify(response.data));
+            },
+            // Failure
+            function(response) {
+                alert("error");
+            }
+        );
+    };
+    */
+    $scope.promise = "empty";
+    $scope.getTaxOutlineMixed = function() {
+        
+        $scope.promise = pwPostOptions2.taxOutlineMixed();
+
+    };
+
+
+};
+
+/*
+
+postworld.service('pwPostOptions2', ['$log', '$q', 'pwData', 'siteOptions', function ($log, $q, pwData, siteOptions, $scope) {
+    // Do one AJAX call here which returns all the options
+    return{
+        taxOutlineMixed : function(){
+            
+            function get_tax_outline_mixed(){
+                var deferred = $q.defer();
+
+
+                var args = siteOptions.taxOutlineMixed();
+                pwData.taxonomies_outline_mixed( args ).then(
+                    // Success
+                    function(response) {    
+                        //alert(JSON.stringify(response.data));
+                        deferred.resolve( response.data );
+                    },
+                    // Failure
+                    function(response) {
+                        deferred.reject( "error" ); 
+                    }
+                );
+
+
+                return deferred.promise;
+            }
+
+            var promise = get_tax_outline_mixed();
+
+            promise.then(function(result) {
+              alert('Success: ' + JSON.stringify(result));
+              //return result;
+            }, function(reason) {
+              alert('Failed: ' + reason);
+            }, function(update) {
+              alert('Got notification: ' + update);
+            });
+
+
+        },
+    }
+
+}]);
+
+*/
+
+
+
+
+
+
+
 
 
 'use strict';
@@ -2138,6 +2501,8 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
 
 
 
+
+
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -2146,3 +2511,8 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
+
+
+
+
+

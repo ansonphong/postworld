@@ -1,5 +1,57 @@
 <?php
 
+////////// POSTWORLD QUERY TERMS //////////
+function pw_query_terms( $args ){
+  extract($args);
+  global $wpdb;
+
+  $query_term = $search;
+  $tags_query = "
+    SELECT
+      $wpdb->terms.term_id,
+      $wpdb->terms.name,
+      $wpdb->terms.slug
+    FROM
+      $wpdb->terms
+      INNER JOIN
+        $wpdb->term_taxonomy
+      ON
+        $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id
+    WHERE
+      name LIKE '$query_term%' AND taxonomy = '$taxonomy'
+    ";
+
+  return $wpdb->get_results($tags_query,ARRAY_A);
+
+}
+
+
+////////// TAXONOMIES OUTLINE MIXED //////////
+function taxonomies_outline_mixed( $taxonomy_options ){
+	// Wrapper function for taxonomies_outline() Method
+	// Takes mixed options per taxonomy
+	// Returns a single object
+	$tax_outline_mixed = array();
+	// FOR EACH INPUT TAXONOMY
+	foreach ($taxonomy_options as $taxonomy => $options) {
+		$tax_outline = taxonomies_outline( array($taxonomy), $options['max_depth'], $options['fields'], $options['filter'] );
+		$tax_outline_mixed = array_merge( $tax_outline_mixed, $tax_outline );//array_push( $tax_outline_mixed, $tax_outline );
+	}
+	return $tax_outline_mixed;
+}
+
+
+////////// CALLBACK FUNCTION //////////
+	// Get Taxonomy Term Meta
+	function tax_term_meta($input) {
+		$term_id = (int)$input[0];
+		$taxonomy = $input[1];
+		$term_meta['url'] = get_term_link($term_id, $taxonomy);
+		return $term_meta;
+	}
+
+
+////////// TAXONOMIES OUTLINE //////////
 function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filter = false ) {
 
 	// If Taxonomies is not defined or 'all'
@@ -14,14 +66,7 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 	if (!$fields or $fields == 'all')
 		$fields = array('term_id', 'name', 'slug', 'description', 'parent', 'count', 'taxonomy', 'url');
 
-	////////// CALLBACK FUNCTION //////////
-	// Get Taxonomy Term Meta
-	function tax_term_meta($input) {
-		$term_id = (int)$input[0];
-		$taxonomy = $input[1];
-		$term_meta['url'] = get_term_link($term_id, $taxonomy);
-		return $term_meta;
-	}
+	
 
 	// Define Callback to get URL
 	if (in_array('url', $fields)) {
@@ -49,6 +94,10 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 
 		// Setup Terms Array
 		$tax_outline[$taxonomy]['terms'] = array();
+
+		// DEFAULTS
+		if( !isset($callback_fields) ) $callback_fields = "";
+		if( !isset($callback) ) $callback = "";
 
 		// WP TREE_OBJ COMMAND
 		$tax_terms = get_terms($taxonomy, 'hide_empty=0');
@@ -121,8 +170,10 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 
 	return $tax_outline;
 
+
 }
 
+////////// POSTWORLD INSERT TERMS //////////
 function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = FALSE) {
 //print_r($terms_array);
 //echo"<br><br>";
