@@ -426,3 +426,39 @@ postworld.controller('pwLoadPostController',
 		  $scope.pwLoadPost();
     }
 );
+
+postworld.controller('pwTestController',
+    function pwTestController($scope, $location, $log, $attrs, $timeout, pwData) {
+    	// Initialize
+    	   				
+		$scope.pwTestPost = function() {
+
+			var post_data = {
+		       'post_title'    : 'hello content',
+		       'post_content'  :'sdsfdsfds',
+		       'post_status'   : 'publish',
+		       'post_author'   : 1,
+		       'post_category' : [8,39 ],
+		       'post_class':'test',
+		       'post_format' :'ggggggg',
+		       'link_url':'sssssss',
+		       'external_image' : 'fgdfgdfgdf',				
+			};
+            pwData.pw_save_post( post_data ).then(
+                // Success
+                function(response) {    
+                    //alert( "RESPONSE : " + response.data );
+                    $log.info('pwData.pw_save_post : saved post id: ', response.data);                    
+
+                },
+                // Failure
+                function(response) {
+                    //alert('error');
+
+                }
+            );
+			
+		  };
+		  $scope.pwTestPost();
+    }
+);

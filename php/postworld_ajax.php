@@ -8,7 +8,7 @@
 
 
 
-echo json_encode(  );
+// echo json_encode(  );
 
 
 //---------- TAGS AUTOCOMPLETE ----------//

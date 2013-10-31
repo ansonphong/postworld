@@ -99,6 +99,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
         });  
+    $routeProvider.when('/test-post/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwTestWidget.html',             
+        });  
 
 
 
