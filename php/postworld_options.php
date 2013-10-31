@@ -28,7 +28,7 @@ $pw_defaults = array(
 		),
 
 	'rank' => array(
-		'post_types'		=> array('post','blog','feature'),
+		'post_types'		=> array('post'),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		'equations'			=> array(
