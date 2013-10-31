@@ -1,6 +1,32 @@
 <?php
 
+////////// POSTWORLD QUERY TERMS //////////
+function pw_query_terms( $args ){
+  extract($args);
+  global $wpdb;
 
+  $query_term = $search;
+  $tags_query = "
+    SELECT
+      $wpdb->terms.term_id,
+      $wpdb->terms.name,
+      $wpdb->terms.slug
+    FROM
+      $wpdb->terms
+      INNER JOIN
+        $wpdb->term_taxonomy
+      ON
+        $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id
+    WHERE
+      name LIKE '$query_term%' AND taxonomy = '$taxonomy'
+    ";
+
+  return $wpdb->get_results($tags_query,ARRAY_A);
+
+}
+
+
+////////// TAXONOMIES OUTLINE MIXED //////////
 function taxonomies_outline_mixed( $taxonomy_options ){
 	// Wrapper function for taxonomies_outline() Method
 	// Takes mixed options per taxonomy
@@ -147,6 +173,7 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 
 }
 
+////////// POSTWORLD INSERT TERMS //////////
 function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = FALSE) {
 
 

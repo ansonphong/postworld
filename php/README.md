@@ -2254,6 +2254,20 @@ Contains functions for working with Taxonomies.
 
 ------
 
+### pw_query_terms( *$args* )
+- Queries for and returns selected post terms
+
+##### Parameters : $args
+
+__search__ : *string* (required)
+- The search term to match
+
+__taxonomy__ : *string* (required)
+- The slug of the taxonomy to search for terms in
+
+
+------
+
 ### taxonomies_outline ( *[$taxonomies], [$max_depth], [$fields]* )
 
 #### Description

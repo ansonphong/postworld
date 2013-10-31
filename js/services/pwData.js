@@ -247,6 +247,11 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('user_query_autocomplete',params);
 		},
+		tags_autocomplete: function(args) {
+			$log.info('pwData.tags_autocomplete',args);
+			var params = {args:args};
+			return this.wp_ajax('tags_autocomplete',params);
+		},
 
    }; // END OF pwData return value
 });

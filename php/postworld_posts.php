@@ -618,10 +618,9 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 		// Adds support for an `author_name` parameter
 		if( isset($postarr["post_author_name"]) ){
 			$user = get_user_by( 'slug', $postarr["post_author_name"] );
-			if( is_int($user->data->ID) ){
+			if( isset($user->data->ID) && current_user_can('edit_others_posts') ){
 				wp_update_post( array( "ID" => $post_ID, "post_author" => $user->data->ID ) );
 			}
-
 		}
 		
 		

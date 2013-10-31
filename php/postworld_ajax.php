@@ -6,6 +6,31 @@
 */
 
 
+
+
+echo json_encode(  );
+
+
+//---------- TAGS AUTOCOMPLETE ----------//
+function tags_autocomplete_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$tag_query_results = pw_query_terms( $args['args'] );
+	
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $tag_query_results;
+	echo json_encode( $response );
+	die;
+
+}
+
+add_action("wp_ajax_nopriv_tags_autocomplete", "tags_autocomplete_anon");
+add_action("wp_ajax_tags_autocomplete", "tags_autocomplete_anon");
+
+
+
+
 //---------- USER QUERY AUTOCOMPLETE ----------//
 function user_query_autocomplete_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
@@ -15,10 +40,8 @@ function user_query_autocomplete_anon(){
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
-	$response['data'] = $user_query; //$pw_args;//$pw_save_post;
+	$response['data'] = $user_query;
 	echo json_encode( $response );
-	//echo json_encode("roger that.");
-	// die ( $oEmbed );
 	die;
 }
 add_action("wp_ajax_nopriv_user_query_autocomplete", "user_query_autocomplete_anon");
@@ -32,14 +55,12 @@ function taxonomies_outline_mixed_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$pw_args = $args['args'];
 
-	$taxonomies_outline_mixed = taxonomies_outline_mixed( $pw_args ); //wp_insert_post($pw_args);//
+	$taxonomies_outline_mixed = taxonomies_outline_mixed( $pw_args );
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
-	$response['data'] = $taxonomies_outline_mixed; //$pw_args;//$pw_save_post;
+	$response['data'] = $taxonomies_outline_mixed;
 	echo json_encode( $response );
-	//echo json_encode("roger that.");
-	// die ( $oEmbed );
 	die;
 }
 add_action("wp_ajax_nopriv_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
@@ -56,10 +77,8 @@ function pw_save_post_admin(){
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
-	$response['data'] = $pw_save_post; //$pw_args;//$pw_save_post;
+	$response['data'] = $pw_save_post;
 	echo json_encode( $response );
-	//echo json_encode("roger that.");
-	// die ( $oEmbed );
 	die;
 }
 //add_action("wp_ajax_nopriv_pw_save_post_admin", "pw_save_post_admin");
