@@ -380,20 +380,6 @@ postworld.controller('pwLoadPostController',
 		$scope.args = {};
 		$scope.args.post_id = $scope.postArgs.post_id;    	     	    	    	  	
 		$scope.args.fields = $scope.postArgs.fields;    	     	    	    	  	
-    	// Set Default Feed Template and Default Feed Item Template
-		pwData.templates.promise.then(function(value) {
-			   if ($scope.postArgs.view) {
-			   		var template = $scope.postArgs.view;
-			   		var post_type = 'post';
-			   		if ($scope.postArgs.type) post_type = $scope.postArgs.type;			   		
-			    	$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
-					$log.info('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
-			   }
-			   else {
-		   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
-			   }
-		   		return;
-		});
     	   				
 		$scope.pwLoadPost = function() {
 			
@@ -408,6 +394,21 @@ postworld.controller('pwLoadPostController',
 					if (response.status==200) {
 						$log.info('pwPostLoadController.pw_load_post Success',response.data);						
 						$scope.post = response.data;
+						// Set Template URL
+				    	// Set Default Feed Template and Default Feed Item Template
+						pwData.templates.promise.then(function(value) {
+							   if ($scope.post) {
+							   		var template = $scope.postArgs.view;
+							   		var post_type = 'post';
+							   		if ($scope.postArgs.type) $scope.post.post_type;			   		
+							    	$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
+									$log.info('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
+							   }
+							   else {
+						   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
+							   }
+						   		return;
+						});
 						return response.data;						
 					} else {
 						// handle error
