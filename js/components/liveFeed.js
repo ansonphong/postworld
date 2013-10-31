@@ -384,8 +384,10 @@ postworld.controller('pwLoadPostController',
 		pwData.templates.promise.then(function(value) {
 			   if ($scope.postArgs.view) {
 			   		var template = $scope.postArgs.view;
-			    	$scope.templateUrl = pwData.pw_get_template('posts','post',template);
-					$log.info('pwLoadPostController Set Post Template to ',$scope.templateUrl);
+			   		var post_type = 'post';
+			   		if ($scope.postArgs.type) post_type = $scope.postArgs.type;			   		
+			    	$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
+					$log.info('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
 			   }
 			   else {
 		   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
@@ -405,7 +407,6 @@ postworld.controller('pwLoadPostController',
 					}
 					if (response.status==200) {
 						$log.info('pwPostLoadController.pw_load_post Success',response.data);						
-						console.log('post data',response.data);
 						$scope.post = response.data;
 						return response.data;						
 					} else {

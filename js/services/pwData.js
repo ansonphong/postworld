@@ -31,18 +31,15 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 	var	getTemplate = function(pwData,grp,type,name) {
 			var template;
 			// TODO can we make this lookup dynamic?
+			$log.info('template here',grp,type,name);
 			switch (grp) {
 				case 'posts':
-					switch (type) {
-						case 'post':
-							template = pwData.templatesFinal.posts[type][name];
-							$log.info('post template:',template);
-							// template = jsVars.pluginurl+'/postworld/templates/posts/'+type+'-'+name+'.html';
-							break;
-						default:
-							template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';
-							break;
+					if (type) {
+						template = pwData.templatesFinal.posts[type][name];						
+					} else {
+						template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';						
 					}
+					// $log.info('post template:',pwData.templatesFinal.posts);
 					break;
 				case 'panels':
 					template = pwData.templatesFinal.panels[name];
