@@ -987,23 +987,16 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
     // TAXONOMY TERMS
-    //$scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
-
-    // TAXONOMY TERMS
     // Gets live set of terms from the DB
     // as $scope.tax_terms
     $pwPostOptions.getTaxTerms($scope);
-
-    // USERNAME FIELD
-    //$scope.usernameField = 
-    
-    //$scope.feedQuery.author_name = "empty";
 
     /*
     $scope.$on('updateUsername', function(username) { 
         $scope.feedQuery.author_name = username;
     });
     */
+    
 }]);
 
 
