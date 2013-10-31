@@ -384,8 +384,10 @@ postworld.controller('pwLoadPostController',
 		pwData.templates.promise.then(function(value) {
 			   if ($scope.postArgs.view) {
 			   		var template = $scope.postArgs.view;
-			    	$scope.templateUrl = pwData.pw_get_template('posts','post',template);
-					$log.info('pwLoadPostController Set Post Template to ',$scope.templateUrl);
+			   		var post_type = 'post';
+			   		if ($scope.postArgs.type) post_type = $scope.postArgs.type;			   		
+			    	$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
+					$log.info('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
 			   }
 			   else {
 		   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
@@ -405,7 +407,6 @@ postworld.controller('pwLoadPostController',
 					}
 					if (response.status==200) {
 						$log.info('pwPostLoadController.pw_load_post Success',response.data);						
-						console.log('post data',response.data);
 						$scope.post = response.data;
 						return response.data;						
 					} else {
@@ -424,5 +425,41 @@ postworld.controller('pwLoadPostController',
 			);
 		  };
 		  $scope.pwLoadPost();
+    }
+);
+
+postworld.controller('pwTestController',
+    function pwTestController($scope, $location, $log, $attrs, $timeout, pwData) {
+    	// Initialize
+    	   				
+		$scope.pwTestPost = function() {
+
+			var post_data = {
+		       'post_title'    : 'hello content',
+		       'post_content'  :'sdsfdsfds',
+		       'post_status'   : 'publish',
+		       'post_author'   : 1,
+		       'post_category' : [8,39 ],
+		       'post_class':'test',
+		       'post_format' :'ggggggg',
+		       'link_url':'sssssss',
+		       'external_image' : 'fgdfgdfgdf',				
+			};
+            pwData.pw_save_post( post_data ).then(
+                // Success
+                function(response) {    
+                    //alert( "RESPONSE : " + response.data );
+                    $log.info('pwData.pw_save_post : saved post id: ', response.data);                    
+
+                },
+                // Failure
+                function(response) {
+                    //alert('error');
+
+                }
+            );
+			
+		  };
+		  $scope.pwTestPost();
     }
 );

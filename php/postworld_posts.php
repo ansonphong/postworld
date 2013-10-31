@@ -588,7 +588,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			global $wpdb;
 			$wpdb -> show_errors();
 			
-			//add_record_to_post_meta($post_ID);
+			add_record_to_post_meta($post_ID);
 				$query = "update $wpdb->pw_prefix"."post_meta set ";
 				 $insertComma = FALSE;
 				if(isset($postarr["post_class"])){

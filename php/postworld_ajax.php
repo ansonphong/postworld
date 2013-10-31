@@ -5,8 +5,6 @@
   
 */
 
-
-
 //---------- TAGS AUTOCOMPLETE ----------//
 function tags_autocomplete_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();

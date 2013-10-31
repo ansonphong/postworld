@@ -175,14 +175,20 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 
 ////////// POSTWORLD INSERT TERMS //////////
 function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = FALSE) {
-
+//print_r($terms_array);
+//echo"<br><br>";
 
 	if($input_format=="JSON"){
-		$terms_array = get_object_vars(json_decode($terms_array));
-		print_r($terms_array);
+		
+		$terms_array_decoded = json_decode($terms_array,TRUE);
+	
+		$terms_array = $terms_array_decoded;
+		
 	}
 
+//print_r($terms_array);
 	$taxonomy_term_names = array_keys($terms_array);
+	//print_r($taxonomy_term_names);
 	$number_of_taxonomy_terms = count($taxonomy_term_names);
 
 	for ($i = 0; $i < $number_of_taxonomy_terms; $i++) {
@@ -191,7 +197,7 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 		for ($j = 0; $j < count($current_object); $j++) {
 			//print_r($current_object);
 			if($input_format=="JSON")
-			$current_object[$j] = get_object_vars($current_object[$j]);
+			//$current_object[$j] = get_object_vars($current_object[$j]);
 			if (isset($current_object[$j]['slug'])) {
 				//print_r($taxonomy_term_names[$i]);
 
