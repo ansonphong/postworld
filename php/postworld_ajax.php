@@ -16,7 +16,7 @@ function tags_autocomplete_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
 
 	$tag_query_results = pw_query_terms( $args['args'] );
-	
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $tag_query_results;
@@ -118,6 +118,7 @@ function pw_get_post_edit_admin() {
 		"post_name",
 		"post_permalink",
 		"taxonomy(all)",
+		"taxonomy_obj(post_tag)",
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		);
 

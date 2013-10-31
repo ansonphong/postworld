@@ -1092,6 +1092,16 @@ function tagsAutocomplete($scope, $filter, pwData) {
          });
     }
 
+    $scope.newTag = function(){
+        var newTag = {
+            name: $scope.queryTag,
+            slug: $scope.queryTag,
+            };
+
+        $scope.tags_input_obj.push(newTag);
+        $scope.queryTag = "";
+    }
+
     // Watch on the object with input tags
     $scope.$watch( "tags_input_obj",
         function (){
@@ -1105,14 +1115,10 @@ function tagsAutocomplete($scope, $filter, pwData) {
             $scope.$emit('updateTagsInput', $scope.tags_input);
         }, 1 );
     
-    // Catch broadcast of username change
-    //$scope.$on('updateUsername', function(event, data) { $scope.username = data; });
+    // Catch broadcast of load in tags
+    $scope.$on('postTagsObject', function(event, data) { $scope.tags_input_obj = data; });
 
 }
-
-
-
-
 
 
 
@@ -1147,7 +1153,8 @@ postworld.controller('editPost',
         tax_input : {
             topic : [],
             section : [],
-            type : []
+            type : [],
+            post_tag : [],
         },
         tags_input : "",
     };
@@ -1202,6 +1209,7 @@ postworld.controller('editPost',
                 var get_post_data = response.data;
 
                 // BREAK OUT THE TAGS INTO TAGS_INPUT
+                /*
                 if ( typeof get_post_data.taxonomy.post_tag !== 'undefined'  ){
                     get_post_data['tags_input'] = "";
                     angular.forEach( get_post_data.taxonomy.post_tag, function( tag ){
@@ -1209,21 +1217,34 @@ postworld.controller('editPost',
                     });
                     delete get_post_data.taxonomy.post_tag;
                 }
-                
+                */
+
+                ///// LOAD TAXONOMIES /////
+
                 // RENAME THE KEY : TAXONOMY > TAX_INPUT
                 var tax_input = {};
                 var tax_obj = get_post_data['taxonomy'];
+                // BOIL DOWN SELECTED TERMS
                 angular.forEach( tax_obj, function( terms, taxonomy ){
                     tax_input[taxonomy] = [];
                     angular.forEach( terms, function( term ){
                         tax_input[taxonomy].push(term.slug);
                     });
+
+                    // BROADCAST TAX OBJECT TO AUTOCOMPLETE CONTROLLER
+                    if( taxonomy == "post_tag")
+                        $scope.$broadcast('postTagsObject', terms);
+
                 });
                 delete get_post_data['taxonomy'];
                 get_post_data['tax_input'] = tax_input; 
 
+                ///// LOAD POST CONTENT /////
+                
                 // SET THE POST CONTENT
                 tinyMCE.get('post_content').setContent( get_post_data.post_content );
+
+                ///// LOAD AUTHOR /////
 
                 // EXTRACT AUTHOR NAME
                 get_post_data['post_author_name'] = get_post_data['author']['user_nicename'];
@@ -1372,6 +1393,15 @@ postworld.controller('editPost',
     $scope.$on('updateUsername', function( event, data ) { 
         $scope.post_data.post_author_name = data;
     });
+
+
+    // UPDATE POST TAGS FROM AUTOCOMPLETE MODULE
+    // Interacts with tagsAutocomplete() controller
+    // Catches the recent value of the tags_input and inject into tax_input
+    $scope.$on('updateTagsInput', function( event, data ) { 
+        $scope.post_data.tax_input.post_tag = data;
+    });
+
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects
