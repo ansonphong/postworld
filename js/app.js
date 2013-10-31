@@ -379,6 +379,7 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
                 // Success
                 function(response) {    
                     $scope.tax_terms = response.data;
+                    //alert(JSON.stringify(response.data));
                 },
                 // Failure
                 function(response) {
@@ -984,8 +985,14 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+
     // TAXONOMY TERMS
-    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+    //$scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+
+    // TAXONOMY TERMS
+    // Gets live set of terms from the DB
+    // as $scope.tax_terms
+    $pwPostOptions.getTaxTerms($scope);
 
     // USERNAME FIELD
     //$scope.usernameField = 
@@ -1383,6 +1390,7 @@ postworld.controller('editPost',
     // Gets live set of terms from the DB
     // as $scope.tax_terms
     $pwPostOptions.getTaxTerms($scope);
+
 
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
