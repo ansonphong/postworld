@@ -553,6 +553,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 
 function pw_insert_post ( $postarr, $wp_error = TRUE ){
+	
 	/*
 	  
 	 * Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post
@@ -568,7 +569,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	return :
 	post_id - If added to the database, otherwise return WP_Error Object
 	 
-	 * */
+	* */
 	
 	$post_ID = wp_insert_post($postarr,$wp_error);
 	
@@ -581,12 +582,15 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			}
 		}
 	
+		
+		
 		//print_r($postarr);
 		// ADD POSTWORLD FIELDS
 		if(isset($postarr["post_class"]) || isset($postarr["post_format"])|| isset($postarr["link_url"]))	{
 			global $wpdb;
 			$wpdb -> show_errors();
-			add_record_to_post_meta($post_ID);
+			
+			//add_record_to_post_meta($post_ID);
 				$query = "update $wpdb->pw_prefix"."post_meta set ";
 				 $insertComma = FALSE;
 				if(isset($postarr["post_class"])){
@@ -611,6 +615,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 					
 				}
 		}
+		
+		
 	}
 	
 

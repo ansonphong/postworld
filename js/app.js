@@ -369,9 +369,23 @@ postworld.service('ext', ['$log', function ($log) {
   |_|                                 |_|                          
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
-postworld.service('pwPostOptions', ['$log', function ($log) {
+postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
+                            function ($log, $siteOptions, $pwData) {
     // Do one AJAX call here which returns all the options
     return{
+        getTaxTerms: function($scope){
+            var args = $siteOptions.taxOutlineMixed();
+            $pwData.taxonomies_outline_mixed( args ).then(
+                // Success
+                function(response) {    
+                    $scope.tax_terms = response.data;
+                },
+                // Failure
+                function(response) {
+                    alert('Error loading terms.');
+                }
+            );
+        },
         pwGetPostTypeOptions: function(){
         return {
             feature : "Features",
@@ -973,7 +987,57 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // TAXONOMY TERMS
     $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
 
+    // USERNAME FIELD
+    //$scope.usernameField = 
+    
+    //$scope.feedQuery.author_name = "empty";
+
+    /*
+    $scope.$on('updateUsername', function(username) { 
+        $scope.feedQuery.author_name = username;
+    });
+    */
 }]);
+
+
+/*
+  _   _                    _         _                                  _      _       
+ | | | |___  ___ _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
+ | | | / __|/ _ \ '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
+ | |_| \__ \  __/ |     / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
+  \___/|___/\___|_|    /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
+                                                                 |_|                   
+////////// ------------ Embedly SERVICE ------------ //////////*/
+function userAutocomplete($scope, pwData) {
+    $scope.username = undefined;
+    $scope.queryList = function () {
+        var searchTerm = $scope.username + "*";            
+        var query_args = {
+            number:20,
+            fields:['user_nicename', 'display_name'],
+            search: searchTerm,
+        };
+        pwData.user_query_autocomplete( query_args ).then(
+            // Success
+            function(response) {
+                //console.log(response);    
+                $scope.authors = response.data.results;
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+    };
+
+    // Watch on the value of username
+    $scope.$watch( "username",
+        function (){
+            // When it changes, emit it's value to the parent controller
+            $scope.$emit('updateUsername', $scope.username);
+        }, 1 );
+    
+}
 
 
 /*
@@ -998,7 +1062,7 @@ postworld.controller('editPost',
         post_title : "",
         post_name : "",
         post_type : "blog",
-        post_status : "publish",
+        post_status : "draft",
         post_format : "standard",
         post_class : "contributor",
         link_url : "",
@@ -1120,7 +1184,6 @@ postworld.controller('editPost',
 
             $scope.status = "saving";
             $pwData.pw_save_post( post_data ).then(
-            //pwData.pw_save_post( post_data ).then(
                 // Success
                 function(response) {    
                     //alert( "RESPONSE : " + response.data );
@@ -1144,7 +1207,7 @@ postworld.controller('editPost',
                             $scope.load_post_data();
                     }
                     else{
-                        alert("Post not saved : " + JSON.stringify(response.data) );
+                        alert("Error : " + JSON.stringify(response) );
                         $scope.status = "done";
                     }
                     
@@ -1210,27 +1273,11 @@ postworld.controller('editPost',
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
+
     // TAXONOMY TERMS
-    // Gets dummy terms form testing models : $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
-    // Gets live set of terms from the DB :
-    $scope.getTaxTerms = function(){
-        var args = $siteOptions.taxOutlineMixed();
-        $pwData.taxonomies_outline_mixed( args ).then(
-            // Success
-            function(response) {    
-                //alert(JSON.stringify(response.data));
-                $scope.tax_terms = response.data;
-                //return response.data;
-            },
-            // Failure
-            function(response) {
-                alert('Error loading terms.');
-            }
-        );
-    }
-    $scope.getTaxTerms();
-
-
+    // Gets live set of terms from the DB
+    // as $scope.tax_terms
+    $pwPostOptions.getTaxTerms($scope);
 
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
@@ -2171,7 +2218,7 @@ var testController = function ( $scope, pwData, siteOptions, pwPostOptions2 ) {
 
 };
 
-
+/*
 
 postworld.service('pwPostOptions2', ['$log', '$q', 'pwData', 'siteOptions', function ($log, $q, pwData, siteOptions, $scope) {
     // Do one AJAX call here which returns all the options
@@ -2216,7 +2263,7 @@ postworld.service('pwPostOptions2', ['$log', '$q', 'pwData', 'siteOptions', func
 
 }]);
 
-
+*/
 
 
 
@@ -2326,6 +2373,8 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
 
 
 
+
+
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -2334,3 +2383,8 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
+
+
+
+
+

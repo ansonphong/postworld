@@ -6,6 +6,26 @@
 */
 
 
+//---------- USER QUERY AUTOCOMPLETE ----------//
+function user_query_autocomplete_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$pw_args = $args['args'];
+
+	$user_query = new WP_User_Query( $pw_args );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $user_query; //$pw_args;//$pw_save_post;
+	echo json_encode( $response );
+	//echo json_encode("roger that.");
+	// die ( $oEmbed );
+	die;
+}
+add_action("wp_ajax_nopriv_user_query_autocomplete", "user_query_autocomplete_anon");
+add_action("wp_ajax_user_query_autocomplete", "user_query_autocomplete_anon");
+
+
+
 
 //---------- TAXONOMIES OUTLINE MIXED ----------//
 function taxonomies_outline_mixed_anon(){
@@ -32,7 +52,7 @@ add_action("wp_ajax_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
 function pw_save_post_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$pw_args = $args['args'];
-	$pw_save_post = pw_save_post( $pw_args ); //wp_insert_post($pw_args);//
+	$pw_save_post = pw_insert_post($pw_args);//
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
@@ -69,6 +89,7 @@ function pw_get_post_edit_admin() {
 		"ID",
 		"post_type",
 		"post_id",
+		"post_status",
 		"post_title",
 		"post_excerpt",
 		"post_content",
