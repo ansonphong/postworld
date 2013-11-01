@@ -110,8 +110,8 @@ postworld.controller('pwFeedController',
 				// Get Feed Item Template from Feed Settings by default
 			   if (pwData.feed_settings[$scope.feed].view.current)
 			   		view = pwData.feed_settings[$scope.feed].view.current;
-		    	$scope.feed_item_template = pwData.pw_get_template('posts','post',view);
-				$log.info('pwFeedController Set Initial Feed Item Template to ',view, $scope.feed_item_template);
+		    	$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view);
+				$log.info('pwFeedController Set Initial Feed Item View Type', $scope.feed_item_view_type);
 				
 			   // Get Feed Template from feed_settings if it exists, otherwise get it from default path
 			   if (pwData.feed_settings[$scope.feed].feed_template) {
@@ -132,9 +132,9 @@ postworld.controller('pwFeedController',
     	
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
 		   $log.info('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
-	    	$scope.feed_item_template = pwData.pw_get_template('posts','post',view); 
+	    	$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view); 
 		   // Broadcast to all children
-			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_template);
+			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
 		   });
 		
 		$scope.resetFeedData = function () {

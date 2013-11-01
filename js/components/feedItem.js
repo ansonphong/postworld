@@ -16,20 +16,30 @@ postworld.directive('feedItem', function() {
 
 postworld.controller('pwFeedItemController',
     function pwFeedItemController($scope, $location, $log, pwData, $attrs) {
-    	$scope.templateUrl = $scope.$parent.feed_item_template;
-    	$log.info('pwFeedItemController New Template=',$scope.templateUrl);    	
+    	
+		pwData.templates.promise.then(function(value) {
+			var type = 'post';
+			if ($scope.post.post_type) type = $scope.post.post_type;
+			$scope.templateUrl = pwData.pw_get_template('posts',type,$scope.$parent.feed_item_view_type);
+	    	// $log.info('pwFeedItemController New Template=',$scope.templateUrl);    	
+		});    	    	
 		
         // Decodes Special characters in URIs
         $scope.decodeURI = function(URI) {
             URI = URI.replace("&amp;","&");
             return decodeURIComponent( URI );
-         }
+        };
 
         // TODO set templateURL?		  
 		// Template Update Event
-		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feedTemplateUrl){
+		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feed_item_view_type){
+			pwData.templates.promise.then(function(value) {
+				var type = $scope.post.post_type;
+				$scope.templateUrl = pwData.pw_get_template('posts',type,feed_item_view_type);
+			});
 		   // $log.info('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
-		   $scope.templateUrl = feedTemplateUrl;
+		   // $scope.templateUrl = feed_item_view_type;
+		   
 		   });		  		      	
     }
 );
