@@ -779,11 +779,18 @@
 		//	echo $row -> total_posts . ",";
 		//	echo($row -> total_points / $row -> total_posts);
 	
-			$output = new get_user_votes_report_Output();
-			$output -> total_posts = $row -> total_posts;
-			$output -> total_points = $row -> total_points;
-			$output -> average_points = ($row -> total_points / $row -> total_posts);
+			$output = array();
+			$output["total_posts"] = $row -> total_posts;
+			if ( $row -> total_points != 0 )
+				$output["total_points"] = $row -> total_points;
+			else
+				$output["total_points"] = 0;
+			if ( $row -> total_posts != 0 )
+				$output["average_points"] = ($row -> total_points / $row -> total_posts);
+			else
+				$output["average_points"] = 0;
 			return $output;
+			
 		}
 	
 	}
