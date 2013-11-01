@@ -403,7 +403,7 @@ postworld.controller('pwLoadPostController',
 							   if ($scope.post) {
 							   		var template = $scope.postArgs.view;
 							   		var post_type = 'post';
-							   		if ($scope.postArgs.type) $scope.post.post_type;			   		
+							   		if ($scope.post.post_type) post_type = $scope.post.post_type;			   		
 							    	$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
 									$log.info('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
 							   }
