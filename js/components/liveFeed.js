@@ -142,6 +142,12 @@ postworld.controller('pwFeedController',
 			pwData.feed_data[$scope.feed] = {};
 			if (pwData.feed_settings[$scope.feed].feed_outline) {
 				pwData.feed_data[$scope.feed].feed_outline = pwData.feed_settings[$scope.feed].feed_outline;
+				// truncate based on max_posts
+				var max = pwData.feed_settings[$scope.feed].max_posts;
+				if (max <pwData.feed_settings[$scope.feed].feed_outline.length) {					
+					pwData.feed_data[$scope.feed].feed_outline = pwData.feed_data[$scope.feed].feed_outline.splice(0,max);
+				}
+					 
 				pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_settings[$scope.feed].feed_outline.length;														
 			};						
 			pwData.feed_data[$scope.feed].loaded = 0;						
@@ -155,11 +161,17 @@ postworld.controller('pwFeedController',
 			pwData.feed_data[$scope.feed] = {};
 			// Insert Response in Feed Data
 			pwData.feed_data[$scope.feed].feed_outline = response.data.feed_outline;						
+			// truncate based on max_posts
+			var max = pwData.feed_settings[$scope.feed].max_posts;
+			if (max <=response.data.feed_outline.length) {					
+				pwData.feed_data[$scope.feed].feed_outline = pwData.feed_data[$scope.feed].feed_outline.splice(0,max);
+			}
 			pwData.feed_data[$scope.feed].posts = response.data.post_data;						
 			pwData.feed_data[$scope.feed].loaded = response.data.post_data.length;						
 			// Count Length of loaded and feed_outline
 			pwData.feed_data[$scope.feed].count_loaded = response.data.post_data.length;						
-			pwData.feed_data[$scope.feed].count_feed_outline = response.data.feed_outline.length;
+			pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_data[$scope.feed].feed_outline.length;
+			console.log('check',pwData.feed_data[$scope.feed]);
 			// Set Feed load Status
 			if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
 				pwData.feed_data[$scope.feed].status = 'all_loaded';													
