@@ -91,6 +91,7 @@ postworld.controller('pwFeedController',
     		$scope.feed		= $attrs.loadFeed;
 	    	$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
     	};    	
+    	// Set feed ID here
     	    	    	  	
     	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
@@ -256,6 +257,8 @@ postworld.controller('pwFeedController',
 			pwData.setNonce(78);
 			var args = {};
 			args.feed_id = $scope.feed;
+			// if id is defined in feed_id of the settings array, then use it
+			if (pwData.feed_settings[$scope.feed].feed_id) args.feed_id = pwData.feed_settings[$scope.feed].feed_id; 
 			args.preload = pwData.feed_settings[$scope.feed].preload;
 			// If that feed already has an outline, then do not load feed, just go get new posts(scroll) and ignore
 			if (pwData.feed_settings[$scope.feed].feed_outline) {
