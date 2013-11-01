@@ -99,7 +99,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		);
 	
 	$viewer_fields =array(
-		'viewer(has_voted,vote_power)'
+		'viewer(has_voted,vote_power,is_favorite,is_view_later)'
 		);
 
 	// Add Preview Fields
@@ -204,7 +204,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			$post_data['post_points'] = get_post_points( $post_id );
 		}
 
-
 	////////// VIEWER FIELDS //////////
 
 		// Extract viewer() fields
@@ -220,17 +219,21 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			if( in_array('vote_power', $viewer_fields) )
 				$post_data['viewer']['vote_power'] = get_user_vote_power( $viewer_user_data->ID );
 		
+			// Is Favorite
+			if( in_array('is_favorite', $viewer_fields) )
+				$post_data['viewer']['is_favorite'] = is_favorite( $post_id );
+
+			// Is Favorite
+			if( in_array('is_view_later', $viewer_fields) )
+				$post_data['viewer']['is_view_later'] = is_view_later( $post_id );
+
 		}
-
-
 
 	////////// DATE & TIME //////////
 
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
 			$post_data['time_ago'] = time_ago( strtotime ( $post_data['post_date_gmt'] ) );
-
-
 
 
 	////////// AVATAR IMAGES //////////

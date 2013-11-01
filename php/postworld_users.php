@@ -247,7 +247,7 @@ function add_favorite($post_id, $user_id) {
 	//echo $query;
 	$results=$wpdb->get_results($query);
 	//echo "huhulh";
-	print_r($results);
+	//print_r($results);
 	if(is_null($results) || count($results)===0){
 		$query = "insert into " . $wpdb -> pw_prefix . 'favorites' . " values (" . $user_id . "," . $post_id . ",null)";
 		$wpdb -> query($query);
@@ -297,7 +297,7 @@ function set_favorite($switch=TRUE, $post_id = null, $user_id = null) {
 		$user_id = get_current_user_id();
 	}
 
-	return set_post_relationship('favorites', $post_id, $user_id, $switch);
+	return set_post_relationship('favorites', $switch, $post_id, $user_id);
 
 }
 
@@ -325,13 +325,13 @@ function is_favorite($post_id = null, $user_id = null) {
 	if (is_null($post_id)) {
 		global $post;
 		$post_id = $post -> ID;
-
 	}
 
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
-	get_post_relationship('favorites', $post_id, $user_id);
+
+	return get_post_relationship('favorites', $post_id, $user_id);
 
 }
 
@@ -351,7 +351,7 @@ function is_viewed($post_id = null, $user_id = null) {
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
-	get_post_relationship('viewed', $post_id, $user_id);
+	return get_post_relationship('viewed', $post_id, $user_id);
 
 }
 
@@ -365,13 +365,13 @@ function is_view_later($post_id = null, $user_id = null) {
 	if (is_null($post_id)) {
 		global $post;
 		$post_id = $post -> ID;
-
 	}
 
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
-	get_post_relationship('view_later', $post_id, $user_id);
+
+	return get_post_relationship('view_later', $post_id, $user_id);
 
 }
 
@@ -379,7 +379,7 @@ function set_viewed($switch=TRUE, $post_id = null, $user_id = null) {
 	/*
 	 Use set_post_relationship() to set the post relationship for viewed
 	 $switch is a boolean
-	 set_post_relationship( 'viewed', $post_id, $user_id, $switch )
+	 set_post_relationship( 'viewed', $switch, $post_id, $user_id )
 	 return : boolean
 	 */
 
@@ -393,7 +393,7 @@ function set_viewed($switch=TRUE, $post_id = null, $user_id = null) {
 		$user_id = get_current_user_id();
 	}
 
-	return set_post_relationship('viewed', $post_id, $user_id, $switch);
+	return set_post_relationship('viewed', $switch, $post_id, $user_id);
 
 }
 
@@ -401,7 +401,7 @@ function set_view_later($switch=TRUE, $post_id = null, $user_id = null) {
 
 	/*Use set_post_relationship() to set the post relationship for view_later
 	 $switch is a boolean
-	 set_post_relationship( 'view_later', $post_id, $user_id, $switch )
+	 set_post_relationship( 'view_later', $switch, $post_id, $user_id )
 	 return : boolean
 	 */
 	 
@@ -415,7 +415,7 @@ function set_view_later($switch=TRUE, $post_id = null, $user_id = null) {
 		$user_id = get_current_user_id();
 	}
 	 
-	return set_post_relationship('view_later', $post_id, $user_id, $switch);
+	return set_post_relationship('view_later', $switch, $post_id, $user_id );
 
 }
 
@@ -544,11 +544,11 @@ function get_user_role($user_id, $return_array = FALSE) {
 function has_shared($user_id, $post_id) {
 }
 
-function set_post_relationship($relationship, $post_id, $user_id, $switch) {
+function set_post_relationship( $relationship, $switch, $post_id = null, $user_id = null ) {
+
 	/*Used to set a given user's relationship to a given post
 	 Parameters
 	 ------------
-
 	 * $relationship : string
 	 The type of relationship to set
 	 Options :
@@ -573,7 +573,7 @@ function set_post_relationship($relationship, $post_id, $user_id, $switch) {
 	 Usage
 
 	 *
-	 set_post_relationship( 'favorites', '24', '101', true )
+	 set_post_relationship( 'favorites', true, '24', '101' )
 	 Anatomy
 
 	 JSON in post_relationships column in User Meta table
@@ -586,8 +586,20 @@ function set_post_relationship($relationship, $post_id, $user_id, $switch) {
 
 	 true - If successful set on
 	 false - If successful set off
-	 error - If error*/
-//echo ($post_id);
+	 error - If error */
+	//echo ($post_id);
+
+
+	if (is_null($post_id)) {
+		global $post;
+		$post_id = $post -> ID;
+
+	}
+
+	if (is_null($user_id)) {
+		$user_id = get_current_user_id();
+	}
+
 	$relashionship_db = get_relationship_from_user_meta($user_id);
 	$relashionship_db_array = (array)json_decode($relashionship_db);
 	
@@ -687,12 +699,12 @@ function add_record_to_user_meta($user_id) {
 		 `post_points_meta`,
 		 `share_points`) values($user_id,'$user_role',null,null,null,null,null,0,0,0,0,null,0)";
 		 */
-		 print_r($query);
+		 //print_r($query);
 		$wpdb -> query($query);
 	}
 }
 
-function get_post_relationship($relationship, $post_id, $user_id) {
+function get_post_relationship( $relationship, $post_id, $user_id) {
 
 	/*
 	 Used to get a given user's relationship to a given post
@@ -721,12 +733,12 @@ function get_post_relationship($relationship, $post_id, $user_id) {
 	$relationship_array = get_relationship_from_user_meta($user_id);
 	//print_r($relationship_array);
 	if (!is_null($relationship_array)) {
-
 		/*array(
 		 'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
 		 'favorites' => [12,16,25],
 		 'view_later' => [58,78]
 		 )*/
+
 		$relationship_array = (array) json_decode($relationship_array);
 		// print_r($relationship_array);
 		if ($relationship != 'all') {
@@ -751,7 +763,7 @@ function get_post_relationship($relationship, $post_id, $user_id) {
 		if ($relationship != 'all')
 			return FALSE;
 		else
-			return array();
+			return FALSE;
 	}
 
 }

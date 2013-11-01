@@ -968,7 +968,7 @@ __USER / POST RELATIONSHIPS__
 
 ------
 
-### set_post_relationship( *$relationship, $post_id, $user_id, $switch* )
+### set_post_relationship( *$relationship, $switch, $post_id, $user_id* )
 - Used to set a given user's relationship to a given post 
 
 ### Parameters
@@ -995,7 +995,7 @@ __$switch__ : *boolean*
 
 #### Usage
 ``` php
-	set_post_relationship( 'favorites', '24', '101', true )
+	set_post_relationship( 'favorites', true, '24', '101' )
 ```
 
 #### Anatomy
@@ -1109,7 +1109,7 @@ __$user_id__ : *integer* (optional)
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'favorites', $post_id, $user_id, $switch )
+	set_post_relationship( 'favorites', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
@@ -1119,7 +1119,7 @@ __return__ : *boolean*
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'viewed', $post_id, $user_id, $switch )
+	set_post_relationship( 'viewed', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
@@ -1129,7 +1129,7 @@ __return__ : *boolean*
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'view_later', $post_id, $user_id, $switch )
+	set_post_relationship( 'view_later', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*

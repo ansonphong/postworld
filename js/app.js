@@ -1719,6 +1719,89 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
 
 }]);
 
+
+
+
+/*
+  ____           _        _        _   _                 
+ |  _ \ ___  ___| |_     / \   ___| |_(_) ___  _ __  ___ 
+ | |_) / _ \/ __| __|   / _ \ / __| __| |/ _ \| '_ \/ __|
+ |  __/ (_) \__ \ |_   / ___ \ (__| |_| | (_) | | | \__ \
+ |_|   \___/|___/\__| /_/   \_\___|\__|_|\___/|_| |_|___/
+                                                         
+////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
+
+var postActions = function ( $scope, pwData ) {
+
+    $scope.$watch( "post.viewer",
+        function (){
+            ( $scope.post.viewer.is_favorite == true ) ? $scope.isFavorite="selected" : $scope.isFavorite="" ;
+            ( $scope.post.viewer.is_view_later == true ) ? $scope.isViewLater="selected" : $scope.isViewLater="" ;
+        }, 1 );
+
+    $scope.setFavorite = function(){
+        $scope.togglePostRelationship('favorites');
+    }
+
+    $scope.setViewLater = function(){
+        $scope.togglePostRelationship('view_later');
+    }
+
+    $scope.togglePostRelationship = function( postRelationship ) {
+
+        // Localize the viewer object
+        var viewer = $scope.post.viewer;
+        
+        // Check toggle switch
+        var setTo;
+        if ( postRelationship == "favorites" )
+            ( viewer.is_favorite == true ) ? setTo = false : setTo = true;
+        if ( postRelationship == "view_later" )
+            ( viewer.is_view_later == true ) ? setTo = false : setTo = true ;
+
+        // Setup parmeters
+        var args = {
+            "relationship" : postRelationship,
+            "switch" : setTo,
+            "post_id" : $scope.post.ID,
+        };
+
+        // AJAX Call 
+        pwData.set_post_relationship( args ).then(
+            // ON : SUCCESS
+            function(response) {    
+                //SET FAVORITE
+                if ( postRelationship == "favorites"){
+                    if ( response.data === false )
+                        $scope.post.viewer.is_favorite = false;
+                    else if ( response.data === true )
+                        $scope.post.viewer.is_favorite = true;
+                    else
+                        alert( "Server error setting favorite." )
+                }
+                //SET VIEW LATER
+                if ( postRelationship == "view_later"){
+                    if ( response.data === false )
+                        $scope.post.viewer.is_view_later = false;
+                    else if ( response.data === true )
+                        $scope.post.viewer.is_view_later = true;
+                    else
+                        alert( "Server error setting view later." )
+                }
+            },
+            // ON : FAILURE
+            function(response) {
+                alert('Client error.');
+            }
+        );
+
+    };
+
+};
+
+
+
+
 /*
   _____         _                         _____ _ _ _            
  |_   _|____  _| |_ __ _ _ __ ___  __ _  |  ___(_) | |_ ___ _ __ 
@@ -2508,6 +2591,9 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
+
+
+
 
 
 

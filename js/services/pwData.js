@@ -249,6 +249,11 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('tags_autocomplete',params);
 		},
+		set_post_relationship: function(args) {
+			$log.info('pwData.set_post_relationship',args);
+			var params = {args:args};
+			return this.wp_ajax('set_post_relationship',params);
+		},
 
    }; // END OF pwData return value
 });

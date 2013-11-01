@@ -5,6 +5,32 @@
   
 */
 
+
+//---------- TAGS AUTOCOMPLETE ----------//
+function set_post_relationship_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$relationship = $params['relationship'];
+	$switch = $params['switch'];
+	$post_id = $params['post_id'];
+
+	$set_post_relationship = set_post_relationship( $relationship, $switch, $post_id );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $set_post_relationship;
+	echo json_encode( $response );
+	die;
+
+}
+
+add_action("wp_ajax_nopriv_set_post_relationship", "set_post_relationship_admin");
+add_action("wp_ajax_set_post_relationship", "set_post_relationship_admin");
+
+
+
+
 //---------- TAGS AUTOCOMPLETE ----------//
 function tags_autocomplete_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
