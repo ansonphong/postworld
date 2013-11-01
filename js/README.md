@@ -228,6 +228,15 @@ __return__ : *Object*
 
 ------
 
+### o-embed *[ directive ]*
+- Populates the element with the embed code for a given media URL
+
+#### Usage
+``` html
+<div o-embed="http://www.youtube.com/watch?v=38peWm76l-U"></div>
+```
+------
+
 ### load-post *[ directive ]*
 
 #### Description : 
