@@ -99,7 +99,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		);
 	
 	$viewer_fields =array(
-		'viewer(has_voted,vote_power,is_favorite,is_view_later)'
+		'viewer(has_voted,is_favorite,is_view_later)'
 		);
 
 	// Add Preview Fields

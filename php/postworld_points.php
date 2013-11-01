@@ -706,7 +706,7 @@
 	}
 	
 	
-	function get_user_votes_on_posts($user_id) {
+	function get_user_votes_on_posts( $user_id, $fields, $direction = null ) {
 		/*
 		 • Get all posts which user has voted on from wp_postworld_points
 		 return : Object
@@ -716,24 +716,39 @@
 		 time : {{timestamp}}
 		 */
 	
+		// Default Fields
+		/*if ( !is_set($fields) || empty($fields) ){
+			$fields = array( 'post_id', 'votes', 'time' );
+		}*/
+
 		global $wpdb;
 		$wpdb -> show_errors();
-	
+
 		$query = "SELECT * FROM ".$wpdb->pw_prefix.'post_points'." Where user_id=" . $user_id;
 		//echo($query);
 		$user_votes_per_post = $wpdb -> get_results($query);
 	
 		$output = array();
 		foreach ($user_votes_per_post as $row) {
-			$singlePost = new get_user_votes_Output();
-			$singlePost->post_id = $row->id;
-			$singlePost->votes = $row->post_points;
-			$singlePost->time = $row->time;
-			
+
+			if( $fields = "post_id" )
+				$singlePost = $row->post_id;
+			else if( $fields = "all" ){
+				$singlePost = array();//get_user_votes_output();
+				$singlePost['post_id'] = $row->post_id;
+				$singlePost['votes'] = $row->post_points;
+				$singlePost['time'] = $row->time;
+			}
+
 			//echo(serialize($singlePost));
-			$output[] = $singlePost;
 			
-			
+			if( $direction == null )
+				$output[] = $singlePost;
+			else if( $row->post_points > 0 && $direction == 'up' )
+				$output[] = $singlePost;
+			else if( $row->post_points < 0 && $direction == 'down' )
+				$output[] = $singlePost;
+				
 		}
 		//echo(json_encode($output));
 		 return $output;

@@ -370,15 +370,52 @@ post_id,author_id,total_points,post_type
 ```
 ------
 
-### get_user_votes_on_posts ( *$user_id* )
+### get_user_votes_on_posts ( *$user_id, [$fields], [$direction]* )
 - Get all posts which user has voted on from __wp_postworld_post_points__ table 
 
-__return__ : *Object*
+#### Parameters
+__$user_id__ : *integer*
+
+__$fields__ : *string*
+- Which fields to return
+- Options:
+  - __all__ (default)
+  - __post_id__ - If this is set as a string, then return flat array with only `post_id`
+
+__$direction__ : *string*
+- Filter the direction by which the user has voted posts
+- Options:
+  - *null* (Default) - Return all voted posts
+  - __up__
+  - __down__
+
+__return__ : *Object / Array*
+
+
+#### Usage
+
+Parameters:
+
 ``` php
-	#for_each
-	'post_id' => {{integer}}
-	'votes' => {{integer}}
-	'time' => {{timestamp}}
+  get_user_votes_on_posts ( 1, 'post_id', 'up' )
+```
+Returns:
+
+``` javascript
+  [234,235,2341,5,135,3151]
+```
+Parameters:
+
+``` php
+  get_user_votes_on_posts ( 1, 'all', 'up' )
+```
+Returns:
+
+``` php
+  #for_each
+  'post_id' => {{integer}}
+  'votes' => {{integer}}
+  'time' => {{timestamp}}
 ```
 
 ------

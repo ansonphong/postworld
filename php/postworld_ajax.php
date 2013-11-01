@@ -6,7 +6,31 @@
 */
 
 
-//---------- TAGS AUTOCOMPLETE ----------//
+//---------- SET POST POINSTS ----------//
+function set_post_points_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$post_id = $params['post_id'];
+	$points = $params['points'];
+
+	$set_post_points = set_post_points( $post_id, $points );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $set_post_points;
+	echo json_encode( $response );
+	die;
+
+}
+
+add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
+add_action("wp_ajax_set_post_points", "set_post_points_admin");
+
+
+
+
+//---------- SET POST RELATIONSHIP ----------//
 function set_post_relationship_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();
 

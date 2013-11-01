@@ -1801,6 +1801,64 @@ var postActions = function ( $scope, pwData ) {
 
 
 
+/*
+  ____           _    __     __    _       
+ |  _ \ ___  ___| |_  \ \   / /__ | |_ ___ 
+ | |_) / _ \/ __| __|  \ \ / / _ \| __/ _ \
+ |  __/ (_) \__ \ |_    \ V / (_) | ||  __/
+ |_|   \___/|___/\__|    \_/ \___/ \__\___|
+                                                                                          
+////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
+
+var postVote = function ( $rootScope, $scope, pwData ) {
+    $rootScope.vote_power = "10";
+
+    // SWITCH CSS CLASSES BASED ON VOTE
+    $scope.$watch( "post.viewer.has_voted",
+        function (){
+            ( $scope.post.viewer.has_voted > 0 ) ? $scope.hasVotedUp = "selected" : $scope.hasVotedUp = "" ;
+            ( $scope.post.viewer.has_voted < 0 ) ? $scope.hasVotedDown = "selected" : $scope.hasVotedDown = "" ;
+            if ( $scope.post.viewer.has_voted == 0 ){
+                $scope.hasVotedUp = "";
+                $scope.hasVotedDown = "";
+            }
+        }, 1 );
+
+    // CAST VOTE ON THE POST
+    $scope.votePost = function( points ){
+        // If casting the same points, reset points
+        if ( points == $scope.post.viewer.has_voted )
+            points = 0;
+        // Setup parameters
+        var args = {
+            post_id: $scope.post.ID,
+            points: points,
+        };
+        // AJAX Call 
+        pwData.set_post_points ( args ).then(
+            // ON : SUCCESS
+            function(response) {    
+                //alert( JSON.stringify(response.data) );
+                // RESPONSE.DATA : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
+                if ( response.data.id == $scope.post.ID ){
+                    // UPDATE POST POINTS
+                    $scope.post.post_points = response.data.points_total;
+                    // UPDATE VIEWER HAS VOTED
+                    $scope.post.viewer.has_voted = ( parseInt($scope.post.viewer.has_voted) + parseInt(response.data.points_added) ) ;
+                } else
+                    alert('Server error voting.');
+            },
+            // ON : FAILURE
+            function(response) {
+                alert('Client error voting.');
+            }
+        );
+
+    }
+
+};
+
+
 
 /*
   _____         _                         _____ _ _ _            
@@ -2477,10 +2535,6 @@ postworld.service('pwPostOptions2', ['$log', '$q', 'pwData', 'siteOptions', func
 
 
 
-
-
-
-
 'use strict';
 
 /*
@@ -2582,7 +2636,6 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
 
 
 
-
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -2591,7 +2644,6 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
-
 
 
 
