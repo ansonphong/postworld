@@ -1298,6 +1298,13 @@ __return__ : *string / Array* (set by $return_array)
 
 ------
 
+### pw_count_user_posts( *$author_id* )
+- Gets the number of posts published by the given user id
+
+__return__ : *integer*
+
+------
+
 ## Posts
 __php/postworld_posts.php__
 

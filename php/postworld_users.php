@@ -832,4 +832,19 @@ function get_relationship_from_user_meta($user_id) {
 	return $relationshp;
 
 }
+
+function pw_count_user_posts( $author_id ){
+	global $wpdb;
+	$posts_query = "
+	  SELECT
+	    COUNT(*)
+	  FROM
+	    $wpdb->posts
+	  WHERE
+	    post_status = 'publish' AND post_author = '$author_id'
+	  ";
+	//$where = $wpdb->get_results($posts_query,ARRAY_A);
+	return $wpdb->get_var( $posts_query );
+}
+
 ?>
