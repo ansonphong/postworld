@@ -395,7 +395,7 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
         return {
             feature : "Features",
             blog : "Blog",
-            // link : "Link",
+            link : "Link",
             announcement : "Announcement",
             tribe_events : "Event"
             };
@@ -410,6 +410,7 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
         pwGetPostFormatOptions: function(){
             return {
                 standard : "Standard",
+                link : "Link",
                 video : "Video",
                 audio : "Audio",
             };
@@ -502,10 +503,16 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
         pwGetPostFormatMeta: function(){
             return [
                 {
-                    name:"Standard",
+                    name:"",
                     slug:"standard",
                     domains:[],
                     icon:"<i class='icon-circle-blank'></i>"
+                },
+                {
+                    name:"Link",
+                    slug:"link",
+                    domains:[],
+                    icon:"<i class='icon-link'></i>"
                 },
                 {
                     name:"Video",
@@ -888,7 +895,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                     });
                     // If no matches, set default
                     if ( set == "" )
-                        return default_format;
+                        return "link";
                     else
                         return set;
                 }
@@ -1246,7 +1253,8 @@ postworld.controller('editPost',
                 ///// LOAD POST CONTENT /////
                 
                 // SET THE POST CONTENT
-                tinyMCE.get('post_content').setContent( get_post_data.post_content );
+                // THROWING ERROR - INVESTIGATE
+                //tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
                 ///// LOAD AUTHOR /////
 
@@ -1280,8 +1288,8 @@ postworld.controller('editPost',
             //alert(JSON.stringify($scope.post_data));
 
             ///// GET POST_DATA FROM TINYMCE /////
-            if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
-                $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+            //if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
+            //    $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
 
             ///// SANITIZE FIELDS /////
             if ( typeof $scope.post_data.link_url === 'undefined' )
@@ -1741,10 +1749,16 @@ var postActions = function ( $scope, pwData ) {
 
     $scope.setFavorite = function(){
         $scope.togglePostRelationship('favorites');
+        //if ($event.stopPropagation) $event.stopPropagation();
+        if ($event.preventDefault) $event.preventDefault();
+        
     }
 
     $scope.setViewLater = function(){
         $scope.togglePostRelationship('view_later');
+        //if ($event.stopPropagation) $event.stopPropagation();
+        if ($event.preventDefault) $event.preventDefault();
+        
     }
 
     $scope.togglePostRelationship = function( postRelationship ) {
@@ -1855,6 +1869,48 @@ var postVote = function ( $rootScope, $scope, pwData ) {
         );
 
     }
+
+};
+
+
+
+/*
+     _       _           _         ____                      _                     
+    / \   __| |_ __ ___ (_)_ __   |  _ \ _ __ ___  _ __   __| | _____      ___ __  
+   / _ \ / _` | '_ ` _ \| | '_ \  | | | | '__/ _ \| '_ \ / _` |/ _ \ \ /\ / / '_ \ 
+  / ___ \ (_| | | | | | | | | | | | |_| | | | (_) | |_) | (_| | (_) \ V  V /| | | |
+ /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
+                                                  |_|                              
+////////// ------------ ADMIN DROPDOWN ------------ //////////*/   
+var adminDropdownMenu = function ($scope) {
+
+    $scope.adminMenuItems = [
+        {
+            name: "Quick Edit",
+            url:"#myModal",
+            icon:"icon-pencil"
+        },
+        {
+            name: "Edit",
+            url: "/post/#/edit/"+$scope.post.ID,
+            icon:"icon-edit"
+        },
+        {
+            name: "WP Edit",
+            url: decodeURI($scope.post.edit_post_link),
+            icon:"icon-edit-sign"
+        },
+        {
+            name: "Flag",
+            url: "#flag",
+            icon:"icon-flag"
+        },
+        {
+            name: "Trash",
+            url: "#trash",
+            icon:"icon-trash"
+        }
+    ];
 
 };
 
@@ -2311,6 +2367,10 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
         );
         
     };
+
+    $scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
+    //$scope.link_url = $scope.post.link_url;
+
 };
 
 
@@ -2635,7 +2695,6 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
 
 
 
-
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -2644,10 +2703,6 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
-
-
-
-
 
 
 
