@@ -867,9 +867,18 @@
 			
 			$post_data= get_post( $post_id, ARRAY_A );
 			//echo json_encode($post_data);
-			$query = "insert into ".$wpdb->pw_prefix.'post_meta'." values("
+			$query = "insert into ".$wpdb->pw_prefix.'post_meta'." 
+					(`post_id`,
+					`author_id`,
+					`post_class`,
+					`post_format`,
+					`link_url`,
+					`post_points`,
+					`rank_score`,
+					`post_shares`
+					) values("
 					.$post_id.","
-					//.$post_data['post_author'].","
+					.$post_data['post_author'].","
 					."'post_class'"."," //TODO
 					."'".$format."',"
 					."'"."',"

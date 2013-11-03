@@ -12,6 +12,7 @@ function postworld_install() {
   $post_meta_table_name = $wpdb->pw_prefix.'post_meta';
   $sql_postworld_post_meta = "CREATE TABLE $post_meta_table_name (
       post_id BIGINT(20) unsigned NOT NULL,
+      author_id BIGINT(20) UNSIGNED NOT NULL,
       post_class char(16) NOT NULL,
       post_format char(16) NOT NULL,
       link_url varchar(512) DEFAULT '' NOT NULL,
