@@ -1178,27 +1178,25 @@ postworld.controller('editPost',
         "$routeChangeSuccess",
         function( $currentRoute, $previousRoute ){
             //alert( JSON.stringify( $currentRoute ) );
-
             ///// ROUTE : NEW POST /////
             if ( $route.current.action == "new_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
-                
                 // SWITCH FROM MODE : EDIT > NEW
                 // If we're coming to 'new' mode from 'edit' mode
                 if($scope.mode == "edit"){
                     // Clear post Data
                     $scope.clear_post_data();
                 }
-                // Set the new mode
-                $scope.mode = "new";
-
                 // Get the post type
                 var post_type = ($routeParams.post_type || "");
                 // If post type is supplied
                 if ( post_type != "" )
                     // Set the post type
                     $scope.post_data.post_type = post_type;
+                // Set the new mode
+                $scope.mode = "new";
+                // Set the status
+                $scope.status = "done";
             }
-
             ///// ROUTE : EDIT POST /////
             if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
                 // Load the specified post data
@@ -1206,7 +1204,6 @@ postworld.controller('editPost',
             }
         }
     );
-
 
     ///// QUICK EDIT : LOAD POST DATA /////
     $scope.$on('loadPostData', function(event, post_id) {
@@ -1258,7 +1255,7 @@ postworld.controller('editPost',
                 
                 // SET THE POST CONTENT
                 // THROWING ERROR - INVESTIGATE
-                //tinyMCE.get('post_content').setContent( get_post_data.post_content );
+                tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
                 ///// LOAD AUTHOR /////
 
@@ -1295,8 +1292,8 @@ postworld.controller('editPost',
             //alert(JSON.stringify($scope.post_data));
 
             ///// GET POST_DATA FROM TINYMCE /////
-            //if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
-            //    $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+            if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
+                $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
 
             ///// SANITIZE FIELDS /////
             if ( typeof $scope.post_data.link_url === 'undefined' )
@@ -2012,7 +2009,7 @@ element.bind("keydown keypress", function(event) {
  |____/|_|_|  \___|\___|\__|_| \_/ \___||___/
                                              
 ////////// ------------ DIRECTIVES ------------ //////////*/
-
+/*
 ///// BLUR FOCUS DIRECTIVE /////
 // Adds 'has-focus' class to form items in focus
 var blurFocusDirective = function () {
@@ -2057,6 +2054,7 @@ var blurFocusDirective = function () {
 };
 postworld.directive('input', blurFocusDirective);
 postworld.directive('select', blurFocusDirective);
+*/
 
 ///// SUBMIT ON ENTER /////
 // Submit on Enter, without a real form
@@ -2715,19 +2713,17 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
 
 
 
+
+
+
 /*
-     __     __  ____    _    _   _ ____  ____   _____  __     __     __
-    / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
-   / /    / /  \___ \ / _ \ |  \| | | | |  _ \| | | \  /    / /    / / 
-  / /    / /    ___) / ___ \| |\  | |_| | |_) | |_| /  \   / /    / /  
- /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
-                                                                       
-*/
-
-
-
-
-/*////////// ------------ QUICK EDIT ------------ //////////*/   
+   ___        _      _      _____    _ _ _   
+  / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
+ | | | | | | | |/ __| |/ / |  _| / _` | | __|
+ | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
+  \__\_\\__,_|_|\___|_|\_\ |_____\__,_|_|\__|
+                                             
+////////// ------------ QUICK EDIT ------------ //////////*/   
 
 var quickEdit = function ($scope, $modal, $log) {
     
@@ -2837,4 +2833,42 @@ var postController = function ( $scope, $rootScope, pwData ) {
 };
 
 
+/*
+  _   _       _                 _      _             _             
+ | | | |_ __ | | ___   __ _  __| |    / \__   ____ _| |_ __ _ _ __ 
+ | | | | '_ \| |/ _ \ / _` |/ _` |   / _ \ \ / / _` | __/ _` | '__|
+ | |_| | |_) | | (_) | (_| | (_| |  / ___ \ V / (_| | || (_| | |   
+  \___/| .__/|_|\___/ \__,_|\__,_| /_/   \_\_/ \__,_|\__\__,_|_|   
+       |_|                                                         
+/*/////////// ------------ UPLOAD AVATAR ------------ ///////////*/  
+
+var uploadAvatar = function ( $scope, $rootScope, pwData ) {
+
+    $scope.status = "empty";
+
+    $scope.updateAvatarImage = function( selected_image ){x
+        // Set the image object into the model
+        $scope.avatar_image = selected_image;
+        $scope.status = "setting";
+
+
+    };
+
+
+};
+
+
+
+
+
+
+
+/*
+     __     __  ____    _    _   _ ____  ____   _____  __     __     __
+    / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
+   / /    / /  \___ \ / _ \ |  \| | | | |  _ \| | | \  /    / /    / / 
+  / /    / /    ___) / ___ \| |\  | |_| | |_) | |_| /  \   / /    / /  
+ /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
+                                                                       
+*/
 

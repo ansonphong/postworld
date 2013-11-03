@@ -914,6 +914,77 @@ Here we have a series of functions which are used to read and write custom user 
 
 ------
 
+### pw_set_avatar( *$obj* )
+- Sets an image/attachment ID has been delegated as the avatar for the given user
+- Stored in __Wordpress User Meta__ `wp_usermeta`
+  - Key : `pw_avatar`
+
+__return__  
+- On success
+  - __user_id__ (integer)
+- On Error returns error object
+
+------
+
+### pw_get_avatar( *$obj* )
+- Gets an image URL or object for a user
+
+#### Parameters : $obj
+
+__user_id__ : *integer* (required)
+
+__size__ : *integer* (optional)
+- The size (in pixels) to return the avatar (square)
+
+
+#### Usage
+
+``` php
+// Retuns Image URL
+$avatar_image = pw_get_avatar( array("user_id"=>"1", "size"=>256) );
+
+// Returns Image Object
+$avatar_object = pw_get_avatar( array("user_id"=>"1") );
+
+```
+
+``` javascript
+var avatar_object = {
+   "width":640,
+   "height":480,
+   "file":"2013\/11\/IMAGE.jpg",
+   "file_url":"http:\/\/localhost:8888\/wp-content\/uploads\/2013\/11\/IMAGE.jpg",
+   "sizes":{
+      "thumbnail":{
+         "file":"IMAGE-150x150.jpg",
+         "width":150,
+         "height":150,
+         "mime-type":"image\/jpeg"
+      },
+      "medium":{
+         "file":"IMAGE-275x300.jpg",
+         "width":275,
+         "height":300,
+         "mime-type":"image\/jpeg"
+      }
+   },
+   "image_meta":{
+      "aperture":0,
+      "credit":"",
+      "camera":"",
+      "caption":"",
+      "created_timestamp":0,
+      "copyright":"",
+      "focal_length":0,
+      "iso":0,
+      "shutter_speed":0,
+      "title":""
+   }
+}
+```
+
+------
+
 ### pw_get_userdata ( *$user_id, [$fields]* )
 
 #### Description :

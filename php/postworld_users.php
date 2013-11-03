@@ -847,4 +847,80 @@ function pw_count_user_posts( $author_id ){
 	return $wpdb->get_var( $posts_query );
 }
 
+
+
+function pw_set_avatar( $image_object, $user_id = null ){
+	//Get Current User
+	$current_user_id = get_current_user_id();
+
+	// TODO : Check if is user OR can XX capabaility
+		// return array('error'=>'no access');
+
+	if( $user_id == null )
+		$user_id = $current_user_id;
+
+	// If Image has an 'ID' field
+	if( isset( $image_object['id'] ) ){
+		$attachment_id = $image_object['id'];
+
+		$previous_value = get_user_meta( $user_id,'pw_avatar', true);
+
+		// Is there a previous value?
+		if( is_numeric( $previous_value ) ){
+			// Update Meta Field
+			$success = update_user_meta( $user_id, 'pw_avatar', $attachment_id );
+		}
+		else{
+			// Add Meta Field
+			$success = add_user_meta( $user_id, 'pw_avatar', $attachment_id, true );
+		}
+
+	} else
+		return array('error'=>'No add avatar.');
+
+	if( $success == true )
+		return $user_id;
+	else{
+		if( is_numeric( $previous_value ) )
+			return $user_id;
+	}
+}
+
+
+
+function pw_get_avatar( $obj ){
+	/*
+		$args = { user_id:"1", [ size: 256 ], [ width:256, height:256 ] }
+	*/
+	extract($obj);
+
+	if ( !isset($user_id) )
+		return false;
+
+	$attachment_id = get_user_meta( $user_id, 'pw_avatar', true );
+	$attachment_meta = wp_get_attachment_metadata( $attachment_id );
+	$attachment_image_src = wp_get_attachment_image_src( $attachment_id, 'full' );
+	$attachment_meta["file_url"] = $attachment_image_src[0];
+
+
+	// If no size is set, return with image meta object
+	if ( !isset($size) )
+		return $attachment_meta;
+
+	else
+		return aq_resize( $attachment_image_src[0], $size, $size, true );
+
+	//return $attachment_meta;
+
+	//else
+	//return array('error'=>'No get avatar.');
+
+}
+
+
+
+
+
+
+
 ?>
