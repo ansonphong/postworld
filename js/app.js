@@ -1143,12 +1143,14 @@ function tagsAutocomplete($scope, $filter, pwData) {
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
-    ['$scope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
+    ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
     'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 
-    function($scope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
+    function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
         $pwData, $log, $route, $routeParams, $location, $http, $siteOptions ) {
 
     //alert( JSON.stringify( $route.current.action ) );
+
+    $scope.status = "loading";
 
     $scope.default_post_data = {
         //post_id : 24,
@@ -1202,16 +1204,29 @@ postworld.controller('editPost',
                 // Load the specified post data
                 $scope.load_post_data();
             }
-           
         }
     );
 
 
-    $scope.load_post_data = function(){
+    ///// QUICK EDIT : LOAD POST DATA /////
+    $scope.$on('loadPostData', function(event, post_id) {
+        $scope.load_post_data( post_id );
+    });
+
+
+    $scope.load_post_data = function( post_id ){
         $scope.mode = "edit";
 
+
+        if ( typeof $routeParams.post_id !== 'undefined' )
+            var post_id = $routeParams.post_id;
+        else{
+            var post_id = $scope.post.ID;
+        }
+
+
         // GET THE POST DATA
-        $pwData.pw_get_post_edit( $routeParams.post_id ).then(
+        $pwData.pw_get_post_edit( post_id ).then(
             // Success
             function(response) {    
                 $log.info('pwData.pw_get_post : RESPONSE : ', response.data);
@@ -1219,19 +1234,8 @@ postworld.controller('editPost',
                 // FILTER FOR INPUT
                 var get_post_data = response.data;
 
-                // BREAK OUT THE TAGS INTO TAGS_INPUT
-                /*
-                if ( typeof get_post_data.taxonomy.post_tag !== 'undefined'  ){
-                    get_post_data['tags_input'] = "";
-                    angular.forEach( get_post_data.taxonomy.post_tag, function( tag ){
-                        get_post_data['tags_input'] += tag.slug + ", ";
-                    });
-                    delete get_post_data.taxonomy.post_tag;
-                }
-                */
 
                 ///// LOAD TAXONOMIES /////
-
                 // RENAME THE KEY : TAXONOMY > TAX_INPUT
                 var tax_input = {};
                 var tax_obj = get_post_data['taxonomy'];
@@ -1259,14 +1263,20 @@ postworld.controller('editPost',
                 ///// LOAD AUTHOR /////
 
                 // EXTRACT AUTHOR NAME
-                get_post_data['post_author_name'] = get_post_data['author']['user_nicename'];
-                delete get_post_data['author'];
-
+                if ( typeof get_post_data['author']['user_nicename'] !== 'undefined' ){
+                    get_post_data['post_author_name'] = get_post_data['author']['user_nicename'];
+                    delete get_post_data['author'];
+                }
+                
                 // BROADCAST TO USERNAME AUTOCOMPLETE FIELD
                 $scope.$broadcast('updateUsername', get_post_data['post_author_name']);
 
                 // SET DATA INTO THE SCOPE
                 $scope.post_data = get_post_data;
+
+                // UPDATE STATUS
+                $scope.status = "done";
+
             },
             // Failure
             function(response) {
@@ -1276,9 +1286,6 @@ postworld.controller('editPost',
         );  
     }
 
-
-
-    $scope.status = "done";
 
     // SAVE POST FUNCTION
     $scope.savePost = function(pwData){
@@ -1309,6 +1316,7 @@ postworld.controller('editPost',
                     // VERIFY POST CREATION
                     // If it was created, it's an integer
                     if( response.data === parseInt(response.data) ){
+                        // SAVE SUCCESSFUL
                         var post_id = response.data;
                         $scope.status = "success";
                         $timeout(function() {
@@ -1322,12 +1330,18 @@ postworld.controller('editPost',
                         else
                             // Otherwise, reload the data from server
                             $scope.load_post_data();
+
+                        // For Quick Edit Mode - emit to parent successful update
+                        $rootScope.$broadcast('postUpdated', post_id);
+
                     }
                     else{
+                        // ERROR
                         alert("Error : " + JSON.stringify(response) );
                         $scope.status = "done";
                     }
                     
+
 
                 },
                 // Failure
@@ -1884,12 +1898,16 @@ var postVote = function ( $rootScope, $scope, pwData ) {
 ////////// ------------ ADMIN DROPDOWN ------------ //////////*/   
 var adminDropdownMenu = function ($scope) {
 
+    
     $scope.adminMenuItems = [
+        /*
         {
             name: "Quick Edit",
-            url:"#myModal",
-            icon:"icon-pencil"
+            url:"#",
+            icon:"icon-pencil",
+            click:"quickEdit"
         },
+        */
         {
             name: "Edit",
             url: "/post/#/edit/"+$scope.post.ID,
@@ -1911,6 +1929,7 @@ var adminDropdownMenu = function ($scope) {
             icon:"icon-trash"
         }
     ];
+
 
 };
 
@@ -2283,6 +2302,7 @@ var mediaModalCtrl = function ($scope, $modal, $log) {
     var modalInstance = $modal.open({
       templateUrl: jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
       controller: MediaModalInstanceCtrl,
+      windowClass: 'media_modal',
       resolve: {
         post: function(){
             return post;
@@ -2703,6 +2723,118 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
+
+
+
+
+/*////////// ------------ QUICK EDIT ------------ //////////*/   
+
+var quickEdit = function ($scope, $modal, $log) {
+    
+    $scope.openQuickEdit = function( post ){
+        console.log( "Launch Quick Edit : ", post );  
+        var modalInstance = $modal.open({
+          templateUrl: jsVars.pluginurl+'/postworld/templates/panels/quick_edit.html',
+          controller: quickEditInstanceCtrl,
+          windowClass: 'quick_edit',
+          resolve: {
+            post: function(){
+                return post;
+            }
+          }
+        });
+        modalInstance.result.then(function (selectedItem) {
+            //$scope.post_title = post_title;
+        }, function () {
+            // WHEN CLOSE MODAL
+            $log.info('Modal dismissed at: ' + new Date());
+        });
+    };
+
+    
+};
+
+
+var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, post, pwData, $timeout) {
+    
+    // Import the passed post object into the Modal Scope
+    $scope.post = post;
+
+
+    // TIMEOUT
+    // Allow editPost Controller to Initialize
+    $timeout(function() {
+      $scope.$broadcast('loadPostData', post.ID );
+    }, 1);
+    
+
+    // MODAL CLOSE
+    $scope.close = function () {
+        $modalInstance.dismiss('close');
+    };
+};
+
+
+/*
+  ____           _      ____            _             _ _           
+ |  _ \ ___  ___| |_   / ___|___  _ __ | |_ _ __ ___ | | | ___ _ __ 
+ | |_) / _ \/ __| __| | |   / _ \| '_ \| __| '__/ _ \| | |/ _ \ '__|
+ |  __/ (_) \__ \ |_  | |__| (_) | | | | |_| | | (_) | | |  __/ |   
+ |_|   \___/|___/\__|  \____\___/|_| |_|\__|_|  \___/|_|_|\___|_|   
+                                                                    
+/*////////// ------------ POST CONTROLLER ------------ //////////*/                
+var postController = function ( $scope, $rootScope, pwData ) {
+
+    // Set class via ng-class, of current assigned taxonomy (topic)
+    $scope.setClass = function(){
+        // Set the color topic class
+        if ( $scope.post.taxonomy.topic !== 'undefined' )
+            angular.forEach( $scope.post.taxonomy.topic, function( term ){
+                if( term.parent == "0" )
+                    $scope.topic = term.slug;
+            });
+    };
+    $scope.setClass();
+
+    // Toggles class="expaned", used with ng-class="expanded" 
+    $scope.expanded = "";
+    $scope.toggleExpanded = function(){
+        ( $scope.expanded == "" ) ? $scope.expanded = "expanded" : $scope.expanded = "" ;
+    };
+
+    // Update the contents of post after Quick Edit
+    $rootScope.$on('postUpdated', function(event, post_id) {
+        if ( $scope.post.ID == post_id ){
+            var args = {
+                post_id: post_id,
+                fields: 'all'
+            };
+            pwData.pw_get_post(args).then(
+                // Success
+                function(response) {
+
+                    if (response.status==200) {
+                        //$log.info('pwPostLoadController.pw_load_post Success',response.data);                     
+                        $scope.post = response.data;
+
+                        // Update Classes
+                        $scope.setClass();
+                    
+                    } else {
+                        // handle error
+                    }
+                },
+                // Failure
+                function(response) {
+                    // $log.error('pwFeedController.pw_live_feed Failure',response);
+                    // TODO Show User Friendly Message
+                }
+            );
+
+        }
+    });
+
+};
 
 
 
