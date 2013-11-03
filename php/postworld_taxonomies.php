@@ -187,16 +187,20 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 	}
 
 //print_r($terms_array);
+//echo("<br><br><br>");
 	$taxonomy_term_names = array_keys($terms_array);
 	//print_r($taxonomy_term_names);
+	//echo("<br><br><br>");
 	$number_of_taxonomy_terms = count($taxonomy_term_names);
 
 	for ($i = 0; $i < $number_of_taxonomy_terms; $i++) {
 		//print_r($terms_array[$taxonomy_term_names[$i]]);
+		//echo("<br><br><br>");
 		$current_object = $terms_array[$taxonomy_term_names[$i]];
 		for ($j = 0; $j < count($current_object); $j++) {
 			//print_r($current_object);
-			if($input_format=="JSON")
+			//echo("<br><br><br>");
+			//if($input_format=="JSON")
 			//$current_object[$j] = get_object_vars($current_object[$j]);
 			if (isset($current_object[$j]['slug'])) {
 				//print_r($taxonomy_term_names[$i]);
@@ -208,7 +212,9 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 						//check is same slug found but different tax
 						$results = check_term_slug_exists($current_object[$j]['slug']);
 						if (!is_null($results) && count($results)>0) {
+							//echo("<br><br><br>");	
 							//print_r($results);
+							//echo("<br><br><br>");
 							if ($force_slugs) {
 								//$inc_number = count($results);
 								$current_object[$j]['slug'] = $current_object[$j]['slug'] .'-1';
@@ -223,12 +229,15 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
                                  'slug' => $current_object[$j]["slug"],
                                )
                       		));
-							
+							$current_term_id=-1;
 							//print_r($insert_term_output);
 							if(gettype($insert_term_output)=='array')
 								$current_term_id = $insert_term_output['term_id'];
-							else{
+							else if(isset($insert_term_output->error_data['term_exists'])){
 								$current_term_id = $insert_term_output->error_data['term_exists'];
+							}else{ // invalid tax
+								//register_taxonomy( $taxonomy_term_names[$i], 'post', $args );
+								//TAXONOMYY NOY FOUND
 							}
 				} else {
 					// found exactly
@@ -242,8 +251,8 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 					//echo "<br><br> inserting children<br><br>";
 					//$current_term_id = $insert_term_output['term_id'];
 					//print_r($current_object[$j]['children']);
-					if($input_format=="JSON")
-					$current_object[$j]['children'] = get_object_vars($current_object[$j]['children']);
+					//if($input_format=="JSON")
+					//$current_object[$j]['children'] = get_object_vars($current_object[$j]['children']);
 					$childres_names = array_keys($current_object[$j]['children']);
 					//print_r($childres_names);
 					$number_of_childres_names = count($childres_names);
@@ -255,9 +264,10 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 						//echo ($child_term_in_tax_id);
 						if ($child_term_in_tax_id === 0 || is_null($child_term_in_tax_id)) {
 							//echo "<br>mal2ahoosh<br>";
-							$output = (wp_insert_term($current_object[$j]["children"][$childres_names[$k]], // the term
-							$taxonomy_term_names[$i], // the taxonomy
-							array('slug' => $childres_names[$k], 'parent' => $current_term_id)));
+							
+								$output = (wp_insert_term($current_object[$j]["children"][$childres_names[$k]], // the term
+								$taxonomy_term_names[$i], // the taxonomy
+								array('slug' => $childres_names[$k], 'parent' => $current_term_id)));
 							
 							//print_r($output);
 						}
