@@ -2833,6 +2833,8 @@ var postController = function ( $scope, $rootScope, pwData ) {
 };
 
 
+
+
 /*
   _   _       _                 _      _             _             
  | | | |_ __ | | ___   __ _  __| |    / \__   ____ _| |_ __ _ _ __ 
@@ -2845,8 +2847,6 @@ var postController = function ( $scope, $rootScope, pwData ) {
 var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
 
     $scope.status = "empty";
-    
-    //alert($scope.user_id);
 
     $scope.updateAvatarImage = function( selected_image_obj ){
         // Set the image object into the model
@@ -2898,7 +2898,7 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
                 }
             );
 
-    }
+    };
     
     // Watch on the value of user_id
     $scope.$watch( "user_id",
@@ -2943,15 +2943,10 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
 
     $scope.loadAvatarImg = function( user_id, size ){
         $scope.status = "loading";
-        
         // Hit pwData.pw_get_avatar with args
 
-    }
-
-
+    };
 };
-
-
 
 
 
