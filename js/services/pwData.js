@@ -259,6 +259,16 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('set_post_points',params);
 		},
+		pw_set_avatar: function(args) {
+			$log.info('pwData.pw_set_avatar',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_set_avatar',params);
+		},
+		pw_get_avatar: function(args) {
+			$log.info('pwData.pw_get_avatar',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_avatar',params);
+		}
 
    }; // END OF pwData return value
 });

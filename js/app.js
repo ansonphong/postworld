@@ -2842,17 +2842,111 @@ var postController = function ( $scope, $rootScope, pwData ) {
        |_|                                                         
 /*/////////// ------------ UPLOAD AVATAR ------------ ///////////*/  
 
-var uploadAvatar = function ( $scope, $rootScope, pwData ) {
+var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
 
     $scope.status = "empty";
+    
+    //alert($scope.user_id);
 
-    $scope.updateAvatarImage = function( selected_image ){x
+    $scope.updateAvatarImage = function( selected_image_obj ){
         // Set the image object into the model
-        $scope.avatar_image = selected_image;
+        $scope.status = "saving";
+        var args = {
+            user_id: $scope.user_id,
+            image_object: selected_image_obj,
+        };
+        pwData.pw_set_avatar( args ).then(
+                // Success
+                function(response) {    
+                    //alert(response.data);
+                    //alert(JSON.stringify(response.data));
+                    $scope.avatar_image = response.data;
+                    $scope.status = "done";
+                    // Load object into scope
+                    //$scope.loadAvatarObj( user_id );
+                    //$scope.loadAvatarObj( $scope.user_id );
+
+                },
+                // Failure
+                function(response) {
+                    alert('Error loading terms.');
+                }
+            );
+        //$scope.avatar_image = selected_image;
         $scope.status = "setting";
-
-
     };
+
+
+    $scope.loadAvatarObj = function( user_id ){
+        $scope.status = "loading";
+        
+        // Hit pwData.pw_get_avatar with args
+        var args = {
+            user_id: user_id
+        };
+        pwData.pw_get_avatar( args ).then(
+                // Success
+                function(response) {    
+                    //alert(response.data);
+                    //alert(JSON.stringify(response.data));
+                    $scope.avatar_image = response.data;
+                    $scope.status = "done";
+                },
+                // Failure
+                function(response) {
+                    alert('JS loading avatar.');
+                }
+            );
+
+    }
+    
+    // Watch on the value of user_id
+    $scope.$watch( "user_id",
+        function (){
+            if( typeof $scope.user_id !== 'undefined'  )
+                $scope.loadAvatarObj( $scope.user_id );
+        });    
+
+    $scope.deleteAvatarImage = function(){
+        // Set the image object into the model
+        $scope.status = "deleting";
+
+        var selected_image_obj = {
+            id: $scope.avatar_image.id,
+            action: 'delete',
+        };
+
+        var args = {
+            user_id: $scope.user_id,
+            image_object: selected_image_obj,
+        };
+
+        pwData.pw_set_avatar( args ).then(
+                // Success
+                function(response) {    
+                    //alert(response.data);
+                    //alert(JSON.stringify(response.data));
+                    if( response.data == true )
+                        $scope.avatar_image = {};
+    
+                    $scope.status = "done";
+
+                },
+                // Failure
+                function(response) {
+                    alert('Error deleting avatar.');
+                }
+            );
+        //$scope.avatar_image = selected_image;
+        $scope.status = "setting";
+    };
+
+    $scope.loadAvatarImg = function( user_id, size ){
+        $scope.status = "loading";
+        
+        // Hit pwData.pw_get_avatar with args
+
+    }
 
 
 };

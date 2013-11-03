@@ -6,7 +6,48 @@
 */
 
 
-//---------- SET POST POINSTS ----------//
+//---------- SET AVATAR ----------//
+function pw_set_avatar_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$user_id = $params['user_id'];
+	$image_object = $params['image_object'];
+
+	$pw_set_avatar = pw_set_avatar( $image_object, $user_id );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_set_avatar;
+	echo json_encode( $response );
+	die;
+
+}
+//add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
+add_action("wp_ajax_pw_set_avatar", "pw_set_avatar_admin");
+
+
+//---------- GET AVATAR ----------//
+function pw_get_avatar_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$pw_get_avatar = pw_get_avatar( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_get_avatar; //$pw_get_avatar;
+	echo json_encode( $response );
+	die;
+
+}
+add_action("wp_ajax_nopriv_pw_get_avatar", "pw_get_avatar_anon");
+add_action("wp_ajax_pw_get_avatar", "pw_get_avatar_anon");
+
+
+
+
+//---------- SET POST POINTS ----------//
 function set_post_points_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();
 
@@ -24,7 +65,7 @@ function set_post_points_admin(){
 
 }
 
-add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
+//add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
 add_action("wp_ajax_set_post_points", "set_post_points_admin");
 
 
