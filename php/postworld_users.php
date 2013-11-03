@@ -620,6 +620,8 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 			if (in_array($post_id, $relashionship_db_array[$relationship])) {
 
 				$relashionship_db_array[$relationship] = array_diff($relashionship_db_array[$relationship], array($post_id));
+				$relashionship_db_array[$relationship]= array_values($relashionship_db_array[$relationship]);
+				//print_r($relashionship_db_array[$relationship]);
 				//unset($post_id,$relashionship_db_array[$relationship][$post_id]);
 				update_post_relationship($user_id, $relashionship_db_array);
 				if ($relationship == 'favorites')
