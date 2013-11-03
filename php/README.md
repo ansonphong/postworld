@@ -914,10 +914,26 @@ Here we have a series of functions which are used to read and write custom user 
 
 ------
 
-### pw_set_avatar( *$obj* )
+### pw_set_avatar( *$image_object, $user_id* )
 - Sets an image/attachment ID has been delegated as the avatar for the given user
 - Stored in __Wordpress User Meta__ `wp_usermeta`
   - Key : `pw_avatar`
+
+#### Parameters
+
+__$image_object__ : *Array* (required)
+- __id__ - ID of the attachment in Media Library
+- __action__ (optional)
+  - __delete__ - Deletes the user's avatar
+
+__$user_id__ : *integer* (required)
+- ID of the user to set
+
+#### Usage
+
+```php
+  pw_set_avatar( array( "id"=>1, [ "action" => "delete" ] ), $user_id );
+```
 
 __return__  
 - On success
