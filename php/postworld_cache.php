@@ -121,7 +121,7 @@
 		/*• Cycles through each post in each post_type scheduled for Rank Score caching
 		• Calculates and caches each post's current rank with cache_rank_score() method
 		return : cron_logs Object (add to table wp_postworld_cron_logs)*/
-	
+		//set_time_limit (300);
 		global $wpdb;
 		$wpdb -> show_errors();
 		
@@ -133,7 +133,7 @@
 		$cron_logs['rank']= array();
 		
 		for($i=0;$i<$number_of_post_types;$i++){
-			$query = "select * from wp_posts where post_type ='".$post_types[$i]."'";
+			$query = "select ID from wp_posts where post_type ='".$post_types[$i]."'";
 			$posts = $wpdb -> get_results($query);
 			$time_start = date("Y-m-d H:i:s");
 			foreach ($posts as $row) {
