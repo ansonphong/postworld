@@ -608,6 +608,12 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 					$query.="link_url='".$postarr["link_url"]."'";
 					 $insertComma= TRUE;
 				} 
+				
+				if(isset($postarr["post_author"])){
+					if($insertComma === TRUE) $query.=" , ";
+					$query.="author_id=".$postarr["post_author"];
+					 $insertComma= TRUE;
+				} 
 			 	if($insertComma === FALSE ){}
 				else{
 					$query.=" where post_id=".$post_ID ;
