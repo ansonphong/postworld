@@ -1502,6 +1502,7 @@ array(
   - __post_class__
   - __post_format__
   - __link_url__
+  - __author_id__
 
 __return__ :
 - *post_id* - If added to the database, otherwise return *WP_Error Object*

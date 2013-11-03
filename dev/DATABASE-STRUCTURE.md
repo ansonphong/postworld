@@ -23,6 +23,9 @@ __Default Table Name:__ *wp_posworld_* __post_meta__
 
 #### __post_id__ : *integer*
 
+
+#### __author_id__ : *integer*
+
 #### __post_class__ : *string*
 - Used by pw_query posts by __class__
 - Examples of classes:
