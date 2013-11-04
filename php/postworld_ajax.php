@@ -6,6 +6,78 @@
 */
 
 
+//---------- SEND ACTIVATION LINK ----------//
+function pw_activate_user_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$pw_activate_user = pw_activate_user( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_activate_user;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_pw_activate_user", "pw_activate_user_anon");
+add_action("wp_ajax_pw_activate_user", "pw_activate_user_anon");
+
+
+
+//---------- SEND ACTIVATION LINK ----------//
+function send_activation_link_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$send_activation_link = send_activation_link( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $send_activation_link;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_send_activation_link", "send_activation_link_anon");
+add_action("wp_ajax_send_activation_link", "send_activation_link_anon");
+
+
+
+//---------- PW INSERT USER ----------//
+function pw_insert_user_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$pw_insert_user = pw_insert_user( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_insert_user;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_pw_insert_user", "pw_insert_user_anon");
+add_action("wp_ajax_pw_insert_user", "pw_insert_user_anon");
+
+
+
+//---------- WP USER QUERY ----------//
+function wp_user_query_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$user_query = new WP_User_Query( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $user_query;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_wp_user_query", "wp_user_query_anon");
+add_action("wp_ajax_wp_user_query", "wp_user_query_anon");
+
+
+
 //---------- SET AVATAR ----------//
 function pw_set_avatar_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();

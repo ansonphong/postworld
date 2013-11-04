@@ -268,7 +268,28 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			$log.info('pwData.pw_get_avatar',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_get_avatar',params);
-		}
+		},
+		wp_user_query: function(args) {
+			$log.info('pwData.wp_user_query',args);
+			var params = {args:args};
+			return this.wp_ajax('wp_user_query',params);
+		},
+		pw_insert_user: function(args) {
+			$log.info('pwData.pw_insert_user',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_insert_user',params);
+		},
+		send_activation_link: function(args) {
+			$log.info('pwData.send_activation_link',args);
+			var params = {args:args};
+			return this.wp_ajax('send_activation_link',params);
+		},
+		pw_activate_user: function(args) {
+			$log.info('pwData.pw_activate_user',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_activate_user',params);
+		},
+		
 
    }; // END OF pwData return value
 });

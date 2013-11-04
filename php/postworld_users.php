@@ -928,6 +928,89 @@ function pw_get_avatar( $obj ){
 }
 
 
+function pw_insert_user( $userdata ){
+	$userdata['role'] = 'subscriber';	
+	$user_id = wp_insert_user( $userdata );
+
+	// If it's successful, we have the new user ID
+	if( is_int($user_id) ){
+		send_activation_link(array("ID" => $user_id));
+		return get_userdata($user_id);
+	}
+	else
+		return $user_id;
+}
+
+
+function send_activation_link( $userdata ){
+
+	if( isset($userdata['email']) ){
+		$user_obj = get_user_by( 'email', $userdata['email'] );
+		$user_id = $user_obj->ID; // TEST?
+	}
+	elseif( isset( $userdata['ID'] ) ) {
+		$user_id = $userdata['ID'];
+	}
+
+	// See if user already has an activation key
+	$hash = get_user_meta( $user_id, 'activation_key', true );
+	// If no key exists
+	if ( !$hash ){
+		$hash = md5( rand() );
+		add_user_meta( $user_id, 'activation_key', $hash );
+	}
+	$user_info = get_userdata($user_id);
+	$to = $user_info->user_email;           
+	$subject = 'Member Verification'; 
+	//$message = 'Hello,';
+	//$message .= "\n\n";
+	$message .= 'Welcome to '.get_bloginfo('name');
+	$message .= "\n\n";
+	$message .= 'Username: '.$user_info->user_login;
+	$message .= "\n";
+	$message .= 'Email: '.$user_info->user_email;
+	$message .= "\n\n";
+	$message .= "Click this link to activate your account:";
+	$message .= "\n";
+	$message .= home_url('/').'activate/?auth_key='.$hash;
+	$headers = 'From: '. get_bloginfo('admin_email') . "\r\n";           
+	return wp_mail($to, $subject, $message, $headers); 
+}
+
+
+function pw_activate_user( $auth_key ){
+	// Query for users based on the meta data
+	$user_query = new WP_User_Query(
+		array(
+			'meta_key'		=>	'activation_key',
+			'meta_value'	=>	$auth_key
+		)
+	);
+
+	// Get the results from the query, returning the first user
+	$users = $user_query->get_results();
+	$user = $users[0];
+
+	if( isset($user) ){
+		$args = array(
+			"ID" => $user->ID,
+			"role" => "contributor"
+			);
+		wp_update_user($args);
+		return $user;
+	}
+	else
+		return array("error" => "Wrong activation code.");
+
+}
+
+
+
+
+
+
+
+
 
 
 

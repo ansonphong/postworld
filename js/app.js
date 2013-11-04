@@ -18,7 +18,7 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 var feed_settings = [];
 
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter' ])
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation' ])
 .config(function ($routeProvider, $locationProvider, $provide) {   
 
     ////////// ROUTE PROVIDERS //////////
@@ -2952,6 +2952,401 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
 
 
 
+
+/*
+  _   _                     ____  _                         
+ | | | |___  ___ _ __   _  / ___|(_) __ _ _ __  _   _ _ __  
+ | | | / __|/ _ \ '__| (_) \___ \| |/ _` | '_ \| | | | '_ \ 
+ | |_| \__ \  __/ |     _   ___) | | (_| | | | | |_| | |_) |
+  \___/|___/\___|_|    (_) |____/|_|\__, |_| |_|\__,_| .__/ 
+                                    |___/            |_|    
+/*/////////// ------------ SIGNUP ------------ ///////////*/  
+
+var pwSignup = function ( $scope, $rootScope, pwData, $timeout, $log ) {
+
+    // SETUP
+    $scope.formData = {
+        name:"",
+        username:"",
+        password:"",
+        email:"",
+    };
+
+    $scope.fieldStatus = {
+        username:'empty',
+        password:'empty',
+        email:'empty',
+    };
+
+    $scope.mode = "signup";
+    $scope.status = "done";
+
+    // VALIDATE : Username
+    $scope.validateUsername = function( username ){
+        // Reset validity
+        //$scope.signupForm.username.$setValidity('available',true);
+        // If vaid username // username.length > 3
+        if(
+            !($scope.signupForm.username.$error.minLength) &&
+            !($scope.signupForm.username.$error.maxLength) &&
+            !($scope.signupForm.username.$error.pattern) &&
+            $scope.signupForm.username.$dirty
+            ){
+            if( username == '' )
+                username = '0';
+            var query_args = {
+                number:1,
+                search_columns:['user_nicename'],
+                fields:['user_nicename'],
+                search: username,
+            };
+            $scope.fieldStatus.username = "busy";
+            $scope.signupForm.username.$setValidity('available',false);
+            pwData.wp_user_query( query_args ).then(
+                // Success
+                function(response) {
+                    $log.info('QUERY : ' + username , response.data.results);
+                    // If the username is already taken
+                    if ( response.data.results.length > 0 ){
+                        if( response.data.results[0].user_nicename === username ){
+                            // Set Field Status
+                            $scope.fieldStatus.username = "taken";
+                            // Set Validity to FALSE
+                            $scope.signupForm.username.$setValidity('available',false);
+                        }
+                        else{
+                            $scope.fieldStatus.username = "done";
+                            $scope.signupForm.username.$setValidity('available',true);
+                        }
+                    }
+                    else {
+                        $scope.fieldStatus.username = "done";
+                        $scope.signupForm.username.$setValidity('available',true);
+                    }
+                },
+                // Failure
+                function(response) {
+                    throw { message:'Error: ' + JSON.stringify(response)};
+                }
+            );
+        }
+        else {
+            $scope.fieldStatus.username = "done";
+        }
+    };
+    // WATCH : value of username
+    if ( typeof $scope.formData.username !== 'undefined' )
+        $scope.$watch( "formData.username", function (){
+            // When it changes, emit it's value to the parent controller
+            $scope.validateUsername( $scope.formData.username );
+            }, 1 );
+
+
+    // VALIDATE : Email Doesn't Exist
+    $scope.validateEmail = function( email ){
+        if(
+            !($scope.signupForm.email.$error.required) &&
+            !($scope.signupForm.email.$error.email) &&
+            $scope.signupForm.email.$dirty
+            ){
+            $scope.signupForm.email.$setValidity('available',false);
+            if( email == '' )
+                email = '0';
+            var query_args = {
+                number:1,
+                search_columns:['user_email'],
+                fields:['user_email'],
+                search: email,
+            };
+            $scope.fieldStatus.email = "busy";
+            pwData.wp_user_query( query_args ).then(
+                // Success
+                function(response) {
+                    $log.info('QUERY : ' + email , response.data.results);
+                    // If the email is already taken
+                    if ( response.data.results.length > 0 ){
+                        if( response.data.results[0].user_email === email ){
+                            // Set Field Status
+                            $scope.fieldStatus.email = "taken";
+                            // Set Validity to FALSE
+                            $scope.signupForm.email.$setValidity('available',false);
+                        }
+                        else{
+                            $scope.fieldStatus.email = "done";
+                            $scope.signupForm.email.$setValidity('available',true);
+                        }
+                    }
+                    else {
+                        $scope.fieldStatus.email = "done";
+                        $scope.signupForm.email.$setValidity('available',true);
+                    }
+                },
+                // Failure
+                function(response) {
+                    throw { message:'Error: ' + JSON.stringify(response)};
+                }
+            );
+        }
+        else {
+            $scope.fieldStatus.email = "done";
+        }
+    };
+    // WATCH : value of email
+    if ( typeof $scope.formData.email != 'undefined' )
+        $scope.$watch( "formData.email", function (){
+            // When it changes, emit it's value to the parent controller
+            $scope.validateEmail( $scope.formData.email );
+            }, 1 );
+
+
+    // INSERT USER
+    $scope.insertUser = function(){        
+        $scope.status = "inserting";
+        var signupForm = $scope.signupForm;
+        var userdata = {
+            user_login:signupForm.username.$modelValue,
+            user_pass:signupForm.password.$modelValue,
+            user_email:signupForm.email.$modelValue,
+            display_name:signupForm.name.$modelValue
+        };
+        $log.info('INSERTING USER : ' , userdata);
+        pwData.pw_insert_user( userdata ).then(
+            // Success
+            function(response) {
+                $log.info('USER INSERT SUCCESSFUL : ' , response.data);
+                if ( typeof response.data.ID !== 'undefined' ){
+                    if ( !isNaN( response.data.ID ) ){
+                        // Insert get_userdata object into scope
+                        $scope.userdata = response.data;
+                        $scope.status = "done";
+                        $scope.mode = "activate";
+                    }
+                }
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+
+    };
+
+    // TODO : REDUNDANT - ADD TO SERVICE
+    // This function is also repeated in pwActivate
+    $scope.sendActivationLink = function( user_email ){
+        $scope.status = "busy";
+        var userdata = {
+            email: user_email,
+        };
+        $log.info('SENDING ACTIVATION LINK : ' , userdata);
+        pwData.send_activation_link( userdata ).then(
+            // Success
+            function(response) {
+                $log.info('ACTIVATION LINK RETURN : ' , response.data);
+                if ( response.data == true ){
+                    $scope.status = "success";
+                    $timeout(function() {
+                      $scope.status = "done";
+                    }, 10000);
+                }
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+    };
+
+
+}
+
+
+
+/*
+  _   _                        _        _   _            _       
+ | | | |___  ___ _ __   _     / \   ___| |_(_)_   ____ _| |_ ___ 
+ | | | / __|/ _ \ '__| (_)   / _ \ / __| __| \ \ / / _` | __/ _ \
+ | |_| \__ \  __/ |     _   / ___ \ (__| |_| |\ V / (_| | ||  __/
+  \___/|___/\___|_|    (_) /_/   \_\___|\__|_| \_/ \__,_|\__\___|
+
+/*////////////// ------------ ACTIVATE ------------ //////////////*/  
+
+var pwActivate = function ( $scope, $rootScope, pwData, $timeout, $log ) {
+
+    $scope.status = "done";
+
+    $scope.formData = {
+        email:"",
+    };
+
+    $scope.fieldStatus = {
+        email:'empty',
+    };
+
+
+    // TODO : REDUNDANT - ADD TO SERVICE
+    // This function is also repeated in pwSignup
+    $scope.sendActivationLink = function( user_email ){
+        //pwUsers.sendActivationLink($scope,user_email);
+        $scope.status = "busy";
+        var userdata = {
+            email: user_email,
+        };
+        $log.info('SENDING ACTIVATION LINK : ' , userdata);
+        pwData.send_activation_link( userdata ).then(
+            // Success
+            function(response) {
+                $log.info('ACTIVATION LINK RETURN : ' , response.data);
+                if ( response.data == true ){
+                    $scope.status = "success";
+                    $timeout(function() {
+                      $scope.status = "done";
+                    }, 10000);
+                }
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+        
+    };
+
+
+    $scope.activateUserKey = function( auth_key ){        
+        $scope.mode = "activate";
+        $scope.status = "activating";
+        //alert(auth_key);
+        $scope.auth_key = auth_key;
+        if( typeof $scope.auth_key_animate === 'undefined' )
+            $scope.auth_key_animate = " ";
+        pwData.pw_activate_user( auth_key ).then(
+            // Success
+            function(response) {
+                $log.info('ACTIVATION RETURN : ', response.data);
+                
+                if ( typeof response.data.data !== 'undefined' ){
+                    $scope.userdata = response.data;
+                    $scope.animateAuthKey();
+                }
+                else{
+                    //alert('error');
+                    $scope.mode = "error";
+                }
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+    };
+
+    $scope.animateAuthKey = function(){
+        var position = ( $scope.auth_key_animate.length ) ;
+        if( ($scope.auth_key_animate.length + 1 ) <= $scope.auth_key.length ){
+            $scope.auth_key_animate = $scope.auth_key.slice(0, ( position + 1 )) + "|";
+            $timeout(function() {
+              $scope.animateAuthKey();
+            }, 50);
+        }
+        else{
+            $scope.status = "activated";
+            $timeout(function() {
+              $scope.mode = "welcome";
+            }, 2000);
+
+        }
+    };
+
+
+    $scope.resendActivationKeyScreen = function(){
+        $scope.mode = "resend";
+        //$scope.formData = {};
+    };
+
+    // VALIDATE : Email Exists
+    $scope.validateEmailExists = function( email ){
+        if(
+            !($scope.resendKey.email.$error.required) &&
+            !($scope.resendKey.email.$error.email) &&
+            $scope.resendKey.email.$dirty
+            ){
+            $scope.resendKey.email.$setValidity('exists',false);
+            if( email == '' )
+                email = '0';
+            var query_args = {
+                number:1,
+                search_columns:['user_email'],
+                fields:'all',
+                search: email,
+            };
+            $scope.fieldStatus.email = "busy";
+            pwData.wp_user_query( query_args ).then(
+                // Success
+                function(response) { // response.data.results[0].roles[0] != 'subscriber'
+                    //alert(JSON.stringify( response.data.results ));
+                    $log.info('QUERY : ' + email , response.data.results);
+
+                    // If the email is already taken
+                    if ( response.data.results.length > 0 ){
+                        // If they are not a subscriber (they are already activated)
+                        if( response.data.results[0].roles[0] != 'subscriber' ){
+                            // Set Field Status
+                            $scope.fieldStatus.email = "activated";
+                            // Set Validity to FALSE
+                            $scope.resendKey.email.$setValidity('exists',false);
+                        }
+                        else{
+                            $scope.fieldStatus.email = "done";
+                            $scope.resendKey.email.$setValidity('exists',true);
+                        }
+                    }
+
+                    else {
+                        $scope.fieldStatus.email = "unregistered";
+                        $scope.resendKey.email.$setValidity('exists',false);
+                    }
+                },
+                // Failure
+                function(response) {
+                    throw { message:'Error: ' + JSON.stringify(response)};
+                }
+            );
+        }
+        else {
+            $scope.fieldStatus.email = "done";
+        }
+    };
+    // WATCH : value of email
+    if ( typeof $scope.formData.email != 'undefined' )
+        $scope.$watch( "formData.email", function (){
+            // When it changes, emit it's value to the parent controller
+            $scope.validateEmailExists( $scope.formData.email );
+            }, 1 );
+
+
+}
+
+
+angular.module('UserValidation', []).directive('validPasswordC', function () {
+    return {
+        require: 'ngModel',
+        link: function (scope, elm, attrs, ctrl) {
+            ctrl.$parsers.unshift(function (viewValue, $scope) {
+                var noMatch = viewValue != scope.signupForm.password.$viewValue
+                ctrl.$setValidity('noMatch', !noMatch)
+            })
+        }
+    }
+})
+
+
+
+
+
+
+
+
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -2960,4 +3355,46 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
+
+
+
+
+postworld.service('pwUsers', ['$scope','$log', '$timeout', function ($scope, $log, $timeout) {
+    return{
+
+        sendActivationLink : function($scope, user_email){
+            $scope.status = "busy";
+            var userdata = {
+                email: user_email,
+            };
+            $log.info('SENDING ACTIVATION LINK : ' , userdata);
+            pwData.send_activation_link( userdata ).then(
+                // Success
+                function(response) {
+                    $log.info('ACTIVATION LINK RETURN : ' , response.data);
+                    if ( response.data == true ){
+                        $scope.status = "success";
+                        $timeout(function() {
+                          $scope.status = "done";
+                        }, 10000);
+                    }
+                },
+                // Failure
+                function(response) {
+                    throw { message:'Error: ' + JSON.stringify(response)};
+                }
+            );
+        },
+
+    }
+
+}]);
+
+
+
+
+
+
+
+
 
