@@ -207,7 +207,7 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 
 				$term_in_tax_id = get_term_by('slug', $current_object[$j]['slug'], $taxonomy_term_names[$i], ARRAY_A);
 				//($current_object[$j]['name'],$taxonomy_term_names[$i]);
-
+				//print_r($term_in_tax_id);
 				if ($term_in_tax_id === FALSE) {//doesn't exist in same taxonomy
 						//check is same slug found but different tax
 						$results = check_term_slug_exists($current_object[$j]['slug']);
@@ -237,7 +237,9 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 								$current_term_id = $insert_term_output->error_data['term_exists'];
 							}else{ // invalid tax
 								//register_taxonomy( $taxonomy_term_names[$i], 'post', $args );
-								//TAXONOMYY NOY FOUND
+								//echo('TAXONOMYY NOY FOUND');
+								$current_term_id=-1;
+								
 							}
 				} else {
 					// found exactly
@@ -246,8 +248,8 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 					//update_name
 					wp_update_term($current_term_id, $taxonomy_term_names[$i], array('name' => $current_object[$j]['name']));
 				}
-
-				if (isset($current_object[$j]['children'])) {
+				
+				if (isset($current_object[$j]['children']) && ($current_term_id!==-1)) {
 					//echo "<br><br> inserting children<br><br>";
 					//$current_term_id = $insert_term_output['term_id'];
 					//print_r($current_object[$j]['children']);
