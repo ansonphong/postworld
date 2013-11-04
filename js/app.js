@@ -1292,7 +1292,7 @@ postworld.controller('editPost',
             //alert(JSON.stringify($scope.post_data));
 
             ///// GET POST_DATA FROM TINYMCE /////
-            if ( typeof tinyMCE.get('post_content').getContent() !== 'undefined' )
+            if ( typeof tinyMCE !== 'undefined' )
                 $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
 
             ///// SANITIZE FIELDS /////
