@@ -927,7 +927,7 @@ function pw_get_avatar( $obj ){
 
 }
 
-
+/////----- INSERT NEW USER -----/////
 function pw_insert_user( $userdata ){
 	$userdata['role'] = 'subscriber';	
 	$user_id = wp_insert_user( $userdata );
@@ -942,8 +942,8 @@ function pw_insert_user( $userdata ){
 }
 
 
+/////----- SEND ACTIVATION LINK -----/////
 function send_activation_link( $userdata ){
-
 	if( isset($userdata['email']) ){
 		$user_obj = get_user_by( 'email', $userdata['email'] );
 		$user_id = $user_obj->ID; // TEST?
@@ -951,7 +951,6 @@ function send_activation_link( $userdata ){
 	elseif( isset( $userdata['ID'] ) ) {
 		$user_id = $userdata['ID'];
 	}
-
 	// See if user already has an activation key
 	$hash = get_user_meta( $user_id, 'activation_key', true );
 	// If no key exists
@@ -978,6 +977,8 @@ function send_activation_link( $userdata ){
 }
 
 
+
+/////----- ACTIVATE USER -----/////
 function pw_activate_user( $auth_key ){
 	// Query for users based on the meta data
 	$user_query = new WP_User_Query(
@@ -986,11 +987,9 @@ function pw_activate_user( $auth_key ){
 			'meta_value'	=>	$auth_key
 		)
 	);
-
 	// Get the results from the query, returning the first user
 	$users = $user_query->get_results();
 	$user = $users[0];
-
 	if( isset($user) ){
 		$args = array(
 			"ID" => $user->ID,
@@ -1001,17 +1000,91 @@ function pw_activate_user( $auth_key ){
 	}
 	else
 		return array("error" => "Wrong activation code.");
-
 }
 
 
 
+/////----- RESET PASSWORD LINK -----/////
+function send_reset_password_link( $userdata ){
+	if( isset($userdata['email']) ){
+		$user_obj = get_user_by( 'email', $userdata['email'] );
+		$user_id = $user_obj->ID;
+	}
+	elseif( isset( $userdata['ID'] ) ) {
+		$user_id = $userdata['ID'];
+	}
+
+	// See if user already has an activation key
+	$hash = get_user_meta( $user_id, 'reset_password_key', true );
+	// If no key exists
+	if ( !$hash ){
+		$hash = md5( rand() );
+		add_user_meta( $user_id, 'reset_password_key', $hash );
+	}
+	// If a key exists, update it with a new one
+	else {
+		$hash = md5( rand() );
+		update_user_meta( $user_id, 'reset_password_key', $hash );
+	}
+
+	$user_info = get_userdata($user_id);
+	$to = $user_info->user_email;           
+	$subject = 'Reset Password'; 
+	//$message = 'Hello,';
+	//$message .= "\n\n";
+	$message .= "Have you recently requested to reset your password on ".get_bloginfo('name')."?";
+	$message .= "\n";
+	$message .= "If not, you can ignore this email.";
+	$message .= "\n\n";
+	$message .= 'Username: '.$user_info->user_login;
+	$message .= "\n";
+	$message .= 'Email: '.$user_info->user_email;
+	$message .= "\n\n";
+	$message .= "Click this link to reset your password:";
+	$message .= "\n";
+	$message .= home_url('/').'reset-password/?auth_key='.$hash;
+	$headers = 'From: '. get_bloginfo('admin_email') . "\r\n";           
+	return wp_mail($to, $subject, $message, $headers); 
+}
 
 
+// ON ACTUAL PASSWORD RESET, REQUIRE THE ACTUAL KEY PRESENT AND VERIFY IT
 
 
+/////----- RESET PASSWORD LINK -----/////
+function reset_password_submit( $userdata ){
+	/*
+		$userdata = array( "password" => *string*, "auth_key" => *string* );
+	*/
 
+	// Query for users based on the meta data
+	$user_query = new WP_User_Query(
+		array(
+			'meta_key'		=>	'reset_password_key',
+			'meta_value'	=>	$userdata['auth_key'],
+		)
+	);
+	// Get the results from the query, returning the first user
+	$users = $user_query->get_results();
+	$user = $users[0];
+	if( isset($user) ){
+		$args = array(
+			"ID" => $user->ID,
+			"user_pass" => $userdata['user_pass']
+			);
+		$user_id = wp_update_user( $args );
 
+		if( is_int($user_id) && $user_id == $user->ID ){
+			// Remove the used key
+			delete_user_meta( $user_id, 'reset_password_key' );
+		}
+
+		return $user;
+	}
+	else
+		return array("error" => "Wrong or no authorization code.");
+
+}
 
 
 

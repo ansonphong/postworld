@@ -289,7 +289,16 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('pw_activate_user',params);
 		},
-		
+		send_reset_password_link: function(args) {
+			$log.info('pwData.send_reset_password_link',args);
+			var params = {args:args};
+			return this.wp_ajax('send_reset_password_link',params);
+		},
+		reset_password_submit: function(args) {
+			$log.info('pwData.reset_password_submit',args);
+			var params = {args:args};
+			return this.wp_ajax('reset_password_submit',params);
+		},
 
    }; // END OF pwData return value
 });

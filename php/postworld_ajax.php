@@ -6,7 +6,45 @@
 */
 
 
-//---------- SEND ACTIVATION LINK ----------//
+
+//---------- RESET PASSWORD SUBMIT ----------//
+function reset_password_submit_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$reset_password_submit = reset_password_submit( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $reset_password_submit;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_reset_password_submit", "reset_password_submit_anon");
+add_action("wp_ajax_reset_password_submit", "reset_password_submit_anon");
+
+
+
+
+//---------- SEND RESET PASSWORD LINK ----------//
+function send_reset_password_link_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$send_reset_password_link = send_reset_password_link( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $send_reset_password_link;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_send_reset_password_link", "send_reset_password_link_anon");
+add_action("wp_ajax_send_reset_password_link", "send_reset_password_link_anon");
+
+
+
+//---------- ACTIVATE USER ----------//
 function pw_activate_user_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
@@ -39,6 +77,8 @@ function send_activation_link_anon(){
 }
 add_action("wp_ajax_nopriv_send_activation_link", "send_activation_link_anon");
 add_action("wp_ajax_send_activation_link", "send_activation_link_anon");
+
+
 
 
 

@@ -2962,7 +2962,7 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
                                     |___/            |_|    
 /*/////////// ------------ SIGNUP ------------ ///////////*/  
 
-var pwSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers ) {
+var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers ) {
 
     // SETUP
     $scope.formData = {
@@ -3139,7 +3139,7 @@ angular.module('UserValidation', []).directive('validPasswordC', function () {
         require: 'ngModel',
         link: function (scope, elm, attrs, ctrl) {
             ctrl.$parsers.unshift(function (viewValue, $scope) {
-                var noMatch = viewValue != scope.signupForm.password.$viewValue
+                var noMatch = viewValue != scope.signupForm.password.$viewValue;
                 ctrl.$setValidity('noMatch', !noMatch)
             })
         }
@@ -3156,7 +3156,7 @@ angular.module('UserValidation', []).directive('validPasswordC', function () {
 
 /*////////////// ------------ ACTIVATE ------------ //////////////*/  
 
-var pwActivate = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers ) {
+var pwUserActivate = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers ) {
 
     $scope.status = "done";
 
@@ -3216,7 +3216,6 @@ var pwActivate = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers 
 
         }
     };
-
     $scope.resendActivationKeyScreen = function(){
         $scope.mode = "resend";
         //$scope.formData = {};
@@ -3224,7 +3223,31 @@ var pwActivate = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers 
 
     // VALIDATE : Email Exists
     $scope.validateEmailExists = function( email ){
-        pwUsers.validateEmailExists( $scope, email );
+        var formName = "resendKey";
+        var callback = "validateEmailExistsCallback";
+        pwUsers.validateEmailExists( $scope, email, formName, callback );
+    };
+
+    // CALLBACK : Process Query Response
+    $scope.validateEmailExistsCallback = function( response ){
+        // If the email is already taken
+        if ( response.data.results.length > 0 ){
+            // If they are not a subscriber (they are already activated)
+            if( response.data.results[0].roles[0] != 'subscriber' ){
+                // Set Field Status
+                $scope.fieldStatus.email = "activated";
+                // Set Validity to FALSE
+                $scope[formName].email.$setValidity('exists',false);
+            }
+            else{
+                $scope.fieldStatus.email = "done";
+                $scope[formName].email.$setValidity('exists',true);
+            }
+        }
+        else {
+            $scope.fieldStatus.email = "unregistered";
+            $scope[formName].email.$setValidity('exists',false);
+        }
     };
 
     // WATCH : value of email
@@ -3234,9 +3257,117 @@ var pwActivate = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers 
             $scope.validateEmailExists( $scope.formData.email );
             }, 1 );
 
-
 }
 
+
+
+/*
+  ____                _     ____                                     _ 
+ |  _ \ ___  ___  ___| |_  |  _ \ __ _ ___ _____      _____  _ __ __| |
+ | |_) / _ \/ __|/ _ \ __| | |_) / _` / __/ __\ \ /\ / / _ \| '__/ _` |
+ |  _ <  __/\__ \  __/ |_  |  __/ (_| \__ \__ \\ V  V / (_) | | | (_| |
+ |_| \_\___||___/\___|\__| |_|   \__,_|___/___/ \_/\_/ \___/|_|  \__,_|
+                                                                       
+/*////////////// ------------ RESET PASSWORD ------------ //////////////*/  
+
+var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers ) {
+
+    $scope.status = "done";
+    $scope.formName = "resetPassword";
+    $scope.formData = {
+        email:"",
+        password:"",
+    };
+    $scope.fieldStatus = {
+        email:'empty',
+    };
+
+    $scope.pwPasswordResetEmailInputScreen = function(){
+        $scope.mode = "emailInput";
+    };
+
+    $scope.pwPasswordResetScreen = function(auth_key){
+        $scope.mode = "resetPassword";
+        $scope.authKey = auth_key;
+    };
+    
+    $scope.sendResetPasswordLink = function( email ){
+        pwUsers.sendResetPasswordLink($scope, email);
+    };
+
+    // VALIDATE : Email Exists
+    $scope.validateEmailExists = function( email ){
+        
+        var callback = "validateEmailExistsCallback";
+        pwUsers.validateEmailExists( $scope, email, $scope.formName, callback );
+
+    };
+
+    // CALLBACK : Process Query Response
+    $scope.validateEmailExistsCallback = function( response ){
+        // If the email is already taken
+        if ( response.data.results.length > 0 ){
+            // If they are not a subscriber (they are already activated)
+            $scope[$scope.formName].email.$setValidity('exists',true);
+            $scope.fieldStatus.email = "done";
+        }
+        else {
+            $scope.fieldStatus.email = "unregistered";
+            $scope[$scope.formName].email.$setValidity('exists',false);
+        }
+    };
+
+    // WATCH : value of email
+    if ( typeof $scope.formData.email != 'undefined' )
+        $scope.$watch( "formData.email", function (){
+            // When it changes, emit it's value to the parent controller
+            //alert('change');
+            $scope.validateEmailExists( $scope.formData.email );
+            }, 1 );
+
+    $scope.submitNewPassword = function( password ){
+        //alert($scope.authKey);
+        $scope.status = "busy";
+        var userdata = {
+            user_pass: password,
+            auth_key: $scope.authKey
+        };
+
+        //alert(JSON.stringify(userdata));
+        $scope.signupForm.$setValidity('busy',false);
+
+        $log.info('SENDING NEW PASSWORD : ' , userdata);
+        pwData.reset_password_submit( userdata ).then(
+            // Success
+            function(response) {
+                $log.info('NEW PASSWORD RETURN : ' , response.data);
+                if ( !isNaN( response.data.ID ) ){
+                    $scope.status = "done";
+                    $timeout(function() {
+                      $scope.mode = "login";
+                    }, 1000);
+                    $scope.signupForm.$setValidity('success',true);
+                } else {
+
+                    $scope.status = "error";
+                    $timeout(function() {
+                        $scope.status = "done";
+                        $scope.signupForm.$setValidity('busy',true);
+                        }, 5000);
+
+                }
+            },
+            // Failure
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify(response)};
+            }
+        );
+
+        
+    };
+
+
+}
 
 
 
@@ -3274,13 +3405,36 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
                 }
             );
         },
-        validateEmailExists : function ( $scope, email ){
+        sendResetPasswordLink : function($scope, user_email){
+            $scope.status = "busy";
+            var userdata = {
+                email: user_email,
+            };
+            $log.info('SENDING ACTIVATION LINK : ' , userdata);
+            pwData.send_reset_password_link( userdata ).then(
+                // Success
+                function(response) {
+                    $log.info('ACTIVATION LINK RETURN : ' , response.data);
+                    if ( response.data == true ){
+                        $scope.status = "success";
+                        $timeout(function() {
+                          $scope.status = "done";
+                        }, 10000);
+                    }
+                },
+                // Failure
+                function(response) {
+                    throw { message:'Error: ' + JSON.stringify(response)};
+                }
+            );
+        },
+        validateEmailExists : function ( $scope, email, formName, callback ){
             if(
-                !($scope.resendKey.email.$error.required) &&
-                !($scope.resendKey.email.$error.email) &&
-                $scope.resendKey.email.$dirty
+                !($scope[formName].email.$error.required) &&
+                !($scope[formName].email.$error.email) &&
+                $scope[formName].email.$dirty
                 ){
-                $scope.resendKey.email.$setValidity('exists',false);
+                $scope[formName].email.$setValidity('exists',false);
                 if( email == '' )
                     email = '0';
                 var query_args = {
@@ -3292,28 +3446,12 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
                 $scope.fieldStatus.email = "busy";
                 pwData.wp_user_query( query_args ).then(
                     // Success
-                    function(response) { // response.data.results[0].roles[0] != 'subscriber'
+                    function(response) {
                         //alert(JSON.stringify( response.data.results ));
                         $log.info('QUERY : ' + email , response.data.results);
 
-                        // If the email is already taken
-                        if ( response.data.results.length > 0 ){
-                            // If they are not a subscriber (they are already activated)
-                            if( response.data.results[0].roles[0] != 'subscriber' ){
-                                // Set Field Status
-                                $scope.fieldStatus.email = "activated";
-                                // Set Validity to FALSE
-                                $scope.resendKey.email.$setValidity('exists',false);
-                            }
-                            else{
-                                $scope.fieldStatus.email = "done";
-                                $scope.resendKey.email.$setValidity('exists',true);
-                            }
-                        }
-                        else {
-                            $scope.fieldStatus.email = "unregistered";
-                            $scope.resendKey.email.$setValidity('exists',false);
-                        }
+                        // Return reponse data to the specified callback function in the original scope
+                        $scope[callback]( response );
                     },
                     // Failure
                     function(response) {
