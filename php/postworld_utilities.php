@@ -71,7 +71,25 @@ function postworld_includes(){
 
 	wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
 
-	//pw_modals();
+
+	///// WINDOW JAVASCRIPT DATA INJECTION /////
+	// Inject Current User Data into Window
+	function pw_current_userdata() {
+		$user_id = get_current_user_id();
+		$userdata = wp_get_current_user();
+		unset($userdata->data->user_pass);
+		?>
+		<script type="text/javascript">
+			var current_user = "<?php echo json_encode($userdata); ?>";
+		</script>
+	<?php
+	}
+	// Add hook for admin <head></head>
+	add_action('admin_head', 'pw_current_userdata');
+	// Add hook for front-end <head></head>
+	add_action('wp_head', 'pw_current_userdata');
+
+
 
 }
 

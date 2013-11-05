@@ -173,11 +173,13 @@ postworld.run(function($rootScope, $templateCache, pwData) {
             pwData.templates.resolve(value.data);
             pwData.templatesFinal = value.data;
             console.log('postworld RUN getTemplates=',pwData.templatesFinal);
-          });       
-// TODO remove in production
+          });    
+
+    // TODO remove in production
    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();
    });
+   
 });
    
 
@@ -532,171 +534,171 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
             return {
                 "topic" : [
                     {
-                        slug:"psyche",
-                        name:"/psyche",
-                        children:{
-                            ancient:"Ancient Mysteries",
-                            astrology:"Astrology",
-                            consciousness:"Consciousness",
-                            dreams:"Dreams",
-                            ets:"Extraterrestrials",
-                            indigenous:"Indigenous Cultures",
-                            occult:"Occult",
-                            psi:"Psi",
-                            psychedelics:"Psychedelics",
-                            psychology:"Psychology",
-                            shamanism:"Shamanism",
-                            spirituality:"Spirituality",
-                            transformation:"Transformation",
-                            psyche_misc:"Misc"
-                            },
+                        "slug":"psyche",
+                        "name":"/psyche",
+                        "children":{
+                            "ancient":"Ancient Mysteries",
+                            "astrology":"Astrology",
+                            "consciousness":"Consciousness",
+                            "dreams":"Dreams",
+                            "ets":"Extraterrestrials",
+                            "indigenous":"Indigenous Cultures",
+                            "occult":"Occult",
+                            "psi":"Psi",
+                            "psychedelics":"Psychedelics",
+                            "psychology":"Psychology",
+                            "shamanism":"Shamanism",
+                            "spirituality":"Spirituality",
+                            "transformation":"Transformation",
+                            "psyche_misc":"Misc"
+                            }
                     },
                     {
-                        slug:"arts",
-                        name:"/arts",
-                        children:{
-                            conferences:"Conferences",
-                            digital_art:"Digital Art",
-                            world_art:"World Art",
-                            festival_culture:"Festival Culture",
-                            games:"Games",
-                            music:"Music",
-                            performance:"Performance",
-                            publications:"Publications",
-                            video:"Video",
-                            film:"Film",
-                            misc:"Misc"
-                            },
+                        "slug":"arts",
+                        "name":"/arts",
+                        "children":{
+                            "conferences":"Conferences",
+                            "digital_art":"Digital Art",
+                            "world_art":"World Art",
+                            "festival_culture":"Festival Culture",
+                            "games":"Games",
+                            "music":"Music",
+                            "performance":"Performance",
+                            "publications":"Publications",
+                            "video":"Video",
+                            "film":"Film",
+                            "misc":"Misc"
+                            }
                     },
                     {
-                        slug:"body",
-                        name:"/body",
-                        children:{
-                            energy_medicine:"Energy Medicine",
-                            food_nutrition:"Food & Nutrition",
-                            healing:"Healing",
-                            herbalism:"Herbalism",
-                            homeopathy:"Homeopathy",
-                            sexuality:"Sexuality",
-                            slow_living:"Slow Living",
-                            tantra:"Tantra",
-                            yoga:"Yoga",
-                            body_misc:"Misc",
-                            },
+                        "slug":"body",
+                        "name":"/body",
+                        "children":{
+                            "energy_medicine":"Energy Medicine",
+                            "food_nutrition":"Food & Nutrition",
+                            "healing":"Healing",
+                            "herbalism":"Herbalism",
+                            "homeopathy":"Homeopathy",
+                            "sexuality":"Sexuality",
+                            "slow_living":"Slow Living",
+                            "tantra":"Tantra",
+                            "yoga":"Yoga",
+                            "body_misc":"Misc",
+                            }
                     },
                     {
-                        slug:"eco",
-                        name:"/eco",
-                        children:{
-                            animal_rights:"Animal Rights",
-                            climate_change:"Climate Change",
-                            conservation:"Conservation",
-                            energy:"Energy",
-                            environment:"Environment",
-                            extinction:"Extinction",
-                            gardening:"Gardening",
-                            permaculture:"Permaculture",
-                            sustainability:"Sustainability",
-                            water:"Water",
-                            eco_misc:"Misc",
-                            },
+                        "slug":"eco",
+                        "name":"/eco",
+                        "children":{
+                            "animal_rights":"Animal Rights",
+                            "climate_change":"Climate Change",
+                            "conservation":"Conservation",
+                            "energy":"Energy",
+                            "environment":"Environment",
+                            "extinction":"Extinction",
+                            "gardening":"Gardening",
+                            "permaculture":"Permaculture",
+                            "sustainability":"Sustainability",
+                            "water":"Water",
+                            "eco_misc":"Misc",
+                            }
                     },
                     {
-                        slug:"tech",
-                        name:"/tech",
-                        children:{
-                            biomimicry:"Biomimicry",
-                            cosmology:"Cosmology",
-                            design_science:"Design Science",
-                            digital:"Digital",
-                            diy:"DIY",
-                            networks:"Networks",
-                            privacy:"Privacy",
-                            robotics:"Robotics",
-                            singularity:"Singularity",
-                            tech_misc:"Misc"
+                        "slug":"tech",
+                        "name":"/tech",
+                        "children":{
+                            "biomimicry":"Biomimicry",
+                            "cosmology":"Cosmology",
+                            "design_science":"Design Science",
+                            "digital":"Digital",
+                            "diy":"DIY",
+                            "networks":"Networks",
+                            "privacy":"Privacy",
+                            "robotics":"Robotics",
+                            "singularity":"Singularity",
+                            "tech_misc":"Misc"
                         }
                     },
                     {
-                        slug:"commons",
-                        name:"/commons",
-                        children:{
-                            action_alerts:"Action Alerts",
-                            activism:"Activism",
-                            alternative_economics:"Alternative Economics",
-                            collaboration:"Collaboration",
-                            community:"Community",
-                            crowdfunding:"Crowdfunding",
-                            democracy:"Democracy",
-                            drug_laws:"Drug Laws",
-                            evolver:"Evolver",
-                            evolver_spores:"Evolver Spores",
-                            open_source:"Open Source",
-                            peer_to_peer:"Peer to Peer",
-                            retreats:"Retreats",
-                            commons_misc:"Misc"
+                        "slug":"commons",
+                        "name":"/commons",
+                        "children":{
+                            "action_alerts":"Action Alerts",
+                            "activism":"Activism",
+                            "alternative_economics":"Alternative Economics",
+                            "collaboration":"Collaboration",
+                            "community":"Community",
+                            "crowdfunding":"Crowdfunding",
+                            "democracy":"Democracy",
+                            "drug_laws":"Drug Laws",
+                            "evolver":"Evolver",
+                            "evolver_spores":"Evolver Spores",
+                            "open_source":"Open Source",
+                            "peer_to_peer":"Peer to Peer",
+                            "retreats":"Retreats",
+                            "commons_misc":"Misc"
                         }
-                    },
+                    }
                 ],
                 'section' : [
                     {
-                        slug:"psychedelic",
-                        name:"Psychedelic Culture",
+                        "slug":"psychedelic",
+                        "name":"Psychedelic Culture",
                     },
                     {
-                        slug:"conscious_convergences",
-                        name:"Conscious Convergences",
+                        "slug":"conscious_convergences",
+                        "name":"Conscious Convergences",
                     },
                     {
-                        slug:"psi",
-                        name:"Psi Frontiers",
+                        "slug":"psi",
+                        "name":"Psi Frontiers",
                     },
                     {
-                        slug:"video",
-                        name:"Videos",
+                        "slug":"video",
+                        "name":"Videos",
                     },
                     {
-                        slug:"podcast",
-                        name:"Podcasts",
+                        "slug":"podcast",
+                        "name":"Podcasts",
                     },
                     {
-                        slug:"edm",
-                        name:"Evolver EDM",
+                        "slug":"edm",
+                        "name":"Evolver EDM",
                     },
                     {
-                        slug:"evo_network",
-                        name:"Evolver Network",
+                        "slug":"evo_network",
+                        "name":"Evolver Network",
                     },
                     {
-                        slug:"evo_learning_lab",
-                        name:"Evolver Learning Lab",
+                        "slug":"evo_learning_lab",
+                        "name":"Evolver Learning Lab",
                     },
 
                 ],
                 'type' : [
                     {
-                        slug:"song_week",
-                        name:"Song of the Week",
-                        parent_name:"Hilight",
-                        parent:"hilight",
+                        "slug":"song_week",
+                        "name":"Song of the Week",
+                        "parent_name":"Hilight",
+                        "parent":"hilight",
                     },
                     {
-                        slug:"video_week",
-                        name:"Video of the Week",
-                        parent_name:"Hilight",
-                        parent:"hilight"
+                        "slug":"video_week",
+                        "name":"Video of the Week",
+                        "parent_name":"Hilight",
+                        "parent":"hilight"
                     },
                     {
-                        slug:"event_feature",
-                        name:"Featured Event",
-                        parent_name:"Events",
-                        parent:"events"
+                        "slug":"event_feature",
+                        "name":"Featured Event",
+                        "parent_name":"Events",
+                        "parent":"events"
                     },
                     {
-                        slug:"event_evolver",
-                        name:"Evolver Event",
-                        parent_name:"Events",
-                        parent:"events"
+                        "slug":"event_evolver",
+                        "name":"Evolver Event",
+                        "parent_name":"Events",
+                        "parent":"events"
                     },
                 ],
                 
@@ -3365,7 +3367,6 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
 
         
     };
-
 
 }
 
