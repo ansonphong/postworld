@@ -179,7 +179,7 @@ postworld.run(function($rootScope, $templateCache, pwData) {
    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();
    });
-   
+
 });
    
 
@@ -1761,17 +1761,17 @@ var postActions = function ( $scope, pwData ) {
             ( $scope.post.viewer.is_view_later == true ) ? $scope.isViewLater="selected" : $scope.isViewLater="" ;
         }, 1 );
 
-    $scope.setFavorite = function(){
+    $scope.setFavorite = function($event){
         $scope.togglePostRelationship('favorites');
         //if ($event.stopPropagation) $event.stopPropagation();
-        if ($event.preventDefault) $event.preventDefault();
+        //if ($event.preventDefault) $event.preventDefault();
         
     }
 
-    $scope.setViewLater = function(){
+    $scope.setViewLater = function($event){
         $scope.togglePostRelationship('view_later');
         //if ($event.stopPropagation) $event.stopPropagation();
-        if ($event.preventDefault) $event.preventDefault();
+        //if ($event.preventDefault) $event.preventDefault();
         
     }
 
@@ -1887,51 +1887,6 @@ var postVote = function ( $rootScope, $scope, pwData ) {
 };
 
 
-
-/*
-     _       _           _         ____                      _                     
-    / \   __| |_ __ ___ (_)_ __   |  _ \ _ __ ___  _ __   __| | _____      ___ __  
-   / _ \ / _` | '_ ` _ \| | '_ \  | | | | '__/ _ \| '_ \ / _` |/ _ \ \ /\ / / '_ \ 
-  / ___ \ (_| | | | | | | | | | | | |_| | | | (_) | |_) | (_| | (_) \ V  V /| | | |
- /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
-                                                  |_|                              
-////////// ------------ ADMIN DROPDOWN ------------ //////////*/   
-var adminDropdownMenu = function ($scope) {
-
-    
-    $scope.adminMenuItems = [
-        /*
-        {
-            name: "Quick Edit",
-            url:"#",
-            icon:"icon-pencil",
-            click:"quickEdit"
-        },
-        */
-        {
-            name: "Edit",
-            url: "/post/#/edit/"+$scope.post.ID,
-            icon:"icon-edit"
-        },
-        {
-            name: "WP Edit",
-            url: decodeURI($scope.post.edit_post_link),
-            icon:"icon-edit-sign"
-        },
-        {
-            name: "Flag",
-            url: "#flag",
-            icon:"icon-flag"
-        },
-        {
-            name: "Trash",
-            url: "#trash",
-            icon:"icon-trash"
-        }
-    ];
-
-
-};
 
 
 
@@ -2370,8 +2325,6 @@ var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwDat
 
 var mediaEmbed = function ( $scope, $sce, pwData ) {
 
-    //$scope.oEmbedDecode = '<iframe width="500" height="281" src="http://www.youtube.com/embed/38peWm76l-U?feature=oembed" frameborder="0" allowfullscreen></iframe> ';
-    $scope.oEmbedDecode = $sce.trustAsHtml( $scope.oEmbedDecode );
     $scope.oEmbed = "";
     $scope.oEmbedGet = function (link_url) {
         var args = { "link_url":link_url };
@@ -2389,8 +2342,12 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
         
     };
 
-    $scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
-    //$scope.link_url = $scope.post.link_url;
+    // Run oEmbedGet on Media
+    if(
+        $scope.post.post_format == 'video' ||
+        $scope.post.post_format == 'audio'
+        )
+        $scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
 
 };
 
@@ -2718,6 +2675,115 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
 
 
 
+/*
+     _       _           _         ____                      _                     
+    / \   __| |_ __ ___ (_)_ __   |  _ \ _ __ ___  _ __   __| | _____      ___ __  
+   / _ \ / _` | '_ ` _ \| | '_ \  | | | | '__/ _ \| '_ \ / _` |/ _ \ \ /\ / / '_ \ 
+  / ___ \ (_| | | | | | | | | | | | |_| | | | (_) | |_) | (_| | (_) \ V  V /| | | |
+ /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
+                                                  |_|                              
+////////// ------------ ADMIN DROPDOWN ------------ //////////*/   
+var adminDropdownMenu = function ($scope, $location, $window, pwQuickEdit) {
+
+    $scope.adminMenuItems = [
+        {
+            name: "Quick Edit",
+            icon:"icon-pencil",
+            action:"quick-edit"
+        },
+        {
+            name: "Edit",
+            icon:"icon-edit",
+            action:"pw-edit",
+        },
+        {
+            name: "WP Edit",
+            icon:"icon-edit-sign",
+            action:"wp-edit",
+        },
+        {
+            name: "Flag",
+            icon:"icon-flag",
+            action:"flag",
+        },
+        {
+            name: "Trash",
+            icon:"icon-trash",
+            action:"trash",
+        }
+    ];
+
+    
+    var actionsByRole = {
+        "administrator":['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
+        "editor":[],
+        "author":[],
+        "contributor":[]
+    };
+    
+    //alert( JSON.stringify( window['current_user'] ) );
+
+    // BUILD MENU HERE - FOREACH
+
+    $scope.menuAction = function(action){
+
+        if( action == "wp-edit" )
+            $window.location.href = $scope.post.edit_post_link.replace("&amp;","&");
+
+        if( action == "pw-edit" )
+            $window.location.href = "/post/#/edit/"+$scope.post.ID;
+
+        if( action == "quick-edit" ){
+            pwQuickEdit.openQuickEdit($scope.post);
+            //alert("quick edit");
+            //$window.location.href = "/post/#/edit/"+$scope.post.ID;
+            //$scope.openQuickEdit($scope.post);
+        }
+
+    };
+
+
+};
+
+
+
+
+
+/*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
+postworld.service('pwQuickEdit', ['$log', '$modal', function ( $log, $modal ) {
+    return{
+        openQuickEdit : function( post ){
+
+
+            console.log( "Launch Quick Edit : ", post );  
+            var modalInstance = $modal.open({
+              templateUrl: jsVars.pluginurl+'/postworld/templates/panels/quick_edit.html',
+              controller: quickEditInstanceCtrl,
+              windowClass: 'quick_edit',
+              resolve: {
+                post: function(){
+                    return post;
+                }
+              }
+            });
+            modalInstance.result.then(function (selectedItem) {
+                //$scope.post_title = post_title;
+            }, function () {
+                // WHEN CLOSE MODAL
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+
+
+        },
+        
+    }
+}]);
+
+
+
+
+
+
 
 /*
    ___        _      _      _____    _ _ _   
@@ -2772,6 +2838,16 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
         $modalInstance.dismiss('close');
     };
 };
+
+
+
+
+
+
+
+
+
+
 
 
 /*

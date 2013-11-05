@@ -80,7 +80,7 @@ function postworld_includes(){
 		unset($userdata->data->user_pass);
 		?>
 		<script type="text/javascript">
-			var current_user = "<?php echo json_encode($userdata); ?>";
+			current_user = "<?php echo json_encode($userdata); ?>";
 		</script>
 	<?php
 	}
