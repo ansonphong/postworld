@@ -1015,7 +1015,6 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
         function (){
             // Create selected terms object
             $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.taxInput);
-            
             // Clear irrelivent sub-terms
             //$scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.taxInput, $scope.selected_tax_terms );
         
