@@ -71,6 +71,7 @@ postworld.controller('pwFilterFeedController',
  			}
 		});
 
+		///// TRANSLATE TAXONOMY MODEL INPUT FOR WP_QUERY /////
 		// Format the Model Input into format accessible to WP_Query
 		$scope.$watch('taxInput', function(value) {
 			
@@ -86,25 +87,29 @@ postworld.controller('pwFilterFeedController',
 					// produce a tax_query object for it
 					// for : http://codex.wordpress.org/Class_Reference/WP_Query
 
-
+					// Remove Null Terms
 					angular.forEach( terms, function( term ){
-						if( term != null ){
-							var termQueryObject = { 
-								"taxonomy": taxonomy,
-								"field": "slug",
-								"terms":[term],
-								//"operator":"IN"
-							};
-							// Push to feedQuery.tax_input
-							$scope.feedQuery.tax_query.push( termQueryObject );
+						if( term == null ){
+							var index = terms.indexOf(term);
+							if (index > -1) {
+							    terms.splice( index, 1);
+							}
 						}
 					});
 
+					// Define Taxonomy Term Query Object
+					var termQueryObject = { 
+						"taxonomy": taxonomy,
+						"field": "slug",
+						"terms":terms,
+						//"operator":"AND"
+					};
+
+					// Push to feedQuery.tax_input
+					$scope.feedQuery.tax_query.push( termQueryObject );
 
 				}
 		    });
-
-			//$scope.feedQuery.tax_query.push( 'relation' : 'AND' );
 
 		    $scope.submit();
 		}, 1); 
