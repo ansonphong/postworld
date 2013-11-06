@@ -34,6 +34,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
         });
+    $routeProvider.when('/live-feed-with-ads/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed6Widget.html',                
+        });
     $routeProvider.when('/live-feed-2-feeds-auto/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
