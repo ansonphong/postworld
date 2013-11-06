@@ -78,11 +78,17 @@ function postworld_includes(){
 		$user_id = get_current_user_id();
 		$userdata = wp_get_current_user();
 		unset($userdata->data->user_pass);
+
+		if ( !isset($userdata->data) ){
+			$userdata = 0;
+		}
+
 		?>
 		<script type="text/javascript">
-			current_user = "<?php echo json_encode($userdata); ?>";
+			var current_user = <?php echo json_encode($userdata); ?>;
 		</script>
 	<?php
+
 	}
 	// Add hook for admin <head></head>
 	add_action('admin_head', 'pw_current_userdata');

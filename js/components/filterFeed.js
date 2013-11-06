@@ -28,10 +28,16 @@ postworld.controller('pwFilterFeedController',
 				// Get Default Argument Values
 				$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
 			   
-
-			   	// UPDATE USERNAME HERE
+			   	// DEFAULTS
 				$scope.feedQuery.author_name = "";
 
+				///// TODO : REFACTOR INTO SITE-SPECIFIC DATA SERVICE, SYNC WITH TAX_INPUT SERVICE /////
+				// MODEL INPUT OBJECT
+				$scope.taxInput = {
+					topic:[],
+					section:[],
+					type:[]
+				};
 
 			   // Get Default View Name
 			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
@@ -63,17 +69,52 @@ postworld.controller('pwFilterFeedController',
  			} else  {
 				$scope.clsOrder ='glyphicon-arrow-up';		
  			}
-		}); 
+		});
+
+		// Format the Model Input into format accessible to WP_Query
+		$scope.$watch('taxInput', function(value) {
+			
+			// Reset tax_query object
+			$scope.feedQuery.tax_query = [];
+
+			// For each taxonomy
+			angular.forEach( $scope.taxInput, function( terms, taxonomy ){
+				//$log.info(terms);
+				// If terms isn't empty
+				if( terms.length > 0 && terms[0] != null ){
+					// For each taxonomy with terms specified
+					// produce a tax_query object for it
+					// for : http://codex.wordpress.org/Class_Reference/WP_Query
+
+
+					angular.forEach( terms, function( term ){
+						if( term != null ){
+							var termQueryObject = { 
+								"taxonomy": taxonomy,
+								"field": "slug",
+								"terms":[term],
+								//"operator":"IN"
+							};
+							// Push to feedQuery.tax_input
+							$scope.feedQuery.tax_query.push( termQueryObject );
+						}
+					});
+
+
+				}
+		    });
+
+			//$scope.feedQuery.tax_query.push( 'relation' : 'AND' );
+
+		    $scope.submit();
+		}, 1); 
 		
+
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function(view) {
 			$log.info('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", view);		    	
 		};	
-
-
-
-
 
     	
     }

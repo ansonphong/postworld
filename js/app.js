@@ -165,7 +165,7 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
  |_| \_\\__,_|_| |_|
                     
 */
-postworld.run(function($rootScope, $templateCache, pwData) {    
+postworld.run(function($rootScope, $templateCache, $log, pwData) {    
         // TODO move getting templates to app startup
         pwData.pw_get_templates(null).then(function(value) {
             // TODO should we create success/failure responses here?
@@ -179,6 +179,10 @@ postworld.run(function($rootScope, $templateCache, pwData) {
    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();
    });
+
+   // 
+   $rootScope.current_user = window['current_user'];
+   $log.info('Current user: ', $rootScope.current_user );
 
 });
    
@@ -1004,6 +1008,20 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // as $scope.tax_terms
     $pwPostOptions.getTaxTerms($scope);
 
+    // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
+    // Make a new object which contains only the selected sub-objects
+    $scope.selected_tax_terms = {};
+    $scope.$watch( "taxInput",
+        function (){
+            // Create selected terms object
+            $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.taxInput);
+            
+            // Clear irrelivent sub-terms
+            //$scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.taxInput, $scope.selected_tax_terms );
+        
+        }, 1 );
+
+
     /*
     $scope.$on('updateUsername', function(username) { 
         $scope.feedQuery.author_name = username;
@@ -1404,13 +1422,6 @@ postworld.controller('editPost',
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
-
-    // TAXONOMY TERMS
-    // Gets live set of terms from the DB
-    // as $scope.tax_terms
-    $pwPostOptions.getTaxTerms($scope);
-
-
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
 
@@ -1421,13 +1432,18 @@ postworld.controller('editPost',
         $scope.post_data.post_author_name = data;
     });
 
-
     // UPDATE POST TAGS FROM AUTOCOMPLETE MODULE
     // Interacts with tagsAutocomplete() controller
     // Catches the recent value of the tags_input and inject into tax_input
     $scope.$on('updateTagsInput', function( event, data ) { 
         $scope.post_data.tax_input.post_tag = data;
     });
+
+
+    // TAXONOMY TERMS
+    // Gets live set of terms from the DB
+    // as $scope.tax_terms
+    $pwPostOptions.getTaxTerms($scope);
 
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
@@ -2683,9 +2699,9 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
 ////////// ------------ ADMIN DROPDOWN ------------ //////////*/   
-var adminDropdownMenu = function ($scope, $location, $window, pwQuickEdit) {
+var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, pwQuickEdit) {
 
-    $scope.adminMenuItems = [
+    $scope.menuOptions = [
         {
             name: "Quick Edit",
             icon:"icon-pencil",
@@ -2713,17 +2729,69 @@ var adminDropdownMenu = function ($scope, $location, $window, pwQuickEdit) {
         }
     ];
 
-    
+    // Actions which each role has access to
     var actionsByRole = {
-        "administrator":['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
-        "editor":[],
-        "author":[],
-        "contributor":[]
+        "administrator": {
+            own:['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
+            other:['quick-edit', 'pw-edit', 'wp-edit','flag','trash']
+        },
+        "editor":{
+            own: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
+            other: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
+        },
+        "author":{
+            own: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
+            other: ['flag'],
+        },
+        "contributor":{
+            own: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
+            other: ['flag'],
+        },
+        "guest":{
+            own: [],
+            other: [],
+        },
     };
-    
-    //alert( JSON.stringify( window['current_user'] ) );
 
-    // BUILD MENU HERE - FOREACH
+    //$
+    
+
+    // Localize current user data
+    $scope.current_user = $rootScope.current_user;
+
+    // Detect the user's possession in relation to the post
+    // If the user's ID is same as the post author's ID
+    if ( typeof $scope.current_user.data !== 'undefined' ){
+        if( $scope.post.author.ID == $scope.current_user.data.ID )
+            $scope.postPossession = "own";
+        else
+            $scope.postPossession = "other";
+    } else {
+        $scope.postPossession = "other";
+    }
+
+    // Detect current user's role
+    if ( $scope.current_user == 0 )
+        $scope.currentRole = "guest";
+    else if ( typeof $scope.current_user.roles != undefined ){
+        $scope.currentRole = $rootScope.current_user.roles[0];
+    }
+
+    // Setup empty menu options array
+    $scope.userOptions = [];
+
+    // TODO : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
+
+    // Build menu for user based on role
+    angular.forEach( $scope.menuOptions, function( option ){
+        if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
+            $scope.userOptions.push( option );
+    });
+
+    // If no options added, set empty
+    if ( $scope.userOptions == [] )
+        $scope.userOptions = "0";
+    
 
     $scope.menuAction = function(action){
 
@@ -2735,16 +2803,11 @@ var adminDropdownMenu = function ($scope, $location, $window, pwQuickEdit) {
 
         if( action == "quick-edit" ){
             pwQuickEdit.openQuickEdit($scope.post);
-            //alert("quick edit");
-            //$window.location.href = "/post/#/edit/"+$scope.post.ID;
-            //$scope.openQuickEdit($scope.post);
         }
 
     };
 
-
 };
-
 
 
 
