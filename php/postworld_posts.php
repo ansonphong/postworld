@@ -126,12 +126,14 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// Get User Data
 		$viewer_user_data = get_userdata( $viewer_user_id );
 		// If user exists, add user fields
-		if( $viewer_user_data != false ){
-			$fields = array_merge($fields, $viewer_fields);
-		}
-	}
-	
+		//if( $viewer_user_data != false ){
+		//	$fields = array_merge($fields, $viewer_fields);
+		//}
+	} else if ($viewer_user_id == 0){
 
+	}
+	$fields = array_merge($fields, $viewer_fields);
+	
 	////////// WP GET_POST METHOD //////////
 	// Get post data from Wordpress standard function
 	$get_post = get_post($post_id, ARRAY_A);
@@ -213,17 +215,21 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			///// GET VIEWER DATA /////
 			// Has Viewer Voted?
 			if( in_array('has_voted', $viewer_fields) )
-				$post_data['viewer']['has_voted'] = has_voted_on_post( $post_id, $viewer_user_data->ID );
+				$post_data['viewer']['has_voted'] = has_voted_on_post( $post_id, $viewer_user_id );
 
 			// View Vote Power
 			if( in_array('vote_power', $viewer_fields) )
-				$post_data['viewer']['vote_power'] = get_user_vote_power( $viewer_user_data->ID );
+				$post_data['viewer']['vote_power'] = get_user_vote_power( $viewer_user_id );
 		
 			// Is Favorite
-			if( in_array('is_favorite', $viewer_fields) )
-				$post_data['viewer']['is_favorite'] = is_favorite( $post_id );
+			if( in_array('is_favorite', $viewer_fields) ){
+				$is_favorite = is_favorite( $post_id );
+				if ( !isset($is_favorite) )
+					$is_favorite = "0";
+				$post_data['viewer']['is_favorite'] = $is_favorite;
+			}
 
-			// Is Favorite
+			// Is View Later
 			if( in_array('is_view_later', $viewer_fields) )
 				$post_data['viewer']['is_view_later'] = is_view_later( $post_id );
 
@@ -255,7 +261,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	   			// Set Avatar Size
 	   			$post_data['avatar'][$avatar_handle]['width'] = $avatar_size;
 	   			$post_data['avatar'][$avatar_handle]['height'] = $avatar_size;
-				$post_data['avatar'][$avatar_handle]['url'] = get_avatar_url( $author_id, $avatar_size );
+				$post_data['avatar'][$avatar_handle]['url'] = pw_get_avatar( array( "user_id"=> $author_id, "size" => $avatar_size ) ); //get_avatar_url( $author_id, $avatar_size );
 
 	   		}
 

@@ -171,7 +171,7 @@ postworld.controller('pwFeedController',
 			// Count Length of loaded and feed_outline
 			pwData.feed_data[$scope.feed].count_loaded = response.data.post_data.length;						
 			pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_data[$scope.feed].feed_outline.length;
-			console.log('check',pwData.feed_data[$scope.feed]);
+			//console.log('check',pwData.feed_data[$scope.feed]);
 			// Set Feed load Status
 			if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
 				pwData.feed_data[$scope.feed].status = 'all_loaded';													
@@ -320,7 +320,7 @@ postworld.controller('pwFeedController',
 		$scope.pwScrollFeed = function() {
 			// Check if all Loaded, then return and do nothing
 			if (pwData.feed_data[$scope.feed].status == 'all_loaded') {
-				$log.info('pwFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
+				//$log.info('pwFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
 				$scope.busy = false;
 				return;
 			};		

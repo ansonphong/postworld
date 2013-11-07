@@ -114,11 +114,9 @@ function postworld_install() {
       UNIQUE KEY user_id_post_id (user_id,post_id)
     );";
     
-    
-    
   $feeds_table_name = $wpdb->pw_prefix.'feeds';
   $sql_postworld_feeds = "CREATE TABLE $feeds_table_name (
-      feed_id char(24) NOT NULL,
+      feed_id char(128) NOT NULL,
       feed_query TEXT NOT NULL,
       feed_outline MEDIUMTEXT  NULL,
       time_start TIMESTAMP  NULL,

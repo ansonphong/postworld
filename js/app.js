@@ -2760,8 +2760,8 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
 
     // Detect the user's possession in relation to the post
     // If the user's ID is same as the post author's ID
-    if ( typeof $scope.current_user.data !== 'undefined' ){
-        if( $scope.post.author.ID == $scope.current_user.data.ID )
+    if ( typeof $scope.current_user.data !== 'undefined' && typeof $scope.post.author.ID !== 'undefined' ){
+        if( $scope.current_user.data.ID == $scope.post.author.ID )
             $scope.postPossession = "own";
         else
             $scope.postPossession = "other";
@@ -2923,13 +2923,17 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
 var postController = function ( $scope, $rootScope, pwData ) {
 
     // Set class via ng-class, of current assigned taxonomy (topic)
+    // TODO : Break this into RS theme specific scripts 
     $scope.setClass = function(){
         // Set the color topic class
-        if ( $scope.post.taxonomy.topic !== 'undefined' )
-            angular.forEach( $scope.post.taxonomy.topic, function( term ){
-                if( term.parent == "0" )
-                    $scope.topic = term.slug;
-            });
+        if( typeof $scope.post !== 'undefined' )
+            if( typeof $scope.post.taxonomy !== 'undefined' )
+                if ( typeof $scope.post.taxonomy.topic !== 'undefined' ){
+                    angular.forEach( $scope.post.taxonomy.topic, function( term ){
+                        if( term.parent == "0" )
+                            $scope.topic = term.slug;
+                    });
+                }
     };
     $scope.setClass();
 
