@@ -1783,10 +1783,14 @@ var postActions = function ( $scope, pwData ) {
         
         // Check toggle switch
         var setTo;
-        if ( postRelationship == "favorites" )
+        if ( postRelationship == "favorites" ){
             ( viewer.is_favorite == true ) ? setTo = false : setTo = true;
-        if ( postRelationship == "view_later" )
+            $scope.favoriteStatus = "busy";
+        }
+        if ( postRelationship == "view_later" ){
             ( viewer.is_view_later == true ) ? setTo = false : setTo = true ;
+            $scope.viewLaterStatus = "busy";
+        }
 
         // Setup parmeters
         var args = {
@@ -1807,6 +1811,8 @@ var postActions = function ( $scope, pwData ) {
                         $scope.post.viewer.is_favorite = true;
                     //else
                         //alert( "Server error setting favorite." )
+
+                    $scope.favoriteStatus = "done";
                 }
                 //SET VIEW LATER
                 if ( postRelationship == "view_later"){
@@ -1814,8 +1820,10 @@ var postActions = function ( $scope, pwData ) {
                         $scope.post.viewer.is_view_later = false;
                     else if ( response.data === true )
                         $scope.post.viewer.is_view_later = true;
-                    else
-                        alert( "Server error setting view later." )
+                    //else
+                        //alert( "Server error setting view later." )
+
+                    $scope.viewLaterStatus = "done";
                 }
             },
             // ON : FAILURE
@@ -1863,6 +1871,7 @@ var postVote = function ( $rootScope, $scope, pwData ) {
             post_id: $scope.post.ID,
             points: points,
         };
+        $scope.voteStatus = "busy";
         // AJAX Call 
         pwData.set_post_points ( args ).then(
             // ON : SUCCESS
@@ -1874,11 +1883,14 @@ var postVote = function ( $rootScope, $scope, pwData ) {
                     $scope.post.post_points = response.data.points_total;
                     // UPDATE VIEWER HAS VOTED
                     $scope.post.viewer.has_voted = ( parseInt($scope.post.viewer.has_voted) + parseInt(response.data.points_added) ) ;
+                    
                 } //else
                     //alert('Server error voting.');
+                $scope.voteStatus = "done";
             },
             // ON : FAILURE
             function(response) {
+                $scope.voteStatus = "done";
                 //alert('Client error voting.');
             }
         );
