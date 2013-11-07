@@ -2051,7 +2051,7 @@ postworld.directive('ngEnter', function() {
 
 
 ///// KEEP DROPDOWN OPEN ON CLICK /////
-postworld.directive('stayOpen', function() {
+postworld.directive('preventDefaultClick', function() {
         return {
             restrict: 'A',
             link: function (scope, element) {
