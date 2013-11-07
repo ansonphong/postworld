@@ -44,7 +44,7 @@ function calculate_rank_score ( $post_id ) {
 	$ARCHIVE_PERIOD =		$equasion['archive_period'];
 	$ARCHIVE_MULTIPLIER =	$equasion['archive_multiplier'];
 
-	$FREE_RANK_SCORE =		$equasion['free_rank_score'];
+	$FREE_RANK_POINTS =		$equasion['free_rank_points'];
 	$FREE_RANK_PERIOD =		$equasion['free_rank_period'];
 
 
@@ -121,9 +121,6 @@ function calculate_rank_score ( $post_id ) {
 }
 
 
-
-
-
 function cache_rank_score ( $post_id ){
 	/*• Calculate rank_score with calculate_rank_score() method
 	• Cache the result in wp_postworld_meta in the rank_score column
@@ -135,7 +132,7 @@ function cache_rank_score ( $post_id ){
 	add_record_to_post_meta($post_id);
 	$query ="update $wpdb->pw_prefix"."post_meta set rank_score=".$post_rank_score." where post_id=".$post_id;
 	$result = $wpdb->query($query);
-	
-	
+
+	return $post_rank_score;
 }
 ?>

@@ -186,6 +186,7 @@ __return__ : *integer* (number of points)
 
 #### Description
 - Wrapper for `set_points()` Method for setting post points
+- Run `cache_rank_score()` to update rank score of the post
 
 #### Parameters
 
@@ -528,6 +529,31 @@ __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 - Cycles through each post in each post_type scheduled for Rank Score caching
 - Calculates and caches each post's current rank with cache_rank_score() method
 __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
+
+#### Solutions to Known Issues with PHP Timelimit
+
+- Adapting the wp-config.php:
+
+``` php
+set_time_limit(600);
+define( 'WP_MAX_MEMORY_LIMIT', '512M' );
+define( 'WP_MEMORY_LIMIT', '512M' );
+```
+
+- Adapting the /.htaccess file of your WordPress installation
+  - (only works if PHP is running as a PHP module)
+
+```
+php_value max_execution_time 600
+php_value memory_limit 512M
+```
+
+- Adapting the php.ini file
+
+```
+max_execution_time = 600;
+memory_limit = 512M;
+```
 
 ------
 

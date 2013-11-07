@@ -545,19 +545,33 @@ feed_data = {
 
 ``` javascript
 feed_settings[feed_id] = {
-     preload : 10,
-     load_increment : 10,
-     offset : 0,
-     max_posts : 0,
-     order_by : 'rank_score',
-     panel : 'feed_top',
-     view : {
-          current : 'list',
-          options : ['list','detail','grid','full']
-     },
-     query_args : {
-          (pw_query Args in JSON format)
-     }
+  preload : 10,
+  load_increment : 10,
+  feed_outline : [24,48,45,...], // (Optional) Loads a pre-defined feed outline
+  offset : 0,
+  max_posts : 0,
+  order_by : 'rank_score',
+  panels : {
+    'panel2'  : 'feed_header',  
+  },
+  view : {
+    current : 'list',
+    options : ['list','detail','grid','full']
+  },
+  blocks : { // (Optional) Loads in blocks inserted into the feed
+    offset:3,
+    increment: 3,
+    max_blocks:50,
+    template: 'ad-block'
+  },
+  query_args : {
+    // pw_query Args in JSON format
+    'post_type':['feature','blog'],
+    'post_class':'author',
+    'post_format':'video',
+    'posts_per_page' : 200
+    //...
+  }
 }
 ```
 

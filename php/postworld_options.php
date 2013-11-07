@@ -22,13 +22,13 @@ $pw_defaults = array(
 		),
 
 	'points' => array(
-		'post_types'		=> array('post'),
+		'post_types'		=> array('post','feature','blog','link','tribe_events'),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		),
 
 	'rank' => array(
-		'post_types'		=> array('post'),
+		'post_types'		=> array('post','feature','blog','link','tribe_events'),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		'equations'			=> array(
@@ -41,7 +41,7 @@ $pw_defaults = array(
 				'fresh_multiplier'	=>	2,
 				'archive_period'	=>	6*$ONE_MONTH,
 				'archive_multiplier'=>	0.2,
-				'free_rank_score'	=>	100,
+				'free_rank_points'	=>	100,
 				'free_rank_period'	=>	3*$ONE_DAY,
 				),
 			),

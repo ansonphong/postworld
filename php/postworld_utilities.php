@@ -438,6 +438,15 @@ function time_ago($timestamp){
 }
 
 
+function username_exists_by_id($user_id){
+	$userdata = get_userdata( $user_id );
+	if($userdata != false){ return true; } else{ return false; }
+}
+
+function post_exists_by_id($post_id){
+	$post = get_post( $post_id );
+	if($post != null){ return true; } else{ return false; }
+}
 
 
 

@@ -1,4 +1,30 @@
 <?php
+
+
+////////// SHARE BUG //////////
+// This is a 'bug' which listens for the share fields
+// And if they exist and data checks out, add a share to the DB
+
+add_action( 'wp_loaded', 'share_bug', 10 );
+function share_bug(){
+	$user_id = $_GET['u'];
+	$post_id = $_GET['p'];
+
+	// If both user and post are supplied ie.
+	// http://localhost:8888/?u=1&p=169953  /  175474 / 178530
+
+	if ( isset( $user_id ) && isset( $post_id ) ){
+		if ( username_exists_by_id($user_id) && post_exists_by_id($post_id) ){
+			set_share ( $user_id, $post_id );
+			/* Redirect browser */
+			$permalink = get_permalink( $post_id );
+			wp_redirect( $permalink );
+		}
+	
+	}
+}
+
+
 function set_share ( $user_id, $post_id ){
 	/*
 	 Description
@@ -33,7 +59,7 @@ function set_share ( $user_id, $post_id ){
 	
 	if(does_user_exist($user_id)&& ($post_author = does_post_exist_return_post_author($post_id))!==FALSE){
 		$last_time = date('Y-m-d H:i:s');
-		echo 'pos_auhor:'.$post_author;
+		//echo 'pos_auhor:'.$post_author;
 		$user_ip = get_client_ip();
 		$current_share = get_share($user_id,$post_id);
 		if($current_share){
