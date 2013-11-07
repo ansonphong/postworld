@@ -631,11 +631,11 @@ USER SHARES
 
 ------
 
-### calculate_user_shares( *$post_id, [$mode]* )
+### calculate_user_shares( *$user_id, [$mode]* )
 - Calculates the total number of shares relating to a given user
 
 #### Parameters
-__$post_id__ : *integer*
+__$user_id__ : *integer*
 
 __$mode__ : *string* (optional)
 - Options :

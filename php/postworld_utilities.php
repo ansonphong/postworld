@@ -78,14 +78,23 @@ function postworld_includes(){
 		$user_id = get_current_user_id();
 		$userdata = wp_get_current_user();
 		unset($userdata->data->user_pass);
-
 		if ( !isset($userdata->data) ){
 			$userdata = 0;
 		}
-
 		?>
 		<script type="text/javascript">
 			var current_user = <?php echo json_encode($userdata); ?>;
+			var site_info = <?php
+				$site_info = array(
+					"name" => get_bloginfo( 'name' ),
+					"description" => get_bloginfo( 'description' ),
+					"url" => get_bloginfo( 'url' ),
+					"wpurl" => get_bloginfo( 'wpurl' ),
+					"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
+					"template_url" => get_bloginfo( 'template_url' ),
+					);
+				echo json_encode($site_info);
+				?>;
 		</script>
 	<?php
 

@@ -1963,6 +1963,11 @@ postworld.directive('ngTextareaFilter', function() {
 
 
 
+
+
+
+
+
 /*
 element.bind("keydown keypress", function(event) {
                 if(event.which === 13) {
@@ -2050,6 +2055,27 @@ postworld.directive('ngEnter', function() {
     });
 
 
+
+///// KEEP DROPDOWN OPEN ON CLICK /////
+postworld.directive('stayOpen', function() {
+        return {
+            restrict: 'A',
+            link: function (scope, element) {
+                element.bind('click', function (event) {
+                    event.stopPropagation();
+                });
+            }
+        };
+    });
+
+///// SELECT ON CLICK /////
+postworld.directive('selectOnClick', function() {
+        return function (scope, element, attrs) {
+            element.bind('click', function () {
+                this.select();
+            });
+        };
+    });
 
 
 
@@ -2910,12 +2936,6 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
 
 
 
-
-
-
-
-
-
 /*
   ____           _      ____            _             _ _           
  |  _ \ ___  ___| |_   / ___|___  _ __ | |_ _ __ ___ | | | ___ _ __ 
@@ -2924,8 +2944,17 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
  |_|   \___/|___/\__|  \____\___/|_| |_|\__|_|  \___/|_|_|\___|_|   
                                                                     
 /*////////// ------------ POST CONTROLLER ------------ //////////*/                
-var postController = function ( $scope, $rootScope, pwData ) {
+var postController = function ( $scope, $rootScope, $window, pwData ) {
 
+    // GENERATE SHARE LINK
+    if(
+        typeof $window.site_info !== 'undefined' &&
+        typeof $window.current_user !== 'undefined' &&
+        typeof $scope.post !== 'undefined'
+        ){
+        $scope.share_link = $window.site_info.url + "/?u=" + $window.current_user.ID + "&p=" + $scope.post.ID;
+    }
+    
     // Set class via ng-class, of current assigned taxonomy (topic)
     // TODO : Break this into RS theme specific scripts 
     $scope.setClass = function(){
@@ -3293,6 +3322,9 @@ angular.module('UserValidation', []).directive('validPasswordC', function () {
         }
     }
 })
+
+
+
 
 
 /*
