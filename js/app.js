@@ -109,54 +109,25 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         });  
 
 
-
     $routeProvider.when('/new/:post_type',
         {
             action: "new_post",
         });
 
-
     $routeProvider.when('/edit/:post_id',
         {
-            //templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
-            //mode:'new';
-
             action: "edit_post",
-
-            //controller: 'editPost',
-            //resolve: { post_type:"link" }
-
-            /*
-            resolve: { post_type: function($route){
-                return $route.current.params.post_type;
-            }}
-            */
-            /*
-            resolve: {
-                resolvedprop: [function () {
-                    var apiObject = {url: 'phong.com' };                      
-                    return apiObject;
-                }],
-            }
-            */
-            /*
-
-            resolve: {
-                resolvedprop: ['$route', '$q', function ($route, $q) {
-                   var apiObject = {url: 'abc.com' };                      
-                   return apiObject     
-                         }],
-            }
-
-            */
-
-
         });
 
+    $routeProvider.when('/home/',
+        {
+            action: "default",
+        });
 
 
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
+
 });
 
 
@@ -397,7 +368,7 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
                 },
                 // Failure
                 function(response) {
-                    alert('Error loading terms.');
+                    //alert('Error loading terms.');
                 }
             );
         },
@@ -1173,6 +1144,7 @@ postworld.controller('editPost',
 
     //alert( JSON.stringify( $route.current.action ) );
 
+    //$scope.mode = "edit";
     $scope.status = "loading";
 
     $scope.default_post_data = {
@@ -1185,6 +1157,7 @@ postworld.controller('editPost',
         post_format : "standard",
         post_class : "contributor",
         link_url : "",
+        post_date_gmt:"",
         post_permalink : "",
         tax_input : {
             topic : [],
@@ -1221,9 +1194,13 @@ postworld.controller('editPost',
                 $scope.status = "done";
             }
             ///// ROUTE : EDIT POST /////
-            if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
+            else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
                 // Load the specified post data
                 $scope.load_post_data();
+            }
+            ///// ROUTE : SET DEFAULT /////
+            else if ( $route.current.action == "default"  ){
+                $location.path('/new/blog');
             }
         }
     );
@@ -1250,6 +1227,7 @@ postworld.controller('editPost',
             // Success
             function(response) {    
                 $log.info('pwData.pw_get_post : RESPONSE : ', response.data);
+
 
                 // FILTER FOR INPUT
                 var get_post_data = response.data;
@@ -1300,7 +1278,7 @@ postworld.controller('editPost',
             },
             // Failure
             function(response) {
-                alert('error');
+                //alert('error');
                 $scope.status = "error";
             }
         );  
@@ -1325,6 +1303,8 @@ postworld.controller('editPost',
             ///// SAVE POST VIA AJAX /////
             var post_data = $scope.post_data;
             //alert(JSON.stringify(post_data));
+            
+            $log.info('pwData.pw_save_post : SUBMITTING : ', post_data);
 
             $scope.status = "saving";
             $pwData.pw_save_post( post_data ).then(
@@ -1357,7 +1337,7 @@ postworld.controller('editPost',
                     }
                     else{
                         // ERROR
-                        alert("Error : " + JSON.stringify(response) );
+                        //alert("Error : " + JSON.stringify(response) );
                         $scope.status = "done";
                     }
                     
@@ -1427,6 +1407,7 @@ postworld.controller('editPost',
 
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
+    //alert(JSON.stringify($scope.post_data));
 
     // UPDATE AUTHOR NAME FROM AUTOCOMPLETE
     // Interacts with userAutocomplete() controller
@@ -1474,17 +1455,18 @@ postworld.controller('editPost',
         function (){
             // TRIBE EVENTS
             if( $scope.post_data.post_type == 'tribe_events' && typeof $scope.EventStartDateObject === 'undefined' ){
-               
                 // DATE : Initialize Objects
                 $scope.EventStartDateObject = new Date();
                 $scope.EventEndDateObject = new Date();
-
             }
+            // ROUTE CHANGE
+            if( $scope.mode == "new" )
+                $location.path('/new/' + $scope.post_data.post_type);
         }, 1 );
+
 
     ////////// EVENT DATE PICKER //////////
     
-
     // DATE CHANGE : Watch the date objects for a change
     $scope.updateDate = function(){
 
@@ -1649,7 +1631,7 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
                 },
                 // Failure
                 function(response) {
-                    alert('Could not find URL.');
+                    //alert('Could not find URL.');
                     throw {message:'Embedly Error'+response};
                 }
             );
@@ -1823,8 +1805,8 @@ var postActions = function ( $scope, pwData ) {
                         $scope.post.viewer.is_favorite = false;
                     else if ( response.data === true )
                         $scope.post.viewer.is_favorite = true;
-                    else
-                        alert( "Server error setting favorite." )
+                    //else
+                        //alert( "Server error setting favorite." )
                 }
                 //SET VIEW LATER
                 if ( postRelationship == "view_later"){
@@ -1838,7 +1820,7 @@ var postActions = function ( $scope, pwData ) {
             },
             // ON : FAILURE
             function(response) {
-                alert('Client error.');
+                //alert('Client error.');
             }
         );
 
@@ -1892,12 +1874,12 @@ var postVote = function ( $rootScope, $scope, pwData ) {
                     $scope.post.post_points = response.data.points_total;
                     // UPDATE VIEWER HAS VOTED
                     $scope.post.viewer.has_voted = ( parseInt($scope.post.viewer.has_voted) + parseInt(response.data.points_added) ) ;
-                } else
-                    alert('Server error voting.');
+                } //else
+                    //alert('Server error voting.');
             },
             // ON : FAILURE
             function(response) {
-                alert('Client error voting.');
+                //alert('Client error voting.');
             }
         );
 
@@ -2381,7 +2363,7 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
             },
             // Failure
             function(response) {
-                alert("error");
+                //alert("error");
             }
         );
         
@@ -2566,54 +2548,6 @@ var testController = function ( $scope, pwData, siteOptions, pwPostOptions2 ) {
 
 
 };
-
-/*
-
-postworld.service('pwPostOptions2', ['$log', '$q', 'pwData', 'siteOptions', function ($log, $q, pwData, siteOptions, $scope) {
-    // Do one AJAX call here which returns all the options
-    return{
-        taxOutlineMixed : function(){
-            
-            function get_tax_outline_mixed(){
-                var deferred = $q.defer();
-
-
-                var args = siteOptions.taxOutlineMixed();
-                pwData.taxonomies_outline_mixed( args ).then(
-                    // Success
-                    function(response) {    
-                        //alert(JSON.stringify(response.data));
-                        deferred.resolve( response.data );
-                    },
-                    // Failure
-                    function(response) {
-                        deferred.reject( "error" ); 
-                    }
-                );
-
-
-                return deferred.promise;
-            }
-
-            var promise = get_tax_outline_mixed();
-
-            promise.then(function(result) {
-              alert('Success: ' + JSON.stringify(result));
-              //return result;
-            }, function(reason) {
-              alert('Failed: ' + reason);
-            }, function(update) {
-              alert('Got notification: ' + update);
-            });
-
-
-        },
-    }
-
-}]);
-
-*/
-
 
 
 
@@ -3036,18 +2970,14 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
         pwData.pw_set_avatar( args ).then(
                 // Success
                 function(response) {    
-                    //alert(response.data);
-                    //alert(JSON.stringify(response.data));
                     $scope.avatar_image = response.data;
                     $scope.status = "done";
                     // Load object into scope
-                    //$scope.loadAvatarObj( user_id );
                     //$scope.loadAvatarObj( $scope.user_id );
-
                 },
                 // Failure
                 function(response) {
-                    alert('Error loading terms.');
+                    //alert('Error loading terms.');
                 }
             );
         //$scope.avatar_image = selected_image;
@@ -3072,7 +3002,7 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
                 },
                 // Failure
                 function(response) {
-                    alert('JS loading avatar.');
+                    //alert('JS loading avatar.');
                 }
             );
 
@@ -3112,7 +3042,7 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
                 },
                 // Failure
                 function(response) {
-                    alert('Error deleting avatar.');
+                    //alert('Error deleting avatar.');
                 }
             );
         //$scope.avatar_image = selected_image;

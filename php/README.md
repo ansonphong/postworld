@@ -949,6 +949,7 @@ Here we have a series of functions which are used to read and write custom user 
 
 __$image_object__ : *Array* (required)
 - __id__ - ID of the attachment in Media Library
+- __url__ - URL of image which will be imported into the media library
 - __action__ (optional)
   - __delete__ - Deletes the user's avatar
 
@@ -958,12 +959,13 @@ __$user_id__ : *integer* (required)
 #### Usage
 
 ```php
-  pw_set_avatar( array( "id"=>1, [ "action" => "delete" ] ), $user_id );
+  pw_set_avatar( array( "id"=>1, [ "action" => "delete" ], [ "url" => "http://...jpg/gif/png" ] ), $user_id );
 ```
 
 __return__  
 - On success
-  - __user_id__ (integer)
+  - __Array__ - Image Meta Data &  URLs
+  - `return['id']` is ID 
 - On Error returns error object
 
 ------
@@ -2402,6 +2404,13 @@ array(
 __php/postworld_images.php__
 
 Contains functions for getting registered images, resizing images and post attachment images.
+
+------
+
+### url_to_media_library( *$image_url* )
+- Uploads a remote image URL to the local Media Library
+
+__return__ : *integer* (Attachment ID)
 
 ------
 

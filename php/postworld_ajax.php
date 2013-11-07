@@ -270,7 +270,7 @@ add_action("wp_ajax_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
 function pw_save_post_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$pw_args = $args['args'];
-	$pw_save_post = pw_insert_post($pw_args);//
+	$pw_save_post = pw_save_post($pw_args);
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
@@ -278,8 +278,8 @@ function pw_save_post_admin(){
 	echo json_encode( $response );
 	die;
 }
-//add_action("wp_ajax_nopriv_pw_save_post_admin", "pw_save_post_admin");
-add_action("wp_ajax_pw_save_post_admin", "pw_save_post_admin");
+//add_action("wp_ajax_nopriv_pw_save_post", "pw_save_post_admin");
+add_action("wp_ajax_pw_save_post", "pw_save_post_admin");
 
 
 //---------- GET POST ADMIN ----------//

@@ -862,14 +862,21 @@ function pw_set_avatar( $image_object, $user_id ){
 	if( $user_id == null )
 		return false;
 
+	// Delete avatar meta data
 	if( $image_object['action'] == 'delete' ){
 		// Delete User Meta
 		delete_user_meta( $user_id, 'pw_avatar' );
 		return true;
 	}
 
+	// Upload image from remote URL
+	if( isset( $image_object['url'] ) ){
+		$attachment_id = url_to_media_library( $image_object['url'] );
+		$image_object['id'] = $attachment_id;
+	}
+
 	// If Image has an 'ID' field
-	if( isset( $image_object['id'] ) ){
+	if( isset( $image_object['id'] ) && is_numeric($image_object['id']) ){
 		$attachment_id = $image_object['id'];
 
 		$previous_value = get_user_meta( $user_id,'pw_avatar', true);

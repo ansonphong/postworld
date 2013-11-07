@@ -227,7 +227,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 		pw_save_post: function(args) {
 			$log.info('pwData.pw_save_post',args);
 			var params = {args:args};
-			return this.wp_ajax('pw_save_post_admin', params);
+			return this.wp_ajax('pw_save_post', params);
 		},
 		pw_get_post_edit: function(args) {
 			$log.info('pwData.pw_get_post_edit',args);

@@ -65,4 +65,41 @@ function registered_images_obj(){
 		}
 		return $sizes;
 	}
+
+
+///// UPLOADS REMOTE URL TO WP IMAGE LIBRARY /////
+function url_to_media_library( $image_url ){
+
+	// Check if it's a URL string
+	if ( strpos($image_url,'://') == false ) {
+	    return array( 'error' => 'Not a URL.' );
+	}
+
+	$upload_dir = wp_upload_dir();
+	$image_data = file_get_contents($image_url);
+	$filename = basename($image_url);
+	if(wp_mkdir_p($upload_dir['path']))
+	    $file = $upload_dir['path'] . '/' . $filename;
+	else
+	    $file = $upload_dir['basedir'] . '/' . $filename;
+	file_put_contents($file, $image_data);
+
+	// Strip off the file extension
+	$file_title =preg_replace("/\\.[^.\\s]{3,4}$/", "", $filename);
+
+	$wp_filetype = wp_check_filetype($filename, null );
+	$attachment = array(
+	    'post_mime_type' => $wp_filetype['type'],
+	    'post_title' => sanitize_file_name($file_title),
+	    'post_content' => '',
+	    'post_status' => 'inherit'
+	);
+	$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+	require_once(ABSPATH . 'wp-admin/includes/image.php');
+	$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+	wp_update_attachment_metadata( $attach_id, $attach_data );
+
+	return $attach_id;
+}
+
 ?>
