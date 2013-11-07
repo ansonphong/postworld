@@ -944,6 +944,7 @@ Here we have a series of functions which are used to read and write custom user 
 - Sets an image/attachment ID has been delegated as the avatar for the given user
 - Stored in __Wordpress User Meta__ `wp_usermeta`
   - Key : `pw_avatar`
+  - Value : Attachment ID in the Media Library  
 
 #### Parameters
 
