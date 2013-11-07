@@ -19,7 +19,7 @@ function postworld_includes(){
 	wp_enqueue_script( 'AngularJS-UI-Utils', WP_PLUGIN_URL.'/postworld/lib/angular/angular-ui-utils.min.js');
 	
 	//BOOTSTRAP
-	//wp_enqueue_style( "bootstrap-CSS", "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" );
+	wp_enqueue_style( "bootstrap-CSS", "//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" );
 	wp_enqueue_script( "bootstrap-JS", "//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js" );
 
 	// FONT AWESOME

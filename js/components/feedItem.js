@@ -20,7 +20,12 @@ postworld.controller('pwFeedItemController',
 		pwData.templates.promise.then(function(value) {
 			var type = 'post';
 			if ($scope.post.post_type) type = $scope.post.post_type;
-			$scope.templateUrl = pwData.pw_get_template('posts',type,$scope.$parent.feed_item_view_type);
+			if (type=="ad") {
+				$scope.templateUrl = pwData.pw_get_template('panels',"",$scope.post.template);
+				// console.log('ad here', $scope.post.template, $scope.templateUrl);				
+			}
+			else 
+				$scope.templateUrl = pwData.pw_get_template('posts',type,$scope.$parent.feed_item_view_type);
 	    	// $log.info('pwFeedItemController New Template=',$scope.templateUrl);    	
 		});    	    	
 		
@@ -34,8 +39,10 @@ postworld.controller('pwFeedItemController',
 		// Template Update Event
 		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feed_item_view_type){
 			pwData.templates.promise.then(function(value) {
-				var type = $scope.post.post_type;
-				$scope.templateUrl = pwData.pw_get_template('posts',type,feed_item_view_type);
+				if ($scope.post.post_type!="ad") {
+					var type = $scope.post.post_type;
+					$scope.templateUrl = pwData.pw_get_template('posts',type,feed_item_view_type);					
+				} 
 			});
 		   // $log.info('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
 		   // $scope.templateUrl = feed_item_view_type;

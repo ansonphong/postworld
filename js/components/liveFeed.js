@@ -136,7 +136,69 @@ postworld.controller('pwFeedController',
 		   // Broadcast to all children
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
 		   });
+		   
+		$scope.injectAds = function() {
+			// if ads settings exist, then inject ads, otherwise, just return.
+			if (pwData.feed_settings[$scope.feed].blocks) {
+				// Initialize Ad Blocks
+				$scope.adBlocks = 0;
+				var len = pwData.feed_data[$scope.feed].posts.length;
+				var offset = 0;
+				if (pwData.feed_settings[$scope.feed].blocks.offset) offset = pwData.feed_settings[$scope.feed].blocks.offset;
+				var increment = 10;
+				if (pwData.feed_settings[$scope.feed].blocks.increment) increment = pwData.feed_settings[$scope.feed].blocks.increment;
+				var max_blocks = 5;
+				if (pwData.feed_settings[$scope.feed].blocks.max_blocks) max_blocks = pwData.feed_settings[$scope.feed].blocks.max_blocks;
+				var adTemplate = "ad-block";
+				if (pwData.feed_settings[$scope.feed].blocks.template) adTemplate = pwData.feed_settings[$scope.feed].blocks.template;
+				$scope.adNextID = offset;
+				// loop on scope.items starting from offset, with increments = increment, and break when max_blocks is reached
+				for (var i=offset;	i<len+$scope.adBlocks; 	i=i+increment)	{ 
+					console.log('Next Ad on ',$scope.adNextID);
+					if (i>=len) break;
+					if ($scope.adBlocks>=max_blocks) break;
+					var item = {
+						'post_type'	: 'ad',
+						'template'	: adTemplate,
+					};
+					//console.log('item',item);
+					// inject here
+					$scope.items.splice(i+$scope.adBlocks,0,item);
+					
+					$scope.adBlocks++;
+					$scope.adNextID += increment+1; // 1 is the new ad added					
+				}				
+			}
+		};
 		
+		$scope.injectNewAd = function() {
+			// check if ads enabled
+			if (pwData.feed_settings[$scope.feed].blocks) {
+				var max_blocks = 5;
+				if (pwData.feed_settings[$scope.feed].blocks.max_blocks) max_blocks = pwData.feed_settings[$scope.feed].blocks.max_blocks;
+				var adTemplate = "ad-block";
+				if (pwData.feed_settings[$scope.feed].blocks.template) adTemplate = pwData.feed_settings[$scope.feed].blocks.template;
+				var increment = 10;
+				if (pwData.feed_settings[$scope.feed].blocks.increment) increment = pwData.feed_settings[$scope.feed].blocks.increment;
+				// Check if max_blocks reached, return.
+				if ($scope.adBlocks>=max_blocks) return;				
+				var len = $scope.items.length;
+				// did we reach new id? insert
+				if ($scope.adNextID==len) {
+					var item = {
+						'post_type'	: 'ad',
+						'template'	: adTemplate,
+					};
+					// inject here
+					$scope.items.push(item);					
+					$scope.adBlocks++;
+					$scope.adNextID += increment+1; // 1 is the new ad added					
+				}
+				// else return
+			}
+		};
+		
+
 		$scope.resetFeedData = function () {
 			// Reset Feed Data
 			pwData.feed_data[$scope.feed] = {};
@@ -153,8 +215,11 @@ postworld.controller('pwFeedController',
 			pwData.feed_data[$scope.feed].loaded = 0;						
 			pwData.feed_data[$scope.feed].count_loaded = 0;						
 			pwData.feed_data[$scope.feed].posts = [];
-			$scope.items = pwData.feed_data[$scope.feed].posts;
-		},
+			// var argsValue = JSON.parse(JSON.stringify($scope.args));			
+			// $scope.items = pwData.feed_data[$scope.feed].posts;
+			$scope.items = JSON.parse(JSON.stringify(pwData.feed_data[$scope.feed].posts));
+			$scope.injectAds();
+		};
 		
    		$scope.fillFeedData = function(response) {
 			// Reset Feed Data
@@ -238,7 +303,10 @@ postworld.controller('pwFeedController',
 							// Insert Response in Feed Data						
 							$log.info('pwFeedController.pw_live_feed Success',response.data);						
 							$scope.fillFeedData(response);																			
-							$scope.items = response.data.post_data;
+							// $scope.items = response.data.post_data;
+							$scope.items = JSON.parse(JSON.stringify(response.data.post_data));
+							$scope.injectAds();
+
 						} else {
 							$scope.message = "No Data Returned";
 							$log.info('pwFeedController.pw_live_feed No Data Received');						
@@ -295,7 +363,9 @@ postworld.controller('pwFeedController',
 						if (!(response.data instanceof Array) ) {
 							// Insert Response in Feed Data						
 							$scope.fillFeedData(response);																			
-							$scope.items = response.data.post_data;
+							//$scope.items = response.data.post_data;
+							$scope.items = JSON.parse(JSON.stringify(response.data.post_data));
+							$scope.injectAds();
 						} else {
 							$scope.message = "No Data Returned";
 							$log.info('pwFeedController.pw_load_feed No Data Received');						
@@ -349,9 +419,9 @@ postworld.controller('pwFeedController',
 						var newItems = response.data;
 						for (var i = 0; i < newItems.length; i++) {
 							// $log.info('Looping :',i,newItems[i].ID);
-							//$scope.items.push(newItems[i]);
-							// TODO check why when adding an item here, it affects also $scope.items !
 							pwData.feed_data[$scope.feed].posts.push(newItems[i]);							
+							$scope.injectNewAd();
+							$scope.items.push(JSON.parse(JSON.stringify(newItems[i])));
 							// $log.info('$scope.items has',$scope.items.length,' items');							
 						 }
 						pwData.feed_data[$scope.feed].loaded += newItems.length;
