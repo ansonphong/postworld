@@ -29,32 +29,32 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 	$log.info('pwData() Registering feed_settings', feed_settings);
 	
 	var	getTemplate = function(pwData,grp,type,name) {
-			var template;
-			// TODO can we make this lookup dynamic?
-			// $log.info('template here',grp,type,name);
-			switch (grp) {
-				case 'posts':
-					if (type) {
-						template = pwData.templatesFinal.posts[type][name];						
-					} else {
-						template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';						
-					}
-					// $log.info('post template:',pwData.templatesFinal.posts);
-					break;
-				case 'panels':
-					template = pwData.templatesFinal.panels[name];
-					//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
-					break;
-				case 'comments':
-					template = pwData.templatesFinal.comments[name];
-					//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
-					break;
-				default:
-					template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
-					break;
-			}
-			// $log.info('Service: pwData Method:getTemplate template=',template);
-			return template;			
+		var template;
+		// TODO can we make this lookup dynamic?
+		// $log.info('template here',grp,type,name);
+		switch (grp) {
+			case 'posts':
+				if (type) {
+					template = pwData.templatesFinal.posts[type][name];						
+				} else {
+					template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';						
+				}
+				// $log.info('post template:',pwData.templatesFinal.posts);
+				break;
+			case 'panels':
+				template = pwData.templatesFinal.panels[name];
+				//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
+				break;
+			case 'comments':
+				template = pwData.templatesFinal.comments[name];
+				//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
+				break;
+			default:
+				template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
+				break;
+		}
+		// $log.info('Service: pwData Method:getTemplate template=',template);
+		return template;			
 	};
 	
 	

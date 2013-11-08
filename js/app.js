@@ -509,303 +509,7 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
                 },
             ];
         },
-        pwGetTaxTerms_old: function(){
-            return {
-                "topic" : [
-                    {
-                        "slug":"psyche",
-                        "name":"/psyche",
-                        "children":{
-                            "ancient":"Ancient Mysteries",
-                            "astrology":"Astrology",
-                            "consciousness":"Consciousness",
-                            "dreams":"Dreams",
-                            "ets":"Extraterrestrials",
-                            "indigenous":"Indigenous Cultures",
-                            "occult":"Occult",
-                            "psi":"Psi",
-                            "psychedelics":"Psychedelics",
-                            "psychology":"Psychology",
-                            "shamanism":"Shamanism",
-                            "spirituality":"Spirituality",
-                            "transformation":"Transformation",
-                            "psyche_misc":"Misc"
-                            }
-                    },
-                    {
-                        "slug":"arts",
-                        "name":"/arts",
-                        "children":{
-                            "conferences":"Conferences",
-                            "digital_art":"Digital Art",
-                            "world_art":"World Art",
-                            "festival_culture":"Festival Culture",
-                            "games":"Games",
-                            "music":"Music",
-                            "performance":"Performance",
-                            "publications":"Publications",
-                            "video":"Video",
-                            "film":"Film",
-                            "misc":"Misc"
-                            }
-                    },
-                    {
-                        "slug":"body",
-                        "name":"/body",
-                        "children":{
-                            "energy_medicine":"Energy Medicine",
-                            "food_nutrition":"Food & Nutrition",
-                            "healing":"Healing",
-                            "herbalism":"Herbalism",
-                            "homeopathy":"Homeopathy",
-                            "sexuality":"Sexuality",
-                            "slow_living":"Slow Living",
-                            "tantra":"Tantra",
-                            "yoga":"Yoga",
-                            "body_misc":"Misc",
-                            }
-                    },
-                    {
-                        "slug":"eco",
-                        "name":"/eco",
-                        "children":{
-                            "animal_rights":"Animal Rights",
-                            "climate_change":"Climate Change",
-                            "conservation":"Conservation",
-                            "energy":"Energy",
-                            "environment":"Environment",
-                            "extinction":"Extinction",
-                            "gardening":"Gardening",
-                            "permaculture":"Permaculture",
-                            "sustainability":"Sustainability",
-                            "water":"Water",
-                            "eco_misc":"Misc",
-                            }
-                    },
-                    {
-                        "slug":"tech",
-                        "name":"/tech",
-                        "children":{
-                            "biomimicry":"Biomimicry",
-                            "cosmology":"Cosmology",
-                            "design_science":"Design Science",
-                            "digital":"Digital",
-                            "diy":"DIY",
-                            "networks":"Networks",
-                            "privacy":"Privacy",
-                            "robotics":"Robotics",
-                            "singularity":"Singularity",
-                            "tech_misc":"Misc"
-                        }
-                    },
-                    {
-                        "slug":"commons",
-                        "name":"/commons",
-                        "children":{
-                            "action_alerts":"Action Alerts",
-                            "activism":"Activism",
-                            "alternative_economics":"Alternative Economics",
-                            "collaboration":"Collaboration",
-                            "community":"Community",
-                            "crowdfunding":"Crowdfunding",
-                            "democracy":"Democracy",
-                            "drug_laws":"Drug Laws",
-                            "evolver":"Evolver",
-                            "evolver_spores":"Evolver Spores",
-                            "open_source":"Open Source",
-                            "peer_to_peer":"Peer to Peer",
-                            "retreats":"Retreats",
-                            "commons_misc":"Misc"
-                        }
-                    }
-                ],
-                'section' : [
-                    {
-                        "slug":"psychedelic",
-                        "name":"Psychedelic Culture",
-                    },
-                    {
-                        "slug":"conscious_convergences",
-                        "name":"Conscious Convergences",
-                    },
-                    {
-                        "slug":"psi",
-                        "name":"Psi Frontiers",
-                    },
-                    {
-                        "slug":"video",
-                        "name":"Videos",
-                    },
-                    {
-                        "slug":"podcast",
-                        "name":"Podcasts",
-                    },
-                    {
-                        "slug":"edm",
-                        "name":"Evolver EDM",
-                    },
-                    {
-                        "slug":"evo_network",
-                        "name":"Evolver Network",
-                    },
-                    {
-                        "slug":"evo_learning_lab",
-                        "name":"Evolver Learning Lab",
-                    },
-
-                ],
-                'type' : [
-                    {
-                        "slug":"song_week",
-                        "name":"Song of the Week",
-                        "parent_name":"Hilight",
-                        "parent":"hilight",
-                    },
-                    {
-                        "slug":"video_week",
-                        "name":"Video of the Week",
-                        "parent_name":"Hilight",
-                        "parent":"hilight"
-                    },
-                    {
-                        "slug":"event_feature",
-                        "name":"Featured Event",
-                        "parent_name":"Events",
-                        "parent":"events"
-                    },
-                    {
-                        "slug":"event_evolver",
-                        "name":"Evolver Event",
-                        "parent_name":"Events",
-                        "parent":"events"
-                    },
-                ],
-                
-            };
-        },
-        pwGetTaxTerms: function(){
-            return {
-                "topic" : [
-                    {
-                        slug:"psyche",
-                        name:"/psyche",
-                        children:[
-                            {
-                                name:"Ancient Mysteries",                     
-                                slug: "ancient",
-                            },
-                            {
-                                name:"Astrology",                     
-                                slug: "astrology",
-                            },
-                            {
-                                name:"Consciousness",                     
-                                slug: "consciousness",
-                            },
-                        ],
-                    },
-                    {
-                        slug:"arts",
-                        name:"/arts",
-                        children:[
-                            {
-                                name:"Conferences",                     
-                                slug: "conferences",
-                            },
-                            {
-                                name:"Digital Art",                     
-                                slug: "digital_art",
-                            },
-                            {
-                                name:"World Art",                     
-                                slug: "world_art",
-                            },
-                        ],
-                    },
-                    {
-                        slug:"body",
-                        name:"/body",
-                        children:[
-                            {
-                                name:"Energy Medicine",                     
-                                slug: "energy_medicine",
-                            },
-                            {
-                                name:"Food & Nutrition",                     
-                                slug: "food_nutrition",
-                            },
-                            {
-                                name:"Healing",                     
-                                slug: "healing",
-                            },
-                        ],
-                    },
-                    
-                ],
-                'section' : [
-                    {
-                        slug:"psychedelic",
-                        name:"Psychedelic Culture",
-                    },
-                    {
-                        slug:"conscious_convergences",
-                        name:"Conscious Convergences",
-                    },
-                    {
-                        slug:"psi",
-                        name:"Psi Frontiers",
-                    },
-                    {
-                        slug:"video",
-                        name:"Videos",
-                    },
-                    {
-                        slug:"podcast",
-                        name:"Podcasts",
-                    },
-                    {
-                        slug:"edm",
-                        name:"Evolver EDM",
-                    },
-                    {
-                        slug:"evo_network",
-                        name:"Evolver Network",
-                    },
-                    {
-                        slug:"evo_learning_lab",
-                        name:"Evolver Learning Lab",
-                    },
-
-                ],
-                'type' : [
-                    {
-                        slug:"song_week",
-                        name:"Song of the Week",
-                        parent_name:"Hilight",
-                        parent:"hilight",
-                    },
-                    {
-                        slug:"video_week",
-                        name:"Video of the Week",
-                        parent_name:"Hilight",
-                        parent:"hilight"
-                    },
-                    {
-                        slug:"event_feature",
-                        name:"Featured Event",
-                        parent_name:"Events",
-                        parent:"events"
-                    },
-                    {
-                        slug:"event_evolver",
-                        name:"Evolver Event",
-                        parent_name:"Events",
-                        parent:"events"
-                    },
-                ],
-                
-            };
-        },
+       
 
     }
 }]);
@@ -1138,9 +842,9 @@ function tagsAutocomplete($scope, $filter, pwData) {
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 'ext', 
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions ) {
+        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext ) {
 
     //alert( JSON.stringify( $route.current.action ) );
 
@@ -1298,12 +1002,18 @@ postworld.controller('editPost',
             if ( typeof $scope.post_data.link_url === 'undefined' )
                 $scope.post_data.link_url = '';
 
-            ///// SAVE POST VIA AJAX /////
-            var post_data = $scope.post_data;
-            //alert(JSON.stringify(post_data));
+
+            ///// DEFINE POST DATA POST VIA AJAX /////
+            if( $scope.post_data.post_type == "tribe_events" )
+                var post_data = $scope.postDataMergeTribeDate();
+            else
+                var post_data = $scope.post_data;
+
+            alert( JSON.stringify( post_data ) );
             
             $log.info('pwData.pw_save_post : SUBMITTING : ', post_data);
 
+            ///// SAVE VIA AJAX /////
             $scope.status = "saving";
             $pwData.pw_save_post( post_data ).then(
                 // Success
@@ -1339,8 +1049,6 @@ postworld.controller('editPost',
                         $scope.status = "done";
                     }
                     
-
-
                 },
                 // Failure
                 function(response) {
@@ -1357,27 +1065,7 @@ postworld.controller('editPost',
             alert("Post not saved : missing fields.");
         }
         
-
-        /*
-        ///// EVENTS DATE & TIME /////
-        ///// EXTRACT THE DATE FOR TRIBE EVENTS ///// 
-        var EventStartHour = $filter('date')( $scope.EventStartDateObject, 'HH'); 
-        var EventStartMinute = $filter('date')( $scope.EventStartDateObject, 'mm'); 
-        //EventStartMaridian
-        var EventEndHour = $filter('date')( $scope.EventEndDateObject, 'HH');
-        var EventEndMinute = $filter('date')( $scope.EventEndDateObject, 'mm'); 
-        //EventEndMaridian
-        var EventStartDate = $filter('date')( $scope.EventStartDateObject, 'yyyy-MM-dd HH:mm Z');
-        var EventEndDate = $filter('date')( $scope.EventEndDateObject, 'yyyy-MM-dd HH:mm Z');
-
-        alert(
-            "Start Date : " + EventStartDate  + "\n" + 
-            " End Date :  " + EventEndDate + "\n" 
-            );
-        */
-        //alert( JSON.stringify( $scope.post_data ) );
     }
-
 
     $scope.clear_post_data = function(){
         $scope.post_data = {};
@@ -1454,8 +1142,11 @@ postworld.controller('editPost',
             // TRIBE EVENTS
             if( $scope.post_data.post_type == 'tribe_events' && typeof $scope.EventStartDateObject === 'undefined' ){
                 // DATE : Initialize Objects
-                $scope.EventStartDateObject = new Date();
-                $scope.EventEndDateObject = new Date();
+                //if (typeof $scope.EventStartDateObject === 'undefined' )
+                    
+                //if (typeof $scope.EventEndDateObject === 'undefined' )
+                //    $scope.EventEndDateObject = new Date();
+                
             }
             // ROUTE CHANGE
             if( $scope.mode == "new" )
@@ -1463,15 +1154,61 @@ postworld.controller('editPost',
         }, 1 );
 
 
-    ////////// EVENT DATE PICKER //////////
+    ////////// TRIBE EVENTS FIELDS //////////
     
-    // DATE CHANGE : Watch the date objects for a change
-    $scope.updateDate = function(){
 
-    }
+    $scope.post_data.EventStartDateObject = new Date( );
+    $scope.post_data.EventEndDateObject = new Date();
 
-    //$scope.post_data.WPDate = $filter('date')(new Date(), 'yyyy-MM-dd');
 
+    /*
+    $scope.reportEventStartDateObject = function(){
+        var dateObject = $scope.post_data.EventStartDateObject;
+        alert( $filter('date')( dateObject, 'yyyy-MM-dd HH:mm' ) );
+    };
+
+    $scope.reportEventEndDateObject = function(){
+        var dateObject = $scope.post_data.EventEndDateObject;
+        alert( $filter('date')( dateObject, 'yyyy-MM-dd HH:mm' ) );
+    };
+    */
+
+    $scope.postDataMergeTribeDate = function(){
+
+        var startDateObject = $scope.post_data.EventStartDateObject;
+        var endDateObject = $scope.post_data.EventEndDateObject;
+
+        var fullStartDate = $filter('date')( startDateObject, 'yyyy-MM-dd HH:mm a' );
+
+        var EventStartDate = $filter('date')( startDateObject, 'yyyy-MM-dd' );
+        var EventStartHour = $filter('date')( startDateObject, 'hh' );
+        var EventStartMinute = $filter('date')( startDateObject, 'mm' );
+        var EventStartMeridian = $filter('date')( startDateObject, 'a' );
+
+        var EventEndDate = $filter('date')( endDateObject, 'yyyy-MM-dd' );
+        var EventEndHour = $filter('date')( endDateObject, 'hh' );
+        var EventEndMinute = $filter('date')( endDateObject, 'mm' );
+        var EventEndMeridian = $filter('date')( endDateObject, 'a' );
+
+        var tribeEventFields = {
+            "EventStartDate" : EventStartDate,
+            "EventStartHour" : EventStartHour,
+            "EventStartMinute" : EventStartMinute,
+            "EventStartMeridian" : EventStartMeridian,
+            "EventEndDate" : EventEndDate,
+            "EventEndHour" : EventEndHour,
+            "EventEndMinute" : EventEndMinute,
+            "EventEndMeridian" : EventEndMeridian,
+        }
+
+        var mergePostObject = $ext.mergeRecursiveObj( $scope.post_data, tribeEventFields );
+        $log.info('mergePostObject : ', mergePostObject);
+        return mergePostObject;
+
+    };
+
+
+    ////////// EVENT DATE PICKER : CONFIG //////////
     $scope.showWeeks = false;
 
     $scope.clear = function () {
@@ -1483,8 +1220,9 @@ postworld.controller('editPost',
         'starting-day': 1
     };
 
-    ////////// TIME PICKER //////////
+    ////////// TIME PICKER : CONFIG //////////
 
+    $scope.minDate = new Date();
     $scope.mytime = new Date();
 
     $scope.hstep = 1;
@@ -1523,7 +1261,7 @@ postworld.controller('editPost',
     };
 
 
-    ///// FEATURED IMAGE /////
+    ////////// FEATURED IMAGE //////////
     // Media Upload Window
     $scope.updateFeaturedImage = function(image_object){
         //alert( JSON.stringify(image_object) );
@@ -2302,11 +2040,11 @@ angular.module('monospaced.elastic', [])
 ////////// ------------ MEDIA MODAL ------------ //////////*/                                                         
 
 
-var mediaModalCtrl = function ($scope, $modal, $log) {
+var mediaModalCtrl = function ($scope, $modal, $log, $window, pwData) {
 
   $scope.openMediaModal = function (post) {
     var modalInstance = $modal.open({
-      templateUrl: jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
+      templateUrl: pwData.pw_get_template('panels','','media_modal'), // $window['site_info'].stylesheet_directory + '/postworld/templates/panels/media_modal.html', // //jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
       controller: MediaModalInstanceCtrl,
       windowClass: 'media_modal',
       resolve: {
@@ -2799,14 +2537,13 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
 
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', ['$log', '$modal', function ( $log, $modal ) {
+postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $modal, pwData ) {
     return{
         openQuickEdit : function( post ){
 
-
             console.log( "Launch Quick Edit : ", post );  
             var modalInstance = $modal.open({
-              templateUrl: jsVars.pluginurl+'/postworld/templates/panels/quick_edit.html',
+              templateUrl: pwData.pw_get_template('panels','','quick_edit'), //jsVars.pluginurl+'/postworld/templates/panels/quick_edit.html',
               controller: quickEditInstanceCtrl,
               windowClass: 'quick_edit',
               resolve: {

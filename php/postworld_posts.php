@@ -66,6 +66,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'taxonomy(all)',
 		'comment_status',
 		'post_status',
+		'post_meta(all)'
 		);
 
 	////////// FIELDS MODEL //////////
@@ -97,6 +98,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'image(medium)',
 		'image(large)',
 		'image(full)',
+		'post_meta(all)'
 		);
 	
 	$viewer_fields =array(
@@ -269,6 +271,30 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		} // END foreach
 
 
+	////////// META DATA //////////
+		// Extract meta fields
+		$post_meta_fields = extract_linear_fields( $fields, 'post_meta', true );
+		if ( !empty($post_meta_fields) ){
+
+			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
+			foreach ($post_meta_fields as $post_meta_field ) {
+
+				// GET 'ALL' FIELDS
+				if ( $post_meta_field == "all" ){
+					// Return all meta data
+					$post_data['post_meta'] = get_metadata('post', $post_id, '', true);
+
+					// Convert to strings
+					if ( !empty( $post_data['post_meta'] ) ){
+						foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
+							$post_data['post_meta'][$meta_key] = $post_data['post_meta'][$meta_key][0];
+						}
+					}
+				}
+
+
+			}
+		}
 
 	////////// AUTHOR DATA //////////
 
@@ -608,15 +634,32 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	
 	if(gettype($post_ID) == 'integer'){ // successful
 
-		// ADD TERMS / TAXONOMIES
+		///// ADD TERMS / TAXONOMIES //////
 		if(isset($postarr["tax_input"])){
 			foreach ( $postarr["tax_input"] as $taxonomy => $terms) {
 				wp_set_object_terms( $post_ID, $terms, $taxonomy, false );
 			}
 		}
 	
-		//print_r($postarr);
-		// ADD POSTWORLD FIELDS
+		///// ADD/UPDATE META FIELDS //////
+		if( isset($postarr["post_meta"]) ){
+			foreach ( $postarr["post_meta"] as $meta_key => $meta_value ) {
+
+				// CHECK FOR EXISTING VALUE
+				$get_meta_value = get_post_meta( $post_ID, $meta_key, true );
+
+				if ( !empty( $get_meta_value ) )
+					// UPDATE META
+					update_post_meta($post_ID, $meta_key, $meta_value);
+				else
+					// ADD META
+					add_post_meta($post_ID, $meta_key, $meta_value, true);
+			
+			}
+		}
+
+
+		///// ADD POSTWORLD FIELDS //////
 		if(isset($postarr["post_class"]) || isset($postarr["post_format"])|| isset($postarr["link_url"]))	{
 			global $wpdb;
 			$wpdb -> show_errors();
@@ -653,7 +696,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 				}
 		}
 
-		// Author Name Field
+
+		///// AUTHOR NAME/SLUG FIELD /////
 		// Adds support for an `author_name` parameter
 		if( isset($postarr["post_author_name"]) ){
 			$user = get_user_by( 'slug', $postarr["post_author_name"] );
@@ -662,7 +706,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			}
 		}
 		
-		
+
+
 	}
 	
 
