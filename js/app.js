@@ -1226,12 +1226,10 @@ postworld.controller('editPost',
         $pwData.pw_get_post_edit( post_id ).then(
             // Success
             function(response) {    
-                $log.info('pwData.pw_get_post : RESPONSE : ', response.data);
-
+                $log.info('pwData.pw_get_post_edit : RESPONSE : ', response.data);
 
                 // FILTER FOR INPUT
                 var get_post_data = response.data;
-
 
                 ///// LOAD TAXONOMIES /////
                 // RENAME THE KEY : TAXONOMY > TAX_INPUT
@@ -1529,16 +1527,29 @@ postworld.controller('editPost',
     // Media Upload Window
     $scope.updateFeaturedImage = function(image_object){
         //alert( JSON.stringify(image_object) );
-        $scope.featured_image = image_object;
+        $scope.post_data.image = {};
+        $scope.post_data.image.meta = image_object;
         $scope.post_data.thumbnail_id = image_object.id;
         if( typeof image_object !== 'undefined' ){
-            $scope.has_featured_image = 'true';
+            $scope.hasFeaturedImage = 'true';
         }
     }
+
+    // FEATURE IMAGE WATCH : Watch the Featured Image
+    $scope.$watch( "post_data.image",
+        function (){
+        if( typeof $scope.post_data.thumbnail_id !== 'undefined' &&
+            $scope.post_data.thumbnail_id !== "" &&
+            $scope.post_data.thumbnail_id !== "delete" )
+            $scope.hasFeaturedImage = 'true';
+        else
+            $scope.hasFeaturedImage = 'false';
+        }, 1 );
+
     $scope.removeFeaturedImage = function(){
-        $scope.featured_image = {};
-        $scope.has_featured_image = 'false';
-        $scope.post_data.thumbnail_id = '';
+        $scope.post_data.image = {};
+        $scope.post_data.thumbnail_id = "delete";
+        $scope.hasFeaturedImage = 'false';
     }
 
     ///// GET POST_CONTENT FROM TINY MCE /////

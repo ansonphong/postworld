@@ -62,6 +62,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_format',
 		'link_url',
 		'image(id)',
+		'image(meta)',
 		'taxonomy(all)',
 		'comment_status',
 		'post_status',
@@ -334,6 +335,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			// If there is a set 'featured image' set the $thumbnail_url
 			if ( $thumbnail_id ){
 				$thumbnail_url = wp_get_attachment_url( $thumbnail_id ,'full');
+
 			}
 			// If there is no set 'featured image', get fallback - first image in post
 			else {
@@ -419,6 +421,28 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$post_data['image'][$image_handle]['width'] = (int)$image_obj['width'];
 						$post_data['image'][$image_handle]['height'] = (int)$image_obj['width'];
 					}
+
+
+					// Get Image Meta Data
+					elseif( $image_handle == 'meta' && is_numeric($thumbnail_id) ){
+						$post_data['image']['meta'] = wp_get_attachment_metadata($thumbnail_id);
+
+						// Get the actual file URLS and inject into the object
+						if( isset($post_data['image']['meta']) ){
+							foreach( $post_data['image']['meta']['sizes'] as $key => $value ){
+								$image_size_meta = wp_get_attachment_image_src( $thumbnail_id, $key );
+								$post_data['image']['meta']['sizes'][$key]['url'] = $image_size_meta[0];
+							}
+						}
+
+					}
+					// Get Image ID
+					elseif( $image_handle == 'id' ){
+						$post_data['thumbnail_id']= $thumbnail_id;
+
+					}
+
+
 
 				} 
 				///// CUSTOM IMAGE SIZES /////
@@ -715,14 +739,19 @@ function pw_set_post_thumbnail( $post_id, $image ){
 		else
 			return array( 'error' => 'Not a valid Media Library ID.' );
 	}
-
-	$attach_id = url_to_media_library($image);
-	if( is_numeric($attach_id) ){
-		set_post_thumbnail( $post_id, $attach_id );
+	// If it's empty, unset it
+	elseif ( $image == 'delete' ){
+		delete_post_thumbnail($post_id);
+		return '0';
 	}
-	
-	return $attach_id;
-
+	// Otherwise, assume it's a URL
+	else{
+		$attach_id = url_to_media_library($image);
+		if( is_numeric($attach_id) ){
+			set_post_thumbnail( $post_id, $attach_id );
+		}
+		return $attach_id;
+	}
 }
 
 function pw_save_post($post_data){
@@ -782,10 +811,11 @@ function pw_save_post($post_data){
 	///// ADD / UPDATE POST META /////
 
 	// IMAGE FIELDS
-	// THUMBNAIL ID : If there is a thumbnail ID
+	// Handle Thumbnail ID
 	if ( !empty($thumbnail_id) && !empty($post_id) )
 		pw_set_post_thumbnail( $post_id, $thumbnail_id );
-	// THUMBNAIL URL : If there is a thumbnail URL
+
+	// Handle Thumbnail URL
 	elseif ( !empty($thumbnail_url) && !empty($post_id) )
 		pw_set_post_thumbnail( $post_id, $thumbnail_url );
 	

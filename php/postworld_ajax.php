@@ -316,7 +316,9 @@ function pw_get_post_edit_admin() {
 		"post_permalink",
 		"taxonomy(all)",
 		"taxonomy_obj(post_tag)",
-		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
+		"author(ID,display_name,user_nicename,posts_url,user_profile_url)",
+		"image(id)",
+		"image(meta)"
 		);
 
 	/* set the response type as JSON */
