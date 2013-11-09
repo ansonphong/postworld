@@ -870,8 +870,8 @@ postworld.controller('editPost',
             post_tag : [],
         },
         tags_input : "",
+        post_meta:{},
     };
-
 
     // WATCH : ROUTE
     $scope.$on(
@@ -3318,8 +3318,6 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
 
 
 
-
-
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -3328,8 +3326,6 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
-
-
 
 
 

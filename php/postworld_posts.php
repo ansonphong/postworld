@@ -96,12 +96,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'avatar(small,48)',
 		'post_format',
 		'time_ago',
+		'post_meta(all)',
 		);
 
 	$detail_fields =	array(
 		'post_path',
 		'image(full)',
-		'post_meta(all)',
 		'post_content',
 		);
 	
@@ -658,6 +658,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 				wp_set_object_terms( $post_ID, $terms, $taxonomy, false );
 			}
 		}
+	
 	
 		///// ADD/UPDATE META FIELDS //////
 		if( isset($postarr["post_meta"]) ){
