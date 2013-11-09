@@ -51,11 +51,13 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	$edit_fields = array(
 		'ID',
+		'post_id',
+		'post_type',
+		'post_status',
 		'post_title',
 		'post_content',
 		'post_excerpt',
 		'post_name',
-		'post_type',
 		'post_date',
 		'post_date_gmt',
 		'post_class',
@@ -64,8 +66,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'image(id)',
 		'image(meta)',
 		'taxonomy(all)',
+		'taxonomy_obj(post_tag)',
 		'comment_status',
-		'post_status',
+		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		'post_meta(all)'
 		);
 

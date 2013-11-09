@@ -22,13 +22,13 @@ $pw_defaults = array(
 		),
 
 	'points' => array(
-		'post_types'		=> array('post','feature','blog','link','tribe_events'),
+		'post_types'		=> array('post','feature','blog','link','event'),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		),
 
 	'rank' => array(
-		'post_types'		=> array('post','feature','blog','link','tribe_events'),
+		'post_types'		=> array('post','feature','blog','link','event'),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		'equations'			=> array(

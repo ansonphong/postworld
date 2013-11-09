@@ -322,7 +322,7 @@ function pw_get_post_edit_admin() {
 		);
 
 	/* set the response type as JSON */
-	$results = pw_get_post( $pw_args, $fields ); //$post_id,$fields,$user_ID
+	$results = pw_get_post( $pw_args, 'edit' ); //$post_id,$fields,$user_ID
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $results;

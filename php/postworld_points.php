@@ -124,7 +124,7 @@
 		
 		$total_user_points_breakdown = get_user_points_voted_to_posts($user_id,TRUE);
 		$total_user_points =0;
-		$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "tribe_events" => 0));
+		$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "event" => 0));
 		
 		
 		foreach ($total_user_points_breakdown as $row) {
@@ -245,7 +245,7 @@
 		$post_points_meta = get_post_points_meta($user_id);
 		
 		if($post_points_meta == null)
-			$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "tribe_events" => 0));
+			$post_points_meta = array("post_type"=> array ("post"=> 0,"link" =>0,"blog" =>0, "event" => 0));
 		else
 			$post_points_meta = json_decode( $post_points_meta,true ); // decode from JSON
 		

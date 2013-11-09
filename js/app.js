@@ -374,11 +374,11 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
         },
         pwGetPostTypeOptions: function(){
         return {
-            feature : "Features",
-            blog : "Blog",
-            link : "Link",
-            announcement : "Announcement",
-            tribe_events : "Event"
+            "feature" : "Feature",
+            "blog" : "Blog",
+            "link" : "Link",
+            "announcement" : "Announcement",
+            "event" : "Event"
             };
         },
         pwGetPostStatusOptions: function(){
@@ -957,8 +957,8 @@ postworld.controller('editPost',
                 ///// LOAD POST CONTENT /////
                 
                 // SET THE POST CONTENT
-                if( typeof tinyMCE !== 'undefined' )
-                    tinyMCE.get('post_content').setContent( get_post_data.post_content );
+                //if( typeof tinyMCE !== 'undefined' )
+                //    tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
                 ///// LOAD AUTHOR /////
 
@@ -995,21 +995,18 @@ postworld.controller('editPost',
             //alert(JSON.stringify($scope.post_data));
 
             ///// GET POST_DATA FROM TINYMCE /////
-            if ( typeof tinyMCE !== 'undefined' )
-                $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+            //if ( typeof tinyMCE !== 'undefined' )
+            //    $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
 
             ///// SANITIZE FIELDS /////
             if ( typeof $scope.post_data.link_url === 'undefined' )
                 $scope.post_data.link_url = '';
 
 
-            ///// DEFINE POST DATA POST VIA AJAX /////
-            if( $scope.post_data.post_type == "tribe_events" )
-                var post_data = $scope.postDataMergeTribeDate();
-            else
-                var post_data = $scope.post_data;
+            ///// DEFINE POST DATA /////
+            var post_data = $scope.post_data;
 
-            alert( JSON.stringify( post_data ) );
+            //alert( JSON.stringify( post_data ) );
             
             $log.info('pwData.pw_save_post : SUBMITTING : ', post_data);
 
@@ -1069,8 +1066,8 @@ postworld.controller('editPost',
 
     $scope.clear_post_data = function(){
         $scope.post_data = {};
-        if( typeof tinyMCE !== 'undefined' )
-            tinyMCE.get('post_content').setContent( "" );
+        //if( typeof tinyMCE !== 'undefined' )
+        //    tinyMCE.get('post_content').setContent( "" );
     }
 
     $scope.pw_get_post_object = function(){
@@ -1136,130 +1133,18 @@ postworld.controller('editPost',
             $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
 
+
     // POST TYPE WATCH : Watch the Post Type
     $scope.$watch( "post_data.post_type",
         function (){
-            // TRIBE EVENTS
-            if( $scope.post_data.post_type == 'tribe_events' && typeof $scope.EventStartDateObject === 'undefined' ){
-                // DATE : Initialize Objects
-                //if (typeof $scope.EventStartDateObject === 'undefined' )
-                    
-                //if (typeof $scope.EventEndDateObject === 'undefined' )
-                //    $scope.EventEndDateObject = new Date();
-                
-            }
             // ROUTE CHANGE
             if( $scope.mode == "new" )
                 $location.path('/new/' + $scope.post_data.post_type);
+
+            // BROADCAST CHANGE TO CHILD CONTROLLERS NODES
+            $rootScope.$broadcast('changePostType', $scope.post_data.post_type );
+
         }, 1 );
-
-
-    ////////// TRIBE EVENTS FIELDS //////////
-    
-
-    $scope.post_data.EventStartDateObject = new Date( );
-    $scope.post_data.EventEndDateObject = new Date();
-
-
-    /*
-    $scope.reportEventStartDateObject = function(){
-        var dateObject = $scope.post_data.EventStartDateObject;
-        alert( $filter('date')( dateObject, 'yyyy-MM-dd HH:mm' ) );
-    };
-
-    $scope.reportEventEndDateObject = function(){
-        var dateObject = $scope.post_data.EventEndDateObject;
-        alert( $filter('date')( dateObject, 'yyyy-MM-dd HH:mm' ) );
-    };
-    */
-
-    $scope.postDataMergeTribeDate = function(){
-
-        var startDateObject = $scope.post_data.EventStartDateObject;
-        var endDateObject = $scope.post_data.EventEndDateObject;
-
-        var fullStartDate = $filter('date')( startDateObject, 'yyyy-MM-dd HH:mm a' );
-
-        var EventStartDate = $filter('date')( startDateObject, 'yyyy-MM-dd' );
-        var EventStartHour = $filter('date')( startDateObject, 'hh' );
-        var EventStartMinute = $filter('date')( startDateObject, 'mm' );
-        var EventStartMeridian = $filter('date')( startDateObject, 'a' );
-
-        var EventEndDate = $filter('date')( endDateObject, 'yyyy-MM-dd' );
-        var EventEndHour = $filter('date')( endDateObject, 'hh' );
-        var EventEndMinute = $filter('date')( endDateObject, 'mm' );
-        var EventEndMeridian = $filter('date')( endDateObject, 'a' );
-
-        var tribeEventFields = {
-            "EventStartDate" : EventStartDate,
-            "EventStartHour" : EventStartHour,
-            "EventStartMinute" : EventStartMinute,
-            "EventStartMeridian" : EventStartMeridian,
-            "EventEndDate" : EventEndDate,
-            "EventEndHour" : EventEndHour,
-            "EventEndMinute" : EventEndMinute,
-            "EventEndMeridian" : EventEndMeridian,
-        }
-
-        var mergePostObject = $ext.mergeRecursiveObj( $scope.post_data, tribeEventFields );
-        $log.info('mergePostObject : ', mergePostObject);
-        return mergePostObject;
-
-    };
-
-
-    ////////// EVENT DATE PICKER : CONFIG //////////
-    $scope.showWeeks = false;
-
-    $scope.clear = function () {
-        $scope.dt = null;
-    };
-
-    $scope.dateOptions = {
-        'year-format': "'yy'",
-        'starting-day': 1
-    };
-
-    ////////// TIME PICKER : CONFIG //////////
-
-    $scope.minDate = new Date();
-    $scope.mytime = new Date();
-
-    $scope.hstep = 1;
-    $scope.mstep = 1;
-
-    $scope.options = {
-        hstep: [1, 2, 3],
-        mstep: [1, 5, 10, 15, 25, 30]
-    };
-
-    // Toggle AM/PM // 24H
-    $scope.ismeridian = true;
-    $scope.toggleMode = function() {
-        $scope.ismeridian = ! $scope.ismeridian;
-    };
-
-    // Example (bind to ng-change)
-    $scope.changed = function () {
-        console.log('Time changed to: ' + $scope.EventStartTimeObject );
-        //$scope.updateEventDate();
-        //$scope.post_data.EventStartHour = $scope.EventStartDateObject.getUTCHours();
-        //alert( $scope.EventEndDateObject.getHours() );
-    };
-
-    // Example of setting time
-    $scope.update = function() {
-        var d = new Date();
-        d.setHours( 14 );
-        d.setMinutes( 0 );
-        $scope.mytime = d;
-    };
-
-    // Example of clearing time
-    $scope.clear = function() {
-        $scope.mytime = null;
-    };
-
 
     ////////// FEATURED IMAGE //////////
     // Media Upload Window
@@ -1296,6 +1181,100 @@ postworld.controller('editPost',
     }
 
     
+}]);
+
+
+
+////////// ------------ EVENT DATA/TIME CONTROLLER ------------ //////////*/
+postworld.controller('eventInput',
+    ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
+        'pwData', '$log', 'siteOptions', 'ext', 
+    function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
+        $pwData, $log, $siteOptions, $ext ) {
+
+
+    // SETUP DATE OBJECTS
+    if( typeof $scope.post_data.post_meta === 'undefined' )
+        $scope.post_data.post_meta = {};
+
+    if( typeof $scope.post_data.post_meta.event_start_date_obj === 'undefined' )
+        $scope.post_data.post_meta.event_start_date_obj = new Date( );
+    if( typeof $scope.post_data.post_meta.event_end_date_obj === 'undefined' )
+        $scope.post_data.post_meta.event_end_date_obj = new Date( );
+
+
+    // WATCH : EVENT START TIME
+    $scope.$watch( "post_data.post_meta.event_start_date_obj",
+        function (){
+            $scope.post_data.post_meta.event_start_date = $filter('date')(
+                $scope.post_data.post_meta.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
+        }, 1 );
+
+    // WATCH : EVENT END TIME
+    $scope.$watch( "post_data.post_meta.event_end_date_obj",
+        function (){
+            $scope.post_data.post_meta.event_end_date = $filter('date')(
+                $scope.post_data.post_meta.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
+        }, 1 );
+
+
+    // POST TYPE WATCH : Watch the Post Type
+    // Cleanup post_meta
+    $scope.$on('changePostType', function(event, data) { $scope.post_data.post_meta = {}; });
+
+
+    ////////// EVENT DATE PICKER : CONFIG //////////
+    $scope.showWeeks = false;
+
+    $scope.clear = function () {
+        $scope.dt = null;
+    };
+
+    $scope.dateOptions = {
+        'year-format': "'yy'",
+        'starting-day': 1
+    };
+
+    ////////// TIME PICKER : CONFIG //////////
+
+    $scope.minDate = new Date();
+    $scope.mytime = new Date();
+
+    $scope.hstep = 1;
+    $scope.mstep = 1;
+
+    $scope.options = {
+        hstep: [1, 2, 3],
+        mstep: [1, 5, 10, 15, 25, 30]
+    };
+
+    // Toggle AM/PM // 24H
+    $scope.ismeridian = true;
+    $scope.toggleMode = function() {
+        $scope.ismeridian = ! $scope.ismeridian;
+    };
+
+    // Example (bind to ng-change)
+    $scope.changed = function () {
+        //console.log('Time changed to: ' + $scope.EventStartTimeObject );
+        //$scope.updateEventDate();
+        //$scope.post_data.EventStartHour = $scope.EventStartDateObject.getUTCHours();
+        //alert( $scope.EventEndDateObject.getHours() );
+    };
+
+    // Example of setting time
+    $scope.update = function() {
+        var d = new Date();
+        d.setHours( 14 );
+        d.setMinutes( 0 );
+        $scope.mytime = d;
+    };
+
+    // Example of clearing time
+    $scope.clear = function() {
+        $scope.mytime = null;
+    };
+
 
 }]);
 
