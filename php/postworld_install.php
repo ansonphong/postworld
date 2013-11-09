@@ -33,7 +33,6 @@ function postworld_install() {
       UNIQUE KEY post_id_user_id (post_id,user_id)
      );";
 
-
  /* Comments */
   $comment_meta_table_name = $wpdb->pw_prefix.'comment_meta';
   $sql_postworld_comment_meta= "CREATE TABLE $comment_meta_table_name (
