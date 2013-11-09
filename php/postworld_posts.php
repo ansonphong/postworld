@@ -58,6 +58,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_content',
 		'post_excerpt',
 		'post_name',
+		'post_permalink',
 		'post_date',
 		'post_date_gmt',
 		'post_class',
@@ -76,7 +77,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	$preview_fields =	array(
 		'ID',
 		'post_title',
-		'post_content',
 		'post_excerpt',
 		'post_permalink',
 		'post_type',
@@ -85,6 +85,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'comment_count',
 		'link_url',
 		'image(thumbnail)',
+		//'image(medium)',
+		'image(all)',
 		'post_points',
 		'edit_post_link',
 		'post_categories_list',
@@ -98,14 +100,13 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	$detail_fields =	array(
 		'post_path',
-		'image(medium)',
-		'image(large)',
 		'image(full)',
-		'post_meta(all)'
+		'post_meta(all)',
+		'post_content',
 		);
 	
 	$viewer_fields =array(
-		'viewer(has_voted,is_favorite,is_view_later)'
+		'viewer(has_voted,is_favorite,is_view_later)',
 		);
 
 	// Add Preview Fields
@@ -434,7 +435,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				// If image attributes contains only a handle
 				if ( count($image_attributes) == 1 ){
 
-					// Get 'full' image
+					// FULL : Get 'full' image
 					if ( $image_handle == 'full' ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
 						$post_data['image']['full']['url']	= $thumbnail_url;
@@ -442,7 +443,22 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$post_data['image']['full']['height'] = (int)$image_obj['height'];
 					}
 
-					// Get registered image
+					// ALL : Get all registered images
+					elseif( $image_handle == 'all' ) {
+						$registered_images = registered_images_obj();
+
+						foreach( $registered_images as $image_handle => $image_attributes ){
+							$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_handle );
+							$registered_images[$image_handle]["url"] = $image_src[0];
+							$registered_images[$image_handle]["width"] = $image_src[1];
+							$registered_images[$image_handle]["height"] = $image_src[2];
+							$registered_images[$image_handle]["hard_crop"] = $image_src[3];
+						}
+
+						$post_data['image'] = array_merge( $post_data['image'], $registered_images );
+					}
+
+					// HANDLE : Get registered image
 					// If it is a registered image format
 					elseif( array_key_exists($image_handle, $registered_images_obj) ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
@@ -451,8 +467,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$post_data['image'][$image_handle]['height'] = (int)$image_obj['width'];
 					}
 
-
-					// Get Image Meta Data
+					// META : Get Image Meta Data
 					elseif( $image_handle == 'meta' && is_numeric($thumbnail_id) ){
 						$post_data['image']['meta'] = wp_get_attachment_metadata($thumbnail_id);
 

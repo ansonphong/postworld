@@ -957,8 +957,8 @@ postworld.controller('editPost',
                 ///// LOAD POST CONTENT /////
                 
                 // SET THE POST CONTENT
-                //if( typeof tinyMCE !== 'undefined' )
-                //    tinyMCE.get('post_content').setContent( get_post_data.post_content );
+                if( typeof tinyMCE !== 'undefined' )
+                    tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
                 ///// LOAD AUTHOR /////
 
@@ -995,8 +995,8 @@ postworld.controller('editPost',
             //alert(JSON.stringify($scope.post_data));
 
             ///// GET POST_DATA FROM TINYMCE /////
-            //if ( typeof tinyMCE !== 'undefined' )
-            //    $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+            if ( typeof tinyMCE !== 'undefined' )
+                $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
 
             ///// SANITIZE FIELDS /////
             if ( typeof $scope.post_data.link_url === 'undefined' )
@@ -1066,8 +1066,8 @@ postworld.controller('editPost',
 
     $scope.clear_post_data = function(){
         $scope.post_data = {};
-        //if( typeof tinyMCE !== 'undefined' )
-        //    tinyMCE.get('post_content').setContent( "" );
+        if( typeof tinyMCE !== 'undefined' )
+            tinyMCE.get('post_content').setContent( "" );
     }
 
     $scope.pw_get_post_object = function(){
@@ -1326,8 +1326,9 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
     $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+    
     // TAXONOMY TERMS
-    $scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+    //$scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
 
     // DEFAULT POST DATA
     $scope.post_data = {
