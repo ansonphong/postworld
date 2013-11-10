@@ -910,7 +910,6 @@ function pw_get_avatar( $obj ){
 		$args = { user_id:"1", [ size: 256 ], [ width:256, height:256 ] }
 	*/
 	extract($obj);
-
 	$default_avatar = "/images/defaults/user.png";
 
 	if ( !isset($user_id) ){

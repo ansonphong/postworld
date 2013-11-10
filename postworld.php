@@ -57,6 +57,7 @@ function set_template_paths(){
 
 	return $template_paths;
 }
+global $template_paths;
 $template_paths = set_template_paths();
 
 ////////// WP OPTIONS ///////////
