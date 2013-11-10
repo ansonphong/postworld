@@ -987,7 +987,7 @@ postworld.controller('editPost',
     }
 
 
-    // SAVE POST FUNCTION
+    /////----- SAVE POST FUNCTION -----//////
     $scope.savePost = function(pwData){
 
         // VALIDATE THE FORM
@@ -1007,7 +1007,6 @@ postworld.controller('editPost',
             var post_data = $scope.post_data;
 
             //alert( JSON.stringify( post_data ) );
-            
             $log.info('pwData.pw_save_post : SUBMITTING : ', post_data);
 
             ///// SAVE VIA AJAX /////
@@ -1017,7 +1016,6 @@ postworld.controller('editPost',
                 function(response) {    
                     //alert( "RESPONSE : " + response.data );
                     $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
-
                     // VERIFY POST CREATION
                     // If it was created, it's an integer
                     if( response.data === parseInt(response.data) ){
@@ -1027,7 +1025,6 @@ postworld.controller('editPost',
                         $timeout(function() {
                           $scope.status = "done";
                         }, 2000);
-
                         // If created a new post
                         if ( $scope.mode == "new" )
                             // Forward to edit page
@@ -1035,17 +1032,14 @@ postworld.controller('editPost',
                         else
                             // Otherwise, reload the data from server
                             $scope.load_post_data();
-
                         // For Quick Edit Mode - emit to parent successful update
                         $rootScope.$broadcast('postUpdated', post_id);
-
                     }
                     else{
                         // ERROR
                         //alert("Error : " + JSON.stringify(response) );
                         $scope.status = "done";
                     }
-                    
                 },
                 // Failure
                 function(response) {
@@ -1061,8 +1055,9 @@ postworld.controller('editPost',
         } else {
             alert("Post not saved : missing fields.");
         }
-        
     }
+    /////----- END SAVE POST FUNCTION -----//////
+
 
     $scope.clear_post_data = function(){
         $scope.post_data = {};
@@ -1106,12 +1101,10 @@ postworld.controller('editPost',
         $scope.post_data.tax_input.post_tag = data;
     });
 
-
     // TAXONOMY TERMS
     // Gets live set of terms from the DB
     // as $scope.tax_terms
     $pwPostOptions.getTaxTerms($scope);
-
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects
@@ -1126,13 +1119,13 @@ postworld.controller('editPost',
         
         }, 1 );
 
+
     // LINK_URL WATCH : Watch for changes in link_url
     // Evaluate the post_format
     $scope.$watchCollection('[post_data.link_url, post_data.post_format]',
         function ( newValue, oldValue ){
             $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
-
 
     // POST TYPE WATCH : Watch the Post Type
     $scope.$watch( "post_data.post_type",
@@ -1305,7 +1298,7 @@ postworld.controller('AuthorAutocomplete', ['$scope', function($scope) {
  |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
 
 ////////// ------------ POST LINK CONTROLLER ------------ //////////*/
-postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext',function($scope, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, pwData) {
+postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext', 'pwData',function($scope, $log, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, $pwData) {
 
     // Setup the intermediary Link URL
     $scope.link_url = '';
@@ -1315,6 +1308,9 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
 
     // Set the default mode
     $scope.mode = "url_input";
+
+    // Set the status
+    $scope.status = "done";
 
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
@@ -1328,11 +1324,41 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
     
     // TAXONOMY TERMS
-    //$scope.tax_terms = $pwPostOptions.pwGetTaxTerms();
+    // Gets live set of terms from the DB
+    // as $scope.tax_terms
+    $pwPostOptions.getTaxTerms($scope);
+
+    // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
+    // Make a new object which contains only the selected sub-objects
+    $scope.selected_tax_terms = {};
+    $scope.$watch( "post_data.tax_input",
+        function (){
+            // Create selected terms object
+            $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post_data.tax_input);
+            
+            // Clear irrelivent sub-terms
+            $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
+        
+        }, 1 );
+
+    // UPDATE AUTHOR NAME FROM AUTOCOMPLETE
+    // Interacts with userAutocomplete() controller
+    // Catches the recent value of the auto-complete
+    $scope.$on('updateUsername', function( event, data ) { 
+        $scope.post_data.post_author_name = data;
+    });
+
+    // UPDATE POST TAGS FROM AUTOCOMPLETE MODULE
+    // Interacts with tagsAutocomplete() controller
+    // Catches the recent value of the tags_input and inject into tax_input
+    $scope.$on('updateTagsInput', function( event, data ) { 
+        $scope.post_data.tax_input.post_tag = data;
+    });
 
     // DEFAULT POST DATA
     $scope.post_data = {
         post_title:"Link Title",
+        post_type:"link",
         link_url:"",
         post_format:"standard",
         post_class:"",
@@ -1341,10 +1367,10 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
         tax_input : {
             topic : [],
             section : [],
-            type : []
+            type : [],
+            post_tag:[]
         }
     };
-
 
     // GET URL EXTRACT
     // 1. On detect paste
@@ -1352,27 +1378,32 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
 
     $scope.extract_url = function() {
 
+        $scope.status = "busy";
         $embedly.liveEmbedlyExtract( $scope.link_url ).then( // 
                 // Success
                 function(response) {
                     console.log(response);    
                     $scope.embedly_extract = response;
+                    $scope.status = "done";
                 },
                 // Failure
                 function(response) {
                     //alert('Could not find URL.');
                     throw {message:'Embedly Error'+response};
+                    $scope.status = "done";
                 }
             );
 
         //alert(JSON.stringify($scope.embedly_extract));
         //alert('extract');
     }
+
     $scope.reset_extract = function() {
         $scope.embedly_extract = {};
         //alert(JSON.stringify($scope.embedly_extract));
         //alert('extract');
     }
+
     $scope.ok = function() {
         $scope.mode = "url_input";
     }
@@ -1430,9 +1461,9 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
     $scope.$watch( "selected_image",
         function ( newValue, oldValue ){
             if ( typeof $scope.embedly_extract_image_meta != 'undefined' )
-                $scope.post_data.image_url = $scope.embedly_extract_image_meta.images[newValue].url;
+                $scope.post_data.thumbnail_url = $scope.embedly_extract_image_meta.images[newValue].url;
             else
-                $scope.post_data.image_url = "";
+                $scope.post_data.thumbnail_url = "";
         }, 1 );
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
@@ -1453,6 +1484,7 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
             $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
 
+    /*
     ///// SUBMIT /////
     function timeoutStatus(){
         $scope.mode =  "success";
@@ -1460,11 +1492,71 @@ postworld.controller('postLink', ['$scope', '$timeout','pwPostOptions','pwEditPo
         };
     $scope.submit_status = "ready";
     $scope.savePost = function(){
-        //alert(JSON.stringify($scope.post_data));
+        alert(JSON.stringify($scope.post_data));
         $scope.submit_status = "busy";
         $timeout( timeoutStatus, 1000);
-
     }
+    */
+
+
+    /////----- SAVE POST FUNCTION -----//////
+    $scope.savePost = function(pwData){
+
+        // VALIDATE THE FORM
+        if ($scope.post_data.post_title != '' || typeof $scope.post_data.post_title !== 'undefined'){
+            //alert(JSON.stringify($scope.post_data));
+
+            ///// SANITIZE FIELDS /////
+            if ( typeof $scope.post_data.link_url === 'undefined' )
+                $scope.post_data.link_url = '';
+
+            ///// DEFINE POST DATA /////
+            var post_data = $scope.post_data;
+
+            //alert( JSON.stringify( post_data ) );
+            $log.info('pwData.pw_save_post : SUBMITTING : ', post_data);
+
+            ///// SAVE VIA AJAX /////
+            $scope.status = "saving";
+            $pwData.pw_save_post( post_data ).then(
+                // Success
+                function(response) {    
+                    //alert( "RESPONSE : " + response.data );
+                    $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
+                    // VERIFY POST CREATION
+                    // If it was created, it's an integer
+                    if( response.data === parseInt(response.data) ){
+                        // SAVE SUCCESSFUL
+                        var post_id = response.data;
+                        $scope.status = "success";
+                        $scope.mode = "success";
+                        $timeout(function() {
+                          $scope.status = "done";
+                        }, 2000);
+                    }
+                    else{
+                        // ERROR
+                        //alert("Error : " + JSON.stringify(response) );
+                        $scope.status = "done";
+                    }
+                },
+                // Failure
+                function(response) {
+                    //alert('error');
+                    $scope.status = "error";
+                    $timeout(function() {
+                      $scope.status = "done";
+                    }, 2000);
+
+                }
+            );
+
+        } else {
+            alert("Post not saved : missing fields.");
+        }
+    }
+    /////----- END SAVE POST FUNCTION -----//////
+
 
     // ADD ERROR SUPPORT
 
@@ -2350,7 +2442,7 @@ postworld.factory('embedly', function ($resource, $q, $log) {
                     post_title: embedly_extract.title,
                     post_excerpt: embedly_extract.description,
                     link_url: embedly_extract.url,
-                    image_url: link_url_set,
+                    thumbnail_url: link_url_set,
                 };
             },
             embedlyExtractImageMeta: function( embedly_extract ){

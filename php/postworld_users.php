@@ -916,7 +916,7 @@ function pw_get_avatar( $obj ){
 		global $template_paths;
 		return $template_paths['POSTWORLD_URL'].$default_avatar;
 	}
-
+	
 	$attachment_id = get_user_meta( $user_id, 'pw_avatar', true );
 
 	if ( !empty($attachment_id) ){

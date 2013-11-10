@@ -879,7 +879,7 @@ function pw_save_post($post_data){
 	if ( !empty($thumbnail_id) && !empty($post_id) )
 		pw_set_post_thumbnail( $post_id, $thumbnail_id );
 
-	// Handle Thumbnail URL
+	// Handle Thumbnail URL 
 	elseif ( !empty($thumbnail_url) && !empty($post_id) )
 		pw_set_post_thumbnail( $post_id, $thumbnail_url );
 	
