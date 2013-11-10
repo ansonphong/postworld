@@ -253,7 +253,7 @@ postworld.service('siteOptions', ['$log', function ($log) {
                   ],
                   "filter":""
                },
-               "type":{
+               "hilight":{
                   "max_depth":2,
                   "fields":[
                      "term_id",
@@ -866,7 +866,7 @@ postworld.controller('editPost',
         tax_input : {
             topic : [],
             section : [],
-            type : [],
+            hilight : [],
             post_tag : [],
         },
         tags_input : "",
@@ -1367,7 +1367,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         tax_input : {
             topic : [],
             section : [],
-            type : [],
+            hilight : [],
             post_tag:[]
         }
     };
