@@ -904,35 +904,42 @@ function pw_set_avatar( $image_object, $user_id ){
 }
 
 
-
+/////----- GET POSTWORLD AVATAR -----/////
 function pw_get_avatar( $obj ){
 	/*
 		$args = { user_id:"1", [ size: 256 ], [ width:256, height:256 ] }
 	*/
 	extract($obj);
 
-	if ( !isset($user_id) )
-		return false;
+	$default_avatar = "/images/defaults/user.png";
+
+	if ( !isset($user_id) ){
+		global $template_paths;
+		return $template_paths['POSTWORLD_URL'].$default_avatar;
+	}
 
 	$attachment_id = get_user_meta( $user_id, 'pw_avatar', true );
-	$attachment_meta = wp_get_attachment_metadata( $attachment_id );
-	$attachment_image_src = wp_get_attachment_image_src( $attachment_id, 'full' );
-	$attachment_meta["file_url"] = $attachment_image_src[0];
-	$attachment_meta["id"] = $attachment_id;
 
-	// If no size is set, return with image meta object
-	if ( !isset($size) )
-		return $attachment_meta;
+	if ( !empty($attachment_id) ){
+		$attachment_meta = wp_get_attachment_metadata( $attachment_id );
+		$attachment_image_src = wp_get_attachment_image_src( $attachment_id, 'full' );
+		$attachment_meta["file_url"] = $attachment_image_src[0];
+		$attachment_meta["id"] = $attachment_id;
 
-	else
-		return aq_resize( $attachment_image_src[0], $size, $size, true );
-
-	//return $attachment_meta;
-
-	//else
-	//return array('error'=>'No get avatar.');
+		// If no size is set, return with image meta object
+		if ( !isset($size) ){
+			return $attachment_meta;
+		}
+		else
+			return aq_resize( $attachment_image_src[0], $size, $size, true );
+	}
+	else{
+		global $template_paths;
+		return $template_paths['POSTWORLD_URL'].$default_avatar;
+	}
 
 }
+
 
 /////----- INSERT NEW USER -----/////
 function pw_insert_user( $userdata ){
