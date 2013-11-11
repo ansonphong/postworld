@@ -101,7 +101,7 @@ function pw_get_userdata($user_id, $fields = false) {
 			// Result will be output as an numerically indexed array of associative arrays, using column names as keys
 			$postworld_user_data = $wpdb -> get_results($query, ARRAY_A);
 			// Transfer the user data into $user_data
-			if ( isset($postworld_user_data) )
+			if ( is_array($postworld_user_data) )
 				foreach ( $postworld_user_data[0] as $meta_key => $meta_value ){
 					if ( in_array( $meta_key, $fields ) ){
 						$pw_json_fields = array( "post_points_meta", "share_points_meta", "post_relationships" );
