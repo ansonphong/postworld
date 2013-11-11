@@ -68,7 +68,7 @@ function registered_images_obj(){
 
 
 ///// UPLOADS REMOTE URL TO WP IMAGE LIBRARY /////
-function url_to_media_library( $image_url ){
+function url_to_media_library( $image_url, $post_id =null){
 
 	// Check if it's a URL string
 	if ( strpos($image_url,'://') == false ) {
@@ -94,7 +94,11 @@ function url_to_media_library( $image_url ){
 	    'post_content' => '',
 	    'post_status' => 'inherit'
 	);
-	$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+	if(!is_null($post_id))
+		$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+	else
+		$attach_id = wp_insert_attachment( $attachment, $file);
+	
 	require_once(ABSPATH . 'wp-admin/includes/image.php');
 	$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
 	wp_update_attachment_metadata( $attach_id, $attach_data );
