@@ -3,6 +3,8 @@
 ////////// SHARE BUG //////////
 // This is a 'bug' which listens for the share fields
 // And if they exist and data checks out, add a share to the DB
+
+/*
 add_action( 'wp_loaded', 'share_bug', 10 );
 function share_bug(){
 	$user_id = $_GET['u'];
@@ -14,14 +16,14 @@ function share_bug(){
 	if ( isset( $user_id ) && isset( $post_id ) ){
 		if ( username_exists_by_id($user_id) && post_exists_by_id($post_id) ){
 			set_share ( $user_id, $post_id );
-			/* Redirect browser */
+			// Redirect browser
 			$permalink = get_permalink( $post_id );
 			wp_redirect( $permalink );
 		}
 	
 	}
 }
-
+*/
 
 function set_share ( $user_id, $post_id ){
 	/*
