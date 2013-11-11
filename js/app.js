@@ -498,13 +498,13 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
                 {
                     name:"Video",
                     slug:"video",
-                    domains:["youtube.com","youtu.be","vimeo.com"],
+                    domains:["youtube.com/","youtu.be/","vimeo.com/","hulu.com/","ted.com/","sapo.pt/","dailymotion.com","blip.tv/","ustream.tv/",],
                     icon:"<i class='icon-youtube-play'></i>"
                 },
                 {
                     name:"Audio",
                     slug:"audio",
-                    domains:["soundcloud.com"],
+                    domains:["soundcloud.com/","mixcloud.com/","official.fm/","shoudio.com/",],
                     icon:"<i class='icon-headphones'></i>"
                 },
             ];
@@ -1668,7 +1668,7 @@ var postActions = function ( $scope, pwData ) {
                                                                                           
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
-var postVote = function ( $rootScope, $scope, pwData ) {
+var postVote = function ( $rootScope, $scope, $log, pwData ) {
     $rootScope.vote_power = "10";
 
     // SWITCH CSS CLASSES BASED ON VOTE
@@ -1699,7 +1699,11 @@ var postVote = function ( $rootScope, $scope, pwData ) {
             function(response) {    
                 //alert( JSON.stringify(response.data) );
                 // RESPONSE.DATA : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
+                
+                $log.info('VOTE RETURN : ' + JSON.stringify(response) );
+
                 if ( response.data.id == $scope.post.ID ){
+
                     // UPDATE POST POINTS
                     $scope.post.post_points = response.data.points_total;
                     // UPDATE VIEWER HAS VOTED

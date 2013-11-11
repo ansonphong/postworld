@@ -338,7 +338,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			///// POSTWORLD AUTHOR FIELDS /////
 			/*
 			if( in_array('posts_points', $author_fields) )
-				$post_data['author']['posts_points'] = get_user_posts_points( $post_id );
+				$post_data['author']['posts_points'] = get_user_post_points( $post_id );
 			if( in_array('comments_points', $author_fields) )
 				$post_data['author']['comments_points'] = get_user_comments_points( $post_id );
 			*/

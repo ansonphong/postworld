@@ -267,13 +267,34 @@ __USER POST POINTS__
 
 ------
 
-### get_user_posts_points ( *$user_id* )
+### get_user_post_points ( *$user_id* )
 - Get the number of points voted to posts authored by the given user
 - Get cached points of user from __wp_postworld_user_meta__ table __post_points__ column
 
 __return__ : *integer* (number of points)
 
 ------
+
+### get_user_post_points_meta
+- Get the number of points voted to posts authored by the given user, broken down
+- Get cached points of user from __wp_postworld_user_meta__ table __post_points_meta__ column
+- Include total points
+
+__return__ : *Array*
+
+```php
+array(
+  'total' => 640,
+  'post_type' => array(
+    'post' => 160,
+    'link' => 325,
+    'blog' => 65,
+    'event' => 90
+  )
+)
+```
+------
+
 
 ### calculate_user_posts_points ( *$user_id* )
 - Add up the points voted to given user's posts, stored in __wp_postworld_post_points__
@@ -1075,6 +1096,9 @@ __$fields__ : (optional) *string / Array*
     • viewed  
     • favorites  
     • view_later  
+
+- __Buddypress__ User Fields:
+  - user_profile_url
 
 #### Usage
 ``` php
@@ -2293,7 +2317,7 @@ __SHARE REPORTS__
 
 ------
 
-### user_share_report ( *$user_id* )
+### user_share_report_outgoing ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by posts that the given user has shared__
@@ -2319,10 +2343,60 @@ array(
 
 	)
 ```
+------
+
+### user_share_report_meta ( *$user_share_report* )
+- Inserts the post object data for each user share
+
+
+#### Usage : Outgoing
+``` php
+user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) );
+```
+
+#### Output : Outgoing
+``` javascript
+[
+  {
+    "post_id":"181217",
+    "shares":"1",
+    "last_time":"2013-11-11 07:11:21",
+    "post":{ "post_title":"title",... } // << Adds this object : output from pw_get_post
+  },
+  ...
+]
+```
+
+#### Usage : Incoming
+``` php
+user_share_report_meta( user_share_report_incoming( $displayed_user_id ) );
+```
+
+#### Output : Incoming
+``` javascript
+[
+  {
+    "post_id":"200047",
+    "total_shares":"1",
+    "post":{ "post_title":"title",... } // << Adds this object : output from pw_get_post
+    "user_shares":[
+      {
+        "user_id":"1",
+        "shares":"1",
+        "last_time":"2013-11-11 07:13:54"
+        "author":{ "display_name":"Name", ... } // << Adds this object : output from pw_get_userdata
+      }
+    ]
+  },
+  ...
+]
+
+```
+
 
 ------
 
-### user_posts_share_report ( *$user_id* )
+### user_share_report_outgoing ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by shares to the given user's posts__

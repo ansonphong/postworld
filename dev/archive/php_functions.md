@@ -1,11 +1,11 @@
 
 ------
 
-### cache_user_posts_share_report( *$user_id* )
-- Run `generate_user_posts_share_report($user_id)`
+### cache_user_share_report_outgoing( *$user_id* )
+- Run `generate_user_share_report_outgoing($user_id)`
 - Save the result in __User Meta__ table, __share_report__ column
 
-__return__ : *Array* (same as `generate_user_posts_share_report()`)
+__return__ : *Array* (same as `generate_user_share_report_outgoing()`)
 
 ------
 

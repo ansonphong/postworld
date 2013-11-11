@@ -134,7 +134,7 @@ function does_post_exist_return_post_author($post_id){
 	  return FALSE;
 	}
 }
-function user_share_report ( $user_id ){
+function user_share_report_outgoing ( $user_id ){
 	/*
 	 Description
 
@@ -176,7 +176,35 @@ function user_share_report ( $user_id ){
 	
 }
 
-function user_posts_share_report ( $user_id ){
+
+function user_share_report_meta ($user_share_report){
+	if (!empty($user_share_report)){
+		$user_share_meta_report = array();
+		foreach( $user_share_report as $shared_post ){
+			$user_share_meta_single = $shared_post;
+			$user_share_meta_single['post'] = pw_get_post( $shared_post['post_id'], 'preview' );
+			// If it's an incoming share report
+			// Add user meta for each sharer
+			if( isset($shared_post["user_shares"]) ){
+				// Generate new user_sahres object, with 'user' meta data
+				$user_shares = array();
+				foreach( $shared_post["user_shares"] as $user ){ 
+					$user_share_single = $user;
+					$user_fields = array("display_name", "user_nicename", "user_profile_url");
+					$user_share_single["user"] = pw_get_userdata( $user["user_id"], $user_fields );
+					array_push( $user_shares, $user_share_single );
+				}
+				// Over-write original user_shares object
+				$user_share_meta_single["user_shares"] = $user_shares;
+			}
+			array_push( $user_share_meta_report, $user_share_meta_single );
+		}
+	}
+	return $user_share_meta_report;
+}
+
+
+function user_share_report_incoming ( $user_id ){
 	/*
 	Description
 

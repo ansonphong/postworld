@@ -443,24 +443,24 @@
 		$output = array();
 		global $wpdb;
 		$wpdb -> show_errors();
-		if($mode =='incoming' || $mode=='both'){
-			$user_share_report = user_share_report($user_id);
-			//print_r($user_share_report);
-			$incoming = 0;
-			for ($i=0; $i <count($user_share_report) ; $i++) { 
-				$incoming=$incoming + $user_share_report[$i]['shares'];
-			}
-			$output['incoming'] = $incoming;
-		}
-		
-		if($mode == 'outgoing' || $mode =='both'){
-			$user_posts_share_report = user_posts_share_report($user_id);
-			//print_r($user_posts_share_report);
+		if($mode =='outgoing' || $mode=='both'){
+			$user_share_report_outgoing = user_share_report_outgoing($user_id);
+			//print_r($user_share_report_outgoing);
 			$outgoing = 0;
-			for ($i=0; $i <count($user_posts_share_report) ; $i++) { 
-				$outgoing=$outgoing + $user_posts_share_report[$i]['total_shares'];
+			for ( $i=0; $i < count($user_share_report_outgoing) ; $i++) { 
+				$outgoing = $outgoing + $user_share_report_outgoing[$i]['shares'];
 			}
 			$output['outgoing'] = $outgoing;
+		}
+		
+		if($mode == 'incoming' || $mode =='both'){
+			$user_share_report_incoming = user_share_report_incoming($user_id);
+			//print_r($user_share_report_incoming);
+			$incoming = 0;
+			for ($i=0; $i <count($user_share_report_incoming) ; $i++) { 
+				$incoming=$incoming + $user_share_report_incoming[$i]['total_shares'];
+			}
+			$output['incoming'] = $incoming;
 		}
 		return $output;
 	}

@@ -135,7 +135,6 @@ function pw_set_avatar_admin(){
 	die;
 
 }
-//add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
 add_action("wp_ajax_pw_set_avatar", "pw_set_avatar_admin");
 
 

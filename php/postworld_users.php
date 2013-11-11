@@ -49,7 +49,7 @@ function get_current_userdata_obj($fields) {
 	echo $user_data;
 }
 
-function pw_get_userdata($user_id, $fields) {
+function pw_get_userdata($user_id, $fields = false) {
 
 	$wordpress_user_fields = array('user_login', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'display_name', 'user_firstname', 'user_lastname', 'nickname', 'user_description', 'wp_capabilities', 'admin_color', 'closedpostboxes_page', 'primary_blog', 'rich_editing', 'source_domain', 'roles', 'capabilities', );
 
@@ -60,30 +60,31 @@ function pw_get_userdata($user_id, $fields) {
 	$user_data = array();
 
 	// If Fields is empty or 'all', add all fields
-	if (!$fields || $fields == 'all') {
+	if ( $fields == false || $fields == 'all') {
 		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields);
 	}
 
+	///// TRANSFER ONLY REQUESTED FIELDS!! /////
+
 	// WORDPRESS USER FIELDS
 	// Check to see if any requested fields are standard Wordpress User Fields
-	foreach ($fields as $value) {
+	foreach ($fields as $field) {
 		// If a requested field is provided by WP get_userdata() Method, collect all the data
-		if (in_array($value, $wordpress_user_fields)) {
+		if (in_array($field, $wordpress_user_fields)) {
 			$wordpress_user_data = get_userdata($user_id);
 			if ((isset($wordpress_user_data))&&($wordpress_user_data)) {
-				// Transfer the user data into $user_data
-				foreach ($wordpress_user_data->data as $key => $value)
-					$user_data[$key] = $value;
-	
+				// Transfer the requested user data into $user_data
+				foreach ($wordpress_user_data->data as $key => $field){
+					if ( in_array($key, $fields) )
+						$user_data[$key] = $field;
+				}
 				// Get user Roles
 				if (in_array('roles', $fields))
 					$user_data['roles'] = $wordpress_user_data -> roles;
-	
 				// Get user Capabilities
 				if (in_array('capabilities', $fields))
 					$user_data['capabilities'] = $wordpress_user_data -> allcaps;
 			}
-
 			// Break out of foreach
 			break;
 		}
@@ -93,19 +94,22 @@ function pw_get_userdata($user_id, $fields) {
 	// Check to see if requested fields are custom Postworld User Fields
 	foreach ($fields as $value) {
 		// If a requested field is custom Postworld, get the user's row in *user_meta* table
-		if (in_array($value, $postworld_user_fields)) {
-
+		if ( in_array($value, $postworld_user_fields )) {
 			global $wpdb;
 			$wpdb -> show_errors();
 			$query = "select * from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
-			//echo $query;
-			//esult will be output as an numerically indexed array of associative arrays, using column names as keys
+			// Result will be output as an numerically indexed array of associative arrays, using column names as keys
 			$postworld_user_data = $wpdb -> get_results($query, ARRAY_A);
-
 			// Transfer the user data into $user_data
-			foreach ($postworld_user_data as $key => $value)
-				$user_data[$key] = $value;
-
+			foreach ( $postworld_user_data[0] as $meta_key => $meta_value ){
+				if ( in_array( $meta_key, $fields ) ){
+					$pw_json_fields = array( "post_points_meta", "share_points_meta", "post_relationships" );
+					// Decode the JSON encoded DB fields
+					if ( in_array( $meta_key, $pw_json_fields ) )
+						$meta_value = json_decode( $meta_value );
+					$user_data[$meta_key] = $meta_value;
+				}
+			}
 			break;
 		}
 	}
@@ -120,6 +124,9 @@ function pw_get_userdata($user_id, $fields) {
 				$user_data['user_profile_url'] = bp_core_get_userlink($user_id, false, true);
 		}
 	}
+
+	// REMOVE PASSWORD
+	unset($user_data["user_pass"]);
 
 	return $user_data;
 
