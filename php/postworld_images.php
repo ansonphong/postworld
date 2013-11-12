@@ -66,7 +66,33 @@ function registered_images_obj(){
 		return $sizes;
 	}
 
+function grab_image($url,$saveto){
+    $ch = curl_init ($url);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+	curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
+	
+    $raw=curl_exec($ch);  	
+    if(curl_errno($ch))
+	{
+	    echo 'Curl error: ' . curl_error($ch);
+		curl_close ($ch);
+		return false;
+	}    
+    else {
+	   	$file_size = file_put_contents($saveto,$raw);
+		curl_close ($ch);
+		return $file_size;
+		
+	
+    }
+   
+	
+	return false;
 
+}
 ///// UPLOADS REMOTE URL TO WP IMAGE LIBRARY /////
 function url_to_media_library( $image_url, $post_id = 0){
 
@@ -76,44 +102,49 @@ function url_to_media_library( $image_url, $post_id = 0){
 	}
 
 	$upload_dir = wp_upload_dir();
-	$image_data = file_get_contents($image_url);
+	
 	$base_file_name = basename($image_url);
 	$filename = $post_id."-".$base_file_name;
 	if(wp_mkdir_p($upload_dir['path']))
 	    $file = $upload_dir['path'] . '/' . $filename;
 	else
 	    $file = $upload_dir['basedir'] . '/' . $filename;
-	file_put_contents($file, $image_data);
+	//file_put_contents($file, $image_data);
 
-	
+	$image_data = grab_image($image_url,$file);//file_get_contents($image_url);
 	// Check if post exists
-	$postdata = get_post( $post_id, "ARRAY_A" );
-
-	// Define the title
-	if( $post_id != 0 && isset($postdata['post_title'])  ){
-		$file_title = $postdata['post_title'];
-	} else{
-		// Strip off the file extension
-		$file_title =preg_replace("/\\.[^.\\s]{3,4}$/", "", $base_file_name);
-	}
-
-	$wp_filetype = wp_check_filetype($filename, null );
-	$attachment = array(
-	    'post_mime_type' => $wp_filetype['type'],
-	    'post_title' => $file_title,
-	    'post_content' => '',
-	    'post_status' => 'inherit'
-	);
-	if( $post_id != 0 )
-		$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
-	else
-		$attach_id = wp_insert_attachment( $attachment, $file);
 	
-	require_once(ABSPATH . 'wp-admin/includes/image.php');
-	$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
-	wp_update_attachment_metadata( $attach_id, $attach_data );
-
-	return $attach_id;
+	if($image_data!== FALSE){
+		$postdata = get_post( $post_id, "ARRAY_A" );
+	
+		// Define the title
+		if( $post_id != 0 && isset($postdata['post_title'])  ){
+			$file_title = $postdata['post_title'];
+		} else{
+			// Strip off the file extension
+			$file_title =preg_replace("/\\.[^.\\s]{3,4}$/", "", $base_file_name);
+		}
+	
+		$wp_filetype = wp_check_filetype($filename, null );
+		$attachment = array(
+		    'post_mime_type' => $wp_filetype['type'],
+		    'post_title' => $file_title,
+		    'post_content' => '',
+		    'post_status' => 'inherit'
+		);
+		if( $post_id != 0 )
+			$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
+		else
+			$attach_id = wp_insert_attachment( $attachment, $file);
+		
+		require_once(ABSPATH . 'wp-admin/includes/image.php');
+		$attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+		wp_update_attachment_metadata( $attach_id, $attach_data );
+	
+		return $attach_id;
+	}
+	else echo  "<br />IMAGE NOT MIGRATED<br />";
+	return 0;
 }
 
 ?>
