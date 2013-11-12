@@ -457,6 +457,10 @@ function post_exists_by_id($post_id){
 	if($post != null){ return true; } else{ return false; }
 }
 
+function crop_string_to_word( $string, $max_chars = 200 ){
+	return substr($string, 0, strrpos(substr($string, 0, $max_chars), ' '));
+}
+
 
 
 ?>
