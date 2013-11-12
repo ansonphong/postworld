@@ -68,33 +68,43 @@ function registered_images_obj(){
 
 
 ///// UPLOADS REMOTE URL TO WP IMAGE LIBRARY /////
-function url_to_media_library( $image_url, $post_id =null){
+function url_to_media_library( $image_url, $post_id = 0){
 
 	// Check if it's a URL string
-	if ( strpos($image_url,'://') == false ) {
+	if ( strpos($image_url,'//') == false ) {
 	    return array( 'error' => 'Not a URL.' );
 	}
 
 	$upload_dir = wp_upload_dir();
 	$image_data = file_get_contents($image_url);
-	$filename = basename($image_url);
+	$base_file_name = basename($image_url);
+	$filename = $post_id."-".$base_file_name;
 	if(wp_mkdir_p($upload_dir['path']))
 	    $file = $upload_dir['path'] . '/' . $filename;
 	else
 	    $file = $upload_dir['basedir'] . '/' . $filename;
 	file_put_contents($file, $image_data);
 
-	// Strip off the file extension
-	$file_title =preg_replace("/\\.[^.\\s]{3,4}$/", "", $filename);
+	
+	// Check if post exists
+	$postdata = get_post( $post_id, "ARRAY_A" );
+
+	// Define the title
+	if( $post_id != 0 && isset($postdata['post_title'])  ){
+		$file_title = $postdata['post_title'];
+	} else{
+		// Strip off the file extension
+		$file_title =preg_replace("/\\.[^.\\s]{3,4}$/", "", $base_file_name);
+	}
 
 	$wp_filetype = wp_check_filetype($filename, null );
 	$attachment = array(
 	    'post_mime_type' => $wp_filetype['type'],
-	    'post_title' => sanitize_file_name($file_title),
+	    'post_title' => $file_title,
 	    'post_content' => '',
 	    'post_status' => 'inherit'
 	);
-	if(!is_null($post_id))
+	if( $post_id != 0 )
 		$attach_id = wp_insert_attachment( $attachment, $file, $post_id );
 	else
 		$attach_id = wp_insert_attachment( $attachment, $file);
