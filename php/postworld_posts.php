@@ -251,31 +251,14 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	////////// AVATAR IMAGES //////////
 
-		// Extract avatar() fields
-		$avatars = extract_fields( $fields, 'avatar' );
-		
-		// Get each avatar() image
-		foreach ($avatars as $avatar) {
-			// Extract image attributes from parenthesis
-	   		$avatar_attributes = extract_parenthesis_values($avatar, true);
-
-	   		// Check format
-	   		if ( count($avatar_attributes) == 2 && !is_numeric( $avatar_attributes[0]) && is_numeric( $avatar_attributes[1]) ){
-	   			// Setup Values
-	   			$avatar_handle = $avatar_attributes[0];
-	   			$avatar_size = $avatar_attributes[1];
-
-	   			// Set Avatar Size
-	   			$post_data['avatar'][$avatar_handle]['width'] = $avatar_size;
-	   			$post_data['avatar'][$avatar_handle]['height'] = $avatar_size;
-				$post_data['avatar'][$avatar_handle]['url'] = pw_get_avatar( array( "user_id"=> $author_id, "size" => $avatar_size ) ); //get_avatar_url( $author_id, $avatar_size );
-
-	   		}
-
-		} // END foreach
+		// AVATAR FIELDS
+		$avatars_object = get_avatar_sizes($user_id, $fields);
+		if ( !empty($avatars_object) )
+			$post_data["avatar"] = $avatars_object;
 
 
 	////////// META DATA //////////
+		
 		// Extract meta fields
 		$post_meta_fields = extract_linear_fields( $fields, 'post_meta', true );
 		if ( !empty($post_meta_fields) ){

@@ -49,12 +49,23 @@ function get_current_userdata_obj($fields) {
 	echo $user_data;
 }
 
+
+function pw_get_userdatas( $user_ids, $fields = false ){
+	$users_array = array();
+	foreach( $user_ids as $user_id ){
+		array_push(
+			$users_array,
+			pw_get_userdata($user_id, $fields)
+			);
+	}
+	return $users_array;
+}
+
+
 function pw_get_userdata($user_id, $fields = false) {
 
 	$wordpress_user_fields = array('user_login', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'display_name', 'user_firstname', 'user_lastname', 'nickname', 'user_description', 'wp_capabilities', 'admin_color', 'closedpostboxes_page', 'primary_blog', 'rich_editing', 'source_domain', 'roles', 'capabilities', );
-
 	$postworld_user_fields = array('viewed', 'favorites', 'location_city', 'location_region', 'location_country', 'post_points', 'comment_points', 'post_points_meta');
-
 	$buddypress_user_fields = array('user_profile_url', );
 
 	$user_data = array();
@@ -116,7 +127,7 @@ function pw_get_userdata($user_id, $fields = false) {
 		}
 	}
 
-	// BUDDYPRESS USER FIELDS
+	///// BUDDYPRESS PROFILE LINK /////
 	// Check to see if requested fields are Buddypress User Fields
 	foreach ($fields as $value) {
 		// If a requested field is Buddypress
@@ -127,12 +138,71 @@ function pw_get_userdata($user_id, $fields = false) {
 		}
 	}
 
+
+
+	////////// BUDDYPRESS CUSTOM PROFILE FIELDS //////////
+		
+	// Extract meta fields
+	$buddypress_fields = extract_linear_fields( $fields, 'buddypress', true );
+	if ( !empty($buddypress_fields) && function_exists('bp_get_profile_field_data') ){
+
+		$user_data["buddypress"] = array();
+
+		// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
+		foreach ($buddypress_fields as $buddypress_field ) {
+			$args = array(
+		        'field'   => $buddypress_field, // Field name or ID.
+		        'user_id' => $user_id // Default
+		        );
+			$user_data["buddypress"][$buddypress_field] = bp_get_profile_field_data( $args );
+		}
+	}
+
+
+
+
+
+	// AVATAR FIELDS
+	$avatars_object = get_avatar_sizes($user_id, $fields);
+	if ( !empty($avatars_object) )
+		$user_data["avatar"] = $avatars_object;
+
 	// REMOVE PASSWORD
 	unset($user_data["user_pass"]);
 
 	return $user_data;
 
 }
+
+
+function get_avatar_sizes($user_id, $fields){
+	// Takes input $fields in the following format "avatar(handle,size)"
+	// $fields = array( 'avatar(small,48)', 'avatar(medium, 150)', ... );
+	// Produces an object like : array( 'small'=>array( "width"=>48, "height"=>48, "url"=>"http://...jpg" ) )
+
+	// Extract avatar() fields
+	$avatars = extract_fields( $fields, 'avatar' );
+	$avatars_object = array();
+	// Get each avatar() image
+	foreach ($avatars as $avatar) {
+		// Extract image attributes from parenthesis
+   		$avatar_attributes = extract_parenthesis_values($avatar, true);
+   		// Check format
+   		if ( count($avatar_attributes) == 2 && !is_numeric( $avatar_attributes[0]) && is_numeric( $avatar_attributes[1]) ){
+   			// Setup Values
+   			$avatar_handle = $avatar_attributes[0];
+   			$avatar_size = $avatar_attributes[1];
+   			// Set Avatar Size
+   			$avatars_object[$avatar_handle]['width'] = $avatar_size;
+   			$avatars_object[$avatar_handle]['height'] = $avatar_size;
+			$avatars_object[$avatar_handle]['url'] = pw_get_avatar( array( "user_id"=> $user_id, "size" => $avatar_size ) ); //get_avatar_url( $author_id, $avatar_size );
+   		}
+
+	} // END foreach
+	return $avatars_object;
+}
+
+
 
 //TODO: change to new schema
 function pw_update_user($userdata) {

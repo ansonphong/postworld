@@ -18,7 +18,7 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 var feed_settings = [];
 
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation' ])
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters' ])
 .config(function ($routeProvider, $locationProvider, $provide) {   
 
     ////////// ROUTE PROVIDERS //////////
@@ -1484,76 +1484,57 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
             $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
 
-    /*
-    ///// SUBMIT /////
-    function timeoutStatus(){
-        $scope.mode =  "success";
-        $scope.submit_status = "ready";
-        };
-    $scope.submit_status = "ready";
-    $scope.savePost = function(){
-        alert(JSON.stringify($scope.post_data));
-        $scope.submit_status = "busy";
-        $timeout( timeoutStatus, 1000);
-    }
-    */
-
 
     /////----- SAVE POST FUNCTION -----//////
     $scope.savePost = function(pwData){
+        $scope.status = "busy";
 
-        // VALIDATE THE FORM
-        if ($scope.post_data.post_title != '' || typeof $scope.post_data.post_title !== 'undefined'){
-            //alert(JSON.stringify($scope.post_data));
+        ///// SANITIZE FIELDS /////
+        if ( typeof $scope.post_data.link_url === 'undefined' )
+            $scope.post_data.link_url = '';
 
-            ///// SANITIZE FIELDS /////
-            if ( typeof $scope.post_data.link_url === 'undefined' )
-                $scope.post_data.link_url = '';
+        ///// DEFINE POST DATA /////
+        var post_data = $scope.post_data;
 
-            ///// DEFINE POST DATA /////
-            var post_data = $scope.post_data;
+        //alert( JSON.stringify( post_data ) );
+        $log.info('pwData.pw_save_post : POSTING LINK : ', post_data);
 
-            //alert( JSON.stringify( post_data ) );
-            $log.info('pwData.pw_save_post : SUBMITTING : ', post_data);
-
-            ///// SAVE VIA AJAX /////
-            $scope.status = "saving";
-            $pwData.pw_save_post( post_data ).then(
-                // Success
-                function(response) {    
-                    //alert( "RESPONSE : " + response.data );
-                    $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
-                    // VERIFY POST CREATION
-                    // If it was created, it's an integer
-                    if( response.data === parseInt(response.data) ){
-                        // SAVE SUCCESSFUL
-                        var post_id = response.data;
-                        $scope.status = "success";
-                        $scope.mode = "success";
-                        $timeout(function() {
-                          $scope.status = "done";
-                        }, 2000);
-                    }
-                    else{
-                        // ERROR
-                        //alert("Error : " + JSON.stringify(response) );
-                        $scope.status = "done";
-                    }
-                },
-                // Failure
-                function(response) {
-                    //alert('error');
-                    $scope.status = "error";
+        ///// SAVE VIA AJAX /////
+        $pwData.pw_save_post( post_data ).then(
+            // Success
+            function(response) {    
+                //alert( "RESPONSE : " + response.data );
+                $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
+                // VERIFY POST CREATION
+                // If it was created, it's an integer
+                if( response.data === parseInt(response.data) ){
+                    // SAVE SUCCESSFUL
+                    var post_id = response.data;
+                    $scope.status = "success";
+                    $scope.mode = "success";
                     $timeout(function() {
                       $scope.status = "done";
                     }, 2000);
-
                 }
-            );
+                else{
+                    // ERROR
+                    //alert("Error : " + JSON.stringify(response) );
+                    $scope.status = "done";
+                }
+            },
+            // Failure
+            function(response) {
+                //alert('error');
+                $scope.status = "error";
+                $timeout(function() {
+                  $scope.status = "done";
+                  $scope.postLinkForm.$setValidity('busy',true);
+                }, 2000);
 
-        } else {
-            alert("Post not saved : missing fields.");
-        }
+            }
+        );
+
+    
     }
     /////----- END SAVE POST FUNCTION -----//////
 
@@ -3427,6 +3408,24 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
 }]);
 
 
+/*
+  _____ _ _ _                
+ |  ___(_) | |_ ___ _ __ ___ 
+ | |_  | | | __/ _ \ '__/ __|
+ |  _| | | | ||  __/ |  \__ \
+ |_|   |_|_|\__\___|_|  |___/
+
+/*////////////// ------------ FILTERS ------------ //////////////*/  
+
+angular.module('pwFilters', []).filter('htmlToPlaintext', function() {
+    return function(text) {
+        return String(text).replace(/<(?:.|\n)*?>/gm, '');
+    };
+});
+
+
+
+
 
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
@@ -3436,6 +3435,16 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
+
+
+
+
+
+
+
+
+
+
 
 
 

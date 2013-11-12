@@ -461,6 +461,23 @@ function crop_string_to_word( $string, $max_chars = 200 ){
 	return substr($string, 0, strrpos(substr($string, 0, $max_chars), ' '));
 }
 
+function extract_array_from_object( $object, $field_key ){
+		// Extracts one series of field values
+		// From an array of associative array/objects
+		// Into a flat array
+
+		// INPUT : $ids = [{"ID":"6427"},{"ID":"8979"},{"ID":"1265"}...]
+		// FUNCTION : extract_array_from_object($ids, "ID")
+		// OUTPUT : ["6427","8979","1265"...]
+
+		$array = array();
+		// Convert into ARRAY_A
+		$object = json_decode(json_encode($object), true);
+		foreach( $object as $item ){
+			array_push( $array, $item[$field_key]  );
+		}
+		return $array;
+	}
 
 
 ?>

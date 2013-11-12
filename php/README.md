@@ -1051,6 +1051,36 @@ var avatar_object = {
 
 ------
 
+### get_avatar_sizes( $user_id, $fields )
+
+- Takes input $fields in the following format
+  - `avatar(handle,size)`
+
+__return__ : *Array* (of image objects)
+
+```
+$fields = array( 'avatar(small,48)', 'avatar(medium, 150)' );
+$avatars_object = get_avatar_sizes( $user_id, $fields );
+
+//RESULT
+$avatars_object = array(
+  'small'=>array( "width"=>48, "height"=>48, "url"=>"http://...jpg" ),
+  'medium'=>array( "width"=>150, "height"=>150, "url"=>"http://...jpg" )
+  )
+```
+
+------
+
+### pw_get_userdatas( $user_ids, $fields )
+
+- Wrapper for `pw_get_userdata()`
+- `$user_ids` is a flat array of user_ids
+
+__return__ : *Array* (of userdata objects)
+
+------
+
+
 ### pw_get_userdata ( *$user_id, [$fields]* )
 
 #### Description :
