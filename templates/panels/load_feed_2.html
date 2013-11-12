@@ -2,7 +2,7 @@
 	<h2>{{title}} </h2>	
     <div id="scrollMe"  class="infinite-scroll">
 	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
-	    <div ng-repeat='post in items' >
+	    <div ng-repeat='post in items track by $index' >
 	    	<div feed-item ng-include="templateUrl" post="post" feed-id='args.feed_id'></div>
 			<hr>
 	      <div style='clear: both;'></div>
