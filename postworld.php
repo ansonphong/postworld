@@ -22,7 +22,6 @@ global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
 
-
 $postworld_db_version = "1.0";
 
 //global $pw_prefix;

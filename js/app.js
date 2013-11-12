@@ -1601,7 +1601,6 @@ var postActions = function ( $scope, pwData ) {
 
         // Localize the viewer object
         var viewer = $scope.post.viewer;
-        
         // Check toggle switch
         var setTo;
         if ( postRelationship == "favorites" ){
@@ -1612,14 +1611,12 @@ var postActions = function ( $scope, pwData ) {
             ( viewer.is_view_later == true ) ? setTo = false : setTo = true ;
             $scope.viewLaterStatus = "busy";
         }
-
         // Setup parmeters
         var args = {
             "relationship" : postRelationship,
             "switch" : setTo,
             "post_id" : $scope.post.ID,
         };
-
         // AJAX Call 
         pwData.set_post_relationship( args ).then(
             // ON : SUCCESS
@@ -1632,7 +1629,6 @@ var postActions = function ( $scope, pwData ) {
                         $scope.post.viewer.is_favorite = true;
                     //else
                         //alert( "Server error setting favorite." )
-
                     $scope.favoriteStatus = "done";
                 }
                 //SET VIEW LATER
@@ -2604,6 +2600,9 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
         if( action == "quick-edit" ){
             pwQuickEdit.openQuickEdit($scope.post);
         }
+        if( action == "trash" ){
+            pwQuickEdit.trashPost($scope);
+        }
 
     };
 
@@ -2633,17 +2632,37 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
             }, function () {
                 // WHEN CLOSE MODAL
                 $log.info('Modal dismissed at: ' + new Date());
+
             });
 
-
         },
-        
+
+        trashPost : function ( scope ){
+            if ( window.confirm("Are you sure you want to trash : \n" + scope.post.post_title) ) {
+                pwData.wp_trash_post( scope.post.ID ).then(
+                    // Success
+                    function(response) {
+                        if (response.status==200) {
+                            $log.info('Post Trashed RETURN : ',response.data);                     
+                            if ( response.data != false ){
+                                var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
+                                scope.post.post_title = "Trashed";
+                                scope.post.post_excerpt = "The post can still be retreived from the trash.";
+                            }
+                        } else {
+                            // handle error
+                        }
+                    },
+                    // Failure
+                    function(response) {
+                        // Failed Delete
+                    }
+                );
+            }
+        },
+ 
     }
 }]);
-
-
-
-
 
 
 
@@ -2657,7 +2676,6 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
 ////////// ------------ QUICK EDIT ------------ //////////*/   
 
 var quickEdit = function ($scope, $modal, $log) {
-    
     $scope.openQuickEdit = function( post ){
         console.log( "Launch Quick Edit : ", post );  
         var modalInstance = $modal.open({
@@ -2676,9 +2694,7 @@ var quickEdit = function ($scope, $modal, $log) {
             // WHEN CLOSE MODAL
             $log.info('Modal dismissed at: ' + new Date());
         });
-    };
-
-    
+    }; 
 };
 
 
@@ -2756,7 +2772,6 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
             pwData.pw_get_post(args).then(
                 // Success
                 function(response) {
-
                     if (response.status==200) {
                         //$log.info('pwPostLoadController.pw_load_post Success',response.data);                     
                         $scope.post = response.data;
@@ -2774,7 +2789,6 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
                     // TODO Show User Friendly Message
                 }
             );
-
         }
     });
 
