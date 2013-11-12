@@ -25,6 +25,7 @@ function share_bug(){
 }
 */
 
+
 function set_share ( $user_id, $post_id ){
 	/*
 	 Description
