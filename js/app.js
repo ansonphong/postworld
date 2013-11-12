@@ -2739,9 +2739,13 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
 
     // Toggles class="expaned", used with ng-class="expanded" 
     $scope.expanded = "";
+    var clickTip = "Click to expand";
+    $scope.clickTip = clickTip;
     $scope.toggleExpanded = function(){
         ( $scope.expanded == "" ) ? $scope.expanded = "expanded" : $scope.expanded = "" ;
+        ( $scope.clickTip != "" ) ? $scope.clickTip = "" : $scope.clickTip = clickTip ;
     };
+
 
     // Update the contents of post after Quick Edit
     $rootScope.$on('postUpdated', function(event, post_id) {
@@ -3289,13 +3293,11 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
                     }, 1000);
                     $scope.signupForm.$setValidity('success',true);
                 } else {
-
                     $scope.status = "error";
                     $timeout(function() {
                         $scope.status = "done";
                         $scope.signupForm.$setValidity('busy',true);
                         }, 5000);
-
                 }
             },
             // Failure
@@ -3304,7 +3306,6 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
             }
         );
 
-        
     };
 
 }
