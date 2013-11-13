@@ -137,8 +137,7 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
  |  _ \ _   _ _ __  
  | |_) | | | | '_ \ 
  |  _ <| |_| | | | |
- |_| \_\\__,_|_| |_|
-                    
+ |_| \_\\__,_|_| |_|        
 */
 postworld.run(function($rootScope, $templateCache, $log, pwData) {    
         // TODO move getting templates to app startup
@@ -1037,7 +1036,7 @@ postworld.controller('editPost',
                     }
                     else{
                         // ERROR
-                        //alert("Error : " + JSON.stringify(response) );
+                        alert("Error : " + response.data );
                         $scope.status = "done";
                     }
                 },

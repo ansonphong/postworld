@@ -801,6 +801,17 @@ function pw_set_post_thumbnail( $post_id, $image ){
 	}
 }
 
+
+function pw_trash_post($post_id){
+
+	// delete_{post_type}s
+	// delete_others_{post_type}s
+	// delete_published_{post_type}s
+	// delete_private_{post_type}s
+
+}
+
+
 function pw_save_post($post_data){
 
 	extract($post_data);
@@ -811,41 +822,95 @@ function pw_save_post($post_data){
 		$post_id = $ID;
 	}
 	
+	////////// SECURITY CHECKPOINT //////////
+	// CHECK : ID
 	$current_user_id = get_current_user_id();
+	// GET : USERDATA
 	$current_userdata = (array) get_userdata( $current_user_id );
 
-	///// SECURITY CHECK & SET METHOD /////
+	////////// CHECK : POST TYPE ACCESS //////////
+
+	///// DEFINE : THE CURRENT POST TYPE //////
+	// Check if there's a post_type set
+	if( isset($post_data["post_type"]) ){
+		// DEFINE : Post Type
+		$post_type = $post_data["post_type"];
+
+		// Check if the post exists
+	} else if( pw_post_exists( $post_data["ID"] ) ) {
+		// If it does, get the post_type
+		$post = get_post( $post_data["ID"], "ARRAY_A" );
+		$post_type = $post["post_type"];
+		// Set Default
+	} else {
+		// DEFINE : Default Post Type
+		$post_type = "post";
+	}
+		
+	
+	///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
+	// The required capabilities of current action
+	$required_capabilities = array();
+	// Is a post ID not defined?
+	if( !isset( $post_data["ID"] ) ){
+		// REQUIRE : CREATION
+		array_push( $required_capabilities,"create_".$post_type."s" );
+		// Does the post exist?
+	} else if( pw_post_exists( $post_data["ID"] ) ){
+		// GET : THE POST
+		$post = get_post( $post_data["ID"], "ARRAY_A");
+		// Does the current user own the post?
+		if( $current_userdata["ID"] == $post["post_author"] ){
+			// REQUIRE : EDITING
+			array_push( $required_capabilities, "edit_".$post_type."s" );
+		} else{
+			// REQUIRE : EDITING OTHERS
+			array_push( $required_capabilities, "edit_others_".$post_type."s" );
+		}
+		// Is the post published?
+		if( $post["post_status"] == "publish" ){
+			array_push( $required_capabilities, "edit_published_".$post_type."s" );
+		// Is it private?
+		} else if( $post["post_status"] == "private" ){
+			array_push( $required_capabilities, "edit_private_".$post_type."s" );
+		}
+	}
+	if( $post_data["post_status"] == "publish" ){
+		array_push( $required_capabilities, "publish_".$post_type."s" );
+	}
+
+
+	///// VALIDATE CAPABILITIES /////
+	// Validate required capabilities in array of current user's capabilities
+
+	$pass = true;
+	$no_capabilities = array();
+	// Cycle through each required capability
+	foreach( $required_capabilities as $cap ){
+		
+		// Does it not match value : true : in the current user's
+		if ( $current_userdata['allcaps'][ $cap ] != true )
+			// If any one is false, it sets false
+			$pass = false;
+		
+		// Add failed capability to error message
+		array_push( $no_capabilities, $cap );
+	}
+
+	if ( $pass == false ){
+		return "User No Capabilities: " . json_encode( $no_capabilities );
+	}
+
+	///// SET METHOD /////
 	// If there is a post_id and it exists
 	if ( !empty( $ID ) && pw_post_exists( $ID ) ){
-		
-		// Get the post
-		$current_post_data = get_post( $ID, 'ARRAY_A');
-
-		///// SECURITY /////
-		// Check to see who owns the post
-		$author_id = $current_post_data['author_id'];
-
-		// Is the current user the author of the post?
-		( $current_post_data['author_id'] == $current_user_id ) ? $user_is_author = true : $user_is_author = false;
-
-		// Does the current user have the ability to edit others posts?
-		( $current_userdata['allcaps']['edit_others_posts'] ) ? $edit_others_posts = true : $edit_others_posts = false;
-
-		// If user doesn't own post and can't edit other's posts
-		if( $user_is_author == false && $edit_others_posts == false ){
-			// Return false, exit out of the function
-			return array( 'error' => 'No permissions to edit post.' );
-		}
-		
 		$method = 'update';
-
 	}
 	else{
 		$method = 'insert';
 	}
 
 	///// INSERT POST METHOD /////
-	
 	if( $method == 'insert' ){
 		$post_id = pw_insert_post($post_data);
 	}
@@ -856,7 +921,6 @@ function pw_save_post($post_data){
 	}
 	
 	///// ADD / UPDATE POST META /////
-
 	// IMAGE FIELDS
 	// Handle Thumbnail ID
 	if ( !empty($thumbnail_id) && !empty($post_id) )
