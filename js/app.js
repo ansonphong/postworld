@@ -883,6 +883,7 @@ postworld.controller('editPost',
         tags_input : "",
         post_meta:{},
     };
+    
 
     // WATCH : ROUTE
     $scope.$on(
