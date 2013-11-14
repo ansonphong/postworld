@@ -545,25 +545,25 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                     name:"",
                     slug:"standard",
                     domains:[],
-                    icon:"<i class='icon-circle-blank'></i>"
+                    icon:"icon-circle-blank"
                 },
                 {
                     name:"Link",
                     slug:"link",
                     domains:[],
-                    icon:"<i class='icon-link'></i>"
+                    icon:"icon-link"
                 },
                 {
                     name:"Video",
                     slug:"video",
                     domains:["youtube.com/","youtu.be/","vimeo.com/","hulu.com/","ted.com/","sapo.pt/","dailymotion.com","blip.tv/","ustream.tv/",],
-                    icon:"<i class='icon-youtube-play'></i>"
+                    icon:"icon-youtube-play"
                 },
                 {
                     name:"Audio",
                     slug:"audio",
                     domains:["soundcloud.com/","mixcloud.com/","official.fm/","shoudio.com/",],
-                    icon:"<i class='icon-headphones'></i>"
+                    icon:"icon-headphones"
                 },
             ];
         },
@@ -737,31 +737,31 @@ var postTypeMenu = function($scope, pwPostOptions){
         {
             name: "Feature",
             slug: "feature",
-            icon: "<i class='icon-star'></i>",
+            icon: "icon-star",
             url: "/post/#/new/feature/"
         },
         {
             name: "Blog",
             slug: "blog",
-            icon: "<i class='icon-pencil'></i>",
+            icon: "icon-pencil",
             url: "/post/#/new/blog/"
         },
         {
             name: "Link",
             slug: "link",
-            icon: "<i class='icon-link'></i>",
+            icon: "icon-link",
             url: "/post/#/new/link/"
         },
         {
             name: "Event",
             slug: "event",
-            icon: "<i class='icon-calendar'></i>",
+            icon: "icon-calendar",
             url: "/post/#/new/event/"
         },
         {
             name: "Announcement",
             slug: "announcement",
-            icon: "<i class='icon-sun'></i>",
+            icon: "icon-sun",
             url: "/post/#/new/announcement/"
         },
     ];
