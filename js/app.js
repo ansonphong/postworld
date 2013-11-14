@@ -5,12 +5,9 @@
  |  __/ (_) \__ \ |_ \ V  V / (_) | |  | | (_| |
  |_|   \___/|___/\__| \_/\_/ \___/|_|  |_|\__,_|
                                                 
-Developed by : Innuva & Phong Media
 Framework by : AngularJS
 GitHub Repo  : https://github.com/phongmedia/postworld/
 ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
-
-"AS SEEN ON REALITY SANDWICH!"
 
 */
 
@@ -369,22 +366,25 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             );
         },
         pwGetPostTypeOptions: function( mode ){
-            if( mode == 'edit' ){
-                // Cycle through provided post_types
-                // Which post_types does the user have access to edit?
-                var post_type_edit_access = {};
-                angular.forEach( $window.post_types , function( name, slug ){
-                    var cap_type = "edit_"+ slug + "s";
-                    if( $window.current_user.allcaps[cap_type] == true ){
-                        post_type_edit_access[slug] = name;
-                    }
-                });
-                return post_type_edit_access;
-            }
-            else{
+            // MODE OPTIONS
+            // read / edit / edit_others / publish / create / edit_published / edit_private
+
+            // IF READ MODE : Return all public post types
+            if( mode == 'read' ){
                 return $window.post_types;
             }
 
+            // IF EDIT/OTHER MODE : Compare post types against their capabilities
+            // Cycle through provided post_types
+            // Which post_types does the user have access to 'mode' operation?
+            var userPostTypeOptions = {};
+            angular.forEach( $window.post_types , function( name, slug ){
+                var cap_type = mode + "_"+ slug + "s";
+                if( $window.current_user.allcaps[cap_type] == true ){
+                    userPostTypeOptions[slug] = name;
+                }
+            });
+            return userPostTypeOptions;
         },
         pwGetPostStatusOptions: function( post_type ){
             // GET ROLE
@@ -715,6 +715,80 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
     }]);
 
 
+
+
+
+/*
+  ____           _     _____                   __  __                  
+ |  _ \ ___  ___| |_  |_   _|   _ _ __   ___  |  \/  | ___ _ __  _   _ 
+ | |_) / _ \/ __| __|   | || | | | '_ \ / _ \ | |\/| |/ _ \ '_ \| | | |
+ |  __/ (_) \__ \ |_    | || |_| | |_) |  __/ | |  | |  __/ | | | |_| |
+ |_|   \___/|___/\__|   |_| \__, | .__/ \___| |_|  |_|\___|_| |_|\__,_|
+                            |___/|_|                                   
+
+////////// ------------ POST TYPE MENU ------------ //////////*/
+// This goes on the user dashboard under + quick add
+// Giving the user quick access to create a new post of a specified post type
+// TODO : Refactor to take live data from Postworld Admin Panel & registered post types
+
+var postTypeMenu = function($scope, pwPostOptions){ 
+
+    var postTypeOptionsMeta = [
+        {
+            name: "Feature",
+            slug: "feature",
+            icon: "<i class='icon-star'></i>",
+            url: "/post/#/new/feature/"
+        },
+        {
+            name: "Blog",
+            slug: "blog",
+            icon: "<i class='icon-pencil'></i>",
+            url: "/post/#/new/blog/"
+        },
+        {
+            name: "Link",
+            slug: "link",
+            icon: "<i class='icon-link'></i>",
+            url: "/post/#/new/link/"
+        },
+        {
+            name: "Event",
+            slug: "event",
+            icon: "<i class='icon-calendar'></i>",
+            url: "/post/#/new/event/"
+        },
+        {
+            name: "Announcement",
+            slug: "announcement",
+            icon: "<i class='icon-sun'></i>",
+            url: "/post/#/new/announcement/"
+        },
+    ];
+
+    // Get the post type options which the user has access to "create"
+    var userPostTypeOptions = pwPostOptions.pwGetPostTypeOptions( 'create' );
+
+    // Define the Menu Object
+    $scope.userPostTypeOptionsMenu = [];
+
+    ///// BUILD USER ACCESS POST TYPE MENU /////
+    // FOREACH OPTIONS : Cycle through each option
+    angular.forEach( userPostTypeOptions, function( name, slug ){
+        // FOREACH META : Cycle through each meta
+        angular.forEach( postTypeOptionsMeta , function( meta ){
+            if( meta.slug === slug ){
+                $scope.userPostTypeOptionsMenu.push(meta);
+            }
+        });
+    });
+
+};
+
+
+
+
+
 /*
   ____                      _       _____ _      _     _     
  / ___|  ___  __ _ _ __ ___| |__   |  ___(_) ___| | __| |___ 
@@ -726,7 +800,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
 postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
-    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
+    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions('read');
     // POST YEAR OPTIONS
     $scope.post_year_options = $pwPostOptions.pwGetPostYearOptions();
     // POST MONTH OPTIONS
@@ -3556,10 +3630,6 @@ angular.module('pwFilters', []).filter('htmlToPlaintext', function() {
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
-// SANDBOX //
-
-
-
 
 
 
