@@ -567,13 +567,9 @@ function pw_get_post_types_admin() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
 	// $pw_args = $args['args']['feed_query'];
-	
 	$pw_args = $args['args'];
-	
 	// Get the results in array format, so that it is converted once to json along with the rest of the response
-	
 	//$results = pw_get_posts ( $args['post_ids'],$args['fields'] );
-	
 	// TODO check results are ok
 	/* set the response type as JSON */
 	header('Content-Type: application/json');

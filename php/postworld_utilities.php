@@ -95,6 +95,7 @@ function postworld_includes(){
 					);
 				echo json_encode($site_info);
 				?>;
+			var post_types = <?php echo json_encode(pw_get_post_types()); ?>;
 		</script>
 	<?php
 
@@ -103,8 +104,6 @@ function postworld_includes(){
 	add_action('admin_head', 'pw_current_userdata');
 	// Add hook for front-end <head></head>
 	add_action('wp_head', 'pw_current_userdata');
-
-
 
 }
 
@@ -120,9 +119,10 @@ function object_to_array($data){
     return $data;
 }
 
+
 ////////// EDIT POST HELP FUNCTIONS //////////
 
-function pw_get_post_types( $options ){
+function pw_get_post_types(){
 	//$user_role = get_user_role();
 
 	$args = array(

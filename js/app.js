@@ -198,7 +198,6 @@ postworld.run(function($rootScope, $templateCache, $log, pwData) {
 
 
 //////////////////// CONSTRUCTION ZONE < (phongmedia) ////////////////////
-
 ////////// SIMPLE HELPERS ////////
 /*
 window.isInArray =  function(value, array) {
@@ -207,7 +206,6 @@ window.isInArray =  function(value, array) {
     else
         return false;
 }
-
 window.isEmpty = function(value){
     if ( typeof value === 'undefined' || value == '' )
         return true;
@@ -215,7 +213,6 @@ window.isEmpty = function(value){
         return false; //value[0].value ? true : false;  
 }
 */
-
 
 
 /*
@@ -353,8 +350,8 @@ postworld.service('ext', ['$log', function ($log) {
   |_|                                 |_|                          
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
-postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
-                            function ($log, $siteOptions, $pwData) {
+postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
+                            function ($window, $log, $siteOptions, $pwData) {
     // Do one AJAX call here which returns all the options
     return{
         getTaxTerms: function($scope){
@@ -371,14 +368,23 @@ postworld.service('pwPostOptions', ['$log', 'siteOptions', 'pwData',
                 }
             );
         },
-        pwGetPostTypeOptions: function(){
-        return {
-            "feature" : "Feature",
-            "blog" : "Blog",
-            "link" : "Link",
-            "announcement" : "Announcement",
-            "event" : "Event"
-            };
+        pwGetPostTypeOptions: function( mode ){
+            if( mode == 'edit' ){
+                // Cycle through provided post_types
+                // Which post_types does the user have access to edit?
+                var post_type_edit_access = {};
+                angular.forEach( $window.post_types , function( name, slug ){
+                    var cap_type = "edit_"+ slug + "s";
+                    if( $window.current_user.allcaps[cap_type] == true ){
+                        post_type_edit_access[slug] = name;
+                    }
+                });
+                return post_type_edit_access;
+            }
+            else{
+                return $window.post_types;
+            }
+
         },
         pwGetPostStatusOptions: function(){
             return {
@@ -841,18 +847,24 @@ function tagsAutocomplete($scope, $filter, pwData) {
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 'ext', 
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 'ext', '$window',
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext ) {
+        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext, $window ) {
 
     //alert( JSON.stringify( $route.current.action ) );
 
     //$scope.mode = "edit";
     $scope.status = "loading";
 
+    $scope.current_user = $window.current_user;
+
+    // Is the user an editor?
+
+    if ( $scope.current_user.roles[0] == 'administrator' || $scope.current_user.roles[0] == 'editor' )
+        $scope.editor = true;
+
+    // SET : DEFAULT POST DATA
     $scope.default_post_data = {
-        //post_id : 24,
-        post_author: 1,
         post_title : "",
         post_name : "",
         post_type : "blog",
@@ -881,16 +893,21 @@ postworld.controller('editPost',
             if ( $route.current.action == "new_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
                 // SWITCH FROM MODE : EDIT > NEW
                 // If we're coming to 'new' mode from 'edit' mode
+                
+
                 if($scope.mode == "edit"){
                     // Clear post Data
                     $scope.clear_post_data();
                 }
+                
                 // Get the post type
                 var post_type = ($routeParams.post_type || "");
                 // If post type is supplied
                 if ( post_type != "" )
                     // Set the post type
                     $scope.post_data.post_type = post_type;
+
+                $scope.clear_post_data();
                 // Set the new mode
                 $scope.mode = "new";
                 // Set the status
@@ -989,6 +1006,9 @@ postworld.controller('editPost',
     /////----- SAVE POST FUNCTION -----//////
     $scope.savePost = function(pwData){
 
+        //alert( tinyMCE.get('post_content').getContent() );//tinyMCE.editors.content.getContent() );
+        //alert( JSON.stringify($scope.post_data) );
+
         // VALIDATE THE FORM
         if ($scope.post_data.post_title != '' || typeof $scope.post_data.post_title !== 'undefined'){
             //alert(JSON.stringify($scope.post_data));
@@ -1057,11 +1077,19 @@ postworld.controller('editPost',
     }
     /////----- END SAVE POST FUNCTION -----//////
 
-
     $scope.clear_post_data = function(){
-        $scope.post_data = {};
-        if( typeof tinyMCE !== 'undefined' )
-            tinyMCE.get('post_content').setContent( "" );
+        //$scope.post_data = {};
+        $scope.post_data = $scope.default_post_data;
+
+        $timeout(function() {
+            if( typeof tinyMCE !== 'undefined' ){
+                if( typeof tinyMCE.get('post_content') !== 'undefined' ){
+                    //$log.info('RESET tinyMCE : ', tinyMCE);
+                    tinyMCE.get('post_content').setContent( "" );
+                }
+            }
+        }, 1);
+
     }
 
     $scope.pw_get_post_object = function(){
@@ -1072,7 +1100,7 @@ postworld.controller('editPost',
     }
 
     // POST TYPE OPTIONS
-    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
+    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
     // POST STATUS OPTIONS
     $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
     // POST FORMAT OPTIONS
@@ -1312,7 +1340,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     $scope.status = "done";
 
     // POST TYPE OPTIONS
-    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions();
+    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
     // POST STATUS OPTIONS
     $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
     // POST FORMAT OPTIONS
