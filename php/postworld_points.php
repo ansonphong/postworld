@@ -199,7 +199,7 @@
 		$wpdb -> show_errors();		
 		
 		//$total_comment_points = get_user_comments_points($user_id);
-		$query ="select SUM(comment_points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
+		$query ="select SUM(points) from ".$wpdb->pw_prefix.'comment_points'." where comment_author_id=".$user_id;
 		$total_comment_points = $wpdb -> get_var($query);
 		
 		if($total_comment_points==null)
@@ -236,7 +236,7 @@
 		Run set_points( 'comment', $post_id, $set_points )
 		return : Array (same as set_points() )
 		 * */	
-		return set_points( 'comment', $post_id, $set_points );
+		return set_points( 'comment', $comment_id, $set_poinst );
 		
 	}
 	
@@ -422,7 +422,7 @@
 			$points_total = cache_comment_points($id);
 			// Cache Points of the Author
 			$commentdata = get_comment ( $id );
-			cache_user_comments_points( $commentdata->comment_author );
+			cache_user_comments_points( $commentdata->user_id );
 		}
 		
 		 
