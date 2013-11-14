@@ -386,12 +386,65 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             }
 
         },
-        pwGetPostStatusOptions: function(){
-            return {
-                publish : "Published",
-                draft : "Draft",
-                pending : "Pending",
+        pwGetPostStatusOptions: function( post_type ){
+            // GET ROLE
+            var current_user_role = $window.current_user.roles[0];
+
+            // DEFINE : POST STATUS OPTIONS
+            var post_status_options = {
+                "publish" : "Published",
+                "draft" : "Draft",
+                "pending" : "Pending"
             };
+
+            // DEFINE : OPTIONS PER ROLE > POST TYPE
+            // TODO : EXTRACT INTO SITE OPTIONS
+            var post_status_role_options = {
+                "administrator" : {
+                    "feature" : ['publish','draft','pending'],
+                    "blog" : ['publish','draft','pending'],
+                    "event" : ['publish','draft','pending'],
+                    "announcement" : ['publish','pending'],
+                    "link" : ['publish'],
+                },
+                "editor" : {
+                    "feature" : ['publish','draft','pending'],
+                    "blog" : ['publish','draft','pending'],
+                    "event" : ['publish','draft','pending'],
+                    "announcement" : [],
+                    "link" : ['publish'],
+                },
+                "author" : {
+                    "feature" : ['draft','pending'],
+                    "blog" : ['publish','draft'],
+                    "event" : ['publish','draft','pending'],
+                    "announcement" : [],
+                    "link" : ['publish'],
+                },
+                "contributor" : {
+                    "feature" : [],
+                    "blog" : ['publish','draft'],
+                    "event" : [],
+                    "announcement" : [],
+                    "link" : ['publish'],
+                },
+            };
+
+            // BUILD OPTIONS MENU OBJECT
+            var post_status_menu = {};
+            var user_role_options = post_status_role_options[current_user_role][post_type];
+            if( typeof user_role_options !== 'undefined' ){
+                angular.forEach(  user_role_options, function( post_status_slug ){
+                    post_status_menu[post_status_slug] = post_status_options[post_status_slug];
+                });
+                return post_status_menu;
+            } else{
+                // DEFAULT
+                return {
+                    "publish" : "Published",
+                };
+            }
+
         },
         pwGetPostFormatOptions: function(){
             return {
@@ -679,7 +732,7 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // POST MONTH OPTIONS
     $scope.post_month_options = $pwPostOptions.pwGetPostMonthOptions();
     // POST STATUS OPTIONS
-    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
+    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( );
     // POST FORMAT OPTIONS
     $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
@@ -852,16 +905,20 @@ postworld.controller('editPost',
         $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext, $window ) {
 
     //alert( JSON.stringify( $route.current.action ) );
-
     //$scope.mode = "edit";
-    $scope.status = "loading";
 
+    $scope.status = "loading";
     $scope.current_user = $window.current_user;
 
+    // ESTABLISH ROLE ACCESS
     // Is the user an editor?
-
     if ( $scope.current_user.roles[0] == 'administrator' || $scope.current_user.roles[0] == 'editor' )
         $scope.editor = true;
+
+    // Is the user an author?
+    if ( $scope.editor == true || $scope.current_user.roles[0] == 'author' )
+        $scope.author = true;
+
 
     // SET : DEFAULT POST DATA
     $scope.default_post_data = {
@@ -1057,7 +1114,10 @@ postworld.controller('editPost',
                     }
                     else{
                         // ERROR
-                        alert("Error : " + response.data );
+                        if( typeof response.data == 'object' )
+                            alert("Error : " + JSON.stringify(response.data) );
+                        else
+                            alert("Error : " + response.data );
                         $scope.status = "done";
                     }
                 },
@@ -1102,8 +1162,7 @@ postworld.controller('editPost',
 
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
-    // POST STATUS OPTIONS
-    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
+    
     // POST FORMAT OPTIONS
     $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
@@ -1111,11 +1170,27 @@ postworld.controller('editPost',
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
+    // WATCH : POST TYPE
+    $scope.$watch( "post_data.post_type",
+        function (){
+            // ROUTE CHANGE
+            if( $scope.mode == "new" )
+                $location.path('/new/' + $scope.post_data.post_type);
+
+            // BROADCAST CHANGE TO CHILD CONTROLLERS NODES
+            $rootScope.$broadcast('changePostType', $scope.post_data.post_type );
+ 
+            // POST STATUS OPTIONS
+            // Re-evaluate available post_status options on post_type switch
+            $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post_data.post_type );
+
+        }, 1 );
+
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
     //alert(JSON.stringify($scope.post_data));
 
-    // UPDATE AUTHOR NAME FROM AUTOCOMPLETE
+    // UPDATE AUTHOR NAME FROM AUTOCOMPLETE MODULE
     // Interacts with userAutocomplete() controller
     // Catches the recent value of the auto-complete
     $scope.$on('updateUsername', function( event, data ) { 
@@ -1155,17 +1230,6 @@ postworld.controller('editPost',
             $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
         });
 
-    // POST TYPE WATCH : Watch the Post Type
-    $scope.$watch( "post_data.post_type",
-        function (){
-            // ROUTE CHANGE
-            if( $scope.mode == "new" )
-                $location.path('/new/' + $scope.post_data.post_type);
-
-            // BROADCAST CHANGE TO CHILD CONTROLLERS NODES
-            $rootScope.$broadcast('changePostType', $scope.post_data.post_type );
-
-        }, 1 );
 
     ////////// FEATURED IMAGE //////////
     // Media Upload Window
@@ -1343,7 +1407,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
     // POST STATUS OPTIONS
-    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions();
+    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( 'link' );
     // POST FORMAT OPTIONS
     $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
