@@ -75,12 +75,23 @@ function postworld_includes(){
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
 	function pw_current_userdata() {
+		
 		$user_id = get_current_user_id();
-		$userdata = wp_get_current_user();
-		unset($userdata->data->user_pass);
-		if ( !isset($userdata->data) ){
+		if( $user_id != 0 ){
+
+			$userdata = wp_get_current_user();
+			unset($userdata->data->user_pass);
+
+			$userdata = (array) $userdata;
+
+			$userdata["postworld"] = array();
+			$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
+
+		}
+		else {
 			$userdata = 0;
 		}
+
 		?>
 		<script type="text/javascript">
 			var current_user = <?php echo json_encode($userdata); ?>;
