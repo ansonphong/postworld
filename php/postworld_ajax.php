@@ -9,19 +9,19 @@
 
 
 //---------- RESET PASSWORD SUBMIT ----------//
-function wp_trash_post_admin(){
+function pw_trash_post_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$wp_trash_post = wp_trash_post( $params );
+	$pw_trash_post = pw_trash_post( $params );
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
-	$response['data'] = $wp_trash_post;
+	$response['data'] = $pw_trash_post;
 	echo json_encode( $response );
 	die;
 }
-add_action("wp_ajax_wp_trash_post", "wp_trash_post_admin");
+add_action("wp_ajax_pw_trash_post", "pw_trash_post_admin");
 
 
 

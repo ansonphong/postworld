@@ -2581,7 +2581,7 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
             pwQuickEdit.openQuickEdit($scope.post);
         }
         if( action == "trash" ){
-            pwQuickEdit.trashPost($scope);
+            pwQuickEdit.trashPost($scope.post.ID, $scope);
         }
 
     };
@@ -2595,7 +2595,6 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
 postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $modal, pwData ) {
     return{
         openQuickEdit : function( post ){
-
             console.log( "Launch Quick Edit : ", post );  
             var modalInstance = $modal.open({
               templateUrl: pwData.pw_get_template('panels','','quick_edit'), //jsVars.pluginurl+'/postworld/templates/panels/quick_edit.html',
@@ -2614,20 +2613,25 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                 $log.info('Modal dismissed at: ' + new Date());
 
             });
-
         },
 
-        trashPost : function ( scope ){
+        trashPost : function ( post_id, scope ){
             if ( window.confirm("Are you sure you want to trash : \n" + scope.post.post_title) ) {
-                pwData.wp_trash_post( scope.post.ID ).then(
+                pwData.pw_trash_post( post_id ).then(
                     // Success
                     function(response) {
                         if (response.status==200) {
                             $log.info('Post Trashed RETURN : ',response.data);                     
-                            if ( response.data != false ){
-                                var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
-                                scope.post.post_title = "Trashed";
-                                scope.post.post_excerpt = "The post can still be retreived from the trash.";
+                            if ( response.data == true ){
+                                
+                                if( typeof scope != undefined ){    
+                                    var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
+                                    scope.post.post_status = 'trash';
+                                }
+                            
+                            }
+                            else{
+                                alert( "Error trashing post : " + response.data );
                             }
                         } else {
                             // handle error
@@ -2678,11 +2682,10 @@ var quickEdit = function ($scope, $modal, $log) {
 };
 
 
-var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, post, pwData, $timeout) {
+var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, post, pwData, $timeout, pwQuickEdit) {
     
     // Import the passed post object into the Modal Scope
     $scope.post = post;
-
 
     // TIMEOUT
     // Allow editPost Controller to Initialize
@@ -2690,11 +2693,29 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
       $scope.$broadcast('loadPostData', post.ID );
     }, 1);
     
-
     // MODAL CLOSE
     $scope.close = function () {
         $modalInstance.dismiss('close');
     };
+
+    // TRASH POST
+    $scope.trashPost = function(){
+        pwQuickEdit.trashPost($scope.post.ID, $scope);
+    }; 
+
+
+    // WATCH FOR TRASHED
+    // Close Modal
+    // Set Parent post_status = trash
+
+    // Watch on the value of user_id
+    $scope.$watch( "post.post_status",
+        function (){
+            if( $scope.post.post_status == 'trash'  )
+                $modalInstance.dismiss('close');
+        }); 
+
+
 };
 
 

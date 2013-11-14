@@ -229,10 +229,10 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('pw_save_post', params);
 		},
-		wp_trash_post: function(args) {
-			$log.info('pwData.wp_trash_post',args);
+		pw_trash_post: function(args) {
+			$log.info('pwData.pw_trash_post',args);
 			var params = {args:args};
-			return this.wp_ajax('wp_trash_post', params);
+			return this.wp_ajax('pw_trash_post', params);
 		},
 		pw_get_post_edit: function(args) {
 			$log.info('pwData.pw_get_post_edit',args);

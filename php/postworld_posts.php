@@ -80,6 +80,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_excerpt',
 		'post_permalink',
 		'post_type',
+		'post_status',
 		'post_date',
 		'post_date_gmt',
 		'comment_count',
@@ -802,14 +803,92 @@ function pw_set_post_thumbnail( $post_id, $image ){
 }
 
 
-function pw_trash_post($post_id){
+function pw_trash_post( $post_id ){
 
-	// delete_{post_type}s
-	// delete_others_{post_type}s
-	// delete_published_{post_type}s
-	// delete_private_{post_type}s
+	////////// SECURITY CHECKPOINT //////////
+	// CHECK : ID
+	$current_user_id = get_current_user_id();
+	// GET : USERDATA
+	$current_userdata = (array) get_userdata( $current_user_id );
+
+	// Does post exist?
+	if( pw_post_exists( $post_id ) ){ 
+
+		///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
+		// The required capabilities of current action	
+		$required_capabilities = array();
+		// DETECT POST TYPE
+		$post = get_post($post_id, "ARRAY_A");
+		$post_type = $post["post_type"];
+		// Does user own post?
+		if( $current_user_id == $post["post_author"] ){
+			// REQUIRE : DELETE
+			array_push( $required_capabilities,"delete_".$post_type."s" );
+		} else {
+			// REQUIRE : DELETE OTHERS
+			array_push( $required_capabilities,"delete_others_".$post_type."s" );
+		}
+		// Is the post published?
+		if( $post["post_status"] == "published" ){
+			// REQUIRE : DELETE PUBLISHED
+			array_push( $required_capabilities,"delete_published_".$post_type."s" );
+
+		} else if( $post["post_status"] == "private" ){
+			// REQUIRE : DELETE PRIVATE
+			array_push( $required_capabilities,"delete_private_".$post_type."s" );
+		}
+
+		///// VALIDATE CAPABILITIES /////
+		// Compare required capabilities to array of current user's capabilities
+		$pass = true;
+		$no_capabilities = array();
+		// Cycle through each required capability
+		foreach( $required_capabilities as $cap ){
+			// Does it not match value : true : in the current user's
+			if ( $current_userdata['allcaps'][ $cap ] != true )
+				// If any one is false, it sets false
+				$pass = false;
+			// Push failed capability to error message
+			array_push( $no_capabilities, $cap );
+		}
+		if ( $pass == false ){
+			return "User No Capabilities: " . json_encode( $no_capabilities );
+		} else {
+			$wp_trash_post = wp_trash_post( $post_id );
+			if( $wp_trash_post == false )
+				return "Unknown error.";
+			else
+				return true;
+		}
+
+	} else {
+		// If post does not exist
+		return "Post does not exist with ID : ". $post_id;
+	}
 
 }
+
+
+function detect_post_type( $post_data ){
+	// $post_data = array( "ID"=>1, ["post_type"=>"post"] );
+
+	///// DETECT : THE CURRENT POST TYPE //////
+	// Check if there's a post_type set
+	if( isset($post_data["post_type"]) ){
+		// DEFINE : Post Type
+		return $post_data["post_type"];
+		// Check if the post exists
+	} else if( pw_post_exists( $post_data["ID"] ) ) {
+		// If it does, get the post_type
+		$post = get_post( $post_data["ID"], "ARRAY_A" );
+		return $post["post_type"];
+		// Set Default
+	} else {
+		// DEFINE : Default Post Type
+		return "post";
+	}
+}
+
 
 
 function pw_save_post($post_data){
@@ -829,25 +908,8 @@ function pw_save_post($post_data){
 	$current_userdata = (array) get_userdata( $current_user_id );
 
 	////////// CHECK : POST TYPE ACCESS //////////
-
-	///// DEFINE : THE CURRENT POST TYPE //////
-	// Check if there's a post_type set
-	if( isset($post_data["post_type"]) ){
-		// DEFINE : Post Type
-		$post_type = $post_data["post_type"];
-
-		// Check if the post exists
-	} else if( pw_post_exists( $post_data["ID"] ) ) {
-		// If it does, get the post_type
-		$post = get_post( $post_data["ID"], "ARRAY_A" );
-		$post_type = $post["post_type"];
-		// Set Default
-	} else {
-		// DEFINE : Default Post Type
-		$post_type = "post";
-	}
+	$post_type = detect_post_type( $post_data );
 		
-	
 	///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
 	// The required capabilities of current action
 	$required_capabilities = array();
@@ -879,20 +941,16 @@ function pw_save_post($post_data){
 		array_push( $required_capabilities, "publish_".$post_type."s" );
 	}
 
-
 	///// VALIDATE CAPABILITIES /////
-	// Validate required capabilities in array of current user's capabilities
-
+	// Compare required capabilities to array of current user's capabilities
 	$pass = true;
 	$no_capabilities = array();
 	// Cycle through each required capability
 	foreach( $required_capabilities as $cap ){
-		
 		// Does it not match value : true : in the current user's
 		if ( $current_userdata['allcaps'][ $cap ] != true )
 			// If any one is false, it sets false
 			$pass = false;
-		
 		// Add failed capability to error message
 		array_push( $no_capabilities, $cap );
 	}
