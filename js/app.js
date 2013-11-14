@@ -1818,8 +1818,7 @@ var postActions = function ( $scope, pwData ) {
                                                                                           
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
-var postVote = function ( $rootScope, $scope, $log, pwData ) {
-    $rootScope.vote_power = "10";
+var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
 
     // SWITCH CSS CLASSES BASED ON VOTE
     $scope.$watch( "post.viewer.has_voted",
@@ -1834,31 +1833,42 @@ var postVote = function ( $rootScope, $scope, $log, pwData ) {
 
     // CAST VOTE ON THE POST
     $scope.votePost = function( points ){
-        // If casting the same points, reset points
-        if ( points == $scope.post.viewer.has_voted )
-            points = 0;
+        // Get the voting power of the current user
+        if( typeof $window.current_user.postworld !== 'undefined' )
+            var vote_power = parseInt($window.current_user.postworld.vote_power);
+        // If they're not logged in, return false
+        if( typeof vote_power === 'undefined' ){
+            alert("Must be logged in to vote.");
+            return false;
+        }
+        // Define how many points have they already given to this post
+        var has_voted = parseInt($scope.post.viewer.has_voted);
+        // Define how many points will be set
+        var setPoints = ( has_voted + points );
+        // If set points exceeds vote power
+        if( Math.abs(setPoints) > vote_power ){
+            setPoints = (vote_power * points);
+            //alert( "Normalizing : " + setPoints );
+        }
         // Setup parameters
         var args = {
             post_id: $scope.post.ID,
-            points: points,
+            points: setPoints,
         };
+        // Set Status
         $scope.voteStatus = "busy";
         // AJAX Call 
         pwData.set_post_points ( args ).then(
             // ON : SUCCESS
             function(response) {    
                 //alert( JSON.stringify(response.data) );
-                // RESPONSE.DATA : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
-                
+                // RESPONSE.DATA FORMAT : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
                 $log.info('VOTE RETURN : ' + JSON.stringify(response) );
-
                 if ( response.data.id == $scope.post.ID ){
-
                     // UPDATE POST POINTS
                     $scope.post.post_points = response.data.points_total;
                     // UPDATE VIEWER HAS VOTED
                     $scope.post.viewer.has_voted = ( parseInt($scope.post.viewer.has_voted) + parseInt(response.data.points_added) ) ;
-                    
                 } //else
                     //alert('Server error voting.');
                 $scope.voteStatus = "done";
