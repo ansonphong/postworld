@@ -402,14 +402,14 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             var post_status_role_options = {
                 "administrator" : {
                     "feature" : ['publish','draft','pending'],
-                    "blog" : ['publish','draft','pending'],
+                    "blog" : ['publish','draft'],
                     "event" : ['publish','draft','pending'],
                     "announcement" : ['publish','pending'],
                     "link" : ['publish'],
                 },
                 "editor" : {
                     "feature" : ['publish','draft','pending'],
-                    "blog" : ['publish','draft','pending'],
+                    "blog" : ['publish','draft'],
                     "event" : ['publish','draft','pending'],
                     "announcement" : [],
                     "link" : ['publish'],
@@ -1183,6 +1183,13 @@ postworld.controller('editPost',
             // POST STATUS OPTIONS
             // Re-evaluate available post_status options on post_type switch
             $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post_data.post_type );
+            
+            // SET DEFAULT POST STATUS
+            angular.forEach( $scope.post_status_options, function(value, key){
+                //return key;
+                $scope.post_data.post_status = key;
+            });
+
 
         }, 1 );
 
