@@ -169,10 +169,14 @@ function curl_exec_follow($ch, &$maxredirect = null) {
 function url_to_media_library( $image_url, $post_id = 0){
 
 	// Check if it's a URL string
-	if ( strpos($image_url,'//') == false ) {
+	if ( strpos($image_url,'//') == false )
 	    return array( 'error' => 'Not a URL.' );
-	}
 
+	// STRIP QUERY VARS : Remove everything after '?' in the image URL
+	$image_url_split = explode('?', $image_url);
+	$image_url = $image_url_split[0];
+
+	// SETUP
 	$upload_dir = wp_upload_dir();
 	
 	$base_file_name = basename($image_url);

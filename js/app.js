@@ -351,12 +351,16 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                             function ($window, $log, $siteOptions, $pwData) {
     // Do one AJAX call here which returns all the options
     return{
-        getTaxTerms: function($scope){
+        getTaxTerms: function($scope, tax_obj){ // , tax_obj
+            
+            if ( typeof tax_obj === 'undefined' )
+                var tax_obj = "tax_terms";
+
             var args = $siteOptions.taxOutlineMixed();
             $pwData.taxonomies_outline_mixed( args ).then(
                 // Success
                 function(response) {    
-                    $scope.tax_terms = response.data;
+                    $scope[tax_obj] = response.data;
                     //alert(JSON.stringify(response.data));
                 },
                 // Failure
@@ -448,16 +452,16 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
         },
         pwGetPostFormatOptions: function(){
             return {
-                standard : "Standard",
-                link : "Link",
-                video : "Video",
-                audio : "Audio",
+                "standard" : "Standard",
+                "link" : "Link",
+                "video" : "Video",
+                "audio" : "Audio",
             };
         },
         pwGetPostClassOptions: function(){
             return {
-                contributor:"Contributor",
-                author:"Author"
+                "contributor" : "Contributor",
+                "author" : "Author",
             };
         },
         pwGetPostYearOptions: function(){
@@ -567,8 +571,6 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                 },
             ];
         },
-       
-
     }
 }]);
 
@@ -817,7 +819,8 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // TAXONOMY TERMS
     // Gets live set of terms from the DB
     // as $scope.tax_terms
-    $pwPostOptions.getTaxTerms($scope);
+    // TODO : VERIFY THIS WORKS
+    $pwPostOptions.getTaxTerms($scope, 'tax_terms');
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects
@@ -978,21 +981,9 @@ postworld.controller('editPost',
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
         $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext, $window ) {
 
-    //alert( JSON.stringify( $route.current.action ) );
-    //$scope.mode = "edit";
-
     $scope.status = "loading";
     $scope.current_user = $window.current_user;
-
-    // ESTABLISH ROLE ACCESS
-    // Is the user an editor?
-    if ( $scope.current_user.roles[0] == 'administrator' || $scope.current_user.roles[0] == 'editor' )
-        $scope.editor = true;
-
-    // Is the user an author?
-    if ( $scope.editor == true || $scope.current_user.roles[0] == 'author' )
-        $scope.author = true;
-
+    $scope.post_data = {};
 
     // SET : DEFAULT POST DATA
     $scope.default_post_data = {
@@ -1014,9 +1005,22 @@ postworld.controller('editPost',
         tags_input : "",
         post_meta:{},
     };
-    
 
-    // WATCH : ROUTE
+    //alert( JSON.stringify( $route.current.action ) );
+    //$scope.mode = "edit";
+
+    // ESTABLISH ROLE ACCESS
+    // Is the user an editor?
+    if ( $scope.current_user.roles[0] == 'administrator' || $scope.current_user.roles[0] == 'editor' )
+        $scope.editor = true;
+
+    // Is the user an author?
+    if ( $scope.editor == true || $scope.current_user.roles[0] == 'author' )
+        $scope.author = true;
+
+
+
+    ///// WATCH : ROUTE /////
     $scope.$on(
         "$routeChangeSuccess",
         function( $currentRoute, $previousRoute ){
@@ -1025,20 +1029,16 @@ postworld.controller('editPost',
             if ( $route.current.action == "new_post"  ){ // && typeof $scope.post_data.post_id !== 'undefined'
                 // SWITCH FROM MODE : EDIT > NEW
                 // If we're coming to 'new' mode from 'edit' mode
-                
-
                 if($scope.mode == "edit"){
                     // Clear post Data
                     $scope.clear_post_data();
                 }
-                
                 // Get the post type
                 var post_type = ($routeParams.post_type || "");
                 // If post type is supplied
                 if ( post_type != "" )
                     // Set the post type
                     $scope.post_data.post_type = post_type;
-
                 $scope.clear_post_data();
                 // Set the new mode
                 $scope.mode = "new";
@@ -1063,17 +1063,14 @@ postworld.controller('editPost',
     });
 
 
+    ///// LOAD POST DATA /////
     $scope.load_post_data = function( post_id ){
         $scope.mode = "edit";
-
-
         if ( typeof $routeParams.post_id !== 'undefined' )
             var post_id = $routeParams.post_id;
         else{
             var post_id = $scope.post.ID;
         }
-
-
         // GET THE POST DATA
         $pwData.pw_get_post_edit( post_id ).then(
             // Success
@@ -1093,38 +1090,30 @@ postworld.controller('editPost',
                     angular.forEach( terms, function( term ){
                         tax_input[taxonomy].push(term.slug);
                     });
-
                     // BROADCAST TAX OBJECT TO AUTOCOMPLETE CONTROLLER
                     if( taxonomy == "post_tag")
                         $scope.$broadcast('postTagsObject', terms);
-
                 });
                 delete get_post_data['taxonomy'];
                 get_post_data['tax_input'] = tax_input; 
 
                 ///// LOAD POST CONTENT /////
-                
                 // SET THE POST CONTENT
                 if( typeof tinyMCE !== 'undefined' )
                     tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
                 ///// LOAD AUTHOR /////
-
                 // EXTRACT AUTHOR NAME
                 if ( typeof get_post_data['author']['user_nicename'] !== 'undefined' ){
                     get_post_data['post_author_name'] = get_post_data['author']['user_nicename'];
                     delete get_post_data['author'];
                 }
-                
                 // BROADCAST TO USERNAME AUTOCOMPLETE FIELD
                 $scope.$broadcast('updateUsername', get_post_data['post_author_name']);
-
                 // SET DATA INTO THE SCOPE
                 $scope.post_data = get_post_data;
-
                 // UPDATE STATUS
                 $scope.status = "done";
-
             },
             // Failure
             function(response) {
@@ -1137,10 +1126,8 @@ postworld.controller('editPost',
 
     /////----- SAVE POST FUNCTION -----//////
     $scope.savePost = function(pwData){
-
         //alert( tinyMCE.get('post_content').getContent() );//tinyMCE.editors.content.getContent() );
         //alert( JSON.stringify($scope.post_data) );
-
         // VALIDATE THE FORM
         if ($scope.post_data.post_title != '' || typeof $scope.post_data.post_title !== 'undefined'){
             //alert(JSON.stringify($scope.post_data));
@@ -1152,7 +1139,6 @@ postworld.controller('editPost',
             ///// SANITIZE FIELDS /////
             if ( typeof $scope.post_data.link_url === 'undefined' )
                 $scope.post_data.link_url = '';
-
 
             ///// DEFINE POST DATA /////
             var post_data = $scope.post_data;
@@ -1212,6 +1198,7 @@ postworld.controller('editPost',
     }
     /////----- END SAVE POST FUNCTION -----//////
 
+    ///// CLEAR POST DATA /////
     $scope.clear_post_data = function(){
         //$scope.post_data = {};
         $scope.post_data = $scope.default_post_data;
@@ -1227,22 +1214,73 @@ postworld.controller('editPost',
 
     }
 
+    ///// GET POST OBJECT /////
     $scope.pw_get_post_object = function(){
         var post_data = $scope.default_post_data;
+
+        // SET THE POST CLASS
+        if ( $scope.author == true ){
+            post_data.post_class = "author";
+        }
+        else{
+            post_data.post_class = "contributor";
+        }
+
         // CHECK TERMS CATEGORY / SUBCATEGORY ORDER
         post_data = $pwEditPostFilters.sortTaxTermsInput( post_data, $scope.tax_terms, 'tax_input' );
         return post_data;   
     }
 
+    ///// LOAD IN DATA /////
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
-    
     // POST FORMAT OPTIONS
     $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
     $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+
+    // ACTION : AUTHOR NAME FROM AUTOCOMPLETE MODULE
+    // • Interacts with userAutocomplete() controller
+    // • Catches the recent value of the auto-complete
+    $scope.$on('updateUsername', function( event, data ) { 
+        $scope.post_data.post_author_name = data;
+    });
+
+    // ACTION : POST TAGS FROM AUTOCOMPLETE MODULE
+    // • Interacts with tagsAutocomplete() controller
+    // • Catches the recent value of the tags_input and inject into tax_input
+    $scope.$on('updateTagsInput', function( event, data ) { 
+        $scope.post_data.tax_input.post_tag = data;
+    });
+
+    // GET : TAXONOMY TERMS
+    // • Gets live set of terms from the DB as $scope.tax_terms
+    $pwPostOptions.getTaxTerms( $scope, 'tax_terms' );
+
+    // WATCH : TAXONOMY TERMS
+    // • Watch for any changes to the post_data.tax_input
+    // • Make a new object which contains only the selected sub-objects
+    $scope.selected_tax_terms = {};
+    $scope.$watch('[ post_data.tax_input, tax_terms ]',
+        function ( newValue, oldValue ){
+            if ( typeof $scope.tax_terms !== 'undefined' ){
+                // Create selected terms object
+                $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post_data.tax_input);
+                // Clear irrelivent sub-terms
+                $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
+            }
+        }, 1);
+
+    // WATCH : LINK_URL
+    // • Watch for changes in Link URL field
+    // • Evaluate the Post Format
+    $scope.$watchCollection('[ post_data.link_url, post_data.post_format ]',
+        function ( newValue, oldValue ){
+            $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
+        });
+
 
     // WATCH : POST TYPE
     $scope.$watch( "post_data.post_type",
@@ -1259,57 +1297,14 @@ postworld.controller('editPost',
             $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post_data.post_type );
             
             // SET DEFAULT POST STATUS
-            angular.forEach( $scope.post_status_options, function(value, key){
-                //return key;
-                $scope.post_data.post_status = key;
-            });
+            if ( $scope.post_data.post_status == null || $scope.post_data.post_status == '' )
+                angular.forEach( $scope.post_status_options, function(value, key){
+                    //return key;
+                    $scope.post_data.post_status = key;
+                });
 
 
         }, 1 );
-
-    // POST DATA OBJECT
-    $scope.post_data = $scope.pw_get_post_object();
-    //alert(JSON.stringify($scope.post_data));
-
-    // UPDATE AUTHOR NAME FROM AUTOCOMPLETE MODULE
-    // Interacts with userAutocomplete() controller
-    // Catches the recent value of the auto-complete
-    $scope.$on('updateUsername', function( event, data ) { 
-        $scope.post_data.post_author_name = data;
-    });
-
-    // UPDATE POST TAGS FROM AUTOCOMPLETE MODULE
-    // Interacts with tagsAutocomplete() controller
-    // Catches the recent value of the tags_input and inject into tax_input
-    $scope.$on('updateTagsInput', function( event, data ) { 
-        $scope.post_data.tax_input.post_tag = data;
-    });
-
-    // TAXONOMY TERMS
-    // Gets live set of terms from the DB
-    // as $scope.tax_terms
-    $pwPostOptions.getTaxTerms($scope);
-
-    // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
-    // Make a new object which contains only the selected sub-objects
-    $scope.selected_tax_terms = {};
-    $scope.$watch( "post_data.tax_input",
-        function (){
-            // Create selected terms object
-            $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post_data.tax_input);
-            
-            // Clear irrelivent sub-terms
-            $scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post_data.tax_input, $scope.selected_tax_terms );
-        
-        }, 1 );
-
-
-    // LINK_URL WATCH : Watch for changes in link_url
-    // Evaluate the post_format
-    $scope.$watchCollection('[post_data.link_url, post_data.post_format]',
-        function ( newValue, oldValue ){
-            $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
-        });
 
 
     ////////// FEATURED IMAGE //////////
@@ -1346,6 +1341,9 @@ postworld.controller('editPost',
         
     }
 
+    // POST DATA OBJECT
+    $scope.post_data = $scope.pw_get_post_object();
+    //alert(JSON.stringify($scope.post_data));
     
 }]);
 
@@ -1496,10 +1494,10 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
     
-    // TAXONOMY TERMS
+    // GET : TAXONOMY TERMS
     // Gets live set of terms from the DB
     // as $scope.tax_terms
-    $pwPostOptions.getTaxTerms($scope);
+    $pwPostOptions.getTaxTerms($scope, 'tax_terms');
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
     // Make a new object which contains only the selected sub-objects
