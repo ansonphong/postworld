@@ -1372,6 +1372,11 @@ postworld.controller('eventInput',
         function (){
             $scope.post_data.post_meta.event_start_date = $filter('date')(
                 $scope.post_data.post_meta.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
+
+            // If start time is set after the end time - make them equal
+            if( $scope.post_data.post_meta.event_end_date_obj < $scope.post_data.post_meta.event_start_date_obj )
+                $scope.post_data.post_meta.event_end_date_obj = $scope.post_data.post_meta.event_start_date_obj;
+
         }, 1 );
 
     // WATCH : EVENT END TIME
@@ -1379,6 +1384,11 @@ postworld.controller('eventInput',
         function (){
             $scope.post_data.post_meta.event_end_date = $filter('date')(
                 $scope.post_data.post_meta.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
+
+            // If end time is set before the start time - make them equal
+            if( $scope.post_data.post_meta.event_start_date_obj > $scope.post_data.post_meta.event_end_date_obj  )
+                $scope.post_data.post_meta.event_start_date_obj = $scope.post_data.post_meta.event_end_date_obj ;
+
         }, 1 );
 
 
