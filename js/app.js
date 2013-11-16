@@ -15,7 +15,7 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 var feed_settings = [];
 
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters' ])
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', '$strap.directives' ])
 .config(function ($routeProvider, $locationProvider, $provide) {   
 
     ////////// ROUTE PROVIDERS //////////
@@ -3677,7 +3677,6 @@ angular.module('pwFilters', []).filter('htmlToPlaintext', function() {
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
-
 
 
 
