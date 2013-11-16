@@ -2286,7 +2286,7 @@ angular.module('monospaced.elastic', [])
 
 var mediaModalCtrl = function ($scope, $modal, $log, $window, pwData) {
 
-  $scope.openMediaModal = function (post) {
+  $scope.launch = function (post) {
     var modalInstance = $modal.open({
       templateUrl: pwData.pw_get_template('panels','','media_modal'), // $window['site_info'].stylesheet_directory + '/postworld/templates/panels/media_modal.html', // //jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
       controller: MediaModalInstanceCtrl,
@@ -2343,6 +2343,35 @@ var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwDat
         $modalInstance.dismiss('close');
     };
 };
+
+///// DIRECTIVE /////
+
+
+postworld.directive( 'launchMediaModal', ['$sce',function($scope, $sce){
+
+    return { 
+        //restrict: 'A',
+        //scope : function(){
+        //},
+        //template : '',
+        
+        controller: 'mediaModalCtrl'
+
+        /*
+        link : function ($scope, element, attributes){
+            // When the oEmbed Value changes, then change the html here
+            
+            $scope.$watch('oEmbed', function(value) {
+                console.log('test',value);
+                element.html(value);
+            });          
+        }
+        */
+
+    };
+
+}]);
+
 
 
 
