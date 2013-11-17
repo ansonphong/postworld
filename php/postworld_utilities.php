@@ -27,7 +27,7 @@ function postworld_includes(){
 
 	// ANGULAR UI : BOOTSTRAP
 	wp_enqueue_script( 'AngularJS-UI-Bootstrap', plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
-	wp_enqueue_script( 'AngularJS-AngularStrap', plugins_url().'/postworld/lib/angular/angular-strap-v0.7.8.min.js' );
+	//wp_enqueue_script( 'AngularJS-AngularStrap', plugins_url().'/postworld/lib/angular/angular-strap-v0.7.8.min.js' );
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array( 'ajaxurl' => admin_url( 'admin-ajax.php' ),
