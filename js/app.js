@@ -966,6 +966,35 @@ function tagsAutocomplete($scope, $filter, pwData) {
 
 
 
+/*
+   _        ____       _         _                         
+  | |   _  |  _ \ ___ | | ___   / \   ___ ___ ___  ___ ___ 
+ / __) (_) | |_) / _ \| |/ _ \ / _ \ / __/ __/ _ \/ __/ __|
+ \__ \  _  |  _ < (_) | |  __// ___ \ (_| (_|  __/\__ \__ \
+ (   / (_) |_| \_\___/|_|\___/_/   \_\___\___\___||___/___/
+  |_|                                                      
+
+/*///////// ------- SERVICE : PW USERS ------- /////////*/  
+postworld.service('pwRoleAccess', ['$log', '$window', function ($log, $window) {
+    return{
+
+        setRoleAccess : function($scope){
+            $scope.current_user = $window.current_user;
+
+            // ESTABLISH ROLE ACCESS
+            // Is the user an editor?
+            if ( $scope.current_user.roles[0] == 'administrator' || $scope.current_user.roles[0] == 'editor' )
+                $scope.editor = true;
+
+            // Is the user an author?
+            if ( $scope.editor == true || $scope.current_user.roles[0] == 'author' )
+                $scope.author = true;
+
+        },
+
+    }
+}]);
+
 
 /*
   _____    _ _ _     ____           _   
@@ -977,12 +1006,11 @@ function tagsAutocomplete($scope, $filter, pwData) {
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 'ext', '$window',
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 'ext', '$window', 'pwRoleAccess',
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext, $window ) {
+        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext, $window, $pwRoleAccess ) {
 
     $scope.status = "loading";
-    $scope.current_user = $window.current_user;
     $scope.post_data = {};
 
     // SET : DEFAULT POST DATA
@@ -1009,15 +1037,9 @@ postworld.controller('editPost',
     //alert( JSON.stringify( $route.current.action ) );
     //$scope.mode = "edit";
 
-    // ESTABLISH ROLE ACCESS
-    // Is the user an editor?
-    if ( $scope.current_user.roles[0] == 'administrator' || $scope.current_user.roles[0] == 'editor' )
-        $scope.editor = true;
-
-    // Is the user an author?
-    if ( $scope.editor == true || $scope.current_user.roles[0] == 'author' )
-        $scope.author = true;
-
+    // ROLE ACCESS
+    // Sets booleans for role access variables : "editor", "author"
+    $pwRoleAccess.setRoleAccess($scope);
 
 
     ///// WATCH : ROUTE /////
@@ -1230,6 +1252,7 @@ postworld.controller('editPost',
         post_data = $pwEditPostFilters.sortTaxTermsInput( post_data, $scope.tax_terms, 'tax_input' );
         return post_data;   
     }
+
 
     ///// LOAD IN DATA /////
     // POST TYPE OPTIONS
@@ -1479,7 +1502,7 @@ postworld.controller('AuthorAutocomplete', ['$scope', function($scope) {
  |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
 
 ////////// ------------ POST LINK CONTROLLER ------------ //////////*/
-postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext', 'pwData',function($scope, $log, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, $pwData) {
+postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext', 'pwData', '$window', 'pwRoleAccess',function($scope, $log, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, $pwData, $window, $pwRoleAccess) {
 
     // Setup the intermediary Link URL
     $scope.link_url = '';
@@ -1492,6 +1515,10 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
 
     // Set the status
     $scope.status = "done";
+
+    // ROLE ACCESS
+    // Sets booleans for role access variables : "editor", "author"
+    $pwRoleAccess.setRoleAccess($scope);
 
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
@@ -1721,6 +1748,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
 
 
     // ADD ERROR SUPPORT
+
 
 
 }]);
