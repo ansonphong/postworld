@@ -26,7 +26,7 @@ function postworld_includes( $mode = 'deploy' ){
 	if ( $mode == 'deploy' ){
 	
 		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/build/postworld.min.js' );
+		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js' );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script( 'Postworld-Deploy','', $angularDep ); //array('Postworld-Libraries') );
 

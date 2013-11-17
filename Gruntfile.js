@@ -8,7 +8,7 @@ module.exports = function(grunt) {
     	multiple_sourcemaps: {
         files: {
           //'build/postworld.min.js': ['js/*.js', 'js/**/*.js'],
-          'build/postworld.min.js':[
+          'deploy/postworld.min.js':[
         	  'lib/angular/angular.min.js', // Angular.js has to go first
           	'lib/angular/ui-bootstrap-tpls-0.6.0.min.js',
           	'lib/bootstrap/bootstrap.min.js',
