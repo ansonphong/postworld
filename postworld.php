@@ -101,8 +101,11 @@ include 'php/postworld_cache.php';
 include 'php/postworld_images.php';
 include 'php/postworld_posts.php';
 
-
+////////// QUERY FUNCTIONS ///////////
 include 'php/postworld_query.php';
+
+/////////////// WIDGETS ////////////////
+include 'php/postworld_widgets.php';
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';

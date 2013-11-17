@@ -4,7 +4,7 @@
 // This is a 'bug' which listens for the share fields
 // And if they exist and data checks out, add a share to the DB
 
-/*
+
 add_action( 'wp_loaded', 'share_bug', 10 );
 function share_bug(){
 	$user_id = $_GET['u'];
@@ -23,7 +23,6 @@ function share_bug(){
 	
 	}
 }
-*/
 
 
 function set_share ( $user_id, $post_id ){
@@ -179,7 +178,7 @@ function user_share_report_outgoing ( $user_id ){
 	
 }
 
-
+////////// USER SHARE REPORT META //////////
 function user_share_report_meta ($user_share_report){
 	if (!empty($user_share_report)){
 		$user_share_meta_report = array();
@@ -189,7 +188,7 @@ function user_share_report_meta ($user_share_report){
 			// If it's an incoming share report
 			// Add user meta for each sharer
 			if( isset($shared_post["user_shares"]) ){
-				// Generate new user_sahres object, with 'user' meta data
+				// Generate new user_sshares object, with 'user' meta data
 				$user_shares = array();
 				foreach( $shared_post["user_shares"] as $user ){ 
 					$user_share_single = $user;
@@ -205,6 +204,36 @@ function user_share_report_meta ($user_share_report){
 	}
 	return $user_share_meta_report;
 }
+
+
+
+////////// POST SHARE REPORT META //////////
+// [{"user_id":"1","shares":"1","last_time":"2013-11-17 12:17:27"}]
+function post_share_report_meta ($post_share_report){
+
+	if (!empty($post_share_report)){
+		
+		// SETUP OBJECT
+		$post_share_report_meta = array();
+
+		// CYCLE THROUGH SHARES
+		foreach( $post_share_report as $share_user ){
+
+			// RETURN USER DATA
+			$user_fields = array("display_name", "user_nicename", "user_profile_url");
+			$share_user["user"] = pw_get_userdata( $share_user["user_id"], $user_fields );
+
+			// PUSH TO NEW OBJECT
+			array_push( $post_share_report_meta, $share_user );
+
+		}
+
+	}
+
+	return $post_share_report_meta;
+
+}
+
 
 
 function user_share_report_incoming ( $user_id ){

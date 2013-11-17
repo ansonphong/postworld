@@ -144,6 +144,10 @@ postworld.run(function($rootScope, $templateCache, $log, pwData) {
             pwData.templates.resolve(value.data);
             pwData.templatesFinal = value.data;
             console.log('postworld RUN getTemplates=',pwData.templatesFinal);
+
+            // BROADCAST HERE - TEMPLATES LOADED
+            $rootScope.$broadcast('pwTemplatesLoaded', true);
+
           });    
 
     // TODO remove in production
@@ -3825,6 +3829,7 @@ angular.module('$strap.directives').directive('bsButton', [
     };
   }
 ]);
+
 'use strict';
 angular.module('$strap.directives').directive('bsPopover', [
   '$parse',
@@ -3888,16 +3893,20 @@ angular.module('$strap.directives').directive('bsPopover', [
             html: true
           }));
           var popover = element.data('popover');
-          popover.hasContent = function () {
-            return this.getTitle() || template;
-          };
-          popover.getPosition = function () {
-            var r = $.fn.popover.Constructor.prototype.getPosition.apply(this, arguments);
-            $compile(this.$tip)(scope);
-            scope.$digest();
-            this.$tip.data('popover', this);
-            return r;
-          };
+          
+          if( typeof popover !== 'undefined' ){
+              popover.hasContent = function () {
+                return this.getTitle() || template;
+              };
+              popover.getPosition = function () {
+                var r = $.fn.popover.Constructor.prototype.getPosition.apply(this, arguments);
+                $compile(this.$tip)(scope);
+                scope.$digest();
+                this.$tip.data('popover', this);
+                return r;
+              };
+          }
+          
           scope.$popover = function (name) {
             popover(name);
           };
@@ -3960,3 +3969,26 @@ angular.module('$strap.directives').directive('bsSelect', [
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
+
+
+///// PANEL WIDGET CONTROLLER /////
+postworld.controller('panelWidgetController', ['$scope','$timeout','pwData', function($scope, $timeout, $pwData) {
+    
+    $scope.panel_id = "";
+    $scope.setPanelID = function(panel_id){
+        $scope.panel_id = panel_id;
+    }
+
+    $scope.$on('pwTemplatesLoaded', function(event, data) {
+        $scope.panel_url = $pwData.pw_get_template('panels','',$scope.panel_id);
+        //alert($scope.panel_url);
+    });
+
+}]);
+
+
+
+
+
+
+
