@@ -1,12 +1,4 @@
 <?php
-	////// WIDGETS //////
-	// - Post Share Report
-	include 'widgets/post_share_report.php';
-
-
-	// - Author recent posts
-	// - Ad Block
-
 /*
   ____                     _     ____           _       
  |  _ \ ___  ___ ___ _ __ | |_  |  _ \ ___  ___| |_ ___ 
@@ -17,9 +9,6 @@
 ////////////////////// RECENT POSTS /////////////////////*/
 // BY SECTION
 // BY AUTHOR
-
-
-
 
 /*
                 ____                  _ 

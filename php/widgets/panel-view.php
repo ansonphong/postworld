@@ -7,9 +7,6 @@
  |_|   \__,_|_| |_|\___|_|    \_/\_/  |_|\__,_|\__, |\___|\__|
                                                |___/          
 //////////////////// PANEL WIDGET - VIEW ////////////////////*/
-
-$post_id = $GLOBALS['post']->ID;
-
 ?>
 
 <div ng-controller="panelWidgetController" ng-init="setPanelID('<?php echo $panel_id; ?>')" ng-cloak>

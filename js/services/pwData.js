@@ -304,6 +304,11 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var params = {args:args};
 			return this.wp_ajax('reset_password_submit',params);
 		},
+		post_share_report: function(args) {
+			$log.info('pwData.post_share_report',args);
+			var params = {args:args};
+			return this.wp_ajax('post_share_report',params);
+		},
 
 
    }; // END OF pwData return value

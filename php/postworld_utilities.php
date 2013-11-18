@@ -34,7 +34,6 @@ function postworld_includes( $mode = 'deploy' ){
 	///// DEVELOPMENT FILE INCLUDES /////
 	else if ( $mode == 'dev' ){
 
-
 		// DEV DEPENDENCIES
 		$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route');
 		
@@ -52,14 +51,13 @@ function postworld_includes( $mode = 'deploy' ){
 		// ANGULAR UI : BOOTSTRAP
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap', plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 
-
 		// POSTWORLD
-		wp_register_script( "pw-app-JS", WP_PLUGIN_URL.'/postworld/js/app.js' );
+		wp_register_script( 'pw-app-JS', WP_PLUGIN_URL.'/postworld/js/app.js' );
 		wp_localize_script( 'pw-app-JS', 'jsVars', $jsVars);
-		wp_enqueue_script( 'pw-app-JS','', $angularDep );
+		wp_enqueue_script( 	'pw-app-JS','', $angularDep );
 
-		wp_register_script( "pw-Filters-JS", WP_PLUGIN_URL.'/postworld/js/components/filters.js' );
-		wp_enqueue_script( 'pw-Filters-JS','', $angularDep );
+		wp_register_script( 'pw-Filters-JS', WP_PLUGIN_URL.'/postworld/js/components/filters.js' );
+		wp_enqueue_script( 	'pw-Filters-JS','', $angularDep );
 
 		wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js' );
 		wp_localize_script( 'pw-LiveFeed-JS', 'jsVars', $jsVars);
@@ -95,49 +93,68 @@ function postworld_includes( $mode = 'deploy' ){
 
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
-	function pw_current_userdata() {
-		
-		$user_id = get_current_user_id();
-		if( $user_id != 0 ){
+	function pwGlobals() {
 
-			$userdata = wp_get_current_user();
-			unset($userdata->data->user_pass);
+		function parse_pw_globals(){
+			//$post_id = $GLOBALS['post']->ID;
+			$pw_globals = array();
+			$pw_globals['current_view'] = array();
 
-			$userdata = (array) $userdata;
-
-			$userdata["postworld"] = array();
-			$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
-
-		}
-		else {
-			$userdata = 0;
-		}
-
-		?>
-		<script type="text/javascript">
-			var current_user = <?php echo json_encode($userdata); ?>;
-			var site_info = <?php
-				$site_info = array(
-					"name" => get_bloginfo( 'name' ),
-					"description" => get_bloginfo( 'description' ),
-					"url" => get_bloginfo( 'url' ),
-					"wpurl" => get_bloginfo( 'wpurl' ),
-					"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
-					"template_url" => get_bloginfo( 'template_url' ),
+			// POST
+			if( !empty($GLOBALS['post']->ID) ){
+				$pw_globals["current_view"]["type"] = "post";
+				$pw_globals["current_view"]["post"] = array(
+					"post_id" => $GLOBALS['post']->ID
 					);
-				echo json_encode($site_info);
-				?>;
-			var post_types = <?php echo json_encode(pw_get_post_types()); ?>;
-		</script>
-	<?php
+			}
 
+			// POST TYPES
+			$pw_globals["post_types"] = pw_get_post_types();
+
+			// SITE INFO
+			$pw_globals["site_info"] = array(
+				"name" => get_bloginfo( 'name' ),
+				"description" => get_bloginfo( 'description' ),
+				"url" => get_bloginfo( 'url' ),
+				"wpurl" => get_bloginfo( 'wpurl' ),
+				"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
+				"template_url" => get_bloginfo( 'template_url' ),
+				);
+
+			// CURRENT USER
+			$user_id = get_current_user_id();
+			if( $user_id != 0 ){
+				$userdata = wp_get_current_user();
+				unset($userdata->data->user_pass);
+				$userdata = (array) $userdata;
+				$userdata["postworld"] = array();
+				$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
+			}
+			else {
+				$userdata = 0;
+			}
+
+			$pw_globals["current_user"] = $userdata;
+
+			return $pw_globals;
+		}
+	?>
+
+		<script type="text/javascript">
+			var pwGlobals = <?php echo json_encode( parse_pw_globals() ); ?>;
+		</script>
+		
+
+	<?php
 	}
 	// Add hook for admin <head></head>
-	add_action('admin_head', 'pw_current_userdata');
+	add_action('admin_head', 'pwGlobals');
 	// Add hook for front-end <head></head>
-	add_action('wp_head', 'pw_current_userdata');
+	add_action('wp_head', 'pwGlobals');
 
 }
+
+
 
 
 function object_to_array($data){

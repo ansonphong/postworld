@@ -6,9 +6,28 @@
 */
 
 
+//json_encode( post_share_report_meta( post_share_report( $post_id ) ) )
 
 
-//---------- RESET PASSWORD SUBMIT ----------//
+//---------- TRASH POST ----------//
+function post_share_report_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$post_share_report = post_share_report_meta( post_share_report( $params['post_id'] ) );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $post_share_report;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_post_share_report", "post_share_report_anon");
+add_action("wp_ajax_post_share_report", "post_share_report_anon");
+
+
+//---------- TRASH POST ----------//
 function pw_trash_post_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];

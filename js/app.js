@@ -379,16 +379,16 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
 
             // IF READ MODE : Return all public post types
             if( mode == 'read' ){
-                return $window.post_types;
+                return $window.pwGlobals.post_types;
             }
 
             // IF EDIT/OTHER MODE : Compare post types against their capabilities
             // Cycle through provided post_types
             // Which post_types does the user have access to 'mode' operation?
             var userPostTypeOptions = {};
-            angular.forEach( $window.post_types , function( name, slug ){
+            angular.forEach( $window.pwGlobals.post_types , function( name, slug ){
                 var cap_type = mode + "_"+ slug + "s";
-                if( $window.current_user.allcaps[cap_type] == true ){
+                if( $window.pwGlobals.current_user.allcaps[cap_type] == true ){
                     userPostTypeOptions[slug] = name;
                 }
             });
@@ -396,7 +396,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
         },
         pwGetPostStatusOptions: function( post_type ){
             // GET ROLE
-            var current_user_role = $window.current_user.roles[0];
+            var current_user_role = $window.pwGlobals.current_user.roles[0];
 
             // DEFINE : POST STATUS OPTIONS
             var post_status_options = {
@@ -983,7 +983,7 @@ postworld.service('pwRoleAccess', ['$log', '$window', function ($log, $window) {
     return{
 
         setRoleAccess : function($scope){
-            $scope.current_user = $window.current_user;
+            $scope.current_user = $window.pwGlobals.current_user;
 
             // ESTABLISH ROLE ACCESS
             // Is the user an editor?
@@ -1874,8 +1874,8 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
     // CAST VOTE ON THE POST
     $scope.votePost = function( points ){
         // Get the voting power of the current user
-        if( typeof $window.current_user.postworld !== 'undefined' )
-            var vote_power = parseInt($window.current_user.postworld.vote_power);
+        if( typeof $window.pwGlobals.current_user.postworld !== 'undefined' )
+            var vote_power = parseInt($window.pwGlobals.current_user.postworld.vote_power);
         // If they're not logged in, return false
         if( typeof vote_power === 'undefined' ){
             alert("Must be logged in to vote.");
@@ -2786,7 +2786,7 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
     
 
     // Localize current user data
-    $scope.current_user = $rootScope.current_user;
+    $scope.current_user = $window.pwGlobals.current_user;
 
     // Detect the user's possession in relation to the post
     // If the user's ID is same as the post author's ID
@@ -2803,7 +2803,7 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
     if ( $scope.current_user == 0 )
         $scope.currentRole = "guest";
     else if ( typeof $scope.current_user.roles != undefined ){
-        $scope.currentRole = $rootScope.current_user.roles[0];
+        $scope.currentRole = $scope.current_user.roles[0];
     }
 
     // Setup empty menu options array
@@ -2988,11 +2988,11 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
 
     // GENERATE SHARE LINK
     if(
-        typeof $window.site_info !== 'undefined' &&
-        typeof $window.current_user !== 'undefined' &&
+        typeof $window.pwGlobals.site_info !== 'undefined' &&
+        typeof $window.pwGlobals.current_user !== 'undefined' &&
         typeof $scope.post !== 'undefined'
         ){
-        $scope.share_link = $window.site_info.url + "/?u=" + $window.current_user.ID + "&p=" + $scope.post.ID;
+        $scope.share_link = $window.pwGlobals.site_info.url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
     }
     
     // Set class via ng-class, of current assigned taxonomy (topic)
@@ -3961,6 +3961,64 @@ angular.module('$strap.directives').directive('bsSelect', [
 ]);
 
 
+
+/*
+ __        ___     _            _       
+ \ \      / (_) __| | __ _  ___| |_ ___ 
+  \ \ /\ / /| |/ _` |/ _` |/ _ \ __/ __|
+   \ V  V / | | (_| | (_| |  __/ |_\__ \
+    \_/\_/  |_|\__,_|\__, |\___|\__|___/
+                     |___/              
+//////////////// WIDGETS ////////////////*/
+
+
+///// PANEL WIDGET CONTROLLER /////
+postworld.controller('panelWidgetController',
+    ['$scope','$timeout','pwData', '$compile',
+    function($scope, $timeout, $pwData, $compile) {
+    
+    $scope.status = "loading";
+
+    $scope.panel_id = "";
+    $scope.setPanelID = function(panel_id){
+        $scope.panel_id = panel_id;
+    }
+    $scope.$on('pwTemplatesLoaded', function(event, data) {
+        $scope.panel_url = $pwData.pw_get_template('panels','',$scope.panel_id);
+    });
+
+}]);
+
+
+///// POST SHARE REPORT PANEL CONTROLLER /////
+postworld.controller('postReportMetaLive',
+    ['$scope','$window','$timeout','pwData',
+    function($scope, $window, $timeout, $pwData) {
+
+    $scope.postShareReport = {};
+
+    if( typeof $window.pwGlobals.current_view.post != 'undefined' ){
+        $scope.post = $window.pwGlobals.current_view.post;
+        var args = { "post_id" : $scope.post.post_id };
+        $pwData.post_share_report( args ).then(
+            // Success
+            function(response) {    
+                $scope.postShareReport = response.data;
+                $scope.status = "done";
+            },
+            // Failure
+            function(response) {
+                //alert('Error loading report.');
+            }
+        );
+
+    }
+}]);
+
+
+
+
+
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -3969,26 +4027,4 @@ angular.module('$strap.directives').directive('bsSelect', [
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
                                                                        
 */
-
-
-///// PANEL WIDGET CONTROLLER /////
-postworld.controller('panelWidgetController', ['$scope','$timeout','pwData', function($scope, $timeout, $pwData) {
-    
-    $scope.panel_id = "";
-    $scope.setPanelID = function(panel_id){
-        $scope.panel_id = panel_id;
-    }
-
-    $scope.$on('pwTemplatesLoaded', function(event, data) {
-        $scope.panel_url = $pwData.pw_get_template('panels','',$scope.panel_id);
-        //alert($scope.panel_url);
-    });
-
-}]);
-
-
-
-
-
-
 
