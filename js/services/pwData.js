@@ -26,12 +26,12 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 	
 	var feed_data = {};
 	
-	$log.info('pwData() Registering feed_settings', feed_settings);
+	$log.debug('pwData() Registering feed_settings', feed_settings);
 	
 	var	getTemplate = function(pwData,grp,type,name) {
 		var template;
 		// TODO can we make this lookup dynamic?
-		// $log.info('template here',grp,type,name);
+		// $log.debug('template here',grp,type,name);
 		switch (grp) {
 			case 'posts':
 				if (type) {
@@ -39,7 +39,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 				} else {
 					template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';						
 				}
-				// $log.info('post template:',pwData.templatesFinal.posts);
+				// $log.debug('post template:',pwData.templatesFinal.posts);
 				break;
 			case 'panels':
 				template = pwData.templatesFinal.panels[name];
@@ -53,7 +53,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 				template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
 				break;
 		}
-		// $log.info('Service: pwData Method:getTemplate template=',template);
+		// $log.debug('Service: pwData Method:getTemplate template=',template);
 		return template;			
 	};
 	
@@ -78,7 +78,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
     	},
     	// A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
 		wp_ajax: function(fname, args) {
-			$log.info('pwData.wp_ajax', fname, 'args: ',args);
+			$log.debug('pwData.wp_ajax', fname, 'args: ',args);
             var deferred = $q.defer();
             // works only for non array returns
             resource.wp_ajax({action:fname},{args:args,nonce:this.getNonce()},
@@ -99,16 +99,16 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			fargs = this.mergeFeedQuery(fargs,args); // will read args and override fargs
 			   
 			var params = {'args':fargs};
-			$log.info('pwData.pw_live_feed',fargs);
+			$log.debug('pwData.pw_live_feed',fargs);
 			return this.wp_ajax('pw_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {
-			$log.info('pwData.pw_scroll_feed',args);
+			$log.debug('pwData.pw_scroll_feed',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_scroll_feed',params);
 		},
 		o_embed: function(url,args) {
-			$log.info('pwData.o_embed',args);
+			$log.debug('pwData.o_embed',args);
 			var params = { url:url, args:args};
 			return this.wp_ajax('o_embed',params);
 		},
@@ -117,7 +117,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			var feedData = feed_data[args.feed_id];
 			// If already all loaded, then return
 			if (feedData.status == 'all_loaded')  {
-				$log.info('pwData.pw_get_posts ALL LOADED');
+				$log.debug('pwData.pw_get_posts ALL LOADED');
 				// TODO should we return or set promise.?
 				 //var results = {'status':200,'data':[]};
 				 var response = $q.defer();
@@ -145,30 +145,30 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 					fields = feedSettings.query_args.fields;
 				}				
 			}
-			$log.info('pwData.pw_get_posts range:',idBegin, idEnd);
+			$log.debug('pwData.pw_get_posts range:',idBegin, idEnd);
 			// Set Fields
 			var params = { feed_id:args.feed_id, post_ids:postIDs, fields:fields};
-			$log.info('pwData.pw_get_posts',params);
+			$log.debug('pwData.pw_get_posts',params);
 			return this.wp_ajax('pw_get_posts',params);
 		},
 		pw_get_templates: function(templates_object) {
 			// TODO Optimize by running it once and caching it
-			$log.info('pwData.pw_get_templates',templates_object);
+			$log.debug('pwData.pw_get_templates',templates_object);
 			var params = { templates_object:templates_object};			
 			return this.wp_ajax('pw_get_templates',params);
 		},
 		pw_register_feed: function(args) {
-			$log.info('pwData.pw_register_feed',args);
+			$log.debug('pwData.pw_register_feed',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_register_feed',params);
 		},
 		pw_load_feed: function(args) {
-			$log.info('pwData.pw_load_feed',args);
+			$log.debug('pwData.pw_load_feed',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_load_feed',params);
 		},
 		pw_get_post: function(args) {
-			$log.info('pwData.pw_get_post',args);
+			$log.debug('pwData.pw_get_post',args);
 			//var params = {args:args};
 			return this.wp_ajax('pw_get_post',args);
 		},
@@ -209,105 +209,110 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			if (args.feed_query) {
 				for (var prop in args.feed_query) {
 				    fargs.feed_query[prop] = args.feed_query[prop];
-				    //$log.info("args.feed_query",prop,args.feed_query[prop],fargs.feed_query[prop]);
+				    //$log.debug("args.feed_query",prop,args.feed_query[prop],fargs.feed_query[prop]);
 				}
 			}
 			return fargs;
 		},
 		pw_get_post_types: function(args) {
-			//$log.info('pwData.pw_load_feed',args);
+			//$log.debug('pwData.pw_load_feed',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_get_post_types', params);
 		},
 		ajax_oembed_get: function(args) {
-			$log.info('pwData.ajax_oembed_get',args);
+			$log.debug('pwData.ajax_oembed_get',args);
 			var params = {args:args};
 			return this.wp_ajax('ajax_oembed_get', params);
 		},
 		pw_save_post: function(args) {
-			$log.info('pwData.pw_save_post',args);
+			$log.debug('pwData.pw_save_post',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_save_post', params);
 		},
 		pw_trash_post: function(args) {
-			$log.info('pwData.pw_trash_post',args);
+			$log.debug('pwData.pw_trash_post',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_trash_post', params);
 		},
 		pw_get_post_edit: function(args) {
-			$log.info('pwData.pw_get_post_edit',args);
+			$log.debug('pwData.pw_get_post_edit',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_get_post_edit',params);
 		},
 		taxonomies_outline_mixed: function(args) {
-			$log.info('pwData.taxonomies_outline_mixed',args);
+			$log.debug('pwData.taxonomies_outline_mixed',args);
 			var params = {args:args};
 			return this.wp_ajax('taxonomies_outline_mixed',params);
 		},
 		user_query_autocomplete: function(args) {
-			$log.info('pwData.user_query_autocomplete',args);
+			$log.debug('pwData.user_query_autocomplete',args);
 			var params = {args:args};
 			return this.wp_ajax('user_query_autocomplete',params);
 		},
 		tags_autocomplete: function(args) {
-			$log.info('pwData.tags_autocomplete',args);
+			$log.debug('pwData.tags_autocomplete',args);
 			var params = {args:args};
 			return this.wp_ajax('tags_autocomplete',params);
 		},
 		set_post_relationship: function(args) {
-			$log.info('pwData.set_post_relationship',args);
+			$log.debug('pwData.set_post_relationship',args);
 			var params = {args:args};
 			return this.wp_ajax('set_post_relationship',params);
 		},
 		set_post_points: function(args) {
-			$log.info('pwData.set_post_points',args);
+			$log.debug('pwData.set_post_points',args);
 			var params = {args:args};
 			return this.wp_ajax('set_post_points',params);
 		},
 		pw_set_avatar: function(args) {
-			$log.info('pwData.pw_set_avatar',args);
+			$log.debug('pwData.pw_set_avatar',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_set_avatar',params);
 		},
 		pw_get_avatar: function(args) {
-			$log.info('pwData.pw_get_avatar',args);
+			$log.debug('pwData.pw_get_avatar',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_get_avatar',params);
 		},
 		wp_user_query: function(args) {
-			$log.info('pwData.wp_user_query',args);
+			$log.debug('pwData.wp_user_query',args);
 			var params = {args:args};
 			return this.wp_ajax('wp_user_query',params);
 		},
 		pw_insert_user: function(args) {
-			$log.info('pwData.pw_insert_user',args);
+			$log.debug('pwData.pw_insert_user',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_insert_user',params);
 		},
 		send_activation_link: function(args) {
-			$log.info('pwData.send_activation_link',args);
+			$log.debug('pwData.send_activation_link',args);
 			var params = {args:args};
 			return this.wp_ajax('send_activation_link',params);
 		},
 		pw_activate_user: function(args) {
-			$log.info('pwData.pw_activate_user',args);
+			$log.debug('pwData.pw_activate_user',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_activate_user',params);
 		},
 		send_reset_password_link: function(args) {
-			$log.info('pwData.send_reset_password_link',args);
+			$log.debug('pwData.send_reset_password_link',args);
 			var params = {args:args};
 			return this.wp_ajax('send_reset_password_link',params);
 		},
 		reset_password_submit: function(args) {
-			$log.info('pwData.reset_password_submit',args);
+			$log.debug('pwData.reset_password_submit',args);
 			var params = {args:args};
 			return this.wp_ajax('reset_password_submit',params);
 		},
 		post_share_report: function(args) {
-			$log.info('pwData.post_share_report',args);
+			$log.debug('pwData.post_share_report',args);
 			var params = {args:args};
 			return this.wp_ajax('post_share_report',params);
+		},
+		user_share_report_outgoing: function(args) {
+			$log.debug('pwData.user_share_report_outgoing',args);
+			var params = {args:args};
+			return this.wp_ajax('user_share_report_outgoing',params);
 		},
 
 

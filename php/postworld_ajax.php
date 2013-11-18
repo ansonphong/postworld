@@ -6,10 +6,26 @@
 */
 
 
-//json_encode( post_share_report_meta( post_share_report( $post_id ) ) )
+//---------- SHARE REPORT - USER - OUTGOING ----------//
+function user_share_report_outgoing_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$user_share_report_outgoing = user_share_report_meta( user_share_report_outgoing( $params['displayed_user_id'] ) );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $user_share_report_outgoing;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_user_share_report_outgoing", "user_share_report_outgoing_anon");
+add_action("wp_ajax_user_share_report_outgoing", "user_share_report_outgoing_anon");
 
 
-//---------- TRASH POST ----------//
+
+//---------- SHARE REPORT - POST ----------//
 function post_share_report_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];

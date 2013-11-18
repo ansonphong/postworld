@@ -40,7 +40,7 @@ postworld.factory('pwCommentsService', function ($resource, $q, $log,pwData) {
 	
 	var comments_data = {};
 	
-	$log.info('pwCommentsService() Registering comments_settings', comments_settings);
+	$log.debug('pwCommentsService() Registering comments_settings', comments_settings);
 		
     return {
     	comments_settings: comments_settings,
@@ -49,18 +49,18 @@ postworld.factory('pwCommentsService', function ($resource, $q, $log,pwData) {
 			var settings = this.comments_settings[feed];
 			if (!settings) throw {message:'comments settings not initialized properly'};
 			if (!settings.query) throw {message:'query for comments settings is not initialized properly'};
-			$log.info('pwCommentsService.pw_get_comments',settings);
+			$log.debug('pwCommentsService.pw_get_comments',settings);
 			// will pass settings as is, which will include few more parameters that will not be used in php
 			return pwData.wp_ajax('pw_get_comments',settings);
 		},
 		pw_save_comment: function(args) {
 			if (!args.comment_data) throw {message:'pw_save_comment - argument comment_data not initialized properly'};
-			$log.info('pwCommentsService.pw_save_comment',args);
+			$log.debug('pwCommentsService.pw_save_comment',args);
 			return pwData.wp_ajax('pw_save_comment',args);
 		},
 		pw_delete_comment: function(args) {
 			if (!args.comment_id) throw {message:'pw_delete_comment - argument comment_id not initialized properly'};
-			$log.info('pwCommentsService.pw_delete_comment',args);
+			$log.debug('pwCommentsService.pw_delete_comment',args);
 			return pwData.wp_ajax('pw_delete_comment',args);
 		},
    };

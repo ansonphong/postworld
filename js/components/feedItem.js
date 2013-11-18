@@ -26,7 +26,7 @@ postworld.controller('pwFeedItemController',
 			}
 			else 
 				$scope.templateUrl = pwData.pw_get_template('posts',type,$scope.$parent.feed_item_view_type);
-	    	// $log.info('pwFeedItemController New Template=',$scope.templateUrl);    	
+	    	// $log.debug('pwFeedItemController New Template=',$scope.templateUrl);    	
 		});    	    	
 		
         // Decodes Special characters in URIs
@@ -44,7 +44,7 @@ postworld.controller('pwFeedItemController',
 					$scope.templateUrl = pwData.pw_get_template('posts',type,feed_item_view_type);					
 				} 
 			});
-		   // $log.info('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
+		   // $log.debug('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
 		   // $scope.templateUrl = feed_item_view_type;
 		   
 		   });		  		      	

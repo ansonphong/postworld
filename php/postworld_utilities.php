@@ -9,7 +9,6 @@ function postworld_includes( $mode = 'deploy' ){
 						'is_admin'		=> is_admin(),
 					);
 
-
 	//////////---------- LIBRARY INCLUDES ----------//////////
 
 	//BOOTSTRAP CSS
@@ -19,7 +18,6 @@ function postworld_includes( $mode = 'deploy' ){
 	wp_deregister_script('jquery');
 	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery','',$angularDep);
-
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
 	///// DELPLOY FILE INCLUDES /////
@@ -133,8 +131,21 @@ function postworld_includes( $mode = 'deploy' ){
 			else {
 				$userdata = 0;
 			}
-
 			$pw_globals["current_user"] = $userdata;
+
+
+			// DISPLAYED USER
+			// If post_id = $GLOBALS['post']->ID 
+
+			if ( function_exists('bp_displayed_user_id') ){
+				$displayed_user_id = bp_displayed_user_id();
+			} else {
+				$displayed_user_id = $GLOBALS['post']->post_author;
+			}
+
+			$pw_globals['displayed_user'] = array(
+				"user_id" => $displayed_user_id,		
+				);
 
 			return $pw_globals;
 		}
@@ -143,7 +154,7 @@ function postworld_includes( $mode = 'deploy' ){
 		<script type="text/javascript">
 			var pwGlobals = <?php echo json_encode( parse_pw_globals() ); ?>;
 		</script>
-		
+			
 
 	<?php
 	}
@@ -153,7 +164,6 @@ function postworld_includes( $mode = 'deploy' ){
 	add_action('wp_head', 'pwGlobals');
 
 }
-
 
 
 
@@ -396,37 +406,29 @@ function extract_hierarchical_fields( $fields_array, $query_string ){
 				}
 				$extract_fields = array_merge( $extract_fields, $hierarchical_values);
 		}
-
 		return $extract_fields;
-
 	}
 	else
 		return false;
 }
 
 
-
 function get_avatar_url( $user_id, $avatar_size ){
-
 	// Get Buddypress Avatar Image
 	if ( function_exists('bp_core_fetch_avatar') ) {
-
 		// Set Buddypress Avatar 'Type' Attribute
 		if ( $avatar_size > $bp_avatar_thumb_size )
 			$bp_avatar_size = 'thumb';
 		else
 			$bp_avatar_size = 'full';
-
 		// Set Buddypress Avatar Settings
 		$bp_avatar_args = array(
 			'item_id' => $user_id,
 			'type' => $bp_avatar_size,
 			'html' => false
 			);
-
 		return bp_core_fetch_avatar( $bp_avatar_args );
 	}
-
 	// Get Avatar Image with Wordpress Method (embedded in an image tag)
 	else {
 		$avatar_img = get_avatar( $user_id, $avatar_size );
@@ -434,15 +436,12 @@ function get_avatar_url( $user_id, $avatar_size ){
 		preg_match("/src='(.*?)'/i", $avatar_img, $matches);
 	    return $matches[1];
 	}
-
 }
-
 
 function post_time_ago($post_id) {
 	$post_time = get_post_time( 'U', true, $post_id );
 	return time_ago( $post_time );
 }
-
 
 function time_ago($timestamp){
     //type cast, current time, difference in timestamps

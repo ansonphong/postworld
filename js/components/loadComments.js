@@ -121,7 +121,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 		   if (settings.view) {
 		   		var template = 'comment-'+settings.view;
 		    	$scope.templateUrl = pwData.pw_get_template('comments','comment',template);
-				$log.info('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
+				$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
 		   }
 		   else {
 	   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/comments/comments-default.html';

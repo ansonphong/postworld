@@ -17,7 +17,6 @@ postworld.directive('liveFeed', function() {
     };
 });
 
-
 postworld.directive('loadFeed', function() {
     return {
         restrict: 'A',
@@ -31,7 +30,6 @@ postworld.directive('loadFeed', function() {
     };
 });
 
-
 postworld.directive('loadPost', function() {
     return {
         restrict: 'A',
@@ -44,7 +42,6 @@ postworld.directive('loadPost', function() {
         }
     };
 });
-
 
 postworld.controller('pwFeedController',
     function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData) {
@@ -96,7 +93,7 @@ postworld.controller('pwFeedController',
     	// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
 				if (!$scope.feed) {
-					$log.info('no valid Feed ID provided in Feed Settings',$scope);
+					$log.debug('no valid Feed ID provided in Feed Settings',$scope);
 					return;
 				}
 				
@@ -111,13 +108,13 @@ postworld.controller('pwFeedController',
 			   if (pwData.feed_settings[$scope.feed].view.current)
 			   		view = pwData.feed_settings[$scope.feed].view.current;
 		    	$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view);
-				$log.info('pwFeedController Set Initial Feed Item View Type', $scope.feed_item_view_type);
+				$log.debug('pwFeedController Set Initial Feed Item View Type', $scope.feed_item_view_type);
 				
 			   // Get Feed Template from feed_settings if it exists, otherwise get it from default path
 			   if (pwData.feed_settings[$scope.feed].feed_template) {
 			   		var template = pwData.feed_settings[$scope.feed].feed_template;			   	
 			    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-					$log.info('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
+					$log.debug('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
 			   }
 			   else {
 			   		if ($scope.directive=='liveFeed')
@@ -127,11 +124,11 @@ postworld.controller('pwFeedController',
 			   		// just use default template provided in directive settings, no action required
 			   		return;			   	
 			   }
-				// $log.info('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
+				// $log.debug('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
 		});
     	
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
-		   $log.info('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
+		   $log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
 	    	$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view); 
 		   // Broadcast to all children
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
@@ -251,13 +248,13 @@ postworld.controller('pwFeedController',
 	    	$scope.message = "";   			
 			// If already getting results, do not run again.
 			if ($scope.busy) {
-				$log.info('pwFeedController.getNext: We\'re Busy, wait!');
+				$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
 				return;
 				}
 			$scope.busy = true;
 			// if running for the first time, do this
 			if ($scope.firstRun) {
-				$log.info('pwFeedController.getNext: Running for the first time',$scope.feed,$scope.directive);
+				$log.debug('pwFeedController.getNext: Running for the first time',$scope.feed,$scope.directive);
 				$scope.firstRun = false;
 				if ($scope.directive=='liveFeed')	$scope.pwLiveFeed();
 				else if ($scope.directive=='loadFeed')	$scope.pwLoadFeed();
@@ -265,7 +262,7 @@ postworld.controller('pwFeedController',
 			// otherwise, do this
 			else {
 				// Run Search
-				$log.info('pwFeedController.getNext: Scrolling More');
+				$log.debug('pwFeedController.getNext: Scrolling More');
 				$scope.pwScrollFeed();				
 			}
 		};
@@ -292,7 +289,7 @@ postworld.controller('pwFeedController',
 				// Success
 				function(response) {	
 					$scope.busy = false;
-					// $log.info('pwFeedController.pwLiveFeed',$scope.args.feed_query.order_by,$scope.args.feed_query.order);						
+					// $log.debug('pwFeedController.pwLiveFeed',$scope.args.feed_query.order_by,$scope.args.feed_query.order);						
 					if (response.status === undefined) {
 						console.log('response format is not recognized');
 						return;
@@ -301,7 +298,7 @@ postworld.controller('pwFeedController',
 						// Check if data exists
 						if (!(response.data instanceof Array) ) {
 							// Insert Response in Feed Data						
-							$log.info('pwFeedController.pw_live_feed Success',response.data);						
+							$log.debug('pwFeedController.pw_live_feed Success',response.data);						
 							$scope.fillFeedData(response);																			
 							// $scope.items = response.data.post_data;
 							$scope.items = JSON.parse(JSON.stringify(response.data.post_data));
@@ -309,7 +306,7 @@ postworld.controller('pwFeedController',
 
 						} else {
 							$scope.message = "No Data Returned";
-							$log.info('pwFeedController.pw_live_feed No Data Received');						
+							$log.debug('pwFeedController.pw_live_feed No Data Received');						
 						}
 						$scope.busy = false;							
 						return response.data;
@@ -358,7 +355,7 @@ postworld.controller('pwFeedController',
 						return;
 					}
 					if (response.status==200) {
-						$log.info('pwFeedController.pw_load_feed Success',response.data);						
+						$log.debug('pwFeedController.pw_load_feed Success',response.data);						
 						// Check if data exists
 						if (!(response.data instanceof Array) ) {
 							// Insert Response in Feed Data						
@@ -368,7 +365,7 @@ postworld.controller('pwFeedController',
 							$scope.injectAds();
 						} else {
 							$scope.message = "No Data Returned";
-							$log.info('pwFeedController.pw_load_feed No Data Received');						
+							$log.debug('pwFeedController.pw_load_feed No Data Received');						
 						}
 						$scope.busy = false;							
 						return response.data;						
@@ -390,7 +387,7 @@ postworld.controller('pwFeedController',
 		$scope.pwScrollFeed = function() {
 			// Check if all Loaded, then return and do nothing
 			if (pwData.feed_data[$scope.feed].status == 'all_loaded') {
-				//$log.info('pwFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
+				//$log.debug('pwFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
 				$scope.busy = false;
 				return;
 			};		
@@ -398,7 +395,7 @@ postworld.controller('pwFeedController',
 			pwData.feed_data[$scope.feed].status = 'loading';
 			
 			
-			$log.info('pwFeedController.pwScrollFeed For',$scope.feed);
+			$log.debug('pwFeedController.pwScrollFeed For',$scope.feed);
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
 			// console.log('Params=',$scope.args);
@@ -412,17 +409,17 @@ postworld.controller('pwFeedController',
 						return;
 					}
 					if (response.status==200) {
-						$log.info('pwFeedController.pwScrollFeed Success',response.data);
+						$log.debug('pwFeedController.pwScrollFeed Success',response.data);
 						// Add Results to controller items						
 						//$scope.posts = response.data;
 						
 						var newItems = response.data;
 						for (var i = 0; i < newItems.length; i++) {
-							// $log.info('Looping :',i,newItems[i].ID);
+							// $log.debug('Looping :',i,newItems[i].ID);
 							pwData.feed_data[$scope.feed].posts.push(newItems[i]);							
 							$scope.injectNewAd();
 							$scope.items.push(JSON.parse(JSON.stringify(newItems[i])));
-							// $log.info('$scope.items has',$scope.items.length,' items');							
+							// $log.debug('$scope.items has',$scope.items.length,' items');							
 						 }
 						pwData.feed_data[$scope.feed].loaded += newItems.length;
 						// Count Length of loaded
@@ -436,7 +433,7 @@ postworld.controller('pwFeedController',
 						}
 						  
 						// Update feed data with newly loaded posts
-						$log.info('pwFeedController.pwScrollFeed Success feed_data:',pwData.feed_data[$scope.feed]);
+						$log.debug('pwFeedController.pwScrollFeed Success feed_data:',pwData.feed_data[$scope.feed]);
 						return response.data;						
 					} else {
 						// handle error
@@ -477,7 +474,7 @@ postworld.controller('pwLoadPostController',
 						return;
 					}
 					if (response.status==200) {
-						$log.info('pwPostLoadController.pw_load_post Success',response.data);						
+						$log.debug('pwPostLoadController.pw_load_post Success',response.data);						
 						$scope.post = response.data;
 						// Set Template URL
 				    	// Set Default Feed Template and Default Feed Item Template
@@ -487,7 +484,7 @@ postworld.controller('pwLoadPostController',
 							   		var post_type = 'post';
 							   		if ($scope.post.post_type) post_type = $scope.post.post_type;			   		
 							    	$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
-									$log.info('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
+									$log.debug('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
 							   }
 							   else {
 						   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
@@ -535,7 +532,7 @@ postworld.controller('pwTestController',
                 // Success
                 function(response) {    
                     //alert( "RESPONSE : " + response.data );
-                    $log.info('pwData.pw_save_post : saved post id: ', response.data);                    
+                    $log.debug('pwData.pw_save_post : saved post id: ', response.data);                    
 
                 },
                 // Failure

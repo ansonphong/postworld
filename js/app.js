@@ -16,7 +16,7 @@ var feed_settings = [];
 
 
 var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', '$strap.directives' ])
-.config(function ($routeProvider, $locationProvider, $provide) {   
+.config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
 
     ////////// ROUTE PROVIDERS //////////
     $routeProvider.when('/live-feed-1/',
@@ -125,6 +125,8 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
     // this will be also the default route, or when no route is selected
     $routeProvider.otherwise({redirectTo: '/home/'});
 
+    //$logProvider.debugEnabled(false);
+
 });
 
 
@@ -157,7 +159,7 @@ postworld.run(function($rootScope, $templateCache, $log, pwData) {
 
    // 
    $rootScope.current_user = window['current_user'];
-   $log.info('Current user: ', $rootScope.current_user );
+   $log.debug('Current user: ', $rootScope.current_user );
 
 });
    
@@ -1101,7 +1103,7 @@ postworld.controller('editPost',
         $pwData.pw_get_post_edit( post_id ).then(
             // Success
             function(response) {    
-                $log.info('pwData.pw_get_post_edit : RESPONSE : ', response.data);
+                $log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
 
                 // FILTER FOR INPUT
                 var get_post_data = response.data;
@@ -1170,7 +1172,7 @@ postworld.controller('editPost',
             var post_data = $scope.post_data;
 
             //alert( JSON.stringify( post_data ) );
-            $log.info('pwData.pw_save_post : SUBMITTING : ', post_data);
+            $log.debug('pwData.pw_save_post : SUBMITTING : ', post_data);
 
             ///// SAVE VIA AJAX /////
             $scope.status = "saving";
@@ -1178,7 +1180,7 @@ postworld.controller('editPost',
                 // Success
                 function(response) {    
                     //alert( "RESPONSE : " + response.data );
-                    $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
+                    $log.debug('pwData.pw_save_post : RESPONSE : ', response.data);
                     // VERIFY POST CREATION
                     // If it was created, it's an integer
                     if( response.data === parseInt(response.data) ){
@@ -1187,7 +1189,7 @@ postworld.controller('editPost',
                         $scope.status = "success";
                         $timeout(function() {
                           $scope.status = "done";
-                        }, 2000);
+                        }, 4000);
                         // If created a new post
                         if ( $scope.mode == "new" )
                             // Forward to edit page
@@ -1213,7 +1215,7 @@ postworld.controller('editPost',
                     $scope.status = "error";
                     $timeout(function() {
                       $scope.status = "done";
-                    }, 2000);
+                    }, 4000);
 
                 }
             );
@@ -1232,7 +1234,7 @@ postworld.controller('editPost',
         $timeout(function() {
             if( typeof tinyMCE !== 'undefined' ){
                 if( typeof tinyMCE.get('post_content') !== 'undefined' ){
-                    //$log.info('RESET tinyMCE : ', tinyMCE);
+                    //$log.debug('RESET tinyMCE : ', tinyMCE);
                     tinyMCE.get('post_content').setContent( "" );
                 }
             }
@@ -1709,14 +1711,14 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         var post_data = $scope.post_data;
 
         //alert( JSON.stringify( post_data ) );
-        $log.info('pwData.pw_save_post : POSTING LINK : ', post_data);
+        $log.debug('pwData.pw_save_post : POSTING LINK : ', post_data);
 
         ///// SAVE VIA AJAX /////
         $pwData.pw_save_post( post_data ).then(
             // Success
             function(response) {    
                 //alert( "RESPONSE : " + response.data );
-                $log.info('pwData.pw_save_post : RESPONSE : ', response.data);
+                $log.debug('pwData.pw_save_post : RESPONSE : ', response.data);
                 // VERIFY POST CREATION
                 // If it was created, it's an integer
                 if( response.data === parseInt(response.data) ){
@@ -1903,7 +1905,7 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
             function(response) {    
                 //alert( JSON.stringify(response.data) );
                 // RESPONSE.DATA FORMAT : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
-                $log.info('VOTE RETURN : ' + JSON.stringify(response) );
+                $log.debug('VOTE RETURN : ' + JSON.stringify(response) );
                 if ( response.data.id == $scope.post.ID ){
                     // UPDATE POST POINTS
                     $scope.post.post_points = response.data.points_total;
@@ -2333,7 +2335,7 @@ var mediaModalCtrl = function ($scope, $modal, $log, $window, pwData) {
         //$scope.post_title = post_title;
     }, function () {
         // WHEN CLOSE MODAL
-        $log.info('Modal dismissed at: ' + new Date());
+        $log.debug('Modal dismissed at: ' + new Date());
     });
   };
 
@@ -2640,7 +2642,7 @@ postworld.factory('embedly', function ($resource, $q, $log) {
         return {
             // A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
             embedly_call: function(action,url, options) {
-                $log.info('embedly.embedly_call', action, url, options);
+                $log.debug('embedly.embedly_call', action, url, options);
                 var deferred = $q.defer();
                 // works only for non array returns
                 resource.embedly_call({action:action, url:url, options:options},
@@ -2863,7 +2865,7 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                 //$scope.post_title = post_title;
             }, function () {
                 // WHEN CLOSE MODAL
-                $log.info('Modal dismissed at: ' + new Date());
+                $log.debug('Modal dismissed at: ' + new Date());
 
             });
         },
@@ -2874,7 +2876,7 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                     // Success
                     function(response) {
                         if (response.status==200) {
-                            $log.info('Post Trashed RETURN : ',response.data);                     
+                            $log.debug('Post Trashed RETURN : ',response.data);                     
                             if ( response.data == true ){
                                 
                                 if( typeof scope != undefined ){    
@@ -2929,7 +2931,7 @@ var quickEdit = function ($scope, $modal, $log) {
             //$scope.post_title = post_title;
         }, function () {
             // WHEN CLOSE MODAL
-            $log.info('Modal dismissed at: ' + new Date());
+            $log.debug('Modal dismissed at: ' + new Date());
         });
     }; 
 };
@@ -3031,7 +3033,7 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
                 // Success
                 function(response) {
                     if (response.status==200) {
-                        //$log.info('pwPostLoadController.pw_load_post Success',response.data);                     
+                        //$log.debug('pwPostLoadController.pw_load_post Success',response.data);                     
                         $scope.post = response.data;
 
                         // Update Classes
@@ -3217,7 +3219,7 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
             pwData.wp_user_query( query_args ).then(
                 // Success
                 function(response) {
-                    $log.info('QUERY : ' + username , response.data.results);
+                    $log.debug('QUERY : ' + username , response.data.results);
                     // If the username is already taken
                     if ( response.data.results.length > 0 ){
                         if( response.data.results[0].user_nicename === username ){
@@ -3274,7 +3276,7 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
             pwData.wp_user_query( query_args ).then(
                 // Success
                 function(response) {
-                    $log.info('QUERY : ' + email , response.data.results);
+                    $log.debug('QUERY : ' + email , response.data.results);
                     // If the email is already taken
                     if ( response.data.results.length > 0 ){
                         if( response.data.results[0].user_email === email ){
@@ -3321,11 +3323,11 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
             user_email:signupForm.email.$modelValue,
             display_name:signupForm.name.$modelValue
         };
-        $log.info('INSERTING USER : ' , userdata);
+        $log.debug('INSERTING USER : ' , userdata);
         pwData.pw_insert_user( userdata ).then(
             // Success
             function(response) {
-                $log.info('USER INSERT SUCCESSFUL : ' , response.data);
+                $log.debug('USER INSERT SUCCESSFUL : ' , response.data);
                 if ( typeof response.data.ID !== 'undefined' ){
                     if ( !isNaN( response.data.ID ) ){
                         // Insert get_userdata object into scope
@@ -3400,7 +3402,7 @@ var pwUserActivate = function ( $scope, $rootScope, pwData, $timeout, $log, pwUs
         pwData.pw_activate_user( auth_key ).then(
             // Success
             function(response) {
-                $log.info('ACTIVATION RETURN : ', response.data);
+                $log.debug('ACTIVATION RETURN : ', response.data);
                 
                 if ( typeof response.data.data !== 'undefined' ){
                     $scope.userdata = response.data;
@@ -3554,11 +3556,11 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
         //alert(JSON.stringify(userdata));
         $scope.signupForm.$setValidity('busy',false);
 
-        $log.info('SENDING NEW PASSWORD : ' , userdata);
+        $log.debug('SENDING NEW PASSWORD : ' , userdata);
         pwData.reset_password_submit( userdata ).then(
             // Success
             function(response) {
-                $log.info('NEW PASSWORD RETURN : ' , response.data);
+                $log.debug('NEW PASSWORD RETURN : ' , response.data);
                 if ( !isNaN( response.data.ID ) ){
                     $scope.status = "done";
                     $timeout(function() {
@@ -3601,11 +3603,11 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
             var userdata = {
                 email: user_email,
             };
-            $log.info('SENDING ACTIVATION LINK : ' , userdata);
+            $log.debug('SENDING ACTIVATION LINK : ' , userdata);
             pwData.send_activation_link( userdata ).then(
                 // Success
                 function(response) {
-                    $log.info('ACTIVATION LINK RETURN : ' , response.data);
+                    $log.debug('ACTIVATION LINK RETURN : ' , response.data);
                     if ( response.data == true ){
                         $scope.status = "success";
                         $timeout(function() {
@@ -3624,11 +3626,11 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
             var userdata = {
                 email: user_email,
             };
-            $log.info('SENDING ACTIVATION LINK : ' , userdata);
+            $log.debug('SENDING ACTIVATION LINK : ' , userdata);
             pwData.send_reset_password_link( userdata ).then(
                 // Success
                 function(response) {
-                    $log.info('ACTIVATION LINK RETURN : ' , response.data);
+                    $log.debug('ACTIVATION LINK RETURN : ' , response.data);
                     if ( response.data == true ){
                         $scope.status = "success";
                         $timeout(function() {
@@ -3662,7 +3664,7 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
                     // Success
                     function(response) {
                         //alert(JSON.stringify( response.data.results ));
-                        $log.info('QUERY : ' + email , response.data.results);
+                        $log.debug('QUERY : ' + email , response.data.results);
 
                         // Return reponse data to the specified callback function in the original scope
                         $scope[callback]( response );
@@ -3990,8 +3992,8 @@ postworld.controller('panelWidgetController',
 }]);
 
 
-///// POST SHARE REPORT PANEL CONTROLLER /////
-postworld.controller('postReportMetaLive',
+///// POST SHARE REPORT /////
+postworld.controller('postShareReport',
     ['$scope','$window','$timeout','pwData',
     function($scope, $window, $timeout, $pwData) {
 
@@ -4015,6 +4017,36 @@ postworld.controller('postReportMetaLive',
     }
 }]);
 
+
+///// POST SHARE REPORT /////
+postworld.controller('userShareReportOutgoing',
+    ['$scope','$window','$timeout','pwData',
+    function($scope, $window, $timeout, $pwData) {
+
+    $scope.postShareReport = {};
+
+    if( typeof $window.pwGlobals.displayed_user.user_id != 'undefined' ){
+
+        $scope.displayed_user_id = $window.pwGlobals.displayed_user.user_id;
+
+        var args = { "displayed_user_id" : $scope.displayed_user_id };
+
+        $pwData.user_share_report_outgoing( args ).then(
+            // Success
+            function(response) {    
+                $scope.shareReportMetaOutgoing = response.data;
+                $scope.status = "done";
+            },
+            // Failure
+            function(response) {
+                //alert('Error loading report.');
+            }
+        );
+
+    }
+}]);
+
+// <?php echo json_encode( user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) ) ); ?>;
 
 
 

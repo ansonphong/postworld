@@ -22,7 +22,7 @@ postworld.controller('pwFilterFeedController',
 				var FeedID = $scope.feedId;
 				var template = 'feed_top';	// TODO get from Constant values
 				if (!$scope.feedId) {
-					$log.info('no valid Feed ID provided in Feed Settings');
+					$log.debug('no valid Feed ID provided in Feed Settings');
 					return;
 				}
 				// Get Default Argument Values
@@ -43,7 +43,7 @@ postworld.controller('pwFilterFeedController',
 			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
 			   		template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
 		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-				$log.info('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
+				$log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
 		});		
 
 		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
@@ -60,10 +60,10 @@ postworld.controller('pwFilterFeedController',
 			} else $scope.feedQuery.order = 'ASC';
 		};		
 		$scope.$watch('feedQuery.order_by', function(value) {
-			$log.info('pwFilterFeedController.changeFeedTemplate order by changed',$scope.feedQuery.order_by);
+			$log.debug('pwFilterFeedController.changeFeedTemplate order by changed',$scope.feedQuery.order_by);
 		}); 
 		$scope.$watch('feedQuery.order', function(value) {
-			$log.info('pwFilterFeedController.changeFeedTemplate order changed',$scope.feedQuery.order);
+			$log.debug('pwFilterFeedController.changeFeedTemplate order changed',$scope.feedQuery.order);
  			if (value == 'DESC') {
 				$scope.clsOrder ='glyphicon-arrow-down'; 				
  			} else  {
@@ -80,7 +80,7 @@ postworld.controller('pwFilterFeedController',
 
 			// For each taxonomy
 			angular.forEach( $scope.taxInput, function( terms, taxonomy ){
-				//$log.info(terms);
+				//$log.debug(terms);
 				// If terms isn't empty
 				if( terms.length > 0 && terms[0] != null ){
 					// For each taxonomy with terms specified
@@ -117,7 +117,7 @@ postworld.controller('pwFilterFeedController',
 
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function(view) {
-			$log.info('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
+			$log.debug('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", view);		    	
 		};	
 
@@ -140,7 +140,7 @@ postworld.controller('pwRegisterFeedController',
     	$scope.args.feed_id = '';
 		$scope.registerFeed = function() {
 			$scope.args.feed_query = $scope.$parent.feedQuery;
-			$log.info('pwRegisterFeedController.pwRegisterFeed For',$scope.args);
+			$log.debug('pwRegisterFeedController.pwRegisterFeed For',$scope.args);
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
         	pwData.pw_register_feed($scope.args).then(
@@ -153,7 +153,7 @@ postworld.controller('pwRegisterFeedController',
 						return;
 					}
 					if (response.status==200) {
-						$log.info('pwRegisterFeedController.pwRegisterFeed Success',response.data);
+						$log.debug('pwRegisterFeedController.pwRegisterFeed Success',response.data);
 						$scope.message = "Feed Registered Successfully";
 						return response.data;						
 					} else {
@@ -174,53 +174,34 @@ postworld.controller('pwRegisterFeedController',
     }
 );
 
+
+
 ///// LOAD PANEL /////
 postworld.directive('loadPanel', function() {
     return {
         restrict: 'EA',
-        replace: true,
+        //replace: true,
         controller: 'pwLoadPanelController',
-        // transclude: true,
-        // Must use an isolated scope, to allow for using multiple panel directives in the same page
-        scope: {
-        	
+        //transclude: true,
+        scope:{
+        	// Must use an isolated scope, to allow for using multiple panel directives in the same page
+        },
+        link: function($scope, element, attributes){
+        	$scope.panel_id = attributes.loadPanel;
         }
     };
 });
 
 postworld.controller('pwLoadPanelController',
-    function pwLoadPanelController($scope, $timeout, $log ) {
-    	$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
-	    $log.info('setting loadpanel url first time',$scope.templateUrl);
-	    var loadMe = $timeout( function() {
-	      $scope.templateUrl =  jsVars.pluginurl+'/postworld/templates/loadpaneltest.html';
-	      $log.info('setting loadpanel url',$scope.templateUrl);
-	    }, 1000);
+    function pwLoadPanelController($scope, $timeout, $log, pwData ) {
+    	// TEMP LOADING TEMPLATE
+    	//$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
+    	$scope.$on('pwTemplatesLoaded', function(event, data) {
+	        $scope.templateUrl = pwData.pw_get_template('panels','', $scope.panel_id);
+		    $log.debug('setting loadpanel url',$scope.templateUrl);
+	    });
+
 	}
 );
 
 
-///// LOAD PANEL 2 /////
-postworld.directive('loadPanel2', function() {
-    return {
-        restrict: 'EA',
-        replace: true,
-        controller: 'pwLoadPanel2Controller',
-        // transclude: true,
-        // Must use an isolated scope, to allow for using multiple panel directives in the same page
-        scope: {
-        	
-        }
-    };
-});
-
-postworld.controller('pwLoadPanel2Controller',
-    function pwLoadPanel2Controller($scope,$timeout, $log ) {
-    	 $scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
-	    $log.info('setting loadpanel2 url first time',$scope.templateUrl);
-	    var loadMe = $timeout( function() {
-	      $scope.templateUrl =  jsVars.pluginurl+'/postworld/templates/loadpaneltest.html';
-	      $log.info('setting loadpanel2 url',$scope.templateUrl);
-	    }, 5000);
-	}
-);
