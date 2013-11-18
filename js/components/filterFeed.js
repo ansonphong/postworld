@@ -197,8 +197,9 @@ postworld.controller('pwLoadPanelController',
     	// TEMP LOADING TEMPLATE
     	//$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
     	$scope.$on('pwTemplatesLoaded', function(event, data) {
-	        $scope.templateUrl = pwData.pw_get_template('panels','', $scope.panel_id);
-		    $log.debug('setting loadpanel url',$scope.templateUrl);
+	        $scope.panel = {};
+	        $scope.panel.templateUrl = pwData.pw_get_template('panels','', $scope.panel_id);
+		    $log.debug('setting loadpanel url',$scope.panelTemplateUrl);
 	    });
 
 	}

@@ -13,7 +13,7 @@ postworld.directive('liveFeed', function() {
         controller: 'pwFeedController',
         scope : {
         	
-        }
+        },
     };
 });
 
@@ -22,7 +22,7 @@ postworld.directive('loadFeed', function() {
         restrict: 'A',
         // DO not set url here and in nginclude at the same time, so many errors!
         // templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
-        replace: true,
+        //replace: true,
         controller: 'pwFeedController',
         scope : {
         	
