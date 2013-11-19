@@ -127,24 +127,38 @@ function postworld_includes( $mode = 'deploy' ){
 				$userdata = (array) $userdata;
 				$userdata["postworld"] = array();
 				$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
+			
+				// SUPPORT FOR WPMU MEMBERSHIP
+				if( function_exists('current_user_is_member') ){
+					$userdata["membership"] = array();
+					$userdata["membership"]["is_member"] = current_user_is_member();
+				}
+
 			}
 			else {
 				$userdata = 0;
 			}
-			$pw_globals["current_user"] = $userdata;
 
+			$pw_globals["current_user"] = $userdata;
 
 			// DISPLAYED USER
 			// If post_id = $GLOBALS['post']->ID 
-
+			// SUPPORT FOR BUDDYPRESS GLOBALS
 			if ( function_exists('bp_displayed_user_id') ){
 				$displayed_user_id = bp_displayed_user_id();
+				// Display Name
+				// First Name
 			} else {
 				$displayed_user_id = $GLOBALS['post']->post_author;
 			}
 
+			if ( isset($displayed_user_id) )
+				$displayed_userdata = get_userdata($displayed_user_id);
+
 			$pw_globals['displayed_user'] = array(
-				"user_id" => $displayed_user_id,		
+				"user_id" => $displayed_user_id,
+				"display_name" => $displayed_userdata->display_name,
+				"first_name" => $displayed_userdata->first_name,	
 				);
 
 			return $pw_globals;
