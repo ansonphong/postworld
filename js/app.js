@@ -21,11 +21,12 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
     ////////// ROUTE PROVIDERS //////////
     $routeProvider.when('/live-feed-1/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',                
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',                           
         });
-    $routeProvider.when('/live-feed-2/',
+    $routeProvider.when('/live-feed-2/',    
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',                
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',
+            // reloadOnSearch: false,                
         });
     $routeProvider.when('/live-feed-2-feeds/',
         {
@@ -145,7 +146,7 @@ postworld.run(function($rootScope, $templateCache, $log, pwData) {
             // resolve pwData.templates
             pwData.templates.resolve(value.data);
             pwData.templatesFinal = value.data;
-            console.log('postworld RUN getTemplates=',pwData.templatesFinal);
+            //console.log('postworld RUN getTemplates=',pwData.templatesFinal);
 
             // BROADCAST HERE - TEMPLATES LOADED
             $rootScope.$broadcast('pwTemplatesLoaded', true);
@@ -159,7 +160,11 @@ postworld.run(function($rootScope, $templateCache, $log, pwData) {
 
    // 
    $rootScope.current_user = window['current_user'];
+<<<<<<< HEAD
+   //$log.info('Current user: ', $rootScope.current_user );
+=======
    $log.debug('Current user: ', $rootScope.current_user );
+>>>>>>> bac4513dee440f64e6dd6d17581f1f89683467c3
 
 });
    

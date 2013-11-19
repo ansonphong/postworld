@@ -16,7 +16,7 @@ postworld.directive('filterFeed', function($log, pwData) {
 
 postworld.controller('pwFilterFeedController',
     function pwFilterFeedController($scope, $location, $log, pwData, $attrs) {    	
-		
+		var firstTime = true;
 		// Set Panel Template
 		pwData.templates.promise.then(function(value) {
 				var FeedID = $scope.feedId;
@@ -43,7 +43,7 @@ postworld.controller('pwFilterFeedController',
 			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
 			   		template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
 		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
-				$log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
+				// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
 		});		
 
 		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
@@ -60,7 +60,7 @@ postworld.controller('pwFilterFeedController',
 			} else $scope.feedQuery.order = 'ASC';
 		};		
 		$scope.$watch('feedQuery.order_by', function(value) {
-			$log.debug('pwFilterFeedController.changeFeedTemplate order by changed',$scope.feedQuery.order_by);
+		//	$log.debug('pwFilterFeedController.changeFeedTemplate order by changed',$scope.feedQuery.order_by);
 		}); 
 		$scope.$watch('feedQuery.order', function(value) {
 			$log.debug('pwFilterFeedController.changeFeedTemplate order changed',$scope.feedQuery.order);
@@ -74,7 +74,11 @@ postworld.controller('pwFilterFeedController',
 		///// TRANSLATE TAXONOMY MODEL INPUT FOR WP_QUERY /////
 		// Format the Model Input into format accessible to WP_Query
 		$scope.$watch('taxInput', function(value) {
-			
+			if (firstTime) {
+				firstTime = false;
+				return;
+			}
+			$log.info('taxInput',value);
 			// Reset tax_query object
 			$scope.feedQuery.tax_query = [];
 
@@ -117,7 +121,7 @@ postworld.controller('pwFilterFeedController',
 
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function(view) {
-			$log.debug('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
+			//$log.debug('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", view);		    	
 		};	
 

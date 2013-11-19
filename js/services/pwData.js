@@ -26,7 +26,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 	
 	var feed_data = {};
 	
-	$log.debug('pwData() Registering feed_settings', feed_settings);
+	// $log.debug('pwData() Registering feed_settings', feed_settings);
 	
 	var	getTemplate = function(pwData,grp,type,name) {
 		var template;
@@ -78,7 +78,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
     	},
     	// A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
 		wp_ajax: function(fname, args) {
-			$log.debug('pwData.wp_ajax', fname, 'args: ',args);
+			// $log.debug('pwData.wp_ajax', fname, 'args: ',args);
             var deferred = $q.defer();
             // works only for non array returns
             resource.wp_ajax({action:fname},{args:args,nonce:this.getNonce()},
@@ -90,16 +90,17 @@ postworld.factory('pwData', function ($resource, $q, $log) {
                 });
             return deferred.promise;		
 		},
-		pw_live_feed: function(args) {
+		pw_live_feed: function(args,qsArgs) {
 			// args: arguments received from Panel. fargs: is the final args sent along the ajax call.
 			// fargs will be filled initially with data from feed settings, 
-			// fargs will be filled next from data in the args parameters
-			
+			// fargs will be filled next from data in the query string			
 			var fargs = this.convertFeedSettings(args.feed_id,args); // will read settings and put them in fargs
-			fargs = this.mergeFeedQuery(fargs,args); // will read args and override fargs
-			   
+			fargs = this.mergeQueryString(fargs,qsArgs); // will read args and override fargs
+			// Get Query Arguments and save them in feed settings
+			var feedSettings = feed_settings[args.feed_id];
+			feedSettings.finalFeedQuery = fargs.feed_query;
 			var params = {'args':fargs};
-			$log.debug('pwData.pw_live_feed',fargs);
+			// $log.debug('pwData.pw_live_feed',fargs);
 			return this.wp_ajax('pw_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {
@@ -145,7 +146,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 					fields = feedSettings.query_args.fields;
 				}				
 			}
-			$log.debug('pwData.pw_get_posts range:',idBegin, idEnd);
+			// $log.debug('pwData.pw_get_posts range:',idBegin, idEnd);
 			// Set Fields
 			var params = { feed_id:args.feed_id, post_ids:postIDs, fields:fields};
 			$log.debug('pwData.pw_get_posts',params);
@@ -182,8 +183,10 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			fargs.feed_query = {};
 			//if(!args.feed_query) args.feed_query = {};
 			// TODO use constants from app settings
+			
 			// Get Feed_Settings Parameters
 			var feed = feed_settings[feedID];
+  			$log.info('Feed Query Override by Feed Settings',feedID, feed.query_args);
 			// Query Args will fill in the feed_query first, then any other parameter in the feed will override it, then any user parameter will override all
 			if (feed.query_args != null) fargs.feed_query = feed.query_args;  
 			if (feed.preload != null) fargs.preload = feed.preload; else fargs.preload = 10;  
@@ -205,8 +208,18 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 			fargs.feed_id = feedID;
 			return fargs;			
 		},
+		
+  		mergeQueryString: function (fargs,args) {
+  			$log.info('Feed Query Override by Query String',args);
+  			for(var key in args){
+			    // $scope.args.feed_query[key] = params[key];
+			    fargs.feed_query[key] = args[key];
+			}			
+			return fargs;
+  		},		
 		mergeFeedQuery: function (fargs,args) {
 			if (args.feed_query) {
+	  			$log.info('Feed Query Override by Search feedQuery',args.feed_query);
 				for (var prop in args.feed_query) {
 				    fargs.feed_query[prop] = args.feed_query[prop];
 				    //$log.debug("args.feed_query",prop,args.feed_query[prop],fargs.feed_query[prop]);
