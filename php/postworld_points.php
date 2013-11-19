@@ -145,19 +145,19 @@
 		$total_user_points =0;
 		$post_points_meta = array( "post_type"=> array("feature"=> 0,"link" =>0,"blog" =>0, "event" => 0));
 		
-		
+		//print_r($total_user_points_breakdown);
 		foreach ($total_user_points_breakdown as $row) {
 			$total_user_points+= $row->total_points;
-			$post_points_meta['post_type'][$row->post_type] = $row->total_points;
+			$post_points_meta['post_type'][$row->post_type] += $row->total_points;
 		}
 		
 		global $wpdb;
 		$wpdb -> show_errors();
-		
+		add_record_to_user_meta($user_id);
 		$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."' where user_id=".$user_id;
 		$result = $wpdb->query($query);
 		
-		return array("total"=>$total_user_points,$post_points_meta);
+		return array("total"=>$total_user_points,"post_type"=>$post_points_meta['post_type']);
 		
 	}
 	
@@ -618,7 +618,7 @@
 				return 0;
 		}else{
 			
-			$query ="select post_id,author_id ,sum(post_points) as total_points, wp_posts.post_type from $wpdb->pw_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->pw_prefix"."post_meta.post_id AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id) group by post_type ";	
+			$query ="select post_id,author_id ,(post_points) as total_points, wp_posts.post_type from $wpdb->pw_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->pw_prefix"."post_meta.post_id AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id) where author_id=$user_id  ";	
 			//echo $query;
 			$user_votes_points_breakdown = $wpdb -> get_results($query);
 			//echo json_encode($user_votes_points_breakdown);
@@ -814,6 +814,18 @@
 		}
 	}
 	
+	function get_pw_post_types(){
+		$args = array(
+  		 'public'   => true,
+ 		  '_builtin' => false
+		);
+
+		$output = 'names'; // names or objects, note names is the default
+		$operator = 'and'; // 'and' or 'or'
+
+		$post_types = get_post_types( $args, $output, $operator ); 
+		print_r($post_types);
+	}
 	
 
 ?>
