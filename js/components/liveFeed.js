@@ -64,11 +64,14 @@ postworld.controller('pwFeedController',
   			for(var key in params){
 			    // The value is obj[key]
 			    //$scope.args.feed_query[key] = params[key];
-			    // TODO escaping
-			    // TODO objects like taxonomy
-			    // TODO empty values
-			    //if (params[key] != "")
-			    	queryString += key + "=" + escape(params[key]) + "&"; 
+			    // TODO objects like taxonomy?
+			    // TODO arrays?
+			    if ((params[key]!==0) && (params[key]!==false)) {
+			    	if (params[key] == "") {
+			    		continue;
+			    	}
+			    }  
+		    	queryString += key + "=" + escape(params[key]) + "&"; 
 			}
 			queryString = queryString.substring(0, queryString.length - 1);
 			// $location.search('page', pageNumber);
