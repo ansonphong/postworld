@@ -160,11 +160,7 @@ postworld.run(function($rootScope, $templateCache, $log, pwData) {
 
    // 
    $rootScope.current_user = window['current_user'];
-<<<<<<< HEAD
    //$log.info('Current user: ', $rootScope.current_user );
-=======
-   $log.debug('Current user: ', $rootScope.current_user );
->>>>>>> bac4513dee440f64e6dd6d17581f1f89683467c3
 
 });
    

@@ -68,7 +68,7 @@ postworld.controller('pwFeedController',
 			    // TODO objects like taxonomy
 			    // TODO empty values
 			    //if (params[key] != "")
-			    	queryString += key + "=" + params[key] + "&"; 
+			    	queryString += key + "=" + escape(params[key]) + "&"; 
 			}
 			queryString = queryString.substring(0, queryString.length - 1);
 			// $location.search('page', pageNumber);
