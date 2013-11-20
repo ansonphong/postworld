@@ -60,6 +60,10 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
         });
+    $routeProvider.when('/load-feed-ads/',
+        {
+            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed5Widget.html',                
+        });
     $routeProvider.when('/load-panel/',
         {
             templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPanelWidget.html',                

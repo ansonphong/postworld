@@ -26,7 +26,7 @@ postworld.controller('pwFeedItemController',
 			}
 			else 
 				$scope.templateUrl = pwData.pw_get_template('posts',type,$scope.$parent.feed_item_view_type);
-	    	// $log.debug('pwFeedItemController New Template=',$scope.templateUrl);    	
+	    		//$log.debug('pwFeedItemController New Template=',$scope.templateUrl,$scope.$parent.feed_item_view_type, type);    	
 		});    	    	
 		
         // Decodes Special characters in URIs
