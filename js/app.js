@@ -18,35 +18,37 @@ var feed_settings = [];
 var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', '$strap.directives' ])
 .config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
 
+    var plugin_url = jsVars.pluginurl;
+
     ////////// ROUTE PROVIDERS //////////
     $routeProvider.when('/live-feed-1/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed1Widget.html',                           
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed1Widget.html',                           
         });
     $routeProvider.when('/live-feed-2/',    
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed2Widget.html',
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed2Widget.html',
             // reloadOnSearch: false,                
         });
     $routeProvider.when('/live-feed-2-feeds/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
         });
     $routeProvider.when('/live-feed-with-ads/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed6Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed6Widget.html',                
         });
     $routeProvider.when('/live-feed-2-feeds-auto/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
         });
     $routeProvider.when('/live-feed-params/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLiveFeed5Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed5Widget.html',                
         });
     $routeProvider.when('/load-feed-1/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed1Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed1Widget.html',                
         });
     $routeProvider.when('/load-feed-2/',
         {
@@ -54,23 +56,23 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         });
     $routeProvider.when('/load-feed-2-feeds/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed3Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed3Widget.html',                
         });
     $routeProvider.when('/load-feed-cached-outline/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
         });
     $routeProvider.when('/load-feed-ads/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadFeed5Widget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed5Widget.html',                
         });
     $routeProvider.when('/load-panel/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPanelWidget.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLoadPanelWidget.html',                
         });
     $routeProvider.when('/register-feed/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwRegisterFeedWidget.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/pwRegisterFeedWidget.html',             
         });
     $routeProvider.when('/home/',
         {
@@ -78,36 +80,36 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         });
     $routeProvider.when('/edit-post/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/editPost.html',                
+            templateUrl: plugin_url+'/postworld/templates/samples/editPost.html',                
         });
 
     $routeProvider.when('/load-comments/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
         });            
     $routeProvider.when('/embedly/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedlyWidget.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/pwEmbedlyWidget.html',             
         });            
     $routeProvider.when('/load-post/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwLoadPostWidget.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/pwLoadPostWidget.html',             
         });            
     $routeProvider.when('/o-embed/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwEmbedWidget.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/pwEmbedWidget.html',             
         });       
     $routeProvider.when('/media-modal/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/mediaModal.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/mediaModal.html',             
         });  
     $routeProvider.when('/post-link/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/postLink.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/postLink.html',             
         });  
     $routeProvider.when('/test-post/',
         {
-            templateUrl: jsVars.pluginurl+'/postworld/templates/samples/pwTestWidget.html',             
+            templateUrl: plugin_url+'/postworld/templates/samples/pwTestWidget.html',             
         });  
 
 
@@ -2326,7 +2328,7 @@ var mediaModalCtrl = function ($scope, $modal, $log, $window, pwData) {
 
   $scope.launch = function (post) {
     var modalInstance = $modal.open({
-      templateUrl: pwData.pw_get_template('panels','','media_modal'), // $window['site_info'].stylesheet_directory + '/postworld/templates/panels/media_modal.html', // //jsVars.pluginurl+'/postworld/templates/panels/media_modal.html',
+      templateUrl: pwData.pw_get_template('panels','','media_modal'),
       controller: MediaModalInstanceCtrl,
       windowClass: 'media_modal',
       resolve: {
@@ -2856,7 +2858,7 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
         openQuickEdit : function( post ){
             console.log( "Launch Quick Edit : ", post );  
             var modalInstance = $modal.open({
-              templateUrl: pwData.pw_get_template('panels','','quick_edit'), //jsVars.pluginurl+'/postworld/templates/panels/quick_edit.html',
+              templateUrl: pwData.pw_get_template('panels','','quick_edit'),
               controller: quickEditInstanceCtrl,
               windowClass: 'quick_edit',
               resolve: {
@@ -2918,11 +2920,11 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                                              
 ////////// ------------ QUICK EDIT ------------ //////////*/   
 
-var quickEdit = function ($scope, $modal, $log) {
+var quickEdit = function ($scope, $modal, $log, $window) {
     $scope.openQuickEdit = function( post ){
         console.log( "Launch Quick Edit : ", post );  
         var modalInstance = $modal.open({
-          templateUrl: jsVars.pluginurl+'/postworld/templates/panels/quick_edit.html',
+          templateUrl: $window.pwGlobals.paths.plugin_url+'/postworld/templates/panels/quick_edit.html',
           controller: quickEditInstanceCtrl,
           windowClass: 'quick_edit',
           resolve: {
@@ -2994,11 +2996,11 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
 
     // GENERATE SHARE LINK
     if(
-        typeof $window.pwGlobals.site_info !== 'undefined' &&
+        typeof $window.pwGlobals.paths !== 'undefined' &&
         typeof $window.pwGlobals.current_user !== 'undefined' &&
         typeof $scope.post !== 'undefined'
         ){
-        $scope.share_link = $window.pwGlobals.site_info.url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
+        $scope.share_link = $window.pwGlobals.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
     }
     
     // Set class via ng-class, of current assigned taxonomy (topic)

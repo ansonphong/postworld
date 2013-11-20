@@ -92,10 +92,10 @@ postworld.directive('loadComments', function() {
     };
 });
 
-postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs,pwData,$log) {
+postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs,pwData,$log, $window) {
     $scope.json = '';
-    $scope.user_id = jsVars.user_id;
-    $scope.isAdmin = jsVars.is_admin;
+    $scope.user_id = $window.pwGlobals.current_user.ID;
+    $scope.isAdmin = $window.pwGlobals.current_user.is_admin;
     $scope.startTime = 0;
     $scope.endTime = 0;
     $scope.treedata = {children: []};
@@ -124,7 +124,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 				$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
 		   }
 		   else {
-	   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/comments/comments-default.html';
+	   			$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
 	   			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		   }
 	   		return;
@@ -133,32 +133,36 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
     $scope.loadComments = function () {
     	$scope.commentsLoaded = false;
     	settings.query.orderby = $scope.orderBy;
-		pwCommentsService.pw_get_comments($scope.feed).then(function(value){
-			console.log('Got Comments', value.data.length);
-			$scope.treedata = {children: value.data};
-			$scope.commentsLoaded = true;
-	        $scope.treeUpdated = !$scope.treeUpdated;			      
-			$scope.commentsCount = value.data.length;
-			/*
-			// not used here, but can be used for progressive element loading
-		    var recursiveTimeout = function() {
-		    	var load = $timeout( function loadComments() {	    		  
-		    		  for (var i=0;i<20;i++) {
-					      if ($scope.key<$scope.commentsCount) {
-					    	  // console.log('loading data', $scope.key);
-						      $scope.treedata.children[$scope.key] = value.data[$scope.key];
-						      $scope.key++;
-					      }
-		    		  }
-				      $scope.treeUpdated = !$scope.treeUpdated;			      
-				      if ($scope.key<$scope.commentsCount) {
-				      	load = $timeout(loadComments, 50);
-				      }
-				    }, 50); 
-		    };
-		    recursiveTimeout(); 
-		    */
-		});
+
+      //alert( JSON.stringify($scope.feed) );
+
+  		pwCommentsService.pw_get_comments($scope.feed).then(function(value){
+        $log.debug('Got Comments: ', value.data );
+  			$scope.treedata = {children: value.data};
+  			$scope.commentsLoaded = true;
+  	        $scope.treeUpdated = !$scope.treeUpdated;			      
+  			$scope.commentsCount = value.data.length;
+  			/*
+  			// not used here, but can be used for progressive element loading
+  		    var recursiveTimeout = function() {
+  		    	var load = $timeout( function loadComments() {	    		  
+  		    		  for (var i=0;i<20;i++) {
+  					      if ($scope.key<$scope.commentsCount) {
+  					    	  // console.log('loading data', $scope.key);
+  						      $scope.treedata.children[$scope.key] = value.data[$scope.key];
+  						      $scope.key++;
+  					      }
+  		    		  }
+  				      $scope.treeUpdated = !$scope.treeUpdated;			      
+  				      if ($scope.key<$scope.commentsCount) {
+  				      	load = $timeout(loadComments, 50);
+  				      }
+  				    }, 50); 
+  		    };
+  		    recursiveTimeout(); 
+  		    */
+  		});
+
     };
 	// $scope.loadComments();
     
@@ -180,9 +184,9 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   $scope.karmaAdd = function (child) {
 	// Add Point here
 	child.comment_karma = parseInt(child.comment_karma)+1;
-	
 	// TODO Call Function
   };
+
   $scope.karmaRemove = function (child) {
 	// Add Point here
 	child.comment_karma = parseInt(child.comment_karma)-1;

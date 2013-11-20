@@ -11,7 +11,7 @@
  *	$args = json_decode($args_text);
  * */
 
-postworld.factory('pwData', function ($resource, $q, $log) {	  
+postworld.factory('pwData', function ($resource, $q, $log, $window) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
@@ -59,7 +59,7 @@ postworld.factory('pwData', function ($resource, $q, $log) {
 	
 	
 	// for Ajax Calls
-    var resource = $resource(jsVars.ajaxurl, {action:'wp_action'}, 
+    var resource = $resource( $window.pwGlobals.paths.ajax_url, {action:'wp_action'}, 
     							{	wp_ajax: { method: 'POST', isArray: false, },	}
 							);
 	

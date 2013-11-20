@@ -664,11 +664,15 @@ function pw_get_comments_anon() {
 	// $args has all function arguments. in this case it has only one argument
 	if($args['query']) $query = $args['query'];
 	else ErrorReturn($response, 400, 'missing argument query'); 
+	
 	if ($args['fields']) $fields = $args['fields'];
 	else $fields = null;
+	
 	if ($args['tree'])	$tree = $args['tree'];
 	else $tree = null;
+	
 	/* set the response type as JSON */
+	
 	$results = pw_get_comments($query,$fields,$tree);
 	header('Content-Type: application/json');
 	$response['status'] = 200;
@@ -677,6 +681,11 @@ function pw_get_comments_anon() {
 	// documentation says that die() should be the end...
 	die();
 }
+
+/* Action Hook for pw_get_comments() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
+
+
 
  /* Actions for pw_save_comment () */
 
@@ -772,10 +781,6 @@ add_action("wp_ajax_pw_save_comment", "pw_save_comment_loggedIn");
 
 /* Action Hook for pw_get_comments() - Logged In users */
 add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
-
-/* Action Hook for pw_get_comments() - Anonymous users */
-add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
-
 
 
 /* *************************

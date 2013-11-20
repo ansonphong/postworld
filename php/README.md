@@ -1576,7 +1576,7 @@ __TAXONOMIES__
 
 
 __VIEWER SPECIFIC__
-- __user_vote__ - number of points the user has voted for this post
+- __has_voted__ - number of points the user has voted for this post
 
 __IMAGE__
 

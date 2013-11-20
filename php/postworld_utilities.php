@@ -51,38 +51,33 @@ function postworld_includes( $mode = 'deploy' ){
 
 		// POSTWORLD
 		wp_register_script( 'pw-app-JS', WP_PLUGIN_URL.'/postworld/js/app.js' );
-		wp_localize_script( 'pw-app-JS', 'jsVars', $jsVars);
 		wp_enqueue_script( 	'pw-app-JS','', $angularDep );
 
 		wp_register_script( 'pw-Filters-JS', WP_PLUGIN_URL.'/postworld/js/components/filters.js' );
 		wp_enqueue_script( 	'pw-Filters-JS','', $angularDep );
 
 		wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js' );
-		wp_localize_script( 'pw-LiveFeed-JS', 'jsVars', $jsVars);
 		wp_enqueue_script( 'pw-LiveFeed-JS','', $angularDep );
 
 		wp_register_script( "pw-filterFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/filterFeed.js' );
-		wp_localize_script( 'pw-filterFeed-JS', 'jsVars', $jsVars);
 		wp_enqueue_script( 'pw-filterFeed-JS','', $angularDep );
 
 		wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/components/feedItem.js' );
-		wp_localize_script( 'pw-FeedItem-JS', 'jsVars', $jsVars);
 		wp_enqueue_script( 'pw-FeedItem-JS','', $angularDep );
 
 		wp_register_script( "pw-TreeView-JS", WP_PLUGIN_URL.'/postworld/js/components/treeview.js' );
 		wp_enqueue_script( 'pw-TreeView-JS','', $angularDep );
 
 		wp_register_script( "pw-LoadComments-JS", WP_PLUGIN_URL.'/postworld/js/components/loadComments.js' );
-		wp_localize_script( 'pw-LoadComments-JS', 'jsVars', $jsVars);
 		wp_enqueue_script( 'pw-LoadComments-JS','', $angularDep );
 
 		wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js');
-		wp_localize_script( 'pw-pwData-JS', 'jsVars', $jsVars);
 		wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
 		
 		wp_register_script( "pw-pwCommentsService-JS", WP_PLUGIN_URL.'/postworld/js/services/postworld_comments_service.js');
-		wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
 		wp_enqueue_script( 'pw-pwCommentsService-JS','', $angularDep );
+
+		wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
 
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
 
@@ -98,7 +93,8 @@ function postworld_includes( $mode = 'deploy' ){
 			$pw_globals = array();
 			$pw_globals['current_view'] = array();
 
-			// POST
+
+			///// POST /////
 			if( !empty($GLOBALS['post']->ID) ){
 				$pw_globals["current_view"]["type"] = "post";
 				$pw_globals["current_view"]["post"] = array(
@@ -106,20 +102,27 @@ function postworld_includes( $mode = 'deploy' ){
 					);
 			}
 
-			// POST TYPES
+
+			///// POST TYPES /////
 			$pw_globals["post_types"] = pw_get_post_types();
 
-			// SITE INFO
+			///// SITE INFO /////
 			$pw_globals["site_info"] = array(
 				"name" => get_bloginfo( 'name' ),
 				"description" => get_bloginfo( 'description' ),
-				"url" => get_bloginfo( 'url' ),
-				"wpurl" => get_bloginfo( 'wpurl' ),
+				);
+
+			///// PATHS /////
+			$pw_globals["paths"] = array(
+				'ajax_url' => admin_url( 'admin-ajax.php' ),
+				'plugin_url' => WP_PLUGIN_URL,
+				"home_url" => get_bloginfo( 'url' ),
+				"wp_url" => get_bloginfo( 'wpurl' ),
 				"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
 				"template_url" => get_bloginfo( 'template_url' ),
 				);
 
-			// CURRENT USER
+			///// CURRENT USER /////
 			$user_id = get_current_user_id();
 			if( $user_id != 0 ){
 				$userdata = wp_get_current_user();
@@ -127,30 +130,24 @@ function postworld_includes( $mode = 'deploy' ){
 				$userdata = (array) $userdata;
 				$userdata["postworld"] = array();
 				$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
-			
+				$userdata["is_admin"] = is_admin();
+
 				// SUPPORT FOR WPMU MEMBERSHIP
 				if( function_exists('current_user_is_member') ){
 					$userdata["membership"] = array();
 					$userdata["membership"]["is_member"] = current_user_is_member();
 				}
-
-			}
-			else {
+			} else
 				$userdata = 0;
-			}
-
 			$pw_globals["current_user"] = $userdata;
 
-			// DISPLAYED USER
-			// If post_id = $GLOBALS['post']->ID 
-			// SUPPORT FOR BUDDYPRESS GLOBALS
+
+			///// DISPLAYED USER /////
+			// Support for Buddypress Globals
 			if ( function_exists('bp_displayed_user_id') ){
 				$displayed_user_id = bp_displayed_user_id();
-				// Display Name
-				// First Name
-			} else {
+			} else
 				$displayed_user_id = $GLOBALS['post']->post_author;
-			}
 
 			if ( isset($displayed_user_id) )
 				$displayed_userdata = get_userdata($displayed_user_id);
@@ -161,12 +158,16 @@ function postworld_includes( $mode = 'deploy' ){
 				"first_name" => $displayed_userdata->first_name,	
 				);
 
+
+			///// RETURN /////
 			return $pw_globals;
 		}
 	?>
 
 		<script type="text/javascript">
+			/* <![CDATA[ */
 			var pwGlobals = <?php echo json_encode( parse_pw_globals() ); ?>;
+			/* ]]> */
 		</script>
 			
 

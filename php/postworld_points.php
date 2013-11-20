@@ -574,7 +574,10 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 	
-		$query = "SELECT * FROM ".$wpdb->pw_prefix.'comment_points'." Where comment_post_id=" . $comment_id . " and user_id=" . $user_id;
+		if(empty($user_id))
+			$user_id = get_current_user_id();
+
+		$query = "SELECT * FROM ".$wpdb->pw_prefix.'comment_points'." Where comment_id=" . $comment_id . " and user_id=" . $user_id;
 		$commentPointsRow = $wpdb -> get_row($query);
 		//echo "<br>".$query;
 		if ($commentPointsRow != null)

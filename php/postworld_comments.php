@@ -157,11 +157,11 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			$comment_data[$field] = get_comment_points( $comment_id );
 		}
 		else if( $field == 'user_voted' ){
-			$comment_data[$field] = 0; //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+			$comment_data[$field] = has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
 		}
 		else if( $field == 'time_ago' ){
 			$timestamp = strtotime($wp_comment_data['comment_date_gmt']);
-			$comment_data[$field] = time_ago($timestamp); //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+			$comment_data[$field] = time_ago($timestamp);
 		}
 	}
 
@@ -200,7 +200,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 	// POSTWORLD COMMENT FIELD MODEL
 	$pw_comment_fields = array(
 		'comment_points',
-		'user_voted',
+		'viewer_points',
 		);
 
 	// POSTWORLD PW_GET_USERDATA() FIELD MODEL
@@ -237,18 +237,9 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			// If the current field is requested, move the data
 			if( in_array( $field, $wp_comment_fields ) ){
 				$comment_data[$field] = $comment[$field];
-	
 				// Apply Content Filters
 				if ( $field == 'comment_content' )
 					$comment_data[$field] = apply_filters('the_content', $comment_data[$field] );
-			}
-
-			///// POSTWORLD COMMMENT FIELDS /////
-			else if( $field == 'comment_points' ){
-				$comment_data[$field] = get_comment_points( $comment['comment_ID'] );
-			}
-			else if( $field == 'user_voted' ){
-				$comment_data[$field] = 0; //has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
 			}
 		}
 
@@ -257,7 +248,6 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			// If the current field is a custom author data field
 			// Use pw_get_userdata() to get the data
 			if ( in_array( $field, $pw_userdata_fields ) ){
-
 				// EXTRACT THE FIELDS WHICH ARE
 				$get_pw_userdata_fields = array();
 				foreach ($fields as $field) {
@@ -265,20 +255,27 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 						array_push($get_pw_userdata_fields, $field);
 					}
 				}
-
 				// GET THE USER ID FROM THE SLUG
 				$comment_data = get_comment($comment['comment_ID'],'ARRAY_A');
 				$user_id = $comment_data['user_id'];
-
 				// GET THE USER FIELD DATA
 				$pw_userdata = pw_get_userdata( $user_id, $get_pw_userdata_fields );
 				$comment_data = array_merge( $comment_data, $pw_userdata );					
-
 				break;
 			}
-
 		}
 
+		///// POSTWORLD COMMMENT FIELDS /////
+		foreach ($fields as $field) {
+			if( in_array( $field, $pw_comment_fields ) ){
+				if( $field == 'comment_points' ){
+					$comment_data['comment_points'] = get_comment_points( $comment['comment_ID'] );
+				}
+				else if( $field == 'viewer_points' ){
+					$comment_data[$field] = has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+				}
+			}
+		}
 
 		array_push($comments_data, $comment_data);
 
