@@ -1,0 +1,26 @@
+<style>
+.infinite-scroll-auto {
+	height: auto;
+	overflow-y: scroll;
+}
+</style>
+
+<div>
+	<div class="row" >
+			<div class="form-group input-group col-md-12">		
+				<h2>{{title}} </h2>
+				<div ng-show="message" class="alert alert-warning">{{message}}</div>
+			</div>
+	</div>
+    <div id="scrollMe2"  class="infinite-scroll1">
+	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' >
+	    <div ng-repeat='post in items' >
+	    	<div feed-item ng-include="templateUrl" post="post" feed-id='args.feed_id'></div>
+			<hr>
+	      <div style='clear: both;'></div>
+	    </div>
+	    <div ng-show='busy' class="text-center"><img src="http://www.showoffimports.nl/sandbox/live/ajaxLoad.gif"></div>
+	    <div ng-show='!busy' class="text-center"><strong>{{scrollMessage}}</strong></div>
+	  </div>
+  	</div>
+</div>

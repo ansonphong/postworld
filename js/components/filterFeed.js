@@ -192,6 +192,10 @@ postworld.directive('loadPanel', function() {
         },
         link: function($scope, element, attributes){
         	$scope.panel_id = attributes.loadPanel;
+        	$scope.panel_grp = 'panels'; // posts, comments, posts
+        	$scope.post_type = '';  // post type only
+        	if (attributes.panelGroup) $scope.panel_grp = attributes.panelGroup; // can be ignored in case of panels, since it is the default
+        	if (attributes.postType) $scope.post_type = attributes.postType; // only needed in case of posts
         }
     };
 });
@@ -201,9 +205,9 @@ postworld.controller('pwLoadPanelController',
     	// TEMP LOADING TEMPLATE
     	//$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
     	$scope.$on('pwTemplatesLoaded', function(event, data) {
-	        $scope.panel = {};
-	        $scope.panel.templateUrl = pwData.pw_get_template('panels','', $scope.panel_id);
-		    $log.debug('setting loadpanel url',$scope.panelTemplateUrl);
+	        $scope.panel = {};	        	
+	        $scope.panel.templateUrl = pwData.pw_get_template($scope.panel_grp,$scope.post_type, $scope.panel_id);
+		    $log.debug('setting loadpanel url',$scope.panel_grp,$scope.post_type, $scope.panel_id,$scope.panel.templateUrl);
 	    });
 
 	}

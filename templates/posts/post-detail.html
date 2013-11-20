@@ -1,209 +1,38 @@
-<div ng-controller="postController" ng-class="topic" class="post detail"  ng-hide="post.post_status == 'trash'"
-  style="margin-bottom:20px; position:relative;">
-
-
-  <!--////////// HEADER & POST CONTROLS //////////-->
-  <header>
-    <!-- TOPIC & SUBTOPIC -->
-    <a ng-repeat="term in post.taxonomy.topic" href="{{term.url}}" ng-class="term.slug" class="topic">{{term.name}}</a>
-
-    <!-- MEDIA FORMAT : VIDEO -->
-    <span ng-show="post.post_type == 'feature'">
-      <span ng-show="post.post_format == 'video'">
-        <button launch-media-modal ng-click="launch(post)">
-          <i class="icon-youtube-play"> Play</i> 
-        </button>
-      </span>
-
-      <!-- MEDIA FORMAT : AUDIO -->
-      <span ng-show="post.post_format == 'audio'">
-        <button launch-media-modal ng-click="launch(post)">
-          <i class="icon-headphones"> Play</i> 
-        </button>
-      </span>
-    </span>
-
-    
-    <!--///// POST ACTIONS /////-->
-    <div ng-controller="postActions" class="interactions post_actions">
-      <!-- VIEW LATER -->
-      <button prevent-default-click ng-click="setViewLater()" ng-class="isViewLater" class="view_later" tooltip="View Later" tooltip-placement="top">
-        <i ng-show="viewLaterStatus=='busy'" class="icon-spinner icon-spin"></i>
-        <i ng-show="viewLaterStatus!='busy'" class="icon-time"></i>
-      </button>
-      <!-- FAVORITE -->
-      <button prevent-default-click ng-click="setFavorite()" ng-class="isFavorite" class="favorites" tooltip="Favorite" tooltip-placement="top">
-        <i ng-show="favoriteStatus=='busy'" class="icon-spinner icon-spin"></i>
-        <i ng-show="favoriteStatus!='busy'" class="icon-heart"></i>
-      </button>
-      <!-- SHARE -->
-      <span class="dropdown">
-         <button prevent-default-click class="dropdown-toggle share" ng-show="share_link" tooltip="Share" tooltip-placement="top">
-          <i class="icon-share-alt"></i>
-        </button>
-        <div prevent-default-click class="dropdown-menu pull-right share-dropdown">
-          <div><i class="icon-link"></i> Share Link:</b></div>
-          <input ng-value="share_link" class=" stay-open" select-on-click><br>
-          <span>Sharing this link will give you one share karma point for each person who follows the link.</span>
-        </div>
-      </span>
-      <!-- DROPDOWN -->
-      <span ng-controller="adminDropdownMenu" ng-show="userOptions != 0" class="admin_menu dropdown">
-        <button prevent-default-click dropdown-toggle class="view_later edit" tooltip="Edit" tooltip-placement="top">
-          <i class="icon-caret-down"></i>
-        </button>
-        <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel" >
-          <li prevent-default-click ng-repeat="item in userOptions">
-            <button ng-click="menuAction(item.action)"><i class="{{item.icon}}"></i> {{item.name}}</button>
-          </li>
-        </ul>
-      </span>
-    </div>
-
-  </header>
-
-
-  <!-- SPACER -->
-  <div class="clearfix" style="height:45px;"></div>
-
-
-
-  <!--///// POST TYPE : FEATURE /////-->
-  <span class="feature" ng-show="post.post_type=='feature' && post.image.grid.url">
-    <div class="thumbnail"
-      style="background-image:url({{post.image.grid.url}});">
-    </div>
-
-    <!-- SPACER -->
-    <div class="clearfix" style="height:155px;"></div>
-  </span>
-
-
-  <!--///// POST TYPE : ALL /////-->
-	<!-- VOTING -->
-  <div ng-controller="postVote" class="vote_widget">
-    <button ng-click="votePost(1)" ng-class="hasVotedUp" class="up">
-      <i class="icon-caret-up"></i>
-    </button>
-    <div>
-      <span ng-show="voteStatus=='busy'"><i class="icon-spinner icon-spin"></i></span>
-      <span ng-show="voteStatus!='busy'">{{ post.post_points }}</span>
-    </div>
-    <button ng-click="votePost(-1)" ng-class="hasVotedDown" class="down">
-      <i class="icon-caret-down"></i>
-    </button>
-  </div>
-
-	<!-- POST TITLE -->
-	<h3 class="post_title">
-		<a href="{{post.post_permalink}}">{{post.post_title}}</a>
-	</h3>
-
-	<div class="clearfix"></div>
-
-
-  <!--///// POST TYPE : FEATURE /////-->
-  <!-- POST EXCERPT -->
-  <div ng-show="post.post_type=='feature'" class="post_excerpt feature" ng-bind-html="post.post_excerpt"></div>
-
-
-	<!--///// POST TYPE : POST / BLOG /////-->
-	<div ng-switch="post.post_type">
-
-    <div ng-switch-default>
-
-  		<!-- THUMBNAIL BY POST FORMAT  -->
-  		<span ng-switch="post.post_format"  ng-show="post.link_url || post.image.thumbnail.url" class="thumbnail" launch-media-modal>
-  			
-        <!-- AUDIO -->
-  			<button ng-switch-when="audio"	ng-click="launch(post)"
-          tooltip="Click to Listen" tooltip-placement="bottom" tooltip-popup-delay="500"
-          style="background-image:url({{post.image.thumbnail.url}})">
-  				<i class="audio icon-headphones"></i>
-  			</button>
-  			<!-- VIDEO -->
-  			<button ng-switch-when="video" ng-click="launch(post)"
-          tooltip="Click to Watch" tooltip-placement="bottom" tooltip-popup-delay="500"
-          style="background-image:url({{post.image.thumbnail.url}})">
-  				<i class="video icon-youtube-play"></i>
-  			</button>
-
-        <!-- DEFAULT -->
-        <span ng-switch-default>
-          <!--///// THUMBNAIL BY POST TYPE /////-->
-          <span ng-switch="post.post_type">
-            <!-- POST TYPE : POST -->
-            <a ng-switch-when="post" href="{{post.post_permalink}}" 
-              style="background-image:url({{post.image.thumbnail.url}})"></a>
-            <!-- POST TYPE : BLOG -->
-            <a ng-switch-when="blog" href="{{post.post_permalink}}" 
-              style="background-image:url({{post.image.thumbnail.url}})"></a>
-            <!-- POST TYPE : LINK -->
-            <a ng-switch-when="link" href="{{post.link_url}}"  target="_blank"
-              style="background-image:url({{post.image.thumbnail.url}})"></a>
-          </span>
-        </span>
-  		</span>
-
-  		<!--///// POST TYPE : BLOG - POST EXCERPT /////-->
-  		<div ng-show="post.post_type == 'blog'" class="post_excerpt" ng-bind-html="post.post_excerpt"></div>
-
-      <!--///// POST TYPE : LINK - POST EXCERPT /////-->
-      <a href="{{post.link_url}}" ng-show="post.post_type == 'link'" class="link_excerpt" target="_blank">
-        <b><i class="icon-link"> {{post.link_url}}</i></b>
-        <span class="post_excerpt" ng-bind-html="post.post_excerpt"></span>
-      </a>
-
-    </div>
-
-    <!-- POST TYPE : EVENT -->
-    <div ng-switch-when="event" class="event">
-      <div class="details">
-        <div class="date_block">
-          <!-- MONTH -->
-          <div class="month">{{ post.post_meta.event_start_date_obj | date : "MMMM" }}</div>
-          <!-- DAY -->
-          <div class="date">{{ post.post_meta.event_start_date_obj | date : "dd" }}</div>
-          <!-- YEAR -->
-          <div class="year">{{ post.post_meta.event_start_date_obj | date : "yyyy" }}</div>
-        </div>
-        <!-- TIME -->
-        <span class="post_excerpt">
-          <b>
-            {{ post.post_meta.event_start_date_obj | date : "EEEE hh:mm a" }}
-            -
-            {{ post.post_meta.event_end_date_obj | date : "hh:mm a" }}
-            <span ng-show="post.post_meta.event_all_day == 'true'"> ( All Day )</span>
-            <span ng-show="post.post_meta.event_cost"> // {{ post.post_meta.event_cost }}</span>
-
-            <span ng-show="post.post_meta.event_city"><br><i class="icon-map-marker"></i> {{ post.post_meta.event_city }}, </span>
-            <span ng-show="post.post_meta.event_region">{{ post.post_meta.event_region }}, </span>
-            <span ng-show="post.post_meta.event_country">{{ post.post_meta.event_country }}</span>
-          </b> 
-          {{ post.post_excerpt }}
-        </span>
-      </div>
-      <img ng-show="post.image.banner.url && post.post_points >= 0" src="{{post.image.banner.url}}" style="width:100%; height:auto;">
-    </div>
-    <!-- POST TYPE : FEATURE -->
-    <div ng-switch-when="feature"></div>
-	</div>
-
-	<div class="clearfix"></div>
-
-	<!-- POST DETAILS -->
-	<div class="post_footer clearfix" ng-switch="post.post_type">
-
-		<img ng-switch-when="feature"
-      src="{{post.avatar.small.url}}" width="{{post.avatar.small.width/2}}" height="{{post.avatar.small.height/2}}">
-
-		<a href="{{ post.author.user_profile_url }}" class="author display_name">{{post.author.display_name}}</a>
-			• {{post.time_ago}}
-			• <a href="{{post.post_permalink}}#comments"><i class="icon-comment"></i> {{post.comment_count}} Comments</a>
-	</div>
+<div class="post standard detail" >
+<!-- ANGULAR TEMPLATING TEST -->
 	
+	<span ng-repeat="tag in post.taxonomy.category">
+		<a href="{{tag.url}}">{{tag.name}}</a>
+	</span>
+	<div class="clearfix"></div>
+
+	<div ng-vote-panel class="vote" style="width:50px; height:56px; background:#ccc; float:left; clear:both;">
+		<button class="up"><i class="icon-caret-up"></i></button>
+		<div>{{post.post_points}}</div>
+		<button class="down"><i class="icon-caret-down"></i></button>
+	</div>
+
+	<h2 class="post_title" style="margin-top:0px; padding-left:60px;">
+		<a href="{{post.post_permalink}}">{{post.post_title}}</a>
+	</h2>
 
 	<div class="clearfix"></div>
 
+	<img src="{{post.image.thumbnail.url}}"
+		style="width:150px; height:150px; background:#f3f3f3; float:left; margin:0 15px 10px 0; ">
 
+	<div class="post_excerpt" ng-bind-html="post.post_excerpt"></div>
+
+	<div class="clearfix"></div>
+	
+	<div class="post_footer clearfix">
+		<img src="{{post.avatar.small.url}}" width="{{post.avatar.small.width/2}}" height="{{post.avatar.small.height/2}}">
+		<a href="{{post.author.profile_url}}">{{post.author.display_name}}</a>
+			• {{post.time_ago}}
+			• <a href="{{post.post_permalink}}#comments"><i class="icon-comment"></i> 56 Comments</a>
+	</div>
+
+	<div class="clearfix"></div>
+
+<!-- ANGULAR TEMPLATING TEST -->
 </div>
