@@ -167,7 +167,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   };
   
   $scope.OpenClose = function(child) {
-  	child.karmaPoints = child.comment_karma = Math.floor(Math.random() * 100) + 1;
+  	//child.comment_karma = child.comment_karma = Math.floor(Math.random() * 100) + 1;
   	if (parseInt(child.comment_karma)>$scope.minPoints) child.minimized = false;
   	else child.minimized = true;
   	// console.log('minimized',child.comment_ID,child.comment_karma,child.minimized);
@@ -179,13 +179,13 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 
   $scope.karmaAdd = function (child) {
 	// Add Point here
-	child.karmaPoints = parseInt(child.comment_karma)+1;
+	child.comment_karma = parseInt(child.comment_karma)+1;
 	
 	// TODO Call Function
   };
   $scope.karmaRemove = function (child) {
 	// Add Point here
-	child.karmaPoints = parseInt(child.comment_karma)-1;
+	child.comment_karma = parseInt(child.comment_karma)-1;
 	// TODO Call Function
   };
 

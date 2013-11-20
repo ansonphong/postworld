@@ -139,7 +139,7 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
  |  _ <| |_| | | | |
  |_| \_\\__,_|_| |_|        
 */
-postworld.run(function($rootScope, $templateCache, $log, pwData) {    
+postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {    
         // TODO move getting templates to app startup
         pwData.pw_get_templates(null).then(function(value) {
             // TODO should we create success/failure responses here?
@@ -158,9 +158,8 @@ postworld.run(function($rootScope, $templateCache, $log, pwData) {
       $templateCache.removeAll();
    });
 
-   // 
-   $rootScope.current_user = window['current_user'];
-   //$log.info('Current user: ', $rootScope.current_user );
+   //$rootScope.current_user = $window.pwGlobals.current_user;
+   //$log.debug('Current user: ', $rootScope.current_user );
 
 });
    

@@ -110,6 +110,14 @@ This will display a button to launch the media modal for media post formats.
 ```
 
 
+------
+
+comment_author
+comment_content
+
+
+
+
 
 
 
