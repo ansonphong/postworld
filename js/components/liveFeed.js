@@ -248,8 +248,18 @@ postworld.controller('pwFeedController',
    		$scope.fillFeedData = function(response) {
 			// Reset Feed Data
 			pwData.feed_data[$scope.feed] = {};
+			if ($scope.directive=="loadFeed") {
+				if (pwData.feed_settings[$scope.feed].offset)  {
+					// truncate feed outline in case of existing offset for load-feed only
+					var offset = pwData.feed_settings[$scope.feed].offset;
+					var len = response.data.feed_outline.length;
+					response.data.feed_outline = response.data.feed_outline.splice(offset,len);
+					// truncate response posts in case of existing offset for load-feed only															
+					response.data.post_data = response.data.post_data.splice(offset,len);						
+				}
+			}
 			// Insert Response in Feed Data
-			pwData.feed_data[$scope.feed].feed_outline = response.data.feed_outline;						
+			pwData.feed_data[$scope.feed].feed_outline = response.data.feed_outline;
 			// truncate based on max_posts
 			var max = pwData.feed_settings[$scope.feed].max_posts;
 			if (max <=response.data.feed_outline.length) {					
