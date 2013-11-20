@@ -242,7 +242,7 @@ postworld.controller('pwFeedController',
 			// var argsValue = JSON.parse(JSON.stringify($scope.args));			
 			// $scope.items = pwData.feed_data[$scope.feed].posts;
 			$scope.items = JSON.parse(JSON.stringify(pwData.feed_data[$scope.feed].posts));
-			$scope.injectAds();
+			// $scope.injectAds();
 		};
 		
    		$scope.fillFeedData = function(response) {
