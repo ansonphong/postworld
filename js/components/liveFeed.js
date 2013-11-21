@@ -74,8 +74,10 @@ postworld.controller('pwFeedController',
 		    	queryString += key + "=" + escape(params[key]) + "&"; 
 			}
 			queryString = queryString.substring(0, queryString.length - 1);
+			$log.debug('path is ',$location.path());
 			// $location.search('page', pageNumber);
-			$location.path('live-feed-2/').search(queryString);
+			var path = $location.path();
+			$location.path(path).search(queryString);
 			//$location.path().search(queryString);
 			$log.info('abslute path = ',$location.absUrl(),queryString);			
 			//$log.info('pwFeedController convertFeedQuery2QueryString', queryString);  			
