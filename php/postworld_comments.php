@@ -238,7 +238,6 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			if( in_array( $field, $wp_comment_fields ) ){
 				$comment_data[$field] = $comment[$field];
 			}
-
 		}
 
 		///// CUSTOM AUTHOR FIELDS /////
@@ -280,19 +279,18 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		// Apply Content Filters
 		if ( isset($comment_data['comment_content']) ){
 			$comment_content = $comment_data['comment_content'];
-
 			//$comment_content = apply_filters('the_content', $comment_content );
 			//$comment_content = str_replace( '&#160;',' ', $comment_content);
-			//$comment_content = preg_replace( '/\h+/', ' ', $comment_content );
+			//$comment_content = preg_replace("/\s+/", " ", $comment_content); //preg_replace( '/\h+/', ' ', $comment_content );
+			$comment_content = preg_replace("/(\r\n){3,}/","\r\n\r\n",trim($comment_content));
+			//$comment_content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", $comment_content));
+			//$comment_content = preg_replace("/\s+/", " ", $comment_content);
 			//$comment_data[$field] = $comment_data[$field]. "test";
 			//$comment_content = "test";
-
 			$comment_data['comment_content'] = $comment_content;
 		}
 		
-
 		array_push($comments_data, $comment_data);
-
 	}
 
 	///// RETURN AS HIERARCHICAL TREE /////
@@ -363,8 +361,8 @@ function pw_save_comment($comment_data, $return = 'data'){
 		// Is the current user the author of the post?
 		( $author_id == $current_user_id ) ? $user_is_author = true : $user_is_author = false;
 
-		// If user doesn't own post
-		if( $user_is_author == false ){
+		// If user doesn't own post or annot moderate comments
+		if( $user_is_author == false && $current_userdata['allcaps']['moderate_comments'] == false ){
 			// Return false, exit out of the function
 			return array( 'error' => 'No permissions to edit comment.' );
 		}

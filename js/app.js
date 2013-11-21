@@ -2735,8 +2735,8 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
   / ___ \ (_| | | | | | | | | | | | |_| | | | (_) | |_) | (_| | (_) \ V  V /| | | |
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
-////////// ------------ ADMIN DROPDOWN ------------ //////////*/   
-var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, pwQuickEdit) {
+////////// ------------ ADMIN POSTS DROPDOWN ------------ //////////*/   
+var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, pwQuickEdit) {
 
     $scope.menuOptions = [
         {
@@ -2789,9 +2789,6 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
             other: [],
         },
     };
-
-    //$
-    
 
     // Localize current user data
     $scope.current_user = $window.pwGlobals.current_user;
@@ -2849,6 +2846,127 @@ var adminDropdownMenu = function ($scope, $rootScope, $location, $window, $log, 
 
 };
 
+
+
+
+
+/*
+     _       _           _         ____                      _                     
+    / \   __| |_ __ ___ (_)_ __   |  _ \ _ __ ___  _ __   __| | _____      ___ __  
+   / _ \ / _` | '_ ` _ \| | '_ \  | | | | '__/ _ \| '_ \ / _` |/ _ \ \ /\ / / '_ \ 
+  / ___ \ (_| | | | | | | | | | | | |_| | | | (_) | |_) | (_| | (_) \ V  V /| | | |
+ /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
+                                                  |_|                              
+////////// ------------ ADMIN COMMENTS DROPDOWN ------------ //////////*/   
+var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $log, pwCommentsService) {
+
+    var comment = $scope.child;
+
+    $scope.menuOptions = [
+        {
+            name: "Edit",
+            icon:"icon-edit",
+            action:"edit",
+        },
+        {
+            name: "Flag",
+            icon:"icon-flag",
+            action:"flag",
+        },
+        {
+            name: "Trash",
+            icon:"icon-trash",
+            action:"trash",
+        }
+    ];
+
+    // Actions which each role has access to
+    var actionsByRole = {
+        "administrator": {
+            own:['edit','flag','trash'],
+            other:['edit','flag','trash']
+        },
+        "editor":{
+            own: ['edit','flag','trash'],
+            other: ['edit','flag','trash'],
+        },
+        "author":{
+            own: ['edit','trash'],
+            other: ['flag'],
+        },
+        "contributor":{
+            own: ['edit','trash'],
+            other: ['flag'],
+        },
+        "guest":{
+            own: [],
+            other: [],
+        },
+    };
+
+    // Localize current user data
+    $scope.current_user = $window.pwGlobals.current_user;
+
+    // Detect if the user owns the comment
+    // If the user's ID is same as the post author's ID
+    if ( typeof $scope.current_user.data !== 'undefined' && typeof comment !== 'undefined' ){
+        if( $scope.current_user.data.ID == comment.user_id )
+            $scope.postPossession = "own";
+        else
+            $scope.postPossession = "other";
+    } else {
+        $scope.postPossession = "other";
+    }
+
+    // Detect current user's role
+    if ( $scope.current_user == 0 )
+        $scope.currentRole = "guest";
+    else if ( typeof $scope.current_user.roles != undefined ){
+        $scope.currentRole = $scope.current_user.roles[0];
+    }
+
+    // Setup empty menu options array
+    $scope.userOptions = [];
+
+    // Build menu for user based on role
+    angular.forEach( $scope.menuOptions, function( option ){
+        if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
+            $scope.userOptions.push( option );
+    });
+
+    // If no options added, set empty
+    if ( $scope.userOptions == [] )
+        $scope.userOptions = "0";
+    
+    // Menu Actions
+    $scope.menuAction = function(action, child){
+        if( action == "edit" )
+            $scope.toggleEditBox(child);
+
+        if( action == "flag" ){
+            $scope.flagComment(child);
+            // Remove the flag option after flagging once
+            
+            var updatedUserOptions = [];
+            angular.forEach( $scope.userOptions, function( option ){
+                if( option.action != 'flag' )
+                    updatedUserOptions.push( option );
+            });
+            $scope.userOptions = updatedUserOptions;
+
+
+        }
+        
+        if( action == "trash" ){
+            if ( window.confirm("Are you sure you want to delete this comment?") ) {
+                $scope.deleteComment(child);
+            }
+        }
+
+    };
+
+
+};
 
 
 

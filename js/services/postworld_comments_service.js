@@ -63,5 +63,10 @@ postworld.factory('pwCommentsService', function ($resource, $q, $log,pwData) {
 			$log.debug('pwCommentsService.pw_delete_comment',args);
 			return pwData.wp_ajax('pw_delete_comment',args);
 		},
+		flag_comment: function(args) {
+			$log.debug('pwCommentsService.flag_comment',args);
+			var params = {args:args};
+			return pwData.wp_ajax('flag_comment',params);
+		},
    };
 });

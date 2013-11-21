@@ -6,6 +6,40 @@
 */
 
 
+	
+
+
+
+
+//---------- FLAG COMMENTS ----------//
+function flag_comment_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	// FLAG COMMENT >>> Requires plugin : "Safe Report Comments"
+	// If plugin is installed
+	if (class_exists('Safe_Report_Comments')){
+		$flag_comments = new Safe_Report_Comments();
+		$flag_comments->mark_flagged( $params['comment_ID'] );
+		$response_data = true;
+	// If plugin is not installed
+	} else{
+		$response_data = false;
+	}
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
+add_action("wp_ajax_flag_comment", "flag_comment_admin");
+
+
+
+
 //---------- SHARE REPORT - USER - OUTGOING ----------//
 function user_share_report_outgoing_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
@@ -703,6 +737,7 @@ function pw_get_comments_anon() {
 
 /* Action Hook for pw_get_comments() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
+//add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
 
 
 
@@ -722,13 +757,28 @@ function pw_save_comment_loggedIn() {
 	$commentdata = apply_filters('preprocess_comment', $commentdata);
 	
 	
-	// Get User ID, it must be real, since this function is called for logged in users only
-	$user_ID = get_current_user_id();
-	if (!$user_ID) ErrorReturn($response, 400, 'User must be authenticated to perform this action');
-	$commentdata['user_id'] = $user_ID;
-	
+
+	// If comment ID is provided
+	if ( $commentdata['comment_ID'] ){
+	// Check to see if comment already exists
+		$current_comment = get_comment( $commentdata['comment_ID'], "ARRAY_A" );
+		// If comment exists
+		if( $current_comment != null ){
+			$user_ID = $current_comment["user_id"];
+			// If user doesn't have access to moderate
+			if ( !current_user_can( 'moderate_comments' ) )
+				return array( "error" => "No access to moderate comments." );
+		}
+
+	} else{
+		// Get User ID, it must be real, since this function is called for logged in users only
+		$user_ID = get_current_user_id();
+		if (!$user_ID) ErrorReturn($response, 400, 'User must be authenticated to perform this action');
+		$commentdata['user_id'] = $user_ID;
+	}
+
 	// Get Author Info
-	 $user_data = get_userdata( $user_ID );
+	$user_data = get_userdata( $user_ID );
 	if ($user_data->display_name) {
 		$commentdata['comment_author'] = $user_data->display_name; 
 	} else if ($user_data->user_nicename) {
@@ -742,20 +792,21 @@ function pw_save_comment_loggedIn() {
 	  
 	if ($user_data->user_url) {
 		$commentdata['comment_author_url'] = $user_data->user_url; 
-	}  	
-	
+	}
+
 	// Get IP, Agent
 	$commentdata['comment_author_IP'] = preg_replace( '/[^0-9a-fA-F:., ]/', '',$_SERVER['REMOTE_ADDR'] );
 	$commentdata['comment_agent']     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 ) : '';
+	
 	// Get Date
 	// $commentdata['comment_date']     = current_time('mysql');
 	$commentdata['comment_date_gmt'] = current_time('mysql', 1);
+
 
 	// Sanitize
 	$commentdata = wp_filter_comment($commentdata);
 	$commentdata['comment_approved'] = wp_allow_comment($commentdata);	
 			
-	
 	$results = pw_save_comment($commentdata,$return);
 	header('Content-Type: application/json');
 	$response['status'] = 200;

@@ -94,8 +94,12 @@ postworld.directive('loadComments', function() {
 
 postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs,pwData,$log, $window) {
     $scope.json = '';
-    $scope.user_id = $window.pwGlobals.current_user.ID;
-    $scope.isAdmin = $window.pwGlobals.current_user.is_admin;
+
+    if ( typeof $window.pwGlobals.current_user.ID !== 'undefined'  )
+      $scope.user_id = $window.pwGlobals.current_user.ID;
+    else
+      $scope.user_id = 0;
+
     $scope.startTime = 0;
     $scope.endTime = 0;
     $scope.treedata = {children: []};
@@ -140,7 +144,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
         $log.debug('Got Comments: ', value.data );
   			$scope.treedata = {children: value.data};
   			$scope.commentsLoaded = true;
-  	        $scope.treeUpdated = !$scope.treeUpdated;			      
+  	    $scope.treeUpdated = !$scope.treeUpdated;			      
   			$scope.commentsCount = value.data.length;
   			/*
   			// not used here, but can be used for progressive element loading
@@ -245,8 +249,6 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
               //alert('Client error voting.');
           }
       );
-      
-
   }
 
   $scope.addChild = function (child, data) {
@@ -270,7 +272,10 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   	child.deleteBox = false;
   	// toggle reply box
   	child.replyBox = !child.replyBox;
+
   	// TODO add focus here
+    //$window.$( "#reply-"+child.comment_ID ).focus();
+
   };
   
   $scope.toggleEditBox = function(child) {
@@ -344,17 +349,22 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   		);
   };
   
+
   $scope.editComment = function(child) {
+      //alert( JSON.stringify(child.user_id) );
   		// Disable edit button, text editing, cancelling until we are back
   		child.editInProgress = true;
 		  child.editError = "";		
   		// trigger call to send reply
   		var args = {};
-  		args.comment_data = {};
-  		args.comment_data.comment_ID = child.comment_ID;
-  		args.comment_data.comment_content = child.editText;
+  		args.comment_data = {
+        "comment_ID": child.comment_ID,
+        "comment_content": child.editText,
+        "user_id": child.user_id
+      };
   		
-  		args.return_value = 'data';  		
+  		args.return_value = 'data';
+
   		pwCommentsService.pw_save_comment(args).then(
   			function(response) {
   				if ((response.status==200)&&(response.data)) {
@@ -429,6 +439,28 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   		);
   };
 
+
+  $scope.flagComment = function(child){
+
+    var args = {
+      "comment_ID" : child.comment_ID,
+    };
+
+    pwCommentsService.flag_comment(args).then(
+        function(response) {
+          if ((response.status==200)&&(response.data == true)) {
+            alert( "Comment flagged for moderation." );          
+          } else {
+            alert( "Comment not flagged for moderation." );       
+          }
+        },
+        function(response) {
+          alert( "Comment not flagged for moderation." );   
+        }
+      );
+  };
+
+
   $scope.removeChild = function (child) {
     function walk(target) {
       var children = target.children,
@@ -448,4 +480,40 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
     $scope.treeUpdated = !$scope.treeUpdated;			      
   };
 
+  $scope.setRoles = function(child){
+
+    var current_user = $window.pwGlobals.current_user;
+
+    // Set the roles/relationship of the user to each post
+    child.roles = {};
+
+    // Guest
+    ( current_user == 0 ) ?
+      child.roles.isGuest = true : child.roles.isGuest = false;
+
+    // User
+    ( current_user.user_id != 0 ) ? 
+      child.roles.isUser = true : child.roles.isUser = false;
+      
+    // Owner
+    ( current_user.data.ID == child.user_id ) ? 
+      child.roles.isOwner = true : child.roles.isOwner = false;
+
+    // Admin
+    ( current_user.roles[0] == "administrator" || 
+      current_user.roles[0] == "editor" ) ? 
+      child.roles.isAdmin = true : child.roles.isAdmin = false; 
+
+    //child.roles.isGuest
+
+  }
+
+
 });
+
+
+
+
+
+
+
