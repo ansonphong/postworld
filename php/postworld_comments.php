@@ -157,7 +157,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			$comment_data[$field] = get_comment_points( $comment_id );
 		}
 		else if( $field == 'user_voted' ){
-			$comment_data[$field] = has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+			$comment_data[$field] = has_voted_on_comment( $comment_id, get_current_user_id() );
 		}
 		else if( $field == 'time_ago' ){
 			$timestamp = strtotime($wp_comment_data['comment_date_gmt']);
@@ -237,10 +237,8 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			// If the current field is requested, move the data
 			if( in_array( $field, $wp_comment_fields ) ){
 				$comment_data[$field] = $comment[$field];
-				// Apply Content Filters
-				if ( $field == 'comment_content' )
-					$comment_data[$field] = apply_filters('the_content', $comment_data[$field] );
 			}
+
 		}
 
 		///// CUSTOM AUTHOR FIELDS /////
@@ -265,7 +263,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			}
 		}
 
-		///// POSTWORLD COMMMENT FIELDS /////
+		///// POSTWORLD COMMENT FIELDS /////
 		foreach ($fields as $field) {
 			if( in_array( $field, $pw_comment_fields ) ){
 				if( $field == 'comment_points' ){
@@ -276,6 +274,22 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 				}
 			}
 		}
+
+		///// FILTER CONTENT /////
+
+		// Apply Content Filters
+		if ( isset($comment_data['comment_content']) ){
+			$comment_content = $comment_data['comment_content'];
+
+			//$comment_content = apply_filters('the_content', $comment_content );
+			//$comment_content = str_replace( '&#160;',' ', $comment_content);
+			//$comment_content = preg_replace( '/\h+/', ' ', $comment_content );
+			//$comment_data[$field] = $comment_data[$field]. "test";
+			//$comment_content = "test";
+
+			$comment_data['comment_content'] = $comment_content;
+		}
+		
 
 		array_push($comments_data, $comment_data);
 
@@ -305,8 +319,6 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 	return $comments_data; //$comments_data;
 
 }
-
-
 
 
 function get_comment_author_id($comment_id){

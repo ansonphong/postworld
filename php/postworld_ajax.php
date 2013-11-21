@@ -209,6 +209,25 @@ add_action("wp_ajax_nopriv_pw_get_avatar", "pw_get_avatar_anon");
 add_action("wp_ajax_pw_get_avatar", "pw_get_avatar_anon");
 
 
+//---------- SET COMMENT POINTS ----------//
+function set_comment_points_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$comment_id = $params['comment_id'];
+	$points = $params['points'];
+
+	$set_comment_points = set_comment_points( $comment_id, $points );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $set_comment_points;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
+add_action("wp_ajax_set_comment_points", "set_comment_points_admin");
 
 
 //---------- SET POST POINTS ----------//

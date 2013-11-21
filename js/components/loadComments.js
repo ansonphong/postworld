@@ -171,27 +171,83 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   };
   
   $scope.OpenClose = function(child) {
-  	//child.comment_karma = child.comment_karma = Math.floor(Math.random() * 100) + 1;
-  	if (parseInt(child.comment_karma)>$scope.minPoints) child.minimized = false;
+  	if (parseInt(child.comment_points)>$scope.minPoints) child.minimized = false;
   	else child.minimized = true;
-  	// console.log('minimized',child.comment_ID,child.comment_karma,child.minimized);
   };
   
   $scope.trustHtml = function(child) {
     child.trustedContent = $sce.trustAsHtml(child.comment_content);
   };
 
-  $scope.karmaAdd = function (child) {
-	// Add Point here
-	child.comment_karma = parseInt(child.comment_karma)+1;
-	// TODO Call Function
-  };
+  $scope.voteUpSelected = function(child){
+    if( child.viewer_points > 0 ){
+      return 'selected';
+    }
+  }
 
-  $scope.karmaRemove = function (child) {
-	// Add Point here
-	child.comment_karma = parseInt(child.comment_karma)-1;
-	// TODO Call Function
-  };
+  $scope.voteDownSelected = function(child){
+    if( child.viewer_points < 0 ){
+      return 'selected';
+    }
+  }
+
+  // CAST VOTE ON THE POST
+  $scope.voteComment = function( points, child ){
+
+      // Get the voting power of the current user
+      if( typeof $window.pwGlobals.current_user.postworld !== 'undefined' )
+          var vote_power = parseInt($window.pwGlobals.current_user.postworld.vote_power);
+      // If they're not logged in, return false
+      if( typeof vote_power === 'undefined' ){
+          alert("Must be logged in to vote.");
+          return false;
+      }
+      
+      // Define how many points have they already given to this post
+      var has_voted = parseInt(child.viewer_points);
+
+      // Define how many points will be set
+      var setPoints = ( has_voted + points );
+
+      // If set points exceeds vote power
+      if( Math.abs(setPoints) > vote_power ){
+          setPoints = (vote_power * points);
+          //alert( "Normalizing : " + setPoints );
+      }
+
+      // Setup parameters
+      var args = {
+          comment_id: child.comment_ID,
+          points: setPoints,
+      };
+
+      // Set Status
+      child.voteStatus = "busy";
+      // AJAX Call 
+      pwData.set_comment_points ( args ).then(
+          // ON : SUCCESS
+          function(response) {    
+              //alert( JSON.stringify(response.data) );
+              // RESPONSE.DATA FORMAT : {"point_type":"comment","user_id":1,"id":51407,"points_added":0,"points_total":"5"}
+              $log.debug('VOTE RETURN : ' + JSON.stringify(response) );
+              if ( response.data.id == child.comment_ID ){
+                  // UPDATE POST POINTS
+                  child.comment_points = response.data.points_total;
+                  // UPDATE VIEWER HAS VOTED
+                  child.viewer_points = ( parseInt(child.viewer_points) + parseInt(response.data.points_added) ) ;
+              } //else
+                  //alert('Server error voting.');
+              child.voteStatus = "done";
+          },
+          // ON : FAILURE
+          function(response) {
+              child.voteStatus = "done";
+              //alert('Client error voting.');
+          }
+      );
+      
+
+  }
 
   $scope.addChild = function (child, data) {
   	if (!child.children) child.children = [];
@@ -259,7 +315,6 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   		pwCommentsService.pw_save_comment(args).then(
   			function(response) {
   				if ((response.status==200)&&(response.data)) {
-  					
 	  				// reset form and hide it
 			  		child.replyInProgress = false;
 	  				child.replyText = "";
@@ -267,7 +322,8 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 	  				child.replyError = "";
 			  		console.log('added',response);
 	  				// show the new comment
-	  				$scope.addChild(child, response.data);  					
+	  				$scope.addChild(child, response.data);
+
   				} else {
 	  				// reset the form
 	  				child.replyInProgress = false;
@@ -291,7 +347,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   $scope.editComment = function(child) {
   		// Disable edit button, text editing, cancelling until we are back
   		child.editInProgress = true;
-		child.editError = "";		
+		  child.editError = "";		
   		// trigger call to send reply
   		var args = {};
   		args.comment_data = {};
@@ -337,7 +393,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   $scope.deleteComment = function(child) {
   		// Disable edit button, text editing, cancelling until we are back
   		child.deleteInProgress = true;
-		child.deleteError = "";
+		  child.deleteError = "";
   		// trigger call to send reply
   		var args = {};
   		args.comment_id = child.comment_ID;

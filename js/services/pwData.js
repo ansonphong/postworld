@@ -277,6 +277,11 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('set_post_points',params);
 		},
+		set_comment_points: function(args) {
+			$log.debug('pwData.set_comment_points',args);
+			var params = {args:args};
+			return this.wp_ajax('set_comment_points',params);
+		},
 		pw_set_avatar: function(args) {
 			$log.debug('pwData.pw_set_avatar',args);
 			var params = {args:args};
