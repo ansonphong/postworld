@@ -2942,32 +2942,24 @@ var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $lo
     $scope.menuAction = function(action, child){
         if( action == "edit" )
             $scope.toggleEditBox(child);
-
         if( action == "flag" ){
             $scope.flagComment(child);
-            // Remove the flag option after flagging once
-            
+            // Remove the flag option after flagging
             var updatedUserOptions = [];
             angular.forEach( $scope.userOptions, function( option ){
                 if( option.action != 'flag' )
                     updatedUserOptions.push( option );
             });
             $scope.userOptions = updatedUserOptions;
-
-
         }
-        
         if( action == "trash" ){
             if ( window.confirm("Are you sure you want to delete this comment?") ) {
                 $scope.deleteComment(child);
             }
         }
-
     };
 
-
 };
-
 
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  

@@ -149,8 +149,12 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			$comment_data[$field] = $wp_comment_data[$field];
 
 			// Apply Content Filters
-			if ( $field == 'comment_content' )
-				$comment_data[$field] = apply_filters('the_content', $comment_data[$field] );
+			if ( $field == 'comment_content' ){
+				//$comment_data[$field] = apply_filters('the_content', $comment_data[$field] );
+				//$comment_data[$field] = apply_filters( "o_embed_filter", $comment_data[$field] );
+				$comment_data['comment_content'] = apply_filters( "o_embed_filter", $comment_data['comment_content'] );
+
+			}
 		}
 		// POSTWORLD COMMMENT FIELDS 
 		else if( $field == 'comment_points' ){
@@ -164,6 +168,20 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			$comment_data[$field] = time_ago($timestamp);
 		}
 	}
+
+	//global $wp_embed;
+	//add_filter('o_embed_filter2', array($wp_embed, 'autoembed'), 11);
+	//$comment_data['comment_content'] = apply_filters( "o_embed_filter2", $comment_data['comment_content'] );
+
+	/*
+	$o_embed_string = "o-embed action : \n http://www.youtube.com/watch?v=38peWm76l-U";
+	$o_embed_string = apply_filters( "o_embed_filter", $o_embed_string );
+	$comment_data['comment_content'] = $comment_data['comment_content'] . $o_embed_string;
+	*/
+
+	//$comment_data['comment_content'] = apply_filters( "o_embed_filter", $comment_data['comment_content'] );
+	
+
 
 	return $comment_data;
 }
@@ -282,11 +300,16 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			//$comment_content = apply_filters('the_content', $comment_content );
 			//$comment_content = str_replace( '&#160;',' ', $comment_content);
 			//$comment_content = preg_replace("/\s+/", " ", $comment_content); //preg_replace( '/\h+/', ' ', $comment_content );
-			$comment_content = preg_replace("/(\r\n){3,}/","\r\n\r\n",trim($comment_content));
+			//$comment_content = preg_replace("/(\r\n){3,}/","\r\n\r\n",trim($comment_content));
 			//$comment_content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", $comment_content));
 			//$comment_content = preg_replace("/\s+/", " ", $comment_content);
 			//$comment_data[$field] = $comment_data[$field]. "test";
 			//$comment_content = "test";
+
+			//$comment_content = apply_filters( "o_embed_filter", $comment_content );
+
+			$comment_content = o_embed_filter_function($comment_content);
+
 			$comment_data['comment_content'] = $comment_content;
 		}
 		

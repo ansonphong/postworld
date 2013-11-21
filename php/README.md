@@ -1112,6 +1112,7 @@ __$fields__ : (optional) *string / Array*
   - capabilities
 
 - Custom __Postworld__ User Fields:
+  - avatar(small,48) - *( handle, dimensions )*
   - post_points
   - post_points_meta
   - comment_points

@@ -276,6 +276,11 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   	// TODO add focus here
     //$window.$( "#reply-"+child.comment_ID ).focus();
 
+    if ( child.replyBoxSelected == "" )
+      child.replyBoxSelected = "selected";
+    else
+      child.replyBoxSelected = "";
+
   };
   
   $scope.toggleEditBox = function(child) {
@@ -324,11 +329,11 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 			  		child.replyInProgress = false;
 	  				child.replyText = "";
 	  				child.replyBox = false;
+            child.replyBoxSelected = "";
 	  				child.replyError = "";
 			  		console.log('added',response);
 	  				// show the new comment
 	  				$scope.addChild(child, response.data);
-
   				} else {
 	  				// reset the form
 	  				child.replyInProgress = false;
@@ -375,9 +380,10 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 	  				child.editText = "";
 	  				child.editBox = false;
 	  				child.editError = "";
-			  		console.log('edited',response);
+			  		//console.log('edited',response);
 	  				// show the new comment
-	  				$scope.updateChild(child, response.data);  					
+	  				$scope.updateChild(child, response.data);  		
+            //alert(JSON.stringify(response.data));			
   				} else {
 	  				// reset the form
 	  				child.editMode = false;

@@ -756,8 +756,8 @@ function pw_save_comment_loggedIn() {
 	// Sanitize
 	$commentdata = apply_filters('preprocess_comment', $commentdata);
 	
+	//wp_filter_nohtml_kses( $data )
 	
-
 	// If comment ID is provided
 	if ( $commentdata['comment_ID'] ){
 	// Check to see if comment already exists
@@ -806,7 +806,10 @@ function pw_save_comment_loggedIn() {
 	// Sanitize
 	$commentdata = wp_filter_comment($commentdata);
 	$commentdata['comment_approved'] = wp_allow_comment($commentdata);	
-			
+	
+	// Remove HTML
+	$commentdata['comment_content'] = wp_filter_nohtml_kses( $commentdata['comment_content'] );
+
 	$results = pw_save_comment($commentdata,$return);
 	header('Content-Type: application/json');
 	$response['status'] = 200;
