@@ -30,8 +30,8 @@ function calculate_rank_score ( $post_id ) {
 	extract($TIME_UNITS);
 
 	//////////// SET DEFAULTS ////////////
-	global $pw_defaults;
-	$equasion = $pw_defaults['rank']['equations']['default'];
+	global $pw_settings;
+	$equasion = $pw_settings['rank']['equations']['default'];
 
 	$POINTS_WEIGHT =		$equasion['points_weight'];;
 	$COMMENTS_WEIGHT =		$equasion['comments_weight'];;

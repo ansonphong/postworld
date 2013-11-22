@@ -117,6 +117,22 @@ comment_content
 
 
 
+<!-- TOPIC -->
+  <span ng-hide="post.taxonomy.topic.length < 1">
+    Topic :
+    <span ng-repeat="term in post.taxonomy.topic">
+      <a href="{{term.url}}" ng-hide="term.parent">{{term.name}}</a>
+    </span>
+    <br>
+  </span>
+
+  <!-- SUB-TOPIC -->
+  <span ng-hide="post.taxonomy.topic.length < 2">
+    Sub-topic :
+    <span ng-repeat="term in post.taxonomy.topic">
+      <a href="{{term.url}}" ng-show="term.parent">{{term.name}}</a>
+    </span>
+  </span>
 
 
 

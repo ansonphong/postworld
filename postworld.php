@@ -16,7 +16,7 @@ include 'php/postworld_utilities.php';
 
 
 // GLOBAL VARIABLES
-global $pw_defaults;
+global $pw_settings;
 global $postworld_db_version;
 global $pw_queries;
 global $wp_rewrite;
@@ -59,8 +59,8 @@ function set_template_paths(){
 global $template_paths;
 $template_paths = set_template_paths();
 
-////////// WP OPTIONS ///////////
-include 'php/postworld_options.php';
+////////// WP SETTINGS ///////////
+include 'php/postworld_settings.php';
 
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';

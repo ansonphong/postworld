@@ -274,11 +274,11 @@ function pw_load_feed ( $feed_id, $preload=0 ){
 }
 
 function get_panel_ids(){
-	global $pw_defaults;
-	$override_file_names = list_dir_file_names( $pw_defaults['template_paths']['override_panel_template_abs_path']);
-	$default_file_names = list_dir_file_names( $pw_defaults['template_paths']['default_panel_template_abs_path']);
-	//print_r($pw_defaults['template_paths']['override_panel_template_url']);
-	//print_r($pw_defaults['template_paths']['default_panel_template_url']);
+	global $pw_settings;
+	$override_file_names = list_dir_file_names( $pw_settings['template_paths']['override_panel_template_abs_path']);
+	$default_file_names = list_dir_file_names( $pw_settings['template_paths']['default_panel_template_abs_path']);
+	//print_r($pw_settings['template_paths']['override_panel_template_url']);
+	//print_r($pw_settings['template_paths']['default_panel_template_url']);
 	//print_r($override_file_names);
 	//print_r($default_file_names);
 	
@@ -300,9 +300,9 @@ function get_panel_ids(){
 
 
 function get_comment_ids(){
-	global $pw_defaults;
-	$override_file_names = list_dir_file_names( $pw_defaults['template_paths']['override_comment_template_abs_path']);
-	$default_file_names = list_dir_file_names( $pw_defaults['template_paths']['default_comment_template_abs_path']);
+	global $pw_settings;
+	$override_file_names = list_dir_file_names( $pw_settings['template_paths']['override_comment_template_abs_path']);
+	$default_file_names = list_dir_file_names( $pw_settings['template_paths']['default_comment_template_abs_path']);
 	
 	
 	$final_comment_names = array();
@@ -371,22 +371,22 @@ function pw_get_templates ( $templates_object =null){
 		null : default
 		Returns object with all panels and templates in the default and over-ride folders
 			 * */
-		global $pw_defaults;
+		global $pw_settings;
 		//abs paths
-		$default_posts_template_abs_path = $pw_defaults['template_paths']['default_posts_template_abs_path'];
-		$override_posts_template_abs_path = $pw_defaults['template_paths']['override_posts_template_abs_path'];
-		$default_panel_template_abs_path = $pw_defaults['template_paths']['default_panel_template_abs_path'] ;
-		$override_panel_template_abs_path =$pw_defaults['template_paths']['override_panel_template_abs_path'];
-		$default_comment_template_abs_path = $pw_defaults['template_paths']['default_comment_template_abs_path'] ;
-		$override_comment_template_abs_path =$pw_defaults['template_paths']['override_comment_template_abs_path'];
+		$default_posts_template_abs_path = $pw_settings['template_paths']['default_posts_template_abs_path'];
+		$override_posts_template_abs_path = $pw_settings['template_paths']['override_posts_template_abs_path'];
+		$default_panel_template_abs_path = $pw_settings['template_paths']['default_panel_template_abs_path'] ;
+		$override_panel_template_abs_path =$pw_settings['template_paths']['override_panel_template_abs_path'];
+		$default_comment_template_abs_path = $pw_settings['template_paths']['default_comment_template_abs_path'] ;
+		$override_comment_template_abs_path =$pw_settings['template_paths']['override_comment_template_abs_path'];
 		
 		//urls
-		$default_posts_template_url = $pw_defaults['template_paths']['default_posts_template_url'];
-		$override_posts_template_url = $pw_defaults['template_paths']['override_posts_template_url'];			 
-		$default_panel_template_url = $pw_defaults['template_paths']['default_panel_template_url'];
-		$override_panel_template_url = $pw_defaults['template_paths']['override_panel_template_url'];
-		$default_comment_template_url = $pw_defaults['template_paths']['default_comment_template_url'];
-		$override_comment_template_url = $pw_defaults['template_paths']['override_comment_template_url'];
+		$default_posts_template_url = $pw_settings['template_paths']['default_posts_template_url'];
+		$override_posts_template_url = $pw_settings['template_paths']['override_posts_template_url'];			 
+		$default_panel_template_url = $pw_settings['template_paths']['default_panel_template_url'];
+		$override_panel_template_url = $pw_settings['template_paths']['override_panel_template_url'];
+		$default_comment_template_url = $pw_settings['template_paths']['default_comment_template_url'];
+		$override_comment_template_url = $pw_settings['template_paths']['override_comment_template_url'];
 		
 		
 		$output = array();
@@ -409,15 +409,15 @@ function pw_get_templates ( $templates_object =null){
 
    				$post_types_final[]= $post_type ;
 			}
-			global $pw_defaults;
+			global $pw_settings;
 			
 			
-			$post_views = $pw_defaults['post_views'];//array( 'list', 'detail', 'grid', 'full' );
+			$post_views = $pw_settings['post_views'];//array( 'list', 'detail', 'grid', 'full' );
 			$templates_object['posts']=array();
 			$templates_object['posts']['post_types']=$post_types_final;
 			$templates_object['posts']['post_views']=$post_views; 
 			
-			//$panel_ids = $pw_defaults['panel_ids'];//array('feed_top','feed_search');
+			//$panel_ids = $pw_settings['panel_ids'];//array('feed_top','feed_search');
 			
 			$templates_object['panels']= get_panel_ids();
 			$templates_object['comments']= get_comment_ids();

@@ -169,11 +169,9 @@ function pw_get_userdata($user_id, $fields = false) {
 
 	// REMOVE PASSWORD
 	unset($user_data["user_pass"]);
-
 	return $user_data;
 
 }
-
 
 function get_avatar_sizes($user_id, $fields){
 	// Takes input $fields in the following format "avatar(handle,size)"
@@ -201,7 +199,6 @@ function get_avatar_sizes($user_id, $fields){
 	} // END foreach
 	return $avatars_object;
 }
-
 
 
 //TODO: change to new schema
@@ -989,7 +986,10 @@ function pw_get_avatar( $obj ){
 		$args = { user_id:"1", [ size: 256 ], [ width:256, height:256 ] }
 	*/
 	extract($obj);
-	$default_avatar = "/images/defaults/user.png";
+	
+	global $pw_settings;
+
+	$default_avatar = $pw_settings['avatar']['default'] ;//"/images/defaults/user.png";
 
 	if ( !isset($user_id) ){
 		global $template_paths;

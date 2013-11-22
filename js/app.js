@@ -474,6 +474,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             return {
                 "contributor" : "Contributor",
                 "author" : "Author",
+                "members" : "Members Only",
             };
         },
         pwGetPostYearOptions: function(){
@@ -3936,8 +3937,6 @@ postworld.controller('userShareReportOutgoing',
 // <?php echo json_encode( user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) ) ); ?>;
 
 
-
-
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
@@ -3947,3 +3946,15 @@ postworld.controller('userShareReportOutgoing',
                                                                        
 */
 
+
+// Reduces a url string to just the base domain
+postworld.filter( 'domain', function () {
+  return function ( input ) {
+    var matches,
+        output = "",
+        urls = /\w+:\/\/([\w|\.]+)/;
+    matches = urls.exec( input );
+    if ( matches !== null ) output = matches[1];
+    return output;
+  };
+});

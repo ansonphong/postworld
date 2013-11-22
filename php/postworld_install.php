@@ -167,13 +167,13 @@ function postworld_install() {
 
 function postworld_install_data() {
   global $wpdb;
-  global $pw_defaults;
+  global $pw_settings;
   global $postworld_db_version;
  
 
   ///// USER ROLE DATA /////
-  // Pre-populate data for each role in >>> $pw_defaults['roles'] <<<
-  foreach ( $pw_defaults['roles'] as $key => $value) {
+  // Pre-populate data for each role in >>> $pw_settings['roles'] <<<
+  foreach ( $pw_settings['roles'] as $key => $value) {
     $add_rows = $wpdb->insert( $wpdb->pw_prefix.'user_roles',
     array(
       'user_role' => $key,

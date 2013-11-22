@@ -49,8 +49,8 @@
 		//get wp_options Enable Points ( postworld_points ) field and get post types enabled for points - http://codex.wordpress.org/Function_Reference/get_option
 		//TODO : Use wp_options_api http://codex.wordpress.org/Options_API
 		
-		global $pw_defaults;
-		$points_options = $pw_defaults['points']; // array of post types
+		global $pw_settings;
+		$points_options = $pw_settings['points']; // array of post types
 		
 		//select all post ids of posts that their post types are enabled for points
 		//$post_types_string = implode(', ',$points_options['post_types']);
@@ -125,8 +125,8 @@
 		global $wpdb;
 		$wpdb -> show_errors();
 		
-		global $pw_defaults;
-		$rank_options = $pw_defaults['rank']; // array of post types
+		global $pw_settings;
+		$rank_options = $pw_settings['rank']; // array of post types
 		$post_types = $rank_options['post_types'];
 		$number_of_post_types = count($post_types);
 		$cron_logs;
@@ -154,8 +154,8 @@
 	function cache_all_feeds (){
 		/*• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
 		return : cron_logs Object (store in table wp_postworld_cron_logs)*/
-		global $pw_defaults;
-		$feeds_options = $pw_defaults['feeds']['cache_feeds'];
+		global $pw_settings;
+		$feeds_options = $pw_settings['feeds']['cache_feeds'];
 		$cron_logs=array();
 		$number_of_feeds = count($feeds_options);
 		//print_r($number_of_feeds);

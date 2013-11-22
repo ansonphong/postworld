@@ -74,6 +74,9 @@ function postworld_includes( $mode = 'deploy' ){
 		wp_register_script( "pw-controlMenus-JS", WP_PLUGIN_URL.'/postworld/js/components/controlMenus.js');
 		wp_enqueue_script( 'pw-controlMenus-JS','', $angularDep );
 
+		wp_register_script( "pw-inputSearch-JS", WP_PLUGIN_URL.'/postworld/js/components/inputSearch.js');
+		wp_enqueue_script( 'pw-inputSearch-JS','', $angularDep );
+
 		wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js');
 		wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
 		
