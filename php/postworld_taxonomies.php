@@ -290,4 +290,24 @@ function check_term_slug_exists($slug) {
 	$results = $wpdb -> get_results($query);
 	return $results;
 }
+
+
+////////// GET CHILD TERMS META //////////
+// Add URL / meta fields to taxonomy
+function pw_get_child_terms_meta( $term_query, $taxonomy ){
+	// Get child terms
+	$sub_terms = get_terms( $taxonomy, $term_query );
+	// Add Meta data to terms
+	$sub_terms_meta = array();
+	foreach( $sub_terms as $sub_term ){
+		$sub_term = (array) $sub_term;
+		// Add URL
+		$sub_term['url'] = get_term_link( intval($sub_term['term_id']) , $taxonomy );
+		array_push( $sub_terms_meta, $sub_term );
+	}
+	return $sub_terms_meta;
+}
+
+
+
 ?>
