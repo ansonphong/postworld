@@ -1173,8 +1173,9 @@ postworld.controller('editPost',
             //alert(JSON.stringify($scope.post_data));
 
             ///// GET POST_DATA FROM TINYMCE /////
-            if ( typeof tinyMCE !== 'undefined' )
+            if ( typeof tinyMCE.get('post_content') !== 'undefined' ){
                 $scope.post_data.post_content = tinyMCE.get('post_content').getContent();
+            }
 
             ///// SANITIZE FIELDS /////
             if ( typeof $scope.post_data.link_url === 'undefined' )
