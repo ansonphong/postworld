@@ -31,6 +31,32 @@ $pw_settings = array(
 		'community'	=>	array(
 			'preface'	=>	'Be a Contributor to Reality Sandwich by posting a blog, link or event. All posts appear here in the Community section. Some posts may be selected by an editor to appear on the Home Page or Section pages.',
 			),
+		'edit_post'	=>	array(
+			'post_title'	=>	"Titles limited to 10-100 characters.",
+			'thumbnail'		=>	"Images should be at least 480 pixels wide and less than 1MB.",
+			'link_url'		=>	"Add URL here to embed video, audio, or webpage link at top of page. System recognizes links from YouTube, Vimeo, and Soundcloud, among other services.",
+			'post_status'	=>	"Save as Draft to preview and revise. Save as Published to share with others.",
+			
+			'post_types'	=>	array(
+				'feature'	=>	array(
+					'overview'	=>	"Feature articles appear on the Reality Sandwich home page, as well as on Section and Topic pages. All Feature articles are reviewed by editors, which may take several days. Authors retain all rights to their material. For more about posting on Reality Sandwich, read the FAQ.",
+					'post_status'	=>	"Save as Draft to preview and revise. Save as Pending when finished & to be reviewed by an RS editor.",
+					),
+				'blog'	=>	array(
+					'overview'	=>	"Blog posts by Authors appear on the Reality Sandwich home page when published. Contributors (registered users) blogs appear in the Community area. Editors may select posts from the Community area to publish on the Home Page. Authors retain all rights to their material. For more about posting on Reality Sandwich, read the FAQ."
+					),
+				'event'	=>	array(
+					'overview'	=>	"Event posts by Authors appear on the Reality Sandwich home page, as well as on the Community Calendar. Events posted by Contributors (registered users) appear in the Community area. Editors may select events from the Community area to present on the Home Page and on Section pages. Authors retain all rights to their material. For more about posting on Reality Sandwich, read the FAQ."
+					),
+				'link'	=>	array(
+					'overview'	=>	"Paste a webpage link into the Link URL field and it will automatically create a post for you. Videos from YouTube and Vimeo, and audio from Soundcloud, is automatically embedded. Links posted by Authors appear on the Reality Sandwich home page. Links posted by Contributors (registered users) appear in the Community area. Editors may select events from the Community area to present on the Home Page and on Section pages. For more about posting on Reality Sandwich, read How To Post."
+					),
+				),
+
+			'taxonomy'	=>	array(
+				'topic'	=>	"Choosing a topic and sub-topic is required."
+				),
+			),
 		),
 
 	'avatar'			=> array(

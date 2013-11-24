@@ -77,9 +77,12 @@ function postworld_includes( $mode = 'deploy' ){
 		wp_register_script( "pw-inputSearch-JS", WP_PLUGIN_URL.'/postworld/js/components/inputSearch.js');
 		wp_enqueue_script( 'pw-inputSearch-JS','', $angularDep );
 
+		wp_register_script( "pw-editPost-JS", WP_PLUGIN_URL.'/postworld/js/components/editPost.js');
+		wp_enqueue_script( 'pw-editPost-JS','', $angularDep );
+
 		wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js');
 		wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
-		
+
 		wp_register_script( "pw-pwCommentsService-JS", WP_PLUGIN_URL.'/postworld/js/services/postworld_comments_service.js');
 		wp_enqueue_script( 'pw-pwCommentsService-JS','', $angularDep );
 
