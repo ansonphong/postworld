@@ -2395,28 +2395,9 @@ var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwDat
 
 
 postworld.directive( 'launchMediaModal', ['$sce',function($scope, $sce){
-
     return { 
-        //restrict: 'A',
-        //scope : function(){
-        //},
-        //template : '',
-        
         controller: 'mediaModalCtrl'
-
-        /*
-        link : function ($scope, element, attributes){
-            // When the oEmbed Value changes, then change the html here
-            
-            $scope.$watch('oEmbed', function(value) {
-                console.log('test',value);
-                element.html(value);
-            });          
-        }
-        */
-
     };
-
 }]);
 
 
@@ -2880,10 +2861,12 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
     // GENERATE SHARE LINK
     if(
         typeof $window.pwGlobals.paths !== 'undefined' &&
+        typeof $window.pwGlobals.language !== 'undefined' &&
         typeof $window.pwGlobals.current_user !== 'undefined' &&
         typeof $scope.post !== 'undefined'
         ){
         $scope.share_link = $window.pwGlobals.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
+        $scope.language = $window.pwGlobals.language;
     }
     
     // Set class via ng-class, of current assigned taxonomy (topic)
@@ -3935,7 +3918,37 @@ postworld.controller('userShareReportOutgoing',
     }
 }]);
 
-// <?php echo json_encode( user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) ) ); ?>;
+
+
+
+/*
+  _                                             
+ | |    __ _ _ __   __ _ _   _  __ _  __ _  ___ 
+ | |   / _` | '_ \ / _` | | | |/ _` |/ _` |/ _ \
+ | |__| (_| | | | | (_| | |_| | (_| | (_| |  __/
+ |_____\__,_|_| |_|\__, |\__,_|\__,_|\__, |\___|
+                   |___/             |___/      
+////////// POSTWORLD LANGUAGE ACCESS //////////*/
+postworld.directive( 'pwLanguage', [function(){
+    return { 
+        controller: 'pwLanguageCtrl'
+    };
+}]);
+
+postworld.controller('pwLanguageCtrl',
+    ['$scope','$window',
+    function($scope, $window) {
+    $scope.language = $window.pwGlobals.language;
+    
+    /*
+    $scope.parseHTML = function(string){
+        return $sce.parseAsHtml(string);
+    };
+    */
+
+}]);
+
+
 
 
 /*
@@ -3943,9 +3956,8 @@ postworld.controller('userShareReportOutgoing',
     / /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
    / /    / /  \___ \ / _ \ |  \| | | | |  _ \| | | \  /    / /    / / 
   / /    / /    ___) / ___ \| |\  | |_| | |_) | |_| /  \   / /    / /  
- /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/   
-                                                                       
-*/
+ /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/    
+/////////////////////////////////////////////////////////////////*/
 
 
 // Reduces a url string to just the base domain
@@ -3959,3 +3971,8 @@ postworld.filter( 'domain', function () {
     return output;
   };
 });
+
+
+
+
+

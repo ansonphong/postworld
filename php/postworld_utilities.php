@@ -96,6 +96,7 @@ function postworld_includes( $mode = 'deploy' ){
 
 		function parse_pw_globals(){
 			//$post_id = $GLOBALS['post']->ID;
+			global $pw_settings;
 			$pw_globals = array();
 			$pw_globals['current_view'] = array();
 
@@ -164,6 +165,8 @@ function postworld_includes( $mode = 'deploy' ){
 				"first_name" => $displayed_userdata->first_name,	
 				);
 
+			///// LANGUAGE /////
+			$pw_globals['language'] = $pw_settings['language'];
 
 			///// RETURN /////
 			return $pw_globals;

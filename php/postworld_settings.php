@@ -3,6 +3,36 @@
 global $pw_settings;
 $pw_settings = array(
 
+	'language'	=>	array(
+		'points'	=> array(
+			'post'	=> array(
+				'name'	=>					'Post Karma',
+				),
+			'comment'	=> array(
+				'name'	=>					'Comment Karma',
+				),
+			'share'	=> array(
+				'name'	=>					'Share Karma',
+				'action'	=>				'Share',
+				// Link
+				'link_name'	=> 				'Share Link',
+				'link_description'	=> 		'Use this link for email & social media, & receive 1 Share Karma point for each person who follows the link.',
+				// Outgoing
+				'outgoing_name' => 			'Outgoing Shares',
+				'outgoing_description' => 	'Posts that you have shared',
+				// Incoming
+				'incoming_name'	=>			'Incoming Shares',
+				'incoming_description'	=>	'Your posts that have been shared',
+				// Descriptions
+				'recent_description'	=>	'Most recent share',
+				'total_description'		=>	'Total Share Karma',
+				),
+			),
+		'community'	=>	array(
+			'preface'	=>	'Be a Contributor to Reality Sandwich by posting a blog, link or event. All posts appear here in the Community section. Some posts may be selected by an editor to appear on the Home Page or Section pages.',
+			),
+		),
+
 	'avatar'			=> array(
 		'default'	=>	'/images/avatars/avatar-ajones-A.png'
 		),
