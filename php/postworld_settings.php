@@ -169,16 +169,18 @@ $pw_settings = array(
 			),
 		),
 
+	/*
 	'formats'	=>	array(
 		'post'	=>	array(
 			'standard'	=>	array(),
 			),
 		),
-
+	
 	'views'		=>	array(
-		'enable'	=>	"",
-		'grid'		=>	"",
+		'full'	=>	"",
+		'grid'	=>	"",
 		),
+	*/
 
 	'buddypress'	=>	array(
 		'avatar'	=>	array(
@@ -189,8 +191,9 @@ $pw_settings = array(
 				),
 			),
 		),
-	'post_views'	=> array('list', 'detail', 'grid', 'full', ),
-	//'panel_ids' => array('feed_top','feed_search','feed_header'),
+
+	'post_views'	=> array('compact', 'list', 'detail', 'grid', 'full' ),
+
 	'template_paths' =>array(
 	
 		'default_posts_template_abs_path' => ABSPATH . "wp-content/plugins/postworld/templates/posts/" ,
