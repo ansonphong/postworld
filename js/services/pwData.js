@@ -96,6 +96,7 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			// fargs will be filled next from data in the query string			
 			var fargs = this.convertFeedSettings(args.feed_id,args); // will read settings and put them in fargs
 			fargs = this.mergeQueryString(fargs,qsArgs); // will read args and override fargs
+			fargs = this.removeEmptyArgs(fargs);
 			// Get Query Arguments and save them in feed settings
 			var feedSettings = feed_settings[args.feed_id];
 			feedSettings.finalFeedQuery = fargs.feed_query;
@@ -227,6 +228,17 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			}
 			return fargs;
 		},
+  		removeEmptyArgs: function (args) {
+  			$log.info('Feed Query Remove Empty Args',args);
+  			for(var key in args.feed_query){  				
+			    if ((args.feed_query[key]!==0) && (args.feed_query[key]!==false)) {
+			    	if (args.feed_query[key] == "") {
+			    		delete args.feed_query[key];
+			    	}
+			    }  			    			    
+			}			
+			return args;
+  		},		
 		pw_get_post_types: function(args) {
 			//$log.debug('pwData.pw_load_feed',args);
 			var params = {args:args};

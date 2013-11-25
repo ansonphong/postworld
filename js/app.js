@@ -130,7 +130,7 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
 
 
     // this will be also the default route, or when no route is selected
-    $routeProvider.otherwise({redirectTo: '/home/'});
+    // $routeProvider.otherwise({redirectTo: '/home/'});
 
     //$logProvider.debugEnabled(false);
 
