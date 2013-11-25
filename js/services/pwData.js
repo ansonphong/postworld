@@ -231,7 +231,7 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
   		removeEmptyArgs: function (args) {
   			$log.info('Feed Query Remove Empty Args',args);
   			for(var key in args.feed_query){
-  				if (args.feed_query[key]==null) {
+  				if ((args.feed_query[key]=="null") && (key!= "s")){
   					delete args.feed_query[key];
   					continue;
   				}  				
