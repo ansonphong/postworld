@@ -128,8 +128,8 @@ postworld.controller('editPost',
 
                 ///// LOAD POST CONTENT /////
                 // SET THE POST CONTENT
-                //if( typeof tinyMCE !== 'undefined' )
-                //    tinyMCE.get('post_content').setContent( get_post_data.post_content );
+                if( typeof tinyMCE !== 'undefined' )
+                    tinyMCE.get('post_content').setContent( get_post_data.post_content );
 
                 ///// LOAD AUTHOR /////
                 // EXTRACT AUTHOR NAME
@@ -250,7 +250,7 @@ postworld.controller('editPost',
         var post_data = $scope.default_post_data;
 
         // SET THE POST CLASS
-        if ( $scope.author == true ){
+        if ( $scope.roles.author == true || $scope.roles.editor == true ){
             post_data.post_class = "author";
         }
         else{
