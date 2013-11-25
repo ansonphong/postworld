@@ -148,6 +148,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	foreach ($get_post as $key => $value) {
 		if( in_array($key, $fields) )
 			$post_data[$key] = $value;
+
+		// FILTER DATA
+		if ( $key == 'post_content' )
+			$post_data[$key] = wpautop( $post_data[$key] );
+
 	}
 
 	////////// WP GET_POST_CUSTOM METHOD //////////
@@ -263,15 +268,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// Extract meta fields
 		$post_meta_fields = extract_linear_fields( $fields, 'post_meta', true );
 		if ( !empty($post_meta_fields) ){
-
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
-
 				// GET 'ALL' FIELDS
 				if ( $post_meta_field == "all" ){
 					// Return all meta data
 					$post_data['post_meta'] = get_metadata('post', $post_id, '', true);
-
 					// Convert to strings
 					if ( !empty( $post_data['post_meta'] ) ){
 						foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
@@ -279,8 +281,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						}
 					}
 				}
-
-
 			}
 		}
 
@@ -469,8 +469,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$post_data['thumbnail_id']= $thumbnail_id;
 
 					}
-
-
 
 				} 
 				///// CUSTOM IMAGE SIZES /////
