@@ -70,22 +70,22 @@ class PW_Query extends WP_Query {
 		$where =" WHERE ";	
 		$insertAnd= '0';
 		//echo($insertAnd);
-		if(array_key_exists('post_format',  $this->query_vars)){
-				if(gettype($this->query_vars['post_format']) == "array") {
+		if(array_key_exists('link_format',  $this->query_vars)){
+				if(gettype($this->query_vars['link_format']) == "array") {
 						if($insertAnd=='0'){
 							 //$where.=" and ";
 							 $insertAnd = '1';
 							
 						}	
-						$where.=" post_format in ('".implode("','", $this->query_vars['post_format'])."') ";
+						$where.=" link_format in ('".implode("','", $this->query_vars['link_format'])."') ";
 						
 					}
-					else if(gettype($this->query_vars['post_format']) == "string"){
+					else if(gettype($this->query_vars['link_format']) == "string"){
 						if($insertAnd=='0'){
 							// $where.=" and ";
 							 $insertAnd = '1';
 						}	
-						$where.=" post_format = '".$this->query_vars['post_format']."' ";
+						$where.=" link_format = '".$this->query_vars['link_format']."' ";
 					}
 			}
 		
@@ -122,6 +122,7 @@ class PW_Query extends WP_Query {
 			$this->request = str_replace('WHERE', $where, $this->request);
 			$strposOfOrderBy = strpos($this->request, "ORDER BY");
 			$this->request =  substr($this->request ,0,$strposOfOrderBy);
+			//$this->request = str_replace("AND 0 = 1", " ", $this->request);
 			$this->request.=$orderBy;
 		
 	}
