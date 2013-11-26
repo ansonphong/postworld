@@ -205,9 +205,9 @@ postworld.controller('pwLoadPanelController',
     	// TEMP LOADING TEMPLATE
     	//$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
     	$scope.$on('pwTemplatesLoaded', function(event, data) {
-	        $scope.panel = {};	        	
-	        $scope.panel.templateUrl = pwData.pw_get_template($scope.panel_grp,$scope.post_type, $scope.panel_id);
-		    $log.debug('setting loadpanel url',$scope.panel_grp,$scope.post_type, $scope.panel_id,$scope.panel.templateUrl);
+	        //$scope.panel = {};	        	
+	        $scope.templateUrl = pwData.pw_get_template($scope.panel_grp,$scope.post_type, $scope.panel_id);
+		    $log.debug('setting loadpanel url',$scope.panel_grp,$scope.post_type, $scope.panel_id,$scope.templateUrl);
 	    });
 
 	}

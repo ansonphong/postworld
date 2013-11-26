@@ -946,7 +946,7 @@ function pw_set_avatar( $image_object, $user_id ){
 	}
 
 	// Upload image from remote URL
-	if( isset( $image_object['url'] ) ){
+	if( isset( $image_object['url'] ) && !isset( $image_object['id'] ) ){
 		$attachment_id = url_to_media_library( $image_object['url'] );
 		$image_object['id'] = $attachment_id;
 	}
@@ -989,7 +989,7 @@ function pw_get_avatar( $obj ){
 	
 	global $pw_settings;
 
-	$default_avatar = $pw_settings['avatar']['default'] ;//"/images/defaults/user.png";
+	$default_avatar = $pw_settings['avatar']['default'] ;
 
 	if ( !isset($user_id) ){
 		global $template_paths;

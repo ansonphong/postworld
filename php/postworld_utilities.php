@@ -17,7 +17,7 @@ function postworld_includes( $mode = 'deploy' ){
 	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
 	wp_deregister_script('jquery');
 	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
-	wp_enqueue_script('jquery','',$angularDep);
+	wp_enqueue_script('jquery','');
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
 	///// DELPLOY FILE INCLUDES /////
@@ -521,7 +521,6 @@ function time_ago($timestamp){
     }
 }
 
-
 function username_exists_by_id($user_id){
 	$userdata = get_userdata( $user_id );
 	if($userdata != false){ return true; } else{ return false; }
@@ -533,7 +532,14 @@ function post_exists_by_id($post_id){
 }
 
 function crop_string_to_word( $string, $max_chars = 200 ){
-	return substr($string, 0, strrpos(substr($string, 0, $max_chars), ' '));
+	
+	if (strlen($string) > $max_chars) {
+	    $string = substr($string, 0, $max_chars);
+	    $string = substr($string, 0, strrpos($string, ' '));        
+	    $string .= '...';
+	}
+	return $string;
+	//return substr($string, 0, strrpos(substr($string, 0, $max_chars), ' '));
 }
 
 function extract_array_from_object( $object, $field_key ){

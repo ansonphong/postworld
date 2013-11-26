@@ -7,8 +7,11 @@
 
 add_action( 'wp_loaded', 'share_bug', 10 );
 function share_bug(){
-	$user_id = $_GET['u'];
-	$post_id = $_GET['p'];
+
+	if( isset( $_GET['u'] ) )
+		$user_id = $_GET['u'];
+	if( isset( $_GET['u'] ) )
+		$post_id = $_GET['u'];
 
 	// If both user and post are supplied ie.
 	// http://localhost:8888/?u=1&p=169953  /  175474 / 178530
