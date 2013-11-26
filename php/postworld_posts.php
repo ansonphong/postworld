@@ -12,7 +12,7 @@ function pw_post_exists ( $post_id ){
 }
 
 
-function pw_get_posts( $post_ids, $fields='all', $viewer_user_id=null ) {
+function pw_get_posts( $post_ids, $fields='all' ) {
 	// • Run pw_post_data on each of the $post_ids, and return the given fields
 	if($fields == null) $fields='all';
 	// If $post_ids isn't an Array, return
@@ -22,7 +22,7 @@ function pw_get_posts( $post_ids, $fields='all', $viewer_user_id=null ) {
 	// Cycle though each $post_id
 	$posts = array();
 	foreach ($post_ids as $post_id) {
-		$post = pw_get_post($post_id, $fields, $viewer_user_id );
+		$post = pw_get_post($post_id, $fields );
 		array_push($posts, $post);
 	}
 
@@ -106,22 +106,30 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_content',
 		);
 	
+	$micro_fields =	array(
+		'post_title',
+		);
+
 	$viewer_fields =array(
 		'viewer(has_voted,is_favorite,is_view_later)',
 		);
 
-	// Add Preview Fields
-	if ($fields == 'preview')
-		$fields = $preview_fields;
-
-	// Add Detail Fields
+	// All Fields
 	if ($fields == 'all'){
-		$fields = array_merge($preview_fields, $detail_fields);
+		$fields = array_merge($preview_fields, $detail_fields, $viewer_fields);
 	}
 
-	// Add Edit Fields
-	if ($fields == 'edit')
+	// Preview Fields
+	else if ($fields == 'preview')
+		$fields = $preview_fields;
+
+	// Edit Fields
+	else if ($fields == 'edit')
 		$fields = $edit_fields;
+
+	// Micro Fields
+	else if ($fields == 'micro')
+		$fields = $micro_fields;
 
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
@@ -140,7 +148,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	} else if ($viewer_user_id == 0){
 
 	}
-	$fields = array_merge($fields, $viewer_fields);
+	//$fields = array_merge($fields, $viewer_fields);
 	
 	////////// WP GET_POST METHOD //////////
 	// Get post data from Wordpress standard function
@@ -514,99 +522,101 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
         $taxonomy_fields = $taxonomy_names;
 	}*/
 	
-	foreach( $taxonomy_fields as $taxonomy => $tax_fields ){
+	if( !empty($taxonomy_fields) ){
+		foreach( $taxonomy_fields as $taxonomy => $tax_fields ){
 
-		
-		// ALL : If *all* taxonomies requested via taxonomy(all)
-		// Clear and populate all taxonomies with the sub-fields defined in 'all'
-		if($taxonomy == 'all'){
-			// Clear the Taxonomy field, start from scratch
-			$taxonomy_fields = array();
-
-			// QUERY TAXONOMIES
-			$taxonomy_args = array('public'   => true ); 
-	        $all_taxonomies = get_taxonomies($taxonomy_args, 'names');
-
-	        // Over-write all taxonomies with sub-fields from 'all'
-	        foreach ($all_taxonomies as $this_taxonomy) {
-	        	$taxonomy_fields[$this_taxonomy] = $tax_fields;
-	        }
-	        break; // END FOREACH
-		}
-	}
-
-	// Get each Taxonomy Field
-	foreach ($taxonomy_fields as $taxonomy => $tax_fields) {
-		/*
-			PROCESS THIS :
-			taxonomy_fields = {
-				"category":["id","name"],
-				"topic":["id","slug"],
-				"section":["id","slug"],
-				"post_tag":[""]
-			}
-		*/
-
-		// Taxonomy Field Options
-		$taxonomy_field_options = array(
-			'term_id',
-			'name',
-			'slug',
-			'description',
-			'parent',
-			'count',
-			'taxonomy',
-			'term_group',
-			'url',
-			);
-
-		// If $fields is Empty or 'all', set to all field_options
-		if ( empty($tax_fields[0]) || $tax_fields[0] == 'all' ){
-			$tax_fields = $taxonomy_field_options;
-		}
-
-		// Get the post's terms for this taxonomy as an Array
-		$post_terms =  wp_get_object_terms( $post_id, $taxonomy );
-		$post_terms = (array) $post_terms;
-		
-		// TEMP :
-		//$post_data['taxonomy'][$taxonomy] =  $post_terms;
-		
-		$post_data['taxonomy'][$taxonomy] = array();
-
-		///// FOR EACH TERM /////
-		foreach ($post_terms as $post_term) {
-			$post_term = (array) $post_term;
-
-			// If there is multiple taxonomy fields
-			if( count($tax_fields) > 1 ){
-				$term_obj = array();
-
-				///// FOR EACH FIELD /////
-				foreach ($tax_fields as $tax_field) {
-					if ($tax_field != 'url')
-						$term_obj[$tax_field] = $post_term[$tax_field];
-				}
-				// Get the URL field
-				if( in_array('url', $tax_fields) ){
-					$term_id = (int) $post_term['term_id'];
-					$term_obj['url'] = get_term_link( $term_id , $taxonomy );
-				}
-				// Push the multi-dimensional Array of values
-				array_push( $post_data['taxonomy'][$taxonomy], $term_obj );
-			}
-			// If there is only one taxonomy field
-			else {
-				// Just push the single term value in flat Array
-				$term_field = $tax_fields[0];
-				$term_value = $post_term[ $term_field ];
-				array_push( $post_data['taxonomy'][$taxonomy], $term_value );
-			}
 			
+			// ALL : If *all* taxonomies requested via taxonomy(all)
+			// Clear and populate all taxonomies with the sub-fields defined in 'all'
+			if($taxonomy == 'all'){
+				// Clear the Taxonomy field, start from scratch
+				$taxonomy_fields = array();
+
+				// QUERY TAXONOMIES
+				$taxonomy_args = array('public'   => true ); 
+		        $all_taxonomies = get_taxonomies($taxonomy_args, 'names');
+
+		        // Over-write all taxonomies with sub-fields from 'all'
+		        foreach ($all_taxonomies as $this_taxonomy) {
+		        	$taxonomy_fields[$this_taxonomy] = $tax_fields;
+		        }
+		        break; // END FOREACH
+			}
 		}
 
-	} // END foreach
-	
+		// Get each Taxonomy Field
+		foreach ($taxonomy_fields as $taxonomy => $tax_fields) {
+			/*
+				PROCESS THIS :
+				taxonomy_fields = {
+					"category":["id","name"],
+					"topic":["id","slug"],
+					"section":["id","slug"],
+					"post_tag":[""]
+				}
+			*/
+
+			// Taxonomy Field Options
+			$taxonomy_field_options = array(
+				'term_id',
+				'name',
+				'slug',
+				'description',
+				'parent',
+				'count',
+				'taxonomy',
+				'term_group',
+				'url',
+				);
+
+			// If $fields is Empty or 'all', set to all field_options
+			if ( empty($tax_fields[0]) || $tax_fields[0] == 'all' ){
+				$tax_fields = $taxonomy_field_options;
+			}
+
+			// Get the post's terms for this taxonomy as an Array
+			$post_terms =  wp_get_object_terms( $post_id, $taxonomy );
+			$post_terms = (array) $post_terms;
+			
+			// TEMP :
+			//$post_data['taxonomy'][$taxonomy] =  $post_terms;
+			
+			$post_data['taxonomy'][$taxonomy] = array();
+
+			///// FOR EACH TERM /////
+			foreach ($post_terms as $post_term) {
+				$post_term = (array) $post_term;
+
+				// If there is multiple taxonomy fields
+				if( count($tax_fields) > 1 ){
+					$term_obj = array();
+
+					///// FOR EACH FIELD /////
+					foreach ($tax_fields as $tax_field) {
+						if ($tax_field != 'url')
+							$term_obj[$tax_field] = $post_term[$tax_field];
+					}
+					// Get the URL field
+					if( in_array('url', $tax_fields) ){
+						$term_id = (int) $post_term['term_id'];
+						$term_obj['url'] = get_term_link( $term_id , $taxonomy );
+					}
+					// Push the multi-dimensional Array of values
+					array_push( $post_data['taxonomy'][$taxonomy], $term_obj );
+				}
+				// If there is only one taxonomy field
+				else {
+					// Just push the single term value in flat Array
+					$term_field = $tax_fields[0];
+					$term_value = $post_term[ $term_field ];
+					array_push( $post_data['taxonomy'][$taxonomy], $term_value );
+				}
+				
+			}
+
+		} // END foreach
+	} // END IF
+
 	return $post_data;
 
 }

@@ -25,8 +25,8 @@ class PW_Query extends WP_Query {
 		$fields = $this->query_vars['fields'];
 		if($fields == null || $fields=='' ) 
 			$fields='all';
-		else if($fields!='preview' && $fields!='ids' && gettype($fields)!='array')
-			$fields='all';
+		//else if($fields!='preview' && $fields!='ids' && gettype($fields)!='array')
+		//	$fields='all';
 		
 		return $fields;
 	}
@@ -1093,8 +1093,8 @@ class PW_User_Query extends WP_User_Query {
 		$fields = $this->query_vars['fields'];
 		if($fields == null || $fields=='' ) 
 			$fields='all';
-		else if($fields!='preview' && $fields!='ids' && gettype($fields)!='array')
-			$fields='all';
+		//else if($fields!='preview' && $fields!='ids' && gettype($fields)!='array')
+		//	$fields='all';
 		
 		return $fields;
 	}

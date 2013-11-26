@@ -192,7 +192,7 @@ $pw_settings = array(
 			),
 		),
 
-	'post_views'	=> array('compact', 'list', 'detail', 'grid', 'full' ),
+	'post_views'	=> array('micro', 'compact', 'list', 'detail', 'grid', 'full' ),
 
 	'template_paths' =>array(
 	
