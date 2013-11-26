@@ -34,6 +34,7 @@ postworld.controller('pwFilterFeedController',
 				///// TODO : REFACTOR INTO SITE-SPECIFIC DATA SERVICE, SYNC WITH TAX_INPUT SERVICE /////
 				// MODEL INPUT OBJECT
 				$scope.taxInput = {
+					hilight: [],
 					topic:[],
 					section:[],
 					type:[]
@@ -53,6 +54,9 @@ postworld.controller('pwFilterFeedController',
 	        $scope.feedQuery.author_name = data;
 	    });
 
+		$scope.submit1 = function() {
+			// debugger;
+		};		
     	// TODO check best location for that code, should we create a panel child?
 		$scope.toggleOrder = function() {
 			if ($scope.feedQuery.order == 'ASC') {

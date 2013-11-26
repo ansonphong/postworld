@@ -62,6 +62,15 @@ postworld.controller('pwFeedController',
 			// Loop on all query variables
 			var queryString = "";
   			for(var key in params){
+  				// Remove Null Values
+  				if (params[key]==null){  					
+  					continue;
+  				}
+  				if (key=="tax_query") {
+  					var taxInput = escape(JSON.stringify(params[key]));
+  					queryString += key + "=" + taxInput + "&";
+  					continue;
+  				};
 			    // The value is obj[key]
 			    //$scope.args.feed_query[key] = params[key];
 			    // TODO objects like taxonomy?
@@ -91,6 +100,9 @@ postworld.controller('pwFeedController',
     		// Get Query String Parameters
     		// TODO Check if location.search work on all browsers.
     		var params = $location.search();
+    		if ((params) && (params.tax_query)) {    			
+    			params.tax_query = JSON.parse(params.tax_query); 
+    		}
     		return params;
   			//$scope.convertQueryString2FeedQuery(params);  			
   		};
