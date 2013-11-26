@@ -127,7 +127,7 @@ postworld.controller('editPost',
                 get_post_data['tax_input'] = tax_input; 
 
                 ///// LOAD POST CONTENT /////
-                
+
                 // SET THE POST CONTENT
                 //if( typeof tinyMCE !== 'undefined' )
                 $timeout(function() {
@@ -138,7 +138,7 @@ postworld.controller('editPost',
                             //tinyMCE.get('post_content').setContent( "" );
                         }
                     }
-                }, 1);
+                }, 2000);
 
                 ///// LOAD AUTHOR /////
                 // EXTRACT AUTHOR NAME
