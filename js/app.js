@@ -479,13 +479,13 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
         },
         pwGetPostYearOptions: function(){
             return [
-                2007,
-                2008,
-                2009,
-                2010,
-                2011,
-                2012,
-                2013,
+                "2007",
+                "2008",
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
             ];
         },
         pwGetPostMonthOptionsPrimary: function(){
@@ -508,54 +508,54 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             return [
                 {
                     name:"January",
-                    number:"0"
-                },
-                {
-                    name:"February",
                     number:"1"
                 },
                 {
-                    name:"March",
+                    name:"February",
                     number:"2"
                 },
                 {
-                    name:"April",
+                    name:"March",
                     number:"3"
                 },
                 {
-                    name:"May",
+                    name:"April",
                     number:"4"
                 },
                 {
-                    name:"June",
+                    name:"May",
                     number:"5"
                 },
                 {
-                    name:"July",
+                    name:"June",
                     number:"6"
                 },
                 {
-                    name:"August",
+                    name:"July",
                     number:"7"
                 },
                 {
-                    name:"September",
+                    name:"August",
                     number:"8"
                 },
                 {
-                    name:"October",
+                    name:"September",
                     number:"9"
                 },
                 {
-                    name:"November",
+                    name:"October",
                     number:"10"
                 },
                 {
-                    name:"December",
+                    name:"November",
                     number:"11"
                 },
+                {
+                    name:"December",
+                    number:"12"
+                },
             ];
-        },
+        },        
         pwGetPostFormatMeta: function(){
             return [
                 {
