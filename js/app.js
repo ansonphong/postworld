@@ -1043,10 +1043,15 @@ var postActions = function ( $scope, pwData ) {
         
     }
 
+    $scope.spinnerClass = "";
+
     $scope.togglePostRelationship = function( postRelationship ) {
 
         // Localize the viewer object
         var viewer = $scope.post.viewer;
+
+        $scope.spinnerClass = "icon-spin";
+
         // Check toggle switch
         var setTo;
         if ( postRelationship == "favorites" ){
@@ -1076,6 +1081,7 @@ var postActions = function ( $scope, pwData ) {
                     //else
                         //alert( "Server error setting favorite." )
                     $scope.favoriteStatus = "done";
+                    $scope.spinnerClass = "";
                 }
                 //SET VIEW LATER
                 if ( postRelationship == "view_later"){
@@ -1087,6 +1093,7 @@ var postActions = function ( $scope, pwData ) {
                         //alert( "Server error setting view later." )
 
                     $scope.viewLaterStatus = "done";
+                    $scope.spinnerClass = "";
                 }
             },
             // ON : FAILURE
@@ -1098,7 +1105,6 @@ var postActions = function ( $scope, pwData ) {
     };
 
 };
-
 
 
 /*
@@ -1124,6 +1130,7 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
         }, 1 );
 
     // CAST VOTE ON THE POST
+    $scope.spinnerClass = "";
     $scope.votePost = function( points ){
         // Get the voting power of the current user
         if( typeof $window.pwGlobals.current_user.postworld !== 'undefined' )
@@ -1149,6 +1156,7 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
         };
         // Set Status
         $scope.voteStatus = "busy";
+        $scope.spinnerClass = "icon-spin";
         // AJAX Call 
         pwData.set_post_points ( args ).then(
             // ON : SUCCESS
@@ -1164,10 +1172,12 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
                 } //else
                     //alert('Server error voting.');
                 $scope.voteStatus = "done";
+                $scope.spinnerClass = "";
             },
             // ON : FAILURE
             function(response) {
                 $scope.voteStatus = "done";
+                $scope.spinnerClass = "";
                 //alert('Client error voting.');
             }
         );

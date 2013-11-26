@@ -159,9 +159,7 @@ postworld.controller('editPost',
         $timeout(function() {
             if( typeof tinyMCE !== 'undefined' ){
                 if( typeof tinyMCE.get('post_content') !== 'undefined' ){
-                    //$log.debug('RESET tinyMCE : ', tinyMCE);
                     tinyMCE.get('post_content').setContent( post_content );
-                    //tinyMCE.get('post_content').setContent( "" );
                 }
                 else
                     $scope.set_post_content( post_content );
