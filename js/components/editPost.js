@@ -127,9 +127,18 @@ postworld.controller('editPost',
                 get_post_data['tax_input'] = tax_input; 
 
                 ///// LOAD POST CONTENT /////
+                
                 // SET THE POST CONTENT
-                if( typeof tinyMCE !== 'undefined' )
-                    tinyMCE.get('post_content').setContent( get_post_data.post_content );
+                //if( typeof tinyMCE !== 'undefined' )
+                $timeout(function() {
+                    if( typeof tinyMCE !== 'undefined' ){
+                        if( typeof tinyMCE.get('post_content') !== 'undefined' ){
+                            //$log.debug('RESET tinyMCE : ', tinyMCE);
+                            tinyMCE.get('post_content').setContent( get_post_data.post_content );
+                            //tinyMCE.get('post_content').setContent( "" );
+                        }
+                    }
+                }, 1);
 
                 ///// LOAD AUTHOR /////
                 // EXTRACT AUTHOR NAME
