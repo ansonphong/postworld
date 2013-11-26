@@ -1055,7 +1055,7 @@ function send_activation_link( $userdata ){
 	$subject = 'Member Verification'; 
 	//$message = 'Hello,';
 	//$message .= "\n\n";
-	$message .= 'Welcome to '.get_bloginfo('name');
+	$message .= 'Thanks for signing up for '.get_bloginfo('name').'!';
 	$message .= "\n\n";
 	$message .= 'Username: '.$user_info->user_login;
 	$message .= "\n";

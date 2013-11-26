@@ -85,13 +85,8 @@ function grab_image($url,$saveto){
 	   	$file_size = file_put_contents($saveto,$raw);
 		curl_close ($ch);
 		return $file_size;
-		
-	
     }
-   
-	
 	return false;
-
 }
 
 function curl_exec_follow($ch, &$maxredirect = null) {
