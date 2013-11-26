@@ -456,7 +456,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$post_data['image']['meta'] = wp_get_attachment_metadata($thumbnail_id);
 
 						// Get the actual file URLS and inject into the object
-						if( isset($post_data['image']['meta']) ){
+						if( isset($post_data['image']['meta']) && is_array($post_data['image']['meta']) ){
+							
 							foreach( $post_data['image']['meta']['sizes'] as $key => $value ){
 								$image_size_meta = wp_get_attachment_image_src( $thumbnail_id, $key );
 								$post_data['image']['meta']['sizes'][$key]['url'] = $image_size_meta[0];
