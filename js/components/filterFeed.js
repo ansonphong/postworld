@@ -34,6 +34,7 @@ postworld.controller('pwFilterFeedController',
 				///// TODO : REFACTOR INTO SITE-SPECIFIC DATA SERVICE, SYNC WITH TAX_INPUT SERVICE /////
 				// MODEL INPUT OBJECT
 				$scope.taxInput = {
+					hilight: [],
 					topic:[],
 					section:[],
 					type:[]
