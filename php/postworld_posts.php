@@ -150,8 +150,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			$post_data[$key] = $value;
 
 		// FILTER DATA
-		if ( $key == 'post_content' )
-			$post_data[$key] = wpautop( $post_data[$key] );
+		//if ( $key == 'post_content' )
+		//	$post_data[$key] = wpautop( $post_data[$key] );
 
 	}
 
