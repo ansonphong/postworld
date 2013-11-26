@@ -62,6 +62,10 @@ postworld.controller('pwFeedController',
 			// Loop on all query variables
 			var queryString = "";
   			for(var key in params){
+  				// Remove Null Values
+  				if (params[key]==null){  					
+  					continue;
+  				}  				  				
 			    // The value is obj[key]
 			    //$scope.args.feed_query[key] = params[key];
 			    // TODO objects like taxonomy?

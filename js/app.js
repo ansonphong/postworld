@@ -508,51 +508,51 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             return [
                 {
                     name:"January",
-                    number:1
+                    number:"0"
                 },
                 {
                     name:"February",
-                    number:2
+                    number:"1"
                 },
                 {
                     name:"March",
-                    number:3
+                    number:"2"
                 },
                 {
                     name:"April",
-                    number:4
+                    number:"3"
                 },
                 {
                     name:"May",
-                    number:5
+                    number:"4"
                 },
                 {
                     name:"June",
-                    number:6
+                    number:"5"
                 },
                 {
                     name:"July",
-                    number:7
+                    number:"6"
                 },
                 {
                     name:"August",
-                    number:8
+                    number:"7"
                 },
                 {
                     name:"September",
-                    number:9
+                    number:"8"
                 },
                 {
                     name:"October",
-                    number:10
+                    number:"9"
                 },
                 {
                     name:"November",
-                    number:11
+                    number:"10"
                 },
                 {
                     name:"December",
-                    number:12
+                    number:"11"
                 },
             ];
         },
