@@ -129,16 +129,7 @@ postworld.controller('editPost',
                 ///// LOAD POST CONTENT /////
 
                 // SET THE POST CONTENT
-                //if( typeof tinyMCE !== 'undefined' )
-                $timeout(function() {
-                    if( typeof tinyMCE !== 'undefined' ){
-                        if( typeof tinyMCE.get('post_content') !== 'undefined' ){
-                            //$log.debug('RESET tinyMCE : ', tinyMCE);
-                            tinyMCE.get('post_content').setContent( get_post_data.post_content );
-                            //tinyMCE.get('post_content').setContent( "" );
-                        }
-                    }
-                }, 2000);
+                $scope.set_post_content( get_post_data.post_content );
 
                 ///// LOAD AUTHOR /////
                 // EXTRACT AUTHOR NAME
@@ -161,6 +152,24 @@ postworld.controller('editPost',
         );  
     }
 
+    // SET POST CONTENT
+    // Function checks to see if tinyMCE has initialized yet
+    // If not, it sets a timeout and runs the function again
+    $scope.set_post_content = function( post_content ){
+        $timeout(function() {
+            if( typeof tinyMCE !== 'undefined' ){
+                if( typeof tinyMCE.get('post_content') !== 'undefined' ){
+                    //$log.debug('RESET tinyMCE : ', tinyMCE);
+                    tinyMCE.get('post_content').setContent( post_content );
+                    //tinyMCE.get('post_content').setContent( "" );
+                }
+                else
+                    $scope.set_post_content( post_content );
+            }
+            else
+                    $scope.set_post_content( post_content );
+        }, 250 );
+    };
     
 
     /////----- SAVE POST FUNCTION -----//////
