@@ -403,6 +403,9 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             return userPostTypeOptions;
         },
         pwGetPostStatusOptions: function( post_type ){
+        	if ((!$window.pwGlobals.current_user) || (!$window.pwGlobals.current_user)) {
+        		return;
+        	}        	
             // GET ROLE
             var current_user_role = $window.pwGlobals.current_user.roles[0];
 
