@@ -160,10 +160,11 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
           });    
 
     // TODO remove in production
-   $rootScope.$on('$viewContentLoaded', function() {
+    /*
+    $rootScope.$on('$viewContentLoaded', function() {
       $templateCache.removeAll();
-   });
-
+    });
+    */
    //$rootScope.current_user = $window.pwGlobals.current_user;
    //$log.debug('Current user: ', $rootScope.current_user );
 
@@ -2117,6 +2118,7 @@ var postController = function ( $scope, $rootScope, $window, pwData ) {
         ){
         $scope.share_link = $window.pwGlobals.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
         $scope.language = $window.pwGlobals.language;
+        $scope.current_user_id = $window.pwGlobals.current_user.ID;
     }
     
     // Set class via ng-class, of current assigned taxonomy (topic)
