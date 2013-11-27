@@ -31,7 +31,7 @@ function calculate_rank_score ( $post_id ) {
 
 	//////////// SET DEFAULTS ////////////
 	global $pw_settings;
-	$equasion = $pw_settings['rank']['equations']['default'];
+	$equasion = $pw_settings['rank']['equations']['rsv2'];
 
 	$POINTS_WEIGHT =		$equasion['points_weight'];;
 	$COMMENTS_WEIGHT =		$equasion['comments_weight'];;

@@ -14,6 +14,6 @@ postworld.controller('inputSearch',
     $scope.input = {};
     $scope.submit = function(){
         //alert( JSON.stringify(search_context) );
-        $window.location.href = "/s/#/home/?s="+$scope.input.s;
+        $window.location.href = "/s/#/?s="+$scope.input.s;
     }
 }]);

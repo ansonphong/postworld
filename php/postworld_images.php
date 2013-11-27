@@ -173,19 +173,18 @@ function url_to_media_library( $image_url, $post_id = 0){
 
 	// SETUP
 	$upload_dir = wp_upload_dir();
-	
+	$image_data = file_get_contents($image_url); // grab_image($image_url,$file);
+
 	$base_file_name = basename($image_url);
 	$filename = $post_id."-".$base_file_name;
 	if(wp_mkdir_p($upload_dir['path']))
 	    $file = $upload_dir['path'] . '/' . $filename;
 	else
 	    $file = $upload_dir['basedir'] . '/' . $filename;
-	//file_put_contents($file, $image_data);
+	file_put_contents($file, $image_data);
 
-	$image_data = grab_image($image_url,$file);//file_get_contents($image_url);
 	// Check if post exists
-	
-	if($image_data!== FALSE){
+	if($image_data !== FALSE){
 		$postdata = get_post( $post_id, "ARRAY_A" );
 	
 		// Define the title

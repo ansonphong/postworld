@@ -92,6 +92,7 @@ $pw_settings = array(
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		'equations'			=> array(
+
 			'default'		=> array(
 				'time_compression'	=>	0.5,
 				'time_weight'		=>	1,
@@ -104,6 +105,20 @@ $pw_settings = array(
 				'free_rank_points'	=>	100,
 				'free_rank_period'	=>	3*$ONE_DAY,
 				),
+
+			'rsv2'		=> array(
+				'time_compression'	=>	0.5,
+				'time_weight'		=>	2,
+				'comments_weight'	=>	0.5,
+				'points_weight'		=>	1.5,
+				'fresh_period'		=>	1*$ONE_WEEK,
+				'fresh_multiplier'	=>	3,
+				'archive_period'	=>	3*$ONE_MONTH,
+				'archive_multiplier'=>	0.2,
+				'free_rank_points'	=>	333,
+				'free_rank_period'	=>	3*$ONE_DAY,
+				),
+			
 			),
 		),
 
@@ -169,19 +184,7 @@ $pw_settings = array(
 			),
 		),
 
-	/*
-	'formats'	=>	array(
-		'post'	=>	array(
-			'standard'	=>	array(),
-			),
-		),
-	
-	'views'		=>	array(
-		'full'	=>	"",
-		'grid'	=>	"",
-		),
-	*/
-
+	// DELETE THIS (AND TEST)
 	'buddypress'	=>	array(
 		'avatar'	=>	array(
 			'size'	=>	array(
@@ -191,6 +194,7 @@ $pw_settings = array(
 				),
 			),
 		),
+	// END DELETE THIS
 
 	'post_views'	=> array('micro', 'compact', 'list', 'detail', 'grid', 'full' ),
 
@@ -213,22 +217,6 @@ $pw_settings = array(
 	),
 
 	);
-
-
-/*
-///// BUDDYPRESS OPTIONS /////
-$bp_avatar_full_size = $pw_settings['buddypress']['avatar']['size']['full'];
-$bp_avatar_thumb_size = $pw_settings['buddypress']['avatar']['size']['thumb'];
-$bp_avatar_original_max_width = $pw_settings['buddypress']['avatar']['size']['original_max_width'];
-
-define( 'BP_AVATAR_ORIGINAL_MAX_WIDTH', $bp_avatar_original_max_width );
-define( 'BP_AVATAR_THUMB_WIDTH', $bp_avatar_thumb_size ); //change this with your desired thumb width
-define( 'BP_AVATAR_THUMB_HEIGHT', $bp_avatar_thumb_size ); //change this with your desired thumb height
-define( 'BP_AVATAR_FULL_WIDTH', $bp_avatar_full_size ); //change this with your desired full size,weel I changed it to 260 <img src="http://buddydev.com/wp-includes/images/smilies/icon_smile.gif" alt=":)" class="wp-smiley"> 
-define( 'BP_AVATAR_FULL_HEIGHT', $bp_avatar_full_size ); //change this to default height for full avatar
-//define ( 'BP_AVATAR_DEFAULT', $img_url );
-//define ( 'BP_AVATAR_DEFAULT_THUMB', $img_url );
-*/
 
 
 ?>
