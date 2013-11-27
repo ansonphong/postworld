@@ -2309,6 +2309,7 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
         username:"",
         password:"",
         email:"",
+        agreement:""
     };
 
     $scope.fieldStatus = {
