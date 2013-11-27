@@ -4,15 +4,12 @@
 // This is a 'bug' which listens for the share fields
 // And if they exist and data checks out, add a share to the DB
 
-
-add_action( 'wp_loaded', 'share_bug', 10 );
+add_action( 'setup_theme', 'share_bug', 10 ); // init
 function share_bug(){
-
 	if( isset( $_GET['u'] ) )
 		$user_id = $_GET['u'];
-	if( isset( $_GET['u'] ) )
-		$post_id = $_GET['u'];
-
+	if( isset( $_GET['p'] ) )
+		$post_id = $_GET['p'];
 	// If both user and post are supplied ie.
 	// http://localhost:8888/?u=1&p=169953  /  175474 / 178530
 
@@ -21,12 +18,11 @@ function share_bug(){
 			set_share ( $user_id, $post_id );
 			// Redirect browser
 			$permalink = get_permalink( $post_id );
-			wp_redirect( $permalink );
+			//echo $permalink;
+			wp_redirect( "http://phong.com" );
 		}
-	
 	}
 }
-
 
 function set_share ( $user_id, $post_id ){
 	/*
