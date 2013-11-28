@@ -82,13 +82,13 @@ $pw_settings = array(
 		),
 
 	'points' => array(
-		'post_types'		=> array('post','feature','blog','link','event'),
+		'post_types'		=> array('feature','blog','link','event','announcement'),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		),
 
 	'rank' => array(
-		'post_types'		=> array('post','feature','blog','link','event'),
+		'post_types'		=> array('feature','blog','link','event','announcement'),
 		'cache_interval'	=> 'fifteen_minutes',
 		'cron_logs'			=> 0,
 		'equations'			=> array(
@@ -109,11 +109,11 @@ $pw_settings = array(
 			'rsv2'		=> array(
 				'time_compression'	=>	0.5,
 				'time_weight'		=>	2,
-				'comments_weight'	=>	0.5,
+				'comments_weight'	=>	0.05,
 				'points_weight'		=>	1.5,
 				'fresh_period'		=>	1*$ONE_WEEK,
-				'fresh_multiplier'	=>	3,
-				'archive_period'	=>	3*$ONE_MONTH,
+				'fresh_multiplier'	=>	6,
+				'archive_period'	=>	1*$ONE_MONTH,
 				'archive_multiplier'=>	0.2,
 				'free_rank_points'	=>	333,
 				'free_rank_period'	=>	3*$ONE_DAY,
