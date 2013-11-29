@@ -98,6 +98,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_format',
 		'time_ago',
 		'post_meta(all)',
+		'rank_score',
 		);
 
 	$detail_fields =	array(

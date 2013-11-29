@@ -50,7 +50,7 @@ function calculate_rank_score ( $post_id ) {
 
 	//////////// GET POST VALUES ////////////
 	// TIME
-	$post_time =	get_post_time('U', true, $post_id);
+	$post_time = get_post_time('U', true, $post_id);
 	$current_time =	time();
 	$TIME = $current_time - $post_time;
 
@@ -108,6 +108,9 @@ function calculate_rank_score ( $post_id ) {
 	$TIME = pow($TIME, $TIME_CURVE);
 
 	$RANK_SCORE = ((( $POINTS*$POINTS_WEIGHT + $COMMENTS*$COMMENTS_WEIGHT ) / ($TIME * $TIME_WEIGHT)  ) * $RANK_SCORE_RANGE) * $FRESH_MULTIPLIER * $ARCHIVE_MULTIPLIER + $FREE_RANK;
+
+
+	//return $RANK_SCORE;
 
 	////////// RETURN //////////
 	// IF RANK SCORE IS NEGATIVE
