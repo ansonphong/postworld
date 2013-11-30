@@ -603,7 +603,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         post_type:"link",
         link_url:"",
         post_format:"standard",
-        post_class:"",
+        post_class:"contributor",
         tags_input:"",
         post_status:"publish",
         tax_input : {
@@ -614,6 +614,11 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         }
     };
 
+
+    // Set Post Class
+    if( $scope.roles.editor == true || $scope.roles.author == true )
+        $scope.post_data.post_class = "author";
+    
     // GET URL EXTRACT
     // 1. On detect paste
     // 2. On click
