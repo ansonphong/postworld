@@ -24,11 +24,13 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
             icon:"icon-edit-sign",
             action:"wp-edit",
         },
+        /*
         {
             name: "Flag",
             icon:"icon-flag",
             action:"flag",
         },
+        */
         {
             name: "Trash",
             icon:"icon-trash",
@@ -39,20 +41,20 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
     // Actions which each role has access to
     var actionsByRole = {
         "administrator": {
-            own:['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
-            other:['quick-edit', 'pw-edit', 'wp-edit','flag','trash']
+            own:['quick-edit', 'pw-edit', 'wp-edit','trash'],
+            other:['quick-edit', 'pw-edit', 'wp-edit','trash']
         },
         "editor":{
-            own: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
-            other: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
+            own: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
+            other: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
         },
         "author":{
-            own: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
-            other: ['flag'],
+            own: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
+            other: [],
         },
         "contributor":{
-            own: ['quick-edit', 'pw-edit', 'wp-edit','flag','trash'],
-            other: ['flag'],
+            own: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
+            other: [],
         },
         "guest":{
             own: [],
