@@ -134,9 +134,15 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 		'time_ago'
 		);
 
+	// POSTWORLD USER FIELDS
+	$pw_userdata_fields = array(
+		'user_profile_url',
+		'display_name',
+	);
+
 	// All Fields
 	if ($fields == 'all'){
-		$all_fields = array_merge($wp_comment_fields, $pw_comment_fields);
+		$all_fields = array_merge($wp_comment_fields, $pw_comment_fields, $pw_userdata_fields);
 		$fields = $all_fields;
 	}
 
@@ -156,7 +162,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 
 			}
 		}
-		// POSTWORLD COMMMENT FIELDS 
+		// POSTWORLD COMMENT FIELDS 
 		else if( $field == 'comment_points' ){
 			$comment_data[$field] = get_comment_points( $comment_id );
 		}
@@ -166,6 +172,28 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 		else if( $field == 'time_ago' ){
 			$timestamp = strtotime($wp_comment_data['comment_date_gmt']);
 			$comment_data[$field] = time_ago($timestamp);
+		}
+	}
+
+	///// POSTWORLD USER FIELDS /////
+	foreach ($fields as $field) {
+		// If the current field is a custom author data field
+		// Use pw_get_userdata() to get the data
+		if ( in_array( $field, $pw_userdata_fields ) ){
+			// EXTRACT THE FIELDS WHICH ARE
+			$get_pw_userdata_fields = array();
+			foreach ($fields as $field) {
+				if( in_array($field, $pw_userdata_fields) ){
+					array_push($get_pw_userdata_fields, $field);
+				}
+			}
+			// GET THE USER ID FROM THE SLUG
+			//$comment_data = get_comment($comment['comment_ID'],'ARRAY_A');
+			$user_id = $wp_comment_data['user_id'];
+			// GET THE USER FIELD DATA
+			$pw_userdata = pw_get_userdata( $user_id, $get_pw_userdata_fields );
+			$comment_data = array_merge( $comment_data, $pw_userdata );					
+			break;
 		}
 	}
 
