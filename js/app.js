@@ -869,6 +869,9 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
 ////////// ------------ USER AUTOCOMPLETE CONTROLLER ------------ //////////*/
 function userAutocomplete($scope, pwData) {
     $scope.username = undefined;
+    if (($scope.$parent.feedQuery) && ($scope.$parent.feedQuery.author_name)) {
+    	$scope.username = $scope.$parent.feedQuery.author_name;
+    };    
     $scope.queryList = function () {
         var searchTerm = $scope.username + "*";            
         var query_args = {
@@ -893,14 +896,15 @@ function userAutocomplete($scope, pwData) {
     $scope.$watch( "username",
         function (){
             // When it changes, emit it's value to the parent controller
-            $scope.$emit('updateUsername', $scope.username);
+            if ($scope.username) $scope.$emit('updateUsername', $scope.username);
         }, 1 );
     
     // Catch broadcast of username change
-    $scope.$on('updateUsername', function(event, data) { $scope.username = data; });
+    $scope.$on('updateUsername', function(event, data) { 
+    	if (data) $scope.username = data; 
+    	});
 
 }
-
 /*
   _____                    _         _                                  _      _       
  |_   _|_ _  __ _ ___     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
