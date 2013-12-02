@@ -131,7 +131,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 	   			$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
 	   			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		   }
-	   		return;
+	   	   return;
 	});
     
     $scope.loadComments = function () {
@@ -140,7 +140,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 
       //alert( JSON.stringify($scope.feed) );
 
-  		pwCommentsService.pw_get_comments($scope.feed).then(function(value){
+  		pwCommentsService.pw_get_comments($scope.feed).then(function(value) {
         $log.debug('Got Comments: ', value.data );
   			$scope.treedata = {children: value.data};
   			$scope.commentsLoaded = true;
@@ -311,7 +311,8 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   		var args = {};
   		args.comment_data = {};
   		args.comment_data.comment_content = child.replyText;
-  		args.comment_data.comment_post_ID = child.comment_post_ID;
+  		// we can get the post id from the child comment post id too, however, when there is no parent, we cannot get it from here. so we can get it always directly from settings.
+  		args.comment_data.comment_post_ID = settings.query.post_id; 
   		args.comment_data.comment_date = new Date(); // should we do it here? security?
   		// args.comment_data.comment_date_gmt = ;
   		// args.comment_data.comment_type = 'comment';  	// in documentation, this is not added in wordpress insert/add functions	  			
