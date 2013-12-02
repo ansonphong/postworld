@@ -1639,12 +1639,12 @@ class PW_COMMENTS extends WP_Comment_Query {
 		$join .= " left join  $wpdb->pw_prefix"."comment_meta on wp_comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id ";
 		
 		$query = "SELECT $fields FROM $wpdb->comments $join WHERE $where $groupby ORDER BY $orderby $order $limits";
-		print_r($query);
+		//print_r($query);
 		if ( $count )
 			return $wpdb->get_var( $query );
 
 		$comments = $wpdb->get_results( $query );
-		echo json_encode($comments);
+		//echo json_encode($comments);
 		$comments = apply_filters_ref_array( 'the_comments', array( $comments, &$this ) );
 
 		wp_cache_add( $cache_key, $comments, 'comment' );
