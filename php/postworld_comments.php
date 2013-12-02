@@ -218,7 +218,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 
 function pw_get_comments( $query, $fields = 'all', $tree = true ){
 
-	$wp_comments = get_comments( $query );
+	$wp_comments = pw_new_get_comments($query); //get_comments( $query );
 	if (!$wp_comments) return false;
 
 	$wp_comments = (array) $wp_comments;
