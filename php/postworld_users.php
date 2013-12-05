@@ -1196,7 +1196,7 @@ function reset_password_submit( $userdata ){
 
 
 /////----- EMAIL SINGLE RESET PASSWORD LINK // REALITY SANDWICH EXCLUSIVE -----/////
-function reset_password_mailout_single( $user_id ){
+function reset_password_mailout_single_postworld( $user_id ){
 
 	// See if user already has an activation key
 	$hash = get_user_meta( $user_id, 'reset_password_key', true );
