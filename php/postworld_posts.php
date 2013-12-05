@@ -158,10 +158,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if( in_array($key, $fields) )
 			$post_data[$key] = $value;
 
-		// FILTER DATA
-		//if ( $key == 'post_content' )
-		//	$post_data[$key] = wpautop( $post_data[$key] );
-
+		if ( $key == 'post_content' ){
+			//$post_data[$key] = pw_embed_content( $post_data[$key] );
+			// $post_data[$key] = o_embed_filter_function( $post_data[$key] ). " : TRUE";//apply_filters( 'the_content' , $post_data[$key] ). " : TRUE ";
+			// $post_data[$key] = wpautop( $post_data[$key] );
+			// $html_links = preg_replace('"\b(http://\S+)"', '<a href="$1">$1</a>', $text);
+		}
 	}
 
 	////////// WP GET_POST_CUSTOM METHOD //////////
@@ -195,11 +197,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if( in_array('post_tags_list', $fields) ){
 			$post_data["post_tags_list"] = get_the_term_list( $post_id, 'post_tag', '', '', '' );
 			if ( $post_data["post_tags_list"] == false ) $post_data["post_tags_list"] = '';
-		}
-
-		// Excerpt Filter
-		if( in_array('post_excerpt', $fields) ){
-			$post_data['post_excerpt'] = wp_filter_nohtml_kses( $post_data['post_excerpt'] );
 		}
 
 		// Edit Post Link
@@ -618,6 +615,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		} // END foreach
 	} // END IF
 
+
 	return $post_data;
 
 }
@@ -1006,5 +1004,81 @@ function pw_save_post($post_data){
 
 }
 
+
+///// O EMBED HTML /////
+// Takes an HTML / text string and replaces all oEmbed provider URLs with embed code
+
+function pw_embed_url($input){
+	$url = $input[0];
+	$o_embed_providers = array(
+		// GENERAL
+		"twitter.com/",
+		"api.embed.ly/",
+		"wordpress.com/",
+		"scribd.com/",
+		"crowdranking.com/",
+		"meetup.com/",
+		"meetu.ps/",
+
+		// AUDIO
+		"soundcloud.com/",
+		"mixcloud.com/",
+		"official.fm/",
+		"shoudio.com/",
+		"rdio.com/",
+
+		// VIDEO
+		"youtube.com/",
+		"youtu.be/",
+		"vimeo.com/",
+		"hulu.com/",
+		"ted.com/",
+		"sapo.pt/",
+		"dailymotion.com",
+		"blip.tv/",
+		"ustream.tv/",
+		"viddler.com/",
+		"qik.com/",
+		"revision3.com/",
+		"jest.com/",
+
+		// PRESENTATIONS
+		"screenr.com/",
+		"speakerdeck.com/",
+		"kickstarter.com/projects/",
+
+		// IMAGES
+		//"flickr.com/", // Resolve after the @ in URL
+		//"deviantart.com/", // Needs testing ??
+		"slideshare.net/",
+		"instagram.com/p/",
+		"instagr.am/p/",
+
+		// MOBILE
+		"polleverywhere.com/",
+
+	);
+
+	foreach( $o_embed_providers as $provider ){
+		if ( strpos( $url, $provider ) !== false ) {
+		    $o_embed = true;
+		    break;
+		}
+	}
+
+	// OEMBED : check if it's an o-embed provider
+	if( $o_embed == true )
+		$embed = wp_oembed_get($url);
+	// HOTLINK : if not, hotlink it
+	else
+		$embed = '<a target="_blank" href="' . $url . '" target="_blank">' . $url . '</a>';
+
+	return $embed;
+}
+
+
+function pw_embed_content($content){
+	return preg_replace_callback('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', 'pw_embed_url', $content." ");
+}
 
 ?>

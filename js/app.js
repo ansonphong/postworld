@@ -581,7 +581,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                 {
                     name:"Audio",
                     slug:"audio",
-                    domains:["soundcloud.com/","mixcloud.com/","official.fm/","shoudio.com/",],
+                    domains:["soundcloud.com/","mixcloud.com/","official.fm/","shoudio.com/","rdio.com/"],
                     icon:"icon-headphones"
                 },
             ];
@@ -727,6 +727,20 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                         tax_input[taxonomy].splice(1,1);
                 });// END FOREACH
                 return tax_input;
+            },
+            stripslashes: function( str ){
+                return (str + '').replace(/\\(.?)/g, function (s, n1) {
+                switch (n1) {
+                case '\\':
+                  return '\\';
+                case '0':
+                  return '\u0000';
+                case '':
+                  return '';
+                default:
+                  return n1;
+                }
+              });
             },
         };
     }]);
@@ -2109,7 +2123,12 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
  |_|   \___/|___/\__|  \____\___/|_| |_|\__|_|  \___/|_|_|\___|_|   
                                                                     
 /*////////// ------------ POST CONTROLLER ------------ //////////*/                
-var postController = function ( $scope, $rootScope, $window, pwData ) {
+var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
+
+    // Trust the post_content as HTML
+    if( typeof $scope.post.post_content !== 'undefined' ){
+        $scope.post.post_content = $sce.trustAsHtml($scope.post.post_content);
+    }
 
     // GENERATE SHARE LINK
     if(

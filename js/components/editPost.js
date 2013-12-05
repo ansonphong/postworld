@@ -394,16 +394,20 @@ postworld.controller('editPost',
     $scope.$watch( "editPost.$valid",
         function (){
         
-
-
         }, 1 );
 
     // POST DATA OBJECT
     $scope.post_data = $scope.pw_get_post_object();
     //alert(JSON.stringify($scope.post_data));
+
+    $scope.showEditorSource = function(){
+        var source = $('#post_content').val();
+        source = tinyMCE.get('post_content').getContent({format : 'raw'});
+        alert(source);
+
+    };
     
 }]);
-
 
 
 ////////// ------------ EVENT DATA/TIME CONTROLLER ------------ //////////*/

@@ -511,7 +511,7 @@ postworld.controller('pwFeedController',
 );
 
 postworld.controller('pwLoadPostController',
-    function pwLoadPostController($scope, $location, $log, $attrs, $timeout, pwData) {
+    function pwLoadPostController($scope, $location, $log, $attrs, $timeout, $sce, $sanitize, pwData) {
     	// Initialize
     	$scope.postSettings = window['load_post'];
     	if (!$scope.postSettings) throw {message:'pwLoadPostController: no post settings defined'};
@@ -534,6 +534,7 @@ postworld.controller('pwLoadPostController',
 					if (response.status==200) {
 						//$log.debug('pwPostLoadController.pw_load_post Success',response.data);						
 						$scope.post = response.data;
+
 						// Set Template URL
 				    	// Set Default Feed Template and Default Feed Item Template
 						pwData.templates.promise.then(function(value) {

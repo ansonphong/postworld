@@ -985,8 +985,9 @@ function pw_get_avatar( $obj ){
 	/*
 		$args = { user_id:"1", [ size: 256 ], [ width:256, height:256 ] }
 	*/
+
 	extract($obj);
-	
+
 	global $pw_settings;
 
 	$default_avatar = $pw_settings['avatar']['default'] ;
@@ -1008,8 +1009,19 @@ function pw_get_avatar( $obj ){
 		if ( !isset($size) ){
 			return $attachment_meta;
 		}
-		else
-			return aq_resize( $attachment_image_src[0], $size, $size, true );
+		// Size is set
+		else{	
+			$size = (int) $size;
+
+			// If requested avatar is larger than the original image
+			if( $size > $attachment_meta["width"] || $size > $attachment_meta["height"] ){
+				$size = min( $attachment_meta["width"], $attachment_meta["height"] );
+			}
+
+			$width = $size;
+			$height = $size;
+			return aq_resize( $attachment_image_src[0], $width, $height, true );
+		}
 	}
 	else{
 		global $template_paths;
@@ -1178,6 +1190,58 @@ function reset_password_submit( $userdata ){
 
 }
 
+
+
+
+
+
+/////----- EMAIL SINGLE RESET PASSWORD LINK // REALITY SANDWICH EXCLUSIVE -----/////
+function reset_password_mailout_single( $user_id ){
+
+	// See if user already has an activation key
+	$hash = get_user_meta( $user_id, 'reset_password_key', true );
+	// If no key exists
+	if ( !$hash ){
+		$hash = md5( rand() );
+		add_user_meta( $user_id, 'reset_password_key', $hash );
+	}
+
+	/*// Don't use this part for the mass-mailout 
+	// If a key exists, update it with a new one
+	else {
+		$hash = md5( rand() );
+		update_user_meta( $user_id, 'reset_password_key', $hash );
+	}
+	*/
+
+	$user_info = get_userdata($user_id);
+	$to = $user_info->user_email;           
+	$subject = 'New Reality Sandwich Live - Please Reset Password'; 
+	$message .= "\n\n";
+	$message .= "Exciting news! The expanded Reality Sandwich site -- which we call RS 2.0 -- is now live!";
+	$message .= "\n\n";
+	$message .= "We've added a lot. A stream of timely blog posts, much more video, a Community area where everyone can post, better search tools, improved commenting, and more.";
+	$message .= "\n\n";
+	$message .= "When you log into Reality Sandwich, you'll be able to do way more than ever before!";
+	$message .= "\n\n";
+	$message .= "But to login, you'll first need to reset your password. The new RS site uses a completely different technical system, and we couldn't transfer over the old passwords.";
+	$message .= "\n\n";
+	$message .= "So please click on the link below to reset your password. Then visit RS 2.0, login, and experience a deep dose of transformational culture.";
+	$message .= "\n\n";
+	$message .= 'Username: '.$user_info->user_login;
+	$message .= "\n";
+	$message .= 'Email: '.$user_info->user_email;
+	$message .= "\n\n";
+	$message .= "Click this link to reset your password:";
+	$message .= "\n";
+	$message .= home_url('/').'reset-password/?auth_key='.$hash;
+	$message .= "\n\n";
+	$message .= "Cheers,";
+	$message .= "\n";
+	$message .= "Ken, Faye, Steven, Phong, Jeremy, Tara, David, Nese, and the Reality Sandwich Team";
+	$headers = 'From: Reality Sandwich <'. get_bloginfo('admin_email') . ">\r\n";           
+	return wp_mail($to, $subject, $message, $headers); 
+}
 
 
 

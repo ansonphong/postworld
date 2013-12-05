@@ -5,11 +5,7 @@
   
 */
 
-
 	
-
-
-
 
 //---------- FLAG COMMENTS ----------//
 function flag_comment_admin(){
@@ -632,6 +628,11 @@ function pw_get_post_anon() {
 	$user_ID = get_current_user_id();
 	/* set the response type as JSON */
 	$results = pw_get_post($post_id,$fields,$user_ID);
+
+	// Apply O-Embed and Hot-links
+	if( isset($results['post_content']) )
+		$results['post_content'] = pw_embed_content( $results['post_content'] );
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $results;
