@@ -103,6 +103,14 @@ function add_record_to_comment_meta($comment_id,$total_points=0){
 
 function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null ){
 
+	// Detect and switch into edit mode
+	if( $fields == "edit" ){
+		$mode = "edit";
+		$fields = "all";
+	} else{
+		$mode = "display";
+	}
+
 	// Access the Comment Data
 	$wp_comment_data = get_comment( $comment_id, 'ARRAY_A' );
 	if (!$wp_comment_data) return false;
@@ -155,12 +163,10 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			$comment_data[$field] = $wp_comment_data[$field];
 
 			// Apply Content Filters
-			if ( $field == 'comment_content' ){
-
+			if ( $field == 'comment_content' && $mode == "display" ){
 				// ADDITIONAL FUNCTIONALITY
 				//$comment_data['comment_content'] = wpautop( $comment_data['comment_content'] );
 				//$comment_data['comment_content'] = $comment_content = pw_embed_content($comment_data['comment_content']);
-
 			}
 		}
 		// POSTWORLD COMMENT FIELDS 
