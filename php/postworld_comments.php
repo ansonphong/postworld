@@ -156,9 +156,10 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 
 			// Apply Content Filters
 			if ( $field == 'comment_content' ){
-				//$comment_data[$field] = apply_filters('the_content', $comment_data[$field] );
-				//$comment_data[$field] = apply_filters( "o_embed_filter", $comment_data[$field] );
-				$comment_data['comment_content'] = apply_filters( "o_embed_filter", $comment_data['comment_content'] );
+
+				// ADDITIONAL FUNCTIONALITY
+				//$comment_data['comment_content'] = wpautop( $comment_data['comment_content'] );
+				//$comment_data['comment_content'] = $comment_content = pw_embed_content($comment_data['comment_content']);
 
 			}
 		}
@@ -325,18 +326,10 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		// Apply Content Filters
 		if ( isset($comment_data['comment_content']) ){
 			$comment_content = $comment_data['comment_content'];
-			//$comment_content = apply_filters('the_content', $comment_content );
-			//$comment_content = str_replace( '&#160;',' ', $comment_content);
-			//$comment_content = preg_replace("/\s+/", " ", $comment_content); //preg_replace( '/\h+/', ' ', $comment_content );
-			//$comment_content = preg_replace("/(\r\n){3,}/","\r\n\r\n",trim($comment_content));
-			//$comment_content = preg_replace('/[ \t]+/', ' ', preg_replace('/\s*$^\s*/m', "\n", $comment_content));
-			//$comment_content = preg_replace("/\s+/", " ", $comment_content);
-			//$comment_data[$field] = $comment_data[$field]. "test";
-			//$comment_content = "test";
 
-			//$comment_content = apply_filters( "o_embed_filter", $comment_content );
-
-			$comment_content = o_embed_filter_function($comment_content);
+			// ADDITIONAL FUNCTIONALITY
+			//$comment_content = pw_embed_content($comment_content);
+			//$comment_content = wpautop( $comment_content );
 
 			$comment_data['comment_content'] = $comment_content;
 		}
