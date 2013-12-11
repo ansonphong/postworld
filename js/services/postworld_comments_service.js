@@ -45,6 +45,10 @@ postworld.factory('pwCommentsService', function ($resource, $q, $log,pwData) {
     return {
     	comments_settings: comments_settings,
     	comments_data: comments_data,
+		pw_get_comment: function(args) {
+			if (!args.comment_id) throw {message:'pw_get_comment - no id defined'};
+			return pwData.wp_ajax('pw_get_comment',args);
+		},
 		pw_get_comments: function(feed) {
 			var settings = this.comments_settings[feed];
 			if (!settings) throw {message:'comments settings not initialized properly'};

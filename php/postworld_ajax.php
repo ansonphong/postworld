@@ -711,6 +711,30 @@ add_action("wp_ajax_nopriv_pw_get_templates", "pw_get_templates_anon");
  * 
  ************************** */
 
+/* Actions for pw_get_comment () */
+
+function pw_get_comment_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	if($args['comment_id']) $comment_id = $args['comment_id'];
+	else ErrorReturn($response, 400, 'missing argument comment_id'); 
+	
+	if ($args['fields']) $fields = $args['fields'];
+	else $fields = 'all';
+	
+	if ($args['viewer_user_id']) $viewer_user_id = $args['viewer_user_id'];
+	else $viewer_user_id = null;
+	
+	/* set the response type as JSON */
+	$results = pw_get_comment($comment_id, $fields, $viewer_user_id);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
  /* Actions for pw_get_comments () */
 
 function pw_get_comments_anon() {
@@ -736,8 +760,14 @@ function pw_get_comments_anon() {
 	die();
 }
 
+/* Action Hook for pw_get_comment() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_comment", "pw_get_comment_anon");
+add_action("wp_ajax_pw_get_comment", "pw_get_comment_anon");
+
 /* Action Hook for pw_get_comments() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
+/* Action Hook for pw_get_comments() - Anonymous users */
+//add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
 //add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
 
 

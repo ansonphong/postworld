@@ -165,8 +165,8 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			// Apply Content Filters
 			if ( $field == 'comment_content' && $mode == "display" ){
 				// ADDITIONAL FUNCTIONALITY
-				//$comment_data['comment_content'] = wpautop( $comment_data['comment_content'] );
-				//$comment_data['comment_content'] = $comment_content = pw_embed_content($comment_data['comment_content']);
+				$comment_data['comment_content'] = wpautop( $comment_data['comment_content'] );
+				$comment_data['comment_content'] = $comment_content = pw_embed_content($comment_data['comment_content']);
 			}
 		}
 		// POSTWORLD COMMENT FIELDS 
@@ -334,8 +334,8 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 			$comment_content = $comment_data['comment_content'];
 
 			// ADDITIONAL FUNCTIONALITY
-			//$comment_content = pw_embed_content($comment_content);
-			//$comment_content = wpautop( $comment_content );
+			$comment_content = pw_embed_content($comment_content);
+			$comment_content = wpautop( $comment_content );
 
 			$comment_data['comment_content'] = $comment_content;
 		}

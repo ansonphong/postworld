@@ -288,9 +288,38 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
   	// close other boxes
   	child.deleteBox = false;
   	child.replyBox = false;
-  	// toggle edit box
-  	child.editMode = !child.editMode;
-  	// TODO add focus here
+  	
+  	// if in Edit Mode, just close it.
+  	if (child.editMode) {
+  		child.editMode = false;
+  		return;
+  	}
+  	// if not in Edit Mode, make a call to get comment  	
+  	if (!child.editMode) {
+  		var args = {};
+  		args.comment_id = child.comment_ID;
+  		args.fields = 'edit';
+  		// Should we set editInProgress here?
+  		pwCommentsService.pw_get_comment(args).then(
+  			// success
+  			function(response) {
+  				if ((response.status==200)&&(response.data)) {
+  					// set raw comment value
+  					child.comment_content_raw = response.data.comment_content; 
+  					// child.editText = response.comment_content;  					
+  					// set editMode
+  					child.editMode = true;
+  				} else {
+  					child.editMode = false;
+  				}
+  			},
+  			// failure
+  			function(response) {
+  					child.editMode = false;  				
+  			}
+  		);  		
+  	}
+  	// child.editMode = !child.editMode;  	
   };
   
   $scope.toggleDeleteBox = function(child) {
