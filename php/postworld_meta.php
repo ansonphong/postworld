@@ -2,10 +2,7 @@
 
 function pw_get_post_meta($post_id){
 	global $wpdb;
-	
-
 	$post_meta_table = $wpdb->pw_prefix.'post_meta';
-
 	$meta = $wpdb->get_row("SELECT * FROM $post_meta_table WHERE post_id = $post_id", ARRAY_A);
 	return $meta;
 }
@@ -34,7 +31,7 @@ function pw_set_post_meta($post_id, $post_meta){
 	 */
 	 
 	 global $wpdb;
-	 $wpdb -> show_errors(); 
+	 //$wpdb -> show_errors(); 
 	 $insertComma = FALSE;
 	 
 	 $query = "Update $wpdb->pw_prefix"."post_meta set ";
@@ -53,13 +50,11 @@ function pw_set_post_meta($post_id, $post_meta){
 	 	if($insertComma === TRUE) $query.=" , ";
 	 	$query.="link_url='".$post_meta['link_url']."' ";
 	 }
-	 
-
 
 	 if($insertComma === FALSE && $post_meta['link_url']==null){return "insufficient Parameters";}
 	 else{
 	 	$query.=" where post_id=".$post_id ;
-		echo $query;
+		//echo $query;
 	 	$wpdb->query($query);
 	 }
 }
