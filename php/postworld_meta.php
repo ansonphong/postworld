@@ -34,6 +34,8 @@ function pw_set_post_meta($post_id, $post_meta){
 	 //$wpdb -> show_errors(); 
 	 $insertComma = FALSE;
 	 
+	 add_record_to_post_meta($post_id);
+
 	 $query = "Update $wpdb->pw_prefix"."post_meta set ";
 	 if($post_meta['post_class'] !=null ){
 	 	$query.="post_class='".$post_meta['post_class']."' ";
