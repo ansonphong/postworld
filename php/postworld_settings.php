@@ -4,6 +4,9 @@ global $pw_settings;
 $pw_settings = array(
 
 	'language'	=>	array(
+		'blocks'	=> array(
+			'close_alert' => 'To live ad free on Reality Sandwich, become a Conscious Agent.',
+			),
 		'points'	=> array(
 			'post'	=> array(
 				'name'	=>					'Post Karma',
