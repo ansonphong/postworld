@@ -2107,10 +2107,7 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
                 $modalInstance.dismiss('close');
         }); 
 
-
 };
-
-
 
 
 
@@ -2125,22 +2122,31 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
 /*////////// ------------ POST CONTROLLER ------------ //////////*/                
 var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
 
+    // Define backup source for 'post' object 
+    if( typeof $scope.post === 'undefined' ){
+        if( typeof $window.post != 'undefined' ){
+            $scope.post = $window.post;
+        }
+    }
+
     // Trust the post_content as HTML
     if( typeof $scope.post.post_content !== 'undefined' ){
         $scope.post.post_content = $sce.trustAsHtml($scope.post.post_content);
     }
 
-    // GENERATE SHARE LINK
+    // IMPORT LANGUAGE
     if(
         typeof $window.pwGlobals.paths !== 'undefined' &&
         typeof $window.pwGlobals.language !== 'undefined' &&
         typeof $window.pwGlobals.current_user !== 'undefined' &&
         typeof $scope.post !== 'undefined'
         ){
-        $scope.share_link = $window.pwGlobals.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
         $scope.language = $window.pwGlobals.language;
         $scope.current_user_id = $window.pwGlobals.current_user.ID;
+        // GENERATE  SHARE LINK
+        $scope.share_link = $window.pwGlobals.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
     }
+    //alert( JSON.stringify( $scope.language ) );
     
     // Set class via ng-class, of current assigned taxonomy (topic)
     // TODO : Break this into RS theme specific scripts 
@@ -2165,7 +2171,6 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
         ( $scope.expanded == "" ) ? $scope.expanded = "expanded" : $scope.expanded = "" ;
         ( $scope.clickTip != "" ) ? $scope.clickTip = "" : $scope.clickTip = clickTip ;
     };
-
 
     // Update the contents of post after Quick Edit
     $rootScope.$on('postUpdated', function(event, post_id) {
@@ -2198,7 +2203,6 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
     });
 
 };
-
 
 
 
