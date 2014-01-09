@@ -369,7 +369,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					///// DEFAULT FALLBACK IMAGES /////
 
 					// SETUP DEFAULT IMAGE FILE NAMES : ...jpg
-					$link_format =  get_link_format( $post_id );
+					$link_format =  get_post_format( $post_id );
 					$default_type_format_thumb_filename = 	'default-'.$post_data['post_type'].'-'.$link_format.'-thumb.jpg';
 					$default_format_thumb_filename = 		'default-'.$link_format.'-thumb.jpg';
 					$default_thumb_filename = 				'default-thumb.jpg';
