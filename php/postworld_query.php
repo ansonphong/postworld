@@ -1,6 +1,5 @@
 <?php 
 
-
 class PW_Query extends WP_Query {
 	 
 	    /*function __construct( $args = array() ) {
@@ -70,7 +69,9 @@ class PW_Query extends WP_Query {
 		$where =" WHERE ";	
 		$insertAnd= '0';
 		//echo($insertAnd);
-		if(array_key_exists('link_format',  $this->query_vars)){
+
+			///// LINK FORMAT /////
+			if(array_key_exists('link_format',  $this->query_vars)){
 				if(gettype($this->query_vars['link_format']) == "array") {
 						if($insertAnd=='0'){
 							 //$where.=" and ";
@@ -89,6 +90,7 @@ class PW_Query extends WP_Query {
 					}
 			}
 		
+			///// POST CLAS /////
 			if(array_key_exists('post_class',  $this->query_vars)){
 					if(gettype($this->query_vars['post_class']) == "array") {
 						if($insertAnd=='1'){

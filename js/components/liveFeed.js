@@ -1,86 +1,86 @@
 'use strict';
 
 postworld.config(function($locationProvider){
-    // $locationProvider.html5Mode(true).hashPrefix('!');
+	// $locationProvider.html5Mode(true).hashPrefix('!');
 });
 
 postworld.directive('liveFeed', function() {
-    return {
-        restrict: 'A',
-        // DO not set url here and in nginclude at the same time, so many errors!
-        // templateUrl: jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html',
-        replace: true,
-        controller: 'pwFeedController',
-        scope : {
-        	
-        },
-    };
+	return {
+		restrict: 'A',
+		// DO not set url here and in nginclude at the same time, so many errors!
+		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html',
+		replace: true,
+		controller: 'pwFeedController',
+		scope : {
+			
+		},
+	};
 });
 
 postworld.directive('loadFeed', function() {
-    return {
-        restrict: 'A',
-        // DO not set url here and in nginclude at the same time, so many errors!
-        // templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
-        //replace: true,
-        controller: 'pwFeedController',
-        scope : {
-        	
-        }
-    };
+	return {
+		restrict: 'A',
+		// DO not set url here and in nginclude at the same time, so many errors!
+		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
+		//replace: true,
+		controller: 'pwFeedController',
+		scope : {
+			
+		}
+	};
 });
 
 postworld.directive('loadPost', function() {
-    return {
-        restrict: 'A',
-        // DO not set url here and in nginclude at the same time, so many errors!
-        // templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
-        replace: true,
-        controller: 'pwLoadPostController',
-        scope : {
-        	
-        }
-    };
+	return {
+		restrict: 'A',
+		// DO not set url here and in nginclude at the same time, so many errors!
+		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
+		replace: true,
+		controller: 'pwLoadPostController',
+		scope : {
+			
+		}
+	};
 });
 
 postworld.controller('pwFeedController',
-    function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData, $route) {
+	function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData, $route) {
 
-    	// Definitions
-    	/*
-  		$scope.convertQueryString2FeedQuery= function (params) {
-  			$log.info('Feed Query Override by Query String',params);
-  			for(var key in params){
-			    // The value is obj[key]
-			    $scope.args.feed_query[key] = params[key];
+		// Definitions
+		/*
+		$scope.convertQueryString2FeedQuery= function (params) {
+			$log.info('Feed Query Override by Query String',params);
+			for(var key in params){
+				// The value is obj[key]
+				$scope.args.feed_query[key] = params[key];
 			}			
-  		};
-  		*/
-  		$scope.convertFeedQuery2QueryString= function (params) {
+		};
+		*/
+		$scope.convertFeedQuery2QueryString= function (params) {
 			// $log.info('pwFeedController convertFeedQuery2QueryString', params);
-  			$log.info('Feed Query Override by Feed Query',params);			  			
+			$log.info('Feed Query Override by Feed Query',params);			  			
 			// Loop on all query variables
 			var queryString = "";
-  			for(var key in params){
-  				// Remove Null Values
-  				if (params[key]==null){  					
-  					continue;
-  				}
-  				if (key=="tax_query") {
-  					var taxInput = escape(JSON.stringify(params[key]));
-  					queryString += key + "=" + taxInput + "&";
-  					continue;
-  				};
-			    // The value is obj[key]
-			    //$scope.args.feed_query[key] = params[key];
-			    // TODO objects like taxonomy?
-			    // TODO arrays?
-			    if ((params[key]!==0) && (params[key]!==false)) {
-			    	if (params[key] == "") {
-			    		continue;
-			    	}
-			    }  
-		    	queryString += key + "=" + escape(params[key]) + "&"; 
+			for(var key in params){
+				// Remove Null Values
+				if (params[key]==null){  					
+					continue;
+				}
+				if (key=="tax_query") {
+					var taxInput = escape(JSON.stringify(params[key]));
+					queryString += key + "=" + taxInput + "&";
+					continue;
+				};
+				// The value is obj[key]
+				//$scope.args.feed_query[key] = params[key];
+				// TODO objects like taxonomy?
+				// TODO arrays?
+				if ((params[key]!==0) && (params[key]!==false)) {
+					if (params[key] == "") {
+						continue;
+					}
+				}  
+				queryString += key + "=" + escape(params[key]) + "&"; 
 			}
 			queryString = queryString.substring(0, queryString.length - 1);
 			$log.debug('path is ',$location.path());
@@ -90,87 +90,87 @@ postworld.controller('pwFeedController',
 			//$location.path().search(queryString);
 			$log.info('abslute path = ',$location.absUrl(),queryString);			
 			//$log.info('pwFeedController convertFeedQuery2QueryString', queryString);  			
-  		};
+		};
 
-  		$scope.getQueryStringArgs= function () {
-  			// TODO Should query string work with live feed only?
-  			if ($attrs.loadFeed) {
-  				return;
-  			}
-    		// Get Query String Parameters
-    		// TODO Check if location.search work on all browsers.
-    		var params = $location.search();
-    		if ((params) && (params.tax_query)) {    			
-    			params.tax_query = JSON.parse(params.tax_query); 
-    		}
-    		return params;
-  			//$scope.convertQueryString2FeedQuery(params);  			
-  		};
-    	
-    	
-    	// Initialize
-    	$scope.busy = false; 				// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
-    	$scope.firstRun = true; 			// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
+		$scope.getQueryStringArgs= function () {
+			// TODO Should query string work with live feed only?
+			if ($attrs.loadFeed) {
+				return;
+			}
+			// Get Query String Parameters
+			// TODO Check if location.search work on all browsers.
+			var params = $location.search();
+			if ((params) && (params.tax_query)) {    			
+				params.tax_query = JSON.parse(params.tax_query); 
+			}
+			return params;
+			//$scope.convertQueryString2FeedQuery(params);  			
+		};
+		
+		
+		// Initialize
+		$scope.busy = false; 				// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
+		$scope.firstRun = true; 			// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 		$scope.args = {};
 		$scope.args.feed_query = {};
 		$scope.feed_query = {};
 		$scope.scrollMessage = "";
-    	$scope.items = [];
-    	$scope.message = "";    	
-    	
-    	// List of Post Items displayed in Scroller
-    	// is this a live feed or a load feed?
-    	if ($attrs.liveFeed)    { 
-    		$scope.directive = 'liveFeed';
-    		$scope.feed		= $attrs.liveFeed;
-	    	$scope.args.feed_id = $attrs.liveFeed; // This Scope variable will propagate to all directives inside Live Feed
-    	}
-    	else  if ($attrs.loadFeed)   {
-    		$scope.directive = 'loadFeed';
-    		$scope.feed		= $attrs.loadFeed;
-	    	$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
-    	};    	
-    	    	    	  	
-    	// Set Default Feed Template and Default Feed Item Template
+		$scope.items = [];
+		$scope.message = "";    	
+		
+		// List of Post Items displayed in Scroller
+		// is this a live feed or a load feed?
+		if ($attrs.liveFeed)    { 
+			$scope.directive = 'liveFeed';
+			$scope.feed		= $attrs.liveFeed;
+			$scope.args.feed_id = $attrs.liveFeed; // This Scope variable will propagate to all directives inside Live Feed
+		}
+		else  if ($attrs.loadFeed)   {
+			$scope.directive = 'loadFeed';
+			$scope.feed		= $attrs.loadFeed;
+			$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
+		};    	
+							
+		// Set Default Feed Template and Default Feed Item Template
 		pwData.templates.promise.then(function(value) {
 				if (!$scope.feed) {
 					$log.debug('no valid Feed ID provided in Feed Settings',$scope);
 					return;
 				}
 				
-		    	// Set Title
-		    	if (pwData.feed_settings[$scope.feed].title) {
-		    		$scope.title = pwData.feed_settings[$scope.feed].title;
-		    	} else {
-		    		$scope.title = '';
-		    	}				
+				// Set Title
+				if (pwData.feed_settings[$scope.feed].title) {
+					$scope.title = pwData.feed_settings[$scope.feed].title;
+				} else {
+					$scope.title = '';
+				}				
 				var view = 'list';	// TODO get from Constant values
 				// Get Feed Item Template from Feed Settings by default
 			   if (pwData.feed_settings[$scope.feed].view.current)
-			   		view = pwData.feed_settings[$scope.feed].view.current;
-		    	$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view);
+					view = pwData.feed_settings[$scope.feed].view.current;
+				$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view);
 				//$log.debug('pwFeedController Set Initial Feed Item View Type', $scope.feed_item_view_type);
 				
 			   // Get Feed Template from feed_settings if it exists, otherwise get it from default path
 			   if (pwData.feed_settings[$scope.feed].feed_template) {
-			   		var template = pwData.feed_settings[$scope.feed].feed_template;			   	
-			    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
+					var template = pwData.feed_settings[$scope.feed].feed_template;			   	
+					$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
 					//$log.debug('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
 			   }
 			   else {
-			   		if ($scope.directive=='liveFeed')
-			   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html';
-			   		else if ($scope.directive=='loadFeed')
-			   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html';
-			   		// just use default template provided in directive settings, no action required
-			   		return;			   	
+					if ($scope.directive=='liveFeed')
+						$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html';
+					else if ($scope.directive=='loadFeed')
+						$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html';
+					// just use default template provided in directive settings, no action required
+					return;			   	
 			   }
 				// $log.debug('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
 		});
-    	
+		
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
 		   $log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
-	    	$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view); 
+			$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view); 
 		   // Broadcast to all children
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
 		   });
@@ -259,7 +259,7 @@ postworld.controller('pwFeedController',
 			// $scope.injectAds();
 		};
 		
-   		$scope.fillFeedData = function(response) {
+		$scope.fillFeedData = function(response) {
 			// Reset Feed Data
 			pwData.feed_data[$scope.feed] = {};
 			if ($scope.directive=="loadFeed") {
@@ -293,10 +293,10 @@ postworld.controller('pwFeedController',
 				pwData.feed_data[$scope.feed].status = 'loaded';						
 				$scope.scrollMessage = "Scroll down to load more.";						
 			}   			
-   		};
-   		
-   		$scope.getNext = function() {
-	    	$scope.message = "";   			
+		};
+		
+		$scope.getNext = function() {
+			$scope.message = "";   			
 			// If already getting results, do not run again.
 			if ($scope.busy) {
 				$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
@@ -329,19 +329,19 @@ postworld.controller('pwFeedController',
 			this.getNext();
 		};
 		$scope.pwLiveFeed = function() {
-			    				
+								
 			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
-	    	// identify the feed_settings feed_id
+			// identify the feed_settings feed_id
 			
 			$scope.items = {};
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
-	    	// get Query String Parameters,
-	    	var qsArgs = $scope.getQueryStringArgs();			
+			// get Query String Parameters,
+			var qsArgs = $scope.getQueryStringArgs();			
 			// We need to work with a clone of the args value
 			var argsValue = JSON.parse(JSON.stringify($scope.args));
 			var qsArgsValue = JSON.parse(JSON.stringify(qsArgs));
-        	pwData.pw_live_feed(argsValue,qsArgsValue).then(
+			pwData.pw_live_feed(argsValue,qsArgsValue).then(
 				// Success
 				function(response) {
 					$scope.busy = false;
@@ -385,7 +385,7 @@ postworld.controller('pwFeedController',
 		  };
 		$scope.pwLoadFeed = function() {
 			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
-	    	// identify the feed_settings feed_id
+			// identify the feed_settings feed_id
 			
 			$scope.items = {};
 			// TODO set Nonce from UI
@@ -404,7 +404,7 @@ postworld.controller('pwFeedController',
 				$scope.pwScrollFeed();
 				return;
 			}
-        	pwData.pw_load_feed(args).then(
+			pwData.pw_load_feed(args).then(
 				// Success
 				function(response) {
 					$scope.busy = false;
@@ -457,7 +457,7 @@ postworld.controller('pwFeedController',
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
 			// console.log('Params=',$scope.args);
-        	pwData.pw_get_posts($scope.args).then(
+			pwData.pw_get_posts($scope.args).then(
 				// Success
 				function(response) {
 					$scope.busy = false;
@@ -507,23 +507,23 @@ postworld.controller('pwFeedController',
 				}
 			);
 		  };
-    }
+	}
 );
 
 postworld.controller('pwLoadPostController',
-    function pwLoadPostController($scope, $location, $log, $attrs, $timeout, $sce, $sanitize, pwData) {
-    	// Initialize
-    	$scope.postSettings = window['load_post'];
-    	if (!$scope.postSettings) throw {message:'pwLoadPostController: no post settings defined'};
-    	$scope.postArgs = $scope.postSettings[$attrs.loadPost];
-    	if (!$scope.postSettings[$attrs.loadPost]) throw {message:'pwLoadPostController: no post settings for '+$attrs.loadPost+'defined'};
+	function pwLoadPostController($scope, $location, $log, $attrs, $timeout, $sce, $sanitize, pwData) {
+		// Initialize
+		$scope.postSettings = window['load_post'];
+		if (!$scope.postSettings) throw {message:'pwLoadPostController: no post settings defined'};
+		$scope.postArgs = $scope.postSettings[$attrs.loadPost];
+		if (!$scope.postSettings[$attrs.loadPost]) throw {message:'pwLoadPostController: no post settings for '+$attrs.loadPost+'defined'};
 		$scope.args = {};
 		$scope.args.post_id = $scope.postArgs.post_id;    	     	    	    	  	
 		$scope.args.fields = $scope.postArgs.fields;    	     	    	    	  	
-    	   				
+						
 		$scope.pwLoadPost = function() {
 			
-        	pwData.pw_get_post($scope.args).then(
+			pwData.pw_get_post($scope.args).then(
 				// Success
 				function(response) {
 					$scope.busy = false;
@@ -536,19 +536,19 @@ postworld.controller('pwLoadPostController',
 						$scope.post = response.data;
 
 						// Set Template URL
-				    	// Set Default Feed Template and Default Feed Item Template
+						// Set Default Feed Template and Default Feed Item Template
 						pwData.templates.promise.then(function(value) {
 							   if ($scope.post) {
-							   		var template = $scope.postArgs.view;
-							   		var post_type = 'post';
-							   		if ($scope.post.post_type) post_type = $scope.post.post_type;			   		
-							    	$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
+									var template = $scope.postArgs.view;
+									var post_type = 'post';
+									if ($scope.post.post_type) post_type = $scope.post.post_type;			   		
+									$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
 									//$log.debug('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
 							   }
 							   else {
-						   			$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
+									$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
 							   }
-						   		return;
+								return;
 						});
 						return response.data;						
 					} else {
@@ -567,41 +567,41 @@ postworld.controller('pwLoadPostController',
 			);
 		  };
 		  $scope.pwLoadPost();
-    }
+	}
 );
 
 postworld.controller('pwTestController',
-    function pwTestController($scope, $location, $log, $attrs, $timeout, pwData) {
-    	// Initialize
-    	   				
+	function pwTestController($scope, $location, $log, $attrs, $timeout, pwData) {
+		// Initialize
+						
 		$scope.pwTestPost = function() {
 
 			var post_data = {
-		       'post_title'    : 'hello content',
-		       'post_content'  :'sdsfdsfds',
-		       'post_status'   : 'publish',
-		       'post_author'   : 1,
-		       'post_category' : [8,39 ],
-		       'post_class':'test',
-		       'post_format' :'ggggggg',
-		       'link_url':'sssssss',
-		       'external_image' : 'fgdfgdfgdf',				
+				'post_title'   	: 'Hello Title',
+				'post_content' 	: 'Test content.',
+				'post_status'  	: 'publish',
+				'post_author'  	: 1,
+				'post_category'	: [1,2,4],
+				'post_class'	: 'standard',
+				'post_format' 	: 'post',
+				'link_url'		: 'http://www.com',
+				'external_image': 'http://www.com/image.jpg',				
 			};
-            pwData.pw_save_post( post_data ).then(
-                // Success
-                function(response) {    
-                    //alert( "RESPONSE : " + response.data );
-                    $log.debug('pwData.pw_save_post : saved post id: ', response.data);                    
+			pwData.pw_save_post( post_data ).then(
+				// Success
+				function(response) {    
+					//alert( "RESPONSE : " + response.data );
+					$log.debug('pwData.pw_save_post : saved post id: ', response.data);                    
 
-                },
-                // Failure
-                function(response) {
-                    //alert('error');
+				},
+				// Failure
+				function(response) {
+					//alert('error');
 
-                }
-            );
+				}
+			);
 			
 		  };
 		  $scope.pwTestPost();
-    }
+	}
 );

@@ -9,15 +9,22 @@ module.exports = function(grunt) {
         files: {
           //'build/postworld.min.js': ['js/*.js', 'js/**/*.js'],
           'deploy/postworld.min.js':[
-        	  'lib/angular/angular.min.js', // Angular.js has to go first
-          	'lib/angular/ui-bootstrap-tpls-0.6.0.min.js',
-          	'lib/bootstrap/bootstrap.min.js',
+        	  
+            // Angular
+            'lib/angular/angular.min.js', // Angular.js has to go first
+
+          	// Bootstrap
+            'lib/bootstrap/bootstrap.min.js',             // Main Bootstrap JS
+            'lib/angular/ui-bootstrap-tpls-0.6.0.min.js', // Angular UI Boostrap
+            'lib/angular-strap/angular-strap.js',         // Angular Strap
+
+            // Angular Extensions
           	'lib/angular/angular-ui-utils.min.js',
           	'lib/angular/angular-sanitize.min.js',
           	'lib/angular/angular-route.min.js',
           	'lib/angular/angular-resource.min.js',
 
-          	// Here comes Postworld
+          	// Postworld
           	'js/*.js',
           	'js/**/*.js',
 

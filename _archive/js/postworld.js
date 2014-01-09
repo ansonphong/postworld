@@ -371,3 +371,70 @@ angular.module('postworld', []).
 
 
 	});
+
+
+
+
+
+/*
+element.bind("keydown keypress", function(event) {
+    if(event.which === 13) {
+        scope.$apply(function(){
+            //scope.$eval(attrs.ngEnter);
+            scope.$eval("submit()");
+        });
+        event.preventDefault();
+    }
+});
+*/
+
+
+
+
+
+/*
+///// BLUR FOCUS DIRECTIVE /////
+// Adds 'has-focus' class to form items in focus
+var blurFocusDirective = function () {
+    return {
+        restrict: 'E',
+        require: '?ngModel',
+        link: function (scope, elm, attr, ctrl) {
+            if (!ctrl) {
+                return;
+            }
+
+            elm.on('focus', function () {
+                elm.addClass('has-focus');
+
+                scope.$apply(function () {
+                    ctrl.hasFocus = true;
+                });
+            });
+
+            elm.on('blur', function () {
+                elm.removeClass('has-focus');
+                elm.addClass('has-visited');
+
+                scope.$apply(function () {
+                    ctrl.hasFocus = false;
+                    ctrl.hasVisited = true;
+                });
+            });
+
+            elm.closest('form').on('submit', function () {
+                elm.addClass('has-visited');
+
+                scope.$apply(function () {
+                    ctrl.hasFocus = false;
+                    ctrl.hasVisited = true;
+                });
+            });
+
+        }
+    };
+
+};
+postworld.directive('input', blurFocusDirective);
+postworld.directive('select', blurFocusDirective);
+*/
