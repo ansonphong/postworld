@@ -639,8 +639,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	post_id - If added to the database, otherwise return WP_Error Object
 	 
 	* */
-	
-	$post_ID = wp_insert_post($postarr,$wp_error);
+	//return json_encode($postarr);
+	$post_ID = wp_insert_post( $postarr, $wp_error );
 	
 	if(gettype($post_ID) == 'integer'){ // successful
 
@@ -676,35 +676,36 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			$wpdb -> show_errors();
 			
 			add_record_to_post_meta($post_ID);
-				$query = "update $wpdb->pw_prefix"."post_meta set ";
-				 $insertComma = FALSE;
-				if(isset($postarr["post_class"])){
-					$query.="post_class='".$postarr["post_class"]."'";
-					 $insertComma= TRUE;
-				} 
-				if(isset($postarr["link_format"])){
-					if($insertComma === TRUE) $query.=" , ";
-					$query.="link_format='".$postarr["link_format"]."'";
-					 $insertComma= TRUE;
-				} 
-				if(isset($postarr["link_url"])){
-					if($insertComma === TRUE) $query.=" , ";
-					$query.="link_url='".$postarr["link_url"]."'";
-					 $insertComma= TRUE;
-				} 
+
+			$query = "update $wpdb->pw_prefix"."post_meta set ";
+			 $insertComma = FALSE;
+			if(isset($postarr["post_class"])){
+				$query.="post_class='".$postarr["post_class"]."'";
+				 $insertComma= TRUE;
+			} 
+			if(isset($postarr["link_format"])){
+				if($insertComma === TRUE) $query.=" , ";
+				$query.="link_format='".$postarr["link_format"]."'";
+				 $insertComma= TRUE;
+			} 
+			if(isset($postarr["link_url"])){
+				if($insertComma === TRUE) $query.=" , ";
+				$query.="link_url='".$postarr["link_url"]."'";
+				 $insertComma= TRUE;
+			} 
+			if(isset($postarr["post_author"])){
+				if($insertComma === TRUE) $query.=" , ";
+				$query.="author_id=".$postarr["post_author"];
+				 $insertComma= TRUE;
+			} 
+		 	if($insertComma === FALSE ){}
+			else{
+				$query.=" where post_id=".$post_ID ;
+				//echo $query;
+ 				$wpdb->query($query);
 				
-				if(isset($postarr["post_author"])){
-					if($insertComma === TRUE) $query.=" , ";
-					$query.="author_id=".$postarr["post_author"];
-					 $insertComma= TRUE;
-				} 
-			 	if($insertComma === FALSE ){}
-				else{
-					$query.=" where post_id=".$post_ID ;
-					//echo $query;
-	 				$wpdb->query($query);
-					
-				}
+			}
+
 		}
 
 

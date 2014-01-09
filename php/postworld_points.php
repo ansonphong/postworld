@@ -785,7 +785,7 @@
 		//$wpdb-> show_errors();
 		
 		if(!does_post_meta_exist($post_id)){
-			$format = get_link_format();
+			$format = get_post_format(); // TODO : Phong - Why this function used?
 			if ( false === $format )
 			$format = 'standard';
 			

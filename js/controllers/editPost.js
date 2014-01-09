@@ -193,7 +193,7 @@ postworld.controller('editPost',
             var post_data = $scope.post_data;
 
             //alert( JSON.stringify( post_data ) );
-            $log.debug('pwData.pw_save_post : SUBMITTING : ', post_data);
+            //$log.debug('pwData.pw_save_post : SUBMITTING : ', post_data);
 
             ///// SAVE VIA AJAX /////
             $scope.status = "saving";
