@@ -785,7 +785,7 @@
 		//$wpdb-> show_errors();
 		
 		if(!does_post_meta_exist($post_id)){
-			$format = get_post_format();
+			$format = get_link_format();
 			if ( false === $format )
 			$format = 'standard';
 			
@@ -795,7 +795,7 @@
 					(`post_id`,
 					`author_id`,
 					`post_class`,
-					`post_format`,
+					`link_format`,
 					`link_url`,
 					`post_points`,
 					`rank_score`,

@@ -879,14 +879,14 @@ class PW_Query extends WP_Query {
 				
 			$this->prepare_new_request(true);	
 				
-			/*$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
+			/* //TESTING
+			$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
 			$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
-			$this->request = str_replace('WHERE', "WHERE post_class = 'blog' AND post_format='audio' and  ", $this->request);
+			$this->request = str_replace('WHERE', "WHERE post_class = 'blog' AND link_format='audio' and  ", $this->request);
 			$strposOfOrderBy = strpos($this->request, "ORDER BY");
 			$this->request =  substr($this->request ,0,$strposOfOrderBy);
-			$this->request.="ORDER BY wp_posts.post_date DESC LIMIT 0,10";*/
-			
-			
+			$this->request.="ORDER BY wp_posts.post_date DESC LIMIT 0,10";
+			*/
 			
 			$this->posts = $wpdb->get_results( $this->request );
 			$this->post_count = count( $this->posts );
@@ -1060,7 +1060,7 @@ function pw_query($args,$return_Type = 'PW_QUERY') {
 	 * Description:
 		• Similar to the functionality of WP_Query : http://codex.wordpress.org/Class_Reference/WP_Query 
 		
-		• Query by Postworld data fields post_format & post_class
+		• Query by Postworld data fields link_format & post_class
 		• Sort by points & rank_score
 		• Define which fields are returned using pw_get_posts() method
 		• Can determine the return_format as JSON, PHP Associative Array or WP post objects

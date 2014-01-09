@@ -18,7 +18,7 @@ A Wordpress Plugin used to display posts in creative ways.
   - Custom templating system for displaying lists of posts in multiple views
 
 #### Post Formats
-  - Each **post_format** can have optionally unique templates for showcasing custom content types
+  - Each **link_format** can have optionally unique templates for showcasing custom content types
 
 #### Post Formats
   - Embed videos, audio files and customize templates depending on format

@@ -3,7 +3,7 @@
 ///// GET_POST_DATA : MODELLING ///// 
 // INPUT
 $fields = array(
-	'post_title', 'post_content', 'post_type', 'post_format', 'post_class',
+	'post_title', 'post_content', 'post_type', 'link_format', 'post_class',
 	'image(original)', 'image(thumbnail)', 'image(topview,250,200,0)',
 	'author(display_name,profile_url,posts_url,user_nicename)',
 	'avatar(small,48)',

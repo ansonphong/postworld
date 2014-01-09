@@ -34,10 +34,10 @@ Default post formats supported are :
 - __video__ - Links URLs to video sharing sites
 - __audio__ - Link URLs to audio sharing sites
 
-Using `ng-switch` to determine displayed elements by `post_format`, this DOM structure would be used:
+Using `ng-switch` to determine displayed elements by `link_format`, this DOM structure would be used:
 
 ```html
-<div ng-switch="post.post_format" class="post_format">
+<div ng-switch="post.link_format" class="link_format">
 	<div ng-switch-default class="standard">{{ default elements }}</div>
 	<div ng-switch-when="link" class="link">{{ link elements }}</div>
 	<div ng-switch-when="video" class="video">{{ video elements }}</div>
@@ -102,7 +102,7 @@ This will additonally assign a class to each term element with the value of the 
 This will display a button to launch the media modal for media post formats.
 
 ``` html
-<button ng-show="post.post_format == 'video' || post.post_format == 'audio'"
+<button ng-show="post.link_format == 'video' || post.link_format == 'audio'"
 	launch-media-modal ng-click="launch(post)">
   <i class="icon-play"> Play</i> 
 </button>

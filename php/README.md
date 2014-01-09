@@ -38,7 +38,7 @@ __return__ : *Array*
 	'post_id' => {{integer}}
 	'author_id'	=> {{integer}}
 	'post_class' => {{string}}
-	'post_format' => {{string}}
+	'link_format' => {{string}}
 	'link_url' => {{string}}
 	'post_points' => {{integer}}
 	'rank_score' => {{integer}}
@@ -63,14 +63,14 @@ __$post_id__ : *integer* (required)
 
 __$post_meta__ : *Array*
 - post_class
-- post_format
+- link_format
 - link_url
 
 #### Usage:
 ```php
 $post_meta = array(
      'post_class' => string,
-     'post_format' => string,
+     'link_format' => string,
      'link_url' => string
 );
 pw_set_post_meta($post_id, $post_meta);
@@ -772,8 +772,8 @@ __post_type__ : *string / Array*
   - __string__ - Return posts with that post_type
   - __Array__ - Return posts in either post_type (IN/OR operator)
 
-__post_format__ : *string / Array*
-- post_format column in wp_postworld_post_meta 
+__link_format__ : *string / Array*
+- link_format column in wp_postworld_post_meta 
   - __string__ - Return posts with that post_type
   - __Array__ - Return posts in either post_type (IN/OR operator) 
 
@@ -861,7 +861,7 @@ $args = array(
 	'post_type' => array('post'),
 	'year' => '2013',
 	'month' => '12',
-	'post_format' => 'standard',
+	'link_format' => 'standard',
 	'post_class' => 'editorial',
 	'author' => '1',
 	'tax_query' => array(
@@ -1505,7 +1505,7 @@ array(
 		'post_title' => 'Post Title',
 		'post_content' => 'Content of the post.'
 		'post_type' => 'post',
-		'post_format' => 'standard',
+		'link_format' => 'standard',
 		...
 	),
 	array(
@@ -1559,7 +1559,7 @@ __WORDPRESS__
 __POSTWORLD__
 - __post_points__
 - __rank_score__
-- __post_format__
+- __link_format__
 - __post_class__
 - __link_url__
 
@@ -1671,7 +1671,7 @@ array(
 - All fields in `wp_insert_post()` Method
 - Postworld __Post Meta__ Fields:
   - __post_class__
-  - __post_format__
+  - __link_format__
   - __link_url__
   - __author_id__
 
@@ -1742,7 +1742,7 @@ $post_data = array(
   ///// POSTWORLD INPUTS /////
   'link_url'       => [ <URL> ],
   'post_class'     => [ 'author' | 'contributor' ],
-  'post_format'    => [ 'standard' | 'video' | 'audio' ]
+  'link_format'    => [ 'standard' | 'video' | 'audio' ]
 
   ///// IMAGE INPUTS /////
   'thumbnail_url'  => [ <URL> ], // The URL of an image to be imported into the library

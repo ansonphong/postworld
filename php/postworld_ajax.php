@@ -410,7 +410,7 @@ function pw_get_post_edit_admin() {
 		"post_title",
 		"post_excerpt",
 		"post_content",
-		"post_format",
+		"link_format",
 		"post_class",
 		"link_url",
 		"post_name",

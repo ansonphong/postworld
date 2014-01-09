@@ -568,7 +568,7 @@ feed_settings[feed_id] = {
     // pw_query Args in JSON format
     'post_type':['feature','blog'],
     'post_class':'author',
-    'post_format':'video',
+    'link_format':'video',
     'posts_per_page' : 200
     //...
   }
@@ -791,7 +791,7 @@ __Filter__
   - __tax_input__ - Conditions a *select* form element into the `pw_insert_post()` data model
   - __tags_input__ - Conditions a *text input* form element into the `pw_insert_post()` data model
   - __tax_query__ - Conditions a *select* form element into the `pw_query()` data model
-  - __post_format__ - Conditions a field for __post_format__ depending on the contents of __link_url__ field
+  - __link_format__ - Conditions a field for __link_format__ depending on the contents of __link_url__ field
 
 
 #### Filter Methods
@@ -856,7 +856,7 @@ post_obj = {
 
 ------
 
-__post_format__ : *text input ('link_url' field)*
+__link_format__ : *text input ('link_url' field)*
 - Keep a watch on __link_url__ field
 
 Values : 

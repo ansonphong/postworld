@@ -32,7 +32,7 @@ __Default Table Name:__ *wp_posworld_* __post_meta__
   - __editorial__ - On posts from approved authors and editors
   - __community__ - On posts from community members
 
-#### __post_format__ : *string*
+#### __link_format__ : *string*
 __Default__: *standard*
 
 - Used by pw_query media by __format__

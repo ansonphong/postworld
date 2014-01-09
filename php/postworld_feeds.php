@@ -539,7 +539,7 @@ function pw_get_templates ( $templates_object =null){
 		//convert object to array $array =  (array) $yourObject;
 	class pw_query_args{
 		public $post_type;
-		public $post_format;//pw
+		public $link_format;//pw
 		public $post_class;//pw
 		public $author;
 		public $author_name;

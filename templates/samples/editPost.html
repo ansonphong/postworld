@@ -41,10 +41,10 @@
     
 
     <!-- POST FORMAT -->
-    <h5>Post Format : {{post_data.post_format}}
-      <div ng-repeat="format in post_format_meta" class="row-fluid">
+    <h5>Post Format : {{post_data.link_format}}
+      <div ng-repeat="format in link_format_meta" class="row-fluid">
         <label>
-          <input type="radio" name="post_format" value="{{format.slug}}" ng-model="post_data.post_format" disabled />
+          <input type="radio" name="link_format" value="{{format.slug}}" ng-model="post_data.link_format" disabled />
           &nbsp;<span ng-bind-html="format.icon"></span>&nbsp;<span ng-bind="format.name"></span>
         </label>
       </div>

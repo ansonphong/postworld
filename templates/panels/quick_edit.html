@@ -81,9 +81,9 @@
               <input class="labeled" type="url" ng-model="post_data.link_url" placeholder="http://">
             
             <!-- POST FORMAT -->
-            <div class="post_format">
-              <span ng-repeat="format in post_format_meta" class="row-fluid">
-                  <input type="radio" name="post_format" value="{{format.slug}}" ng-model="post_data.post_format" disabled />
+            <div class="link_format">
+              <span ng-repeat="format in link_format_meta" class="row-fluid">
+                  <input type="radio" name="link_format" value="{{format.slug}}" ng-model="post_data.link_format" disabled />
                   <label>
                     <span ng-bind-html="format.icon"></span> <span ng-bind="format.name"></span>
                   </label>

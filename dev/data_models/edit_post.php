@@ -55,7 +55,7 @@ MAIN
 
 ASIDE
 <div edit-field="featured_image" data-input="button"></div> // do special action here
-<div edit-field="post_format" data-input="button"></div> // do special action here
+<div edit-field="link_format" data-input="button"></div> // do special action here
 <div edit-field="taxonomy(topic)" data-input="dropdown"></div>
 <div edit-field="taxonomy(tags)" data-input="textarea"></div>
 <div edit-field="post_name" data-input="input-text"></div>

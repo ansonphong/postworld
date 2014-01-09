@@ -210,8 +210,8 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 
     // Run oEmbedGet on Media
     if(
-        $scope.post.post_format == 'video' ||
-        $scope.post.post_format == 'audio'
+        $scope.post.link_format == 'video' ||
+        $scope.post.link_format == 'audio'
         )
         $scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
 

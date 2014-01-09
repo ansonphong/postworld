@@ -27,7 +27,7 @@ postworld.controller('editPost',
         post_name : "",
         post_type : "blog",
         post_status : "draft",
-        post_format : "standard",
+        link_format : "standard",
         post_class : "contributor",
         link_url : "",
         post_date_gmt:"",
@@ -285,9 +285,9 @@ postworld.controller('editPost',
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
     // POST FORMAT OPTIONS
-    $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    $scope.link_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
-    $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
@@ -326,9 +326,9 @@ postworld.controller('editPost',
     // WATCH : LINK_URL
     // • Watch for changes in Link URL field
     // • Evaluate the Post Format
-    $scope.$watchCollection('[ post_data.link_url, post_data.post_format ]',
+    $scope.$watchCollection('[ post_data.link_url, post_data.link_format ]',
         function ( newValue, oldValue ){
-            $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
+            $scope.post_data.link_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.link_format_meta );
         });
 
 
@@ -564,9 +564,9 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     // POST STATUS OPTIONS
     $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( 'link' );
     // POST FORMAT OPTIONS
-    $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    $scope.link_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
-    $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
     
@@ -607,7 +607,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         post_title:"Link Title",
         post_type:"link",
         link_url:"",
-        post_format:"standard",
+        link_format:"standard",
         post_class:"contributor",
         tags_input:"",
         post_status:"publish",
@@ -730,10 +730,10 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         }, 1 );
 
     // LINK_URL WATCH : Watch for changes in link_url
-    // Evaluate the post_format
-    $scope.$watchCollection('[post_data.link_url, post_data.post_format]',
+    // Evaluate the link_format
+    $scope.$watchCollection('[post_data.link_url, post_data.link_format]',
         function ( newValue, oldValue ){
-            $scope.post_data.post_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.post_format_meta );
+            $scope.post_data.link_format = $pwEditPostFilters.evalPostFormat( $scope.post_data.link_url, $scope.link_format_meta );
         });
 
 

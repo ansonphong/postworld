@@ -239,10 +239,10 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
         },
         pwGetPostFormatOptions: function(){
             return {
-                "standard" : "Standard",
-                "link" : "Link",
-                "video" : "Video",
-                "audio" : "Audio",
+                "standard" :    "Standard",
+                "link" :        "Link",
+                "video" :       "Video",
+                "audio" :       "Audio",
             };
         },
         pwGetPostClassOptions: function(){
@@ -410,20 +410,20 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                 });
                 return post_data;
             },
-            ///// EVALUATE AND SET POST_FORMAT DEPENDING ON LINK_URL /////
-            evalPostFormat: function( link_url, post_format_meta ){
+            ///// EVALUATE AND SET link_format DEPENDING ON LINK_URL /////
+            evalPostFormat: function( link_url, link_format_meta ){
                 var default_format = "standard";
                 var set = "";
-                //alert(post_format_meta);
+                //alert(link_format_meta);
                 // If link_url has a value
-                if ( !ext.isEmpty( link_url ) && !ext.isEmpty( post_format_meta ) ){
+                if ( !ext.isEmpty( link_url ) && !ext.isEmpty( link_format_meta ) ){
                     ///// FOR EACH POST FORMAT : Go through each post format
-                    angular.forEach( post_format_meta, function( post_format ){
+                    angular.forEach( link_format_meta, function( link_format ){
                         ///// FOR EACH DOMAIN : Go through each domain
-                        angular.forEach( post_format.domains, function( domain ){
+                        angular.forEach( link_format.domains, function( domain ){
                         // If domain exists in the link_url, set that format
                             if ( ext.isInArray( domain, link_url ) ){
-                                set = post_format.slug;
+                                set = link_format.slug;
                             }
                         });
                     });

@@ -12,7 +12,7 @@
 		</div>
 
 		<!-- MEDIA EMBED -->
-		<div ng-switch="post.post_format">
+		<div ng-switch="post.link_format">
 			<span ng-switch-when="video" class="video">
 				<div ng-bind-html="oEmbed"></div>
 			</span>
@@ -23,7 +23,7 @@
 
 	</div>
 
-	<div class="modal-header" ng-switch="post.post_format">
+	<div class="modal-header" ng-switch="post.link_format">
 		<h3>
 			<span ng-switch-when="video" class="video"><i class="icon-youtube-play"></i></span>
 			<span ng-switch-when="audio" class="audio"><i class="icon-headphones"></i></span>

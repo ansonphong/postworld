@@ -17,7 +17,7 @@ postworld.service('pwEditPost', ['$log', function ($log) {
                     post_name : "hello_space",
                     post_type : "blog",
                     post_status : "publish",
-                    post_format : "video",
+                    link_format : "video",
                     post_class : "contributor",
                     link_url : "http://youtube.com/",
                     post_permalink : "http://realitysandwich.com/",

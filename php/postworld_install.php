@@ -14,7 +14,7 @@ function postworld_install() {
       post_id BIGINT(20) unsigned NOT NULL,
       author_id BIGINT(20) UNSIGNED NOT NULL,
       post_class char(16) NOT NULL,
-      post_format char(16) NOT NULL,
+      link_format char(16) NOT NULL,
       link_url varchar(512) DEFAULT '' NOT NULL,
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       rank_score mediumint(4) DEFAULT '0' NOT NULL,

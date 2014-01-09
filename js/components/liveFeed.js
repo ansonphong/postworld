@@ -583,7 +583,7 @@ postworld.controller('pwTestController',
 				'post_author'  	: 1,
 				'post_category'	: [1,2,4],
 				'post_class'	: 'standard',
-				'post_format' 	: 'post',
+				'link_format' 	: 'post',
 				'link_url'		: 'http://www.com',
 				'external_image': 'http://www.com/image.jpg',				
 			};

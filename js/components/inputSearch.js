@@ -39,9 +39,9 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // POST STATUS OPTIONS
     $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( );
     // POST FORMAT OPTIONS
-    $scope.post_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    $scope.link_format_options = $pwPostOptions.pwGetPostFormatOptions();
     // POST FORMAT META
-    $scope.post_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 

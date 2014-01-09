@@ -62,7 +62,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_date',
 		'post_date_gmt',
 		'post_class',
-		'post_format',
+		'link_format',
 		'link_url',
 		'image(id)',
 		'image(meta)',
@@ -95,7 +95,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'taxonomy(all)',
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		'avatar(small,48)',
-		'post_format',
+		'link_format',
 		'time_ago',
 		'post_meta(all)',
 		'rank_score',
@@ -369,9 +369,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					///// DEFAULT FALLBACK IMAGES /////
 
 					// SETUP DEFAULT IMAGE FILE NAMES : ...jpg
-					$post_format =  get_post_format( $post_id );
-					$default_type_format_thumb_filename = 	'default-'.$post_data['post_type'].'-'.$post_format.'-thumb.jpg';
-					$default_format_thumb_filename = 		'default-'.$post_format.'-thumb.jpg';
+					$link_format =  get_link_format( $post_id );
+					$default_type_format_thumb_filename = 	'default-'.$post_data['post_type'].'-'.$link_format.'-thumb.jpg';
+					$default_format_thumb_filename = 		'default-'.$link_format.'-thumb.jpg';
 					$default_thumb_filename = 				'default-thumb.jpg';
 
 					// SETUP DEFAULT IMAGE PATHS : /home/user/...
@@ -631,7 +631,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	 * Parameters : $post Array
 		All fields in wp_insert_post() Method
 		post_class
-		post_format
+		link_format
 		link_url
 		external_image
 		 
@@ -671,7 +671,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 
 
 		///// ADD POSTWORLD FIELDS //////
-		if(isset($postarr["post_class"]) || isset($postarr["post_format"])|| isset($postarr["link_url"]))	{
+		if(isset($postarr["post_class"]) || isset($postarr["link_format"])|| isset($postarr["link_url"]))	{
 			global $wpdb;
 			$wpdb -> show_errors();
 			
@@ -682,9 +682,9 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 					$query.="post_class='".$postarr["post_class"]."'";
 					 $insertComma= TRUE;
 				} 
-				if(isset($postarr["post_format"])){
+				if(isset($postarr["link_format"])){
 					if($insertComma === TRUE) $query.=" , ";
-					$query.="post_format='".$postarr["post_format"]."'";
+					$query.="link_format='".$postarr["link_format"]."'";
 					 $insertComma= TRUE;
 				} 
 				if(isset($postarr["link_url"])){

@@ -18,14 +18,14 @@ function pw_set_post_meta($post_id, $post_meta){
 		
 		$post_meta : Array
 		     • post_class
-		     • post_format
+		     • link_format
 		     • link_url
 		
 		Usage:
 		$post_meta = array(
 		     'post_id' => integer,
 		     'post_class' => string,
-		     'post_format' => string,
+		     'link_format' => string,
 		     'link_url' => string
 		);
 	 */
@@ -41,10 +41,10 @@ function pw_set_post_meta($post_id, $post_meta){
 	 	$query.="post_class='".$post_meta['post_class']."' ";
 		 $insertComma= TRUE;
 	 }
-	 if($post_meta['post_format'] !=null ){
+	 if($post_meta['link_format'] !=null ){
 	 	if($insertComma === TRUE) $query.=" , ";
 	 	
-	 	$query.="post_format='".$post_meta['post_format']."' ";
+	 	$query.="link_format='".$post_meta['link_format']."' ";
 	 	$insertComma= TRUE;
 	 }
 	 
