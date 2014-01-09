@@ -12,7 +12,8 @@ function postworld_includes( $mode = 'deploy' ){
 	//////////---------- LIBRARY INCLUDES ----------//////////
 
 	//BOOTSTRAP CSS
-	wp_enqueue_style( "bootstrap-CSS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.css' );
+	// Removed - move be added in theme
+	//wp_enqueue_style( "bootstrap-CSS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.css' );
 
 	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
 	wp_deregister_script('jquery');

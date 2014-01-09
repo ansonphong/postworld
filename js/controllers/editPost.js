@@ -861,7 +861,7 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                             if ( response.data == true ){
                                 
                                 if( typeof scope != undefined ){    
-                                    var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
+                                    //var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
                                     scope.post.post_status = 'trash';
                                 }
                             
@@ -943,7 +943,7 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
     // Close Modal
     // Set Parent post_status = trash
 
-    // Watch on the value of user_id
+    // Watch on the value of post_status
     $scope.$watch( "post.post_status",
         function (){
             if( $scope.post.post_status == 'trash'  )
