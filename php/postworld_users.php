@@ -988,8 +988,7 @@ function pw_get_avatar( $obj ){
 
 	extract($obj);
 
-	global $pw_settings;
-
+	global $pwSiteGlobals;
 	$default_avatar = $pwSiteGlobals['avatar']['default'] ;
 
 	if ( !isset($user_id) ){
@@ -1024,7 +1023,7 @@ function pw_get_avatar( $obj ){
 	}
 	else{
 		global $template_paths;
-		return $template_paths['POSTWORLD_URL'].$default_avatar;
+		return $default_avatar;
 	}
 
 }
