@@ -51,498 +51,499 @@
 postworld.directive('ngShowMore', function ($timeout,$animate) {
 	//console.log('at least we got in directive');
 	function link(scope, element, attrs) {
-      		scope.child.showMore = false;
-      		scope.child.tall = false;
-      		//console.log(scope.child.comment_ID,scope.child.comment_content.length);
+					scope.child.showMore = false;
+					scope.child.tall = false;
+					//console.log(scope.child.comment_ID,scope.child.comment_content.length);
 			if (scope.child.comment_content.length>600) {
-	      			scope.child.showMore = true;
-	      			scope.child.tall = true;				
+							scope.child.showMore = true;
+							scope.child.tall = true;				
 			} ;
-      		//  this needs to perform better, so it is replaced with the above function
-      		/*
-	      $timeout(function(){
-	      		scope.child.showMore = false;
-	      		scope.child.tall = false;
-	      		scope.child.height = element.height();
-	      		if (scope.child.height>60) { 
-	      			scope.child.showMore = true;
-	      			scope.child.tall = true;
-	      			} 
-    		});
-    		*/
-    		       
-	    }	
-  return {
-    restrict: 'A',
-    link: link,
-  };
+					//  this needs to perform better, so it is replaced with the above function
+					/*
+				$timeout(function(){
+						scope.child.showMore = false;
+						scope.child.tall = false;
+						scope.child.height = element.height();
+						if (scope.child.height>60) { 
+							scope.child.showMore = true;
+							scope.child.tall = true;
+							} 
+				});
+				*/
+							 
+			}	
+	return {
+		restrict: 'A',
+		link: link,
+	};
 });
 
 
 postworld.directive('loadComments', function() {
-    return {
-        restrict: 'A',
-        // DO not set url here and in nginclude at the same time, so many errors!
-        // templateUrl: jsVars.pluginurl+'/postworld/templates/comments/comments-default.html',
-        replace: true,
-        controller: 'pwTreeController',
-        scope: {
-        	post : '=',
-        }
-    };
+		return {
+				restrict: 'A',
+				// DO not set url here and in nginclude at the same time, so many errors!
+				// templateUrl: jsVars.pluginurl+'/postworld/templates/comments/comments-default.html',
+				replace: true,
+				controller: 'pwTreeController',
+				scope: {
+					post : '=',
+				}
+		};
 });
 
 postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs,pwData,$log, $window) {
-    $scope.json = '';
+		$scope.json = '';
 
-    if ( typeof $window.pwGlobals.current_user.ID !== 'undefined'  )
-      $scope.user_id = $window.pwGlobals.current_user.ID;
-    else
-      $scope.user_id = 0;
+		if ( typeof $window.pwGlobals.current_user.ID !== 'undefined'  )
+			$scope.user_id = $window.pwGlobals.current_user.ID;
+		else
+			$scope.user_id = 0;
 
-    $scope.startTime = 0;
-    $scope.endTime = 0;
-    $scope.treedata = {children: []};
-    $scope.minimized = false;
-    $scope.treeUpdated = false;
-    $scope.commentsLoaded = false;
-    $scope.key = 0;
-    $scope.commentsCount = 0;
-    $scope.feed = $attrs.loadComments;
-    $scope.pluginUrl = jsVars.pluginurl;
-    $scope.templateLoaded = false;
-    console.log('post is',$scope.post);
-    var settings = pwCommentsService.comments_settings[$scope.feed];
-    if ($scope.post) {
-    	settings.query.post_id = $scope.post.ID; // setting the post id here    	
-    }
-    $scope.minPoints = settings.min_points;
-    if (settings.query.orderby) $scope.orderBy = settings.query.orderby;
-    else $scope.orderBy = 'comment_date_gmt'; 
-    if (settings.order_options) $scope.orderOptions = settings.order_options;
-     
-	pwData.templates.promise.then(function(value) {
-		   if (settings.view) {
-		   		var template = 'comment-'+settings.view;
-		    	$scope.templateUrl = pwData.pw_get_template('comments','comment',template);
-				$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
-		   }
-		   else {
-	   			$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
-	   			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
-		   }
-	   	   return;
-	});
-    
-    $scope.loadComments = function () {
-    	$scope.commentsLoaded = false;
-    	settings.query.orderby = $scope.orderBy;
+		$scope.startTime = 0;
+		$scope.endTime = 0;
+		$scope.treedata = {children: []};
+		$scope.minimized = false;
+		$scope.treeUpdated = false;
+		$scope.commentsLoaded = false;
+		$scope.key = 0;
+		$scope.commentsCount = 0;
+		$scope.feed = $attrs.loadComments;
+		$scope.pluginUrl = jsVars.pluginurl;
+		$scope.templateLoaded = false;
+		$log.debug('post is',$scope.post);
+		var settings = pwCommentsService.comments_settings[$scope.feed];
 
-      //alert( JSON.stringify($scope.feed) );
+		if ($scope.post) {
+			settings.query.post_id = $scope.post.ID; // setting the post id here    	
+		}
 
-  		pwCommentsService.pw_get_comments($scope.feed).then(function(value) {
-        $log.debug('Got Comments: ', value.data );
-  			$scope.treedata = {children: value.data};
-  			$scope.commentsLoaded = true;
-  	    $scope.treeUpdated = !$scope.treeUpdated;			      
-  			$scope.commentsCount = value.data.length;
-  			/*
-  			// not used here, but can be used for progressive element loading
-  		    var recursiveTimeout = function() {
-  		    	var load = $timeout( function loadComments() {	    		  
-  		    		  for (var i=0;i<20;i++) {
-  					      if ($scope.key<$scope.commentsCount) {
-  					    	  // console.log('loading data', $scope.key);
-  						      $scope.treedata.children[$scope.key] = value.data[$scope.key];
-  						      $scope.key++;
-  					      }
-  		    		  }
-  				      $scope.treeUpdated = !$scope.treeUpdated;			      
-  				      if ($scope.key<$scope.commentsCount) {
-  				      	load = $timeout(loadComments, 50);
-  				      }
-  				    }, 50); 
-  		    };
-  		    recursiveTimeout(); 
-  		    */
-  		});
+		$scope.minPoints = settings.min_points;
 
-    };
+		if (settings.query.orderby) $scope.orderBy = settings.query.orderby;
+		else $scope.orderBy = 'comment_points'; 
+
+		if (settings.order_options) $scope.orderOptions = settings.order_options;
+		 
+		pwData.templates.promise.then(function(value) {
+				 if (settings.view) {
+						var template = 'comment-'+settings.view;
+						$scope.templateUrl = pwData.pw_get_template('comments','comment',template);
+					$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
+				 }
+				 else {
+						$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
+						// this template fires the loadComments function, so there is no possibility that loadComments will run first.
+				 }
+					 return;
+		});
+		
+		$scope.loadComments = function () {
+			$scope.commentsLoaded = false;
+			settings.query.orderby = $scope.orderBy;
+			pwCommentsService.pw_get_comments($scope.feed).then(function(value) {
+				$log.debug('Got Comments: ', value.data );
+				$scope.treedata = {children: value.data};
+				$scope.commentsLoaded = true;
+				$scope.treeUpdated = !$scope.treeUpdated;			      
+				$scope.commentsCount = value.data.length;
+				/*
+				// not used here, but can be used for progressive element loading
+					var recursiveTimeout = function() {
+						var load = $timeout( function loadComments() {	    		  
+								for (var i=0;i<20;i++) {
+									if ($scope.key<$scope.commentsCount) {
+										// console.log('loading data', $scope.key);
+										$scope.treedata.children[$scope.key] = value.data[$scope.key];
+										$scope.key++;
+									}
+								}
+								$scope.treeUpdated = !$scope.treeUpdated;			      
+								if ($scope.key<$scope.commentsCount) {
+									load = $timeout(loadComments, 50);
+								}
+							}, 50); 
+					};
+					recursiveTimeout(); 
+					*/
+			});
+
+		};
 	// $scope.loadComments();
-    
-  $scope.toggleMinimized = function (child) {
-    child.minimized = !child.minimized;
-  };
-  
-  $scope.OpenClose = function(child) {
-  	if (parseInt(child.comment_points)>$scope.minPoints) child.minimized = false;
-  	else child.minimized = true;
-  };
-  
-  $scope.trustHtml = function(child) {
-    child.trustedContent = $sce.trustAsHtml(child.comment_content);
-  };
+		
+	$scope.toggleMinimized = function (child) {
+		child.minimized = !child.minimized;
+	};
+	
+	$scope.OpenClose = function(child) {
+		if (parseInt(child.comment_points)>$scope.minPoints) child.minimized = false;
+		else child.minimized = true;
+	};
+	
+	$scope.trustHtml = function(child) {
+		child.trustedContent = $sce.trustAsHtml(child.comment_content);
+	};
 
-  $scope.voteUpSelected = function(child){
-    if( child.viewer_points > 0 ){
-      return 'selected';
-    }
-  }
+	$scope.voteUpSelected = function(child){
+		if( child.viewer_points > 0 ){
+			return 'selected';
+		}
+	}
 
-  $scope.voteDownSelected = function(child){
-    if( child.viewer_points < 0 ){
-      return 'selected';
-    }
-  }
+	$scope.voteDownSelected = function(child){
+		if( child.viewer_points < 0 ){
+			return 'selected';
+		}
+	}
 
-  // CAST VOTE ON THE POST
-  $scope.voteComment = function( points, child ){
+	// CAST VOTE ON THE POST
+	$scope.voteComment = function( points, child ){
 
-      // Get the voting power of the current user
-      if( typeof $window.pwGlobals.current_user.postworld !== 'undefined' )
-          var vote_power = parseInt($window.pwGlobals.current_user.postworld.vote_power);
-      // If they're not logged in, return false
-      if( typeof vote_power === 'undefined' ){
-          alert("Must be logged in to vote.");
-          return false;
-      }
-      
-      // Define how many points have they already given to this post
-      var has_voted = parseInt(child.viewer_points);
+			// Get the voting power of the current user
+			if( typeof $window.pwGlobals.current_user.postworld !== 'undefined' )
+					var vote_power = parseInt($window.pwGlobals.current_user.postworld.vote_power);
+			// If they're not logged in, return false
+			if( typeof vote_power === 'undefined' ){
+					alert("Must be logged in to vote.");
+					return false;
+			}
+			
+			// Define how many points have they already given to this post
+			var has_voted = parseInt(child.viewer_points);
 
-      // Define how many points will be set
-      var setPoints = ( has_voted + points );
+			// Define how many points will be set
+			var setPoints = ( has_voted + points );
 
-      // If set points exceeds vote power
-      if( Math.abs(setPoints) > vote_power ){
-          setPoints = (vote_power * points);
-          //alert( "Normalizing : " + setPoints );
-      }
+			// If set points exceeds vote power
+			if( Math.abs(setPoints) > vote_power ){
+					setPoints = (vote_power * points);
+					//alert( "Normalizing : " + setPoints );
+			}
 
-      // Setup parameters
-      var args = {
-          comment_id: child.comment_ID,
-          points: setPoints,
-      };
+			// Setup parameters
+			var args = {
+					comment_id: child.comment_ID,
+					points: setPoints,
+			};
 
-      // Set Status
-      child.voteStatus = "busy";
-      // AJAX Call 
-      pwData.set_comment_points ( args ).then(
-          // ON : SUCCESS
-          function(response) {    
-              //alert( JSON.stringify(response.data) );
-              // RESPONSE.DATA FORMAT : {"point_type":"comment","user_id":1,"id":51407,"points_added":0,"points_total":"5"}
-              $log.debug('VOTE RETURN : ' + JSON.stringify(response) );
-              if ( response.data.id == child.comment_ID ){
-                  // UPDATE POST POINTS
-                  child.comment_points = response.data.points_total;
-                  // UPDATE VIEWER HAS VOTED
-                  child.viewer_points = ( parseInt(child.viewer_points) + parseInt(response.data.points_added) ) ;
-              } //else
-                  //alert('Server error voting.');
-              child.voteStatus = "done";
-          },
-          // ON : FAILURE
-          function(response) {
-              child.voteStatus = "done";
-              //alert('Client error voting.');
-          }
-      );
-  }
+			// Set Status
+			child.voteStatus = "busy";
+			// AJAX Call 
+			pwData.set_comment_points ( args ).then(
+					// ON : SUCCESS
+					function(response) {    
+							//alert( JSON.stringify(response.data) );
+							// RESPONSE.DATA FORMAT : {"point_type":"comment","user_id":1,"id":51407,"points_added":0,"points_total":"5"}
+							$log.debug('VOTE RETURN : ' + JSON.stringify(response) );
+							if ( response.data.id == child.comment_ID ){
+									// UPDATE POST POINTS
+									child.comment_points = response.data.points_total;
+									// UPDATE VIEWER HAS VOTED
+									child.viewer_points = ( parseInt(child.viewer_points) + parseInt(response.data.points_added) ) ;
+							} //else
+									//alert('Server error voting.');
+							child.voteStatus = "done";
+					},
+					// ON : FAILURE
+					function(response) {
+							child.voteStatus = "done";
+							//alert('Client error voting.');
+					}
+			);
+	}
 
-  $scope.addChild = function (child, data) {
-  	if (!child.children) child.children = [];
-    child.children.push(data);
-    $scope.treeUpdated = !$scope.treeUpdated;			      
-  };
-  
-  $scope.updateChild = function (child, data) {
-    // child.comment_content = data.comment_content;
-    for (var key in data) {
-    	child[key] = data[key];
-    }
-    $scope.treeUpdated = !$scope.treeUpdated;			      
-  };
+	$scope.addChild = function (child, data) {
+		if (!child.children) child.children = [];
+		child.children.push(data);
+		$scope.treeUpdated = !$scope.treeUpdated;			      
+	};
+	
+	$scope.updateChild = function (child, data) {
+		// child.comment_content = data.comment_content;
+		for (var key in data) {
+			child[key] = data[key];
+		}
+		$scope.treeUpdated = !$scope.treeUpdated;			      
+	};
 
-  $scope.toggleReplyBox = function(child) {
-  	if (child.editInProgress || child.deleteInProgress || child.replyInProgress) return;
-  	// close other boxes
-  	child.editMode = false;
-  	child.deleteBox = false;
-  	// toggle reply box
-  	child.replyBox = !child.replyBox;
+	$scope.toggleReplyBox = function(child) {
+		if (child.editInProgress || child.deleteInProgress || child.replyInProgress) return;
+		// close other boxes
+		child.editMode = false;
+		child.deleteBox = false;
+		// toggle reply box
+		child.replyBox = !child.replyBox;
 
-  	// TODO add focus here
-    //$window.$( "#reply-"+child.comment_ID ).focus();
+		// TODO add focus here
+		//$window.$( "#reply-"+child.comment_ID ).focus();
 
-    if ( child.replyBoxSelected == "" )
-      child.replyBoxSelected = "selected";
-    else
-      child.replyBoxSelected = "";
+		if ( child.replyBoxSelected == "" )
+			child.replyBoxSelected = "selected";
+		else
+			child.replyBoxSelected = "";
 
-  };
-  
-  $scope.toggleEditBox = function(child) {
-  	if (child.editInProgress || child.deleteInProgress || child.replyInProgress) return;
-  	// close other boxes
-  	child.deleteBox = false;
-  	child.replyBox = false;
-  	
-  	// if in Edit Mode, just close it.
-  	if (child.editMode) {
-  		child.editMode = false;
-  		return;
-  	}
-  	// if not in Edit Mode, make a call to get comment  	
-  	if (!child.editMode) {
-  		var args = {};
-  		args.comment_id = child.comment_ID;
-  		args.fields = 'edit';
-  		// Should we set editInProgress here?
-  		pwCommentsService.pw_get_comment(args).then(
-  			// success
-  			function(response) {
-  				if ((response.status==200)&&(response.data)) {
-  					// set raw comment value
-  					child.comment_content_raw = response.data.comment_content; 
-  					// child.editText = response.comment_content;  					
-  					// set editMode
-  					child.editMode = true;
-  				} else {
-  					child.editMode = false;
-  				}
-  			},
-  			// failure
-  			function(response) {
-  					child.editMode = false;  				
-  			}
-  		);  		
-  	}
-  	// child.editMode = !child.editMode;  	
-  };
-  
-  $scope.toggleDeleteBox = function(child) {
-  	if (child.editInProgress || child.deleteInProgress || child.replyInProgress) return;
-  	// close other boxes
-  	child.editMode = false;
-  	child.replyBox = false;
-  	// toggle delete box
-  	child.deleteBox = !child.deleteBox;
-  	// TODO add focus here
-  };
-  
-  $scope.replyComment = function(child) {
-  		// Disable reply button, text editing, cancelling until we are back
-  		child.replyInProgress = true;
+	};
+	
+	$scope.toggleEditBox = function(child) {
+		if (child.editInProgress || child.deleteInProgress || child.replyInProgress) return;
+		// close other boxes
+		child.deleteBox = false;
+		child.replyBox = false;
+		
+		// if in Edit Mode, just close it.
+		if (child.editMode) {
+			child.editMode = false;
+			return;
+		}
+		// if not in Edit Mode, make a call to get comment  	
+		if (!child.editMode) {
+			var args = {};
+			args.comment_id = child.comment_ID;
+			args.fields = 'edit';
+			// Should we set editInProgress here?
+			pwCommentsService.pw_get_comment(args).then(
+				// success
+				function(response) {
+					if ((response.status==200)&&(response.data)) {
+						// set raw comment value
+						child.comment_content_raw = response.data.comment_content; 
+						// child.editText = response.comment_content;  					
+						// set editMode
+						child.editMode = true;
+					} else {
+						child.editMode = false;
+					}
+				},
+				// failure
+				function(response) {
+						child.editMode = false;  				
+				}
+			);  		
+		}
+		// child.editMode = !child.editMode;  	
+	};
+	
+	$scope.toggleDeleteBox = function(child) {
+		if (child.editInProgress || child.deleteInProgress || child.replyInProgress) return;
+		// close other boxes
+		child.editMode = false;
+		child.replyBox = false;
+		// toggle delete box
+		child.deleteBox = !child.deleteBox;
+		// TODO add focus here
+	};
+	
+	$scope.replyComment = function(child) {
+			// Disable reply button, text editing, cancelling until we are back
+			child.replyInProgress = true;
 		child.replyError = "";
-  		// trigger call to send reply
-  		var args = {};
-  		args.comment_data = {};
-  		args.comment_data.comment_content = child.replyText;
-  		// we can get the post id from the child comment post id too, however, when there is no parent, we cannot get it from here. so we can get it always directly from settings.
-  		args.comment_data.comment_post_ID = settings.query.post_id; 
-  		args.comment_data.comment_date = new Date(); // should we do it here? security?
-  		// args.comment_data.comment_date_gmt = ;
-  		// args.comment_data.comment_type = 'comment';  	// in documentation, this is not added in wordpress insert/add functions	  			
-  		if (child == $scope.treedata) {
-	  		args.comment_data.comment_parent = 0;  			
-  		} else {
-	  		args.comment_data.comment_parent = child.comment_ID;  			
-  		}
-  		
-  		args.return_value = 'data';  		
-  		pwCommentsService.pw_save_comment(args).then(
-  			function(response) {
-  				if ((response.status==200)&&(response.data)) {
-	  				// reset form and hide it
-			  		child.replyInProgress = false;
-	  				child.replyText = "";
-	  				child.replyBox = false;
-            child.replyBoxSelected = "";
-	  				child.replyError = "";
-			  		console.log('added',response);
-	  				// show the new comment
-	  				$scope.addChild(child, response.data);
-  				} else {
-	  				// reset the form
-	  				child.replyInProgress = false;
-	  				// TODO add more descriptive error
-	  				child.replyError = "Error adding new comment";
-	  				// show the error
-	  				console.log('error adding new comment',response);  					
-  				}
-  			},
-  			function(response) {
-  				// reset the form
-  				child.replyInProgress = false;
-  				// TODO add more descriptive error
-  				child.replyError = "Error adding new comment";
-  				// show the error
-  				console.log('error adding new comment',response);
-  			}
-  		);
-  };
-  
+			// trigger call to send reply
+			var args = {};
+			args.comment_data = {};
+			args.comment_data.comment_content = child.replyText;
+			// we can get the post id from the child comment post id too, however, when there is no parent, we cannot get it from here. so we can get it always directly from settings.
+			args.comment_data.comment_post_ID = settings.query.post_id; 
+			args.comment_data.comment_date = new Date(); // should we do it here? security?
+			// args.comment_data.comment_date_gmt = ;
+			// args.comment_data.comment_type = 'comment';  	// in documentation, this is not added in wordpress insert/add functions	  			
+			if (child == $scope.treedata) {
+				args.comment_data.comment_parent = 0;  			
+			} else {
+				args.comment_data.comment_parent = child.comment_ID;  			
+			}
+			
+			args.return_value = 'data';  		
+			pwCommentsService.pw_save_comment(args).then(
+				function(response) {
+					if ((response.status==200)&&(response.data)) {
+						// reset form and hide it
+						child.replyInProgress = false;
+						child.replyText = "";
+						child.replyBox = false;
+						child.replyBoxSelected = "";
+						child.replyError = "";
+						console.log('added',response);
+						// show the new comment
+						$scope.addChild(child, response.data);
+					} else {
+						// reset the form
+						child.replyInProgress = false;
+						// TODO add more descriptive error
+						child.replyError = "Error adding new comment";
+						// show the error
+						console.log('error adding new comment',response);  					
+					}
+				},
+				function(response) {
+					// reset the form
+					child.replyInProgress = false;
+					// TODO add more descriptive error
+					child.replyError = "Error adding new comment";
+					// show the error
+					console.log('error adding new comment',response);
+				}
+			);
+	};
+	
 
-  $scope.editComment = function(child) {
-      //alert( JSON.stringify(child.user_id) );
-  		// Disable edit button, text editing, cancelling until we are back
-  		child.editInProgress = true;
-		  child.editError = "";		
-  		// trigger call to send reply
-  		var args = {};
-  		args.comment_data = {
-        "comment_ID": child.comment_ID,
-        "comment_content": child.editText,
-        "user_id": child.user_id
-      };
-  		
-  		args.return_value = 'data';
+	$scope.editComment = function(child) {
+			//alert( JSON.stringify(child.user_id) );
+			// Disable edit button, text editing, cancelling until we are back
+			child.editInProgress = true;
+			child.editError = "";		
+			// trigger call to send reply
+			var args = {};
+			args.comment_data = {
+				"comment_ID": child.comment_ID,
+				"comment_content": child.editText,
+				"user_id": child.user_id
+			};
+			
+			args.return_value = 'data';
 
-  		pwCommentsService.pw_save_comment(args).then(
-  			function(response) {
-  				if ((response.status==200)&&(response.data)) {
-  					
-	  				// reset form and hide it
-	  				child.editMode = false;
-			  		child.editInProgress = false;
-	  				child.editText = "";
-	  				child.editBox = false;
-	  				child.editError = "";
-			  		//console.log('edited',response);
-	  				// show the new comment
-	  				$scope.updateChild(child, response.data);  		
-            //alert(JSON.stringify(response.data));			
-  				} else {
-	  				// reset the form
-	  				child.editMode = false;
-	  				child.editInProgress = false;
-	  				// TODO add more descriptive error
-	  				child.editError = "Error editing comment";
-	  				// show the error
-	  				console.log('error editing comment',response);  					
-  				}
-  			},
-  			function(response) {
-  				// reset the form
-  				child.editMode = false;
-  				child.editInProgress = false;
-  				// TODO add more descriptive error
-  				child.editError = "Error editing comment";
-  				// show the error
-  				console.log('error editing comment',response);
-  			}
-  		);
-  };
+			pwCommentsService.pw_save_comment(args).then(
+				function(response) {
+					if ((response.status==200)&&(response.data)) {
+						
+						// reset form and hide it
+						child.editMode = false;
+						child.editInProgress = false;
+						child.editText = "";
+						child.editBox = false;
+						child.editError = "";
+						//console.log('edited',response);
+						// show the new comment
+						$scope.updateChild(child, response.data);  		
+						//alert(JSON.stringify(response.data));			
+					} else {
+						// reset the form
+						child.editMode = false;
+						child.editInProgress = false;
+						// TODO add more descriptive error
+						child.editError = "Error editing comment";
+						// show the error
+						console.log('error editing comment',response);  					
+					}
+				},
+				function(response) {
+					// reset the form
+					child.editMode = false;
+					child.editInProgress = false;
+					// TODO add more descriptive error
+					child.editError = "Error editing comment";
+					// show the error
+					console.log('error editing comment',response);
+				}
+			);
+	};
 
-  $scope.deleteComment = function(child) {
-  		// Disable edit button, text editing, cancelling until we are back
-  		child.deleteInProgress = true;
-		  child.deleteError = "";
-  		// trigger call to send reply
-  		var args = {};
-  		args.comment_id = child.comment_ID;
-  		
-  		pwCommentsService.pw_delete_comment(args).then(
-  			function(response) {
-  				if ((response.status==200)&&(response.data)) {
-  					
-	  				// reset form and hide it
-			  		child.deleteInProgress = false;
-	  				child.deleteBox = false;
-	  				child.deleteError = "";
-			  		console.log('deleted',response);
-	  				// show the new comment
-	  				$scope.removeChild(child);  					
-  				} else {
-	  				// reset the form
-	  				child.deleteInProgress = false;
-	  				// TODO add more descriptive error
-	  				child.deleteError = "Error deleting comment";
-	  				// show the error
-	  				console.log('error deleting comment',response);  					
-  				}
-  			},
-  			function(response) {
-  				// reset the form
-  				child.deleteInProgress = false;
-  				// TODO add more descriptive error
-  				child.deleteError = "Error deleting comment";
-  				// show the error
-  				console.log('error deleting comment',response);
-  			}
-  		);
-  };
-
-
-  $scope.flagComment = function(child){
-
-    var args = {
-      "comment_ID" : child.comment_ID,
-    };
-
-    pwCommentsService.flag_comment(args).then(
-        function(response) {
-          if ((response.status==200)&&(response.data == true)) {
-            alert( "Comment flagged for moderation." );          
-          } else {
-            alert( "Comment not flagged for moderation." );       
-          }
-        },
-        function(response) {
-          alert( "Comment not flagged for moderation." );   
-        }
-      );
-  };
+	$scope.deleteComment = function(child) {
+			// Disable edit button, text editing, cancelling until we are back
+			child.deleteInProgress = true;
+			child.deleteError = "";
+			// trigger call to send reply
+			var args = {};
+			args.comment_id = child.comment_ID;
+			
+			pwCommentsService.pw_delete_comment(args).then(
+				function(response) {
+					if ((response.status==200)&&(response.data)) {
+						
+						// reset form and hide it
+						child.deleteInProgress = false;
+						child.deleteBox = false;
+						child.deleteError = "";
+						console.log('deleted',response);
+						// show the new comment
+						$scope.removeChild(child);  					
+					} else {
+						// reset the form
+						child.deleteInProgress = false;
+						// TODO add more descriptive error
+						child.deleteError = "Error deleting comment";
+						// show the error
+						console.log('error deleting comment',response);  					
+					}
+				},
+				function(response) {
+					// reset the form
+					child.deleteInProgress = false;
+					// TODO add more descriptive error
+					child.deleteError = "Error deleting comment";
+					// show the error
+					console.log('error deleting comment',response);
+				}
+			);
+	};
 
 
-  $scope.removeChild = function (child) {
-    function walk(target) {
-      var children = target.children,
-        i;
-      if (children) {
-        i = children.length;
-        while (i--) {
-          if (children[i] === child) {
-            return children.splice(i, 1);
-          } else {
-            walk(children[i]);
-          }
-        }
-      }
-    }
-    walk($scope.treedata);
-    $scope.treeUpdated = !$scope.treeUpdated;			      
-  };
+	$scope.flagComment = function(child){
 
-  $scope.setRoles = function(child){
+		var args = {
+			"comment_ID" : child.comment_ID,
+		};
 
-    var current_user = $window.pwGlobals.current_user;
+		pwCommentsService.flag_comment(args).then(
+				function(response) {
+					if ((response.status==200)&&(response.data == true)) {
+						alert( "Comment flagged for moderation." );          
+					} else {
+						alert( "Comment not flagged for moderation." );       
+					}
+				},
+				function(response) {
+					alert( "Comment not flagged for moderation." );   
+				}
+			);
+	};
 
-    // Set the roles/relationship of the user to each post
-    child.roles = {};
 
-    // Guest
-    ( current_user == 0 ) ?
-      child.roles.isGuest = true : child.roles.isGuest = false;
+	$scope.removeChild = function (child) {
+		function walk(target) {
+			var children = target.children,
+				i;
+			if (children) {
+				i = children.length;
+				while (i--) {
+					if (children[i] === child) {
+						return children.splice(i, 1);
+					} else {
+						walk(children[i]);
+					}
+				}
+			}
+		}
+		walk($scope.treedata);
+		$scope.treeUpdated = !$scope.treeUpdated;			      
+	};
 
-    // User
-    ( current_user.user_id != 0 ) ? 
-      child.roles.isUser = true : child.roles.isUser = false;
-      
-    // Owner
-    ( current_user.data.ID == child.user_id ) ? 
-      child.roles.isOwner = true : child.roles.isOwner = false;
+	$scope.setRoles = function(child){
 
-    // Admin
-    ( current_user.roles[0] == "administrator" || 
-      current_user.roles[0] == "editor" ) ? 
-      child.roles.isAdmin = true : child.roles.isAdmin = false; 
+		var current_user = $window.pwGlobals.current_user;
 
-    //child.roles.isGuest
+		// Set the roles/relationship of the user to each post
+		child.roles = {};
 
-  }
+		// Guest
+		( current_user == 0 ) ?
+			child.roles.isGuest = true : child.roles.isGuest = false;
+
+		// User
+		( current_user.user_id != 0 ) ? 
+			child.roles.isUser = true : child.roles.isUser = false;
+			
+		// Owner
+		( current_user.data.ID == child.user_id ) ? 
+			child.roles.isOwner = true : child.roles.isOwner = false;
+
+		// Admin
+		( current_user.roles[0] == "administrator" || 
+			current_user.roles[0] == "editor" ) ? 
+			child.roles.isAdmin = true : child.roles.isAdmin = false; 
+
+		//child.roles.isGuest
+
+	}
 
 
 });
