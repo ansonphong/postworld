@@ -722,7 +722,7 @@
 	function get_user_vote_power ( $user_id ){
 		/*
 		 	• Checks to see user's WP roles with get_user_role()
-			• Checks how many points the user's role can cast, from wp_postworld_user_roles table, under vote_points column
+			• Checks how many points the user's role can cast, from $pwSiteGlobals object
 			return : integer (the number of points the user can cast)
 		 */
 	
@@ -731,18 +731,16 @@
 		//echo(json_encode($current_user_role_output));
 
 		if(gettype($current_user_role_output) == "array") {
-			//echo('arraaaaaay');
 			$current_user_role = $current_user_role_output[0];
 		}
 		else if (gettype($current_user_role_output) == "string"){
-			//echo('string<br>');
 			$current_user_role = $current_user_role_output;
-			//echo("role :" .json_encode($current_user_role));
 		}
 		
-		$query = "select vote_points from ".$wpdb->pw_prefix.'user_roles'." where user_role='".$current_user_role."'";
-		$vote_points = $wpdb->get_var($query);
-		
+		$current_user_role = strtolower($current_user_role);
+		global $pwSiteGlobals;
+		$vote_points = $pwSiteGlobals['roles'][ $current_user_role ]['vote_points'];
+
 		if($vote_points !=null) return $vote_points;
 		else 0;
 		

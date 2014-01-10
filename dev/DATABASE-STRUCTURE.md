@@ -281,21 +281,6 @@ __Default Table Name:__ *wp_posworld_* __shares__
 
 ------
 
-## User Roles
-__Default Table Name:__ *wp_posworld_* __user_roles__
-
-- Used to store meta data relating the user roles
-
-### Columns
-
-#### __role_name__ : *string*
-- The name of the role
-
-#### __vote_points__ : *integer*
-- The number of points which users with that role can cast
-
-------
-
 ## Favorites
 __Default Table Name:__ *wp_posworld_* __favorites__
 

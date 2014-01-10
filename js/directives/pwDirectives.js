@@ -276,8 +276,8 @@ postworld.directive( 'pwLanguage', [function(){
 postworld.controller('pwLanguageCtrl',
     ['$scope','$window',
     function($scope, $window) {
-    $scope.language = $window.pwGlobals.language;
-    
+      $scope.language = $window.pwSiteLanguage;
+            
     /*
     $scope.parseHTML = function(string){
         return $sce.parseAsHtml(string);

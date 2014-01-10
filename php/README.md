@@ -462,7 +462,7 @@ __return__ : *Object*
 
 ### get_user_vote_power ( *$user_id* )
 - Checks to see user's WP roles `with get_user_role()`
-- Checks how many points the user's role can cast, from __wp_postworld_user_roles__ table, under __vote_points__ column
+- Checks how many points the user's role can cast, from `$pwSiteGlobals['roles'][ $current_user_role ]['vote_points']`
 
 __return__ : *integer* (the number of points the user can cast)
 

@@ -37,187 +37,117 @@ function postworld_includes( $mode = 'deploy' ){
 		$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route');
 		
 		// ANGULAR & SERVICES
-		wp_enqueue_script( 'AngularJS', WP_PLUGIN_URL.'/postworld/lib/angular/angular.min.js');
-		wp_enqueue_script( 'AngularJS-Resource', WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
-		wp_enqueue_script( 'AngularJS-Route', WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
-		wp_enqueue_script( 'AngularJS-Sanitize', WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
+		wp_enqueue_script( 'AngularJS',
+			WP_PLUGIN_URL.'/postworld/lib/angular/angular.min.js');
+
+		wp_enqueue_script( 'AngularJS-Resource',
+			WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
+
+		wp_enqueue_script( 'AngularJS-Route',
+			WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
+
+		wp_enqueue_script( 'AngularJS-Sanitize',
+			WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
+
 		// wp_enqueue_script( 'AngularJS-Animate', WP_PLUGIN_URL.'/postworld/lib/angular/angular-animate.min.js');
-		wp_enqueue_script( 'AngularJS-UI-Utils', WP_PLUGIN_URL.'/postworld/lib/angular/angular-ui-utils.min.js');
+		
+		wp_enqueue_script( 'AngularJS-UI-Utils',
+			WP_PLUGIN_URL.'/postworld/lib/angular/angular-ui-utils.min.js');
 		
 		//BOOTSTRAP JS
-		wp_enqueue_script( "bootstrap-JS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.js' );
+		wp_enqueue_script( "bootstrap-JS",
+			WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.js' );
 
 		// ANGULAR UI : BOOTSTRAP
-		wp_enqueue_script( 'AngularJS-UI-Bootstrap', plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
+		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
+			plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 
 		// ANGULAR STRAP : BOOTSTRAP
-		wp_register_script( 'AngularJS-AngularStrap', WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js' );
-		wp_enqueue_script( 	'AngularJS-AngularStrap','', $angularDep );
+		wp_enqueue_script( 	'AngularJS-AngularStrap',
+			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
 
 
 		// POSTWORLD APP		
-		wp_register_script( 'pw-app-JS', WP_PLUGIN_URL.'/postworld/js/app.js' );
-		wp_enqueue_script( 	'pw-app-JS','', $angularDep );
+		wp_enqueue_script( 	'pw-app-JS',
+			WP_PLUGIN_URL.'/postworld/js/app.js', $angularDep );
 
 		// COMPONENTS
-		wp_register_script( "pw-FeedItem-JS", WP_PLUGIN_URL.'/postworld/js/components/feedItem.js' );
-		wp_enqueue_script( 'pw-FeedItem-JS','', $angularDep );
+		wp_enqueue_script( 'pw-FeedItem-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/feedItem.js', $angularDep );
 
-		wp_register_script( "pw-TreeView-JS", WP_PLUGIN_URL.'/postworld/js/components/treeview.js' );
-		wp_enqueue_script( 'pw-TreeView-JS','', $angularDep );
+		wp_enqueue_script( 'pw-TreeView-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/treeview.js', $angularDep );
 
-		wp_register_script( "pw-LoadComments-JS", WP_PLUGIN_URL.'/postworld/js/components/loadComments.js' );
-		wp_enqueue_script( 'pw-LoadComments-JS','', $angularDep );
+		wp_enqueue_script( 'pw-LoadComments-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/loadComments.js', $angularDep );
 		
-		wp_register_script( "pw-inputSearch-JS", WP_PLUGIN_URL.'/postworld/js/components/inputSearch.js');
-		wp_enqueue_script( 'pw-inputSearch-JS','', $angularDep );
+		wp_enqueue_script( 'pw-inputSearch-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/inputSearch.js', $angularDep );
 
-		wp_register_script( "pw-LiveFeed-JS", WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js' );
-		wp_enqueue_script( 'pw-LiveFeed-JS','', $angularDep );
+		wp_enqueue_script( 'pw-LiveFeed-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js', $angularDep );
 
-		wp_register_script( "pw-MediaEmbed-JS", WP_PLUGIN_URL.'/postworld/js/components/mediaEmbed.js' );
-		wp_enqueue_script( 'pw-MediaEmbed-JS','', $angularDep );
+		wp_enqueue_script( 'pw-MediaEmbed-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/mediaEmbed.js', $angularDep );
 
-		wp_register_script( "pw-Users-JS", WP_PLUGIN_URL.'/postworld/js/components/pwUsers.js' );
-		wp_enqueue_script( 'pw-Users-JS','', $angularDep );
+		wp_enqueue_script( 'pw-Users-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/pwUsers.js', $angularDep );
 
 		// CONTROLLERS
-		wp_register_script( "pw-Controllers-JS", WP_PLUGIN_URL.'/postworld/js/controllers/pwControllers.js');
-		wp_enqueue_script( 'pw-Controllers-JS','', $angularDep );
+		wp_enqueue_script( 'pw-Controllers-JS',
+			WP_PLUGIN_URL.'/postworld/js/controllers/pwControllers.js', $angularDep );
 
-		wp_register_script( "pw-controlMenus-JS", WP_PLUGIN_URL.'/postworld/js/controllers/controlMenus.js');
-		wp_enqueue_script( 'pw-controlMenus-JS','', $angularDep );
+		wp_enqueue_script( 'pw-controlMenus-JS',
+			WP_PLUGIN_URL.'/postworld/js/controllers/controlMenus.js', $angularDep );
 
-		wp_register_script( "pw-editPost-JS", WP_PLUGIN_URL.'/postworld/js/controllers/editPost.js');
-		wp_enqueue_script( 'pw-editPost-JS','', $angularDep );
+		wp_enqueue_script( 'pw-editPost-JS',
+			WP_PLUGIN_URL.'/postworld/js/controllers/editPost.js', $angularDep );
 
-		wp_register_script( "pw-autoComplete-JS", WP_PLUGIN_URL.'/postworld/js/controllers/autoComplete.js');
-		wp_enqueue_script( 'pw-autoComplete-JS','', $angularDep );
+		wp_enqueue_script( 'pw-autoComplete-JS',
+			WP_PLUGIN_URL.'/postworld/js/controllers/autoComplete.js', $angularDep );
 
-		wp_register_script( "pw-Widgets-JS", WP_PLUGIN_URL.'/postworld/js/controllers/pwWidgets.js');
-		wp_enqueue_script( 'pw-Widgets-JS','', $angularDep );
+		wp_enqueue_script( 'pw-Widgets-JS',
+			WP_PLUGIN_URL.'/postworld/js/controllers/pwWidgets.js', $angularDep );
 
 		// FILTERS
-		wp_register_script( 'pw-Filters-JS', WP_PLUGIN_URL.'/postworld/js/filters/pwFilters.js' );
-		wp_enqueue_script( 	'pw-Filters-JS','', $angularDep );
+		wp_enqueue_script( 	'pw-Filters-JS',
+			WP_PLUGIN_URL.'/postworld/js/filters/pwFilters.js', $angularDep );
 
-		wp_register_script( "pw-filterFeed-JS", WP_PLUGIN_URL.'/postworld/js/filters/filterFeed.js' );
-		wp_enqueue_script( 'pw-filterFeed-JS','', $angularDep );
+		wp_enqueue_script( 'pw-filterFeed-JS',
+			WP_PLUGIN_URL.'/postworld/js/filters/filterFeed.js', $angularDep );
 
 		// SERVICES
-		wp_register_script( "pw-pwData-JS", WP_PLUGIN_URL.'/postworld/js/services/pwData.js');
-		wp_enqueue_script( 'pw-pwData-JS','', $angularDep );
+		wp_enqueue_script( 'pw-pwData-JS',
+			WP_PLUGIN_URL.'/postworld/js/services/pwData.js', $angularDep );
 
-		wp_register_script( "pw-Services-JS", WP_PLUGIN_URL.'/postworld/js/services/pwServices.js');
-		wp_enqueue_script( 'pw-Services-JS','', $angularDep );
+		wp_enqueue_script( 'pw-Services-JS',
+			WP_PLUGIN_URL.'/postworld/js/services/pwServices.js', $angularDep );
 
-		wp_register_script( "pw-pwCommentsService-JS", WP_PLUGIN_URL.'/postworld/js/services/pwCommentsService.js');
-		wp_enqueue_script( 'pw-pwCommentsService-JS','', $angularDep );
+		wp_enqueue_script( 'pw-pwCommentsService-JS',
+			WP_PLUGIN_URL.'/postworld/js/services/pwCommentsService.js', $angularDep );
+
 		wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
 
 		// DIRECTIVES
-		wp_register_script( "pw-Directives-JS", WP_PLUGIN_URL.'/postworld/js/directives/pwDirectives.js');
-		wp_enqueue_script( 'pw-Directives-JS','', $angularDep );
+		wp_enqueue_script( 'pw-Directives-JS',
+			WP_PLUGIN_URL.'/postworld/js/directives/pwDirectives.js', $angularDep );
 
 		// COMPONENTS
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
 
 	}
 
+	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
+	pwSiteGlobals_include();
+
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
 	function pwGlobals() {
-
-		function parse_pw_globals(){
-			//$post_id = $GLOBALS['post']->ID;
-			global $pw_settings;
-			global $pw_globals;
-			$pw_globals = array();
-			$pw_globals['current_view'] = array();
-
-
-			///// POST /////
-			if( !empty($GLOBALS['post']->ID) ){
-				$pw_globals["current_view"]["type"] = "post";
-				$pw_globals["current_view"]["post"] = array(
-					"post_id" => $GLOBALS['post']->ID
-					);
-			}
-
-			///// POST TYPES /////
-			$pw_globals["post_types"] = pw_get_post_types();
-
-			///// SITE INFO /////
-			$pw_globals["site_info"] = array(
-				"name" => get_bloginfo( 'name' ),
-				"description" => get_bloginfo( 'description' ),
-				);
-
-			///// PATHS /////
-			$pw_globals["paths"] = array(
-				'ajax_url' => admin_url( 'admin-ajax.php' ),
-				'plugin_url' => WP_PLUGIN_URL,
-				'plugin_dir' => WP_PLUGIN_DIR,
-				"theme_dir"	=>	get_stylesheet_directory(),
-				"home_url" => get_bloginfo( 'url' ),
-				"wp_url" => get_bloginfo( 'wpurl' ),
-				"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
-
-				"template_url" => get_bloginfo( 'template_url' ),
-				"postworld_url" => WP_PLUGIN_URL . '/postworld',
-				"postworld_dir" => WP_PLUGIN_DIR . '/postworld',
-				);
-
-			///// CURRENT USER /////
-			$user_id = get_current_user_id();
-			if( $user_id != 0 ){
-				$userdata = wp_get_current_user();
-				unset($userdata->data->user_pass);
-				$userdata = (array) $userdata;
-				$userdata["postworld"] = array();
-				$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
-				$userdata["is_admin"] = is_admin();
-
-				// SUPPORT FOR WPMU MEMBERSHIP
-				if( function_exists('current_user_is_member') ){
-					$userdata["membership"] = array();
-					$userdata["membership"]["is_member"] = current_user_is_member();
-				}
-			} else
-				$userdata = 0;
-			$pw_globals["current_user"] = $userdata;
-
-
-			///// DISPLAYED USER /////
-			// Support for Buddypress Globals
-			if ( function_exists('bp_displayed_user_id') ){
-				$displayed_user_id = bp_displayed_user_id();
-			} else
-				$displayed_user_id = $GLOBALS['post']->post_author;
-
-			if ( isset($displayed_user_id) )
-				$displayed_userdata = get_userdata($displayed_user_id);
-
-			$pw_globals['displayed_user'] = array(
-				"user_id" => $displayed_user_id,
-				"display_name" => $displayed_userdata->display_name,
-				"first_name" => $displayed_userdata->first_name,	
-				);
-
-			///// LANGUAGE /////
-			$pw_globals['language'] = $pw_settings['language'];
-
-			///// RETURN /////
-			return $pw_globals;
-		}
 	?>
 
-		<script type="text/javascript">
-			/* <![CDATA[ */
-			var pwGlobals = <?php echo json_encode( parse_pw_globals() ); ?>;
-			/* ]]> */
-		</script>
-			
+		<script type="text/javascript">/* <![CDATA[ */
+			var pwGlobals = <?php echo json_encode( pwGlobals_parse() ); ?>;
+		/* ]]> */</script>
 
 	<?php
 	}
@@ -228,6 +158,132 @@ function postworld_includes( $mode = 'deploy' ){
 
 }
 
+
+
+///// PARSE pwSiteGlobals /////
+
+function pwSiteGlobals_include(){
+
+	///// DYNAMICALLY GENERATED JAVASCRIPT /////
+	// This method can only be used for site-wide globals
+	// Not for user-specific globals
+
+	// ENCODE SITE GLOBALS
+	global $pwSiteGlobals;	
+	$pwGlobalsJs  = "";
+	$pwGlobalsJs .= "var pwSiteGlobals = ";
+	$pwGlobalsJs .= json_encode( $pwSiteGlobals );
+	$pwGlobalsJs .= ";";
+
+	// ENCODE SITE LANGUAGE
+	global $pwSiteLanguage;	
+	$pwGlobalsJs .= "\n\n";
+	$pwGlobalsJs .= "var pwSiteLanguage = ";
+	$pwGlobalsJs .= json_encode( $pwSiteLanguage );
+	$pwGlobalsJs .= ";";
+
+	$pwGlobalsJsFile = WP_PLUGIN_DIR.'/postworld/deploy/pwSiteGlobals.js';
+	$file = fopen( $pwGlobalsJsFile ,"w" );
+	fwrite($file,"$pwGlobalsJs");
+	fclose($file);
+	chmod($pwGlobalsJsFile, 0755);
+
+	wp_enqueue_script( 'pw-SiteGlobals-JS',
+		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js', $angularDep );
+	
+}
+
+
+
+///// PARSE pwGlobals /////
+function pwGlobals_parse(){
+	//$post_id = $GLOBALS['post']->ID;
+	global $pw_settings;
+	global $pw_globals;
+	$pw_globals = array();
+	$pw_globals['current_view'] = array();
+
+
+	/////////// USER / PAGE SPECIFIC GLOBALS //////////
+
+	///// POST /////
+	if( !empty($GLOBALS['post']->ID) ){
+		$pw_globals["current_view"]["type"] = "post";
+		$pw_globals["current_view"]["post"] = array(
+			"post_id" => $GLOBALS['post']->ID
+			);
+	}
+
+	///// CURRENT USER /////
+	$user_id = get_current_user_id();
+	if( $user_id != 0 ){
+		$userdata = wp_get_current_user();
+		unset($userdata->data->user_pass);
+		$userdata = (array) $userdata;
+		$userdata["postworld"] = array();
+		$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
+		$userdata["is_admin"] = is_admin();
+
+		// SUPPORT FOR WPMU MEMBERSHIP
+		if( function_exists('current_user_is_member') ){
+			$userdata["membership"] = array();
+			$userdata["membership"]["is_member"] = current_user_is_member();
+		}
+	} else
+		$userdata = 0;
+	$pw_globals["current_user"] = $userdata;
+
+	///// DISPLAYED USER /////
+	// Support for Buddypress Globals
+	if ( function_exists('bp_displayed_user_id') ){
+		$displayed_user_id = bp_displayed_user_id();
+	} else
+		$displayed_user_id = $GLOBALS['post']->post_author;
+
+	if ( isset($displayed_user_id) )
+		$displayed_userdata = get_userdata($displayed_user_id);
+
+	$pw_globals['displayed_user'] = array(
+		"user_id" => $displayed_user_id,
+		"display_name" => $displayed_userdata->display_name,
+		"first_name" => $displayed_userdata->first_name,	
+		);
+
+
+
+	/////////// SITE WIDE GLOBALS //////////
+
+	///// SITE INFO /////
+	$pw_globals["site_info"] = array(
+		"name" => get_bloginfo( 'name' ),
+		"description" => get_bloginfo( 'description' ),
+		);
+
+	///// POST TYPES /////
+	$pw_globals["post_types"] = pw_get_post_types();
+
+	///// PATHS /////
+	$pw_globals["paths"] = array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'plugin_url' => WP_PLUGIN_URL,
+		'plugin_dir' => WP_PLUGIN_DIR,
+		"theme_dir"	=>	get_stylesheet_directory(),
+		"home_url" => get_bloginfo( 'url' ),
+		"wp_url" => get_bloginfo( 'wpurl' ),
+		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
+
+		"template_url" => get_bloginfo( 'template_url' ),
+		"postworld_url" => WP_PLUGIN_URL . '/postworld',
+		"postworld_dir" => WP_PLUGIN_DIR . '/postworld',
+		);
+
+	///// LANGUAGE /////
+	$pw_globals['language'] = $pw_settings['language'];
+
+
+	///// RETURN /////
+	return $pw_globals;
+}
 
 
 function object_to_array($data){

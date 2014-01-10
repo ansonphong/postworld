@@ -990,11 +990,10 @@ function pw_get_avatar( $obj ){
 
 	global $pw_settings;
 
-	$default_avatar = $pw_settings['avatar']['default'] ;
+	$default_avatar = $pwSiteGlobals['avatar']['default'] ;
 
 	if ( !isset($user_id) ){
-		global $template_paths;
-		return $template_paths['POSTWORLD_URL'].$default_avatar;
+		return $default_avatar;
 	}
 	
 	$attachment_id = get_user_meta( $user_id, 'pw_avatar', true );

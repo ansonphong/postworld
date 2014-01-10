@@ -5,7 +5,50 @@
   
 */
 
+
+////////// POSTWORLD SITE OPTIONS : AGGREGATE //////////
+function pw_site_options( $args ){
 	
+	$pw_site_options = array(
+		"months"	=> array(
+			"1"  => "January",
+            "2"  => "Fabruary",
+            "3"  => "March",
+            "4"  => "April",
+            "5"  => "May",
+            "6"  => "June",
+            "7"  => "July",
+            "8"  => "August",
+            "9"  => "September",
+            "10" => "October",
+            "11" => "November",
+            "12" => "December",
+			),
+		);
+
+	return $pw_site_options;
+}
+
+
+//---------- PW SITE OPTIONS : AJAX RELAY NODE ----------//
+function pw_site_options_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_site_options($params);
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_site_options", "pw_site_options_ajax");
+add_action("wp_ajax_pw_site_options", "pw_site_options_ajax");
+
+
+
 
 //---------- FLAG COMMENTS ----------//
 function flag_comment_admin(){

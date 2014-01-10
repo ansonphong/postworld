@@ -350,5 +350,13 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 		},
 
 
+		pw_site_options: function(args) {
+			$log.debug('pwData.pw_site_options',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_site_options',params);
+		},
+
+
+
    }; // END OF pwData return value
 });

@@ -133,7 +133,7 @@ postworld.service('ext', ['$log', function ($log) {
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
 postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                             function ($window, $log, $siteOptions, $pwData) {
-    // Do one AJAX call here which returns all the options
+
     return{
         getTaxTerms: function($scope, tax_obj){ // , tax_obj
             
@@ -153,6 +153,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                 }
             );
         },
+
         pwGetPostTypeOptions: function( mode ){
             // MODE OPTIONS
             // read / edit / edit_others / publish / create / edit_published / edit_private
@@ -174,6 +175,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             });
             return userPostTypeOptions;
         },
+
         pwGetPostStatusOptions: function( post_type ){
         	if ((!$window.pwGlobals.current_user) || (!$window.pwGlobals.current_user)) {
         		return;
@@ -237,6 +239,15 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
             }
 
         },
+        
+        pwGetPostClassOptions: function(){
+            return {
+                "contributor" : "Contributor",
+                "author" : "Author",
+                "members" : "Members Only",
+            };
+        },
+
         pwGetPostFormatOptions: function(){
             return {
                 "standard" :    "Standard",
@@ -245,93 +256,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                 "audio" :       "Audio",
             };
         },
-        pwGetPostClassOptions: function(){
-            return {
-                "contributor" : "Contributor",
-                "author" : "Author",
-                "members" : "Members Only",
-            };
-        },
-        pwGetPostYearOptions: function(){
-            return [
-                "2007",
-                "2008",
-                "2009",
-                "2010",
-                "2011",
-                "2012",
-                "2013",
-                "2014",
-            ];
-        },
-        pwGetPostMonthOptionsPrimary: function(){
-            return {
-                1:"January",
-                2:"Fabruary",
-                3:"March",
-                4:"April",
-                5:"May",
-                6:"June",
-                7:"July",
-                8:"August",
-                9:"September",
-                10:"October",
-                11:"November",
-                12:"December",
-            };
-        },
-        pwGetPostMonthOptions: function(){
-            return [
-                {
-                    name:"January",
-                    number:"1"
-                },
-                {
-                    name:"February",
-                    number:"2"
-                },
-                {
-                    name:"March",
-                    number:"3"
-                },
-                {
-                    name:"April",
-                    number:"4"
-                },
-                {
-                    name:"May",
-                    number:"5"
-                },
-                {
-                    name:"June",
-                    number:"6"
-                },
-                {
-                    name:"July",
-                    number:"7"
-                },
-                {
-                    name:"August",
-                    number:"8"
-                },
-                {
-                    name:"September",
-                    number:"9"
-                },
-                {
-                    name:"October",
-                    number:"10"
-                },
-                {
-                    name:"November",
-                    number:"11"
-                },
-                {
-                    name:"December",
-                    number:"12"
-                },
-            ];
-        },        
+
         pwGetPostFormatMeta: function(){
             return [
                 {
@@ -360,6 +285,62 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                 },
             ];
         },
+
+
+
+        pwGetPostYearOptions: function(){
+            return [
+                "2007",
+                "2008",
+                "2009",
+                "2010",
+                "2011",
+                "2012",
+                "2013",
+                "2014",
+            ];
+        },
+
+
+        pwGetPostMonthOptions: function(){
+            return {
+                1:"January",
+                2:"Fabruary",
+                3:"March",
+                4:"April",
+                5:"May",
+                6:"June",
+                7:"July",
+                8:"August",
+                9:"September",
+                10:"October",
+                11:"November",
+                12:"December",
+            };
+        },
+
+
+        pw_site_options: function( $scope ){
+            
+            var args = "";
+            $pwData.pw_site_options( args ).then(
+                // Success
+                function(response) {    
+                    //alert( JSON.stringify(response.data.months) );
+                    return response.data;
+                    //alert(JSON.stringify(response.data));
+                },
+                // Failure
+                function(response) {
+                    //alert('Error loading terms.');
+                }
+            );
+
+
+        },
+        
+
+
     }
 }]);
 

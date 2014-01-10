@@ -45,6 +45,10 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
+    // TEST OPTION IMPORT
+    //$scope.pw_site_options = $pwPostOptions.pw_site_options();
+
+
     // TAXONOMY TERMS
     // Gets live set of terms from the DB
     // as $scope.tax_terms

@@ -99,11 +99,6 @@ function postworld_install() {
       total_views mediumint(9) NOT NULL
     );";
 
-  $user_roles_table_name = $wpdb->pw_prefix.'user_roles';
-  $sql_postworld_user_roles = "CREATE TABLE $user_roles_table_name (
-      user_role char(16) NOT NULL,
-      vote_points mediumint(6) NOT NULL
-    );";
 
   $favorites_table_name = $wpdb->pw_prefix.'favorites';
   $sql_postworld_favorites = "CREATE TABLE $favorites_table_name (
@@ -155,7 +150,6 @@ function postworld_install() {
   dbDelta( $sql_postworld_comment_points );
   dbDelta( $sql_postworld_user_meta );
   dbDelta( $sql_postworld_user_shares );
-  dbDelta( $sql_postworld_user_roles );
   dbDelta( $sql_postworld_favorites );
   dbDelta( $sql_postworld_feeds );
   dbDelta( $sql_postworld_cron_logs );
@@ -167,13 +161,13 @@ function postworld_install() {
 
 function postworld_install_data() {
   global $wpdb;
-  global $pw_settings;
+  global $pwSiteGlobals;
   global $postworld_db_version;
  
-
+  /* OBSOLETE
   ///// USER ROLE DATA /////
   // Pre-populate data for each role in >>> $pw_settings['roles'] <<<
-  foreach ( $pw_settings['roles'] as $key => $value) {
+  foreach ( $pwSiteGlobals['roles'] as $key => $value) {
     $add_rows = $wpdb->insert( $wpdb->pw_prefix.'user_roles',
     array(
       'user_role' => $key,
@@ -181,6 +175,7 @@ function postworld_install_data() {
       )
     );
   }
+  */
 
 }
 

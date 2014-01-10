@@ -31,11 +31,11 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
     // IMPORT LANGUAGE
     if(
         typeof $window.pwGlobals.paths !== 'undefined' &&
-        typeof $window.pwGlobals.language !== 'undefined' &&
+        typeof $window.pwSiteLanguage !== 'undefined' &&
         typeof $window.pwGlobals.current_user !== 'undefined' &&
         typeof $scope.post !== 'undefined'
         ){
-        $scope.language = $window.pwGlobals.language;
+        $scope.language = $window.pwSiteLanguage;
         $scope.current_user_id = $window.pwGlobals.current_user.ID;
         // GENERATE  SHARE LINK
         $scope.share_link = $window.pwGlobals.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
