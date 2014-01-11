@@ -59,16 +59,12 @@ function set_template_paths(){
 global $template_paths;
 $template_paths = set_template_paths();
 
-////////// WP SETTINGS ///////////
-include 'php/postworld_settings.php';
-
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';
 register_activation_hook( __FILE__, 'postworld_install' );
 register_activation_hook( __FILE__, 'postworld_install_data' );
 register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
 register_activation_hook( __FILE__, 'postworld_install_Triggers' );
-
 
 //include 'php/postworld_debugger.php';
 

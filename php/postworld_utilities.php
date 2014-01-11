@@ -197,8 +197,7 @@ function pwSiteGlobals_include(){
 
 ///// PARSE pwGlobals /////
 function pwGlobals_parse(){
-	//$post_id = $GLOBALS['post']->ID;
-	global $pw_settings;
+
 	global $pw_globals;
 	$pw_globals = array();
 	$pw_globals['current_view'] = array();

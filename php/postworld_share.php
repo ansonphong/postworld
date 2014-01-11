@@ -56,16 +56,22 @@ function set_share ( $user_id, $post_id ){
 	 
 	 */
 	
-	if(does_user_exist($user_id)&& ($post_author = does_post_exist_return_post_author($post_id))!==FALSE){
+	if( does_user_exist($user_id) && ( $post_author = does_post_exist_return_post_author($post_id)) !== FALSE ){
 		$last_time = date('Y-m-d H:i:s');
 		//echo 'pos_auhor:'.$post_author;
 		$user_ip = get_client_ip();
 		$current_share = get_share($user_id,$post_id);
+
+		global $pwSiteGlobals;
+		$ip_history = (int) $pwSiteGlobals['shares']['tracker']['ip_history']; // Integer - number of IPs to store in post share history
+		if( isset($ip_history) )
+			$ip_history = (int) 100;
+
 		if($current_share){
 			$shares=0;
-			$ips_list =(array)json_decode( $current_share->recent_ips);
+			$ips_list = (array)json_decode( $current_share->recent_ips);
 			if(!in_array($user_ip, $ips_list)){
-				if(count($ips_list)>=100){
+				if(count($ips_list) >= $ip_history){
 					$ips_list = array($user_ip);
 				}else{
 					$ips_list[]=$user_ip;

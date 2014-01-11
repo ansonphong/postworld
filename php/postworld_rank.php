@@ -30,8 +30,8 @@ function calculate_rank_score ( $post_id ) {
 	extract($TIME_UNITS);
 
 	//////////// SET DEFAULTS ////////////
-	global $pw_settings;
-	$equasion = $pw_settings['rank']['equations']['rsv2'];
+	global $pwSiteGlobals;
+	$equasion = $pwSiteGlobals['rank']['equations']['rsv2'];
 
 	$POINTS_WEIGHT =		$equasion['points_weight'];;
 	$COMMENTS_WEIGHT =		$equasion['comments_weight'];;
@@ -46,7 +46,6 @@ function calculate_rank_score ( $post_id ) {
 
 	$FREE_RANK_POINTS =		$equasion['free_rank_points'];
 	$FREE_RANK_PERIOD =		$equasion['free_rank_period'];
-
 
 	//////////// GET POST VALUES ////////////
 	// TIME
