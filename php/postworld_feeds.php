@@ -226,7 +226,7 @@ function pw_get_feed ( $feed_id ){
 	
 }
   
-function pw_load_feed ( $feed_id, $preload=0 ){
+function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
 	/*
 	 Parameters:
 
@@ -253,30 +253,57 @@ function pw_load_feed ( $feed_id, $preload=0 ){
 		)
 	 */
 	
-	$feed_row = pw_get_feed($feed_id);
-	//print_r($feed_row);
+	$feed_row = (array) pw_get_feed($feed_id);
 	if($feed_row){
-		$feed_row->feed_outline = array_map("intval", explode(",", $feed_row->feed_outline));
-		if($preload>0){
-			//print_r($feed_outline);
-			$preload_posts = array_slice( $feed_row->feed_outline, 0, $preload ); // to get top post ids
-			//print_r($preload_posts);
-			$feed_query_feeds = (array)json_decode($feed_row->feed_query);//["fields"];
-			//print_r($feed_query_feeds);
-			//print_r($feed_query_feeds["fields"]);
-			$post_array = pw_get_posts($preload_posts,$feed_query_feeds["fields"]); 
-			//print_r($post_array);
-			$feed_row->post_data = $post_array;
+		$feed_row['feed_outline'] = array_map("intval", explode(",", $feed_row['feed_outline']));
+		
+		if($preload > 0){
+			// Get the top preload post IDs
+			$preload_posts = array_slice( $feed_row['feed_outline'], 0, $preload ); 
+			
+			if( $fields == null ){
+				// Get the default fields
+				$feed_query = (array)json_decode($feed_row['feed_query']);
+				$fields = $feed_query['fields'];
+			}
+
+			$feed_row['post_data'] = pw_get_posts($preload_posts,$fields);
 		}
+
 	}
+
 	return (array)$feed_row;
 	
 }
 
+
+function pw_print_feed( $args ){
+
+	$load_feed = pw_load_feed( $args['feed_id'], $args['posts'], $args['fields'] );
+
+	// H2O
+	global $pw_globals;
+	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
+	$template_path = $args['template_path']; //$pw_globals['paths']['theme_dir']."/postworld/templates/posts/post-list-h2o.html";
+	$h2o = new h2o($template_path);
+
+	$pw_post = array();
+	$post_html = "";
+
+	foreach( $load_feed['post_data'] as $post_data ){
+		$pw_post['post'] = $post_data;
+		$post_html .= $h2o->render($pw_post);
+	}
+
+	return $post_html;
+
+}
+
+
 function get_panel_ids(){
 	global $pwSiteGlobals;
-	$override_file_names = list_dir_file_names( $pwSiteGlobals['template_paths']['override_panel_template_abs_path']);
-	$default_file_names = list_dir_file_names( $pwSiteGlobals['template_paths']['default_panel_template_abs_path']);
+	$override_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['panels']['dir']['override'] ); //['override_panel_template_abs_path']);
+	$default_file_names = 	list_dir_file_names( $pwSiteGlobals['template_paths']['panels']['dir']['default'] ); //['default_panel_template_abs_path'] );
 
 	$final_panel_names = array();
 	for ($i=0; $i <count($default_file_names) ; $i++) { 
@@ -297,8 +324,8 @@ function get_panel_ids(){
 
 function get_comment_ids(){
 	global $pwSiteGlobals;
-	$override_file_names = list_dir_file_names( $pwSiteGlobals['template_paths']['override_comment_template_abs_path']);
-	$default_file_names = list_dir_file_names( $pwSiteGlobals['template_paths']['default_comment_template_abs_path']);
+	$override_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['override'] ); //['override_comment_template_abs_path']);
+	$default_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['default'] );//['default_comment_template_abs_path']);
 	
 	
 	$final_comment_names = array();
@@ -347,13 +374,11 @@ function list_dir_file_names($directory){
 			
 	return $names_array;
 }
-function pw_get_templates ( $templates_object =null){
+function pw_get_templates ( $templates_object = null, $path='url' ){
 	/*
-	 
-	 $templates_object : Array (optional)
+	$templates_object : Array (optional)
 
 		Options:
-		
 		Array containing ['posts'] : indicates to return a Post Templates Object
 		
 		post_types : Array (optional) - Array of post_types which to return template paths for
@@ -366,10 +391,16 @@ function pw_get_templates ( $templates_object =null){
 		panel_id : Return the url for the given panel_id
 		null : default
 		Returns object with all panels and templates in the default and over-ride folders
+
+	$path : string (optional)
+		Options:
+		  'url' (default): Returns absolute URL string of template file
+		  'dir' (default): Returns absolute directory path of template file
+
 			 * */
 
 		global $pwSiteGlobals;
-		extract($pwSiteGlobals['template_paths']);
+		$template_paths = $pwSiteGlobals['template_paths'];
 		
 		$output = array();
 
@@ -385,14 +416,13 @@ function pw_get_templates ( $templates_object =null){
 			$operator = 'and'; // 'and' or 'or'
 			
 			$post_types = get_post_types( $args, 'names', $operator );
-			//echo json_encode($post_types); 
-			$post_types_final=array();
-			foreach ( $post_types as $post_type ) {
+			$post_types_final = array();
 
-   				$post_types_final[]= $post_type ;
+			foreach ( $post_types as $post_type ) {
+   				$post_types_final[] = $post_type ;
 			}
 
-			global $pwSiteGlobals;
+			//global $pwSiteGlobals; // redundant - prune
 			$post_views = $pwSiteGlobals['post_views'];
 
 			$templates_object['posts']=array();
@@ -415,25 +445,21 @@ function pw_get_templates ( $templates_object =null){
 			 	 $output['posts'][$templates_object['posts']['post_types'][$i] ]=array();
 				
 				 for ($j=0; $j < count($templates_object['posts']['post_views']) ; $j++) {
-					 	 
 					 $template_name = $templates_object['posts']['post_types'][$i] ."-". $templates_object['posts']['post_views'][$j].".html";
-					// echo "<br>".$template_name;
-					// echo("post_over+name :" . $override_posts_template_abs_path.$template_name);
-				 	 if(file_exists($override_posts_template_abs_path.$template_name)){
-				 	// 	echo 'file exists';	
-				 	 	$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]]= $override_posts_template_url.$template_name;
+				 	 
+				 	 if(file_exists($template_paths['posts']['dir']['override'].$template_name)){
+				 	 	$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts']['url']['override'].$template_name;
 				 	 }
 				 	 
 				 	 else{
-				 	 //	echo ('file doesnt exist');
 				 	 	$fall_back_template_name ="post-".$templates_object['posts']['post_views'][$j].".html";
-				 	 //	echo("fallbackname:".$fall_back_template_name."<br>");
-				 	 	if(file_exists($override_posts_template_abs_path.$fall_back_template_name))
-				 	 		$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]]=$override_posts_template_url.$fall_back_template_name;
+				 	 	
+				 	 	if(file_exists($template_paths['posts']['dir']['override'].$fall_back_template_name))
+				 	 		$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts']['url']['override'].$fall_back_template_name;
 						
 						else{
-							$fall_back_template_default_path = $default_posts_template_url."post-".$templates_object['posts']['post_views'][$j].".html";
-							$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]]=$fall_back_template_default_path;
+							$fall_back_template_default_path = $template_paths['posts']['url']['default']."post-".$templates_object['posts']['post_views'][$j].".html";
+							$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $fall_back_template_default_path;
 						}
 
 				 	 }
@@ -449,12 +475,11 @@ function pw_get_templates ( $templates_object =null){
 			$output['panels']=array();
 
 			for ($i=0; $i < count($templates_object['panels']) ; $i++) {
-				if(file_exists($override_panel_template_abs_path.$templates_object['panels'][$i].".html")){
-					//echo $override_panel_template_abs_path.$templates_object['panels'][$i].".html";
-					$output['panels'][$templates_object['panels'][$i]] =  $override_panel_template_url.$templates_object['panels'][$i].".html";
+				if(file_exists( $template_paths['panels']['dir']['override'].$templates_object['panels'][$i].".html")){
+					$output['panels'][$templates_object['panels'][$i]] = $template_paths['panels']['url']['override'].$templates_object['panels'][$i].".html";
 				}
 				else {
-					$output['panels'][$templates_object['panels'][$i]] =  $default_panel_template_url.$templates_object['panels'][$i].".html";
+					$output['panels'][$templates_object['panels'][$i]] = $template_paths['panels']['url']['default'].$templates_object['panels'][$i].".html";
 				}
 			}
 		}
@@ -464,12 +489,11 @@ function pw_get_templates ( $templates_object =null){
 			$output['comments']=array();
 
 			for ($i=0; $i < count($templates_object['comments']) ; $i++) {
-				if(file_exists($override_comment_template_abs_path.$templates_object['comments'][$i].".html")){
-					//echo $override_comment_template_abs_path.$templates_object['comments'][$i].".html";
-					$output['comments'][$templates_object['comments'][$i]] =  $override_comment_template_url.$templates_object['comments'][$i].".html";
+				if(file_exists( $template_paths['comments']['dir']['override'].$templates_object['comments'][$i].".html")){
+					$output['comments'][$templates_object['comments'][$i]] =  $template_paths['comments']['url']['override'].$templates_object['comments'][$i].".html";
 				}
 				else {
-					$output['comments'][$templates_object['comments'][$i]] =  $default_comment_template_url.$templates_object['comments'][$i].".html";
+					$output['comments'][$templates_object['comments'][$i]] = $template_paths['comments']['url']['default'].$templates_object['comments'][$i].".html";
 				}
 			}
 			
@@ -479,7 +503,7 @@ function pw_get_templates ( $templates_object =null){
 	}
 
 
-	function  pw_get_post_template ( $post_id, $post_view ){
+	function  pw_get_post_template ( $post_id, $post_view, $path='url', $string=false ){
 		
 		/* Returns an template path based on the provided post ID and view
 			Process
@@ -513,9 +537,21 @@ function pw_get_templates ( $templates_object =null){
         		'post_views' => array( $post_view )     // 'full'
     		),
 		);
-		return pw_get_templates($args);
-		 
-		 
+		
+		$templates_object = pw_get_templates($args);
+
+		if( $string == false )
+			return $templates_object;
+		 else{
+
+		 	foreach( $templates_object as $template_type => $post_types ){
+			 	foreach( $post_types as $post_type => $views ){
+			 		foreach( $views as $view => $template_path ){
+			 			return $template_path;
+			 		}
+			 	}
+			 }
+		 }
 	}
 		//convert object to array $array =  (array) $yourObject;
 	class pw_query_args{

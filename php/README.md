@@ -2073,11 +2073,15 @@ __return__ : *Array* (of post IDs)
 ### __pw_load_feed__ ( *$feed_id, [$preload]* )
 
 #### Parameters:
-
 __$feed_id__ : *string*
 
 __$preload__ : *integer* (optional)('0' default)
 - The number of posts to pre-load with post_data
+
+__$fields__ : *Array* (optional)
+- Array of fields to relay to `pw_get_posts()`
+- Only used if a number of posts to preload is specified
+- Defaults to to 'fields' parameter defined in the feed query
 
 #### Process:
 - Return an object containing all the columns from the __Feeds__ table
@@ -2100,12 +2104,45 @@ array(
 
 ------
 
-### pw_get_post_template ( *$post_id, $post_view* )
+### pw_print_feed( *$args* )
+- Returns a string with the rendered templates of a given feed
+
+#### Parameters : $args
+__feed_id__ : *string*
+- Feed ID of the registered Feed to print
+
+__posts__ : *integer*
+- Number of posts to print
+
+__fields__ : *string/Array* (optional) (default:null)
+- Fields to pass to `pw_get_post()`
+- Defaults to null, which falls back to fields defined in the registered `feed_query['fields']`
+
+__template__ : *string* (required)
+- Which template to use, relative to posts template path
+
+------
+
+### pw_get_post_template ( *$post_id, $post_view, $path, $string* )
 - Returns an template path based on the provided post ID and view
 
 #### Process
 - Check the __post type__ of the post as `$post_type` with `get_post_type( $post_id )`
 - Using `pw_get_templates()`, get the template object
+
+#### Parameters
+__$post_id__ : *integer*
+
+__$post_view__ : *string*
+
+__$path__ : *string*
+- Options:
+  - __url__ (default): Returns absolute URL string of template file
+  - __dir__ (default): Returns absolute directory path of template file
+
+__$string__ : *boolean* (default : *false*)
+- Return
+
 
 Input : 
 
@@ -2119,8 +2156,10 @@ $args = array(
 $post_template_object = pw_get_templates ($args);
 ```
 
-Output : 
 
+__return__ : *Array / string*
+
+- If $string = false, return:
 ``` javascript
 {
 posts : {
@@ -2131,11 +2170,12 @@ posts : {
 }
 ```
 
-__return__ : *string* (The single template path) : `/wp-content/plugins/postworld/templates/posts/post-full.html`
+- If $string = true, return : the single template path as a string
+`/wp-content/plugins/postworld/templates/posts/post-full.html`
 
 ------
 
-### pw_get_templates ( *$templates_object* )
+### pw_get_templates ( *$templates_object, $path* )
 - Gets an Object of template paths based on the provided object
 
 #### Parameters:
@@ -2156,6 +2196,12 @@ Options:
 
 - __null__ : *default*  
   Returns object with all panels and templates in the default and over-ride folders.
+
+
+__$path__ : *string* (optional)
+- Options:
+  - __url__ (default): Returns absolute URL string of template file
+  - __dir__ (default): Returns absolute directory path of template file
 
 
 #### Process:
