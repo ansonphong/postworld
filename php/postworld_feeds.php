@@ -277,26 +277,61 @@ function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
 }
 
 
+
 function pw_print_feed( $args ){
 
-	$load_feed = pw_load_feed( $args['feed_id'], $args['posts'], $args['fields'] );
+	// Load a cached feed
+	if( isset($args['feed_id']) ){
+		// LOAD A CACHED FEED
+		// Run Postworld Load Feed
+		$load_feed = pw_load_feed( $args['feed_id'], $args['posts'], $args['fields'] );
+		$posts = $load_feed['post_data'];
 
-	// H2O
+	} else if( isset($args['feed_query']) ) {
+		
+		// LOAD A FRESH QUERY
+		$feed_query = $args['feed_query'];
+		
+		if( isset($args['fields']) )
+			// Override fields
+			$feed_query['fields'] = $args['fields'];
+
+		$pw_query = pw_query( $feed_query );
+		$posts = $pw_query->posts;
+
+	} else {
+		// RETURN ERROR
+		return array('error' => 'No feed_id or feed_query defined.');
+	}
+
+	
+	// Include h2o template engine
 	global $pw_globals;
 	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
-	$template_path = $args['template_path']; //$pw_globals['paths']['theme_dir']."/postworld/templates/posts/post-list-h2o.html";
-	$h2o = new h2o($template_path);
 
 	$pw_post = array();
 	$post_html = "";
 
-	foreach( $load_feed['post_data'] as $post_data ){
+	// Iterate through each provited post
+	foreach( $posts as $post_data ){
+
+		// ID is a required field, to determine the post template
+		$post_id = $post_data['ID'];
+
+		// Get the template for this post
+		$template_path = pw_get_post_template( $post_id, $args['view'], 'dir', true );
+		
+		// Initialize h2o template engine
+		$h2o = new h2o($template_path);
+
+		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
 		$pw_post['post'] = $post_data;
+
+		// Add rendered HTML to the return data
 		$post_html .= $h2o->render($pw_post);
 	}
 
 	return $post_html;
-
 }
 
 
@@ -374,7 +409,7 @@ function list_dir_file_names($directory){
 			
 	return $names_array;
 }
-function pw_get_templates ( $templates_object = null, $path='url' ){
+function pw_get_templates ( $templates_object = null, $path_type='url' ){
 	/*
 	$templates_object : Array (optional)
 
@@ -399,178 +434,177 @@ function pw_get_templates ( $templates_object = null, $path='url' ){
 
 			 * */
 
-		global $pwSiteGlobals;
-		$template_paths = $pwSiteGlobals['template_paths'];
-		
-		$output = array();
+	global $pwSiteGlobals;
+	$template_paths = $pwSiteGlobals['template_paths'];
+	
+	$output = array();
 
-		if(!$templates_object){
-			/*null : default
-				Returns object with all panels and templates in the default and over-ride folders.
-			 */
-			$args = array(
-  			 'public'   => true,
-  			// '_builtin' => false
-			);
-			//$output = 'names'; // names or objects, note names is the default
-			$operator = 'and'; // 'and' or 'or'
-			
-			$post_types = get_post_types( $args, 'names', $operator );
-			$post_types_final = array();
-
-			foreach ( $post_types as $post_type ) {
-   				$post_types_final[] = $post_type ;
-			}
-
-			//global $pwSiteGlobals; // redundant - prune
-			$post_views = $pwSiteGlobals['post_views'];
-
-			$templates_object['posts']=array();
-			$templates_object['posts']['post_types']=$post_types_final;
-			$templates_object['posts']['post_views']=$post_views; 
-			
-			//$panel_ids = $pwSiteGlobals['panel_ids']; //array('feed_top','feed_search');
-			
-			$templates_object['panels']= get_panel_ids();
-			$templates_object['comments']= get_comment_ids();
-			
-			//print_r($templates_object);
-		}
-		
-		if(array_key_exists('posts', $templates_object)){
-		//if($templates_object['posts']){
-			
-			 $output['posts'] = array(); 
-			 for ($i=0; $i < count($templates_object['posts']['post_types']) ; $i++) {
-			 	 $output['posts'][$templates_object['posts']['post_types'][$i] ]=array();
-				
-				 for ($j=0; $j < count($templates_object['posts']['post_views']) ; $j++) {
-					 $template_name = $templates_object['posts']['post_types'][$i] ."-". $templates_object['posts']['post_views'][$j].".html";
-				 	 
-				 	 if(file_exists($template_paths['posts']['dir']['override'].$template_name)){
-				 	 	$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts']['url']['override'].$template_name;
-				 	 }
-				 	 
-				 	 else{
-				 	 	$fall_back_template_name ="post-".$templates_object['posts']['post_views'][$j].".html";
-				 	 	
-				 	 	if(file_exists($template_paths['posts']['dir']['override'].$fall_back_template_name))
-				 	 		$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts']['url']['override'].$fall_back_template_name;
-						
-						else{
-							$fall_back_template_default_path = $template_paths['posts']['url']['default']."post-".$templates_object['posts']['post_views'][$j].".html";
-							$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $fall_back_template_default_path;
-						}
-
-				 	 }
-				 }//for
-			 } //for
-
-			 
-		}
-
-		/* array( 'panels'=>'panel_id' )*/
-		//if($templates_object['panels' ]) {
-		if(array_key_exists('panels', $templates_object)){
-			$output['panels']=array();
-
-			for ($i=0; $i < count($templates_object['panels']) ; $i++) {
-				if(file_exists( $template_paths['panels']['dir']['override'].$templates_object['panels'][$i].".html")){
-					$output['panels'][$templates_object['panels'][$i]] = $template_paths['panels']['url']['override'].$templates_object['panels'][$i].".html";
-				}
-				else {
-					$output['panels'][$templates_object['panels'][$i]] = $template_paths['panels']['url']['default'].$templates_object['panels'][$i].".html";
-				}
-			}
-		}
-		
-		//echo 'gfde';
-		if(array_key_exists('comments', $templates_object)){
-			$output['comments']=array();
-
-			for ($i=0; $i < count($templates_object['comments']) ; $i++) {
-				if(file_exists( $template_paths['comments']['dir']['override'].$templates_object['comments'][$i].".html")){
-					$output['comments'][$templates_object['comments'][$i]] =  $template_paths['comments']['url']['override'].$templates_object['comments'][$i].".html";
-				}
-				else {
-					$output['comments'][$templates_object['comments'][$i]] = $template_paths['comments']['url']['default'].$templates_object['comments'][$i].".html";
-				}
-			}
-			
-		}
-		
-		return $output;
-	}
-
-
-	function  pw_get_post_template ( $post_id, $post_view, $path='url', $string=false ){
-		
-		/* Returns an template path based on the provided post ID and view
-			Process
-			
-			Check the post type of the post as $post_type with get_post_type( $post_id )
-			Using pw_get_templates(), get the template object
-			Input :
-			
-			$args = array(
-			    'posts' => array(
-			        'post_types' => array( $post_type ),    // 'post'
-			        'post_views' => array( $post_view )     // 'full'
-			    ),
-			);
-			$post_template_object = pw_get_templates ($args);
-			Output :
-			
-			{
-			posts : {
-			     'post' : {
-			          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
-			          },
-			     },
-			}
-			return : string (The single template path) : /wp-content/plugins/postworld/templates/posts/post-full.html
+	if(!$templates_object){
+		/*null : default
+			Returns object with all panels and templates in the default and over-ride folders.
 		 */
-		 $post_type=  get_post_type( $post_id );
-		 $args = array(
-    			'posts' => array(
-        		'post_types' => array( $post_type ),    // 'post'
-        		'post_views' => array( $post_view )     // 'full'
-    		),
+		$args = array(
+			 'public'   => true,
+			// '_builtin' => false
 		);
+		//$output = 'names'; // names or objects, note names is the default
+		$operator = 'and'; // 'and' or 'or'
 		
-		$templates_object = pw_get_templates($args);
+		$post_types = get_post_types( $args, 'names', $operator );
+		$post_types_final = array();
 
-		if( $string == false )
-			return $templates_object;
-		 else{
+		foreach ( $post_types as $post_type ) {
+				$post_types_final[] = $post_type ;
+		}
 
-		 	foreach( $templates_object as $template_type => $post_types ){
-			 	foreach( $post_types as $post_type => $views ){
-			 		foreach( $views as $view => $template_path ){
-			 			return $template_path;
-			 		}
-			 	}
-			 }
+		//global $pwSiteGlobals; // redundant - prune
+		$post_views = $pwSiteGlobals['post_views'];
+
+		$templates_object['posts']=array();
+		$templates_object['posts']['post_types']=$post_types_final;
+		$templates_object['posts']['post_views']=$post_views; 
+		
+		//$panel_ids = $pwSiteGlobals['panel_ids']; //array('feed_top','feed_search');
+		
+		$templates_object['panels']= get_panel_ids();
+		$templates_object['comments']= get_comment_ids();
+		
+		//print_r($templates_object);
+	}
+	
+	if(array_key_exists('posts', $templates_object)){
+	//if($templates_object['posts']){
+		
+		 $output['posts'] = array(); 
+		 for ($i=0; $i < count($templates_object['posts']['post_types']) ; $i++) {
+		 	 $output['posts'][$templates_object['posts']['post_types'][$i] ]=array();
+			
+			 for ($j=0; $j < count($templates_object['posts']['post_views']) ; $j++) {
+				 $template_name = $templates_object['posts']['post_types'][$i] ."-". $templates_object['posts']['post_views'][$j].".html";
+			 	 
+			 	 if(file_exists($template_paths['posts']['dir']['override'].$template_name)){
+			 	 	$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts'][$path_type]['override'].$template_name;
+			 	 }
+			 	 
+			 	 else{
+			 	 	$fall_back_template_name ="post-".$templates_object['posts']['post_views'][$j].".html";
+			 	 	
+			 	 	if(file_exists($template_paths['posts']['dir']['override'].$fall_back_template_name))
+			 	 		$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts'][$path_type]['override'].$fall_back_template_name;
+					
+					else{
+						$fall_back_template_default_path = $template_paths['posts'][$path_type]['default']."post-".$templates_object['posts']['post_views'][$j].".html";
+						$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $fall_back_template_default_path;
+					}
+
+			 	 }
+			 }//for
+		 } //for
+
+		 
+	}
+
+	/* array( 'panels'=>'panel_id' )*/
+	//if($templates_object['panels' ]) {
+	if(array_key_exists('panels', $templates_object)){
+		$output['panels']=array();
+
+		for ($i=0; $i < count($templates_object['panels']) ; $i++) {
+			if(file_exists( $template_paths['panels']['dir']['override'].$templates_object['panels'][$i].".html")){
+				$output['panels'][$templates_object['panels'][$i]] = $template_paths['panels'][$path_type]['override'].$templates_object['panels'][$i].".html";
+			}
+			else {
+				$output['panels'][$templates_object['panels'][$i]] = $template_paths['panels'][$path_type]['default'].$templates_object['panels'][$i].".html";
+			}
+		}
+	}
+	
+	//echo 'gfde';
+	if(array_key_exists('comments', $templates_object)){
+		$output['comments']=array();
+
+		for ($i=0; $i < count($templates_object['comments']) ; $i++) {
+			if(file_exists( $template_paths['comments']['dir']['override'].$templates_object['comments'][$i].".html")){
+				$output['comments'][$templates_object['comments'][$i]] =  $template_paths['comments'][$path_type]['override'].$templates_object['comments'][$i].".html";
+			}
+			else {
+				$output['comments'][$templates_object['comments'][$i]] = $template_paths['comments'][$path_type]['default'].$templates_object['comments'][$i].".html";
+			}
+		}
+		
+	}
+	
+	return $output;
+}
+
+
+function  pw_get_post_template ( $post_id, $post_view, $path_type='url', $string=false ){
+	
+	/* Returns an template path based on the provided post ID and view
+		Process
+		
+		Check the post type of the post as $post_type with get_post_type( $post_id )
+		Using pw_get_templates(), get the template object
+		Input :
+		
+		$args = array(
+		    'posts' => array(
+		        'post_types' => array( $post_type ),    // 'post'
+		        'post_views' => array( $post_view )     // 'full'
+		    ),
+		);
+		$post_template_object = pw_get_templates ($args);
+		Output :
+		
+		{
+		posts : {
+		     'post' : {
+		          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
+		          },
+		     },
+		}
+		return : string (The single template path) : /wp-content/plugins/postworld/templates/posts/post-full.html
+	 */
+	 $post_type=  get_post_type( $post_id );
+	 $args = array(
+			'posts' => array(
+    		'post_types' => array( $post_type ),    // 'post'
+    		'post_views' => array( $post_view )     // 'full'
+		),
+	);
+	
+	$templates_object = pw_get_templates($args, $path_type);
+
+	if( $string == false )
+		return $templates_object;
+	 else{
+
+	 	foreach( $templates_object as $template_type => $post_types ){
+		 	foreach( $post_types as $post_type => $views ){
+		 		foreach( $views as $view => $template_path ){
+		 			return $template_path;
+		 		}
+		 	}
 		 }
-	}
-		//convert object to array $array =  (array) $yourObject;
-	class pw_query_args{
-		public $post_type;
-		public $link_format;//pw
-		public $post_class;//pw
-		public $author;
-		public $author_name;
-		public $year;
-		public $month;
-		public $tax_query;
-		public $s;
-		public $orderby='date';
-		public $order='DESC';
-		public $posts_per_page="-1";
-		public $fields;
-		
+	 }
+}
 
-	}
+//convert object to array $array =  (array) $yourObject;
+class pw_query_args{
+	public $post_type;
+	public $link_format;//pw
+	public $post_class;//pw
+	public $author;
+	public $author_name;
+	public $year;
+	public $month;
+	public $tax_query;
+	public $s;
+	public $orderby='date';
+	public $order='DESC';
+	public $posts_per_page="-1";
+	public $fields;
+}
 
 
 ?>

@@ -1595,17 +1595,13 @@ __AVATAR__
   example : __avatar(small,48)__
 
 __AUTHOR__
-- __post_author_name__
-- __post_author_link__
-- __post_author_website__
-- __post_author_description__
-- __post_author_nicename__
-- __edit_post_link__
+- author(ID,display_name,user_nicename,posts_url,user_profile_url)
+- __edit_post_link__ // ??
 - __user_profile_url__ - *Requires Buddypress*
 - __post_author_social__ <<< PHONG
 
 __DATE & TIME__
-- __post_time_ago__ - "(2 minutes ago)" : http://www.devnetwork.net/viewtopic.php?f=50&t=113253 
+- __time_ago__ - "(2 minutes ago)" : http://www.devnetwork.net/viewtopic.php?f=50&t=113253 
 
 #### Process:
 - Mixed Methods for retrieving data
@@ -2110,6 +2106,10 @@ array(
 #### Parameters : $args
 __feed_id__ : *string*
 - Feed ID of the registered Feed to print
+- If supplied, `feed_query` is ignored
+
+__feed_query__ : *Array*
+- Postworld Query args input directly into `pw_query()`
 
 __posts__ : *integer*
 - Number of posts to print
@@ -2117,13 +2117,44 @@ __posts__ : *integer*
 __fields__ : *string/Array* (optional) (default:null)
 - Fields to pass to `pw_get_post()`
 - Defaults to null, which falls back to fields defined in the registered `feed_query['fields']`
+- Overrides `feed_query['fields]`
 
 __template__ : *string* (required)
 - Which template to use, relative to posts template path
 
+#### Usage
+
+##### Example of Load Feed from `feed_id`
+```php
+///// PRINT LOAD FEED /////
+$print_feed_args = array(
+  'feed_id' =>  'features-front_page',
+  'posts'   =>  3,
+  'fields'  =>  array('ID','post_title', 'post_excerpt','post_permalink'),
+  'view'    =>  'list-h2o',
+  );
+echo pw_print_feed( $print_feed_args );
+```
+
+##### Example of Feed Query
+```php
+///// PRINT LOAD FEED /////
+$print_feed_args = array(
+  'feed_query'  =>  array(
+    'post_type' =>  array('blog'),
+    'posts_per_page'  =>  '3',
+    'fields'  =>  array('ID','post_title', 'post_excerpt','post_permalink'),
+    ),
+  'view'    =>  'list-h2o',
+  );
+echo pw_print_feed( $print_feed_args );
+```
+
+
+
 ------
 
-### pw_get_post_template ( *$post_id, $post_view, $path, $string* )
+### pw_get_post_template ( *$post_id, $post_view, $path_type, $string* )
 - Returns an template path based on the provided post ID and view
 
 #### Process
@@ -2135,7 +2166,7 @@ __$post_id__ : *integer*
 
 __$post_view__ : *string*
 
-__$path__ : *string*
+__$path_type__ : *string*
 - Options:
   - __url__ (default): Returns absolute URL string of template file
   - __dir__ (default): Returns absolute directory path of template file
@@ -2175,7 +2206,7 @@ posts : {
 
 ------
 
-### pw_get_templates ( *$templates_object, $path* )
+### pw_get_templates ( *$templates_object, $path_type* )
 - Gets an Object of template paths based on the provided object
 
 #### Parameters:
@@ -2198,7 +2229,7 @@ Options:
   Returns object with all panels and templates in the default and over-ride folders.
 
 
-__$path__ : *string* (optional)
+__$path_type__ : *string* (optional)
 - Options:
   - __url__ (default): Returns absolute URL string of template file
   - __dir__ (default): Returns absolute directory path of template file
