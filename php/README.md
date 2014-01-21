@@ -2172,8 +2172,8 @@ __$path_type__ : *string*
   - __dir__ (default): Returns absolute directory path of template file
 
 __$string__ : *boolean* (default : *false*)
-- Return
-
+  - __true__ - Return as a string
+  - __false__ - Return embedded in the templates object
 
 Input : 
 
@@ -2203,6 +2203,24 @@ posts : {
 
 - If $string = true, return : the single template path as a string
 `/wp-content/plugins/postworld/templates/posts/post-full.html`
+
+------
+
+### pw_get_panel_template ( *$panel_id, $path_type* )
+- Returns a string of the template path based on the provided post ID and view
+
+#### Paramters
+__$panel_id__ : *string* (required)
+- The ID of the panel, which is the name of the file in the /panels directory, without the .html extension
+
+__$path_type__ : *string* (optional)
+- The type of path to return
+- Options:
+  + __url__ : (default) Absolute URL to the path
+  + __dir__ : Absolute system path, ie. /var/vhosts/www...
+
+__return__ : *string / false*
+- The URL or path of the
 
 ------
 
@@ -2329,7 +2347,7 @@ $args = array(
 $post_templates = pw_get_templates ($args);
 
 // To get Panel Template Object
-$panel_template = pw_get_templates ( array( 'panels'=>'panel_id' ));
+$panel_template = pw_get_templates ( array( 'panels'=>array('panel_1_id', 'panel_2_id') ));
 
 // To get Comments Template Object
 $panel_template = pw_get_templates ( array( 'comments' ));
