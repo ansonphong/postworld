@@ -33,6 +33,11 @@ function pw_get_posts( $post_ids, $fields='all' ) {
 
 ////////// GET POST DATA //////////
 function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
+	
+	// Switch Modes (view/edit)
+	// 'Edit' mode toggles content display filtering (oEmbed, shortcodes, etc)
+	$mode = 'view';
+
 	//• Gets data fields for the specified post
 	if($fields == null) $fields='all';
 	if(gettype($post_id) == "array") $post_id = $post_id['ID'];	
@@ -125,8 +130,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		$fields = $preview_fields;
 
 	// Edit Fields
-	else if ($fields == 'edit')
+	else if ($fields == 'edit'){
 		$fields = $edit_fields;
+		$mode = 'edit';
+	}
 
 	// Micro Fields
 	else if ($fields == 'micro')
@@ -158,11 +165,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if( in_array($key, $fields) )
 			$post_data[$key] = $value;
 
-		if ( $key == 'post_content' ){
-			//$post_data[$key] = pw_embed_content( $post_data[$key] );
-			// $post_data[$key] = o_embed_filter_function( $post_data[$key] ). " : TRUE";//apply_filters( 'the_content' , $post_data[$key] ). " : TRUE ";
-			// $post_data[$key] = wpautop( $post_data[$key] );
-			// $html_links = preg_replace('"\b(http://\S+)"', '<a href="$1">$1</a>', $text);
+		if ( $key == 'post_content' && $mode == 'view' ){
+			///// CONTENT FILTERING /////
+			// oEmbed URLs
+			$post_data[$key] = pw_embed_content($post_data[$key]);
+			// Apply Shortcodes
+			$post_data[$key] = do_shortcode($post_data[$key]);
 		}
 	}
 
