@@ -594,7 +594,7 @@ function  pw_get_post_template ( $post_id, $post_view, $path_type='url', $string
 function pw_get_panel_template( $panel_id, $path_type = "url" ){
 	// Returns a single string for panel template from ID
 
-	$panel_template = pw_get_templates ( array( "panels"=>array("ad-block-HomeLeft1"), $path_type ));
+	$panel_template = pw_get_templates ( array( "panels"=>array($panel_id), $path_type ));
 
 	if( isset($panel_template) )
 		return (string) $panel_template['panels'][$panel_id];
