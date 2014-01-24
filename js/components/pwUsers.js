@@ -249,13 +249,13 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
             $scope.fieldStatus.email = "done";
         }
     };
+
     // WATCH : value of email
     if ( typeof $scope.formData.email != 'undefined' )
         $scope.$watch( "formData.email", function (){
             // When it changes, emit it's value to the parent controller
             $scope.validateEmail( $scope.formData.email );
             }, 1 );
-
 
     // INSERT USER
     $scope.insertUser = function(){        
@@ -292,6 +292,16 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
         pwUsers.sendActivationLink($scope, user_email);
     };
 
+
+    // WATCH : value of passwords - TODO: Refactor into modular service function
+    $scope.$watch( "[formData.password, formData.password_c]", function (){
+        // When it changes, check that confirmation password is the same
+        if( $scope.formData.password == $scope.formData.password_c )
+            $scope.signupForm.password_c.$setValidity('noMatch',true);
+        else
+            $scope.signupForm.password_c.$setValidity('noMatch',false);
+        }, 1 );
+
 }
 
 /*///////// ------- SIGNUP FORM : RE-ENTER PASSWORD VALIDATION ------- /////////*/  
@@ -305,8 +315,7 @@ angular.module('UserValidation', []).directive('validPasswordC', function () {
             })
         }
     }
-})
-
+});
 
 
 
@@ -526,6 +535,15 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
         );
 
     };
+
+    // WATCH : value of passwords - TODO: Refactor into modular service function
+    $scope.$watch( "[formData.password, formData.password_c]", function (){
+        // When it changes, check that confirmation password is the same
+        if( $scope.formData.password == $scope.formData.password_c )
+            $scope.signupForm.password_c.$setValidity('noMatch',true);
+        else
+            $scope.signupForm.password_c.$setValidity('noMatch',false);
+        }, 1 );
 
 }
 
