@@ -54,12 +54,12 @@ __object__ : *string* (optional)
 
 ``` javascript
 var url = 'http://www.youtube.com/watch?v=38peWm76l-U';
-var post_data = {};
-embedly_extract( url, post_data.embedly_extract );
+var post = {};
+embedly_extract( url, post.embedly_extract );
 
 // Produces :
 
-post_data = {
+post = {
 	'embedly_extract' : {
 	    "url": "http://www.youtube.com/watch?v=38peWm76l-U", 
 	    "title": "Earth From Space HD 1080p / Nova"
@@ -76,7 +76,7 @@ post_data = {
 ``` javascript
 
 var url = 'http://www.youtube.com/watch?v=38peWm76l-U';
-var post_data = {
+var post = {
 	'embedly_extract' : embedly_extract( url );
 	};
 
@@ -106,7 +106,7 @@ __return__ : *Object*
 
 ------
 
-### load_post_data ( post_id, fields, callback )
+### load_post ( post_id, fields, callback )
 
 - Pull in new post data from server 
 
@@ -124,7 +124,7 @@ __callback__
 
 ------
 
-### save_post_data ( *post_id, object, callback* )
+### save_post ( *post_id, object, callback* )
 
 - Save post data to the server
 - Use `pw_save_post()` via AJAX
@@ -218,7 +218,7 @@ __return__ : *Object*
 ``` javascript
 {
 	feed_outline : [1,3,5,8,12,16,24,64],
-	post_data : { Object } 
+	post : { Object } 
 }
 ```
 
@@ -344,12 +344,12 @@ __PHP / AJAX :__
 1. Run `pw_get_feed( feed_id, preload )` PHP method via AJAX.  
   __returns__ : 
     feed_outline
-    post_data
+    post
     feed_query
     ...
 
 2. Populate `feed_data[feed_id]` JS Object with __feed_outline__, and __feed_query__
-3. Populate `feed_data[feed_id][['posts']` Object with post_data posts
+3. Populate `feed_data[feed_id][['posts']` Object with post posts
 
 __JAVASCRIPT :__  
 1. Populate `feed_data[feed_id]` Object with `feed_settings[feed_id]` Object 

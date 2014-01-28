@@ -54,7 +54,7 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // TODO : VERIFY THIS WORKS
     $pwPostOptions.getTaxTerms($scope, 'tax_terms');
 
-    // TAXONOMY TERM WATCH : Watch for any changes to the post_data.tax_input
+    // TAXONOMY TERM WATCH : Watch for any changes to the post.tax_input
     // Make a new object which contains only the selected sub-objects
     $scope.selected_tax_terms = {};
     $scope.$watch( "taxInput",
@@ -62,7 +62,7 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
             // Create selected terms object
             $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.taxInput);
             // Clear irrelivent sub-terms
-            //$scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.taxInput, $scope.selected_tax_terms );
+            //$scope.post.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.taxInput, $scope.selected_tax_terms );
         
         }, 1 );
 

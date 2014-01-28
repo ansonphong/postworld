@@ -221,7 +221,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
 postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log, ext, $window) {
         return {
-            sortTaxTermsInput: function(post_data, tax_terms, sub_object){
+            sortTaxTermsInput: function(post, tax_terms, sub_object){
                 // SORT TAXONOMIES
                 // FOR EACH SELECTED TAXONOMY TERM SET
                 // The order of the taxonomy terms & sub-terms control is sensitive to order in the terms array
@@ -233,7 +233,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
                 //     and "healing" term is in fact a child of "body" term,
                 //     then re-arrange to { topic : ["body","healing"] }
                 
-                angular.forEach( post_data[sub_object], function( selected_terms, taxonomy ){
+                angular.forEach( post[sub_object], function( selected_terms, taxonomy ){
                     if ( selected_terms.length > 1 ){
                         // FOR EACH TAXONOMY TERM OPTION
                         // Go through each top level term for taxonomy in tax_terms
@@ -249,11 +249,11 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
                             }
                         });
                         if ( reorder == true ){
-                            post_data[sub_object][taxonomy].reverse();
+                            post[sub_object][taxonomy].reverse();
                         }
                     }
                 });
-                return post_data;
+                return post;
             },
 
             ///// EVALUATE AND SET link_format DEPENDING ON LINK_URL /////
