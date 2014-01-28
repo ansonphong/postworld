@@ -66,13 +66,6 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
         
         }, 1 );
 
-
-    $scope.returnKey = function(key){
-        alert(key);
-        return parseInt(key);
-    };
-
-
     /*
     $scope.$on('updateUsername', function(username) { 
         $scope.feedQuery.author_name = username;
