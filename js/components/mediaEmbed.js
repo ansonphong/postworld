@@ -8,10 +8,10 @@
  (   / (_)  \___|_| |_| |_|_.__/ \___|\__,_(_)_|\__, |
   |_|                                           |___/ 
 ////////// ------------ Embedly SERVICE ------------ //////////*/  
-postworld.factory('embedly', function ($resource, $q, $log) {     
+postworld.factory('embedly', function ($resource, $q, $log, $window) {     
         // TODO Replace this with your Production Key
         // http://api.embed.ly/1/extract?key=:key&url=:url&maxwidth=:maxwidth&maxheight=:maxheight&format=:format&callback=:callback
-        var embedlyKey = "512f7d063fc1490d9bcc7504c764a6dd";
+        var embedlyKey = $window.pwSiteGlobals.embedly.key;
         var embedlyUrl = "http://api.embed.ly/1/:action";
         var resource = $resource(embedlyUrl, {key:embedlyKey, url:''}, 
                                     {   embedly_call: { method: 'GET', isArray: false, params: {action:'extract'} },    }
@@ -94,7 +94,6 @@ postworld.controller('pwEmbedly', function pwEmbedly($scope, $location, $log, pw
         };      
     }
 );
-
 
 
 
