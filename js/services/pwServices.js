@@ -113,12 +113,14 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
             // Cycle through provided post_types
             // Which post_types does the user have access to 'mode' operation?
             var userPostTypeOptions = {};
-            angular.forEach( $window.pwGlobals.post_types , function( name, slug ){
-                var cap_type = mode + "_"+ slug + "s";
-                if( $window.pwGlobals.current_user.allcaps[cap_type] == true ){
-                    userPostTypeOptions[slug] = name;
-                }
-            });
+            if( $window.pwGlobals.current_user != 0 ){
+                angular.forEach( $window.pwGlobals.post_types , function( name, slug ){
+                    var cap_type = mode + "_"+ slug + "s";
+                    if( $window.pwGlobals.current_user.allcaps[cap_type] == true ){
+                        userPostTypeOptions[slug] = name;
+                    }
+                });
+            }
             return userPostTypeOptions;
         },
 

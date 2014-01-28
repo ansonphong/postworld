@@ -10,21 +10,25 @@ postworld.service('pwRoleAccess', ['$log', '$window', 'ext', function ($log, $wi
     return{
         setRoleAccess : function($scope){
             $scope.current_user = $window.pwGlobals.current_user;
-            $scope.roles = {};
 
+            ( $scope.current_user != 0 ) ?
+                $scope.current_user_role = $window.pwGlobals.current_user :
+                $scope.current_user_role = 'guest' ;
+
+            $scope.roles = {};
             $scope.role_map = $window.pwSiteGlobals.role_map;
 
             // ESTABLISH ROLE ACCESS
             // Is the user an editor?
-            ( $ext.isInArray( $scope.current_user.roles[0], $scope.role_map.editor ) ) ?
+            ( $ext.isInArray( $scope.current_user_role, $scope.role_map.editor ) ) ?
                 $scope.roles.editor = true : $scope.roles.editor = false;
 
             // Is the user an author?
-            ( $ext.isInArray( $scope.current_user.roles[0], $scope.role_map.author ) ) ?
+            ( $ext.isInArray( $scope.current_user_role, $scope.role_map.author ) ) ?
                 $scope.roles.author = true : $scope.roles.author = false;
 
             // Is the user an contributor?
-            ( $ext.isInArray( $scope.current_user.roles[0], $scope.role_map.contributor ) ) ?
+            ( $ext.isInArray( $scope.current_user_role, $scope.role_map.contributor ) ) ?
                 $scope.roles.contributor = true : $scope.roles.contributor = false ;
 
         },
