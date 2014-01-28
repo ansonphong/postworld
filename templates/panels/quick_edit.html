@@ -1,38 +1,65 @@
-<div ng-controller="editPost" class="edit_post">
+
+<div ng-controller="editPost" ng-init="mode='quick-edit'" class="edit_post quick edit">
 
   <!-- LOADING -->
   <div ng-show="status=='loading'" style="text-align:center;">
     <i class="icon-spinner icon-spin icon-large" style="font-size:48px;"></i>
   </div>
 
-
 <!-- WRAPPER (Cloak until loaded) -->
   <div class="wrapper" ng-cloak ng-hide="status=='loading'">
 
     <!--//////////////////// HEADER ////////////////////-->
-    <div class="modal-header">
+    <div class="modal-body">
     
-      <footer class="edit_post-menu">
-        <label for="post_type">Quick Edit</label>
+      <header class="edit_post-menu module">
+        <div class="col-sm-3">
+        <!--///// POST TYPE /////-->
+          <div class="labeled">
+            <label class="inner">
+              Post Type
+            </label>
+            <select ng-model="post_data.post_type" ng-options="key as value for (key,value) in post_type_options" ></select>
+            <i class="select-arrow icon-caret-down"></i>
+          </div>
+        </div>
 
-        <!-- POST TYPE -->
-        <select ng-model="post_data.post_type" ng-options="key as value for (key,value) in post_type_options">
-          </select>
+        <div class="col-sm-3">
+          <!--///// TAXONOMY : TOPIC /////-->
+          <div class="labeled">
+            <label class="inner">
+              Topic
+              <button pw-language class="info info-xs info-white info-absolute"
+                popover="{{language.edit_post.taxonomy.topic}}" popover-trigger="mouseenter" popover-popup-delay="333" popover-placement="bottom" popover-append-to-body="true">
+                <i class="icon-info-sign"></i>
+              </button>
+            </label>
+            <select ng-model="post_data.tax_input.topic[0]" required class="topic"
+              ng-options="value.slug as value.name for value in tax_terms.topic"></select>
+              <i class="select-arrow icon-caret-down"></i>
+          </div>
+        </div>
 
-        <!-- TAXONOMY : TOPIC -->
-        <label style="margin-left:20px">Topic</label>
-        <select ng-model="post_data.tax_input.topic[0]" class="topic"
-          ng-options="value.slug as value.name for value in tax_terms.topic"></select>
-        
-        <select ng-show="selected_tax_terms.topic.terms" ng-model="post_data.tax_input.topic[1]" class="subtopic"
-          ng-options="value.slug as value.name for value in selected_tax_terms.topic.terms">
-            <option value="" style="text-align:center">Subtopic:</option>
-        </select>
+        <div class="col-sm-4">
+          <!--///// TAXONOMY : TOPIC /////-->
+          <span ng-show="selected_tax_terms.topic.terms">
+            <div class="labeled">
+              <label class="inner">
+                Subtopic
+              </label>
+              <select required ng-model="post_data.tax_input.topic[1]" class="subtopic"
+                ng-options="value.slug as value.name for value in selected_tax_terms.topic.terms">
+              </select>
+              <i class="select-arrow icon-caret-down"></i>
+            </div>
+          </span>
+        </div>
+
 
         <!-- BUTTONS -->
-        <div style="float:right;">
+        <div class="col-sm-2 last">
 
-          <button type="submit" ng-click="savePost()" class="btn btn-primary">
+          <button type="submit" ng-click="savePost()" class="aqua save">
             <span ng-switch="status">
               <i ng-switch-default class="icon-save"></i>
               <i ng-switch-when="saving" class="icon-spinner icon-spin"></i>
@@ -42,17 +69,13 @@
             Save
           </button>
 
-          <button class="btn btn-close" ng-click="close()">
-            <i class="icon-remove"></i>
-          </button>
 
         </div>
-      </footer>
-    </div>
 
-    <div class="clearfix"></div>
+        <div class="clearfix"></div>
+      </header>
 
-    <div class="modal-body">
+
 
       <!--//////////////////// EDIT FIELDS ////////////////////-->
 
@@ -63,14 +86,13 @@
         <!-- POST EXCERPT -->
         <div class="post_excerpt">
           <label class="inner">Post Excerpt</label>
-          <textarea id="post_excerpt" class="labeled" msd-elastic ng-textarea-filter data-maxlength="260" data-readmore="..."
+          <textarea id="post_excerpt" class="labeled" msd-elastic ng-textarea-filter data-maxlength="500" data-readmore="..."
             name="post_excerpt" ng-model="post_data.post_excerpt"></textarea>
         </div>
 
-        <hr>
+        <hr class="thin">
 
         <!--///// POST DETAILS /////-->
-
         <div class="post-details row">
 
           <!--/// LEFT COLUMN ///-->
@@ -85,7 +107,7 @@
               <span ng-repeat="format in link_format_meta" class="row-fluid">
                   <input type="radio" name="link_format" value="{{format.slug}}" ng-model="post_data.link_format" disabled />
                   <label>
-                    <span ng-bind-html="format.icon"></span> <span ng-bind="format.name"></span>
+                    <i class="{{format.icon}}"></i> <span ng-bind="format.name"></span>
                   </label>
               </span>
               <span ng-show="post_data.link_url.length">
@@ -94,58 +116,87 @@
             </div>
 
 
-            <!--///// EDITORS ONLY /////-->
-            <div class="editors">
-              <hr>
-              <h4>Editors Only</h4>
-              <hr>
-              <!-- TAXONOMY : SECTION -->
-              <label>Section</label>
-                <select ng-model="post_data.tax_input.section[0]"
-                  ng-options="value.slug as value.name for value in tax_terms.section">
-                  <option value="">None</option>
-                </select>
-              <hr>
-              <!-- TAXONOMY : TYPE -->
-              <label>Type</label>
-                <select ng-model="post_data.tax_input.type[0]"
-                  ng-options="term.slug as term.name group by term.parent_name for term in tax_terms.type">
-                  <option value="">None</option>
-                </select>
-              <hr>
-              <!-- POST CLASS -->
-              <label>Class</label>
-              <select ng-model="post_data.post_class"
-                ng-options="key as value for (key,value) in post_class_options">
-              </select>
-            </div>
+            <!-- TRASH -->
+            <button class="red" ng-click="trashPost()"><i class="icon-trash"></i> Trash</button>
 
-
-
+            <!-- CANCEL -->
+            <button class="gray" ng-click="close()">
+              <i class="icon-remove"></i> Cancel
+            </button>
+          
           </div>
 
           <!--/// RIGHT COLUMN ///-->
           <div class="col-md-6">
-            
             <!-- TAXONOMY : TAGS -->
-            <div ng-controller="tagsAutocomplete" class="tags">
-                <div ng-repeat="tag in tags_input_obj" class="tag">
-                    <b>{{tag.name}}</b><button ng-click="removeTag('{{tag.slug}}')"><i class='icon-remove'></i></button>
-                </div>
-                <input type="text" typeahead-min-length="1" typeahead-loading="status" typeahead-wait-ms="500"
-                  ng-change="queryTags()" typeahead-editable="1" ng-model="queryTag"
-                  typeahead="tag.slug as tag.name for tag in tagOptions | filter:$viewValue | limitTo:20"
-                  typeahead-on-select="addTag()">
-                  <button ng-click="newTag()"><i class="icon-plus"></i> New Tag</button>
+            <div class="post-details module taxonomy">
+              <div ng-controller="tagsAutocomplete" class="tags">
+                  <div ng-repeat="tag in tags_input_obj" class="tag">
+                      <b>{{tag.name}}</b>
+                      <button ng-click="removeTag('{{tag.slug}}')" class="gray">
+                      <i class="icon-remove"></i>
+                    </button>
+                  </div>
+                  <div class="input-group">
+                    <input type="text" typeahead-min-length="1" typeahead-loading="status" typeahead-wait-ms="500"
+                      ng-change="queryTags()" typeahead-editable="1" ng-model="queryTag"
+                      typeahead="tag.slug as tag.name for tag in tagOptions | filter:$viewValue | limitTo:20"
+                      typeahead-on-select="addTag()" class="form-control blue">
+                    <span class="input-group-btn">
+                      <button class="btn btn-default blue" ng-click="newTag()"><i class="icon-plus"></i> New Tag</button>
+                    </span>
+                  </div>
+              </div>
             </div>
-
-
           </div>
 
+          <div class="clearfix"></div>
+          <!--///// EDITORS ONLY /////-->
+          <div class="editors" ng-show="roles.editor">
+            <hr>
+            <h5>Editors Only</h5>
+            <!-- TAXONOMY : SECTION -->
+            <div class="labeled module">
+              <label class="inner">Section</label>
+              <select ng-model="post_data.tax_input.section[0]"
+                ng-options="value.slug as value.name for value in tax_terms.section">
+                <option value="">None</option>
+              </select>
+              <i class="select-arrow icon-caret-down"></i>
+            </div>
+            <!-- TAXONOMY : TYPE -->
+            <div class="labeled module">
+              <label class="inner">Hilight</label>
+              <select class="labeled" ng-model="post_data.tax_input.hilight[0]"
+                ng-options="term.slug as term.name group by term.parent_name for term in tax_terms.hilight">
+                <option value="">None</option>
+              </select>
+              <i class="select-arrow icon-caret-down"></i>
+            </div>
+            <!-- POST CLASS -->
+            <div class="labeled module">
+              <label class="inner">Class</label>
+              <select class="labeled" ng-model="post_data.post_class"
+                ng-options="key as value for (key,value) in post_class_options">
+              </select>
+              <i class="select-arrow icon-caret-down"></i>
+            </div>
+            <!-- POST AUTHOR OVER-RIDE -->
+            <div class="labeled module">
+              <label class="inner">Author</label>
+              <!-- SECTION -->
+              <span class='container-fluid' ng-controller="userAutocomplete">
+                <input class="labeled" type="text" typeahead-min-length="2" typeahead-loading="status" typeahead-wait-ms="100"
+                  ng-change="queryList()" typeahead-editable="0" ng-model="username"
+                  typeahead="author.user_nicename as author.display_name for author in authors | filter:$viewValue | limitTo:20"
+                  >
+              </span>
+            </div>
+          </div>
+          <!--///// END EDITORS ONLY /////-->
+
+
         </div>
-
-      <hr>
-
 
     </div><!-- END MODAL BODY -->
 

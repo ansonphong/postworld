@@ -14,9 +14,9 @@ function tinyMCE_init_custom(){
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'siteOptions', 'ext', '$window', 'pwRoleAccess',
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess',
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http, $siteOptions, $ext, $window, $pwRoleAccess ) {
+        $pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess ) {
 
     $scope.status = "loading";
     $scope.post_data = {};
@@ -285,7 +285,7 @@ postworld.controller('editPost',
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
     // POST FORMAT OPTIONS
-    $scope.link_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    $scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
     // POST FORMAT META
     $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
@@ -414,9 +414,9 @@ postworld.controller('editPost',
 ////////// ------------ EVENT DATA/TIME CONTROLLER ------------ //////////*/
 postworld.controller('eventInput',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-        'pwData', '$log', 'siteOptions', 'ext', 
+        'pwData', '$log', 'ext', 
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
-        $pwData, $log, $siteOptions, $ext ) {
+        $pwData, $log, $ext ) {
 
 
     // SETUP DATE OBJECTS
@@ -526,12 +526,6 @@ postworld.controller('eventInput',
                                                                                |_|                   
 ////////// ------------ AUTHOR AUTOCOMPLETE CONTROLLER ------------ //////////*/
 
-///// AUTHOR AUTOCOMPLETE /////
-postworld.controller('AuthorAutocomplete', ['$scope', function($scope) {
-    $scope.selected = undefined;
-    $scope.authors = ['Erik Davis', 'Daniel Pinchbeck', 'Ken Jordan', 'Starhawk', 'Faye', 'Alex Grey', 'Nick Meador', 'Maureen Dawn Healy', 'Jonathon Miller Weisberger', 'Adam Elenbaas', 'Dan Phiffer', 'Michael Garfield', 'Jay Michaelson', 'Nathan Walters', 'Carolyn Elliott', 'Gary Lachman', 'Kourosh Ziabari', 'Adam Sommer'];
-}]);
-
 
 /*
   ____           _     _     _       _    
@@ -564,7 +558,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     // POST STATUS OPTIONS
     $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( 'link' );
     // POST FORMAT OPTIONS
-    $scope.link_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    $scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
     // POST FORMAT META
     $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
@@ -895,11 +889,11 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                                              
 ////////// ------------ QUICK EDIT ------------ //////////*/   
 
-var quickEdit = function ($scope, $modal, $log, $window) {
+var quickEdit = function ($scope, $modal, $log, $window, pwData) {
     $scope.openQuickEdit = function( post ){
         console.log( "Launch Quick Edit : ", post );  
         var modalInstance = $modal.open({
-          templateUrl: $window.pwGlobals.paths.plugin_url+'/postworld/templates/panels/quick_edit.html',
+          templateUrl: pwData.pw_get_template('panels','quick_edit'), //$window.pwSiteGlobals.template_paths.panels.url.override + 'quick_edit.html',
           controller: quickEditInstanceCtrl,
           windowClass: 'quick_edit',
           resolve: {
@@ -916,7 +910,6 @@ var quickEdit = function ($scope, $modal, $log, $window) {
         });
     }; 
 };
-
 
 var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, post, pwData, $timeout, pwQuickEdit) {
     

@@ -1,64 +1,12 @@
 'use strict';
 
 /*
-   _        ____  _ _          ___        _   _                 
-  | |   _  / ___|(_) |_ ___   / _ \ _ __ | |_(_) ___  _ __  ___ 
- / __) (_) \___ \| | __/ _ \ | | | | '_ \| __| |/ _ \| '_ \/ __|
- \__ \  _   ___) | | ||  __/ | |_| | |_) | |_| | (_) | | | \__ \
- (   / (_) |____/|_|\__\___|  \___/| .__/ \__|_|\___/|_| |_|___/
-  |_|                              |_|                          
-////////// ------------ CUSTOM SITE CONFIGURATIONS ------------ //////////*/
-// This should be broken off into another seperate file and included seperately
-// In the website theme folder, as it contains custom options for Postworld Configuration
-
-postworld.service('siteOptions', ['$log', function ($log) {
-    // Do one AJAX call here which returns all the options
-    return{
-        taxOutlineMixed : function(){
-            return {
-               "topic":{
-                  "max_depth":2,
-                  "fields":[
-                     "term_id",
-                     "name",
-                     "slug"
-                  ],
-                  "filter":""
-               },
-               "section":{
-                  "max_depth":1,
-                  "fields":[
-                     "term_id",
-                     "name",
-                     "slug"
-                  ],
-                  "filter":""
-               },
-               "hilight":{
-                  "max_depth":2,
-                  "fields":[
-                     "term_id",
-                     "name",
-                     "slug"
-                  ],
-                  "filter":"label_group"
-               }
-            }
-        },
-    }
-
-}]);
-
-
-
-/*
    _                  _   
   | |   _    _____  _| |_ 
  / __) (_)  / _ \ \/ / __|
  \__ \  _  |  __/>  <| |_ 
  (   / (_)  \___/_/\_\\__|
   |_|                     
-
 ////////// ------------ JAVASCRIPT EXTENTION SERVICE ------------ //////////*/ 
 postworld.service('ext', ['$log', function ($log) {
     // SIMPLE JS FUNCTION HELPERS
@@ -131,21 +79,20 @@ postworld.service('ext', ['$log', function ($log) {
   |_|                                 |_|                          
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
-postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
-                            function ($window, $log, $siteOptions, $pwData) {
+postworld.service('pwPostOptions', ['$window','$log', 'pwData',
+                            function ($window, $log, $pwData) {
 
     return{
         getTaxTerms: function($scope, tax_obj){ // , tax_obj
-            
+
             if ( typeof tax_obj === 'undefined' )
                 var tax_obj = "tax_terms";
 
-            var args = $siteOptions.taxOutlineMixed();
+            var args = $window.pwSiteGlobals.post_options.taxonomy_outline;
             $pwData.taxonomies_outline_mixed( args ).then(
                 // Success
                 function(response) {    
                     $scope[tax_obj] = response.data;
-                    //alert(JSON.stringify(response.data));
                 },
                 // Failure
                 function(response) {
@@ -157,7 +104,6 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
         pwGetPostTypeOptions: function( mode ){
             // MODE OPTIONS
             // read / edit / edit_others / publish / create / edit_published / edit_private
-
             // IF READ MODE : Return all public post types
             if( mode == 'read' ){
                 return $window.pwGlobals.post_types;
@@ -177,55 +123,18 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
         },
 
         pwGetPostStatusOptions: function( post_type ){
-        	if ((!$window.pwGlobals.current_user) || (!$window.pwGlobals.current_user)) {
+        	if ((!$window.pwGlobals.current_user) || (!$window.pwGlobals.current_user))
         		return;
-        	}        	
+
             // GET ROLE
             var current_user_role = $window.pwGlobals.current_user.roles[0];
-
             // DEFINE : POST STATUS OPTIONS
-            var post_status_options = {
-                "publish" : "Published",
-                "draft" : "Draft",
-                "pending" : "Pending"
-            };
-
-            // DEFINE : OPTIONS PER ROLE > POST TYPE
-            // TODO : EXTRACT INTO SITE OPTIONS
-            var post_status_role_options = {
-                "administrator" : {
-                    "feature" : ['publish','draft','pending'],
-                    "blog" : ['publish','draft','pending'],
-                    "event" : ['publish','draft','pending'],
-                    "announcement" : ['publish','draft','pending'],
-                    "link" : ['publish'],
-                },
-                "editor" : {
-                    "feature" : ['publish','draft','pending'],
-                    "blog" : ['publish','draft','pending'],
-                    "event" : ['publish','draft','pending'],
-                    "announcement" : [],
-                    "link" : ['publish'],
-                },
-                "author" : {
-                    "feature" : ['draft','pending'],
-                    "blog" : ['publish','draft'],
-                    "event" : ['publish','draft','pending'],
-                    "announcement" : [],
-                    "link" : ['publish'],
-                },
-                "contributor" : {
-                    "feature" : [],
-                    "blog" : ['publish','draft'],
-                    "event" : [],
-                    "announcement" : [],
-                    "link" : ['publish'],
-                },
-            };
-
+            var post_status_options = $window.pwSiteGlobals.post_options.post_status;
+            // DEFINE : POST STATUS OPTIONS PER ROLE BY POST TYPE
+            var role_post_type_status_access = $window.pwSiteGlobals.post_options.role_post_type_status_access;
             // BUILD OPTIONS MENU OBJECT
             var post_status_menu = {};
-            var user_role_options = post_status_role_options[current_user_role][post_type];
+            var user_role_options = role_post_type_status_access[current_user_role][post_type];
             if( typeof user_role_options !== 'undefined' ){
                 angular.forEach(  user_role_options, function( post_status_slug ){
                     post_status_menu[post_status_slug] = post_status_options[post_status_slug];
@@ -233,92 +142,39 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                 return post_status_menu;
             } else{
                 // DEFAULT
-                return {
-                    "publish" : "Published",
-                };
+                return post_status_options;
             }
-
         },
         
         pwGetPostClassOptions: function(){
-            return {
-                "contributor" : "Contributor",
-                "author" : "Author",
-                "members" : "Members Only",
-            };
+            return $window.pwSiteGlobals.post_options.post_class;
         },
 
-        pwGetPostFormatOptions: function(){
-            return {
-                "standard" :    "Standard",
-                "link" :        "Link",
-                "video" :       "Video",
-                "audio" :       "Audio",
-            };
+        pwGetLinkFormatOptions: function(){
+            return $window.pwSiteGlobals.post_options.post_format;
         },
 
         pwGetPostFormatMeta: function(){
-            return [
-                {
-                    name:"",
-                    slug:"standard",
-                    domains:[],
-                    icon:"icon-circle-blank"
-                },
-                {
-                    name:"Link",
-                    slug:"link",
-                    domains:[],
-                    icon:"icon-link"
-                },
-                {
-                    name:"Video",
-                    slug:"video",
-                    domains:["youtube.com/","youtu.be/","vimeo.com/","hulu.com/","ted.com/","sapo.pt/","dailymotion.com","blip.tv/","ustream.tv/",],
-                    icon:"icon-youtube-play"
-                },
-                {
-                    name:"Audio",
-                    slug:"audio",
-                    domains:["soundcloud.com/","mixcloud.com/","official.fm/","shoudio.com/","rdio.com/"],
-                    icon:"icon-headphones"
-                },
-            ];
+            return $window.pwSiteGlobals.post_options.post_format_meta;
         },
-
-
 
         pwGetPostYearOptions: function(){
-            return [
-                "2007",
-                "2008",
-                "2009",
-                "2010",
-                "2011",
-                "2012",
-                "2013",
-                "2014",
-            ];
+            return $window.pwSiteGlobals.post_options.year;
         },
-
 
         pwGetPostMonthOptions: function(){
-            return {
-                1:"January",
-                2:"Fabruary",
-                3:"March",
-                4:"April",
-                5:"May",
-                6:"June",
-                7:"July",
-                8:"August",
-                9:"September",
-                10:"October",
-                11:"November",
-                12:"December",
-            };
+            var months_obj = $window.pwSiteGlobals.post_options.month;
+            var months_array = [];
+            // Convert from "1:January" Associative Object format to { number:1, name:"January" } 
+            angular.forEach( months_obj, function( value, key ){
+                var month = {
+                    'number' : parseInt(key),
+                    'name' : value
+                };
+                months_array.push( month );
+            });
+            return months_array;
         },
-
 
         pw_site_options: function( $scope ){
             
@@ -336,10 +192,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'siteOptions', 'pwData',
                 }
             );
 
-
         },
-        
-
 
     }
 }]);

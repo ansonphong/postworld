@@ -19,7 +19,6 @@ postworld.controller('inputSearch',
 }]);
 
 
-
 /*
   ____                      _       _____ _      _     _     
  / ___|  ___  __ _ _ __ ___| |__   |  ___(_) ___| | __| |___ 
@@ -39,7 +38,7 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // POST STATUS OPTIONS
     $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( );
     // POST FORMAT OPTIONS
-    $scope.link_format_options = $pwPostOptions.pwGetPostFormatOptions();
+    $scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
     // POST FORMAT META
     $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
     // POST CLASS OPTIONS
@@ -66,6 +65,12 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
             //$scope.post_data.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.taxInput, $scope.selected_tax_terms );
         
         }, 1 );
+
+
+    $scope.returnKey = function(key){
+        alert(key);
+        return parseInt(key);
+    };
 
 
     /*

@@ -15,7 +15,7 @@ postworld.directive('filterFeed', function($log, pwData) {
 });
 
 postworld.controller('pwFilterFeedController',
-    function pwFilterFeedController($scope, $location, $log, pwData, $attrs) {    	
+    function pwFilterFeedController($scope, $location, $log, pwData, $attrs, $window) {    	
 		var firstTime = true;
 		// Set Panel Template
 		pwData.templates.promise.then(function(value) {
@@ -56,22 +56,32 @@ postworld.controller('pwFilterFeedController',
 
 		$scope.submit1 = function() {
 			// debugger;
-		};		
-    	// TODO check best location for that code, should we create a panel child?
+		};
+
+    	// TODO : check best location for that code, should we create a panel child?
 		$scope.toggleOrder = function() {
 			if ($scope.feedQuery.order == 'ASC') {
 				$scope.feedQuery.order = 'DESC';
 			} else $scope.feedQuery.order = 'ASC';
-		};		
+		};	
+
+		// MONTH : Convert Month value into Integer (for model to work properly)
+		$scope.$watch('feedQuery.monthnum', function(value) {
+			if( typeof $scope.feedQuery.monthnum != 'undefined' )
+				$scope.feedQuery.monthnum = parseInt($scope.feedQuery.monthnum);
+		});
+
 		$scope.$watch('feedQuery.order_by', function(value) {
 		//	$log.debug('pwFilterFeedController.changeFeedTemplate order by changed',$scope.feedQuery.order_by);
 		}); 
+
+		// SET ORDER ICON
 		$scope.$watch('feedQuery.order', function(value) {
 			$log.debug('pwFilterFeedController.changeFeedTemplate order changed',$scope.feedQuery.order);
  			if (value == 'DESC') {
-				$scope.clsOrder ='glyphicon-arrow-down'; 				
+				$scope.clsOrder = $window.pwSiteGlobals.icons.order.descending; 				
  			} else  {
-				$scope.clsOrder ='glyphicon-arrow-up';		
+				$scope.clsOrder = $window.pwSiteGlobals.icons.order.ascending;	
  			}
 		});
 
