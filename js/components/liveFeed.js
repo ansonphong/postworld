@@ -269,7 +269,7 @@ postworld.controller('pwFeedController',
 					var len = response.data.feed_outline.length;
 					response.data.feed_outline = response.data.feed_outline.splice(offset,len);
 					// truncate response posts in case of existing offset for load-feed only															
-					response.data.post = response.data.post.splice(offset,len);						
+					response.data.post = response.data.post_data.splice(offset,len);						
 				}
 			}
 			// Insert Response in Feed Data
@@ -279,10 +279,10 @@ postworld.controller('pwFeedController',
 			if (max <=response.data.feed_outline.length) {					
 				pwData.feed_data[$scope.feed].feed_outline = pwData.feed_data[$scope.feed].feed_outline.splice(0,max);
 			}
-			pwData.feed_data[$scope.feed].posts = response.data.post;						
-			pwData.feed_data[$scope.feed].loaded = response.data.post.length;						
+			pwData.feed_data[$scope.feed].posts = response.data.post_data;						
+			pwData.feed_data[$scope.feed].loaded = response.data.post_data.length;						
 			// Count Length of loaded and feed_outline
-			pwData.feed_data[$scope.feed].count_loaded = response.data.post.length;						
+			pwData.feed_data[$scope.feed].count_loaded = response.data.post_data.length;						
 			pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_data[$scope.feed].feed_outline.length;
 			//console.log('check',pwData.feed_data[$scope.feed]);
 			// Set Feed load Status
@@ -357,7 +357,7 @@ postworld.controller('pwFeedController',
 							//$log.debug('pwFeedController.pw_live_feed Success',response.data);						
 							$scope.fillFeedData(response);																			
 							// $scope.items = response.data.post;
-							$scope.items = JSON.parse(JSON.stringify(response.data.post));
+							$scope.items = JSON.parse(JSON.stringify(response.data.post_data));
 							$scope.injectAds();
 
 						} else {
@@ -418,8 +418,8 @@ postworld.controller('pwFeedController',
 						if (!(response.data instanceof Array) ) {
 							// Insert Response in Feed Data						
 							$scope.fillFeedData(response);																			
-							//$scope.items = response.data.post;
-							$scope.items = JSON.parse(JSON.stringify(response.data.post));
+							//$scope.items = response.data.post_data;
+							$scope.items = JSON.parse(JSON.stringify(response.data.post_data));
 							$scope.injectAds();
 						} else {
 							$scope.message = "No Data Returned";
