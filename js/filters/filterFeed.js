@@ -31,14 +31,20 @@ postworld.controller('pwFilterFeedController',
 			   	// DEFAULTS
 				$scope.feedQuery.author_name = "";
 
-				///// TODO : REFACTOR INTO SITE-SPECIFIC DATA SERVICE, SYNC WITH TAX_INPUT SERVICE /////
-				// MODEL INPUT OBJECT
+				// MODEL TAXONOMY INPUT OBJECT
+				var taxonomies = $window.pwSiteGlobals.post_options.taxonomies;
+				$scope.taxInput = {};
+				angular.forEach( taxonomies, function( value ){
+					$scope.taxInput[value] = [];
+				});
+				
+				/*
 				$scope.taxInput = {
 					hilight: [],
 					topic:[],
 					section:[],
-					type:[]
 				};
+				*/
 
 			   // Get Default View Name
 			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
@@ -67,7 +73,7 @@ postworld.controller('pwFilterFeedController',
 
 		// MONTH : Convert Month value into Integer (for model to work properly)
 		$scope.$watch('feedQuery.monthnum', function(value) {
-			if( typeof $scope.feedQuery.monthnum != 'undefined' )
+			if( typeof $scope.feedQuery.monthnum !== 'undefined' )
 				$scope.feedQuery.monthnum = parseInt($scope.feedQuery.monthnum);
 		});
 
