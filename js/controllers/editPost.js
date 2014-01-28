@@ -813,6 +813,14 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
 
 
 
+/*
+   ___        _      _      _____    _ _ _   
+  / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
+ | | | | | | | |/ __| |/ / |  _| / _` | | __|
+ | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
+  \__\_\\__,_|_|\___|_|\_\ |_____\__,_|_|\__|
+                                             
+////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
 postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $modal, pwData ) {
@@ -873,15 +881,7 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
 
 
 
-/*
-   ___        _      _      _____    _ _ _   
-  / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
- | | | | | | | |/ __| |/ / |  _| / _` | | __|
- | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
-  \__\_\\__,_|_|\___|_|\_\ |_____\__,_|_|\__|
-                                             
-////////// ------------ QUICK EDIT ------------ //////////*/   
-
+/*///////// ------- SERVICE : QUICK EDIT CONTROLLER ------- /////////*/  
 var quickEdit = function ($scope, $modal, $log, $window, pwData) {
     $scope.openQuickEdit = function( post ){
         console.log( "Launch Quick Edit : ", post );  

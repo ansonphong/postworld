@@ -1,8 +1,4 @@
-
-
-
-/*
-   _        ____       _         _                         
+/* _        ____       _         _                         
   | |   _  |  _ \ ___ | | ___   / \   ___ ___ ___  ___ ___ 
  / __) (_) | |_) / _ \| |/ _ \ / _ \ / __/ __/ _ \/ __/ __|
  \__ \  _  |  _ < (_) | |  __// ___ \ (_| (_|  __/\__ \__ \
@@ -10,31 +6,35 @@
   |_|                                                      
 
 /*///////// ------- SERVICE : PW USERS ------- /////////*/  
-postworld.service('pwRoleAccess', ['$log', '$window', function ($log, $window) {
+postworld.service('pwRoleAccess', ['$log', '$window', 'ext', function ($log, $window, $ext) {
     return{
         setRoleAccess : function($scope){
             $scope.current_user = $window.pwGlobals.current_user;
             $scope.roles = {};
+
+            $scope.role_map = $window.pwSiteGlobals.role_map;
+
             // ESTABLISH ROLE ACCESS
             // Is the user an editor?
-            ( $scope.current_user.roles[0] == 'administrator' || $scope.current_user.roles[0] == 'editor' ) ?
+            ( $ext.isInArray( $scope.current_user.roles[0], $scope.role_map.editor ) ) ?
                 $scope.roles.editor = true : $scope.roles.editor = false;
 
             // Is the user an author?
-            ( $scope.current_user.roles[0] == 'author' ) ?
+            ( $ext.isInArray( $scope.current_user.roles[0], $scope.role_map.author ) ) ?
                 $scope.roles.author = true : $scope.roles.author = false;
 
             // Is the user an contributor?
-            ( $scope.current_user.roles[0] == 'contributor' ) ?
+            ( $ext.isInArray( $scope.current_user.roles[0], $scope.role_map.contributor ) ) ?
                 $scope.roles.contributor = true : $scope.roles.contributor = false ;
+
         },
     }
 }]);
 
 
 
-/*
-  ____           _        _        _   _                 
+
+/*____           _        _        _   _                 
  |  _ \ ___  ___| |_     / \   ___| |_(_) ___  _ __  ___ 
  | |_) / _ \/ __| __|   / _ \ / __| __| |/ _ \| '_ \/ __|
  |  __/ (_) \__ \ |_   / ___ \ (__| |_| | (_) | | | \__ \
@@ -128,8 +128,9 @@ var postActions = function ( $scope, pwData ) {
 };
 
 
-/*
-  ____           _    __     __    _       
+
+
+/*____           _    __     __    _       
  |  _ \ ___  ___| |_  \ \   / /__ | |_ ___ 
  | |_) / _ \/ __| __|  \ \ / / _ \| __/ _ \
  |  __/ (_) \__ \ |_    \ V / (_) | ||  __/
@@ -210,9 +211,7 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
 
 
 
-
-/*
-     _       _           _         ____                      _                     
+/*   _       _           _         ____                      _                     
     / \   __| |_ __ ___ (_)_ __   |  _ \ _ __ ___  _ __   __| | _____      ___ __  
    / _ \ / _` | '_ ` _ \| | '_ \  | | | | '__/ _ \| '_ \ / _` |/ _ \ \ /\ / / '_ \ 
   / ___ \ (_| | | | | | | | | | | | |_| | | | (_) | |_) | (_| | (_) \ V  V /| | | |
@@ -251,29 +250,8 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
         }
     ];
 
-    // Actions which each role has access to
-    var actionsByRole = {
-        "administrator": {
-            own:['quick-edit', 'pw-edit', 'wp-edit','trash'],
-            other:['quick-edit', 'pw-edit', 'wp-edit','trash']
-        },
-        "editor":{
-            own: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
-            other: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
-        },
-        "author":{
-            own: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
-            other: [],
-        },
-        "contributor":{
-            own: ['quick-edit', 'pw-edit', 'wp-edit','trash'],
-            other: [],
-        },
-        "guest":{
-            own: [],
-            other: [],
-        },
-    };
+    // Define actions which each role has access to
+    var actionsByRole = $window.pwSiteGlobals.controls.post.role_access;
 
     // Localize current user data
     $scope.current_user = $window.pwGlobals.current_user;
@@ -311,7 +289,6 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
     if ( $scope.userOptions == [] )
         $scope.userOptions = "0";
     
-
     $scope.menuAction = function(action){
 
         if( action == "wp-edit" )
@@ -335,8 +312,7 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
 
 
 
-/*
-     _       _           _         ____                      _                     
+/*   _       _           _         ____                      _                     
     / \   __| |_ __ ___ (_)_ __   |  _ \ _ __ ___  _ __   __| | _____      ___ __  
    / _ \ / _` | '_ ` _ \| | '_ \  | | | | '__/ _ \| '_ \ / _` |/ _ \ \ /\ / / '_ \ 
   / ___ \ (_| | | | | | | | | | | | |_| | | | (_) | |_) | (_| | (_) \ V  V /| | | |
@@ -366,28 +342,7 @@ var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $lo
     ];
 
     // Actions which each role has access to
-    var actionsByRole = {
-        "administrator": {
-            own:['edit','flag','trash'],
-            other:['edit','flag','trash']
-        },
-        "editor":{
-            own: ['edit','flag','trash'],
-            other: ['edit','flag','trash'],
-        },
-        "author":{
-            own: ['edit','trash'],
-            other: ['flag'],
-        },
-        "contributor":{
-            own: ['edit','trash'],
-            other: ['flag'],
-        },
-        "guest":{
-            own: [],
-            other: [],
-        },
-    };
+    var actionsByRole = $window.pwSiteGlobals.controls.comment.role_access;
 
     // Localize current user data
     $scope.current_user = $window.pwGlobals.current_user;
