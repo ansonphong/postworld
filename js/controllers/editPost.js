@@ -21,23 +21,20 @@ postworld.controller('editPost',
     $scope.status = "loading";
     $scope.post_data = {};
 
-    // SET : DEFAULT POST DATA
+    var post_defaults = $window.pwSiteGlobals.post_options.defaults;
+
+    // SET : DEFAULT POST DATA MODEL
     $scope.default_post_data = {
         post_title : "",
         post_name : "",
-        post_type : "blog",
-        post_status : "draft",
-        link_format : "standard",
-        post_class : "contributor",
+        post_type : post_defaults.edit_post.post_type,
+        post_status : post_defaults.edit_post.post_status,
+        post_class : post_defaults.edit_post.post_class,
         link_url : "",
+        link_format : post_defaults.edit_post.link_format,
         post_date_gmt:"",
         post_permalink : "",
-        tax_input : {
-            topic : [],
-            section : [],
-            hilight : [],
-            post_tag : [],
-        },
+        tax_input : $pwPostOptions.pwGetTaxInputModel(),
         tags_input : "",
         post_meta:{},
     };
@@ -82,7 +79,7 @@ postworld.controller('editPost',
             }
             ///// ROUTE : SET DEFAULT /////
             else if ( $route.current.action == "default"  ){
-                $location.path('/new/blog');
+                $location.path('/new/' + post_defaults.edit_post.post_type );
             }
         }
     );
@@ -287,7 +284,7 @@ postworld.controller('editPost',
     // POST FORMAT OPTIONS
     $scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
     // POST FORMAT META
-    $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    $scope.link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
@@ -535,7 +532,8 @@ postworld.controller('eventInput',
  |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
 
 ////////// ------------ POST LINK CONTROLLER ------------ //////////*/
-postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext', 'pwData', '$window', 'pwRoleAccess',function($scope, $log, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, $pwData, $window, $pwRoleAccess) {
+postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext', 'pwData', '$window', 'pwRoleAccess',
+    function($scope, $log, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, $pwData, $window, $pwRoleAccess) {
 
     // Setup the intermediary Link URL
     $scope.link_url = '';
@@ -560,7 +558,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     // POST FORMAT OPTIONS
     $scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
     // POST FORMAT META
-    $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    $scope.link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
     
@@ -597,22 +595,17 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     });
 
     // DEFAULT POST DATA
+    var post_defaults = $window.pwSiteGlobals.post_options.defaults;
     $scope.post_data = {
-        post_title:"Link Title",
-        post_type:"link",
+        post_title:"",
+        post_type: post_defaults.post_link.post_type,
         link_url:"",
-        link_format:"standard",
-        post_class:"contributor",
+        link_format: post_defaults.post_link.link_format,
+        post_class: post_defaults.post_link.post_class,
         tags_input:"",
-        post_status:"publish",
-        tax_input : {
-            topic : [],
-            section : [],
-            hilight : [],
-            post_tag:[]
-        }
+        post_status: post_defaults.post_link.post_status,
+        tax_input : $pwPostOptions.pwGetTaxInputModel(),
     };
-
 
     // Set Post Class
     if( $scope.roles.editor == true || $scope.roles.author == true )

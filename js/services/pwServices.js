@@ -151,11 +151,11 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
         },
 
         pwGetLinkFormatOptions: function(){
-            return $window.pwSiteGlobals.post_options.post_format;
+            return $window.pwSiteGlobals.post_options.link_format;
         },
 
-        pwGetPostFormatMeta: function(){
-            return $window.pwSiteGlobals.post_options.post_format_meta;
+        pwGetLinkFormatMeta: function(){
+            return $window.pwSiteGlobals.post_options.link_format_meta;
         },
 
         pwGetPostYearOptions: function(){
@@ -174,6 +174,17 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
                 months_array.push( month );
             });
             return months_array;
+        },
+
+        pwGetTaxInputModel: function(){
+            // TAXONOMY OBJECT MODEL
+            // Makes empty array in the taxInput object for each taxonomy inputs
+            var taxonomies = $window.pwSiteGlobals.post_options.taxonomies;
+            var taxInput = {};
+            angular.forEach( taxonomies, function( value ){
+                taxInput[value] = [];
+            });
+            return taxInput;
         },
 
         pw_site_options: function( $scope ){
@@ -208,7 +219,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
  (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__| |_|   |_|_|\__\___|_|  |___/
   |_|                                                                          
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
-postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
+postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log, ext, $window) {
         return {
             sortTaxTermsInput: function(post_data, tax_terms, sub_object){
                 // SORT TAXONOMIES
@@ -244,9 +255,10 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                 });
                 return post_data;
             },
+
             ///// EVALUATE AND SET link_format DEPENDING ON LINK_URL /////
             evalPostFormat: function( link_url, link_format_meta ){
-                var default_format = "standard";
+                var default_format = $window.pwSiteGlobals.post_options.link_format_defaults.none;
                 var set = "";
                 //alert(link_format_meta);
                 // If link_url has a value
@@ -263,7 +275,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                     });
                     // If no matches, set default
                     if ( set == "" )
-                        return "link";
+                        return $window.pwSiteGlobals.link_format_defaults.link;
                     else
                         return set;
                 }
@@ -271,7 +283,6 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', function ($log, ext) {
                 else {
                     return default_format;
                 }
-                
             },
             selected_tax_terms: function(tax_terms, tax_input){
                 ///// SELECTED TAXONOMY TERMS /////

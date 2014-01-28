@@ -15,7 +15,7 @@ postworld.directive('filterFeed', function($log, pwData) {
 });
 
 postworld.controller('pwFilterFeedController',
-    function pwFilterFeedController($scope, $location, $log, pwData, $attrs, $window) {    	
+    function pwFilterFeedController($scope, $location, $log, pwData, $attrs, $window, pwPostOptions) {    	
 		var firstTime = true;
 		// Set Panel Template
 		pwData.templates.promise.then(function(value) {
@@ -31,20 +31,8 @@ postworld.controller('pwFilterFeedController',
 			   	// DEFAULTS
 				$scope.feedQuery.author_name = "";
 
-				// MODEL TAXONOMY INPUT OBJECT
-				var taxonomies = $window.pwSiteGlobals.post_options.taxonomies;
-				$scope.taxInput = {};
-				angular.forEach( taxonomies, function( value ){
-					$scope.taxInput[value] = [];
-				});
-				
-				/*
-				$scope.taxInput = {
-					hilight: [],
-					topic:[],
-					section:[],
-				};
-				*/
+				// Taxonomy Object Model
+				$scope.taxInput = pwPostOptions.pwGetTaxInputModel();
 
 			   // Get Default View Name
 			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])

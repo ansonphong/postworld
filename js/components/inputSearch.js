@@ -40,7 +40,7 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
     // POST FORMAT OPTIONS
     $scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
     // POST FORMAT META
-    $scope.link_format_meta = $pwPostOptions.pwGetPostFormatMeta();
+    $scope.link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
     // POST CLASS OPTIONS
     $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
 
