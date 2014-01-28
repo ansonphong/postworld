@@ -608,13 +608,11 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     };
 
     // Set Post Class
-    if( $scope.roles.editor == true || $scope.roles.author == true )
-        $scope.post_data.post_class = "author";
-    
+    var current_user_role = $window.pwGlobals.current_user.roles[0];
+    $scope.post_data.post_class = $window.pwSiteGlobals.roles[current_user_role].post_class;
+
     // GET URL EXTRACT
     // 1. On detect paste
-    // 2. On click
-
     $scope.extract_url = function() {
 
         $scope.status = "busy";
