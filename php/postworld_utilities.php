@@ -2,6 +2,9 @@
 
 function postworld_includes( $mode = 'deploy' ){
 	
+	global $angularDep;
+	$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route', 'UnderscoreJS');
+
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' => admin_url( 'admin-ajax.php' ),
 						'pluginurl' => WP_PLUGIN_URL,
@@ -32,9 +35,6 @@ function postworld_includes( $mode = 'deploy' ){
 	}
 	///// DEVELOPMENT FILE INCLUDES /////
 	else if ( $mode == 'dev' ){
-
-		// DEV DEPENDENCIES
-		$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route', 'UnderscoreJS', 'Google-Maps-API');
 		
 		// UNDERSCORE JS
 		wp_enqueue_script( 'UnderscoreJS',
@@ -77,8 +77,8 @@ function postworld_includes( $mode = 'deploy' ){
 		//	'//maps.googleapis.com/maps/api/js?sensor=false', $angularDep );
 
 		// ANGULAR UI : GOOGLE MAPS
-		wp_enqueue_script( 'AngularJS-Google-Maps',
-			plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
+		//wp_enqueue_script( 'AngularJS-Google-Maps',
+		//	plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
 
 
 		// POSTWORLD APP		
@@ -202,6 +202,7 @@ function pwSiteGlobals_include(){
 	fclose($file);
 	chmod($pwGlobalsJsFile, 0755);
 
+	global $angularDep;
 	wp_enqueue_script( 'pw-SiteGlobals-JS',
 		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js', $angularDep );
 	

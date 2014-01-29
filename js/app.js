@@ -15,7 +15,7 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 'use strict';
 var feed_settings = [];
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', '$strap.directives', 'google-maps' ])
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', '$strap.directives' ])
 .config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
 
     var plugin_url = jsVars.pluginurl;
