@@ -34,7 +34,7 @@ function postworld_includes( $mode = 'deploy' ){
 	else if ( $mode == 'dev' ){
 
 		// DEV DEPENDENCIES
-		$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route', 'UnderscoreJS');
+		$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route', 'UnderscoreJS', 'Google-Maps-API');
 		
 		// UNDERSCORE JS
 		wp_enqueue_script( 'UnderscoreJS',
@@ -72,9 +72,14 @@ function postworld_includes( $mode = 'deploy' ){
 		wp_enqueue_script( 	'AngularJS-AngularStrap',
 			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
 
+		// GOOGLE MAPS
+		//wp_enqueue_script( 'Google-Maps-API',
+		//	'//maps.googleapis.com/maps/api/js?sensor=false', $angularDep );
+
 		// ANGULAR UI : GOOGLE MAPS
 		wp_enqueue_script( 'AngularJS-Google-Maps',
 			plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
+
 
 		// POSTWORLD APP		
 		wp_enqueue_script( 	'pw-app-JS',
