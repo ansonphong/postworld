@@ -13,9 +13,13 @@ module.exports = function(grunt) {
             // Angular
             'lib/angular/angular.min.js', // Angular.js has to go first
 
+            // Underscore
+            'lib/underscore/underscore.min.js',
+
           	// Bootstrap
             'lib/bootstrap/bootstrap.min.js',             // Main Bootstrap JS
-            'lib/angular/ui-bootstrap-tpls-0.6.0.min.js', // Angular UI Boostrap
+            //'lib/angular/ui-bootstrap-tpls-0.6.0.min.js', // Angular UI Boostrap
+            'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.10.0.min.js', // Angular UI Boostrap
             'lib/angular-strap/angular-strap.js',         // Angular Strap
 
             // Angular Extensions
@@ -23,6 +27,9 @@ module.exports = function(grunt) {
           	'lib/angular/angular-sanitize.min.js',
           	'lib/angular/angular-route.min.js',
           	'lib/angular/angular-resource.min.js',
+
+            // Angular Google Maps
+            'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
 
           	// Postworld
           	'js/*.js',

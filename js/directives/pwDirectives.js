@@ -276,7 +276,15 @@ postworld.directive( 'pwLanguage', [function(){
 postworld.controller('pwLanguageCtrl',
     ['$scope','$window',
     function($scope, $window) {
+
+      $scope.lang = 'en';
+      $scope.lang_options = {
+        'en': 'English',
+        'es': 'Español'
+      };
+
       $scope.language = $window.pwSiteLanguage;
+      $scope.l = $window.pwSiteLanguage;
             
     /*
     $scope.parseHTML = function(string){
