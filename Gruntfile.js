@@ -29,7 +29,7 @@ module.exports = function(grunt) {
           	'lib/angular/angular-resource.min.js',
 
             // Angular Google Maps
-            'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
+            //'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
 
           	// Postworld
           	'js/*.js',
