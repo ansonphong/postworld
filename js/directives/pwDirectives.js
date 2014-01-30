@@ -284,7 +284,7 @@ postworld.controller('pwLanguageCtrl',
       };
 
       $scope.language = $window.pwSiteLanguage;
-      $scope.l = $window.pwSiteLanguage;
+      //$scope.l = $window.pwSiteLanguage;
             
     /*
     $scope.parseHTML = function(string){

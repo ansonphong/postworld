@@ -1,9 +1,28 @@
 <?php
 
-function postworld_includes( $mode = 'deploy' ){
+function postworld_includes( $args ){
 	
+
+
+	extract( $args );
+
+	// Default Angular Version
+	if( empty( $angular_version ) )
+		$angular_version = 'angular-1.2.1';
+
+	// Default Dependencies
+	if( empty($dep) ){
+		$dep = array();
+	}
+
+	// Build Angular Dependancies
 	global $angularDep;
 	$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route', 'UnderscoreJS');
+
+	if( in_array( 'google-maps', $dep ) ){
+		array_push( $angularDep, 'google-maps' );
+	}
+
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -30,7 +49,18 @@ function postworld_includes( $mode = 'deploy' ){
 		// POSTWORLD
 		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js' );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
-		wp_enqueue_script( 'Postworld-Deploy','', $angularDep ); //array('Postworld-Libraries') );
+		wp_enqueue_script(  'Postworld-Deploy' ); //array('Postworld-Libraries') );
+
+		// ADD GOOGLE MAPS
+		if( in_array('google-maps', $dep) ){
+			// GOOGLE MAPS
+			wp_enqueue_script( 'Google-Maps-API',
+				'//maps.googleapis.com/maps/api/js?sensor=false', $angularDep );
+			// ANGULAR UI : GOOGLE MAPS
+			wp_enqueue_script( 'AngularJS-Google-Maps',
+				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
+		}
+
 
 	}
 	///// DEVELOPMENT FILE INCLUDES /////
@@ -40,21 +70,27 @@ function postworld_includes( $mode = 'deploy' ){
 		wp_enqueue_script( 'UnderscoreJS',
 			WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
 
-		// ANGULAR & SERVICES
-		wp_enqueue_script( 'AngularJS',
-			WP_PLUGIN_URL.'/postworld/lib/angular/angular.min.js');
 
+		///// ANGULAR VERSION CONTROL /////
+
+		// ANGULAR
+		wp_enqueue_script( 'AngularJS',
+			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular.min.js');
+
+		// ANGULAR SERVICES
 		wp_enqueue_script( 'AngularJS-Resource',
-			WP_PLUGIN_URL.'/postworld/lib/angular/angular-resource.min.js');
+			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-resource.min.js');
 
 		wp_enqueue_script( 'AngularJS-Route',
-			WP_PLUGIN_URL.'/postworld/lib/angular/angular-route.min.js');
+			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-route.min.js');
 
 		wp_enqueue_script( 'AngularJS-Sanitize',
-			WP_PLUGIN_URL.'/postworld/lib/angular/angular-sanitize.min.js');
+			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-sanitize.min.js');
+
 
 		// wp_enqueue_script( 'AngularJS-Animate', WP_PLUGIN_URL.'/postworld/lib/angular/angular-animate.min.js');
 		
+		// ANGULAR UI UTILITIES
 		wp_enqueue_script( 'AngularJS-UI-Utils',
 			WP_PLUGIN_URL.'/postworld/lib/angular/angular-ui-utils.min.js');
 		
@@ -72,13 +108,16 @@ function postworld_includes( $mode = 'deploy' ){
 		wp_enqueue_script( 	'AngularJS-AngularStrap',
 			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
 
-		// GOOGLE MAPS
-		//wp_enqueue_script( 'Google-Maps-API',
-		//	'//maps.googleapis.com/maps/api/js?sensor=false', $angularDep );
 
-		// ANGULAR UI : GOOGLE MAPS
-		//wp_enqueue_script( 'AngularJS-Google-Maps',
-		//	plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
+		// ADD GOOGLE MAPS
+		if( in_array('google-maps', $dep) ){
+			// GOOGLE MAPS
+			wp_enqueue_script( 'Google-Maps-API',
+				'//maps.googleapis.com/maps/api/js?sensor=false', $angularDep );
+			// ANGULAR UI : GOOGLE MAPS
+			wp_enqueue_script( 'AngularJS-Google-Maps',
+				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
+		}
 
 
 		// POSTWORLD APP		
@@ -152,8 +191,9 @@ function postworld_includes( $mode = 'deploy' ){
 	}
 
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
-	pwSiteGlobals_include();
 
+	pwSiteGlobals_include();
+	
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
 	function pwGlobals() {
@@ -204,7 +244,7 @@ function pwSiteGlobals_include(){
 
 	global $angularDep;
 	wp_enqueue_script( 'pw-SiteGlobals-JS',
-		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js', $angularDep );
+		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js' );
 	
 }
 

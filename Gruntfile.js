@@ -1,5 +1,7 @@
 module.exports = function(grunt) {
 
+  var angular_version = 'angular-1.2-rc2';
+
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -7,11 +9,12 @@ module.exports = function(grunt) {
     uglify: {
     	multiple_sourcemaps: {
         files: {
-          //'build/postworld.min.js': ['js/*.js', 'js/**/*.js'],
+          //'deploy/postworld.min.js': ['js/*.js', 'js/**/*.js'],
           'deploy/postworld.min.js':[
         	  
+            ///// LIBRARY /////
             // Angular
-            'lib/angular/angular.min.js', // Angular.js has to go first
+            'lib/'+angular_version+'/angular.min.js', // Angular.js has to go first
 
             // Underscore
             'lib/underscore/underscore.min.js',
@@ -22,16 +25,19 @@ module.exports = function(grunt) {
             'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.10.0.min.js', // Angular UI Boostrap
             'lib/angular-strap/angular-strap.js',         // Angular Strap
 
+            // Angular Utilities
+            'lib/angular-ui-utils/angular-ui-utils.min.js',
+            
             // Angular Extensions
-          	'lib/angular/angular-ui-utils.min.js',
-          	'lib/angular/angular-sanitize.min.js',
-          	'lib/angular/angular-route.min.js',
-          	'lib/angular/angular-resource.min.js',
+          	'lib/'+angular_version+'/angular-sanitize.min.js',
+          	'lib/'+angular_version+'/angular-route.min.js',
+          	'lib/'+angular_version+'/angular-resource.min.js',
 
             // Angular Google Maps
             //'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
 
-          	// Postworld
+
+          	///// Postworld /////
           	'js/*.js',
           	'js/**/*.js',
 
