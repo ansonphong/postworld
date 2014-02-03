@@ -874,8 +874,8 @@ $args = array(
 	's' => 'search string',
 	'orderby' => 'rank_score',
 	'order' => 'ASC'
-	'posts_per_page' : '20',
-	fields : array('ID','post_title','post_content','post_date'), // See pw_get_post() $fields method
+	'posts_per_page' => '20',
+	'fields' => array('ID','post_title','post_content','post_date'), // See pw_get_post() $fields method
 );
 
 $posts = pw_query( $args, 'JSON' );

@@ -37,10 +37,14 @@ function pw_set_post_meta($post_id, $post_meta){
 	 add_record_to_post_meta($post_id);
 
 	 $query = "Update $wpdb->pw_prefix"."post_meta set ";
+
+	 // POST CLASS
 	 if($post_meta['post_class'] !=null ){
 	 	$query.="post_class='".$post_meta['post_class']."' ";
 		 $insertComma= TRUE;
 	 }
+
+	 // LINK FORMAT
 	 if($post_meta['link_format'] !=null ){
 	 	if($insertComma === TRUE) $query.=" , ";
 	 	
@@ -48,6 +52,7 @@ function pw_set_post_meta($post_id, $post_meta){
 	 	$insertComma= TRUE;
 	 }
 	 
+	 // LINK URL
 	 if($post_meta['link_url'] !=null ){
 	 	if($insertComma === TRUE) $query.=" , ";
 	 	$query.="link_url='".$post_meta['link_url']."' ";

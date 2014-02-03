@@ -13,6 +13,7 @@ License: GPL2
 
 include 'php/postworld_variables.php';
 include 'php/postworld_utilities.php';
+include 'php/postworld_includes.php';
 
 
 // GLOBAL VARIABLES
