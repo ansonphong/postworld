@@ -841,7 +841,7 @@ __post_count__ : *integer*
   - 0 (default) - Return all
 
 __fields__ : *string / Array*
-- Set return values. Uses pw_get_posts( $post_ids, $fields ) method
+- Set return values. Uses `pw_get_posts( $post_ids, $fields )` method
 - Pass this directly to `wp_get_posts()` method unless the value is 'ids'
   - __ids__ (default) - Return an Array of post IDs
   - __all__ - Return all fields

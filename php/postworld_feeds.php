@@ -58,9 +58,7 @@ function pw_live_feed ( $args ){
 
 	// Get the Feed Outline
 	$feed_query = $args["feed_query"];
-
 	$feed_outline = pw_feed_outline( $feed_query );
-
 	
 	// Select which posts to preload
 	$preload_posts = array_slice( $feed_outline, 0, $preload ); // to get top post ids

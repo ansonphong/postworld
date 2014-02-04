@@ -13,7 +13,7 @@ postworld.service('ext', ['$log', function ($log) {
     // Extends the function vocabulary of JS
 
     return{
-        varExists: function(value){
+        exists: function(value){
             if ( typeof value === 'undefined' )
                 return false;
             else

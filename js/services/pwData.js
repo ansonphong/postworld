@@ -90,6 +90,11 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
                 });
             return deferred.promise;		
 		},
+		pw_query: function( args ){
+			$log.debug('pwData.pw_query',args);
+			var params = {'args':args};
+			return this.wp_ajax('pw_query',params);
+		},
 		pw_live_feed: function(args,qsArgs) {
 			// args: arguments received from Panel. fargs: is the final args sent along the ajax call.
 			// fargs will be filled initially with data from feed settings, 
@@ -348,15 +353,6 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('user_share_report_outgoing',params);
 		},
-
-
-		pw_site_options: function(args) {
-			$log.debug('pwData.pw_site_options',args);
-			var params = {args:args};
-			return this.wp_ajax('pw_site_options',params);
-		},
-
-
 
    }; // END OF pwData return value
 });

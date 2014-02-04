@@ -162,15 +162,17 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	// Get post data from Wordpress standard function
 	$get_post = get_post($post_id, ARRAY_A);
 	foreach ($get_post as $key => $value) {
-		if( in_array($key, $fields) )
+		if( in_array($key, $fields) ){
 			$post_data[$key] = $value;
 
-		if ( $key == 'post_content' && $mode == 'view' ){
-			///// CONTENT FILTERING /////
-			// oEmbed URLs
-			$post_data[$key] = pw_embed_content($post_data[$key]);
-			// Apply Shortcodes
-			$post_data[$key] = do_shortcode($post_data[$key]);
+			if ( $key == 'post_content' && $mode == 'view' ){
+				///// CONTENT FILTERING /////
+				// oEmbed URLs
+				$post_data[$key] = pw_embed_content($post_data[$key]);
+				// Apply Shortcodes
+				$post_data[$key] = do_shortcode($post_data[$key]);
+			}
+			
 		}
 	}
 
