@@ -19,8 +19,8 @@ function postworld_install() {
       post_points mediumint(8) DEFAULT '0' NOT NULL,
       rank_score mediumint(4) DEFAULT '0' NOT NULL,
       post_shares mediumint(9) DEFAULT '0' NOT NULL,
-      latitude DECIMAL(10, 8) NOT NULL,
-      longitude DECIMAL(11, 8) NOT NULL,
+      geo_latitude DECIMAL(10, 8) NOT NULL,
+      geo_longitude DECIMAL(11, 8) NOT NULL,
       event_start int(11) NOT NULL,
       event_end int(11) NOT NULL,
       UNIQUE KEY post_id (post_id)
