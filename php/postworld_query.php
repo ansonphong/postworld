@@ -63,60 +63,94 @@ class PW_Query extends WP_Query {
 		return $orderby;
 				
 	}
+
+	function prepare_geo_query(){
+		///// GEO LATITUDE /////
+
+		$geo_query = '';
+
+		$latitude = $this->query_vars['geo_latitude'];
+		$longitude = $this->query_vars['geo_longitude'];
+
+		if(array_key_exists('geo_range',  $this->query_vars)){
+			// Apply range
+			$range = $this->query_vars['geo_range'];
+
+			$lat_low = $latitude - $range;
+			$lat_high = $latitude + $range;
+			$geo_query = "geo_latitude BETWEEN ".$lat_low." AND ".$lat_high;
+
+			$lng_low = $longitude - $range;
+			$lng_high = $longitude + $range;
+			$geo_query.=" AND geo_longitude BETWEEN ".$lng_low." AND ".$lng_high;
+		} else {
+			// Default geo query
+			$geo_query = "geo_latitude = ".$latitude;
+			$geo_query.=" AND geo_longitude = ".$longitude;
+		}
+
+		if($geo_query == "") return " AND ";
+		return $geo_query." AND ";
+	}
 	
 	function prepare_where_query(){
 		
-		$where =" WHERE ";	
+		$where ="WHERE ";	
 		$insertAnd= '0';
-		//echo($insertAnd);
 
-			///// LINK FORMAT /////
-			if(array_key_exists('link_format',  $this->query_vars)){
-				if(gettype($this->query_vars['link_format']) == "array") {
-						if($insertAnd=='0'){
-							 //$where.=" and ";
-							 $insertAnd = '1';
-							
-						}	
-						$where.=" link_format in ('".implode("','", $this->query_vars['link_format'])."') ";
+		///// LINK FORMAT /////
+		// Must be first (or config $where.= to work and update the first one to work like this one currently does)
+		if(array_key_exists('link_format',  $this->query_vars)){
+			if(gettype($this->query_vars['link_format']) == "array") {
+					if($insertAnd=='0'){
+						 //$where.=" and ";
+						 $insertAnd = '1';
 						
-					}
-					else if(gettype($this->query_vars['link_format']) == "string"){
-						if($insertAnd=='0'){
-							// $where.=" and ";
-							 $insertAnd = '1';
-						}	
-						$where.=" link_format = '".$this->query_vars['link_format']."' ";
-					}
-			}
-		
-			///// POST CLAS /////
-			if(array_key_exists('post_class',  $this->query_vars)){
-					if(gettype($this->query_vars['post_class']) == "array") {
-						if($insertAnd=='1'){
-							 $where.=" and ";
-							 $insertAnd = '0';
-							
-						}	
-						$where.=" post_class in ('".implode("','", $this->query_vars['post_class'])."') ";
-					}
-					else if(gettype($this->query_vars['post_class']) == "string"){
-						if($insertAnd=='1'){
-							 $where.=" and ";
-							 $insertAnd = '0'; 
-						}	
-						$where.=" post_class = '".$this->query_vars['post_class']."' ";
-					}
-			}
-		
-		if($where ==" WHERE ") return $where;	
-		return $where."  and ";
+					}	
+					$where.=" link_format in ('".implode("','", $this->query_vars['link_format'])."') ";
+					
+				}
+				else if(gettype($this->query_vars['link_format']) == "string"){
+					if($insertAnd=='0'){
+						// $where.=" and ";
+						 $insertAnd = '1';
+					}	
+					$where.=" link_format = '".$this->query_vars['link_format']."' ";
+				}
+		}
+	
+		///// POST CLASS /////
+		if(array_key_exists('post_class',  $this->query_vars)){
+				if(gettype($this->query_vars['post_class']) == "array") {
+					if($insertAnd=='1'){
+						 $where.=" and ";
+						 $insertAnd = '0';
+						
+					}	
+					$where.=" post_class in ('".implode("','", $this->query_vars['post_class'])."') ";
+				}
+				else if(gettype($this->query_vars['post_class']) == "string"){
+					if($insertAnd=='1'){
+						 $where.=" and ";
+						 $insertAnd = '0'; 
+					}	
+					$where.=" post_class = '".$this->query_vars['post_class']."' ";
+				}
+		}
+
+		if($where =="WHERE ") return $where;	
+		return $where." AND ";
 	}
 	
 	
 	function prepare_new_request($remove_tbl=false){
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
+
+		if(array_key_exists('geo_latitude',  $this->query_vars) && array_key_exists('geo_longitude',  $this->query_vars)){
+			$where = $where.$this->prepare_geo_query();
+		}
+		//$where.=" AND ";
 		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
 		$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
