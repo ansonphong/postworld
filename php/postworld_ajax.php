@@ -433,7 +433,6 @@ function pw_get_post_edit_admin() {
 	// pw_get_post ( $post_id, $fields, [$user_id] );
 	$pw_args = $args['args'];
 
-
 	/* ADD SECURITY CHECK */
 
 	/*

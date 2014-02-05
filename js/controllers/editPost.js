@@ -92,12 +92,22 @@ postworld.controller('editPost',
 
     ///// LOAD POST DATA /////
     $scope.load_post = function( post_id ){
+
         $scope.mode = "edit";
-        if ( typeof $routeParams.post_id !== 'undefined' )
+
+        // Get Post ID from Route
+        if (
+            _.isUndefined( post_id ) &&
+            !_.isUndefined($routeParams.post_id) ){
             var post_id = $routeParams.post_id;
-        else{
+        }
+        // Get Post ID from Post Object
+        else if (
+            _.isUndefined( post_id ) &&
+            !_.isUndefined($scope.post) ){
             var post_id = $scope.post.ID;
         }
+
         // GET THE POST DATA
         $pwData.pw_get_post_edit( post_id ).then(
             // Success
@@ -146,6 +156,7 @@ postworld.controller('editPost',
             function(response) {
                 //alert('error');
                 $scope.status = "error";
+                $log.debug('pwData.pw_get_post_edit : ERROR : ', response);
             }
         );  
     }
