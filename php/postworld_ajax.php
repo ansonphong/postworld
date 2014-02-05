@@ -420,7 +420,7 @@ function pw_get_post_edit_admin() {
 	else $fields = 'all';
 	// Get User Id
 	$user_ID = get_current_user_id();
-	*/
+	
 
 	$fields = array(
 		"ID",
@@ -441,9 +441,11 @@ function pw_get_post_edit_admin() {
 		"image(id)",
 		"image(meta)"
 		);
+	*/
 
 	/* set the response type as JSON */
 	$results = pw_get_post( $pw_args, 'edit' ); //$post_id,$fields,$user_ID
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $results;

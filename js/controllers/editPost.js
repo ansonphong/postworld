@@ -98,10 +98,13 @@ postworld.controller('editPost',
         else{
             var post_id = $scope.post.ID;
         }
+        
+        $log.debug('editPost Controller : load_post(post_id) // Post ID : ', post_id);
+
         // GET THE POST DATA
         $pwData.pw_get_post_edit( post_id ).then(
             // Success
-            function(response) {    
+            function(response) {
                 $log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
 
                 // FILTER FOR INPUT
@@ -137,6 +140,16 @@ postworld.controller('editPost',
                 }
                 // BROADCAST TO USERNAME AUTOCOMPLETE FIELD
                 $scope.$broadcast('updateUsername', get_post['post_author_name']);
+
+                // Deserialize JSON Meta Data
+                var parseJsonMetaFields = ['geocode', 'location_obj'];
+                if ( !_.isUndefined( get_post['post_meta'] ) ){
+                    angular.forEach( get_post.post_meta , function(value, key){
+                        if( $ext.isInArray(key, parseJsonMetaFields) )
+                            get_post.post_meta[key] = angular.fromJson(value);
+                    });
+                }
+
                 // SET DATA INTO THE SCOPE
                 $scope.post = get_post;
                 // UPDATE STATUS
@@ -391,8 +404,14 @@ postworld.controller('editPost',
     // FORM VALIDATION WATCH
     $scope.$watch( "editPost.$valid",
         function (){
-        
         }, 1 );
+
+    // LANGUAGE CODE WATCH
+    // If 'lang' is defined (by pw-language) then add it to the post object
+    $scope.$watch( "lang", function (){
+            if( !_.isUndefined($scope.lang) )
+                $scope.post.language_code = $scope.lang;
+        } );
 
     // POST DATA OBJECT
     $scope.post = $scope.pw_get_post_object();
@@ -453,7 +472,8 @@ postworld.controller('eventInput',
 
     // POST TYPE WATCH : Watch the Post Type
     // Cleanup post_meta
-    $scope.$on('changePostType', function(event, data) { $scope.post.post_meta = {}; });
+    // Hidden - was causing issues with empty post_meta on load
+    // $scope.$on('changePostType', function(event, data) { $scope.post.post_meta = {}; });
 
 
     ////////// EVENT DATE PICKER : CONFIG //////////
