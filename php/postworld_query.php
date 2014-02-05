@@ -69,13 +69,24 @@ class PW_Query extends WP_Query {
 
 		$geo_query = '';
 
-		if(array_key_exists('geo_latitude',  $this->query_vars)){
-			$geo_query = "geo_latitude = ".$this->query_vars['geo_latitude'];
-		}
+		$latitude = $this->query_vars['geo_latitude'];
+		$longitude = $this->query_vars['geo_longitude'];
 
-		///// GEO LONGITUDE /////
-		if(array_key_exists('geo_longitude',  $this->query_vars)){
-			$geo_query.=" AND geo_longitude = ".$this->query_vars['geo_longitude'];
+		if(array_key_exists('geo_range',  $this->query_vars)){
+			// Apply range
+			$range = $this->query_vars['geo_range'];
+
+			$lat_low = $latitude - $range;
+			$lat_high = $latitude + $range;
+			$geo_query = "geo_latitude BETWEEN ".$lat_low." AND ".$lat_high;
+
+			$lng_low = $longitude - $range;
+			$lng_high = $longitude + $range;
+			$geo_query.=" AND geo_longitude BETWEEN ".$lng_low." AND ".$lng_high;
+		} else {
+			// Default geo query
+			$geo_query = "geo_latitude = ".$latitude;
+			$geo_query.=" AND geo_longitude = ".$longitude;
 		}
 
 		if($geo_query == "") return " AND ";
