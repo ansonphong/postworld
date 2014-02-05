@@ -90,7 +90,7 @@ function postworld_includes( $args ){
 		
 		// ANGULAR UI UTILITIES
 		wp_enqueue_script( 'AngularJS-UI-Utils',
-			WP_PLUGIN_URL.'/postworld/lib/angular/angular-ui-utils.min.js');
+			WP_PLUGIN_URL.'/postworld/lib/angular-ui-utils/angular-ui-utils.min.js');
 		
 		//BOOTSTRAP JS
 		wp_enqueue_script( "bootstrap-JS",
