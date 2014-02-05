@@ -1031,7 +1031,9 @@ function pw_get_avatar( $obj ){
 
 /////----- INSERT NEW USER -----/////
 function pw_insert_user( $userdata ){
-	$userdata['role'] = 'subscriber';	
+	global $pwSiteGlobals;
+
+	$userdata['role'] = $pwSiteGlobals['role']['default'];	
 	$user_id = wp_insert_user( $userdata );
 
 	// If it's successful, we have the new user ID

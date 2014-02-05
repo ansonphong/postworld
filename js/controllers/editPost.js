@@ -271,22 +271,6 @@ postworld.controller('editPost',
 
     }
 
-    ///// GET POST OBJECT /////
-    $scope.pw_get_post_object = function(){
-        var post = $scope.default_post;
-
-        // SET THE POST CLASS
-        if ( $scope.roles.author == true || $scope.roles.editor == true ){
-            post.post_class = "author";
-        }
-        else{
-            post.post_class = "contributor";
-        }
-
-        // CHECK TERMS CATEGORY / SUBCATEGORY ORDER
-        post = $pwEditPostFilters.sortTaxTermsInput( post, $scope.tax_terms, 'tax_input' );
-        return post;   
-    }
 
 
     ///// LOAD IN DATA /////
@@ -406,7 +390,21 @@ postworld.controller('editPost',
         }, 1 );
 
     // POST DATA OBJECT
-    $scope.post = $scope.pw_get_post_object();
+
+    ///// GET POST OBJECT /////
+    $scope.get_post_object = function(){
+        var post = $scope.default_post;
+        var role = $scope.current_user_role;
+        // SET THE POST CLASS
+        post.post_class = $window.pwSiteGlobals.roles[role].post_class;
+
+        // CHECK TERMS CATEGORY / SUBCATEGORY ORDER
+        post = $pwEditPostFilters.sortTaxTermsInput( post, $scope.tax_terms, 'tax_input' );
+        return post;  
+    }
+
+    $scope.post = $scope.get_post_object();
+
     //alert(JSON.stringify($scope.post));
 
     $scope.showEditorSource = function(){

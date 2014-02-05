@@ -211,6 +211,45 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 }]);
 
 
+/* _        ____       _         _                         
+  | |   _  |  _ \ ___ | | ___   / \   ___ ___ ___  ___ ___ 
+ / __) (_) | |_) / _ \| |/ _ \ / _ \ / __/ __/ _ \/ __/ __|
+ \__ \  _  |  _ < (_) | |  __// ___ \ (_| (_|  __/\__ \__ \
+ (   / (_) |_| \_\___/|_|\___/_/   \_\___\___\___||___/___/
+  |_|                                                      
+
+/*///////// ------- SERVICE : PW USERS ------- /////////*/  
+postworld.service('pwRoleAccess', ['$log', '$window', 'ext', function ($log, $window, $ext) {
+    return{
+        setRoleAccess : function($scope){
+            $scope.current_user = $window.pwGlobals.current_user;
+
+            ( $scope.current_user != 0 ) ?
+                $scope.current_user_role = $window.pwGlobals.current_user.roles[0] :
+                $scope.current_user_role = 'guest' ;
+
+            $scope.roles = {};
+            $scope.role_map = $window.pwSiteGlobals.role.map;
+
+            // ESTABLISH ROLE ACCESS
+            // Is the user an editor?
+            ( $ext.isInArray( $scope.current_user_role, $scope.role_map.editor ) ) ?
+                $scope.roles.editor = true : $scope.roles.editor = false;
+
+            // Is the user an author?
+            ( $ext.isInArray( $scope.current_user_role, $scope.role_map.author ) ) ?
+                $scope.roles.author = true : $scope.roles.author = false;
+
+            // Is the user an contributor?
+            ( $ext.isInArray( $scope.current_user_role, $scope.role_map.contributor ) ) ?
+                $scope.roles.contributor = true : $scope.roles.contributor = false ;
+
+        },
+    }
+}]);
+
+
+
 
 
 /*
@@ -277,7 +316,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
                     });
                     // If no matches, set default
                     if ( set == "" )
-                        return $window.pwSiteGlobals.link_format_defaults.link;
+                        return $window.pwSiteGlobals.post_options.link_format_defaults.link;
                     else
                         return set;
                 }
