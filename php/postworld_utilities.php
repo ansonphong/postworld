@@ -2,8 +2,6 @@
 
 function postworld_includes( $args ){
 	
-
-
 	extract( $args );
 
 	// Default Angular Version
