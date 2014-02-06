@@ -23,6 +23,7 @@ function postworld_install() {
       geo_longitude DECIMAL(11, 8) NOT NULL,
       event_start int(11) NOT NULL,
       event_end int(11) NOT NULL,
+      related_post BIGINT(20) unsigned NOT NULL,
       UNIQUE KEY post_id (post_id)
     );";
     //author_id BIGINT(20) UNSIGNED NOT NULL,

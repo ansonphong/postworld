@@ -54,7 +54,6 @@ class PW_Query extends WP_Query {
 		}
 			
 		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
-			//if($this->query_vars["offset"])
 			if(array_key_exists('offset',  $this->query_vars))
 				$orderby.=" Limit ".$this->query_vars["offset"].", ".$this->query_vars['posts_per_page'];	
 			else $orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
@@ -62,6 +61,13 @@ class PW_Query extends WP_Query {
 		
 		return $orderby;
 				
+	}
+
+	function prepare_related_query(){
+		///// related_post  /////
+		$related_post = $this->query_vars['related_post'];
+		$related_query = "related_post = ".$related_post;
+		return $related_query." AND ";
 	}
 
 	function prepare_time_query(){
@@ -79,9 +85,8 @@ class PW_Query extends WP_Query {
 				$time_query = "event_end > ".$event_start;
 				$add_and = true;	
 			} else {
-				$time_query = "AND event_end > ".$event_start;
+				$time_query = " AND event_end > ".$event_start;
 			}
-			
 		}
 
 		///// event_end,  /////
@@ -119,7 +124,7 @@ class PW_Query extends WP_Query {
 				$time_query .= "event_start > ".$event_after;
 				$add_and = true;
 			} else {
-				$time_query .= " AND event_start > ".$eventevent_after_before;
+				$time_query .= " AND event_start > ".$event_after;
 			}
 		}
 
@@ -219,6 +224,11 @@ class PW_Query extends WP_Query {
 		// Check for event_start
 		if($this->has_time_attributes()){
 			$where = $where.$this->prepare_time_query();
+		}
+
+		// Check for related_post
+		if(array_key_exists('related_post', $this->query_vars)){
+			$where = $where.$this->prepare_related_query();
 		}
 
 		//$where.=" AND ";
