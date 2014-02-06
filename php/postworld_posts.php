@@ -75,7 +75,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'taxonomy_obj(post_tag)',
 		'comment_status',
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
-		'post_meta(all)'
+		'post_meta(all)',
+		'post_parent',
 		);
 
 	////////// FIELDS MODEL //////////
@@ -299,6 +300,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				}
 			}
 		}
+
+
 
 	////////// AUTHOR DATA //////////
 
@@ -555,7 +558,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// Get each Taxonomy Field
 		foreach ($taxonomy_fields as $taxonomy => $tax_fields) {
 			/*
-				PROCESS THIS :
+				INPUT MODEL :
 				taxonomy_fields = {
 					"category":["id","name"],
 					"topic":["id","slug"],
@@ -625,7 +628,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		} // END foreach
 	} // END IF
 
-
 	return $post_data;
 
 }
@@ -661,10 +663,13 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			}
 		}
 	
-	
 		///// ADD/UPDATE META FIELDS //////
 		if( isset($postarr["post_meta"]) ){
 			foreach ( $postarr["post_meta"] as $meta_key => $meta_value ) {
+
+				// ENCODE ARRAYS AS JSON
+				if( is_array($meta_value) )
+					$meta_value = json_encode($meta_value);
 
 				// CHECK FOR EXISTING VALUE
 				$get_meta_value = get_post_meta( $post_ID, $meta_key, true );
@@ -928,6 +933,7 @@ function pw_save_post($post_data){
 
 	////////// CHECK : POST TYPE ACCESS //////////
 	$post_type = detect_post_type( $post_data );
+
 		
 	///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
 	// The required capabilities of current action
@@ -935,7 +941,7 @@ function pw_save_post($post_data){
 	// Is a post ID not defined?
 	if( !isset( $post_data["ID"] ) ){
 		// REQUIRE : CREATION
-		array_push( $required_capabilities,"create_".$post_type."s" );
+		array_push( $required_capabilities,"edit_".$post_type."s" );
 		// Does the post exist?
 	} else if( pw_post_exists( $post_data["ID"] ) ){
 		// GET : THE POST
@@ -959,6 +965,7 @@ function pw_save_post($post_data){
 	if( $post_data["post_status"] == "publish" ){
 		array_push( $required_capabilities, "publish_".$post_type."s" );
 	}
+
 
 	///// VALIDATE CAPABILITIES /////
 	// Compare required capabilities to array of current user's capabilities

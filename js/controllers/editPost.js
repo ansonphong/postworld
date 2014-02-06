@@ -98,10 +98,13 @@ postworld.controller('editPost',
         else{
             var post_id = $scope.post.ID;
         }
+        
+        $log.debug('editPost Controller : load_post(post_id) // Post ID : ', post_id);
+
         // GET THE POST DATA
         $pwData.pw_get_post_edit( post_id ).then(
             // Success
-            function(response) {    
+            function(response) {
                 $log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
 
                 // FILTER FOR INPUT
@@ -137,6 +140,26 @@ postworld.controller('editPost',
                 }
                 // BROADCAST TO USERNAME AUTOCOMPLETE FIELD
                 $scope.$broadcast('updateUsername', get_post['post_author_name']);
+
+
+                ///// POST META /////
+                if ( !_.isUndefined( get_post['post_meta'] ) ){
+                    
+                    // Deserialize JSON
+                    var parseJsonMetaFields = ['geocode', 'location_obj'];
+                    angular.forEach( get_post.post_meta , function(value, key){
+                        if( $ext.isInArray(key, parseJsonMetaFields) )
+                            get_post.post_meta[key] = angular.fromJson(value);
+                    });
+
+                     // Emit Geocode
+                     // If geocode data exists, emit it's value
+                    if( !_.isUndefined( get_post.post_meta['geocode'] ) )
+                        $scope.$emit('pwAddGeocode', get_post.post_meta['geocode']);
+
+                }
+
+
                 // SET DATA INTO THE SCOPE
                 $scope.post = get_post;
                 // UPDATE STATUS
@@ -385,14 +408,19 @@ postworld.controller('editPost',
 
     ///// GET POST_CONTENT FROM TINY MCE /////
     $scope.getTinyMCEContent = function(){        
-        
     }
 
     // FORM VALIDATION WATCH
     $scope.$watch( "editPost.$valid",
         function (){
-        
         }, 1 );
+
+    // LANGUAGE CODE WATCH
+    // If 'lang' is defined (by pw-language) then add it to the post object
+    $scope.$watch( "lang", function (){
+            if( !_.isUndefined($scope.lang) )
+                $scope.post.language_code = $scope.lang;
+        } );
 
     // POST DATA OBJECT
     $scope.post = $scope.pw_get_post_object();
@@ -402,11 +430,9 @@ postworld.controller('editPost',
         var source = $('#post_content').val();
         source = tinyMCE.get('post_content').getContent({format : 'raw'});
         alert(source);
-
     };
     
 }]);
-
 
 ////////// ------------ EVENT DATA/TIME CONTROLLER ------------ //////////*/
 postworld.controller('eventInput',
@@ -425,6 +451,16 @@ postworld.controller('eventInput',
     if( typeof $scope.post.post_meta.event_end_date_obj === 'undefined' )
         $scope.post.post_meta.event_end_date_obj = new Date( );
 
+    $scope.getUnixTimestamp = function( dateObject ){
+        return Math.round( dateObject.getTime() / 1000);
+    };
+
+    $scope.setUnixTimestamps = function(){
+        // Add the UNIX Timestamp : event_start
+        $scope.post.event_start = $scope.getUnixTimestamp( $scope.post.post_meta.event_start_date_obj );
+        // Add the UNIX Timestamp : event_end
+        $scope.post.event_end = $scope.getUnixTimestamp( $scope.post.post_meta.event_end_date_obj );
+    }
 
     // WATCH : EVENT START TIME
     $scope.$watch( "post.post_meta.event_start_date_obj",
@@ -435,6 +471,9 @@ postworld.controller('eventInput',
             // If start time is set after the end time - make them equal
             if( $scope.post.post_meta.event_end_date_obj < $scope.post.post_meta.event_start_date_obj )
                 $scope.post.post_meta.event_end_date_obj = $scope.post.post_meta.event_start_date_obj;
+
+            // Set UNIX Timestamps
+            $scope.setUnixTimestamps();
 
         }, 1 );
 
@@ -448,12 +487,16 @@ postworld.controller('eventInput',
             if( $scope.post.post_meta.event_start_date_obj > $scope.post.post_meta.event_end_date_obj  )
                 $scope.post.post_meta.event_start_date_obj = $scope.post.post_meta.event_end_date_obj ;
 
+            // Set UNIX Timestamps
+            $scope.setUnixTimestamps();
+
         }, 1 );
 
 
     // POST TYPE WATCH : Watch the Post Type
     // Cleanup post_meta
-    $scope.$on('changePostType', function(event, data) { $scope.post.post_meta = {}; });
+    // Hidden - was causing issues with empty post_meta on load
+    // $scope.$on('changePostType', function(event, data) { $scope.post.post_meta = {}; });
 
 
     ////////// EVENT DATE PICKER : CONFIG //////////
