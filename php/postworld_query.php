@@ -54,7 +54,6 @@ class PW_Query extends WP_Query {
 		}
 			
 		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
-			//if($this->query_vars["offset"])
 			if(array_key_exists('offset',  $this->query_vars))
 				$orderby.=" Limit ".$this->query_vars["offset"].", ".$this->query_vars['posts_per_page'];	
 			else $orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
@@ -62,6 +61,76 @@ class PW_Query extends WP_Query {
 		
 		return $orderby;
 				
+	}
+
+	function prepare_related_query(){
+		///// related_post  /////
+		$related_post = $this->query_vars['related_post'];
+		$related_query = "related_post = ".$related_post;
+		return $related_query." AND ";
+	}
+
+	function prepare_time_query(){
+		///// event_start,  /////
+
+		$time_query = '';
+		$add_and = false;
+
+
+		if(array_key_exists('event_start',  $this->query_vars)){
+			// all events with event_end after this
+			$event_start = $this->query_vars['event_start'];
+			
+			if($add_and == false){
+				$time_query = "event_end > ".$event_start;
+				$add_and = true;	
+			} else {
+				$time_query = " AND event_end > ".$event_start;
+			}
+		}
+
+		///// event_end,  /////
+		if(array_key_exists('event_end',  $this->query_vars)){
+			// all events with event_start before this
+			$event_end = $this->query_vars['event_end'];
+
+			if($add_and == false){
+				$time_query .= "event_start < ".$event_end;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_start < ".$event_end;
+			}
+		}
+
+		///// event_before,  /////
+		if(array_key_exists('event_before',  $this->query_vars)){
+			// all events with event_end before this
+			$event_before = $this->query_vars['event_before'];
+
+			if($add_and == false){
+				$time_query .= "event_end < ".$event_before;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_end < ".$event_before;
+			}
+		}
+
+		///// event_after,  /////
+		if(array_key_exists('event_after',  $this->query_vars)){
+			// all events with event_start after this
+			$event_after = $this->query_vars['event_after'];
+
+			if($add_and == false){
+				$time_query .= "event_start > ".$event_after;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_start > ".$event_after;
+			}
+		}
+
+		// Return Query
+		if($time_query == "") return "";
+		return $time_query." AND ";
 	}
 
 	function prepare_geo_query(){
@@ -147,9 +216,21 @@ class PW_Query extends WP_Query {
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
 
+		// Check for geo_latitude
 		if(array_key_exists('geo_latitude',  $this->query_vars) && array_key_exists('geo_longitude',  $this->query_vars)){
 			$where = $where.$this->prepare_geo_query();
 		}
+
+		// Check for event_start
+		if($this->has_time_attributes()){
+			$where = $where.$this->prepare_time_query();
+		}
+
+		// Check for related_post
+		if(array_key_exists('related_post', $this->query_vars)){
+			$where = $where.$this->prepare_related_query();
+		}
+
 		//$where.=" AND ";
 		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
@@ -161,6 +242,14 @@ class PW_Query extends WP_Query {
 			//$this->request = str_replace("AND 0 = 1", " ", $this->request);
 			$this->request.=$orderBy;
 		
+	}
+
+	function has_time_attributes(){
+		if(array_key_exists('event_start',  $this->query_vars) || array_key_exists('event_end',  $this->query_vars) || array_key_exists('event_before',  $this->query_vars) || array_key_exists('event_after',  $this->query_vars)){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	function get_posts() {
