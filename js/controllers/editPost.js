@@ -14,9 +14,9 @@ function tinyMCE_init_custom(){
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 postworld.controller('editPost',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess',
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit',
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-        $pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess ) {
+        $pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit ) {
 
     $scope.status = "loading";
     $scope.post = {};
@@ -58,7 +58,7 @@ postworld.controller('editPost',
                 // If we're coming to 'new' mode from 'edit' mode
                 if($scope.mode == "edit"){
                     // Clear post Data
-                    $scope.clear_post();
+                    $scope.newPost();
                 }
                 // Get the post type
                 var post_type = ($routeParams.post_type || "");
@@ -66,16 +66,14 @@ postworld.controller('editPost',
                 if ( post_type != "" )
                     // Set the post type
                     $scope.post.post_type = post_type;
-                $scope.clear_post();
-                // Set the new mode
-                $scope.mode = "new";
+                $scope.newPost();
                 // Set the status
                 $scope.status = "done";
             }
             ///// ROUTE : EDIT POST /////
             else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
                 // Load the specified post data
-                $scope.load_post();
+                $scope.loadPost();
             }
             ///// ROUTE : SET DEFAULT /////
             else if ( $route.current.action == "default"  ){
@@ -86,26 +84,36 @@ postworld.controller('editPost',
 
     ///// QUICK EDIT : LOAD POST DATA /////
     $scope.$on('loadPostData', function(event, post_id) {
-        $scope.load_post( post_id );
+        $scope.loadPost( post_id );
     });
 
 
     ///// LOAD POST DATA /////
-    $scope.load_post = function( post_id ){
-        $scope.mode = "edit";
-        if ( typeof $routeParams.post_id !== 'undefined' )
+    $scope.loadPost = function( post_id ){
+
+        // Post ID passed directly
+        if( !_.isUndefined(post_id) ){
+            $log.debug('editPost Controller : loadPost( *post_id* ) // Post ID passed directly : ', post_id);
+
+        // Post ID passed by Route
+        } else if ( typeof $routeParams.post_id !== 'undefined' &&
+            $routeParams.post_id > 0 ){
             var post_id = $routeParams.post_id;
-        else{
+            $log.debug('editPost Controller : loadPost() // Post ID from Route : ', post_id);
+        }
+
+        // Post ID passed by Post Object
+        else if( !_.isUndefined($scope.post.ID) && $scope.post.ID > 0 ){
             var post_id = $scope.post.ID;
+            $log.debug('editPost Controller : loadPost() // Post ID from Post Object : ', post_id);
         }
         
-        $log.debug('editPost Controller : load_post(post_id) // Post ID : ', post_id);
-
         // GET THE POST DATA
         $pwData.pw_get_post_edit( post_id ).then(
             // Success
             function(response) {
                 $log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
+                $scope.mode = "edit";
 
                 // FILTER FOR INPUT
                 var get_post = response.data;
@@ -159,6 +167,12 @@ postworld.controller('editPost',
 
                 }
 
+                // LOCAL CALLBACK ACTION EMIT
+                // Any sibling or parent scope can listen on this action
+                $scope.$emit('postLoaded', get_post);
+
+                // Set the Route
+                $location.path('/edit/' + get_post.ID);
 
                 // SET DATA INTO THE SCOPE
                 $scope.post = get_post;
@@ -172,24 +186,6 @@ postworld.controller('editPost',
             }
         );  
     }
-
-    // SET POST CONTENT
-    // Function checks to see if tinyMCE has initialized yet
-    // If not, it sets a timeout and runs the function again
-    $scope.set_post_content = function( post_content ){
-        $timeout(function() {
-            if( typeof tinyMCE !== 'undefined' ){
-                if( typeof tinyMCE.get('post_content') !== 'undefined' ){
-                    tinyMCE.get('post_content').setContent( post_content );
-                }
-                else
-                    $scope.set_post_content( post_content );
-            }
-            else
-                    $scope.set_post_content( post_content );
-        }, 250 );
-    };
-    
 
     /////----- SAVE POST FUNCTION -----//////
     $scope.savePost = function(pwData){
@@ -231,15 +227,18 @@ postworld.controller('editPost',
                         $timeout(function() {
                           $scope.status = "done";
                         }, 4000);
-                        // If created a new post
-                        if ( $scope.mode == "new" )
-                            // Forward to edit page
-                            $location.path('/edit/' + post_id);
-                        else
-                            // Otherwise, reload the data from server
-                            $scope.load_post();
-                        // For Quick Edit Mode - emit to parent successful update
+
+                        // LOAD POST
+                        $scope.loadPost( post_id );
+
+                        // ACTION BROADCAST
+                        // For Quick Edit Mode - broadcast to children successful update
                         $rootScope.$broadcast('postUpdated', post_id);
+
+                        // ACTION EMIT
+                        // Any sibling or parent scope can listen on this action
+                        $scope.$emit('postUpdated', post_id);
+
                     }
                     else{
                         // ERROR
@@ -268,10 +267,26 @@ postworld.controller('editPost',
     /////----- END SAVE POST FUNCTION -----//////
 
     ///// CLEAR POST DATA /////
-    $scope.clear_post = function(){
-        //$scope.post = {};
-        $scope.post = $scope.default_post;
+    $scope.newPost = function( post_object ){
+        
+        // Set the new mode
+        $scope.mode = "new";
 
+        // Merge the given post data with the default post
+        if( typeof post_object === 'object' ){
+            var post = $scope.default_post;
+
+            // Over-write inputs over default post
+            angular.forEach( post_object, function(value, key){
+                post[key] = value;
+            });
+            $scope.post = post;
+
+        } else{
+            $scope.post = $scope.default_post;
+        }
+
+        // Clear TinyMCE
         $timeout(function() {
             if( typeof tinyMCE !== 'undefined' ){
                 if( typeof tinyMCE.get('post_content') !== 'undefined' ){
@@ -281,7 +296,15 @@ postworld.controller('editPost',
             }
         }, 1);
 
+        // Set the Route
+        $location.path('/new/' + $scope.post.post_type);
+
     }
+
+    // TRASH POST
+    $scope.trashPost = function(){
+        $pwQuickEdit.trashPost( $scope.post.ID, $scope );
+    }; 
 
     ///// GET POST OBJECT /////
     $scope.pw_get_post_object = function(){
@@ -299,6 +322,24 @@ postworld.controller('editPost',
         post = $pwEditPostFilters.sortTaxTermsInput( post, $scope.tax_terms, 'tax_input' );
         return post;   
     }
+
+
+    ///// SET POST CONTENT /////
+    // Function checks to see if tinyMCE has initialized yet
+    // If not, it sets a timeout and runs the function again
+    $scope.set_post_content = function( post_content ){
+        $timeout(function() {
+            if( typeof tinyMCE !== 'undefined' ){
+                if( typeof tinyMCE.get('post_content') !== 'undefined' ){
+                    tinyMCE.get('post_content').setContent( post_content );
+                }
+                else
+                    $scope.set_post_content( post_content );
+            }
+            else
+                    $scope.set_post_content( post_content );
+        }, 250 );
+    };
 
 
     ///// LOAD IN DATA /////
@@ -351,7 +392,6 @@ postworld.controller('editPost',
             $scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
         });
 
-
     // WATCH : POST TYPE
     $scope.$watch( "post.post_type",
         function (){
@@ -373,9 +413,7 @@ postworld.controller('editPost',
                     $scope.post.post_status = key;
                 });
 
-
         }, 1 );
-
 
     ////////// FEATURED IMAGE //////////
     // Media Upload Window
@@ -452,7 +490,8 @@ postworld.controller('eventInput',
         $scope.post.post_meta.event_end_date_obj = new Date( );
 
     $scope.getUnixTimestamp = function( dateObject ){
-        return Math.round( dateObject.getTime() / 1000);
+        if( !_.isUndefined(dateObject) )
+            return Math.round( dateObject.getTime() / 1000);
     };
 
     $scope.setUnixTimestamps = function(){
@@ -893,14 +932,19 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                     // Success
                     function(response) {
                         if (response.status==200) {
-                            $log.debug('Post Trashed RETURN : ',response.data);                     
-                            if ( response.data == true ){
-                                
-                                if( typeof scope != undefined ){    
+                            $log.debug('Post Trashed RETURN : ',response.data);                  
+                            if ( _.isNumber(response.data) ){
+                                var trashed_post_id = response.data;
+                                if( typeof scope != undefined ){
+                                    // SUCESSFULLY TRASHED
                                     //var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
                                     scope.post.post_status = 'trash';
+                                    // Emit Trash Event : post_id
+                                    scope.$emit('trashPost', trashed_post_id );
+                                    // Broadcast Trash Event : post_id
+                                    scope.$broadcast('trashPost', trashed_post_id );
+
                                 }
-                            
                             }
                             else{
                                 alert( "Error trashing post : " + response.data );

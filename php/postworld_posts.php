@@ -880,9 +880,9 @@ function pw_trash_post( $post_id ){
 		} else {
 			$wp_trash_post = wp_trash_post( $post_id );
 			if( $wp_trash_post == false )
-				return "Unknown error.";
+				return array( "error" => "Unknown error.");
 			else
-				return true;
+				return $post_id;
 		}
 
 	} else {
