@@ -2169,7 +2169,7 @@ __$post_view__ : *string*
 __$path_type__ : *string*
 - Options:
   - __url__ (default): Returns absolute URL string of template file
-  - __dir__ (default): Returns absolute directory path of template file
+  - __dir__ : Returns absolute directory path of template file
 
 __$string__ : *boolean* (default : *false*)
   - __true__ - Return as a string
