@@ -134,7 +134,7 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
 
     // SHOW / HIDE DEBUG LOGS IN CONSOLE
     // Comment out for development
-    $logProvider.debugEnabled(false);
+    $logProvider.debugEnabled(true);
 
 });
 

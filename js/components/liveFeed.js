@@ -269,7 +269,8 @@ postworld.controller('pwFeedController',
 					var len = response.data.feed_outline.length;
 					response.data.feed_outline = response.data.feed_outline.splice(offset,len);
 					// truncate response posts in case of existing offset for load-feed only															
-					response.data.post = response.data.post_data.splice(offset,len); 
+					response.data.post_data = response.data.post_data.splice(offset,len); 
+					$log.debug('FEED DATA : ' + pwData.feed_settings[$scope.feed].feed_id, response.data );
 					//response.data.post_data = response.data.post_data.splice(offset,len); 
 					// PHONG : replace post with post_data 					
 				}
