@@ -1659,6 +1659,60 @@ array(
 
 ------
 
+### pw_print_post( $args )
+- Injects a post into an HTML template
+- Template takes django style markup, using **h2o-php** *by speedmax*
+
+#### Parameters : __$args__
+
+__post_id__ : *integer* (required)
+- The ID of the post
+
+__template__ : *string* (required)
+- The absolute system directory path of the template to inject the post into
+
+__fields__ : *string/Array* (optional)
+- Passed to `pw_get_post()` `fields` parameter
+- Define all the fields here which will be accessable in the template
+
+__vars__ : *A_Array* (optional)
+- Can contain a series of `key/value` pairs which will be injected into the data object and accessible in the template.
+- Accessible by `{{ key.value }}` markup in the template
+
+__js_vars__ : *Array* (optional)
+- List the variables to be injected into the Javascript `$window` object for accessibility
+- The required value in most cases is : `array('post')` 
+
+#### Example Usage
+- In the context of a single post template, ie. `single.php`
+
+```php
+// Globalize Post
+global $post;
+
+// Social Media Widgets
+global $social_settings;
+$social_settings['meta']['url'] = get_permalink();
+
+// Post Settings
+$post_settings = array(
+  'post_id'   =>  $post->ID,
+  'template'  =>  get_stylesheet_directory().'/postworld/templates/posts/post-full-h2o.html',
+  'fields'    => 'all',
+  'vars'      =>  array(
+    'language'        =>  $pwSiteLanguage,
+    'social_widgets'  =>  pw_social_widgets($social_settings)
+    ),
+  'js_vars' =>  array('post'),
+  );
+
+
+```
+
+
+
+------
+
 ### pw_insert_post ( $post )
 - Extends `wp_insert_post` : http://codex.wordpress.org/Function_Reference/wp_insert_post 
 - Include additional Postworld __Post Meta__ fields as inputs
@@ -2149,8 +2203,6 @@ $print_feed_args = array(
   );
 echo pw_print_feed( $print_feed_args );
 ```
-
-
 
 ------
 
