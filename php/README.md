@@ -1697,7 +1697,7 @@ $social_settings['meta']['url'] = get_permalink();
 // Post Settings
 $post_settings = array(
   'post_id'   =>  $post->ID,
-  'template'  =>  get_stylesheet_directory().'/postworld/templates/posts/post-full-h2o.html',
+  'template'  =>  pw_get_post_template ( $post->ID, 'full-h2o', 'dir', true ),
   'fields'    => 'all',
   'vars'      =>  array(
     'language'        =>  $pwSiteLanguage,
