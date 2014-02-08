@@ -1706,6 +1706,8 @@ $post_settings = array(
   'js_vars' =>  array('post'),
   );
 
+$post_html = pw_print_post( $post_settings );
+echo $post_html;
 
 ```
 
