@@ -1099,4 +1099,54 @@ function pw_embed_content($content){
 	return preg_replace_callback('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', 'pw_embed_url', $content." ");
 }
 
+
+function pw_print_post( $args ){
+	extract($args);
+
+	global $pw_globals;
+
+	$pw_post = array();
+	$pw_post['post'] = pw_get_post( $post_id );
+
+	// Add custom input variables
+	if( isset($vars) && !empty($vars) ){
+		foreach( $vars as $key => $value ){
+			$pw_post[$key] = $value;
+		}
+	}
+
+	// H2O
+	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
+	$h2o = new h2o($template);
+	$post_html = $h2o->render($pw_post);
+
+	// Add Javascript Variables
+	if( isset( $js_vars ) && !empty( $js_vars ) ){
+
+		// Add Post
+		if( in_array( 'post', $js_vars ) ){
+			// Prepare to print to $window for AngularJS / Javascript
+			$pw_post_window = $pw_post['post'];
+
+			// Remove post_content
+			if( !empty($pw_post_window['post_content']) )
+				$pw_post_window['post_content'] = '';
+
+			// Prepare the Javascript
+			$js_var_post =	'<script type=\'text/javascript\'>';
+			$js_var_post .=	'var post = ';
+			$js_var_post .=	json_encode( $pw_post_window );
+			$js_var_post .=	';</script>';
+
+			// Prepend the Javascript
+			$post_html = $js_var_post . $post_html;
+
+		}
+		
+	}
+
+	return $post_html;
+
+}
+
 ?>
