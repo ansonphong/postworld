@@ -35,13 +35,16 @@ Used to get Postworld values in the __wp_postworld_post_meta__ table
 
 __return__ : *Array*
 ```php
-	'post_id' => {{integer}}
-	'author_id'	=> {{integer}}
-	'post_class' => {{string}}
-	'link_format' => {{string}}
-	'link_url' => {{string}}
-	'post_points' => {{integer}}
-	'rank_score' => {{integer}}
+  array(
+  	'post_id' => {{integer}}
+  	'author_id'	=> {{integer}}
+  	'post_class' => {{string}}
+  	'link_format' => {{string}}
+  	'link_url' => {{string}}
+  	'post_points' => {{integer}}
+  	'rank_score' => {{integer}}
+    //...
+  )
 ```
 
 #### Usage:
@@ -62,9 +65,15 @@ All parameters, except post_id, are optional.
 __$post_id__ : *integer* (required)
 
 __$post_meta__ : *Array*
-- post_class
-- link_format
-- link_url
+- post_class : *string*
+- link_format : *string*
+- link_url : *string*
+- geo_latitude : *number*
+- geo_longitude : *number*
+- event_start : *integer*
+- event_end : *integer*
+- related_post : *integer*
+
 
 #### Usage:
 ```php
@@ -1559,9 +1568,14 @@ __WORDPRESS__
 __POSTWORLD__
 - __post_points__
 - __rank_score__
-- __link_format__
 - __post_class__
 - __link_url__
+- __link_format__
+- __geo_latitude__
+- __geo_longitude__
+- __event_start__
+- __event_end__
+- __related_post__
 
 __TAXONOMIES__
 - __taxonomy(tax_slug)[fields]__ - Returns taxonomy terms array for the post

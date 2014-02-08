@@ -71,7 +71,6 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'UnderscoreJS',
 			WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
 
-
 		// ADD GOOGLE MAPS
 		if( in_array('google-maps', $dep) ){
 			// GOOGLE MAPS
@@ -98,8 +97,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Sanitize',
 			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-sanitize.min.js');
 
-
 		// wp_enqueue_script( 'AngularJS-Animate', WP_PLUGIN_URL.'/postworld/lib/angular/angular-animate.min.js');
+
+		///// ANGULAR THIRD PARTY MODULES /////
 		
 		// ANGULAR UI UTILITIES
 		wp_enqueue_script( 'AngularJS-UI-Utils',
@@ -113,14 +113,26 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS-UI-Bootstrap',
 		//	plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-			plugins_url().'/postworld/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.10.0.min.js', $angularDep );
+			plugins_url().'/postworld/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.10.0.min.js' );
+
 
 		// ANGULAR STRAP : BOOTSTRAP
-		wp_enqueue_script( 	'AngularJS-AngularStrap',
-			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
+		//wp_enqueue_script( 'AngularJS-Strap',
+		//	WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
+
+		wp_enqueue_script( 'AngularJS-Strap',
+			plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.js', $angularDep );
+
+		wp_enqueue_script( 'AngularJS-Strap-Templates',
+			plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.tpl.js', $angularDep );
 
 
-		// POSTWORLD APP		
+		// ANGULAR : TIMER
+		wp_enqueue_script( 	'AngularJS-Timer',
+			WP_PLUGIN_URL.'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
+
+
+		/////// POSTWORLD APP /////	
 		wp_enqueue_script( 	'pw-app-JS',
 			WP_PLUGIN_URL.'/postworld/js/app.js', $angularDep );
 

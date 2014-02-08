@@ -154,6 +154,8 @@ function extract_bracket_values ( $input, $force_array = true ){
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
 
+	$match=array();
+
 	// Extract contents of (parenthesis)
 	preg_match('#\[(.*?)\]#', $input, $match);
 

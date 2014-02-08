@@ -28,6 +28,9 @@ module.exports = function(grunt) {
             // Angular Utilities
             'lib/angular-ui-utils/angular-ui-utils.min.js',
             
+            // Angular Timer
+            'lib/angular-timer/timer.js',
+
             // Angular Extensions
           	'lib/'+angular_version+'/angular-sanitize.min.js',
           	'lib/'+angular_version+'/angular-route.min.js',
@@ -35,7 +38,6 @@ module.exports = function(grunt) {
 
             // Angular Google Maps
             //'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
-
 
           	///// Postworld /////
           	'js/*.js',

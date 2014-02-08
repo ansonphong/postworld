@@ -80,4 +80,13 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
         }
     });
 
+    // TIME FUNCTIONS
+    $scope.jsDateToTimestamp = function(jsDate){
+        var dateObject = new Date(jsDate);
+
+        return Date.parse(dateObject);
+
+    }
+
+
 };

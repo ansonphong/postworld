@@ -53,6 +53,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	///// SETUP VARIABLES /////
 	global $template_paths;
+	global $pw_post_meta_fields;
 
 	$edit_fields = array(
 		'ID',
@@ -78,6 +79,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_meta(all)',
 		'post_parent',
 		);
+
 
 	////////// FIELDS MODEL //////////
 	$preview_fields =	array(
@@ -123,7 +125,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	// All Fields
 	if ($fields == 'all'){
-		$fields = array_merge($preview_fields, $detail_fields, $viewer_fields);
+		$fields = array_merge($preview_fields, $detail_fields, $viewer_fields, $pw_post_meta_fields);
 	}
 
 	// Preview Fields
@@ -132,7 +134,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	// Edit Fields
 	else if ($fields == 'edit'){
-		$fields = $edit_fields;
+		$fields = array_merge($edit_fields, $pw_post_meta_fields);
 		$mode = 'edit';
 	}
 
@@ -652,14 +654,14 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	 
 	* */
 	//return json_encode($postarr);
-	$post_ID = wp_insert_post( $postarr, $wp_error );
+	$post_id = wp_insert_post( $postarr, $wp_error );
 	
-	if(gettype($post_ID) == 'integer'){ // successful
+	if(gettype($post_id) == 'integer'){ // successful
 
 		///// ADD TERMS / TAXONOMIES //////
 		if(isset($postarr["tax_input"])){
 			foreach ( $postarr["tax_input"] as $taxonomy => $terms) {
-				wp_set_object_terms( $post_ID, $terms, $taxonomy, false );
+				wp_set_object_terms( $post_id, $terms, $taxonomy, false );
 			}
 		}
 	
@@ -672,56 +674,42 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 					$meta_value = json_encode($meta_value);
 
 				// CHECK FOR EXISTING VALUE
-				$get_meta_value = get_post_meta( $post_ID, $meta_key, true );
+				$get_meta_value = get_post_meta( $post_id, $meta_key, true );
 
 				if ( !empty( $get_meta_value ) )
 					// UPDATE META
-					update_post_meta($post_ID, $meta_key, $meta_value);
+					update_post_meta($post_id, $meta_key, $meta_value);
 				else
 					// ADD META
-					add_post_meta($post_ID, $meta_key, $meta_value, true);
+					add_post_meta($post_id, $meta_key, $meta_value, true);
 			
 			}
 		}
 
 
-		///// ADD POSTWORLD FIELDS //////
-		if(isset($postarr["post_class"]) || isset($postarr["link_format"])|| isset($postarr["link_url"]))	{
-			global $wpdb;
-			$wpdb -> show_errors();
-			
-			add_record_to_post_meta($post_ID);
+		///// ADD POSTWORLD META FIELDS //////
 
-			$query = "update $wpdb->pw_prefix"."post_meta set ";
-			 $insertComma = FALSE;
-			if(isset($postarr["post_class"])){
-				$query.="post_class='".$postarr["post_class"]."'";
-				 $insertComma= TRUE;
-			} 
-			if(isset($postarr["link_format"])){
-				if($insertComma === TRUE) $query.=" , ";
-				$query.="link_format='".$postarr["link_format"]."'";
-				 $insertComma= TRUE;
-			} 
-			if(isset($postarr["link_url"])){
-				if($insertComma === TRUE) $query.=" , ";
-				$query.="link_url='".$postarr["link_url"]."'";
-				 $insertComma= TRUE;
-			} 
-			if(isset($postarr["post_author"])){
-				if($insertComma === TRUE) $query.=" , ";
-				$query.="author_id=".$postarr["post_author"];
-				 $insertComma= TRUE;
-			} 
-		 	if($insertComma === FALSE ){}
-			else{
-				$query.=" where post_id=".$post_ID ;
-				//echo $query;
- 				$wpdb->query($query);
-				
+			// Set the Post Author to Current User ID if not found
+			if( !isset($postarr['post_author']) )
+				$postarr['post_author'] = get_current_user_id();
+
+
+			// Define which fields are Postworld Post Meta
+			global $pw_post_meta_fields;
+			
+			// Check to see if the post array has any Postworld Post Meta Field Values
+			$has_pw_post_meta_fields = false;
+			foreach( $postarr as $key => $value ){
+				if( in_array( $key, $pw_post_meta_fields) && !empty($value) ){
+					$has_pw_post_meta_fields = true;
+					break;
+				}
 			}
 
-		}
+			// If it has Postworld Post Meta, Set it
+			if( $has_pw_post_meta_fields ){
+				pw_set_post_meta( $post_id, $postarr );
+			} 
 
 
 		///// AUTHOR NAME/SLUG FIELD /////
@@ -729,16 +717,13 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 		if( isset($postarr["post_author_name"]) ){
 			$user = get_user_by( 'slug', $postarr["post_author_name"] );
 			if( isset($user->data->ID) && current_user_can('edit_others_posts') ){
-				wp_update_post( array( "ID" => $post_ID, "post_author" => $user->data->ID ) );
+				wp_update_post( array( "ID" => $post_id, "post_author" => $user->data->ID ) );
 			}
 		}
 		
-
-
 	}
 	
-
-	return $post_ID;
+	return $post_id;
 
 }
 
