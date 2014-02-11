@@ -201,7 +201,7 @@ function postworld_includes( $args ){
 
 		// WORDPRESS DIRECTIVES
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
-			WP_PLUGIN_URL.'/postworld/js/wp-directives/wpMediaLibrary.js', $angularDep );
+			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
 
 	}
 
