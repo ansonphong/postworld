@@ -452,15 +452,15 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					elseif( $image_handle == 'all' ) {
 						$registered_images = registered_images_obj();
 
+						$post_data['image'] = array();
 						foreach( $registered_images as $image_handle => $image_attributes ){
 							$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_handle );
 							$registered_images[$image_handle]["url"] = $image_src[0];
 							$registered_images[$image_handle]["width"] = $image_src[1];
 							$registered_images[$image_handle]["height"] = $image_src[2];
 							$registered_images[$image_handle]["hard_crop"] = $image_src[3];
+							$post_data['image'] = array_merge( $post_data['image'], $registered_images );
 						}
-
-						$post_data['image'] = array_merge( $post_data['image'], $registered_images );
 					}
 
 					// HANDLE : Get registered image

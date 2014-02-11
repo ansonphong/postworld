@@ -41,7 +41,10 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 			mediaDefaultTab:'@mediaDefaultTab',
 			mediaMultiple:'@mediaMultiple',
 			mediaType:'@mediaType',
+			mediaId:'@mediaId',
+
 			mediaCallback:'@mediaCallback',
+			mediaParentCallback:'@mediaParentCallback',
 
 			mediaClick:'&'
 		},
@@ -66,8 +69,8 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 }]);
 
 postworld.controller( 'wpMediaLibraryCtrl',
-	[ '$scope', '$window', '$timeout',
-	function( $scope, $window, $timeout ) {
+	[ '$scope', '$window', '$timeout', 'pwData',
+	function( $scope, $window, $timeout, $pwData ) {
 
 	///// SERVICE FUNCTIONS /////
 	$scope.stringToBoolean = function(string){
@@ -97,7 +100,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			var mediaTabs = ( !_.isUndefined($scope.mediaTabs) ) ? $scope.mediaTabs : "upload, library" ;
 			var mediaType = ( !_.isUndefined($scope.mediaType) ) ? $scope.mediaType : "" ;
 			var mediaMultiple = $scope.stringToBoolean($scope.mediaMultiple);
-
+			var mediaId = ( !_.isUndefined($scope.mediaId) ) ? $scope.mediaId : "" ;
 			// Default Tab : uploadFiles
 			//var mediaDefaultTab =
 			//	( !_.isUndefined($scope.mediaDefaultTab) && $scope.mediaDefaultTab == 'upload' ) ?
@@ -105,6 +108,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 			// Define the Media Library Frame
 			var mediaLibraryFrame = {
+				id: mediaId,
 				title: mediaTitle,
 				button: {
 				  text: mediaButton,
@@ -115,7 +119,6 @@ postworld.controller( 'wpMediaLibraryCtrl',
 				multiple: mediaMultiple,
 				tabs: mediaTabs,
 			  };
-
 
 			/*
 			file_frame = wp.media.frames.file_frame = wp.media({
@@ -137,6 +140,20 @@ postworld.controller( 'wpMediaLibraryCtrl',
 				tabs: 'upload, library', // Just added for example
 				returned_image_size: 'thumbnail' // Just added for example
 			});
+
+		 	id: 'mystate',
+	        title: 'my title',
+	        priority:   20,
+	        toolbar:    'select',
+	        filterable: 'uploaded',
+	        library:    media.query( file_frame.options.library ),
+	        multiple:   file_frame.options.multiple ? 'reset' : false,
+	        editable:   true,
+	        displayUserSettings: false,
+	        displaySettings: true,
+	        allowLocalEdits: true,
+
+
 			*/
 
 		// If the media frame already exists, reopen it.
@@ -160,20 +177,63 @@ postworld.controller( 'wpMediaLibraryCtrl',
 	};
 
 	
-	$scope.setSelectedMedia = function(selectedMedia){
+	$scope.setSelectedMedia = function( selectedMedia ){
 		
 		// alert( JSON.stringify( selectedMedia ) );
 		//$scope.$parent.selectedMedia = selectedMedia;
 
-		// Run Specified Callback
+		// Run Specified Callback in Local Scope
 		if( !_.isUndefined( $scope.mediaCallback ) ){
-			var callback = $scope.mediaCallback;
-			$scope.$parent[callback](selectedMedia);
+			var mediaCallback = $scope.mediaCallback;
+			$scope[mediaCallback](selectedMedia);
 		}
-		// If single, return just first image item
+
+		// Run Specified Callback in Parent Scope
+		if( !_.isUndefined( $scope.mediaParentCallback ) ){
+			var mediaParentCallback = $scope.mediaParentCallback;
+			$scope.$parent[mediaParentCallback](selectedMedia);
+		}
 
 		// If multiple, return an array
 		$scope.$apply();
+	}
+
+	$scope.setPostImage = function( selectedMedia ){
+
+		//alert( 'setPostImage' );
+
+		// Get the first item from the array
+
+		// Set it as the post image
+
+		// If successful, replace the post.image object with the newly queried one
+
+		var post_id = $scope.$parent.post.ID;
+		var thumbnail_id = selectedMedia.first().id;
+
+		//alert(JSON.stringify( selectedMedia.first().id ));
+
+		var args = {
+			'post_id': post_id,
+			'thumbnail_id': thumbnail_id,
+			'return_fields': ['ID','image(all)'],
+			//'return': 'image( large, 300, 300, true )' // id / all / ID of registeded image size / parameters of image - passed to pw_get_post 
+		};
+
+		$pwData.set_post_image( args ).then(
+			// Success
+			function(response) {    
+				// Replace the parent image object with the new image
+				$scope.$parent.post.image = response.data.image;
+				
+			},
+			// Failure
+			function(response) {
+				//$scope.movements = [{post_title:"Movements not loaded.", ID:"0"}];
+			}
+		);
+		
+
 	}
 
 

@@ -354,5 +354,12 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			return this.wp_ajax('user_share_report_outgoing',params);
 		},
 
+		set_post_image: function(args) {
+			$log.debug('pwData.set_post_image',args);
+			var params = {args:args};
+			return this.wp_ajax('set_post_image',params);
+		},
+
+
    }; // END OF pwData return value
 });
