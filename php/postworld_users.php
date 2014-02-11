@@ -665,11 +665,11 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 	 error - If error */
 	//echo ($post_id);
 
+	 $switch = pw_switch_value($switch);
 
 	if (is_null($post_id)) {
 		global $post;
 		$post_id = $post -> ID;
-
 	}
 
 	if (is_null($user_id)) {
@@ -681,13 +681,12 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 	
 	//print_r($relashionship_db_array);
 	if ($relashionship_db) {
-		if ($switch) {
+		if ($switch == 'on') {
 			if (!in_array($post_id, $relashionship_db_array[$relationship])) {
 				$relashionship_db_array[$relationship][] = $post_id;
 				update_post_relationship($user_id, $relashionship_db_array);
 				//echo ($relationship);
 				if ($relationship == 'favorites'){
-					//echo "addinggggggggggggggggg";	
 					add_favorite($post_id, $user_id);
 				}
 			}
