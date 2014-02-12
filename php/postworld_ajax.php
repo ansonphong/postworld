@@ -2,9 +2,34 @@
 
 /* 	WP Ajax Tips
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
-  
 */
 
+
+//---------- PW QUERY ----------//
+function pw_set_post_image_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	// Set the thumbnail
+	$set_post_thumbnail = set_post_thumbnail( $params['post_id'], $params['thumbnail_id'] );
+
+	// Return 
+	if( $set_post_thumbnail ){
+		$response_data = pw_get_post( $params['post_id'], $params['return_fields'] );	
+	} else {
+		$response_data = false;
+	}
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_pw_set_post_image_ajax", "set_post_image_ajax");
+add_action("wp_ajax_set_post_image", "pw_set_post_image_ajax");
 
 
 //---------- PW QUERY ----------//

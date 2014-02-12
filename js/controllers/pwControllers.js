@@ -80,4 +80,31 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
         }
     });
 
+    ///// TIME FUNCTIONS /////
+    $scope.jsDateToTimestamp = function(jsDate){
+        var dateObject = new Date(jsDate);
+
+        return Date.parse(dateObject);
+
+    }
+
+
+    ///// IMAGE FUNCTIONS /////
+    $scope.backgroundImage = function( imageHandle, properties ){
+
+        // Set the Image URL
+        var imageUrl = $scope.post.image[imageHandle].url;
+        var style = { 'background-image': "url(" + imageUrl + ")" };
+
+        // Add additional properties
+        if( !_.isUndefined( properties ) ){
+            angular.forEach( properties, function(value, key){
+                style[key] = value;
+            });
+        }
+
+        return style;
+    }
+
+
 };

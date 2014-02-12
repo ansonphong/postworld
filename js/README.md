@@ -228,6 +228,83 @@ __return__ : *Object*
 
 ------
 
+### wp-media-library *[ directive ]*
+- For use on Buttons and clickable items
+- Activates the Wordpress Media Library / Uploader, and returns selected images to callback function(s)
+
+#### Attributes
+__media-id__ : *string* (optional)
+- Sets an ID on the media window for targetted CSS styling
+
+__media-type__ : *string* (optional)
+- Select which media type mime type to filter by
+- Options:
+  + __image__
+  + ...
+
+__media-title__ : *string* (optional)
+- Sets the title which appears at the top of the media window
+
+__media-button__ : *string* (optional)
+- Sets the text which appears on the select button
+
+__media-default-tab__ : *string* (optional) __IN-OP?__
+- Sets the default tab which is selected
+- Options:
+  + __upload__
+  + ...
+
+__media-tabs__ : *string* (optional)
+- Sets the tabs are available
+- Options:
+  + __upload__
+  + __library__
+
+__media-multiple__ : *boolean* (optional)
+- Sets if multiple media files are selected / returned
+
+__media-callback__ : *string* (optional)
+- Calls a local callback in the scope of the directive
+- Available options:
+  + __setPostImage__ - Replaces the `post.image` object with the new image after selected
+
+__media-parent-callback__ : *string* (optional)
+- Calls a callback in the parent scope of the directive
+- Provides one argument of the media array returned from the media window
+- Value is the name of the function in the parent scope
+
+__media-model__ : *string* (optional)
+- The name of an object in the parent scope
+- The array returned from the media window is populated into this object model
+
+#### Usage
+``` html
+<button
+      wp-media-library
+      media-id="setImage"
+      media-type="image"
+      media-title="Select a Cover Image"
+      media-button="Set Cover Image"
+      media-default-tab="upload"
+      media-tabs="upload, library"
+      media-multiple="false"
+      media-callback="setPostImage"
+      media-parent-callback="localSetPostImage"
+      media-model="thumbnailImage">
+      Upload Image
+    </button>
+```
+
+#### Requirements
+- The following line of PHP code must be on the page somewhere for this directive to work
+
+```php
+wp_enqueue_media();
+```
+
+
+-----
+
 ### o-embed *[ directive ]*
 - Populates the element with the embed code for a given media URL
 

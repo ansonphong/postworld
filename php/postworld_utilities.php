@@ -154,6 +154,8 @@ function extract_bracket_values ( $input, $force_array = true ){
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
 
+	$match=array();
+
 	// Extract contents of (parenthesis)
 	preg_match('#\[(.*?)\]#', $input, $match);
 
@@ -350,22 +352,117 @@ function crop_string_to_word( $string, $max_chars = 200 ){
 }
 
 function extract_array_from_object( $object, $field_key ){
-		// Extracts one series of field values
-		// From an array of associative array/objects
-		// Into a flat array
+	// Extracts one series of field values
+	// From an array of associative array/objects
+	// Into a flat array
 
-		// INPUT : $ids = [{"ID":"6427"},{"ID":"8979"},{"ID":"1265"}...]
-		// FUNCTION : extract_array_from_object($ids, "ID")
-		// OUTPUT : ["6427","8979","1265"...]
+	// INPUT : $ids = [{"ID":"6427"},{"ID":"8979"},{"ID":"1265"}...]
+	// FUNCTION : extract_array_from_object($ids, "ID")
+	// OUTPUT : ["6427","8979","1265"...]
 
-		$array = array();
-		// Convert into ARRAY_A
-		$object = json_decode(json_encode($object), true);
-		foreach( $object as $item ){
-			array_push( $array, $item[$field_key]  );
-		}
-		return $array;
+	$array = array();
+	// Convert into ARRAY_A
+	$object = json_decode(json_encode($object), true);
+	foreach( $object as $item ){
+		array_push( $array, $item[$field_key]  );
+	}
+	return $array;
+}
+
+
+function pw_type_cast( $value, $type ){
+
+	// Type Cast
+	if( $type == 'int' || $type == 'integer' )
+		$value = (int) $value;
+	else if( $type == 'float' || $type == 'double' || $type == 'real' )
+		$value = (boolean) $value;
+	else if( $type == 'string' )
+		$value = (string) $value;
+	else if( $type == 'boolean' || $type == 'bool' )
+		$value = (boolean) $value;
+	else if( $type == 'object' )
+		$value = (object) $value;
+
+	return $value;
+}
+
+
+function pw_switch_value( $switch ){
+	// Convert 1/true to 'on', 0/false to 'off'
+	$switch = (string) $switch;
+
+	// Homogonize Switch Variable
+	if( $switch == 'on' || $switch == '1'|| $switch == 'true' )
+		$switch = 'on';
+	else if( $switch == 'off' || $switch == '0' || $switch == 'false' )
+		$switch = 'off';
+
+	return $switch;
+
+};
+
+function pw_toggle_array( $args ){
+	// Takes in an
+	/*
+		$args = array()
+			'input'   => JSON string or ARRAY,
+			'format'  => JSON / ARRAY,
+			'value'	  => // which value to add or remove from the input
+			'switch'  => // force the value on or off, if not set will toggle
+			'type'    => // type (if any) which to force the value, ie. integer, string, etc.
+			);
+	*/
+
+	extract($args);
+	
+	// Convert 1/true to 'on', 0/false to 'off'
+	$switch = pw_switch_value( $switch );
+	
+
+	// Decode JSON
+	if( $format == 'JSON' ){
+		$input = json_decode( $input, 1 );
 	}
 
+	// Type Cast
+	if( isset($type) ){
+		$value = pw_type_cast($value, $type);
+	}
+		
+	// Handle Switch
+	switch ($switch) {
+		case "on":
+			// Add $value to $input
+			if( !in_array( $value, $input ) )
+				array_push( $input, $value );
+			break;
+		case "off":
+			// Remove $value from $input
+			$new_input = array();
+			foreach ( $input as $input_item) { 
+	            if ( $input_item != $value ) { 
+	                array_push( $new_input, $input_item ); 
+	            }
+	        }
+	        $input = $new_input;
+
+			break;
+		case "toggle":
+			if( in_array( $value, $input ) )
+				$input = array_diff( $input, $value );
+			else
+				array_push( $input, $value );
+			break;
+	}
+
+	// Encode JSON
+	if( $format == 'JSON' ){
+		$input = json_encode( $input );
+	}
+
+	return $input;
+
+}
 
 ?>
