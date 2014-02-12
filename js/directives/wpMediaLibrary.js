@@ -68,6 +68,7 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 	};
 }]);
 
+
 postworld.controller( 'wpMediaLibraryCtrl',
 	[ '$scope', '$window', '$timeout', 'pwData',
 	function( $scope, $window, $timeout, $pwData ) {
