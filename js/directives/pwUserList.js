@@ -30,12 +30,45 @@ postworld.directive( 'pwUserList', [ function($scope){
 	};
 }]);
 
-
 postworld.controller( 'pwUserListCtrl',
 	[ '$scope', '$window', '$timeout', 'pwData',
 	function( $scope, $window, $timeout, $pwData ) {
 
 	//$scope.$parent.attend_event_users = {'test':true}; 
+
+	// EVENT LISTENER : 
+	// Takes broadcast / emit events from other scopes
+	// To, for instance, add or Remove a user from the List
+	$scope.$on('pwUserList', function( event, args ) { 
+		/*
+			args = {
+				userListId: $scope.relationsAction,
+		    	action: action,
+		    	userId: $scope.userId(),
+		    	postId: $scope.eventId()
+	    	};
+    	*/
+		//alert( JSON.stringify( args ) );
+	
+		if( args.action == 'addUser' ){
+			alert( "add user : " + args.userId );
+
+			// Get userdata for that new user being added
+			// Prepend the data to the users array, so they (the new user) appears at the top
+
+		}
+
+		if( args.action == 'removeUser' ){
+			alert( "remove user : " + args.userId );
+
+			// Get list ID model - remove ID
+			// Get user data model - walk it and find the specified user ID, remove it
+
+		}
+
+
+	});
+
 
 	$scope.getUserDatas = function(){
 		

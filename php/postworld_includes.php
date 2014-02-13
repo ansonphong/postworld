@@ -197,7 +197,7 @@ function postworld_includes( $args ){
 			WP_PLUGIN_URL.'/postworld/js/directives/pwDirectives.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-ListUsers',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwListUsers.js', $angularDep );
+			WP_PLUGIN_URL.'/postworld/js/directives/pwUserList.js', $angularDep );
 
 		// COMPONENTS
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
