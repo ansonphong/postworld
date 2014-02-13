@@ -267,6 +267,25 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		}
 
+		////////// AUTHOR DATA //////////
+
+		// Extract author() fields
+		$relationships = extract_linear_fields( $fields, 'is_relationship', true );
+
+		if ( !empty($relationships) ){
+			if( !isset($post_data['viewer']) )
+				$post_data['viewer'] = array();
+
+			//$post_data['viewer']['test'] = "wow";
+			
+			foreach ($relationships as $relationship ) {
+
+				$post_data['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
+			
+			}
+
+		}
+
 	////////// DATE & TIME //////////
 
 		// Post Time Ago
@@ -1091,7 +1110,7 @@ function pw_print_post( $args ){
 	global $pw_globals;
 
 	$pw_post = array();
-	$pw_post['post'] = pw_get_post( $post_id );
+	$pw_post['post'] = pw_get_post( $post_id, $fields );
 
 	// Add custom input variables
 	if( isset($vars) && !empty($vars) ){

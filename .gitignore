@@ -3,6 +3,11 @@
 wp-config.php
 .htaccess
 
+
+# Postworld #
+#############
+deploy/pwSiteGlobals.js
+
 # Compiled source #
 ###################
 *.com

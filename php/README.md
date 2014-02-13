@@ -1441,6 +1441,17 @@ __return__ : *boolean*
 
 ------
 
+### is_post_relationship( *$post_relationship, [$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for the specified post relationship
+
+``` php
+  get_post_relationship( $post_relationship, $post_id, $user_id )
+```
+
+__return__ : *boolean*
+
+------
+
 __USER LOCATION__
 
 ------

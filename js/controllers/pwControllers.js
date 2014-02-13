@@ -88,6 +88,7 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
 
     }
 
+    
 
     ///// IMAGE FUNCTIONS /////
     $scope.backgroundImage = function( imageHandle, properties ){
@@ -104,6 +105,13 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
         }
 
         return style;
+    }
+
+
+    ///// SET ACTIVE CLASS /////
+    $scope.setActiveClass = function( boolean ){
+        //alert('test');
+        return ( boolean ) ? "active" : "";
     }
 
 

@@ -159,9 +159,6 @@ function pw_get_userdata($user_id, $fields = false) {
 	}
 
 
-
-
-
 	// AVATAR FIELDS
 	$avatars_object = get_avatar_sizes($user_id, $fields);
 	if ( !empty($avatars_object) )
@@ -449,6 +446,24 @@ function is_view_later($post_id = null, $user_id = null) {
 
 	return get_post_relationship('view_later', $post_id, $user_id);
 
+}
+
+function is_post_relationship( $post_relationship, $post_id = null, $user_id = null) {
+	/*
+	 Use get_post_relationship() method to return the post relationship status for $post_relationship
+	 return : boolean
+	 */
+
+	if (is_null($post_id)) {
+		global $post;
+		$post_id = $post -> ID;
+	}
+
+	if (is_null($user_id)) {
+		$user_id = get_current_user_id();
+	}
+
+	return get_post_relationship( $post_relationship, $post_id, $user_id);
 }
 
 function set_viewed($switch=TRUE, $post_id = null, $user_id = null) {
@@ -817,13 +832,21 @@ function get_post_relationship( $relationship, $post_id, $user_id) {
 		 )*/
 
 		$relationship_array = (array) json_decode($relationship_array);
-		// print_r($relationship_array);
+
 		if ($relationship != 'all') {
-			if (in_array($post_id, $relationship_array[$relationship])) {
+
+			// If that relationship object doesn't exist
+			if( !isset($relationship_array[$relationship]) )
+				return FALSE;
+
+			// If it exists, test it
+			if ( in_array( $post_id, $relationship_array[$relationship] )) {
 				return TRUE;
 			} else
 				return FALSE;
-		}// not all
+		}
+
+		// ALL
 		else {
 			$output = array();
 			if (in_array($post_id, $relationship_array['viewed']))
