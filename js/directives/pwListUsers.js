@@ -6,10 +6,10 @@
  |_|                                                        
 ///////////////////////// POST MEDIA LIBRARY DIRECTIVE ////////////////////////*/
 
-postworld.directive( 'pwListUsers', [ function($scope){
+postworld.directive( 'pwUserList', [ function($scope){
 	return {
 		restrict: 'AE',
-		controller: 'pwListUsersCtrl',
+		controller: 'pwUserListCtrl',
 		scope: {
 			//userQuery:'@userQuery', // INOP
 			userFields:'@userFields',
@@ -31,7 +31,7 @@ postworld.directive( 'pwListUsers', [ function($scope){
 }]);
 
 
-postworld.controller( 'pwListUsersCtrl',
+postworld.controller( 'pwUserListCtrl',
 	[ '$scope', '$window', '$timeout', 'pwData',
 	function( $scope, $window, $timeout, $pwData ) {
 
