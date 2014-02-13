@@ -5,7 +5,28 @@
 */
 
 
-//---------- PW QUERY ----------//
+//---------- PW GET USER DATAS ----------//
+function pw_get_userdatas_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_userdatas( $user_ids,  $fields );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_pw_set_post_image_ajax", "set_post_image_ajax");
+add_action("wp_ajax_pw_get_userdatas", "pw_get_userdatas_ajax");
+
+
+
+
+//---------- PW SET POST IMAGE ----------//
 function pw_set_post_image_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];

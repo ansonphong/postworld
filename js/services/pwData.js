@@ -353,11 +353,15 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('user_share_report_outgoing',params);
 		},
-
 		set_post_image: function(args) {
 			$log.debug('pwData.set_post_image',args);
 			var params = {args:args};
 			return this.wp_ajax('set_post_image',params);
+		},
+		get_userdatas: function(args) {
+			$log.debug('pwData.get_userdatas',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_userdatas',params);
 		},
 
 

@@ -226,6 +226,34 @@ __return__ : *Object*
 
 ## Directives
 
+### pw-list-users  *[ directive ]*
+- Loads an object into the scope which is an array of user data
+
+#### Attributes
+
+__user-fields__ : *Array*
+- Fields to pass to the `pw_get_userdata` fields parameter
+- Example:
+  + {'user_nicename', 'display_name' }
+
+__user-ids__ : *Array*
+- Reference to an Array of user IDs
+
+__users-model__
+- The model in scope where to return the data from `pw_get_userdata`
+
+__users-query__ : *Array* (IN-OP)
+- Query for users to auto-populate
+- Over-ridden by `user-ids` attribute
+
+#### Scope Methods
+
+### __getUsers( *userIds* )__
+- Gets the user data for the array of supplied User IDs
+- Gets the attribute `user-fields` fields
+- Places the returned array in `user-model` 
+
+
 ------
 
 ### wp-media-library *[ directive ]*
@@ -390,7 +418,7 @@ __feed_query__ : *string / object*
 
 
 ####Usage:
-````javascript
+``` javascript
 feed_settings['feed_id'] = {
      preload: 3,
      load_increment : 10,
@@ -400,10 +428,11 @@ feed_settings['feed_id'] = {
           current : 'detail',
           options : [ 'list', 'detail', 'grid' ],
      }
-     feed_query : {…}
+     feed_query : {}
 
 }
 ```
+
 ```html
 <div live-feed="feed_id"></div> 
 ```

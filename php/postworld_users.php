@@ -159,9 +159,6 @@ function pw_get_userdata($user_id, $fields = false) {
 	}
 
 
-
-
-
 	// AVATAR FIELDS
 	$avatars_object = get_avatar_sizes($user_id, $fields);
 	if ( !empty($avatars_object) )
