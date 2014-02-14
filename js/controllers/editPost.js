@@ -153,8 +153,8 @@ postworld.controller('editPost',
                 ///// POST META /////
                 if ( !_.isUndefined( get_post['post_meta'] ) ){
                     
-                    // Deserialize JSON
-                    var parseJsonMetaFields = ['geocode', 'location_obj'];
+                    // Deserialize Known JSON Fields
+                    var parseJsonMetaFields = ['geocode', 'location_obj', 'related_post'];
                     angular.forEach( get_post.post_meta , function(value, key){
                         if( $ext.isInArray(key, parseJsonMetaFields) )
                             get_post.post_meta[key] = angular.fromJson(value);
