@@ -363,6 +363,11 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('pw_get_userdatas',params);
 		},
+		get_userdata: function(args) {
+			$log.debug('pwData.get_userdata',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_userdata',params);
+		},
 
 
    }; // END OF pwData return value

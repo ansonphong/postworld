@@ -4,6 +4,24 @@
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 */
 
+//---------- PW GET USER DATA ----------//
+function pw_get_userdata_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_userdata( $user_id,  $fields ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_get_userdata", "pw_get_userdata_ajax");
+add_action("wp_ajax_pw_get_userdata", "pw_get_userdata_ajax");
+
 
 //---------- PW GET USER DATAS ----------//
 function pw_get_userdatas_ajax(){
@@ -20,7 +38,7 @@ function pw_get_userdatas_ajax(){
 	die;
 }
 
-//add_action("wp_ajax_nopriv_pw_set_post_image_ajax", "set_post_image_ajax");
+add_action("wp_ajax_nopriv_pw_get_userdatas", "pw_get_userdatas_ajax");
 add_action("wp_ajax_pw_get_userdatas", "pw_get_userdatas_ajax");
 
 

@@ -231,6 +231,10 @@ __return__ : *Object*
 
 #### Attributes
 
+__user-list-id__ : *string*
+- The unique identifier for this instance of the user list
+- Used by the `pwUserList` Event Listener to verify which list the action is being sent to
+
 __user-fields__ : *Array*
 - Fields to pass to the `pw_get_userdata` fields parameter
 - Example:
@@ -252,6 +256,33 @@ __users-query__ : *Array* (IN-OP)
 - Gets the user data for the array of supplied User IDs
 - Gets the attribute `user-fields` fields
 - Places the returned array in `user-model` 
+
+### __getUser( *userId* )__
+
+
+### __pwUserList__ : Event Listener
+- Listens for commands broadcast from rootScope or other related emit or broadcast
+
+#### Usage
+
+- Add / Remove User from List with Event Listener:
+``` javascript
+$rootScope.$broadcast( 'pwUserList', {
+    userListId: [string],     // Specify the list ID, equivilant to 
+    action: [string],         // Options : addUser / removeUser
+    userId: [integer],        // Which User ID to do the action on
+    postId: [integer]         // Which Post ID to do the action on (optional)
+  } );
+```
+
+
+
+``` javascript
+userListId: $scope.relationsAction,
+action: action,
+userId: $scope.userId(),
+postId: $scope.eventId()
+```
 
 
 ------

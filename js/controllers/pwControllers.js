@@ -91,10 +91,11 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
     
 
     ///// IMAGE FUNCTIONS /////
-    $scope.backgroundImage = function( imageHandle, properties ){
+    $scope.backgroundImage = function( imageUrl, properties ){
 
         // Set the Image URL
-        var imageUrl = $scope.post.image[imageHandle].url;
+        //var imageUrl = $scope.post.image[imageHandle].url;
+
         var style = { 'background-image': "url(" + imageUrl + ")" };
 
         // Add additional properties
@@ -103,7 +104,6 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
                 style[key] = value;
             });
         }
-
         return style;
     }
 
