@@ -114,5 +114,9 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
         return ( boolean ) ? "active" : "";
     }
 
+    $scope.gotoUrl = function( url ){
+        window.location = url;
+    };
+
 
 };

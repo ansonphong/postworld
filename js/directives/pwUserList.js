@@ -237,6 +237,8 @@ postworld.controller( 'pwUserListCtrl',
 		
 	}
 
+	
+
 
 }]);
 
