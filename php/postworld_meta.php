@@ -107,6 +107,13 @@ function pw_set_post_meta($post_id, $post_meta){
 		$insertComma = TRUE;
 	}
 
+	// RELATED POST
+	if( isset($post_meta['related_post']) ){
+		if($insertComma === TRUE) $query.=" , ";
+		$query .= "related_post='".$post_meta['related_post']."' ";
+		$insertComma = TRUE;
+	}
+
 	if( $insertComma == FALSE ){
 		return false;
 	}

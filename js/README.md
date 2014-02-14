@@ -226,6 +226,32 @@ __return__ : *Object*
 
 ## Directives
 
+### pw-query  *[ directive ]*
+- Loads a set of posts into scope based on a query 
+
+#### Attributes
+
+__pw-query__ : *object/model path*
+- An object to pass to `pw_query`, which contains the query variables
+
+__query-results-model__ : *object/model path*
+- The array where to deposit the results of the query
+
+__query-status-model__ : *object/model path*
+- Where to update the status for the current query instance
+- Example: `loading`, `done`, etc...
+
+__query-id__ : *string*
+- An ID for the query instance
+- Generally used for triggering refreshes with `$on` actions
+
+
+//// BETTER WAY TO EMIT / UPDATE IT
+
+
+
+------
+
 ### pw-list-users  *[ directive ]*
 - Loads an object into the scope which is an array of user data
 
@@ -243,7 +269,7 @@ __user-fields__ : *Array*
 __user-ids__ : *Array*
 - Reference to an Array of user IDs
 
-__users-model__
+__users-model__ : *object/model path*
 - The model in scope where to return the data from `pw_get_userdata`
 
 __users-query__ : *Array* (IN-OP)
