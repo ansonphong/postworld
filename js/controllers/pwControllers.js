@@ -8,7 +8,7 @@
  |_|   \___/|___/\__|  \____\___/|_| |_|\__|_|  \___/|_|_|\___|_|   
                                                                     
 /*////////// ------------ POST CONTROLLER ------------ //////////*/                
-var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
+var postController = function ( $scope, $rootScope, $window, $sce, pwData, pwEditPostFilters ) {
 
     // Define backup source for 'post' object 
     if( typeof $scope.post === 'undefined' ){
@@ -22,6 +22,9 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
     // For performing theme-specific per-post operations
     if( typeof $window.pw_post_functions === "function" )
         $window.pw_post_functions($scope);
+
+    // Parse known JSON Fields from strings into JSON
+    $scope.post = pwEditPostFilters.parseKnownJsonFields( $scope.post );
 
     // Trust the post_content as HTML
     if( typeof $scope.post.post_content !== 'undefined' ){
