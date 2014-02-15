@@ -233,15 +233,15 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
             parseKnownJsonFields: function( post ){
 
                 if ( !_.isUndefined( post['post_meta'] ) ){
-                    
+
                     // Deserialize Known JSON Fields
-                    var parseJsonMetaFields = [
+                    var knownJsonFields = [
                         'geocode',
                         'location_obj',
                         'related_post'
                         ];
                     angular.forEach( post.post_meta , function(value, key){
-                        if( ext.isInArray( key, parseJsonMetaFields ) )
+                        if( ext.isInArray( key, knownJsonFields ) )
                             post.post_meta[key] = angular.fromJson(value);
                     });
 

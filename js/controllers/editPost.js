@@ -161,7 +161,8 @@ postworld.controller('editPost',
                 }
 
                 // Parse known JSON Fields from strings into JSON
-                get_post = $pwEditPostFilters.parseKnownJsonFields( get_post );
+                // UPDATE : This is now being on in pw_get_post() PHP Method
+                //get_post = $pwEditPostFilters.parseKnownJsonFields( get_post );
 
                 // LOCAL CALLBACK ACTION EMIT
                 // Any sibling or parent scope can listen on this action

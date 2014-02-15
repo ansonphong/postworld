@@ -24,7 +24,7 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData, pwEdi
         $window.pw_post_functions($scope);
 
     // Parse known JSON Fields from strings into JSON
-    $scope.post = pwEditPostFilters.parseKnownJsonFields( $scope.post );
+    //$scope.post = pwEditPostFilters.parseKnownJsonFields( $scope.post );
 
     // Trust the post_content as HTML
     if( typeof $scope.post.post_content !== 'undefined' ){

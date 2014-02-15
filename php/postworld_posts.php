@@ -320,10 +320,25 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					}
 				}
 			}
+
+			// Parse known JSON fields into objects
+			$known_JSON_fields = array(
+				'geocode',
+				'location_obj',
+				'related_post'
+				);
+			foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
+				if(
+					in_array($meta_key, $known_JSON_fields) &&
+					is_string($meta_value)
+					){
+					$post_data['post_meta'][$meta_key] = json_decode($post_data['post_meta'][$meta_key]);
+				}
+			}
+
 		}
 
-
-
+		
 	////////// AUTHOR DATA //////////
 
 		// Extract author() fields
