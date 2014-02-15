@@ -81,19 +81,6 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData ) {
     });
 
 
-    ///// MAP FUNCTIONS /////
-    // Convert location data to JSON
-    var geoObj = eval("(function(){return " + post.post_meta.geocode + ";})()");
-
-    $scope.map = {
-        address: geoObj.formatted_address,
-        center: {
-            latitude: geoObj.geometry.location.lat,
-            longitude: geoObj.geometry.location.lng
-        },
-        zoom: 8
-    };
-
     ///// TIME FUNCTIONS /////
     $scope.jsDateToTimestamp = function(jsDate){
         var dateObject = new Date(jsDate);
