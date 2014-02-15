@@ -38,6 +38,9 @@ function postworld_includes( $args ){
 	// Removed - move be added in theme
 	//wp_enqueue_style( "bootstrap-CSS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.css' );
 
+	wp_enqueue_style( "Angular-Strap-Animation", WP_PLUGIN_URL.'/postworld/lib/angular-strap-2.0.0-rc.2/css/angular-motion.min.css' );
+
+
 	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
 	wp_deregister_script('jquery');
 	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
@@ -96,6 +99,9 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'AngularJS-Sanitize',
 			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-sanitize.min.js');
+
+		wp_enqueue_script( 'AngularJS-Animate',
+			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-animate.min.js');
 
 		// wp_enqueue_script( 'AngularJS-Animate', WP_PLUGIN_URL.'/postworld/lib/angular/angular-animate.min.js');
 

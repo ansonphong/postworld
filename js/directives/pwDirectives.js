@@ -49,6 +49,17 @@ postworld.directive('selectOnClick', function() {
     });
 
 
+///// AUTO FOCUS /////
+// Automatically focuses the input field it's applied to
+postworld.directive('pwAutofocus', function($timeout) {
+    return {
+        link: function ( scope, element, attrs ) {
+            scope.$watch( attrs.ngFocus, function ( val ) {
+                $timeout( function () { element[0].focus(); } );
+            }, true);
+        }
+    };
+});
 
 
 /*
@@ -293,4 +304,7 @@ postworld.controller('pwLanguageCtrl',
     */
 
 }]);
+
+
+
 

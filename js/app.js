@@ -15,8 +15,12 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 'use strict';
 var feed_settings = [];
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', 'google-maps', 'timer', 'mgcrea.ngStrap' ]) // $strap.directives
-.config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
+var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'ngAnimate', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', 'google-maps', 'timer', 'mgcrea.ngStrap' ]) // $strap.directives
+.config(function ($routeProvider, $locationProvider, $provide, $logProvider, $modalProvider) {   
+
+    angular.extend($modalProvider.defaults, {
+        animation: 'am-flip-x'
+    });
 
     var plugin_url = jsVars.pluginurl;
 
