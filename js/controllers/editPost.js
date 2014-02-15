@@ -153,19 +153,15 @@ postworld.controller('editPost',
                 ///// POST META /////
                 if ( !_.isUndefined( get_post['post_meta'] ) ){
                     
-                    // Deserialize Known JSON Fields
-                    var parseJsonMetaFields = ['geocode', 'location_obj', 'related_post'];
-                    angular.forEach( get_post.post_meta , function(value, key){
-                        if( $ext.isInArray(key, parseJsonMetaFields) )
-                            get_post.post_meta[key] = angular.fromJson(value);
-                    });
-
                      // Emit Geocode
                      // If geocode data exists, emit it's value
                     if( !_.isUndefined( get_post.post_meta['geocode'] ) )
                         $scope.$emit('pwAddGeocode', get_post.post_meta['geocode']);
 
                 }
+
+                // Parse known JSON Fields from strings into JSON
+                get_post = $pwEditPostFilters.parseKnownJsonFields( get_post );
 
                 // LOCAL CALLBACK ACTION EMIT
                 // Any sibling or parent scope can listen on this action

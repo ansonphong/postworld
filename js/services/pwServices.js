@@ -230,6 +230,25 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
 postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log, ext, $window) {
         return {
+            parseKnownJsonFields: function( post ){
+
+                if ( !_.isUndefined( post['post_meta'] ) ){
+                    
+                    // Deserialize Known JSON Fields
+                    var parseJsonMetaFields = [
+                        'geocode',
+                        'location_obj',
+                        'related_post'
+                        ];
+                    angular.forEach( post.post_meta , function(value, key){
+                        if( ext.isInArray( key, parseJsonMetaFields ) )
+                            post.post_meta[key] = angular.fromJson(value);
+                    });
+
+                }
+                return post;
+
+            },
             sortTaxTermsInput: function(post, tax_terms, sub_object){
                 // SORT TAXONOMIES
                 // FOR EACH SELECTED TAXONOMY TERM SET
