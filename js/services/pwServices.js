@@ -303,7 +303,7 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
                     });
                     // If no matches, set default
                     if ( set == "" )
-                        return $window.pwSiteGlobals.link_format_defaults.link;
+                        return $window.pwSiteGlobals.post_options.link_format_defaults.link;
                     else
                         return set;
                 }
