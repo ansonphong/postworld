@@ -9,6 +9,33 @@
                                              
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
+
+///// PW-HREF /////
+
+postworld.directive('pwHref', function() {
+    return {
+        scope:{
+          pwHref:"=pwHref"
+        },
+        link: function(scope, element, attrs) {
+            
+            attrs.$set('href', scope.pwHref );
+
+            //var fullPathUrl = "http://.../";
+            /*
+            if(element[0].tagName === "A") {
+                attrs.$set('href',fullPathUrl + attrs.fullPath);
+            } else {
+                attrs.$set('src',fullPathUrl + attrs.fullPath);
+            }*/
+
+        },
+    }
+});
+
+
+
+
 ///// SUBMIT ON ENTER /////
 // Submit on Enter, without a real form
 postworld.directive('ngEnter', function() {
