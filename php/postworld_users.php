@@ -63,6 +63,8 @@ function pw_get_xprofile( $user_id, $fields ){
 	foreach ( $fields as $field ){
 		$field_value = xprofile_get_field_data( $field, $user_id );
 
+		$field = str_replace(' ', '_', $field);
+
 		if( isset($field_value) )
 			$xprofile[$field] = $field_value;
 
