@@ -128,6 +128,45 @@ class PW_Query extends WP_Query {
 			}
 		}
 
+		///// get past events  /////
+		if(array_key_exists('event_past',  $this->query_vars)){
+			// Get past events
+			$current_timestamp = time();
+
+			if($add_and == false){
+				$time_query .= "event_end < ".$current_timestamp;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_end < ".$current_timestamp;
+			}
+		}
+
+		///// get past events  /////
+		if(array_key_exists('event_future',  $this->query_vars)){
+			// Get past events
+			$current_timestamp = time();
+
+			if($add_and == false){
+				$time_query .= "event_start > ".$current_timestamp;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_start > ".$current_timestamp;
+			}
+		}
+
+		///// get current events  /////
+		if(array_key_exists('event_now', $this->query_vars)){
+			// Get past events
+			$current_timestamp = time();
+
+			if($add_and == false){
+				$time_query .= "event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
+			}
+		}
+
 		// Return Query
 		if($time_query == "") return "";
 		return $time_query." AND ";
@@ -245,7 +284,7 @@ class PW_Query extends WP_Query {
 	}
 
 	function has_time_attributes(){
-		if(array_key_exists('event_start',  $this->query_vars) || array_key_exists('event_end',  $this->query_vars) || array_key_exists('event_before',  $this->query_vars) || array_key_exists('event_after',  $this->query_vars)){
+		if(array_key_exists('event_now',  $this->query_vars) || array_key_exists('event_future',  $this->query_vars) || array_key_exists('event_past',  $this->query_vars) || array_key_exists('event_start',  $this->query_vars) || array_key_exists('event_end',  $this->query_vars) || array_key_exists('event_before',  $this->query_vars) || array_key_exists('event_after',  $this->query_vars)){
 			return true;
 		} else {
 			return false;
