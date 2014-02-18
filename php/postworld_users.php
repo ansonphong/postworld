@@ -50,6 +50,27 @@ function get_current_userdata_obj($fields) {
 }
 
 
+function pw_get_xprofile( $user_id, $fields ){
+	// Get info from Bussypress extended profile
+
+	$xprofile = array();
+	
+	// If Buddypress isn't isntalled, return false
+	if( !function_exists('xprofile_get_field_data') )
+		return false;
+
+	// Get each requested field
+	foreach ( $fields as $field ){
+		$field_value = xprofile_get_field_data( $field, $user_id );
+
+		if( isset($field_value) )
+			$xprofile[$field] = $field_value;
+
+	}
+	return $xprofile;
+}
+
+
 function pw_get_userdatas( $user_ids, $fields = false ){
 	$users_array = array();
 	foreach( $user_ids as $user_id ){
@@ -1262,6 +1283,7 @@ function reset_password_mailout_single_postworld( $user_id ){
 	$headers = 'From: Reality Sandwich <'. get_bloginfo('admin_email') . ">\r\n";           
 	return wp_mail($to, $subject, $message, $headers); 
 }
+
 
 
 
