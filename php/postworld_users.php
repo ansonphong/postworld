@@ -50,6 +50,16 @@ function get_current_userdata_obj($fields) {
 }
 
 
+function pw_can_edit_profile( $user_id ){
+	if( $user_id == get_current_user_id() ||
+		current_user_can('edit_users') )
+		return true;
+	else
+		return false;
+}
+
+
+
 function pw_get_xprofile( $user_id, $fields ){
 	// Get info from Bussypress extended profile
 
