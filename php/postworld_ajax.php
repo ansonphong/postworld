@@ -4,6 +4,42 @@
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 */
 
+//---------- PW SET WIZARD STATUS ----------//
+function pw_set_wizard_status_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	//extract($params);
+
+	$response_data = pw_set_wizard_status( $params ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_pw_set_wizard_status", "pw_set_wizard_status_ajax");
+
+
+//---------- PW GET WIZARD STATUS ----------//
+function pw_get_wizard_status_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	//extract($params);
+
+	$response_data = pw_get_wizard_status( $params ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_pw_get_wizard_status", "pw_get_wizard_status_ajax");
+
+
 //---------- PW GET USER DATA ----------//
 function pw_get_userdata_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

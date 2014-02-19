@@ -368,6 +368,16 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('pw_get_userdata',params);
 		},
+		get_wizard_status: function(args) {
+			$log.debug('pwData.get_wizard_status',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_wizard_status',params);
+		},
+		set_wizard_status: function(args) {
+			$log.debug('pwData.set_wizard_status',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_set_wizard_status',params);
+		},
 
 
    }; // END OF pwData return value

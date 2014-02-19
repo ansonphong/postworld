@@ -3141,8 +3141,14 @@ __wizard_name__ : *string* (required)
 __value__ : *JSON string / A_ARRAY* (required)
 - The value to be inserted into the specified object
 
-__format__ : *string* (optional)
-- The format of the value being set
+__input_format__ : *string* (optional)
+- The format of the value being passed in and set
+- Options:
+    + __A_ARRAY__ (default)
+    + __JSON__
+
+__output_format__ : *string* (optional)
+- The format of the value being returned
 - Options:
     + __A_ARRAY__ (default)
     + __JSON__
@@ -3184,10 +3190,20 @@ __format__ : *string* (optional)
 - If wizard doesn't exist, or user doesn't have wizard status, or any other error, return `false`
 
 
+------
 
+### pw_is_wizard_active( *$wizard_name* )
+- Reads the value of a Wizard Status object for the logged in user and returns whether the requested `$wizard_name` is currently active
 
+__return__ : *boolean*
+- If the requested wizard object has `active:'true'` return __true__. In all other cases return __false__.
 
+------
 
+### pw_active_wizards( [`$user_id`] )
+- Return an array of all active wizards for the logged in user
 
+__return__ : *array*
 
+------
 

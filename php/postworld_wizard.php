@@ -72,6 +72,8 @@ function pw_set_wizard_status( $vars ){
 			'user_id'		=>	// integer
 			'wizard_name'	=>	// string
 			'value'			=>  // object/array
+			'input_format'	=>	
+			'output_format'	=>	
 			'format'		=>  // string ( A_ARRAY / JSON )
 		);
 	*/
@@ -88,17 +90,19 @@ function pw_set_wizard_status( $vars ){
 		return array('error' => 'No "wizard_name" defined.');
 	if( !isset( $value ) )
 		return array('error' => 'No "value" defined.');
-	if( !isset( $format ) )
-		$format = "A_ARRAY";
+	if( !isset( $input_format ) )
+		$input_format = "A_ARRAY";
+	if( !isset( $output_format ) )
+		$output_format = "A_ARRAY";
 
 	// Security
 	if( $user_id != get_current_user_id() && !current_user_can( 'edit_users' ) )
 		return array('error' => 'No access.');
 
 	// Format Validation
-	if( $format == "A_ARRAY" && !is_array( $value ) )
+	if( $input_format == "A_ARRAY" && !is_array( $value ) )
 		return array('error' => 'Expecting "value" to be an Array.');
-	if( $format == "JSON" && !is_string( $value ) )
+	if( $input_format == "JSON" && !is_string( $value ) )
 		return array('error' => 'Expecting "value" to be a JSON string.');
 
 	// Check if user has a wizard status object
@@ -114,7 +118,7 @@ function pw_set_wizard_status( $vars ){
 	}
 
 	// Condition the $value field
-	if( $format == 'JSON' )
+	if( $input_format == 'JSON' )
 		// Decode JSON $value as
 		$value = json_decode( $value, true );
 
@@ -122,10 +126,14 @@ function pw_set_wizard_status( $vars ){
 	$wizard_status[$wizard_name] = $value;
 
 	// Encode it as JSON
-	$wizard_status = json_encode($wizard_status);
+	$wizard_status_json = json_encode($wizard_status);
 
 	// Update the Database
-	$update_user_meta = update_user_meta( $user_id, $meta_key, $wizard_status );
+	$update_user_meta = update_user_meta( $user_id, $meta_key, $wizard_status_json );
+
+	// Convert into A_ARRAY if requested
+	if( $output_format == "JSON" )
+		$wizard_status = $wizard_status_json;
 
 	// Return with the current value
 	return $wizard_status;
