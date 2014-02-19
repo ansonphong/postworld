@@ -16,6 +16,8 @@ Postworld // PHP / MySQL Functions
 0. [ __Images__ : postworld_images.php ](#images)
 0. [ __Taxonomies__ : postworld_taxonomies.php ](#taxonomies)
 0. [ __Utilities__ : postworld_utilities.php ](#utilities)
+0. [ __Wizard__ : postworld_wizard.php ](#wizard)
+
 
 ## Post Meta
 
@@ -3111,6 +3113,75 @@ Result :
 ```
 
 
+------
+
+## Wizard
+__php/postworld_wizard.php__
+
+Contains helper functions for storing and retreiving data for user-specific wizards.
+
+------
+
+### pw_set_wizard_status( *$vars* )
+- Sets the status of a wizard in relation to the user
+- Inserts the status object 
+
+#### Process
+1. If the user doesn't have a `wizard_status` postmeta entry, create one.
+2. Insert / overwrite the current wizard sub-object by `wizard_name`
+
+#### Parameters : $vars
+
+__user_id__ : *integer* (optional)
+- If no user ID is provided, the current user ID will be used
+
+__wizard_name__ : *string* (required)
+- The name of the object to add the value to
+
+__value__ : *JSON string / A_ARRAY* (required)
+- The value to be inserted into the specified object
+
+__format__ : *string* (optional)
+- The format of the value being set
+- Options:
+    + __A_ARRAY__ (default)
+    + __JSON__
+
+##### Return : *Array*
+- The current full value of the `wizard_status` user meta value
+
+------
+
+### pw_get_wizard_status( *$vars* )
+- Gets the current status of a user's progress through a wizard
+- Stored in JSON as `wizard_status` in `wp_usermeta`
+
+#### Parameters : $vars
+
+__user_id__ : *string* (optional)
+- If no user ID is provided, the current user ID will be used
+
+__wizard_name__ : *string* (optional)
+- The name of the wizard to return the status of
+- If no `wizard_name` is specified, the entire `wizard_status` object will be returned
+
+__format__ : *string* (optional)
+- The format of the value to return
+- Options:
+    + __A_ARRAY__ (default)
+    + __JSON__
+
+#### Usage
+```php
+    $wizard_status = unify_get_wizard_status( array(
+        'user_id' => 1,
+        'wizard_name' => 'organizerInit',
+        ) );
+```
+
+#### Return
+- Return the requested object
+- If wizard doesn't exist, or user doesn't have wizard status, or any other error, return `false`
 
 
 

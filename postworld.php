@@ -109,6 +109,9 @@ include 'php/postworld_widgets.php';
 /////////////// SOCIAL ////////////////
 include 'php/postworld_social.php';
 
+/////////////// WIZARD ////////////////
+include 'php/postworld_wizard.php';
+
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
 include 'php/postworld_comments.php';
