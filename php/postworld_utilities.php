@@ -1,5 +1,12 @@
 <?php
 
+function pw_empty_array( $format ){
+	// Return an empty array
+	if( $format == "A_ARRAY" )
+		return array();
+	else if( $format == "JSON" )
+		return "{}";
+}
 
 function object_to_array($data){
     if (is_array($data) || is_object($data)){

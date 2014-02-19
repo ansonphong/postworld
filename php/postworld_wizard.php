@@ -8,13 +8,6 @@
 //////// ------ POSTWORLD WIZARD ------ ////////*/
 
 
-function pw_empty_array( $format ){
-	// Return an empty array
-	if( $format == "A_ARRAY" )
-		return array();
-	else if( $format == "JSON" )
-		return "{}";
-}
 
 function pw_get_wizard_status( $vars ){
 	/*
