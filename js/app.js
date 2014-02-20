@@ -18,7 +18,7 @@ var feed_settings = [];
 var postworld = angular.module('postworld',
     ['ngResource','ngRoute', 'ngSanitize', 'ngAnimate', 'infinite-scroll',
         'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter',
-        'UserValidation','pwFilters', 'google-maps', 'timer' ])
+        'UserValidation','pwFilters', 'timer' ])
         // $strap.directives // 'mgcrea.ngStrap.modal'
 .config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
 
