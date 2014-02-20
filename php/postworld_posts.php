@@ -78,6 +78,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		'post_meta(all)',
 		'post_parent',
+		'event_start',
+		'event_end',
+		'geo_latitude',
+		'geo_longitude',
+		'related_post'
 		);
 
 
