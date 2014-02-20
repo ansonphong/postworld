@@ -308,8 +308,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if ( !empty($post_meta_fields) ){
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
+
 				// GET 'ALL' FIELDS
-				if ( $post_meta_field == "all" ){
+				if ( in_array("all", $post_meta_fields) ||
+						$post_meta_field == "all" ){
+
 					// Return all meta data
 					$post_data['post_meta'] = get_metadata('post', $post_id, '', true);
 					// Convert to strings
@@ -318,7 +321,24 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 							$post_data['post_meta'][$meta_key] = $post_data['post_meta'][$meta_key][0];
 						}
 					}
+					// Break from the foreach
+					break;
 				}
+
+				// GET SPECIFIC FIELDS
+				else {
+
+					$post_meta_data = get_post_meta( $post_id, $post_meta_field, true );
+
+					if( !empty($post_meta_data) )
+						$post_data['post_meta'][$post_meta_field] = $post_meta_data;
+
+				}
+
+				// 
+
+
+
 			}
 
 			// Parse known JSON fields into objects
@@ -332,7 +352,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					in_array($meta_key, $known_JSON_fields) &&
 					is_string($meta_value)
 					){
-					$post_data['post_meta'][$meta_key] = json_decode($post_data['post_meta'][$meta_key]);
+					$post_data['post_meta'][$meta_key] = json_decode($post_data['post_meta'][$meta_key], true);
 				}
 			}
 

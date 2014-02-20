@@ -121,19 +121,23 @@ postworld.controller('editPost',
                 ///// LOAD TAXONOMIES /////
                 // RENAME THE KEY : TAXONOMY > TAX_INPUT
                 var tax_input = {};
-                var tax_obj = get_post['taxonomy'];
-                // BOIL DOWN SELECTED TERMS
-                angular.forEach( tax_obj, function( terms, taxonomy ){
-                    tax_input[taxonomy] = [];
-                    angular.forEach( terms, function( term ){
-                        tax_input[taxonomy].push(term.slug);
+                if( !_.isUndefined( get_post['taxonomy'] ) ){
+                    var tax_obj = get_post['taxonomy'];
+                    // BOIL DOWN SELECTED TERMS
+                    angular.forEach( tax_obj, function( terms, taxonomy ){
+                        tax_input[taxonomy] = [];
+                        angular.forEach( terms, function( term ){
+                            tax_input[taxonomy].push(term.slug);
+                        });
+                        // BROADCAST TAX OBJECT TO AUTOCOMPLETE CONTROLLER
+                        if( taxonomy == "post_tag")
+                            $scope.$broadcast('postTagsObject', terms);
                     });
-                    // BROADCAST TAX OBJECT TO AUTOCOMPLETE CONTROLLER
-                    if( taxonomy == "post_tag")
-                        $scope.$broadcast('postTagsObject', terms);
-                });
-                delete get_post['taxonomy'];
+                    delete get_post['taxonomy'];
+
+                }
                 get_post['tax_input'] = tax_input; 
+                
 
                 ///// LOAD POST CONTENT /////
 
