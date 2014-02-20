@@ -3156,6 +3156,20 @@ __output_format__ : *string* (optional)
 ##### Return : *Array*
 - The current full value of the `wizard_status` user meta value
 
+__wizard_Status__ Model:
+```javascript
+
+  wizard_status = {
+    organizeEvent : {
+      active: true,   // If it in in progress
+      visible: false, // If it is visible on the sidebar
+    },
+  };
+
+
+```
+
+
 ------
 
 ### pw_get_wizard_status( *$vars* )
@@ -3200,10 +3214,12 @@ __return__ : *boolean*
 
 ------
 
-### pw_active_wizards( [`$user_id`] )
-- Return an array of all active wizards for the logged in user
+### pw_active_wizard( [`$user_id`] )
+- Return an string of the active wizard for the logged in user
 
-__return__ : *array*
+__return__ : *string*
+- Return the `wizard_name`
+- Return false if no active wizards
 
 ------
 
