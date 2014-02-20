@@ -743,9 +743,9 @@ function pw_get_post_anon() {
 	// pw_get_post ( $post_id, $fields, [$user_id] );
 	
 	if($args['post_id']) $post_id = $args['post_id'];
-	else ErrorReturn($response, 400, 'missing argument post_id'); 
+		else ErrorReturn($response, 400, 'missing argument post_id'); 
 	if ($args['fields']) $fields = $args['fields'];
-	else $fields = 'all';
+		else $fields = 'all';
 	// Get User Id
 	$user_ID = get_current_user_id();
 	/* set the response type as JSON */
