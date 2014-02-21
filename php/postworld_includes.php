@@ -227,7 +227,6 @@ function postworld_includes( $args ){
 	// Inject Current User Data into Window
 	function pwGlobals() {
 	?>
-
 		<script type="text/javascript">/* <![CDATA[ */
 			var pwGlobals = <?php echo json_encode( pwGlobals_parse() ); ?>;
 		/* ]]> */</script>
@@ -296,9 +295,13 @@ function pwGlobals_parse(){
 
 	///// POST /////
 	if( !empty($GLOBALS['post']->ID) ){
-		$pw_globals["current_view"]["type"] = "post";
+		//$pw_globals["current_view"]["type"] = "post";
+		$pw_globals["current_view"]["type"] = $GLOBALS['post']->post_type;
 		$pw_globals["current_view"]["post"] = array(
-			"post_id" => $GLOBALS['post']->ID
+			"post_id" => $GLOBALS['post']->ID,
+			"post_name" => $GLOBALS['post']->post_name,
+			"post_title" => $GLOBALS['post']->post_title,
+			"post_status" => $GLOBALS['post']->post_status
 			);
 	}
 
