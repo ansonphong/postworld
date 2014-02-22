@@ -79,69 +79,10 @@ postworld.controller('pwWizardCtrl',
 	///// WATCH WIZARD STATUS /////
 	$scope.$watch('wizardStatus', function() {
 		// Set a boolean if the current stage is completed
-		$scope.wizardState['stageComplete'] = $scope.isStageComplete($scope.wizardState.currentStage.id);
+		if( !_.isUndefined( $scope.wizardState ) &&
+			!_.isEmpty( $scope.wizardState.currentStage ))
+			$scope.wizardState['stageComplete'] = $scope.isStageComplete($scope.wizardState.currentStage.id);
 	});
-
-	//////////// START WIZARD ////////////
-	$scope.startWizard = function( wizardName ){
-
-		// Require scope.wizardStatus
-		if( _.isUndefined($scope.wizardStatus) )
-			return false;
-
-		// Define local vars
-		var wizardStatus = $scope.wizardStatus;
-		var wizardName = $scope.wizardState['wizardName'];
-		var wizardState = $scope.wizardState;
-
-		// Set the the Wizard status in the DB
-		var vars = {
-			'wizard_name' : wizardName,
-			'value' : wizardStatus
-		};
-
-		// Insulate from 2-way Data Binding
-		var JSON = angular.toJson(vars);
-		vars = angular.fromJson(JSON);
-
-		// Set the Wizard to Active
-		vars['value'].active = true;
-
-		// Set the Wizard to Visible
-		vars['value'].visible = true;
-		
-		///// SET THE STATUS IN THE DB /////
-		$pwData.set_wizard_status( vars ).then(
-			// Success
-			function(response) {
-				// Then go to the next stage
-				$scope.gotoNextStage();
-			
-			},
-			// Failure
-			function(response) {
-				$log.debug(response);
-			}
-		);
-
-	};
-
-	$scope.gotoNextStage = function(){
-
-		// Define local vars
-		var wizardStatus = $scope.wizardStatus;
-		var wizardState = $scope.wizardState;
-
-		///// GO TO NEXT STAGE /////
-		// Get the next stage
-		var nextStage = $scope.getNextIncompleteStage( wizardState, wizardStatus );
-		//alert( wizardName + " // Next Stage : " + JSON.stringify( nextStage ) );
-		
-		// If the next stage has a URL, go there
-		if( !_.isUndefined(nextStage.url) )
-			$window.location = nextStage.url;
-
-	};
 
 	//////////// INITIALIZE WIZARD ////////////
 	$scope.initWizard = function( wizardName, action ){
@@ -186,7 +127,7 @@ postworld.controller('pwWizardCtrl',
 				// START Action
 				// Send them to the next incomplete stage
 				if( action == 'start' )
-					$scope.startWizard();
+					$scope.runWizard( 'start' );
 
 			},
 			// Failure
@@ -196,6 +137,112 @@ postworld.controller('pwWizardCtrl',
 		);
 
 	};
+
+
+	//////////// WIZARD STAGE COMPLETE ////////////
+	$scope.runWizard = function( action, wizardName ){
+		// Mark the current stage of the wizard complete, if on a stage
+		// And jump ahead to the next stage
+
+		// If Wizard Name is not defined, find it
+		if( _.isUndefined( wizardName ) &&
+			!_.isUndefined( $scope.wizardState ) &&
+			!_.isUndefined( $scope.wizardState.wizardName ) )
+			var wizardName = $scope.wizardState['wizardName'];
+		else
+			return false;
+
+		// Require scope.wizardStatus
+		if( _.isUndefined($scope.wizardStatus) )
+			return false;
+
+		// Set the current stage complete
+		if(
+			action == 'next' &&
+			// wizardStatus exists
+			!_.isUndefined( $scope.wizardStatus ) &&
+			// wizardState exists
+			!_.isUndefined( $scope.wizardState ) &&
+			// currentStage is defined
+			!_.isEmpty( $scope.wizardState.currentStage ) &&
+			// currentStage ID is not already in the array of completed stages
+			!ext.isInArray( $scope.wizardState.currentStage.id, $scope.wizardStatus.completed ) ){
+				// Push the stage as complete
+				$scope.wizardStatus['completed'].push( $scope.wizardState.currentStage.id );
+			}
+
+		// Define local vars
+		var wizardStatus = $scope.wizardStatus;
+		var wizardState = $scope.wizardState;
+
+		// Set the the Wizard status in the DB
+		var vars = {
+			'wizard_name' : wizardName,
+			'value' : wizardStatus
+		};
+
+		// Insulate from 2-way Data Binding
+		var JSON = angular.toJson(vars);
+		vars = angular.fromJson(JSON);
+
+		// Check the next stage
+		var nextStage = $scope.getNextIncompleteStage( wizardState, wizardStatus );
+
+		if( nextStage != 'complete' ){
+			// Set the Wizard to Active
+			vars['value'].active = true;
+			// Set the Wizard to Visible
+			vars['value'].visible = true;
+		}
+
+		///// SET THE STATUS IN THE DB /////
+		$pwData.set_wizard_status( vars ).then(
+			// Success
+			function(response) {
+				// Then go to the next stage
+				$scope.gotoNextStage();
+			
+			},
+			// Failure
+			function(response) {
+				$log.debug(response);
+			}
+		);
+
+
+	};
+
+	$scope.gotoNextStage = function(){
+
+		// Define local vars
+		var wizardStatus = $scope.wizardStatus;
+		var wizardState = $scope.wizardState;
+
+		///// GO TO NEXT STAGE /////
+		// Get the next stage
+		var nextStage = $scope.getNextIncompleteStage( wizardState, wizardStatus );
+		//alert( wizardState.wizardName + " // Next Incomplete Stage : " + JSON.stringify( nextStage ) );
+		
+		// If complete, send to the completed URL
+		if( nextStage == 'complete' ){
+			// Deactivate the current Wizard
+			$scope.deactivateWizard();
+
+			// Go to the custom complete URL
+			if( !_.isUndefined( wizardState.currentWizard['completed-url'] ) )
+				$window.location = wizardState.currentWizard['completed-url'];
+			
+			return true;
+		}
+			
+
+		// If the next stage has a URL, go there
+		if( !_.isUndefined(nextStage) &&
+			!_.isUndefined(nextStage.url) )
+			$window.location = nextStage.url;
+
+	};
+
 
 	$scope.getWizardStatus = function( wizardName ){
 		// Generic function used to fetch the status of a wizard
@@ -263,6 +310,45 @@ postworld.controller('pwWizardCtrl',
 
 	};
 
+	$scope.isOnStage = function(){
+		return ( !_.isEmpty( $scope.getCurrentStage() ) ) ?
+			true : false ;
+	}
+
+	$scope.isOnLastStage = function(){
+		// Check if the state is currently on the last stage of the wizard
+		// By checking ig the current stage 'order' values is equal to the number of stages
+
+		// Get the current stage object
+		if( !_.isUndefined( $scope.wizardState ) &&
+			!_.isUndefined( $scope.wizardState.currentStage ) &&
+			!_.isUndefined( $scope.wizardState.currentStage.order ))
+			var currentStageOrder = parseInt( $scope.wizardState.currentStage.order );
+		else
+			return false;
+
+		// Get the current stage object
+		if( !_.isUndefined( $scope.wizardState.currentWizard ) &&
+			!_.isUndefined( $scope.wizardState.currentWizard.stages &&
+			_.isArray( $scope.wizardState.currentWizard.stages ) ))
+			var currentWizardLength = $scope.wizardState.currentWizard.stages.length;
+		else
+			return false;
+
+		return ( currentStageOrder == currentWizardLength ) ?
+			true : false ;
+	};
+
+	$scope.isOnNotLastStage = function(){
+		if ( $scope.isOnLastStage() )
+			return false;
+		if ( $scope.isOnStage() )
+			return true;
+		else
+			return false;
+
+	};
+
 	$scope.getIncompleteStages = function( wizardState, wizardStatus ){
 		// Compares the current Wizard (global) with the Wizard Status (user)
 		// Returns with an object of the incomplete stages
@@ -304,13 +390,22 @@ postworld.controller('pwWizardCtrl',
 		// Gets the next incomplete stage in the wizard
 		// By comparing the Wizard Status object to the current wizard
 		// With respect to the 'stage.order' value
+		
+		var nextStage = {};
 
 		// Call the incompleteStages function
 		var incomplete = $scope.getIncompleteStages( wizardState, wizardStatus );
 
-		// Get the stage with the lowest order number
-		var len = incomplete.keys.length;
-		for (i = 0; i < len; i++){
+		// If we're complete
+		if( incomplete == 'complete' )
+			return 'complete';
+
+		// Get the number of stages
+		var len = wizardState.currentWizard.stages.length;
+
+		// Get the incomplete stage with the lowest order number
+		// Iterate through 0-len
+		for (i = 0; i <= len; i++){
 			// Starting from 0 up, see if a key with that value exists
 			if( !_.isUndefined( incomplete.stages[i] ) ){
 				// Get the first result
@@ -319,6 +414,7 @@ postworld.controller('pwWizardCtrl',
 				break;
 			}
 		}
+		//alert( JSON.stringify(nextStage) );
 		// Return with the result
 		return nextStage;
 			
