@@ -211,6 +211,9 @@ function postworld_includes( $args ){
 		// COMPONENTS
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
 
+		// WIZARD
+		wp_enqueue_script( 'pw-Wizard', plugins_url().'/postworld/js/components/pwWizard.js', $angularDep );
+
 		// WORDPRESS DIRECTIVES
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
 			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
