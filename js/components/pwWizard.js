@@ -225,21 +225,36 @@ postworld.controller('pwWizardCtrl',
 		
 		// If complete, send to the completed URL
 		if( nextStage == 'complete' ){
-			// Deactivate the current Wizard
-			$scope.deactivateWizard();
 
-			// Go to the custom complete URL
-			if( !_.isUndefined( wizardState.currentWizard['completed-url'] ) )
-				$window.location = wizardState.currentWizard['completed-url'];
-			
+			// Reset the Wizard
+			$scope.wizardStatus['visible'] = false;
+			$scope.wizardStatus['active'] = false;
+			$scope.wizardStatus['completed'] = [];
+
+			// Save wizardStatus to the DB via AJAX
+			$scope.setWizardStatus(
+				$scope.wizardState.wizardName, 	// Wizard Name
+				$scope.wizardStatus 			// Status Object
+				);
+
+			// Timeout, to let the AJAX work
+			// Then goto the completed page
+			$timeout(function() {
+				// Go to the custom complete URL
+				if( !_.isUndefined( wizardState.currentWizard['completed-url'] ) )
+					$window.location = wizardState.currentWizard['completed-url'];
+		    }, 2000);
+
 			return true;
-		}
-			
 
-		// If the next stage has a URL, go there
-		if( !_.isUndefined(nextStage) &&
-			!_.isUndefined(nextStage.url) )
-			$window.location = nextStage.url;
+		} else{
+			// If the next stage has a URL, go there
+			if( !_.isUndefined(nextStage) &&
+				!_.isUndefined(nextStage.url) )
+				$window.location = nextStage.url;
+		}
+		
+		
 
 	};
 
@@ -484,7 +499,7 @@ postworld.controller('pwWizardCtrl',
 	
 	};
 
-	$scope.deactivateWizard = function(){
+	$scope.deactivateWizard = function( vars ){
 		// Sets wizardStatus 'visible' and 'active' attributes to false
 		// And saves the current status to the DB
 
