@@ -340,16 +340,13 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 				}
 
-				// 
-
-
-
 			}
 
 			// Parse known JSON fields into objects
 			$known_JSON_fields = array(
 				'geocode',
 				'location_obj',
+				'date_obj',
 				'related_post'
 				);
 			foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
@@ -363,7 +360,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		}
 
-		
 	////////// AUTHOR DATA //////////
 
 		// Extract author() fields

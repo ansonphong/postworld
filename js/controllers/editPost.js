@@ -482,13 +482,15 @@ postworld.controller('eventInput',
 
 
     // SETUP DATE OBJECTS
-    if( typeof $scope.post.post_meta === 'undefined' )
+    if( _.isUndefined( $scope.post.post_meta ) )
         $scope.post.post_meta = {};
+    if( _.isUndefined( $scope.post.post_meta.date_obj ) )
+        $scope.post.post_meta.date_obj = {};
 
-    if( typeof $scope.post.post_meta.event_start_date_obj === 'undefined' )
-        $scope.post.post_meta.event_start_date_obj = new Date( );
-    if( typeof $scope.post.post_meta.event_end_date_obj === 'undefined' )
-        $scope.post.post_meta.event_end_date_obj = new Date( );
+    if( typeof $scope.post.post_meta.date_obj.event_start_date_obj === 'undefined' )
+        $scope.post.post_meta.date_obj.event_start_date_obj = new Date( );
+    if( typeof $scope.post.post_meta.date_obj.event_end_date_obj === 'undefined' )
+        $scope.post.post_meta.date_obj.event_end_date_obj = new Date( );
 
     $scope.getUnixTimestamp = function( dateObject ){
         if( !_.isUndefined(dateObject) )
@@ -497,20 +499,20 @@ postworld.controller('eventInput',
 
     $scope.setUnixTimestamps = function(){
         // Add the UNIX Timestamp : event_start
-        $scope.post.event_start = $scope.getUnixTimestamp( $scope.post.post_meta.event_start_date_obj );
+        $scope.post.event_start = $scope.getUnixTimestamp( $scope.post.post_meta.date_obj.event_start_date_obj );
         // Add the UNIX Timestamp : event_end
-        $scope.post.event_end = $scope.getUnixTimestamp( $scope.post.post_meta.event_end_date_obj );
+        $scope.post.event_end = $scope.getUnixTimestamp( $scope.post.post_meta.date_obj.event_end_date_obj );
     }
 
     // WATCH : EVENT START TIME
-    $scope.$watch( "post.post_meta.event_start_date_obj",
+    $scope.$watch( "post.post_meta.date_obj.event_start_date_obj",
         function (){
-            $scope.post.post_meta.event_start_date = $filter('date')(
-                $scope.post.post_meta.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
+            $scope.post.post_meta.date_obj.event_start_date = $filter('date')(
+                $scope.post.post_meta.date_obj.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
 
             // If start time is set after the end time - make them equal
-            if( $scope.post.post_meta.event_end_date_obj < $scope.post.post_meta.event_start_date_obj )
-                $scope.post.post_meta.event_end_date_obj = $scope.post.post_meta.event_start_date_obj;
+            if( $scope.post.post_meta.date_obj.event_end_date_obj < $scope.post.post_meta.date_obj.event_start_date_obj )
+                $scope.post.post_meta.date_obj.event_end_date_obj = $scope.post.post_meta.date_obj.event_start_date_obj;
 
             // Set UNIX Timestamps
             $scope.setUnixTimestamps();
@@ -518,14 +520,14 @@ postworld.controller('eventInput',
         }, 1 );
 
     // WATCH : EVENT END TIME
-    $scope.$watch( "post.post_meta.event_end_date_obj",
+    $scope.$watch( "post.post_meta.date_obj.event_end_date_obj",
         function (){
-            $scope.post.post_meta.event_end_date = $filter('date')(
-                $scope.post.post_meta.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
+            $scope.post.post_meta.date_obj.event_end_date = $filter('date')(
+                $scope.post.post_meta.date_obj.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
 
             // If end time is set before the start time - make them equal
-            if( $scope.post.post_meta.event_start_date_obj > $scope.post.post_meta.event_end_date_obj  )
-                $scope.post.post_meta.event_start_date_obj = $scope.post.post_meta.event_end_date_obj ;
+            if( $scope.post.post_meta.date_obj.event_start_date_obj > $scope.post.post_meta.date_obj.event_end_date_obj  )
+                $scope.post.post_meta.date_obj.event_start_date_obj = $scope.post.post_meta.date_obj.event_end_date_obj ;
 
             // Set UNIX Timestamps
             $scope.setUnixTimestamps();
