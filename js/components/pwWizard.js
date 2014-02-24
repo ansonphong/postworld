@@ -115,8 +115,8 @@ postworld.controller('pwWizardCtrl',
 				// If the Wizard has not been started
 				if( _.isEmpty( wizardStatus )  )
 					// Set the empty status object model
-					wizardStatus = $scope.wizardStatusModel;
-
+					wizardStatus = $pwWizardData.wizardStatusModel();
+				
 				// Set the Status
 				$scope.wizardStatus = wizardStatus;
 
@@ -194,6 +194,7 @@ postworld.controller('pwWizardCtrl',
 			// Set the Wizard to Visible
 			vars['value'].visible = true;
 		}
+
 
 		///// SET THE STATUS IN THE DB /////
 		$pwData.set_wizard_status( vars ).then(
