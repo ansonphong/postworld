@@ -8,7 +8,24 @@
  |_|   \___/|___/\__|  \____\___/|_| |_|\__|_|  \___/|_|_|\___|_|   
                                                                     
 /*////////// ------------ POST CONTROLLER ------------ //////////*/                
-var postController = function ( $scope, $rootScope, $window, $sce, pwData, pwEditPostFilters ) {
+
+postworld.directive( 'pwPost', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'postController',
+        link: function( $scope, element, attrs ){
+            // OBSERVE Attribute
+            //attrs.$observe('postsModel', function(value) {
+            //  alert(value);
+            //});
+        }
+    };
+}]);
+
+
+postworld.controller('postController',
+    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters",
+    function($scope, $rootScope, $window, $sce, pwData, pwEditPostFilters ) {
 
     // Define backup source for 'post' object 
     if( typeof $scope.post === 'undefined' ){
@@ -123,4 +140,4 @@ var postController = function ( $scope, $rootScope, $window, $sce, pwData, pwEdi
     };
 
 
-};
+}]);

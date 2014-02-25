@@ -67,6 +67,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_permalink',
 		'post_date',
 		'post_date_gmt',
+		'post_timestamp',
 		'post_class',
 		'link_format',
 		'link_url',
@@ -281,8 +282,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			if( !isset($post_data['viewer']) )
 				$post_data['viewer'] = array();
 
-			//$post_data['viewer']['test'] = "wow";
-			
 			foreach ($relationships as $relationship ) {
 
 				$post_data['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
@@ -296,6 +295,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
 			$post_data['time_ago'] = time_ago( strtotime ( $post_data['post_date_gmt'] ) );
+
+		// Post Timestamp
+		if ( in_array('post_timestamp', $fields) )
+			$post_data['post_timestamp'] = (int) strtotime( $post_data['post_date_gmt'] ) ;
 
 
 	////////// AVATAR IMAGES //////////

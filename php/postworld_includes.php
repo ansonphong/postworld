@@ -42,8 +42,8 @@ function postworld_includes( $args ){
 
 
 	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
-	wp_deregister_script('jquery');
-	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
+	//wp_deregister_script('jquery');
+	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery','');
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
