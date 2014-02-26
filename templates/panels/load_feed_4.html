@@ -1,0 +1,16 @@
+<div>
+	<h2>{{title}} </h2>	
+	<div ng-show="message" class="alert alert-warning">{{message}}</div>
+	
+    <div id="scrollMe"  class="infinite-scroll">
+	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
+	    <div ng-repeat='post in items' >
+	    	<div feed-item post="post" feed-id='args.feed_id'></div>
+			<hr>
+	      <div style='clear: both;'></div>
+	    </div>
+	    <div ng-show='busy' class="text-center"><img src="http://www.showoffimports.nl/sandbox/live/ajaxLoad.gif"></div>
+	    <div ng-show='!busy' class="text-center"><strong>{{scrollMessage}}</strong></div>
+	  </div>
+  	</div>
+</div>

@@ -1,4 +1,4 @@
-<?
+<?php
 
 // Define Angular Dependancies
 global $angularDep;
