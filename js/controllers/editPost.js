@@ -12,6 +12,21 @@ function tinyMCE_init_custom(){
  |_____\__,_|_|\__| |_|   \___/|___/\__|
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
+
+postworld.directive( 'pwEditPost', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'editPost',
+        link: function( $scope, element, attrs ){
+            // OBSERVE Attribute
+            //attrs.$observe('postsModel', function(value) {
+            //  alert(value);
+            //});
+        }
+    };
+}]);
+
+
 postworld.controller('editPost',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
     'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit',
