@@ -1,5 +1,7 @@
 
-<div ng-controller="editPost" ng-init="mode='quick-edit'" class="edit_post quick edit">
+<div pw-edit-post
+  ng-init="mode='quick-edit'"
+  class="edit_post quick edit">
 
   <!-- LOADING -->
   <div ng-show="status=='loading'" style="text-align:center;">
@@ -14,52 +16,22 @@
     
       <header class="edit_post-menu module">
         <div class="col-sm-3">
-        <!--///// POST TYPE /////-->
-          <div class="labeled">
-            <label class="inner">
-              Post Type
-            </label>
-            <select ng-model="post_data.post_type" ng-options="key as value for (key,value) in post_type_options" ></select>
-            <i class="select-arrow icon-caret-down"></i>
-          </div>
+          
         </div>
 
         <div class="col-sm-3">
-          <!--///// TAXONOMY : TOPIC /////-->
-          <div class="labeled">
-            <label class="inner">
-              Topic
-              <button pw-language class="info info-xs info-white info-absolute"
-                popover="{{language.edit_post.taxonomy.topic}}" popover-trigger="mouseenter" popover-popup-delay="333" popover-placement="bottom" popover-append-to-body="true">
-                <i class="icon-info-sign"></i>
-              </button>
-            </label>
-            <select ng-model="post_data.tax_input.topic[0]" required class="topic"
-              ng-options="value.slug as value.name for value in tax_terms.topic"></select>
-              <i class="select-arrow icon-caret-down"></i>
-          </div>
+          
         </div>
 
         <div class="col-sm-4">
-          <!--///// TAXONOMY : TOPIC /////-->
-          <span ng-show="selected_tax_terms.topic.terms">
-            <div class="labeled">
-              <label class="inner">
-                Subtopic
-              </label>
-              <select required ng-model="post_data.tax_input.topic[1]" class="subtopic"
-                ng-options="value.slug as value.name for value in selected_tax_terms.topic.terms">
-              </select>
-              <i class="select-arrow icon-caret-down"></i>
-            </div>
-          </span>
+          
         </div>
 
 
         <!-- BUTTONS -->
         <div class="col-sm-2 last">
 
-          <button type="submit" ng-click="savePost()" class="aqua save">
+          <button type="submit" ng-click="savePost()" class="btn btn-blue save pull-right">
             <span ng-switch="status">
               <i ng-switch-default class="icon-save"></i>
               <i ng-switch-when="saving" class="icon-spinner icon-spin"></i>
@@ -81,13 +53,13 @@
 
         <!-- POST TITLE -->
         <label class="inner">Title</label>
-        <input class="labeled title" type="text" ng-model="post_data.post_title" placeholder="Post Title">
+        <input class="labeled title" type="text" ng-model="post.post_title" placeholder="Post Title">
 
         <!-- POST EXCERPT -->
         <div class="post_excerpt">
           <label class="inner">Post Excerpt</label>
           <textarea id="post_excerpt" class="labeled" msd-elastic ng-textarea-filter data-maxlength="500" data-readmore="..."
-            name="post_excerpt" ng-model="post_data.post_excerpt"></textarea>
+            name="post_excerpt" ng-model="post.post_excerpt"></textarea>
         </div>
 
         <hr class="thin">
@@ -100,18 +72,18 @@
 
             <!-- LINK URL -->
               <label class="inner">LINK URL</label>
-              <input class="labeled" type="url" ng-model="post_data.link_url" placeholder="http://">
+              <input class="labeled" type="url" ng-model="post.link_url" placeholder="http://">
             
             <!-- POST FORMAT -->
             <div class="link_format">
               <span ng-repeat="format in link_format_meta" class="row-fluid">
-                  <input type="radio" name="link_format" value="{{format.slug}}" ng-model="post_data.link_format" disabled />
+                  <input type="radio" name="link_format" value="{{format.slug}}" ng-model="post.link_format" disabled />
                   <label>
                     <i class="{{format.icon}}"></i> <span ng-bind="format.name"></span>
                   </label>
               </span>
-              <span ng-show="post_data.link_url.length">
-                <span  style="float:right; padding:5px 10px;"><a href="{{post_data.link_url}}" target="_blank">View <i class="icon-external-link"></i></a></span>
+              <span ng-show="post.link_url.length">
+                <span  style="float:right; padding:5px 10px;"><a href="{{post.link_url}}" target="_blank">View <i class="icon-external-link"></i></a></span>
               </span>
             </div>
 
@@ -158,7 +130,7 @@
             <!-- TAXONOMY : SECTION -->
             <div class="labeled module">
               <label class="inner">Section</label>
-              <select ng-model="post_data.tax_input.section[0]"
+              <select ng-model="post.tax_input.section[0]"
                 ng-options="value.slug as value.name for value in tax_terms.section">
                 <option value="">None</option>
               </select>
@@ -167,7 +139,7 @@
             <!-- TAXONOMY : TYPE -->
             <div class="labeled module">
               <label class="inner">Hilight</label>
-              <select class="labeled" ng-model="post_data.tax_input.hilight[0]"
+              <select class="labeled" ng-model="post.tax_input.hilight[0]"
                 ng-options="term.slug as term.name group by term.parent_name for term in tax_terms.hilight">
                 <option value="">None</option>
               </select>
@@ -176,7 +148,7 @@
             <!-- POST CLASS -->
             <div class="labeled module">
               <label class="inner">Class</label>
-              <select class="labeled" ng-model="post_data.post_class"
+              <select class="labeled" ng-model="post.post_class"
                 ng-options="key as value for (key,value) in post_class_options">
               </select>
               <i class="select-arrow icon-caret-down"></i>

@@ -46,7 +46,17 @@ postworld.service('pwRoleAccess', ['$log', '$window', 'ext', function ($log, $wi
                                                          
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
-var postActions = function ( $scope, pwData ) {
+postworld.directive( 'pwPostActions', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'postActions',
+    };
+}]);
+
+postworld.controller('postActions',
+    [ "$scope", "pwData",
+    function($scope, pwData ) {
+
 
     $scope.$watch( "post.viewer",
         function (){
@@ -129,7 +139,7 @@ var postActions = function ( $scope, pwData ) {
 
     };
 
-};
+}]);
 
 
 
@@ -141,8 +151,17 @@ var postActions = function ( $scope, pwData ) {
  |_|   \___/|___/\__|    \_/ \___/ \__\___|
                                                                                           
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
+postworld.directive( 'pwPostVote', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'postVote',
+    };
+}]);
 
-var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
+postworld.controller('postVote',
+    [ '$window', '$rootScope', '$scope', '$log', 'pwData',
+    function( $window, $rootScope, $scope, $log, pwData ) {
+
 
     // SWITCH CSS CLASSES BASED ON VOTE
     $scope.$watch( "post.viewer.has_voted",
@@ -210,7 +229,7 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
 
     }
 
-};
+}]);
 
 
 
@@ -222,7 +241,18 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
 ////////// ------------ ADMIN POSTS DROPDOWN ------------ //////////*/   
-var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, pwQuickEdit) {
+
+
+postworld.directive( 'pwAdminPostMenu', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'adminPostDropdown',
+    };
+}]);
+
+postworld.controller('adminPostDropdown',
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwQuickEdit', 'ext',
+    function( $scope, $rootScope, $location, $window, $log, pwQuickEdit, $ext ) {
 
     $scope.menuOptions = [
         {
@@ -293,13 +323,34 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
     if ( $scope.userOptions == [] )
         $scope.userOptions = "0";
     
+    $scope.getEditPostPageUrl = function(){
+
+        // Define Post Type
+        var post_type = ( $ext.objExists( $scope, 'post.post_type' ) ) ?
+            $scope.post.post_type : 'post';
+
+        // Localize Options
+        var edit_post = $window.pwSiteGlobals.edit_post;
+
+        // Check if that post type page name is defined
+        var url = ( $ext.objExists( edit_post, post_type + '.url' ) ) ?
+            edit_post[post_type].url :
+            // If not, use the default
+            edit_post['default'].url;
+
+        return url;
+
+    }
+
     $scope.menuAction = function(action){
 
         if( action == "wp-edit" )
             $window.location.href = $scope.post.edit_post_link.replace("&amp;","&");
 
-        if( action == "pw-edit" )
-            $window.location.href = "/post/#/edit/"+$scope.post.ID;
+        if( action == "pw-edit" ){
+            var editPostPageUrl = $scope.getEditPostPageUrl();
+            $window.location.href = editPostPageUrl + "#/edit/"+$scope.post.ID;
+        }
 
         if( action == "quick-edit" ){
             pwQuickEdit.openQuickEdit($scope.post);
@@ -310,10 +361,7 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
 
     };
 
-};
-
-
-
+}]);
 
 
 /*   _       _           _         ____                      _                     
