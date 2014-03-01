@@ -70,8 +70,8 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 
 
 postworld.controller( 'wpMediaLibraryCtrl',
-	[ '$scope', '$window', '$timeout', 'pwData',
-	function( $scope, $window, $timeout, $pwData ) {
+	[ '$scope', '$window', '$timeout', '$log', 'pwData',
+	function( $scope, $window, $timeout, $log, $pwData ) {
 
 	///// SERVICE FUNCTIONS /////
 	$scope.stringToBoolean = function(string){
@@ -195,18 +195,27 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			$scope.$parent[mediaParentCallback](selectedMedia);
 		}
 
-		// If multiple, return an array
 		$scope.$apply();
 	}
 
+	$scope.editPostImage = function( selectedMedia ){
+		// 1. Sets the image as thumbnail_id in the edit post object
+		// 2. Gets the new image sizes and populates the edit post image object
+
+		var thumbnail_id = selectedMedia.first().id;
+		$scope.$parent.post.thumbnail_id = thumbnail_id;
+		$scope.$parent.post.image = selectedMedia.first().attributes.sizes;
+
+		$log.debug( "Selected Media", selectedMedia.first() );
+
+	}
+
 	$scope.setPostImage = function( selectedMedia ){
+		// Immeadiately sets the selected image as the Post's image in the DB
 
 		//alert( 'setPostImage' );
-
 		// Get the first item from the array
-
 		// Set it as the post image
-
 		// If successful, replace the post.image object with the newly queried one
 
 		var post_id = $scope.$parent.post.ID;

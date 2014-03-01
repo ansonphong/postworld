@@ -72,6 +72,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'link_format',
 		'link_url',
 		'image(id)',
+		'image(all)',
 		'image(meta)',
 		'taxonomy(all)',
 		'taxonomy_obj(post_tag)',

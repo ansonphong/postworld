@@ -446,7 +446,7 @@ postworld.controller('editPost',
     // FEATURE IMAGE WATCH : Watch the Featured Image
     $scope.$watch( "post.image",
         function (){
-        if( typeof $scope.post.thumbnail_id !== 'undefined' &&
+        if( !_.isUndefined($scope.post.thumbnail_id) &&
             $scope.post.thumbnail_id !== "" &&
             $scope.post.thumbnail_id !== "delete" )
             $scope.hasFeaturedImage = 'true';
@@ -524,6 +524,10 @@ postworld.controller('eventInput',
     // WATCH : EVENT START TIME
     $scope.$watch( "post.post_meta.date_obj.event_start_date_obj",
         function (){
+            // End function if variable doesn't exist
+            if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) )
+                return false;
+
             $scope.post.post_meta.date_obj.event_start_date = $filter('date')(
                 $scope.post.post_meta.date_obj.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
 
@@ -539,6 +543,10 @@ postworld.controller('eventInput',
     // WATCH : EVENT END TIME
     $scope.$watch( "post.post_meta.date_obj.event_end_date_obj",
         function (){
+            // End function if variable doesn't exist
+            if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) )
+                return false;
+
             $scope.post.post_meta.date_obj.event_end_date = $filter('date')(
                 $scope.post.post_meta.date_obj.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
 
@@ -609,8 +617,6 @@ postworld.controller('eventInput',
     $scope.clear = function() {
         $scope.mytime = null;
     };
-
-
 
 
 }]);
