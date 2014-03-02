@@ -277,6 +277,11 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
             //     and "healing" term is in fact a child of "body" term,
             //     then re-arrange to { topic : ["body","healing"] }
             
+            // Return the post if missing input
+            if( _.isUndefined(post) ||
+                _.isUndefined(tax_terms) )
+                return post;
+
             angular.forEach( post[sub_object], function( selected_terms, taxonomy ){
                 if ( selected_terms.length > 1 ){
                     // FOR EACH TAXONOMY TERM OPTION
@@ -332,6 +337,11 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
             ///// SELECTED TAXONOMY TERMS /////
             // • Extracts an object with singular sub-term data
             //   so that they can be referred to to define subtopics
+
+            // Return false if missing input
+            if( _.isUndefined(tax_terms) ||
+                _.isUndefined(tax_input) )
+                return false;
 
             // EACH TAXONOMY : Cycle through each taxonomy
             var selected_tax_terms = {};

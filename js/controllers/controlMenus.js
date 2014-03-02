@@ -252,7 +252,7 @@ postworld.directive( 'pwAdminPostMenu', [ function($scope){
 
 postworld.controller('adminPostDropdown',
     [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwQuickEdit', 'ext',
-    function( $scope, $rootScope, $location, $window, $log, pwQuickEdit, $ext ) {
+    function( $scope, $rootScope, $location, $window, $log, $pwQuickEdit, $ext ) {
 
     $scope.menuOptions = [
         {
@@ -353,10 +353,10 @@ postworld.controller('adminPostDropdown',
         }
 
         if( action == "quick-edit" ){
-            pwQuickEdit.openQuickEdit($scope.post);
+            $pwQuickEdit.openQuickEdit($scope.post);
         }
         if( action == "trash" ){
-            pwQuickEdit.trashPost($scope.post.ID, $scope);
+            $pwQuickEdit.trashPost($scope.post.ID, $scope);
         }
 
     };

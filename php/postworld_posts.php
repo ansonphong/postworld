@@ -1193,4 +1193,15 @@ function pw_print_post( $args ){
 
 }
 
+
+
+function pw_editor( $content, $editor_id, $settings = array() ){
+	ob_start();
+	wp_editor( $content, $editor_id, $settings );
+	$editor = ob_get_contents();
+	ob_end_clean();
+	return $editor;
+}
+
+
 ?>
