@@ -555,25 +555,41 @@ postworld.controller('editPost',
     }
 
     // FEATURE IMAGE WATCH : Watch the Featured Image
+    ////// DEPRECIATED /////
+    /*
     $scope.$watch( "post.image",
         function (){
 
         // Check if Object Exists
         if( !$ext.objExists( $scope, 'post.image' ) )
+            $scope.hasFeaturedImage = false;
+
+        if( !_.isUndefined($scope.post.thumbnail_id) &&
+            $scope.post.thumbnail_id !== "" &&
+            $scope.post.thumbnail_id !== "delete" )
+            $scope.hasFeaturedImage = true;
+        else
+            $scope.hasFeaturedImage = false;
+        }, 1 );
+    */
+
+    // Check if Object Exists
+    $scope.hasFeaturedImage = function(){
+        if( !$ext.objExists( $scope, 'post.image' ) ||
+            _.isEmpty($scope.post.image) )
             return false;
 
         if( !_.isUndefined($scope.post.thumbnail_id) &&
             $scope.post.thumbnail_id !== "" &&
             $scope.post.thumbnail_id !== "delete" )
-            $scope.hasFeaturedImage = 'true';
+            return true;
         else
-            $scope.hasFeaturedImage = 'false';
-        }, 1 );
+            return false;
+    }
 
     $scope.removeFeaturedImage = function(){
         $scope.post.image = {};
         $scope.post.thumbnail_id = "delete";
-        $scope.hasFeaturedImage = 'false';
     }
 
     ///// GET POST_CONTENT FROM TINY MCE /////
@@ -839,6 +855,12 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     var current_user_role = $window.pwGlobals.current_user.roles[0];
     $scope.post.post_class = $window.pwSiteGlobals.roles[current_user_role].post_class;
 
+
+
+
+    //////////////////// EMBEDLY CORE ////////////////////
+
+
     // GET URL EXTRACT
     // 1. On detect paste
     $scope.extract_url = function() {
@@ -858,15 +880,10 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
                     $scope.status = "done";
                 }
             );
-
-        //alert(JSON.stringify($scope.embedly_extract));
-        //alert('extract');
     }
 
     $scope.reset_extract = function() {
         $scope.embedly_extract = {};
-        //alert(JSON.stringify($scope.embedly_extract));
-        //alert('extract');
     }
 
     $scope.ok = function() {
@@ -947,6 +964,19 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         function ( newValue, oldValue ){
             $scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
         });
+
+
+
+    //////////////////// END EMBEDLY CORE ////////////////////
+
+
+
+
+
+
+
+
+
 
 
     /////----- SAVE POST FUNCTION -----//////
