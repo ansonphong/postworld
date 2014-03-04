@@ -24,8 +24,8 @@ postworld.directive( 'pwPost', [ function($scope){
 
 
 postworld.controller('postController',
-    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters",
-    function($scope, $rootScope, $window, $sce, pwData, pwEditPostFilters ) {
+    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "ext",
+    function($scope, $rootScope, $window, $sce, pwData, pwEditPostFilters, $ext ) {
 
     // Define backup source for 'post' object 
     if( typeof $scope.post === 'undefined' ){
@@ -44,7 +44,7 @@ postworld.controller('postController',
     //$scope.post = pwEditPostFilters.parseKnownJsonFields( $scope.post );
 
     // Trust the post_content as HTML
-    if( typeof $scope.post.post_content !== 'undefined' ){
+    if( $ext.objExists( $scope, 'post.post_content' ) ){
         $scope.post.post_content = $sce.trustAsHtml($scope.post.post_content);
     }
 
