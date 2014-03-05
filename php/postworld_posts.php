@@ -66,10 +66,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_permalink',
 		'post_date',
 		'post_date_gmt',
+		'post_timestamp',
 		'post_class',
 		'link_format',
 		'link_url',
 		'image(id)',
+		'image(all)',
 		'image(meta)',
 		'taxonomy(all)',
 		'taxonomy_obj(post_tag)',
@@ -280,8 +282,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			if( !isset($post_data['viewer']) )
 				$post_data['viewer'] = array();
 
-			//$post_data['viewer']['test'] = "wow";
-			
 			foreach ($relationships as $relationship ) {
 
 				$post_data['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
@@ -295,6 +295,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
 			$post_data['time_ago'] = time_ago( strtotime ( $post_data['post_date_gmt'] ) );
+
+		// Post Timestamp
+		if ( in_array('post_timestamp', $fields) )
+			$post_data['post_timestamp'] = (int) strtotime( $post_data['post_date_gmt'] ) ;
 
 
 	////////// AVATAR IMAGES //////////
@@ -339,16 +343,13 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 				}
 
-				// 
-
-
-
 			}
 
 			// Parse known JSON fields into objects
 			$known_JSON_fields = array(
 				'geocode',
 				'location_obj',
+				'date_obj',
 				'related_post'
 				);
 			foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
@@ -362,7 +363,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		}
 
-		
 	////////// AUTHOR DATA //////////
 
 		// Extract author() fields
@@ -1191,5 +1191,16 @@ function pw_print_post( $args ){
 	return $post_html;
 
 }
+
+
+
+function pw_editor( $content, $editor_id, $settings = array() ){
+	ob_start();
+	wp_editor( $content, $editor_id, $settings );
+	$editor = ob_get_contents();
+	ob_end_clean();
+	return $editor;
+}
+
 
 ?>

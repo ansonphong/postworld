@@ -1589,6 +1589,7 @@ __POSTWORLD__
 - __event_start__
 - __event_end__
 - __related_post__
+- __post_timestamp__ - UNIX Timestamp from GMT Date
 
 __TAXONOMIES__
 - __taxonomy(tax_slug)[fields]__ - Returns taxonomy terms array for the post
@@ -3221,5 +3222,7 @@ __return__ : *string*
 - Return the `wizard_name`
 - Return false if no active wizards
 
-------
+
+
+
 

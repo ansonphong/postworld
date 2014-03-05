@@ -1,92 +1,263 @@
 'use strict';
 
-function tinyMCE_init_custom(){
-    //alert( "TINYMCE INITIALIZED" );
-}
-
-/*
-  _____    _ _ _     ____           _   
+/*_____    _ _ _     ____           _   
  | ____|__| (_) |_  |  _ \ ___  ___| |_ 
  |  _| / _` | | __| | |_) / _ \/ __| __|
  | |__| (_| | | |_  |  __/ (_) \__ \ |_ 
  |_____\__,_|_|\__| |_|   \___/|___/\__|
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
+
+postworld.directive( 'pwEditPost', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'editPost',
+        link: function( $scope, element, attrs ){
+            $scope.initEditPost = {};
+            // OBSERVE Attribute
+            attrs.$observe('postType', function(value) {
+                if( !_.isUndefined( value ) )
+                    $scope.initEditPost['post_type'] = value;
+            });
+        }
+    };
+}]);
+
 postworld.controller('editPost',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
     'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit',
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
         $pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit ) {
 
-    $scope.status = "loading";
-    $scope.post = {};
+    // Define Default Post
+    //alert( JSON.stringify($scope.post) );
+    //$scope.default_post = $scope.post;
 
-    var post_defaults = $window.pwSiteGlobals.post_options.defaults;
+    $scope.setPostObject = function( post ){
+        // Given any even incomplete post object
+        // This function will build it into a safe post object
+        // And set it in the Scope
 
-    // SET : DEFAULT POST DATA MODEL
-    $scope.default_post = {
-        post_title : "",
-        post_name : "",
-        post_type : post_defaults.edit_post.post_type,
-        post_status : post_defaults.edit_post.post_status,
-        post_class : post_defaults.edit_post.post_class,
-        link_url : "",
-        link_format : post_defaults.edit_post.link_format,
-        post_date_gmt:"",
-        post_permalink : "",
-        tax_input : $pwPostOptions.pwGetTaxInputModel(),
-        tags_input : "",
-        post_meta:{},
+        //post_type, post_format
+        $scope.status = "loading";
+
+        var post_defaults = $window.pwSiteGlobals.post_options.defaults;
+        var editPostGlobals = $window.pwSiteGlobals.edit_post;
+
+        ///// DETECT POST TYPE /////
+        // Check for Post Type Defined by the 'input' Post Object
+        if( !_.isUndefined( post.post_type ) )
+            var post_type = post.post_type;
+
+        // Check for Post Type Defined by the 'scope' Post Object
+        else if( $ext.objExists( $scope, 'post.post_type' ) )
+            var post_type = $scope.post.post_type;
+
+        else
+            var post_type = "post";
+
+        ///// DETECT POST FORMAT /////
+        // Check for Post Format Defined by the 'input' Post Object 
+        if( !_.isUndefined( post.post_format ) )
+            var post_format = post.post_format;
+        else
+            var post_format = 'default';
+
+
+
+        ///// GET DEFAULT POST OBJECT /////
+        // This function is safe to pass an 'undefined' post type / format
+        var post = $scope.getDefaultPostConfig( post_type, post_format );
+        
+
+        ///// OVERRIDE WITH SCOPE POST /////
+        // If the Post Object is defined the current scope
+        // Override the defaults with those values
+        if( !_.isUndefined( $scope.post ) ){
+            // Over-write inputs over default post
+            angular.forEach( $scope.post, function(value, key){
+                post[key] = value;
+            });
+        }
+
+        ///// FILL IN REQUIRED DEFAULTS /////
+        // Check it over to make sure it has all the neccessary fields to init
+        // SET : DEFAULT POST DATA MODEL
+        var default_post = {
+            post_title : "",
+            post_name : "",
+            //post_type : $scope.initEditPost.post_type,
+            post_status : post_defaults.edit_post.post_status,
+            post_class : post_defaults.edit_post.post_class,
+            link_url : "",
+            link_format : post_defaults.edit_post.link_format,
+            post_date_gmt:"",
+            post_permalink : "",
+            tax_input : $pwPostOptions.pwGetTaxInputModel(),
+            tags_input : "",
+            post_meta:{},
+        };
+
+        // If post object doesn't contain init defaults, write them in
+        angular.forEach( default_post, function(value, key){
+            if( _.isUndefined( post[key] ) )
+                post[key] = value;
+        });
+
+        // CHECK TERMS CATEGORY / SUBCATEGORY ORDER
+        post = $pwEditPostFilters.sortTaxTermsInput( post, $scope.tax_terms, 'tax_input' );
+
+        $scope.default_post = post;
+        $scope.post = post;
+
     };
 
-    //alert( JSON.stringify( $route.current.action ) );
-    //$scope.mode = "edit";
+    $scope.getDefaultPostConfig = function( post_type, post_format ){
+
+        ///// DETECT POST TYPE /////
+        // If post type is empty or not defined
+        // Define Default Post Type
+        if( _.isUndefined(post_type) ||
+            _.isEmpty( post_type ) ||
+            post_type == '' ){
+            // Check for Post Type defined by directive
+            if (!_.isUndefined( $scope.initEditPost.post_type ) )
+                var post_type = $scope.initEditPost.post_type;
+            // Check for Post Type defined by scope post object
+            else if( $ext.objExists( $scope, 'post.post_type' ) )
+                var post_type = $scope.post.post_type;
+            else
+                var post_type = 'post';
+        }
+
+        // Define default Post Format
+        if( _.isUndefined(post_format) ||
+            _.isEmpty(post_format) )
+            var post_format = 'default';
+
+        // Localize Edit Post Config
+        var edit_post = $window.pwSiteGlobals.edit_post;
+
+        // Check if the requested post type is defined
+        if( _.isUndefined( edit_post[post_type] ) )
+            // Fallback on post_type
+            post_type = 'post';
+
+        // Check if the requested post format is defined
+        if( !$ext.objExists( edit_post, post_type + ".new." + post_format ) )
+            // Fallback on post_format
+            post_format = 'default';
+
+        // Define New Post from Default Config
+        if( !_.isUndefined( edit_post[post_type]['new'] ) &&
+            !_.isUndefined( edit_post[post_type]['new'][post_format] ) )
+            var post = edit_post[post_type]['new'][post_format];
+        else{
+            var post = edit_post['post']['new']['default'];
+        
+            // If post type was defined, but not in config, re-insert here
+            if( !_.isUndefined( post_type ) )
+                post.post_type = post_type;
+        }
+
+        // Return the selected post defaults
+        return post;
+
+    };
 
     // ROLE ACCESS
     // Sets booleans for role access variables : "editor", "author"
     $pwRoleAccess.setRoleAccess($scope);
 
+    ///// CLEAR POST DATA /////
+    $scope.newPost = function( post ){
+        
+        // Set the new mode
+        $scope.mode = "new";
 
-    ///// WATCH : ROUTE /////
-    $scope.$on(
-        "$routeChangeSuccess",
-        function( $currentRoute, $previousRoute ){
-            //alert( JSON.stringify( $currentRoute ) );
-            ///// ROUTE : NEW POST /////
-            if ( $route.current.action == "new_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
-                // SWITCH FROM MODE : EDIT > NEW
-                // If we're coming to 'new' mode from 'edit' mode
-                if($scope.mode == "edit"){
-                    // Clear post Data
-                    $scope.newPost();
+        $scope.post = {};
+        // Set the new post object in scope
+        $scope.setPostObject( post );
+
+        // Clear TinyMCE
+        $timeout(function() {
+            if( typeof tinyMCE !== 'undefined' ){
+                if( typeof tinyMCE.get('post_content') !== 'undefined' ){
+                    //$log.debug('RESET tinyMCE : ', tinyMCE);
+                    tinyMCE.get('post_content').setContent( "" );
                 }
-                // Get the post type
-                var post_type = ($routeParams.post_type || "");
-                // If post type is supplied
-                if ( post_type != "" )
-                    // Set the post type
-                    $scope.post.post_type = post_type;
-                $scope.newPost();
-                // Set the status
-                $scope.status = "done";
             }
-            ///// ROUTE : EDIT POST /////
-            else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
-                // Load the specified post data
-                $scope.loadPost();
+        }, 2);
+
+        // Set the Route
+        if( $ext.objExists( $scope, 'post.post_type' ) )
+            $location.path('/new/' + $scope.post.post_type);
+
+    }
+
+    ///// NEW QUICK EDIT POST /////
+    if( $scope.mode == 'quick-edit-new' ){
+        //alert( $scope.post.post_type ); 
+        $scope.setPostObject( { 'post_type':$scope.post.post_type } );
+        $scope.status = "done";
+    }
+    
+    ///// WATCH : ROUTE /////
+    //$timeout( function(){
+        $scope.$on(
+            "$routeChangeSuccess",
+            function( $currentRoute, $previousRoute ){
+                //alert( JSON.stringify( $currentRoute ) );
+                ///// ROUTE : NEW POST /////
+                if ( $route.current.action == "new_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
+                    // SWITCH FROM MODE : EDIT > NEW
+                    // If we're coming to 'new' mode from 'edit' mode
+                    if($scope.mode == "edit"){
+                        // Clear post Data
+                        $scope.newPost();
+                    }
+
+                    // Get the post type from route
+                    var post_type = ($routeParams.post_type || "");
+
+                    // Get the post type from the directive attributes
+                    if( post_type == "" )
+                        if( !_.isUndefined( $scope.initEditPost.post_type ) )
+                            post_type = $scope.initEditPost.post_type;
+
+                    /* OBSOLETE
+                    // If Post Type has been defined
+                    if ( post_type != "" ){
+                        // If the post object is not defined, set it
+                        if( _.isUndefined($scope.post) )
+                            $scope.post = {};
+                        // Set the post type
+                        $scope.post.post_type = post_type;
+                    }
+                    */
+
+                    $scope.setPostObject( { 'post_type':post_type } );
+
+                    // Set the status
+                    $scope.status = "done";
+                }
+                ///// ROUTE : EDIT POST /////
+                else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
+                    // Load the specified post data
+                    $scope.loadPost();
+                }
+                ///// ROUTE : SET DEFAULT /////
+                else if ( $route.current.action == "default"  ){
+                    $location.path('/new/' + post_defaults.edit_post.post_type );
+                }
             }
-            ///// ROUTE : SET DEFAULT /////
-            else if ( $route.current.action == "default"  ){
-                $location.path('/new/' + post_defaults.edit_post.post_type );
-            }
-        }
-    );
+        );
+    //}, 1 );
 
     ///// QUICK EDIT : LOAD POST DATA /////
     $scope.$on('loadPostData', function(event, post_id) {
         $scope.loadPost( post_id );
     });
-
 
     ///// LOAD POST DATA /////
     $scope.loadPost = function( post_id ){
@@ -140,13 +311,12 @@ postworld.controller('editPost',
                 
 
                 ///// LOAD POST CONTENT /////
-
                 // SET THE POST CONTENT
                 $scope.set_post_content( get_post.post_content );
 
                 ///// LOAD AUTHOR /////
                 // EXTRACT AUTHOR NAME
-                if ( typeof get_post['author']['user_nicename'] !== 'undefined' ){
+                if ( $ext.objExists( get_post, 'author.user_nicename' ) ){
                     get_post['post_author_name'] = get_post['author']['user_nicename'];
                     delete get_post['author'];
                 }
@@ -239,14 +409,13 @@ postworld.controller('editPost',
                         // ACTION EMIT
                         // Any sibling or parent scope can listen on this action
                         $scope.$emit('postUpdated', post_id);
-
                     }
                     else{
                         // ERROR
                         if( typeof response.data == 'object' )
                             alert("Error : " + JSON.stringify(response.data) );
                         else
-                            alert("Error : " + response.data );
+                            alert("ERROR : RESPONSE : (LOGGED IN?) : " + JSON.stringify( response ) );
                         $scope.status = "done";
                     }
                 },
@@ -257,7 +426,6 @@ postworld.controller('editPost',
                     $timeout(function() {
                       $scope.status = "done";
                     }, 4000);
-
                 }
             );
 
@@ -267,63 +435,11 @@ postworld.controller('editPost',
     }
     /////----- END SAVE POST FUNCTION -----//////
 
-    ///// CLEAR POST DATA /////
-    $scope.newPost = function( post_object ){
-        
-        // Set the new mode
-        $scope.mode = "new";
-
-        // Merge the given post data with the default post
-        if( typeof post_object === 'object' ){
-            var post = $scope.default_post;
-
-            // Over-write inputs over default post
-            angular.forEach( post_object, function(value, key){
-                post[key] = value;
-            });
-            $scope.post = post;
-
-        } else{
-            $scope.post = $scope.default_post;
-        }
-
-        // Clear TinyMCE
-        $timeout(function() {
-            if( typeof tinyMCE !== 'undefined' ){
-                if( typeof tinyMCE.get('post_content') !== 'undefined' ){
-                    //$log.debug('RESET tinyMCE : ', tinyMCE);
-                    tinyMCE.get('post_content').setContent( "" );
-                }
-            }
-        }, 1);
-
-        // Set the Route
-        $location.path('/new/' + $scope.post.post_type);
-
-    }
 
     // TRASH POST
     $scope.trashPost = function(){
         $pwQuickEdit.trashPost( $scope.post.ID, $scope );
     }; 
-
-    ///// GET POST OBJECT /////
-    $scope.pw_get_post_object = function(){
-        var post = $scope.default_post;
-
-        // SET THE POST CLASS
-        if ( $scope.roles.author == true || $scope.roles.editor == true ){
-            post.post_class = "author";
-        }
-        else{
-            post.post_class = "contributor";
-        }
-
-        // CHECK TERMS CATEGORY / SUBCATEGORY ORDER
-        post = $pwEditPostFilters.sortTaxTermsInput( post, $scope.tax_terms, 'tax_input' );
-        return post;   
-    }
-
 
     ///// SET POST CONTENT /////
     // Function checks to see if tinyMCE has initialized yet
@@ -342,7 +458,6 @@ postworld.controller('editPost',
         }, 250 );
     };
 
-
     ///// LOAD IN DATA /////
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
@@ -357,7 +472,8 @@ postworld.controller('editPost',
     // • Interacts with userAutocomplete() controller
     // • Catches the recent value of the auto-complete
     $scope.$on('updateUsername', function( event, data ) { 
-        $scope.post.post_author_name = data;
+        if( !_.isUndefined( $scope.post ) )
+            $scope.post.post_author_name = data;
     });
 
     // ACTION : POST TAGS FROM AUTOCOMPLETE MODULE
@@ -377,7 +493,8 @@ postworld.controller('editPost',
     $scope.selected_tax_terms = {};
     $scope.$watch('[ post.tax_input, tax_terms ]',
         function ( newValue, oldValue ){
-            if ( typeof $scope.tax_terms !== 'undefined' ){
+            if ( !_.isUndefined($scope.tax_terms) &&
+                $ext.objExists( $scope, 'post.tax_input' ) ){
                 // Create selected terms object
                 $scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post.tax_input);
                 // Clear irrelivent sub-terms
@@ -390,12 +507,21 @@ postworld.controller('editPost',
     // • Evaluate the Post Format
     $scope.$watchCollection('[ post.link_url, post.link_format ]',
         function ( newValue, oldValue ){
-            $scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
+
+            // Check if Object Exists
+            if( $ext.objExists( $scope, 'post.link_url' ) )
+                $scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
+        
         });
 
     // WATCH : POST TYPE
     $scope.$watch( "post.post_type",
         function (){
+
+            // Check if Object Exists
+            if( !$ext.objExists( $scope, 'post.post_type' ) )
+                return false;
+
             // ROUTE CHANGE
             if( $scope.mode == "new" )
                 $location.path('/new/' + $scope.post.post_type);
@@ -429,20 +555,41 @@ postworld.controller('editPost',
     }
 
     // FEATURE IMAGE WATCH : Watch the Featured Image
+    ////// DEPRECIATED /////
+    /*
     $scope.$watch( "post.image",
         function (){
-        if( typeof $scope.post.thumbnail_id !== 'undefined' &&
+
+        // Check if Object Exists
+        if( !$ext.objExists( $scope, 'post.image' ) )
+            $scope.hasFeaturedImage = false;
+
+        if( !_.isUndefined($scope.post.thumbnail_id) &&
             $scope.post.thumbnail_id !== "" &&
             $scope.post.thumbnail_id !== "delete" )
-            $scope.hasFeaturedImage = 'true';
+            $scope.hasFeaturedImage = true;
         else
-            $scope.hasFeaturedImage = 'false';
+            $scope.hasFeaturedImage = false;
         }, 1 );
+    */
+
+    // Check if Object Exists
+    $scope.hasFeaturedImage = function(){
+        if( !$ext.objExists( $scope, 'post.image' ) ||
+            _.isEmpty($scope.post.image) )
+            return false;
+
+        if( !_.isUndefined($scope.post.thumbnail_id) &&
+            $scope.post.thumbnail_id !== "" &&
+            $scope.post.thumbnail_id !== "delete" )
+            return true;
+        else
+            return false;
+    }
 
     $scope.removeFeaturedImage = function(){
         $scope.post.image = {};
         $scope.post.thumbnail_id = "delete";
-        $scope.hasFeaturedImage = 'false';
     }
 
     ///// GET POST_CONTENT FROM TINY MCE /////
@@ -457,60 +604,72 @@ postworld.controller('editPost',
     // LANGUAGE CODE WATCH
     // If 'lang' is defined (by pw-language) then add it to the post object
     $scope.$watch( "lang", function (){
-            if( !_.isUndefined($scope.lang) )
-                $scope.post.language_code = $scope.lang;
-        } );
 
-    // POST DATA OBJECT
-    $scope.post = $scope.pw_get_post_object();
-    //alert(JSON.stringify($scope.post));
+        // Check if Post Exists
+        if( !$ext.objExists( $scope, 'post' ) )
+            return false;
+
+        if( !_.isUndefined($scope.lang) )
+            $scope.post.language_code = $scope.lang;
+    } );
 
     $scope.showEditorSource = function(){
         var source = $('#post_content').val();
         source = tinyMCE.get('post_content').getContent({format : 'raw'});
         alert(source);
     };
-    
+
 }]);
 
 ////////// ------------ EVENT DATA/TIME CONTROLLER ------------ //////////*/
 postworld.controller('eventInput',
     ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-        'pwData', '$log', 'ext', 
+        'pwData', '$log', 'ext', 'pwDate',
     function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
-        $pwData, $log, $ext ) {
+        $pwData, $log, $ext, $pwDate ) {
 
+    $timeout(function() {
+        // SETUP DATE OBJECTS
+        if( _.isUndefined( $scope.post ) )
+            $scope.post = {};
+        if( _.isUndefined( $scope.post.post_meta ) )
+            $scope.post.post_meta = {};
+        if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) ) // _.isUndefined( $scope.post.post_meta.date_obj )
+            $scope.post.post_meta.date_obj = {};
 
-    // SETUP DATE OBJECTS
-    if( typeof $scope.post.post_meta === 'undefined' )
-        $scope.post.post_meta = {};
-
-    if( typeof $scope.post.post_meta.event_start_date_obj === 'undefined' )
-        $scope.post.post_meta.event_start_date_obj = new Date( );
-    if( typeof $scope.post.post_meta.event_end_date_obj === 'undefined' )
-        $scope.post.post_meta.event_end_date_obj = new Date( );
+        if( typeof $scope.post.post_meta.date_obj.event_start_date_obj === 'undefined' )
+            $scope.post.post_meta.date_obj.event_start_date_obj = new Date( );
+        if( typeof $scope.post.post_meta.date_obj.event_end_date_obj === 'undefined' )
+            $scope.post.post_meta.date_obj.event_end_date_obj = new Date( );
+    }, 4 );
 
     $scope.getUnixTimestamp = function( dateObject ){
-        if( !_.isUndefined(dateObject) )
-            return Math.round( dateObject.getTime() / 1000);
+        if( !_.isUndefined( dateObject ) ){
+            var localDateObj = new Date(dateObject);
+            return Math.round( localDateObj.getTime() / 1000);
+        }
     };
 
     $scope.setUnixTimestamps = function(){
         // Add the UNIX Timestamp : event_start
-        $scope.post.event_start = $scope.getUnixTimestamp( $scope.post.post_meta.event_start_date_obj );
+        $scope.post.event_start = $scope.getUnixTimestamp( $scope.post.post_meta.date_obj.event_start_date_obj );
         // Add the UNIX Timestamp : event_end
-        $scope.post.event_end = $scope.getUnixTimestamp( $scope.post.post_meta.event_end_date_obj );
+        $scope.post.event_end = $scope.getUnixTimestamp( $scope.post.post_meta.date_obj.event_end_date_obj );
     }
 
     // WATCH : EVENT START TIME
-    $scope.$watch( "post.post_meta.event_start_date_obj",
+    $scope.$watch( "post.post_meta.date_obj.event_start_date_obj",
         function (){
-            $scope.post.post_meta.event_start_date = $filter('date')(
-                $scope.post.post_meta.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
+            // End function if variable doesn't exist
+            if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) )
+                return false;
+
+            $scope.post.post_meta.date_obj.event_start_date = $filter('date')(
+                $scope.post.post_meta.date_obj.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
 
             // If start time is set after the end time - make them equal
-            if( $scope.post.post_meta.event_end_date_obj < $scope.post.post_meta.event_start_date_obj )
-                $scope.post.post_meta.event_end_date_obj = $scope.post.post_meta.event_start_date_obj;
+            if( $scope.post.post_meta.date_obj.event_end_date_obj < $scope.post.post_meta.date_obj.event_start_date_obj )
+                $scope.post.post_meta.date_obj.event_end_date_obj = $scope.post.post_meta.date_obj.event_start_date_obj;
 
             // Set UNIX Timestamps
             $scope.setUnixTimestamps();
@@ -518,14 +677,18 @@ postworld.controller('eventInput',
         }, 1 );
 
     // WATCH : EVENT END TIME
-    $scope.$watch( "post.post_meta.event_end_date_obj",
+    $scope.$watch( "post.post_meta.date_obj.event_end_date_obj",
         function (){
-            $scope.post.post_meta.event_end_date = $filter('date')(
-                $scope.post.post_meta.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
+            // End function if variable doesn't exist
+            if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) )
+                return false;
+
+            $scope.post.post_meta.date_obj.event_end_date = $filter('date')(
+                $scope.post.post_meta.date_obj.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
 
             // If end time is set before the start time - make them equal
-            if( $scope.post.post_meta.event_start_date_obj > $scope.post.post_meta.event_end_date_obj  )
-                $scope.post.post_meta.event_start_date_obj = $scope.post.post_meta.event_end_date_obj ;
+            if( $scope.post.post_meta.date_obj.event_start_date_obj > $scope.post.post_meta.date_obj.event_end_date_obj  )
+                $scope.post.post_meta.date_obj.event_start_date_obj = $scope.post.post_meta.date_obj.event_end_date_obj ;
 
             // Set UNIX Timestamps
             $scope.setUnixTimestamps();
@@ -553,7 +716,7 @@ postworld.controller('eventInput',
 
     ////////// TIME PICKER : CONFIG //////////
 
-    $scope.minDate = new Date();
+    //$scope.minDate = new Date();
     $scope.mytime = new Date();
 
     $scope.hstep = 1;
@@ -597,8 +760,7 @@ postworld.controller('eventInput',
 
 
 
-/*
-     _         _   _                     _         _                                  _      _       
+/*   _         _   _                     _         _                                  _      _       
     / \  _   _| |_| |__   ___  _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
    / _ \| | | | __| '_ \ / _ \| '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
   / ___ \ |_| | |_| | | | (_) | |     / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
@@ -607,8 +769,7 @@ postworld.controller('eventInput',
 ////////// ------------ AUTHOR AUTOCOMPLETE CONTROLLER ------------ //////////*/
 
 
-/*
-  ____           _     _     _       _    
+/*____           _     _     _       _    
  |  _ \ ___  ___| |_  | |   (_)_ __ | | __
  | |_) / _ \/ __| __| | |   | | '_ \| |/ /
  |  __/ (_) \__ \ |_  | |___| | | | |   < 
@@ -694,6 +855,12 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
     var current_user_role = $window.pwGlobals.current_user.roles[0];
     $scope.post.post_class = $window.pwSiteGlobals.roles[current_user_role].post_class;
 
+
+
+
+    //////////////////// EMBEDLY CORE ////////////////////
+
+
     // GET URL EXTRACT
     // 1. On detect paste
     $scope.extract_url = function() {
@@ -713,15 +880,10 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
                     $scope.status = "done";
                 }
             );
-
-        //alert(JSON.stringify($scope.embedly_extract));
-        //alert('extract');
     }
 
     $scope.reset_extract = function() {
         $scope.embedly_extract = {};
-        //alert(JSON.stringify($scope.embedly_extract));
-        //alert('extract');
     }
 
     $scope.ok = function() {
@@ -755,7 +917,6 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         $scope.loaded = 'true';
 
         }, 1 );
-
 
     ///// SELECT IMAGES /////
     // Default Selected Image
@@ -803,6 +964,19 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
         function ( newValue, oldValue ){
             $scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
         });
+
+
+
+    //////////////////// END EMBEDLY CORE ////////////////////
+
+
+
+
+
+
+
+
+
 
 
     /////----- SAVE POST FUNCTION -----//////
@@ -865,8 +1039,7 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
 
 
 
-/*
-  ____        _         ____  _      _             
+/*____        _         ____  _      _             
  |  _ \  __ _| |_ ___  |  _ \(_) ___| | _____ _ __ 
  | | | |/ _` | __/ _ \ | |_) | |/ __| |/ / _ \ '__|
  | |_| | (_| | ||  __/ |  __/| | (__|   <  __/ |   
@@ -894,8 +1067,7 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
 
 
 
-/*
-   ___        _      _      _____    _ _ _   
+/* ___        _      _      _____    _ _ _   
   / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
  | | | | | | | |/ __| |/ / |  _| / _` | | __|
  | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
@@ -904,17 +1076,27 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
 ////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $modal, pwData ) {
+postworld.service('pwQuickEdit', ['$log', '$location', '$modal', 'pwData',
+    function ( $log, $location, $modal, pwData ) {
     return{
-        openQuickEdit : function( post ){
-            console.log( "Launch Quick Edit : ", post );  
+        openQuickEdit : function( post, mode ){
+            
+            // Default Defaults
+            if( _.isUndefined( mode ) )
+                var mode = 'quick-edit';
+
+            $log.debug( "Launch Quick Edit : MODE : " + mode, post );
+
             var modalInstance = $modal.open({
               templateUrl: pwData.pw_get_template('panels','','quick_edit'),
-              controller: quickEditInstanceCtrl,
+              controller: 'quickEditInstanceCtrl',
               windowClass: 'quick_edit',
               resolve: {
                 post: function(){
                     return post;
+                },
+                mode: function(){
+                    return mode;
                 }
               }
             });
@@ -923,6 +1105,11 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
             }, function () {
                 // WHEN CLOSE MODAL
                 $log.debug('Modal dismissed at: ' + new Date());
+                
+                // Clear the URL params
+                //$location.url('/');
+                $location.path('/');
+                $rootScope.$apply();
 
             });
         },
@@ -944,7 +1131,6 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                                     scope.$emit('trashPost', trashed_post_id );
                                     // Broadcast Trash Event : post_id
                                     scope.$broadcast('trashPost', trashed_post_id );
-
                                 }
                             }
                             else{
@@ -961,45 +1147,31 @@ postworld.service('pwQuickEdit', ['$log', '$modal', 'pwData', function ( $log, $
                 );
             }
         },
- 
     }
 }]);
 
 
+postworld.controller('quickEditInstanceCtrl',
+    [ '$scope', '$rootScope', '$sce', '$modalInstance', 'post', 'mode', 'pwData', '$timeout', 'pwQuickEdit',
+    function($scope, $rootScope, $sce, $modalInstance, post, mode, $pwData, $timeout, $pwQuickEdit) {
 
-/*///////// ------- SERVICE : QUICK EDIT CONTROLLER ------- /////////*/  
-var quickEdit = function ($scope, $modal, $log, $window, pwData) {
-    $scope.openQuickEdit = function( post ){
-        console.log( "Launch Quick Edit : ", post );  
-        var modalInstance = $modal.open({
-          templateUrl: pwData.pw_get_template('panels','quick_edit'), //$window.pwSiteGlobals.template_paths.panels.url.override + 'quick_edit.html',
-          controller: quickEditInstanceCtrl,
-          windowClass: 'quick_edit',
-          resolve: {
-            post: function(){
-                return post;
-            }
-          }
-        });
-        modalInstance.result.then(function (selectedItem) {
-            //$scope.post_title = post_title;
-        }, function () {
-            // WHEN CLOSE MODAL
-            $log.debug('Modal dismissed at: ' + new Date());
-        });
-    }; 
-};
+    // Set Default Mode
+    $scope.mode = ( !_.isUndefined( mode ) ) ?
+        mode : "quick-edit";
 
-var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, post, pwData, $timeout, pwQuickEdit) {
-    
     // Import the passed post object into the Modal Scope
     $scope.post = post;
+    //alert( JSON.stringify( $scope.post ) );
 
     // TIMEOUT
     // Allow editPost Controller to Initialize
-    $timeout(function() {
-      $scope.$broadcast('loadPostData', post.ID );
-    }, 1);
+    if( !_.isUndefined( post.ID ) &&
+        mode != 'new' ){
+        // Broadcast to Load in the Post Data
+        $timeout(function() {
+          $scope.$broadcast('loadPostData', post.ID );
+        }, 3);
+    }
     
     // MODAL CLOSE
     $scope.close = function () {
@@ -1008,13 +1180,12 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
 
     // TRASH POST
     $scope.trashPost = function(){
-        pwQuickEdit.trashPost($scope.post.ID, $scope);
+        $pwQuickEdit.trashPost($scope.post.ID, $scope);
     }; 
 
     // WATCH FOR TRASHED
     // Close Modal
     // Set Parent post_status = trash
-
     // Watch on the value of post_status
     $scope.$watch( "post.post_status",
         function (){
@@ -1022,5 +1193,32 @@ var quickEditInstanceCtrl = function ($scope, $rootScope, $sce, $modalInstance, 
                 $modalInstance.dismiss('close');
         }); 
 
-};
+}]);
 
+
+postworld.directive( 'pwModalAccess', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'pwModalAccessCtrl',
+        link: function( $scope, element, attrs ){
+            // OBSERVE Attribute
+            //attrs.$observe('postsModel', function(value) {
+            //  alert(value);
+            //});
+        }
+    };
+}]);
+
+postworld.controller('pwModalAccessCtrl',
+    ['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
+    'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit',
+    function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
+        $pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit ) {
+
+    $scope.newPostModal = function( post ){
+        // Open Modal
+        $pwQuickEdit.openQuickEdit( post, 'quick-edit-new' );
+
+    }
+
+}]);

@@ -23,11 +23,13 @@ postworld.directive( 'pwUserList', [ function($scope){
 
 			$scope.userMax = parseInt($scope.userMax);
 
-			/*
+			
 			// OBSERVE Attribute
-			attrs.$observe('var', function(value) {
+			attrs.$observe('userMax', function(value) {
+				//if( _.isUndefined( $scope.userMax ) )
+					//$scope.userMax = 0;
 			});
-			*/
+			
 		}
 	};
 }]);
@@ -186,7 +188,12 @@ postworld.controller( 'pwUserListCtrl',
 
 	$scope.getUserDatas = function(){
 		
+		// Define User IDs
+		if( _.isUndefined($scope.userIds) )
+			$scope.userIds = [];
 		var userIds = $scope.userIds;
+		
+		// Define User Fields
 		var userFields = $scope.userFields;
 
 		// If users exceeds user max

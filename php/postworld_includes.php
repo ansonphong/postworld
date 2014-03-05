@@ -1,4 +1,4 @@
-<?
+<?php
 
 // Define Angular Dependancies
 global $angularDep;
@@ -42,8 +42,8 @@ function postworld_includes( $args ){
 
 
 	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
-	wp_deregister_script('jquery');
-	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
+	//wp_deregister_script('jquery');
+	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery','');
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
@@ -211,6 +211,9 @@ function postworld_includes( $args ){
 		// COMPONENTS
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
 
+		// WIZARD
+		wp_enqueue_script( 'pw-Wizard', plugins_url().'/postworld/js/components/pwWizard.js', $angularDep );
+
 		// WORDPRESS DIRECTIVES
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
 			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
@@ -227,7 +230,6 @@ function postworld_includes( $args ){
 	// Inject Current User Data into Window
 	function pwGlobals() {
 	?>
-
 		<script type="text/javascript">/* <![CDATA[ */
 			var pwGlobals = <?php echo json_encode( pwGlobals_parse() ); ?>;
 		/* ]]> */</script>
@@ -296,9 +298,13 @@ function pwGlobals_parse(){
 
 	///// POST /////
 	if( !empty($GLOBALS['post']->ID) ){
-		$pw_globals["current_view"]["type"] = "post";
+		//$pw_globals["current_view"]["type"] = "post";
+		$pw_globals["current_view"]["type"] = $GLOBALS['post']->post_type;
 		$pw_globals["current_view"]["post"] = array(
-			"post_id" => $GLOBALS['post']->ID
+			"post_id" => $GLOBALS['post']->ID,
+			"post_name" => $GLOBALS['post']->post_name,
+			"post_title" => $GLOBALS['post']->post_title,
+			"post_status" => $GLOBALS['post']->post_status
 			);
 	}
 

@@ -122,7 +122,20 @@ function pw_set_wizard_status( $vars ){
 		// Decode JSON $value as
 		$value = json_decode( $value, true );
 
-	// Write in the value
+
+	// If the current incoming status is active
+	if( $value['active'] == true ){
+		// Deactivate the other wizards so that only one is active at a time
+		$wizard_status_deactivated = array();
+		foreach( $wizard_status as $name => $status ){
+			$status['active'] = false;
+			$status['visible'] = false;
+			$wizard_status_deactivated[$name] = $status;
+		}
+		$wizard_status = $wizard_status_deactivated;
+	}
+	
+	// Write in the new value
 	$wizard_status[$wizard_name] = $value;
 
 	// Encode it as JSON
@@ -141,6 +154,31 @@ function pw_set_wizard_status( $vars ){
 }
 
 
+function pw_active_wizard( $user_id ){
+
+	// Set Defaults
+	if( !isset( $user_id ) )
+		$user_id = get_current_user_id();
+	if( $user_id == 0 )
+		return array( "error" => "No user." );
+
+	$wizard_status = pw_get_wizard_status( array( 'user_id' => $user_id ) );
+
+	// If the wizard is empty, return empty array
+	if( empty($wizard_status) )
+		return array();
+
+	// If any are active, return the first one found
+	foreach( $wizard_status as $name => $status ){
+		if( $status['active'] == true )
+			return array( $name => $status );
+	}
+
+	// If none are active
+	return array();
+
+
+}
 
 
 
