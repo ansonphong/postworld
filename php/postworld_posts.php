@@ -11,7 +11,6 @@ function pw_post_exists ( $post_id ){
 	    return false;
 }
 
-
 function pw_get_posts( $post_ids, $fields='all' ) {
 	// • Run pw_post_data on each of the $post_ids, and return the given fields
 	if($fields == null) $fields='all';
