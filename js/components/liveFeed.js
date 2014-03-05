@@ -14,7 +14,7 @@ postworld.directive('liveFeed', function() {
 		controller: 'pwFeedController',
 		//template: '<div ng-include src="templateUrl"></div>',		
        	// template: '<div ng-include src="\'http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html\'"></div>',
-       	template: '<div ng-include="templateUrl"></div>',
+       	template: '<div ng-include="templateUrl" class="feed"></div>',
  		// template: '<div ng-include="templateUrl"></div>',
  		// templateUrl: 'http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html',
 		//templateUrl: '{{templateUrl}}',
@@ -29,7 +29,7 @@ postworld.directive('loadFeed', function() {
 		// DO not set url here and in nginclude at the same time, so many errors!
 		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
 		replace: true,
-       	template: '<div ng-include="templateUrl"></div>',
+       	template: '<div ng-include="templateUrl" class="feed"></div>',
 		controller: 'pwFeedController',
 		scope : {
 			// templateUrl: "=",			

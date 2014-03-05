@@ -1076,8 +1076,8 @@ var DatepickerDemoCtrl = function ($scope, $timeout) {
 ////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', ['$log', '$location', '$modal', 'pwData',
-    function ( $log, $location, $modal, pwData ) {
+postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData',
+    function ( $rootScope, $log, $location, $modal, pwData ) {
     return{
         openQuickEdit : function( post, mode ){
             
@@ -1109,7 +1109,7 @@ postworld.service('pwQuickEdit', ['$log', '$location', '$modal', 'pwData',
                 // Clear the URL params
                 //$location.url('/');
                 $location.path('/');
-                $rootScope.$apply();
+                //$rootScope.$apply();
 
             });
         },
