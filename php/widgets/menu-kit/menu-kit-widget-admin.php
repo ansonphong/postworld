@@ -201,41 +201,24 @@ extract($OPTIONS);
 	   
 	   */-->
 	   
-	   
    </div>
-	  
    
    <!-- CUSTOM MENUS -->
 	<div class="type-wrapper">
 		<div class="type-title">
 			<input type="radio" value="custom_menu" class="radio-type-select" id="<?php echo $this->get_field_id('menu_type'); ?>" name="<?php echo $this->get_field_name('menu_type'); ?>" <?php if($menu_type === 'custom_menu'){ echo 'checked="checked"'; } ?> />
 			<label><b>Custom Menu</b></label>
-
 			<select name="<?php echo $this->get_field_name('menu_slug'); ?>"  id="<?php echo $this->get_field_id('menu_slug'); ?>">
 				<?php
 					$menus = get_terms( 'nav_menu' );
 					foreach( $menus as $menu ){?>
-
 						<option value="<?php echo $menu->slug; ?>" <?php if($menu_slug == $menu->slug){ echo 'selected="selected"'; }?> ><?php echo $menu->name; ?></option>
-
 					<?php
 					}
 				?>
-
 			</select>
-
 		</div>
-   
    </div>
 
 </div>
-
-<script>
-jQuery(document).ready(function() {
-	
-	
-	
-	});
-
-</script>
-	   
+ 
