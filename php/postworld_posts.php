@@ -176,6 +176,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			if ( $key == 'post_content' && $mode == 'view' ){
 				///// CONTENT FILTERING /////
+
+				// Apply AutoP
+				$post_data[$key] = wpautop($post_data[$key]);
+				//$post_data[$key] = apply_filters('the_content', $post_data[$key]);
+				
 				// oEmbed URLs
 				$post_data[$key] = pw_embed_content($post_data[$key]);
 				// Apply Shortcodes
