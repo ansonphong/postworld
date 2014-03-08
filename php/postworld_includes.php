@@ -257,7 +257,7 @@ function pwSiteGlobals_include(){
 	global $pwSiteGlobals;
 
 	$pwSiteGlobals['wordpress'] = array( 
-		'ajax_url' => admin_url('admin-ajax.php')
+		'ajax_url' => admin_url('admin-ajax.php'),
 	);
 
 	$pwGlobalsJs  = "";
