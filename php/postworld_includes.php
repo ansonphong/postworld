@@ -10,7 +10,7 @@ function postworld_includes( $args ){
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.2.1';
+		$angular_version = 'angular-1.2.14';
 
 	// Default Dependencies
 	if( empty($dep) ){
@@ -24,7 +24,6 @@ function postworld_includes( $args ){
 		//array_push( $angularDep, 'google-maps' );
 	}
 
-
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' => admin_url( 'admin-ajax.php' ),
 						'pluginurl' => WP_PLUGIN_URL,
@@ -37,9 +36,7 @@ function postworld_includes( $args ){
 	//BOOTSTRAP CSS
 	// Removed - move be added in theme
 	//wp_enqueue_style( "bootstrap-CSS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.css' );
-
-	wp_enqueue_style( "Angular-Strap-Animation", WP_PLUGIN_URL.'/postworld/lib/angular-strap-2.0.0-rc.2/css/angular-motion.min.css' );
-
+	//wp_enqueue_style( "Angular-Strap-Animation", WP_PLUGIN_URL.'/postworld/lib/angular-strap-2.0.0-rc.2/css/angular-motion.min.css' );
 
 	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
 	//wp_deregister_script('jquery');
@@ -103,8 +100,6 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Animate',
 			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-animate.min.js');
 
-		// wp_enqueue_script( 'AngularJS-Animate', WP_PLUGIN_URL.'/postworld/lib/angular/angular-animate.min.js');
-
 		///// ANGULAR THIRD PARTY MODULES /////
 		
 		// ANGULAR UI UTILITIES
@@ -125,16 +120,11 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS-Strap',
 		//	WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
 
-		wp_enqueue_script( 'AngularJS-Strap',
-			plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.js', $angularDep );
+		//wp_enqueue_script( 'AngularJS-Strap',
+		//	plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.js', $angularDep );
 
-		wp_enqueue_script( 'AngularJS-Strap-Templates',
-			plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.tpl.js', $angularDep );
-
-
-		// ANGULAR : TIMER
-		wp_enqueue_script( 	'AngularJS-Timer',
-			WP_PLUGIN_URL.'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
+		//wp_enqueue_script( 'AngularJS-Strap-Templates',
+		//	plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.tpl.js', $angularDep );
 
 
 		/////// POSTWORLD APP /////	
@@ -211,6 +201,9 @@ function postworld_includes( $args ){
 		// COMPONENTS
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
 
+		// ANGULAR : TIMER
+		wp_enqueue_script( 	'AngularJS-Timer', WP_PLUGIN_URL.'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
+
 		// WIZARD
 		wp_enqueue_script( 'pw-Wizard', plugins_url().'/postworld/js/components/pwWizard.js', $angularDep );
 
@@ -258,6 +251,8 @@ function pwSiteGlobals_include(){
 
 	$pwSiteGlobals['wordpress'] = array( 
 		'ajax_url' => admin_url('admin-ajax.php'),
+		'stylesheet_directory_uri' => get_stylesheet_directory_uri(),
+		'template_directory_uri' => get_template_directory_uri(),
 	);
 
 	$pwGlobalsJs  = "";

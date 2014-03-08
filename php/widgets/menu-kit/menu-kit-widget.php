@@ -31,7 +31,6 @@ class menu_kit_widget extends WP_Widget {
 		$title = apply_filters( 'widget_menu-title', $OPTIONS['title'] );
 		$menu_type = apply_filters( 'widget_menu-type', $OPTIONS['menu_type'] );
 		
-		
 		////////// DRAW PAGES WIDGET //////////
 		
 		$OPTIONS['show_title'] = apply_filters( 'widget_menu-show_title', $OPTIONS['show_title'] );
@@ -90,9 +89,9 @@ class menu_kit_widget extends WP_Widget {
 			
 			
 			// RENDER MENU KIT PAGES
-			echo "<div id='".$CONTAINER."'>";
+			echo "<ul id='".$CONTAINER."'>";
 			menu_kit_categories($OPTIONS);
-			echo "</div>";
+			echo "</ul>";
 		
 		endif;
 		
