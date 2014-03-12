@@ -61,6 +61,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_status',
 		'post_title',
 		'post_content',
+		'post_format',
 		'post_excerpt',
 		'post_name',
 		'post_permalink',
@@ -110,6 +111,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		'avatar(small,48)',
 		'link_format',
+		'post_format',
 		'time_ago',
 		'post_meta(all)',
 		'rank_score',
@@ -167,6 +169,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	}
 	//$fields = array_merge($fields, $viewer_fields);
 	
+
 	////////// WP GET_POST METHOD //////////
 	// Get post data from Wordpress standard function
 	$get_post = get_post($post_id, ARRAY_A);
@@ -189,6 +192,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			
 		}
 	}
+
 
 	////////// WP GET_POST_CUSTOM METHOD //////////
 	// Get post data from Wordpress standard function
@@ -229,6 +233,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			if ( $post_data["edit_post_link"] == false ) $post_data["edit_post_link"] = '#';
 		}
 
+		// Post Format
+		if( in_array('post_format', $fields) )
+			$post_data['post_format'] = get_post_format( $post_id );
+
 
 	////////// POSTWORLD //////////
 
@@ -248,6 +256,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if( in_array('post_points', $fields) ){
 			$post_data['post_points'] = get_post_points( $post_id );
 		}
+
 
 	////////// VIEWER FIELDS //////////
 
@@ -278,7 +287,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		}
 
-		////////// AUTHOR DATA //////////
+	
+	////////// AUTHOR DATA //////////
 
 		// Extract author() fields
 		$relationships = extract_linear_fields( $fields, 'is_relationship', true );
@@ -294,6 +304,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			}
 
 		}
+
 
 	////////// DATE & TIME //////////
 
@@ -367,6 +378,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			}
 
 		}
+
 
 	////////// AUTHOR DATA //////////
 
@@ -726,6 +738,11 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			foreach ( $postarr["tax_input"] as $taxonomy => $terms) {
 				wp_set_object_terms( $post_id, $terms, $taxonomy, false );
 			}
+		}
+
+		///// POST FORMAT //////
+		if(isset($postarr["post_format"])){
+			set_post_format( $post_id , $postarr["post_format"] );
 		}
 	
 		///// ADD/UPDATE META FIELDS //////
