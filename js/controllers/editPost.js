@@ -860,7 +860,6 @@ postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','
 
 	//////////////////// EMBEDLY CORE ////////////////////
 
-
 	// GET URL EXTRACT
 	// 1. On detect paste
 	$scope.extract_url = function() {
