@@ -33,26 +33,23 @@ postworld.directive('pwHref', function() {
     }
 });
 
-
-
-
 ///// SUBMIT ON ENTER /////
 // Submit on Enter, without a real form
 postworld.directive('ngEnter', function() {
-        return function(scope, element, attrs) {
-            element.bind("keydown keypress", function(event) {
-                if(event.which === 13) {
-                    scope.$apply(function(){
-                        //scope.$eval(attrs.ngEnter);
-                        scope.$eval("submit()");
-                    });
-                    event.preventDefault();
-                }
-            });
-        };
-    });
-
-
+      return function(scope, element, attrs) {
+          element.bind("keydown keypress", function(event) {
+              if(event.which === 13) {
+                  scope.$apply(function(){
+                    if( attrs.ngEnter )
+                      scope.$eval(attrs.ngEnter);
+                    else
+                      scope.$eval("submit()");
+                  });
+                  event.preventDefault();
+              }
+          });
+      };
+  });
 
 ///// KEEP DROPDOWN OPEN ON CLICK /////
 postworld.directive('preventDefaultClick', function() {

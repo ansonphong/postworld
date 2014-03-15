@@ -29,9 +29,31 @@ postworld.controller('editPost',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit ) {
 
+
+	$scope.clearAndClose = function(){
+		// Clear Embedly Extract
+		$scope.clearExtract();
+
+		// Clear Post (not working in modal context properly)
+		//var post_type = $scope.post.post_type;
+		//$scope.post = {};
+		//$scope.setPostObject( { 'post_type' : post_type } );
+
+		// Close Modal
+		$scope.close();
+
+	};
+
 	// Define Default Post
-	//alert( JSON.stringify($scope.post) );
-	//$scope.default_post = $scope.post;
+	$scope.getSelectedLinkFormatMeta = function(){
+		var link_format = $scope.post.link_format;
+		return _.where( $scope.link_format_meta, { "slug" : link_format } );
+	}
+
+	$scope.$watch("post.link_format", function (){
+		var selectedLinkFormatMeta = $scope.getSelectedLinkFormatMeta();
+		$scope.selectedLinkFormatMeta = selectedLinkFormatMeta[0];
+	}, 1);
 
 	$scope.setPostObject = function( post ){
 		// Given any even incomplete post object
@@ -62,7 +84,6 @@ postworld.controller('editPost',
 			var post_format = post.post_format;
 		else
 			var post_format = 'default';
-
 
 
 		///// GET DEFAULT POST OBJECT /////
