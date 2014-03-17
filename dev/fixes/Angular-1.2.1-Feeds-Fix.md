@@ -8,9 +8,12 @@ For the postworld-dev repo,
 <div live-feed='feed1' ></div>
 
 <div load-feed="front_page_features" ></div>
-                The ng-include is taken away from the livefeed/loadfeed directive and used in the template definition of each directive.
+
+The ng-include is taken away from the livefeed/loadfeed directive and used in the template definition of each directive.
+
 You may need to create a database entry for community-blog on wp_postworld_feeds to see some output on this.
 For the postworld Unify-B branch,
+
 1-      Added 2 templates for the infinite scrolling [live_feed_4 and load_feed_4], one for livefeed and one for loadfeed, the basic idea is to remove ng-include from  the feed-item directive, and put it inside the directive template definition.
 
 <div feed-item post="post" feed-id='args.feed_id'></div>
@@ -22,29 +25,17 @@ For the postworld Unify-B branch,
 postworld.directive('feedItem', function() {
 
     return {
-
         restrict: 'A',
-
         replace: true,
-
         controller: 'pwFeedItemController',
-
         template: '<div ng-include src="templateUrlf"></div>',       
-
         scope: {
-
               // this identifies the panel id, hence the panel template
-
               feedItem      : '=',
-
               post : "=",   // Get from ng-repeat
-
               feedId : '=', // Get from Parent Scope of Live Feed
-
               }
-
     };
-
 });
 
 4- liveFeed and loadFeed directives are updated to include template like this:-
@@ -59,7 +50,8 @@ postworld.directive('liveFeed', function() {
        };
 });
  
- 
+
+
 While the changes seem trivial, they were not suggested anywhere online, they do the trick because:-
 1-  ng-include is separated from the controller and the directive, so there is no conflict in priority anymore between ng-include and controller, neither between ng-include and directive.
 

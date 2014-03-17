@@ -567,8 +567,16 @@ add_action("wp_ajax_pw_get_post_edit", "pw_get_post_edit_admin");
 //---------- oEMBED GET ----------//
 function ajax_oembed_get(){
 	list($response, $args, $nonce) = initAjaxResponse();
+	extract($args);
 	$pw_args = $args;
+
+	// GET OEMBED
 	$oEmbed = wp_oembed_get( $pw_args['link_url'] );
+
+	// AUTOPLAY
+	if( !empty( $autoplay ) && $autoplay == true )
+		$oEmbed = str_replace("?feature=oembed", "?feature=oembed&autoplay=1", $oEmbed);
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $oEmbed;

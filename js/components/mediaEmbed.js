@@ -170,17 +170,26 @@ postworld.directive( 'oEmbed-old', ['$sce','pwData', function($scope, $sce, pwDa
 postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
 
     return { 
-        //restrict: 'A',
-        //scope : function(){
-        //},
+        restrict: 'AE',
+        scope : {
+            link_url:"=oEmbed",
+            autoplay:"=autoplay"
+        },
         //template : '',
         controller: 'pwOEmbedController',
         link : function ($scope, element, attributes){
+            /*
         	// When the oEmbed Value changes, then change the html here
         	$scope.$watch('oEmbed', function(value) {
-        		console.log('test',value);
+        		//console.log('test',value);
         		element.html(value);
-        	});          
+        	});
+            */
+            /*
+            attrs.$observe('oEmbed', function(value) {
+                element.html(value);
+            });
+            */
         }
     };
 
@@ -188,22 +197,35 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
 
 
 postworld.controller('pwOEmbedController',
-    function pwOEmbedController($scope, $attrs, $sce, pwData) {
-            //alert( attributes.oEmbed );
-            $scope.status = "loading";
-            $scope.oEmbed = "embed code for : " + $attrs.oEmbed;
+    function pwOEmbedController($scope, $attrs, $sce, pwData, $log) {
+            
+            var link_url = $scope.link_url;
 
-            var link_url = $attrs.oEmbed;
-            var args = { "link_url": link_url };
+            // Status
+            if( _.isUndefined( $scope.$parent.oEmbedStatus ) )
+                $scope.$parent.oEmbedStatus = {};
+            $scope.$parent.oEmbedStatus[link_url] = "loading";
+
+            $scope.status = "loading";
+
+            var autoplay = (
+                !_.isUndefined( $scope.autoplay ) &&
+                $scope.autoplay == true ) ?
+                true : false;
+
+            var args = {
+                "link_url": link_url,
+                "autoplay": autoplay
+                };
 
             // MEDIA GET
             $scope.oEmbedGet = function(){
                 pwData.wp_ajax('ajax_oembed_get', args ).then(
                     // Success
                     function(response) {    
-                        $scope.status = "done";
-                        console.log('return',response.data);
-                        $scope.oEmbed = response.data; // $sce.trustAsHtml( response.data );                        
+                        $scope.$parent.oEmbedStatus[link_url] = "done";
+                        $log.debug('return', response.data);
+                        $scope.$parent.oEmbed = $sce.trustAsHtml( response.data );                        
                     },
                     // Failure
                     function(response) {
@@ -213,6 +235,7 @@ postworld.controller('pwOEmbedController',
             };
             $scope.oEmbedGet();
 });
+
 
 postworld.run(function($rootScope, $templateCache) {
    $rootScope.$on('$viewContentLoaded', function() {
