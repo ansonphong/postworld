@@ -234,8 +234,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		}
 
 		// Post Format
-		if( in_array('post_format', $fields) )
+		if( in_array('post_format', $fields) ){
 			$post_data['post_format'] = get_post_format( $post_id );
+			if( $post_data['post_format'] == false )
+				$post_data['post_format'] = 'standard';
+		}
 
 
 	////////// POSTWORLD //////////
