@@ -596,6 +596,17 @@ postworld.controller('editPost',
 
 	// Check if Object Exists
 	$scope.hasFeaturedImage = function(){
+
+
+		if( $ext.objExists( $scope, 'post.image' ) &&
+			!_.isEmpty($scope.post.image) )
+			return true;
+		else
+			return false;
+
+
+		//------------------------------------\\
+		/*
 		if( !$ext.objExists( $scope, 'post.image' ) ||
 			_.isEmpty($scope.post.image) )
 			return false;
@@ -606,6 +617,7 @@ postworld.controller('editPost',
 			return true;
 		else
 			return false;
+		*/
 	}
 
 	$scope.removeFeaturedImage = function(){

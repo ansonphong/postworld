@@ -35,18 +35,32 @@ postworld.controller( 'pwEmbedlyExtractCtrl',
 
 	$scope.$parent.extractUrl = function() {
 		$scope.status = "busy";
+
+		// Update Status in Parent Scope
+		if( _.isUndefined( $scope.$parent.statusObj ) )
+			$scope.$parent.statusObj = {};
+		$scope.$parent.statusObj.extractUrl = 'busy';
+
 		$embedly.liveEmbedlyExtract( $scope.extractUrlModel ).then( // 
 				// Success
 				function(response) {
-					$log.debug( response );    
+					$log.debug( response );
+
+					// Clear the HTML Field
+					if( $ext.objExists( response, 'media.html' ) )
+						response['media']['html'] = '';
+
 					$scope.extractObjectModel = response;
+
 					$scope.status = "done";
+					$scope.$parent.statusObj.extractUrl = 'done';
 				},
 				// Failure
 				function(response) {
 					//alert('Could not find URL.');
 					throw {message:'Embedly Error'+response};
 					$scope.status = "done";
+					$scope.$parent.statusObj.extractUrl = 'done';
 				}
 			);
 	}
