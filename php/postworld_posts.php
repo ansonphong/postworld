@@ -441,6 +441,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		///// PROCESS IMAGE FIELDS /////
 		// Check if there are images to process
 		if ( !empty($images) ){
+			$post_data['image'] = array();
 
 			///// GET IMAGE TO USE /////
 			// Setup Thumbnail Image Variables
@@ -520,7 +521,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				if ( count($image_attributes) == 1 ){
 
 					// FULL : Get 'full' image
-					if ( $image_handle == 'full' ) {
+					if ( $image_handle == 'full' || $image_handle == 'all' ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
 						$post_data['image']['full']['url']	= $thumbnail_url;
 						$post_data['image']['full']['width'] = (int)$image_obj['width'];
@@ -528,10 +529,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					}
 
 					// ALL : Get all registered images
-					elseif( $image_handle == 'all' ) {
+					if( $image_handle == 'all' ) {
 						$registered_images = registered_images_obj();
 
-						$post_data['image'] = array();
 						foreach( $registered_images as $image_handle => $image_attributes ){
 							$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_handle );
 							$registered_images[$image_handle]["url"] = $image_src[0];
