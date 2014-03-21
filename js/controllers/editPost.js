@@ -46,6 +46,10 @@ postworld.controller('editPost',
 
 	// Define Default Post
 	$scope.getSelectedLinkFormatMeta = function(){
+		
+		if(!$ext.objExists( $scope, 'post.link_format' ))
+			return false;
+		
 		var link_format = $scope.post.link_format;
 		return _.where( $scope.link_format_meta, { "slug" : link_format } );
 	}

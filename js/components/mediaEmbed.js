@@ -225,7 +225,8 @@ postworld.controller('pwOEmbedController',
                     function(response) {    
                         $scope.$parent.oEmbedStatus[link_url] = "done";
                         $log.debug('return', response.data);
-                        $scope.$parent.oEmbed = $sce.trustAsHtml( response.data );                        
+                        $scope.$parent.oEmbed = $sce.trustAsHtml( response.data ); 
+                        $scope.$parent.oEmbedCode = response.data;                        
                     },
                     // Failure
                     function(response) {

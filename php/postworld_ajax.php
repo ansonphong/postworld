@@ -4,6 +4,27 @@
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 */
 
+
+//---------- PW LOAD IMAGE ----------//
+function pw_get_image_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_image( $params ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_get_image", "pw_get_image_ajax");
+add_action("wp_ajax_pw_get_image", "pw_get_image_ajax");
+
+
+
 //---------- PW SET WIZARD STATUS ----------//
 function pw_set_wizard_status_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
@@ -574,8 +595,19 @@ function ajax_oembed_get(){
 	$oEmbed = wp_oembed_get( $pw_args['link_url'] );
 
 	// AUTOPLAY
-	if( !empty( $autoplay ) && $autoplay == true )
-		$oEmbed = str_replace("?feature=oembed", "?feature=oembed&autoplay=1", $oEmbed);
+	if( !empty( $autoplay ) && $autoplay == true ){
+
+		// VIMEO
+		if (strpos($oEmbed, 'vimeo') !== false) {
+		    $oEmbed = str_replace("\" width=\"", "?autoplay=1\" width=\"", $oEmbed);
+		}
+
+		// YOUTUBE
+		if (strpos($oEmbed, 'youtube') !== false) {
+		    $oEmbed = str_replace("?feature=oembed", "?feature=oembed&autoplay=1", $oEmbed);
+		}
+		
+	}
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;

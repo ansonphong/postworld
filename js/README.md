@@ -226,6 +226,90 @@ __return__ : *Object*
 
 ## Directives
 
+------
+
+### pw-image  *[ directive ]*
+- Loads an image object into a predefined scope object / variable
+
+#### Attributes
+
+__image-id__ : *integer / model path*
+- The image attachment ID
+
+__image-model__ : *model path*
+- The model path which will be populated with the image object
+
+__TODO__ : Add image() fields-like request specific imge sizes, including custom image sizes, like `pw_get_post.`
+
+#### Usage
+- The `$scope` object `images` is the reccomended usage to store all the image objects, with a subobject with the ID of the image, *ie.* `link_thumbnail`
+
+```html
+  <img
+  pw-image
+  image-id="{{post.post_meta.link_thumbnail_id}}"
+  image-model="images.link_thumbnail"
+  ng-src="{{ images.link_thumbnail.url }}">
+
+```
+
+#### Example of `image-model`
+
+```javascript
+{
+  "width": 480,
+  "height": 360,
+  "file": "2014/03/188-hqdefault.jpg",
+  "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault.jpg",
+  "sizes": {
+    "thumbnail": {
+      "file": "188-hqdefault-150x150.jpg",
+      "width": 150,
+      "height": 150,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-150x150.jpg"
+    },
+    "medium": {
+      "file": "188-hqdefault-300x225.jpg",
+      "width": 300,
+      "height": 225,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-300x225.jpg"
+    },
+    "banner": {
+      "file": "188-hqdefault-480x275.jpg",
+      "width": 480,
+      "height": 275,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-480x275.jpg"
+    },
+    "grid": {
+      "file": "188-hqdefault-480x275.jpg",
+      "width": 480,
+      "height": 275,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-480x275.jpg"
+    }
+  },
+  "image_meta": {
+    "aperture": 0,
+    "credit": "",
+    "camera": "",
+    "caption": "",
+    "created_timestamp": 0,
+    "copyright": "",
+    "focal_length": 0,
+    "iso": 0,
+    "shutter_speed": 0,
+    "title": ""
+  }
+}
+
+```
+
+
+------
+
 ### pw-query  *[ directive ]*
 - Loads a set of posts into scope based on a query 
 
@@ -393,10 +477,27 @@ wp_enqueue_media();
 ### o-embed *[ directive ]*
 - Populates the element with the embed code for a given media URL
 
+#### Attributes
+__o-embed__ : *expression*
+- The URL of the URL to embed
+
+__autoplay__ : *boolean*
+- Whether or not to auto-play (support limited to Vimeo / YouTube)
+
 #### Usage
-``` html
-<div o-embed="http://www.youtube.com/watch?v=38peWm76l-U"></div>
+
+```html
+<div o-embed="post.link_url" autoplay="true">
+  <div class="o-embed" ng-bind-html="oEmbed"></div>
+</div>
 ```
+
+- An additional `oEmbedCode` scope variable is created, which is populated with the raw HTML embed code for dev inspection.
+
+```html
+  <div ng-bind="oEmbedCode | json"></div>
+```
+
 ------
 
 ### load-post *[ directive ]*

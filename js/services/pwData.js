@@ -378,6 +378,11 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('pw_set_wizard_status',params);
 		},
+		get_image: function(args) {
+			$log.debug('pwData.get_image',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_image',params);
+		},
 
 
    }; // END OF pwData return value

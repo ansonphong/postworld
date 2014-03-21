@@ -548,7 +548,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$image_obj = image_obj($thumbnail_id, $image_handle);
 						$post_data['image'][$image_handle]['url']	= $image_obj['url'];
 						$post_data['image'][$image_handle]['width'] = (int)$image_obj['width'];
-						$post_data['image'][$image_handle]['height'] = (int)$image_obj['width'];
+						$post_data['image'][$image_handle]['height'] = (int)$image_obj['height'];
 					}
 
 					// META : Get Image Meta Data
@@ -583,9 +583,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$hard_crop = 1;
 
 					// Process custom image size, return url
-					$post_data['images'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
-					$post_data['images'][$image_handle]['width'] = (int)$thumb_width;
-					$post_data['images'][$image_handle]['height'] = (int)$thumb_height;
+					$post_data['image'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+					$post_data['image'][$image_handle]['width'] = (int)$thumb_width;
+					$post_data['image'][$image_handle]['height'] = (int)$thumb_height;
 				}
 
 			} // END foreeach

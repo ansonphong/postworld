@@ -31,6 +31,13 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 					var controllerName = "pwModalInstanceCtrl";
 					var windowClass = "modal-view-post"; 
 				break;
+				///// MEDIA /////
+				case "media":
+					// TODO : Add support to detect post types / format and check for availability of the modal template					
+					var panelId = "modal-media";
+					var controllerName = "pwModalInstanceCtrl";
+					var windowClass = "modal-media"; 
+				break;
 				///// DEFAULT /////
 				default:
 					//code to be executed if n is different from case 1 and 2
@@ -198,9 +205,12 @@ postworld.controller('pwModalAccessCtrl',
 		$pwQuickEdit.openQuickEdit( post, 'quick-edit-new' );
 	}
 
-
 	$scope.viewPostModal = function( post ){
 		$pwModal.openModal( post, 'view' );
+	}
+
+	$scope.mediaModal = function( post ){
+		$pwModal.openModal( post, 'media' );
 	}
 
 }]);

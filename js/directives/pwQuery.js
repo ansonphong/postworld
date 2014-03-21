@@ -36,8 +36,8 @@ postworld.controller('pwQueryCtrl',
 		$scope.queryResultsModel = [];
 
 	// Create query model if it doesn't exist
-	if( _.isUndefined( $scope.queryStatusModel ) )
-		$scope.queryStatusModel = 'loading';
+	//if( _.isUndefined( $scope.queryStatusModel ) )
+	$scope.queryStatusModel = 'loading';
 
 	//$scope.movementStatus = "loading";
 
@@ -46,11 +46,12 @@ postworld.controller('pwQueryCtrl',
 			// Success
 			function(response) {
 				$scope.queryResultsModel = response.data.posts;
-				$scope.statusQueryModel = "done";
+				$scope.queryStatusModel = "done";
 			},
 			// Failure
 			function(response) {
 				$scope.queryResultsModel = [{post_title:"Posts not loaded.", ID:"0"}];
+				$scope.queryStatusModel = "done";
 			}
 		);
 	}

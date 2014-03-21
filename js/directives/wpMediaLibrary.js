@@ -201,15 +201,25 @@ postworld.controller( 'wpMediaLibraryCtrl',
 	$scope.editPostImage = function( selectedMedia ){
 		// 1. Sets the image as thumbnail_id in the edit post object
 		// 2. Gets the new image sizes and populates the edit post image object
-
 		var thumbnail_id = selectedMedia.first().id;
 		$scope.$parent.post.thumbnail_id = thumbnail_id;
 		$scope.$parent.post.image = selectedMedia.first().attributes.sizes;
 
 		$log.debug( "Selected Media", selectedMedia.first() );
-
 	}
 
+
+	$scope.editLinkImage = function( selectedMedia ){
+		// 1. Sets the image as thumbnail_id in the edit post object
+		// 2. Gets the new image sizes and populates the edit post image object
+		var thumbnail_id = selectedMedia.first().id;
+		$scope.$parent.post.post_meta.link_thumbnail_id = thumbnail_id;
+		//$scope.$parent.post.post_meta.link_image = selectedMedia.first().attributes; //.sizes;
+
+		$log.debug( "Selected Media", selectedMedia.first() );
+	}
+
+	
 	$scope.setPostImage = function( selectedMedia ){
 		// Immeadiately sets the selected image as the Post's image in the DB
 
