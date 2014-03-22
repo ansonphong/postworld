@@ -54,14 +54,15 @@ postworld.directive( 'pwPostActions', [ function($scope){
 }]);
 
 postworld.controller('postActions',
-    [ "$scope", "pwData",
-    function($scope, pwData ) {
-
+    [ "$scope", "pwData", "ext",
+    function($scope, pwData, $ext ) {
 
     $scope.$watch( "post.viewer",
         function (){
-            ( $scope.post.viewer.is_favorite == true ) ? $scope.isFavorite="selected" : $scope.isFavorite="" ;
-            ( $scope.post.viewer.is_view_later == true ) ? $scope.isViewLater="selected" : $scope.isViewLater="" ;
+            if( $ext.objExists( $scope, "post.viewer" ) ){
+                ( $scope.post.viewer.is_favorite == true ) ? $scope.isFavorite="selected" : $scope.isFavorite="" ;
+                ( $scope.post.viewer.is_view_later == true ) ? $scope.isViewLater="selected" : $scope.isViewLater="" ;
+            }
         }, 1 );
 
     $scope.setFavorite = function($event){
@@ -251,8 +252,8 @@ postworld.directive( 'pwAdminPostMenu', [ function($scope){
 }]);
 
 postworld.controller('adminPostDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwQuickEdit', 'ext',
-    function( $scope, $rootScope, $location, $window, $log, $pwQuickEdit, $ext ) {
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwQuickEdit', 'ext', '$timeout',
+    function( $scope, $rootScope, $location, $window, $log, $pwQuickEdit, $ext, $timeout ) {
 
     $scope.menuOptions = [
         {
@@ -290,38 +291,67 @@ postworld.controller('adminPostDropdown',
     // Localize current user data
     $scope.current_user = $window.pwGlobals.current_user;
 
-    // Detect the user's possession in relation to the post
-    // If the user's ID is same as the post author's ID
-    if ( typeof $scope.current_user.data !== 'undefined' && typeof $scope.post.author.ID !== 'undefined' ){
-        if( $scope.current_user.data.ID == $scope.post.author.ID )
-            $scope.postPossession = "own";
-        else
+
+    /*
+    $scope.$watch('post', function(value) {        
+    },1);
+    */
+
+    var initAttempts = 0;
+    $scope.initMenu = function(){
+
+        // Try Initializing the menu until author ID is defined
+        if( !$ext.objExists( $scope, 'post.author.ID' ) ){
+            initAttempts ++;
+
+            // Stop trying after 100 tries
+            if( initAttempts < 100 ){
+                $timeout(function() {
+                    $scope.initMenu();
+                }, 200);  
+            }
+            return false;
+        }
+
+
+        // Detect the user's possession in relation to the post
+        // If the user's ID is same as the post author's ID
+        if ( typeof $scope.current_user.data !== 'undefined' && typeof $scope.post.author.ID !== 'undefined' ){
+            if( $scope.current_user.data.ID == $scope.post.author.ID )
+                $scope.postPossession = "own";
+            else
+                $scope.postPossession = "other";
+        } else {
             $scope.postPossession = "other";
-    } else {
-        $scope.postPossession = "other";
+        }
+
+        // Detect current user's role
+        if ( $scope.current_user == 0 )
+            $scope.currentRole = "guest";
+        else if ( typeof $scope.current_user.roles != undefined ){
+            $scope.currentRole = $scope.current_user.roles[0];
+        }
+
+        // Setup empty menu options array
+        $scope.userOptions = [];
+
+        // TODO : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
+
+        // Build menu for user based on role
+        angular.forEach( $scope.menuOptions, function( option ){
+            if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
+                $scope.userOptions.push( option );
+        });
+
+        // If no options added, set empty
+        if ( $scope.userOptions == [] )
+            $scope.userOptions = "0";
     }
+    // Run the function
+    $scope.initMenu();
+    
 
-    // Detect current user's role
-    if ( $scope.current_user == 0 )
-        $scope.currentRole = "guest";
-    else if ( typeof $scope.current_user.roles != undefined ){
-        $scope.currentRole = $scope.current_user.roles[0];
-    }
 
-    // Setup empty menu options array
-    $scope.userOptions = [];
-
-    // TODO : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
-
-    // Build menu for user based on role
-    angular.forEach( $scope.menuOptions, function( option ){
-        if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
-            $scope.userOptions.push( option );
-    });
-
-    // If no options added, set empty
-    if ( $scope.userOptions == [] )
-        $scope.userOptions = "0";
     
     $scope.getEditPostPageUrl = function(){
 

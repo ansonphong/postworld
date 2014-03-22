@@ -484,6 +484,10 @@ __o-embed__ : *expression*
 __autoplay__ : *boolean*
 - Whether or not to auto-play (support limited to Vimeo / YouTube)
 
+__run__ : *boolean*
+- If this is *false*, the o-embed will not run
+- This is set on a watch, so if this changes to true the *o-embed* will run
+
 #### Usage
 
 ```html

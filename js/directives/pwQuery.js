@@ -55,7 +55,12 @@ postworld.controller('pwQueryCtrl',
 			}
 		);
 	}
-	$scope.pwQuery( $scope.pwQueryVars );
+
+	$scope.$watch('pwQueryVars', function(value) {
+		if( !_.isUndefined($scope.pwQueryVars) )
+			$scope.pwQuery( $scope.pwQueryVars );
+	});
+	
 
 	// LOAD SUCCESS
 	$scope.$on('postUpdated', function(post) { 

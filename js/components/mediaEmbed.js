@@ -173,7 +173,8 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
         restrict: 'AE',
         scope : {
             link_url:"=oEmbed",
-            autoplay:"=autoplay"
+            autoplay:"=autoplay",
+            run:"=run",
         },
         //template : '',
         controller: 'pwOEmbedController',
@@ -213,19 +214,30 @@ postworld.controller('pwOEmbedController',
                 $scope.autoplay == true ) ?
                 true : false;
 
-            var args = {
-                "link_url": link_url,
-                "autoplay": autoplay
-                };
 
             // MEDIA GET
             $scope.oEmbedGet = function(){
+
+                // Check if RUN is false
+                if( $scope.run == false )
+                    return false;
+
+                var args = {
+                    "link_url": link_url,
+                    "autoplay": autoplay
+                    };
                 pwData.wp_ajax('ajax_oembed_get', args ).then(
                     // Success
                     function(response) {    
                         $scope.$parent.oEmbedStatus[link_url] = "done";
+
+                        // If not data, return false
+                        if ( response.data == false )
+                            return false;
+
                         $log.debug('return', response.data);
                         $scope.$parent.oEmbed = $sce.trustAsHtml( response.data ); 
+                        
                         $scope.$parent.oEmbedCode = response.data;                        
                     },
                     // Failure
@@ -234,7 +246,15 @@ postworld.controller('pwOEmbedController',
                     }
                 );
             };
+
             $scope.oEmbedGet();
+
+            $scope.$watch('run', function(value) {
+                $scope.oEmbedGet();
+            },1);
+            
+
+            
 });
 
 

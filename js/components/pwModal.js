@@ -206,6 +206,7 @@ postworld.controller('pwModalAccessCtrl',
 	}
 
 	$scope.viewPostModal = function( post ){
+		//alert( JSON.stringify( post ) );
 		$pwModal.openModal( post, 'view' );
 	}
 
