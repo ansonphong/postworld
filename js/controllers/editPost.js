@@ -30,6 +30,11 @@ postworld.controller('editPost',
 		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit ) {
 
 
+	// Set the default mode
+	if( _.isUndefined( $scope.mode ) )
+		$scope.mode = 'new';
+
+
 	$scope.clearAndClose = function(){
 		// Clear Embedly Extract
 		$scope.clearExtract();
@@ -58,6 +63,7 @@ postworld.controller('editPost',
 		var selectedLinkFormatMeta = $scope.getSelectedLinkFormatMeta();
 		$scope.selectedLinkFormatMeta = selectedLinkFormatMeta[0];
 	}, 1);
+
 
 	$scope.setPostObject = function( post ){
 		// Given any even incomplete post object
@@ -665,20 +671,35 @@ postworld.controller('eventInput',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
 		$pwData, $log, $ext, $pwDate ) {
 
+	
 	$timeout(function() {
-		// SETUP DATE OBJECTS
-		if( _.isUndefined( $scope.post ) )
+		// SETUP // INITIALIZE DATE OBJECTS
+		// If this is enabled, it causes post.post_meta.date_obj functionality to break
+		// TODO : Refactor eventInput as an isolated scope directive
+
+		//alert( JSON.stringify( $scope.post ) );
+
+		/*
+		if( !$ext.objExists( $scope, 'post' ) )
 			$scope.post = {};
+		*/
+		/*
 		if( _.isUndefined( $scope.post.post_meta ) )
 			$scope.post.post_meta = {};
+		*/
+		/*	
 		if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) ) // _.isUndefined( $scope.post.post_meta.date_obj )
 			$scope.post.post_meta.date_obj = {};
-
+		*/
+		/*
 		if( typeof $scope.post.post_meta.date_obj.event_start_date_obj === 'undefined' )
 			$scope.post.post_meta.date_obj.event_start_date_obj = new Date( );
 		if( typeof $scope.post.post_meta.date_obj.event_end_date_obj === 'undefined' )
 			$scope.post.post_meta.date_obj.event_end_date_obj = new Date( );
+		*/
+
 	}, 4 );
+
 
 	$scope.getUnixTimestamp = function( dateObject ){
 		if( !_.isUndefined( dateObject ) ){
