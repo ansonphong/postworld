@@ -383,6 +383,11 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('pw_get_image',params);
 		},
+		set_option: function(args) {
+			$log.debug('pwData.set_option',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_set_option',params);
+		},
 
 
    }; // END OF pwData return value

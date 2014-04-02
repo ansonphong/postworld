@@ -5,6 +5,25 @@
 */
 
 
+//---------- PW SET OPTION ----------//
+function pw_set_option_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_set_option( $option, $value ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_set_option", "pw_set_option_ajax");
+add_action("wp_ajax_pw_set_option", "pw_set_option_ajax");
+
+
 //---------- PW LOAD IMAGE ----------//
 function pw_get_image_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

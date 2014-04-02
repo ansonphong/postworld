@@ -34,7 +34,8 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 		restrict: 'AE',
 		controller: 'wpMediaLibraryCtrl',
 		scope: {
-			mediaModel:'@mediaModel',
+			mediaModel:'=mediaModel',
+			mediaModelArray:'@mediaModelArray',
 			mediaTitle:'@mediaTitle',
 			mediaButton:'@mediaButton',
 			mediaTabs:'@mediaTabs',
@@ -70,8 +71,8 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 
 
 postworld.controller( 'wpMediaLibraryCtrl',
-	[ '$scope', '$window', '$timeout', '$log', 'pwData',
-	function( $scope, $window, $timeout, $log, $pwData ) {
+	[ '$scope', '$window', '$timeout', '$log', 'pwData', 'ext',
+	function( $scope, $window, $timeout, $log, $pwData, $ext ) {
 
 	///// SERVICE FUNCTIONS /////
 	$scope.stringToBoolean = function(string){
@@ -179,23 +180,55 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 	
 	$scope.setSelectedMedia = function( selectedMedia ){
-		
-		// alert( JSON.stringify( selectedMedia ) );
-		//$scope.$parent.selectedMedia = selectedMedia;
 
+		///// MEDIA MODEL /////
+		// Set the selected Media Object into the specified Media Model
+		if( $ext.objExists($scope, 'mediaModel') ){
+
+			// If there's only one image, and mediaModelArray is not set to true
+			if( selectedMedia.length == 1 && $scope.mediaModelArray != 'true' )
+				$scope.mediaModel = selectedMedia.first();
+			else
+				$scope.mediaModel = selectedMedia;
+
+		}
+
+		///// LOCAL CALLBACK /////
 		// Run Specified Callback in Local Scope
 		if( !_.isUndefined( $scope.mediaCallback ) ){
 			var mediaCallback = $scope.mediaCallback;
-			$scope[mediaCallback](selectedMedia);
+
+			// Check to see if there's brackets
+			// to see if a executable function is defined
+			if( $ext.isInArray( '(', mediaCallback ) &&
+				$ext.isInArray( ')', mediaCallback ) )
+				$scope.$eval(mediaCallback);
+			// If a pre-set function name is defined
+			else
+				$scope[mediaCallback](selectedMedia);
 		}
 
+		///// PARENT CALLBACK /////
 		// Run Specified Callback in Parent Scope
+
 		if( !_.isUndefined( $scope.mediaParentCallback ) ){
 			var mediaParentCallback = $scope.mediaParentCallback;
-			$scope.$parent[mediaParentCallback](selectedMedia);
+
+			// Check to see if there's brackets
+			// to see if a executable function is defined
+			if( $ext.isInArray( '(', mediaParentCallback ) &&
+				$ext.isInArray( ')', mediaParentCallback ) )
+				$scope.$eval(mediaParentCallback);
+			// If a pre-set function name is defined
+			else
+				$scope[mediaParentCallback](selectedMedia);
 		}
 
 		$scope.$apply();
+	}
+
+	$scope.test = function(message){
+		alert(message);
 	}
 
 	$scope.editPostImage = function( selectedMedia ){
@@ -253,6 +286,57 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		);
 		
 	}
+
+
+	$scope.setOption = function( option, field ){
+		//alert( "option name: " + option + " // field : " + field  );
+		
+		if( !$ext.objExists($scope, 'mediaModel') ){
+			$log.debug('WP Media Library "setOption()" Callback Error : Must specify "media-model" attribute.');
+			return false;
+		}
+		
+		// Get selected media, and get around 2-way data binding
+		var selectedMedia = angular.fromJson( angular.toJson( $scope.mediaModel ) );
+		alert( JSON.stringify( selectedMedia ) );
+
+		//alert( typeof selectedMedia );
+
+		// FIELD : id
+		if( field == 'id' ){
+			
+			if( !_.isUndefined( selectedMedia.id ) )
+				var value = selectedMedia.id;
+			else if( !_.isUndefined( selectedMedia[0] ) )
+				var value = selectedMedia[0].id;
+
+		} else{
+			var value = angular.toJson($scope.mediaModel);
+		}
+
+		var vars = {
+			option: option,
+			value: value,
+		};
+
+		$pwData.set_option( vars ).then(
+			// Success
+			function(response){
+
+				// Get around 2-way data binding
+				$scope.mediaModel = selectedMedia;
+
+			},
+			// Failure
+			function(response) {
+				//$scope.movements = [{post_title:"Movements not loaded.", ID:"0"}];
+			}
+		);
+
+
+	}
+
+
 
 }]);
 

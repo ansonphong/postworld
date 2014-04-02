@@ -436,15 +436,23 @@ __media-callback__ : *string* (optional)
 - Calls a local callback in the scope of the directive
 - Available options:
   + __setPostImage__ - Replaces the `post.image` object with the new image after selected
+  + __editPostImage__ - Replaces the `post.thumbnail_id` and `post.image` values in the current `post` object
+  + __setOption(option, [field])__ - Sets the selected image object in the `wp_options` table as the specified `option` name. The `field` can optionally be set to `id` and only the image ID will be saved.
 
 __media-parent-callback__ : *string* (optional)
 - Calls a callback in the parent scope of the directive
-- Provides one argument of the media array returned from the media window
 - Value is the name of the function in the parent scope
+- If only the function name is provided, it provides one variable of the media array returned from the media window. ie. `functionName(selectedMedia)`
 
 __media-model__ : *string* (optional)
 - The name of an object in the parent scope
 - The array returned from the media window is populated into this object model
+
+__media-model-array__ : *boolean* (optional)
+- Options:
+  + `false` *(default)* - the media model with only one image selected will be automatically taken out of the array and converted into an object. ie. `[{ imageObj }]` ›› `{imageObj}`
+  + `true` - the media model will be preserved as an array, even if only one image is selected. ie. `[{ imageObj }]`
+
 
 #### Usage
 ``` html

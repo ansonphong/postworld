@@ -1,5 +1,16 @@
 <?php
 
+
+function pw_set_option( $option, $value ){
+	if( current_user_can('manage_options') ){
+		update_option( $option, $value );
+		return get_option($option);
+	}
+	else
+		return array('error'=>'No access.');
+}
+
+
 function pw_empty_array( $format ){
 	// Return an empty array
 	if( $format == "A_ARRAY" )
