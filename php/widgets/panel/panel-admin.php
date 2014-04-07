@@ -38,10 +38,7 @@ extract($OPTIONS);
 </style>
 
 <?php
-
-  
   //echo json_encode( $pw_templates["panels"] );
-
 ?>
 
 <div id="widget-options">
