@@ -228,8 +228,8 @@ function postworld_includes( $args ){
 
 	}
 
+	
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
-
 	pwSiteGlobals_include();
 	
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
