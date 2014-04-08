@@ -81,6 +81,9 @@ include 'php/postworld_points.php';
 ////////// RANK FUNCTIONS ///////////
 include 'php/postworld_rank.php';
 
+////////// TEMPLATE FUNCTIONS ///////////
+include 'php/postworld_templates.php';
+
 ////////// FEED FUNCTIONS ///////////
 include 'php/postworld_feeds.php';
 

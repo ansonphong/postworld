@@ -407,7 +407,10 @@ function list_dir_file_names($directory){
 			
 	return $names_array;
 }
-function pw_get_templates ( $templates_object = null, $path_type='url' ){
+
+
+////////// DISCONTINUED //////////
+function pw_get_templates_old_and_obsolete_function_delete_me ( $templates_object = null, $path_type='url' ){
 	/*
 	$templates_object : Array (optional)
 
@@ -441,21 +444,20 @@ function pw_get_templates ( $templates_object = null, $path_type='url' ){
 		/*null : default
 			Returns object with all panels and templates in the default and over-ride folders.
 		 */
-		$args = array(
+		$pt_args = array(
 			 'public'   => true,
 			// '_builtin' => false
 		);
-		//$output = 'names'; // names or objects, note names is the default
-		$operator = 'and'; // 'and' or 'or'
-		
-		$post_types = get_post_types( $args, 'names', $operator );
+		$pt_output = 'names'; // names or objects, note names is the default
+		$pt_operator = 'and'; // 'and' or 'or'
+		$post_types = get_post_types( $pt_args, $pt_output, $pt_operator );
+
 		$post_types_final = array();
 
 		foreach ( $post_types as $post_type ) {
 				$post_types_final[] = $post_type ;
 		}
 
-		//global $pwSiteGlobals; // redundant - prune
 		$post_views = $pwSiteGlobals['post_views'];
 
 		$templates_object['posts']=array();
@@ -470,6 +472,9 @@ function pw_get_templates ( $templates_object = null, $path_type='url' ){
 		//print_r($templates_object);
 	}
 	
+	///// HANDLE POSTS /////
+	// File naming convention : "post_type-post_view.html"
+
 	if(array_key_exists('posts', $templates_object)){
 	//if($templates_object['posts']){
 		
@@ -488,7 +493,7 @@ function pw_get_templates ( $templates_object = null, $path_type='url' ){
 			 	 	$fall_back_template_name ="post-".$templates_object['posts']['post_views'][$j].".html";
 			 	 	
 			 	 	if(file_exists($template_paths['posts']['dir']['override'].$fall_back_template_name))
-			 	 		$output['posts'][$templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts'][$path_type]['override'].$fall_back_template_name;
+			 	 		$output['posts'][ $templates_object['posts']['post_types'][$i] ][$templates_object['posts']['post_views'][$j]] = $template_paths['posts'][$path_type]['override'].$fall_back_template_name;
 					
 					else{
 						$fall_back_template_default_path = $template_paths['posts'][$path_type]['default']."post-".$templates_object['posts']['post_views'][$j].".html";
@@ -501,6 +506,8 @@ function pw_get_templates ( $templates_object = null, $path_type='url' ){
 
 		 
 	}
+
+	///// HANDLE ALL OTHER FORMATS /////
 
 	/* array( 'panels'=>'panel_id' )*/
 	//if($templates_object['panels' ]) {
@@ -536,69 +543,8 @@ function pw_get_templates ( $templates_object = null, $path_type='url' ){
 }
 
 
-function  pw_get_post_template ( $post_id, $post_view, $path_type='url', $string=false ){
-	
-	/* Returns an template path based on the provided post ID and view
-		Process
-		
-		Check the post type of the post as $post_type with get_post_type( $post_id )
-		Using pw_get_templates(), get the template object
-		Input :
-		
-		$args = array(
-		    'posts' => array(
-		        'post_types' => array( $post_type ),    // 'post'
-		        'post_views' => array( $post_view )     // 'full'
-		    ),
-		);
-		$post_template_object = pw_get_templates ($args);
-		Output :
-		
-		{
-		posts : {
-		     'post' : {
-		          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
-		          },
-		     },
-		}
-		return : string (The single template path) : /wp-content/plugins/postworld/templates/posts/post-full.html
-	 */
-	 $post_type=  get_post_type( $post_id );
-	 $args = array(
-			'posts' => array(
-    		'post_types' => array( $post_type ),    // 'post'
-    		'post_views' => array( $post_view )     // 'full'
-		),
-	);
-	
-	$templates_object = pw_get_templates($args, $path_type);
-
-	if( $string == false )
-		return $templates_object;
-	 else{
-
-	 	foreach( $templates_object as $template_type => $post_types ){
-		 	foreach( $post_types as $post_type => $views ){
-		 		foreach( $views as $view => $template_path ){
-		 			return $template_path;
-		 		}
-		 	}
-		 }
-	 }
-}
 
 
-
-function pw_get_panel_template( $panel_id, $path_type = "url" ){
-	// Returns a single string for panel template from ID
-
-	$panel_template = pw_get_templates ( array( "panels"=>array($panel_id), $path_type ));
-
-	if( isset($panel_template) )
-		return (string) $panel_template['panels'][$panel_id];
-	else
-		return false;
-}
 
 
 
