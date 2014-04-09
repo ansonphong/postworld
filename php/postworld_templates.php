@@ -281,4 +281,17 @@ function pw_get_panel_template( $panel_id ){
 }
 
 
+// Include a Postworld Feed Template from templates/feeds
+function pw_parse_template( $template_path, $vars = array() ){
+	extract($vars);
+	
+	ob_start();
+	//include $i_paths['infinite']['dir'].'/php/setup-archive.php';
+	include $template_path;
+	$content = ob_get_contents();
+	ob_end_clean();
+	return $content;
+}
+
+
 ?>

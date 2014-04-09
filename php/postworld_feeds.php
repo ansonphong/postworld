@@ -301,7 +301,6 @@ function pw_print_feed( $args ){
 		// RETURN ERROR
 		return array('error' => 'No feed_id or feed_query defined.');
 	}
-
 	
 	// Include h2o template engine
 	global $pw_globals;

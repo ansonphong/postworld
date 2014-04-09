@@ -2389,6 +2389,35 @@ panels : {
 };
 ```
 
+------
+
+### pw_parse_template( *$template_path, $vars* )
+- Parses a PHP template
+- Injects the template with the provided `$vars` localized via extract
+  + `extract($vars)`
+- Useful for turning parsed template HTML into a variable
+
+#### Parameters
+__$template_path__ : *string* (required)
+- The absolute directory path the PHP template to parse
+
+__$vars__ : *array* (optional)
+- Variables to be injected locally into the template
+- `$vars` is unpacked into the template context with PHP's `extract()`
+- A value of : `array( 'query'=>array('post_type'=>'post') )` is accessed in the template like `$query['post_type']`
+
+#### Usage 
+```php
+$vars = array(
+  'query' => array(
+    'post_type' => $post->post_type // Localized in template as $query['post_type']
+    )
+  );
+$template_html = pw_parse_template( $template_path, $vars );
+```
+
+__return__ : *string*
+- The parsed template contents
 
 ------
 
