@@ -22,22 +22,23 @@ function pw_construct_template_obj( $args ){
 	if( !isset( $path_type ) )
 		$path_type = 'dir';
 	if( !isset( $ext ) )
-		$ext = '.php';
+		$ext = 'php';
 	if( !isset( $url ) )
 		$url = '';
+	if( !isset( $subdirs ) )
+		$subdirs = pw_get_dirs( $dir );
 
-	$subdirs = pw_get_dirs( $dir );
 	$template_object = array();
 
 	// Iterate through each Directory
 	foreach( $subdirs as $subdir ){
 		$template_object[$subdir] = array();
-		$files = glob( trailingslashit($dir) . $subdir . '/*' . $ext );
+		$files = glob( trailingslashit($dir) . $subdir . '/*' . '.' . $ext );
 
 		// Iterate through each File
 		foreach( $files as $file ){
 			$basename = basename($file);
-			$basename_noext = basename($file, $ext);
+			$basename_noext = basename( $file, '.' . $ext );
 
 			// Output Directory Path
 			if( $path_type == 'dir' )
@@ -61,7 +62,7 @@ function pw_get_templates( $vars = array() ){
 		$vars = array(
 			'path_type'			=>	[string] ( 'url' / 'dir' ),
 			'source'			=>	[string] ( 'default' / 'merge' ),
-			'ext'				=>	[string] ( '.php' / '.html' ),
+			'ext'				=>	[string] ( 'php' / 'html' ),
 			'templates_object'	=>	[array]	
 			)
 
@@ -79,11 +80,10 @@ function pw_get_templates( $vars = array() ){
 	if( !isset( $source ) )
 		$source = 'merge';
 	if( !isset( $ext ) )
-		$ext = '.html';
-
+		$ext = 'html';
 
 	// Check to see if there is a templates folder in the child folder
-	$has_override_templates_dir = is_dir( $pwSiteGlobals['templates']['dir']['override'] );
+	//$has_override_templates_dir = is_dir( $pwSiteGlobals['templates']['dir']['override'] );
 
 	// Setup Variables
 	$default_template_dir = $pwSiteGlobals['templates']['dir']['default'];
@@ -91,7 +91,8 @@ function pw_get_templates( $vars = array() ){
 	$override_template_dir = $pwSiteGlobals['templates']['dir']['override'];
 	$override_template_url = $pwSiteGlobals['templates']['url']['override'];
 
-	// DEFAULT Templates Object
+
+	///// DEFAULT Templates Object /////
 	$default_template_obj_args = array(
 		'dir'	=>	$default_template_dir,
 		'url'	=>	$default_template_url,
@@ -99,10 +100,14 @@ function pw_get_templates( $vars = array() ){
 		'path_type'	=>	$path_type,
 		);
 
+	if( isset($subdirs) )
+		$default_template_obj_args['subdirs'] = (array) $subdirs;
+
 	if( $source == 'default' || $source == 'merge' )
 		$default_template_obj = pw_construct_template_obj( $default_template_obj_args );
 
-	// OVERRIDE Templates Object
+
+	///// OVERRIDE Templates Object /////
 	$override_template_obj_args = array(
 		'dir'	=>	$override_template_dir,
 		'url'	=>	$override_template_url,
@@ -110,10 +115,14 @@ function pw_get_templates( $vars = array() ){
 		'path_type'	=>	$path_type,
 		);
 
+	if( isset($subdirs) )
+		$override_template_obj_args['subdirs'] = (array) $subdirs;
+
 	if( $source == 'override' || $source == 'merge' )
 		$override_template_obj = pw_construct_template_obj( $override_template_obj_args );
 
-	// Merge Results
+
+	///// Merge Results /////
 	if( $source == 'merge' ){
 		// Start with Default Template Object
 		$template_obj = $default_template_obj;
@@ -137,25 +146,32 @@ function pw_get_templates( $vars = array() ){
 
 	}
 
-
 	////////// POST TEMPLATES : OBJECT STRUCTURE //////////
 
 	///// GET POST TYPES /////
-	$pt_args = array(
-			'public'   => true,
-		);
-	$pt_output = 'names'; // names or objects, note names is the default
-	$pt_operator = 'and'; // 'and' or 'or'
-	$post_types = get_post_types( $pt_args, $pt_output, $pt_operator );
-	// Flatten Array
-	$post_types_final = array();
-	foreach ( $post_types as $post_type ) {
-			$post_types_final[] = $post_type ;
+	$post_types_defined = ( isset ( $posts['post_types'] ) ) ? true : false;
+	$post_types = $post_types_defined
+		? // Post Types defined
+		$posts['post_types']
+		: // Post Types are not defined
+		get_post_types( array( 'public'   => true ), 'names', 'and' );
+
+	// If the post types were not defined and so derived from `get_post_types`
+	if( !$post_types_defined ){
+		// Flatten Array
+		$post_types_final = array();
+		foreach ( $post_types as $post_type ) {
+				$post_types_final[] = $post_type ;
+		}
+		$post_types = $post_types_final;
 	}
-	$post_types = $post_types_final;
+		
 
 	///// GET VIEWS /////
-	$post_views = $pwSiteGlobals['post_views'];
+	$post_views = ( isset( $posts['post_views'] ) ) ?
+		$posts['post_views'] :
+		$pwSiteGlobals['post_views'];
+
 
 	///// CONSTRUCT POSTS TEMPLATE OBJECT /////
 	$post_template_obj = array();
@@ -195,6 +211,22 @@ function pw_get_templates( $vars = array() ){
 }
 
 
+function pw_get_template( $subdir, $template_id, $ext = "html", $path_type = "url" ){
+	// Returns a single string for panel template from ID
+
+	$panel_template = pw_get_templates ( array(
+			"subdirs" 	=> 	array( $subdir ),
+			"path_type"	=> 	$path_type,
+			"ext"		=>	$ext,
+			)
+		);
+
+	if( isset($panel_template) && isset($panel_template[$subdir][$template_id]) )
+		return (string) $panel_template[$subdir][$template_id];
+	else
+		return false;
+}
+
 
 function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
 	
@@ -226,9 +258,10 @@ function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
 		
 	 $post_type =  get_post_type( $post_id );
 	 $args = array(
+	 		'subdirs'	=>	array('posts'),
 			'posts' => array(
 	    		'post_types' => array( $post_type ),    // 'post'
-	    		'post_views' => array( $post_view ),     // 'full'
+	    		'post_views' => array( $post_view ),    // 'full'
 				),
 			'path_type'	=>	$path_type,
 		);
@@ -241,17 +274,11 @@ function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
 
 
 
-function pw_get_panel_template( $panel_id, $path_type = "url" ){
+function pw_get_panel_template( $panel_id ){
 	// Returns a single string for panel template from ID
+	return pw_get_template( 'panels', $panel_id, 'html', 'url' );
 
-	$panel_template = pw_get_templates ( array( "panels"=>array($panel_id), $path_type ));
-
-	if( isset($panel_template) )
-		return (string) $panel_template['panels'][$panel_id];
-	else
-		return false;
 }
-
 
 
 ?>

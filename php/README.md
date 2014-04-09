@@ -2178,11 +2178,9 @@ $print_feed_args = array(
 echo pw_print_feed( $print_feed_args );
 ```
 
-
-
 ------
 
-### pw_get_post_template ( *$post_id, $post_view, $path_type, $string* )
+### pw_get_post_template ( *$post_id, $post_view, $path_type* )
 - Returns an template path based on the provided post ID and view
 
 #### Process
@@ -2194,43 +2192,21 @@ __$post_id__ : *integer*
 
 __$post_view__ : *string*
 
-__$path_type__ : *string*
+__$path_type__ : *string* (optional)
 - Options:
   - __url__ (default): Returns absolute URL string of template file
   - __dir__ : Returns absolute directory path of template file
 
-__$string__ : *boolean* (default : *false*)
-  - __true__ - Return as a string
-  - __false__ - Return embedded in the templates object
 
-Input : 
+#### Usage
 
 ``` php
-$args = array(
-	'posts' => array(
-		'post_types' => array( $post_type ),	// 'post'
-		'post_views' => array( $post_view )		// 'full'
-	),
-);
-$post_template_object = pw_get_templates ($args);
+$post_template_url = pw_get_post_template ( $post->ID, 'full', 'url' );
 ```
 
-
-__return__ : *Array / string*
-
-- If $string = false, return:
-``` javascript
-{
-posts : {
-     'post' : {
-          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
-          },
-     },
-}
-```
-
-- If $string = true, return : the single template path as a string
-`/wp-content/plugins/postworld/templates/posts/post-full.html`
+__return__ : *string*
+- The URL or absolute path of the template
+`http://www.com/wp-content/plugins/postworld/templates/posts/post-full.html`
 
 ------
 
@@ -2239,7 +2215,7 @@ posts : {
 
 #### Paramters
 __$panel_id__ : *string* (required)
-- The ID of the panel, which is the name of the file in the /panels directory, without the .html extension
+- The ID of the panel, which is the name of the file in the /panels directory, minus the extension
 
 __$path_type__ : *string* (optional)
 - The type of path to return
@@ -2248,46 +2224,72 @@ __$path_type__ : *string* (optional)
   + __dir__ : Absolute system path, ie. /var/vhosts/www...
 
 __return__ : *string / false*
-- The URL or path of the
+- The URL or absolute path of the template
 
 ------
 
-### pw_get_templates ( *$templates_object, $path_type* )
+### pw_get_template ( *$subdir, $panel_id, $ext, $path_type* )
 - Gets an Object of template paths based on the provided object
+- Searches both the default and override template paths
 
-#### Parameters:
+#### Paramters
+__$subdir__ : *string* (required)
+- Which subdirectory to search for the template, relative to the default and over-ride template paths
 
-__$templates_object__ : *Array* (optional)
+__$panel_id__ : *string* (required)
+- The ID of the panel, which is the name of the file in the /panels directory, minus the extension
 
-Options:
-- *Array* containing __['posts']__ : indicates to return a __Post Templates Object__
-  - __post_types__ : *Array* (optional) - Array of post_types which to return template paths for  
-    __default__ : Get all registered post types with `get_post_types()` WP Method :  
-	`get_post_types( array( array( 'public' => true, '_builtin' => false ) ), 'names' )`
-
-  - __post_views__ : *Array* (optional) - Array of 'feed views' which to retrieve templates for  
-    __default__ : `array( 'list', 'detail', 'grid', 'full' )`
-
-- *Array* containing __['panels']__ : indicates to return a __Panel Templates Object__
-  - __panel_id__ : Return the url for the given panel_id
-
-- __null__ : *default*  
-  Returns object with all panels and templates in the default and over-ride folders.
-
+__$ext__ : *string* (optional)
+- The file extension of the template
+- Default : __html__
 
 __$path_type__ : *string* (optional)
+- The type of path to return
+- Options:
+  + __url__ : (default) Absolute URL to the path
+  + __dir__ : Absolute system path, ie. /var/vhosts/www...
+
+__return__ : *string / false*
+- The URL or absolute path of the template
+
+------
+
+### pw_get_templates ( *$vars* )
+- Gets an Object of template paths based on the provided object
+- Searches both the default and override template paths
+
+#### Parameters: __*$vars*__
+
+__subdirs__ : *Array* (optional)
+- Which sub-directory(s) to search through
+- By default, will search through all sub-directories within the template paths
+- ie. `array('posts','panels','comments')`
+
+__posts__ : *Array* (optional)
+- Custom filtering for returning post templates
+- Options:
+  + __post_types__ : *Array* (optional) - Which post types to return templates for. *Default*: All post types
+  + __post_views__ : *Array* (optional) - Which post views to return templates for. *Default*: All post views registered in `pw-config`
+
+__path_type__ : *string* (optional)
 - Options:
   - __url__ (default): Returns absolute URL string of template file
   - __dir__ (default): Returns absolute directory path of template file
 
+__ext__ : *string* (optional)
+- The suffix / extension of file type which to search for
+- Must not include period / dot before extension ie. `html`, `php`
+- Default: `html`
+
+__source__ : *string* (optional)
+- The method by which to merge the over-ride templates
+- Options:
+  + __merge__ (default) - A custom merge method
+  + __default__ - Default PHP merge method
 
 #### Process:
 
 __POST TEMPLATES OBJECT__
-
-``` php
-	if($templates_object['posts']) // If it has a posts object
-```
 
 - __Default__ post templates path :  
   __/plugins__/postworld/templates/posts
@@ -2315,17 +2317,13 @@ __POST TEMPLATES OBJECT__
 5. Gather all the template files into an object
 
 
-__PANEL TEMPLATES OBJECT__
-
-``` php
-	if($templates_object['panels']) // If it has a templates object
-```
+__TEMPLATES OBJECTS BY DIRECTORY__
 
 - Default panels template path :  
-  __/plugins__/postworld/templates/panels
+  __/plugins__/postworld/templates/[panels/comments/modals]
 
 - Over-ride panels template path:  
-  __/theme_name__/postworld/templates/panels
+  __/theme_name__/postworld/templates/[panels/comments/modals]
 
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
@@ -2335,47 +2333,24 @@ __PANEL TEMPLATES OBJECT__
 2. If file exists in __over-ride__ paths, overwrite the __default__ paths
 
 __return__ : *Array* (with requested template paths)
-
-
-__COMMENTS TEMPLATE OBJECT__ *(Clone of "Panel Templates Object")*
-
-``` php
-  if($templates_object['comments']) // If it has a 'comments' object
-```
-
-- Default panels template path :  
-  __/plugins__/postworld/templates/comments
-
-- Over-ride panels template path:  
-  __/theme_name__/postworld/templates/comments
-
-
-1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
-  - {{panel_id}}.html  
-  Key is __file_name__ without the HTML extension, value is the path relative to base domain
-   
-2. If file exists in __over-ride__ paths, overwrite the __default__ paths
-
-__return__ : *Array* (with requested template paths)
-
-
 
 
 #### Usage:
 
 ``` php
 
-// To get Post Templates Object
-$args = array(
-	'posts' => array(
-		'post_types' => array( 'post', 'link' ),
-		'post_views' => array( 'grid', 'list', 'detail', 'full' )
-	),
-);
+// To get Selective Post Templates Object
+$args =  array(
+  'subdirs' => array( 'posts', 'comments' ),
+  'posts'=> array( 
+    'post_types' => array('posts', 'pages'),
+    'post_views' => array('list','full'),
+    )
+  );
 $post_templates = pw_get_templates ($args);
 
-// To get Panel Template Object
-$panel_template = pw_get_templates ( array( 'panels'=>array('panel_1_id', 'panel_2_id') ));
+// To get Panel Templates Object
+$panel_template = pw_get_templates ( array( 'subdirs' => array( 'panels' ));
 
 // To get Comments Template Object
 $panel_template = pw_get_templates ( array( 'comments' ));
@@ -2389,20 +2364,19 @@ $panel_template = pw_get_templates ( array( 'comments' ));
 After JSON Encoded :
 
 ``` javascript
-
 {
-posts : {
-     'post' : {
-          'list' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
-          'detail' : '/wp-content/plugins/postworld/templates/posts/post-detail.html',
-          'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
-          },
-     },
+  posts : {
+   'post' : {
+      'list' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
+      'detail' : '/wp-content/plugins/postworld/templates/posts/post-detail.html',
+      'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
+      },
+  },
 };
 
 ```
 
-- __Panel Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
+- __Directory Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
 
 After JSON Encoded :
 
@@ -2410,21 +2384,8 @@ After JSON Encoded :
 {
 panels : {
 	'feed_top': '/wp-content/plugins/postworld/templates/panels/feed_top.html',
+  //...
 	}
-};
-```
-
-- __Comments Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
-
-After JSON Encoded :
-
-``` javascript
-{
-panels : {
-  'comment-edit': '/wp-content/plugins/postworld/templates/panels/comment-edit.html',
-  'comment-single': '/wp-content/plugins/postworld/templates/panels/comment-edit.html',
-  'comment-header': '/wp-content/plugins/postworld/templates/panels/comment-header.html',
-  }
 };
 ```
 
