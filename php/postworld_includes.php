@@ -10,7 +10,7 @@ function postworld_includes( $args ){
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.2.14';
+		$angular_version = 'angular-1.2.9';
 
 	// Default Dependencies
 	if( empty($dep) ){

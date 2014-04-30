@@ -4,15 +4,7 @@
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 */
 
-
-//---------- PW SET OPTION ----------//
-function pw_set_option_ajax(){
-	list($response, $args, $nonce) = initAjaxResponse();
-	$params = $args['args'];
-	extract($params);
-
-	$response_data = pw_set_option( $option, $value ); 
-
+function pwAjaxRespond( $response_data ){
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $response_data;
@@ -20,8 +12,45 @@ function pw_set_option_ajax(){
 	die;
 }
 
-add_action("wp_ajax_nopriv_pw_set_option", "pw_set_option_ajax");
-add_action("wp_ajax_pw_set_option", "pw_set_option_ajax");
+//---------- PW SET OPTION OBJECT ----------//
+function pw_set_option_obj_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_set_option_obj( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_set_option_obj", "pw_set_option_obj_ajax");
+add_action("wp_ajax_pw_set_option_obj", "pw_set_option_obj_ajax");
+
+
+//---------- PW GET OPTION OBJECT ----------//
+function pw_get_option_obj_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_option_obj( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_option_obj", "pw_get_option_obj_ajax");
+add_action("wp_ajax_pw_get_option_obj", "pw_get_option_obj_ajax");
+
+
+
+//---------- PW UPDATE OPTION ----------//
+function pw_update_option_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_update_option( $option, $value ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_update_option", "pw_update_option_ajax");
+add_action("wp_ajax_pw_update_option", "pw_update_option_ajax");
 
 
 //---------- PW LOAD IMAGE ----------//
@@ -31,12 +60,7 @@ function pw_get_image_ajax(){
 	extract($params);
 
 	$response_data = pw_get_image( $params ); 
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
 
 add_action("wp_ajax_nopriv_pw_get_image", "pw_get_image_ajax");
@@ -51,12 +75,7 @@ function pw_set_wizard_status_ajax(){
 	//extract($params);
 
 	$response_data = pw_set_wizard_status( $params ); 
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
 
 add_action("wp_ajax_pw_set_wizard_status", "pw_set_wizard_status_ajax");
@@ -69,12 +88,7 @@ function pw_get_wizard_status_ajax(){
 	//extract($params);
 
 	$response_data = pw_get_wizard_status( $params ); 
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
 
 add_action("wp_ajax_pw_get_wizard_status", "pw_get_wizard_status_ajax");
@@ -87,12 +101,7 @@ function pw_get_userdata_ajax(){
 	extract($params);
 
 	$response_data = pw_get_userdata( $user_id,  $fields ); 
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
 
 add_action("wp_ajax_nopriv_pw_get_userdata", "pw_get_userdata_ajax");
@@ -106,12 +115,7 @@ function pw_get_userdatas_ajax(){
 	extract($params);
 
 	$response_data = pw_get_userdatas( $user_ids,  $fields );
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
 
 add_action("wp_ajax_nopriv_pw_get_userdatas", "pw_get_userdatas_ajax");

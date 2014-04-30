@@ -115,12 +115,17 @@ include 'php/postworld_social.php';
 /////////////// WIZARD ////////////////
 include 'php/postworld_wizard.php';
 
+/////////////// OPTIONS ////////////////
+include 'php/postworld_options.php';
+
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
 include 'php/postworld_comments.php';
 include 'php/postworld_share.php';
 
 include 'php/postworld_meta.php';
+
+
 
 //To get user id from wordpress
 

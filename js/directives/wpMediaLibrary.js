@@ -287,24 +287,12 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		
 	}
 
-
-	$scope.setOption = function( option, field ){
-		//alert( "option name: " + option + " // field : " + field  );
-		
-		if( !$ext.objExists($scope, 'mediaModel') ){
-			$log.debug('WP Media Library "setOption()" Callback Error : Must specify "media-model" attribute.');
-			return false;
-		}
-		
-		// Get selected media, and get around 2-way data binding
+	$scope.returnMediaValue = function( field ){
+		// Get selected media, undo 2-way data binding
 		var selectedMedia = angular.fromJson( angular.toJson( $scope.mediaModel ) );
-		alert( JSON.stringify( selectedMedia ) );
-
-		//alert( typeof selectedMedia );
 
 		// FIELD : id
 		if( field == 'id' ){
-			
 			if( !_.isUndefined( selectedMedia.id ) )
 				var value = selectedMedia.id;
 			else if( !_.isUndefined( selectedMedia[0] ) )
@@ -314,26 +302,67 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			var value = angular.toJson($scope.mediaModel);
 		}
 
+		return value;
+	}
+
+	$scope.unbindSelectedMedia = function(){
+		var selectedMedia = angular.fromJson( angular.toJson( $scope.mediaModel ) );
+		return selectedMedia;
+	}
+
+	$scope.errorCheck = function(){
+		if( !$ext.objExists($scope, 'mediaModel') ){
+			$log.debug('WP Media Library "setOption()" Callback Error : Must specify "media-model" attribute.');
+			return false;
+		}
+		return true;
+	}
+
+	$scope.updateOption = function( option, field ){
+		if( !$scope.errorCheck() )
+			return false;
+
+		var value = $scope.returnMediaValue( field );
+
 		var vars = {
 			option: option,
 			value: value,
 		};
 
-		$pwData.set_option( vars ).then(
-			// Success
+		$pwData.update_option( vars ).then(
 			function(response){
-
 				// Get around 2-way data binding
-				$scope.mediaModel = selectedMedia;
-
+				$scope.mediaModel = $scope.unbindSelectedMedia();
 			},
-			// Failure
 			function(response) {
-				//$scope.movements = [{post_title:"Movements not loaded.", ID:"0"}];
 			}
 		);
+	}
 
+	$scope.setOptionObj = function( vars ){
+		/*
+		var vars = {
+			option_name: option_name,
+			subkey: subkey,
+			value: value,
+		};
+		*/
 
+		if( !$scope.errorCheck() )
+			return false;
+		
+		var value = $scope.returnMediaValue( vars.value );
+		vars['value'] = value;
+		
+		$pwData.set_option_obj( vars ).then(
+			function(response){
+				$log.debug(response);
+				// Get around 2-way data binding
+				$scope.mediaModel = $scope.unbindSelectedMedia();
+			},
+			function(response) {
+			}
+		);
 	}
 
 

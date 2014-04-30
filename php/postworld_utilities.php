@@ -1,13 +1,113 @@
 <?php
+/*_   _ _   _ _ _ _   _           
+ | | | | |_(_) (_) |_(_) ___  ___ 
+ | | | | __| | | | __| |/ _ \/ __|
+ | |_| | |_| | | | |_| |  __/\__ \
+  \___/ \__|_|_|_|\__|_|\___||___/
+//////////////////////////////////*/
 
-function pw_set_option( $option, $value ){
-	if( current_user_can('manage_options') ){
-		update_option( $option, $value );
-		return get_option($option);
-	}
-	else
-		return array('error'=>'No access.');
+function pw_user_id_exists($user_id){
+    global $wpdb;
+    $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));
+    if($count == 1){ return true; }else{ return false; }
 }
+
+function pw_check_user_id($user_id){
+	///// USER ID /////
+	$current_user_id = get_current_user_id();
+	if( !isset( $user_id ) || !pw_user_id_exists( $user_id )  )
+		$user_id = $current_user_id;
+	if( $user_id == 0 )
+		return array( 'error' => 'No user ID.' );
+	// Security Layer
+	// Check if setting for current user, or if current user can edit users
+	if(	$user_id != $current_user_id &&
+		!current_user_can( 'edit_users' ) )
+		return array( 'error' => 'No permissions.' );
+	
+	return $user_id;
+}
+
+function pw_get_obj( $obj, $key ){
+	// Checks to see if a key exists in an object,
+	// and returns it if it does exist.
+
+	/*	PARAMETERS:
+		$obj 	= 	[array]
+		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
+	*/
+
+	// If $key is empty, return the whole $obj
+	if( empty($key) )
+		return $obj;
+
+	///// KEY PARTS /////
+	// FROM : "key.subkey.sub.subkey"
+	// TO 	: array( "key", "subkey", "subkey" )
+	$key_parts = explode( '.', $key );
+	// Count how many parts
+	$key_parts_count = count( $key_parts );
+
+	foreach($key_parts as $key_part){
+		if( isset( $obj[$key_part] ) )
+			$obj = $obj[$key_part];
+		else
+			return false;
+	}
+
+	return $obj;
+
+}
+
+
+function pw_set_obj( $obj, $key, $value ){
+	// Sets the value of an object,
+	// even if it or it's parent(s) doesn't exist.
+	
+	/*	PARAMETERS:
+		$obj 	= 	[array]
+		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
+		$value 	= 	[string/array/object]
+	*/
+
+	///// KEY PARTS /////
+	// FROM : "key.subkey.sub.subkey"
+	// TO 	: array( "key", "subkey", "subkey" )
+	$key_parts = array_reverse( explode( '.', $key ) );
+	// Count how many parts
+	$key_parts_count = count( $key_parts );
+	
+	// Prepare to catch finished key parts
+	$key_parts_done = array();
+
+	// Iterate through each key part
+	$seed = array();
+	$i = 0;
+	foreach( $key_parts as $key_part ){
+		$i++;
+		// First Key
+		if( $i == 1 ){
+			// Create seed with first key
+			$seed[$i][$key_part] = $value;
+		// Other Keys
+		} else{
+			// Nest previous seed in current key
+			$seed[$i][$key_part] = $seed[($i-1)];
+		}
+		// Last Key
+		if( $i == $key_parts_count ){
+			// Return final seed result
+			$seed = $seed[$i];
+		}
+	}
+
+	// Merge $seed array with input $array
+	$obj = array_replace_recursive( $obj, $seed );
+
+	return $obj;
+}
+
+
 
 function pw_empty_array( $format ){
 	// Return an empty array
