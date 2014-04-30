@@ -13,6 +13,7 @@ License: GPL2
 
 include 'php/postworld_variables.php';
 include 'php/postworld_utilities.php';
+include 'php/postworld_includes.php';
 
 
 // GLOBAL VARIABLES
@@ -80,6 +81,9 @@ include 'php/postworld_points.php';
 ////////// RANK FUNCTIONS ///////////
 include 'php/postworld_rank.php';
 
+////////// TEMPLATE FUNCTIONS ///////////
+include 'php/postworld_templates.php';
+
 ////////// FEED FUNCTIONS ///////////
 include 'php/postworld_feeds.php';
 
@@ -107,6 +111,9 @@ include 'php/postworld_widgets.php';
 
 /////////////// SOCIAL ////////////////
 include 'php/postworld_social.php';
+
+/////////////// WIZARD ////////////////
+include 'php/postworld_wizard.php';
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';

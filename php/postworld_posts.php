@@ -11,7 +11,6 @@ function pw_post_exists ( $post_id ){
 	    return false;
 }
 
-
 function pw_get_posts( $post_ids, $fields='all' ) {
 	// • Run pw_post_data on each of the $post_ids, and return the given fields
 	if($fields == null) $fields='all';
@@ -53,6 +52,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	///// SETUP VARIABLES /////
 	global $template_paths;
+	global $pw_post_meta_fields;
 
 	$edit_fields = array(
 		'ID',
@@ -61,22 +61,32 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_status',
 		'post_title',
 		'post_content',
+		'post_format',
 		'post_excerpt',
 		'post_name',
 		'post_permalink',
 		'post_date',
 		'post_date_gmt',
+		'post_timestamp',
 		'post_class',
 		'link_format',
 		'link_url',
 		'image(id)',
+		'image(all)',
 		'image(meta)',
 		'taxonomy(all)',
 		'taxonomy_obj(post_tag)',
 		'comment_status',
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
-		'post_meta(all)'
+		'post_meta(all)',
+		'post_parent',
+		'event_start',
+		'event_end',
+		'geo_latitude',
+		'geo_longitude',
+		'related_post'
 		);
+
 
 	////////// FIELDS MODEL //////////
 	$preview_fields =	array(
@@ -101,6 +111,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
 		'avatar(small,48)',
 		'link_format',
+		'post_format',
 		'time_ago',
 		'post_meta(all)',
 		'rank_score',
@@ -122,7 +133,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	// All Fields
 	if ($fields == 'all'){
-		$fields = array_merge($preview_fields, $detail_fields, $viewer_fields);
+		$fields = array_merge($preview_fields, $detail_fields, $viewer_fields, $pw_post_meta_fields);
 	}
 
 	// Preview Fields
@@ -131,7 +142,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	// Edit Fields
 	else if ($fields == 'edit'){
-		$fields = $edit_fields;
+		$fields = array_merge($edit_fields, $pw_post_meta_fields);
 		$mode = 'edit';
 	}
 
@@ -158,21 +169,30 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	}
 	//$fields = array_merge($fields, $viewer_fields);
 	
+
 	////////// WP GET_POST METHOD //////////
 	// Get post data from Wordpress standard function
 	$get_post = get_post($post_id, ARRAY_A);
 	foreach ($get_post as $key => $value) {
-		if( in_array($key, $fields) )
+		if( in_array($key, $fields) ){
 			$post_data[$key] = $value;
 
-		if ( $key == 'post_content' && $mode == 'view' ){
-			///// CONTENT FILTERING /////
-			// oEmbed URLs
-			$post_data[$key] = pw_embed_content($post_data[$key]);
-			// Apply Shortcodes
-			$post_data[$key] = do_shortcode($post_data[$key]);
+			if ( $key == 'post_content' && $mode == 'view' ){
+				///// CONTENT FILTERING /////
+
+				// Apply AutoP
+				$post_data[$key] = wpautop($post_data[$key]);
+				//$post_data[$key] = apply_filters('the_content', $post_data[$key]);
+				
+				// oEmbed URLs
+				$post_data[$key] = pw_embed_content($post_data[$key]);
+				// Apply Shortcodes
+				$post_data[$key] = do_shortcode($post_data[$key]);
+			}
+			
 		}
 	}
+
 
 	////////// WP GET_POST_CUSTOM METHOD //////////
 	// Get post data from Wordpress standard function
@@ -213,6 +233,13 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			if ( $post_data["edit_post_link"] == false ) $post_data["edit_post_link"] = '#';
 		}
 
+		// Post Format
+		if( in_array('post_format', $fields) ){
+			$post_data['post_format'] = get_post_format( $post_id );
+			if( $post_data['post_format'] == false )
+				$post_data['post_format'] = 'standard';
+		}
+
 
 	////////// POSTWORLD //////////
 
@@ -232,6 +259,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if( in_array('post_points', $fields) ){
 			$post_data['post_points'] = get_post_points( $post_id );
 		}
+
 
 	////////// VIEWER FIELDS //////////
 
@@ -262,11 +290,34 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		}
 
+	
+	////////// AUTHOR DATA //////////
+
+		// Extract author() fields
+		$relationships = extract_linear_fields( $fields, 'is_relationship', true );
+
+		if ( !empty($relationships) ){
+			if( !isset($post_data['viewer']) )
+				$post_data['viewer'] = array();
+
+			foreach ($relationships as $relationship ) {
+
+				$post_data['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
+			
+			}
+
+		}
+
+
 	////////// DATE & TIME //////////
 
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
 			$post_data['time_ago'] = time_ago( strtotime ( $post_data['post_date_gmt'] ) );
+
+		// Post Timestamp
+		if ( in_array('post_timestamp', $fields) )
+			$post_data['post_timestamp'] = (int) strtotime( $post_data['post_date_gmt'] ) ;
 
 
 	////////// AVATAR IMAGES //////////
@@ -284,8 +335,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if ( !empty($post_meta_fields) ){
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
+
 				// GET 'ALL' FIELDS
-				if ( $post_meta_field == "all" ){
+				if ( in_array("all", $post_meta_fields) ||
+						$post_meta_field == "all" ){
+
 					// Return all meta data
 					$post_data['post_meta'] = get_metadata('post', $post_id, '', true);
 					// Convert to strings
@@ -294,9 +348,41 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 							$post_data['post_meta'][$meta_key] = $post_data['post_meta'][$meta_key][0];
 						}
 					}
+					// Break from the foreach
+					break;
+				}
+
+				// GET SPECIFIC FIELDS
+				else {
+
+					$post_meta_data = get_post_meta( $post_id, $post_meta_field, true );
+
+					if( !empty($post_meta_data) )
+						$post_data['post_meta'][$post_meta_field] = $post_meta_data;
+
+				}
+
+			}
+
+			// Parse known JSON fields into objects
+			$known_JSON_fields = array(
+				'geocode',
+				'location_obj',
+				'date_obj',
+				'related_post',
+				'embedly_extract'
+				);
+			foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
+				if(
+					in_array($meta_key, $known_JSON_fields) &&
+					is_string($meta_value)
+					){
+					$post_data['post_meta'][$meta_key] = json_decode($post_data['post_meta'][$meta_key], true);
 				}
 			}
+
 		}
+
 
 	////////// AUTHOR DATA //////////
 
@@ -355,6 +441,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		///// PROCESS IMAGE FIELDS /////
 		// Check if there are images to process
 		if ( !empty($images) ){
+			$post_data['image'] = array();
 
 			///// GET IMAGE TO USE /////
 			// Setup Thumbnail Image Variables
@@ -434,7 +521,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				if ( count($image_attributes) == 1 ){
 
 					// FULL : Get 'full' image
-					if ( $image_handle == 'full' ) {
+					if ( $image_handle == 'full' || $image_handle == 'all' ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
 						$post_data['image']['full']['url']	= $thumbnail_url;
 						$post_data['image']['full']['width'] = (int)$image_obj['width'];
@@ -442,7 +529,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					}
 
 					// ALL : Get all registered images
-					elseif( $image_handle == 'all' ) {
+					if( $image_handle == 'all' ) {
 						$registered_images = registered_images_obj();
 
 						foreach( $registered_images as $image_handle => $image_attributes ){
@@ -451,9 +538,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 							$registered_images[$image_handle]["width"] = $image_src[1];
 							$registered_images[$image_handle]["height"] = $image_src[2];
 							$registered_images[$image_handle]["hard_crop"] = $image_src[3];
+							$post_data['image'] = array_merge( $post_data['image'], $registered_images );
 						}
-
-						$post_data['image'] = array_merge( $post_data['image'], $registered_images );
 					}
 
 					// HANDLE : Get registered image
@@ -462,7 +548,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$image_obj = image_obj($thumbnail_id, $image_handle);
 						$post_data['image'][$image_handle]['url']	= $image_obj['url'];
 						$post_data['image'][$image_handle]['width'] = (int)$image_obj['width'];
-						$post_data['image'][$image_handle]['height'] = (int)$image_obj['width'];
+						$post_data['image'][$image_handle]['height'] = (int)$image_obj['height'];
 					}
 
 					// META : Get Image Meta Data
@@ -497,9 +583,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$hard_crop = 1;
 
 					// Process custom image size, return url
-					$post_data['images'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
-					$post_data['images'][$image_handle]['width'] = (int)$thumb_width;
-					$post_data['images'][$image_handle]['height'] = (int)$thumb_height;
+					$post_data['image'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+					$post_data['image'][$image_handle]['width'] = (int)$thumb_width;
+					$post_data['image'][$image_handle]['height'] = (int)$thumb_height;
 				}
 
 			} // END foreeach
@@ -553,7 +639,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// Get each Taxonomy Field
 		foreach ($taxonomy_fields as $taxonomy => $tax_fields) {
 			/*
-				PROCESS THIS :
+				INPUT MODEL :
 				taxonomy_fields = {
 					"category":["id","name"],
 					"topic":["id","slug"],
@@ -623,7 +709,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		} // END foreach
 	} // END IF
 
-
 	return $post_data;
 
 }
@@ -648,73 +733,67 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	 
 	* */
 	//return json_encode($postarr);
-	$post_ID = wp_insert_post( $postarr, $wp_error );
+	$post_id = wp_insert_post( $postarr, $wp_error );
 	
-	if(gettype($post_ID) == 'integer'){ // successful
+	if(gettype($post_id) == 'integer'){ // successful
 
 		///// ADD TERMS / TAXONOMIES //////
 		if(isset($postarr["tax_input"])){
 			foreach ( $postarr["tax_input"] as $taxonomy => $terms) {
-				wp_set_object_terms( $post_ID, $terms, $taxonomy, false );
+				wp_set_object_terms( $post_id, $terms, $taxonomy, false );
 			}
 		}
-	
+
+		///// POST FORMAT //////
+		if(isset($postarr["post_format"])){
+			set_post_format( $post_id , $postarr["post_format"] );
+		}
 	
 		///// ADD/UPDATE META FIELDS //////
 		if( isset($postarr["post_meta"]) ){
 			foreach ( $postarr["post_meta"] as $meta_key => $meta_value ) {
 
+				// ENCODE ARRAYS AS JSON
+				if( is_array($meta_value) )
+					$meta_value = json_encode($meta_value);
+
 				// CHECK FOR EXISTING VALUE
-				$get_meta_value = get_post_meta( $post_ID, $meta_key, true );
+				$get_meta_value = get_post_meta( $post_id, $meta_key, true );
 
 				if ( !empty( $get_meta_value ) )
 					// UPDATE META
-					update_post_meta($post_ID, $meta_key, $meta_value);
+					update_post_meta($post_id, $meta_key, $meta_value);
 				else
 					// ADD META
-					add_post_meta($post_ID, $meta_key, $meta_value, true);
+					add_post_meta($post_id, $meta_key, $meta_value, true);
 			
 			}
 		}
 
 
-		///// ADD POSTWORLD FIELDS //////
-		if(isset($postarr["post_class"]) || isset($postarr["link_format"])|| isset($postarr["link_url"]))	{
-			global $wpdb;
-			$wpdb -> show_errors();
-			
-			add_record_to_post_meta($post_ID);
+		///// ADD POSTWORLD META FIELDS //////
 
-			$query = "update $wpdb->pw_prefix"."post_meta set ";
-			 $insertComma = FALSE;
-			if(isset($postarr["post_class"])){
-				$query.="post_class='".$postarr["post_class"]."'";
-				 $insertComma= TRUE;
-			} 
-			if(isset($postarr["link_format"])){
-				if($insertComma === TRUE) $query.=" , ";
-				$query.="link_format='".$postarr["link_format"]."'";
-				 $insertComma= TRUE;
-			} 
-			if(isset($postarr["link_url"])){
-				if($insertComma === TRUE) $query.=" , ";
-				$query.="link_url='".$postarr["link_url"]."'";
-				 $insertComma= TRUE;
-			} 
-			if(isset($postarr["post_author"])){
-				if($insertComma === TRUE) $query.=" , ";
-				$query.="author_id=".$postarr["post_author"];
-				 $insertComma= TRUE;
-			} 
-		 	if($insertComma === FALSE ){}
-			else{
-				$query.=" where post_id=".$post_ID ;
-				//echo $query;
- 				$wpdb->query($query);
-				
+			// Set the Post Author to Current User ID if not found
+			if( !isset($postarr['post_author']) )
+				$postarr['post_author'] = get_current_user_id();
+
+
+			// Define which fields are Postworld Post Meta
+			global $pw_post_meta_fields;
+			
+			// Check to see if the post array has any Postworld Post Meta Field Values
+			$has_pw_post_meta_fields = false;
+			foreach( $postarr as $key => $value ){
+				if( in_array( $key, $pw_post_meta_fields) && !empty($value) ){
+					$has_pw_post_meta_fields = true;
+					break;
+				}
 			}
 
-		}
+			// If it has Postworld Post Meta, Set it
+			if( $has_pw_post_meta_fields ){
+				pw_set_post_meta( $post_id, $postarr );
+			} 
 
 
 		///// AUTHOR NAME/SLUG FIELD /////
@@ -722,16 +801,13 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 		if( isset($postarr["post_author_name"]) ){
 			$user = get_user_by( 'slug', $postarr["post_author_name"] );
 			if( isset($user->data->ID) && current_user_can('edit_others_posts') ){
-				wp_update_post( array( "ID" => $post_ID, "post_author" => $user->data->ID ) );
+				wp_update_post( array( "ID" => $post_id, "post_author" => $user->data->ID ) );
 			}
 		}
 		
-
-
 	}
 	
-
-	return $post_ID;
+	return $post_id;
 
 }
 
@@ -873,9 +949,9 @@ function pw_trash_post( $post_id ){
 		} else {
 			$wp_trash_post = wp_trash_post( $post_id );
 			if( $wp_trash_post == false )
-				return "Unknown error.";
+				return array( "error" => "Unknown error.");
 			else
-				return true;
+				return $post_id;
 		}
 
 	} else {
@@ -926,6 +1002,7 @@ function pw_save_post($post_data){
 
 	////////// CHECK : POST TYPE ACCESS //////////
 	$post_type = detect_post_type( $post_data );
+
 		
 	///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
 	// The required capabilities of current action
@@ -933,7 +1010,7 @@ function pw_save_post($post_data){
 	// Is a post ID not defined?
 	if( !isset( $post_data["ID"] ) ){
 		// REQUIRE : CREATION
-		array_push( $required_capabilities,"create_".$post_type."s" );
+		array_push( $required_capabilities,"edit_".$post_type."s" );
 		// Does the post exist?
 	} else if( pw_post_exists( $post_data["ID"] ) ){
 		// GET : THE POST
@@ -957,6 +1034,7 @@ function pw_save_post($post_data){
 	if( $post_data["post_status"] == "publish" ){
 		array_push( $required_capabilities, "publish_".$post_type."s" );
 	}
+
 
 	///// VALIDATE CAPABILITIES /////
 	// Compare required capabilities to array of current user's capabilities
@@ -1090,13 +1168,18 @@ function pw_embed_content($content){
 	return preg_replace_callback('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', 'pw_embed_url', $content." ");
 }
 
+
 function pw_print_post( $args ){
 	extract($args);
 
 	global $pw_globals;
 
 	$pw_post = array();
+
 	$pw_post['post'] = pw_get_post( $post_id );
+
+	$pw_post['post'] = pw_get_post( $post_id, $fields );
+
 
 	// Add custom input variables
 	if( isset($vars) && !empty($vars) ){
@@ -1138,5 +1221,16 @@ function pw_print_post( $args ){
 	return $post_html;
 
 }
+
+
+
+function pw_editor( $content, $editor_id, $settings = array() ){
+	ob_start();
+	wp_editor( $content, $editor_id, $settings );
+	$editor = ob_get_contents();
+	ob_end_clean();
+	return $editor;
+}
+
 
 ?>

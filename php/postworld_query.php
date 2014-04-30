@@ -54,7 +54,6 @@ class PW_Query extends WP_Query {
 		}
 			
 		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
-			//if($this->query_vars["offset"])
 			if(array_key_exists('offset',  $this->query_vars))
 				$orderby.=" Limit ".$this->query_vars["offset"].", ".$this->query_vars['posts_per_page'];	
 			else $orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
@@ -63,60 +62,215 @@ class PW_Query extends WP_Query {
 		return $orderby;
 				
 	}
+
+	function prepare_related_query(){
+		///// related_post  /////
+		$related_post = $this->query_vars['related_post'];
+		$related_query = "related_post = ".$related_post;
+		return $related_query." AND ";
+	}
+
+	function prepare_time_query(){
+		///// event_start,  /////
+
+		$time_query = '';
+		$add_and = false;
+
+
+		if(array_key_exists('event_start',  $this->query_vars)){
+			// all events with event_end after this
+			$event_start = $this->query_vars['event_start'];
+			
+			if($add_and == false){
+				$time_query = "event_end > ".$event_start;
+				$add_and = true;	
+			} else {
+				$time_query = " AND event_end > ".$event_start;
+			}
+		}
+
+		///// event_end,  /////
+		if(array_key_exists('event_end',  $this->query_vars)){
+			// all events with event_start before this
+			$event_end = $this->query_vars['event_end'];
+
+			if($add_and == false){
+				$time_query .= "event_start < ".$event_end;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_start < ".$event_end;
+			}
+		}
+
+		///// event_before,  /////
+		if(array_key_exists('event_before',  $this->query_vars)){
+			// all events with event_end before this
+			$event_before = $this->query_vars['event_before'];
+
+			if($add_and == false){
+				$time_query .= "event_end < ".$event_before;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_end < ".$event_before;
+			}
+		}
+
+		///// event_after,  /////
+		if(array_key_exists('event_after',  $this->query_vars)){
+			// all events with event_start after this
+			$event_after = $this->query_vars['event_after'];
+
+			if($add_and == false){
+				$time_query .= "event_start > ".$event_after;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_start > ".$event_after;
+			}
+		}
+
+		///// get past events  /////
+		if(array_key_exists('event_past',  $this->query_vars)){
+			// Get past events
+			$current_timestamp = time();
+
+			if($add_and == false){
+				$time_query .= "event_end < ".$current_timestamp;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_end < ".$current_timestamp;
+			}
+		}
+
+		///// get past events  /////
+		if(array_key_exists('event_future',  $this->query_vars)){
+			// Get past events
+			$current_timestamp = time();
+
+			if($add_and == false){
+				$time_query .= "event_start > ".$current_timestamp;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_start > ".$current_timestamp;
+			}
+		}
+
+		///// get current events  /////
+		if(array_key_exists('event_now', $this->query_vars)){
+			// Get past events
+			$current_timestamp = time();
+
+			if($add_and == false){
+				$time_query .= "event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
+				$add_and = true;
+			} else {
+				$time_query .= " AND event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
+			}
+		}
+
+		// Return Query
+		if($time_query == "") return "";
+		return $time_query." AND ";
+	}
+
+	function prepare_geo_query(){
+		///// GEO LATITUDE /////
+
+		$geo_query = '';
+
+		$latitude = $this->query_vars['geo_latitude'];
+		$longitude = $this->query_vars['geo_longitude'];
+
+		if(array_key_exists('geo_range',  $this->query_vars)){
+			// Apply range
+			$range = $this->query_vars['geo_range'];
+
+			$lat_low = $latitude - $range;
+			$lat_high = $latitude + $range;
+			$geo_query = "geo_latitude BETWEEN ".$lat_low." AND ".$lat_high;
+
+			$lng_low = $longitude - $range;
+			$lng_high = $longitude + $range;
+			$geo_query.=" AND geo_longitude BETWEEN ".$lng_low." AND ".$lng_high;
+		} else {
+			// Default geo query
+			$geo_query = "geo_latitude = ".$latitude;
+			$geo_query.=" AND geo_longitude = ".$longitude;
+		}
+
+		if($geo_query == "") return " AND ";
+		return $geo_query." AND ";
+	}
 	
 	function prepare_where_query(){
 		
-		$where =" WHERE ";	
+		$where ="WHERE ";	
 		$insertAnd= '0';
-		//echo($insertAnd);
 
-			///// LINK FORMAT /////
-			if(array_key_exists('link_format',  $this->query_vars)){
-				if(gettype($this->query_vars['link_format']) == "array") {
-						if($insertAnd=='0'){
-							 //$where.=" and ";
-							 $insertAnd = '1';
-							
-						}	
-						$where.=" link_format in ('".implode("','", $this->query_vars['link_format'])."') ";
+		///// LINK FORMAT /////
+		// Must be first (or config $where.= to work and update the first one to work like this one currently does)
+		if(array_key_exists('link_format',  $this->query_vars)){
+			if(gettype($this->query_vars['link_format']) == "array") {
+					if($insertAnd=='0'){
+						 //$where.=" and ";
+						 $insertAnd = '1';
 						
-					}
-					else if(gettype($this->query_vars['link_format']) == "string"){
-						if($insertAnd=='0'){
-							// $where.=" and ";
-							 $insertAnd = '1';
-						}	
-						$where.=" link_format = '".$this->query_vars['link_format']."' ";
-					}
-			}
-		
-			///// POST CLAS /////
-			if(array_key_exists('post_class',  $this->query_vars)){
-					if(gettype($this->query_vars['post_class']) == "array") {
-						if($insertAnd=='1'){
-							 $where.=" and ";
-							 $insertAnd = '0';
-							
-						}	
-						$where.=" post_class in ('".implode("','", $this->query_vars['post_class'])."') ";
-					}
-					else if(gettype($this->query_vars['post_class']) == "string"){
-						if($insertAnd=='1'){
-							 $where.=" and ";
-							 $insertAnd = '0'; 
-						}	
-						$where.=" post_class = '".$this->query_vars['post_class']."' ";
-					}
-			}
-		
-		if($where ==" WHERE ") return $where;	
-		return $where."  and ";
+					}	
+					$where.=" link_format in ('".implode("','", $this->query_vars['link_format'])."') ";
+					
+				}
+				else if(gettype($this->query_vars['link_format']) == "string"){
+					if($insertAnd=='0'){
+						// $where.=" and ";
+						 $insertAnd = '1';
+					}	
+					$where.=" link_format = '".$this->query_vars['link_format']."' ";
+				}
+		}
+	
+		///// POST CLASS /////
+		if(array_key_exists('post_class',  $this->query_vars)){
+				if(gettype($this->query_vars['post_class']) == "array") {
+					if($insertAnd=='1'){
+						 $where.=" and ";
+						 $insertAnd = '0';
+						
+					}	
+					$where.=" post_class in ('".implode("','", $this->query_vars['post_class'])."') ";
+				}
+				else if(gettype($this->query_vars['post_class']) == "string"){
+					if($insertAnd=='1'){
+						 $where.=" and ";
+						 $insertAnd = '0'; 
+					}	
+					$where.=" post_class = '".$this->query_vars['post_class']."' ";
+				}
+		}
+
+		if($where =="WHERE ") return $where;	
+		return $where." AND ";
 	}
 	
 	
 	function prepare_new_request($remove_tbl=false){
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
+
+		// Check for geo_latitude
+		if(array_key_exists('geo_latitude',  $this->query_vars) && array_key_exists('geo_longitude',  $this->query_vars)){
+			$where = $where.$this->prepare_geo_query();
+		}
+
+		// Check for event_start
+		if($this->has_time_attributes()){
+			$where = $where.$this->prepare_time_query();
+		}
+
+		// Check for related_post
+		if(array_key_exists('related_post', $this->query_vars)){
+			$where = $where.$this->prepare_related_query();
+		}
+
+		//$where.=" AND ";
 		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
 		$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
@@ -127,6 +281,14 @@ class PW_Query extends WP_Query {
 			//$this->request = str_replace("AND 0 = 1", " ", $this->request);
 			$this->request.=$orderBy;
 		
+	}
+
+	function has_time_attributes(){
+		if(array_key_exists('event_now',  $this->query_vars) || array_key_exists('event_future',  $this->query_vars) || array_key_exists('event_past',  $this->query_vars) || array_key_exists('event_start',  $this->query_vars) || array_key_exists('event_end',  $this->query_vars) || array_key_exists('event_before',  $this->query_vars) || array_key_exists('event_after',  $this->query_vars)){
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	function get_posts() {

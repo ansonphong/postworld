@@ -1,342 +1,21 @@
 <?php
 
-function postworld_includes( $args ){
-	
-	extract( $args );
-
-	// Default Angular Version
-	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.2.1';
-
-	// Default Dependencies
-	if( empty($dep) ){
-		$dep = array();
+function pw_set_option( $option, $value ){
+	if( current_user_can('manage_options') ){
+		update_option( $option, $value );
+		return get_option($option);
 	}
-
-	// Build Angular Dependancies
-	global $angularDep;
-	$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route', 'UnderscoreJS');
-
-	if( in_array( 'google-maps', $dep ) ){
-		array_push( $angularDep, 'google-maps' );
-	}
-
-
-	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
-	$jsVars = array(	'ajaxurl' => admin_url( 'admin-ajax.php' ),
-						'pluginurl' => WP_PLUGIN_URL,
-						'user_id'		=> get_current_user_id(),
-						'is_admin'		=> is_admin(),
-					);
-
-	//////////---------- LIBRARY INCLUDES ----------//////////
-
-	//BOOTSTRAP CSS
-	// Removed - move be added in theme
-	//wp_enqueue_style( "bootstrap-CSS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.css' );
-
-	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
-	wp_deregister_script('jquery');
-	wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
-	wp_enqueue_script('jquery','');
-
-	//////////---------- POSTWORLD INCLUDES ----------//////////
-	///// DELPLOY FILE INCLUDES /////
-	if ( $mode == 'deploy' ){
-	
-		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js' );
-		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
-		wp_enqueue_script(  'Postworld-Deploy' ); //array('Postworld-Libraries') );
-
-		// ADD GOOGLE MAPS
-		if( in_array('google-maps', $dep) ){
-			// GOOGLE MAPS
-			wp_enqueue_script( 'Google-Maps-API',
-				'//maps.googleapis.com/maps/api/js?sensor=false', $angularDep );
-			// ANGULAR UI : GOOGLE MAPS
-			wp_enqueue_script( 'AngularJS-Google-Maps',
-				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
-		}
-
-
-	}
-	///// DEVELOPMENT FILE INCLUDES /////
-	else if ( $mode == 'dev' ){
-		
-		// UNDERSCORE JS
-		wp_enqueue_script( 'UnderscoreJS',
-			WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
-
-
-		///// ANGULAR VERSION CONTROL /////
-
-		// ANGULAR
-		wp_enqueue_script( 'AngularJS',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular.min.js');
-
-		// ANGULAR SERVICES
-		wp_enqueue_script( 'AngularJS-Resource',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-resource.min.js');
-
-		wp_enqueue_script( 'AngularJS-Route',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-route.min.js');
-
-		wp_enqueue_script( 'AngularJS-Sanitize',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-sanitize.min.js');
-
-
-		// wp_enqueue_script( 'AngularJS-Animate', WP_PLUGIN_URL.'/postworld/lib/angular/angular-animate.min.js');
-		
-		// ANGULAR UI UTILITIES
-		wp_enqueue_script( 'AngularJS-UI-Utils',
-			WP_PLUGIN_URL.'/postworld/lib/angular-ui-utils/angular-ui-utils.min.js');
-		
-		//BOOTSTRAP JS
-		wp_enqueue_script( "bootstrap-JS",
-			WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.js' );
-
-		// ANGULAR UI : BOOTSTRAP
-		//wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-		//	plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
-		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-			plugins_url().'/postworld/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.10.0.min.js', $angularDep );
-
-		// ANGULAR STRAP : BOOTSTRAP
-		wp_enqueue_script( 	'AngularJS-AngularStrap',
-			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
-
-
-		// ADD GOOGLE MAPS
-		if( in_array('google-maps', $dep) ){
-			// GOOGLE MAPS
-			wp_enqueue_script( 'Google-Maps-API',
-				'//maps.googleapis.com/maps/api/js?sensor=false', $angularDep );
-			// ANGULAR UI : GOOGLE MAPS
-			wp_enqueue_script( 'AngularJS-Google-Maps',
-				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
-		}
-
-
-		// POSTWORLD APP		
-		wp_enqueue_script( 	'pw-app-JS',
-			WP_PLUGIN_URL.'/postworld/js/app.js', $angularDep );
-
-		// COMPONENTS
-		wp_enqueue_script( 'pw-FeedItem-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/feedItem.js', $angularDep );
-
-		wp_enqueue_script( 'pw-TreeView-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/treeview.js', $angularDep );
-
-		wp_enqueue_script( 'pw-LoadComments-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/loadComments.js', $angularDep );
-		
-		wp_enqueue_script( 'pw-inputSearch-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/inputSearch.js', $angularDep );
-
-		wp_enqueue_script( 'pw-LiveFeed-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js', $angularDep );
-
-		wp_enqueue_script( 'pw-MediaEmbed-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/mediaEmbed.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Users-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/pwUsers.js', $angularDep );
-
-		// CONTROLLERS
-		wp_enqueue_script( 'pw-Controllers-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/pwControllers.js', $angularDep );
-
-		wp_enqueue_script( 'pw-controlMenus-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/controlMenus.js', $angularDep );
-
-		wp_enqueue_script( 'pw-editPost-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/editPost.js', $angularDep );
-
-		wp_enqueue_script( 'pw-autoComplete-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/autoComplete.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Widgets-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/pwWidgets.js', $angularDep );
-
-		// FILTERS
-		wp_enqueue_script( 	'pw-Filters-JS',
-			WP_PLUGIN_URL.'/postworld/js/filters/pwFilters.js', $angularDep );
-
-		wp_enqueue_script( 'pw-filterFeed-JS',
-			WP_PLUGIN_URL.'/postworld/js/filters/filterFeed.js', $angularDep );
-
-		// SERVICES
-		wp_enqueue_script( 'pw-pwData-JS',
-			WP_PLUGIN_URL.'/postworld/js/services/pwData.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Services-JS',
-			WP_PLUGIN_URL.'/postworld/js/services/pwServices.js', $angularDep );
-
-		wp_enqueue_script( 'pw-pwCommentsService-JS',
-			WP_PLUGIN_URL.'/postworld/js/services/pwCommentsService.js', $angularDep );
-
-		wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
-
-		// DIRECTIVES
-		wp_enqueue_script( 'pw-Directives-JS',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwDirectives.js', $angularDep );
-
-		// COMPONENTS
-		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
-
-	}
-
-	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
-
-	pwSiteGlobals_include();
-	
-	///// WINDOW JAVASCRIPT DATA INJECTION /////
-	// Inject Current User Data into Window
-	function pwGlobals() {
-	?>
-
-		<script type="text/javascript">/* <![CDATA[ */
-			var pwGlobals = <?php echo json_encode( pwGlobals_parse() ); ?>;
-		/* ]]> */</script>
-
-	<?php
-	}
-	// Add hook for admin <head></head>
-	add_action('admin_head', 'pwGlobals');
-	// Add hook for front-end <head></head>
-	add_action('wp_head', 'pwGlobals');
-
+	else
+		return array('error'=>'No access.');
 }
 
-
-
-///// PARSE pwSiteGlobals /////
-
-function pwSiteGlobals_include(){
-
-	///// DYNAMICALLY GENERATED JAVASCRIPT /////
-	// This method can only be used for site-wide globals
-	// Not for user-specific globals
-
-	// ENCODE SITE GLOBALS
-	global $pwSiteGlobals;	
-	$pwGlobalsJs  = "";
-	$pwGlobalsJs .= "var pwSiteGlobals = ";
-	$pwGlobalsJs .= json_encode( $pwSiteGlobals );
-	$pwGlobalsJs .= ";";
-
-	// ENCODE SITE LANGUAGE
-	global $pwSiteLanguage;	
-	$pwGlobalsJs .= "\n\n";
-	$pwGlobalsJs .= "var pwSiteLanguage = ";
-	$pwGlobalsJs .= json_encode( $pwSiteLanguage );
-	$pwGlobalsJs .= ";";
-
-	$pwGlobalsJsFile = WP_PLUGIN_DIR.'/postworld/deploy/pwSiteGlobals.js';
-	$file = fopen( $pwGlobalsJsFile ,"w" );
-	fwrite($file,"$pwGlobalsJs");
-	fclose($file);
-	chmod($pwGlobalsJsFile, 0755);
-
-	global $angularDep;
-	wp_enqueue_script( 'pw-SiteGlobals-JS',
-		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js' );
-	
+function pw_empty_array( $format ){
+	// Return an empty array
+	if( $format == "A_ARRAY" )
+		return array();
+	else if( $format == "JSON" )
+		return "{}";
 }
-
-
-
-///// PARSE pwGlobals /////
-function pwGlobals_parse(){
-
-	global $pw_globals;
-	$pw_globals = array();
-	$pw_globals['current_view'] = array();
-
-
-	/////////// USER / PAGE SPECIFIC GLOBALS //////////
-
-	///// POST /////
-	if( !empty($GLOBALS['post']->ID) ){
-		$pw_globals["current_view"]["type"] = "post";
-		$pw_globals["current_view"]["post"] = array(
-			"post_id" => $GLOBALS['post']->ID
-			);
-	}
-
-	///// CURRENT USER /////
-	$user_id = get_current_user_id();
-	if( $user_id != 0 ){
-		$userdata = wp_get_current_user();
-		unset($userdata->data->user_pass);
-		$userdata = (array) $userdata;
-		$userdata["postworld"] = array();
-		$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
-		$userdata["is_admin"] = is_admin();
-
-		// SUPPORT FOR WPMU MEMBERSHIP
-		if( function_exists('current_user_is_member') ){
-			$userdata["membership"] = array();
-			$userdata["membership"]["is_member"] = current_user_is_member();
-		}
-	} else
-		$userdata = 0;
-	$pw_globals["current_user"] = $userdata;
-
-	///// DISPLAYED USER /////
-	// Support for Buddypress Globals
-	if ( function_exists('bp_displayed_user_id') ){
-		$displayed_user_id = bp_displayed_user_id();
-	} else
-		$displayed_user_id = $GLOBALS['post']->post_author;
-
-	if ( isset($displayed_user_id) )
-		$displayed_userdata = get_userdata($displayed_user_id);
-
-	$pw_globals['displayed_user'] = array(
-		"user_id" => $displayed_user_id,
-		"display_name" => $displayed_userdata->display_name,
-		"first_name" => $displayed_userdata->first_name,	
-		);
-
-
-
-	/////////// SITE WIDE GLOBALS //////////
-
-	///// SITE INFO /////
-	$pw_globals["site_info"] = array(
-		"name" => get_bloginfo( 'name' ),
-		"description" => get_bloginfo( 'description' ),
-		);
-
-	///// POST TYPES /////
-	$pw_globals["post_types"] = pw_get_post_types();
-
-	///// PATHS /////
-	$pw_globals["paths"] = array(
-		'ajax_url' => admin_url( 'admin-ajax.php' ),
-		'plugin_url' => WP_PLUGIN_URL,
-		'plugin_dir' => WP_PLUGIN_DIR,
-		"theme_dir"	=>	get_stylesheet_directory(),
-		"home_url" => get_bloginfo( 'url' ),
-		"wp_url" => get_bloginfo( 'wpurl' ),
-		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
-
-		"template_url" => get_bloginfo( 'template_url' ),
-		"postworld_url" => WP_PLUGIN_URL . '/postworld',
-		"postworld_dir" => WP_PLUGIN_DIR . '/postworld',
-		);
-
-	///// LANGUAGE /////
-	$pw_globals['language'] = $pw_settings['language'];
-
-
-	///// RETURN /////
-	return $pw_globals;
-}
-
 
 function object_to_array($data){
     if (is_array($data) || is_object($data)){
@@ -490,6 +169,8 @@ function extract_bracket_values ( $input, $force_array = true ){
 	// Extracts comma deliniated values which are contained in square brackets
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
+
+	$match=array();
 
 	// Extract contents of (parenthesis)
 	preg_match('#\[(.*?)\]#', $input, $match);
@@ -687,22 +368,117 @@ function crop_string_to_word( $string, $max_chars = 200 ){
 }
 
 function extract_array_from_object( $object, $field_key ){
-		// Extracts one series of field values
-		// From an array of associative array/objects
-		// Into a flat array
+	// Extracts one series of field values
+	// From an array of associative array/objects
+	// Into a flat array
 
-		// INPUT : $ids = [{"ID":"6427"},{"ID":"8979"},{"ID":"1265"}...]
-		// FUNCTION : extract_array_from_object($ids, "ID")
-		// OUTPUT : ["6427","8979","1265"...]
+	// INPUT : $ids = [{"ID":"6427"},{"ID":"8979"},{"ID":"1265"}...]
+	// FUNCTION : extract_array_from_object($ids, "ID")
+	// OUTPUT : ["6427","8979","1265"...]
 
-		$array = array();
-		// Convert into ARRAY_A
-		$object = json_decode(json_encode($object), true);
-		foreach( $object as $item ){
-			array_push( $array, $item[$field_key]  );
-		}
-		return $array;
+	$array = array();
+	// Convert into ARRAY_A
+	$object = json_decode(json_encode($object), true);
+	foreach( $object as $item ){
+		array_push( $array, $item[$field_key]  );
+	}
+	return $array;
+}
+
+
+function pw_type_cast( $value, $type ){
+
+	// Type Cast
+	if( $type == 'int' || $type == 'integer' )
+		$value = (int) $value;
+	else if( $type == 'float' || $type == 'double' || $type == 'real' )
+		$value = (boolean) $value;
+	else if( $type == 'string' )
+		$value = (string) $value;
+	else if( $type == 'boolean' || $type == 'bool' )
+		$value = (boolean) $value;
+	else if( $type == 'object' )
+		$value = (object) $value;
+
+	return $value;
+}
+
+
+function pw_switch_value( $switch ){
+	// Convert 1/true to 'on', 0/false to 'off'
+	$switch = (string) $switch;
+
+	// Homogonize Switch Variable
+	if( $switch == 'on' || $switch == '1'|| $switch == 'true' )
+		$switch = 'on';
+	else if( $switch == 'off' || $switch == '0' || $switch == 'false' )
+		$switch = 'off';
+
+	return $switch;
+
+};
+
+function pw_toggle_array( $args ){
+	// Takes in an
+	/*
+		$args = array()
+			'input'   => JSON string or ARRAY,
+			'format'  => JSON / ARRAY,
+			'value'	  => // which value to add or remove from the input
+			'switch'  => // force the value on or off, if not set will toggle
+			'type'    => // type (if any) which to force the value, ie. integer, string, etc.
+			);
+	*/
+
+	extract($args);
+	
+	// Convert 1/true to 'on', 0/false to 'off'
+	$switch = pw_switch_value( $switch );
+	
+
+	// Decode JSON
+	if( $format == 'JSON' ){
+		$input = json_decode( $input, 1 );
 	}
 
+	// Type Cast
+	if( isset($type) ){
+		$value = pw_type_cast($value, $type);
+	}
+		
+	// Handle Switch
+	switch ($switch) {
+		case "on":
+			// Add $value to $input
+			if( !in_array( $value, $input ) )
+				array_push( $input, $value );
+			break;
+		case "off":
+			// Remove $value from $input
+			$new_input = array();
+			foreach ( $input as $input_item) { 
+	            if ( $input_item != $value ) { 
+	                array_push( $new_input, $input_item ); 
+	            }
+	        }
+	        $input = $new_input;
+
+			break;
+		case "toggle":
+			if( in_array( $value, $input ) )
+				$input = array_diff( $input, $value );
+			else
+				array_push( $input, $value );
+			break;
+	}
+
+	// Encode JSON
+	if( $format == 'JSON' ){
+		$input = json_encode( $input );
+	}
+
+	return $input;
+
+}
 
 ?>

@@ -9,23 +9,47 @@
                                              
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
+
+///// PW-HREF /////
+
+postworld.directive('pwHref', function() {
+    return {
+        scope:{
+          pwHref:"=pwHref"
+        },
+        link: function(scope, element, attrs) {
+            
+            attrs.$set('href', scope.pwHref );
+
+            //var fullPathUrl = "http://.../";
+            /*
+            if(element[0].tagName === "A") {
+                attrs.$set('href',fullPathUrl + attrs.fullPath);
+            } else {
+                attrs.$set('src',fullPathUrl + attrs.fullPath);
+            }*/
+
+        },
+    }
+});
+
 ///// SUBMIT ON ENTER /////
 // Submit on Enter, without a real form
 postworld.directive('ngEnter', function() {
-        return function(scope, element, attrs) {
-            element.bind("keydown keypress", function(event) {
-                if(event.which === 13) {
-                    scope.$apply(function(){
-                        //scope.$eval(attrs.ngEnter);
-                        scope.$eval("submit()");
-                    });
-                    event.preventDefault();
-                }
-            });
-        };
-    });
-
-
+      return function(scope, element, attrs) {
+          element.bind("keydown keypress", function(event) {
+              if(event.which === 13) {
+                  scope.$apply(function(){
+                    if( attrs.ngEnter )
+                      scope.$eval(attrs.ngEnter);
+                    else
+                      scope.$eval("submit()");
+                  });
+                  event.preventDefault();
+              }
+          });
+      };
+  });
 
 ///// KEEP DROPDOWN OPEN ON CLICK /////
 postworld.directive('preventDefaultClick', function() {
@@ -49,6 +73,17 @@ postworld.directive('selectOnClick', function() {
     });
 
 
+///// AUTO FOCUS /////
+// Automatically focuses the input field it's applied to
+postworld.directive('pwAutofocus', function($timeout) {
+    return {
+        link: function ( scope, element, attrs ) {
+            scope.$watch( attrs.ngFocus, function ( val ) {
+                $timeout( function () { element[0].focus(); } );
+            }, true);
+        }
+    };
+});
 
 
 /*
@@ -293,4 +328,7 @@ postworld.controller('pwLanguageCtrl',
     */
 
 }]);
+
+
+
 

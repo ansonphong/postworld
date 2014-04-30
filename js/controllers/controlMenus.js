@@ -9,12 +9,23 @@
                                                          
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
-var postActions = function ( $scope, pwData ) {
+postworld.directive( 'pwPostActions', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'postActions',
+    };
+}]);
+
+postworld.controller('postActions',
+    [ "$scope", "pwData", "ext",
+    function($scope, pwData, $ext ) {
 
     $scope.$watch( "post.viewer",
         function (){
-            ( $scope.post.viewer.is_favorite == true ) ? $scope.isFavorite="selected" : $scope.isFavorite="" ;
-            ( $scope.post.viewer.is_view_later == true ) ? $scope.isViewLater="selected" : $scope.isViewLater="" ;
+            if( $ext.objExists( $scope, "post.viewer" ) ){
+                ( $scope.post.viewer.is_favorite == true ) ? $scope.isFavorite="selected" : $scope.isFavorite="" ;
+                ( $scope.post.viewer.is_view_later == true ) ? $scope.isViewLater="selected" : $scope.isViewLater="" ;
+            }
         }, 1 );
 
     $scope.setFavorite = function($event){
@@ -92,7 +103,7 @@ var postActions = function ( $scope, pwData ) {
 
     };
 
-};
+}]);
 
 
 
@@ -104,8 +115,17 @@ var postActions = function ( $scope, pwData ) {
  |_|   \___/|___/\__|    \_/ \___/ \__\___|
                                                                                           
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
+postworld.directive( 'pwPostVote', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'postVote',
+    };
+}]);
 
-var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
+postworld.controller('postVote',
+    [ '$window', '$rootScope', '$scope', '$log', 'pwData',
+    function( $window, $rootScope, $scope, $log, pwData ) {
+
 
     // SWITCH CSS CLASSES BASED ON VOTE
     $scope.$watch( "post.viewer.has_voted",
@@ -173,7 +193,7 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
 
     }
 
-};
+}]);
 
 
 
@@ -185,7 +205,18 @@ var postVote = function ( $window, $rootScope, $scope, $log, pwData ) {
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
 ////////// ------------ ADMIN POSTS DROPDOWN ------------ //////////*/   
-var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, pwQuickEdit) {
+
+
+postworld.directive( 'pwAdminPostMenu', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'adminPostDropdown',
+    };
+}]);
+
+postworld.controller('adminPostDropdown',
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwQuickEdit', 'ext', '$timeout',
+    function( $scope, $rootScope, $location, $window, $log, $pwQuickEdit, $ext, $timeout ) {
 
     $scope.menuOptions = [
         {
@@ -223,60 +254,107 @@ var adminPostDropdown = function ($scope, $rootScope, $location, $window, $log, 
     // Localize current user data
     $scope.current_user = $window.pwGlobals.current_user;
 
-    // Detect the user's possession in relation to the post
-    // If the user's ID is same as the post author's ID
-    if ( typeof $scope.current_user.data !== 'undefined' && typeof $scope.post.author.ID !== 'undefined' ){
-        if( $scope.current_user.data.ID == $scope.post.author.ID )
-            $scope.postPossession = "own";
-        else
+
+    /*
+    $scope.$watch('post', function(value) {        
+    },1);
+    */
+
+    var initAttempts = 0;
+    $scope.initMenu = function(){
+
+        // Try Initializing the menu until author ID is defined
+        if( !$ext.objExists( $scope, 'post.author.ID' ) ){
+            initAttempts ++;
+
+            // Stop trying after 100 tries
+            if( initAttempts < 100 ){
+                $timeout(function() {
+                    $scope.initMenu();
+                }, 200);  
+            }
+            return false;
+        }
+
+
+        // Detect the user's possession in relation to the post
+        // If the user's ID is same as the post author's ID
+        if ( typeof $scope.current_user.data !== 'undefined' && typeof $scope.post.author.ID !== 'undefined' ){
+            if( $scope.current_user.data.ID == $scope.post.author.ID )
+                $scope.postPossession = "own";
+            else
+                $scope.postPossession = "other";
+        } else {
             $scope.postPossession = "other";
-    } else {
-        $scope.postPossession = "other";
+        }
+
+        // Detect current user's role
+        if ( $scope.current_user == 0 )
+            $scope.currentRole = "guest";
+        else if ( typeof $scope.current_user.roles != undefined ){
+            $scope.currentRole = $scope.current_user.roles[0];
+        }
+
+        // Setup empty menu options array
+        $scope.userOptions = [];
+
+        // TODO : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
+
+        // Build menu for user based on role
+        angular.forEach( $scope.menuOptions, function( option ){
+            if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
+                $scope.userOptions.push( option );
+        });
+
+        // If no options added, set empty
+        if ( $scope.userOptions == [] )
+            $scope.userOptions = "0";
     }
-
-    // Detect current user's role
-    if ( $scope.current_user == 0 )
-        $scope.currentRole = "guest";
-    else if ( typeof $scope.current_user.roles != undefined ){
-        $scope.currentRole = $scope.current_user.roles[0];
-    }
-
-    // Setup empty menu options array
-    $scope.userOptions = [];
-
-    // TODO : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
-
-    // Build menu for user based on role
-    angular.forEach( $scope.menuOptions, function( option ){
-        if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
-            $scope.userOptions.push( option );
-    });
-
-    // If no options added, set empty
-    if ( $scope.userOptions == [] )
-        $scope.userOptions = "0";
+    // Run the function
+    $scope.initMenu();
     
+
+
+    
+    $scope.getEditPostPageUrl = function(){
+
+        // Define Post Type
+        var post_type = ( $ext.objExists( $scope, 'post.post_type' ) ) ?
+            $scope.post.post_type : 'post';
+
+        // Localize Options
+        var edit_post = $window.pwSiteGlobals.edit_post;
+
+        // Check if that post type page name is defined
+        var url = ( $ext.objExists( edit_post, post_type + '.url' ) ) ?
+            edit_post[post_type].url :
+            // If not, use the default
+            edit_post['default'].url;
+
+        return url;
+
+    }
+
     $scope.menuAction = function(action){
 
         if( action == "wp-edit" )
             $window.location.href = $scope.post.edit_post_link.replace("&amp;","&");
 
-        if( action == "pw-edit" )
-            $window.location.href = "/post/#/edit/"+$scope.post.ID;
+        if( action == "pw-edit" ){
+            var editPostPageUrl = $scope.getEditPostPageUrl();
+            $window.location.href = editPostPageUrl + "#/edit/"+$scope.post.ID;
+        }
 
         if( action == "quick-edit" ){
-            pwQuickEdit.openQuickEdit($scope.post);
+            $pwQuickEdit.openQuickEdit($scope.post);
         }
         if( action == "trash" ){
-            pwQuickEdit.trashPost($scope.post.ID, $scope);
+            $pwQuickEdit.trashPost($scope.post.ID, $scope);
         }
 
     };
 
-};
-
-
-
+}]);
 
 
 /*   _       _           _         ____                      _                     

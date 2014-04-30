@@ -2,40 +2,16 @@
 
 /* 	WP Ajax Tips
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
-  
 */
 
 
-////////// POSTWORLD SITE OPTIONS : AGGREGATE //////////
-function pw_site_options( $args ){
-	
-	$pw_site_options = array(
-		"months"	=> array(
-			"1"  => "January",
-            "2"  => "Fabruary",
-            "3"  => "March",
-            "4"  => "April",
-            "5"  => "May",
-            "6"  => "June",
-            "7"  => "July",
-            "8"  => "August",
-            "9"  => "September",
-            "10" => "October",
-            "11" => "November",
-            "12" => "December",
-			),
-		);
-
-	return $pw_site_options;
-}
-
-
-//---------- PW SITE OPTIONS : AJAX RELAY NODE ----------//
-function pw_site_options_ajax(){
+//---------- PW SET OPTION ----------//
+function pw_set_option_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
+	extract($params);
 
-	$response_data = pw_site_options($params);
+	$response_data = pw_set_option( $option, $value ); 
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
@@ -44,8 +20,149 @@ function pw_site_options_ajax(){
 	die;
 }
 
-add_action("wp_ajax_nopriv_pw_site_options", "pw_site_options_ajax");
-add_action("wp_ajax_pw_site_options", "pw_site_options_ajax");
+add_action("wp_ajax_nopriv_pw_set_option", "pw_set_option_ajax");
+add_action("wp_ajax_pw_set_option", "pw_set_option_ajax");
+
+
+//---------- PW LOAD IMAGE ----------//
+function pw_get_image_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_image( $params ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_get_image", "pw_get_image_ajax");
+add_action("wp_ajax_pw_get_image", "pw_get_image_ajax");
+
+
+
+//---------- PW SET WIZARD STATUS ----------//
+function pw_set_wizard_status_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	//extract($params);
+
+	$response_data = pw_set_wizard_status( $params ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_pw_set_wizard_status", "pw_set_wizard_status_ajax");
+
+
+//---------- PW GET WIZARD STATUS ----------//
+function pw_get_wizard_status_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	//extract($params);
+
+	$response_data = pw_get_wizard_status( $params ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_pw_get_wizard_status", "pw_get_wizard_status_ajax");
+
+
+//---------- PW GET USER DATA ----------//
+function pw_get_userdata_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_userdata( $user_id,  $fields ); 
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_get_userdata", "pw_get_userdata_ajax");
+add_action("wp_ajax_pw_get_userdata", "pw_get_userdata_ajax");
+
+
+//---------- PW GET USER DATAS ----------//
+function pw_get_userdatas_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_userdatas( $user_ids,  $fields );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_get_userdatas", "pw_get_userdatas_ajax");
+add_action("wp_ajax_pw_get_userdatas", "pw_get_userdatas_ajax");
+
+
+
+
+//---------- PW SET POST IMAGE ----------//
+function pw_set_post_image_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	// Set the thumbnail
+	$set_post_thumbnail = set_post_thumbnail( $params['post_id'], $params['thumbnail_id'] );
+
+	// Return 
+	if( $set_post_thumbnail ){
+		$response_data = pw_get_post( $params['post_id'], $params['return_fields'] );	
+	} else {
+		$response_data = false;
+	}
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_pw_set_post_image_ajax", "set_post_image_ajax");
+add_action("wp_ajax_set_post_image", "pw_set_post_image_ajax");
+
+
+//---------- PW QUERY ----------//
+function pw_query_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_query($params);
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_query", "pw_query_ajax");
+add_action("wp_ajax_pw_query", "pw_query_ajax");
 
 
 
@@ -442,7 +559,7 @@ function pw_get_post_edit_admin() {
 	else $fields = 'all';
 	// Get User Id
 	$user_ID = get_current_user_id();
-	*/
+	
 
 	$fields = array(
 		"ID",
@@ -463,9 +580,11 @@ function pw_get_post_edit_admin() {
 		"image(id)",
 		"image(meta)"
 		);
+	*/
 
 	/* set the response type as JSON */
 	$results = pw_get_post( $pw_args, 'edit' ); //$post_id,$fields,$user_ID
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $results;
@@ -487,8 +606,27 @@ add_action("wp_ajax_pw_get_post_edit", "pw_get_post_edit_admin");
 //---------- oEMBED GET ----------//
 function ajax_oembed_get(){
 	list($response, $args, $nonce) = initAjaxResponse();
+	extract($args);
 	$pw_args = $args;
+
+	// GET OEMBED
 	$oEmbed = wp_oembed_get( $pw_args['link_url'] );
+
+	// AUTOPLAY
+	if( !empty( $autoplay ) && $autoplay == true ){
+
+		// VIMEO
+		if (strpos($oEmbed, 'vimeo') !== false) {
+		    $oEmbed = str_replace("\" width=\"", "?autoplay=1\" width=\"", $oEmbed);
+		}
+
+		// YOUTUBE
+		if (strpos($oEmbed, 'youtube') !== false) {
+		    $oEmbed = str_replace("?feature=oembed", "?feature=oembed&autoplay=1", $oEmbed);
+		}
+		
+	}
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $oEmbed;
@@ -663,9 +801,9 @@ function pw_get_post_anon() {
 	// pw_get_post ( $post_id, $fields, [$user_id] );
 	
 	if($args['post_id']) $post_id = $args['post_id'];
-	else ErrorReturn($response, 400, 'missing argument post_id'); 
+		else ErrorReturn($response, 400, 'missing argument post_id'); 
 	if ($args['fields']) $fields = $args['fields'];
-	else $fields = 'all';
+		else $fields = 'all';
 	// Get User Id
 	$user_ID = get_current_user_id();
 	/* set the response type as JSON */

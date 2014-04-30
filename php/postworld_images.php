@@ -5,6 +5,25 @@
 $aq_resizer_include = $template_paths['POSTWORLD_PATH'].'lib/wordpress/aq_resizer.php';
 include_once $aq_resizer_include;
 
+
+
+///// GET IMAGE /////
+function pw_get_image( $vars ){
+	extract($vars);
+
+	$image = array();
+	$image = wp_get_attachment_metadata( $image_id );
+	$image['url'] = wp_get_attachment_url($image_id);
+
+	foreach( $image['sizes'] as $key => $value ){
+		$image_size_meta = wp_get_attachment_image_src( $image_id, $key );
+		$image['sizes'][$key]['url'] = $image_size_meta[0];
+	}
+
+	return $image;
+}
+
+
 ///// GET FIRST IMAGE : FULL SIZE : URL, WIDTH, HEIGHT & ID /////
 function first_image_obj( $post_id ) {
 	$args = array(

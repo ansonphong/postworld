@@ -16,32 +16,33 @@ function menu_kit_categories($OPTIONS){
 		$POST_TYPE_CATS = wp_get_object_terms( $POST_TYPE_IDS, $TAXONOMY,array('fields' => 'ids') );
 		
 		if($POST_TYPE_CATS){
-		  $POST_TYPE_CATS = array_unique($POST_TYPE_CATS);
-		  $POST_TYPE_CATS = implode(',',$POST_TYPE_CATS);
-		  
-		  $args = array(
-			'include'		=> $POST_TYPE_CATS,
-			'taxonomy'		=> $TAXONOMY,
-			'hierarchical'	=> $HIERARCHICAL,
-			'include'		=> $INCLUDE_,
-			'exclude'		=> $EXCLUDE_,
-			'title_li'		=> $TITLE,
-			'depth'			=> 2,
-			'show_count'	=> 0,
-			'hide_empty'	=> $HIDE_EMPTY
-		  );
-		  
-		 wp_list_categories($args);
-		
-		  
+
+			$POST_TYPE_CATS = array_unique($POST_TYPE_CATS);
+			$POST_TYPE_CATS = implode(',',$POST_TYPE_CATS);
+
+			$args = array(
+				'include'		=> $POST_TYPE_CATS,
+				'taxonomy'		=> $TAXONOMY,
+				'hierarchical'	=> $HIERARCHICAL,
+				'title_li'		=> $TITLE,
+				'depth'			=> 2,
+				'show_count'	=> 0,
+				'hide_empty'	=> $HIDE_EMPTY
+				);
+
+			if( !empty($INCLUDE_) )
+				$args['include'] = $INCLUDE_;
+
+			if( !empty($EXCLUDE_) )
+				$args['exclude'] = $EXCLUDE_;
+
+			wp_list_categories($args);
+			
 		}
-		
-		
+
 	}
 	///// END LIST CATEGORIES OUTPUT /////
 
-
 }
-
 
 ?>

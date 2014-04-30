@@ -16,6 +16,8 @@ Postworld // PHP / MySQL Functions
 0. [ __Images__ : postworld_images.php ](#images)
 0. [ __Taxonomies__ : postworld_taxonomies.php ](#taxonomies)
 0. [ __Utilities__ : postworld_utilities.php ](#utilities)
+0. [ __Wizard__ : postworld_wizard.php ](#wizard)
+
 
 ## Post Meta
 
@@ -35,13 +37,16 @@ Used to get Postworld values in the __wp_postworld_post_meta__ table
 
 __return__ : *Array*
 ```php
-	'post_id' => {{integer}}
-	'author_id'	=> {{integer}}
-	'post_class' => {{string}}
-	'link_format' => {{string}}
-	'link_url' => {{string}}
-	'post_points' => {{integer}}
-	'rank_score' => {{integer}}
+  array(
+  	'post_id' => {{integer}}
+  	'author_id'	=> {{integer}}
+  	'post_class' => {{string}}
+  	'link_format' => {{string}}
+  	'link_url' => {{string}}
+  	'post_points' => {{integer}}
+  	'rank_score' => {{integer}}
+    //...
+  )
 ```
 
 #### Usage:
@@ -62,9 +67,15 @@ All parameters, except post_id, are optional.
 __$post_id__ : *integer* (required)
 
 __$post_meta__ : *Array*
-- post_class
-- link_format
-- link_url
+- post_class : *string*
+- link_format : *string*
+- link_url : *string*
+- geo_latitude : *number*
+- geo_longitude : *number*
+- event_start : *integer*
+- event_end : *integer*
+- related_post : *integer*
+
 
 #### Usage:
 ```php
@@ -841,7 +852,7 @@ __post_count__ : *integer*
   - 0 (default) - Return all
 
 __fields__ : *string / Array*
-- Set return values. Uses pw_get_posts( $post_ids, $fields ) method
+- Set return values. Uses `pw_get_posts( $post_ids, $fields )` method
 - Pass this directly to `wp_get_posts()` method unless the value is 'ids'
   - __ids__ (default) - Return an Array of post IDs
   - __all__ - Return all fields
@@ -874,8 +885,8 @@ $args = array(
 	's' => 'search string',
 	'orderby' => 'rank_score',
 	'order' => 'ASC'
-	'posts_per_page' : '20',
-	fields : array('ID','post_title','post_content','post_date'), // See pw_get_post() $fields method
+	'posts_per_page' => '20',
+	'fields' => array('ID','post_title','post_content','post_date'), // See pw_get_post() $fields method
 );
 
 $posts = pw_query( $args, 'JSON' );
@@ -1432,6 +1443,17 @@ __return__ : *boolean*
 
 ------
 
+### is_post_relationship( *$post_relationship, [$post_id], [$user_id]* )
+- Use `get_post_relationship()` method to return the post relationship status for the specified post relationship
+
+``` php
+  get_post_relationship( $post_relationship, $post_id, $user_id )
+```
+
+__return__ : *boolean*
+
+------
+
 __USER LOCATION__
 
 ------
@@ -1559,9 +1581,15 @@ __WORDPRESS__
 __POSTWORLD__
 - __post_points__
 - __rank_score__
-- __link_format__
 - __post_class__
 - __link_url__
+- __link_format__
+- __geo_latitude__
+- __geo_longitude__
+- __event_start__
+- __event_end__
+- __related_post__
+- __post_timestamp__ - UNIX Timestamp from GMT Date
 
 __TAXONOMIES__
 - __taxonomy(tax_slug)[fields]__ - Returns taxonomy terms array for the post
@@ -2208,7 +2236,7 @@ echo pw_print_feed( $print_feed_args );
 
 ------
 
-### pw_get_post_template ( *$post_id, $post_view, $path_type, $string* )
+### pw_get_post_template ( *$post_id, $post_view, $path_type* )
 - Returns an template path based on the provided post ID and view
 
 #### Process
@@ -2220,43 +2248,21 @@ __$post_id__ : *integer*
 
 __$post_view__ : *string*
 
-__$path_type__ : *string*
+__$path_type__ : *string* (optional)
 - Options:
   - __url__ (default): Returns absolute URL string of template file
-  - __dir__ (default): Returns absolute directory path of template file
+  - __dir__ : Returns absolute directory path of template file
 
-__$string__ : *boolean* (default : *false*)
-  - __true__ - Return as a string
-  - __false__ - Return embedded in the templates object
 
-Input : 
+#### Usage
 
 ``` php
-$args = array(
-	'posts' => array(
-		'post_types' => array( $post_type ),	// 'post'
-		'post_views' => array( $post_view )		// 'full'
-	),
-);
-$post_template_object = pw_get_templates ($args);
+$post_template_url = pw_get_post_template ( $post->ID, 'full', 'url' );
 ```
 
-
-__return__ : *Array / string*
-
-- If $string = false, return:
-``` javascript
-{
-posts : {
-     'post' : {
-          'full' : '/wp-content/plugins/postworld/templates/posts/post-full.html',
-          },
-     },
-}
-```
-
-- If $string = true, return : the single template path as a string
-`/wp-content/plugins/postworld/templates/posts/post-full.html`
+__return__ : *string*
+- The URL or absolute path of the template
+`http://www.com/wp-content/plugins/postworld/templates/posts/post-full.html`
 
 ------
 
@@ -2265,7 +2271,7 @@ posts : {
 
 #### Paramters
 __$panel_id__ : *string* (required)
-- The ID of the panel, which is the name of the file in the /panels directory, without the .html extension
+- The ID of the panel, which is the name of the file in the /panels directory, minus the extension
 
 __$path_type__ : *string* (optional)
 - The type of path to return
@@ -2274,46 +2280,72 @@ __$path_type__ : *string* (optional)
   + __dir__ : Absolute system path, ie. /var/vhosts/www...
 
 __return__ : *string / false*
-- The URL or path of the
+- The URL or absolute path of the template
 
 ------
 
-### pw_get_templates ( *$templates_object, $path_type* )
+### pw_get_template ( *$subdir, $panel_id, $ext, $path_type* )
 - Gets an Object of template paths based on the provided object
+- Searches both the default and override template paths
 
-#### Parameters:
+#### Paramters
+__$subdir__ : *string* (required)
+- Which subdirectory to search for the template, relative to the default and over-ride template paths
 
-__$templates_object__ : *Array* (optional)
+__$panel_id__ : *string* (required)
+- The ID of the panel, which is the name of the file in the /panels directory, minus the extension
 
-Options:
-- *Array* containing __['posts']__ : indicates to return a __Post Templates Object__
-  - __post_types__ : *Array* (optional) - Array of post_types which to return template paths for  
-    __default__ : Get all registered post types with `get_post_types()` WP Method :  
-	`get_post_types( array( array( 'public' => true, '_builtin' => false ) ), 'names' )`
-
-  - __post_views__ : *Array* (optional) - Array of 'feed views' which to retrieve templates for  
-    __default__ : `array( 'list', 'detail', 'grid', 'full' )`
-
-- *Array* containing __['panels']__ : indicates to return a __Panel Templates Object__
-  - __panel_id__ : Return the url for the given panel_id
-
-- __null__ : *default*  
-  Returns object with all panels and templates in the default and over-ride folders.
-
+__$ext__ : *string* (optional)
+- The file extension of the template
+- Default : __html__
 
 __$path_type__ : *string* (optional)
+- The type of path to return
+- Options:
+  + __url__ : (default) Absolute URL to the path
+  + __dir__ : Absolute system path, ie. /var/vhosts/www...
+
+__return__ : *string / false*
+- The URL or absolute path of the template
+
+------
+
+### pw_get_templates ( *$vars* )
+- Gets an Object of template paths based on the provided object
+- Searches both the default and override template paths
+
+#### Parameters: __*$vars*__
+
+__subdirs__ : *Array* (optional)
+- Which sub-directory(s) to search through
+- By default, will search through all sub-directories within the template paths
+- ie. `array('posts','panels','comments')`
+
+__posts__ : *Array* (optional)
+- Custom filtering for returning post templates
+- Options:
+  + __post_types__ : *Array* (optional) - Which post types to return templates for. *Default*: All post types
+  + __post_views__ : *Array* (optional) - Which post views to return templates for. *Default*: All post views registered in `pw-config`
+
+__path_type__ : *string* (optional)
 - Options:
   - __url__ (default): Returns absolute URL string of template file
   - __dir__ (default): Returns absolute directory path of template file
 
+__ext__ : *string* (optional)
+- The suffix / extension of file type which to search for
+- Must not include period / dot before extension ie. `html`, `php`
+- Default: `html`
+
+__source__ : *string* (optional)
+- The method by which to merge the over-ride templates
+- Options:
+  + __merge__ (default) - A custom merge method
+  + __default__ - Default PHP merge method
 
 #### Process:
 
 __POST TEMPLATES OBJECT__
-
-``` php
-	if($templates_object['posts']) // If it has a posts object
-```
 
 - __Default__ post templates path :  
   __/plugins__/postworld/templates/posts
@@ -2341,17 +2373,13 @@ __POST TEMPLATES OBJECT__
 5. Gather all the template files into an object
 
 
-__PANEL TEMPLATES OBJECT__
-
-``` php
-	if($templates_object['panels']) // If it has a templates object
-```
+__TEMPLATES OBJECTS BY DIRECTORY__
 
 - Default panels template path :  
-  __/plugins__/postworld/templates/panels
+  __/plugins__/postworld/templates/[panels/comments/modals]
 
 - Over-ride panels template path:  
-  __/theme_name__/postworld/templates/panels
+  __/theme_name__/postworld/templates/[panels/comments/modals]
 
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
@@ -2361,47 +2389,24 @@ __PANEL TEMPLATES OBJECT__
 2. If file exists in __over-ride__ paths, overwrite the __default__ paths
 
 __return__ : *Array* (with requested template paths)
-
-
-__COMMENTS TEMPLATE OBJECT__ *(Clone of "Panel Templates Object")*
-
-``` php
-  if($templates_object['comments']) // If it has a 'comments' object
-```
-
-- Default panels template path :  
-  __/plugins__/postworld/templates/comments
-
-- Over-ride panels template path:  
-  __/theme_name__/postworld/templates/comments
-
-
-1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
-  - {{panel_id}}.html  
-  Key is __file_name__ without the HTML extension, value is the path relative to base domain
-   
-2. If file exists in __over-ride__ paths, overwrite the __default__ paths
-
-__return__ : *Array* (with requested template paths)
-
-
 
 
 #### Usage:
 
 ``` php
 
-// To get Post Templates Object
-$args = array(
-	'posts' => array(
-		'post_types' => array( 'post', 'link' ),
-		'post_views' => array( 'grid', 'list', 'detail', 'full' )
-	),
-);
+// To get Selective Post Templates Object
+$args =  array(
+  'subdirs' => array( 'posts', 'comments' ),
+  'posts'=> array( 
+    'post_types' => array('posts', 'pages'),
+    'post_views' => array('list','full'),
+    )
+  );
 $post_templates = pw_get_templates ($args);
 
-// To get Panel Template Object
-$panel_template = pw_get_templates ( array( 'panels'=>array('panel_1_id', 'panel_2_id') ));
+// To get Panel Templates Object
+$panel_template = pw_get_templates ( array( 'subdirs' => array( 'panels' ));
 
 // To get Comments Template Object
 $panel_template = pw_get_templates ( array( 'comments' ));
@@ -2415,20 +2420,19 @@ $panel_template = pw_get_templates ( array( 'comments' ));
 After JSON Encoded :
 
 ``` javascript
-
 {
-posts : {
-     'post' : {
-          'list' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
-          'detail' : '/wp-content/plugins/postworld/templates/posts/post-detail.html',
-          'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
-          },
-     },
+  posts : {
+   'post' : {
+      'list' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
+      'detail' : '/wp-content/plugins/postworld/templates/posts/post-detail.html',
+      'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
+      },
+  },
 };
 
 ```
 
-- __Panel Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
+- __Directory Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
 
 After JSON Encoded :
 
@@ -2436,24 +2440,40 @@ After JSON Encoded :
 {
 panels : {
 	'feed_top': '/wp-content/plugins/postworld/templates/panels/feed_top.html',
+  //...
 	}
 };
 ```
 
-- __Comments Template Object__ : *Array* - With key as __panel_id__ value as __panel_url__
+------
 
-After JSON Encoded :
+### pw_parse_template( *$template_path, $vars* )
+- Parses a PHP template
+- Injects the template with the provided `$vars` localized via extract
+  + `extract($vars)`
+- Useful for turning parsed template HTML into a variable
 
-``` javascript
-{
-panels : {
-  'comment-edit': '/wp-content/plugins/postworld/templates/panels/comment-edit.html',
-  'comment-single': '/wp-content/plugins/postworld/templates/panels/comment-edit.html',
-  'comment-header': '/wp-content/plugins/postworld/templates/panels/comment-header.html',
-  }
-};
+#### Parameters
+__$template_path__ : *string* (required)
+- The absolute directory path the PHP template to parse
+
+__$vars__ : *array* (optional)
+- Variables to be injected locally into the template
+- `$vars` is unpacked into the template context with PHP's `extract()`
+- A value of : `array( 'query'=>array('post_type'=>'post') )` is accessed in the template like `$query['post_type']`
+
+#### Usage 
+```php
+$vars = array(
+  'query' => array(
+    'post_type' => $post->post_type // Localized in template as $query['post_type']
+    )
+  );
+$template_html = pw_parse_template( $template_path, $vars );
 ```
 
+__return__ : *string*
+- The parsed template contents
 
 ------
 
@@ -3140,10 +3160,113 @@ Result :
 ```
 
 
+------
+
+## Wizard
+__php/postworld_wizard.php__
+
+Contains helper functions for storing and retreiving data for user-specific wizards.
+
+------
+
+### pw_set_wizard_status( *$vars* )
+- Sets the status of a wizard in relation to the user
+- Inserts the status object 
+
+#### Process
+1. If the user doesn't have a `wizard_status` postmeta entry, create one.
+2. Insert / overwrite the current wizard sub-object by `wizard_name`
+
+#### Parameters : $vars
+
+__user_id__ : *integer* (optional)
+- If no user ID is provided, the current user ID will be used
+
+__wizard_name__ : *string* (required)
+- The name of the object to add the value to
+
+__value__ : *JSON string / A_ARRAY* (required)
+- The value to be inserted into the specified object
+
+__input_format__ : *string* (optional)
+- The format of the value being passed in and set
+- Options:
+    + __A_ARRAY__ (default)
+    + __JSON__
+
+__output_format__ : *string* (optional)
+- The format of the value being returned
+- Options:
+    + __A_ARRAY__ (default)
+    + __JSON__
+
+##### Return : *Array*
+- The current full value of the `wizard_status` user meta value
+
+__wizard_Status__ Model:
+```javascript
+
+  wizard_status = {
+    organizeEvent : {
+      active: true,   // If it in in progress
+      visible: false, // If it is visible on the sidebar
+    },
+  };
 
 
+```
 
 
+------
+
+### pw_get_wizard_status( *$vars* )
+- Gets the current status of a user's progress through a wizard
+- Stored in JSON as `wizard_status` in `wp_usermeta`
+
+#### Parameters : $vars
+
+__user_id__ : *string* (optional)
+- If no user ID is provided, the current user ID will be used
+
+__wizard_name__ : *string* (optional)
+- The name of the wizard to return the status of
+- If no `wizard_name` is specified, the entire `wizard_status` object will be returned
+
+__format__ : *string* (optional)
+- The format of the value to return
+- Options:
+    + __A_ARRAY__ (default)
+    + __JSON__
+
+#### Usage
+```php
+    $wizard_status = unify_get_wizard_status( array(
+        'user_id' => 1,
+        'wizard_name' => 'organizerInit',
+        ) );
+```
+
+#### Return
+- Return the requested object
+- If wizard doesn't exist, or user doesn't have wizard status, or any other error, return `false`
+
+
+------
+
+### pw_is_wizard_active( *$wizard_name* )
+- Reads the value of a Wizard Status object for the logged in user and returns whether the requested `$wizard_name` is currently active
+
+__return__ : *boolean*
+- If the requested wizard object has `active:'true'` return __true__. In all other cases return __false__.
+
+------
+
+### pw_active_wizard( [`$user_id`] )
+- Return an string of the active wizard for the logged in user
+
+__return__ : *string*
+- Return the `wizard_name`
+- Return false if no active wizards
 
 
 

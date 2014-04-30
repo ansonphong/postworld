@@ -41,8 +41,8 @@ angular.module('TimeAgoFilter', []).
 			          pad(parseInt(Math.abs(offset/60)), 2)+
 			          pad(Math.abs(offset%60), 2));
     		console.log('offset',offset);
-    		var thedate = "2013-10-26T20:00:32.000Z";
-    		console.log('time',new Date(thedate));
+    		//var thedate = "2013-10-26T20:00:32.000Z";
+    		//console.log('time',new Date(thedate));
         return function(input, p_allowFuture) {
             var substitute = function (stringOrFunction, number, strings) {
                     var string = $.isFunction(stringOrFunction) ? stringOrFunction(number, dateDifference) : stringOrFunction;

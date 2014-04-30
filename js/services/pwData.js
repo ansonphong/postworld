@@ -90,6 +90,11 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
                 });
             return deferred.promise;		
 		},
+		pw_query: function( args ){
+			$log.debug('pwData.pw_query',args);
+			var params = {'args':args};
+			return this.wp_ajax('pw_query',params);
+		},
 		pw_live_feed: function(args,qsArgs) {
 			// args: arguments received from Panel. fargs: is the final args sent along the ajax call.
 			// fargs will be filled initially with data from feed settings, 
@@ -348,14 +353,41 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			var params = {args:args};
 			return this.wp_ajax('user_share_report_outgoing',params);
 		},
-
-
-		pw_site_options: function(args) {
-			$log.debug('pwData.pw_site_options',args);
+		set_post_image: function(args) {
+			$log.debug('pwData.set_post_image',args);
 			var params = {args:args};
-			return this.wp_ajax('pw_site_options',params);
+			return this.wp_ajax('set_post_image',params);
 		},
-
+		get_userdatas: function(args) {
+			$log.debug('pwData.get_userdatas',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_userdatas',params);
+		},
+		get_userdata: function(args) {
+			$log.debug('pwData.get_userdata',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_userdata',params);
+		},
+		get_wizard_status: function(args) {
+			$log.debug('pwData.get_wizard_status',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_wizard_status',params);
+		},
+		set_wizard_status: function(args) {
+			$log.debug('pwData.set_wizard_status',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_set_wizard_status',params);
+		},
+		get_image: function(args) {
+			$log.debug('pwData.get_image',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_image',params);
+		},
+		set_option: function(args) {
+			$log.debug('pwData.set_option',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_set_option',params);
+		},
 
 
    }; // END OF pwData return value

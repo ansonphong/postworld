@@ -1,11 +1,14 @@
-/*
-  ____           _                      _     _ 
+/*____           _                      _     _ 
  |  _ \ ___  ___| |___      _____  _ __| | __| |
  | |_) / _ \/ __| __\ \ /\ / / _ \| '__| |/ _` |
  |  __/ (_) \__ \ |_ \ V  V / (_) | |  | | (_| |
  |_|   \___/|___/\__| \_/\_/ \___/|_|  |_|\__,_|
-                                                
-A Wordpress plugin for displaying posts in creative ways.
+
+////////////////////////////////////////////////
+
+A Wordpress plugin for
+• Extending the Wordpress functions API
+• Displaying posts in creative ways.
 
 Framework by : AngularJS
 GitHub Repo  : https://github.com/phongmedia/postworld/
@@ -15,7 +18,23 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 'use strict';
 var feed_settings = [];
 
-var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize', 'infinite-scroll', 'ui.bootstrap', 'monospaced.elastic','TimeAgoFilter','TruncateFilter','UserValidation','pwFilters', '$strap.directives' ])
+var depInject = [
+    'ngResource',
+    'ngRoute',
+    'ngSanitize',
+    // 'ngAnimate', (animate removed for bootstrap carousel)
+    'infinite-scroll', 
+    'ui.bootstrap',
+    'monospaced.elastic',
+    'TimeAgoFilter',
+    'TruncateFilter',
+    'UserValidation',
+    'pwFilters',
+    'timer'
+    ];
+
+
+var postworld = angular.module('postworld', depInject )
 .config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
 
     var plugin_url = jsVars.pluginurl;
@@ -113,6 +132,7 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         });  
 
 
+
     $routeProvider.when('/new/:post_type',
         {
             action: "new_post",
@@ -127,7 +147,6 @@ var postworld = angular.module('postworld', ['ngResource','ngRoute', 'ngSanitize
         {
             action: "default",
         });
-
 
     // this will be also the default route, or when no route is selected
     // $routeProvider.otherwise({redirectTo: '/home/'});

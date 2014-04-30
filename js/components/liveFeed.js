@@ -9,10 +9,16 @@ postworld.directive('liveFeed', function() {
 		restrict: 'A',
 		// DO not set url here and in nginclude at the same time, so many errors!
 		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html',
+		// "http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_1.html"
 		replace: true,
 		controller: 'pwFeedController',
+		//template: '<div ng-include src="templateUrl"></div>',		
+       	// template: '<div ng-include src="\'http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html\'"></div>',
+       	template: '<div ng-include="templateUrl" class="feed"></div>',
+ 		// template: '<div ng-include="templateUrl"></div>',
+ 		// templateUrl: 'http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html',
+		//templateUrl: '{{templateUrl}}',
 		scope : {
-			
 		},
 	};
 });
@@ -22,10 +28,11 @@ postworld.directive('loadFeed', function() {
 		restrict: 'A',
 		// DO not set url here and in nginclude at the same time, so many errors!
 		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
-		//replace: true,
+		replace: true,
+       	template: '<div ng-include="templateUrl" class="feed"></div>',
 		controller: 'pwFeedController',
 		scope : {
-			
+			// templateUrl: "=",			
 		}
 	};
 });
@@ -116,7 +123,8 @@ postworld.controller('pwFeedController',
 		$scope.feed_query = {};
 		$scope.scrollMessage = "";
 		$scope.items = [];
-		$scope.message = "";    	
+		$scope.message = "";   
+		// $scope.turl = "http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html"; 	
 		
 		// List of Post Items displayed in Scroller
 		// is this a live feed or a load feed?

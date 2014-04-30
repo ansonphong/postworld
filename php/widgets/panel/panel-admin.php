@@ -38,10 +38,7 @@ extract($OPTIONS);
 </style>
 
 <?php
-
-  
   //echo json_encode( $pw_templates["panels"] );
-
 ?>
 
 <div id="widget-options">
@@ -49,7 +46,7 @@ extract($OPTIONS);
     <!-- TITLE -->
     <label for="<?php echo $this->get_field_id( 'title' ); ?>">
         
-        <input type="checkbox" value="1" title="Show Title" name="<?php echo $this->get_field_name('show_title'); ?>" id="<?php echo $this->get_field_id('show_title'); ?>" <?php if($show_title == '1'){ echo 'checked="checked"'; } ?> >
+        <input type="checkbox" value="1" title="Show Title" name="<?php echo $this->get_field_name('show_title'); ?>" id="<?php echo $this->get_field_id('show_title'); ?>" <?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
         <?php _e( 'Title:' ); ?>
     </label> 
     <input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />

@@ -50,6 +50,39 @@ function get_current_userdata_obj($fields) {
 }
 
 
+function pw_can_edit_profile( $user_id ){
+	if( $user_id == get_current_user_id() ||
+		current_user_can('edit_users') )
+		return true;
+	else
+		return false;
+}
+
+
+
+function pw_get_xprofile( $user_id, $fields ){
+	// Get info from Bussypress extended profile
+
+	$xprofile = array();
+	
+	// If Buddypress isn't isntalled, return false
+	if( !function_exists('xprofile_get_field_data') )
+		return false;
+
+	// Get each requested field
+	foreach ( $fields as $field ){
+		$field_value = xprofile_get_field_data( $field, $user_id );
+
+		$field = str_replace(' ', '_', $field);
+
+		if( isset($field_value) )
+			$xprofile[$field] = $field_value;
+
+	}
+	return $xprofile;
+}
+
+
 function pw_get_userdatas( $user_ids, $fields = false ){
 	$users_array = array();
 	foreach( $user_ids as $user_id ){
@@ -157,9 +190,6 @@ function pw_get_userdata($user_id, $fields = false) {
 			$user_data["buddypress"][$buddypress_field] = bp_get_profile_field_data( $args );
 		}
 	}
-
-
-
 
 
 	// AVATAR FIELDS
@@ -451,6 +481,24 @@ function is_view_later($post_id = null, $user_id = null) {
 
 }
 
+function is_post_relationship( $post_relationship, $post_id = null, $user_id = null) {
+	/*
+	 Use get_post_relationship() method to return the post relationship status for $post_relationship
+	 return : boolean
+	 */
+
+	if (is_null($post_id)) {
+		global $post;
+		$post_id = $post -> ID;
+	}
+
+	if (is_null($user_id)) {
+		$user_id = get_current_user_id();
+	}
+
+	return get_post_relationship( $post_relationship, $post_id, $user_id);
+}
+
 function set_viewed($switch=TRUE, $post_id = null, $user_id = null) {
 	/*
 	 Use set_post_relationship() to set the post relationship for viewed
@@ -665,11 +713,11 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 	 error - If error */
 	//echo ($post_id);
 
+	 $switch = pw_switch_value($switch);
 
 	if (is_null($post_id)) {
 		global $post;
 		$post_id = $post -> ID;
-
 	}
 
 	if (is_null($user_id)) {
@@ -681,13 +729,12 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 	
 	//print_r($relashionship_db_array);
 	if ($relashionship_db) {
-		if ($switch) {
+		if ($switch == 'on') {
 			if (!in_array($post_id, $relashionship_db_array[$relationship])) {
 				$relashionship_db_array[$relationship][] = $post_id;
 				update_post_relationship($user_id, $relashionship_db_array);
 				//echo ($relationship);
 				if ($relationship == 'favorites'){
-					//echo "addinggggggggggggggggg";	
 					add_favorite($post_id, $user_id);
 				}
 			}
@@ -818,13 +865,21 @@ function get_post_relationship( $relationship, $post_id, $user_id) {
 		 )*/
 
 		$relationship_array = (array) json_decode($relationship_array);
-		// print_r($relationship_array);
+
 		if ($relationship != 'all') {
-			if (in_array($post_id, $relationship_array[$relationship])) {
+
+			// If that relationship object doesn't exist
+			if( !isset($relationship_array[$relationship]) )
+				return FALSE;
+
+			// If it exists, test it
+			if ( in_array( $post_id, $relationship_array[$relationship] )) {
 				return TRUE;
 			} else
 				return FALSE;
-		}// not all
+		}
+
+		// ALL
 		else {
 			$output = array();
 			if (in_array($post_id, $relationship_array['viewed']))
@@ -1242,6 +1297,7 @@ function reset_password_mailout_single_postworld( $user_id ){
 	$headers = 'From: Reality Sandwich <'. get_bloginfo('admin_email') . ">\r\n";           
 	return wp_mail($to, $subject, $message, $headers); 
 }
+
 
 
 

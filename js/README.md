@@ -228,13 +228,288 @@ __return__ : *Object*
 
 ------
 
-### o-embed *[ directive ]*
-- Populates the element with the embed code for a given media URL
+### pw-image  *[ directive ]*
+- Loads an image object into a predefined scope object / variable
+
+#### Attributes
+
+__image-id__ : *integer / model path*
+- The image attachment ID
+
+__image-model__ : *model path*
+- The model path which will be populated with the image object
+
+__TODO__ : Add image() fields-like request specific imge sizes, including custom image sizes, like `pw_get_post.`
+
+#### Usage
+- The `$scope` object `images` is the reccomended usage to store all the image objects, with a subobject with the ID of the image, *ie.* `link_thumbnail`
+
+```html
+  <img
+  pw-image
+  image-id="{{post.post_meta.link_thumbnail_id}}"
+  image-model="images.link_thumbnail"
+  ng-src="{{ images.link_thumbnail.url }}">
+
+```
+
+#### Example of `image-model`
+
+```javascript
+{
+  "width": 480,
+  "height": 360,
+  "file": "2014/03/188-hqdefault.jpg",
+  "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault.jpg",
+  "sizes": {
+    "thumbnail": {
+      "file": "188-hqdefault-150x150.jpg",
+      "width": 150,
+      "height": 150,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-150x150.jpg"
+    },
+    "medium": {
+      "file": "188-hqdefault-300x225.jpg",
+      "width": 300,
+      "height": 225,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-300x225.jpg"
+    },
+    "banner": {
+      "file": "188-hqdefault-480x275.jpg",
+      "width": 480,
+      "height": 275,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-480x275.jpg"
+    },
+    "grid": {
+      "file": "188-hqdefault-480x275.jpg",
+      "width": 480,
+      "height": 275,
+      "mime-type": "image/jpeg",
+      "url": "http://localhost:8888/wp-content/uploads/2014/03/188-hqdefault-480x275.jpg"
+    }
+  },
+  "image_meta": {
+    "aperture": 0,
+    "credit": "",
+    "camera": "",
+    "caption": "",
+    "created_timestamp": 0,
+    "copyright": "",
+    "focal_length": 0,
+    "iso": 0,
+    "shutter_speed": 0,
+    "title": ""
+  }
+}
+
+```
+
+
+------
+
+### pw-query  *[ directive ]*
+- Loads a set of posts into scope based on a query 
+
+#### Attributes
+
+__pw-query__ : *object/model path*
+- An object to pass to `pw_query`, which contains the query variables
+
+__query-results-model__ : *object/model path*
+- The array where to deposit the results of the query
+
+__query-status-model__ : *object/model path*
+- Where to update the status for the current query instance
+- Example: `loading`, `done`, etc...
+
+__query-id__ : *string*
+- An ID for the query instance
+- Generally used for triggering refreshes with `$on` actions
+
+
+//// BETTER WAY TO EMIT / UPDATE IT
+
+
+
+------
+
+### pw-list-users  *[ directive ]*
+- Loads an object into the scope which is an array of user data
+
+#### Attributes
+
+__user-list-id__ : *string*
+- The unique identifier for this instance of the user list
+- Used by the `pwUserList` Event Listener to verify which list the action is being sent to
+
+__user-fields__ : *Array*
+- Fields to pass to the `pw_get_userdata` fields parameter
+- Example:
+  + {'user_nicename', 'display_name' }
+
+__user-ids__ : *Array*
+- Reference to an Array of user IDs
+
+__users-model__ : *object/model path*
+- The model in scope where to return the data from `pw_get_userdata`
+
+__users-query__ : *Array* (IN-OP)
+- Query for users to auto-populate
+- Over-ridden by `user-ids` attribute
+
+#### Scope Methods
+
+### __getUsers( *userIds* )__
+- Gets the user data for the array of supplied User IDs
+- Gets the attribute `user-fields` fields
+- Places the returned array in `user-model` 
+
+### __getUser( *userId* )__
+
+
+### __pwUserList__ : Event Listener
+- Listens for commands broadcast from rootScope or other related emit or broadcast
+
+#### Usage
+
+- Add / Remove User from List with Event Listener:
+``` javascript
+$rootScope.$broadcast( 'pwUserList', {
+    userListId: [string],     // Specify the list ID, equivilant to 
+    action: [string],         // Options : addUser / removeUser
+    userId: [integer],        // Which User ID to do the action on
+    postId: [integer]         // Which Post ID to do the action on (optional)
+  } );
+```
+
+
+
+``` javascript
+userListId: $scope.relationsAction,
+action: action,
+userId: $scope.userId(),
+postId: $scope.eventId()
+```
+
+
+------
+
+### wp-media-library *[ directive ]*
+- For use on Buttons and clickable items
+- Activates the Wordpress Media Library / Uploader, and returns selected images to callback function(s)
+
+#### Attributes
+__media-id__ : *string* (optional)
+- Sets an ID on the media window for targetted CSS styling
+
+__media-type__ : *string* (optional)
+- Select which media type mime type to filter by
+- Options:
+  + __image__
+  + ...
+
+__media-title__ : *string* (optional)
+- Sets the title which appears at the top of the media window
+
+__media-button__ : *string* (optional)
+- Sets the text which appears on the select button
+
+__media-default-tab__ : *string* (optional) __IN-OP?__
+- Sets the default tab which is selected
+- Options:
+  + __upload__
+  + ...
+
+__media-tabs__ : *string* (optional)
+- Sets the tabs are available
+- Options:
+  + __upload__
+  + __library__
+
+__media-multiple__ : *boolean* (optional)
+- Sets if multiple media files are selected / returned
+
+__media-callback__ : *string* (optional)
+- Calls a local callback in the scope of the directive
+- Available options:
+  + __setPostImage__ - Replaces the `post.image` object with the new image after selected
+  + __editPostImage__ - Replaces the `post.thumbnail_id` and `post.image` values in the current `post` object
+  + __setOption(option, [field])__ - Sets the selected image object in the `wp_options` table as the specified `option` name. The `field` can optionally be set to `id` and only the image ID will be saved.
+
+__media-parent-callback__ : *string* (optional)
+- Calls a callback in the parent scope of the directive
+- Value is the name of the function in the parent scope
+- If only the function name is provided, it provides one variable of the media array returned from the media window. ie. `functionName(selectedMedia)`
+
+__media-model__ : *string* (optional)
+- The name of an object in the parent scope
+- The array returned from the media window is populated into this object model
+
+__media-model-array__ : *boolean* (optional)
+- Options:
+  + `false` *(default)* - the media model with only one image selected will be automatically taken out of the array and converted into an object. ie. `[{ imageObj }]` ›› `{imageObj}`
+  + `true` - the media model will be preserved as an array, even if only one image is selected. ie. `[{ imageObj }]`
+
 
 #### Usage
 ``` html
-<div o-embed="http://www.youtube.com/watch?v=38peWm76l-U"></div>
+<button
+      wp-media-library
+      media-id="setImage"
+      media-type="image"
+      media-title="Select a Cover Image"
+      media-button="Set Cover Image"
+      media-default-tab="upload"
+      media-tabs="upload, library"
+      media-multiple="false"
+      media-callback="setPostImage"
+      media-parent-callback="localSetPostImage"
+      media-model="thumbnailImage">
+      Upload Image
+    </button>
 ```
+
+#### Requirements
+- The following line of PHP code must be on the page somewhere for this directive to work
+
+```php
+wp_enqueue_media();
+```
+
+
+-----
+
+### o-embed *[ directive ]*
+- Populates the element with the embed code for a given media URL
+
+#### Attributes
+__o-embed__ : *expression*
+- The URL of the URL to embed
+
+__autoplay__ : *boolean*
+- Whether or not to auto-play (support limited to Vimeo / YouTube)
+
+__run__ : *boolean*
+- If this is *false*, the o-embed will not run
+- This is set on a watch, so if this changes to true the *o-embed* will run
+
+#### Usage
+
+```html
+<div o-embed="post.link_url" autoplay="true">
+  <div class="o-embed" ng-bind-html="oEmbed"></div>
+</div>
+```
+
+- An additional `oEmbedCode` scope variable is created, which is populated with the raw HTML embed code for dev inspection.
+
+```html
+  <div ng-bind="oEmbedCode | json"></div>
+```
+
 ------
 
 ### load-post *[ directive ]*
@@ -313,7 +588,7 @@ __feed_query__ : *string / object*
 
 
 ####Usage:
-````javascript
+``` javascript
 feed_settings['feed_id'] = {
      preload: 3,
      load_increment : 10,
@@ -323,10 +598,11 @@ feed_settings['feed_id'] = {
           current : 'detail',
           options : [ 'list', 'detail', 'grid' ],
      }
-     feed_query : {…}
+     feed_query : {}
 
 }
 ```
+
 ```html
 <div live-feed="feed_id"></div> 
 ```
