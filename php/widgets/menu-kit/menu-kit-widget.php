@@ -89,15 +89,11 @@ class menu_kit_widget extends WP_Widget {
 			
 			
 			// RENDER MENU KIT PAGES
-<<<<<<< HEAD
-			echo "<div id='".$CONTAINER."'>";
-			menu_kit_categories($OPTIONS);
-			echo "</div>";
-=======
+
 			echo "<ul id='".$CONTAINER."'>";
 			menu_kit_categories($OPTIONS);
 			echo "</ul>";
->>>>>>> origin/UNIFY-B
+
 		
 		endif;
 		
