@@ -210,26 +210,30 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 		///// PARENT CALLBACK /////
 		// Run Specified Callback in Parent Scope
-
+		
 		if( !_.isUndefined( $scope.mediaParentCallback ) ){
 			var mediaParentCallback = $scope.mediaParentCallback;
 
 			// Check to see if there's brackets
 			// to see if a executable function is defined
 			if( $ext.isInArray( '(', mediaParentCallback ) &&
-				$ext.isInArray( ')', mediaParentCallback ) )
-				$scope.$eval(mediaParentCallback);
+				$ext.isInArray( ')', mediaParentCallback ) ){
+				$scope.$parent.$eval( mediaParentCallback );
+			}
 			// If a pre-set function name is defined
-			else
-				$scope[mediaParentCallback](selectedMedia);
+			else{
+				$scope.$parent[mediaParentCallback](selectedMedia);
+			}
 		}
+		
 
 		$scope.$apply();
-	}
+
+	};
 
 	$scope.test = function(message){
 		alert(message);
-	}
+	};
 
 	$scope.editPostImage = function( selectedMedia ){
 		// 1. Sets the image as thumbnail_id in the edit post object
@@ -239,7 +243,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		$scope.$parent.post.image = selectedMedia.first().attributes.sizes;
 
 		$log.debug( "Selected Media", selectedMedia.first() );
-	}
+	};
 
 
 	$scope.editLinkImage = function( selectedMedia ){
@@ -250,7 +254,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		//$scope.$parent.post.post_meta.link_image = selectedMedia.first().attributes; //.sizes;
 
 		$log.debug( "Selected Media", selectedMedia.first() );
-	}
+	};
 
 	
 	$scope.setPostImage = function( selectedMedia ){
@@ -285,7 +289,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			}
 		);
 		
-	}
+	};
 
 	$scope.returnMediaValue = function( field ){
 		// Get selected media, undo 2-way data binding
@@ -299,16 +303,16 @@ postworld.controller( 'wpMediaLibraryCtrl',
 				var value = selectedMedia[0].id;
 
 		} else{
-			var value = angular.toJson($scope.mediaModel);
+			var value = selectedMedia;
 		}
 
 		return value;
-	}
+	};
 
 	$scope.unbindSelectedMedia = function(){
 		var selectedMedia = angular.fromJson( angular.toJson( $scope.mediaModel ) );
 		return selectedMedia;
-	}
+	};
 
 	$scope.errorCheck = function(){
 		if( !$ext.objExists($scope, 'mediaModel') ){
@@ -316,7 +320,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			return false;
 		}
 		return true;
-	}
+	};
 
 	$scope.updateOption = function( option, field ){
 		if( !$scope.errorCheck() )
@@ -333,11 +337,12 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			function(response){
 				// Get around 2-way data binding
 				$scope.mediaModel = $scope.unbindSelectedMedia();
+				$scope.$emit('updateOptions', vars );
 			},
 			function(response) {
 			}
 		);
-	}
+	};
 
 	$scope.setOptionObj = function( vars ){
 		/*
@@ -347,25 +352,52 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			value: value,
 		};
 		*/
-
+		
+		// Error Checking
 		if( !$scope.errorCheck() )
 			return false;
 		
+		// Set Value
 		var value = $scope.returnMediaValue( vars.value );
 		vars['value'] = value;
-		
+
+		// Emit action
+		$scope.$emit('updateOptions', vars );
+
+		// Undo 2-way data binding
+		$scope.mediaModel = $scope.unbindSelectedMedia();
+
+		// SAVE TO THE DATABASE
 		$pwData.set_option_obj( vars ).then(
 			function(response){
-				$log.debug(response);
-				// Get around 2-way data binding
-				$scope.mediaModel = $scope.unbindSelectedMedia();
+				$log.debug( "wpMediaLibrary.set_option_obj", response );
 			},
 			function(response) {
+				$log.debug( "ERROR : wpMediaLibrary.set_option_obj", response );
 			}
 		);
-	}
+	};
 
 
+	$scope.emitSelectedMedia = function( key ){
+		var selectedMedia = $scope.returnMediaValue();
+		// Emit action
+		$scope.$emit('selectedMedia', {
+			format : 'media',
+			key : key,
+			media : selectedMedia
+			});
+	};
+
+	$scope.emitSelectedMediaId = function( key ){
+		var selectedMedia = $scope.returnMediaValue('id');
+		// Emit action
+		$scope.$emit('selectedMedia', {
+			format : 'media-id',
+			key : key,
+			media : selectedMedia
+			});
+	};
 
 }]);
 

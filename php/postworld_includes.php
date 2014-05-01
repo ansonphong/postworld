@@ -71,6 +71,10 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'UnderscoreJS',
 			WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
 
+		// DEEP MERGE
+		wp_enqueue_script( 'DeepMerge',
+			WP_PLUGIN_URL.'/postworld/lib/deepmerge/deepmerge.js');
+
 		// ADD GOOGLE MAPS
 		if( in_array('google-maps', $dep) ){
 			// GOOGLE MAPS

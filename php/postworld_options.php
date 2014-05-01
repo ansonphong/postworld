@@ -19,7 +19,7 @@ function pw_set_option_obj($vars){
 		PARAMETERS:
 		$vars = array(
 			"option_name" 	=>	[string] 	(optional)
-			"sub_key"		=>	[string],	(required)
+			"key"		=>	[string],	(required)
 			"value" 		=>	[mixed],	(required)
 			);
 	*/
@@ -35,7 +35,7 @@ function pw_set_option_obj($vars){
 		$option_name = pw_option_name;
 
 	///// KEY /////
-	if( !isset($sub_key) )
+	if( !isset($key) )
 		return array( 'error' => 'Sub-key not specified.' ); 
 
 	///// SETUP DATA /////
@@ -50,7 +50,7 @@ function pw_set_option_obj($vars){
 		$option_value = array();
 
 	///// SET VALUE /////
-	$option_value = pw_set_obj( $option_value, $sub_key, $value );
+	$option_value = pw_set_obj( $option_value, $key, $value );
 
 	// Encode back into JSON
 	$option_value = json_encode( $option_value );
@@ -72,7 +72,7 @@ function pw_get_option_obj($vars){
 		PARAMETERS:
 		$vars = array(
 			"option_name" 	=>	[string] 	(optional)
-			"sub_key"		=>	[string],
+			"key"		=>	[string],
 			"format" 		=>	[string] 	"JSON" / "ARRAY" (default),
 			
 			);
@@ -82,8 +82,8 @@ function pw_get_option_obj($vars){
 	$option_name = pw_option_name;
 
 	///// KEY /////
-	if( !isset($sub_key) )
-		$sub_key = '';
+	if( !isset($key) )
+		$key = '';
 
 	///// GET DATA /////
 	// Check if the meta key exists
@@ -95,7 +95,7 @@ function pw_get_option_obj($vars){
 	$option_value = json_decode( $option_value, true );
 
 	// Get Subkey
-	$return = pw_get_obj( $option_value, $sub_key );
+	$return = pw_get_obj( $option_value, $key );
 	if( $return == false )
 		return $return;
 
