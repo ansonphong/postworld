@@ -295,6 +295,7 @@ function pw_print_feed( $args ){
 			$feed_query['fields'] = $args['fields'];
 
 		$pw_query = pw_query( $feed_query );
+		//return "test";
 		$posts = $pw_query->posts;
 
 	} else {
@@ -316,8 +317,11 @@ function pw_print_feed( $args ){
 		$post_id = $post_data['ID'];
 
 		// Get the template for this post
-		$template_path = pw_get_post_template( $post_id, $args['view'], 'dir' );
-		
+		if( isset($args['view']) )
+			$template_path = pw_get_post_template( $post_id, $args['view'], 'dir' );
+		else if( isset($args['template']) )
+			$template_path = $args['template'];
+
 		// Initialize h2o template engine
 		$h2o = new h2o($template_path);
 

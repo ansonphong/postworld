@@ -2203,12 +2203,17 @@ __fields__ : *string/Array* (optional) (default:null)
 - Defaults to null, which falls back to fields defined in the registered `feed_query['fields']`
 - Overrides `feed_query['fields]`
 
-__template__ : *string* (required)
-- Which template to use, relative to posts template path
+__view__ : *string* (optional)
+- Which Postworld `view` template to use
+- Will auto-detect the post type and use the proper template
+- If this is not defined, `template` must be defined
+
+__template__ : *string* (optional)
+- Absolute path of the template to use (including `.html` extension), relative to posts template path
 
 #### Usage
 
-##### Example of Load Feed from `feed_id`
+##### Example with Load Feed from cached `feed_id`
 ```php
 ///// PRINT LOAD FEED /////
 $print_feed_args = array(
@@ -2220,7 +2225,7 @@ $print_feed_args = array(
 echo pw_print_feed( $print_feed_args );
 ```
 
-##### Example of Feed Query
+##### Example with Feed Query
 ```php
 ///// PRINT LOAD FEED /////
 $print_feed_args = array(

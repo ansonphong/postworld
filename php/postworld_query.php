@@ -1251,6 +1251,8 @@ function pw_query($args,$return_Type = 'PW_QUERY') {
 }
 
 /***********************************************************************************/
+
+/* // COMMENTED OUT - SUDDENLY FOR NO APPARENT REASON CAUSING FATAL PHP ERRORS
 class PW_User_Query extends WP_User_Query {
 	function prepare_fields(){
 		
@@ -1350,11 +1352,11 @@ class PW_User_Query extends WP_User_Query {
 		if($remove_tbl===false )
 		$this->query_fields = str_replace('SELECT', 'SELECT wp_postworld_user_meta.* , ', $this->query_fields);
 			
-			/*$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
-			$this->request = str_replace('WHERE', $where, $this->request);
-			$strposOfOrderBy = strpos($this->request, "ORDER BY");
-			$this->request =  substr($this->request ,0,$strposOfOrderBy);
-			$this->request.=$orderBy;*/
+			//$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
+			//$this->request = str_replace('WHERE', $where, $this->request);
+			//$strposOfOrderBy = strpos($this->request, "ORDER BY");
+			//$this->request =  substr($this->request ,0,$strposOfOrderBy);
+			//$this->request.=$orderBy;
 		
 	}
 	function prepare_query() {
@@ -1541,9 +1543,8 @@ class PW_User_Query extends WP_User_Query {
 			}
 		}
 	}
-
 }
-
+*/
 
 function pw_user_query( $args, $args,$return_Type = 'PW_User_Query' ){
 		/*

@@ -250,7 +250,10 @@ function extract_parenthesis_values ( $input, $force_array = true ){
 	preg_match('#\((.*?)\)#', $input, $match);
 
 	// Split into an Array
-	$value_array = explode(',', $match[1]);
+	if( isset($match[1]) )
+		$value_array = explode(',', $match[1]);
+	else
+		$value_array = array();
 
 	// Remove extra white spaces from Array values
 	foreach($value_array as $index => $value) 
@@ -276,8 +279,11 @@ function extract_bracket_values ( $input, $force_array = true ){
 	preg_match('#\[(.*?)\]#', $input, $match);
 
 	// Split into an Array
-	$value_array = explode(',', $match[1]);
-
+	if( isset($match[1]) )
+		$value_array = explode(',', $match[1]);
+	else
+		$value_array = array();
+	
 	// Remove extra white spaces from Array values
 	foreach($value_array as $index => $value) 
 			$value_array[$index] = trim($value);

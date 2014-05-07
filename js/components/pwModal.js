@@ -1,67 +1,88 @@
-
 /*////////////// ------- SERVICE ------- //////////////*/  
 
 postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwData',
 	function ( $rootScope, $log, $location, $modal, pwData ) {
 	return{
 
-		openModal : function( post, mode ){
+		openModal : function( meta, post ){
 			
+			///// DEFAULTS /////
+			if( _.isUndefined(post) )
+				var post = {};
+			if( _.isUndefined(meta) )
+				var meta = {};
+
+			// Default Template ID
+			var mode = ( _.isUndefined( meta.mode ) ) ?
+					'default' : meta.mode;
+
+			// Default Template ID
+			var panelId = ( _.isUndefined( meta.panelId ) ) ?
+					'modal-default' : meta.panelId;
+
+			// Default Controller
+			var controller = ( _.isUndefined( meta.controller ) ) ?
+					'osModalInstanceCtrl' : meta.controller;
+
+			// Default Window Class
+			var windowClass = ( _.isUndefined( meta.windowClass ) ) ?
+				'os-modal-default' : meta.windowClass;
+
+
 			////////// SWITCH MODE //////////
 			// mode : Can be used to pass the preset mode
 			// or if string not found, this substitutes as the panel id
-			switch(mode){
+			switch( meta.mode ){
 				///// QUICK EDIT /////
 				// TODO - IMPLIMENT THIS <<<< Currently it's using the lineage "pwQuickEdit" method
 				case "quick-edit":
-					var panelId = "modal-edit-post";
-					var controllerName = "pwModalInstanceCtrl";
-					var windowClass = "modal-edit-post";
+					panelId = "modal-edit-post";
+					controller = "pwModalInstanceCtrl";
+					windowClass = "modal-edit-post";
 				break;
 				///// QUICK EDIT NEW /////
 				case "quick-edit-new":
-					var panelId = "modal-edit-post";
-					var controllerName = "pwModalInstanceCtrl";
-					var windowClass = "modal-edit-post";
+					panelId = "modal-edit-post";
+					controller = "pwModalInstanceCtrl";
+					windowClass = "modal-edit-post";
 				break;
 				///// VIEW /////
 				case "view":
 					// TODO : Add support to detect post types / format and check for availability of the modal template					
-					var panelId = "modal-view-post";
-					var controllerName = "pwModalInstanceCtrl";
-					var windowClass = "modal-view-post"; 
+					panelId = "modal-view-post";
+					controller = "pwModalInstanceCtrl";
+					windowClass = "modal-view-post"; 
 				break;
 				///// MEDIA /////
 				case "media":
 					// TODO : Add support to detect post types / format and check for availability of the modal template					
-					var panelId = "modal-media";
-					var controllerName = "pwModalInstanceCtrl";
-					var windowClass = "modal-media"; 
+					panelId = "modal-media";
+					controller = "pwModalInstanceCtrl";
+					windowClass = "modal-media"; 
 				break;
 				///// DEFAULT /////
 				default:
-					//code to be executed if n is different from case 1 and 2
-					var panelId = 'modal-' + mode;
-					var controllerName = "pwModalInstanceCtrl";
-					var windowClass = "modal-view-post"; 
+					templateName = templateName;
+					controller = controller;
+					windowClass = windowClass;
 			}
 
 			// Default Defaults
 			if( _.isUndefined( mode ) )
 				var mode = 'quick-edit';
 
-			$log.debug( "Launch Modal : MODE : " + mode + " // PANEL ID : " + panelId, post );
+			$log.debug( "Launch Modal : META : " + meta + " // PANEL ID : " + panelId, post );
 
 			var modalInstance = $modal.open({
 			  templateUrl: pwData.pw_get_template('panels','', panelId),
-			  controller: controllerName,
+			  controller: controller,
 			  windowClass: windowClass,
 			  resolve: {
 				post: function(){
 					return post;
 				},
-				mode: function(){
-					return mode;
+				meta: function(){
+					return meta;
 				}
 			  }
 			});
