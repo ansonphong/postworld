@@ -72,7 +72,7 @@ function pw_get_option_obj($vars){
 		PARAMETERS:
 		$vars = array(
 			"option_name" 	=>	[string] 	(optional)
-			"key"		=>	[string],
+			"key"			=>	[string],
 			"format" 		=>	[string] 	"JSON" / "ARRAY" (default),
 			
 			);
