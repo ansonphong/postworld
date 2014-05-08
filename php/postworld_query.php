@@ -1252,7 +1252,7 @@ function pw_query($args,$return_Type = 'PW_QUERY') {
 
 /***********************************************************************************/
 
-/* // COMMENTED OUT - SUDDENLY FOR NO APPARENT REASON CAUSING FATAL PHP ERRORS
+
 class PW_User_Query extends WP_User_Query {
 	function prepare_fields(){
 		
@@ -1544,7 +1544,7 @@ class PW_User_Query extends WP_User_Query {
 		}
 	}
 }
-*/
+
 
 function pw_user_query( $args, $args,$return_Type = 'PW_User_Query' ){
 		/*

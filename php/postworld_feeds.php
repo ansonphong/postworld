@@ -294,9 +294,12 @@ function pw_print_feed( $args ){
 			// Override fields
 			$feed_query['fields'] = $args['fields'];
 
+
 		$pw_query = pw_query( $feed_query );
-		//return "test";
+		//return json_encode($pw_query);
 		$posts = $pw_query->posts;
+
+
 
 	} else {
 		// RETURN ERROR
