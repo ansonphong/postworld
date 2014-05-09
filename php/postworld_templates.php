@@ -1,5 +1,6 @@
 <?php
 
+
 function pw_get_dirs($path = '.') {
 	$dirs = array();
 	
@@ -60,10 +61,11 @@ function pw_construct_template_obj( $args ){
 function pw_get_templates( $vars = array() ){
 	/*
 		$vars = array(
+			'subdirs'			=>	[array]	(optional)
+			'posts'				=>	[array]	(optional)
 			'path_type'			=>	[string] ( 'url' / 'dir' ),
-			'source'			=>	[string] ( 'default' / 'merge' ),
 			'ext'				=>	[string] ( 'php' / 'html' ),
-			'templates_object'	=>	[array]	
+			'source'			=>	[string] ( 'default' / 'merge' ),
 			)
 
 	*/
@@ -145,6 +147,14 @@ function pw_get_templates( $vars = array() ){
 		}
 
 	}
+
+	///// RETURN : BEFORE POSTS /////
+	// If 'subdirs' is specified, and 'posts' is not specified
+	if( isset($subdirs) &&
+		!in_array( 'posts', $subdirs ))
+		// Return before processing post templates
+		return $template_obj;
+
 
 	////////// POST TEMPLATES : OBJECT STRUCTURE //////////
 
@@ -293,5 +303,19 @@ function pw_parse_template( $template_path, $vars = array() ){
 	return $content;
 }
 
+
+function pw_get_menu_templates(){
+	
+	$templates = pw_get_templates(
+		array(
+			'subdirs' => array( 'menu-kit' ),
+			'ext' => 'php',
+			'path_type' =>  'dir',
+			)
+		)['menu-kit'];
+
+	return $templates;
+
+}
 
 ?>

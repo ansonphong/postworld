@@ -11,6 +11,7 @@
 include 'menu-kit-pages.php';
 include 'menu-kit-categories.php';
 include 'menu-kit-authors.php';
+include 'menu-kit-custom-menu.php';
 include 'menu-kit-widget.php';
 
 // INSERT STYLE SHEET	
@@ -19,6 +20,5 @@ function menu_kit_admin_styles(){
 	wp_register_style( 'menu-kit-widget-style', get_template_directory_uri() . '/menu-kit/css/menu-widget.css');
 	wp_enqueue_style( 'menu-kit-widget-style' );
 }
-
 
 ?>

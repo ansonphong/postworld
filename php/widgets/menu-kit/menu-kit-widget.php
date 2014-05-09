@@ -10,7 +10,7 @@ class menu_kit_widget extends WP_Widget {
 	 */
 	public function __construct() {
 		parent::__construct(
-	 		'menu_kit', // Base ID
+	 		'pw_menu_kit', // Base ID
 			'(Postworld) Menu Kit', // Name
 			array( 'description' => __( 'Menu Kit Widget', 'text_domain' ), ) // Args
 		);
@@ -122,12 +122,47 @@ class menu_kit_widget extends WP_Widget {
 			
 		endif;
 		
+		////////// DRAW CUSTOM MENU WIDGET //////////
 		
+		if ($menu_type == 'custom_menu') :
+
+		    // Get the menu templates
+		    $menu_templates = pw_get_menu_templates();
+			$menu_template = $OPTIONS['menu_template'];
+
+		    $template_path = $menu_templates[$menu_template] ;//'templates/custom_menu-walker.php';
+
+			$walker = new Menu_With_Description;
+
+			$custom_menu_config = array(
+				'theme_location'  => '',
+				'menu'            => $OPTIONS['menu_slug'],
+				'container'       => 'div',
+				'container_class' => '',
+				'container_id'    => '',
+				'menu_class'      => 'menu',
+				'menu_id'         => '',
+				'echo'            => true,
+				'fallback_cb'     => 'wp_page_menu',
+				'before'          => '',
+				'after'           => '',
+				'link_before'     => '',
+				'link_after'      => '',
+				'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
+				'depth'           => 0,
+				'walker'          => $walker,
+				'walker_vars'	  => array(
+					'menu_template' => $OPTIONS['menu_template'],
+					'template_path' => $template_path,
+					),
+			);
+
+			wp_nav_menu( $custom_menu_config );
+
+		endif;
 		
 		// CLOSE
 		echo $after_widget;
-		
-		
 		
 	}
 
@@ -169,7 +204,7 @@ class menu_kit_widget extends WP_Widget {
 
 		// MENUS SETTINGS : SAVE
 		$OPTIONS['menu_slug'] = $NEW_OPTIONS['menu_slug'];
-		
+		$OPTIONS['menu_template'] = $NEW_OPTIONS['menu_template'];
 		
 		return $OPTIONS;
 	}

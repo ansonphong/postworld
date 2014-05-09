@@ -214,7 +214,6 @@ extract($OPTIONS);
 		avatar_size
 		role
 		order_by
-	   
 	   */-->
 	   
    </div>
@@ -226,18 +225,37 @@ extract($OPTIONS);
 			<input type="radio" value="custom_menu" class="radio-type-select" id="<?php echo $this->get_field_id('menu_type'); ?>" name="<?php echo $this->get_field_name('menu_type'); ?>" <?php if( !empty($menu_type) && $menu_type === 'custom_menu'){ echo 'checked="checked"'; } ?> />
 
 			<label><b>Custom Menu</b></label>
-			<select name="<?php echo $this->get_field_name('menu_slug'); ?>"  id="<?php echo $this->get_field_id('menu_slug'); ?>">
-				<?php
-					$menus = get_terms( 'nav_menu' );
-					foreach( $menus as $menu ){?>
-
-						<option value="<?php echo $menu->slug; ?>" <?php if( !empty($menu_slug) && $menu_slug == $menu->slug){ echo 'selected="selected"'; }?> ><?php echo $menu->name; ?></option>
-
-					<?php
-					}
-				?>
-			</select>
+			<br>
 		</div>
+
+		Menu :
+		<select name="<?php echo $this->get_field_name('menu_slug'); ?>"  id="<?php echo $this->get_field_id('menu_slug'); ?>">
+			<?php
+				$menus = get_terms( 'nav_menu' );
+				foreach( $menus as $menu ){?>
+					<option value="<?php echo $menu->slug; ?>" <?php if( !empty($menu_slug) && $menu_slug == $menu->slug){ echo 'selected="selected"'; }?> ><?php echo $menu->name; ?></option>
+				<?php
+				}
+			?>
+		</select>
+		<br>
+
+		Template:
+		<select name="<?php echo $this->get_field_name('menu_template'); ?>"  id="<?php echo $this->get_field_id('menu_template'); ?>">
+			<?php
+				// Move this up, and re-use for other menu types
+				$menu_templates = pw_get_menu_templates();
+				
+				foreach( $menu_templates as $menu_template_key => $menu_template_value ){?>
+					<option value="<?php echo $menu_template_key; ?>" <?php if( !empty($menu_template) && $menu_template == $menu_template_key){ echo 'selected="selected"'; }?> ><?php echo $menu_template_key; ?></option>
+			
+				<?php
+				}
+			?>
+
+		</select>
+
+
    </div>
 
 </div>
