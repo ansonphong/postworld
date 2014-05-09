@@ -587,4 +587,22 @@ function pw_toggle_array( $args ){
 
 }
 
+
+function pw_set_html_attr( $attribute, $value, $add_string = '' ){
+	$output = '';
+
+	if( !empty($add_string) )
+		$add_string = " " . $add_string;
+
+	if( !empty($value) )
+		$output .= " " . $attribute . "=\"" . $value . $add_string . "\" ";
+
+	return $output;
+
+}
+
+function pw_print_html_attr( $attribute, $value, $add_string = '' ){
+	echo pw_set_html_attr( $attribute, $value, $add_string);
+}
+
 ?>

@@ -24,29 +24,36 @@ class Menu_With_Description extends Walker_Nav_Menu {
         // Contextualize Classes as HTML Attribute
         $class_names = ' class="' . esc_attr( $class_names ) . '"';
 
-        // Define the label in the link
-        $link_label = $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
-
-        // For Dev, check out the Item Properties
+        // For Development : print the Item Properties
         //$output .= json_encode( $item );
 
-        // Parse the Attributes for the Link
-        $link_attributes =  ! empty( $item->attr_title ) ? ' title="' . esc_attr( $item->attr_title ) .'"' : '';
-        $link_attributes .= ! empty( $item->target ) ? ' target="' . esc_attr( $item->target ) .'"' : '';
-        $link_attributes .= ! empty( $item->xfn ) ? ' rel="' . esc_attr( $item->xfn ) .'"' : '';
-        $link_attributes .= ! empty( $item->url ) ? ' href="' . esc_attr( $item->url ) .'"' : '';
+        ///// LINK META /////
+        // Parse the Meta Data for the Link
+        $link_meta = array();
+        $link_meta['label'] = $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
 
-        // Define Description
-        $description = ( !empty($item->description) ) ?
+        $link_meta['description'] = ( !empty($item->description) ) ?
             $item->description : false;
+
+        ///// LINK ATTRIBUTES /////
+        // Parse the Attributes for the Link
+        $link_attr = array();
+        $link_attr['title'] = !empty( $item->attr_title ) ?
+            esc_attr( $item->attr_title ) : false;
+
+        $link_attr['target'] = !empty( $item->target ) ?
+            esc_attr( $item->target ) : false;
+        
+        $link_attr['rel'] = !empty( $item->xfn ) ?
+            esc_attr( $item->xfn ) : false;
+
+        $link_attr['href'] = !empty( $item->url ) ?
+            esc_attr( $item->url ) : false;
 
         // Init Item Output
         $output .= $indent;
         $output .= '<li id="menu-item-'.$item->ID.'" '.$class_names.' >';
         $output .= $args->before;
-
-        // Localize the template ID (neccessary?)
-        $menu_template = $args->walker_vars['menu_template'];
 
         // Print the template body
         ob_start();
