@@ -67,8 +67,6 @@ class Menu_With_Description extends Walker_Nav_Menu {
     }
 }
 
-
-
 function pw_menu_kit_get_templates(
     $vars = array(
         "type" => "custom_menu"
@@ -84,9 +82,7 @@ function pw_menu_kit_get_templates(
         );
     $menu_templates = $templates['menus'];
 
-
 }
-
 
 
 ?>
