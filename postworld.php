@@ -109,6 +109,9 @@ include 'php/postworld_query.php';
 /////////////// WIDGETS ////////////////
 include 'php/postworld_widgets.php';
 
+/////////////// SHORTCODES ////////////////
+include 'php/postworld_shortcodes.php';
+
 /////////////// SOCIAL ////////////////
 include 'php/postworld_social.php';
 
