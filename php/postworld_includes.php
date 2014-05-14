@@ -2,7 +2,7 @@
 
 // Define Angular Dependancies
 global $angularDep;
-$angularDep = array('jquery','AngularJS','AngularJS-Resource','AngularJS-Route', 'AngularJS-Sanitize', 'UnderscoreJS');
+$angularDep = array('jquery','UnderscoreJS','DeepMerge','AngularJS','AngularJS-Resource','AngularJS-Route', 'AngularJS-Sanitize', 'UnderscoreJS');
 
 function postworld_includes( $args ){
 
@@ -20,6 +20,7 @@ function postworld_includes( $args ){
 	// Build Angular Dependancies
 	global $angularDep;
 	
+	// Add Google Maps to include before AngularJS app
 	if( in_array( 'google-maps', $dep ) ){
 		//array_push( $angularDep, 'google-maps' );
 	}
@@ -85,6 +86,18 @@ function postworld_includes( $args ){
 				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
 		}
 
+
+
+		wp_enqueue_script( 'CreateJS-Easel',
+			WP_PLUGIN_URL.'/postworld/lib/create.js/easeljs-0.7.0.min.js');
+		wp_enqueue_script( 'CreateJS-Tween',
+			WP_PLUGIN_URL.'/postworld/lib/create.js/tweenjs-0.5.0.min.js');
+		wp_enqueue_script( 'CreateJS-MovieClip',
+			WP_PLUGIN_URL.'/postworld/lib/create.js/movieclip-0.7.0.min.js');
+		
+
+
+		
 		///// ANGULAR VERSION CONTROL /////
 
 		// ANGULAR
@@ -134,6 +147,21 @@ function postworld_includes( $args ){
 		/////// POSTWORLD APP /////	
 		wp_enqueue_script( 	'pw-app-JS',
 			WP_PLUGIN_URL.'/postworld/js/app.js', $angularDep );
+
+
+
+
+
+		///// ADD CREATE.JS /////
+		//if( in_array('create.js', $dep) ){
+			
+		// LOCAL COMPONENT
+		wp_enqueue_script( 'Postworld-FlashCanvas',
+			WP_PLUGIN_URL.'/postworld/js/components/flashCanvas.js', $angularDep);
+		//}
+
+
+
 
 		// COMPONENTS
 		wp_enqueue_script( 'pw-FeedItem-JS',
@@ -228,6 +256,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
 			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
 
+
+
+		
 		
 
 	}
@@ -270,6 +301,8 @@ function pwSiteGlobals_include(){
 		'ajax_url' => admin_url('admin-ajax.php'),
 		'stylesheet_directory_uri' => get_stylesheet_directory_uri(),
 		'template_directory_uri' => get_template_directory_uri(),
+		'plugins_dir' => WP_PLUGIN_DIR,
+		'plugins_url' => WP_PLUGIN_URL,
 	);
 
 	$pwGlobalsJs  = "";

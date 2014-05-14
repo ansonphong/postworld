@@ -55,7 +55,7 @@ function pw_print_slider( $args ){
 
 	// Do query
 
-	// Init H2O
+	// Init H2O Template Engine
 
 	// Return Result
 

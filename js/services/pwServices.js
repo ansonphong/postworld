@@ -1,5 +1,40 @@
 'use strict';
 
+
+postworld.factory('pw',
+	['$resource','$q','$log','$window',
+	function ($resource, $q, $log, $window) {   
+
+	// DECLARATIONS
+	return {
+		pluginUrl: function(value){
+			if( !_.isUndefined(value) )
+				value = "/postworld/" + value;
+			else
+				value = "/postworld/";
+
+			return $window.pwSiteGlobals.wordpress.plugins_url + value;
+		},
+		loadScript: function( url, callback ){
+            // Adding the script tag to the head as suggested before
+            var head = document.getElementsByTagName('head')[0];
+            var script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.src = url;
+
+            // Then bind the event to the callback function.
+            // There are several events for cross browser compatibility.
+            script.onreadystatechange = callback;
+            script.onload = callback;
+
+            // Fire the loading
+            head.appendChild(script);
+        },
+	};
+
+}]);
+
+
 /*                      _                                  
 		_   _ _ __   __| | ___ _ __ ___  ___ ___  _ __ ___ 
 	   | | | | '_ \ / _` |/ _ \ '__/ __|/ __/ _ \| '__/ _ \
@@ -89,6 +124,29 @@ postworld.factory('_',
 			return true;
 			
 		},
+		getObj: function( obj, subKey ){
+            // Returns a sub-object
+            // SYNTAX : subKey = 'object.subkey.subsubkey'
+
+            if( _.isUndefined( obj ) )
+                return false;
+            
+            ///// MINE OBJECT /////
+            var parts = subKey.split('.');
+            for(var i = 0, l = parts.length; i < l; i++) {
+                var part = parts[i];
+                if(obj !== null && typeof obj === "object" && part in obj) {
+                    obj = obj[part];
+                }
+                else {
+                    return false;
+                }
+            }
+
+            // Return findWhere
+            return obj;
+            
+        },
 		setObj : function( obj, key, value  ){
 			// Sets the value of an object,
 			// even if it or it's parent(s) doesn't exist.
