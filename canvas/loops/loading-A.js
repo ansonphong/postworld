@@ -1,3 +1,5 @@
+var lib, images, createjs;
+
 (function (lib, img, cjs) {
 
 var p; // shortcut to reference prototypes
@@ -7,12 +9,12 @@ lib.properties = {
 	width: 160,
 	height: 160,
 	fps: 24,
-	color: "#CCCCCC",
+	//color: "#CCCCCC",
 	manifest: []
 };
 
 // stage content:
-(lib.loadingiox1 = function() {
+(lib.loading_A = function() {
 	this.initialize();
 
 	// Layer 1
@@ -107,4 +109,3 @@ p.nominalBounds = new cjs.Rectangle(-1.2,-51.5,52.8,103);
 p.nominalBounds = new cjs.Rectangle(-41.1,-51.5,103,94.9);
 
 })(lib = lib||{}, images = images||{}, createjs = createjs||{});
-var lib, images, createjs;
