@@ -605,4 +605,12 @@ function pw_print_html_attr( $attribute, $value, $add_string = '' ){
 	echo pw_set_html_attr( $attribute, $value, $add_string);
 }
 
+
+function pw_include_h2o(){
+	// Include h2o template engine
+	global $pw_globals;
+	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
+}
+
+
 ?>
