@@ -612,5 +612,21 @@ function pw_include_h2o(){
 	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
 }
 
+function pw_set_defaults( $obj, $defaults ){
+	// Sets default sub-key values of an object
+	// Only does one level, with no recursion
+
+	foreach( $defaults as $key => $value ){
+		if( !isset($obj[$key]) )
+			$obj[$key] = $value;
+	}
+
+	return $obj;
+
+}
+
+
+
+
 
 ?>

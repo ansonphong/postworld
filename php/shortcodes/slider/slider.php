@@ -6,28 +6,13 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 
 	// Extract Shortcode Attributes, set defaults
 	extract( shortcode_atts( array(
-		"template"	=>	"default",
-		"query" => "{}",
+		"template"	=> "slider-default",
+		"query" 	=> "{}",
+		"id" 		=> hash( "md5", "1" ),
+		"class" 	=> "shortcode-slider",
+		"interval" 	=> 5000,
 	), $atts ) );
 
-	///// Locate Template ////
-	$slider_templates = pw_get_templates(
-		array(
-			'subdirs' => array('sliders'),
-			'path_type' => 'dir',
-			'ext'=>'html',
-			)
-		);
-
-	$slider_id = "slider-".$template;
-
-	$slider_template = ( isset( $slider_templates['sliders'][$slider_id] ) ) ?
-		$slider_templates['sliders'][$slider_id] :
-		$slider_templates['sliders']['default'];
-
-
-	///// QUERY /////
-	global $post;
 
 	// Condition Query Values
 	if( $query != "{}" ){
@@ -44,30 +29,13 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 		// Init Empty Query
 		$query = array();
 
-	// Condition Query
-	
-	// Set Default Post Type
-	//$query['post_type'] = 'slider';
-
-	// Set Post Status
-	$query['post_status'] = 'publish';
-
-	// Set Other Properties
-	$query['posts_per_page'] = 25;
-	$query['fields'] = array(
-		'ID',
-		'post_title',
-		'post_type',
-		'post_parent',
-		'post_permalink',
-		'post_excerpt',
-		'image(all)'
-		);
 
 	// Setup Feed Query
 	$slider_args = array(
-		'feed_query' => 	$query,
-		'template' =>		$slider_template,
+		'query' 	=>	$query,
+		'template' 	=>	$template,
+		'id' 		=>	$id,
+		'class' 	=>	$class,
 		);
 
 	$shortcode = pw_print_slider( $slider_args );	
@@ -76,31 +44,105 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 
 }
 
-function pw_print_slider( $args ){
+function pw_print_slider( $slider ){
+
+	///// Setup /////
+	// Localize Variables
+	//extract( $slider );
+
+	///// Set Defaults /////
+	$default_template = "slider-default";
+
+	$slider_defaults = array(
+		'template' 	=> $default_template,
+		'id'		=> hash('md5', '1' ),
+		'class'		=> '',
+		'interval'	=> 5000,
+		);
+
+	$slider = pw_set_defaults( $slider, $slider_defaults ); 
+
+	// Add Classes
+	if( $slider['transition'] == 'fade' )
+		$slider['class'] .= " carousel-fade";
+
+	///// Locate Templates ////
+	$template_id = $slider['template'];
+	$slider_templates = pw_get_templates(
+		array(
+			'subdirs' => array('sliders'),
+			'path_type' => 'dir',
+			'ext'=>'php',
+			)
+		);
+
+	$template_id = $slider['template'];
+
+	$slider_template = ( isset( $slider_templates['sliders'][$template_id] ) ) ?
+		$slider_templates['sliders'][$template_id] :
+		$slider_templates['sliders'][$default_template];
+
+
+	///// QUERY /////
+	global $post;
+
+	// Localize Query
+	$query = $slider['query'];
+	
+	// Set Post Status
+	if( !isset( $query['post_status'] ) )
+		$query['post_status'] = 'publish';
+
+	// Set Other Properties
+	if( !isset( $query['posts_per_page'] ) )
+		$query['posts_per_page'] = 25;
+
+	$query['fields'] = array(
+		'ID',
+		'post_title',
+		'post_excerpt',
+		'post_type',
+		'post_parent',
+		'post_permalink',
+		'post_excerpt',
+		'image(all)',
+		);
 
 	// Do query, return posts
-	$posts = pw_query( $args['feed_query'] )->posts;
+	$posts = pw_query( $query )->posts;
 
-	//return $posts;
+	// Generate random ID for slider Instance
+	$slider_hash = hash('md5', json_encode($query));
+	$slider['instance'] = "slider_".substr( $slider_hash, 1, 8 );
 
-	// Include H2O Template Engine
-	pw_include_h2o();
+	// Include the template
+	ob_start();
+	include $slider_template;
+	$content = ob_get_contents();
+	ob_end_clean();
 
-	
-	// Init H2O
-
-	// Initialize h2o template engine
-	$h2o = new h2o( $args['template'] );
-
-	// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
-	$h2o_data['posts'] = $posts;
-
-	// Add rendered HTML to the return data
-	$html = $h2o->render($h2o_data);
-
-	// Return Result
-	return $html;
+	// Return with everything in a string
+	return $content;
 	
 }
+
+
+/* DELETE
+
+// Include H2O Template Engine
+pw_include_h2o();
+
+// Init H2O
+// Initialize h2o template engine
+$h2o = new h2o( $args['template'] );
+
+// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
+$h2o_data['posts'] = $posts;
+
+// Add rendered HTML to the return data
+$html = $h2o->render($h2o_data);
+*/
+
+	
 
 ?>
