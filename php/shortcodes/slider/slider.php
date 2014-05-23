@@ -11,6 +11,7 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 		"id" 		=> hash( "md5", "1" ),
 		"class" 	=> "shortcode-slider",
 		"interval" 	=> 5000,
+		"category" 	=> "",
 	), $atts ) );
 
 
@@ -32,10 +33,12 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 
 	// Setup Feed Query
 	$slider_args = array(
-		'query' 	=>	$query,
-		'template' 	=>	$template,
-		'id' 		=>	$id,
-		'class' 	=>	$class,
+		'template' 	=> $template,
+		'query' 	=> $query,
+		'id' 		=> $id,
+		'class' 	=> $class,
+		'interval' 	=> $interval,
+		'category'	=> $category
 		);
 
 	$shortcode = pw_print_slider( $slider_args );	
@@ -54,19 +57,17 @@ function pw_print_slider( $slider ){
 	$default_template = "slider-default";
 
 	$slider_defaults = array(
-		'template' 	=> $default_template,
-		'id'		=> hash('md5', '1' ),
-		'class'		=> '',
-		'interval'	=> 5000,
+		'template' 		=> $default_template,
+		'id'			=> hash('md5', '1' ),
+		'class'			=> '',
+		'interval'		=> 5000,
+		'category'		=> '',
+		'category_id'	=> 0,
 		);
 
 	$slider = pw_set_defaults( $slider, $slider_defaults ); 
 
-	// Add Classes
-	if( $slider['transition'] == 'fade' )
-		$slider['class'] .= " carousel-fade";
-
-	///// Locate Templates ////
+	///// TEMPLATES ////
 	$template_id = $slider['template'];
 	$slider_templates = pw_get_templates(
 		array(
@@ -108,13 +109,27 @@ function pw_print_slider( $slider ){
 		'image(all)',
 		);
 
+	// Add Category
+	if( !empty( $slider['category'] ) )
+		$query['category_name'] = $slider['category'];
+
+	// Add Category ID
+	if( !empty( $slider['category_id'] ) )
+		$query['cat'] = $slider['category_id'];
+
 	// Do query, return posts
 	$posts = pw_query( $query )->posts;
 
+	///// INSTANCE /////
 	// Generate random ID for slider Instance
 	$slider_hash = hash('md5', json_encode($query));
 	$slider['instance'] = "slider_".substr( $slider_hash, 1, 8 );
 
+	///// CLASS /////
+	if( $slider['transition'] == 'fade' )
+		$slider['class'] .= " carousel-fade";
+
+	///// INCLUDE TEMPLATE /////
 	// Include the template
 	ob_start();
 	include $slider_template;
