@@ -243,8 +243,12 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Directives-pwImage',
 			WP_PLUGIN_URL.'/postworld/js/directives/pwImage.js', $angularDep );
 
-		// COMPONENTS
+		wp_enqueue_script( 'pw-Directives-pwWindow',
+			WP_PLUGIN_URL.'/postworld/js/directives/pwWindow.js', $angularDep );
+
+		// THIRD PARTY COMPONENTS
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
+		wp_enqueue_script( 'angularJS-Parallax', plugins_url().'/postworld/lib/angular-parallax/angular-parallax.js', $angularDep );
 
 		// ANGULAR : TIMER
 		wp_enqueue_script( 	'AngularJS-Timer', WP_PLUGIN_URL.'/postworld/lib/angular-timer/angular-timer.js', $angularDep );

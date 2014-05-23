@@ -30,7 +30,8 @@ var depInject = [
     'TruncateFilter',
     'UserValidation',
     'pwFilters',
-    'timer'
+    'timer',
+    'angular-parallax',
     ];
 
 

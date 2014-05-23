@@ -127,22 +127,4 @@ function pw_print_slider( $slider ){
 }
 
 
-/* DELETE
-
-// Include H2O Template Engine
-pw_include_h2o();
-
-// Init H2O
-// Initialize h2o template engine
-$h2o = new h2o( $args['template'] );
-
-// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
-$h2o_data['posts'] = $posts;
-
-// Add rendered HTML to the return data
-$html = $h2o->render($h2o_data);
-*/
-
-	
-
 ?>
