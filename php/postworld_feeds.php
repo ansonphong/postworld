@@ -306,14 +306,13 @@ function pw_print_feed( $args ){
 		return array('error' => 'No feed_id or feed_query defined.');
 	}
 	
-	/* LINEAGE - DELETE
+	// LINEAGE - DELETE
 	// Include h2o template engine
 	global $pw_globals;
 	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
-	*/
 
 	// Include H2O Template Engine
-	pw_include_h2o();
+	//pw_include_h2o();
 
 	$pw_post = array();
 	$post_html = "";
