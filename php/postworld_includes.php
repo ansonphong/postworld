@@ -428,5 +428,9 @@ function pwGlobals_parse(){
 	return $pw_globals;
 }
 
+// Init Globals
+global $pw_globals;
+$pw_globals = pwGlobals_parse();
+
 
 ?>

@@ -274,8 +274,6 @@ function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
 	
 }
 
-
-
 function pw_print_feed( $args ){
 
 	// Load a cached feed
