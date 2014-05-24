@@ -625,7 +625,13 @@ function pw_set_defaults( $obj, $defaults ){
 
 }
 
-
+function pw_ob_include( $path ){
+	ob_start();
+	include locate_template( $path );
+	$content = ob_get_contents();
+	ob_end_clean();
+	return $content;
+}
 
 
 
