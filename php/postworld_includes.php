@@ -68,6 +68,9 @@ function postworld_includes( $args ){
 	///// DEVELOPMENT FILE INCLUDES /////
 	else if ( $mode == 'dev' ){
 		
+
+		///// JAVASCRIPT LIBRARIES /////
+
 		// UNDERSCORE JS
 		wp_enqueue_script( 'UnderscoreJS',
 			WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
@@ -75,6 +78,9 @@ function postworld_includes( $args ){
 		// DEEP MERGE
 		wp_enqueue_script( 'DeepMerge',
 			WP_PLUGIN_URL.'/postworld/lib/deepmerge/deepmerge.js');
+
+
+		///// THIRD PARTY LIBRARIES /////
 
 		// ADD GOOGLE MAPS
 		if( in_array('google-maps', $dep) ){
@@ -86,8 +92,8 @@ function postworld_includes( $args ){
 				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
 		}
 
-
-
+		// CREATE.JS
+		// Development Only
 		wp_enqueue_script( 'CreateJS-Easel',
 			WP_PLUGIN_URL.'/postworld/lib/create.js/easeljs-0.7.0.min.js');
 		wp_enqueue_script( 'CreateJS-Tween',
@@ -95,8 +101,6 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'CreateJS-MovieClip',
 			WP_PLUGIN_URL.'/postworld/lib/create.js/movieclip-0.7.0.min.js');
 		
-
-
 		
 		///// ANGULAR VERSION CONTROL /////
 
@@ -114,14 +118,16 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Sanitize',
 			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-sanitize.min.js');
 
-		wp_enqueue_script( 'AngularJS-Animate',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-animate.min.js');
+		//wp_enqueue_script( 'AngularJS-Animate',
+		//	WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-animate.min.js');
+
 
 		///// ANGULAR THIRD PARTY MODULES /////
 		
 		// ANGULAR UI UTILITIES
-		wp_enqueue_script( 'AngularJS-UI-Utils',
-			WP_PLUGIN_URL.'/postworld/lib/angular-ui-utils/angular-ui-utils.min.js');
+		// Development only
+		//wp_enqueue_script( 'AngularJS-UI-Utils',
+		//	WP_PLUGIN_URL.'/postworld/lib/angular-ui-utils/angular-ui-utils.min.js');
 		
 		//BOOTSTRAP JS
 		wp_enqueue_script( "bootstrap-JS",
@@ -131,7 +137,7 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS-UI-Bootstrap',
 		//	plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-			plugins_url().'/postworld/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.10.0.min.js' );
+			plugins_url().'/postworld/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js' );
 
 		// ANGULAR STRAP : BOOTSTRAP
 		//wp_enqueue_script( 'AngularJS-Strap',
@@ -144,15 +150,24 @@ function postworld_includes( $args ){
 		//	plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.tpl.js', $angularDep );
 
 
+		// ANGULAR : INFINITE SCROLL
+		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/lib/ng-infinite-scroll/ng-infinite-scroll.js', $angularDep );
+		
+		// ANGULAR : TIMER
+		wp_enqueue_script( 'AngularJS-Timer',
+			plugins_url().'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
+
+		// ANGULAR : PARALLAX
+		wp_enqueue_script( 'angularJS-Parallax',
+			plugins_url().'/postworld/lib/angular-parallax/angular-parallax.js', $angularDep );
+
+
 		/////// POSTWORLD APP /////	
 		wp_enqueue_script( 	'pw-app-JS',
 			WP_PLUGIN_URL.'/postworld/js/app.js', $angularDep );
 
 
-
-
-
-		///// ADD CREATE.JS /////
+		///// CREATE.JS /////
 		//if( in_array('create.js', $dep) ){
 			
 		// LOCAL COMPONENT
@@ -246,15 +261,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Directives-pwWindow',
 			WP_PLUGIN_URL.'/postworld/js/directives/pwWindow.js', $angularDep );
 
-		// THIRD PARTY COMPONENTS
-		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/js/components/ng-infinite-scroll.js', $angularDep );
-		wp_enqueue_script( 'angularJS-Parallax', plugins_url().'/postworld/lib/angular-parallax/angular-parallax.js', $angularDep );
-
-		// ANGULAR : TIMER
-		wp_enqueue_script( 	'AngularJS-Timer', WP_PLUGIN_URL.'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
-
 		// WIZARD
-		wp_enqueue_script( 'pw-Wizard', plugins_url().'/postworld/js/components/pwWizard.js', $angularDep );
+		wp_enqueue_script( 'pw-Wizard',
+			plugins_url().'/postworld/js/components/pwWizard.js', $angularDep );
 
 		// WORDPRESS DIRECTIVES
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',

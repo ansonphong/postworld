@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  var angular_version = 'angular-1.2-rc2';
+  var angular_version = 'angular-1.2.9';
 
   // Project configuration.
   grunt.initConfig({
@@ -12,24 +12,46 @@ module.exports = function(grunt) {
           //'deploy/postworld.min.js': ['js/*.js', 'js/**/*.js'],
           'deploy/postworld.min.js':[
         	  
-            ///// LIBRARY /////
+
+            ///// ANGULAR /////
             // Angular
             'lib/'+angular_version+'/angular.min.js', // Angular.js has to go first
 
+
+            ///// JS LIBRARIES /////
             // Underscore
             'lib/underscore/underscore.min.js',
 
-          	// Bootstrap
-            'lib/bootstrap/bootstrap.min.js',             // Main Bootstrap JS
-            //'lib/angular/ui-bootstrap-tpls-0.6.0.min.js', // Angular UI Boostrap
-            'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.10.0.min.js', // Angular UI Boostrap
-            'lib/angular-strap/angular-strap.js',         // Angular Strap
+            // Deep Merge
+            'lib/deepmerge/deepmerge.js',
+
+
+            ///// BOOTSTRAP /////
+          	// Bootstrap JS
+            //'lib/bootstrap/bootstrap.min.js',             // Main Bootstrap JS
+
+            // Angular UI Bootstrap
+            'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js', // Angular UI Boostrap
+            
+            //'lib/angular-strap/angular-strap.js',         // Angular Strap
+
+
+            ///// THIRD PARTY MODULES /////
 
             // Angular Utilities
-            'lib/angular-ui-utils/angular-ui-utils.min.js',
-            
+            //'lib/angular-ui-utils/angular-ui-utils.min.js',
+
+            // Angular Infinite Scroll
+            'lib/ng-infinite-scroll/ng-infinite-scroll.js',
+
             // Angular Timer
             'lib/angular-timer/timer.js',
+
+            // Angular Parallax
+            'lib/angular-parallax/angular-parallax.js',
+
+
+            ///// ANGULAR NATIVE EXTENSIONS /////
 
             // Angular Extensions
           	'lib/'+angular_version+'/angular-sanitize.min.js',
@@ -39,7 +61,7 @@ module.exports = function(grunt) {
             // Angular Google Maps
             //'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
 
-          	///// Postworld /////
+          	///// POSTWORLD /////
           	'js/*.js',
           	'js/**/*.js',
 
