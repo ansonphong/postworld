@@ -495,7 +495,10 @@ postworld.service('pwRoleAccess', ['$log', '$window', 'ext', function ($log, $wi
  (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__| |_|   |_|_|\__\___|_|  |___/
   |_|                                                                          
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
-postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log, ext, $window) {
+postworld.service('pwEditPostFilters',
+	['$log', 'ext', '$window', 'pwPostOptions',
+	function ($log, ext, $window, $pwPostOptions ) {
+
 	return {
 		parseKnownJsonFields: function( post ){
 
@@ -560,9 +563,15 @@ postworld.service('pwEditPostFilters', ['$log', 'ext', '$window', function ($log
 
 		///// EVALUATE AND SET link_format DEPENDING ON LINK_URL /////
 		evalPostFormat: function( link_url, link_format_meta ){
+
+			// If Custom Link Format Meta isn't supplied, get the default
+			if ( _.isUndefined( link_format_meta ) )
+				link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
+
+			// Set the default format
 			var default_format = $window.pwSiteGlobals.post_options.link_format_defaults.none;
 			var set = "";
-			//alert(link_format_meta);
+
 			// If link_url has a value
 			if ( !ext.isEmpty( link_url ) && !ext.isEmpty( link_format_meta ) ){
 				///// FOR EACH POST FORMAT : Go through each post format

@@ -121,6 +121,9 @@ include 'php/postworld_wizard.php';
 /////////////// OPTIONS ////////////////
 include 'php/postworld_options.php';
 
+/////////////// META BOXES ////////////////
+include 'php/postworld_metabox.php';
+
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
 include 'php/postworld_comments.php';

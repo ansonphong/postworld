@@ -1169,6 +1169,21 @@ function pw_embed_content($content){
 }
 
 
+function pw_embed_link_url( $post_id ){
+	// Returns the embed code if a given post ID contains a link_url and it's media
+
+	$fields = array( 'ID', 'link_url', 'link_format' );
+	$post = pw_get_post( $post_id, $fields );
+
+	$embed_formats = array( 'video', 'audio' );
+
+	if( in_array( $post['link_format'], $embed_formats )  ){
+		return wp_oembed_get( $post['link_url'] );
+	}
+	else
+		return false;
+}
+
 function pw_print_post( $args ){
 	extract($args);
 
