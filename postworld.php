@@ -13,7 +13,7 @@ License: GPL2
 
 include 'php/postworld_variables.php';
 include 'php/postworld_utilities.php';
-include 'php/postworld_includes.php';
+
 
 
 // GLOBAL VARIABLES
@@ -131,6 +131,8 @@ include 'php/postworld_share.php';
 
 include 'php/postworld_meta.php';
 
+/////////////// INCLUDES ////////////////
+include 'php/postworld_includes.php';
 
 
 //To get user id from wordpress
