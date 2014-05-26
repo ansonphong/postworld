@@ -117,6 +117,18 @@ function pw_print_slider( $slider ){
 	if( !empty( $slider['category_id'] ) )
 		$query['cat'] = $slider['category_id'];
 
+	// Check for Taxonomy & Term definitions
+	if( !empty( $slider['taxonomy'] ) && !empty( $slider['term'] ) ){
+		$query['tax_query'] = array(
+			array(
+				'taxonomy' 	=> $slider['taxonomy'],
+				'field'		=> 'slug',
+				'terms' 	=> $slider['term']
+				),
+			);
+		//echo json_encode($query['tax_query']);
+	}
+
 	// Do query, return posts
 	$posts = pw_query( $query )->posts;
 
