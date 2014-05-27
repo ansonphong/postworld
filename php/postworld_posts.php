@@ -1184,17 +1184,15 @@ function pw_embed_link_url( $post_id ){
 		return false;
 }
 
-function pw_print_post( $args ){
-	extract($args);
+function pw_print_post( $vars ){
+	extract($vars);
 
 	global $pw_globals;
 
 	$pw_post = array();
 
-	$pw_post['post'] = pw_get_post( $post_id );
-
+	//$pw_post['post'] = pw_get_post( $post_id );
 	$pw_post['post'] = pw_get_post( $post_id, $fields );
-
 
 	// Add custom input variables
 	if( isset($vars) && !empty($vars) ){
@@ -1202,6 +1200,10 @@ function pw_print_post( $args ){
 			$pw_post[$key] = $value;
 		}
 	}
+
+	// Use $view to over-ride $template
+	if( isset($view) )
+		$template = pw_get_post_template ( $post_id, $view, 'dir', true );
 
 	// H2O
 	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';

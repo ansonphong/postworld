@@ -1687,17 +1687,22 @@ array(
 
 ------
 
-### pw_print_post( $args )
+### pw_print_post( $vars )
 - Injects a post into an HTML template
 - Template takes django style markup, using **h2o-php** *by speedmax*
 
-#### Parameters : __$args__
+#### Parameters : __$vars__
 
 __post_id__ : *integer* (required)
 - The ID of the post
 
-__template__ : *string* (required)
+__template__ : *string* (optional)
 - The absolute system directory path of the template to inject the post into
+
+__view__ : *string* (optional)
+- The name of the registered view template to display the post in
+- This field over-rides `template` variables if provided
+- Uses `pw_get_post_template` to get the template path
 
 __fields__ : *string/Array* (optional)
 - Passed to `pw_get_post()` `fields` parameter
