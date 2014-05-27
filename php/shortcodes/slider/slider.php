@@ -67,6 +67,7 @@ function pw_print_slider( $slider ){
 
 	$slider = pw_set_defaults( $slider, $slider_defaults ); 
 
+
 	///// TEMPLATES ////
 	$template_id = $slider['template'];
 	$slider_templates = pw_get_templates(
@@ -98,9 +99,15 @@ function pw_print_slider( $slider ){
 	if( !isset( $query['post_type'] ) )
 		$query['post_type'] = array('page','post','attachment');
 
-	// Set Other Properties
+	// Set Post Parent
+	if( $slider['query_vars']['show_children'] == true )
+		$query['post_parent'] = $post->ID;
+
+	// Posts Per Page
 	if( !isset( $query['posts_per_page'] ) )
 		$query['posts_per_page'] = 25;
+	if( isset( $slider['query_vars']['max_posts'] ) )
+		$query['posts_per_page'] = intval($slider['query_vars']['max_posts']);
 
 	$query['fields'] = array(
 		'ID',
@@ -114,20 +121,21 @@ function pw_print_slider( $slider ){
 		);
 
 	// Add Category
-	if( !empty( $slider['category'] ) )
+	if( !empty( $slider['query_vars']['category'] ) )
 		$query['category_name'] = $slider['category'];
 
 	// Add Category ID
-	if( !empty( $slider['category_id'] ) )
+	if( !empty( $slider['query_vars']['category_id'] ) )
 		$query['cat'] = $slider['category_id'];
 
 	// Check for Taxonomy & Term definitions
-	if( !empty( $slider['taxonomy'] ) && !empty( $slider['term'] ) ){
+	if( !empty( $slider['query_vars']['taxonomy'] ) &&
+		!empty( $slider['query_vars']['term'] ) ){
 		$query['tax_query'] = array(
 			array(
-				'taxonomy' 	=> $slider['taxonomy'],
+				'taxonomy' 	=> $slider['query_vars']['taxonomy'],
 				'field'		=> 'slug',
-				'terms' 	=> $slider['term']
+				'terms' 	=> $slider['query_vars']['term']
 				),
 			);
 		//echo json_encode($query['tax_query']);
