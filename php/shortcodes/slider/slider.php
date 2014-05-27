@@ -94,6 +94,10 @@ function pw_print_slider( $slider ){
 	if( !isset( $query['post_status'] ) )
 		$query['post_status'] = 'publish';
 
+	// Set Post Types
+	if( !isset( $query['post_type'] ) )
+		$query['post_type'] = array('page','post','attachment');
+
 	// Set Other Properties
 	if( !isset( $query['posts_per_page'] ) )
 		$query['posts_per_page'] = 25;

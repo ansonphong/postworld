@@ -318,7 +318,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 							function ($window, $log, $pwData) {
 
 	return{
-		getTaxTerms: function($scope, tax_obj){ // , tax_obj
+		getTaxTerms: function( $scope, tax_obj ){ // , tax_obj
 
 			if ( typeof tax_obj === 'undefined' )
 				var tax_obj = "tax_terms";
@@ -326,7 +326,8 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 			var args = $window.pwSiteGlobals.post_options.taxonomy_outline;
 			$pwData.taxonomies_outline_mixed( args ).then(
 				// Success
-				function(response) {    
+				function(response) {
+					$log.debug('pwData.taxonomies_outline_mixed : RESPONSE : ', response); 
 					$scope[tax_obj] = response.data;
 				},
 				// Failure
