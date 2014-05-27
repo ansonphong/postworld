@@ -124,6 +124,9 @@ include 'php/postworld_options.php';
 /////////////// META BOXES ////////////////
 include 'php/postworld_metabox.php';
 
+/////////////// ADMIN ////////////////
+include 'php/postworld_admin.php';
+
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
 include 'php/postworld_comments.php';
