@@ -236,4 +236,93 @@ function url_to_media_library( $image_url, $post_id = 0){
 	return 0;
 }
 
+
+
+
+
+/**
+ * Retrieve galleries from the passed post's content.
+ * @param int|WP_Post $post Optional. Post ID or object.
+ * @param bool        $html Whether to return HTML or data in the array.
+ * @return array A list of arrays, each containing gallery data and srcs parsed
+ *		         from the expanded shortcode.
+ */
+/*
+function pw_get_post_galleries_atts( $post ) {
+	// Based on `get_post_galleries`
+	if ( ! $post = get_post( $post ) )
+		return array();
+
+	if ( ! has_shortcode( $post->post_content, 'gallery' ) )
+		return array();
+
+	$galleries = array();
+
+	// Find all gallery shortcodes in the post
+	// And return an array of associative arrays with the shortcode attributes
+	if ( preg_match_all( '/' . get_shortcode_regex() . '/s', $post->post_content, $matches, PREG_SET_ORDER ) ) {
+		foreach ( $matches as $shortcode ) {
+			if ( 'gallery' === $shortcode[2] ) {
+				$data = shortcode_parse_atts( $shortcode[3] );
+				$data['src'] = array_values( array_unique( $srcs ) );
+				$galleries[] = $data;
+			}
+		}
+	}
+
+	return $galleries;
+}
+*/
+
+
+function pw_get_post_galleries_atts( $post ){
+	get_post_galleries( $post, false );
+
+}
+
+
+function pw_get_post_galleries_attachment_ids( $post ){
+	// Returns all the attachment IDs for all gallery images in the post's galleries
+
+	$galleries = get_post_galleries( $post, false );
+
+	if( !empty( $galleries ) ){
+		$attachment_ids = array();		
+		
+		foreach( $galleries as $gallery ){
+			$gallery_ids = explode( ',', $gallery['ids']);
+			$attachment_ids = array_merge( $attachment_ids, $gallery_ids );
+		}
+
+		$attachment_ids = array_unique( $attachment_ids );
+
+	} else{
+		$attachment_ids = array();
+	}
+
+	return $attachment_ids;
+
+}
+
+
+function pw_get_posts_galleries_attachment_ids( $post_ids = array() ){
+	// Does for multiple posts
+
+	if( empty($post_ids) )
+		return false;
+
+	$attachment_ids = array();
+	foreach( $post_ids as $post_id ){
+		$gallery_attachment_ids = pw_get_post_galleries_attachment_ids( $post_id );
+		$attachment_ids = array_merge( $attachment_ids, $gallery_attachment_ids );
+	}
+
+	$attachment_ids = array_unique( $attachment_ids );
+
+	return $attachment_ids;
+
+}
+
+
+
 ?>

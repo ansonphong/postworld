@@ -634,5 +634,46 @@ function pw_ob_include( $path ){
 }
 
 
+function pw_get_post_ids( $posts ){
+	// Returns just an array of IDs from an array of posts
+
+	$posts = (array) $posts;
+	$post_ids = array();
+
+	foreach( $posts as $post ){
+		if( isset($post['id']) )
+			$id = $post['id'];
+		else if( isset($post['ID']) ) 
+			$id = $post['ID'];
+		else
+			continue;
+
+		$post_ids[] = $id;
+
+	}
+
+	return $post_ids;
+
+}
+
+
+/**
+ * @param string $code name of the shortcode
+ * @param string $content
+ * @return string content with shortcode striped
+ */
+function pw_strip_shortcode($code, $content)
+{
+    global $shortcode_tags;
+
+    $stack = $shortcode_tags;
+    $shortcode_tags = array($code => 1);
+
+    $content = strip_shortcodes($content);
+
+    $shortcode_tags = $stack;
+    return $content;
+}
+
 
 ?>

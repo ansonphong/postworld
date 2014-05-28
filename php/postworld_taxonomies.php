@@ -32,11 +32,13 @@ function taxonomies_outline_mixed( $taxonomy_options ){
 	// Takes mixed options per taxonomy
 	// Returns a single object
 	$tax_outline_mixed = array();
+
 	// FOR EACH INPUT TAXONOMY
 	foreach ($taxonomy_options as $taxonomy => $options) {
-		$tax_outline = taxonomies_outline( array($taxonomy), $options['max_depth'], $options['fields'], $options['filter'] );
-		$tax_outline_mixed = array_merge( $tax_outline_mixed, $tax_outline );//array_push( $tax_outline_mixed, $tax_outline );
+		$tax = taxonomies_outline( array($taxonomy), $options['max_depth'], $options['fields'], $options['filter'] );
+		$tax_outline_mixed = array_merge( $tax_outline_mixed, $tax );//array_push( $tax_outline_mixed, $tax_outline );
 	}
+	
 	return $tax_outline_mixed;
 }
 
@@ -66,8 +68,6 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 	if (!$fields or $fields == 'all')
 		$fields = array('term_id', 'name', 'slug', 'description', 'parent', 'count', 'taxonomy', 'url');
 
-	
-
 	// Define Callback to get URL
 	if (in_array('url', $fields)) {
 		$callback = 'tax_term_meta';
@@ -78,16 +78,12 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 	$tax_outline = array();
 	///// TAXONOMIES : Cycle through each Taxonomy //////
 	foreach ($taxonomies as $taxonomy) {
-		// Get the Taxnomy Object
+		// Get the Taxonomy Object
 		$tax_obj = get_taxonomy($taxonomy);
 
 		// If it's not hierarchical, skip it
-		if (!$tax_obj -> hierarchical)
+		if (!$tax_obj->hierarchical)
 			continue;
-
-		// Set the Outline Values
-		$tax_outline[$taxonomy]['label'] = $tax_obj -> label;
-		//$tax_outline[$taxonomy]['cap'] = $tax_obj->cap;
 
 		// Process and order Terms Recursively
 		$tax_terms = get_terms($taxonomy, 'hide_empty=0');
@@ -103,7 +99,13 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 		$tax_terms = get_terms($taxonomy, 'hide_empty=0');
 		$args = array('object' => $tax_terms, 'fields' => $fields, 'id_key' => 'term_id', 'parent_key' => 'parent', 'child_key' => 'terms', 'max_depth' => $max_depth, 'callback' => $callback, 'callback_fields' => $callback_fields, );
 
-		$tax_outline[$taxonomy] = wp_tree_obj($args);
+		$tax_outline[$taxonomy]['terms'] = wp_tree_obj($args);
+
+
+		///// SET LABEL VALUES /////
+		// Set the Outline Values
+		$tax_outline[$taxonomy]['labels'] = $tax_obj->labels;
+		//$tax_outline[$taxonomy]['cap'] = $tax_obj->cap;
 
 	}
 
@@ -116,14 +118,16 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 		// With terms having an additional 'parent_[key]':'value' pair
 		// For each included $field, ie. parent_slug, parent_name, parent_term_id, etc.
 		// For use with AngularJS "label group" <select> <options> comprehension expression 
+
 		if ( $filter == "label_group" ){
 			// FOR EACH TAXONOMY
-			foreach ( $tax_outline as $taxonomy => $root_terms ) {
+			foreach ( $tax_outline as $taxonomy => $tax_value ) {
 				
 				// SETUP FLAT TERMS CONTAINER STRUCTURE
 				$flat_terms = array();
 
 				// FOR EACH ROOT TERM
+				$root_terms = $tax_value['terms'];
 				foreach ( $root_terms as $root_term ) {
 
 					// IF THE TERM HAS CHILD TERMS
@@ -158,7 +162,7 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 				} // END FOR EACH ROOT TERM
 				
 				// REWRITE THE ORIGINAL OUTLINE
-				$tax_outline[$taxonomy] = $flat_terms;
+				$tax_outline[$taxonomy]['terms'] = $flat_terms;
 
 			} // END FOR EACH TAXONOMY
 

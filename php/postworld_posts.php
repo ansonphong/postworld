@@ -1,6 +1,5 @@
 <?php
 
-
 function pw_post_exists ( $post_id ){
 	// Check if a post exists
 	global $wpdb;
@@ -445,8 +444,15 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			///// GET IMAGE TO USE /////
 			// Setup Thumbnail Image Variables
-			$thumbnail_id = get_post_thumbnail_id( $post_id );
-			
+
+			if( $get_post['post_type'] == 'attachment' ){
+				// Handle Attachment Post Types
+				$thumbnail_id = $post_id;
+			} else{
+				// Handle Posts
+				$thumbnail_id = get_post_thumbnail_id( $post_id );
+			}
+
 			// If there is a set 'featured image' set the $thumbnail_url
 			if ( $thumbnail_id ){
 				$thumbnail_url = wp_get_attachment_url( $thumbnail_id ,'full');
@@ -454,7 +460,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			}
 			// If there is no set 'featured image', get fallback - first image in post
 			else {
-				$first_image_obj = first_image_obj($post_id);
+				$first_image_obj = first_image_obj( $post_id );
 				// If there is an image in the post
 				if ($first_image_obj){
 					$thumbnail_url = $first_image_obj['url'];
@@ -533,7 +539,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$registered_images = registered_images_obj();
 
 						foreach( $registered_images as $image_handle => $image_attributes ){
-							$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_handle );
+							//$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_handle );
+							$image_src = wp_get_attachment_image_src( $thumbnail_id, $image_handle );
 							$registered_images[$image_handle]["url"] = $image_src[0];
 							$registered_images[$image_handle]["width"] = $image_src[1];
 							$registered_images[$image_handle]["height"] = $image_src[2];
@@ -712,7 +719,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	return $post_data;
 
 }
-
 
 function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	
