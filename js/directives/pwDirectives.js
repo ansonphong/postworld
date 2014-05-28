@@ -330,5 +330,35 @@ postworld.controller('pwLanguageCtrl',
 }]);
 
 
+/*_____ _                            _   
+ |_   _(_)_ __ ___   ___  ___  _   _| |_ 
+   | | | | '_ ` _ \ / _ \/ _ \| | | | __|
+   | | | | | | | | |  __/ (_) | |_| | |_ 
+   |_| |_|_| |_| |_|\___|\___/ \__,_|\__|
+
+////////// POSTWORLD TIMEOUT //////////*/
+// Run an action in an isolated scope on a timeout
+
+postworld.directive('pwTimeout', function( $timeout ) {
+    return {
+        scope:{
+            pwTimeout:"@",
+            timeoutAction:"@",
+        },
+        link: function( $scope, element, attrs ) {
+            $timeout( function(){
+                // Evaluate passed local function
+                $scope.$eval( $scope.timeoutAction );
+                // Destroy Scope
+                $scope.$destroy();
+            }, parseInt( $scope.pwTimeout ) ); // 
+
+            $scope.addClass = function( classes ){
+                element.addClass( classes );
+            }
+        },
+    }
+});
+
 
 
