@@ -48,10 +48,14 @@ function postworld_includes( $args ){
 	///// DELPLOY FILE INCLUDES /////
 	if ( $mode == 'deploy' ){
 	
+		// ANGULAR
+		//wp_enqueue_script( 'AngularJS',
+		//	WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular.min.js');
+
 		// POSTWORLD
 		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js' );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
-		wp_enqueue_script(  'Postworld-Deploy' ); //array('Postworld-Libraries') );
+		wp_enqueue_script(  'Postworld-Deploy' );
 
 		// ADD GOOGLE MAPS
 		if( in_array('google-maps', $dep) ){
@@ -62,6 +66,7 @@ function postworld_includes( $args ){
 			wp_enqueue_script( 'AngularJS-Google-Maps',
 				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', array('Postworld-Deploy') );
 		}
+
 
 
 	}
@@ -270,9 +275,6 @@ function postworld_includes( $args ){
 			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
 
 
-
-		
-		
 
 	}
 
