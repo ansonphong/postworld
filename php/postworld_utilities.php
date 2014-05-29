@@ -676,4 +676,19 @@ function pw_strip_shortcode($code, $content)
 }
 
 
+// Strips the site URL from a URL
+// Returning the relative/absolute path
+function pw_strip_site_url( $url ){
+	$path = str_replace( get_site_url(), '', $url );
+	// Add "/" to the start, if it doesn't exist
+	if( substr( $path, 0, 1 ) != "/" )
+		$path = "/".$path;
+	return $path;
+}
+
+// Wraps quotes around a string
+function pw_wrap_quotes( $string ){
+    return "\"" . $string . "\"";
+}
+
 ?>
