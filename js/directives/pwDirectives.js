@@ -430,9 +430,6 @@ postworld.directive('uiScrollfix', ['$window', function ($window) {
 }]);
 
 
-
-
-
 postworld.directive('pwScrollfix', function( $window, $log, $timeout ) {
 	return {
 		scope:{
