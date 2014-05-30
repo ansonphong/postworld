@@ -1246,7 +1246,6 @@ function pw_print_post( $vars ){
 }
 
 
-
 function pw_editor( $content, $editor_id, $settings = array() ){
 	ob_start();
 	wp_editor( $content, $editor_id, $settings );
@@ -1254,6 +1253,9 @@ function pw_editor( $content, $editor_id, $settings = array() ){
 	ob_end_clean();
 	return $editor;
 }
+
+
+
 
 
 ?>

@@ -276,6 +276,8 @@ function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
 
 function pw_print_feed( $args ){
 
+
+
 	// Load a cached feed
 	if( isset($args['feed_id']) ){
 		// LOAD A CACHED FEED
@@ -297,13 +299,14 @@ function pw_print_feed( $args ){
 		//return json_encode($pw_query);
 		$posts = $pw_query->posts;
 
-
+	} else if( isset( $args['posts'] ) ) {
+		$posts = $args['posts'];
 
 	} else {
 		// RETURN ERROR
 		return array('error' => 'No feed_id or feed_query defined.');
 	}
-	
+
 	// LINEAGE - DELETE
 	// Include h2o template engine
 	global $pw_globals;
@@ -314,16 +317,18 @@ function pw_print_feed( $args ){
 
 	$pw_post = array();
 	$post_html = "";
-
-	// Iterate through each provited post
+	
+	// Iterate through each provided post
 	foreach( $posts as $post_data ){
 
 		// ID is a required field, to determine the post template
 		$post_id = $post_data['ID'];
 
 		// Get the template for this post
-		if( isset($args['view']) )
+		if( isset($args['view']) ){
+
 			$template_path = pw_get_post_template( $post_id, $args['view'], 'dir' );
+		}
 		else if( isset($args['template']) )
 			$template_path = $args['template'];
 
@@ -332,6 +337,7 @@ function pw_print_feed( $args ){
 
 		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
 		$pw_post['post'] = $post_data;
+		$pw_post['post_json'] = json_encode($post_data);
 
 		// Add rendered HTML to the return data
 		$post_html .= $h2o->render($pw_post);
@@ -339,6 +345,72 @@ function pw_print_feed( $args ){
 
 	return $post_html;
 }
+
+
+
+function pw_print_menu_feed( $vars ){
+	/*
+		$vars = array(
+			"menu" 		=> "" 		// Name or ID or slug of menu
+			"fields"	=> array()	// Fields to pass to pw_get_post
+			"view"		=> ""		// Which view to render
+		)
+	*/
+
+	$posts = pw_get_menu_posts( $vars['menu'], $vars['fields'] );
+
+	$html = pw_print_feed(
+		array(
+			"view"	=>	$vars["view"],
+			"posts"	=>	$posts,
+			)
+		);
+
+	return $html;
+
+}
+
+
+function pw_get_menu_posts( $menu, $fields ){
+	// $menu can be menu name, slug, or term ID
+
+	$menu_slug = wp_get_nav_menu_object( $menu )->slug;
+
+	$query = array(
+		"post_type"			=>	"nav_menu_item",
+		"fields"			=>	array("ID", "post_title", "post_meta(_menu_item_object_id)"),
+		"posts_per_page"	=>	200,
+		'order'             => 'ASC',
+		'orderby' 			=> 'menu_order',
+		'output_key' 		=> 'menu_order',
+		"tax_query"	=>	array(
+			array(
+				"taxonomy"	=>	"nav_menu",
+				"field"		=>	"slug",
+				"terms"		=>	$menu_slug,
+				),
+			),
+		);
+
+	$menu_items = pw_query( $query )->posts;
+
+	$posts = array();
+	foreach( $menu_items as $item ){
+		$post_id = $item['post_meta']['_menu_item_object_id'];
+		$post = pw_get_post( $post_id, $fields );
+
+		// Over-ride post title with menu title
+		if( !empty( $item['post_title'] ) )
+			$post['post_title'] = $item['post_title'];
+
+		$posts[] = $post;
+
+	}
+
+	return $posts;
+
+}
+
 
 
 function get_panel_ids(){

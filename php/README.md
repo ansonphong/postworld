@@ -2201,7 +2201,7 @@ __feed_query__ : *Array*
 - Postworld Query args input directly into `pw_query()`
 
 __posts__ : *integer*
-- Number of posts to print
+- Pass in pre-queried post data
 
 __fields__ : *string/Array* (optional) (default:null)
 - Fields to pass to `pw_get_post()`
