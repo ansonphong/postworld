@@ -22,7 +22,7 @@ postworld.controller('panelWidgetController',
         $scope.panel_id = panel_id;
     }
     $scope.$on('pwTemplatesLoaded', function(event, data) {
-        $scope.panel_url = $pwData.pw_get_template('panels','',$scope.panel_id);
+        $scope.panel_url = $pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
     });
 
 }]);

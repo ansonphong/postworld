@@ -18,7 +18,7 @@ postworld.controller('pwFilterFeedController',
     function pwFilterFeedController($scope, $location, $log, pwData, $attrs, $window, pwPostOptions) {    	
 		var firstTime = true;
 		// Set Panel Template
-		pwData.templates.promise.then(function(value) {
+		//pwData.templates.promise.then(function(value) {
 				var FeedID = $scope.feedId;
 				var template = 'feed_top';	// TODO get from Constant values
 				if (!$scope.feedId) {
@@ -37,9 +37,9 @@ postworld.controller('pwFilterFeedController',
 			   // Get Default View Name
 			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
 			   		template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
-		    	$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
+		    	$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: template } );
 				// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
-		});		
+		//});		
 
 		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
 		// Interacts with userAutocomplete() controller
@@ -213,12 +213,10 @@ postworld.controller('pwLoadPanelController',
     	// TEMP LOADING TEMPLATE
     	//$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
     	$scope.$on('pwTemplatesLoaded', function(event, data) {
-	        //$scope.panel = {};	        	
-	        $scope.templateUrl = pwData.pw_get_template($scope.panel_grp,$scope.post_type, $scope.panel_id);
+	        //$scope.panel = {};
+	        $scope.templateUrl = pwData.pw_get_template( { subdir: $scope.panel_grp, post_type: $scope.post_type, view: $scope.panel_id } );
 		    $log.debug('setting loadpanel url',$scope.panel_grp,$scope.post_type, $scope.panel_id,$scope.templateUrl);
 	    });
 
 	}
 );
-
-

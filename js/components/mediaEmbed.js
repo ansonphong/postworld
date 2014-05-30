@@ -12,7 +12,7 @@ var mediaModalCtrl = function ($scope, $modal, $log, $window, pwData) {
 
   $scope.launch = function (post) {
     var modalInstance = $modal.open({
-      templateUrl: pwData.pw_get_template('panels','','media_modal'),
+      templateUrl: pwData.pw_get_template( { subdir: 'panels', view: 'media_modal' } ),
       controller: MediaModalInstanceCtrl,
       windowClass: 'media_modal',
       resolve: {

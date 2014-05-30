@@ -125,18 +125,18 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 
 		if (settings.order_options) $scope.orderOptions = settings.order_options;
 		 
-		pwData.templates.promise.then(function(value) {
-				 if (settings.view) {
-						var template = 'comment-'+settings.view;
-						$scope.templateUrl = pwData.pw_get_template('comments','comment',template);
-					$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
-				 }
-				 else {
-						$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
-						// this template fires the loadComments function, so there is no possibility that loadComments will run first.
-				 }
-					 return;
-		});
+		//pwData.templates.promise.then(function(value) {
+			if (settings.view) {
+				var template = 'comment-'+settings.view;
+				$scope.templateUrl = pwData.pw_get_template( { subdir: 'comments', post_type: 'comment', view: template } );
+			$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
+			}
+			else {
+				$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
+				// this template fires the loadComments function, so there is no possibility that loadComments will run first.
+			}
+			return;
+		//});
 		
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;

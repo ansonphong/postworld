@@ -140,7 +140,7 @@ postworld.controller('pwFeedController',
 		};    	
 							
 		// Set Default Feed Template and Default Feed Item Template
-		pwData.templates.promise.then(function(value) {
+		//pwData.templates.promise.then(function(value) {
 				if (!$scope.feed) {
 					$log.debug('no valid Feed ID provided in Feed Settings',$scope);
 					return;
@@ -162,7 +162,7 @@ postworld.controller('pwFeedController',
 			   // Get Feed Template from feed_settings if it exists, otherwise get it from default path
 			   if (pwData.feed_settings[$scope.feed].feed_template) {
 					var template = pwData.feed_settings[$scope.feed].feed_template;			   	
-					$scope.templateUrl = pwData.pw_get_template('panels','panel',template);
+					$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', post_type:'panel', view: template } );
 					//$log.debug('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
 			   }
 			   else {
@@ -174,7 +174,7 @@ postworld.controller('pwFeedController',
 					return;			   	
 			   }
 				// $log.debug('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
-		});
+		//});
 		
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
 		   $log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
@@ -548,19 +548,19 @@ postworld.controller('pwLoadPostController',
 
 						// Set Template URL
 						// Set Default Feed Template and Default Feed Item Template
-						pwData.templates.promise.then(function(value) {
+						//pwData.templates.promise.then(function(value) {
 							   if ($scope.post) {
 									var template = $scope.postArgs.view;
 									var post_type = 'post';
 									if ($scope.post.post_type) post_type = $scope.post.post_type;			   		
-									$scope.templateUrl = pwData.pw_get_template('posts',post_type,template);
+									$scope.templateUrl = pwData.pw_get_template( { subdir: 'posts', post_type: post_type, view: template } );
 									//$log.debug('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
 							   }
 							   else {
 									$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
 							   }
 								return;
-						});
+						//});
 						return response.data;						
 					} else {
 						// handle error

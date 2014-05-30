@@ -168,18 +168,19 @@ var postworld = angular.module('postworld', depInject )
  |_| \_\\__,_|_| |_|        
 */
 postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {    
-        // TODO move getting templates to app startup
-        pwData.pw_get_templates(null).then(function(value) {
-            // TODO should we create success/failure responses here?
-            // resolve pwData.templates
-            pwData.templates.resolve(value.data);
-            pwData.templatesFinal = value.data;
-            //console.log('postworld RUN getTemplates=',pwData.templatesFinal);
 
-            // BROADCAST HERE - TEMPLATES LOADED
-            $rootScope.$broadcast('pwTemplatesLoaded', true);
-
-          });    
+    /*
+    // TODO move getting templates to app startup
+    pwData.pw_get_templates(null).then(function(value) {
+        // TODO should we create success/failure responses here?
+        // resolve pwData.templates
+        pwData.templates.resolve(value.data);
+        pwData.templatesFinal = value.data;
+        //console.log('postworld RUN getTemplates=',pwData.templatesFinal);
+        // BROADCAST HERE - TEMPLATES LOADED
+        $rootScope.$broadcast('pwTemplatesLoaded', true);
+    });    
+    */
 
     // TODO remove in production
     /*
@@ -187,6 +188,7 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
       $templateCache.removeAll();
     });
     */
+
    //$rootScope.current_user = $window.pwGlobals.current_user;
    //$log.debug('Current user: ', $rootScope.current_user );
 

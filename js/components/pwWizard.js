@@ -522,30 +522,3 @@ postworld.controller('pwWizardCtrl',
 	};
 
 }]);
-
-
-///// GRAVEYARD /////
-/*
-$scope.continueWizard = function(){
-	// Define local vars
-	var wizardStatus = $scope.wizardStatus;
-	var wizardState = $scope.wizardState;
-}
-*/
-
-/*
-// Open Wizard Modal
-var modalInstance = $modal.open({
-	templateUrl: $pwData.pw_get_template('panels','','modal-login'),
-	backdrop:false,
-	windowClass:'wizard',
-	//controller: ModalInstanceCtrl,
-	
-	resolve: {
-		items: function () {
-		//	return $scope.items;
-		}
-	}
-	
-});
-*/

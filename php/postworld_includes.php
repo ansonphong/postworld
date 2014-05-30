@@ -325,6 +325,12 @@ function pwSiteGlobals_include(){
 	$pwGlobalsJs .= json_encode( $pwSiteGlobals );
 	$pwGlobalsJs .= ";";
 
+	// ENCODE TEMPLATES
+	$pwGlobalsJs .= "\n\n";
+	$pwGlobalsJs .= "var pwTemplates = ";
+	$pwGlobalsJs .= json_encode( pw_get_templates() );
+	$pwGlobalsJs .= ";";	
+
 	// ENCODE SITE LANGUAGE
 	global $pwSiteLanguage;	
 	$pwGlobalsJs .= "\n\n";

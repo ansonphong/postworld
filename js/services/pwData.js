@@ -28,26 +28,32 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 	
 	// $log.debug('pwData() Registering feed_settings', feed_settings);
 	
-	var	getTemplate = function(pwData,grp,type,name) {
+	var	getTemplate = function( pwData, meta ) { // (pwData,subdir,post_type,view)
+		// (this,subdir,post_type,view) -> ( this, meta )
 		var template;
+
+		// Localize Meta
+		var subdir = meta.subdir;
+		var post_type = meta.post_type;
+		var view = meta.view;
+
 		// TODO can we make this lookup dynamic?
-		// $log.debug('template here',grp,type,name);
-		switch (grp) {
+		$log.debug('getTemplate : META : ',meta);
+
+		switch (subdir) {
 			case 'posts':
-				if (type) {
-					template = pwData.templatesFinal.posts[type][name];						
+				if (post_type) {
+					template = pwData.templatesFinal.posts[post_type][view];						
 				} else {
 					template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';						
 				}
 				// $log.debug('post template:',pwData.templatesFinal.posts);
 				break;
 			case 'panels':
-				template = pwData.templatesFinal.panels[name];
-				//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
+				template = pwData.templatesFinal.panels[view];
 				break;
 			case 'comments':
-				template = pwData.templatesFinal.comments[name];
-				//template = jsVars.pluginurl+'/postworld/templates/panels/'+name+'.html';
+				template = pwData.templatesFinal.comments[view];
 				break;
 			default:
 				template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
@@ -60,14 +66,16 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 	
 	// for Ajax Calls
     var resource = $resource( $window.pwGlobals.paths.ajax_url, {action:'wp_action'}, 
-    							{	wp_ajax: { method: 'POST', isArray: false, },	}
-							);
+				{ wp_ajax: { method: 'POST', isArray: false, },	}
+			);
 	
     return {
     	feed_settings: feed_settings,
     	feed_data: feed_data,
-    	templates: $q.defer(),
-    	templatesFinal:{},
+    	
+    	templates: $window.pwTemplates, //$q.defer(), // 
+    	templatesFinal: $window.pwTemplates, //{},
+
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
     		nonce = val;
@@ -179,10 +187,33 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 			//var params = {args:args};
 			return this.wp_ajax('pw_get_post',args);
 		},
-		pw_get_template: function(grp,type,name) {
+		pw_get_template: function ( meta ) { // ( subdir, post_type, view)
 			// if templates object already exists, then get value, if not, then retrieve it first
-			var template = getTemplate(this,grp,type,name);
+
+			// Setup Meta (lineage)
+			/*
+			var meta = {
+				subdir: subdir,
+				post_type: post_type,
+				view: view,
+			};
+			*/
+
+			///// Set Defaults /////
+			// Subdirectory
+			if( _.isUndefined(meta.subdir) )
+				return false;
+			// Post Type
+			if( _.isUndefined(meta.post_type) )
+				meta.post_type = '';
+			// View
+			if( _.isUndefined(meta.view) )
+				return false;
+
+		
+			var template = getTemplate( this, meta ); // ( this, subdir, post_type, name )
 		    return template;
+
 		}, // END OF pw_get_template
 		convertFeedSettings: function (feedID,args1) {
 			var fargs = {};
