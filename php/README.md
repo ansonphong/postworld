@@ -2246,6 +2246,21 @@ echo pw_print_feed( $print_feed_args );
 
 ------
 
+### pw_print_menu_feed( *$vars* )
+- Runs `pw_print_feed()` on the posts in a given menu
+
+```php
+/*
+    $vars = array(
+      "menu"    => ""     // Name or ID or slug of menu
+      "fields"  => array()  // Fields to pass to pw_get_post
+      "view"    => ""   // Which view to render
+    )
+*/
+```
+
+------
+
 ### pw_get_post_template ( *$post_id, $post_view, $path_type* )
 - Returns an template path based on the provided post ID and view
 
