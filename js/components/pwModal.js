@@ -1,24 +1,24 @@
 /*////////////// ------- SERVICE ------- //////////////*/  
 
 postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwData',
-	function ( $rootScope, $log, $location, $modal, pwData ) {
+	function ( $rootScope, $log, $location, $modal, $pwData ) {
 	return{
 
 		openModal : function( meta ){
 			
 			///// DEFAULTS /////
-			if( _.isUndefined(post) )
-				var post = {};
 			if( _.isUndefined(meta) )
 				var meta = {};
+			if( _.isUndefined( meta.post ) )
+				meta.post = {};
 
 			// Default Template ID
 			var mode = ( _.isUndefined( meta.mode ) ) ?
 					'default' : meta.mode;
 
 			// Default Template ID
-			var panelId = ( _.isUndefined( meta.panelId ) ) ?
-					'modal-default' : meta.panelId;
+			var templateName = ( _.isUndefined( meta.templateName ) ) ?
+					'modal-default' : meta.templateName;
 
 			// Default Controller
 			var controller = ( _.isUndefined( meta.controller ) ) ?
@@ -67,22 +67,28 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 					windowClass = meta.windowClass;
 			}
 
-			// Default Defaults
-			if( _.isUndefined( meta.mode ) )
-				var mode = 'quick-edit';
+			// Default Defaults << DELETE
+			//if( _.isUndefined( meta.mode ) )
+			//	var mode = 'quick-edit';
 
-			$log.debug( "Launch Modal // MODAL TEMPLATE : " + templateName + " // META : ", meta );
+			var templateUrl = $pwData.pw_get_template( { subdir: 'modals', view: templateName } );
+
+			$log.debug(
+				"Launch Modal // templateName : " + templateName + 
+				" // templateUrl : " + templateUrl + 
+				" // meta : ", meta );
 
 			var modalInstance = $modal.open({
-			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: templateName } ),
-			  controller: controller,
-			  windowClass: windowClass,
-			  resolve: {
-				meta: function(){
-					return meta;
+				templateUrl: templateUrl,
+				controller: controller,
+				windowClass: windowClass,
+				resolve: {
+					meta: function(){
+						return meta;
+					}
 				}
-			  }
 			});
+
 			modalInstance.result.then(function (selectedItem) {
 				//$scope.post_title = post_title;
 			}, function () {
@@ -91,26 +97,26 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 				
 				// Clear the URL params
 				//$location.url('/');
-				$location.path('/');
+				//$location.path('/');
 				//$rootScope.$apply();
 
 			});
+			
 		},
 
 	}
 }]);
 
 
-
 ////////// MODAL INSTANCE CONTROL //////////
 
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope',  '$modalInstance', 'mode', 'pwData', '$timeout', // 'pwQuickEdit',
-	function($scope, $rootScope, $modalInstance, mode, $pwData, $timeout) { // , $pwQuickEdit
+	[ '$scope', '$rootScope',  '$modalInstance', 'meta', 'pwData', '$timeout', // 'pwQuickEdit',
+	function($scope, $rootScope, $modalInstance, meta, $pwData, $timeout) { // , $pwQuickEdit
 
 	// Set Default Mode
-	$scope.mode = ( !_.isUndefined( mode ) ) ?
-		mode : "view";
+	$scope.mode = ( !_.isUndefined( meta.mode ) ) ?
+		meta.mode : "view";
 
 	// Import the passed post object into the Modal Scope
 	if( !_.isUndefined( meta.post ) )
@@ -120,8 +126,7 @@ postworld.controller('pwModalInstanceCtrl',
 	// TIMEOUT
 	// Allow editPost Controller to Initialize
 	if( !_.isUndefined( $scope.post.ID ) &&
-		mode != 'new' ){
-
+		$scope.mode != 'new' ){
 		// Broadcast to Load in the Post Data
 		$timeout(function() {
 		  $scope.$broadcast('loadPostData', $scope.post.ID );
@@ -192,24 +197,21 @@ postworld.controller('pwModalAccessCtrl',
 postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData',
 	function ( $rootScope, $log, $location, $modal, pwData ) {
 	return{
-		openQuickEdit : function( post, mode ){
+		openQuickEdit : function( meta ){
 			
 			// Default Defaults
-			if( _.isUndefined( mode ) )
-				var mode = 'quick-edit';
+			if( _.isUndefined( meta.mode ) )
+				meta.mode = 'quick-edit';
 
-			$log.debug( "Launch Quick Edit : MODE : " + mode, post );
+			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
 
 			var modalInstance = $modal.open({
 			  templateUrl: pwData.pw_get_template( { subdir: 'panels', view: 'modal-edit-post' } ),
 			  controller: 'quickEditInstanceCtrl',
 			  windowClass: 'quick_edit',
 			  resolve: {
-				post: function(){
-					return post;
-				},
-				mode: function(){
-					return mode;
+				meta: function(){
+					return meta;
 				}
 			  }
 			});

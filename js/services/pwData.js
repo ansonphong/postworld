@@ -45,18 +45,11 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 				if (post_type) {
 					template = pwData.templatesFinal.posts[post_type][view];						
 				} else {
-					template = jsVars.pluginurl+'/postworld/templates/posts/post-list.html';						
+					template = pwData.templatesFinal.posts['post'][view];						
 				}
-				// $log.debug('post template:',pwData.templatesFinal.posts);
-				break;
-			case 'panels':
-				template = pwData.templatesFinal.panels[view];
-				break;
-			case 'comments':
-				template = pwData.templatesFinal.comments[view];
 				break;
 			default:
-				template = jsVars.pluginurl+'/postworld/templates/panels/feed_top.html';
+				template = pwData.templatesFinal[subdir][view];
 				break;
 		}
 		// $log.debug('Service: pwData Method:getTemplate template=',template);
