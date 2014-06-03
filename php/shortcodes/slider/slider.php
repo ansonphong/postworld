@@ -6,12 +6,14 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 
 	// Extract Shortcode Attributes, set defaults
 	extract( shortcode_atts( array(
-		"template"	=> "slider-default",
-		"query" 	=> "{}",
-		"id" 		=> hash( "md5", "1" ),
-		"class" 	=> "shortcode-slider",
-		"interval" 	=> 5000,
-		"category" 	=> "",
+		"template"		=> "slider-default",
+		"query" 		=> "{}",
+		"id" 			=> hash( "md5", "1" ),
+		"class" 		=> "shortcode-slider",
+		"interval" 		=> 5000,
+		"category" 		=> "",
+		'no_pause'		=> 	false,
+		'transition'	=>	'fade',
 	), $atts ) );
 
 
@@ -33,12 +35,13 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 
 	// Setup Feed Query
 	$slider_args = array(
-		'template' 	=> $template,
-		'query' 	=> $query,
-		'id' 		=> $id,
-		'class' 	=> $class,
-		'interval' 	=> $interval,
-		'category'	=> $category
+		'template' 		=> $template,
+		'query' 		=> $query,
+		'id' 			=> $id,
+		'class' 		=> $class,
+		'interval' 		=> $interval,
+		'category'		=> $category,
+		'transition'	=> $transition,
 		);
 
 	$shortcode = pw_print_slider( $slider_args );	
@@ -57,12 +60,14 @@ function pw_print_slider( $slider ){
 	$default_template = "slider-default";
 
 	$slider_defaults = array(
-		'template' 		=> $default_template,
-		'id'			=> hash('md5', '1' ),
-		'class'			=> '',
-		'interval'		=> 5000,
-		'category'		=> '',
-		'category_id'	=> 0,
+		'template' 		=> 	$default_template,
+		'id'			=> 	hash('md5', '1' ),
+		'class'			=> 	'',
+		'interval'		=> 	5000,
+		'category'		=> 	'',
+		'category_id'	=> 	0,
+		'no_pause'		=> 	false,
+		'transition'	=>	'fade',
 		);
 
 	$slider = pw_set_defaults( $slider, $slider_defaults ); 
@@ -247,8 +252,8 @@ function pw_print_slider( $slider ){
 	$slider['instance'] = "slider_".substr( $slider_hash, 1, 8 );
 
 	///// CLASS /////
-	if( $slider['transition'] == 'fade' )
-		$slider['class'] .= " carousel-fade";
+	if( $slider['transition'] == 'fade' || !isset($slider['transition']) )
+		$slider['class'] .= " carousel-fade ";
 
 	///// INCLUDE TEMPLATE /////
 	// Include the template
