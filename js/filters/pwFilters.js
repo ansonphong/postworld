@@ -163,6 +163,9 @@ angular.module('TruncateFilter', []).
 // Adds extended functionality to textareas
 // Takes attributes : data-maxlength, data-readmore
 
+// NEEDS REFCTOR!
+
+/*
 postworld.directive('ngTextareaFilter', function() {
         return function($scope, element, attributes) {
             var model = attributes.ngModel;
@@ -203,7 +206,7 @@ postworld.directive('ngTextareaFilter', function() {
                     }, 1 );
         };
     });
-
+*/
 
 /*
   ____                        _         _____ _ _ _            

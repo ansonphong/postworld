@@ -239,7 +239,7 @@ function pw_get_template( $subdir, $template_id, $ext = "html", $path_type = "ur
 
 
 function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
-	
+
 	/* Returns an template path based on the provided post ID and view
 		Process
 		
@@ -267,6 +267,7 @@ function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
 	 */
 		
 	 $post_type =  get_post_type( $post_id );
+
 	 $args = array(
 	 		'subdirs'	=>	array('posts'),
 			'posts' => array(
@@ -277,6 +278,8 @@ function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
 		);
 	
 	$templates_object = pw_get_templates( $args );
+	
+	
 
 	return $templates_object['posts'][$post_type][$post_view];
 

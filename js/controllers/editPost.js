@@ -25,9 +25,9 @@ postworld.directive( 'pwEditPost', [ function($scope){
 
 postworld.controller('editPost',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit',
+	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit', '_',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit ) {
+		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit, $_ ) {
 
 
 	// Set the default mode
@@ -73,7 +73,7 @@ postworld.controller('editPost',
 		//post_type, post_format
 		$scope.status = "loading";
 
-		var post_defaults = $window.pwSiteGlobals.post_options.defaults;
+		var post_defaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
 		var editPostGlobals = $window.pwSiteGlobals.edit_post;
 
 		///// DETECT POST TYPE /////
@@ -118,10 +118,10 @@ postworld.controller('editPost',
 			post_title : "",
 			post_name : "",
 			//post_type : $scope.initEditPost.post_type,
-			post_status : post_defaults.edit_post.post_status,
-			post_class : post_defaults.edit_post.post_class,
+			post_status : post_defaults.post_status,
+			post_class : post_defaults.post_class,
 			link_url : "",
-			link_format : post_defaults.edit_post.link_format,
+			link_format : post_defaults.link_format,
 			post_date_gmt:"",
 			post_permalink : "",
 			tax_input : $pwPostOptions.pwGetTaxInputModel(),
@@ -170,12 +170,14 @@ postworld.controller('editPost',
 		var edit_post = $window.pwSiteGlobals.edit_post;
 
 		// Check if the requested post type is defined
+
+		//if( !$_.objExists( edit_post, post_type ) )
 		if( _.isUndefined( edit_post[post_type] ) )
 			// Fallback on post_type
 			post_type = 'post';
 
 		// Check if the requested post format is defined
-		if( !$ext.objExists( edit_post, post_type + ".new." + post_format ) )
+		if( !$_.objExists( edit_post, post_type + ".new." + post_format ) )
 			// Fallback on post_format
 			post_format = 'default';
 
@@ -279,7 +281,7 @@ postworld.controller('editPost',
 				}
 				///// ROUTE : SET DEFAULT /////
 				else if ( $route.current.action == "default"  ){
-					$location.path('/new/' + post_defaults.edit_post.post_type );
+					$location.path('/new/' + post_defaults.post_type );
 				}
 			}
 		);
@@ -511,7 +513,8 @@ postworld.controller('editPost',
 	// • Interacts with tagsAutocomplete() controller
 	// • Catches the recent value of the tags_input and inject into tax_input
 	$scope.$on('updateTagsInput', function( event, data ) { 
-		$scope.post.tax_input.post_tag = data;
+		if( $_.objExists( $scope, 'post.tax_input' ) )
+			$scope.post.tax_input.post_tag = data;
 	});
 
 	// GET : TAXONOMY TERMS
