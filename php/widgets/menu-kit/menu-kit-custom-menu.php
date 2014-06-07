@@ -57,7 +57,7 @@ class Menu_With_Description extends Walker_Nav_Menu {
 
         // Print the template body
         ob_start();
-        include $args->walker_vars['template_path'];
+        include $args->walker_vars['item_template_path'];
         $item_output = ob_get_contents();
         ob_end_clean();
 
@@ -67,6 +67,7 @@ class Menu_With_Description extends Walker_Nav_Menu {
     }
 }
 
+/*
 function pw_menu_kit_get_templates(
     $vars = array(
         "type" => "custom_menu"
@@ -75,7 +76,7 @@ function pw_menu_kit_get_templates(
 
     $templates = pw_get_templates(
         array(
-            'subdirs' => array( 'menu-kit' ),
+            'subdirs' => array( 'menus' ),
             'ext' => 'php',
             'path_type' =>  'dir',
             )
@@ -83,6 +84,7 @@ function pw_menu_kit_get_templates(
     $menu_templates = $templates['menus'];
 
 }
+*/
 
 
 ?>

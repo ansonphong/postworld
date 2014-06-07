@@ -10,6 +10,7 @@
 		?>
 			tooltip="<?php echo $link_meta['description']; ?>"
 			tooltip-placement="left"
+			tooltip-popup-delay="333"
 		<?php
 		}
 	?>

@@ -308,11 +308,11 @@ function pw_get_menu_templates(){
 	
 	$templates = pw_get_templates(
 		array(
-			'subdirs' => array( 'menu-kit' ),
+			'subdirs' => array( 'menus' ),
 			'ext' => 'php',
 			'path_type' =>  'dir',
 			)
-		)['menu-kit'];
+		)['menus'];
 
 	return $templates;
 

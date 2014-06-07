@@ -126,38 +126,13 @@ class menu_kit_widget extends WP_Widget {
 		
 		if ($menu_type == 'custom_menu') :
 
-		    // Get the menu templates
+		    // Get the menu template path
 		    $menu_templates = pw_get_menu_templates();
 			$menu_template = $OPTIONS['menu_template'];
-
 		    $template_path = $menu_templates[$menu_template] ;//'templates/custom_menu-walker.php';
 
-			$walker = new Menu_With_Description;
-
-			$custom_menu_config = array(
-				'theme_location'  => '',
-				'menu'            => $OPTIONS['menu_slug'],
-				'container'       => 'div',
-				'container_class' => '',
-				'container_id'    => '',
-				'menu_class'      => 'menu',
-				'menu_id'         => '',
-				'echo'            => true,
-				'fallback_cb'     => 'wp_page_menu',
-				'before'          => '',
-				'after'           => '',
-				'link_before'     => '',
-				'link_after'      => '',
-				'items_wrap'      => '<ul id="%1$s" class="%2$s">%3$s</ul>',
-				'depth'           => 0,
-				'walker'          => $walker,
-				'walker_vars'	  => array(
-					'menu_template' => $OPTIONS['menu_template'],
-					'template_path' => $template_path,
-					),
-			);
-
-			wp_nav_menu( $custom_menu_config );
+		    // Include the template path
+		    include $template_path;
 
 		endif;
 		
