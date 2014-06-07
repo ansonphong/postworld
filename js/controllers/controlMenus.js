@@ -215,8 +215,8 @@ postworld.directive( 'pwAdminPostMenu', [ function($scope){
 }]);
 
 postworld.controller('adminPostDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwQuickEdit', 'ext', '$timeout',
-    function( $scope, $rootScope, $location, $window, $log, $pwQuickEdit, $ext, $timeout ) {
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', 'ext', '$timeout',
+    function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $ext, $timeout ) {
 
     $scope.menuOptions = [
         {
@@ -337,20 +337,26 @@ postworld.controller('adminPostDropdown',
 
     $scope.menuAction = function(action){
 
-        if( action == "wp-edit" )
-            $window.location.href = $scope.post.edit_post_link.replace("&amp;","&");
+        switch( action ){
 
-        if( action == "pw-edit" ){
-            var editPostPageUrl = $scope.getEditPostPageUrl();
-            $window.location.href = editPostPageUrl + "#/edit/"+$scope.post.ID;
+            case 'wp-edit':
+                $window.location.href = $scope.post.edit_post_link.replace("&amp;","&");
+                break;
+
+            case 'pw-edit':
+                var editPostPageUrl = $scope.getEditPostPageUrl();
+                $window.location.href = editPostPageUrl + "#/edit/"+$scope.post.ID;
+                break;
+
+            case 'quick-edit':
+                $pwModal.openModal( { mode: 'quick-edit', post: $scope.post } );
+                break;
+
+            case 'trash':
+                $pwQuickEdit.trashPost($scope.post.ID, $scope);
+                break;
         }
 
-        if( action == "quick-edit" ){
-            $pwQuickEdit.openQuickEdit($scope.post);
-        }
-        if( action == "trash" ){
-            $pwQuickEdit.trashPost($scope.post.ID, $scope);
-        }
 
     };
 

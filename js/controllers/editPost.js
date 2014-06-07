@@ -13,12 +13,62 @@ postworld.directive( 'pwEditPost', [ function($scope){
 		restrict: 'AE',
 		controller: 'editPost',
 		link: function( $scope, element, attrs ){
+			// Init Edit Post Object
 			$scope.initEditPost = {};
+
+			// Edit Post Config Setup
+			$scope.editPostConfig = {
+				routing: true,		// Enables Routing on the URL
+				autoReload: true,	// Auto reloads the post data from the DB after saving
+			};
+
 			// OBSERVE Attribute
 			attrs.$observe('postType', function(value) {
 				if( !_.isUndefined( value ) )
 					$scope.initEditPost['post_type'] = value;
 			});
+
+			// OBSERVE Attribute
+			// Edit Mode is for changing the behavior of the routing while editing a post
+			// if edit-mode='inline', the routing functionality will be bypassed
+			attrs.$observe('editMode', function(value) {
+				if( !_.isUndefined( value ) )
+					$scope.initEditPost['editMode'] = value;
+					if( value == 'inline-submit' ){
+						$scope.editPostConfig.routing = false;
+						$scope.editPostConfig.autoReload = false;
+					}
+			});
+
+			// OBSERVE Attribute
+			// Save Callback evaluates on submitting a post to be saved
+			attrs.$observe('saveSubmitCallback', function(value) {
+				if( !_.isUndefined( value ) )
+					$scope.initEditPost['saveSubmitCallback'] = value;
+			});
+
+			// OBSERVE Attribute
+			// Save Success Callback evaluates on success of saving a post
+			attrs.$observe('saveSuccessCallback', function(value) {
+				if( !_.isUndefined( value ) )
+					$scope.initEditPost['saveSuccessCallback'] = value;
+			});
+
+			// OBSERVE Attribute
+			// Save Callback Error evaluates on error saving a post
+			attrs.$observe('saveErrorCallback', function(value) {
+				if( !_.isUndefined( value ) )
+					$scope.initEditPost['saveErrorCallback'] = value;
+			});
+
+			// OBSERVE Attribute
+			// Init Callback on initiating a new post
+			attrs.$observe('initCallback', function(value) {
+				if( !_.isUndefined( value ) )
+					$scope.initEditPost['initCallback'] = value;
+			});
+
+
 		}
 	};
 }]);
@@ -34,7 +84,13 @@ postworld.controller('editPost',
 	if( _.isUndefined( $scope.mode ) )
 		$scope.mode = 'new';
 
-
+	// If No Post Object exists, create one
+	$timeout( function(){
+		if( _.isUndefined( $scope.post ) ){
+			$scope.setPostObject({});
+		}
+	}, 1 );
+	
 	$scope.clearAndClose = function(){
 		// Clear Embedly Extract
 		$scope.clearExtract();
@@ -78,15 +134,21 @@ postworld.controller('editPost',
 
 		///// DETECT POST TYPE /////
 		// Check for Post Type Defined by the 'input' Post Object
-		if( !_.isUndefined( post.post_type ) )
+		if( !_.isUndefined( post.post_type ) ){
 			var post_type = post.post_type;
-
+		}
 		// Check for Post Type Defined by the 'scope' Post Object
-		else if( $ext.objExists( $scope, 'post.post_type' ) )
+		else if( $ext.objExists( $scope, 'post.post_type' ) ){
 			var post_type = $scope.post.post_type;
+		}
+		// Check for Post Type Defined by the attribute 'post-type'
+		else if( $_.objExists( $scope, 'initEditPost.post_type' ) ){
+			var post_type = $scope.initEditPost.post_type;
+		}
 
-		else
+		else{
 			var post_type = "post";
+		}
 
 		///// DETECT POST FORMAT /////
 		// Check for Post Format Defined by the 'input' Post Object 
@@ -140,6 +202,10 @@ postworld.controller('editPost',
 
 		$scope.default_post = post;
 		$scope.post = post;
+
+		// Post Initilize Callback
+		if( !_.isUndefined( $scope.initEditPost['initCallback'] ) )
+			$scope.$eval( $scope.initEditPost['initCallback'] );
 
 	};
 
@@ -223,7 +289,8 @@ postworld.controller('editPost',
 		}, 2);
 
 		// Set the Route
-		if( $ext.objExists( $scope, 'post.post_type' ) )
+		if( $ext.objExists( $scope, 'post.post_type' ) &&
+			$scope.editPostConfig.routing == true )
 			$location.path('/new/' + $scope.post.post_type);
 
 	}
@@ -240,6 +307,10 @@ postworld.controller('editPost',
 		$scope.$on(
 			"$routeChangeSuccess",
 			function( $currentRoute, $previousRoute ){
+
+				if( $scope.editPostConfig.routing == false )
+					return false;
+
 				//alert( JSON.stringify( $currentRoute ) );
 				///// ROUTE : NEW POST /////
 				if ( $route.current.action == "new_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
@@ -376,7 +447,8 @@ postworld.controller('editPost',
 				$scope.$emit('postLoaded', get_post);
 
 				// Set the Route
-				$location.path('/edit/' + get_post.ID);
+				if( $scope.editPostConfig.routing == true )
+					$location.path('/edit/' + get_post.ID);
 
 				// SET DATA INTO THE SCOPE
 				$scope.post = get_post;
@@ -392,82 +464,94 @@ postworld.controller('editPost',
 	}
 
 	/////----- SAVE POST FUNCTION -----//////
-	$scope.savePost = function(pwData){
-		//alert( tinyMCE.get('post_content').getContent() );//tinyMCE.editors.content.getContent() );
-		//alert( JSON.stringify($scope.post) );
-		// VALIDATE THE FORM
-		if ($scope.post.post_title != '' || typeof $scope.post.post_title !== 'undefined'){
-			//alert(JSON.stringify($scope.post));
+	$scope.savePost = function(){
 
-			///// GET post FROM TINYMCE /////
-			if ( typeof tinyMCE !== 'undefined' )
-				if ( typeof tinyMCE.get('post_content') !== 'undefined'  )
-					$scope.post.post_content = tinyMCE.get('post_content').getContent();
-			
+		// EVALUATE CALLBACK
+		if( !_.isUndefined( $scope.initEditPost['saveSubmitCallback'] ) )
+			$scope.$eval( $scope.initEditPost['saveSubmitCallback'] );
 
-			///// SANITIZE FIELDS /////
-			if ( typeof $scope.post.link_url === 'undefined' )
-				$scope.post.link_url = '';
+		// VALIDATE THE POST
+		if ($scope.post.post_title == '' || _.isUndefined( $scope.post.post_title ) ){
+			alert("Post not saved : missing Title field.");
+			return false;
+		}
 
-			///// DEFINE POST DATA /////
-			var post = $scope.post;
+		///// GET post FROM TINYMCE /////
+		if ( typeof tinyMCE != 'undefined' )
+			if ( !_.isUndefined( tinyMCE.get('post_content') )  )
+				$scope.post.post_content = tinyMCE.get('post_content').getContent();
 
-			//alert( JSON.stringify( post ) );
-			//$log.debug('pwData.pw_save_post : SUBMITTING : ', post);
+		///// SANITIZE FIELDS /////
+		if ( _.isUndefined( $scope.post.link_url ) )
+			$scope.post.link_url = '';
 
-			///// SAVE VIA AJAX /////
-			$scope.status = "saving";
-			$pwData.pw_save_post( post ).then(
-				// Success
-				function(response) {    
-					//alert( "RESPONSE : " + response.data );
-					$log.debug('pwData.pw_save_post : RESPONSE : ', response.data);
-					// VERIFY POST CREATION
-					// If it was created, it's an integer
-					if( response.data === parseInt(response.data) ){
-						// SAVE SUCCESSFUL
-						var post_id = response.data;
-						$scope.status = "success";
-						$timeout(function() {
-						  $scope.status = "done";
-						}, 4000);
+		///// DEFINE POST DATA /////
+		var post = $scope.post;
 
-						// LOAD POST
-						$scope.loadEditPost( post_id );
+		//alert( JSON.stringify( post ) );
+		//$log.debug('pwData.pw_save_post : SUBMITTING : ', post);
 
-						// ACTION BROADCAST
-						// For Quick Edit Mode - broadcast to children successful update
-						$rootScope.$broadcast('postUpdated', post_id);
-
-						// ACTION EMIT
-						// Any sibling or parent scope can listen on this action
-						$scope.$emit('postUpdated', post_id);
-					}
-					else{
-						// ERROR
-						if( typeof response.data == 'object' )
-							alert("Error : " + JSON.stringify(response.data) );
-						else
-							alert("ERROR : RESPONSE : (LOGGED IN?) : " + JSON.stringify( response ) );
-						$scope.status = "done";
-					}
-				},
-				// Failure
-				function(response) {
-					//alert('error');
-					$scope.status = "error";
+		///// SAVE VIA AJAX /////
+		$scope.status = "saving";
+		$pwData.pw_save_post( post ).then(
+			// Success
+			function(response) {    
+				//alert( "RESPONSE : " + response.data );
+				$log.debug('pwData.pw_save_post : RESPONSE : ', response.data);
+				// VERIFY POST CREATION
+				// If it was created, it's an integer
+				if( response.data === parseInt(response.data) ){
+					// SAVE SUCCESSFUL
+					var post_id = response.data;
+					$scope.status = "success";
 					$timeout(function() {
 					  $scope.status = "done";
 					}, 4000);
-				}
-			);
 
-		} else {
-			alert("Post not saved : missing fields.");
-		}
+					// RELOAD POST
+					if( $scope.editPostConfig.autoReload )
+						$scope.loadEditPost( post_id );
+
+					// ACTION BROADCAST
+					// For Quick Edit Mode - broadcast to children successful update
+					$rootScope.$broadcast('postUpdated', post_id);
+
+					// ACTION EMIT
+					// Any sibling or parent scope can listen on this action
+					$scope.$emit('postUpdated', post_id);
+
+					// EVALUATE CALLBACK
+					if( !_.isUndefined( $scope.initEditPost['saveSuccessCallback'] ) )
+						$scope.$eval( $scope.initEditPost['saveSuccessCallback'] );
+
+				}
+				else{
+					// ERROR
+					if( typeof response.data == 'object' )
+						alert("Error : " + JSON.stringify(response.data) );
+					else
+						alert("ERROR : RESPONSE : (LOGGED IN?) : " + JSON.stringify( response ) );
+					$scope.status = "done";
+
+					// EVALUATE CALLBACK
+					if( !_.isUndefined( $scope.initEditPost['saveErrorCallback'] ) )
+						$scope.$eval( $scope.initEditPost['saveErrorCallback'] );
+
+				}
+			},
+			// Failure
+			function(response) {
+				//alert('error');
+				$scope.status = "error";
+				$timeout(function() {
+				  $scope.status = "done";
+				}, 4000);
+			}
+		);
+
+		
 	}
 	/////----- END SAVE POST FUNCTION -----//////
-
 
 	// TRASH POST
 	$scope.trashPost = function(){
@@ -557,7 +641,7 @@ postworld.controller('editPost',
 				return false;
 
 			// ROUTE CHANGE
-			if( $scope.mode == "new" )
+			if( $scope.mode == "new" && $scope.editPostConfig.routing == true )
 				$location.path('/new/' + $scope.post.post_type);
 
 			// BROADCAST CHANGE TO CHILD CONTROLLERS NODES
@@ -664,6 +748,7 @@ postworld.controller('editPost',
 		source = tinyMCE.get('post_content').getContent({format : 'raw'});
 		alert(source);
 	};
+
 
 }]);
 
@@ -830,272 +915,8 @@ postworld.controller('eventInput',
 ////////// ------------ AUTHOR AUTOCOMPLETE CONTROLLER ------------ //////////*/
 
 
-/*____           _     _     _       _    
- |  _ \ ___  ___| |_  | |   (_)_ __ | | __
- | |_) / _ \/ __| __| | |   | | '_ \| |/ /
- |  __/ (_) \__ \ |_  | |___| | | | |   < 
- |_|   \___/|___/\__| |_____|_|_| |_|_|\_\
-
-////////// ------------ POST LINK CONTROLLER ------------ //////////*/
-postworld.controller('postLink', ['$scope', '$log', '$timeout','pwPostOptions','pwEditPostFilters','embedly','ext', 'pwData', '$window', 'pwRoleAccess',
-	function($scope, $log, $timeout, $pwPostOptions, $pwEditPostFilters, $embedly, $ext, $pwData, $window, $pwRoleAccess) {
-
-	// Setup the intermediary Link URL
-	$scope.link_url = '';
-
-	// Set the default statuss
-	$scope.loaded = 'false';
-
-	// Set the default mode
-	$scope.mode = "url_input";
-
-	// Set the status
-	$scope.status = "done";
-
-	// ROLE ACCESS
-	// Sets booleans for role access variables : "editor", "author"
-	$pwRoleAccess.setRoleAccess($scope);
-
-	// POST TYPE OPTIONS
-	$scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
-	// POST STATUS OPTIONS
-	$scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( 'link' );
-	// POST FORMAT OPTIONS
-	$scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
-	// POST FORMAT META
-	$scope.link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
-	// POST CLASS OPTIONS
-	$scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
-	
-	// GET : TAXONOMY TERMS
-	// Gets live set of terms from the DB
-	// as $scope.tax_terms
-	$pwPostOptions.getTaxTerms($scope, 'tax_terms');
-
-	// TAXONOMY TERM WATCH : Watch for any changes to the post.tax_input
-	// Make a new object which contains only the selected sub-objects
-	$scope.selected_tax_terms = {};
-	$scope.$watch( "post.tax_input",
-		function (){
-			// Create selected terms object
-			$scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post.tax_input);
-			
-			// Clear irrelivent sub-terms
-			$scope.post.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post.tax_input, $scope.selected_tax_terms );
-		
-		}, 1 );
-
-	// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
-	// Interacts with userAutocomplete() controller
-	// Catches the recent value of the auto-complete
-	$scope.$on('updateUsername', function( event, data ) { 
-		$scope.post.post_author_name = data;
-	});
-
-	// UPDATE POST TAGS FROM AUTOCOMPLETE MODULE
-	// Interacts with tagsAutocomplete() controller
-	// Catches the recent value of the tags_input and inject into tax_input
-	$scope.$on('updateTagsInput', function( event, data ) { 
-		$scope.post.tax_input.post_tag = data;
-	});
-
-	// DEFAULT POST DATA
-	var post_defaults = $window.pwSiteGlobals.post_options.defaults;
-	$scope.post = {
-		post_title:"",
-		post_type: post_defaults.post_link.post_type,
-		link_url:"",
-		link_format: post_defaults.post_link.link_format,
-		post_class: post_defaults.post_link.post_class,
-		tags_input:"",
-		post_status: post_defaults.post_link.post_status,
-		tax_input : $pwPostOptions.pwGetTaxInputModel(),
-	};
-
-	// Set Post Class
-	var current_user_role = $window.pwGlobals.current_user.roles[0];
-	$scope.post.post_class = $window.pwSiteGlobals.roles[current_user_role].post_class;
 
 
-
-
-	//////////////////// EMBEDLY CORE ////////////////////
-
-	// GET URL EXTRACT
-	// 1. On detect paste
-	$scope.extract_url = function() {
-
-		$scope.status = "busy";
-		$embedly.liveEmbedlyExtract( $scope.link_url ).then( // 
-				// Success
-				function(response) {
-					console.log(response);    
-					$scope.embedly_extract = response;
-					$scope.status = "done";
-				},
-				// Failure
-				function(response) {
-					//alert('Could not find URL.');
-					throw {message:'Embedly Error'+response};
-					$scope.status = "done";
-				}
-			);
-	}
-
-	$scope.reset_extract = function() {
-		$scope.embedly_extract = {};
-	}
-
-	$scope.ok = function() {
-		$scope.mode = "url_input";
-	}
-	
-	// EMBEDLY OBJECT WATCH : Watch for any changes to the embedly data
-	$scope.embedly_extract = {};
-	$scope.$watch( "embedly_extract",
-		function (){
-			// CHANGE MODE 
-			// SET MODE : ( new | edit )
-			if ( typeof $scope.embedly_extract.title == 'undefined' )
-				$scope.mode = "url_input";
-			else
-				$scope.mode = "post_input";
-
-			// Here Process the data from embedly.extract into the post format
-			if( $scope.mode == "post_input" ){
-				// Translate Embedly Object into WP Object
-				$scope.embedly_extract_translated = $embedly.translateToPostData( $scope.embedly_extract );
-				// Merge it with the current post
-				$scope.post = $ext.mergeRecursiveObj( $scope.post, $scope.embedly_extract_translated ) ;
-				// Extract image meta
-				$scope.embedly_extract_image_meta = $embedly.embedlyExtractImageMeta( $scope.embedly_extract );
-				
-				// Default Selected Image
-				$scope.selected_image = 0;
-			}
-
-		$scope.loaded = 'true';
-
-		}, 1 );
-
-	///// SELECT IMAGES /////
-	// Default Selected Image
-	$scope.selected_image = 0;
-	// Previous Image
-	$scope.previousImage = function(){
-		 if( $scope.selected_image == 0 ){
-			$scope.selected_image = $scope.embedly_extract_image_meta.image_count-1;
-		}
-		else
-			$scope.selected_image --;
-	};
-	// Next Image
-	$scope.nextImage = function(){
-		if( $scope.selected_image >= $scope.embedly_extract_image_meta.image_count-1 ){
-			$scope.selected_image = 0;
-		}
-		else
-			$scope.selected_image ++;
-	};
-
-	// UPDATE SELECTED IMAGE
-	$scope.$watch( "selected_image",
-		function ( newValue, oldValue ){
-			if ( typeof $scope.embedly_extract_image_meta != 'undefined' )
-				$scope.post.thumbnail_url = $scope.embedly_extract_image_meta.images[newValue].url;
-			else
-				$scope.post.thumbnail_url = "";
-		}, 1 );
-
-	// TAXONOMY TERM WATCH : Watch for any changes to the post.tax_input
-	// Make a new object which contains only the selected sub-objects
-	$scope.selected_tax_terms = {};
-	$scope.$watch( "post.tax_input",
-		function (){
-			// Create selected terms object
-			$scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post.tax_input);
-			// Clear irrelivent sub-terms
-			$scope.post.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post.tax_input, $scope.selected_tax_terms );
-		}, 1 );
-
-	// LINK_URL WATCH : Watch for changes in link_url
-	// Evaluate the link_format
-	$scope.$watchCollection('[post.link_url, post.link_format]',
-		function ( newValue, oldValue ){
-			$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
-		});
-
-
-
-	//////////////////// END EMBEDLY CORE ////////////////////
-
-
-
-
-
-
-
-
-
-
-
-	/////----- SAVE POST FUNCTION -----//////
-	$scope.savePost = function(pwData){
-		$scope.status = "busy";
-
-		///// SANITIZE FIELDS /////
-		if ( typeof $scope.post.link_url === 'undefined' )
-			$scope.post.link_url = '';
-
-		///// DEFINE POST DATA /////
-		var post = $scope.post;
-
-		//alert( JSON.stringify( post ) );
-		$log.debug('pwData.pw_save_post : POSTING LINK : ', post);
-
-		///// SAVE VIA AJAX /////
-		$pwData.pw_save_post( post ).then(
-			// Success
-			function(response) {    
-				//alert( "RESPONSE : " + response.data );
-				$log.debug('pwData.pw_save_post : RESPONSE : ', response.data);
-				// VERIFY POST CREATION
-				// If it was created, it's an integer
-				if( response.data === parseInt(response.data) ){
-					// SAVE SUCCESSFUL
-					var post_id = response.data;
-					$scope.status = "success";
-					$scope.mode = "success";
-					$timeout(function() {
-					  $scope.status = "done";
-					}, 2000);
-				}
-				else{
-					// ERROR
-					//alert("Error : " + JSON.stringify(response) );
-					$scope.status = "done";
-				}
-			},
-			// Failure
-			function(response) {
-				//alert('error');
-				$scope.status = "error";
-				$timeout(function() {
-				  $scope.status = "done";
-				  $scope.postLinkForm.$setValidity('busy',true);
-				}, 2000);
-
-			}
-		);
-
-	
-	}
-	/////----- END SAVE POST FUNCTION -----//////
-
-	// ADD ERROR SUPPORT
-
-
-}]);
 
 
 
