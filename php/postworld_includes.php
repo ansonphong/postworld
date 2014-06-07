@@ -274,13 +274,12 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
 			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
 
-
-
 	}
 
-	
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
-	pwSiteGlobals_include();
+	// Dynamically generate javascript file
+	// After all Plugins and Theme Loaded
+	add_action( 'init', 'pwSiteGlobals_include');
 	
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
@@ -401,7 +400,7 @@ function pwGlobals_parse(){
 		$displayed_user_id = $GLOBALS['post']->post_author;
 
 	if ( isset($displayed_user_id) )
-		$displayed_userdata = get_userdata($displayed_user_id);
+		$displayed_userdata = get_userdata( $displayed_user_id );
 
 	$pw_globals['displayed_user'] = array(
 		"user_id" => $displayed_user_id,
@@ -445,9 +444,16 @@ function pwGlobals_parse(){
 	return $pw_globals;
 }
 
-// Init Globals
-global $pw_globals;
-$pw_globals = pwGlobals_parse();
+
+// Parse Globals After all Plugins Loaded
+function parse_postworld_globals(){
+ 	// Init Globals
+	global $pw_globals;
+	$pw_globals = pwGlobals_parse();
+}
+add_action( 'plugins_loaded', 'parse_postworld_globals', 10, 2 );
+
+
 
 
 ?>

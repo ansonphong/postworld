@@ -455,7 +455,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
   |_|                                                      
 
 /*///////// ------- SERVICE : PW USERS ------- /////////*/  
-postworld.service('pwRoleAccess', ['$log', '$window', 'ext', function ($log, $window, $ext) {
+postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $window, $_) {
 	return{
 		setRoleAccess : function($scope){
 			$scope.current_user = $window.pwGlobals.current_user;
@@ -469,15 +469,15 @@ postworld.service('pwRoleAccess', ['$log', '$window', 'ext', function ($log, $wi
 
 			// ESTABLISH ROLE ACCESS
 			// Is the user an editor?
-			( $ext.isInArray( $scope.current_user_role, $scope.role_map.editor ) ) ?
+			( $_.isInArray( $scope.current_user_role, $scope.role_map.editor ) ) ?
 				$scope.roles.editor = true : $scope.roles.editor = false;
 
 			// Is the user an author?
-			( $ext.isInArray( $scope.current_user_role, $scope.role_map.author ) ) ?
+			( $_.isInArray( $scope.current_user_role, $scope.role_map.author ) ) ?
 				$scope.roles.author = true : $scope.roles.author = false;
 
 			// Is the user an contributor?
-			( $ext.isInArray( $scope.current_user_role, $scope.role_map.contributor ) ) ?
+			( $_.isInArray( $scope.current_user_role, $scope.role_map.contributor ) ) ?
 				$scope.roles.contributor = true : $scope.roles.contributor = false ;
 
 		},
@@ -544,7 +544,7 @@ postworld.service('pwEditPostFilters',
 					// If it equals the first value of terms, leave it as is
 					// If it isn't found, then swap order
 					var reorder = true;
-					angular.forEach( tax_terms[taxonomy], function( term_option ){
+					angular.forEach( tax_terms[taxonomy].terms, function( term_option ){
 						// Compare each term option to the selected terms
 						// If they're the same, do not reorder
 						if ( term_option.slug == selected_terms[0] ){
@@ -596,7 +596,7 @@ postworld.service('pwEditPostFilters',
 				return default_format;
 			}
 		},
-		selected_tax_terms: function(tax_terms, tax_input){
+		selected_tax_terms: function( tax_terms , tax_input){
 			///// SELECTED TAXONOMY TERMS /////
 			// • Extracts an object with singular sub-term data
 			//   so that they can be referred to to define subtopics
@@ -608,13 +608,13 @@ postworld.service('pwEditPostFilters',
 
 			// EACH TAXONOMY : Cycle through each taxonomy
 			var selected_tax_terms = {};
-			angular.forEach( tax_terms, function( terms, taxonomy ){
+			angular.forEach( tax_terms, function( tax_obj, taxonomy ){
 				// Setup Object
 				if ( ext.isEmpty( tax_input[taxonomy] ) )
 					tax_input[taxonomy] = [];
 				// SET TERM : Cycle through each term
 				// Set the selected taxonomy terms object
-				angular.forEach( terms, function( term ){
+				angular.forEach( tax_obj.terms, function( term ){
 					// If the term is selected, add it to the selected object
 					if ( term.slug == tax_input[taxonomy][0] ){
 						selected_tax_terms[taxonomy] = term;

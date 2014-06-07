@@ -51,7 +51,7 @@ postworld.directive('ngEnter', function() {
 	  };
   });
 
-///// KEEP DROPDOWN OPEN ON CLICK /////
+///// PREVENT DEFAULT ON CLICK /////
 postworld.directive('preventDefaultClick', function() {
 		return {
 			restrict: 'A',
@@ -59,6 +59,18 @@ postworld.directive('preventDefaultClick', function() {
 				element.bind('click', function (event) {
 					event.stopPropagation();
 					event.preventDefault();
+				});
+			}
+		};
+	});
+
+///// PREVENT DEFAULT ON CLICK /////
+postworld.directive('stopPropagationClick', function() {
+		return {
+			restrict: 'A',
+			link: function (scope, element) {
+				element.bind('click', function (event) {
+					event.stopPropagation();
 				});
 			}
 		};
