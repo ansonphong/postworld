@@ -1,0 +1,22 @@
+<div infinite-scroll-parent>
+  <div
+    infinite-scroll='getNext()'
+    infinite-scroll-disabled='busy'>
+    <div
+      ng-repeat='post in items' class="feed-item">
+      <span
+        feed-item post="post"
+        class="feed-post"
+        feed-id='args.feed_id'></span>
+    </div>
+    <div class="clearfix"></div>
+    <div
+      ng-show='busy'
+      class="text-center">
+      <div
+        class="loading feed">
+        <i class="icon-spinner icon-spin icon-large" style="font-size:48px;"></i>
+      </div>
+    </div>
+  </div>
+</div>

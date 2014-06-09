@@ -9,7 +9,7 @@
 //////////////////// PANEL WIDGET - VIEW ////////////////////*/
 ?>
 
-<div ng-controller="panelWidgetController" ng-init="setPanelID('<?php echo $panel_id; ?>')" ng-cloak>
+<div ng-controller="panelWidgetCtrl" ng-init="setPanelID('<?php echo $panel_id; ?>')" ng-cloak>
 	<div ng-include="panel_url"></div>
 </div>
 

@@ -11,7 +11,7 @@
 
 
 ///// PANEL WIDGET CONTROLLER /////
-postworld.controller('panelWidgetController',
+postworld.controller('panelWidgetCtrl',
     ['$scope','$timeout','pwData', '$compile',
     function($scope, $timeout, $pwData, $compile) {
     
@@ -21,9 +21,12 @@ postworld.controller('panelWidgetController',
     $scope.setPanelID = function(panel_id){
         $scope.panel_id = panel_id;
     }
-    $scope.$on('pwTemplatesLoaded', function(event, data) {
+
+    // Wait for pwData to initialize
+    $timeout( function(){
         $scope.panel_url = $pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
-    });
+        }, 1
+    );
 
 }]);
 

@@ -193,30 +193,30 @@ postworld.directive('loadPanel', function() {
     return {
         restrict: 'EA',
         //replace: true,
-        controller: 'pwLoadPanelController',
+        controller: 'pwLoadPanelCtrl',
         //transclude: true,
+        template: '<div ng-include="templateUrl" class="panel"></div>',
         scope:{
         	// Must use an isolated scope, to allow for using multiple panel directives in the same page
         },
         link: function($scope, element, attributes){
         	$scope.panel_id = attributes.loadPanel;
-        	$scope.panel_grp = 'panels'; // posts, comments, posts
-        	$scope.post_type = '';  // post type only
+        	$scope.panel_grp = 'panels';
         	if (attributes.panelGroup) $scope.panel_grp = attributes.panelGroup; // can be ignored in case of panels, since it is the default
         	if (attributes.postType) $scope.post_type = attributes.postType; // only needed in case of posts
         }
     };
 });
 
-postworld.controller('pwLoadPanelController',
-    function pwLoadPanelController($scope, $timeout, $log, pwData ) {
-    	// TEMP LOADING TEMPLATE
-    	//$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/panels/ajaxloader.html';
-    	$scope.$on('pwTemplatesLoaded', function(event, data) {
-	        //$scope.panel = {};
-	        $scope.templateUrl = pwData.pw_get_template( { subdir: $scope.panel_grp, post_type: $scope.post_type, view: $scope.panel_id } );
-		    $log.debug('setting loadpanel url',$scope.panel_grp,$scope.post_type, $scope.panel_id,$scope.templateUrl);
-	    });
+postworld.controller('pwLoadPanelCtrl',
+    function( $scope, $timeout, $log, pwData ) {
+
+		// Wait for pwData to initialize
+		$timeout( function(){
+			// Load Template URL
+			$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
+			$log.debug('Load Panel :' + $scope.panel_id, $scope.templateUrl );
+		},1 );
 
 	}
 );

@@ -7,17 +7,11 @@ postworld.config(function($locationProvider){
 postworld.directive('liveFeed', function() {
 	return {
 		restrict: 'A',
-		// DO not set url here and in nginclude at the same time, so many errors!
-		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html',
-		// "http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_1.html"
 		replace: true,
 		controller: 'pwFeedController',
-		//template: '<div ng-include src="templateUrl"></div>',		
-       	// template: '<div ng-include src="\'http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html\'"></div>',
        	template: '<div ng-include="templateUrl" class="feed"></div>',
- 		// template: '<div ng-include="templateUrl"></div>',
- 		// templateUrl: 'http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html',
 		//templateUrl: '{{templateUrl}}',
+		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
 		scope : {
 		},
 	};
@@ -26,10 +20,10 @@ postworld.directive('liveFeed', function() {
 postworld.directive('loadFeed', function() {
 	return {
 		restrict: 'A',
-		// DO not set url here and in nginclude at the same time, so many errors!
-		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
 		replace: true,
        	template: '<div ng-include="templateUrl" class="feed"></div>',
+       	// DO not set url here and in nginclude at the same time, so many errors!
+		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
 		controller: 'pwFeedController',
 		scope : {
 			// templateUrl: "=",			
@@ -43,9 +37,9 @@ postworld.directive('loadPost', function() {
 		// DO not set url here and in nginclude at the same time, so many errors!
 		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
 		replace: true,
+		template: '<div ng-include="templateUrl" class="post"></div>',
 		controller: 'pwLoadPostController',
 		scope : {
-			
 		}
 	};
 });
@@ -162,7 +156,7 @@ postworld.controller('pwFeedController',
 			   // Get Feed Template from feed_settings if it exists, otherwise get it from default path
 			   if (pwData.feed_settings[$scope.feed].feed_template) {
 					var template = pwData.feed_settings[$scope.feed].feed_template;			   	
-					$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', post_type:'panel', view: template } );
+					$scope.templateUrl = pwData.pw_get_template( { subdir: 'feeds', view: template } );
 					//$log.debug('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
 			   }
 			   else {
