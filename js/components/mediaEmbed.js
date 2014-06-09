@@ -8,34 +8,14 @@
 
 ////////// ------------ MEDIA MODAL ------------ //////////*/                                                         
 
-var mediaModalCtrl = function ($scope, $modal, $log, $window, pwData) {
 
-  $scope.launch = function (post) {
-    var modalInstance = $modal.open({
-      templateUrl: pwData.pw_get_template( { subdir: 'panels', view: 'media_modal' } ),
-      controller: MediaModalInstanceCtrl,
-      windowClass: 'media_modal',
-      resolve: {
-        post: function(){
-            return post;
-        }
-      }
-    });
-    modalInstance.result.then(function (selectedItem) {
-        //$scope.post_title = post_title;
-    }, function () {
-        // WHEN CLOSE MODAL
-        $log.debug('Modal dismissed at: ' + new Date());
-    });
-  };
-
-};
+postworld.controller('mediaModalInstanceCtrl',
+    [ '$scope', '$sce', '$modalInstance', 'meta', 'pwData',
+    function( $scope, $sce, $modalInstance, meta, pwData ) { 
 
 
-var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwData) {
-    
     // Import the passed post object into the Modal Scope
-    $scope.post = post;
+    $scope.post = meta.post;
 
     /*
     $scope.ok = function () {
@@ -46,7 +26,7 @@ var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwDat
     $scope.status = "loading";
 
     $scope.oEmbed = '';
-    var link_url = post.link_url;
+    var link_url = $scope.post.link_url;
     var args = { "link_url": link_url };
 
     // MEDIA GET
@@ -66,17 +46,9 @@ var MediaModalInstanceCtrl = function ($scope, $sce, $modalInstance, post, pwDat
     $scope.close = function () {
         $modalInstance.dismiss('close');
     };
-};
-
-///// DIRECTIVE /////
 
 
-postworld.directive( 'launchMediaModal', ['$sce',function($scope, $sce){
-    return { 
-        controller: 'mediaModalCtrl'
-    };
 }]);
-
 
 
 

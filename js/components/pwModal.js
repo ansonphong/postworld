@@ -57,7 +57,7 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 				case "media":
 					// TODO : Add support to detect post types / format and check for availability of the modal template					
 					templateName = "modal-media";
-					controller = "pwModalInstanceCtrl";
+					controller = "mediaModalInstanceCtrl";
 					windowClass = "modal-media"; 
 				break;
 				///// DEFAULT /////
