@@ -84,6 +84,10 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'DeepMerge',
 			WP_PLUGIN_URL.'/postworld/lib/deepmerge/deepmerge.js');
 
+		// MOMENT.JS
+		wp_enqueue_script( 'Moment-JS',
+			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment.min.js');
+
 
 		///// THIRD PARTY LIBRARIES /////
 
@@ -98,7 +102,7 @@ function postworld_includes( $args ){
 		}
 
 		// CREATE.JS
-		// Development Only
+		// Development Only ( Not in Grunt File / Deploy Version )
 		wp_enqueue_script( 'CreateJS-Easel',
 			WP_PLUGIN_URL.'/postworld/lib/create.js/easeljs-0.7.0.min.js');
 		wp_enqueue_script( 'CreateJS-Tween',
@@ -162,9 +166,17 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Timer',
 			plugins_url().'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
 
+		// ANGULAR : TIMER
+		wp_enqueue_script( 'AngularJS-Moment',
+			plugins_url().'/postworld/lib/angular-moment/angular-moment.min.js', $angularDep );
+
 		// ANGULAR : PARALLAX
 		wp_enqueue_script( 'angularJS-Parallax',
 			plugins_url().'/postworld/lib/angular-parallax/angular-parallax.js', $angularDep );
+
+		// ANGULAR : ELASTIC
+		wp_enqueue_script( 'angularJS-Elastic',
+			plugins_url().'/postworld/lib/angular-elastic/angular-elastic.js', $angularDep );
 
 
 		/////// POSTWORLD APP /////	

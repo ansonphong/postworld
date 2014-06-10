@@ -25,6 +25,8 @@ module.exports = function(grunt) {
             // Deep Merge
             'lib/deepmerge/deepmerge.js',
 
+            // Moment.js
+            'lib/moment.js/moment.min.js',
 
             ///// BOOTSTRAP /////
           	// Bootstrap JS
@@ -50,9 +52,13 @@ module.exports = function(grunt) {
             // Angular Parallax
             'lib/angular-parallax/angular-parallax.js',
 
+            // Angular Moment
+            'lib/angular-moment/angular-moment.min.js',
+
+            // Angular Elastic
+            'lib/angular-elastic/angular-elastic.js',
 
             ///// ANGULAR NATIVE EXTENSIONS /////
-
             // Angular Extensions
           	'lib/'+angular_version+'/angular-sanitize.min.js',
           	'lib/'+angular_version+'/angular-route.min.js',

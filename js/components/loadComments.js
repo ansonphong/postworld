@@ -82,12 +82,11 @@ postworld.directive('ngShowMore', function ($timeout,$animate) {
 postworld.directive('loadComments', function() {
 		return {
 				restrict: 'A',
-				// DO not set url here and in nginclude at the same time, so many errors!
-				// templateUrl: jsVars.pluginurl+'/postworld/templates/comments/comments-default.html',
 				replace: true,
 				controller: 'pwTreeController',
+				template: '<div ng-include="templateUrl" class="comments"></div>',
 				scope: {
-					post : '=',
+					postId : '=',
 				}
 		};
 });
@@ -111,11 +110,12 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 		$scope.feed = $attrs.loadComments;
 		$scope.pluginUrl = jsVars.pluginurl;
 		$scope.templateLoaded = false;
-		$log.debug('post is',$scope.post);
+		$log.debug('Comments post ID is:', $scope.postId);
 		var settings = pwCommentsService.comments_settings[$scope.feed];
 
-		if ($scope.post) {
-			settings.query.post_id = $scope.post.ID; // setting the post id here    	
+		// Set the Post ID
+		if ( $scope.postId ) {
+			settings.query.post_id = $scope.postId; // setting the post id here    	
 		}
 
 		$scope.minPoints = settings.min_points;
@@ -127,20 +127,21 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 		 
 		//pwData.templates.promise.then(function(value) {
 			if (settings.view) {
-				var template = 'comment-'+settings.view;
-				$scope.templateUrl = pwData.pw_get_template( { subdir: 'comments', post_type: 'comment', view: template } );
+				var template = 'comments-'+settings.view;
+				$scope.templateUrl = pwData.pw_get_template( { subdir: 'comments', view: template } );
 			$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
 			}
 			else {
 				$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
 				// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 			}
-			return;
+			
 		//});
 		
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;
+
 			pwCommentsService.pw_get_comments($scope.feed).then(function(value) {
 				$log.debug('Got Comments: ', value.data );
 				$scope.treedata = {children: value.data};
@@ -334,55 +335,56 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 	};
 	
 	$scope.replyComment = function(child) {
-			// Disable reply button, text editing, cancelling until we are back
-			child.replyInProgress = true;
+
+		// Disable reply button, text editing, cancelling until we are back
+		child.replyInProgress = true;
 		child.replyError = "";
-			// trigger call to send reply
-			var args = {};
-			args.comment_data = {};
-			args.comment_data.comment_content = child.replyText;
-			// we can get the post id from the child comment post id too, however, when there is no parent, we cannot get it from here. so we can get it always directly from settings.
-			args.comment_data.comment_post_ID = settings.query.post_id; 
-			args.comment_data.comment_date = new Date(); // should we do it here? security?
-			// args.comment_data.comment_date_gmt = ;
-			// args.comment_data.comment_type = 'comment';  	// in documentation, this is not added in wordpress insert/add functions	  			
-			if (child == $scope.treedata) {
-				args.comment_data.comment_parent = 0;  			
-			} else {
-				args.comment_data.comment_parent = child.comment_ID;  			
-			}
-			
-			args.return_value = 'data';  		
-			pwCommentsService.pw_save_comment(args).then(
-				function(response) {
-					if ((response.status==200)&&(response.data)) {
-						// reset form and hide it
-						child.replyInProgress = false;
-						child.replyText = "";
-						child.replyBox = false;
-						child.replyBoxSelected = "";
-						child.replyError = "";
-						console.log('added',response);
-						// show the new comment
-						$scope.addChild(child, response.data);
-					} else {
-						// reset the form
-						child.replyInProgress = false;
-						// TODO add more descriptive error
-						child.replyError = "Error adding new comment";
-						// show the error
-						console.log('error adding new comment',response);  					
-					}
-				},
-				function(response) {
+		// trigger call to send reply
+		var args = {};
+		args.comment_data = {};
+		args.comment_data.comment_content = child.replyText;
+		// we can get the post id from the child comment post id too, however, when there is no parent, we cannot get it from here. so we can get it always directly from settings.
+		args.comment_data.comment_post_ID = settings.query.post_id; 
+		args.comment_data.comment_date = new Date(); // should we do it here? security?
+		// args.comment_data.comment_date_gmt = ;
+		// args.comment_data.comment_type = 'comment';  	// in documentation, this is not added in wordpress insert/add functions	  			
+		if (child == $scope.treedata) {
+			args.comment_data.comment_parent = 0;  			
+		} else {
+			args.comment_data.comment_parent = child.comment_ID;  			
+		}
+		
+		args.return_value = 'data';  		
+		pwCommentsService.pw_save_comment(args).then(
+			function(response) {
+				if ((response.status==200)&&(response.data)) {
+					// reset form and hide it
+					child.replyInProgress = false;
+					child.replyText = "";
+					child.replyBox = false;
+					child.replyBoxSelected = "";
+					child.replyError = "";
+					console.log('added',response);
+					// show the new comment
+					$scope.addChild(child, response.data);
+				} else {
 					// reset the form
 					child.replyInProgress = false;
 					// TODO add more descriptive error
 					child.replyError = "Error adding new comment";
 					// show the error
-					console.log('error adding new comment',response);
+					console.log('error adding new comment',response);  					
 				}
-			);
+			},
+			function(response) {
+				// reset the form
+				child.replyInProgress = false;
+				// TODO add more descriptive error
+				child.replyError = "Error adding new comment";
+				// show the error
+				console.log('error adding new comment',response);
+			}
+		);
 	};
 	
 

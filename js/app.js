@@ -26,12 +26,12 @@ var depInject = [
     'infinite-scroll', 
     'ui.bootstrap',
     'monospaced.elastic',
-    'TimeAgoFilter',
     'TruncateFilter',
     'UserValidation',
     'pwFilters',
     'timer',
     'angular-parallax',
+    'angularMoment',
     ];
 
 
@@ -194,6 +194,13 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
 
 });
    
+/*
+postworld.run(function($rootScope, $templateCache) {
+   $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
+});
+*/
 
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
