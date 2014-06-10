@@ -37,8 +37,7 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 		var post_type = meta.post_type;
 		var view = meta.view;
 
-		// TODO can we make this lookup dynamic?
-		$log.debug('getTemplate : META : ',meta);
+		//$log.debug('getTemplate : META : ',meta);
 
 		switch (subdir) {
 			case 'posts':

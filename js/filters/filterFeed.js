@@ -5,6 +5,7 @@ postworld.directive('filterFeed', function($log, pwData) {
         restrict: 'EA',
         replace: true,
         controller: 'pwFilterFeedController',
+        template: '<div ng-include="templateUrl" class="filter-feed"></div>',
         // Must use an isolated scope, to allow for using multiple panel directives in the same page
         scope: {
         	feedId : '=',

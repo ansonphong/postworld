@@ -80,15 +80,15 @@ postworld.directive('ngShowMore', function ($timeout,$animate) {
 
 
 postworld.directive('loadComments', function() {
-		return {
-				restrict: 'A',
-				replace: true,
-				controller: 'pwTreeController',
-				template: '<div ng-include="templateUrl" class="comments"></div>',
-				scope: {
-					postId : '=',
-				}
-		};
+	return {
+		restrict: 'A',
+		replace: true,
+		controller: 'pwTreeController',
+		template: '<div ng-include="templateUrl" class="comments"></div>',
+		scope: {
+			postId : '=',
+		}
+	};
 });
 
 postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs,pwData,$log, $window) {
