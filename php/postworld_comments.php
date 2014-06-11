@@ -254,6 +254,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 	$pw_comment_fields = array(
 		'comment_points',
 		'viewer_points',
+		'time_ago',
 		);
 
 	// POSTWORLD PW_GET_USERDATA() FIELD MODEL
@@ -318,13 +319,18 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		///// POSTWORLD COMMENT FIELDS /////
 		foreach ($fields as $field) {
 			if( in_array( $field, $pw_comment_fields ) ){
+
 				if( $field == 'comment_points' ){
 					$comment_data['comment_points'] = get_comment_points( $comment['comment_ID'] );
 				}
 				else if( $field == 'viewer_points' ){
 					$comment_data[$field] = has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
 				}
-			}
+
+				// Post Time Ago
+				else if ( in_array('time_ago', $fields) )
+					$comment_data['time_ago'] = time_ago( strtotime ( $comment_data['comment_date_gmt'] ) );
+				}
 		}
 
 		///// FILTER CONTENT /////

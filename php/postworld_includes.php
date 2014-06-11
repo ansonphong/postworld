@@ -73,7 +73,6 @@ function postworld_includes( $args ){
 	///// DEVELOPMENT FILE INCLUDES /////
 	else if ( $mode == 'dev' ){
 		
-
 		///// JAVASCRIPT LIBRARIES /////
 
 		// UNDERSCORE JS
@@ -84,10 +83,17 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'DeepMerge',
 			WP_PLUGIN_URL.'/postworld/lib/deepmerge/deepmerge.js');
 
+		/*
 		// MOMENT.JS
 		wp_enqueue_script( 'Moment-JS',
 			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment.min.js');
-
+		// MOMENT-TIMEZONE.JS
+		wp_enqueue_script( 'Moment-Timezone-JS',
+			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment-timezone.min.js');
+		// MOMENT-TIMEZONE DATA.JS
+		wp_enqueue_script( 'Moment-Timezone-Data-JS',
+			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment-timezone-data.js');
+		*/
 
 		///// THIRD PARTY LIBRARIES /////
 
@@ -185,14 +191,11 @@ function postworld_includes( $args ){
 
 
 		///// CREATE.JS /////
-		//if( in_array('create.js', $dep) ){
-			
+		//if( in_array('create.js', $dep) ){	
 		// LOCAL COMPONENT
 		wp_enqueue_script( 'Postworld-FlashCanvas',
 			WP_PLUGIN_URL.'/postworld/js/components/flashCanvas.js', $angularDep);
 		//}
-
-
 
 
 		// COMPONENTS

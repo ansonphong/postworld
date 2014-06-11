@@ -31,7 +31,7 @@ var depInject = [
     'pwFilters',
     'timer',
     'angular-parallax',
-    'angularMoment',
+    // 'angularMoment',
     ];
 
 
@@ -194,13 +194,7 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
 
 });
    
-/*
-postworld.run(function($rootScope, $templateCache) {
-   $rootScope.$on('$viewContentLoaded', function() {
-      $templateCache.removeAll();
-   });
-});
-*/
+
 
 /*
      __     __  ____    _    _   _ ____  ____   _____  __     __     __
@@ -210,3 +204,18 @@ postworld.run(function($rootScope, $templateCache) {
  /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/    
 /////////////////////////////////////////////////////////////////*/
 
+
+
+angular.module('postworld').constant('angularMomentConfig', {
+    //preprocess: 'unix', // optional
+    timezone: 'America/Los_Angeles' // optional
+});
+
+
+/*
+postworld.run(function($rootScope, $templateCache) {
+   $rootScope.$on('$viewContentLoaded', function() {
+      $templateCache.removeAll();
+   });
+});
+*/
