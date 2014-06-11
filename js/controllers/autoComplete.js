@@ -159,10 +159,16 @@ function tagsAutocomplete($scope, $filter, pwData) {
 		});
 	}
 
-	$scope.removeTag = function(removeSlug){
-		$scope.tags_input_obj = $filter('filter')($scope.tags_input_obj, function(item) {
-			return !(item.slug == removeSlug);
-		 });
+	$scope.removeTag = function( tag ){
+		// Define tags object
+		var tags = $scope.tags_input_obj;
+
+		// Find the original tag object with the same matching slug
+		var removeTag = _.findWhere( tags, { slug: tag.slug } );
+
+		// Remove it from the tags object
+		$scope.tags_input_obj = _.without( tags, removeTag );
+
 	}
 
 	$scope.newTag = function(){
@@ -173,6 +179,7 @@ function tagsAutocomplete($scope, $filter, pwData) {
 
 		$scope.tags_input_obj.push(newTag);
 		$scope.queryTag = "";
+		
 	}
 
 	// Watch on the object with input tags

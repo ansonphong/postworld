@@ -313,9 +313,6 @@ postworld.controller('adminPostDropdown',
     // Run the function
     $scope.initMenu();
     
-
-
-    
     $scope.getEditPostPageUrl = function(){
 
         // Define Post Type
@@ -329,7 +326,7 @@ postworld.controller('adminPostDropdown',
         var url = ( $ext.objExists( edit_post, post_type + '.url' ) ) ?
             edit_post[post_type].url :
             // If not, use the default
-            edit_post['default'].url;
+            edit_post['post'].url;
 
         return url;
 

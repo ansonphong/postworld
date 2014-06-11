@@ -176,17 +176,23 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if( in_array($key, $fields) ){
 			$post_data[$key] = $value;
 
+			// Condition Post Content
 			if ( $key == 'post_content' && $mode == 'view' ){
 				///// CONTENT FILTERING /////
 
-				// Apply AutoP
-				$post_data[$key] = wpautop($post_data[$key]);
-				//$post_data[$key] = apply_filters('the_content', $post_data[$key]);
-				
 				// oEmbed URLs
 				$post_data[$key] = pw_embed_content($post_data[$key]);
+
 				// Apply Shortcodes
-				$post_data[$key] = do_shortcode($post_data[$key]);
+				//$post_data[$key] = do_shortcode($post_data[$key]);
+
+				// Apply AutoP
+				//$post_data[$key] = wpautop($post_data[$key]);
+
+				// Apply all content filters
+				$post_data[$key] = apply_filters('the_content', $post_data[$key]);
+
+
 			}
 			
 		}

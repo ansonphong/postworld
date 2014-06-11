@@ -79,11 +79,14 @@ postworld.controller('editPost',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit, $_ ) {
 
-
 	// Set the default mode
 	if( _.isUndefined( $scope.mode ) )
-		$scope.mode = 'new';
+		$scope.mode = 'default';
 
+	// Define Global Edit Post Defaults
+	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
+	var editPostGlobals = $window.pwSiteGlobals.edit_post;
+	
 	// If No Post Object exists, create one
 	$timeout( function(){
 		if( _.isUndefined( $scope.post ) ){
@@ -128,9 +131,6 @@ postworld.controller('editPost',
 
 		//post_type, post_format
 		$scope.status = "loading";
-
-		var post_defaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
-		var editPostGlobals = $window.pwSiteGlobals.edit_post;
 
 		///// DETECT POST TYPE /////
 		// Check for Post Type Defined by the 'input' Post Object
@@ -180,10 +180,10 @@ postworld.controller('editPost',
 			post_title : "",
 			post_name : "",
 			//post_type : $scope.initEditPost.post_type,
-			post_status : post_defaults.post_status,
-			post_class : post_defaults.post_class,
+			post_status : postDefaults.post_status,
+			post_class : postDefaults.post_class,
 			link_url : "",
-			link_format : post_defaults.link_format,
+			link_format : postDefaults.link_format,
 			post_date_gmt:"",
 			post_permalink : "",
 			tax_input : $pwPostOptions.pwGetTaxInputModel(),
@@ -303,60 +303,77 @@ postworld.controller('editPost',
 	}
 	
 	///// WATCH : ROUTE /////
-	//$timeout( function(){
-		$scope.$on(
-			"$routeChangeSuccess",
-			function( $currentRoute, $previousRoute ){
 
-				if( $scope.editPostConfig.routing == false )
-					return false;
+	$scope.$on(
+		"$routeChangeSuccess",
+		function( $currentRoute, $previousRoute ){
 
-				//alert( JSON.stringify( $currentRoute ) );
-				///// ROUTE : NEW POST /////
-				if ( $route.current.action == "new_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
-					// SWITCH FROM MODE : EDIT > NEW
-					// If we're coming to 'new' mode from 'edit' mode
-					if($scope.mode == "edit"){
-						// Clear post Data
-						$scope.newPost();
-					}
+			// TEMP : For DEV
+			$scope.routeAction = $route.current.action;
 
-					// Get the post type from route
-					var post_type = ($routeParams.post_type || "");
+			// Stop here if routing is disabled
+			if( $scope.editPostConfig.routing == false )
+				return false;
 
+			//alert( JSON.stringify( $currentRoute ) );
+
+			///// ROUTE : NEW POST /////
+			if ( $route.current.action == "new_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
+				// SWITCH FROM MODE : EDIT > NEW
+				// If we're coming to 'new' mode from 'edit' mode
+				if($scope.mode == "edit"){
+					// Clear post Data
+					$scope.newPost();
+				}
+
+				// Get the post type from route
+				var post_type = ($routeParams.post_type || "");
+
+				// Set Default Post Type
+				if( post_type == "" ){
+					
 					// Get the post type from the directive attributes
-					if( post_type == "" )
-						if( !_.isUndefined( $scope.initEditPost.post_type ) )
-							post_type = $scope.initEditPost.post_type;
+					if( !_.isUndefined( $scope.initEditPost.post_type ) )
+						post_type = $scope.initEditPost.post_type;
 
-					/* OBSOLETE
-					// If Post Type has been defined
-					if ( post_type != "" ){
-						// If the post object is not defined, set it
-						if( _.isUndefined($scope.post) )
-							$scope.post = {};
-						// Set the post type
-						$scope.post.post_type = post_type;
+					// Get the post type from the default post definition
+					if( !_.isUndefined( postDefaults.post_type ) ){
+						post_type = postDefaults.post_type;
+						alert( post_type );
 					}
-					*/
 
-					$scope.setPostObject( { 'post_type':post_type } );
+				}
 
-					// Set the status
-					$scope.status = "done";
+				// If Post Type has been defined in the route, update the post model
+				if ( post_type != "" ){
+					// If the post object is not defined, set it
+					if( _.isUndefined($scope.post) )
+						$scope.post = {};
+					// Set the post type
+					$scope.post.post_type = post_type;
 				}
-				///// ROUTE : EDIT POST /////
-				else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
-					// Load the specified post data
-					$scope.loadEditPost();
-				}
-				///// ROUTE : SET DEFAULT /////
-				else if ( $route.current.action == "default"  ){
-					$location.path('/new/' + post_defaults.post_type );
-				}
+
+				// Set a new post object
+				$scope.setPostObject( { 'post_type':post_type } );
+
+				// Set the status
+				$scope.status = "done";
+				// Set the mode
+				$scope.mode = "new";
 			}
-		);
-	//}, 1 );
+			///// ROUTE : EDIT POST /////
+			else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
+				// Load the specified post data
+				$scope.loadEditPost();
+				$mode = "edit";
+			}
+			///// ROUTE : SET DEFAULT /////
+			else if ( $route.current.action == "default"  ){
+				$location.path('/new/' + postDefaults.post_type );
+			}
+		}
+	);
+
 
 	///// QUICK EDIT : LOAD POST DATA /////
 	$scope.$on('loadPostData', function(event, post_id) {
@@ -447,8 +464,11 @@ postworld.controller('editPost',
 				$scope.$emit('postLoaded', get_post);
 
 				// Set the Route
-				if( $scope.editPostConfig.routing == true )
-					$location.path('/edit/' + get_post.ID);
+				//$timeout( function(){
+					if( $scope.editPostConfig.routing == true )
+						$location.path('/edit/' + get_post.ID);
+				//}, 10 );
+				
 
 				// SET DATA INTO THE SCOPE
 				$scope.post = get_post;
@@ -509,9 +529,9 @@ postworld.controller('editPost',
 					}, 4000);
 
 					// RELOAD POST
-					if( $scope.editPostConfig.autoReload )
+					if( $scope.editPostConfig.autoReload == true )
 						$scope.loadEditPost( post_id );
-
+					
 					// ACTION BROADCAST
 					// For Quick Edit Mode - broadcast to children successful update
 					$rootScope.$broadcast('postUpdated', post_id);
@@ -523,7 +543,7 @@ postworld.controller('editPost',
 					// EVALUATE CALLBACK
 					if( !_.isUndefined( $scope.initEditPost['saveSuccessCallback'] ) )
 						$scope.$eval( $scope.initEditPost['saveSuccessCallback'] );
-
+					
 				}
 				else{
 					// ERROR
@@ -632,33 +652,42 @@ postworld.controller('editPost',
 		
 		});
 
-	// WATCH : POST TYPE
-	$scope.$watch( "post.post_type",
-		function (){
+	
 
-			// Check if Object Exists
-			if( !$ext.objExists( $scope, 'post.post_type' ) )
-				return false;
+	// Wait for the controller to initialize
+	//$timeout( function(){
+		// WATCH : POST TYPE
+		$scope.$watch( "post.post_type",
+			function (){
 
-			// ROUTE CHANGE
-			if( $scope.mode == "new" && $scope.editPostConfig.routing == true )
-				$location.path('/new/' + $scope.post.post_type);
+				// Check if Post Type Exists, if not stop here
+				if( !$_.objExists( $scope, 'post.post_type' ) )
+					return false;
 
-			// BROADCAST CHANGE TO CHILD CONTROLLERS NODES
-			$rootScope.$broadcast('changePostType', $scope.post.post_type );
- 
-			// POST STATUS OPTIONS
-			// Re-evaluate available post_status options on post_type switch
-			$scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post.post_type );
-			
-			// SET DEFAULT POST STATUS
-			if ( $scope.post.post_status == null || $scope.post.post_status == '' )
-				angular.forEach( $scope.post_status_options, function(value, key){
-					//return key;
-					$scope.post.post_status = key;
-				});
+				// ROUTE CHANGE
+				if( $scope.mode == "new" && $scope.editPostConfig.routing == true ){
+					//alert( "MODE:" + $scope.mode );
+					$location.path('/new/' + $scope.post.post_type);
+				}
 
-		}, 1 );
+				// BROADCAST CHANGE TO CHILD CONTROLLERS NODES
+				$rootScope.$broadcast('changePostType', $scope.post.post_type );
+	 
+				// POST STATUS OPTIONS
+				// Re-evaluate available post_status options on post_type switch
+				$scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post.post_type );
+				
+				// SET DEFAULT POST STATUS
+				if ( $scope.post.post_status == null || $scope.post.post_status == '' )
+					angular.forEach( $scope.post_status_options, function(value, key){
+						//return key;
+						$scope.post.post_status = key;
+					});
+
+			}, 1 );
+
+	//}, 1 );
+
 
 	////////// FEATURED IMAGE //////////
 	// Media Upload Window
