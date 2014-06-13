@@ -83,7 +83,7 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'DeepMerge',
 			WP_PLUGIN_URL.'/postworld/lib/deepmerge/deepmerge.js');
 
-		/*
+		
 		// MOMENT.JS
 		wp_enqueue_script( 'Moment-JS',
 			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment.min.js');
@@ -93,7 +93,7 @@ function postworld_includes( $args ){
 		// MOMENT-TIMEZONE DATA.JS
 		wp_enqueue_script( 'Moment-Timezone-Data-JS',
 			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment-timezone-data.js');
-		*/
+		
 
 		///// THIRD PARTY LIBRARIES /////
 

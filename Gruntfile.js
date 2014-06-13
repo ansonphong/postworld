@@ -25,14 +25,12 @@ module.exports = function(grunt) {
             // Deep Merge
             'lib/deepmerge/deepmerge.js',
 
-            /*
             // Moment.js
             'lib/moment.js/moment.min.js',
             // Moment-Timezone.js
             'lib/moment.js/moment-timezone.min.js',
             // Moment-Timezone Data.js
             'lib/moment.js/moment-timezone-data.js',
-            */
 
             ///// BOOTSTRAP /////
           	// Bootstrap JS

@@ -37,8 +37,8 @@ postworld.controller('postController',
     // RUN CUSTOM POST FUNCTIONS
     // This function can be added to the $window object
     // For performing theme-specific per-post operations
-    if( typeof $window.pw_post_functions === "function" )
-        $window.pw_post_functions($scope);
+    if( typeof $window.pwPostFunctions === "function" )
+        $window.pwPostFunctions( $scope );
 
     // Parse known JSON Fields from strings into JSON
     //$scope.post = pwEditPostFilters.parseKnownJsonFields( $scope.post );
@@ -122,14 +122,11 @@ postworld.controller('postController',
 
     }
 
-    
-
     ///// IMAGE FUNCTIONS /////
     $scope.backgroundImage = function( imageUrl, properties ){
 
         // Set the Image URL
         //var imageUrl = $scope.post.image[imageHandle].url;
-
         var style = { 'background-image': "url(" + imageUrl + ")" };
 
         // Add additional properties

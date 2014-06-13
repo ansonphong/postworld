@@ -31,7 +31,7 @@ var depInject = [
 	'pwFilters',
 	'timer',
 	'angular-parallax',
-	// 'angularMoment',
+	'angularMoment',
 	];
 
 
@@ -212,8 +212,8 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
 
 
 angular.module('postworld').constant('angularMomentConfig', {
-	//preprocess: 'unix', // optional
-	timezone: 'America/Los_Angeles' // optional
+	preprocess: 'unix', 				// optional
+	//timezone: 'America/Los_Angeles' 	// optional
 });
 
 

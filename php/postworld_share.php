@@ -111,15 +111,27 @@ function add_share($user_id,$post_id,$post_author,$ips_list,$last_time){
 	$wpdb->query($query);
 	
 }
+
+function pw_process_share_row( $row ){
+
+	// Convert the "YYYY:MM:DD HH:MM:SS" timestamp to UNIX timestamp
+	if( isset( $row->last_time ) )
+		$row->last_timestamp = (int) strtotime( $row->last_time );
+
+	return $row;
+
+}
+
 function get_share($user_id,$post_id){
 	global $wpdb;	
 	$wpdb ->show_errors();
 	$query = "select * from $wpdb->pw_prefix"."shares where post_id=$post_id and user_id=$user_id";
 	$row = $wpdb->get_row($query);
 	
+	$row = pw_process_share_row( $row );
+
 	return $row;
 }
-
 
 
 function does_user_exist($user_id){
@@ -153,14 +165,16 @@ function user_share_report_outgoing ( $user_id ){
 	
 	array(
 	    array(
-	        'post_id' => 8723,
-	        'shares' => 385,
-	        'last_time' => {{integer}}
+	        'post_id' 			=> 8723,
+	        'shares' 			=> 385,
+	        'last_time' 		=> {{string}},
+	        'last_timestamp'	=> {{ integer }}
 	        ),
 	    array(
-	        'post_id' => 3463,
-	        'shares' => 234,
-	        'last_time' => {{integer}}
+	        'post_id' 			=> 3463,
+	        'shares' 			=> 234,
+	        'last_time' 		=> {{string}},
+	        'last_timestamp'	=> {{ integer }}
 	        ),
 	    ...
 	
@@ -175,7 +189,7 @@ function user_share_report_outgoing ( $user_id ){
 	$output = array();
 	if($results){
 		foreach ($results as $row ) {
-			$share_data = array('post_id'=>$row->post_id, 'shares'=>$row->shares, 'last_time'=>$row->last_time);
+			$share_data = (array) pw_process_share_row( $row );
 			$output[]= $share_data;
 		}
 	}
@@ -299,24 +313,23 @@ function user_share_report_incoming ( $user_id ){
 	$output = array();
 	if($results){
 		foreach ($results as $row ) {
-			
 			$query="select * from $wpdb->pw_prefix"."shares where post_id=".$row->post_id;
 			$posts_shares_by_id=$wpdb->get_results($query); 
-			//print_r($posts_shares_by_id);
 			$generalData = array('post_id'=>$row->post_id,'total_shares'=>$row->total_shares);
-			$generalData['user_shares']=array();	
+			$generalData['user_shares']=array();
+
 			foreach ($posts_shares_by_id as $post_share) {
-				$post_share_data = array('user_id'=>$post_share->user_id,
-										'shares'=>$post_share->shares,
-										'last_time'=>$post_share->last_time
-										);
+				$post_share_data = (array) pw_process_share_row( $post_share );
 				$generalData['user_shares'][]=$post_share_data;
 			}
+
 			$output[]=$generalData;
+
 		}
 		
 	}
 	return $output;
+	
 }
 
 function post_share_report ( $post_id ){

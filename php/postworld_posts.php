@@ -97,10 +97,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_status',
 		'post_date',
 		'post_date_gmt',
+		'post_timestamp',
 		'comment_count',
 		'link_url',
-		'image(thumbnail)',
-		//'image(medium)',
 		'image(all)',
 		'post_points',
 		'edit_post_link',
@@ -191,7 +190,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 				// Apply all content filters
 				$post_data[$key] = apply_filters('the_content', $post_data[$key]);
-
 
 			}
 			
