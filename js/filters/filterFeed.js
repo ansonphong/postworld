@@ -199,6 +199,8 @@ postworld.directive('loadPanel', function() {
         template: '<div ng-include="templateUrl" class="panel"></div>',
         scope:{
         	// Must use an isolated scope, to allow for using multiple panel directives in the same page
+        	panelMeta:"=",
+        	panelMetaJson:"@",
         },
         link: function($scope, element, attributes){
         	$scope.panel_id = attributes.loadPanel;
@@ -218,6 +220,7 @@ postworld.controller('pwLoadPanelCtrl',
 			$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
 			$log.debug('Load Panel :' + $scope.panel_id, $scope.templateUrl );
 		},1 );
+
 
 	}
 );

@@ -685,34 +685,32 @@ feed_settings['feed_id'] = {
 #### Description:
 - Loads a panel by __panel_id__
 
-####Process:
+#### Attributes
 
-__PHP / AJAX :__  
-- Run `pw_get_templates( panel_id )` PHP method via AJAX.  
-  __returns__ : 
-``` javascript
-{ panel_id : "template_url.html" }
-```
+_load-panel_ : *string*
+- The panel ID of the panel to load
+- Panel ID coorosponds with the file name with `.html` extension, found in the `templates/panels`. ie. for  `templates/panels/myPanel.html` the ID is simply `myPanel`
 
-- Populate `templates.panels[feed_id]` JS Object with data object
+_panel-meta_ : *Angular Expression* (optional)
+- Input an expression which is passed into the isolated scope of the panel as `$scope.panelMeta`
 
-__JAVASCRIPT :__  
-- Append and compile inner __ng-include__ directive like:
-
-``` html
-<div ng-include="template_url.html" class="inner"></div>
-```
-
-__return__ : *scope*
-
-#### Usage : Basic
+#### Usage : With HTML Attributes
 
 ```html
-<div load-panel="panel_id"></div> 
-```
-- Designer can optionally add a custom __ng-controller__ to the html here.
+<div
+  load-panel="myPanel"
+  panel-meta="example.myPanelMeta"></div> 
 
-#### Usage : With Parameters
+~OR~
+
+<div
+  load-panel="myPanel"
+  panel-meta="{ key: 'value' }"></div> 
+```
+
+- Developer can optionally add a custom __ng-controller__ to the html here.
+
+#### Usage : With Standard Javascript Parameters
 
 __load_panel__ : *object*
 - Default : *null*
