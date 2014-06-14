@@ -137,6 +137,9 @@ include 'php/postworld_meta.php';
 /////////////// INCLUDES ////////////////
 include 'php/postworld_includes.php';
 
+/////////////// UPDATE / MIGRATE ////////////////
+include 'php/postworld_update.php';
+
 
 //To get user id from wordpress
 

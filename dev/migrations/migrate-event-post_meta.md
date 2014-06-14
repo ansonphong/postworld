@@ -1,5 +1,6 @@
 # Migrate Event Data Model
-- Primary use-case Reality Sandwich
+- Primary use-case:
+	+ _Reality Sandwich_
 
 
 ## Old Model
@@ -55,6 +56,7 @@ post.post_meta : {
 	+ If they exist, load them and convert from JSON, create new empty objects
 	+ Check for each old model field in meta data
 	+ If it exists, 1. move it into new model, 2. delete the old post meta entry
+	+ Save UNIX entries in wp_postworld_post_meta -> event_start / event_end
 	+ Save the new post_meta fields as JSON
 - Output report
 
