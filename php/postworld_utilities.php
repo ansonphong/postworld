@@ -12,99 +12,63 @@ function pw_user_id_exists($user_id){
     if($count == 1){ return true; }else{ return false; }
 }
 
+function pw_post_id_exists($post_id){
+	$post = get_post( $post_id );
+	if( $post != null ){ return true; } else{ return false; }
+}
+
 function pw_check_user_id($user_id){
+	// Checks if given user has permissions to edit usermeta
+	// $user_id = the ID of the user whos usermeta is being edited
+
 	///// USER ID /////
 	$current_user_id = get_current_user_id();
+
 	if( !isset( $user_id ) || !pw_user_id_exists( $user_id )  )
 		$user_id = $current_user_id;
+
 	if( $user_id == 0 )
 		return array( 'error' => 'No user ID.' );
+
 	// Security Layer
 	// Check if setting for current user, or if current user can edit users
 	if(	$user_id != $current_user_id &&
 		!current_user_can( 'edit_users' ) )
 		return array( 'error' => 'No permissions.' );
 	
+	// If passed all tests, return user ID
 	return $user_id;
-}
-
-function pw_get_obj( $obj, $key ){
-	// Checks to see if a key exists in an object,
-	// and returns it if it does exist.
-
-	/*	PARAMETERS:
-		$obj 	= 	[array]
-		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
-	*/
-
-	// If $key is empty, return the whole $obj
-	if( empty($key) )
-		return $obj;
-
-	///// KEY PARTS /////
-	// FROM : "key.subkey.sub.subkey"
-	// TO 	: array( "key", "subkey", "subkey" )
-	$key_parts = explode( '.', $key );
-	// Count how many parts
-	$key_parts_count = count( $key_parts );
-
-	foreach($key_parts as $key_part){
-		if( isset( $obj[$key_part] ) )
-			$obj = $obj[$key_part];
-		else
-			return false;
-	}
-
-	return $obj;
 
 }
 
+function pw_check_user_post( $post_id, $mode = "edit" ){
+	// Checks if given user has permissions to edit a post
+	// $post_id = the ID of the post being edited
 
-function pw_set_obj( $obj, $key, $value ){
-	// Sets the value of an object,
-	// even if it or it's parent(s) doesn't exist.
-	
-	/*	PARAMETERS:
-		$obj 	= 	[array]
-		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
-		$value 	= 	[string/array/object]
-	*/
+	///// USER ID /////
+	$current_user_id = get_current_user_id();
 
-	///// KEY PARTS /////
-	// FROM : "key.subkey.sub.subkey"
-	// TO 	: array( "key", "subkey", "subkey" )
-	$key_parts = array_reverse( explode( '.', $key ) );
-	// Count how many parts
-	$key_parts_count = count( $key_parts );
-	
-	// Prepare to catch finished key parts
-	$key_parts_done = array();
-
-	// Iterate through each key part
-	$seed = array();
-	$i = 0;
-	foreach( $key_parts as $key_part ){
-		$i++;
-		// First Key
-		if( $i == 1 ){
-			// Create seed with first key
-			$seed[$i][$key_part] = $value;
-		// Other Keys
-		} else{
-			// Nest previous seed in current key
-			$seed[$i][$key_part] = $seed[($i-1)];
-		}
-		// Last Key
-		if( $i == $key_parts_count ){
-			// Return final seed result
-			$seed = $seed[$i];
-		}
+	if( isset( $post_id ) && pw_post_id_exists( $post_id )  ){
+		$post = get_post( $post_id );
+		$post_author = $post->post_author;
 	}
+	else
+		return array( 'error' => 'No post ID.' );
 
-	// Merge $seed array with input $array
-	$obj = array_replace_recursive( $obj, $seed );
+	// Security Layer
+	// Check if setting for current user, or if current user can edit the post
+	if(	$post_author != $current_user_id &&
+		!current_user_can( $mode.'_others_posts' ) )
 
-	return $obj;
+		// Check for custom role to edit custom post type
+		if( !current_user_can( $mode.'_others_'.$post->post_type.'s' ) )
+
+			return array( 'error' => 'No permissions.' );
+	
+	
+	// If passed all tests, return post ID
+	return $post_id;
+
 }
 
 
@@ -457,10 +421,12 @@ function username_exists_by_id($user_id){
 	if($userdata != false){ return true; } else{ return false; }
 }
 
+// DEPRECIATED
 function post_exists_by_id($post_id){
 	$post = get_post( $post_id );
 	if($post != null){ return true; } else{ return false; }
 }
+
 
 function crop_string_to_word( $string, $max_chars = 200 ){
 	

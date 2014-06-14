@@ -72,6 +72,9 @@ register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 ////////// META FUNCTIONS ///////////
 //include 'php/postworld_meta.php';
 
+/////////////// API ////////////////
+include 'php/postworld_api.php';
+
 /////////////// SOCIAL ////////////////
 include 'php/postworld_language.php';
 

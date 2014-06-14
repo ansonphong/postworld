@@ -114,19 +114,17 @@ function pw_set_post_meta($post_id, $post_meta){
 		$insertComma = TRUE;
 	}
 
+
 	if( $insertComma == FALSE ){
 		return false;
 	}
 	
-	
 	else{
 
 		$query.= " where post_id=".$post_id ;
-		//echo $query;
 	 	$wpdb->query($query);
 
 	 	return $post_id;
-	
 	}
 
 	
