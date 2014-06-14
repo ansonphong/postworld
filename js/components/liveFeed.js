@@ -349,7 +349,12 @@ postworld.controller('pwFeedController',
 			pwData.pw_live_feed(argsValue,qsArgsValue).then(
 				// Success
 				function(response) {
-					$scope.busy = false;
+
+					// Prevent Flicker when Template Loading
+					$timeout( function(){
+						$scope.busy = false;
+					}, 100 );
+
 					// $log.debug('pwFeedController.pwLiveFeed',$scope.args.feed_query.order_by,$scope.args.feed_query.order);						
 					if (response.status === undefined) {
 						console.log('response format is not recognized');
@@ -369,7 +374,7 @@ postworld.controller('pwFeedController',
 							$scope.message = "No Data Returned";
 							$log.debug('pwFeedController.pw_live_feed No Data Received');						
 						}
-						$scope.busy = false;							
+						//$scope.busy = false;							
 						return response.data;
 					} else {
 						// handle error
