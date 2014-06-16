@@ -98,16 +98,19 @@ function pw_update_pw1_event_meta( $options = array() ) {
 			"event_country" => 			"event.location.country",
 			"event_postcode" => 		"event.location.postal_code",
 
-			// Event
-			"event_phone" => 			"event.organizer.phone",
-			"event_cost" => 			"event.details.cost",
-
 			// Date
 			"event_start_date_obj" => 	"event.date.start_date_obj",
 			"event_end_date_obj" => 	"event.date.end_date_obj",
 			"event_start_date" => 		"event.date.start_date",
 			"event_end_date" => 		"event.date.end_date",
 			"event_all_day" => 			"event.date.all_day",
+
+			// Orgnizer
+			"event_phone" => 			"event.organizer.phone",
+
+			// Details
+			"event_cost" => 			"event.details.cost",
+
 			);
 
 		// New Data to Insert in the DB

@@ -367,21 +367,21 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			}
 
-			// Parse known JSON fields into objects
-			$known_JSON_fields = array(
-				'geocode',
-				'location_obj',
-				'date_obj',
-				'related_post',
-				'embedly_extract'
-				);
-			foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
-				if(
-					in_array($meta_key, $known_JSON_fields) &&
-					is_string($meta_value)
-					){
-					$post_data['post_meta'][$meta_key] = json_decode($post_data['post_meta'][$meta_key], true);
+			///// JSON META KEYS /////
+			// Parse known JSON keys from JSON strings into objects
+			global $pwSiteGlobals;
+			if( isset( $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'] ) ){
+				
+				$json_meta_keys = $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'];
+
+				foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
+					if(
+						in_array($meta_key, $json_meta_keys) &&
+						is_string($meta_value) ){
+						$post_data['post_meta'][$meta_key] = json_decode($post_data['post_meta'][$meta_key], true);
+					}
 				}
+
 			}
 
 		}
@@ -767,15 +767,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 				if( is_array($meta_value) )
 					$meta_value = json_encode($meta_value);
 
-				// CHECK FOR EXISTING VALUE
-				$get_meta_value = get_post_meta( $post_id, $meta_key, true );
-
-				if ( !empty( $get_meta_value ) )
-					// UPDATE META
-					update_post_meta($post_id, $meta_key, $meta_value);
-				else
-					// ADD META
-					add_post_meta($post_id, $meta_key, $meta_value, true);
+				// UPDATE META
+				update_post_meta($post_id, $meta_key, $meta_value);
 			
 			}
 		}

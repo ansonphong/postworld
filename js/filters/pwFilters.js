@@ -126,7 +126,7 @@ postworld.filter( 'domain', function () {
         urls = /\w+:\/\/([\w|\.]+)/;
     matches = urls.exec( input );
     if ( matches !== null ) output = matches[1];
-    return output;
+        return output;
   };
 });
 

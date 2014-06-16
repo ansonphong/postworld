@@ -79,6 +79,8 @@ postworld.controller('editPost',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit, $_ ) {
 
+	$scope.status = 'loading';
+
 	// Set the default mode
 	if( _.isUndefined( $scope.mode ) )
 		$scope.mode = 'default';
@@ -365,7 +367,7 @@ postworld.controller('editPost',
 			else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
 				// Load the specified post data
 				$scope.loadEditPost();
-				$mode = "edit";
+				$scope.mode = "edit";
 			}
 			///// ROUTE : SET DEFAULT /////
 			else if ( $route.current.action == "default"  ){
@@ -781,42 +783,38 @@ postworld.controller('editPost',
 
 }]);
 
-////////// ------------ EVENT DATA/TIME CONTROLLER ------------ //////////*/
+// Make directive
+// Make attributes for event-start-model, event-end-model
+
+/*
+  _____                 _     ___                   _   
+ | ____|_   _____ _ __ | |_  |_ _|_ __  _ __  _   _| |_ 
+ |  _| \ \ / / _ \ '_ \| __|  | || '_ \| '_ \| | | | __|
+ | |___ \ V /  __/ | | | |_   | || | | | |_) | |_| | |_ 
+ |_____| \_/ \___|_| |_|\__| |___|_| |_| .__/ \__,_|\__|
+                                       |_|              
+//////// ----- EVENT DATA/TIME CONTROLLER ----- ////////*/
+
+postworld.directive( 'pwEventInput', [ function($scope){
+	return {
+		restrict: 'AE',
+		controller: 'eventInput',
+		scope:{
+			'startDateObj':"=",
+			'endDateObj':"=",
+			'startDate':"=",
+			'endDate':"=",
+		},
+		link: function( $scope, element, attrs ){
+		}
+	};
+}]);
+
 postworld.controller('eventInput',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
 		'pwData', '$log', 'ext', 'pwDate',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
 		$pwData, $log, $ext, $pwDate ) {
-
-	
-	$timeout(function() {
-		// SETUP // INITIALIZE DATE OBJECTS
-		// If this is enabled, it causes post.post_meta.date_obj functionality to break
-		// TODO : Refactor eventInput as an isolated scope directive
-
-		//alert( JSON.stringify( $scope.post ) );
-
-		/*
-		if( !$ext.objExists( $scope, 'post' ) )
-			$scope.post = {};
-		*/
-		/*
-		if( _.isUndefined( $scope.post.post_meta ) )
-			$scope.post.post_meta = {};
-		*/
-		/*	
-		if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) ) // _.isUndefined( $scope.post.post_meta.date_obj )
-			$scope.post.post_meta.date_obj = {};
-		*/
-		/*
-		if( typeof $scope.post.post_meta.date_obj.event_start_date_obj === 'undefined' )
-			$scope.post.post_meta.date_obj.event_start_date_obj = new Date( );
-		if( typeof $scope.post.post_meta.date_obj.event_end_date_obj === 'undefined' )
-			$scope.post.post_meta.date_obj.event_end_date_obj = new Date( );
-		*/
-
-	}, 4 );
-
 
 	$scope.getUnixTimestamp = function( dateObject ){
 		if( !_.isUndefined( dateObject ) ){
@@ -827,24 +825,28 @@ postworld.controller('eventInput',
 
 	$scope.setUnixTimestamps = function(){
 		// Add the UNIX Timestamp : event_start
-		$scope.post.event_start = $scope.getUnixTimestamp( $scope.post.post_meta.date_obj.event_start_date_obj );
+		if( !_.isUndefined( $scope.startDateObj ) && !_.isUndefined( $scope.$parent.post ) )
+			$scope.$parent.post.event_start = $scope.getUnixTimestamp( $scope.startDateObj );
 		// Add the UNIX Timestamp : event_end
-		$scope.post.event_end = $scope.getUnixTimestamp( $scope.post.post_meta.date_obj.event_end_date_obj );
-	}
+		if( !_.isUndefined( $scope.endDateObj ) && !_.isUndefined( $scope.$parent.post )  )
+			$scope.$parent.post.event_end = $scope.getUnixTimestamp( $scope.endDateObj );
+	};
 
 	// WATCH : EVENT START TIME
-	$scope.$watch( "post.post_meta.date_obj.event_start_date_obj",
+	$scope.$watch( 'startDateObj',
 		function (){
 			// End function if variable doesn't exist
-			if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) )
+			if( _.isUndefined( $scope.startDateObj ) )
 				return false;
 
-			$scope.post.post_meta.date_obj.event_start_date = $filter('date')(
-				$scope.post.post_meta.date_obj.event_start_date_obj, 'yyyy-MM-dd HH:mm' );
+			// Set the alternate date format
+			if( !_.isUndefined( $scope.startDate ) )
+				$scope.startDate = $filter('date')(
+					$scope.startDateObj, 'yyyy-MM-dd HH:mm' );
 
 			// If start time is set after the end time - make them equal
-			if( $scope.post.post_meta.date_obj.event_end_date_obj < $scope.post.post_meta.date_obj.event_start_date_obj )
-				$scope.post.post_meta.date_obj.event_end_date_obj = $scope.post.post_meta.date_obj.event_start_date_obj;
+			if( $scope.endDateObj < $scope.startDateObj )
+				$scope.endDateObj = $scope.startDateObj;
 
 			// Set UNIX Timestamps
 			$scope.setUnixTimestamps();
@@ -852,18 +854,20 @@ postworld.controller('eventInput',
 		}, 1 );
 
 	// WATCH : EVENT END TIME
-	$scope.$watch( "post.post_meta.date_obj.event_end_date_obj",
+	$scope.$watch( 'endDateObj',
 		function (){
 			// End function if variable doesn't exist
-			if( !$ext.objExists( $scope, 'post.post_meta.date_obj' ) )
+			if( _.isUndefined( $scope.endDateObj ) )
 				return false;
 
-			$scope.post.post_meta.date_obj.event_end_date = $filter('date')(
-				$scope.post.post_meta.date_obj.event_end_date_obj, 'yyyy-MM-dd HH:mm' );
+			// Set the alternate date format
+			if( !_.isUndefined( $scope.endDate ) )
+				$scope.endDate = $filter('date')(
+					$scope.endDateObj, 'yyyy-MM-dd HH:mm' );
 
 			// If end time is set before the start time - make them equal
-			if( $scope.post.post_meta.date_obj.event_start_date_obj > $scope.post.post_meta.date_obj.event_end_date_obj  )
-				$scope.post.post_meta.date_obj.event_start_date_obj = $scope.post.post_meta.date_obj.event_end_date_obj ;
+			if( $scope.startDateObj > $scope.endDateObj )
+				$scope.startDateObj = $scope.endDateObj;
 
 			// Set UNIX Timestamps
 			$scope.setUnixTimestamps();
@@ -871,62 +875,26 @@ postworld.controller('eventInput',
 		}, 1 );
 
 
-	// POST TYPE WATCH : Watch the Post Type
-	// Cleanup post_meta
-	// Hidden - was causing issues with empty post_meta on load
-	// $scope.$on('changePostType', function(event, data) { $scope.post.post_meta = {}; });
-
-
-	////////// EVENT DATE PICKER : CONFIG //////////
-	$scope.showWeeks = false;
-
-	$scope.clear = function () {
-		$scope.dt = null;
-	};
-
-	$scope.dateOptions = {
-		'year-format': "'yy'",
-		'starting-day': 1
-	};
-
 	////////// TIME PICKER : CONFIG //////////
-
-	//$scope.minDate = new Date();
-	$scope.mytime = new Date();
-
-	$scope.hstep = 1;
-	$scope.mstep = 1;
-
-	$scope.options = {
-		hstep: [1, 2, 3],
-		mstep: [1, 5, 10, 15, 25, 30]
+	$scope.$parent.eventOptions = {
+		// Time Picker
+		hstep: 1,
+		mstep: 1,
+		meridian: true,
+		
+		// Date Picker
+		//'year-format': "'yy'",
+		//'starting-day': 1
 	};
 
 	// Toggle AM/PM // 24H
-	$scope.ismeridian = true;
-	$scope.toggleMode = function() {
-		$scope.ismeridian = ! $scope.ismeridian;
+	$scope.$parent.toggleMeridian = function() {
+		$scope.$parent.eventOptions.meridian = ! $scope.$parent.eventOptions.meridian;
 	};
 
 	// Example (bind to ng-change)
-	$scope.changed = function () {
-		//console.log('Time changed to: ' + $scope.EventStartTimeObject );
-		//$scope.updateEventDate();
-		//$scope.post.EventStartHour = $scope.EventStartDateObject.getUTCHours();
-		//alert( $scope.EventEndDateObject.getHours() );
-	};
+	$scope.$parent.dateChanged = function () {
 
-	// Example of setting time
-	$scope.update = function() {
-		var d = new Date();
-		d.setHours( 14 );
-		d.setMinutes( 0 );
-		$scope.mytime = d;
-	};
-
-	// Example of clearing time
-	$scope.clear = function() {
-		$scope.mytime = null;
 	};
 
 
