@@ -57,7 +57,7 @@ postworld.directive('preventDefaultClick', function() {
 			restrict: 'A',
 			link: function (scope, element) {
 				element.bind('click', function (event) {
-					event.stopPropagation();
+					//event.stopPropagation();
 					event.preventDefault();
 				});
 			}

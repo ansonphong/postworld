@@ -20,10 +20,24 @@ function postworld_includes( $args ){
 	// Build Angular Dependancies
 	global $angularDep;
 	
+	//////////// ADD DEPENDENCIES //////////
 	// Add Google Maps to include before AngularJS app
 	if( in_array( 'google-maps', $dep ) ){
 		//array_push( $angularDep, 'google-maps' );
 	}
+
+	// Add LESS Support
+	if( in_array( 'wp-less', $dep ) ){
+		require_once( WP_PLUGIN_DIR.'/postworld/lib/wp-less/wp-less.php' );
+	}
+	
+	// Add Font Awesome 3
+	if( in_array( 'font-awesome-3', $dep ) ){
+		wp_enqueue_style( 'font-awesome-3',
+			WP_PLUGIN_URL.'/postworld/lib/font-awesome-3/css/font-awesome.min.css' );
+	}
+
+
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' => admin_url( 'admin-ajax.php' ),
@@ -45,7 +59,7 @@ function postworld_includes( $args ){
 	wp_enqueue_script('jquery','');
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
-	///// DELPLOY FILE INCLUDES /////
+	///// DEPLOY FILE INCLUDES /////
 	if ( $mode == 'deploy' ){
 	
 		// ANGULAR

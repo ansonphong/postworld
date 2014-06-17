@@ -119,6 +119,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_path',
 		'image(full)',
 		'post_content',
+		'post_type_labels'
 		);
 	
 	$micro_fields =	array(
@@ -136,7 +137,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	// Preview Fields
 	else if ($fields == 'preview')
-		$fields = $preview_fields;
+		$fields = array_merge($preview_fields, $viewer_fields );
 
 	// Edit Fields
 	else if ($fields == 'edit'){
@@ -243,7 +244,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				$post_data['post_format'] = 'standard';
 		}
 
-
+		// Post Type Object
+		if( in_array('post_type_labels', $fields) ){
+			$post_data['post_type_labels'] = get_post_type_object( $get_post['post_type'] )->labels;
+		}
+		
 	////////// POSTWORLD //////////
 
 		// Get post row from Postworld Meta table, as an Array

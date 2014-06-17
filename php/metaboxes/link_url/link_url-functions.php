@@ -5,8 +5,13 @@
 add_action('admin_init','pw_metabox_init_link_url');
 function pw_metabox_init_link_url(){    
 
+	global $pwSiteGlobals;
+
 	// Add to Post Types
-	$link_url_post_types = array('post','page');
+	$link_url_post_types = ( isset($pwSiteGlobals['wp_admin']['metabox']['link_url']['post_types']) ) ?
+		$pwSiteGlobals['wp_admin']['metabox']['link_url']['post_types'] :
+		array( 'post', 'page' );
+
     foreach( $link_url_post_types as $post_type ){
         add_meta_box(
         	'link_url_meta',
