@@ -196,11 +196,11 @@ postworld.directive('loadPanel', function() {
         //replace: true,
         controller: 'pwLoadPanelCtrl',
         //transclude: true,
-        template: '<div ng-include="templateUrl" class="panel"></div>',
+        template: '<div ng-include="templateUrl" class="load-panel"></div>',
         scope:{
         	// Must use an isolated scope, to allow for using multiple panel directives in the same page
         	panelMeta:"=",
-        	panelMetaJson:"@",
+        	//panelMetaJson:"@",
         },
         link: function($scope, element, attributes){
         	$scope.panel_id = attributes.loadPanel;

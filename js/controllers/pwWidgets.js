@@ -10,27 +10,6 @@
 //////////////// WIDGETS ////////////////*/
 
 
-///// PANEL WIDGET CONTROLLER /////
-postworld.controller('panelWidgetCtrl',
-    ['$scope','$timeout','pwData', '$compile',
-    function($scope, $timeout, $pwData, $compile) {
-    
-    $scope.status = "loading";
-
-    $scope.panel_id = "";
-    $scope.setPanelID = function(panel_id){
-        $scope.panel_id = panel_id;
-    }
-
-    // Wait for pwData to initialize
-    $timeout( function(){
-        $scope.panel_url = $pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
-        }, 1
-    );
-
-}]);
-
-
 ///// POST SHARE REPORT /////
 postworld.controller('postShareReport',
     ['$scope','$window','$timeout','pwData',
