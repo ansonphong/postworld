@@ -107,6 +107,14 @@ function postworld_includes( $args ){
 		// MOMENT-TIMEZONE DATA.JS
 		wp_enqueue_script( 'Moment-Timezone-Data-JS',
 			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment-timezone-data.js');
+
+
+		// MASONRY
+		wp_enqueue_script( 'Masonry-JS',
+			WP_PLUGIN_URL.'/postworld/lib/masonry/masonry.pkgd.min.js');		
+
+		wp_enqueue_script( 'ImagesLoaded-JS',
+			WP_PLUGIN_URL.'/postworld/lib/masonry/imagesloaded.pkgd.min.js');
 		
 
 		///// THIRD PARTY LIBRARIES /////
@@ -197,6 +205,10 @@ function postworld_includes( $args ){
 		// ANGULAR : ELASTIC
 		wp_enqueue_script( 'angularJS-Elastic',
 			plugins_url().'/postworld/lib/angular-elastic/angular-elastic.js', $angularDep );
+
+		// ANGULAR : MASONRY
+		wp_enqueue_script( 'angularJS-Masonry',
+			plugins_url().'/postworld/lib/angular-masonry/angular-masonry.js', $angularDep );
 
 
 		/////// POSTWORLD APP /////	

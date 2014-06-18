@@ -32,6 +32,10 @@ module.exports = function(grunt) {
             // Moment-Timezone Data.js
             'lib/moment.js/moment-timezone-data.js',
 
+            // Masonry
+            'lib/masonry.js/masonry.pkgd.min.js',
+            'lib/masonry.js/imagesloaded.pkgd.min.js',
+
             ///// BOOTSTRAP /////
           	// Bootstrap JS
             //'lib/bootstrap/bootstrap.min.js',             // Main Bootstrap JS
@@ -61,6 +65,9 @@ module.exports = function(grunt) {
 
             // Angular Elastic
             'lib/angular-elastic/angular-elastic.js',
+
+            // Angular Masonry
+            'lib/angular-masonry/angular-masonry.js',
 
             ///// ANGULAR NATIVE EXTENSIONS /////
             // Angular Extensions

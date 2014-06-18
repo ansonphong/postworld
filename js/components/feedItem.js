@@ -105,12 +105,12 @@ postworld.controller('pwGridItemCtrl',
     var tagMappings = [
     	{
     		name: 'square',
-    		width: 1.2,
+    		width: 1,
     		height: 1,
     	},
     	{
     		name: 'wide',
-    		width: 1.5,
+    		width: 1,
     		height: 1,
     	},
     	
@@ -166,7 +166,7 @@ postworld.controller('pwGridItemCtrl',
 
     $scope.setGridStyle = function(){
     	var selectedTag = $scope.selectImageTag();
-    	var multiplier = 200;
+    	var multiplier = 300;
         var width = selectedTag['width'] * multiplier;
         var height = selectedTag['height'] * multiplier;
         return { width: width + "px", height: height + "px", };

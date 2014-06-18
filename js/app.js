@@ -32,6 +32,7 @@ var depInject = [
 	'timer',
 	'angular-parallax',
 	'angularMoment',
+	'wu.masonry',
 	];
 
 
