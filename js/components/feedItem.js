@@ -89,7 +89,7 @@ postworld.controller('pwGridItemCtrl',
         {};
 
     // $scope.post.image
-    $log.debug( "LOAD GRID : " + $scope.post.post_title, gridSettings );
+    //$log.debug( "LOAD GRID : " + $scope.post.post_title, gridSettings );
 
     var gridWidth = gridSettings['width'];
     var gridHeight = gridSettings['height'];
@@ -113,37 +113,21 @@ postworld.controller('pwGridItemCtrl',
     		width: 1,
     		height: 1,
     	},
-    	
     	{
     		name: 'x-wide',
     		width: 2,
     		height: 1,
     	},
-    	/*
-    	{
-    		name: 'xx-wide',
-    		width: 3,
-    		height: 1,
-    	},
-    	*/
     	{
     		name: 'tall',
     		width: 1,
     		height: 1.5,
     	},
-    	
     	{
     		name: 'x-tall',
     		width: 1,
     		height: 2,
     	},
-    	/*
-    	{
-    		name: 'xx-tall',
-    		width: 1,
-    		height: 3,
-    	},
-    	*/
     ];
 
     $scope.selectImageTag = function(){

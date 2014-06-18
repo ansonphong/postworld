@@ -194,11 +194,13 @@ postworld.factory('_',
 
 			});
 
-			$log.debug( "SEED : ", seed);
-			$log.debug( "OBJ : ", obj);
+			//$log.debug( "SEED : ", seed);
+			//$log.debug( "OBJ : ", obj);
 
 			// Merge $seed array with input $array
 			obj = deepmerge( obj, seed );
+
+			//$log.debug( "RESULT : ", obj);
 
 			return obj;
 
