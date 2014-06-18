@@ -101,6 +101,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'comment_count',
 		'link_url',
 		'image(all)',
+		'image(stats)',
+		'image(tags)',
 		'post_points',
 		'edit_post_link',
 		'post_categories_list',
@@ -174,23 +176,23 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	$get_post = get_post($post_id, ARRAY_A);
 	foreach ($get_post as $key => $value) {
 		if( in_array($key, $fields) ){
-			$post_data[$key] = $value;
+			$post[$key] = $value;
 
 			// Condition Post Content
 			if ( $key == 'post_content' && $mode == 'view' ){
 				///// CONTENT FILTERING /////
 
 				// oEmbed URLs
-				$post_data[$key] = pw_embed_content($post_data[$key]);
+				$post[$key] = pw_embed_content($post[$key]);
 
 				// Apply Shortcodes
-				//$post_data[$key] = do_shortcode($post_data[$key]);
+				//$post[$key] = do_shortcode($post[$key]);
 
 				// Apply AutoP
-				//$post_data[$key] = wpautop($post_data[$key]);
+				//$post[$key] = wpautop($post[$key]);
 
 				// Apply all content filters
-				$post_data[$key] = apply_filters('the_content', $post_data[$key]);
+				$post[$key] = apply_filters('the_content', $post[$key]);
 
 			}
 			
@@ -203,7 +205,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	$get_post_custom = get_post_custom($post_id);
 	foreach ($get_post_custom as $key => $value) {
 		if( in_array($key, $fields) )
-			$post_data[$key] = $value;
+			$post[$key] = $value;
 	}
 
 	///// SET LOCAL VALUES /////
@@ -215,38 +217,38 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		// Permalink
 		if( in_array('post_permalink', $fields) )
-			$post_data['post_permalink'] = get_permalink( $post_id );
+			$post['post_permalink'] = get_permalink( $post_id );
 
 		// Post Path (Permalink without Home url)
 		if( in_array('post_path', $fields) )
-			$post_data['post_path']	= str_replace( home_url(), '', get_permalink( $post_id ) );
+			$post['post_path']	= str_replace( home_url(), '', get_permalink( $post_id ) );
 
 		// Category List
 		if( in_array('post_categories_list', $fields) )
-			$post_data["post_categories_list"] = get_the_category_list(' ','', $post_id );
+			$post["post_categories_list"] = get_the_category_list(' ','', $post_id );
 
 		// Tags List
 		if( in_array('post_tags_list', $fields) ){
-			$post_data["post_tags_list"] = get_the_term_list( $post_id, 'post_tag', '', '', '' );
-			if ( $post_data["post_tags_list"] == false ) $post_data["post_tags_list"] = '';
+			$post["post_tags_list"] = get_the_term_list( $post_id, 'post_tag', '', '', '' );
+			if ( $post["post_tags_list"] == false ) $post["post_tags_list"] = '';
 		}
 
 		// Edit Post Link
 		if( in_array('edit_post_link', $fields) ){
-			$post_data["edit_post_link"] = get_edit_post_link($post_id);
-			if ( $post_data["edit_post_link"] == false ) $post_data["edit_post_link"] = '#';
+			$post["edit_post_link"] = get_edit_post_link($post_id);
+			if ( $post["edit_post_link"] == false ) $post["edit_post_link"] = '#';
 		}
 
 		// Post Format
 		if( in_array('post_format', $fields) ){
-			$post_data['post_format'] = get_post_format( $post_id );
-			if( $post_data['post_format'] == false )
-				$post_data['post_format'] = 'standard';
+			$post['post_format'] = get_post_format( $post_id );
+			if( $post['post_format'] == false )
+				$post['post_format'] = 'standard';
 		}
 
 		// Post Type Object
 		if( in_array('post_type_labels', $fields) ){
-			$post_data['post_type_labels'] = get_post_type_object( $get_post['post_type'] )->labels;
+			$post['post_type_labels'] = get_post_type_object( $get_post['post_type'] )->labels;
 		}
 		
 	////////// POSTWORLD //////////
@@ -255,17 +257,17 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		$pw_post_meta = pw_get_post_meta($post_id);
 		if ( !empty($pw_post_meta) ){
 			// Cycle though each PW $pw_post_meta value
-			// If it's in $fields, transfer it to $post_data
+			// If it's in $fields, transfer it to $post
 			foreach($pw_post_meta as $key => $value ){
 				if( in_array($key, $fields) ){
-					$post_data[$key] = $pw_post_meta[$key];
+					$post[$key] = $pw_post_meta[$key];
 				}
 			}
 		}
 
 		// Points
 		if( in_array('post_points', $fields) ){
-			$post_data['post_points'] = get_post_points( $post_id );
+			$post['post_points'] = get_post_points( $post_id );
 		}
 
 
@@ -278,23 +280,23 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			///// GET VIEWER DATA /////
 			// Has Viewer Voted?
 			if( in_array('has_voted', $viewer_fields) )
-				$post_data['viewer']['has_voted'] = has_voted_on_post( $post_id, $viewer_user_id );
+				$post['viewer']['has_voted'] = has_voted_on_post( $post_id, $viewer_user_id );
 
 			// View Vote Power
 			if( in_array('vote_power', $viewer_fields) )
-				$post_data['viewer']['vote_power'] = get_user_vote_power( $viewer_user_id );
+				$post['viewer']['vote_power'] = get_user_vote_power( $viewer_user_id );
 		
 			// Is Favorite
 			if( in_array('is_favorite', $viewer_fields) ){
 				$is_favorite = is_favorite( $post_id );
 				if ( !isset($is_favorite) )
 					$is_favorite = "0";
-				$post_data['viewer']['is_favorite'] = $is_favorite;
+				$post['viewer']['is_favorite'] = $is_favorite;
 			}
 
 			// Is View Later
 			if( in_array('is_view_later', $viewer_fields) )
-				$post_data['viewer']['is_view_later'] = is_view_later( $post_id );
+				$post['viewer']['is_view_later'] = is_view_later( $post_id );
 
 		}
 
@@ -305,12 +307,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		$relationships = extract_linear_fields( $fields, 'is_relationship', true );
 
 		if ( !empty($relationships) ){
-			if( !isset($post_data['viewer']) )
-				$post_data['viewer'] = array();
+			if( !isset($post['viewer']) )
+				$post['viewer'] = array();
 
 			foreach ($relationships as $relationship ) {
 
-				$post_data['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
+				$post['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
 			
 			}
 
@@ -321,11 +323,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
-			$post_data['time_ago'] = time_ago( strtotime ( $post_data['post_date_gmt'] ) );
+			$post['time_ago'] = time_ago( strtotime ( $post['post_date_gmt'] ) );
 
 		// Post Timestamp
 		if ( in_array('post_timestamp', $fields) )
-			$post_data['post_timestamp'] = (int) strtotime( $post_data['post_date_gmt'] ) ;
+			$post['post_timestamp'] = (int) strtotime( $post['post_date_gmt'] ) ;
 
 
 	////////// AVATAR IMAGES //////////
@@ -333,7 +335,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// AVATAR FIELDS
 		$avatars_object = get_avatar_sizes($author_id, $fields);
 		if ( !empty($avatars_object) )
-			$post_data["avatar"] = $avatars_object;
+			$post["avatar"] = $avatars_object;
 
 
 	////////// META DATA //////////
@@ -349,11 +351,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$post_meta_field == "all" ){
 
 					// Return all meta data
-					$post_data['post_meta'] = get_metadata('post', $post_id, '', true);
+					$post['post_meta'] = get_metadata('post', $post_id, '', true);
 					// Convert to strings
-					if ( !empty( $post_data['post_meta'] ) ){
-						foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
-							$post_data['post_meta'][$meta_key] = $post_data['post_meta'][$meta_key][0];
+					if ( !empty( $post['post_meta'] ) ){
+						foreach( $post['post_meta'] as $meta_key => $meta_value ){
+							$post['post_meta'][$meta_key] = $post['post_meta'][$meta_key][0];
 						}
 					}
 					// Break from the foreach
@@ -366,7 +368,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					$post_meta_data = get_post_meta( $post_id, $post_meta_field, true );
 
 					if( !empty($post_meta_data) )
-						$post_data['post_meta'][$post_meta_field] = $post_meta_data;
+						$post['post_meta'][$post_meta_field] = $post_meta_data;
 
 				}
 
@@ -379,11 +381,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				
 				$json_meta_keys = $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'];
 
-				foreach( $post_data['post_meta'] as $meta_key => $meta_value ){
+				foreach( $post['post_meta'] as $meta_key => $meta_value ){
 					if(
 						in_array($meta_key, $json_meta_keys) &&
 						is_string($meta_value) ){
-						$post_data['post_meta'][$meta_key] = json_decode($post_data['post_meta'][$meta_key], true);
+						$post['post_meta'][$meta_key] = json_decode($post['post_meta'][$meta_key], true);
 					}
 				}
 
@@ -411,28 +413,28 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			// If so, pull in that data with that function
 			foreach ($author_fields as $author_field) {
 				if( in_array( $author_field, $get_the_author_meta_fields ) )
-					$post_data['author'][$author_field] = get_the_author_meta( $author_field, $author_id );
+					$post['author'][$author_field] = get_the_author_meta( $author_field, $author_id );
 			}
 
 			///// WORDPRESS AUTHOR FIELDS /////
 			
 			// Author Posts URL
 			if( in_array('posts_url', $author_fields) )
-				$post_data['author']['posts_url'] = get_author_posts_url( $author_id );
+				$post['author']['posts_url'] = get_author_posts_url( $author_id );
 
 
 			///// BUDDYPRESS AUTHOR FIELDS : requires Buddypress /////
 
 			// Author Profile URL
 			if( in_array('user_profile_url', $author_fields) && function_exists('bp_core_get_userlink') )
-				$post_data['author']['user_profile_url'] = bp_core_get_userlink( $author_id, false, true );
+				$post['author']['user_profile_url'] = bp_core_get_userlink( $author_id, false, true );
 
 			///// POSTWORLD AUTHOR FIELDS /////
 			/*
 			if( in_array('posts_points', $author_fields) )
-				$post_data['author']['posts_points'] = get_user_post_points( $post_id );
+				$post['author']['posts_points'] = get_user_post_points( $post_id );
 			if( in_array('comments_points', $author_fields) )
-				$post_data['author']['comments_points'] = get_user_comments_points( $post_id );
+				$post['author']['comments_points'] = get_user_comments_points( $post_id );
 			*/
 
 			// ++ ADD : twitter, facebook_url, 
@@ -449,7 +451,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		///// PROCESS IMAGE FIELDS /////
 		// Check if there are images to process
 		if ( !empty($images) ){
-			$post_data['image'] = array();
+			$post['image'] = array();
 
 			///// GET IMAGE TO USE /////
 			// Setup Thumbnail Image Variables
@@ -480,7 +482,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 					// SETUP DEFAULT IMAGE FILE NAMES : ...jpg
 					$link_format =  get_post_format( $post_id );
-					$default_type_format_thumb_filename = 	'default-'.$post_data['post_type'].'-'.$link_format.'-thumb.jpg';
+					$default_type_format_thumb_filename = 	'default-'.$post['post_type'].'-'.$link_format.'-thumb.jpg';
 					$default_format_thumb_filename = 		'default-'.$link_format.'-thumb.jpg';
 					$default_thumb_filename = 				'default-thumb.jpg';
 
@@ -538,9 +540,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					// FULL : Get 'full' image
 					if ( $image_handle == 'full' || $image_handle == 'all' ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
-						$post_data['image']['full']['url']	= $thumbnail_url;
-						$post_data['image']['full']['width'] = (int)$image_obj['width'];
-						$post_data['image']['full']['height'] = (int)$image_obj['height'];
+						$post['image']['full']['url']	= $thumbnail_url;
+						$post['image']['full']['width'] = (int)$image_obj['width'];
+						$post['image']['full']['height'] = (int)$image_obj['height'];
 					}
 
 					// ALL : Get all registered images
@@ -554,7 +556,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 							$registered_images[$image_handle]["width"] = $image_src[1];
 							$registered_images[$image_handle]["height"] = $image_src[2];
 							$registered_images[$image_handle]["hard_crop"] = $image_src[3];
-							$post_data['image'] = array_merge( $post_data['image'], $registered_images );
+							$post['image'] = array_merge( $post['image'], $registered_images );
 						}
 					}
 
@@ -562,28 +564,76 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					// If it is a registered image format
 					elseif( array_key_exists($image_handle, $registered_images_obj) ) {
 						$image_obj = image_obj($thumbnail_id, $image_handle);
-						$post_data['image'][$image_handle]['url']	= $image_obj['url'];
-						$post_data['image'][$image_handle]['width'] = (int)$image_obj['width'];
-						$post_data['image'][$image_handle]['height'] = (int)$image_obj['height'];
+						$post['image'][$image_handle]['url']	= $image_obj['url'];
+						$post['image'][$image_handle]['width'] = (int)$image_obj['width'];
+						$post['image'][$image_handle]['height'] = (int)$image_obj['height'];
 					}
 
 					// META : Get Image Meta Data
 					elseif( $image_handle == 'meta' && is_numeric($thumbnail_id) ){
-						$post_data['image']['meta'] = wp_get_attachment_metadata($thumbnail_id);
+						$post['image']['meta'] = wp_get_attachment_metadata($thumbnail_id);
 
 						// Get the actual file URLS and inject into the object
-						if( isset($post_data['image']['meta']) && is_array($post_data['image']['meta']) ){
+						if( isset($post['image']['meta']) && is_array($post['image']['meta']) ){
 							
-							foreach( $post_data['image']['meta']['sizes'] as $key => $value ){
+							foreach( $post['image']['meta']['sizes'] as $key => $value ){
 								$image_size_meta = wp_get_attachment_image_src( $thumbnail_id, $key );
-								$post_data['image']['meta']['sizes'][$key]['url'] = $image_size_meta[0];
+								$post['image']['meta']['sizes'][$key]['url'] = $image_size_meta[0];
 							}
 						}
 
 					}
+
+					elseif( $image_handle == 'tags' && is_numeric($thumbnail_id) ){
+
+						// Get Image Meta Data
+						if( isset( $post['image']['meta'] ) ){
+							// If it already has been queried, get fro post object
+							$image_meta = $post['image']['meta'];
+						} else if( !isset( $image_meta ) ){
+							// Otherwise get from database
+							$image_meta = wp_get_attachment_metadata($thumbnail_id);
+						}
+
+						// Image Tags Object
+						// Threshold Format as ['Tags'] : 'square' / 'wide' / 'tall' / 'x-wide' / 'x-tall' , etc.
+						$post['image']['tags'] = pw_generate_image_tags( array(
+								"width" => $image_meta['width'],
+								"height" => $image_meta['height'],
+								)
+							);
+					}
+
+					// STATS : Get Image Stats
+					elseif( $image_handle == 'stats' && is_numeric($thumbnail_id) ){
+						
+						// Get Image Meta Data
+						if( isset( $post['image']['meta'] ) ){
+							// If it already has been queried, get fro post object
+							$image_meta = $post['image']['meta'];
+						} else if( !isset( $image_meta ) ){
+							// Otherwise get from database
+							$image_meta = wp_get_attachment_metadata($thumbnail_id);
+						}
+
+						// Calculate Image Ratios
+						$image_stats = array(
+							"width" => $image_meta['width'],
+							"height" => $image_meta['height'],
+							"area"	=>	$image_meta['width'] * $image_meta['height'],
+							"ratio"	=>	$image_meta['width'] / $image_meta['height']
+							);
+
+						// TODO : Add "2:1 / 4:3 / etc" format
+					
+						// Set Stats in Post Object
+						$post['image']['stats'] = $image_stats;
+
+					}
+
 					// Get Image ID
 					elseif( $image_handle == 'id' ){
-						$post_data['thumbnail_id']= $thumbnail_id;
+						$post['thumbnail_id']= $thumbnail_id;
 
 					}
 
@@ -599,9 +649,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$hard_crop = 1;
 
 					// Process custom image size, return url
-					$post_data['image'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
-					$post_data['image'][$image_handle]['width'] = (int)$thumb_width;
-					$post_data['image'][$image_handle]['height'] = (int)$thumb_height;
+					$post['image'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+					$post['image'][$image_handle]['width'] = (int)$thumb_width;
+					$post['image'][$image_handle]['height'] = (int)$thumb_height;
 				}
 
 			} // END foreeach
@@ -687,9 +737,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			$post_terms = (array) $post_terms;
 			
 			// TEMP :
-			//$post_data['taxonomy'][$taxonomy] =  $post_terms;
+			//$post['taxonomy'][$taxonomy] =  $post_terms;
 			
-			$post_data['taxonomy'][$taxonomy] = array();
+			$post['taxonomy'][$taxonomy] = array();
 
 			///// FOR EACH TERM /////
 			foreach ($post_terms as $post_term) {
@@ -710,14 +760,14 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$term_obj['url'] = get_term_link( $term_id , $taxonomy );
 					}
 					// Push the multi-dimensional Array of values
-					array_push( $post_data['taxonomy'][$taxonomy], $term_obj );
+					array_push( $post['taxonomy'][$taxonomy], $term_obj );
 				}
 				// If there is only one taxonomy field
 				else {
 					// Just push the single term value in flat Array
 					$term_field = $tax_fields[0];
 					$term_value = $post_term[ $term_field ];
-					array_push( $post_data['taxonomy'][$taxonomy], $term_value );
+					array_push( $post['taxonomy'][$taxonomy], $term_value );
 				}
 				
 			}
@@ -725,7 +775,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		} // END foreach
 	} // END IF
 
-	return $post_data;
+	return $post;
 
 }
 

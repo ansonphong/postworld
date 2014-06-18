@@ -7,6 +7,100 @@ include_once $aq_resizer_include;
 
 
 
+///// GENERATE IMAGE TAGS /////
+
+function pw_generate_image_tags( $vars = array() ){
+	if( empty( $vars ) )
+		return false;
+
+	extract( $vars );
+
+	// Set Defaults
+	if( !isset( $ratio ) )
+		$ratio = $width / $height;
+
+	///// FILTERS /////
+	// Tag filters to process
+	// Available variables are : $width, $height, $ratio
+	$tag_filters = array();
+
+	global $pwSiteGlobals;
+	$custom_tags = ( isset( $pwSiteGlobals['images']['tags'] ) ) ?
+		$pwSiteGlobals['images']['tags'] :
+		array();
+
+	$default_tags = array(
+		// SQUARE
+		array(
+			"tag"		=>	"square",
+			"condition" => "$ratio > .8 && $ratio < 1.2",
+			),
+
+		// TALL
+		array(
+			"tag"		=>	"tall",
+			"condition" => "$ratio <= .8",
+			),
+		array(
+			"tag"		=>	"x-tall",
+			"condition" => "$ratio <= .5",
+			),
+		array(
+			"tag"		=>	"xx-tall",
+			"condition" => "$ratio <= .33",
+			),
+
+		// WIDE
+		array(
+			"tag"		=>	"wide",
+			"condition" => "$ratio >= 1.2",
+			),
+		array(
+			"tag"		=>	"x-wide",
+			"condition" => "$ratio >= 2",
+			),
+		array(
+			"tag"		=>	"xx-wide",
+			"condition" => "$ratio >= 3",
+			),
+
+		// DEFINITION
+		array(
+			"tag"		=>	"HD",
+			"condition" => "$width >= 1000 && $height >= 1000",
+			),
+		array(
+			"tag"		=>	"XHD",
+			"condition" => "$width >= 2000 && $height >= 2000",
+			),
+		);
+
+	// Merge Filters
+	// TODO : Iterate through each custom tag, and over-ride defaults with conditions
+	$tag_filters = array_merge( $default_tags, $custom_tags );
+
+	// Setup tags object
+	$tags = array();
+
+	///// PROCESS FILTERS /////
+	// Iterate through each filter
+	foreach( $tag_filters as $tag_filter ){
+
+		$condition = ( string ) $tag_filter['condition'];
+		$condition = "return (" . $condition . ");";
+
+		$boolean = (bool) eval( $condition );
+
+		if( $boolean == true )
+			$tags[] = $tag_filter['tag'];
+
+	}
+
+	return $tags;
+
+}
+
+
 ///// GET IMAGE /////
 function pw_get_image( $vars ){
 	extract($vars);

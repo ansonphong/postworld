@@ -1,8 +1,8 @@
 <?php
 /******************************************
-Plugin Name: Post World
+Plugin Name: Postworld
 Plugin URI: htp://phong.com/
-Description: Postworld extends Wordpress to display posts in creative ways
+Description: Wordpress API extension, with AngularJS client-side framework, LESS support, and standard libraries for developers to display posts in creative ways
 Version: 2.0
 Author: phong
 Author URI: http://phong.com
@@ -13,7 +13,6 @@ License: GPL2
 
 include 'php/postworld_variables.php';
 include 'php/postworld_utilities.php';
-
 
 
 // GLOBAL VARIABLES

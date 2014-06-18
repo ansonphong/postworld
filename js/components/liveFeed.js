@@ -10,10 +10,7 @@ postworld.directive('liveFeed', function() {
 		replace: true,
 		controller: 'pwFeedController',
        	template: '<div ng-include="templateUrl" class="feed"></div>',
-		//templateUrl: '{{templateUrl}}',
-		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
-		scope : {
-		},
+		scope : {},
 	};
 });
 
@@ -21,21 +18,15 @@ postworld.directive('loadFeed', function() {
 	return {
 		restrict: 'A',
 		replace: true,
+       	controller: 'pwFeedController',
        	template: '<div ng-include="templateUrl" class="feed"></div>',
-       	// DO not set url here and in nginclude at the same time, so many errors!
-		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
-		controller: 'pwFeedController',
-		scope : {
-			// templateUrl: "=",			
-		}
+		scope : {}
 	};
 });
 
 postworld.directive('loadPost', function() {
 	return {
 		restrict: 'A',
-		// DO not set url here and in nginclude at the same time, so many errors!
-		// templateUrl: jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html',
 		replace: true,
 		template: '<div ng-include="templateUrl" class="post"></div>',
 		controller: 'pwLoadPostController',
@@ -45,73 +36,12 @@ postworld.directive('loadPost', function() {
 });
 
 postworld.controller('pwFeedController',
-	function pwFeedController($scope, $location, $log, $attrs, $timeout, pwData, $route) {
-
-		// Definitions
-		/*
-		$scope.convertQueryString2FeedQuery= function (params) {
-			$log.info('Feed Query Override by Query String',params);
-			for(var key in params){
-				// The value is obj[key]
-				$scope.args.feed_query[key] = params[key];
-			}			
-		};
-		*/
-		$scope.convertFeedQuery2QueryString= function (params) {
-			// $log.info('pwFeedController convertFeedQuery2QueryString', params);
-			$log.info('Feed Query Override by Feed Query',params);			  			
-			// Loop on all query variables
-			var queryString = "";
-			for(var key in params){
-				// Remove Null Values
-				if (params[key]==null){  					
-					continue;
-				}
-				if (key=="tax_query") {
-					var taxInput = escape(JSON.stringify(params[key]));
-					queryString += key + "=" + taxInput + "&";
-					continue;
-				};
-				// The value is obj[key]
-				//$scope.args.feed_query[key] = params[key];
-				// TODO objects like taxonomy?
-				// TODO arrays?
-				if ((params[key]!==0) && (params[key]!==false)) {
-					if (params[key] == "") {
-						continue;
-					}
-				}  
-				queryString += key + "=" + escape(params[key]) + "&"; 
-			}
-			queryString = queryString.substring(0, queryString.length - 1);
-			$log.debug('path is ',$location.path());
-			// $location.search('page', pageNumber);
-			var path = $location.path();
-			$location.path(path).search(queryString);
-			//$location.path().search(queryString);
-			$log.info('abslute path = ',$location.absUrl(),queryString);			
-			//$log.info('pwFeedController convertFeedQuery2QueryString', queryString);  			
-		};
-
-		$scope.getQueryStringArgs= function () {
-			// TODO Should query string work with live feed only?
-			if ($attrs.loadFeed) {
-				return;
-			}
-			// Get Query String Parameters
-			// TODO Check if location.search work on all browsers.
-			var params = $location.search();
-			if ((params) && (params.tax_query)) {    			
-				params.tax_query = JSON.parse(params.tax_query); 
-			}
-			return params;
-			//$scope.convertQueryString2FeedQuery(params);  			
-		};
+	function( $scope, $location, $log, $attrs, $timeout, pwData, $route ) {
 		
 		
 		// Initialize
-		$scope.busy = false; 				// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
-		$scope.firstRun = true; 			// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
+		$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
+		$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 		$scope.args = {};
 		$scope.args.feed_query = {};
 		$scope.feed_query = {};
@@ -120,55 +50,56 @@ postworld.controller('pwFeedController',
 		$scope.message = "";   
 		// $scope.turl = "http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html"; 	
 		
-		// List of Post Items displayed in Scroller
-		// is this a live feed or a load feed?
+		// LIVE FEED
 		if ($attrs.liveFeed)    { 
-			$scope.directive = 'liveFeed';
-			$scope.feed		= $attrs.liveFeed;
-			$scope.args.feed_id = $attrs.liveFeed; // This Scope variable will propagate to all directives inside Live Feed
+			$scope.directive = 		'liveFeed';
+			$scope.feed	= 			$attrs.liveFeed;
+			$scope.args.feed_id = 	$attrs.liveFeed; // This Scope variable will propagate to all directives inside Live Feed
 		}
+
+		// LOAD FEED
 		else  if ($attrs.loadFeed)   {
-			$scope.directive = 'loadFeed';
-			$scope.feed		= $attrs.loadFeed;
-			$scope.args.feed_id = $attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
+			$scope.directive = 		'loadFeed';
+			$scope.feed	= 			$attrs.loadFeed;
+			$scope.args.feed_id = 	$attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
 		};    	
-							
-		// Set Default Feed Template and Default Feed Item Template
-		//pwData.templates.promise.then(function(value) {
-				if (!$scope.feed) {
-					$log.debug('no valid Feed ID provided in Feed Settings',$scope);
-					return;
-				}
-				
-				// Set Title
-				if (pwData.feed_settings[$scope.feed].title) {
-					$scope.title = pwData.feed_settings[$scope.feed].title;
-				} else {
-					$scope.title = '';
-				}				
-				var view = 'list';	// TODO get from Constant values
-				// Get Feed Item Template from Feed Settings by default
-			   if (pwData.feed_settings[$scope.feed].view.current)
-					view = pwData.feed_settings[$scope.feed].view.current;
-				$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view);
-				//$log.debug('pwFeedController Set Initial Feed Item View Type', $scope.feed_item_view_type);
-				
-			   // Get Feed Template from feed_settings if it exists, otherwise get it from default path
-			   if (pwData.feed_settings[$scope.feed].feed_template) {
-					var template = pwData.feed_settings[$scope.feed].feed_template;			   	
-					$scope.templateUrl = pwData.pw_get_template( { subdir: 'feeds', view: template } );
-					//$log.debug('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
-			   }
-			   else {
-					if ($scope.directive=='liveFeed')
-						$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html';
-					else if ($scope.directive=='loadFeed')
-						$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html';
-					// just use default template provided in directive settings, no action required
-					return;			   	
-			   }
-				// $log.debug('Directive:FeedItem Controller:pwFeedItemController Set Initial Feed Template to ',view, $scope.templateUrl);
-		//});
+						
+		// NO FEED
+		if (!$scope.feed) {
+			$log.debug('no valid Feed ID provided in Feed Settings',$scope);
+			return;
+		}
+		
+		// Set Title
+		$scope.title = ( pwData.feed_settings[$scope.feed].title ) ?
+			pwData.feed_settings[$scope.feed].title : '';
+
+		// Set View
+		$scope.args.view = ( pwData.feed_settings[$scope.feed].view ) ?
+			pwData.feed_settings[$scope.feed].view : {};
+
+		var view =  (pwData.feed_settings[$scope.feed].view.current) ?
+			pwData.feed_settings[$scope.feed].view.current :
+			'list';
+
+		$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view);
+		//$log.debug('pwFeedController Set Initial Feed Item View Type', $scope.feed_item_view_type);
+		
+	   	// Get Feed Template from feed_settings if it exists, otherwise get it from default path
+	   	if (pwData.feed_settings[$scope.feed].feed_template) {
+			var template = pwData.feed_settings[$scope.feed].feed_template;			   	
+			$scope.templateUrl = pwData.pw_get_template( { subdir: 'feeds', view: template } );
+			//$log.debug('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
+	   	}
+	   	else {
+			if ($scope.directive=='liveFeed')
+				$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html';
+			else if ($scope.directive=='loadFeed')
+				$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html';
+			// just use default template provided in directive settings, no action required
+			return;			   	
+	   	}
+
 		
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
 		   $log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
@@ -335,7 +266,9 @@ postworld.controller('pwFeedController',
 		};
 		$scope.pwLiveFeed = function() {
 								
-			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
+			if (!$scope.args.feed_query)
+				$scope.args.feed_query = {};
+
 			// identify the feed_settings feed_id
 			
 			$scope.items = {};
@@ -516,7 +449,70 @@ postworld.controller('pwFeedController',
 					// TODO Show User Friendly Error Message
 				}
 			);
-		  };
+		};
+
+
+				// Definitions
+		/*
+		$scope.convertQueryString2FeedQuery= function (params) {
+			$log.info('Feed Query Override by Query String',params);
+			for(var key in params){
+				// The value is obj[key]
+				$scope.args.feed_query[key] = params[key];
+			}			
+		};
+		*/
+		$scope.convertFeedQuery2QueryString= function (params) {
+			// $log.info('pwFeedController convertFeedQuery2QueryString', params);
+			$log.info('Feed Query Override by Feed Query',params);			  			
+			// Loop on all query variables
+			var queryString = "";
+			for(var key in params){
+				// Remove Null Values
+				if (params[key]==null){  					
+					continue;
+				}
+				if (key=="tax_query") {
+					var taxInput = escape(JSON.stringify(params[key]));
+					queryString += key + "=" + taxInput + "&";
+					continue;
+				};
+				// The value is obj[key]
+				//$scope.args.feed_query[key] = params[key];
+				// TODO objects like taxonomy?
+				// TODO arrays?
+				if ((params[key]!==0) && (params[key]!==false)) {
+					if (params[key] == "") {
+						continue;
+					}
+				}  
+				queryString += key + "=" + escape(params[key]) + "&"; 
+			}
+			queryString = queryString.substring(0, queryString.length - 1);
+			$log.debug('path is ',$location.path());
+			// $location.search('page', pageNumber);
+			var path = $location.path();
+			$location.path(path).search(queryString);
+			//$location.path().search(queryString);
+			$log.info('abslute path = ',$location.absUrl(),queryString);			
+			//$log.info('pwFeedController convertFeedQuery2QueryString', queryString);  			
+		};
+
+		$scope.getQueryStringArgs= function () {
+			// TODO Should query string work with live feed only?
+			if ($attrs.loadFeed) {
+				return;
+			}
+			// Get Query String Parameters
+			// TODO Check if location.search work on all browsers.
+			var params = $location.search();
+			if ((params) && (params.tax_query)) {    			
+				params.tax_query = JSON.parse(params.tax_query); 
+			}
+			return params;
+			//$scope.convertQueryString2FeedQuery(params);  			
+		};
+
 	}
 );
 
