@@ -94,10 +94,9 @@ postworld.controller('pwGridItemCtrl',
     var gridWidth = gridSettings['width'];
     var gridHeight = gridSettings['height'];
 
-    $scope.getImageSize = function(){
-        return "full";
+    $scope.getImageSize = function( prefix ){
+        return prefix + $scope.selectImageTag().name;
     }
-
 
     var imageTags = $scope.post.image['tags'];
     var imageStats = $scope.post.image['stats'];
