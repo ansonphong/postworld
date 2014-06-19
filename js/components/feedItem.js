@@ -63,10 +63,10 @@ postworld.controller('pwFeedItemController',
 ////////// GRID FEED CONTROLLER //////////*/
 
 
-postworld.directive( 'pwGridItem', [ function($scope){
+postworld.directive( 'pwGrid', [ function($scope){
     return {
         restrict: 'AE',
-        controller: 'pwGridItemCtrl',
+        controller: 'pwGridCtrl',
         link: function( $scope, element, attrs ){
             //$scope.gridItem = {};
 
@@ -78,11 +78,11 @@ postworld.directive( 'pwGridItem', [ function($scope){
     };
 }]);
 
-postworld.controller('pwGridItemCtrl',
+postworld.controller('pwGridCtrl',
     [ "$scope", "$window", "_", "$log",
     function($scope, $window,  $_, $log ) {
 
-    
+    ////////// GRIDS //////////
 
     var gridSettings = ( $_.objExists( $scope, 'feedSettings.view.settings.grid' ) ) ?
         $scope.feedSettings.view.settings.grid : 
@@ -145,7 +145,13 @@ postworld.controller('pwGridItemCtrl',
     		return false;
     	// Return the selected tag
     	return selectedTag;
-    }
+    };
+
+    $scope.setGridClass = function(){
+    	var selectedTag = $scope.selectImageTag();
+    	return selectedTag.name;
+
+    };
 
     $scope.setGridStyle = function(){
     	var selectedTag = $scope.selectImageTag();
@@ -153,7 +159,7 @@ postworld.controller('pwGridItemCtrl',
         var width = selectedTag['width'] * multiplier;
         var height = selectedTag['height'] * multiplier;
         return { width: width + "px", height: height + "px", };
-    }
+    };
 
     $scope.setGridStyleB = function(){
 
@@ -161,7 +167,64 @@ postworld.controller('pwGridItemCtrl',
         var height = gridHeight;
         return { width: width + "px", height: height + "px", };
 
+    };
+
+}]);
+
+
+
+/*
+   ____      _     _   ___ _                 
+  / ___|_ __(_) __| | |_ _| |_ ___ _ __ ___  
+ | |  _| '__| |/ _` |  | || __/ _ \ '_ ` _ \ 
+ | |_| | |  | | (_| |  | || ||  __/ | | | | |
+  \____|_|  |_|\__,_| |___|\__\___|_| |_| |_|
+
+/////////// GRID ITEM CONTROLLER ///////////*/
+
+postworld.directive( 'pwGridItem', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'pwGridItemCtrl',
+        link: function( $scope, element, attrs ){
+            // OBSERVE Attribute
+            //attrs.$observe('gridFixedHeight', function(value) {
+              //$scope.$parent.gridFeed.gridFixedHeight = value;
+            //});
+        }
+    };
+}]);
+
+postworld.controller('pwGridItemCtrl',
+    [ "$scope", "$window", "_", "$log",
+    function($scope, $window,  $_, $log ) {
+
+    ////////// ALIAS FUNCTIONS //////////
+
+    var parentFunctionExists = function( functionName ){
+    	return !_.isUndefined( $scope.$parent.$parent[ functionName ]() );
     }
+
+    $scope.getImageSize = function( prefix ){
+    	if ( parentFunctionExists( "getImageSize" ) ) 
+        	return $scope.$parent.$parent.getImageSize( prefix );
+    }
+
+    $scope.selectImageTag = function(){
+    	if ( parentFunctionExists( "selectImageTag" ) )
+    		return $scope.$parent.$parent.selectImageTag();
+    };
+
+    $scope.setGridClass = function(){
+    	if ( parentFunctionExists( "setGridClass" ) )
+    		return $scope.$parent.$parent.setGridClass();
+    };
+
+    $scope.setGridStyle = function(){
+    	if ( parentFunctionExists( "setGridStyle" ) )
+    		return $scope.$parent.$parent.setGridStyle();
+    };
+
 
 }]);
 
