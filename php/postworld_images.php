@@ -9,15 +9,9 @@ include_once $aq_resizer_include;
 
 ///// GENERATE IMAGE TAGS /////
 
-function pw_generate_image_tags( $vars = array() ){
-	if( empty( $vars ) )
-		return false;
+function pw_image_tag_filters( $vars ){
 
 	extract( $vars );
-
-	// Set Defaults
-	if( !isset( $ratio ) )
-		$ratio = $width / $height;
 
 	///// FILTERS /////
 	// Tag filters to process
@@ -78,6 +72,23 @@ function pw_generate_image_tags( $vars = array() ){
 	// Merge Filters
 	// TODO : Iterate through each custom tag, and over-ride defaults with conditions
 	$tag_filters = array_merge( $default_tags, $custom_tags );
+
+	return $default_tags;
+
+}
+
+function pw_generate_image_tags( $vars = array() ){
+	if( empty( $vars ) )
+		return false;
+
+	extract( $vars );
+
+	// Set Defaults
+	if( !isset( $ratio ) )
+		$ratio = $width / $height;
+
+	// Get Tag Filters
+	$tag_filters = pw_image_tag_filters( array( "width" => $width, "height" =>  $height, "ratio" => $ratio ) );
 
 	// Setup tags object
 	$tags = array();

@@ -34,7 +34,6 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 			// or if string not found, this substitutes as the panel id
 			switch( meta.mode ){
 				///// QUICK EDIT /////
-				// TODO - IMPLIMENT THIS <<<< Currently it's using the lineage "pwQuickEdit" method
 				case "quick-edit":
 					templateName = "modal-edit-post";
 					controller = "pwModalInstanceCtrl";
@@ -48,6 +47,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 				break;
 				///// VIEW /////
 				case "view":
+				///// FEED /////
+				case "feed":
 					// TODO : Add support to detect post types / format and check for availability of the modal template					
 					templateName = "modal-view-post";
 					controller = "pwModalInstanceCtrl";
@@ -109,30 +110,79 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 
 ////////// MODAL INSTANCE CONTROL //////////
-
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope',  '$modalInstance', 'meta', 'pwData', '$timeout', // 'pwQuickEdit',
-	function($scope, $rootScope, $modalInstance, meta, $pwData, $timeout) { // , $pwQuickEdit
+	[ '$scope', '$rootScope',  '$modalInstance', 'meta', 'pwData', '$timeout', '_', // 'pwQuickEdit',
+	function( $scope, $rootScope, $modalInstance, meta, $pwData, $timeout, $_ ) { // , $pwQuickEdit
 
+	///// SET MODE /////
 	// Set Default Mode
 	$scope.mode = ( !_.isUndefined( meta.mode ) ) ?
 		meta.mode : "view";
 
+	///// GET POST OBJECT /////
 	// Import the passed post object into the Modal Scope
 	if( !_.isUndefined( meta.post ) )
 		$scope.post = meta.post;
-		//alert( JSON.stringify( $scope.post ) );
 
-	// TIMEOUT
+	///// FEED HANDLING /////
+	if( $_.objExists( meta, 'post.feed.id' ) ){
+		$scope.feed = {};
+
+		// Find and localize the feed
+		$scope.feed['id'] = meta.post.feed['id'];
+		$scope.feed['data'] = $pwData.feed_data[ $scope.feed['id'] ];
+
+		// Get the original full post object from the feed
+		// In the case that only a partial post object was passed
+		$scope.post = _.findWhere( $scope.feed['data']['posts'], { ID: $scope.post.ID } );
+
+		// Get the current position of the feed
+		$scope.feed['currentIndex'] = _.indexOf( $scope.feed['data']['posts'], $scope.post );
+	}
+
+
+	///// LOAD POST DATA /////
 	// Allow editPost Controller to Initialize
-	if( !_.isUndefined( $scope.post.ID ) &&
-		$scope.mode != 'new' ){
+	if( !_.isUndefined( $scope.post.ID )){
 		// Broadcast to Load in the Post Data
-		$timeout(function() {
-		  $scope.$broadcast('loadPostData', $scope.post.ID );
-		}, 3);
+		if( $scope.mode == "view" || $scope.mode == "quick-edit" )
+			$timeout(function() {
+			  $scope.$broadcast('loadPostData', $scope.post.ID );
+			}, 3 );
 	}
 	
+
+	///// PREVIOUS & NEXT POSTS FUNCTIONS /////
+
+	// If a feed is specified
+	if( !_.isUndefined( $scope.feed ) ){
+		// TODO : Add ability to go past loaded feed items, and load feed items based on feed_outline
+		// TODO : ... and then resort them in the feed_outline according to their position in feed_outline
+
+		// Watch when feed.currentIndex changes
+		$scope.$watch( "feed.currentIndex", function (){
+				// Set the current $scope.post object to reflect the current index
+				
+			}); 
+	}
+
+	$scope.nextPost = function(){
+		if( _.isUndefined( $scope.feed ) )
+			return false;
+
+		// If the feed is at the end, reset index to 0
+
+	};
+
+	$scope.previousPost = function(){
+		if( _.isUndefined( $scope.feed ) )
+			return false;
+
+		// If the feed is at the beginning, reset index to (feed.posts.length-1)
+
+	};
+
+	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
 	$scope.close = function () {
 		$modalInstance.dismiss('close');
@@ -144,17 +194,16 @@ postworld.controller('pwModalInstanceCtrl',
 	}; 
 
 	// WATCH FOR TRASHED
-	// Close Modal
-	// Set Parent post_status = trash
+	// TODO : Set Parent post_status = trash via pwData.feed_data
 	// Watch on the value of post_status
 	$scope.$watch( "post.post_status",
 		function (){
 			if( $scope.post.post_status == 'trash'  )
+				// Close Modal
 				$modalInstance.dismiss('close');
 		}); 
 
 }]);
-
 
 postworld.directive( 'pwModalAccess', [ function($scope){
 	return {

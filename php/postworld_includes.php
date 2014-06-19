@@ -360,6 +360,8 @@ function pwSiteGlobals_include(){
 		'plugins_url' => WP_PLUGIN_URL,
 	);
 
+	
+
 	$pwGlobalsJs  = "";
 	$pwGlobalsJs .= "var pwSiteGlobals = ";
 	$pwGlobalsJs .= json_encode( $pwSiteGlobals );

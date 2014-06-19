@@ -352,25 +352,26 @@ postworld.controller('pwFeedController',
 
 			var newPosts = [];
 
+			// Iterate through each post
 			angular.forEach( posts, function( post ){
-				var newPost = post;
+				// Add the Feed ID
+				post = $_.setObj( post, 'feed.id', $scope.feed );
 
 				// Add new variables to post object
 				if( vars.mode == "newFeed" ){
-					newPost = $_.setObj( newPost, 'feed.feed_order', feed_order );
-					newPost = $_.setObj( newPost, 'feed.load_order', feed_order );
+					post = $_.setObj( post, 'feed.feed_order', feed_order );
+					post = $_.setObj( post, 'feed.load_order', feed_order );
 				}
 				else if( vars.mode == "scrollFeed" && feed_order >= vars.postsLoaded ){
-					newPost = $_.setObj( newPost, 'feed.feed_order', feed_order );
+					post = $_.setObj( post, 'feed.feed_order', feed_order );
 				}
 
-				newPosts.push( newPost );
+				newPosts.push( post );
 				feed_order ++;
 				
 			});
 
 			// Re-set the centralized posts object
-			//$log.debug( "NEW POSTS: ", newPosts );
 			pwData.feed_data[$scope.feed].posts = newPosts;
 
 		};
