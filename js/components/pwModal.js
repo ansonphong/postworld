@@ -111,8 +111,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 ////////// MODAL INSTANCE CONTROL //////////
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope',  '$modalInstance', 'meta', 'pwData', '$timeout', '_', // 'pwQuickEdit',
-	function( $scope, $rootScope, $modalInstance, meta, $pwData, $timeout, $_ ) { // , $pwQuickEdit
+	[ '$scope', '$rootScope', '$document', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', // 'pwQuickEdit',
+	function( $scope, $rootScope, $document, $modalInstance, meta, $log, $pwData, $timeout, $_ ) { // , $pwQuickEdit
 
 	///// SET MODE /////
 	// Set Default Mode
@@ -198,6 +198,35 @@ postworld.controller('pwModalInstanceCtrl',
 			$scope.feed.currentIndex --;
 
 	};
+
+	///// KEY PRESS /////
+	// Capture Keydown
+	$document.keydown(function(e){
+		$scope.keyDown( e );
+	})
+	$scope.keyDown = function( e ){
+		//$log.debug( "key press : " + e.keyCode + " : ", e );
+		var keyCode = parseInt( e.keyCode );
+	
+		///// FEED /////
+		if( !_.isUndefined( $scope.feed ) ){
+			switch( keyCode ){
+				// Right Key
+				case 39:
+					$scope.nextPost();
+					$log.debug( "next" );
+					break;
+				// Left Key
+				case 37:
+					$scope.previousPost();
+					$log.debug( "previous" );
+					break;
+			}
+		}
+
+		$scope.$apply();
+	}
+
 
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
