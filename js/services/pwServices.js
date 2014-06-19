@@ -211,6 +211,78 @@ postworld.factory('_',
 
 
 
+
+
+
+postworld.factory('pwImages',
+	[ '$log','$window',
+	function ( $log, $window ) {  
+
+	///// UNIVERSALS /////
+	var tagMappings = [
+    	{
+    		name: 'square',
+    		width: 1,
+    		height: 1,
+    	},
+    	{
+    		name: 'wide',
+    		width: 1,
+    		height: 1,
+    	},
+    	{
+    		name: 'x-wide',
+    		width: 2,
+    		height: 1,
+    	},
+    	{
+    		name: 'tall',
+    		width: 1,
+    		height: 1.5,
+    	},
+    	{
+    		name: 'x-tall',
+    		width: 1,
+    		height: 2,
+    	},
+    ];
+
+    ///// FACTORY VALUES /////
+	return {
+		selectImageTag: function( tags, mappings ){
+
+			// Set Default Mapping
+	    	if( _.isUndefined( mappings ) )
+	    		mappings = tagMappings;
+
+	    	var selectedTag = {};
+	    	// Iterate through each image tag in the selected image
+	    	angular.forEach( tags, function( imageTag ){
+	    		// Iterate through each mapping option
+	    		angular.forEach( tagMappings, function( tagMapping ){
+	    			// Select the last match
+	    			if( tagMapping['name'] == imageTag )
+	    				selectedTag = tagMapping;
+		    	});
+	    	});
+	    	// If none selected
+	    	if( selectedTag == {} )
+	    		return false;
+	    	// Return the selected tag
+	    	return selectedTag;
+    	},
+	};
+
+}]);
+
+
+
+
+
+
+
+
+
 ////// DEPRECIATED /////
 
 /* _                  _   

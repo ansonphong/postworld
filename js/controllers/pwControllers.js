@@ -25,8 +25,8 @@ postworld.directive( 'pwPost', [ function($scope){
 
 
 postworld.controller('postController',
-    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "ext", "$log",
-    function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $ext, $log ) {
+    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "ext", "_", "$log", "pwImages",
+    function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $ext, $_, $log, $pwImages ) {
 
     // Define backup source for 'post' object 
     if( typeof $scope.post === 'undefined' ){
@@ -139,6 +139,13 @@ postworld.controller('postController',
         return style;
     }
 
+
+    $scope.selectImageTag = function(){
+        if( $_.objExists( $scope, "post.image.tags" ) == false )
+            return false;
+        var imageTags = $scope.post.image['tags'];
+        return $pwImages.selectImageTag( imageTags );
+    }
 
     ///// SET ACTIVE CLASS /////
     $scope.setActiveClass = function( boolean ){

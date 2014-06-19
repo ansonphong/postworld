@@ -79,8 +79,8 @@ postworld.directive( 'pwGrid', [ function($scope){
 }]);
 
 postworld.controller('pwGridCtrl',
-    [ "$scope", "$window", "_", "$log",
-    function($scope, $window,  $_, $log ) {
+    [ "$scope", "$window", "_", "$log", "pwImages",
+    function($scope, $window,  $_, $log, $pwImages ) {
 
     ////////// GRIDS //////////
 
@@ -101,73 +101,23 @@ postworld.controller('pwGridCtrl',
     var imageTags = $scope.post.image['tags'];
     var imageStats = $scope.post.image['stats'];
 
-    var tagMappings = [
-    	{
-    		name: 'square',
-    		width: 1,
-    		height: 1,
-    	},
-    	{
-    		name: 'wide',
-    		width: 1,
-    		height: 1,
-    	},
-    	{
-    		name: 'x-wide',
-    		width: 2,
-    		height: 1,
-    	},
-    	{
-    		name: 'tall',
-    		width: 1,
-    		height: 1.5,
-    	},
-    	{
-    		name: 'x-tall',
-    		width: 1,
-    		height: 2,
-    	},
-    ];
-
     $scope.selectImageTag = function(){
-    	var selectedTag = {};
-    	// Iterate through each image tag in the selected image
-    	angular.forEach( imageTags, function( imageTag ){
-    		// Iterate through each mapping option
-    		angular.forEach( tagMappings, function( tagMapping ){
-    			// Select the last match
-    			if( tagMapping['name'] == imageTag )
-    				selectedTag = tagMapping;
-	    	});
-    	});
-    	// If none selected
-    	if( selectedTag == {} )
-    		return false;
-    	// Return the selected tag
-    	return selectedTag;
-    };
+    	return $pwImages.selectImageTag( imageTags );
+    }
 
     $scope.setGridClass = function(){
-    	var selectedTag = $scope.selectImageTag();
+    	var selectedTag = $scope.selectImageTag( imageTags );
     	return selectedTag.name;
-
     };
 
     $scope.setGridStyle = function(){
-    	var selectedTag = $scope.selectImageTag();
+    	var selectedTag = $scope.selectImageTag( imageTags );
     	var multiplier = 300;
         var width = selectedTag['width'] * multiplier;
         var height = selectedTag['height'] * multiplier;
         return { width: width + "px", height: height + "px", };
     };
 
-    $scope.setGridStyleB = function(){
-
-        var width = gridHeight * imageStats.ratio;
-        var height = gridHeight;
-        return { width: width + "px", height: height + "px", };
-
-    };
 
 }]);
 
@@ -196,8 +146,8 @@ postworld.directive( 'pwGridItem', [ function($scope){
 }]);
 
 postworld.controller('pwGridItemCtrl',
-    [ "$scope", "$window", "_", "$log",
-    function($scope, $window,  $_, $log ) {
+    [ "$scope", "$window", "_", "$log", "pwImages",
+    function($scope, $window,  $_, $log, $pwImages ) {
 
     ////////// ALIAS FUNCTIONS //////////
 
