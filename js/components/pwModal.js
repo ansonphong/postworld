@@ -162,7 +162,7 @@ postworld.controller('pwModalInstanceCtrl',
 		// Watch when feed.currentIndex changes
 		$scope.$watch( "feed.currentIndex", function (){
 				// Set the current $scope.post object to reflect the current index
-				
+				$scope.post = $scope.feed['data']['posts'][ $scope.feed.currentIndex ];
 			}); 
 	}
 
@@ -170,7 +170,15 @@ postworld.controller('pwModalInstanceCtrl',
 		if( _.isUndefined( $scope.feed ) )
 			return false;
 
+		// Setup Vars
+		var feedLength = $scope.feed['data']['posts'].length;
+		var currentIndex = $scope.feed.currentIndex;
+
 		// If the feed is at the end, reset index to 0
+		if( currentIndex >= ( feedLength - 1 ) )
+			$scope.feed.currentIndex = 0;
+		else
+			$scope.feed.currentIndex ++;
 
 	};
 
@@ -178,7 +186,16 @@ postworld.controller('pwModalInstanceCtrl',
 		if( _.isUndefined( $scope.feed ) )
 			return false;
 
-		// If the feed is at the beginning, reset index to (feed.posts.length-1)
+		// Setup Vars
+		var feedLength = $scope.feed['data']['posts'].length;
+		var currentIndex = $scope.feed.currentIndex;
+
+		// If the feed is at the beginning, set it to the end
+		if( currentIndex == 0 )
+			$scope.feed.currentIndex = ( feedLength - 1 );
+		// Otherwise just reduce the index by one
+		else
+			$scope.feed.currentIndex --;
 
 	};
 
@@ -196,12 +213,11 @@ postworld.controller('pwModalInstanceCtrl',
 	// WATCH FOR TRASHED
 	// TODO : Set Parent post_status = trash via pwData.feed_data
 	// Watch on the value of post_status
-	$scope.$watch( "post.post_status",
-		function (){
-			if( $scope.post.post_status == 'trash'  )
-				// Close Modal
-				$modalInstance.dismiss('close');
-		}); 
+	$scope.$watch( "post.post_status", function (){
+		if( $_.getObj( $scope, 'post.post_status' ) == 'trash'  )
+			// Close Modal
+			$modalInstance.dismiss('close');
+	}); 
 
 }]);
 
