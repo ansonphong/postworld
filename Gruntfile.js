@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  var angular_version = 'angular-1.2.9';
+  var angular_version = 'angular-1.3.0-beta.13';
 
   // Project configuration.
   grunt.initConfig({
