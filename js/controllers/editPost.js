@@ -87,14 +87,41 @@ postworld.controller('editPost',
 
 	// Define Global Edit Post Defaults
 	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
-	var editPostGlobals = $window.pwSiteGlobals.edit_post;
 	
+	// Localize Edit Post Object
+	if( $_.objExists( $window, 'pwSiteGlobals.edit_post' ) )
+		$scope.editPostGlobals = $window.pwSiteGlobals.edit_post;
+	
+	// Localize Post Options Object
+	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
+		$scope.postOptions = $window.pwSiteGlobals.post_options;
+
 	// If No Post Object exists, create one
 	$timeout( function(){
 		if( _.isUndefined( $scope.post ) ){
 			$scope.setPostObject({});
 		}
 	}, 1 );
+
+
+	// Define which post type to return within a set of options
+	// Allows to have a 'default' post type object
+	// With the option to over-ride with the current scope post type
+	$scope.getPostOptions = function( option, subkey ){
+		// option ~= "post_excerpt" / "post_title", etc
+
+		if( $_.objExists( $scope, 'postOptions.' + option + '.' + subkey ) )
+			return $scope.postOptions[ option ][ subkey ];
+
+		else if( $_.objExists( $scope, 'postOptions.' + option + '.default' ) )
+			return $scope.postOptions[ option ][ 'default' ];
+		
+		else
+			return false;
+
+	};
+
+
 	
 	$scope.clearAndClose = function(){
 		// Clear Embedly Extract

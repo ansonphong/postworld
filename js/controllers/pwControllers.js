@@ -28,12 +28,12 @@ postworld.controller('postController',
     [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "ext", "_", "$log", "pwImages",
     function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $ext, $_, $log, $pwImages ) {
 
-    // Define backup source for 'post' object 
-    if( typeof $scope.post === 'undefined' ){
-        if( typeof $window.post != 'undefined' ){
+    // If $scope.post doesn't exist
+    // Get it from $window.post
+    if( _.isUndefined( $scope.post ) )
+        if( !_.isUndefined( $window.post ) )
             $scope.post = $window.post;
-        }
-    }
+        
 
     // RUN CUSTOM POST FUNCTIONS
     // This function can be added to the $window object
@@ -41,16 +41,11 @@ postworld.controller('postController',
     if( typeof $window.pwPostFunctions === "function" )
         $window.pwPostFunctions( $scope );
 
-    // Parse known JSON Fields from strings into JSON
-    //$scope.post = pwEditPostFilters.parseKnownJsonFields( $scope.post );
-
     // Trust the post_content as HTML
-    if( $ext.objExists( $scope, 'post.post_content' )){
-        var post_content = $scope.post.post_content;
-        if( _.isString( post_content ) )
-            $scope.post.post_content = $sce.trustAsHtml(post_content);
-        else
-            $scope.post.post_content = "";
+    // Otherwise seed it as an empty string
+    if( $_.objExists( $scope, 'post.post_content' )){
+        $scope.post.post_content = ( _.isString( $scope.post.post_content ) ) ?
+            $sce.trustAsHtml( $scope.post.post_content ) : "";
     }
 
     // IMPORT LANGUAGE
@@ -86,21 +81,15 @@ postworld.controller('postController',
                 // Success
                 function(response) {
                     if (response.status==200) {
-                        //$log.debug('pwPostLoadController.pw_load_post Success',response.data);                     
-                        
                         var post = response.data;
-
                         // Convert Post Content into Bindable HTML
                         if( !_.isUndefined( post.post_content ) &&
                             _.isString(post.post_content) ){
                             post.post_content = $sce.trustAsHtml(post.post_content);
                         }
-
                         $scope.post = response.data;
-
                         // Update Classes
                         $scope.setClass();
-                    
                     } else {
                         // handle error
                     }
@@ -113,7 +102,6 @@ postworld.controller('postController',
             );
         }
     });
-
 
     ///// TIME FUNCTIONS /////
     $scope.jsDateToTimestamp = function(jsDate){

@@ -252,6 +252,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Embedly-JS',
 			WP_PLUGIN_URL.'/postworld/js/components/pwEmbedly.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Input-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/pwInput.js', $angularDep );
+
 
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',
