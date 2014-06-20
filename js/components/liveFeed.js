@@ -150,13 +150,13 @@ postworld.controller('pwFeedController',
 			// check if ads enabled
 			if (pwData.feed_settings[$scope.feed].blocks) {
 				var max_blocks = 5;
-				if (pwData.feed_settings[$scope.feed].blocks.max_blocks) max_blocks = pwData.feed_settings[$scope.feed].blocks.max_blocks;
+				if ( pwData.feed_settings[$scope.feed].blocks.max_blocks) max_blocks = pwData.feed_settings[$scope.feed].blocks.max_blocks;
 				var adTemplate = "ad-block";
-				if (pwData.feed_settings[$scope.feed].blocks.template) adTemplate = pwData.feed_settings[$scope.feed].blocks.template;
+				if ( pwData.feed_settings[$scope.feed].blocks.template) adTemplate = pwData.feed_settings[$scope.feed].blocks.template;
 				var increment = 10;
-				if (pwData.feed_settings[$scope.feed].blocks.increment) increment = pwData.feed_settings[$scope.feed].blocks.increment;
+				if ( pwData.feed_settings[$scope.feed].blocks.increment) increment = pwData.feed_settings[$scope.feed].blocks.increment;
 				// Check if max_blocks reached, return.
-				if ($scope.adBlocks>=max_blocks) return;				
+				if ( $scope.adBlocks >= max_blocks ) return;				
 				var len = $scope.posts.length;
 				// did we reach new id? insert
 				if ($scope.adNextID==len) {
@@ -334,9 +334,10 @@ postworld.controller('pwFeedController',
 		  };
 
 		$scope.addFeedMeta = function( vars ){
-			// Add Mechanism for scrollFeed, so it stores the value of the last feed_order, so it doesn't have to re-iterate over the whole array
+			// TODO : PERFORMANCE : Add Mechanism for scrollFeed, so it stores the value of the last index,
+			// so it doesn't have to re-iterate over the whole array
 			
-			//{ mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length }
+			// { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length }
 
 			// Set the mode of the Meta Data
 			if( !$_.objExists( vars, 'mode' ) ){
@@ -347,8 +348,8 @@ postworld.controller('pwFeedController',
 			// Localize the posts
 			var posts = pwData.feed_data[$scope.feed].posts;
 			
-			var feed_order = 0;
-			var load_order = 0;
+			var index = 0;
+			var loadOrder = 0;
 
 			var newPosts = [];
 
@@ -359,15 +360,15 @@ postworld.controller('pwFeedController',
 
 				// Add new variables to post object
 				if( vars.mode == "newFeed" ){
-					post = $_.setObj( post, 'feed.feed_order', feed_order );
-					post = $_.setObj( post, 'feed.load_order', feed_order );
+					post = $_.setObj( post, 'feed.index', index );
+					post = $_.setObj( post, 'feed.loadOrder', index );
 				}
-				else if( vars.mode == "scrollFeed" && feed_order >= vars.postsLoaded ){
-					post = $_.setObj( post, 'feed.feed_order', feed_order );
+				else if( vars.mode == "scrollFeed" && index >= vars.postsLoaded ){
+					post = $_.setObj( post, 'feed.index', index );
 				}
 
 				newPosts.push( post );
-				feed_order ++;
+				index ++;
 				
 			});
 
@@ -466,16 +467,17 @@ postworld.controller('pwFeedController',
 					if( response.status == 200) {
 
 						var newItems = response.data;
-						var load_order = 0;
+						var loadOrder = 0;
 						for (var i = 0; i < newItems.length; i++) {
-							// $log.debug('Looping :',i,newItems[i].ID);
-
-							// Add feed.load_order Variable
-							newItems[i] = $_.setObj( newItems[i], 'feed.load_order', load_order );
-							load_order ++;
+							// LOAD ORDER // feed.loadOrder
+							// Tells which order in the chunk of posts loaded each post is
+							// To allow for sequencing transitions, such as offset fade-ins on scroll
+							newItems[i] = $_.setObj( newItems[i], 'feed.loadOrder', loadOrder );
+							loadOrder ++;
 
 							// Push to central posts array
-							pwData.feed_data[$scope.feed].posts.push( newItems[i] );							
+							pwData.feed_data[$scope.feed].posts.push( newItems[i] );
+							// Inject Blocks						
 							$scope.injectNewAd();
 
 						}
