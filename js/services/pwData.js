@@ -11,7 +11,7 @@
  *	$args = json_decode($args_text);
  * */
 
-postworld.factory('pwData', function ($resource, $q, $log, $window) {	  
+postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$postworld', function ( $resource, $q, $log, $window, $postworld ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
@@ -203,7 +203,7 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 				return false;
 
 		
-			var template = getTemplate( this, meta ); // ( this, subdir, post_type, name )
+			var template = getTemplate( this, meta ) + "?ver=" + $postworld['version'] ; // ( this, subdir, post_type, name )
 		    return template;
 
 		}, // END OF pw_get_template
@@ -426,4 +426,4 @@ postworld.factory('pwData', function ($resource, $q, $log, $window) {
 
 
    }; // END OF pwData return value
-});
+}]);

@@ -36,8 +36,11 @@ var depInject = [
 	];
 
 
-var postworld = angular.module('postworld', depInject )
-.config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
+var postworld = angular.module('postworld', depInject );
+
+postworld.constant( '$postworld', { version: "1.5.1" } );
+
+postworld.config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
 
 	var plugin_url = jsVars.pluginurl;
 
@@ -163,6 +166,7 @@ var postworld = angular.module('postworld', depInject )
 	$logProvider.debugEnabled(true);
 
 });
+
 
 
  
