@@ -29,8 +29,8 @@ postworld.directive( 'pwEmbedlyExtract', [ function($scope){
 }]);
 
 postworld.controller( 'pwEmbedlyExtractCtrl',
-	[ '$scope', '$window', '$timeout', '$log', 'pwData', 'embedly', 'pwEditPostFilters', 'ext',
-	function( $scope, $window, $timeout, $log, $pwData, $embedly, $pwEditPostFilters, $ext ) {
+	[ '$scope', '$window', '$timeout', '$log', 'pwData', 'embedly', 'pwEditPostFilters', '_',
+	function( $scope, $window, $timeout, $log, $pwData, $embedly, $pwEditPostFilters, $_ ) {
 
 
 	$scope.$parent.extractUrl = function() {
@@ -47,7 +47,7 @@ postworld.controller( 'pwEmbedlyExtractCtrl',
 					$log.debug( response );
 
 					// Clear the HTML Field
-					if( $ext.objExists( response, 'media.html' ) )
+					if( $_.objExists( response, 'media.html' ) )
 						response['media']['html'] = '';
 
 					$scope.extractObjectModel = response;
@@ -86,7 +86,7 @@ postworld.controller( 'pwEmbedlyExtractCtrl',
 			// Translate Embedly Object into WP Object
 			$scope.embedlyExtractTranslated = $embedly.translateToPostData( $scope.extractObjectModel );
 			// Merge it with the current post
-			$scope.$parent.post = $ext.mergeRecursiveObj( $scope.$parent.post, $scope.embedlyExtractTranslated ) ;
+			$scope.$parent.post = $_.mergeRecursiveObj( $scope.$parent.post, $scope.embedlyExtractTranslated ) ;
 
 			// Extract image meta
 			$scope.$parent.extractImageMeta = $embedly.embedlyExtractImageMeta( $scope.extractObjectModel );
@@ -138,7 +138,7 @@ postworld.controller( 'pwEmbedlyExtractCtrl',
 	$scope.$on('updateSelectedExtractImage', function(event, selectedIndex) {
 
 		// If Meta Value doesn't exist, return early
-		if( !$ext.objExists( $scope.$parent, 'extractImageMeta' ) )
+		if( !$_.objExists( $scope.$parent, 'extractImageMeta' ) )
 			return false;
 
 		// Localize Values

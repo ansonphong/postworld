@@ -75,9 +75,9 @@ postworld.directive( 'pwEditPost', [ function($scope){
 
 postworld.controller('editPost',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit', '_',
+	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window', 'pwRoleAccess', 'pwQuickEdit', '_',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit, $_ ) {
+		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_ ) {
 
 	$scope.status = 'loading';
 
@@ -140,7 +140,7 @@ postworld.controller('editPost',
 	// Define Default Post
 	$scope.getSelectedLinkFormatMeta = function(){
 		
-		if(!$ext.objExists( $scope, 'post.link_format' ))
+		if(!$_.objExists( $scope, 'post.link_format' ))
 			return false;
 		
 		var link_format = $scope.post.link_format;
@@ -167,7 +167,7 @@ postworld.controller('editPost',
 			var post_type = post.post_type;
 		}
 		// Check for Post Type Defined by the 'scope' Post Object
-		else if( $ext.objExists( $scope, 'post.post_type' ) ){
+		else if( $_.objExists( $scope, 'post.post_type' ) ){
 			var post_type = $scope.post.post_type;
 		}
 		// Check for Post Type Defined by the attribute 'post-type'
@@ -250,7 +250,7 @@ postworld.controller('editPost',
 			if (!_.isUndefined( $scope.initEditPost.post_type ) )
 				var post_type = $scope.initEditPost.post_type;
 			// Check for Post Type defined by scope post object
-			else if( $ext.objExists( $scope, 'post.post_type' ) )
+			else if( $_.objExists( $scope, 'post.post_type' ) )
 				var post_type = $scope.post.post_type;
 			else
 				var post_type = 'post';
@@ -318,7 +318,7 @@ postworld.controller('editPost',
 		}, 2);
 
 		// Set the Route
-		if( $ext.objExists( $scope, 'post.post_type' ) &&
+		if( $_.objExists( $scope, 'post.post_type' ) &&
 			$scope.editPostConfig.routing == true )
 			$location.path('/new/' + $scope.post.post_type);
 
@@ -466,7 +466,7 @@ postworld.controller('editPost',
 
 				///// LOAD AUTHOR /////
 				// EXTRACT AUTHOR NAME
-				if ( $ext.objExists( get_post, 'author.user_nicename' ) ){
+				if ( $_.objExists( get_post, 'author.user_nicename' ) ){
 					get_post['post_author_name'] = get_post['author']['user_nicename'];
 					delete get_post['author'];
 				}
@@ -661,7 +661,7 @@ postworld.controller('editPost',
 	$scope.$watch('[ post.tax_input, tax_terms ]',
 		function ( newValue, oldValue ){
 			if ( !_.isUndefined($scope.tax_terms) &&
-				$ext.objExists( $scope, 'post.tax_input' ) ){
+				$_.objExists( $scope, 'post.tax_input' ) ){
 				// Create selected terms object
 				$scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post.tax_input);
 				// Clear irrelivent sub-terms
@@ -676,7 +676,7 @@ postworld.controller('editPost',
 		function ( newValue, oldValue ){
 
 			// Check if Object Exists
-			if( $ext.objExists( $scope, 'post.link_url' ) )
+			if( $_.objExists( $scope, 'post.link_url' ) )
 				$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
 		
 		});
@@ -737,7 +737,7 @@ postworld.controller('editPost',
 		function (){
 
 		// Check if Object Exists
-		if( !$ext.objExists( $scope, 'post.image' ) )
+		if( !$_.objExists( $scope, 'post.image' ) )
 			$scope.hasFeaturedImage = false;
 
 		if( !_.isUndefined($scope.post.thumbnail_id) &&
@@ -753,7 +753,7 @@ postworld.controller('editPost',
 	$scope.hasFeaturedImage = function(){
 
 
-		if( $ext.objExists( $scope, 'post.image' ) &&
+		if( $_.objExists( $scope, 'post.image' ) &&
 			!_.isEmpty($scope.post.image) )
 			return true;
 		else
@@ -762,7 +762,7 @@ postworld.controller('editPost',
 
 		//------------------------------------\\
 		/*
-		if( !$ext.objExists( $scope, 'post.image' ) ||
+		if( !$_.objExists( $scope, 'post.image' ) ||
 			_.isEmpty($scope.post.image) )
 			return false;
 
@@ -794,7 +794,7 @@ postworld.controller('editPost',
 	$scope.$watch( "lang", function (){
 
 		// Check if Post Exists
-		if( !$ext.objExists( $scope, 'post' ) )
+		if( !$_.objExists( $scope, 'post' ) )
 			return false;
 
 		if( !_.isUndefined($scope.lang) )
@@ -839,9 +839,9 @@ postworld.directive( 'pwEventInput', [ function($scope){
 
 postworld.controller('eventInput',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-		'pwData', '$log', 'ext', 'pwDate',
+		'pwData', '$log', '_', 'pwDate',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
-		$pwData, $log, $ext, $pwDate ) {
+		$pwData, $log, $_, $pwDate ) {
 
 	$scope.getUnixTimestamp = function( dateObject ){
 		if( !_.isUndefined( dateObject ) ){

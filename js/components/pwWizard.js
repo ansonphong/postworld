@@ -26,8 +26,8 @@ postworld.directive( 'pwWizard', [ function($scope){
 }]);
 
 postworld.controller('pwWizardCtrl',
-	['$scope', '$rootScope', '$window', '$timeout', 'ext', 'pwData', '$log','$modal','pwWizardData',
-	function($scope, $rootScope, $window, $timeout, ext, $pwData, $log, $modal, $pwWizardData) {
+	['$scope', '$rootScope', '$window', '$timeout', '_', 'pwData', '$log','$modal','pwWizardData',
+	function($scope, $rootScope, $window, $timeout, $_, $pwData, $log, $modal, $pwWizardData) {
 
 	// Localize the current view from PW Globals
 	var pwGlobals = ( !_.isUndefined( $window.pwGlobals ) ) ?
@@ -166,7 +166,7 @@ postworld.controller('pwWizardCtrl',
 			// currentStage is defined
 			!_.isEmpty( $scope.wizardState.currentStage ) &&
 			// currentStage ID is not already in the array of completed stages
-			!ext.isInArray( $scope.wizardState.currentStage.id, $scope.wizardStatus.completed ) ){
+			!$_.isInArray( $scope.wizardState.currentStage.id, $scope.wizardStatus.completed ) ){
 				// Push the stage as complete
 				$scope.wizardStatus['completed'].push( $scope.wizardState.currentStage.id );
 			}
@@ -379,7 +379,7 @@ postworld.controller('pwWizardCtrl',
 		// Get the incomplete stages
 		angular.forEach( wizardStages, function( wizardStage ){
 			// If the stage has not been completed
-			if(  !ext.isInArray( wizardStage.id, wizardStatus.completed )  ){
+			if(  !$_.isInArray( wizardStage.id, wizardStatus.completed )  ){
 				// Add it to the object, with the order number as the key
 				var order = parseInt(wizardStage.order);
 				incompleteStages[ order ] = wizardStage;
@@ -439,7 +439,7 @@ postworld.controller('pwWizardCtrl',
 	$scope.isStageComplete = function( stageId ){
 		// Check if the given stage is complete
 		var wizardStatus = $scope.wizardStatus;
-		return ext.isInArray( stageId, wizardStatus.completed );
+		return $_.isInArray( stageId, wizardStatus.completed );
 
 	};
 

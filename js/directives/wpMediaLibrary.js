@@ -69,10 +69,9 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 	};
 }]);
 
-
 postworld.controller( 'wpMediaLibraryCtrl',
-	[ '$scope', '$window', '$timeout', '$log', 'pwData', 'ext',
-	function( $scope, $window, $timeout, $log, $pwData, $ext ) {
+	[ '$scope', '$window', '$timeout', '$log', 'pwData', '_',
+	function( $scope, $window, $timeout, $log, $pwData, $_ ) {
 
 	///// SERVICE FUNCTIONS /////
 	$scope.stringToBoolean = function(string){
@@ -183,7 +182,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 		///// MEDIA MODEL /////
 		// Set the selected Media Object into the specified Media Model
-		if( $ext.objExists($scope, 'mediaModel') ){
+		if( $_.objExists($scope, 'mediaModel') ){
 
 			// If there's only one image, and mediaModelArray is not set to true
 			if( selectedMedia.length == 1 && $scope.mediaModelArray != 'true' )
@@ -200,8 +199,8 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 			// Check to see if there's brackets
 			// to see if a executable function is defined
-			if( $ext.isInArray( '(', mediaCallback ) &&
-				$ext.isInArray( ')', mediaCallback ) )
+			if( $_.isInArray( '(', mediaCallback ) &&
+				$_.isInArray( ')', mediaCallback ) )
 				$scope.$eval(mediaCallback);
 			// If a pre-set function name is defined
 			else
@@ -216,8 +215,8 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 			// Check to see if there's brackets
 			// to see if a executable function is defined
-			if( $ext.isInArray( '(', mediaParentCallback ) &&
-				$ext.isInArray( ')', mediaParentCallback ) ){
+			if( $_.isInArray( '(', mediaParentCallback ) &&
+				$_.isInArray( ')', mediaParentCallback ) ){
 				$scope.$parent.$eval( mediaParentCallback );
 			}
 			// If a pre-set function name is defined
@@ -315,7 +314,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 	};
 
 	$scope.errorCheck = function(){
-		if( !$ext.objExists($scope, 'mediaModel') ){
+		if( !$_.objExists($scope, 'mediaModel') ){
 			$log.debug('WP Media Library "setOption()" Callback Error : Must specify "media-model" attribute.');
 			return false;
 		}

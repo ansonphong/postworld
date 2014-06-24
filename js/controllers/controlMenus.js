@@ -17,12 +17,12 @@ postworld.directive( 'pwPostActions', [ function($scope){
 }]);
 
 postworld.controller('postActions',
-    [ "$scope", "pwData", "ext",
-    function($scope, pwData, $ext ) {
+    [ "$scope", "pwData", "_",
+    function($scope, pwData, $_ ) {
 
     $scope.$watch( "post.viewer",
         function (){
-            if( $ext.objExists( $scope, "post.viewer" ) ){
+            if( $_.objExists( $scope, "post.viewer" ) ){
                 ( $scope.post.viewer.is_favorite == true ) ? $scope.isFavorite="selected" : $scope.isFavorite="" ;
                 ( $scope.post.viewer.is_view_later == true ) ? $scope.isViewLater="selected" : $scope.isViewLater="" ;
             }
@@ -215,8 +215,8 @@ postworld.directive( 'pwAdminPostMenu', [ function($scope){
 }]);
 
 postworld.controller('adminPostDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', 'ext', '$timeout',
-    function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $ext, $timeout ) {
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '_', '$timeout',
+    function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout ) {
 
     $scope.menuOptions = [
         {
@@ -264,7 +264,7 @@ postworld.controller('adminPostDropdown',
     $scope.initMenu = function(){
 
         // Try Initializing the menu until author ID is defined
-        if( !$ext.objExists( $scope, 'post.author.ID' ) ){
+        if( !$_.objExists( $scope, 'post.author.ID' ) ){
             initAttempts ++;
 
             // Stop trying after 100 tries
@@ -316,14 +316,14 @@ postworld.controller('adminPostDropdown',
     $scope.getEditPostPageUrl = function(){
 
         // Define Post Type
-        var post_type = ( $ext.objExists( $scope, 'post.post_type' ) ) ?
+        var post_type = ( $_.objExists( $scope, 'post.post_type' ) ) ?
             $scope.post.post_type : 'post';
 
         // Localize Options
         var edit_post = $window.pwSiteGlobals.edit_post;
 
         // Check if that post type page name is defined
-        var url = ( $ext.objExists( edit_post, post_type + '.url' ) ) ?
+        var url = ( $_.objExists( edit_post, post_type + '.url' ) ) ?
             edit_post[post_type].url :
             // If not, use the default
             edit_post['post'].url;

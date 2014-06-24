@@ -26,8 +26,8 @@ postworld.directive( 'pwGetPost', [ function($scope){
 }]);
 
 postworld.controller('pwGetPostCtrl',
-	['$scope', '$window', '$timeout', 'ext', 'pwData',
-	function($scope, $window, $timeout, $ext, $pwData) {
+	['$scope', '$window', '$timeout', '_', 'pwData',
+	function($scope, $window, $timeout, $_, $pwData) {
 
 	
 	// Create model if it doesn't exist

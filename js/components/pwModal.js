@@ -266,10 +266,7 @@ postworld.directive( 'pwModalAccess', [ function($scope){
 }]);
 
 postworld.controller('pwModalAccessCtrl',
-	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', 'ext', '$window', 'pwRoleAccess', 'pwQuickEdit', 'pwModal',
-	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-		$pwData, $log, $route, $routeParams, $location, $http, $ext, $window, $pwRoleAccess, $pwQuickEdit, $pwModal ) {
+	[ '$scope', 'pwModal', function( $scope, $pwModal ) {
 
 	$scope.openModal = function( meta ){
 		$pwModal.openModal( meta );

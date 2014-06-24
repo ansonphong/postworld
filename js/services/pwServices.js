@@ -9,7 +9,6 @@ postworld.factory( '$pw',
 	var pwTemplates = ( $_.objExists( $window, 'pwTemplates' ) ) ?
 		$window.pwTemplates : {};
 
-
 	// DECLARATIONS
 	return {
 		version: "1.5.1",
@@ -322,8 +321,8 @@ postworld.factory('pwImages',
 
 
 
-////// DEPRECIATED /////
-
+////// DEPRECIATED & MOST REFERENCES REMOVED 	/////
+///// USE $_ 									/////
 /* _                  _   
   | |   _    _____  _| |_ 
  / __) (_)  / _ \ \/ / __|
@@ -331,6 +330,7 @@ postworld.factory('pwImages',
  (   / (_)  \___/_/\_\\__|
   |_|                     
 ////////// JAVASCRIPT EXTENTION SERVICE //////////*/ 
+
 
 postworld.service('ext', ['$log', function ($log) {
 	// SIMPLE JS FUNCTION HELPERS
@@ -416,6 +416,8 @@ postworld.service('ext', ['$log', function ($log) {
 
 	}
 }]);
+
+
 
 
 /*
@@ -610,8 +612,8 @@ postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $wind
   |_|                                                                          
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
 postworld.service('pwEditPostFilters',
-	['$log', 'ext', '$window', 'pwPostOptions',
-	function ($log, ext, $window, $pwPostOptions ) {
+	['$log', '_', '$window', 'pwPostOptions',
+	function ($log, $_, $window, $pwPostOptions ) {
 
 	return {
 		parseKnownJsonFields: function( post ){
@@ -625,7 +627,7 @@ postworld.service('pwEditPostFilters',
 					'related_post'
 					];
 				angular.forEach( post.post_meta , function(value, key){
-					if( ext.isInArray( key, knownJsonFields ) )
+					if( $_.isInArray( key, knownJsonFields ) )
 						post.post_meta[key] = angular.fromJson(value);
 				});
 
@@ -687,13 +689,13 @@ postworld.service('pwEditPostFilters',
 			var set = "";
 
 			// If link_url has a value
-			if ( !ext.isEmpty( link_url ) && !ext.isEmpty( link_format_meta ) ){
+			if ( !$_.isEmpty( link_url ) && !$_.isEmpty( link_format_meta ) ){
 				///// FOR EACH POST FORMAT : Go through each post format
 				angular.forEach( link_format_meta, function( link_format ){
 					///// FOR EACH DOMAIN : Go through each domain
 					angular.forEach( link_format.domains, function( domain ){
 					// If domain exists in the link_url, set that format
-						if ( ext.isInArray( domain, link_url ) ){
+						if ( $_.isInArray( domain, link_url ) ){
 							set = link_format.slug;
 						}
 					});
@@ -723,7 +725,7 @@ postworld.service('pwEditPostFilters',
 			var selected_tax_terms = {};
 			angular.forEach( tax_terms, function( tax_obj, taxonomy ){
 				// Setup Object
-				if ( ext.isEmpty( tax_input[taxonomy] ) )
+				if ( $_.isEmpty( tax_input[taxonomy] ) )
 					tax_input[taxonomy] = [];
 				// SET TERM : Cycle through each term
 				// Set the selected taxonomy terms object
@@ -758,7 +760,7 @@ postworld.service('pwEditPostFilters',
 				else
 					var term_has_children = false;
 				// Is the child term set for this taxonomy in tax_input?
-				var child_term_is_set = !ext.isEmpty( tax_input[taxonomy][1] );
+				var child_term_is_set = !$_.isEmpty( tax_input[taxonomy][1] );
 				if ( term_has_children ){
 					// Default
 					var is_subterm = false;
@@ -806,7 +808,7 @@ postworld.service('pwEditPostFilters',
 //////////// ------------ POSTWORLD DATE SERVICES ------------ ////////////*/  
 
 
-postworld.service('pwDate', [ '$log', 'ext', '$window', function ($log, ext, $window) {
+postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $window) {
 	return {
 
 		setDateRange: function( set, dateObj, offset ){

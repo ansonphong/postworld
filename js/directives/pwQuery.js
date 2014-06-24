@@ -28,8 +28,8 @@ postworld.directive( 'pwQuery', [ function($scope){
 }]);
 
 postworld.controller('pwQueryCtrl',
-	['$scope', '$window', '$timeout', 'ext', 'pwData',
-	function($scope, $window, $timeout, $ext, $pwData) {
+	['$scope', '$window', '$timeout', '_', 'pwData',
+	function($scope, $window, $timeout, $_, $pwData) {
 
 	// Create query model if it doesn't exist
 	if( _.isUndefined( $scope.queryResultsModel ) )
