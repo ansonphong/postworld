@@ -130,7 +130,7 @@ postworld.controller('pwModalInstanceCtrl',
 
 		// Find and localize the feed
 		$scope.feed['id'] = meta.post.feed['id'];
-		$scope.feed['data'] = $pwData.feed_data[ $scope.feed['id'] ];
+		$scope.feed['data'] = $pwData.feeds[ $scope.feed['id'] ];
 
 		// Get the original full post object from the feed
 		// In the case that only a partial post object was passed
@@ -240,7 +240,7 @@ postworld.controller('pwModalInstanceCtrl',
 	}; 
 
 	// WATCH FOR TRASHED
-	// TODO : Set Parent post_status = trash via pwData.feed_data
+	// TODO : Set Parent post_status = trash via pwData.feeds
 	// Watch on the value of post_status
 	$scope.$watch( "post.post_status", function (){
 		if( $_.getObj( $scope, 'post.post_status' ) == 'trash'  )

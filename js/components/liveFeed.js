@@ -117,7 +117,7 @@ postworld.controller('pwFeedController',
 			if (pwData.feed_settings[$scope.feed].blocks) {
 				// Initialize Ad Blocks
 				$scope.adBlocks = 0;
-				var len = pwData.feed_data[$scope.feed].posts.length;
+				var len = pwData.feeds[$scope.feed].posts.length;
 				var offset = 0;
 				if (pwData.feed_settings[$scope.feed].blocks.offset) offset = pwData.feed_settings[$scope.feed].blocks.offset;
 				var increment = 10;
@@ -176,29 +176,29 @@ postworld.controller('pwFeedController',
 
 		$scope.resetFeedData = function () {
 			// Reset Feed Data
-			pwData.feed_data[$scope.feed] = {};
+			pwData.feeds[$scope.feed] = {};
 			if (pwData.feed_settings[$scope.feed].feed_outline) {
-				pwData.feed_data[$scope.feed].feed_outline = pwData.feed_settings[$scope.feed].feed_outline;
+				pwData.feeds[$scope.feed].feed_outline = pwData.feed_settings[$scope.feed].feed_outline;
 				// truncate based on max_posts
 				var max = pwData.feed_settings[$scope.feed].max_posts;
 				if (max <pwData.feed_settings[$scope.feed].feed_outline.length) {					
-					pwData.feed_data[$scope.feed].feed_outline = pwData.feed_data[$scope.feed].feed_outline.splice(0,max);
+					pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
 				}
 					 
-				pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_settings[$scope.feed].feed_outline.length;														
+				pwData.feeds[$scope.feed].count_feed_outline = pwData.feed_settings[$scope.feed].feed_outline.length;														
 			};						
-			pwData.feed_data[$scope.feed].loaded = 0;						
-			pwData.feed_data[$scope.feed].count_loaded = 0;						
-			pwData.feed_data[$scope.feed].posts = [];
+			pwData.feeds[$scope.feed].loaded = 0;						
+			pwData.feeds[$scope.feed].count_loaded = 0;						
+			pwData.feeds[$scope.feed].posts = [];
 			// var argsValue = JSON.parse(JSON.stringify($scope.args));			
-			// $scope.posts = pwData.feed_data[$scope.feed].posts;
-			$scope.posts = JSON.parse(JSON.stringify(pwData.feed_data[$scope.feed].posts));
+			// $scope.posts = pwData.feeds[$scope.feed].posts;
+			$scope.posts = JSON.parse(JSON.stringify(pwData.feeds[$scope.feed].posts));
 			// $scope.injectAds();
 		};
 		
 		$scope.fillFeedData = function(response) {
 			// Reset Feed Data
-			pwData.feed_data[$scope.feed] = {};
+			pwData.feeds[$scope.feed] = {};
 			if ($scope.directive=="loadFeed") {
 				if (pwData.feed_settings[$scope.feed].offset)  {
 					// truncate feed outline in case of existing offset for load-feed only
@@ -213,26 +213,26 @@ postworld.controller('pwFeedController',
 				}
 			}
 			// Insert Response in Feed Data
-			pwData.feed_data[$scope.feed].feed_outline = response.data.feed_outline;
+			pwData.feeds[$scope.feed].feed_outline = response.data.feed_outline;
 
 			// truncate based on max_posts
 			var max = pwData.feed_settings[$scope.feed].max_posts;
 			if (max <=response.data.feed_outline.length) {					
-				pwData.feed_data[$scope.feed].feed_outline = pwData.feed_data[$scope.feed].feed_outline.splice(0,max);
+				pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
 			}
-			pwData.feed_data[$scope.feed].posts = response.data.post_data;						
-			pwData.feed_data[$scope.feed].loaded = response.data.post_data.length;	
+			pwData.feeds[$scope.feed].posts = response.data.post_data;						
+			pwData.feeds[$scope.feed].loaded = response.data.post_data.length;	
 
 			// Count Length of loaded and feed_outline
-			pwData.feed_data[$scope.feed].count_loaded = response.data.post_data.length;						
-			pwData.feed_data[$scope.feed].count_feed_outline = pwData.feed_data[$scope.feed].feed_outline.length;
+			pwData.feeds[$scope.feed].count_loaded = response.data.post_data.length;						
+			pwData.feeds[$scope.feed].count_feed_outline = pwData.feeds[$scope.feed].feed_outline.length;
 
 			// Set Feed load Status
-			if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
-				pwData.feed_data[$scope.feed].status = 'all_loaded';													
+			if (pwData.feeds[$scope.feed].count_loaded >= pwData.feeds[$scope.feed].count_feed_outline) {
+				pwData.feeds[$scope.feed].status = 'all_loaded';													
 				$scope.scrollMessage = "No more posts to load.";						
 			} else {							
-				pwData.feed_data[$scope.feed].status = 'loaded';						
+				pwData.feeds[$scope.feed].status = 'loaded';						
 				$scope.scrollMessage = "Scroll down to load more.";						
 			}   			
 		};
@@ -304,7 +304,7 @@ postworld.controller('pwFeedController',
 							// Insert Response in Feed Data					
 							$scope.fillFeedData( response );
 							$scope.addFeedMeta();
-							$scope.posts = pwData.feed_data[$scope.feed].posts;
+							$scope.posts = pwData.feeds[$scope.feed].posts;
 
 							$scope.injectAds();
 							
@@ -346,7 +346,7 @@ postworld.controller('pwFeedController',
 			}
 
 			// Localize the posts
-			var posts = pwData.feed_data[$scope.feed].posts;
+			var posts = pwData.feeds[$scope.feed].posts;
 			
 			var index = 0;
 			var loadOrder = 0;
@@ -373,7 +373,7 @@ postworld.controller('pwFeedController',
 			});
 
 			// Re-set the centralized posts object
-			pwData.feed_data[$scope.feed].posts = newPosts;
+			pwData.feeds[$scope.feed].posts = newPosts;
 
 		};
 
@@ -415,7 +415,7 @@ postworld.controller('pwFeedController',
 							// Insert Response in Feed Data					
 							$scope.fillFeedData( response );
 							$scope.addFeedMeta();
-							$scope.posts = pwData.feed_data[$scope.feed].posts;
+							$scope.posts = pwData.feeds[$scope.feed].posts;
 
 							$scope.injectAds();
 							
@@ -442,13 +442,13 @@ postworld.controller('pwFeedController',
 		  };
 		$scope.pwScrollFeed = function() {
 			// Check if all Loaded, then return and do nothing
-			if (pwData.feed_data[$scope.feed].status == 'all_loaded') {
+			if (pwData.feeds[$scope.feed].status == 'all_loaded') {
 				//$log.debug('pwFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
 				$scope.busy = false;
 				return;
 			};		
 			// TODO do we need to set the loading status? or just use the busy flag?
-			pwData.feed_data[$scope.feed].status = 'loading';
+			pwData.feeds[$scope.feed].status = 'loading';
 			
 			
 			//$log.debug('pwFeedController.pwScrollFeed For',$scope.feed);
@@ -476,27 +476,27 @@ postworld.controller('pwFeedController',
 							loadOrder ++;
 
 							// Push to central posts array
-							pwData.feed_data[$scope.feed].posts.push( newItems[i] );
+							pwData.feeds[$scope.feed].posts.push( newItems[i] );
 							// Inject Blocks						
 							$scope.injectNewAd();
 
 						}
 
 						// Add Feed Meta for only the new posts
-						var postsLoaded = parseInt( pwData.feed_data[$scope.feed].loaded );
+						var postsLoaded = parseInt( pwData.feeds[$scope.feed].loaded );
 						$scope.addFeedMeta( { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length } );
-						$scope.posts = pwData.feed_data[$scope.feed].posts;
+						$scope.posts = pwData.feeds[$scope.feed].posts;
 
 						// Update the number of posts loaded
-						pwData.feed_data[$scope.feed].loaded += newItems.length;
+						pwData.feeds[$scope.feed].loaded += newItems.length;
 
 						// Count Length of loaded, update scroll message
-						pwData.feed_data[$scope.feed].count_loaded = pwData.feed_data[$scope.feed].posts.length;
-						if (pwData.feed_data[$scope.feed].count_loaded >= pwData.feed_data[$scope.feed].count_feed_outline) {
-							pwData.feed_data[$scope.feed].status = 'all_loaded';	
+						pwData.feeds[$scope.feed].count_loaded = pwData.feeds[$scope.feed].posts.length;
+						if (pwData.feeds[$scope.feed].count_loaded >= pwData.feeds[$scope.feed].count_feed_outline) {
+							pwData.feeds[$scope.feed].status = 'all_loaded';	
 							$scope.scrollMessage = "No more posts to load!";																									
 						} else {
-							pwData.feed_data[$scope.feed].status = 'loaded';						
+							pwData.feeds[$scope.feed].status = 'loaded';						
 							$scope.scrollMessage = "Scroll down to load more";						
 						}
 

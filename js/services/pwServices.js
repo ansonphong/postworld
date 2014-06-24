@@ -6,17 +6,20 @@ postworld.factory( '$pw',
 	function ($resource, $q, $log, $window, $_ ) {   
 
 	// TEMPLATES
-	//var pwTemplates = ( $_.objExists( $window, 'pwTemplates' ) ) ?
-	//	$window.pwTemplates : {};
+	var pwTemplates = ( $_.objExists( $window, 'pwTemplates' ) ) ?
+		$window.pwTemplates : {};
 
 
 	// DECLARATIONS
 	return {
-
 		version: "1.5.1",
-
 		templates: pwTemplates,
 
+		// user: $window.pwGlobals.current_user, // (or something) - refactor to go directly to pwUser
+    	// view: $window.pwGlobals.current_view
+    	// language: $window.pwSiteLanguage,
+    	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
+    	// paths: 
 
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )

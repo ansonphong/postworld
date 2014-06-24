@@ -18,14 +18,14 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 	// Check feed_settigns to confirm we have valid settings
 	var validSettings = true;
 	// Set feed_settings and feed_data in pwData Singleton
-	var feed_settings = window['feed_settings'];
+	var feed_settings = $window['feed_settings'];
 	// TODO check mandatory fields
 	if (feed_settings == null) {
 		validSettings = false;
 		$log.error('Service: pwData Method:Constructor  no valid feed_settings defined');
 	}
 	
-	var feed_data = {};
+	var feeds = {};
 	
 	// $log.debug('pwData() Registering feed_settings', feed_settings);
 	
@@ -64,9 +64,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 	
     return {
     	feed_settings: feed_settings,
-    	feed_data: feed_data,
+    	feeds: feeds,
 
     	templates: $pw.templates, 
+    	
 
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
@@ -121,9 +122,9 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 		},
 		pw_get_posts: function(args) {
 			var feedSettings = feed_settings[args.feed_id];
-			var feedData = feed_data[args.feed_id];
+			var feeds = feeds[args.feed_id];
 			// If already all loaded, then return
-			if (feedData.status == 'all_loaded')  {
+			if (feeds.status == 'all_loaded')  {
 				$log.debug('pwData.pw_get_posts ALL LOADED');
 				// TODO should we return or set promise.?
 				 //var results = {'status':200,'data':[]};
@@ -135,17 +136,17 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 			
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
-			var idBegin = feedData.loaded;
+			var idBegin = feeds.loaded;
 			var idEnd = idBegin+feedSettings.load_increment;
 			// TODO Check if load_increment exists
 			// Only when feed_outline exists and this is the first run, load from preload value, not from auto increment value
-			if (feedData.loaded==0) {
+			if (feeds.loaded==0) {
 				if (feedSettings.preload)
 					idEnd = idBegin+feedSettings.preload;
 					// TODO, use constant here
 				else idEnd = idBegin+10;
 			}
-			var postIDs = feedData.feed_outline.slice(idBegin,idEnd);
+			var postIDs = feeds.feed_outline.slice(idBegin,idEnd);
 			var fields;
 			if (feedSettings.query_args) {
 				if (feedSettings.query_args.fields != null) {
