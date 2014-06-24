@@ -607,28 +607,21 @@ postworld.controller('pwLoadPostController',
 						$scope.post = response.data;
 
 						// Set Template URL
-						// Set Default Feed Template and Default Feed Item Template
-						//pwData.templates.promise.then(function(value) {
-							   if ($scope.post) {
-									var template = $scope.postArgs.view;
-									var post_type = 'post';
-									if ($scope.post.post_type) post_type = $scope.post.post_type;			   		
-									$scope.templateUrl = pwData.pw_get_template( { subdir: 'posts', post_type: post_type, view: template } );
-									//$log.debug('pwLoadPostController Set Post Template to ', post_type, $scope.templateUrl);
-							   }
-							   else {
-									$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
-							   }
-								return;
-						//});
-						return response.data;						
+						if ($scope.post) {
+							var template = $scope.postArgs.view;
+							var post_type = 'post';
+							if ($scope.post.post_type) post_type = $scope.post.post_type;			   		
+							$scope.templateUrl = pwData.pw_get_template( { subdir: 'posts', post_type: post_type, view: template } );
+						}
+						else {
+							$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/posts/post-full.html';
+						}
+						return;
+						//return response.data;	
+
 					} else {
 						// handle error
-						// throw {message:"error: "+response.status+"- "+response.message};
-						// console.log('error',response.status,response.message);
-						// TODO should we set busy to false when error is returned?
 					}
-					// return response.posts;
 				},
 				// Failure
 				function(response) {

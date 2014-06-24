@@ -255,11 +255,11 @@ add_action("wp_ajax_pw_trash_post", "pw_trash_post_admin");
 
 
 //---------- RESET PASSWORD SUBMIT ----------//
-function reset_password_submit_anon(){
+function pw_reset_password_submit_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$reset_password_submit = reset_password_submit( $params );
+	$reset_password_submit = pw_reset_password_submit( $params );
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
@@ -267,18 +267,18 @@ function reset_password_submit_anon(){
 	echo json_encode( $response );
 	die;
 }
-add_action("wp_ajax_nopriv_reset_password_submit", "reset_password_submit_anon");
-add_action("wp_ajax_reset_password_submit", "reset_password_submit_anon");
+add_action("wp_ajax_nopriv_reset_password_submit", "pw_reset_password_submit_ajax");
+add_action("wp_ajax_reset_password_submit", "pw_reset_password_submit_ajax");
 
 
 
 
 //---------- SEND RESET PASSWORD LINK ----------//
-function send_reset_password_link_anon(){
+function pw_reset_password_email_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$send_reset_password_link = send_reset_password_link( $params );
+	$send_reset_password_link = pw_reset_password_email( $params );
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
@@ -286,8 +286,8 @@ function send_reset_password_link_anon(){
 	echo json_encode( $response );
 	die;
 }
-add_action("wp_ajax_nopriv_send_reset_password_link", "send_reset_password_link_anon");
-add_action("wp_ajax_send_reset_password_link", "send_reset_password_link_anon");
+add_action("wp_ajax_nopriv_reset_password_email", "pw_reset_password_email_ajax");
+add_action("wp_ajax_reset_password_email", "pw_reset_password_email_ajax");
 
 
 

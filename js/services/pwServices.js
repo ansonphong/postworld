@@ -1,12 +1,23 @@
 'use strict';
 
 
-postworld.factory('pw',
-	['$resource','$q','$log','$window',
-	function ($resource, $q, $log, $window) {   
+postworld.factory( '$pw',
+	['$resource','$q','$log','$window', '_',
+	function ($resource, $q, $log, $window, $_ ) {   
+
+	// TEMPLATES
+	//var pwTemplates = ( $_.objExists( $window, 'pwTemplates' ) ) ?
+	//	$window.pwTemplates : {};
+
 
 	// DECLARATIONS
 	return {
+
+		version: "1.5.1",
+
+		templates: pwTemplates,
+
+
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )
 				value = "/postworld/" + value;

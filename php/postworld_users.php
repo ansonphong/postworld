@@ -1,984 +1,201 @@
 <?php
 
-/*
- * PHP / USER FUNCTIONS
- * */
-/*class user_fields_names {
-	public static $USER_ID = 'user_id';
-	public static $USER_ROLE = 'user_role';
-	public static $VIEWED = 'viewed';
-	public static $FAVORITES = 'favorites';
-	public static $LOCATION_CITY = 'location_city';
-	public static $LOCATION_COUNTRY = 'location_country';
-	public static $LOCATION_REGION = 'location_region';
-	public static $VIEW_KARMA = 'view_karma';
-	public static $SHARE_KARMA = 'share_karma';
-	public static $POST_RELATIONSHIP = 'post_relationships';
+/////----- INSERT NEW USER -----/////
+function pw_insert_user( $userdata ){
+	global $pwSiteGlobals;
 
-}*/
-
-class user_fields_names {
-	public static $USER_ID = 'user_id';
-	public static $POST_POINTS='post_points';
-	public static $POST_POINTS_META='post_points_meta';
-	public static $COMMENT_POINTS = 'comment_points';
-	//public static $COMMENT_POINTS_META='comment_points_meta';
-	public static $SHARE_POINTS = 'share_points';
-	public static $SHARE_POINTS_META = 'share_points_meta';
-	public static $POST_RELATIONSHIPS='post_relationships';
-	public static $POST_VOTES='post_votes';
-	public static $COMMENT_VOTES='comment_votes';
-	public static $LOCATION_CITY = 'location_city';
-	public static $LOCATION_COUNTRY = 'location_country';
-	public static $LOCATION_REGION = 'location_region';
-}
-
-class get_user_location_output {
-	public $city = '';
-	public $country = '';
-	public $region = '';
-}
-
-function get_current_userdata($field) {
-	$user_data = pw_get_userdata(get_current_user_id(), 'all');
-	echo $user_data[$field];
-}
-
-function get_current_userdata_obj($fields) {
-	$user_data = pw_get_userdata(get_current_user_id(), $fields);
-	echo $user_data;
-}
-
-
-function pw_can_edit_profile( $user_id ){
-	if( $user_id == get_current_user_id() ||
-		current_user_can('edit_users') )
-		return true;
+	if( isset( $pwSiteGlobals['role']['levels']['default'] ) )
+		$userdata['role'] = $pwSiteGlobals['role']['levels']['default'];	
 	else
-		return false;
-}
+		$userdata['role'] = 'subscriber';
 
+	$user_id = wp_insert_user( $userdata );
 
-
-function pw_get_xprofile( $user_id, $fields ){
-	// Get info from Bussypress extended profile
-
-	$xprofile = array();
-	
-	// If Buddypress isn't isntalled, return false
-	if( !function_exists('xprofile_get_field_data') )
-		return false;
-
-	// Get each requested field
-	foreach ( $fields as $field ){
-		$field_value = xprofile_get_field_data( $field, $user_id );
-
-		$field = str_replace(' ', '_', $field);
-
-		if( isset($field_value) )
-			$xprofile[$field] = $field_value;
-
+	// If it's successful, we have the new user ID
+	if( is_int($user_id) ){
+		pw_activation_email(array("ID" => $user_id));
+		return get_userdata($user_id);
 	}
-	return $xprofile;
+	else
+		return $user_id;
 }
 
 
-function pw_get_userdatas( $user_ids, $fields = false ){
-	$users_array = array();
-	foreach( $user_ids as $user_id ){
-		array_push(
-			$users_array,
-			pw_get_userdata($user_id, $fields)
+/////----- SEND ACTIVATION LINK -----/////
+function pw_activation_email( $userdata ){
+
+	if( isset($userdata['email']) ){
+		$user_obj = get_user_by( 'email', $userdata['email'] );
+		$user_id = $user_obj->ID; // TEST?
+	}
+
+	elseif( isset( $userdata['ID'] ) ) {
+		$user_id = $userdata['ID'];
+	}
+
+	// See if user already has an activation key
+	$hash = get_user_meta( $user_id, 'activation_key', true );
+
+	// If no key exists
+	if ( !$hash ){
+		$hash = md5( rand() );
+		add_user_meta( $user_id, 'activation_key', $hash );
+	}
+
+	$user_info = get_userdata($user_id);
+	$to = $user_info->user_email;           
+	$subject = 'Member Verification'; 
+	$message .= 'Thanks for signing up for '.get_bloginfo('name').'!';
+	$message .= "\n\n";
+	$message .= 'Username: '.$user_info->user_login;
+	$message .= "\n";
+	$message .= 'Email: '.$user_info->user_email;
+	$message .= "\n\n";
+	$message .= "Click this link to activate your account:";
+	$message .= "\n";
+	$message .= home_url('/').'activate/?auth_key='.$hash;
+	$headers = 'From: '. get_bloginfo('admin_email') . "\r\n";           
+	return wp_mail($to, $subject, $message, $headers); 
+}
+
+
+
+/////----- ACTIVATE USER -----/////
+function pw_activate_user( $auth_key ){
+	// Query for users based on the meta data
+	$user_query = new WP_User_Query(
+		array(
+			'meta_key'		=>	'activation_key',
+			'meta_value'	=>	$auth_key
+		)
+	);
+
+	// Set the Activated Role
+	if( isset( $pwSiteGlobals['role']['levels']['activated'] ) )
+		$role = $pwSiteGlobals['role']['levels']['activated'];	
+	else
+		$role = 'contributor';
+
+	// Get the results from the query, returning the first user
+	$users = $user_query->get_results();
+	$user = $users[0];
+	if( isset($user) ){
+		$args = array(
+			"ID" => $user->ID,
+			"role" => $role,
 			);
+		wp_update_user($args);
+		return $user;
 	}
-	return $users_array;
-}
-
-
-function pw_get_userdata($user_id, $fields = false) {
-
-	$wordpress_user_fields = array('user_login', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'display_name', 'user_firstname', 'user_lastname', 'nickname', 'user_description', 'wp_capabilities', 'admin_color', 'closedpostboxes_page', 'primary_blog', 'rich_editing', 'source_domain', 'roles', 'capabilities', );
-	$postworld_user_fields = array('viewed', 'favorites', 'location_city', 'location_region', 'location_country', 'post_points', 'comment_points', 'post_points_meta');
-	$buddypress_user_fields = array('user_profile_url', );
-
-	$user_data = array();
-
-	// If Fields is empty or 'all', add all fields
-	if ( $fields == false || $fields == 'all') {
-		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields);
-	}
-
-	///// TRANSFER ONLY REQUESTED FIELDS!! /////
-
-	// WORDPRESS USER FIELDS
-	// Check to see if any requested fields are standard Wordpress User Fields
-	foreach ($fields as $field) {
-		// If a requested field is provided by WP get_userdata() Method, collect all the data
-		if (in_array($field, $wordpress_user_fields)) {
-			$wordpress_user_data = get_userdata($user_id);
-			if ((isset($wordpress_user_data))&&($wordpress_user_data)) {
-				// Transfer the requested user data into $user_data
-				foreach ($wordpress_user_data->data as $key => $field){
-					if ( in_array($key, $fields) )
-						$user_data[$key] = $field;
-				}
-				// Get user Roles
-				if (in_array('roles', $fields))
-					$user_data['roles'] = $wordpress_user_data -> roles;
-				// Get user Capabilities
-				if (in_array('capabilities', $fields))
-					$user_data['capabilities'] = $wordpress_user_data -> allcaps;
-			}
-			// Break out of foreach
-			break;
-		}
-	}
-
-	// POSTWORLD USER FIELDS
-	// Check to see if requested fields are custom Postworld User Fields
-	foreach ($fields as $value) {
-		// If a requested field is custom Postworld, get the user's row in *user_meta* table
-		if ( in_array($value, $postworld_user_fields )) {
-			global $wpdb;
-			$wpdb -> show_errors();
-			$query = "select * from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
-			// Result will be output as an numerically indexed array of associative arrays, using column names as keys
-			$postworld_user_data = $wpdb -> get_results($query, ARRAY_A);
-			// Transfer the user data into $user_data
-			if ( is_array($postworld_user_data[0]) && isset($postworld_user_data[0]["user_id"]) ){
-				foreach ( $postworld_user_data[0] as $meta_key => $meta_value ){
-					if ( in_array( $meta_key, $fields ) ){
-						$pw_json_fields = array( "post_points_meta", "share_points_meta", "post_relationships" );
-						// Decode the JSON encoded DB fields
-						if ( in_array( $meta_key, $pw_json_fields ) )
-							$meta_value = json_decode( $meta_value );
-						$user_data[$meta_key] = $meta_value;
-					}
-				}
-			}
-			break;
-		}
-	}
-
-	///// BUDDYPRESS PROFILE LINK /////
-	// Check to see if requested fields are Buddypress User Fields
-	foreach ($fields as $value) {
-		// If a requested field is Buddypress
-		if (in_array($value, $buddypress_user_fields)) {
-			// Author Profile URL
-			if ($value == 'user_profile_url' && function_exists('bp_core_get_userlink'))
-				$user_data['user_profile_url'] = bp_core_get_userlink($user_id, false, true);
-		}
-	}
-
-
-
-	////////// BUDDYPRESS CUSTOM PROFILE FIELDS //////////
-		
-	// Extract meta fields
-	$buddypress_fields = extract_linear_fields( $fields, 'buddypress', true );
-	if ( !empty($buddypress_fields) && function_exists('bp_get_profile_field_data') ){
-
-		$user_data["buddypress"] = array();
-
-		// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
-		foreach ($buddypress_fields as $buddypress_field ) {
-			$args = array(
-		        'field'   => $buddypress_field, // Field name or ID.
-		        'user_id' => $user_id // Default
-		        );
-			$user_data["buddypress"][$buddypress_field] = bp_get_profile_field_data( $args );
-		}
-	}
-
-
-	// AVATAR FIELDS
-	$avatars_object = get_avatar_sizes($user_id, $fields);
-	if ( !empty($avatars_object) )
-		$user_data["avatar"] = $avatars_object;
-
-	// REMOVE PASSWORD
-	unset($user_data["user_pass"]);
-	return $user_data;
-
-}
-
-function get_avatar_sizes($user_id, $fields){
-	// Takes input $fields in the following format "avatar(handle,size)"
-	// $fields = array( 'avatar(small,48)', 'avatar(medium, 150)', ... );
-	// Produces an object like : array( 'small'=>array( "width"=>48, "height"=>48, "url"=>"http://...jpg" ) )
-
-	// Extract avatar() fields
-	$avatars = extract_fields( $fields, 'avatar' );
-	$avatars_object = array();
-	// Get each avatar() image
-	foreach ($avatars as $avatar) {
-		// Extract image attributes from parenthesis
-   		$avatar_attributes = extract_parenthesis_values($avatar, true);
-   		// Check format
-   		if ( count($avatar_attributes) == 2 && !is_numeric( $avatar_attributes[0]) && is_numeric( $avatar_attributes[1]) ){
-   			// Setup Values
-   			$avatar_handle = $avatar_attributes[0];
-   			$avatar_size = $avatar_attributes[1];
-   			// Set Avatar Size
-   			$avatars_object[$avatar_handle]['width'] = $avatar_size;
-   			$avatars_object[$avatar_handle]['height'] = $avatar_size;
-			$avatars_object[$avatar_handle]['url'] = pw_get_avatar( array( "user_id"=> $user_id, "size" => $avatar_size ) ); //get_avatar_url( $author_id, $avatar_size );
-   		}
-
-	} // END foreach
-	return $avatars_object;
-}
-
-
-//TODO: change to new schema
-function pw_update_user($userdata) {
-	/*
-	 *
-	 * Extends wp_update_user() to add data to the Postworld user_meta table
-	 See wp_update_user() : http://codex.wordpress.org/Function_Reference/wp_update_user
-	 Usage
-
-	 $userdata = array(
-	 'ID' => 1,
-	 'user_url' => 'http://...com',
-	 'user_description' => 'Description here.',
-	 'favorites' => '23,24,27',
-	 'location_country' => 'Egypt',
-	 );
-	 return : integer
-
-	 user_id - If successful
-	 *
-	 * */
-	$set = '';
-	$insertComma = FALSE;
-	$user_id = wp_update_user($userdata);
-	global $wpdb;
-	$wpdb -> show_errors();
-	if (gettype($user_id) == 'integer') {// successful
-		add_record_to_user_meta($user_id);
-		/*if ($userdata[user_fields_names::$FAVORITES]) {
-			$set .= " " . user_fields_names::$FAVORITES . "='" . $userdata[user_fields_names::$FAVORITES] . "'";
-			$insertComma = TRUE;
-		}*/
-		if (isset($userdata[user_fields_names::$LOCATION_CITY])) {
-			$set .= " " . user_fields_names::$LOCATION_CITY . "='" . $userdata[user_fields_names::$LOCATION_CITY] . "'";
-			$insertComma = TRUE;
-		}
-		if (isset($userdata[user_fields_names::$LOCATION_COUNTRY])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$LOCATION_COUNTRY . "='" . $userdata[user_fields_names::$LOCATION_COUNTRY] . "'";
-			$insertComma = TRUE;
-		}
-		if (isset($userdata[user_fields_names::$LOCATION_REGION])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$LOCATION_REGION . "='" . $userdata[user_fields_names::$LOCATION_REGION] . "'";
-			$insertComma = TRUE;
-		}
-		if (isset($userdata[user_fields_names::$POST_RELATIONSHIPS])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$POST_RELATIONSHIPS . "='" . $userdata[user_fields_names::$POST_RELATIONSHIPS] . "'";
-			$insertComma = TRUE;
-		}
-		if (isset($userdata[user_fields_names::$SHARE_POINTS_META])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$SHARE_POINTS_META . "='" . $userdata[user_fields_names::$SHARE_POINTS_META] . "'";
-			$insertComma = TRUE;
-		}
-		if (isset($userdata[user_fields_names::$POST_VOTES])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$POST_VOTES . "='" . $userdata[user_fields_names::$POST_VOTES] . "'";
-			$insertComma = TRUE;
-		}
-		
-		if (isset($userdata[user_fields_names::$COMMENT_VOTES])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$COMMENT_VOTES . "='" . $userdata[user_fields_names::$COMMENT_VOTES] . "'";
-			$insertComma = TRUE;
-		}
-		
-		if (isset($userdata[user_fields_names::$POST_POINTS_META])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$POST_POINTS_META . "='" . $userdata[user_fields_names::$POST_POINTS_META] . "'";
-			$insertComma = TRUE;
-		}
-		
-		if (isset($userdata[user_fields_names::$POST_POINTS])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$POST_POINTS . "=" . $userdata[user_fields_names::$POST_POINTS] . "";
-			$insertComma = TRUE;
-		}
-		
-		if (isset($userdata[user_fields_names::$SHARE_POINTS])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$SHARE_POINTS . "=" . $userdata[user_fields_names::$SHARE_POINTS] . "";
-			$insertComma = TRUE;
-		}
-		
-		if (isset($userdata[user_fields_names::$COMMENT_POINTS])) {
-			if ($insertComma === TRUE)
-				$set .= " , ";
-			$set .= " " . user_fields_names::$COMMENT_POINTS . "=" . $userdata[user_fields_names::$COMMENT_POINTS] . "";
-			$insertComma = TRUE;
-		}
-
-		if ($insertComma === FALSE) {
-		} else {
-			$query = "update $wpdb->pw_prefix" . "user_meta set $set where user_id=" . $user_id;
-			//echo $query;
-			$wpdb -> query($query);
-
-		}
-
-	}
-	return $user_id;
-
-}
-
-function add_favorite($post_id, $user_id) {
-	// add favorite to wp_postworld_favorites
-	global $wpdb;
-	$wpdb -> show_errors();
-	$query = "select * from  $wpdb->pw_prefix". "favorites where post_id=$post_id  and  user_id=$user_id";
-	//echo $query;
-	$results=$wpdb->get_results($query);
-	//echo "huhulh";
-	//print_r($results);
-	if(is_null($results) || count($results)===0){
-		$query = "insert into " . $wpdb -> pw_prefix . 'favorites' . " values (" . $user_id . "," . $post_id . ",null)";
-		$wpdb -> query($query);
-	}
-	// increment post count in wp_postworld_post_meta
-	//$query = "update " . $wpdb -> pw_prefix . 'post_meta' . " set favorites = favorites +1 where post_id=" . $post_id;
-	//$result = $wpdb -> query($query);
-	//if ($result === FALSE) {
-	//	add_record_to_post_meta($post_id, 0, 0, 1);
-	//}
-
-}
-
-function delete_favorite($post_id, $user_id) {
-	global $wpdb;
-
-	$wpdb -> show_errors();
-	$query = "delete from " . $wpdb -> pw_prefix . 'favorites' . " where post_id=" . $post_id . " and user_id=" . $user_id;
-	$wpdb -> query($query);
-
-	// increment post count in wp_postworld_post_meta
-//	$query = "update " . $wpdb -> pw_prefix . 'post_meta' . " set favorites = favorites -1 where post_id=" . $post_id;
-//	$result = $wpdb -> query($query);
-
-//	if ($result === FALSE) {
-//		add_record_to_post_meta($post_id, 0, 0, 0);
-//	}
-
-}
-
-function set_favorite($switch=TRUE, $post_id = null, $user_id = null) {
-	/*
-	 Use set_post_relationship() to set the post relationship for favorites
-	 If $post_id is undefined
-	 $switch is a boolean
-	 set_post_relationship( 'favorites', $post_id, $user_id, $switch )
-	 return : boolean
-	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return set_post_relationship('favorites', $switch, $post_id, $user_id);
-
-}
-
-function get_favorites($user_id = null) {
-	/*
-	 Use get_post_relationships() method to return just the favorite posts
-	 get_post_relationships($user_id, 'favorites')
-	 return : Array (of post ids)
-
-	 * */
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-	return get_post_relationships($user_id, 'favorites');
-
-}
-
-function is_favorite($post_id = null, $user_id = null) {
-	/*
-	 Use get_post_relationship() method to return the post relationship status for favorites
-	 get_post_relationship( 'favorites', $post_id, $user_id )
-	 return : boolean
-	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return get_post_relationship('favorites', $post_id, $user_id);
-
-}
-
-function is_viewed($post_id = null, $user_id = null) {
-	/*
-	 Use get_post_relationship() method to return the post relationship status for viewed
-	 get_post_relationship( 'viewed', $post_id, $user_id )
-	 return : boolean
-	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-	return get_post_relationship('viewed', $post_id, $user_id);
-
-}
-
-function is_view_later($post_id = null, $user_id = null) {
-	/*
-	 Use get_post_relationship() method to return the post relationship status for view_later
-	 get_post_relationship( 'viewed', $post_id, $user_id )
-	 return : boolean
-	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return get_post_relationship('view_later', $post_id, $user_id);
-
-}
-
-function is_post_relationship( $post_relationship, $post_id = null, $user_id = null) {
-	/*
-	 Use get_post_relationship() method to return the post relationship status for $post_relationship
-	 return : boolean
-	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return get_post_relationship( $post_relationship, $post_id, $user_id);
-}
-
-function set_viewed($switch=TRUE, $post_id = null, $user_id = null) {
-	/*
-	 Use set_post_relationship() to set the post relationship for viewed
-	 $switch is a boolean
-	 set_post_relationship( 'viewed', $switch, $post_id, $user_id )
-	 return : boolean
-	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return set_post_relationship('viewed', $switch, $post_id, $user_id);
-
-}
-
-function set_view_later($switch=TRUE, $post_id = null, $user_id = null) {
-
-	/*Use set_post_relationship() to set the post relationship for view_later
-	 $switch is a boolean
-	 set_post_relationship( 'view_later', $switch, $post_id, $user_id )
-	 return : boolean
-	 */
-	 
-	 if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-	 
-	return set_post_relationship('view_later', $switch, $post_id, $user_id );
-
-}
-
-function get_viewed($user_id = null) {
-	/*
-	 Use get_post_relationships() method to return just the viewed posts
-	 get_post_relationships($user_id, 'viewed')
-	 return : Array (of post ids)
-	 */
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return get_post_relationships($user_id, 'viewed');
-
-}
-
-function get_view_later($user_id = null) {
-	/*
-	 Use get_post_relationships() method to return just the view later posts
-	 get_post_relationships($user_id, 'view_later')
-	 return : Array (of post ids)
-	 */
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return get_post_relationships($user_id, 'view_later');
-
-}
-
-function has_viewed($user_id, $post_id) {
-	/*
-	 • Checks to see if user has viewed a given post
-	 • Values stored in array in has_viewed in wp_postworld_user_meta
-	 return : boolean */
-
-	$post_ids = get_viewed($user_id);
-
-	//echo (json_encode($post_ids));
-
-	$key = array_search($post_id, $post_ids, true);
-
-	//echo('keey  : '.$key);
-	if ($key !== FALSE)
-		return true;
 	else
-		return false;
+		return array("error" => "Wrong activation code.");
 }
 
-function get_user_location($user_id) {
-	/*
-	 • From 'location_' columns in wp_postworld_user_meta
-	 return : Object
-	 city : {{city}}
-	 country : {{country}}
-	 region: {{region}}
-	 * */
 
-	global $wpdb;
 
-	$wpdb -> show_errors();
-
-	$query = "select " . user_fields_names::$LOCATION_CITY . ", " . user_fields_names::$LOCATION_COUNTRY . ", " . user_fields_names::$LOCATION_REGION . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
-	//echo($query);
-	$location_obj = $wpdb -> get_results($query);
-
-	foreach ($location_obj as $row) {
-		$output = new get_user_location_output();
-		$output -> city = $row -> location_city;
-		$output -> country = $row -> location_country;
-		$output -> region = $row -> location_region;
-
-		return $output;
+/////----- RESET PASSWORD LINK -----/////
+function pw_reset_password_email( $userdata ){
+	if( isset($userdata['email']) ){
+		$user_obj = get_user_by( 'email', $userdata['email'] );
+		$user_id = $user_obj->ID;
 	}
-	return null;
+	elseif( isset( $userdata['ID'] ) ) {
+		$user_id = $userdata['ID'];
+	}
+
+	// See if user already has an activation key
+	$hash = get_user_meta( $user_id, 'reset_password_key', true );
+	// If no key exists
+	if ( !$hash ){
+		$hash = md5( rand() );
+		add_user_meta( $user_id, 'reset_password_key', $hash );
+	}
+	// If a key exists, update it with a new one
+	else {
+		$hash = md5( rand() );
+		update_user_meta( $user_id, 'reset_password_key', $hash );
+	}
+
+	$user_info = get_userdata($user_id);
+	$to = $user_info->user_email;           
+	$subject = 'Reset Password'; 
+	//$message = 'Hello,';
+	//$message .= "\n\n";
+	$message .= "Have you recently requested to reset your password on ".get_bloginfo('name')."?";
+	$message .= "\n";
+	$message .= "If not, you can ignore this email.";
+	$message .= "\n\n";
+	$message .= 'Username: '.$user_info->user_login;
+	$message .= "\n";
+	$message .= 'Email: '.$user_info->user_email;
+	$message .= "\n\n";
+	$message .= "Click this link to reset your password:";
+	$message .= "\n";
+	$message .= home_url('/').'reset-password/?auth_key='.$hash;
+	$headers = 'From: '. get_bloginfo('admin_email') . "\r\n";           
+	return wp_mail($to, $subject, $message, $headers); 
+}
+
+
+// ON ACTUAL PASSWORD RESET, REQUIRE THE ACTUAL KEY PRESENT AND VERIFY IT
+/////----- RESET PASSWORD LINK -----/////
+function pw_reset_password_submit( $userdata ){
+	/*
+		$userdata = array( "password" => *string*, "auth_key" => *string* );
+	*/
+
+	// Query for users based on the meta data
+	$user_query = new WP_User_Query(
+		array(
+			'meta_key'		=>	'reset_password_key',
+			'meta_value'	=>	$userdata['auth_key'],
+		)
+	);
+	// Get the results from the query, returning the first user
+	$users = $user_query->get_results();
+	$user = $users[0];
+	if( isset($user) ){
+		$args = array(
+			"ID" => $user->ID,
+			"user_pass" => $userdata['user_pass']
+			);
+		$user_id = wp_update_user( $args );
+
+		if( is_int($user_id) && $user_id == $user->ID ){
+			// Remove the used key
+			delete_user_meta( $user_id, 'reset_password_key' );
+		}
+
+		return $user;
+	}
+	else
+		return array("error" => "Wrong or no authorization code.");
 
 }
 
-function get_client_ip() {
-	/*
-	 * return : IP address of the client
-	 * */
-	return $_SERVER['REMOTE_ADDR'];
-	//return $_SERVER['HTTP_X_FORWARDED_FOR'];
-	// if from proxy, we should save both.
-	//http://stackoverflow.com/questions/3003145/how-to-get-client-ip-address-in-php
-}
 
-function get_user_role($user_id, $return_array = FALSE) {
-	/*
-	 • Returns user role(s) for the specified user
+function pw_login_new_user( $user_id, $email, $meta ) {
 
-	 Parameters:
-	 $return_array : boolean
-	 • false (default) - Returns a string, with the first listed role
-	 • true - Returns an Array with all listed roles
-
-	 return : string / Array (set by $return_array)
-	 */
-
-	if (!$user_id)
-		$user_id = get_current_user_id();
-
-	$user = new WP_User($user_id);
-	// this gives us access to all the useful methods and properties for this user
-	if ($user) {
-		$roles = $user -> roles;
-		// returns an array of roles
-		if ($return_array == true)
-			return $roles;
-		// return the array
-		else {
-			//print_r($roles);
-			if (count($roles) > 0)
-				return $roles[0];
-			else
-				return '';
-		}	// return only a string of the first listed role
+	$user = new WP_User( (int) $user_id );
+	$creds = array();
+	$creds['user_login'] = $user->user_login;
+	$creds['user_password'] = $meta['user_pass'];
+	$creds['remember'] = true;
+	$user = wp_signon( $creds, false );
+	wp_set_current_user($user->ID);
+	if ( is_wp_error($user) ) {
+		echo $user->get_error_message();
 	} else {
-		return false;
-	}
-}
-
-/* Later*/
-function has_shared($user_id, $post_id) {
-}
-
-function set_post_relationship( $relationship, $switch, $post_id = null, $user_id = null ) {
-
-	/*Used to set a given user's relationship to a given post
-	 Parameters
-	 ------------
-	 * $relationship : string
-	 The type of relationship to set
-	 Options :
-	 viewed
-	 favorites
-	 view_later
-
-	 * $post_id : integer
-	 * $user_id : integer
-	 * $switch : boolean
-
-	 true : Add the post_id to the relationship array
-	 false : Remove the post_id from the relationship array
-	 Process
-
-	 Add/remove the given post_id to the given relationship array in post_relationships column in User Meta table
-
-	 -Favorites
-
-	 If $relationship == favorite : Add / remove a row to Favorites table
-
-	 Usage
-
-	 *
-	 set_post_relationship( 'favorites', true, '24', '101' )
-	 Anatomy
-
-	 JSON in post_relationships column in User Meta table
-	 {
-	 viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
-	 favorites:[12,16,25],
-	 view_later:[58,78],
-	 }
-	 return : boolean
-
-	 true - If successful set on
-	 false - If successful set off
-	 error - If error */
-	//echo ($post_id);
-
-	 $switch = pw_switch_value($switch);
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	$relashionship_db = get_relationship_from_user_meta($user_id);
-	$relashionship_db_array = (array)json_decode($relashionship_db);
-	
-	//print_r($relashionship_db_array);
-	if ($relashionship_db) {
-		if ($switch == 'on') {
-			if (!in_array($post_id, $relashionship_db_array[$relationship])) {
-				$relashionship_db_array[$relationship][] = $post_id;
-				update_post_relationship($user_id, $relashionship_db_array);
-				//echo ($relationship);
-				if ($relationship == 'favorites'){
-					add_favorite($post_id, $user_id);
-				}
-			}
-			return TRUE;
-		} else {
-			if (in_array($post_id, $relashionship_db_array[$relationship])) {
-
-				$relashionship_db_array[$relationship] = array_diff($relashionship_db_array[$relationship], array($post_id));
-				$relashionship_db_array[$relationship]= array_values($relashionship_db_array[$relationship]);
-				//print_r($relashionship_db_array[$relationship]);
-				//unset($post_id,$relashionship_db_array[$relationship][$post_id]);
-				update_post_relationship($user_id, $relashionship_db_array);
-				if ($relationship == 'favorites')
-					delete_favorite($post_id, $user_id);
-			}
-			return FALSE;
-		}
-	} else {
-		//add record to user meta or add relationship
-		
-		add_record_to_user_meta($user_id);
-		if ($switch) {
-			$relashionship_db_array = array('viewed' => array(), "favorites" => array(), 'view_later' => array());
-			$relashionship_db_array[$relationship][] = $post_id;
-			update_post_relationship($user_id, $relashionship_db_array);
-			if ($relationship == 'favorites')
-				add_favorite($post_id, $user_id);
-			return TRUE;
-		} else {
-			if ($relationship == 'favorites')
-				delete_favorite($post_id, $user_id);
-			return FALSE;
-		}
-	}
-	return 'error';
-
-}
-
-function update_post_relationship($user_id, $relationship = null) {
-	global $wpdb;
-	$wpdb -> show_errors();
-	$query = "update $wpdb->pw_prefix" . "user_meta set post_relationships='" . json_encode($relationship) . "' where user_id=" . $user_id;
-	$wpdb -> query($query);
-}
-
-function add_record_to_user_meta($user_id) {
-	global $wpdb;
-	$wpdb -> show_errors();
-
-	$query = "select * from " . $wpdb -> pw_prefix . "user_meta where user_id=" . $user_id;
-	$row = $wpdb -> get_row($query);
-
-	if ($row == null) {
-
-		//$user_role = get_user_role($user_id);
-		//if($relationship === null) $relationship='null';
-
-		$query = "INSERT INTO `$wpdb->pw_prefix"."user_meta`
-					(`user_id`,
-					`post_points`,
-					`post_points_meta`,
-					`comment_points`,
-					`share_points`,
-					`share_points_meta`,
-					`post_relationships`,
-					`post_votes`,
-					`comment_votes`,
-					`location_city`,
-					`location_region`,
-					`location_country`)
-					VALUES
-					($user_id,0,null,0,0,null,null,null,null,null,null,null);
-								";
-
-		/*
-		 $query = "insert into $wpdb->pw_prefix"."user_meta (`user_id`,
-		 `user_role`,
-		 `viewed`,
-		 `favorites`,
-		 `location_city`,
-		 `location_region`,
-		 `location_country`,
-		 `view_karma`,
-		 `share_karma`,
-		 `post_points`,
-		 `comment_points`,
-		 `post_points_meta`,
-		 `share_points`) values($user_id,'$user_role',null,null,null,null,null,0,0,0,0,null,0)";
-		 */
-		 //print_r($query);
-		$wpdb -> query($query);
-	}
-}
-
-function get_post_relationship( $relationship, $post_id, $user_id) {
-
-	/*
-	 Used to get a given user's relationship to a given post
-	 Parameters
-
-	 $relationship : string
-
-	 The type of relationship to set
-	 Options :
-	 all
-	 viewed
-	 favorites
-	 view_later
-	 $post_id : integer
-
-	 $user_id : integer
-
-	 Process
-
-	 Check to see if the post_id is in the given relationship array in the post_relationships column in User Meta table
-	 return : boolean
-
-	 If $relationship = all : return an Array containing all the relationships it's in
-	 array('viewed','favorites')
-	 * */
-	$relationship_array = get_relationship_from_user_meta($user_id);
-	//print_r($relationship_array);
-	if (!is_null($relationship_array)) {
-		/*array(
-		 'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
-		 'favorites' => [12,16,25],
-		 'view_later' => [58,78]
-		 )*/
-
-		$relationship_array = (array) json_decode($relationship_array);
-
-		if ($relationship != 'all') {
-
-			// If that relationship object doesn't exist
-			if( !isset($relationship_array[$relationship]) )
-				return FALSE;
-
-			// If it exists, test it
-			if ( in_array( $post_id, $relationship_array[$relationship] )) {
-				return TRUE;
-			} else
-				return FALSE;
-		}
-
-		// ALL
-		else {
-			$output = array();
-			if (in_array($post_id, $relationship_array['viewed']))
-				$output[] = 'viewed';
-			if (in_array($post_id, $relationship_array['favorites']))
-				$output[] = 'favorites';
-			if (in_array($post_id, $relationship_array['view_later']))
-				$output[] = 'view_later';
-
-			return $output;
-		}
-	} else {
-
-		if ($relationship != 'all')
-			return FALSE;
-		else
-			return FALSE;
+		// safe redirect to actually login the user - otherwise they would need to manually refresh the page
+		// PLUS: this clears the activation confirmation page with the plain text password printed on screen
+		wp_safe_redirect( get_home_url() );
+		exit;
 	}
 
 }
+//add_action( 'wpmu_activate_user', 'custom_login_new_user', 10, 3 );
 
-function get_post_relationships($user_id = null, $relationship = null) {
-	/*
-	 Used to get a list of all post relationships of a specified user
-	 Paramaters
 
-	 $user_id : integer
-
-	 $relationship : integer (optional)
-
-	 Process
-
-	 Reads the specified relationship Array from post_relationships column in User Meta table
-	 If relationship is undefined, return entire post_relationships object
-	 Decode from stored JSON, return PHP Array
-	 Usage
-
-	 Specified post relationship :
-
-	 get_post_relationships( '1', 'favorites' )
-	 returns : Array of post IDs
-
-	 array(24,48,128,256,512)
-	 Un-specified post relationship :
-
-	 get_post_relationships( '1' )
-	 returns : Contents of post_relationships
-
-	 array(
-	 'viewed' => [12,25,23,16,47,24,58,112,462,78,234,25,128],
-	 'favorites' => [12,16,25],
-	 'view_later' => [58,78]
-	 )
-	 POST RELATIONSHIP : "SET" ALIASES
-
-	 If no $user_id is defined, use get_current_user_id() method to get user ID
-	 If no $post_id is defined, use $post->ID method to get the post ID
-	 *
-	 */
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	$relationships_db = get_relationship_from_user_meta($user_id);
-	$relationships_db_array = (array) json_decode($relationships_db);
-	if (!is_null($relationships_db)) {
-		if (!is_null($relationship)) {
-			return $relationships_db_array[$relationship];
-		} else {
-			return $relationships_db_array;
-		}
-	}
-
-	return array();
-}
-
-function get_relationship_from_user_meta($user_id) {
-	global $wpdb;
-	$wpdb -> show_errors();
-	$query = "select " . user_fields_names::$POST_RELATIONSHIPS . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
-	//echo($query);
-	$relationshp = $wpdb -> get_var($query);
-	return $relationshp;
-
-}
-
-function pw_count_user_posts( $author_id ){
-	global $wpdb;
-	$posts_query = "
-	  SELECT
-	    COUNT(*)
-	  FROM
-	    $wpdb->posts
-	  WHERE
-	    post_status = 'publish' AND post_author = '$author_id'
-	  ";
-	//$where = $wpdb->get_results($posts_query,ARRAY_A);
-	return $wpdb->get_var( $posts_query );
-}
 
 
 function pw_set_avatar( $image_object, $user_id ){
@@ -1082,223 +299,6 @@ function pw_get_avatar( $obj ){
 	}
 
 }
-
-
-/////----- INSERT NEW USER -----/////
-function pw_insert_user( $userdata ){
-	global $pwSiteGlobals;
-
-	$userdata['role'] = $pwSiteGlobals['role']['default'];	
-	$user_id = wp_insert_user( $userdata );
-
-	// If it's successful, we have the new user ID
-	if( is_int($user_id) ){
-		send_activation_link(array("ID" => $user_id));
-		return get_userdata($user_id);
-	}
-	else
-		return $user_id;
-}
-
-
-/////----- SEND ACTIVATION LINK -----/////
-function send_activation_link( $userdata ){
-	if( isset($userdata['email']) ){
-		$user_obj = get_user_by( 'email', $userdata['email'] );
-		$user_id = $user_obj->ID; // TEST?
-	}
-	elseif( isset( $userdata['ID'] ) ) {
-		$user_id = $userdata['ID'];
-	}
-	// See if user already has an activation key
-	$hash = get_user_meta( $user_id, 'activation_key', true );
-	// If no key exists
-	if ( !$hash ){
-		$hash = md5( rand() );
-		add_user_meta( $user_id, 'activation_key', $hash );
-	}
-	$user_info = get_userdata($user_id);
-	$to = $user_info->user_email;           
-	$subject = 'Member Verification'; 
-	//$message = 'Hello,';
-	//$message .= "\n\n";
-	$message .= 'Thanks for signing up for '.get_bloginfo('name').'!';
-	$message .= "\n\n";
-	$message .= 'Username: '.$user_info->user_login;
-	$message .= "\n";
-	$message .= 'Email: '.$user_info->user_email;
-	$message .= "\n\n";
-	$message .= "Click this link to activate your account:";
-	$message .= "\n";
-	$message .= home_url('/').'activate/?auth_key='.$hash;
-	$headers = 'From: '. get_bloginfo('admin_email') . "\r\n";           
-	return wp_mail($to, $subject, $message, $headers); 
-}
-
-
-
-/////----- ACTIVATE USER -----/////
-function pw_activate_user( $auth_key ){
-	// Query for users based on the meta data
-	$user_query = new WP_User_Query(
-		array(
-			'meta_key'		=>	'activation_key',
-			'meta_value'	=>	$auth_key
-		)
-	);
-	// Get the results from the query, returning the first user
-	$users = $user_query->get_results();
-	$user = $users[0];
-	if( isset($user) ){
-		$args = array(
-			"ID" => $user->ID,
-			"role" => "contributor"
-			);
-		wp_update_user($args);
-		return $user;
-	}
-	else
-		return array("error" => "Wrong activation code.");
-}
-
-
-
-/////----- RESET PASSWORD LINK -----/////
-function send_reset_password_link( $userdata ){
-	if( isset($userdata['email']) ){
-		$user_obj = get_user_by( 'email', $userdata['email'] );
-		$user_id = $user_obj->ID;
-	}
-	elseif( isset( $userdata['ID'] ) ) {
-		$user_id = $userdata['ID'];
-	}
-
-	// See if user already has an activation key
-	$hash = get_user_meta( $user_id, 'reset_password_key', true );
-	// If no key exists
-	if ( !$hash ){
-		$hash = md5( rand() );
-		add_user_meta( $user_id, 'reset_password_key', $hash );
-	}
-	// If a key exists, update it with a new one
-	else {
-		$hash = md5( rand() );
-		update_user_meta( $user_id, 'reset_password_key', $hash );
-	}
-
-	$user_info = get_userdata($user_id);
-	$to = $user_info->user_email;           
-	$subject = 'Reset Password'; 
-	//$message = 'Hello,';
-	//$message .= "\n\n";
-	$message .= "Have you recently requested to reset your password on ".get_bloginfo('name')."?";
-	$message .= "\n";
-	$message .= "If not, you can ignore this email.";
-	$message .= "\n\n";
-	$message .= 'Username: '.$user_info->user_login;
-	$message .= "\n";
-	$message .= 'Email: '.$user_info->user_email;
-	$message .= "\n\n";
-	$message .= "Click this link to reset your password:";
-	$message .= "\n";
-	$message .= home_url('/').'reset-password/?auth_key='.$hash;
-	$headers = 'From: '. get_bloginfo('admin_email') . "\r\n";           
-	return wp_mail($to, $subject, $message, $headers); 
-}
-
-
-// ON ACTUAL PASSWORD RESET, REQUIRE THE ACTUAL KEY PRESENT AND VERIFY IT
-
-
-/////----- RESET PASSWORD LINK -----/////
-function reset_password_submit( $userdata ){
-	/*
-		$userdata = array( "password" => *string*, "auth_key" => *string* );
-	*/
-
-	// Query for users based on the meta data
-	$user_query = new WP_User_Query(
-		array(
-			'meta_key'		=>	'reset_password_key',
-			'meta_value'	=>	$userdata['auth_key'],
-		)
-	);
-	// Get the results from the query, returning the first user
-	$users = $user_query->get_results();
-	$user = $users[0];
-	if( isset($user) ){
-		$args = array(
-			"ID" => $user->ID,
-			"user_pass" => $userdata['user_pass']
-			);
-		$user_id = wp_update_user( $args );
-
-		if( is_int($user_id) && $user_id == $user->ID ){
-			// Remove the used key
-			delete_user_meta( $user_id, 'reset_password_key' );
-		}
-
-		return $user;
-	}
-	else
-		return array("error" => "Wrong or no authorization code.");
-
-}
-
-
-
-
-
-
-/////----- EMAIL SINGLE RESET PASSWORD LINK // REALITY SANDWICH EXCLUSIVE -----/////
-function reset_password_mailout_single_postworld( $user_id ){
-
-	// See if user already has an activation key
-	$hash = get_user_meta( $user_id, 'reset_password_key', true );
-	// If no key exists
-	if ( !$hash ){
-		$hash = md5( rand() );
-		add_user_meta( $user_id, 'reset_password_key', $hash );
-	}
-
-	/*// Don't use this part for the mass-mailout 
-	// If a key exists, update it with a new one
-	else {
-		$hash = md5( rand() );
-		update_user_meta( $user_id, 'reset_password_key', $hash );
-	}
-	*/
-
-	$user_info = get_userdata($user_id);
-	$to = $user_info->user_email;           
-	$subject = 'New Reality Sandwich Live - Please Reset Password'; 
-	$message .= "\n\n";
-	$message .= "Exciting news! The expanded Reality Sandwich site -- which we call RS 2.0 -- is now live!";
-	$message .= "\n\n";
-	$message .= "We've added a lot. A stream of timely blog posts, much more video, a Community area where everyone can post, better search tools, improved commenting, and more.";
-	$message .= "\n\n";
-	$message .= "When you log into Reality Sandwich, you'll be able to do way more than ever before!";
-	$message .= "\n\n";
-	$message .= "But to login, you'll first need to reset your password. The new RS site uses a completely different technical system, and we couldn't transfer over the old passwords.";
-	$message .= "\n\n";
-	$message .= "So please click on the link below to reset your password. Then visit RS 2.0, login, and experience a deep dose of transformational culture.";
-	$message .= "\n\n";
-	$message .= 'Username: '.$user_info->user_login;
-	$message .= "\n";
-	$message .= 'Email: '.$user_info->user_email;
-	$message .= "\n\n";
-	$message .= "Click this link to reset your password:";
-	$message .= "\n";
-	$message .= home_url('/').'reset-password/?auth_key='.$hash;
-	$message .= "\n\n";
-	$message .= "Cheers,";
-	$message .= "\n";
-	$message .= "Ken, Faye, Steven, Phong, Jeremy, Tara, David, Nese, and the Reality Sandwich Team";
-	$headers = 'From: Reality Sandwich <'. get_bloginfo('admin_email') . ">\r\n";           
-	return wp_mail($to, $subject, $message, $headers); 
-}
-
-
 
 
 ?>

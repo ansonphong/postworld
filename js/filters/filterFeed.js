@@ -19,28 +19,28 @@ postworld.controller('pwFilterFeedController',
     function pwFilterFeedController($scope, $location, $log, pwData, $attrs, $window, pwPostOptions) {    	
 		var firstTime = true;
 		// Set Panel Template
-		//pwData.templates.promise.then(function(value) {
-				var FeedID = $scope.feedId;
-				var template = 'feed_top';	// TODO get from Constant values
-				if (!$scope.feedId) {
-					$log.debug('no valid Feed ID provided in Feed Settings');
-					return;
-				}
-				// Get Default Argument Values
-				$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
-			   
-			   	// DEFAULTS
-				$scope.feedQuery.author_name = "";
 
-				// Taxonomy Object Model
-				$scope.taxInput = pwPostOptions.pwGetTaxInputModel();
+		var FeedID = $scope.feedId;
+		var template = 'feed_top';	// TODO get from Constant values
+		if (!$scope.feedId) {
+			$log.debug('no valid Feed ID provided in Feed Settings');
+			return;
+		}
+		// Get Default Argument Values
+		$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
 
-			   // Get Default View Name
-			   if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
-			   		template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
-		    	$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: template } );
-				// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
-		//});		
+			// DEFAULTS
+		$scope.feedQuery.author_name = "";
+
+		// Taxonomy Object Model
+		$scope.taxInput = pwPostOptions.pwGetTaxInputModel();
+
+		// Get Default View Name
+		if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
+				template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
+		$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: template } );
+		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
+
 
 		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
 		// Interacts with userAutocomplete() controller
@@ -49,11 +49,8 @@ postworld.controller('pwFilterFeedController',
 	        $scope.feedQuery.author_name = data;
 	    });
 
-		$scope.submit1 = function() {
-			// debugger;
-		};
 
-    	// TODO : check best location for that code, should we create a panel child?
+    	// TODO : check best location for this code, should we create a panel child?
 		$scope.toggleOrder = function() {
 			if ($scope.feedQuery.order == 'ASC') {
 				$scope.feedQuery.order = 'DESC';

@@ -125,18 +125,17 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 
 		if (settings.order_options) $scope.orderOptions = settings.order_options;
 		 
-		//pwData.templates.promise.then(function(value) {
-			if (settings.view) {
-				var template = 'comments-'+settings.view;
-				$scope.templateUrl = pwData.pw_get_template( { subdir: 'comments', view: template } );
+		// Get Templates
+		if (settings.view) {
+			var template = 'comments-'+settings.view;
+			$scope.templateUrl = pwData.pw_get_template( { subdir: 'comments', view: template } );
 			$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
-			}
-			else {
-				$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
-				// this template fires the loadComments function, so there is no possibility that loadComments will run first.
-			}
+		}
+		else {
+			$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
+			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
+		}
 			
-		//});
 		
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;

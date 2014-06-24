@@ -11,7 +11,8 @@
  *	$args = json_decode($args_text);
  * */
 
-postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$postworld', function ( $resource, $q, $log, $window, $postworld ) {	  
+postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
+	function ( $resource, $q, $log, $window, $pw ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
@@ -42,13 +43,13 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$postworld'
 		switch (subdir) {
 			case 'posts':
 				if (post_type) {
-					template = pwData.templatesFinal.posts[post_type][view];						
+					template = $pw.templates.posts[post_type][view];						
 				} else {
-					template = pwData.templatesFinal.posts['post'][view];						
+					template = $pw.templates.posts['post'][view];						
 				}
 				break;
 			default:
-				template = pwData.templatesFinal[subdir][view];
+				template = $pw.templates[subdir][view];
 				break;
 		}
 		// $log.debug('Service: pwData Method:getTemplate template=',template);
@@ -64,9 +65,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$postworld'
     return {
     	feed_settings: feed_settings,
     	feed_data: feed_data,
-    	
-    	templates: $window.pwTemplates, //$q.defer(), // 
-    	templatesFinal: $window.pwTemplates, //{},
+
+    	templates: $pw.templates, 
 
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
@@ -203,7 +203,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$postworld'
 				return false;
 
 		
-			var template = getTemplate( this, meta ) + "?ver=" + $postworld['version'] ; // ( this, subdir, post_type, name )
+			var template = getTemplate( this, meta ) + "?ver=" + $pw['version'] ; // ( this, subdir, post_type, name )
 		    return template;
 
 		}, // END OF pw_get_template
@@ -356,10 +356,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$postworld'
 			var params = {args:args};
 			return this.wp_ajax('pw_activate_user',params);
 		},
-		send_reset_password_link: function(args) {
-			$log.debug('pwData.send_reset_password_link',args);
+		reset_password_email: function(args) {
+			$log.debug('pwData.reset_password_email',args);
 			var params = {args:args};
-			return this.wp_ajax('send_reset_password_link',params);
+			return this.wp_ajax('reset_password_email',params);
 		},
 		reset_password_submit: function(args) {
 			$log.debug('pwData.reset_password_submit',args);

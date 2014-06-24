@@ -93,6 +93,7 @@ include 'php/postworld_feeds.php';
 include 'php/postworld_cron.php';
 
 ////////// USER FUNCTIONS ///////////
+include 'php/postworld_user_meta.php';
 include 'php/postworld_users.php';
 
 ////////// TAXONOMY FUNCTIONS ///////////
