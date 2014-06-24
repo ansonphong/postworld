@@ -45,8 +45,8 @@ postworld.factory('pw',
  //////////////////////////////////////////////////////////*/
 
 postworld.factory('_',
-	['$resource','$q','$log','$window',
-	function ($resource, $q, $log, $window) {   
+	[ '$rootScope', '$resource','$q','$log','$window', '$timeout',
+	function ( $rootScope, $resource, $q, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
 	return {
@@ -204,7 +204,32 @@ postworld.factory('_',
 
 			return obj;
 
-		}
+		},
+		clobber: function( id, t, f ){ // t = timeout in ms, f = function to run
+
+			// Establish the Clobber Object
+			if( _.isUndefined( $rootScope.clobber ) )
+				$rootScope.clobber = {};
+			if( _.isUndefined( $rootScope.clobber[ id ] ) )
+				$rootScope.clobber[ id ] = 1;
+			else
+				// Increase Clobber Value
+				$rootScope.clobber[ id ] ++;
+
+			// Timeout
+			$timeout( function(){
+				// Decrease Clobber Value
+				$rootScope.clobber[ id ] --;
+				$log.debug( "clobber // ID: " + id + " // T: " + t + " // clobber : " + $rootScope.clobber[ id ] );
+
+				// If no clobbering left, run the function
+				if( $rootScope.clobber[ id ] == 0 )
+					f();
+
+			}, t );
+
+
+		},
 	};
 
 }]);

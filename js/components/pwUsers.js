@@ -122,13 +122,23 @@ var avatarCtrl = function ( $scope, $rootScope, pwData, $timeout ) {
                                     |___/            |_|    
 /*/////////// ------------ SIGNUP ------------ ///////////*/  
 
-var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers ) {
+postworld.directive('pwUserSignup', function() {
+    return {
+        restrict: 'A',
+        controller: 'pwUserSignupCtrl',
+    };
+});
+
+postworld.controller('pwUserSignupCtrl',
+    [ '$scope', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+    function( $scope, $rootScope, pwData, $timeout, $log, pwUsers, $_ ) {
 
     // SETUP
     $scope.formData = {
         name:"",
         username:"",
         password:"",
+        password_c:"",
         email:"",
         agreement:""
     };
@@ -142,62 +152,104 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
     $scope.mode = "signup";
     $scope.status = "done";
 
+
+    $scope.showView = function( view ){
+
+        switch( view ){
+
+            case 'signup':
+                if(
+                    $scope.mode == 'signup' || 
+                    $scope.mode == 'signupCustom' )
+                    return true;
+                break;
+
+            case 'activate':
+                if( $scope.mode == 'activate' )
+                    return true;
+                break;
+        }
+
+        return false;
+
+    }
+
+
     // VALIDATE : Username
     $scope.validateUsername = function( username ){
+
         if(
-            !($scope.signupForm.username.$error.minLength) &&
-            !($scope.signupForm.username.$error.maxLength) &&
-            !($scope.signupForm.username.$error.pattern) &&
-            $scope.signupForm.username.$dirty
+            $scope.signupForm.username.$error.minLength ||
+            $scope.signupForm.username.$error.maxLength ||
+            $scope.signupForm.username.$error.pattern ||
+            !$scope.signupForm.username.$dirty
             ){
-            if( username == '' )
-                username = '0';
-            var query_args = {
-                number:1,
-                search_columns:['user_nicename'],
-                fields:['user_nicename'],
-                search: username,
-            };
-            $scope.fieldStatus.username = "busy";
-            $scope.signupForm.username.$setValidity('available',false);
-            pwData.wp_user_query( query_args ).then(
-                // Success
-                function(response) {
-                    $log.debug('QUERY : ' + username , response.data.results);
-                    // If the username is already taken
-                    if ( response.data.results.length > 0 ){
-                        if( response.data.results[0].user_nicename === username ){
-                            // Set Field Status
-                            $scope.fieldStatus.username = "taken";
-                            // Set Validity to FALSE
-                            $scope.signupForm.username.$setValidity('available',false);
-                        }
-                        else{
-                            $scope.fieldStatus.username = "done";
-                            $scope.signupForm.username.$setValidity('available',true);
-                        }
-                    }
-                    else {
-                        $scope.fieldStatus.username = "done";
-                        $scope.signupForm.username.$setValidity('available',true);
-                    }
-                },
-                // Failure
-                function(response) {
-                    throw { message:'Error: ' + JSON.stringify(response)};
-                }
-            );
-        }
-        else {
             $scope.fieldStatus.username = "done";
+            return false;
         }
+
+        // Handle Empty Username
+        if( username == '' || _.isUndefined( username ) )
+            username = '0';
+
+        // Setup User Query
+        var query_args = {
+            number:1,
+            search_columns:['user_nicename'],
+            fields:['user_nicename'],
+            search: username,
+        };
+
+        // Set Status
+        $scope.fieldStatus.username = "busy";
+        
+        // Query the DB
+        pwData.wp_user_query( query_args ).then(
+            function(response) {
+                $log.debug('QUERY : ' + username , response.data.results);
+
+                // NOT AVAILABLE
+                // If the value is already taken
+                if ( response.data.results.length > 0 ){
+                    if( response.data.results[0].user_nicename === username ){
+                        // Set Field Status
+                        $scope.fieldStatus.username = "taken";
+                        // Set Validity to FALSE
+                        $scope.signupForm.username.$setValidity('available',false);
+                        return false;
+                    }
+                }
+
+                // AVAILABLE
+                // If it's not taken
+                $scope.fieldStatus.username = "done";
+                $scope.signupForm.username.$setValidity('available',true);
+                $scope.formData.username = $scope.signupForm.username.$viewValue;
+
+            },
+            function(response) {
+                throw { message:'Error: ' + JSON.stringify( response )};
+            }
+        );
     };
+
     // WATCH : value of username
-    if ( typeof $scope.formData.username !== 'undefined' )
-        $scope.$watch( "formData.username", function (){
-            // When it changes, emit it's value to the parent controller
-            $scope.validateUsername( $scope.formData.username );
-            }, 1 );
+    $scope.$watch( "signupForm.username.$viewValue",
+        function (){
+
+            if ( $_.objExists( $scope, 'signupForm.username.$viewValue' ) ){
+
+                // Unvalidate until hearing back from the query
+                $scope.signupForm.username.$setValidity( 'available', false );
+
+                // Clobber the Validation Function
+                $_.clobber( 'validateUsername', 1000, function(){
+                    $scope.validateUsername( $scope.signupForm.username.$viewValue );
+                } );
+
+            }
+        }, 1
+    );
 
 
     // VALIDATE : Email Doesn't Exist
@@ -207,37 +259,42 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
             !($scope.signupForm.email.$error.email) &&
             $scope.signupForm.email.$dirty
             ){
-            $scope.signupForm.email.$setValidity('available',false);
+
             if( email == '' )
                 email = '0';
+
             var query_args = {
                 number:1,
                 search_columns:['user_email'],
                 fields:['user_email'],
                 search: email,
             };
+
             $scope.fieldStatus.email = "busy";
+
             pwData.wp_user_query( query_args ).then(
                 // Success
                 function(response) {
                     $log.debug('QUERY : ' + email , response.data.results);
-                    // If the email is already taken
+
+                    // NOT AVAILABLE
+                    // If the value is already taken
                     if ( response.data.results.length > 0 ){
                         if( response.data.results[0].user_email === email ){
                             // Set Field Status
                             $scope.fieldStatus.email = "taken";
                             // Set Validity to FALSE
                             $scope.signupForm.email.$setValidity('available',false);
-                        }
-                        else{
-                            $scope.fieldStatus.email = "done";
-                            $scope.signupForm.email.$setValidity('available',true);
+                            return false;
                         }
                     }
-                    else {
-                        $scope.fieldStatus.email = "done";
-                        $scope.signupForm.email.$setValidity('available',true);
-                    }
+
+                    // AVAILABLE
+                    // If the value is not taken
+                    $scope.fieldStatus.email = "done";
+                    $scope.signupForm.email.$setValidity('available',true);
+                    $scope.formData.email = $scope.signupForm.email.$viewValue;
+
                 },
                 // Failure
                 function(response) {
@@ -251,21 +308,32 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
     };
 
     // WATCH : value of email
-    if ( typeof $scope.formData.email != 'undefined' )
-        $scope.$watch( "formData.email", function (){
-            // When it changes, emit it's value to the parent controller
-            $scope.validateEmail( $scope.formData.email );
-            }, 1 );
+    $scope.$watch( "signupForm.email.$viewValue",
+        function (){
+
+            if ( $_.objExists( $scope, 'signupForm.email.$viewValue' ) ){
+                
+                // Unvalidate until hearing back from the query
+                $scope.signupForm.email.$setValidity( 'available', false );
+
+                // Clobber the Validation Function
+                $_.clobber( 'validateEmail', 1000, function(){
+                    $scope.validateEmail( $scope.signupForm.email.$viewValue );
+                } );
+
+            }
+        }, 1
+    );
 
     // INSERT USER
     $scope.insertUser = function(){        
         $scope.status = "inserting";
         var signupForm = $scope.signupForm;
         var userdata = {
-            user_login:signupForm.username.$modelValue,
-            user_pass:signupForm.password.$modelValue,
-            user_email:signupForm.email.$modelValue,
-            display_name:signupForm.name.$modelValue
+            user_login: signupForm.username.$viewValue,
+            user_pass: signupForm.password.$viewValue,
+            user_email: signupForm.email.$viewValue,
+            display_name: signupForm.name.$viewValue
         };
         $log.debug('INSERTING USER : ' , userdata);
         pwData.pw_insert_user( userdata ).then(
@@ -294,18 +362,20 @@ var pwUserSignup = function ( $scope, $rootScope, pwData, $timeout, $log, pwUser
 
 
     // WATCH : value of passwords - TODO: Refactor into modular service function
-    $scope.$watch( "[formData.password, formData.password_c]", function (){
+    $scope.$watch( "[ signupForm.password.$viewValue, signupForm.password_c.$viewValue ]", function (){
         // When it changes, check that confirmation password is the same
-        if( $scope.formData.password == $scope.formData.password_c )
-            $scope.signupForm.password_c.$setValidity('noMatch',true);
+        if( $scope.signupForm.password.$viewValue == $scope.signupForm.password_c.$viewValue )
+            $scope.signupForm.password_c.$setValidity( 'passwordMatch', true );
         else
-            $scope.signupForm.password_c.$setValidity('noMatch',false);
-        }, 1 );
+            $scope.signupForm.password_c.$setValidity( 'passwordMatch', false );
 
-}
+    }, 1 );
+
+}]);
+
 
 /*///////// ------- SIGNUP FORM : RE-ENTER PASSWORD VALIDATION ------- /////////*/  
-angular.module('UserValidation', []).directive('validPasswordC', function () {
+postworld.directive('validPasswordC', function () {
     return {
         require: 'ngModel',
         link: function (scope, elm, attrs, ctrl) {
@@ -316,7 +386,6 @@ angular.module('UserValidation', []).directive('validPasswordC', function () {
         }
     }
 });
-
 
 
 

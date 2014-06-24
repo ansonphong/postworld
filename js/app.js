@@ -27,7 +27,6 @@ var depInject = [
 	'ui.bootstrap',
 	'monospaced.elastic',
 	'TruncateFilter',
-	'UserValidation',
 	'pwFilters',
 	'timer',
 	'angular-parallax',
