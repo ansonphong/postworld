@@ -122,9 +122,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 		},
 		pw_get_posts: function(args) {
 			var feedSettings = feed_settings[args.feed_id];
-			var feeds = feeds[args.feed_id];
+			var feed = feeds[args.feed_id];
+
 			// If already all loaded, then return
-			if (feeds.status == 'all_loaded')  {
+			if (feed.status == 'all_loaded')  {
 				$log.debug('pwData.pw_get_posts ALL LOADED');
 				// TODO should we return or set promise.?
 				 //var results = {'status':200,'data':[]};
@@ -136,17 +137,17 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 			
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
-			var idBegin = feeds.loaded;
+			var idBegin = feed.loaded;
 			var idEnd = idBegin+feedSettings.load_increment;
 			// TODO Check if load_increment exists
 			// Only when feed_outline exists and this is the first run, load from preload value, not from auto increment value
-			if (feeds.loaded==0) {
+			if (feed.loaded==0) {
 				if (feedSettings.preload)
 					idEnd = idBegin+feedSettings.preload;
 					// TODO, use constant here
 				else idEnd = idBegin+10;
 			}
-			var postIDs = feeds.feed_outline.slice(idBegin,idEnd);
+			var postIDs = feed.feed_outline.slice(idBegin,idEnd);
 			var fields;
 			if (feedSettings.query_args) {
 				if (feedSettings.query_args.fields != null) {
