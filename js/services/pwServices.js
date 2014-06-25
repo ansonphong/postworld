@@ -88,10 +88,15 @@ postworld.factory('_',
 				return false;
 		},
 		isEmpty: function(value){
-			if ( typeof value === 'undefined' || value == '' )
+			if ( typeof value === 'undefined' ||
+				value == '' ||
+				value == null ||
+				value == false ||
+				value == [] ||
+				value == {} )
 				return true;
 			else
-				return false; //value[0].value ? true : false;  
+				return false; 
 		},
 		isEmptyObj: function(obj){
 				for(var prop in obj) {
@@ -240,8 +245,12 @@ postworld.factory('_',
 					f();
 
 			}, t );
-
-
+		},
+		urlParam: function( name ) {
+		    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+		        results = regex.exec(location.search);
+		    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 		},
 	};
 

@@ -158,6 +158,7 @@ postworld.controller('pwUserSignupCtrl',
 	};
 
 	$scope.mode = "signup";
+	$scope.formName = "signupForm";
 	$scope.status = "done";
 
 	// SHOW VIEW : Switch the view based on $scope.mode
@@ -181,10 +182,10 @@ postworld.controller('pwUserSignupCtrl',
 	$scope.validateUsername = function( username ){
 
 		if(
-			$scope.signupForm.username.$error.minLength ||
-			$scope.signupForm.username.$error.maxLength ||
-			$scope.signupForm.username.$error.pattern ||
-			!$scope.signupForm.username.$dirty
+			$scope[ $scope.formName ].username.$error.minLength ||
+			$scope[ $scope.formName ].username.$error.maxLength ||
+			$scope[ $scope.formName ].username.$error.pattern ||
+			!$scope[ $scope.formName ].username.$dirty
 			){
 			$scope.fieldStatus.username = "done";
 			return false;
@@ -217,7 +218,7 @@ postworld.controller('pwUserSignupCtrl',
 						// Set Field Status
 						$scope.fieldStatus.username = "taken";
 						// Set Validity to FALSE
-						$scope.signupForm.username.$setValidity('available',false);
+						$scope[ $scope.formName ].username.$setValidity('available',false);
 						return false;
 					}
 				}
@@ -225,8 +226,8 @@ postworld.controller('pwUserSignupCtrl',
 				// AVAILABLE
 				// If it's not taken
 				$scope.fieldStatus.username = "done";
-				$scope.signupForm.username.$setValidity('available',true);
-				$scope.formData.username = $scope.signupForm.username.$viewValue;
+				$scope[ $scope.formName ].username.$setValidity('available',true);
+				$scope.formData.username = $scope[ $scope.formName ].username.$viewValue;
 
 			},
 			function(response) {
@@ -236,20 +237,20 @@ postworld.controller('pwUserSignupCtrl',
 	};
 
 	// WATCH : value of username
-	$scope.$watch( "signupForm.username.$viewValue",
+	$scope.$watch( $scope.formName + ".username.$viewValue",
 		function (){
 
-			if ( $_.objExists( $scope, 'signupForm.username.$viewValue' ) ){
+			if ( $_.objExists( $scope, $scope.formName + '.username.$viewValue' ) ){
 
 				// Set Field Status
 				$scope.fieldStatus.username = "busy";
 
 				// Unvalidate until hearing back from the query
-				$scope.signupForm.username.$setValidity( 'available', false );
+				$scope[ $scope.formName ].username.$setValidity( 'available', false );
 
 				// Clobber the Validation Function
 				$_.clobber( 'validateUsername', 1000, function(){
-					$scope.validateUsername( $scope.signupForm.username.$viewValue );
+					$scope.validateUsername( $scope[ $scope.formName ].username.$viewValue );
 				} );
 			}
 		}, 1
@@ -259,9 +260,9 @@ postworld.controller('pwUserSignupCtrl',
 	// VALIDATE : Email Doesn't Exist
 	$scope.validateEmail = function( email ){
 		if(
-			!($scope.signupForm.email.$error.required) &&
-			!($scope.signupForm.email.$error.email) &&
-			$scope.signupForm.email.$dirty
+			!($scope[ $scope.formName ].email.$error.required) &&
+			!($scope[ $scope.formName ].email.$error.email) &&
+			$scope[ $scope.formName ].email.$dirty
 			){
 
 			if( email == '' )
@@ -288,7 +289,7 @@ postworld.controller('pwUserSignupCtrl',
 							// Set Field Status
 							$scope.fieldStatus.email = "taken";
 							// Set Validity to FALSE
-							$scope.signupForm.email.$setValidity('available',false);
+							$scope[ $scope.formName ].email.$setValidity('available',false);
 							return false;
 						}
 					}
@@ -296,8 +297,8 @@ postworld.controller('pwUserSignupCtrl',
 					// AVAILABLE
 					// If the value is not taken
 					$scope.fieldStatus.email = "done";
-					$scope.signupForm.email.$setValidity('available',true);
-					$scope.formData.email = $scope.signupForm.email.$viewValue;
+					$scope[ $scope.formName ].email.$setValidity('available',true);
+					$scope.formData.email = $scope[ $scope.formName ].email.$viewValue;
 
 				},
 				// Failure
@@ -312,20 +313,20 @@ postworld.controller('pwUserSignupCtrl',
 	};
 
 	// WATCH : value of email
-	$scope.$watch( "signupForm.email.$viewValue",
+	$scope.$watch( $scope.formName + ".email.$viewValue",
 		function (){
 
-			if ( $_.objExists( $scope, 'signupForm.email.$viewValue' ) ){
+			if ( $_.objExists( $scope, $scope.formName + '.email.$viewValue' ) ){
 
 				// Set Field Status
 				$scope.fieldStatus.email = "busy";
 				
 				// Unvalidate until hearing back from the query
-				$scope.signupForm.email.$setValidity( 'available', false );
+				$scope[ $scope.formName ].email.$setValidity( 'available', false );
 
 				// Clobber the Validation Function
 				$_.clobber( 'validateEmail', 1000, function(){
-					$scope.validateEmail( $scope.signupForm.email.$viewValue );
+					$scope.validateEmail( $scope[ $scope.formName ].email.$viewValue );
 				} );
 
 			}
@@ -335,7 +336,7 @@ postworld.controller('pwUserSignupCtrl',
 	// INSERT USER
 	$scope.insertUser = function(){        
 		$scope.status = "inserting";
-		var signupForm = $scope.signupForm;
+		var signupForm = $scope[ $scope.formName ];
 		var userdata = {
 			user_login: signupForm.username.$viewValue,
 			user_pass: signupForm.password.$viewValue,
@@ -369,14 +370,15 @@ postworld.controller('pwUserSignupCtrl',
 
 
 	// WATCH : value of passwords - TODO: Refactor into modular service function
-	$scope.$watch( "[ signupForm.password.$viewValue, signupForm.password_c.$viewValue ]", function (){
+	$scope.$watch( "[ " +[ $scope.formName ]+ ".password.$viewValue, " +[ $scope.formName ]+ ".password_c.$viewValue ]", function (){
 		// When it changes, check that confirmation password is the same
-		if( $scope.signupForm.password.$viewValue == $scope.signupForm.password_c.$viewValue )
-			$scope.signupForm.password_c.$setValidity( 'passwordMatch', true );
+		if( $scope[ $scope.formName ].password.$viewValue == $scope[ $scope.formName ].password_c.$viewValue )
+			$scope[ $scope.formName ].password_c.$setValidity( 'passwordMatch', true );
 		else
-			$scope.signupForm.password_c.$setValidity( 'passwordMatch', false );
+			$scope[ $scope.formName ].password_c.$setValidity( 'passwordMatch', false );
 
 	}, 1 );
+
 
 }]);
 
@@ -413,10 +415,12 @@ postworld.directive('pwUserActivate', function() {
 });
 
 postworld.controller('pwUserActivateCtrl',
-	[ '$scope', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
-	function( $scope, $rootScope, $pwData, $timeout, $log, $pwUsers, $_ ) {
+	[ '$scope', '$rootScope', '$location', 'pwData', '$timeout', '$log', 'pwUsers', '_', '$window', 
+	function( $scope, $rootScope, $location, $pwData, $timeout, $log, $pwUsers, $_, $window ) {
 
+	///// INIT /////
 	$scope.status = "done";
+	$scope.formName = "resendKey";
 
 	$scope.formData = {
 		email:"",
@@ -426,9 +430,29 @@ postworld.controller('pwUserActivateCtrl',
 		email:'empty',
 	};
 
-	// Outline of Views
-	$scope.views = [ 'activate', 'welcome', 'error', 'resend', 'loggedIn' ];
+	///// SET MODE /////
+	$timeout( function(){
 
+		// If user is logged in
+		if( $_.objExists( $window, 'pwGlobals.current_user.data.ID' ) ){
+			$scope.mode = 'loggedIn';			
+			return false;
+		}
+
+		// If auth_key is provided
+		$scope.authKey = $_.urlParam( 'auth_key' );
+		if( !$_.isEmpty( $scope.authKey )  ){
+			$scope.activateUserKey( $scope.authKey );
+		}
+		else{
+			$scope.mode = "resend";
+		}
+
+	}, 1 );
+
+
+	///// VIEWS : Outline /////
+	$scope.views = [ 'activate', 'welcome', 'error', 'resend', 'loggedIn' ];
 
 	// SHOW VIEW : Switch the view based on $scope.mode
 	$scope.showView = function( view ){
@@ -436,7 +460,7 @@ postworld.controller('pwUserActivateCtrl',
 			true : false;
 	}
 
-
+	///// FUNCTIONS /////
 	$scope.sendActivationLink = function( user_email ){
 		$pwUsers.sendActivationLink($scope, user_email);
 	};
@@ -485,23 +509,18 @@ postworld.controller('pwUserActivateCtrl',
 
 		}
 	};
-	$scope.resendActivationKeyScreen = function(){
-		$scope.mode = "resend";
-		//$scope.formData = {};
-	};
 
 	// VALIDATE : Email Exists
 	$scope.validateEmailExists = function( email ){
 
 		// Clobber the Validation Function
 		$_.clobber( 'validateEmail', 1000, function(){
-			var formName = "resendKey";
 			var callback = "validateEmailExistsCallback";
 			
 			// Validate until hearing back from the DB
-			$scope[formName].email.$setValidity('exists',true);
+			$scope[ $scope.formName ].email.$setValidity('exists',true);
 
-			$pwUsers.validateEmailExists( $scope, email, formName, callback );
+			$pwUsers.validateEmailExists( $scope, email, $scope.formName, callback );
 		} );
 
 	};
@@ -515,16 +534,16 @@ postworld.controller('pwUserActivateCtrl',
 				// Set Field Status
 				$scope.fieldStatus.email = "activated";
 				// Set Validity to FALSE
-				$scope[formName].email.$setValidity('exists',false);
+				$scope[ $scope.formName ].email.$setValidity('exists',false);
 			}
 			else{
 				$scope.fieldStatus.email = "done";
-				$scope[formName].email.$setValidity('exists',true);
+				$scope[ $scope.formName ].email.$setValidity('exists',true);
 			}
 		}
 		else {
 			$scope.fieldStatus.email = "unregistered";
-			$scope[formName].email.$setValidity('exists',false);
+			$scope[ $scope.formName ].email.$setValidity('exists',false);
 		}
 	};
 
@@ -555,36 +574,80 @@ postworld.controller('pwUserActivateCtrl',
 																	   
 /*////////////// ------------ RESET PASSWORD ------------ //////////////*/  
 
-var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log, pwUsers ) {
+postworld.directive('pwUserPasswordReset', function() {
+	return {
+		restrict: 'A',
+		controller: 'pwUserPasswordResetCtrl',
+	};
+});
 
+
+postworld.controller( 'pwUserPasswordResetCtrl',
+	[ '$scope', '$rootScope', '$window', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+	function( $scope, $rootScope, $window, $pwData, $timeout, $log, $pwUsers, $_ ){
+
+	///// INIT /////
 	$scope.status = "done";
-	$scope.formName = "resetPassword";
 	$scope.formData = {
 		email:"",
 		password:"",
 	};
+
 	$scope.fieldStatus = {
 		email:'empty',
 	};
 
-	$scope.pwPasswordResetEmailInputScreen = function(){
-		$scope.mode = "emailInput";
-	};
 
-	$scope.pwPasswordResetScreen = function(auth_key){
-		$scope.mode = "resetPassword";
-		$scope.authKey = auth_key;
-	};
+	///// SET MODE /////
+	$timeout( function(){
+
+		// If user is logged in
+		if( $_.objExists( $window, 'pwGlobals.current_user.data.ID' ) ){
+			$scope.mode = 'loggedIn';			
+			return false;
+		}
+
+		// If auth_key is provided
+		$scope.authKey = $_.urlParam( 'auth_key' );
+		if( !$_.isEmpty( $scope.authKey )  ){
+			$scope.mode = "resetPassword";
+		}
+		else{
+			// Default Mode
+			$scope.mode = "emailInput";
+		}
+
+	}, 1 );
+
+
+	///// VIEWS : Outline /////
+	$scope.views = [ 'emailInput', 'resetPassword', 'login', 'loggedIn' ];
+
+	// SHOW VIEW : Switch the view based on $scope.mode
+	$scope.showView = function( view ){
+		return ( $scope.mode == view ) ? 
+			true : false;
+	}
+
+	///// EMAIL : SEND LINK /////
+	$scope.emailFormName = "emailInput";
 	
 	$scope.sendResetPasswordLink = function( email ){
-		pwUsers.sendResetPasswordLink($scope, email);
+		$pwUsers.sendResetPasswordLink( $scope, email );
 	};
 
 	// VALIDATE : Email Exists
 	$scope.validateEmailExists = function( email ){
-		
-		var callback = "validateEmailExistsCallback";
-		pwUsers.validateEmailExists( $scope, email, $scope.formName, callback );
+
+		// Clobber the Validation Function
+		$_.clobber( 'validateEmail', 1000, function(){
+			var callback = "validateEmailExistsCallback";
+			
+			// Validate until hearing back from the DB
+			$scope[ $scope.emailFormName ].email.$setValidity('exists',true);
+
+			$pwUsers.validateEmailExists( $scope, email, $scope.emailFormName, callback );
+		} );
 
 	};
 
@@ -593,23 +656,30 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
 		// If the email is already taken
 		if ( response.data.results.length > 0 ){
 			// If they are not a subscriber (they are already activated)
-			$scope[$scope.formName].email.$setValidity('exists',true);
+			$scope[ $scope.emailFormName ].email.$setValidity('exists',true);
 			$scope.fieldStatus.email = "done";
 		}
 		else {
 			$scope.fieldStatus.email = "unregistered";
-			$scope[$scope.formName].email.$setValidity('exists',false);
+			$scope[ $scope.emailFormName ].email.$setValidity('exists',false);
 		}
 	};
 
 	// WATCH : value of email
-	if ( typeof $scope.formData.email != 'undefined' )
-		$scope.$watch( "formData.email", function (){
-			// When it changes, emit it's value to the parent controller
-			//alert('change');
-			$scope.validateEmailExists( $scope.formData.email );
-			}, 1 );
+	$scope.$watch( $scope.emailFormName + ".email.$viewValue",
+		function (){
+			if( $_.objExists( $scope, $scope.emailFormName + ".email.$viewValue" ) ){
+				// Devalidate until hearing back from the DB
+				$scope[ $scope.emailFormName ].email.$setValidity('exists',false);
+				// Validate the email exists
+				$scope.validateEmailExists( $scope[ $scope.emailFormName ].email.$viewValue );
+			}
+		}, 1
+	);
 
+	///// PASSWORD RESET SUBMIT /////
+	$scope.passwordFormName = "resetPassword";
+	
 	$scope.submitNewPassword = function( password ){
 		//alert($scope.authKey);
 		$scope.status = "busy";
@@ -619,10 +689,10 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
 		};
 
 		//alert(JSON.stringify(userdata));
-		$scope.signupForm.$setValidity('busy',false);
+		$scope[ $scope.passwordFormName ].$setValidity( 'busy', false );
 
 		$log.debug('SENDING NEW PASSWORD : ' , userdata);
-		pwData.reset_password_submit( userdata ).then(
+		$pwData.reset_password_submit( userdata ).then(
 			// Success
 			function(response) {
 				$log.debug('NEW PASSWORD RETURN : ' , response.data);
@@ -631,12 +701,12 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
 					$timeout(function() {
 					  $scope.mode = "login";
 					}, 1000);
-					$scope.signupForm.$setValidity('success',true);
+					$scope[ $scope.passwordFormName ].$setValidity('success',true);
 				} else {
 					$scope.status = "error";
 					$timeout(function() {
 						$scope.status = "done";
-						$scope.signupForm.$setValidity('busy',true);
+						$scope[ $scope.passwordFormName ].$setValidity('busy',true);
 						}, 5000);
 				}
 			},
@@ -649,15 +719,20 @@ var pwUserPasswordReset = function ( $scope, $rootScope, pwData, $timeout, $log,
 	};
 
 	// WATCH : value of passwords - TODO: Refactor into modular service function
-	$scope.$watch( "[formData.password, formData.password_c]", function (){
-		// When it changes, check that confirmation password is the same
-		if( $scope.formData.password == $scope.formData.password_c )
-			$scope.signupForm.password_c.$setValidity('noMatch',true);
-		else
-			$scope.signupForm.password_c.$setValidity('noMatch',false);
-		}, 1 );
+	$scope.$watch( "[ " + $scope.passwordFormName + ".password.$viewValue, " + $scope.passwordFormName + ".password_c.$viewValue ]",
+		function (){
+			if( $_.objExists( $scope, $scope.passwordFormName + ".password.$viewValue" ) ){
+				// When it changes, check that confirmation password is the same
+				if( $scope[ $scope.passwordFormName ].password.$viewValue == $scope[ $scope.passwordFormName ].password_c.$viewValue )
+					$scope[ $scope.passwordFormName ].password_c.$setValidity( 'passwordMatch', true );
+				else
+					$scope[ $scope.passwordFormName ].password_c.$setValidity( 'passwordMatch', false );
+			}
+		}, 1
+	);
 
-}
+}]);
+
 
 
 
@@ -721,9 +796,9 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
 		validateEmailExists : function ( $scope, email, formName, callback ){
 
 			if(
-				$scope[formName].email.$error.required ||
-				$scope[formName].email.$error.email ||
-				!$scope[formName].email.$dirty
+				$scope[ formName ].email.$error.required ||
+				$scope[ formName ].email.$error.email ||
+				!$scope[ formName ].email.$dirty
 				){
 				$scope.fieldStatus.email = "done";
 				return false;
