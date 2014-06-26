@@ -13,8 +13,24 @@ function pw_insert_user( $userdata ){
 
 	// If it's successful, we have the new user ID
 	if( is_int($user_id) ){
+
+		// Send Activation Email
 		pw_activation_email(array("ID" => $user_id));
+
+		// Set the context in a special usermeta
+		if( isset( $userdata['context'] ) ){
+			$usermeta = array(
+				"user_id"	=>	$user_id,
+				"sub_key"	=>	"signup.context",
+				"value" 	=>	$userdata['context'],
+				//"meta_key" 	=>	// default: 'pw_meta'
+				);
+			pw_set_wp_usermeta( $usermeta );
+		}
+
+		// Return with Data
 		return get_userdata($user_id);
+
 	}
 	else
 		return $user_id;
@@ -44,7 +60,8 @@ function pw_activation_email( $userdata ){
 
 	$user_info = get_userdata($user_id);
 	$to = $user_info->user_email;           
-	$subject = 'Member Verification'; 
+	$subject = 'Signup Verification';
+
 	$message .= 'Thanks for signing up for '.get_bloginfo('name').'!';
 	$message .= "\n\n";
 	$message .= 'Username: '.$user_info->user_login;
@@ -53,8 +70,11 @@ function pw_activation_email( $userdata ){
 	$message .= "\n\n";
 	$message .= "Click this link to activate your account:";
 	$message .= "\n";
-	$message .= home_url('/').'activate/?auth_key='.$hash;
-	$headers = 'From: '. get_bloginfo('admin_email') . "\r\n";           
+	$message .= home_url('/').'activate/?activation_key='.$hash;
+	
+	$headers = "From: ". get_bloginfo('admin_email') . "\r\n";
+	//$headers .= "Content-type: text/html \r\n";
+
 	return wp_mail($to, $subject, $message, $headers); 
 }
 
@@ -90,6 +110,89 @@ function pw_activate_user( $auth_key ){
 	else
 		return array("error" => "Wrong activation code.");
 }
+
+
+
+function pw_activate_autologin( $activation_key, $redirect = "" ){
+
+	///// GET THE USER /////
+	// Get the user object with the specified activation key
+	$user_query = new WP_User_Query(
+		array(
+			'meta_key'		=>	'activation_key',
+			'meta_value'	=>	$activation_key
+		)
+	);
+	$users = $user_query->get_results();
+	$user = ( isset( $users[0] ) ) ?
+		$users[0] : array();
+    //echo json_encode( $users );
+
+
+	///// SECRITY LAYER /////
+	// Return false if more than one user returned
+	if( count( $users ) > 1 )
+		return false;
+	// Return false if double check fails
+	if( get_user_meta( $user->ID, 'activation_key', true ) != $activation_key )
+		return false;
+
+
+	///// LOG THE USER IN /////
+    // If a user is found with this activation key
+    if( !empty( $user ) ){
+
+    	///// CONTEXT /////
+    	// Get context from usermeta array
+    	$usermeta = array(
+    		"user_id"	=>	$user->ID,
+			"sub_key"	=>	'signup.context',
+			//"meta_key" 	=>	[string] 	(optional)
+    		);
+    	$signup_context = pw_get_wp_usermeta( $usermeta );
+
+    	// Get the site config for various contexts
+    	if( isset( $signup_context ) ){
+    		global $pwSiteGlobals;
+	    	$redirect_config = pw_get_obj( $pwSiteGlobals, 'signup.context.'.$signup_context.'.redirect' );
+	    	// Get Default
+	    	if( !isset( $redirect_config ) )
+	    		$redirect_config = pw_get_obj( $pwSiteGlobals, 'signup.context.default.redirect' );
+    	}
+    	
+    	// If the context and redirect are configured
+    	if( isset($redirect_config) )
+    		$redirect = $redirect_config;
+
+    	// Delete the activation key !!!
+    	delete_user_meta( $user->ID, 'activation_key' );
+    	
+    	// Login User
+		wp_clear_auth_cookie();
+	    wp_set_current_user ( $user->ID );
+	    wp_set_auth_cookie  ( $user->ID );
+
+	    // Redirect
+	    if( !empty( $redirect ) )
+		    wp_redirect( $redirect );
+
+    }
+    else {
+    	return false;
+    }
+
+    return true;
+
+}
+
+function pw_activate_autologin_exec(){
+	$activation_key = $_GET['activation_key'];
+	pw_activate_autologin( $activation_key );
+}
+
+// Automatically run autologin function if activation_key is provided in the URL parameters
+if( isset( $_GET['activation_key'] ) )
+	add_action( 'template_redirect', 'pw_activate_autologin_exec', 10, 3 );
 
 
 
@@ -174,26 +277,6 @@ function pw_reset_password_submit( $userdata ){
 }
 
 
-function pw_login_new_user( $user_id, $email, $meta ) {
-
-	$user = new WP_User( (int) $user_id );
-	$creds = array();
-	$creds['user_login'] = $user->user_login;
-	$creds['user_password'] = $meta['user_pass'];
-	$creds['remember'] = true;
-	$user = wp_signon( $creds, false );
-	wp_set_current_user($user->ID);
-	if ( is_wp_error($user) ) {
-		echo $user->get_error_message();
-	} else {
-		// safe redirect to actually login the user - otherwise they would need to manually refresh the page
-		// PLUS: this clears the activation confirmation page with the plain text password printed on screen
-		wp_safe_redirect( get_home_url() );
-		exit;
-	}
-
-}
-//add_action( 'wpmu_activate_user', 'custom_login_new_user', 10, 3 );
 
 
 
@@ -299,6 +382,36 @@ function pw_get_avatar( $obj ){
 	}
 
 }
+
+
+
+
+function pw_user_login( $user_id, $redirect = '/' ) {
+
+	// Login User
+	wp_clear_auth_cookie();
+    wp_set_current_user ( $user_id );
+    wp_set_auth_cookie  ( $user_id );
+
+    // Redirect
+    wp_safe_redirect( $redirect );
+
+}
+
+
+// Automatically login a user with an auth key
+
+// http://localhost/login/?autologin=909238409283kj23hk324
+
+
+//// DELETE ////
+function login_user_test( $activation_key, $redirect ){
+    pw_user_login( 1, '/' );
+}
+//add_action( 'after_setup_theme', 'login_user_test', 10, 3 );
+
+
+
 
 
 ?>

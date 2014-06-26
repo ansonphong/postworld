@@ -161,6 +161,10 @@ postworld.controller('pwUserSignupCtrl',
 	$scope.formName = "signupForm";
 	$scope.status = "done";
 
+	// Set the Context
+	$scope.context = ( !_.isEmpty( $_.urlParam( 'context' ) ) ) ?
+		$_.urlParam( 'context' ) : '';
+
 	// SHOW VIEW : Switch the view based on $scope.mode
 	$scope.showView = function( view ){
 		switch( view ){
@@ -338,11 +342,16 @@ postworld.controller('pwUserSignupCtrl',
 		$scope.status = "inserting";
 		var signupForm = $scope[ $scope.formName ];
 		var userdata = {
-			user_login: signupForm.username.$viewValue,
-			user_pass: signupForm.password.$viewValue,
-			user_email: signupForm.email.$viewValue,
-			display_name: signupForm.name.$viewValue
+			user_login: $scope.formData.username,
+			user_pass: $scope.formData.password,
+			user_email: $scope.formData.email,
+			display_name: $scope.formData['name'],
 		};
+
+		// Add Context
+		if( !_.isEmpty( $scope.context ) )
+			userdata.context = $scope.context;
+
 		$log.debug('INSERTING USER : ' , userdata);
 		$pwData.pw_insert_user( userdata ).then(
 			// Success
@@ -513,39 +522,41 @@ postworld.controller('pwUserActivateCtrl',
 	// VALIDATE : Email Exists
 	$scope.validateEmailExists = function( email ){
 
+		$scope.fieldStatus.email = "busy";
+
 		// Clobber the Validation Function
 		$_.clobber( 'validateEmail', 1000, function(){
-			var callback = "validateEmailExistsCallback";
-			
 			// Validate until hearing back from the DB
 			$scope[ $scope.formName ].email.$setValidity('exists',true);
 
-			$pwUsers.validateEmailExists( $scope, email, $scope.formName, callback );
-		} );
+			$pwUsers.validateEmailExists( email,
+				function( response, email ){
+
+					// If the email is already taken
+					if ( response.data.results.length > 0 ){
+						// If they are not a subscriber (they are already activated)
+						if( response.data.results[0].roles[0] != 'subscriber' ){
+							// Set Field Status
+							$scope.fieldStatus.email = "activated";
+							// Set Validity to FALSE
+							$scope[ $scope.formName ].email.$setValidity('exists',false);
+						}
+						else{
+							$scope.fieldStatus.email = "done";
+							$scope[ $scope.formName ].email.$setValidity('exists',true);
+						}
+					}
+					else {
+						$scope.fieldStatus.email = "unregistered";
+						$scope[ $scope.formName ].email.$setValidity('exists',false);
+					}
+
+				}
+			);
+		});
 
 	};
 
-	// CALLBACK : Process Query Response
-	$scope.validateEmailExistsCallback = function( response, email, formName ){
-		// If the email is already taken
-		if ( response.data.results.length > 0 ){
-			// If they are not a subscriber (they are already activated)
-			if( response.data.results[0].roles[0] != 'subscriber' ){
-				// Set Field Status
-				$scope.fieldStatus.email = "activated";
-				// Set Validity to FALSE
-				$scope[ $scope.formName ].email.$setValidity('exists',false);
-			}
-			else{
-				$scope.fieldStatus.email = "done";
-				$scope[ $scope.formName ].email.$setValidity('exists',true);
-			}
-		}
-		else {
-			$scope.fieldStatus.email = "unregistered";
-			$scope[ $scope.formName ].email.$setValidity('exists',false);
-		}
-	};
 
 	// WATCH : value of email
 	$scope.$watch( "resendKey.email.$viewValue", function (){
@@ -638,43 +649,50 @@ postworld.controller( 'pwUserPasswordResetCtrl',
 
 	// VALIDATE : Email Exists
 	$scope.validateEmailExists = function( email ){
+		$log.debug( "VALIDATE-EMAIL-EXISTS" );
+		//$scope[ $scope.emailFormName ].email.$setValidity( 'exists', false );
+
+		if( _.isEmpty( email ) )
+			return false;
+
+		// Set Field Status
+		$scope.fieldStatus.email = "busy";
 
 		// Clobber the Validation Function
 		$_.clobber( 'validateEmail', 1000, function(){
-			var callback = "validateEmailExistsCallback";
-			
-			// Validate until hearing back from the DB
-			$scope[ $scope.emailFormName ].email.$setValidity('exists',true);
 
-			$pwUsers.validateEmailExists( $scope, email, $scope.emailFormName, callback );
-		} );
+			// Validate if the email exists
+			$pwUsers.validateEmailExists( email,
+				function( response, email, formName ){
+					// Callback function
+					$log.debug( "VALIDATE-EMAIL-EXISTS-CALLBACK : ", response.data.results );
 
-	};
+					// If the email is already taken
+					if ( response.data.results.length > 0 ){
+						// If they are not a subscriber (they are already activated)
+						$scope[ $scope.emailFormName ].email.$setValidity( 'exists', true );
+						$scope.fieldStatus.email = "done";
+					}
+					else {
+						$scope.fieldStatus.email = "unregistered";
+						$scope[ $scope.emailFormName ].email.$setValidity( 'exists', false );
+					}
 
-	// CALLBACK : Process Query Response
-	$scope.validateEmailExistsCallback = function( response ){
-		// If the email is already taken
-		if ( response.data.results.length > 0 ){
-			// If they are not a subscriber (they are already activated)
-			$scope[ $scope.emailFormName ].email.$setValidity('exists',true);
-			$scope.fieldStatus.email = "done";
-		}
-		else {
-			$scope.fieldStatus.email = "unregistered";
-			$scope[ $scope.emailFormName ].email.$setValidity('exists',false);
-		}
+				}
+			);
+
+		});
+
 	};
 
 	// WATCH : value of email
 	$scope.$watch( $scope.emailFormName + ".email.$viewValue",
 		function (){
 			if( $_.objExists( $scope, $scope.emailFormName + ".email.$viewValue" ) ){
-				// Devalidate until hearing back from the DB
-				$scope[ $scope.emailFormName ].email.$setValidity('exists',false);
 				// Validate the email exists
 				$scope.validateEmailExists( $scope[ $scope.emailFormName ].email.$viewValue );
 			}
-		}, 1
+		}
 	);
 
 	///// PASSWORD RESET SUBMIT /////
@@ -793,43 +811,32 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
 				}
 			);
 		},
-		validateEmailExists : function ( $scope, email, formName, callback ){
 
-			if(
-				$scope[ formName ].email.$error.required ||
-				$scope[ formName ].email.$error.email ||
-				!$scope[ formName ].email.$dirty
-				){
-				$scope.fieldStatus.email = "done";
+		validateEmailExists : function ( email, callback ){
+			if( _.isEmpty( email ) )
 				return false;
-			}
 
-
-			$scope[formName].email.$setValidity('exists',false);
-
-			if( email == '' )
-				email = '0';
+			// Setup Query
 			var query_args = {
 				number:1,
 				search_columns:['user_email'],
 				fields:'all',
 				search: email,
 			};
-			$scope.fieldStatus.email = "busy";
-			$pwData.wp_user_query( query_args ).then(
-				// Success
-				function(response) {
-					$log.debug('validateEmailExists : QUERY : ' + email , response.data.results);
 
-					// Return reponse data to the specified callback function in the original scope
-					$scope[ callback ]( response, email, formName );
+			// Run Query
+			$pwData.wp_user_query( query_args ).then(
+				function(response) {
+					// Return reponse data to the specified callback function
+					if( !_.isUndefined( callback ) ){
+						callback( response, email );
+					}
 				},
-				// Failure
 				function(response) {
 					throw { message:'Error: ' + JSON.stringify(response)};
 				}
 			);
-
 		},
+
 	}
 }]);

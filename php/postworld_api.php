@@ -122,7 +122,7 @@ function pw_set_wp_usermeta($vars){
 		$meta_key = pw_usermeta_key;
 
 	///// USER ID /////
-	$user_id = os_check_user_id( $user_id );
+	$user_id = pw_check_user_id( $user_id );
 	if( !is_numeric($user_id) )
 		return $user_id; // Will be: array('error'=>'[Error message]')
 
@@ -158,7 +158,7 @@ function pw_set_wp_usermeta($vars){
 
 function pw_get_wp_usermeta($vars){
 	/*
-	- Gets meta key for the given user under the `os_meta` key
+	- Gets meta key for the given user under the `pw_meta` key
 		in the `wp_usermeta` table
 	
 		PARAMETERS:
@@ -174,7 +174,7 @@ function pw_get_wp_usermeta($vars){
 	$meta_key = pw_usermeta_key;
 
 	///// USER ID /////
-	$user_id = os_check_user_id( $user_id );
+	$user_id = pw_check_user_id( $user_id );
 	if( !is_numeric($user_id) )
 		return $user_id;
 
@@ -291,7 +291,7 @@ function pw_get_wp_postmeta($vars){
 	$meta_key = pw_postmeta_key;
 
 	///// USER ID /////
-	$user_id = os_check_user_post( $post_id );
+	$user_id = pw_check_user_post( $post_id );
 	if( !is_numeric($post_id) )
 		return $post_id;
 
