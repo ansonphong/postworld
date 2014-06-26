@@ -424,8 +424,6 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 			return this.wp_ajax('pw_get_option_obj',params);
 		},
 
-		
-
 
    }; // END OF pwData return value
 }]);
