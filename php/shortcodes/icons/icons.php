@@ -84,12 +84,18 @@ function pw_shortcode_load_iconset( $all_icons, $iconset ){
 	return $all_icons;
 }
 
+global $pw_shortcode_icons;
 $pw_shortcode_icons = array();
 
 ///// LOAD ICON SETS /////
 
 $pw_shortcode_icons = pw_shortcode_load_iconset( $pw_shortcode_icons, 'font-awesome-3' );
 $pw_shortcode_icons = pw_shortcode_load_iconset( $pw_shortcode_icons, 'icon-x' );
+
+function pw_get_shortcode_icons( ){
+	global $pw_shortcode_icons;
+	return $pw_shortcode_icons;
+}
 
 // TODO : find a way to do this conditionally based on injections
 //if( in_array( 'font-awesome-3', pw_injections() ) ){

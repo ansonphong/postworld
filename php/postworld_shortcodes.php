@@ -25,6 +25,24 @@ function pw_general_shortcode( $atts, $content=null, $tag ) {
 	return do_shortcode($shortcode);
 }
 
+function pw_skip_shortcode( $string ){
+	$string = str_replace("[", "&#91;", $string);
+	$string = str_replace("]", "&#93;", $string);
+	return $string;
+}
+function pw_shortcode_example( $string, $echo = true ){
+	$html = "";
+	$html .= "<pre>".pw_skip_shortcode($string)."</pre>";
+	$html .= do_shortcode($string);
+	$html .= "<hr>";
+	
+	if( $echo )
+		echo $html;
+	else
+		return $html;
+}
+
+
 /////////////// BASIC SHORTCODES //////////
 // BLOCKS
 add_shortcode( 'block', 'pw_general_shortcode' );
@@ -44,6 +62,6 @@ include 'shortcodes/pagelist/pagelist.php';
 include 'shortcodes/columns/columns.php';
 include 'shortcodes/alignments/alignments.php';
 include 'shortcodes/icons/icons.php';
-
+include 'shortcodes/help/shortcodes-help.php';
 
 ?>
