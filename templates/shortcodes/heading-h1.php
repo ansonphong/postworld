@@ -1,0 +1,1 @@
+<h1 class="pw-shortcode <?php echo $class; ?>"><?php echo $content; ?></h1>

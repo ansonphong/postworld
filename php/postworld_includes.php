@@ -10,7 +10,7 @@ function postworld_includes( $args ){
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.2.9';
+		$angular_version = 'angular-1.3.0-beta.13';
 
 	// Default Dependencies
 	if( empty($dep) ){
@@ -177,8 +177,15 @@ function postworld_includes( $args ){
 			plugins_url().'/postworld/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js' );
 
 		// ANGULAR STRAP : BOOTSTRAP
-		//wp_enqueue_script( 'AngularJS-Strap',
-		//	WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap.js', $angularDep );
+		wp_enqueue_script( 'AngularJS-Strap-Dimensions',
+			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap-dimensions.js', $angularDep );
+
+		wp_enqueue_script( 'AngularJS-Strap-Tooltip',
+			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap-tooltip.js', $angularDep );
+
+		wp_enqueue_script( 'AngularJS-Strap-Popover',
+			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap-popover.js', $angularDep );
+
 
 		//wp_enqueue_script( 'AngularJS-Strap',
 		//	plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.js', $angularDep );

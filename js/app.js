@@ -32,6 +32,7 @@ var depInject = [
 	'angular-parallax',
 	'angularMoment',
 	'wu.masonry',
+	'mgcrea.ngStrap.popover',
 	];
 
 

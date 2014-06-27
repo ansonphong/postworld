@@ -215,7 +215,7 @@ postworld.controller('pwLoadPanelCtrl',
 		$timeout( function(){
 			// Load Template URL
 			$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
-			$log.debug('Load Panel :' + $scope.panel_id, $scope.templateUrl );
+			//$log.debug('Load Panel :' + $scope.panel_id, $scope.templateUrl );
 		},1 );
 
 

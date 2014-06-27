@@ -1,0 +1,1 @@
+<div class="pw-shortcode block <?php echo $color; ?>"><?php echo $content; ?></div>

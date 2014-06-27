@@ -293,6 +293,11 @@ function pw_get_panel_template( $panel_id ){
 
 }
 
+function pw_get_shortcode_template( $template_id ){
+	// Returns a single string for panel template from ID
+	return pw_get_template( 'shortcodes', $template_id, 'php', 'dir' );
+
+}
 
 // Include a Postworld Feed Template from templates/feeds
 function pw_parse_template( $template_path, $vars = array() ){

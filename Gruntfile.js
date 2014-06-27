@@ -38,13 +38,15 @@ module.exports = function(grunt) {
 
             ///// BOOTSTRAP /////
           	// Bootstrap JS
-            //'lib/bootstrap/bootstrap.min.js',             // Main Bootstrap JS
+            //'lib/bootstrap/bootstrap.min.js', // Main Bootstrap JS
 
             // Angular UI Bootstrap
             'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js', // Angular UI Boostrap
             
-            //'lib/angular-strap/angular-strap.js',         // Angular Strap
-
+            // Angular Strap Modules
+            'lib/angular-strap/angular-strap-dimensions.js',
+            'lib/angular-strap/angular-strap-tooltip.js',
+            'lib/angular-strap/angular-strap-popover.js',
 
             ///// THIRD PARTY MODULES /////
 

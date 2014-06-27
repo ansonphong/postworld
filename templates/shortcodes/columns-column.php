@@ -1,0 +1,1 @@
+<div class="<?php echo $tag;?> <?php echo $class;?>"><?php echo $content; ?></div>
