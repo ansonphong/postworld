@@ -6,6 +6,13 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_plugin_file( $path, $type = "dir" ){
+	if( $type == "dir" )
+		return WP_PLUGIN_DIR . "/postworld/" . $path;
+	if( $type == "url" )
+		return WP_PLUGIN_URL . "/postworld/" . $path;
+}
+
 function pw_user_id_exists($user_id){
     global $wpdb;
     $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));

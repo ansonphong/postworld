@@ -42,6 +42,8 @@ include 'shortcodes/fonts/fonts.php';
 include 'shortcodes/slider/slider.php';
 include 'shortcodes/pagelist/pagelist.php';
 include 'shortcodes/columns/columns.php';
+include 'shortcodes/alignments/alignments.php';
+include 'shortcodes/icons/icons.php';
 
 
 ?>

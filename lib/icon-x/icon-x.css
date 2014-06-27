@@ -1,0 +1,116 @@
+@charset "UTF-8";
+/* CSS Document */
+
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'IconX';
+	src: url('icon-x.ttf')  format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-x-"],
+[class*=" icon-x-"] {
+  font-family:IconX;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  *margin-right: .3em;
+}
+
+[class^="icon-x-"]:before,
+[class*=" icon-x-"]:before {
+  text-decoration: inherit;
+  display: inline-block;
+  cursor: default;
+  speak: none;
+}
+
+
+/* ICON ATTRIBUTIONS
+ * -------------------------- */
+
+.icon-x-home:before {
+  content: "\E001";
+}
+
+.icon-x-globe:before {
+  content: "\E002";
+}
+
+.icon-x-atom:before {
+  content: "\E003";
+}
+
+.icon-x-seedoflife:before {
+  content: "\E004";
+}
+
+.icon-x-lightbulb:before {
+  content: "\E005";
+}
+
+.icon-x-group:before {
+  content: "\E006";
+}
+
+.icon-x-info:before {
+  content: "\E007";
+}
+
+.icon-x-merkaba:before {
+  content: "\E008";
+}
+
+.icon-x-envelope:before, .icon-x-mail:before {
+  content: "\E016";
+}
+
+.icon-x-stream:before {
+  content: "\E011";
+}
+
+.icon-x-location3D:before {
+  content: "\E032";
+}
+
+.icon-x-eq:before {
+  content: "\E040";
+}
+
+.icon-x-cloud:before {
+  content: "\E048";
+}
+
+.icon-x-toprightquarter:before {
+  content: "\E051";
+}
+
+.icon-x-bottomrightquarter:before {
+  content: "\E052";
+}
+
+.icon-x-bottomleftquarter:before {
+  content: "\E053";
+}
+
+.icon-x-topleftquarter:before {
+  content: "\E054";
+}
+
+.icon-x-boardroom:before {
+  content: "\E215";
+}
+
+.icon-x-quarters:before {
+  content: "\E150";
+}
+
+.icon-x-quarters-light:before {
+  content: "\E150";
+}
+
+
+

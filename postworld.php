@@ -112,9 +112,6 @@ include 'php/postworld_query.php';
 /////////////// WIDGETS ////////////////
 include 'php/postworld_widgets.php';
 
-/////////////// SHORTCODES ////////////////
-include 'php/postworld_shortcodes.php';
-
 /////////////// SOCIAL ////////////////
 include 'php/postworld_social.php';
 
@@ -139,6 +136,9 @@ include 'php/postworld_meta.php';
 
 /////////////// INCLUDES ////////////////
 include 'php/postworld_includes.php';
+
+/////////////// SHORTCODES ////////////////
+include 'php/postworld_shortcodes.php';
 
 /////////////// UPDATE / MIGRATE ////////////////
 include 'php/postworld_update.php';

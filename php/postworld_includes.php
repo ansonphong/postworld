@@ -8,33 +8,44 @@ function postworld_includes( $args ){
 
 	extract( $args );
 
+	global $pwSiteGlobals;
+
 	// Default Angular Version
 	if( empty( $angular_version ) )
 		$angular_version = 'angular-1.3.0-beta.13';
 
-	// Default Dependencies
-	if( empty($dep) ){
-		$dep = array();
-	}
+	// Injections
+	global $pwInject;
+	$pwInject = ( isset( $pwSiteGlobals['inject'] ) ) ?
+		$pwSiteGlobals['inject'] : array();
+
+	
 
 	// Build Angular Dependancies
 	global $angularDep;
 	
-	//////////// ADD DEPENDENCIES //////////
+	//////////////////////// INJECTIONS //////////////////////
+
 	// Add Google Maps to include before AngularJS app
-	if( in_array( 'google-maps', $dep ) ){
+	if( in_array( 'google-maps', $pwInject ) ){
 		//array_push( $angularDep, 'google-maps' );
 	}
 
 	// Add LESS Support
-	if( in_array( 'wp-less', $dep ) ){
+	if( in_array( 'wp-less', $pwInject ) ){
 		require_once( WP_PLUGIN_DIR.'/postworld/lib/wp-less/wp-less.php' );
 	}
 	
 	// Add Font Awesome 3
-	if( in_array( 'font-awesome-3', $dep ) ){
+	if( in_array( 'font-awesome-3', $pwInject ) ){
 		wp_enqueue_style( 'font-awesome-3',
 			WP_PLUGIN_URL.'/postworld/lib/font-awesome-3/css/font-awesome.min.css' );
+	}
+
+	// Add ICON X
+	if( in_array( 'icon-x', $pwInject ) ){
+		wp_enqueue_style( 'icon-x',
+			WP_PLUGIN_URL.'/postworld/lib/icon-x/icon-x.css' );
 	}
 
 
@@ -72,7 +83,7 @@ function postworld_includes( $args ){
 		wp_enqueue_script(  'Postworld-Deploy' );
 
 		// ADD GOOGLE MAPS
-		if( in_array('google-maps', $dep) ){
+		if( in_array('google-maps', $pwInject) ){
 			// GOOGLE MAPS
 			wp_enqueue_script( 'Google-Maps-API',
 				'//maps.googleapis.com/maps/api/js?sensor=false' );
@@ -120,7 +131,7 @@ function postworld_includes( $args ){
 		///// THIRD PARTY LIBRARIES /////
 
 		// ADD GOOGLE MAPS
-		if( in_array('google-maps', $dep) ){
+		if( in_array('google-maps', $pwInject) ){
 			// GOOGLE MAPS
 			wp_enqueue_script( 'Google-Maps-API',
 				'//maps.googleapis.com/maps/api/js?sensor=false' );
@@ -224,7 +235,7 @@ function postworld_includes( $args ){
 
 
 		///// CREATE.JS /////
-		//if( in_array('create.js', $dep) ){	
+		//if( in_array('create.js', $pwInject) ){	
 		// LOCAL COMPONENT
 		wp_enqueue_script( 'Postworld-FlashCanvas',
 			WP_PLUGIN_URL.'/postworld/js/components/flashCanvas.js', $angularDep);
@@ -507,6 +518,9 @@ function parse_postworld_globals(){
 add_action( 'plugins_loaded', 'parse_postworld_globals', 10, 2 );
 
 
-
+function pw_injections(){
+	global $pwInject;
+	return $pwInject;
+}
 
 ?>
