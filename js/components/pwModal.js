@@ -1,7 +1,7 @@
 /*////////////// ------- SERVICE ------- //////////////*/  
 
-postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwData',
-	function ( $rootScope, $log, $location, $modal, $pwData ) {
+postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '_', '$pw',
+	function ( $rootScope, $log, $location, $modal, $pwData, $_, $pw ) {
 	return{
 
 		openModal : function( meta ){
@@ -14,15 +14,15 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 			// Default Template ID
 			var mode = ( _.isUndefined( meta.mode ) ) ?
-					'default' : meta.mode;
+				'default' : meta.mode;
 
 			// Default Template ID
 			var templateName = ( _.isUndefined( meta.templateName ) ) ?
-					'modal-default' : meta.templateName;
+				'modal-default' : meta.templateName;
 
 			// Default Controller
 			var controller = ( _.isUndefined( meta.controller ) ) ?
-					'osModalInstanceCtrl' : meta.controller;
+				'osModalInstanceCtrl' : meta.controller;
 
 			// Default Window Class
 			var windowClass = ( _.isUndefined( meta.windowClass ) ) ?
@@ -68,14 +68,26 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 					windowClass = meta.windowClass;
 			}
 
-			// Default Defaults << DELETE
-			//if( _.isUndefined( meta.mode ) )
-			//	var mode = 'quick-edit';
+			///// GET TEMPLATE URL /////
+			// If there's a slash in the template, it's from another subdir
+			if( $_.isInArray( "/", templateName ) ){
+				var templateNameParts = templateName.split("/");
+				// Use the first part as the subdir
+				var templateSubdir = templateNameParts[0];
+				// Use the second part as the view
+				templateName = templateNameParts[1];
+			}
+			// Otherwise assume it's in /modals
+			else {
+				var templateSubdir = 'modals';
+			}
+			
+			var templateUrl = $pwData.pw_get_template( { subdir: templateSubdir, view: templateName } );
 
-			var templateUrl = $pwData.pw_get_template( { subdir: 'modals', view: templateName } );
-
+			///// LAUNCH THE MODAL /////
 			$log.debug(
 				"Launch Modal // templateName : " + templateName + 
+				" // templateSubdir : " + templateSubdir + 
 				" // templateUrl : " + templateUrl + 
 				" // meta : ", meta );
 

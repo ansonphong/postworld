@@ -25,8 +25,8 @@ postworld.directive( 'pwPost', [ function($scope){
 
 
 postworld.controller('postController',
-    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "ext", "_", "$log", "pwImages",
-    function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $ext, $_, $log, $pwImages ) {
+    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw",
+    function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw ) {
 
     // If $scope.post doesn't exist
     // Get it from $window.post
@@ -50,7 +50,6 @@ postworld.controller('postController',
 
     // IMPORT LANGUAGE
     if(
-        typeof $window.pwGlobals.paths !== 'undefined' &&
         typeof $window.pwSiteLanguage !== 'undefined' &&
         typeof $window.pwGlobals.current_user !== 'undefined' &&
         typeof $scope.post !== 'undefined'
@@ -58,7 +57,7 @@ postworld.controller('postController',
         $scope.language = $window.pwSiteLanguage;
         $scope.current_user_id = $window.pwGlobals.current_user.ID;
         // GENERATE  SHARE LINK
-        $scope.share_link = $window.pwGlobals.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
+        $scope.share_link = $pw.paths.home_url + "/?u=" + $window.pwGlobals.current_user.ID + "&p=" + $scope.post.ID;
     }
 
     // Toggles class="expaned", used with ng-class="expanded" 

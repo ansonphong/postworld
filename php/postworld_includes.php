@@ -381,7 +381,20 @@ function pwSiteGlobals_include(){
 		'plugins_url' => WP_PLUGIN_URL,
 	);
 
-	
+	///// PATHS /////
+	$pwSiteGlobals["paths"] = array(
+		'ajax_url' => admin_url( 'admin-ajax.php' ),
+		'plugin_url' => WP_PLUGIN_URL,
+		'plugin_dir' => WP_PLUGIN_DIR,
+		"theme_dir"	=>	get_stylesheet_directory(),
+		"home_url" => get_bloginfo( 'url' ),
+		"wp_url" => get_bloginfo( 'wpurl' ),
+		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
+
+		"template_url" => get_bloginfo( 'template_url' ),
+		"postworld_url" => WP_PLUGIN_URL . '/postworld',
+		"postworld_dir" => WP_PLUGIN_DIR . '/postworld',
+		);
 
 	$pwGlobalsJs  = "";
 	$pwGlobalsJs .= "var pwSiteGlobals = ";
@@ -473,8 +486,8 @@ function pwGlobals_parse(){
 		);
 
 
-
 	/////////// SITE WIDE GLOBALS //////////
+	// TODO : MOVE THIS STUFF INTO pwSiteglobals
 
 	///// SITE INFO /////
 	$pw_globals["site_info"] = array(
@@ -486,6 +499,7 @@ function pwGlobals_parse(){
 	$pw_globals["post_types"] = pw_get_post_types();
 
 	///// PATHS /////
+	// TODO : Remove - Already moved this to pwSiteglobals for JS
 	$pw_globals["paths"] = array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'plugin_url' => WP_PLUGIN_URL,

@@ -9,16 +9,22 @@ postworld.factory( '$pw',
 	var pwTemplates = ( $_.objExists( $window, 'pwTemplates' ) ) ?
 		$window.pwTemplates : {};
 
+	var pwUser = function(){
+		if( !$_.objExists( $window, "pwGlobals.current_user" ) )
+			return false;
+		return $window.pwGlobals.current_user;
+	}
+
 	// DECLARATIONS
 	return {
 		version: "1.5.2",
 		templates: pwTemplates,
 
-		// user: $window.pwGlobals.current_user, // (or something) - refactor to go directly to pwUser
+		user: pwUser(), //$window.pwGlobals.current_user, // (or something) - refactor to go directly to pwUser
     	// view: $window.pwGlobals.current_view
     	// language: $window.pwSiteLanguage,
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
-    	// paths: 
+    	paths: $window.pwGlobals.paths, // Move this to pwSiteglobals
 
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )
@@ -43,6 +49,7 @@ postworld.factory( '$pw',
             // Fire the loading
             head.appendChild(script);
         },
+        
 	};
 
 }]);
@@ -340,7 +347,7 @@ postworld.factory('pwImages',
   |_|                     
 ////////// JAVASCRIPT EXTENTION SERVICE //////////*/ 
 
-
+/*
 postworld.service('ext', ['$log', function ($log) {
 	// SIMPLE JS FUNCTION HELPERS
 	// Extends the function vocabulary of JS
@@ -426,7 +433,7 @@ postworld.service('ext', ['$log', function ($log) {
 	}
 }]);
 
-
+*/
 
 
 /*

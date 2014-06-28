@@ -91,11 +91,13 @@ postworld.directive('loadComments', function() {
 	};
 });
 
-postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsService,$rootScope,$sce,$attrs,pwData,$log, $window) {
+postworld.controller('pwTreeController',
+	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw',
+	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw) {
 		$scope.json = '';
 
-		if ( typeof $window.pwGlobals.current_user.ID !== 'undefined'  )
-			$scope.user_id = $window.pwGlobals.current_user.ID;
+		if ( $pw.user  )
+			$scope.user_id = $pw.user['data'].ID;
 		else
 			$scope.user_id = 0;
 
@@ -132,7 +134,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 			$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
 		}
 		else {
-			$scope.templateUrl = $window.pwGlobals.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
+			$scope.templateUrl = $pw.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
 			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		}
 			
@@ -520,7 +522,7 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 
 	$scope.setRoles = function(child){
 
-		var current_user = $window.pwGlobals.current_user;
+		var current_user = $pw.user;
 
 		// Set the roles/relationship of the user to each post
 		child.roles = {};
@@ -534,20 +536,26 @@ postworld.controller('pwTreeController', function ($scope, $timeout,pwCommentsSe
 			child.roles.isUser = true : child.roles.isUser = false;
 			
 		// Owner
-		( current_user.data.ID == child.user_id ) ? 
-			child.roles.isOwner = true : child.roles.isOwner = false;
+		if( $pw.user )
+			( current_user.data.ID == child.user_id ) ? 
+				child.roles.isOwner = true : child.roles.isOwner = false;
+		else
+			child.roles.isOwner = false;
 
 		// Admin
-		( current_user.roles[0] == "administrator" || 
-			current_user.roles[0] == "editor" ) ? 
-			child.roles.isAdmin = true : child.roles.isAdmin = false; 
-
+		if( $pw.user )
+			( current_user.roles[0] == "administrator" || 
+				current_user.roles[0] == "editor" ) ? 
+				child.roles.isAdmin = true : child.roles.isAdmin = false; 
+		else
+			child.roles.isAdmin = false;
+		
 		//child.roles.isGuest
 
 	}
 
 
-});
+}]);
 
 
 

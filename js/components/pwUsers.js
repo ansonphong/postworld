@@ -424,8 +424,8 @@ postworld.directive('pwUserActivate', function() {
 });
 
 postworld.controller('pwUserActivateCtrl',
-	[ '$scope', '$rootScope', '$location', 'pwData', '$timeout', '$log', 'pwUsers', '_', '$window', 
-	function( $scope, $rootScope, $location, $pwData, $timeout, $log, $pwUsers, $_, $window ) {
+	[ '$scope', '$pw', '$rootScope', '$location', 'pwData', '$timeout', '$log', 'pwUsers', '_', '$window', 
+	function( $scope, $pw, $rootScope, $location, $pwData, $timeout, $log, $pwUsers, $_, $window ) {
 
 	///// INIT /////
 	$scope.status = "done";
@@ -443,7 +443,7 @@ postworld.controller('pwUserActivateCtrl',
 	$timeout( function(){
 
 		// If user is logged in
-		if( $_.objExists( $window, 'pwGlobals.current_user.data.ID' ) ){
+		if( $pw.user ){
 			$scope.mode = 'loggedIn';			
 			return false;
 		}

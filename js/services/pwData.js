@@ -58,7 +58,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 	
 	
 	// for Ajax Calls
-    var resource = $resource( $window.pwGlobals.paths.ajax_url, {action:'wp_action'}, 
+    var resource = $resource( $pw.paths.ajax_url, {action:'wp_action'}, 
 				{ wp_ajax: { method: 'POST', isArray: false, },	}
 			);
 	
