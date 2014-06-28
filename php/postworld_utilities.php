@@ -14,9 +14,14 @@ function pw_plugin_file( $path, $type = "dir" ){
 }
 
 function pw_user_id_exists($user_id){
-    global $wpdb;
-    $count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));
-    if($count == 1){ return true; }else{ return false; }
+    //global $wpdb;
+    //$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));
+    //if($count == 1){ return true; } else { return false; }
+	$user = get_user_by( "id", $user_id );
+	if( $user == false )
+		return false;
+	else
+		return true;
 }
 
 function pw_post_id_exists($post_id){

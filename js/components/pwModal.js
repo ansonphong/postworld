@@ -22,11 +22,11 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 			// Default Controller
 			var controller = ( _.isUndefined( meta.controller ) ) ?
-				'osModalInstanceCtrl' : meta.controller;
+				'pwModalInstanceCtrl' : meta.controller;
 
 			// Default Window Class
 			var windowClass = ( _.isUndefined( meta.windowClass ) ) ?
-				'os-modal-default' : meta.windowClass;
+				'pw-modal-default' : meta.windowClass;
 
 
 			////////// SWITCH MODE //////////
@@ -62,10 +62,12 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 					windowClass = "modal-media"; 
 				break;
 				///// DEFAULT /////
+				/* Defaults already set above
 				default:
 					templateName = meta.templateName;
 					controller = meta.controller;
 					windowClass = meta.windowClass;
+				*/
 			}
 
 			///// GET TEMPLATE URL /////
@@ -125,6 +127,9 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 postworld.controller('pwModalInstanceCtrl',
 	[ '$scope', '$rootScope', '$document', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', // 'pwQuickEdit',
 	function( $scope, $rootScope, $document, $modalInstance, meta, $log, $pwData, $timeout, $_ ) { // , $pwQuickEdit
+
+	///// SET META /////
+	$scope.meta = meta;
 
 	///// SET MODE /////
 	// Set Default Mode

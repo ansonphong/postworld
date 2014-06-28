@@ -373,12 +373,24 @@ function pwSiteGlobals_include(){
 	// ENCODE SITE GLOBALS
 	global $pwSiteGlobals;
 
+	$pwSiteGlobals['site'] = array( 
+		'name' => get_bloginfo('name'),
+		'description' => get_bloginfo('description'),
+		'wpurl' => get_bloginfo('wpurl'),
+		'url' => get_bloginfo('url'),
+		'version' => get_bloginfo('version'),
+		'text_direction' => get_bloginfo('text_direction'),
+		'language' => get_bloginfo('language'),
+		'description' => get_bloginfo('description'),
+	);
+
 	$pwSiteGlobals['wordpress'] = array( 
 		'ajax_url' => admin_url('admin-ajax.php'),
 		'stylesheet_directory_uri' => get_stylesheet_directory_uri(),
 		'template_directory_uri' => get_template_directory_uri(),
 		'plugins_dir' => WP_PLUGIN_DIR,
 		'plugins_url' => WP_PLUGIN_URL,
+		'pingback_url' => get_bloginfo('pingback_url'),
 	);
 
 	///// PATHS /////
@@ -430,14 +442,18 @@ function pwSiteGlobals_include(){
 
 ///// PARSE pwGlobals /////
 function pwGlobals_parse(){
-
+	/////////// USER / PAGE SPECIFIC GLOBALS //////////
 	global $pw_globals;
 	$pw_globals = array();
+
+	///// CURRENT VIEW
 	$pw_globals['current_view'] = array();
 
-
-	/////////// USER / PAGE SPECIFIC GLOBALS //////////
-
+	// URL
+	$protocol = (!empty($_SERVER['HTTPS'])) ?
+		"https://" : "http://";
+	$pw_globals['current_view']['url'] = $protocol.$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
+	
 	///// POST /////
 	if( !empty($GLOBALS['post']->ID) ){
 		//$pw_globals["current_view"]["type"] = "post";

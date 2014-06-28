@@ -1,5 +1,12 @@
 'use strict';
 
+/* _                
+  | | _ ____      __
+ / __) '_ \ \ /\ / /
+ \__ \ |_) \ V  V / 
+ (   / .__/ \_/\_/  
+  |_||_|            
+//////////////////*/
 
 postworld.factory( '$pw',
 	['$resource','$q','$log','$window', '_',
@@ -24,7 +31,10 @@ postworld.factory( '$pw',
     	// view: $window.pwGlobals.current_view
     	// language: $window.pwSiteLanguage,
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
+    	
+    	view: $window.pwGlobals.current_view,
     	paths: $window.pwGlobals.paths, // Move this to pwSiteglobals
+    	site: $window.pwSiteGlobals.site,
 
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )

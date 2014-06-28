@@ -120,6 +120,30 @@ postworld.controller( 'editAvatarCtrl',
 
 
 
+/*_   _                     _                _       
+ | | | |___  ___ _ __   _  | |    ___   __ _(_)_ __  
+ | | | / __|/ _ \ '__| (_) | |   / _ \ / _` | | '_ \ 
+ | |_| \__ \  __/ |     _  | |__| (_) | (_| | | | | |
+  \___/|___/\___|_|    (_) |_____\___/ \__, |_|_| |_|
+                                       |___/         
+/*/////////// --------- LOGIN --------- ///////////*/  
+
+postworld.directive('pwUserLogin', function() {
+	return {
+		restrict: 'A',
+		controller: 'pwUserLoginCtrl',
+	};
+});
+
+postworld.controller('pwUserLoginCtrl',
+	[ '$scope', '$pw', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+	function( $scope, $pw, $rootScope, $pwData, $timeout, $log, pwUsers, $_ ) {
+	
+	$scope.view = $pw.view;
+
+
+}]);
+
 
 /*
   _   _                     ____  _                         
@@ -138,8 +162,14 @@ postworld.directive('pwUserSignup', function() {
 });
 
 postworld.controller('pwUserSignupCtrl',
-	[ '$scope', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
-	function( $scope, $rootScope, $pwData, $timeout, $log, pwUsers, $_ ) {
+	[ '$scope', '$pw', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+	function( $scope, $pw, $rootScope, $pwData, $timeout, $log, pwUsers, $_ ) {
+	
+	// Localize Site data
+	$scope.site = $pw.site;
+
+	///// VIEWS : Outline /////
+	$scope.views = [ 'signup', 'activate', ];
 
 	// SETUP
 	$scope.formData = {
@@ -162,8 +192,11 @@ postworld.controller('pwUserSignupCtrl',
 	$scope.status = "done";
 
 	// Set the Context
-	$scope.context = ( !_.isEmpty( $_.urlParam( 'context' ) ) ) ?
-		$_.urlParam( 'context' ) : '';
+	if( _.isUndefined( $scope.meta ) )
+		$scope.meta = {};
+	if( !$_.objExists( $scope, 'meta.context' ) )
+		$scope.meta.context = ( !_.isEmpty( $_.urlParam( 'context' ) ) ) ?
+			$_.urlParam( 'context' ) : '';
 
 	// SHOW VIEW : Switch the view based on $scope.mode
 	$scope.showView = function( view ){
@@ -348,15 +381,15 @@ postworld.controller('pwUserSignupCtrl',
 			display_name: $scope.formData['name'],
 		};
 
-		// Add Context
-		if( !_.isEmpty( $scope.context ) )
-			userdata.context = $scope.context;
+		// Add Context, from $scope.meta.context
+		if( $_.objExists( $scope, 'meta.context' ) )
+			userdata.context = $scope.meta.context;
 
 		$log.debug('INSERTING USER : ' , userdata);
 		$pwData.pw_insert_user( userdata ).then(
 			// Success
 			function(response) {
-				$log.debug('USER INSERT SUCCESSFUL : ' , response.data);
+				$log.debug('USER INSERT SUCCESSFUL : ' , response);
 				if ( typeof response.data.ID !== 'undefined' ){
 					if ( !isNaN( response.data.ID ) ){
 						// Insert get_userdata object into scope
