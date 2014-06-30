@@ -24,7 +24,7 @@ postworld.factory( '$pw',
 
 	// DECLARATIONS
 	return {
-		version: "1.5.2",
+		version: "1.5.3",
 		templates: pwTemplates,
 
 		user: pwUser(), //$window.pwGlobals.current_user, // (or something) - refactor to go directly to pwUser
