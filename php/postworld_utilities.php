@@ -43,10 +43,13 @@ function pw_check_user_id($user_id){
 		return array( 'error' => 'No user ID.' );
 
 	// Security Layer
-	// Check if setting for current user, or if current user can edit users
-	if(	$user_id != $current_user_id &&
-		!current_user_can( 'edit_users' ) )
-		return array( 'error' => 'No permissions.' );
+	// Mode whereby the system can access user meta for special operations
+	global $pw_globals;
+	if( $pw_globals['security']['mode'] !== 'system' )
+		// Check if setting for current user, or if current user can edit users
+		if(	$user_id != $current_user_id &&
+			!current_user_can( 'edit_users' ) )
+			return array( 'error' => 'No permissions.' );
 	
 	// If passed all tests, return user ID
 	return $user_id;

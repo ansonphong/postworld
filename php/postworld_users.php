@@ -17,6 +17,10 @@ function pw_insert_user( $userdata ){
 		// Send Activation Email
 		pw_activation_email(array("ID" => $user_id));
 
+		// Set the security mode to allow for system operations
+		global $pw_globals;
+		$pw_globals["security"]["mode"] = "system";
+
 		// Set the context in a special usermeta
 		if( isset( $userdata['context'] ) ){
 			$usermeta = array(
@@ -128,7 +132,6 @@ function pw_activate_autologin( $activation_key, $redirect = "" ){
 		$users[0] : array();
     //echo json_encode( $users );
 
-
 	///// SECRITY LAYER /////
 	// Return false if more than one user returned
 	if( count( $users ) > 1 )
@@ -144,6 +147,9 @@ function pw_activate_autologin( $activation_key, $redirect = "" ){
 
     	///// CONTEXT /////
     	// Get context from usermeta array
+    	global $pw_globals;
+    	$pw_globals['security']['mode'] = "system";
+
     	$usermeta = array(
     		"user_id"	=>	$user->ID,
 			"sub_key"	=>	'signup.context',
@@ -166,7 +172,7 @@ function pw_activate_autologin( $activation_key, $redirect = "" ){
 
     	// Delete the activation key !!!
     	delete_user_meta( $user->ID, 'activation_key' );
-    	
+
     	// Login User
 		wp_clear_auth_cookie();
 	    wp_set_current_user ( $user->ID );
@@ -189,11 +195,9 @@ function pw_activate_autologin_exec(){
 	$activation_key = $_GET['activation_key'];
 	pw_activate_autologin( $activation_key );
 }
-
 // Automatically run autologin function if activation_key is provided in the URL parameters
 if( isset( $_GET['activation_key'] ) )
 	add_action( 'template_redirect', 'pw_activate_autologin_exec', 10, 3 );
-
 
 
 /////----- RESET PASSWORD LINK -----/////

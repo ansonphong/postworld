@@ -463,6 +463,7 @@ postworld.controller('pwUserActivateCtrl',
 	///// INIT /////
 	$scope.status = "done";
 	$scope.formName = "resendKey";
+	$scope.site = $pw.site;
 
 	$scope.formData = {
 		email:"",
@@ -474,17 +475,15 @@ postworld.controller('pwUserActivateCtrl',
 
 	///// SET MODE /////
 	$timeout( function(){
-
-		// If user is logged in
-		if( $pw.user ){
-			$scope.mode = 'loggedIn';			
-			return false;
-		}
+		$scope.authKey = $_.urlParam( 'activation_key' );
 
 		// If auth_key is provided
-		$scope.authKey = $_.urlParam( 'auth_key' );
 		if( !$_.isEmpty( $scope.authKey )  ){
 			$scope.activateUserKey( $scope.authKey );
+		}
+		// If user is logged in
+		else if( $pw.user ){
+			$scope.mode = 'loggedIn';		
 		}
 		else{
 			$scope.mode = "resend";

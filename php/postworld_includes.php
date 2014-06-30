@@ -451,9 +451,10 @@ function pwGlobals_parse(){
 
 	// URL
 	$protocol = (!empty($_SERVER['HTTPS'])) ?
-		"https://" : "http://";
-	$pw_globals['current_view']['url'] = $protocol.$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
-	
+		"https" : "http";
+	$pw_globals['current_view']['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
+	$pw_globals['current_view']['protocol'] = $protocol;
+
 	///// POST /////
 	if( !empty($GLOBALS['post']->ID) ){
 		//$pw_globals["current_view"]["type"] = "post";
@@ -501,6 +502,10 @@ function pwGlobals_parse(){
 		"first_name" => $displayed_userdata->first_name,	
 		);
 
+	///// SECURITY /////
+	$pw_globals["security"] = array();
+	// Set the default security mode
+	$pw_globals["security"]["mode"] = "user";
 
 	/////////// SITE WIDE GLOBALS //////////
 	// TODO : MOVE THIS STUFF INTO pwSiteglobals

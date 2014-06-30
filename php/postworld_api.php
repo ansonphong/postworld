@@ -123,7 +123,7 @@ function pw_set_wp_usermeta($vars){
 
 	///// USER ID /////
 	$user_id = pw_check_user_id( $user_id );
-	if( !is_numeric($user_id) )
+	if( !is_numeric( $user_id ) )
 		return $user_id; // Will be: array('error'=>'[Error message]')
 
 	///// KEY /////
