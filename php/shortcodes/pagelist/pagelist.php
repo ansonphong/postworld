@@ -8,7 +8,8 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Extract Shortcode Attributes, set defaults
 	extract( shortcode_atts( array(
 		"class" => "",
-		"view" => "grid",
+		"view" 	=> "grid",
+		"max"	=>	3
 	), $atts ) );
 
 	///// Generate Query /////
@@ -44,6 +45,9 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 			break;
 	}
 	
+	// Add Max Posts
+	$query['posts_per_page'] = $max;
+
 	// Setup Feed Query
 	$feed_query_args = array(
 		'feed_query' => $query,

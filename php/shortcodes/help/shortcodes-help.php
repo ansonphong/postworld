@@ -20,5 +20,6 @@ function pw_help_shortcodes( $atts, $content = null, $tag ) {
 }
 
 add_shortcode( 'shortcodes', 'pw_help_shortcodes' );
+add_shortcode( 'shortcodes-help', 'pw_help_shortcodes' );
 
 ?>

@@ -30,18 +30,27 @@ function pw_skip_shortcode( $string ){
 	$string = str_replace("]", "&#93;", $string);
 	return $string;
 }
+
 function pw_shortcode_example( $string, $echo = true ){
-	$html = "";
-	$html .= "<pre>".pw_skip_shortcode($string)."</pre>";
-	$html .= do_shortcode($string);
-	$html .= "<hr>";
-	
+
+	$shortcode_string = pw_skip_shortcode($string);
+	$shortcode_parsed = do_shortcode($string);
+
+	// Start Output Buffering
+	ob_start();
+	// Get the template
+	include pw_get_shortcode_template( "shortcodes-help-example" );
+	// Set included file into a string/variable
+	$html = ob_get_contents();
+	// End Output Buffering
+	ob_end_clean();
+
 	if( $echo )
 		echo $html;
 	else
 		return $html;
-}
 
+}
 
 /////////////// BASIC SHORTCODES //////////
 // BLOCKS
