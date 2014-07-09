@@ -389,6 +389,8 @@ postworld.factory('pwPosts',
                 function(response) {
                     // Catch the new post data
                     var newPostData = response.data;
+                    // Add the previously missing fields to the 'fields' field
+					newPostData.fields = missingFields;
                     // Merge it into the feed post
                     var merged = mergeFeedPost( vars.feedId, vars.postId, newPostData );
                     $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
