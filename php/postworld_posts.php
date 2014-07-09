@@ -121,7 +121,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_path',
 		'image(full)',
 		'post_content',
-		'post_type_labels'
+		'post_type_labels',
+		'gallery(ids,posts)',
 		);
 	
 	$micro_fields =	array(
@@ -133,10 +134,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		);
 
 	// All Fields
-	if ($fields == 'all'){
+	if ($fields == 'all')
 		$fields = array_merge($preview_fields, $detail_fields, $viewer_fields, $pw_post_meta_fields);
-	}
-
+	
 	// Preview Fields
 	else if ($fields == 'preview')
 		$fields = array_merge($preview_fields, $viewer_fields );
@@ -302,36 +302,26 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	
 	////////// AUTHOR DATA //////////
-
 		// Extract author() fields
 		$relationships = extract_linear_fields( $fields, 'is_relationship', true );
-
 		if ( !empty($relationships) ){
 			if( !isset($post['viewer']) )
 				$post['viewer'] = array();
-
 			foreach ($relationships as $relationship ) {
-
 				$post['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
-			
 			}
-
 		}
 
-
 	////////// DATE & TIME //////////
-
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
 			$post['time_ago'] = time_ago( strtotime ( $post['post_date_gmt'] ) );
-
 		// Post Timestamp
 		if ( in_array('post_timestamp', $fields) )
 			$post['post_timestamp'] = (int) strtotime( $post['post_date_gmt'] ) ;
 
 
 	////////// AVATAR IMAGES //////////
-
 		// AVATAR FIELDS
 		$avatars_object = get_avatar_sizes($author_id, $fields);
 		if ( !empty($avatars_object) )
@@ -378,9 +368,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			// Parse known JSON keys from JSON strings into objects
 			global $pwSiteGlobals;
 			if( isset( $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'] ) ){
-				
 				$json_meta_keys = $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'];
-
 				foreach( $post['post_meta'] as $meta_key => $meta_value ){
 					if(
 						in_array($meta_key, $json_meta_keys) &&
@@ -388,7 +376,16 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$post['post_meta'][$meta_key] = json_decode($post['post_meta'][$meta_key], true);
 					}
 				}
+			}
 
+			///// SERIALIZED ARRAY META KEYS /////
+			$serialized_meta_keys = array( "_wp_attachment_metadata" );
+			foreach( $post['post_meta'] as $meta_key => $meta_value ){
+				if(
+					in_array($meta_key, $serialized_meta_keys) &&
+					is_string($meta_value) ){
+					$post['post_meta'][$meta_key] = unserialize( $post['post_meta'][$meta_key] );
+				}
 			}
 
 		}
@@ -523,6 +520,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			///// PROCESS IMAGES /////
 			// Load in registered images attributes
 			$registered_images_obj = registered_images_obj();
+			$post['image']['sizes'] = array();
 
 			// Process each $image one at a time >> image(name,300,200,1) 
 			foreach ($images as $image) {
@@ -539,10 +537,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 					// FULL : Get 'full' image
 					if ( $image_handle == 'full' || $image_handle == 'all' ) {
-						$image_obj = image_obj($thumbnail_id, $image_handle);
-						$post['image']['full']['url']	= $thumbnail_url;
-						$post['image']['full']['width'] = (int)$image_obj['width'];
-						$post['image']['full']['height'] = (int)$image_obj['height'];
+						$image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
+						$post['image']['sizes']['full']['url']	= $thumbnail_url;
+						$post['image']['sizes']['full']['width'] = (int)$image_obj['width'];
+						$post['image']['sizes']['full']['height'] = (int)$image_obj['height'];
 					}
 
 					// ALL : Get all registered images
@@ -556,17 +554,17 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 							$registered_images[$image_handle]["width"] = $image_src[1];
 							$registered_images[$image_handle]["height"] = $image_src[2];
 							$registered_images[$image_handle]["hard_crop"] = $image_src[3];
-							$post['image'] = array_merge( $post['image'], $registered_images );
+							$post['image']['sizes'] = array_merge( $post['image']['sizes'], $registered_images );
 						}
 					}
 
 					// HANDLE : Get registered image
 					// If it is a registered image format
 					elseif( array_key_exists($image_handle, $registered_images_obj) ) {
-						$image_obj = image_obj($thumbnail_id, $image_handle);
-						$post['image'][$image_handle]['url']	= $image_obj['url'];
-						$post['image'][$image_handle]['width'] = (int)$image_obj['width'];
-						$post['image'][$image_handle]['height'] = (int)$image_obj['height'];
+						$image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
+						$post['image']['sizes'][$image_handle]['url']	= $image_obj['url'];
+						$post['image']['sizes'][$image_handle]['width'] = (int)$image_obj['width'];
+						$post['image']['sizes'][$image_handle]['height'] = (int)$image_obj['height'];
 					}
 
 					// META : Get Image Meta Data
@@ -658,6 +656,27 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		} // END if
 
+
+
+	////////// GALLERY //////////
+		// Extract meta fields
+		$gallery_fields = extract_linear_fields( $fields, 'gallery', true );
+		if ( !empty($gallery_fields) ){
+
+			$post['gallery'] = array();
+			$gallery_post_ids = pw_get_post_galleries_attachment_ids( $post_id );
+
+			// Gallery Attachment IDs
+			if( in_array( 'ids', $gallery_fields ) ){
+				$post['gallery']['ids'] = $gallery_post_ids;
+			}
+
+			// Gallery Attachment Posts
+			if( in_array( 'posts', $gallery_fields ) ){
+				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, "all" );
+			}
+
+		}
 
 
 	////////// TAXONOMIES //////////

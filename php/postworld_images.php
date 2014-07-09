@@ -156,7 +156,7 @@ function first_image_obj( $post_id ) {
 }
 
 ///// GET OBJECT OF AN IMAGE ATTACHMENT ATTRIBUTES /////
-function image_obj( $attachment_id, $size = 'full' ){
+function pw_get_image_obj( $attachment_id, $size = 'full' ){
 	$image_attributes = wp_get_attachment_image_src( $attachment_id, $size );
 	$first_image_obj['url'] = $image_attributes[0];
 	$first_image_obj['width'] = $image_attributes[1];
