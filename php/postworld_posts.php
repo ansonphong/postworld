@@ -83,7 +83,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'event_end',
 		'geo_latitude',
 		'geo_longitude',
-		'related_post'
+		'related_post',
 		);
 
 
@@ -115,6 +115,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'time_ago',
 		'post_meta(all)',
 		'rank_score',
+		'fields',
 		);
 
 	$detail_fields =	array(
@@ -793,6 +794,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		} // END foreach
 	} // END IF
+
+	///// FIELDS /////
+	if( in_array( 'fields', $fields ) ){
+		$post['fields'] = $fields;
+	}
 
 	return $post;
 

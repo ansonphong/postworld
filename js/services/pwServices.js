@@ -274,9 +274,155 @@ postworld.factory('_',
 }]);
 
 
+/* _                      ____           _       
+  | |   _   _ ____      _|  _ \ ___  ___| |_ ___ 
+ / __) (_) | '_ \ \ /\ / / |_) / _ \/ __| __/ __|
+ \__ \  _  | |_) \ V  V /|  __/ (_) \__ \ |_\__ \
+ (   / (_) | .__/ \_/\_/ |_|   \___/|___/\__|___/
+  |_|      |_|                                   */
+
+postworld.factory('pwPosts',
+	[ '$rootScope', '$log','$window', 'pwData', '_', '$pw',
+	function ( $rootScope, $log, $window, $pwData, $_, $pw ) {  
+
+	///// FACTORY DECLARATIONS /////
+	
+	var getFeedPost = function( feedId, postId ){
+		///// Gets a post from a Feed by ID /////
+
+		// Check if feed exists
+		if( !$_.objExists( $pwData, 'feeds.'+feedId+'.posts' ) )
+			return false;
+		// Get the Post
+		var post = _.findWhere( $pwData.feeds[feedId].posts, { ID: postId } );
+		// Check if it's defined
+		if( _.isUndefined( post ) )
+			return false;
+		return post;
+	}
+
+	var updateFeedPost = function( feedId, postId, newPost ){
+		///// Updates a post in a Feed by ID /////
+
+		// Check if feed exists
+		if( !$_.objExists( $pwData, 'feeds.'+feedId+'.posts' ) )
+			return false;
+
+		// Get the posts array
+		var posts = $pwData.feeds[feedId].posts;
+
+		// Rebuild Feed with the new Post
+		var newPosts = [];
+		angular.forEach( posts, function( post ){
+			// If we're on the new post, update it
+			if( post.ID == postId )
+				// Deep merge the old post with the new one
+				post = newPost;
+			// Push posts to array
+			newPosts.push( post );
+		});
+
+		// Set the new posts into the feed
+		$pwData.feeds[feedId].posts = newPosts;
+
+		return true;
+		
+	};
+
+	var mergeFeedPost = function( feedId, postId, mergePost ){
+    		// Get the original Post
+    		var post = getFeedPost( feedId, postId );
+    		if( post == false )
+    			return false;
+    		// Deep merge the new data with the post
+    		post = deepmerge( post, mergePost );
+    		// Update the post
+    		return updateFeedPost( feedId, postId, post );
+    };
+
+    ///// FACTORY FUNCTIONS /////
+	return {
+		requiredFields: function( vars ){
+			/*
+			 *	vars = {
+			 *		feedId: [string]	// Required
+			 *		postId: [integer]	// Required
+			 *		fields: [array]		// Required
+			 *	}
+			 */
+
+			$log.debug( "REQUIRED FIELDS : ", vars );
+
+			// Get the original Post
+    		var post = getFeedPost( vars.feedId, vars.postId );
+    		if( post == false )
+    			return false;
+
+    		// Detect if the post has a 'fields' field, which tells which fields are loaded
+    		if( _.isUndefined( post.fields ) )
+    			return false;
+
+			// Detect if the post has the required fields
+			var requiredFields = vars.fields;
+			var missingFields = [];
+
+			// Iterate through each required field
+			angular.forEach( requiredFields, function( requiredField ){
+				// If it's not in the fields
+				if( !$_.isInArray( requiredField, post.fields ) )
+					// Add it to the missing fields array
+					missingFields.push( requiredField );
+			});
+
+			// If there are no missing fields
+			if( missingFields.length == 0 )
+				return true;
+
+			// If there are missing fields, get them from the server
+			var args = {
+                post_id: vars.postId,
+                fields: missingFields,
+            };
+
+			$pwData.pw_get_post(args).then(
+                // Success
+                function(response) {
+                    // Catch the new post data
+                    var newPostData = response.data;
+                    // Merge it into the feed post
+                    var merged = mergeFeedPost( vars.feedId, vars.postId, newPostData );
+                    $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
+                    // Broadcast event for child listeners to pick up the new data
+                    $rootScope.$broadcast( 'feedPostUpdated', {
+                    		feedId: vars.feedId,
+                    		postId: vars.postId
+                    	});
+                },
+                // Failure
+                function(response) {}
+            );
+
+    	},
+    	getFeedPost: function( feedId, postId ){
+    		return getFeedPost( feedId, postId );
+    	},
+    	updateFeedPost: function( feedId, postId, post ){
+    		return updateFeedPost( feedId, postId, post );
+    	},
+    	mergeFeedPost: function( feedId, postId, mergePost ){
+    		return mergeFeedPost( feedId, postId, mergePost );
+    	},
+	};
+
+}]);
 
 
-
+/* _                      ___                                 
+  | |   _   _ ____      _|_ _|_ __ ___   __ _  __ _  ___  ___ 
+ / __) (_) | '_ \ \ /\ / /| || '_ ` _ \ / _` |/ _` |/ _ \/ __|
+ \__ \  _  | |_) \ V  V / | || | | | | | (_| | (_| |  __/\__ \
+ (   / (_) | .__/ \_/\_/ |___|_| |_| |_|\__,_|\__, |\___||___/
+  |_|      |_|                                |___/           */
 
 postworld.factory('pwImages',
 	[ '$log','$window',

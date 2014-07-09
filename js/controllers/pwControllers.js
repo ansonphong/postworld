@@ -1,7 +1,4 @@
-'use strict';
-
-/*
-  ____           _      ____            _             _ _           
+/*____           _      ____            _             _ _           
  |  _ \ ___  ___| |_   / ___|___  _ __ | |_ _ __ ___ | | | ___ _ __ 
  | |_) / _ \/ __| __| | |   / _ \| '_ \| __| '__/ _ \| | |/ _ \ '__|
  |  __/ (_) \__ \ |_  | |__| (_) | | | | |_| | | (_) | | |  __/ |   
@@ -9,7 +6,7 @@
                                                                     
 /*////////// ------------ POST CONTROLLER ------------ //////////*/                
 
-
+'use strict';
 postworld.directive( 'pwPost', [ function($scope){
     return {
         restrict: 'AE',
@@ -25,8 +22,8 @@ postworld.directive( 'pwPost', [ function($scope){
 
 
 postworld.controller('postController',
-    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw",
-    function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw ) {
+    [ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts",
+    function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts ) {
 
     // If $scope.post doesn't exist
     // Get it from $window.post
@@ -34,7 +31,6 @@ postworld.controller('postController',
         if( !_.isUndefined( $window.post ) )
             $scope.post = $window.post;
         
-
     // RUN CUSTOM POST FUNCTIONS
     // This function can be added to the $window object
     // For performing theme-specific per-post operations
@@ -201,6 +197,37 @@ postworld.controller('postController',
             }
         );  
     }
+
+
+    ///// FEED POST UPDATED /////
+    $scope.$on( 'feedPostUpdated', function( e, vars ){
+        // This is triggered when the central feed post is updated with new data
+        $log.debug( "$ON : feedPostUpdated : ", vars );
+        // If the post does not know it's own feed
+        if( !$_.objExists( $scope, 'post.feed.id' ) )
+            return false;
+        // If the feed and post IDs are provided
+        if( $scope.post.feed.id == vars.feedId &&
+            $scope.post.ID == vars.postId ){
+            // Update the local post with the updated data from the feed
+            $scope.post = $pwPosts.getFeedPost( vars.feedId, vars.postId );
+        }
+    });
+
+    // TODO : WATCH FOR A CHANGE IN post_content
+    // When change, re-run $sce.trustAsHtml on the post_content
+
+    ///// DEV /////
+    //$pwPosts.mergeFeedPost( $scope.post.feed.id, $scope.post.ID, {post_date:"NOW"} );
+    //$log.debug( $pwPosts.getFeedPost( $scope.post.feed.id, $scope.post.ID ) );
+
+    // Now refactor this as a watch / observe on the attribute in the directive
+    $pwPosts.requiredFields(
+        {
+            feedId: $scope.post.feed.id,
+            postId: $scope.post.ID,
+            fields: ['gallery(ids,posts)']
+        });
 
 
 }]);
