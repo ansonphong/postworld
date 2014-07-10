@@ -389,6 +389,7 @@ postworld.factory('pwPosts',
 			$pwData.pw_get_post(args).then(
                 // Success
                 function(response) {
+                	
                     // Catch the new post data
                     var newPostData = response.data;
                     // Add the previously missing fields to the 'fields' field
@@ -396,15 +397,19 @@ postworld.factory('pwPosts',
                     // Merge it into the feed post
                     var merged = mergeFeedPost( vars.feedId, vars.postId, newPostData );
                     $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
+                    
+
                     // Broadcast event for child listeners to pick up the new data
                     $rootScope.$broadcast( 'feedPostUpdated', {
                     		feedId: vars.feedId,
                     		postId: vars.postId
                     	});
+                    
                 },
                 // Failure
                 function(response) {}
             );
+			
 
     	},
     	getFeedPost: function( feedId, postId ){

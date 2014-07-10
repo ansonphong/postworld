@@ -28,12 +28,14 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 		displayed:[],	// All the posts which are actually displayed
 	};
 
-	$scope.$watch( 'post.gallery.posts', function(value){
-		$scope.infiniteGallery.posts = value;
-
-		// Preload Posts
-		if( $scope.galleryDisplayedCount() == 0 ){
-			$scope.galleryGetNext( $scope.galleryPreload );
+	$scope.$watch( 'post.gallery', function( value ){
+		// If Gallery has posts
+		if( $_.objExists( $scope, 'post.gallery.posts' ) ){
+			$scope.infiniteGallery.posts = $scope.post.gallery.posts;
+			// Preload Posts
+			if( $scope.galleryDisplayedCount() == 0 ){
+				$scope.galleryGetNext( $scope.galleryPreload );
+			}
 		}
 	}, 1 );
 

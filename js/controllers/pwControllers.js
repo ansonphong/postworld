@@ -22,8 +22,8 @@ postworld.directive( 'pwPost', [ function( $scope ){
 
 
 postworld.controller('postController',
-	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts",
-	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts ) {
+	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout",
+	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout ) {
 
 	// If $scope.post doesn't exist
 	// Get it from $window.post
@@ -203,8 +203,8 @@ postworld.controller('postController',
 	}
 
 	///// ACTION : FEED POST UPDATED /////
+	// This is run when the central feed post is updated with new data
 	$scope.$on( 'feedPostUpdated', function( e, vars ){
-		// This is triggered when the central feed post is updated with new data
 		$log.debug( "$ON : feedPostUpdated : ", vars );
 		// If the post does not know it's own feed
 		if( !$_.objExists( $scope, 'post.feed.id' ) )
@@ -212,24 +212,32 @@ postworld.controller('postController',
 		// If the feed and post IDs are provided
 		if( $scope.post.feed.id == vars.feedId &&
 			$scope.post.ID == vars.postId ){
-			// Update the local post with the updated data from the feed
-			$scope.post = $pwPosts.getFeedPost( vars.feedId, vars.postId );
+			// Get the post with the updated data from the feed
+			var updatedPost = $pwPosts.getFeedPost( vars.feedId, vars.postId );
+			// Update the local scope post with foreach to avoid two-way binding
+			angular.forEach( updatedPost, function( value, key ){
+				$scope.post[key] = value;
+			});
 		}
 	});
-
+	
 	///// WATCH : REQUIRED FIELDS DIRECTIVE /////
-	$scope.$watch( 'postRequiredFields', function( value ){
-		if( !value )
-			return false;
+	// When the post or the required fields changes
+	// Check to make sure all the required fields are present
+	$scope.$watchCollection( '[ postRequiredFields, post.ID ]', function(){
 		$log.debug( "DIRECTIVE : pwPost -> postRequiredFields : ", $scope.postRequiredFields );
-		$pwPosts.requiredFields(
-			{
-				feedId: $scope.post.feed.id,
-				postId: $scope.post.ID,
-				fields: $scope.postRequiredFields
-			});
-	} );
+		
+		if( $_.objExists( $scope, 'post.feed.id' ) &&
+			$_.objExists( $scope, 'post.ID' ) &&
+			$_.objExists( $scope, 'postRequiredFields' ) )
+			$pwPosts.requiredFields({
+					feedId: $scope.post.feed.id,
+					postId: $scope.post.ID,
+					fields: $scope.postRequiredFields
+				});
 
+	});
+	
 	///// ACTION : LOAD POST DATA /////
 	$scope.$on('loadPostData', function(event, post_id) {
 		if( post_id == $_.getObj( $scope, 'post.ID' ) )

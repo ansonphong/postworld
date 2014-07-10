@@ -125,8 +125,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 ////////// MODAL INSTANCE CONTROL //////////
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope', '$document', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', // 'pwQuickEdit',
-	function( $scope, $rootScope, $document, $modalInstance, meta, $log, $pwData, $timeout, $_ ) { // , $pwQuickEdit
+	[ '$scope', '$rootScope', '$document', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', // 'pwQuickEdit',
+	function( $scope, $rootScope, $document, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts ) { // , $pwQuickEdit
 
 	///// SET META /////
 	$scope.meta = meta;
@@ -151,7 +151,7 @@ postworld.controller('pwModalInstanceCtrl',
 
 		// Get the original full post object from the feed
 		// In the case that only a partial post object was passed
-		$scope.post = _.findWhere( $scope.feed['data']['posts'], { ID: $scope.post.ID } );
+		$scope.post = $pwPosts.getFeedPost( $scope.post.feed.id, $scope.post.ID );
 
 		// Get the current position of the feed
 		$scope.feed['currentIndex'] = _.indexOf( $scope.feed['data']['posts'], $scope.post );
@@ -170,22 +170,25 @@ postworld.controller('pwModalInstanceCtrl',
 	
 
 	///// PREVIOUS & NEXT POSTS FUNCTIONS /////
+	// TODO : Add ability to go past loaded feed items, and load feed items based on feed_outline
+	// TODO : ... and then resort them in the feed_outline according to their position in feed_outline
 
-	// If a feed is specified
-	if( !_.isUndefined( $scope.feed ) ){
-		// TODO : Add ability to go past loaded feed items, and load feed items based on feed_outline
-		// TODO : ... and then resort them in the feed_outline according to their position in feed_outline
-
-		// Watch when feed.currentIndex changes
-		$scope.$watch( "feed.currentIndex", function (){
-				// Set the current $scope.post object to reflect the current index
-				$scope.post = $scope.feed['data']['posts'][ $scope.feed.currentIndex ];
-			}); 
-	}
+	// Watch when feed.currentIndex changes
+	$scope.$watch( "feed.currentIndex", function ( value ){
+		$log.debug( '$watch:feed.currentIndex : ', value );
+		if( $_.objExists( $scope, 'feed.currentIndex' ) ){
+			//$rootScope.$$phase
+			// Set the current $scope.post object to reflect the current index
+			$scope.post = $scope.feed['data']['posts'][ $scope.feed.currentIndex ];
+			$log.debug( '$watch:feed.currentIndex : SWITCH POST : ', $scope.post );
+		}
+	}); 
 
 	$scope.nextPost = function(){
-		if( _.isUndefined( $scope.feed ) )
+		if( _.isUndefined( $scope.feed ) ){
+			$log.debug('nextPost() : No feed.');
 			return false;
+		}
 
 		// Setup Vars
 		var feedLength = $scope.feed['data']['posts'].length;
@@ -197,11 +200,14 @@ postworld.controller('pwModalInstanceCtrl',
 		else
 			$scope.feed.currentIndex ++;
 
+		$log.debug('nextPost() // feed.currentIndex : ' + $scope.feed.currentIndex );
 	};
 
 	$scope.previousPost = function(){
-		if( _.isUndefined( $scope.feed ) )
+		if( _.isUndefined( $scope.feed ) ){
+			$log.debug('previousPost() : No feed.');
 			return false;
+		}
 
 		// Setup Vars
 		var feedLength = $scope.feed['data']['posts'].length;
@@ -213,6 +219,8 @@ postworld.controller('pwModalInstanceCtrl',
 		// Otherwise just reduce the index by one
 		else
 			$scope.feed.currentIndex --;
+
+		$log.debug('previousPost() // feed.currentIndex : ' + $scope.feed.currentIndex );
 
 	};
 
@@ -230,13 +238,13 @@ postworld.controller('pwModalInstanceCtrl',
 			switch( keyCode ){
 				// Right Key
 				case 39:
+					$log.debug( "keyDown: nextPost" );
 					$scope.nextPost();
-					$log.debug( "next" );
 					break;
 				// Left Key
 				case 37:
+					$log.debug( "keyDown: previousPost" );
 					$scope.previousPost();
-					$log.debug( "previous" );
 					break;
 			}
 		}
