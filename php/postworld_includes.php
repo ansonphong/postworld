@@ -273,6 +273,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Input-JS',
 			WP_PLUGIN_URL.'/postworld/js/components/pwInput.js', $angularDep );
 
+		wp_enqueue_script( 'pw-InfiniteGallery-JS',
+			WP_PLUGIN_URL.'/postworld/js/components/pwInfiniteGallery.js', $angularDep );
+
 
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',

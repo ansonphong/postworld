@@ -150,12 +150,6 @@ postworld.controller('postController',
 		window.location = url;
 	};
 
-
-	///// LOAD POST DATA /////
-	$scope.$on('loadPostData', function(event, post_id) {
-		$scope.loadPost( post_id );
-	});
-
 	////////// LOAD POST DATA //////////
 	$scope.loadPost = function( post_id ){
 		$scope.status = "loading";
@@ -236,6 +230,11 @@ postworld.controller('postController',
 			});
 	} );
 
+	///// ACTION : LOAD POST DATA /////
+	$scope.$on('loadPostData', function(event, post_id) {
+		if( post_id == $_.getObj( $scope, 'post.ID' ) )
+			$scope.loadPost( post_id );
+	});
 
 	///// DEV /////
 	//$pwPosts.mergeFeedPost( $scope.post.feed.id, $scope.post.ID, {post_date:"NOW"} );

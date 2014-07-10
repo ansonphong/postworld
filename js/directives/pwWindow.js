@@ -35,20 +35,24 @@ postworld.directive('windowWidth', function( $window ) {
 postworld.directive('windowHeight', function( $window ) {
 		return {
 			restrict: 'A',
-			scope: {
-				windowHeight: '@',
-			},
-			link: function ($scope, elem, $attrs) {
+			link: function ($scope, $elem, $attrs) {
 
 				// Set the size of the element to X percentage of the window
 				var setSize = function () {
-					var percentDecimal = parseFloat( $scope.windowHeight ) / 100.0;
-					var windowHeight = $window.innerHeight;
-					var elementHeight = windowHeight * percentDecimal;
-					elem.css('height', elementHeight + "px");
+					$attrs.$observe('windowHeight', function( value ) {
+
+		            	var percentDecimal = parseFloat( value ) / 100.0;
+						var windowHeight = $window.innerHeight;
+						var elementHeight = windowHeight * percentDecimal;
+						$elem.css('height', elementHeight + "px");
+		            	
+		            });
+
 				};
+
 				setSize();
 				angular.element($window).bind("resize", setSize);
+
 			}
 		};
 	});
