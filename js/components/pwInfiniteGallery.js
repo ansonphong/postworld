@@ -28,14 +28,23 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 		displayed:[],	// All the posts which are actually displayed
 	};
 
-	$scope.$watch( 'post.gallery', function( value ){
-		// If Gallery has posts
-		if( $_.objExists( $scope, 'post.gallery.posts' ) ){
+	///// WATCH : WHEN THE POST CHANGES /////
+	$scope.$watchCollection( '[ post.ID, post.gallery ]', function(){
+		// IF POST HAS GALLERY
+		if( $_.objExists( $scope, 'post.gallery.posts' ) &&
+			!_.isEmpty( $_.getObj( $scope, 'post.gallery.posts' ) ) ){
+
 			$scope.infiniteGallery.posts = $scope.post.gallery.posts;
+
 			// Preload Posts
 			if( $scope.galleryDisplayedCount() == 0 ){
 				$scope.galleryGetNext( $scope.galleryPreload );
 			}
+
+		// IF POST HAS NO GALLERY
+		} else{
+			$scope.infiniteGallery['posts'] = [];
+			$scope.infiniteGallery['displayed'] = [];
 		}
 	}, 1 );
 
@@ -167,32 +176,31 @@ postworld.directive('infiniteHScroll', [
 					remaining = container[0].scrollWidth - (container.scrollLeft() + container.innerWidth() + scrollDistance);
 					shouldScroll =  0 >= remaining;
 
-					$log.debug(
-						'container.scrollTop(): ' + container.scrollTop() + ' / ' +
-						'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
-						'container.innerHeight(): ' + container.innerHeight() + ' / ' +
-						'container.innerWidth(): ' + container.innerWidth() + ' / ' +
-						'container[0].scrollWidth: ' + container[0].scrollWidth + ' / ' +
-						'scrollDistance: ' + scrollDistance + ' / ' +
-						'remaining: ' + remaining
-						//, container
-					);
-
-					// container[0].scrollWidth <= container.scrollLeft() + container.innerWidth() + scrollDistance 
-
 					/*
-					$log.debug(
-						'elementBottom: ' + elementBottom + ' / ' +
-						'containerBottom: ' + containerBottom
-					);
+						$log.debug(
+							'container.scrollTop(): ' + container.scrollTop() + ' / ' +
+							'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
+							'container.innerHeight(): ' + container.innerHeight() + ' / ' +
+							'container.innerWidth(): ' + container.innerWidth() + ' / ' +
+							'container[0].scrollWidth: ' + container[0].scrollWidth + ' / ' +
+							'scrollDistance: ' + scrollDistance + ' / ' +
+							'remaining: ' + remaining
+							//, container
+						);
 
-					$log.debug(
-						'shouldScroll: ' + shouldScroll + ' / ' +
-						'remaining: ' + remaining + ' / ' +
-						'container.height(): ' + container.height() + ' / ' +
-						'scrollDistance: ' + scrollDistance
-					);
+						$log.debug(
+							'elementBottom: ' + elementBottom + ' / ' +
+							'containerBottom: ' + containerBottom
+						);
+
+						$log.debug(
+							'shouldScroll: ' + shouldScroll + ' / ' +
+							'remaining: ' + remaining + ' / ' +
+							'container.height(): ' + container.height() + ' / ' +
+							'scrollDistance: ' + scrollDistance
+						);
 					*/
+
 					if (shouldScroll && scrollEnabled) {
 						$log.debug("CALL SCROLL ACTION");
 						if ($rootScope.$$phase) {
