@@ -343,6 +343,8 @@ postworld.factory('pwPosts',
     ///// FACTORY FUNCTIONS /////
 	return {
 		requiredFields: function( vars ){
+			// Checks a post to see if the specified required fields are present
+			// And if not, it gets from the server automatically and plants them in the feed
 			/*
 			 *	vars = {
 			 *		feedId: [string]	// Required
