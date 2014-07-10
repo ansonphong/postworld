@@ -287,6 +287,10 @@ postworld.factory('pwPosts',
 
 	///// FACTORY DECLARATIONS /////
 	
+	var getFeed = function( feedId ){
+		return $_.getObj( $pwData, 'feeds.' + feedId );
+	};
+
 	var getFeedPost = function( feedId, postId ){
 		///// Gets a post from a Feed by ID /////
 
@@ -420,6 +424,9 @@ postworld.factory('pwPosts',
     	},
     	mergeFeedPost: function( feedId, postId, mergePost ){
     		return mergeFeedPost( feedId, postId, mergePost );
+    	},
+    	getFeed: function( feedId ){
+    		return getFeed( feedId );
     	},
 	};
 

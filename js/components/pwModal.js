@@ -147,14 +147,14 @@ postworld.controller('pwModalInstanceCtrl',
 
 		// Find and localize the feed
 		$scope.feed['id'] = meta.post.feed['id'];
-		$scope.feed['data'] = $pwData.feeds[ $scope.feed['id'] ];
+		//$scope.feed['data'] = $pwData.feeds[ $scope.feed['id'] ];
 
 		// Get the original full post object from the feed
 		// In the case that only a partial post object was passed
 		$scope.post = $pwPosts.getFeedPost( $scope.post.feed.id, $scope.post.ID );
 
 		// Get the current position of the feed
-		$scope.feed['currentIndex'] = _.indexOf( $scope.feed['data']['posts'], $scope.post );
+		$scope.feed['currentIndex'] = _.indexOf( $pwPosts.getFeed( $scope.feed.id )['posts'], $scope.post );
 	}
 
 
@@ -179,7 +179,7 @@ postworld.controller('pwModalInstanceCtrl',
 		if( $_.objExists( $scope, 'feed.currentIndex' ) ){
 			//$rootScope.$$phase
 			// Set the current $scope.post object to reflect the current index
-			$scope.post = $scope.feed['data']['posts'][ $scope.feed.currentIndex ];
+			$scope.post = $pwPosts.getFeed( $scope.feed.id )['posts'][ $scope.feed.currentIndex ];
 			$log.debug( '$watch:feed.currentIndex : SWITCH POST : ', $scope.post );
 		}
 	}); 
@@ -191,7 +191,7 @@ postworld.controller('pwModalInstanceCtrl',
 		}
 
 		// Setup Vars
-		var feedLength = $scope.feed['data']['posts'].length;
+		var feedLength = $pwPosts.getFeed( $scope.feed.id )['posts'].length;
 		var currentIndex = $scope.feed.currentIndex;
 
 		// If the feed is at the end, reset index to 0
@@ -210,7 +210,7 @@ postworld.controller('pwModalInstanceCtrl',
 		}
 
 		// Setup Vars
-		var feedLength = $scope.feed['data']['posts'].length;
+		var feedLength = $pwPosts.getFeed( $scope.feed.id )['posts'].length;
 		var currentIndex = $scope.feed.currentIndex;
 
 		// If the feed is at the beginning, set it to the end
@@ -248,7 +248,6 @@ postworld.controller('pwModalInstanceCtrl',
 					break;
 			}
 		}
-
 		$scope.$apply();
 	}
 
