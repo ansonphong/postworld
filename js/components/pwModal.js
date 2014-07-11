@@ -125,8 +125,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 ////////// MODAL INSTANCE CONTROL //////////
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope', '$document', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', // 'pwQuickEdit',
-	function( $scope, $rootScope, $document, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts ) { // , $pwQuickEdit
+	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', '$browser', // 'pwQuickEdit',
+	function( $scope, $rootScope, $document, $window, $location, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts, $browser ) { // , $pwQuickEdit
 
 	///// SET META /////
 	$scope.meta = meta;
@@ -265,7 +265,7 @@ postworld.controller('pwModalInstanceCtrl',
 		//$pwQuickEdit.trashPost($scope.post.ID, $scope);
 	}; 
 
-	// WATCH FOR TRASHED
+	// WATCH : FOR TRASHED
 	// TODO : Set Parent post_status = trash via pwData.feeds
 	// Watch on the value of post_status
 	$scope.$watch( "post.post_status", function (){
@@ -273,6 +273,43 @@ postworld.controller('pwModalInstanceCtrl',
 			// Close Modal
 			$modalInstance.dismiss('close');
 	}); 
+
+
+	// WATCH : FOR CHANGE POST
+	$scope.$watch( "post.ID", function (){
+		if( $_.objExists( $scope, 'post.post_permalink' )  ){
+
+			// Change the URL to the permalink of the post, and the title to the title
+			// TODO : Currently Causing Infinite Loops
+
+			//$locationProvider.html5Mode(true);
+			//$location.path( $scope.post.post_permalink );
+			//$window.history.replaceState();
+			//History.replaceState( {}, $scope.post.post_title, $scope.post.post_permalink );
+			
+			//$window.history.replaceState( {}, $scope.post.post_title, $scope.post.post_permalink );
+			// https://github.com/angular/angular.js/issues/3924
+
+			//$browser.url( $scope.post.post_permalink );
+			//$location.replace();
+			//History.replaceState( {}, $scope.post.post_title, $scope.post.post_permalink );
+			
+			///// USE THIS ONE - WITH PHP TAG IN THE PAGE WHICH SWITCHES ROUTING TO HTML5 MODE /////
+			$location.path( $scope.post.post_permalink );
+			
+			//$timeout( function(){
+			//	History.replaceState( {}, $scope.post.post_title, $scope.post.post_permalink );
+			//}, 0 );
+			
+
+
+		}
+	}); 
+
+	$rootScope.$on('$routeChangeStart', function(event){ 
+	    event.preventDefault(); 
+	});
+
 
 }]);
 

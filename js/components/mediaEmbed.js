@@ -1,14 +1,11 @@
 'use strict';
-
-
-/*
-  __  __          _ _         _____           _              _ 
+/*__  __          _ _         _____           _              _ 
  |  \/  | ___  __| (_) __ _  | ____|_ __ ___ | |__   ___  __| |
  | |\/| |/ _ \/ _` | |/ _` | |  _| | '_ ` _ \| '_ \ / _ \/ _` |
  | |  | |  __/ (_| | | (_| | | |___| | | | | | |_) |  __/ (_| |
  |_|  |_|\___|\__,_|_|\__,_| |_____|_| |_| |_|_.__/ \___|\__,_|
 
-////////// ------------ MEDIA EMBED CONTROLLER ------------ //////////*/   
+////////// -------- MEDIA EMBED CONTROLLER -------- //////////*/   
 
 var mediaEmbed = function ( $scope, $sce, pwData ) {
 
@@ -83,7 +80,7 @@ postworld.controller('pwOEmbedController',
             $scope.setAutoplay = function(){
                 $scope.autoplay = (
                     !_.isUndefined( $scope.autoplay ) &&
-                    $scope.autoplay == true ) ?
+                    $scope.autoplay !== null ) ?
                     true : false;
             }
             $scope.setAutoplay();

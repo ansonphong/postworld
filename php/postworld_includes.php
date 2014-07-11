@@ -127,6 +127,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'ImagesLoaded-JS',
 			WP_PLUGIN_URL.'/postworld/lib/masonry/imagesloaded.pkgd.min.js');
 		
+		// HISTORY.JS
+		wp_enqueue_script( 'History-JS',
+			WP_PLUGIN_URL.'/postworld/lib/history.js/native.history.js');	
 
 		///// THIRD PARTY LIBRARIES /////
 

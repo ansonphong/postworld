@@ -165,13 +165,12 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 	// Comment out for development
 	$logProvider.debugEnabled(true);
 
+	//$locationProvider.html5Mode(true);
+
 });
 
 
-
- 
-/*
-  ____              
+/*____              
  |  _ \ _   _ _ __  
  | |_) | | | | '_ \ 
  |  _ <| |_| | | | |

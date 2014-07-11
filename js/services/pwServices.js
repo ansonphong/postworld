@@ -183,12 +183,13 @@ postworld.factory('_',
             
         },
 		setObj : function( obj, key, value  ){
-			// Sets the value of an object,
-			// even if it or it's parent(s) doesn't exist.
-			/*  PARAMETERS:
-				obj     =   [object]
-				key     =   [string] ie. ( "key.subkey.subsubkey" )
-				value   =   [string/array/object]
+			/* 	Sets the value of an object,
+			 * 	even if it or it's parent(s) doesn't exist.
+			 *
+			 *  PARAMETERS:
+			 *	obj     =   [object]
+			 *	key     =   [string] ie. ( "key.subkey.subsubkey" )
+			 *	value   =   [string/array/object]
 			*/
 
 			///// KEY PARTS /////
@@ -196,20 +197,15 @@ postworld.factory('_',
 			// TO   : [ "key", "subkey", "subkey" ]
 			var key_parts = key.split('.');
 			key_parts = key_parts.reverse();
-
 			// Count how many parts
 			var key_parts_count = key_parts.length;
-
 			// Prepare to catch finished key parts
 			var key_parts_done = [];
-
 			// Iterate through each key part
 			var seed = [];
 			var i = 0;
-
 			angular.forEach( key_parts, function( key_part ){
 				i++;
-
 				// First Key
 				if( i == 1 ){
 					// Create seed with first key
@@ -226,21 +222,20 @@ postworld.factory('_',
 					// Return final seed result
 					seed = seed[i];
 				}
-
 			});
-
 			//$log.debug( "SEED : ", seed);
 			//$log.debug( "OBJ : ", obj);
-
 			// Merge $seed array with input $array
 			obj = deepmerge( obj, seed );
-
 			//$log.debug( "RESULT : ", obj);
-
 			return obj;
-
 		},
-		clobber: function( id, t, f ){ // t = timeout in ms, f = function to run
+
+		clobber: function( id, t, f ){ // id = unique string, t = timeout in ms, f = function to run
+			/*	Times out for the given time before running a function.
+			 *	Any sequential functions that are clobbered with the same ID before the function runs
+			 *	Will over-write the previous action and again timeout.
+			 */
 
 			// Establish the Clobber Object
 			if( _.isUndefined( $rootScope.clobber ) )
@@ -402,7 +397,6 @@ postworld.factory('pwPosts',
                     var merged = mergeFeedPost( vars.feedId, vars.postId, newPostData );
                     $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
                     
-
                     // Broadcast event for child listeners to pick up the new data
                     $rootScope.$broadcast( 'feedPostUpdated', {
                     		feedId: vars.feedId,
@@ -413,9 +407,8 @@ postworld.factory('pwPosts',
                 // Failure
                 function(response) {}
             );
-			
-
     	},
+
     	getFeedPost: function( feedId, postId ){
     		return getFeedPost( feedId, postId );
     	},
@@ -427,6 +420,30 @@ postworld.factory('pwPosts',
     	},
     	getFeed: function( feedId ){
     		return getFeed( feedId );
+    	},
+    	insertFeed: function( feedId, feed ){
+    		/* Inserts a feed into the $pwData.feeds service
+    		 * feedId = [ string ]
+			 * feed = { posts:[], ... }
+    		 */
+    		feedId = new String( feedId );
+   			///// ADD FEED OBJECT TO POSTS /////
+    		// If the feed has posts
+    		if( $_.objExists( feed, 'posts' ) ){
+    			// Create a new feed container
+    			var newPosts = [];
+    			// Interate through each post in the feed
+	    		angular.forEach( feed.posts, function( post ){
+	    			// And add the 'feed.id' value if it doesn't exist
+	    			if( !$_.objExists( post, 'feed.id' ) )
+	    				post = $_.setObj( post, 'feed.id', feedId );
+	    			newPosts.push( post );
+	    		});
+	    		feed.posts = newPosts;
+    		}
+    		// Add it to the central pwData service
+    		$pwData.feeds[feedId] = feed;
+    		return true;
     	},
 	};
 
@@ -453,12 +470,12 @@ postworld.factory('pwImages',
     	},
     	{
     		name: 'wide',
-    		width: 1,
+    		width: 1.5,
     		height: 1,
     	},
     	{
     		name: 'x-wide',
-    		width: 2,
+    		width: 2.5,
     		height: 1,
     	},
     	{
@@ -468,7 +485,7 @@ postworld.factory('pwImages',
     	},
     	{
     		name: 'x-tall',
-    		width: 1,
+    		width: 2.5,
     		height: 2,
     	},
     ];
@@ -500,10 +517,6 @@ postworld.factory('pwImages',
 	};
 
 }]);
-
-
-
-
 
 
 

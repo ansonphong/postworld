@@ -61,11 +61,11 @@ function pw_image_tag_filters( $vars ){
 		// DEFINITION
 		array(
 			"tag"		=>	"HD",
-			"condition" => "$width >= 1000 && $height >= 1000",
+			"condition" => "$width >= 1024 && $height >= 1024",
 			),
 		array(
 			"tag"		=>	"XHD",
-			"condition" => "$width >= 2000 && $height >= 2000",
+			"condition" => "$width >= 2048 && $height >= 2048",
 			),
 		);
 
