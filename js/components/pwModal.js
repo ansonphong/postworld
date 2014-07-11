@@ -226,9 +226,7 @@ postworld.controller('pwModalInstanceCtrl',
 
 	///// KEY PRESS /////
 	// Capture Keydown
-	$document.keydown(function(e){
-		$scope.keyDown( e );
-	})
+	
 	$scope.keyDown = function( e ){
 		//$log.debug( "key press : " + e.keyCode + " : ", e );
 		var keyCode = parseInt( e.keyCode );
@@ -247,10 +245,14 @@ postworld.controller('pwModalInstanceCtrl',
 					$scope.previousPost();
 					break;
 			}
+			$scope.$apply();
 		}
-		$scope.$apply();
+		
 	}
 
+	$document.keydown( function( e ){
+		$scope.keyDown( e );
+	})
 
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE

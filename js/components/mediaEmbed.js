@@ -49,8 +49,8 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
     return { 
         restrict: 'AE',
         scope : {
-            link_url:"=oEmbed",
-            autoplay:"=autoplay",
+            link_url:"@oEmbed",
+            autoplay:"@autoplay",
             run:"=run",
         },
         //template : '',
@@ -67,12 +67,6 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
             // Set autoplay value if it updates
             attrs.$observe('autoplay', function(value) {
                 $scope.setAutoplay();
-            });
-            
-
-            // Set autoplay value if it updates
-            attrs.$observe('oEmbed', function(value) {
-                $scope.oEmbedGet();
             });
 
         }
@@ -111,7 +105,7 @@ postworld.controller('pwOEmbedController',
                 if( $scope.run == false )
                     return false;
 
-                // If it already has an embed code for the link_url
+                // If it already has an embed code for the same link_url
                 // No need to get it again
                 if( $_.getObj( $scope.$parent, 'post.link_url' ) == $scope.link_url &&
                     $_.getObj( $scope.$parent, 'post.link_url_embed' ) != false ){
@@ -129,12 +123,13 @@ postworld.controller('pwOEmbedController',
                 $pwData.wp_ajax('ajax_oembed_get', vars ).then(
                     // Success
                     function(response) {    
-                        $scope.$parent.oEmbedStatus[$scope.link_ur] = "done";
+                        $scope.$parent.oEmbedStatus[$scope.link_url] = "done";
 
                         // If not data, return false
                         if ( response.data == false )
                             return false;
 
+                        $log.debug( 'GOT EMBED CODE' );
                         $scope.setEmbedCode( response.data )
 
                     },
@@ -147,15 +142,17 @@ postworld.controller('pwOEmbedController',
 
 
             $scope.setEmbedCode = function( embedCode ){
-                $scope.$parent.oEmbed = $sce.trustAsHtml( embedCode );
+                
+                var sceEmbedCode = $sce.trustAsHtml(embedCode); //  
+
+                $scope.$parent.oEmbed = sceEmbedCode;
                 $scope.$parent.oEmbedCode = embedCode; 
 
                 // Check if there is a post link_url associated with the parent scope post
                 // And if it's the same as the a post link_url
                 if( $_.getObj( $scope.$parent, 'post.link_url' ) == $scope.link_url ){
+                    
                     // Add the embed code to 'post.link_url_embed'
-                    var sceEmbedCode = $sce.trustAsHtml( embedCode );
-
                     $scope.$parent.post.link_url_embed = sceEmbedCode;
 
                     // Get Feed ID
@@ -165,7 +162,8 @@ postworld.controller('pwOEmbedController',
                     // Check if there is a feed associated with the post
                     if( _.isString( feedId ) ){
                         // Store it in the central feed object
-                        $pwPosts.mergeFeedPost( feedId, postId, { link_url_embed: sceEmbedCode } )
+                        $pwPosts.mergeFeedPost( feedId, postId, { link_url_embed: sceEmbedCode } );
+                        $log.debug( "MERGE FEED POST : SCE EMBED CODE : ", sceEmbedCode );
                     }
 
                 }
@@ -176,13 +174,5 @@ postworld.controller('pwOEmbedController',
             $scope.$watch('link_url', function(value) {
                 $scope.oEmbedGet();
             });
-
-
-            // MAKE THIS STORE THE EMBED CODE AS POST.LINK_URL_EMBED_CODE IN THE CENTRAL FEEDS
-            // IF THERE IS A POST AND A FEED
-            // WORKS BY CHECKING PARENT.POST, GET THE ID AND FEED, THEN STORE IT THERE
-            // ALSO BEFORE RUNING OEMBED GET, IT CHECKS IF THERE IS A PREVIOUS EMBED CODE SAVED IN THE POST OBJECT
-            // CHECK IF IT'S THE SAME AS LINK_URL FIRST 
-
-            
+     
 }]);
