@@ -295,7 +295,7 @@ postworld.controller('pwModalInstanceCtrl',
 			//History.replaceState( {}, $scope.post.post_title, $scope.post.post_permalink );
 			
 			///// USE THIS ONE - WITH PHP TAG IN THE PAGE WHICH SWITCHES ROUTING TO HTML5 MODE /////
-			$location.path( $scope.post.post_permalink );
+			//$location.path( $scope.post.post_permalink );
 			
 			//$timeout( function(){
 			//	History.replaceState( {}, $scope.post.post_title, $scope.post.post_permalink );
