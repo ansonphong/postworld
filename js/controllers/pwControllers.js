@@ -22,8 +22,8 @@ postworld.directive( 'pwPost', [ function( $scope ){
 
 
 postworld.controller('postController',
-	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout",
-	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout ) {
+	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", "$compile",
+	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout, $compile ) {
 
 	// If $scope.post doesn't exist
 	// Get it from $window.post
@@ -43,10 +43,29 @@ postworld.controller('postController',
 
 	// Trust the post_content as HTML
 	// Otherwise seed it as an empty string
-	$scope.$watch( 'post.post_content', function(){
+	$scope.$watchCollection( 'post', function(){
 		if( $_.objExists( $scope, 'post.post_content' )){
-			$scope.post.post_content = ( _.isString( $scope.post.post_content ) ) ?
-				$sce.trustAsHtml( $scope.post.post_content ) : "";
+
+			$log.debug( typeof $scope.post.post_content );
+
+			if( !_.isObject( $scope.post.post_content ) &&
+				_.isString( $scope.post.post_content ) ){
+
+				var content = $scope.post.post_content; //$compile(angular.element($scope.post.post_content));
+				//content($scope);
+				//$compile(content)($scope);
+
+				$scope.post.post_content =
+					$sce.trustAsJs(
+						$sce.trustAsHtml(
+							content
+						)
+					);
+					
+
+
+			}
+
 		}
 	});
 
@@ -216,6 +235,8 @@ postworld.controller('postController',
 			var updatedPost = $pwPosts.getFeedPost( vars.feedId, vars.postId );
 			// Update the local scope post with foreach to avoid two-way binding
 			angular.forEach( updatedPost, function( value, key ){
+				if( key == 'post_content' )
+					value = $sce.trustAsHtml(value);
 				$scope.post[key] = value;
 			});
 		}
@@ -254,6 +275,35 @@ postworld.controller('postController',
 	
 
 }]);
+
+
+
+postworld.directive( 'pwCompile', [ '$log', '$compile', '$sce', function(  $log, $compile, $sce ){
+	return {
+		restrict: 'AE',
+		//controller: 'postController',
+		link: function( $scope, element, attrs ){
+			
+			$log.debug( "PW COMPILE ELEMENT : ", element );
+
+			// $compile( $sce.trustAsJs( element[0].innerHTML ) )($scope);
+
+			//$compile( element.contents );
+
+
+			// OBSERVE Attribute
+			/*
+			attrs.$observe('postRequiredFields', function( value ) {
+				$scope.postRequiredFields = $scope.$eval( value );
+			});
+			*/
+		}
+	};
+}]);
+
+
+
+
 
 
 
