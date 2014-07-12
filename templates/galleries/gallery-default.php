@@ -1,13 +1,9 @@
 <!-- POSTWORLD GALLERY SHORTCODE : <?php echo $gallery['instance']; ?> -->
 <script>
-	alert( "WORKS IN SCRIPT TAG" );
-	
-	postworld.controller( 'pwGalleryInstance_<?php echo $gallery['instance']; ?>',
+	postworld.controller( '<?php echo $gallery['instance']; ?>',
 		[ '$scope', '_', '$pw', 'pwImages', 'pwPosts', 'pwModal',
 		function( $scope, $_, $pw, $pwImages, $pwPosts, $pwModal ){
 		
-		alert( "WORKS IN CONTROLLER" );
-
 		var instance = "<?php echo $gallery['instance']; ?>";
 		var galleryInstance = "gallery-" + instance;
 		var galleryPosts = <?php echo json_encode( $gallery['posts'] ); ?>;
@@ -16,10 +12,12 @@
 		$scope.feed = $pwPosts.getFeed( galleryInstance );
 
 	}]);
+	registerController( "postworld", "<?php echo $gallery['instance']; ?>" );
 </script>
+
 <div
 	class="pw-gallery-shortcode"
-	ng-controller="pwGalleryInstance_<?php echo $gallery['instance']; ?>">
+	ng-controller="<?php echo $gallery['instance']; ?>">
 	<hr>
 	<masonry
 		column-width=".grid-sizer"

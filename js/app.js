@@ -39,9 +39,12 @@ var depInject = [
 
 var postworld = angular.module('postworld', depInject );
 
-//postworld.constant( '$postworld', { version: "1.5.1" } );
+var controllerProvider;
 
-postworld.config(function ($routeProvider, $locationProvider, $provide, $logProvider) {   
+postworld.config(function ($routeProvider, $locationProvider, $provide, $logProvider, $controllerProvider ) {   
+
+	// Pass $controllerProvider so that vanilla JS can init new controllers
+	controllerProvider = $controllerProvider;
 
 	var plugin_url = jsVars.pluginurl;
 
@@ -168,6 +171,7 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 
 	//$locationProvider.html5Mode(true);
 
+
 });
 
 
@@ -189,8 +193,27 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
    //$rootScope.current_user = $window.pwGlobals.current_user;
    //$log.debug('Current user: ', $rootScope.current_user );
 
-});
+
    
+
+});
+
+
+///// FUNCTION : REGISTER CONTROLLER AFTER BOOTSTRAP /////
+function registerController(moduleName, controllerName) {
+    // Here I cannot get the controller function directly so I
+    // need to loop through the module's _invokeQueue to get it
+    var queue = angular.module(moduleName)._invokeQueue;
+    for(var i=0;i<queue.length;i++) {
+        var call = queue[i];
+        if(call[0] == "$controllerProvider" &&
+           call[1] == "register" &&
+           call[2][0] == controllerName) {
+            controllerProvider.register(controllerName, call[2][1]);
+        }
+    }
+}
+
 
 
 /*

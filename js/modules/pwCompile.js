@@ -8,16 +8,16 @@ angular.module('pw.compile', [], ['$compileProvider', function($compileProvider)
 	// to the developer to ensure that the HTML is safe to insert into the DOM.
 	//
 	// Usage:
-	//     HTML: <div pw-compile-unsafe="templateHtml"></div>
+	//     HTML: <div pw-compile-code="templateHtml"></div>
 	//     JS: $scope.templateHtml = '<a ng-onclick="doSomething()">Click me!</a>';
 	//     Result: DIV will contain an anchor that will call $scope.doSomething() when clicked.
-	$compileProvider.directive('pwCompileUnsafe', ['$compile', function($compile) {
+	$compileProvider.directive('pwCompileCode', ['$compile', function($compile) {
 		return function(scope, element, attrs) {
 
 			scope.$watch(
 				function(scope) {
 					// watch the 'compile' expression for changes
-					return scope.$eval( attrs.pwCompileUnsafe );
+					return scope.$eval( attrs.pwCompileCode );
 				},
 				function(value) {
 					// when the 'compile' expression changes
