@@ -41,33 +41,28 @@ postworld.controller('postController',
 	if( typeof $window.pwPostFunctions === "function" )
 		$window.pwPostFunctions( $scope );
 
-	// Trust the post_content as HTML
-	// Otherwise seed it as an empty string
+
+	// Watch for changes to the post
 	$scope.$watchCollection( 'post', function(){
+
+		///// POST CONTENT /////
 		if( $_.objExists( $scope, 'post.post_content' )){
-
-			$log.debug( typeof $scope.post.post_content );
-
-			if( !_.isObject( $scope.post.post_content ) &&
+			if( !_.isObject( $scope.post.post_content_html ) &&
 				_.isString( $scope.post.post_content ) ){
-
-				var content = $scope.post.post_content; //$compile(angular.element($scope.post.post_content));
-				//content($scope);
-				//$compile(content)($scope);
-
-				$scope.post.post_content =
-					$sce.trustAsJs(
-						$sce.trustAsHtml(
-							content
-						)
-					);
-					
-
-
+				// Create an additional key 'post_content_html'
+				$scope.post.post_content_html = $sce.trustAsHtml( $scope.post.post_content );
+				// If the post has a feed 
+				if( _.isString( $_.getObj( $scope, 'post.feed.id' ) ) &&
+					$_.objExists( $scope, 'post.ID' ) ){
+					// Add it to the central feed
+					$pwPosts.mergeFeedPost( $scope.post.feed.id, $scope.post.ID, { post_content_html: $scope.post.post_content_html }  );
+				}
 			}
-
 		}
+
+
 	});
+
 
 	// POST META
 	if( !$_.objExists( $scope, 'post.meta' ) )
@@ -235,8 +230,6 @@ postworld.controller('postController',
 			var updatedPost = $pwPosts.getFeedPost( vars.feedId, vars.postId );
 			// Update the local scope post with foreach to avoid two-way binding
 			angular.forEach( updatedPost, function( value, key ){
-				if( key == 'post_content' )
-					value = $sce.trustAsHtml(value);
 				$scope.post[key] = value;
 			});
 		}

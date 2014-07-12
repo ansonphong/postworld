@@ -334,6 +334,10 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Directives-pwWindow',
 			WP_PLUGIN_URL.'/postworld/js/directives/pwWindow.js', $angularDep );
 
+		// MODULES
+		wp_enqueue_script( 'pw-Modules-Compile',
+			WP_PLUGIN_URL.'/postworld/js/modules/pwCompile.js', $angularDep );
+
 		// WIZARD
 		wp_enqueue_script( 'pw-Wizard',
 			plugins_url().'/postworld/js/components/pwWizard.js', $angularDep );

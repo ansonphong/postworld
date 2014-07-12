@@ -245,6 +245,7 @@ postworld.controller('pwModalInstanceCtrl',
 					$scope.previousPost();
 					break;
 			}
+			
 			$scope.$apply();
 		}
 		
