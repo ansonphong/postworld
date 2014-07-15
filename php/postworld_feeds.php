@@ -50,9 +50,7 @@ function pw_feed_outline ( $pw_query_args ){
 	$post_ids = (array) $query_results->posts;
 
 	return $post_ids; // Array of post IDs
-
 	//return array( 220034, 216613 );
-
 }
 
 /*
