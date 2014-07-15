@@ -173,7 +173,6 @@ postworld.controller('pwFeedController',
 			}
 		};
 		
-
 		$scope.resetFeedData = function () {
 			// Reset Feed Data
 			pwData.feeds[$scope.feed] = {};
@@ -181,7 +180,7 @@ postworld.controller('pwFeedController',
 				pwData.feeds[$scope.feed].feed_outline = pwData.feed_settings[$scope.feed].feed_outline;
 				// truncate based on max_posts
 				var max = pwData.feed_settings[$scope.feed].max_posts;
-				if (max <pwData.feed_settings[$scope.feed].feed_outline.length) {					
+				if ( max < pwData.feed_settings[$scope.feed].feed_outline.length ) {					
 					pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
 				}
 					 
@@ -206,10 +205,10 @@ postworld.controller('pwFeedController',
 					var len = response.data.feed_outline.length;
 					response.data.feed_outline = response.data.feed_outline.splice(offset,len);
 					// truncate response posts in case of existing offset for load-feed only															
-					response.data.post_data = response.data.post_data.splice(offset,len); 
+					response.data.posts = response.data.posts.splice(offset,len); 
 					$log.debug('FEED DATA : ' + pwData.feed_settings[$scope.feed].feed_id, response.data );
-					//response.data.post_data = response.data.post_data.splice(offset,len); 
-					// PHONG : replace post with post_data 					
+					//response.data.posts = response.data.posts.splice(offset,len); 
+					// PHONG : replace post with posts 					
 				}
 			}
 			// Insert Response in Feed Data
@@ -220,11 +219,11 @@ postworld.controller('pwFeedController',
 			if (max <=response.data.feed_outline.length) {					
 				pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
 			}
-			pwData.feeds[$scope.feed].posts = response.data.post_data;						
-			pwData.feeds[$scope.feed].loaded = response.data.post_data.length;	
+			pwData.feeds[$scope.feed].posts = response.data.posts;						
+			pwData.feeds[$scope.feed].loaded = response.data.posts.length;	
 
 			// Count Length of loaded and feed_outline
-			pwData.feeds[$scope.feed].count_loaded = response.data.post_data.length;						
+			pwData.feeds[$scope.feed].count_loaded = response.data.posts.length;						
 			pwData.feeds[$scope.feed].count_feed_outline = pwData.feeds[$scope.feed].feed_outline.length;
 
 			// Set Feed load Status
@@ -269,7 +268,8 @@ postworld.controller('pwFeedController',
 		};
 
 		$scope.pwLiveFeed = function() {
-								
+			
+
 			if (!$scope.args.feed_query)
 				$scope.args.feed_query = {};
 
@@ -281,11 +281,17 @@ postworld.controller('pwFeedController',
 			// get Query String Parameters,
 			var qsArgs = $scope.getQueryStringArgs();			
 			// We need to work with a clone of the args value
-			var argsValue = JSON.parse(JSON.stringify($scope.args));
-			var qsArgsValue = JSON.parse(JSON.stringify(qsArgs));
+			var argsValue = JSON.parse( JSON.stringify( $scope.args ) );
+			
+			var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
+
+			$log.debug( "LIVE FEED (init) : ID : " + argsValue.feed_id, argsValue );
+
 			pwData.pw_live_feed(argsValue,qsArgsValue).then(
 				// Success
 				function(response) {
+
+					$log.debug( "LIVE FEED (response) : ID : " + response.data.feed_id, response.data );
 
 					// Prevent Flicker when Template Loading
 					$timeout( function(){
@@ -293,11 +299,11 @@ postworld.controller('pwFeedController',
 					}, 100 );
 
 					// $log.debug('pwFeedController.pwLiveFeed',$scope.args.feed_query.order_by,$scope.args.feed_query.order);						
-					if (response.status === undefined) {
-						console.log('response format is not recognized');
+					if ( response.status === undefined ) {
+						$log.error('LIVE FEED : ID : ' + argsValue.feed_id + ' : response format is not recognized');
 						return;
 					}
-					if (response.status==200) {
+					if ( response.status == 200 ) {
 						// Check if data exists
 						if (!(response.data instanceof Array) ) {
 
@@ -305,6 +311,10 @@ postworld.controller('pwFeedController',
 							$scope.fillFeedData( response );
 							$scope.addFeedMeta();
 							$scope.posts = pwData.feeds[$scope.feed].posts;
+
+							//response.data.posts = {};
+
+							
 
 							$scope.injectAds();
 							

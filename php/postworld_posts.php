@@ -26,7 +26,6 @@ function pw_get_posts( $post_ids, $fields='all' ) {
 
 	// Return Array of post data
 	return $posts;
-
 }
 
 ////////// GET POST DATA //////////
@@ -86,7 +85,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'related_post',
 		);
 
-
 	////////// FIELDS MODEL //////////
 	$preview_fields =	array(
 		'ID',
@@ -104,17 +102,15 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'image(stats)',
 		'image(tags)',
 		'post_points',
+		'rank_score',
 		'edit_post_link',
-		'post_categories_list',
-		'post_tags_list',
 		'taxonomy(all)',
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
-		'avatar(small,48)',
+		'avatar(small,96)',
 		'link_format',
 		'post_format',
 		'time_ago',
 		'post_meta(all)',
-		'rank_score',
 		'fields',
 		);
 
@@ -124,6 +120,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_content',
 		'post_type_labels',
 		'gallery(ids,posts)',
+		'post_categories_list',
+		'post_tags_list',
 		);
 	
 	$micro_fields =	array(
@@ -648,9 +646,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						$hard_crop = 1;
 
 					// Process custom image size, return url
-					$post['image'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
-					$post['image'][$image_handle]['width'] = (int)$thumb_width;
-					$post['image'][$image_handle]['height'] = (int)$thumb_height;
+					$post['image']['sizes'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+					$post['image']['sizes'][$image_handle]['width'] = (int)$thumb_width;
+					$post['image']['sizes'][$image_handle]['height'] = (int)$thumb_height;
 				}
 
 			} // END foreeach
