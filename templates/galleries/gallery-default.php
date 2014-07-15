@@ -13,6 +13,8 @@
 
 	}]);
 	registerController( "postworld", "<?php echo $gallery['instance']; ?>" );
+	// Rename this 'pwRegisterController', have first value the controller name,
+	// Second value optional for module, default set to 'postworld'
 </script>
 
 <div
