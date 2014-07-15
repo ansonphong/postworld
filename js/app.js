@@ -200,9 +200,12 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
 
 
 ///// FUNCTION : REGISTER CONTROLLER AFTER BOOTSTRAP /////
-function registerController(moduleName, controllerName) {
+function pwRegisterController( controllerName, moduleName ) {
     // Here I cannot get the controller function directly so I
     // need to loop through the module's _invokeQueue to get it
+    if( moduleName == null )
+    	moduleName = "postworld";
+    
     var queue = angular.module(moduleName)._invokeQueue;
     for(var i=0;i<queue.length;i++) {
         var call = queue[i];

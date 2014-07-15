@@ -6,12 +6,11 @@ function pw_gallery_shortcode( $atts, $content = null, $tag ) {
 
 	// Extract Shortcode Attributes, set defaults
 	extract( shortcode_atts( array(
-		"template"		=> "gallery-default",
+		"template"		=> "gallery-inline",
 		"id" 			=> hash( "md5", "1" ),
 		"ids"			=> "", // The IDs of the attachments
 		"class" 		=> "gallery-slider",
 	), $atts ) );
-
 
 	// Setup Feed Query
 	$gallery_args = array(
@@ -33,7 +32,7 @@ function pw_print_gallery( $gallery ){
 	// Localize Variables
 
 	///// Set Defaults /////
-	$default_template = "gallery-default";
+	$default_template = "gallery-inline";
 
 	// Re-iterate defaults incase the function is called outside a shortcode
 	$gallery_defaults = array(
@@ -110,7 +109,7 @@ function pw_print_gallery( $gallery ){
 	include $template;
 	$content = ob_get_contents();
 	ob_end_clean();
-	
+
 	//$content = "GALLERY TEMPLATE : " . json_encode( $templates ) . " // TEMPLATE : " . json_encode( $template );
 
 	// Return with everything in a string

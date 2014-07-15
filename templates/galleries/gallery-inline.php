@@ -3,7 +3,6 @@
 	postworld.controller( '<?php echo $gallery['instance']; ?>',
 		[ '$scope', '_', '$pw', 'pwImages', 'pwPosts', 'pwModal',
 		function( $scope, $_, $pw, $pwImages, $pwPosts, $pwModal ){
-		
 		var instance = "<?php echo $gallery['instance']; ?>";
 		var galleryInstance = "gallery-" + instance;
 		var galleryPosts = <?php echo json_encode( $gallery['posts'] ); ?>;
@@ -12,9 +11,7 @@
 		$scope.feed = $pwPosts.getFeed( galleryInstance );
 
 	}]);
-	registerController( "postworld", "<?php echo $gallery['instance']; ?>" );
-	// Rename this 'pwRegisterController', have first value the controller name,
-	// Second value optional for module, default set to 'postworld'
+	pwRegisterController( "<?php echo $gallery['instance']; ?>" );
 </script>
 
 <div
