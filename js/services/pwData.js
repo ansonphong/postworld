@@ -107,7 +107,6 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 			var feedSettings = feed_settings[args.feed_id];
 			feedSettings.finalFeedQuery = fargs.feed_query;
 			var params = {'args':fargs};
-			// $log.debug('pwData.pw_live_feed',fargs);
 			return this.wp_ajax('pw_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {

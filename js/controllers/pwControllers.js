@@ -239,17 +239,19 @@ postworld.controller('postController',
 	// When the post or the required fields changes
 	// Check to make sure all the required fields are present
 	$scope.$watchCollection( '[ postRequiredFields, post.ID ]', function(){
-		$log.debug( "DIRECTIVE : pwPost -> postRequiredFields : ", $scope.postRequiredFields );
 		
 		if( $_.objExists( $scope, 'post.feed.id' ) &&
 			$_.objExists( $scope, 'post.ID' ) &&
-			$_.objExists( $scope, 'postRequiredFields' ) )
+			$_.objExists( $scope, 'postRequiredFields' ) &&
+			$_.getObj( $scope, 'postRequiredFields' ) != null ){
+			
+			$log.debug( "DIRECTIVE : pwPost -> postRequiredFields : ", $scope.postRequiredFields );
 			$pwPosts.requiredFields({
 					feedId: $scope.post.feed.id,
 					postId: $scope.post.ID,
 					fields: $scope.postRequiredFields
 				});
-
+		}	
 	});
 	
 	///// ACTION : LOAD POST DATA /////

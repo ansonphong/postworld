@@ -26,7 +26,6 @@ function pw_get_posts( $post_ids, $fields='all' ) {
 
 	// Return Array of post data
 	return $posts;
-
 }
 
 ////////// GET POST DATA //////////
@@ -103,17 +102,15 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'image(stats)',
 		'image(tags)',
 		'post_points',
+		'rank_score',
 		'edit_post_link',
-		'post_categories_list',
-		'post_tags_list',
 		'taxonomy(all)',
 		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
-		'avatar(small,48)',
+		'avatar(small,96)',
 		'link_format',
 		'post_format',
 		'time_ago',
 		'post_meta(all)',
-		'rank_score',
 		'fields',
 		);
 
@@ -123,6 +120,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_content',
 		'post_type_labels',
 		'gallery(ids,posts)',
+		'post_categories_list',
+		'post_tags_list',
 		);
 	
 	$micro_fields =	array(

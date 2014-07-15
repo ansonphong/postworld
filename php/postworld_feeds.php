@@ -1,94 +1,59 @@
 <?php
 
 function pw_live_feed ( $args ){
-	/*
-	
-	Description:
-
-	Used for custom search querying, etc.
-	Does not access wp_postworld_feeds caches at all
-	Helper function for the pw_live_feed() JS method
-	Parameters: $args
-	
-	feed_id : string
-	
-	preload : integer => Number of posts to fetch data and return as post_data
-	feed_query : Array
-	pw_query() Query Variables
-	
-	 
-	Process:
-	
-	Generate return feed_outline , with pw_feed_outline( $args[feed_query] ) method
-	Generate return post data by running the defined preload number of the first posts through pw_get_posts( feed_outline, $args['feed_query']['fields'] )
-	Usage:
-	
-	$args = array (
-	     'feed_id' => {{string}},
-	     'preload'  => {{integer}}
-	     'feed_query' => array(
-	          // pw_query args    
-	     )
-	)
-	$live_feed = pw_live_feed ( *$args* );
-	return : Object
-	
-	array(
-	    'feed_id' => {{string}},
-	    'feed_outline' => '12,356,3564,2362,236',
-	    'loaded' => '12,356,3564',
-	    'preload' => {{integer}},
-	    'post_data' => array(), // Output from pw_get_posts() based on feed_query
-	)
-	 *  
-	 
-	• Helper function for the pw_live_feed() JS method
-	• Used for custom search querying, etc.
-	• Does not access wp_postworld_feeds caches at all
-
-	INPUT :
-	$args = array (
-		'feed_id'		=> string,
-		'preload'		=> integer,
-		'feed_query'	=> array( pw_query )
-	)
-	*/
 
 	extract($args);
+
+	// Defaults
+	if( !isset( $preload ) )
+		$preload = 10;
+
+	// Sanitize
+	$preload = (int) $preload;
 
 	// Get the Feed Outline
 	$feed_query = $args["feed_query"];
 	$feed_outline = pw_feed_outline( $feed_query );
 	
-	// Select which posts to preload
-	$preload_posts = array_slice( $feed_outline, 0, $preload ); // to get top post ids
+	if( count( $feed_outline ) > 0 ){
+		// Select which posts to preload
+		$preload_posts = array_slice( $feed_outline, 0, $preload );
+		
+		// Preload selected posts
+		$posts = pw_get_posts($preload_posts, $feed_query["fields"] );
 	
-	// Preload selected posts
-	$post_data = pw_get_posts($preload_posts, $feed_query["fields"] );
+	}
+	else{
+		$posts = array();
+		$preload_posts = array();
+	}
 	
-	return (array("feed_id"=>$args["feed_id"], "feed_outline"=>$feed_outline, "loaded"=>$preload_posts,"preload"=>count($post_data),"post_data"=>$post_data ));
+	return array(
+		"feed_id" => 			$args["feed_id"],
+		"feed_query" => 		$args["feed_query"],
+		"feed_outline" => 		$feed_outline,
+		"feed_outline_json" => 	json_encode($feed_outline),
+		"feed_outline_count" =>	count( $feed_outline ),
+		"loaded" => 			$preload_posts,
+		"preload" => 			count($posts),
+		"preload_posts" => 		$preload_posts,
+		"posts" =>	 			$posts,
+		);
 	
 }
-
-
 
 function pw_feed_outline ( $pw_query_args ){
 	// • Uses pw_query() method to generate an array of post_ids based on the $pw_query_args
 	
 	$pw_query_args["fields"] = "ids";
-	//echo "<br><br>";
-	//print_r($pw_query_args);
-	//echo json_encode($pw_query_args);
-	//echo "<br><br>";
-	$post_array = pw_query($pw_query_args); // <<< TODO : Flatten from returned Object to Array of IDs
-	//echo "<br><br>";
-	//print_r($post_array);
-	$post_ids  = $post_array->posts;
-	
-	//print_r($post_ids);
-	return $post_ids; // Array of post IDs
-}
+	$query_results = pw_query( $pw_query_args );
+	$post_ids = (array) $query_results->posts;
 
+	return $post_ids; // Array of post IDs
+
+	//return array( 220034, 216613 );
+
+}
 
 /*
 1-pw_get_templates
@@ -225,36 +190,11 @@ function pw_get_feed ( $feed_id ){
 }
   
 function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
-	/*
-	 Parameters:
-
-		$feed_id : string
-		
-		$preload : integer (optional)('0' default)
-		
-		The number of posts to pre-load with post_data
-		Process:
-		
-		Return an object containing all the columns from the Feeds table
-		If $preload (integer) is provided, then use pw_get_posts() on that number of the first posts in the feed_outline , return in post_data Object
-		Use fields value from feed_query column under key fields
-		return : Array
-		
-		array(
-		    'feed_id' => {{string}},
-		    'feed_query' => {{array}},
-		    'time_start' => {{integer/timestamp}},
-		    'time_end' => {{integer/timestamp}},
-		    'timer' => {{milliseconds}},
-		    'feed_outline' => {{array (of post IDs)}},
-		    'post_data' => {{array (of post data)}}
-		)
-	 */
 	
 	$feed_row = (array) pw_get_feed($feed_id);
 	if($feed_row){
 		$feed_row['feed_outline'] = array_map("intval", explode(",", $feed_row['feed_outline']));
-		
+
 		if($preload > 0){
 			// Get the top preload post IDs
 			$preload_posts = array_slice( $feed_row['feed_outline'], 0, $preload ); 
@@ -265,7 +205,7 @@ function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
 				$fields = $feed_query['fields'];
 			}
 
-			$feed_row['post_data'] = pw_get_posts($preload_posts,$fields);
+			$feed_row['posts'] = pw_get_posts($preload_posts,$fields);
 		}
 
 	}
@@ -283,7 +223,7 @@ function pw_print_feed( $args ){
 		// LOAD A CACHED FEED
 		// Run Postworld Load Feed
 		$load_feed = pw_load_feed( $args['feed_id'], $args['posts'], $args['fields'] );
-		$posts = $load_feed['post_data'];
+		$posts = $load_feed['posts'];
 
 	} else if( isset($args['feed_query']) ) {
 		
@@ -319,10 +259,10 @@ function pw_print_feed( $args ){
 	$post_html = "";
 	
 	// Iterate through each provided post
-	foreach( $posts as $post_data ){
+	foreach( $posts as $post ){
 
 		// ID is a required field, to determine the post template
-		$post_id = $post_data['ID'];
+		$post_id = $post['ID'];
 
 		// Get the template for this post
 		if( isset($args['view']) ){
@@ -336,8 +276,8 @@ function pw_print_feed( $args ){
 		$h2o = new h2o($template_path);
 
 		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
-		$pw_post['post'] = $post_data;
-		$pw_post['post_json'] = json_encode($post_data);
+		$pw_post['post'] = $post;
+		$pw_post['post_json'] = json_encode($post);
 
 		// Add rendered HTML to the return data
 		$post_html .= $h2o->render($pw_post);
