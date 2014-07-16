@@ -10,7 +10,7 @@
 
 function pw_get_obj( $obj, $key ){
 	// Checks to see if a key exists in an object,
-	// and returns it if it does exist.
+	// and returns it if it does exist. Otherwise return false.
 
 	/*	PARAMETERS:
 		$obj 	= 	[array]
@@ -288,7 +288,9 @@ function pw_get_wp_postmeta($vars){
 	*/
 
 	extract($vars);
-	$meta_key = pw_postmeta_key;
+
+	if( !isset( $vars['meta_key'] ) )
+		$meta_key = pw_postmeta_key;
 
 	///// USER ID /////
 	$user_id = pw_check_user_post( $post_id );

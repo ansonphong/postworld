@@ -52,6 +52,10 @@ function pw_shortcode_example( $string, $echo = true ){
 
 }
 
+function pw_empty_shortcode(){
+	return "";
+}
+
 /////////////// BASIC SHORTCODES //////////
 // BLOCKS
 add_shortcode( 'block', 'pw_general_shortcode' );

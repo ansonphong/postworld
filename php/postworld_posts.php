@@ -150,6 +150,16 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	else if ($fields == 'micro')
 		$fields = $micro_fields;
 
+
+	///// ADD ACTION HOOK : PW GET POST INIT /////
+	do_action( 'pw_get_post_init',
+		array(
+			'post_id' => $post_id,
+			'fields' => $fields,
+			'mode' => $mode,
+			)
+		);
+
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
 	if ( !$viewer_user_id ){
@@ -175,26 +185,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	$get_post = get_post($post_id, ARRAY_A);
 	foreach ($get_post as $key => $value) {
 		if( in_array($key, $fields) ){
-			$post[$key] = $value;
-
-			// Condition Post Content
-			if ( $key == 'post_content' && $mode == 'view' ){
-				///// CONTENT FILTERING /////
-
-				// oEmbed URLs
-				$post[$key] = pw_embed_content($post[$key]);
-
-				// Apply Shortcodes
-				//$post[$key] = do_shortcode($post[$key]);
-
-				// Apply AutoP
-				//$post[$key] = wpautop($post[$key]);
-
-				// Apply all content filters
-				$post[$key] = apply_filters('the_content', $post[$key]);
-
-			}
-			
+			$post[$key] = $value;	
 		}
 	}
 
@@ -656,7 +647,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		} // END if
 
 
-
 	////////// GALLERY //////////
 		// Extract meta fields
 		$gallery_fields = extract_linear_fields( $fields, 'gallery', true );
@@ -794,13 +784,58 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	} // END IF
 
 	///// FIELDS /////
-	if( in_array( 'fields', $fields ) ){
-		$post['fields'] = $fields;
-	}
+		if( in_array( 'fields', $fields ) ){
+			$post['fields'] = $fields;
+		}
+
+	///// ADD ACTION HOOK : PW GET POST CONTENT /////
+		do_action( 'pw_get_post_content',
+			array(
+				'post_id' => $post_id,
+				'fields' => $fields,
+				'mode' => $mode,
+				'post'	=>	$post,
+				)
+			);
+
+	global $dev;
+	if( !empty($dev) )
+		$post['dev'] = $dev;
+
+	///// POST CONTENT /////
+	// Condition Post Content
+		if ( in_array( 'post_content', $fields ) && $mode == 'view' ){
+			///// CONTENT FILTERING /////
+
+			// oEmbed URLs
+			$post['post_content'] = pw_embed_content($post['post_content']);
+			// Apply Shortcodes
+			//$post[$key] = do_shortcode($post[$key]);
+
+			// Apply AutoP
+			//$post[$key] = wpautop($post[$key]);
+
+			// Apply all content filters
+			$post['post_content'] = apply_filters('the_content', $post['post_content']);
+		}
+
+	///// ADD ACTION HOOK : PW GET POST COMPLETE /////
+		do_action( 'pw_get_post_complete',
+			array(
+				'post_id' => 	$post_id,
+				'fields' => 	$fields,
+				'mode' => 		$mode,
+				'post'	=>		$post,
+				)
+			);
+
+	
 
 	return $post;
 
 }
+
+
 
 function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	
@@ -850,7 +885,6 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			
 			}
 		}
-
 
 		///// ADD POSTWORLD META FIELDS //////
 

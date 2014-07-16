@@ -63,8 +63,6 @@ function pw_print_gallery( $gallery ){
 		$templates['galleries'][$template_id] :
 		$templates['galleries'][$default_template];
 
-
-
 	///// SETUP QUERY /////
 	// This will be problematic when doing a feed
 	// Pass in the Post ID Elsewhere ??
