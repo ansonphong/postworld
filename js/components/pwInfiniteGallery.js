@@ -234,9 +234,6 @@ postworld.directive('infiniteHScroll', [
 
 
 
-
-
-
 ///// INFINITE VERTICAL SCROLL /////
 /* BASED ON : ng-infinite-scroll - v1.0.0 - 2013-05-13 */
 
@@ -306,9 +303,9 @@ postworld.directive('infiniteVScroll', [
 					
 					if (shouldScroll && scrollEnabled) {
 						if ($rootScope.$$phase) {
-							return scope.$eval(attrs.infiniteScroll);
+							return scope.$eval(attrs.scrollAction);
 						} else {
-							return scope.$apply(attrs.infiniteScroll);
+							return scope.$apply(attrs.scrollAction);
 						}
 					} else if (shouldScroll) {
 						return checkWhenEnabled = true;
