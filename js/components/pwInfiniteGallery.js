@@ -102,6 +102,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 
 		// Console
 		$log.debug(
+			"pwInfiniteGallery.galleryGetNext : " +
 			"getPostsCount: " + getPostsCount + " // " + 
 			"galleryPostCount: " + galleryPostCount + " // " + 
 			"galleryDisplayedCount: " + galleryDisplayedCount + " // " + 
@@ -109,18 +110,16 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 			"postsEndIndex: " + postsEndIndex + " // " + 
 			"addPosts: ", addPosts
 			);
-
 	};
 
 }]);
 
 
 
-
 ///// INFINITE HORIZONTAL SCROLL /////
 /* BASED ON : ng-infinite-scroll - v1.0.0 - 2013-05-13 */
 
-postworld.directive('infiniteHScroll', [
+postworld.directive('infiniteXScroll', [
 	'$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log) {
 		return {
 			link: function(scope, elem, attrs) {
@@ -166,6 +165,17 @@ postworld.directive('infiniteHScroll', [
 						containerBottom = container.height() + container.scrollTop();
 						elementBottom = elem.offset().top + elem.height();
 					} else {
+					
+					$log.debug(
+							'container.scrollTop(): ' + container.scrollTop() + ' / ' +
+							'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
+							'container.innerHeight(): ' + container.innerHeight() + ' / ' +
+							'container.innerWidth(): ' + container.innerWidth() + ' / ' +
+							'container[0].scrollWidth: ' + container[0].scrollWidth + ' / ' +
+							'scrollDistance: ' + scrollDistance + ' / ' +
+							'remaining: ' + remaining
+							//, container
+						);
 						containerBottom = container.height();
 						elementBottom = elem.offset().top - container.offset().top + elem.height();
 					}
@@ -177,6 +187,7 @@ postworld.directive('infiniteHScroll', [
 					shouldScroll =  0 >= remaining;
 
 					/*
+						////////// DEV //////////
 						$log.debug(
 							'container.scrollTop(): ' + container.scrollTop() + ' / ' +
 							'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
@@ -237,22 +248,23 @@ postworld.directive('infiniteHScroll', [
 ///// INFINITE VERTICAL SCROLL /////
 /* BASED ON : ng-infinite-scroll - v1.0.0 - 2013-05-13 */
 
-postworld.directive('infiniteVScroll', [
-	'$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log) {
+postworld.directive('infiniteYScroll', [
+	'$rootScope', '$window', '$timeout', '$log', '_', function( $rootScope, $window, $timeout, $log, $_ ) {
 		return {
 			link: function(scope, elem, attrs) {
+
 				var checkWhenEnabled, container, handler, scrollDistance, scrollEnabled;
 				$window = angular.element($window);
 				scrollDistance = 0;
-				if (attrs.infiniteScrollDistance != null) {
-					scope.$watch(attrs.infiniteScrollDistance, function(value) {
+				if (attrs.scrollDistance != null) {
+					scope.$watch(attrs.scrollDistance, function(value) {
 						return scrollDistance = parseInt(value, 10);
 					});
 				}
 				scrollEnabled = true;
 				checkWhenEnabled = false;
-				if (attrs.infiniteScrollDisabled != null) {
-					scope.$watch(attrs.infiniteScrollDisabled, function(value) {
+				if (attrs.scrollDisabled != null) {
+					scope.$watch(attrs.scrollDisabled, function(value) {
 						scrollEnabled = !value;
 						if (scrollEnabled && checkWhenEnabled) {
 							checkWhenEnabled = false;
@@ -260,25 +272,36 @@ postworld.directive('infiniteVScroll', [
 						}
 					});
 				}
+
 				container = $window;
-				if (attrs.infiniteScrollContainer != null) {
-					scope.$watch(attrs.infiniteScrollContainer, function(value) {
-						value = angular.element(value);
-						if (value != null) {
+				$log.debug( "ATTRS.SCROLL CONTAINER", attrs.scrollContainer );
+				if ( attrs.scrollContainer != null && typeof attrs.scrollContainer !== 'undefined' ) {
+					var value = String( attrs.scrollContainer );
+					container = angular.element( attrs.scrollContainer );
+					//$log.debug( "<<<<< attrs.scrollContainer : element >>>>> ", container );
+					/*
+					// Throwing an Error Somehow
+					scope.$watch(attrs.scrollContainer, function(value) {
+						value = angular.element( String( attrs.scrollContainer ) );
+						if ( value != null ) {
 							return container = value;
 						} else {
 							throw new Exception("invalid infinite-scroll-container attribute.");
 						}
 					});
+					*/
 				}
-				if (attrs.infiniteScrollParent != null) {
+				
+				if (attrs.scrollParent != null) {
 					container = elem.parent();
-					scope.$watch(attrs.infiniteScrollParent, function() {
+					scope.$watch(attrs.scrollParent, function() {
 						return container = elem.parent();
 					});
 				}
+
 				handler = function() {
 					var containerBottom, elementBottom, remaining, shouldScroll;
+					
 					if (container[0] === $window[0]) {
 						containerBottom = container.height() + container.scrollTop();
 						elementBottom = elem.offset().top + elem.height();
@@ -287,19 +310,33 @@ postworld.directive('infiniteVScroll', [
 						elementBottom = elem.offset().top - container.offset().top + elem.height();
 					}
 					remaining = elementBottom - containerBottom;
-					shouldScroll = remaining <= container.height() * scrollDistance;
+					shouldScroll = ( remaining <= scrollDistance );
 					
+					/*
+					////////// DEV //////////
+					$log.debug(
+						'container.scrollTop(): ' + container.scrollTop() + ' / ' +
+						'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
+						'container.innerHeight(): ' + container.innerHeight() + ' / ' +
+						'container.innerWidth(): ' + container.innerWidth() + ' / ' +
+						'container[0].scrollHeight: ' + container[0].scrollHeight + ' / ' +
+						'scrollDistance: ' + scrollDistance + ' / ' +
+						'remaining: ' + remaining
+						, container
+					);
+					$log.debug("SCROLLING");
 					$log.debug(
 						'elementBottom: ' + elementBottom + ' / ' +
-						'containerBottom: ' + containerBottom
+						'containerBottom: ' + containerBottom + ' / ' + 
+						'remaining : ' + remaining
 					);
-
 					$log.debug(
 						'shouldScroll: ' + shouldScroll + ' / ' +
 						'remaining: ' + remaining + ' / ' +
 						'container.height(): ' + container.height() + ' / ' +
 						'scrollDistance: ' + scrollDistance
 					);
+					*/
 					
 					if (shouldScroll && scrollEnabled) {
 						if ($rootScope.$$phase) {
@@ -310,15 +347,17 @@ postworld.directive('infiniteVScroll', [
 					} else if (shouldScroll) {
 						return checkWhenEnabled = true;
 					}
-
 				};
+
 				container.on('scroll', handler);
+				//$log.debug( 'infinite-y-scroll : container >>>>> ', container );			
+
 				scope.$on('$destroy', function() {
 					return container.off('scroll', handler);
 				});
 				return $timeout((function() {
-					if (attrs.infiniteScrollImmediateCheck) {
-						if (scope.$eval(attrs.infiniteScrollImmediateCheck)) {
+					if (attrs.scrollImmediateCheck) {
+						if (scope.$eval(attrs.scrollImmediateCheck)) {
 							return handler();
 						}
 					} else {
