@@ -143,6 +143,7 @@ postworld.directive('infiniteXScroll', [
 					});
 				}
 				container = $window;
+				/*
 				if (attrs.infiniteScrollContainer != null) {
 					scope.$watch(attrs.infiniteScrollContainer, function(value) {
 						value = angular.element(value);
@@ -153,6 +154,7 @@ postworld.directive('infiniteXScroll', [
 						}
 					});
 				}
+				*/
 				if (attrs.scrollParent != null) {
 					container = elem.parent();
 					scope.$watch(attrs.scrollParent, function() {
@@ -161,6 +163,8 @@ postworld.directive('infiniteXScroll', [
 				}
 				handler = function() {
 					var containerBottom, elementBottom, remaining, shouldScroll;
+					/*
+					///// REMNANTS FROM Y-SCROLL /////
 					if (container[0] === $window[0]) {
 						containerBottom = container.height() + container.scrollTop();
 						elementBottom = elem.offset().top + elem.height();
@@ -179,6 +183,7 @@ postworld.directive('infiniteXScroll', [
 						containerBottom = container.height();
 						elementBottom = elem.offset().top - container.offset().top + elem.height();
 					}
+					*/
 					//remaining = elementBottom - containerBottom;
 					// Vertical Scrolling
 					//shouldScroll =  remaining <= container.height() * scrollDistance;
