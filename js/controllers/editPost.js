@@ -34,10 +34,21 @@ postworld.directive( 'pwEditPost', [ function($scope){
 			attrs.$observe('editMode', function(value) {
 				if( !_.isUndefined( value ) )
 					$scope.initEditPost['editMode'] = value;
-					if( value == 'inline-submit' ){
+					switch( value ){
+						case "inline":
+						case "inline-submit":
+						case "quick":
+						case "quick-edit":
+							$scope.editPostConfig.routing = false;
+							$scope.editPostConfig.autoReload = false;
+							break;
+					}
+					/*
+					if( value == 'inline-submit' || value == 'quick-edit' ){
 						$scope.editPostConfig.routing = false;
 						$scope.editPostConfig.autoReload = false;
 					}
+					*/
 			});
 
 			// OBSERVE Attribute

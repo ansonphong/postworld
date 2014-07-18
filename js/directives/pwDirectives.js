@@ -99,14 +99,62 @@ postworld.directive('pwAutofocus', function($timeout) {
 });
 
 
+/*_   _                        ____ _               
+ | | | | _____   _____ _ __   / ___| | __ _ ___ ___ 
+ | |_| |/ _ \ \ / / _ \ '__| | |   | |/ _` / __/ __|
+ |  _  | (_) \ V /  __/ |    | |___| | (_| \__ \__ \
+ |_| |_|\___/ \_/ \___|_|     \____|_|\__,_|___/___/
+////////////// POSTWORLD HOVER CLASS //////////////*/
+// Adds specified class(es) to an element on mouseover
+// And removes the classes on mouseleave
+// Optional attributes include hover-on-delay and hover-off-delay
+// Which are specified in the number of milliseconds
+// Before the class is added / removed 
 
-/*
-  _                                             
+postworld.directive('pwHoverClass', function ( $timeout ) {
+    return {
+        restrict: 'A',
+        scope: {
+            pwHoverClass: '@',	// classes to add when hovered
+            hoverOnDelay: '@',	// milliseconds
+            hoverOffDelay: '@',	// milliseconds
+        },
+        link: function ( $scope, element, attrs ) {
+        	// mouseIsOver // Variable to track if mouse is currently over
+        	// Prevents the hover class from getting locked on
+        	// In the case that the ON delay is greater than the OFF delay
+        	// And the mouse passes on and off the element in less time than their difference
+        	var mouseIsOver = false;
+
+            element.on('mouseenter', function() {
+            	mouseIsOver = true;
+            	if( _.isUndefined($scope.hoverOnDelay) )
+            		$scope.hoverOnDelay = 0;
+            	$timeout( function(){
+            		if( mouseIsOver == true )
+	            		element.addClass($scope.pwHoverClass);
+            	}, parseInt($scope.hoverOnDelay) );
+            });
+            element.on('mouseleave', function() {
+            	mouseIsOver = false;
+                if( _.isUndefined($scope.hoverOffDelay) )
+            		$scope.hoverOffDelay = 0;
+                $timeout( function(){
+            		element.removeClass($scope.pwHoverClass);
+            	}, parseInt($scope.hoverOffDelay) );
+            });
+        }
+    };
+})
+
+
+
+/*_                                             
  | |    __ _ _ __   __ _ _   _  __ _  __ _  ___ 
  | |   / _` | '_ \ / _` | | | |/ _` |/ _` |/ _ \
  | |__| (_| | | | | (_| | |_| | (_| | (_| |  __/
  |_____\__,_|_| |_|\__, |\__,_|\__,_|\__, |\___|
-									 |___/             |___/      
+									 |___/     
 ////////// POSTWORLD LANGUAGE ACCESS //////////*/
 postworld.directive( 'pwLanguage', [function(){
 		return { 
