@@ -12,6 +12,20 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
+
+//---------- PW GET MENUS ----------//
+function pw_get_menus_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_menus( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+//add_action("wp_ajax_nopriv_pw_get_menus", "pw_set_option_obj_ajax");
+add_action("wp_ajax_pw_get_menus", "pw_get_menus_ajax");
+
+
 //---------- PW SET OPTION OBJECT ----------//
 function pw_set_option_obj_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

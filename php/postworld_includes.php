@@ -335,6 +335,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Directives-pwImage',
 			WP_PLUGIN_URL.'/postworld/js/directives/pwImage.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Directives-pwMenu',
+			WP_PLUGIN_URL.'/postworld/js/directives/pwMenu.js', $angularDep );
+
 		wp_enqueue_script( 'pw-Directives-pwWindow',
 			WP_PLUGIN_URL.'/postworld/js/directives/pwWindow.js', $angularDep );
 
