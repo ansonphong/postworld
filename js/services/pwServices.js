@@ -384,11 +384,9 @@ postworld.factory('pwPosts',
                 post_id: vars.postId,
                 fields: missingFields,
             };
-
 			$pwData.pw_get_post(args).then(
                 // Success
                 function(response) {
-                	
                     // Catch the new post data
                     var newPostData = response.data;
                     // Add the previously missing fields to the 'fields' field
@@ -396,7 +394,6 @@ postworld.factory('pwPosts',
                     // Merge it into the feed post
                     var merged = mergeFeedPost( vars.feedId, vars.postId, newPostData );
                     $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
-                    
                     // Broadcast event for child listeners to pick up the new data
                     $rootScope.$broadcast( 'feedPostUpdated', {
                     		feedId: vars.feedId,
@@ -408,7 +405,46 @@ postworld.factory('pwPosts',
                 function(response) {}
             );
     	},
+    	reloadFeedPost: function( feedId, postId ){
+    		/* Reloads the post data from the server and plants it in the feed
+			 */
 
+    		// Get the specified post from the feed
+    		var post = getFeedPost( feedId, postId );
+    		if( post == false )
+    			return false;
+
+    		// Get the 'fields' value of the post
+    		var fields = $_.getObj( post, 'fields' );
+    		if( fields == false )
+    			fields = 'all';
+
+    		// Get the post from the server
+			var args = {
+                post_id: postId,
+                fields: fields,
+            };
+			$pwData.pw_get_post(args).then(
+                // Success
+                function(response) {
+                    // Catch the new post data
+                    var postData = response.data;
+                    // Merge it into the feed post
+                    var merged = mergeFeedPost( feedId, postId, postData );
+                    $log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.pw_get_post() : MERGE WITH FEED/POST : ", postData );
+                    // Broadcast event for child listeners to pick up the new data
+                    $rootScope.$broadcast( 'feedPostUpdated', {
+                    		feedId: feedId,
+                    		postId: postId
+                    	});
+                },
+                // Failure
+                function(response) {
+                	$log.error( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.pw_get_post() : UNKOWN ERROR" );
+                }
+            );
+
+    	},
     	getFeedPost: function( feedId, postId ){
     		return getFeedPost( feedId, postId );
     	},
@@ -470,12 +506,12 @@ postworld.factory('pwImages',
     	},
     	{
     		name: 'wide',
-    		width: 1.5,
+    		width: 1,
     		height: 1,
     	},
     	{
     		name: 'x-wide',
-    		width: 2.5,
+    		width: 2,
     		height: 1,
     	},
     	{
@@ -485,7 +521,7 @@ postworld.factory('pwImages',
     	},
     	{
     		name: 'x-tall',
-    		width: 2.5,
+    		width: 1,
     		height: 2,
     	},
     ];
@@ -493,7 +529,6 @@ postworld.factory('pwImages',
     ///// FACTORY VALUES /////
 	return {
 		selectImageTag: function( tags, mappings ){
-
 			// Set Default Mapping
 	    	if( _.isUndefined( mappings ) )
 	    		mappings = tagMappings;
@@ -502,12 +537,15 @@ postworld.factory('pwImages',
 	    	// Iterate through each image tag in the selected image
 	    	angular.forEach( tags, function( imageTag ){
 	    		// Iterate through each mapping option
-	    		angular.forEach( tagMappings, function( tagMapping ){
+	    		angular.forEach( mappings, function( tagMapping ){
 	    			// Select the last match
 	    			if( tagMapping['name'] == imageTag )
 	    				selectedTag = tagMapping;
 		    	});
 	    	});
+	    	
+	    	//$log.debug( "selectImageTag : " // tags : " + tags + " // selectedTag : " + JSON.stringify(selectedTag) + " // mappings : ", mappings );
+
 	    	// If none selected
 	    	if( selectedTag == {} )
 	    		return false;

@@ -101,8 +101,8 @@ postworld.controller('pwGridCtrl',
     //var imageTags = $scope.post.image['tags'];
     //var imageStats = $scope.post.image['stats'];
 
-    $scope.selectImageTag = function( imageTags ){
-    	return $pwImages.selectImageTag( imageTags );
+    $scope.selectImageTag = function( imageTags, tagMapping ){
+    	return $pwImages.selectImageTag( imageTags, tagMapping );
     }
 
     $scope.setGridClass = function( imageTags ){
@@ -110,12 +110,16 @@ postworld.controller('pwGridCtrl',
     	return selectedTag.name;
     };
 
-    $scope.setGridStyle = function( imageTags ){
-    	var selectedTag = $scope.selectImageTag( imageTags );
-    	var multiplier = 300;
+    $scope.setGridStyle = function( multiplier, imageTags, tagMapping ){
+        if( _.isUndefined(multiplier) )
+            multiplier = 300;
+    	var selectedTag = $pwImages.selectImageTag( imageTags, tagMapping );
+        //$log.debug( 'setGridStyle : $pwImages.selectImageTag  : ', tagMapping );
         var width = selectedTag['width'] * multiplier;
         var height = selectedTag['height'] * multiplier;
-        return { width: width + "px", height: height + "px", };
+        var style = { width: width + "px", height: height + "px" };
+        //$log.debug( "setGridStyle: multiplier: " + multiplier + " // imageTags: " + imageTags + " // style: " + JSON.stringify(style) + " // tagMappings: ", tagMapping );
+        return style;
     };
 
 
@@ -162,9 +166,8 @@ postworld.controller('pwGridItemCtrl',
         	return $scope.$parent.$parent.getImageSize( prefix, imageTags );
     }
 
-    $scope.selectImageTag = function( imageTags ){
-    	if ( parentFunctionExists( "selectImageTag" ) )
-    		return $scope.$parent.$parent.selectImageTag( imageTags );
+    $scope.selectImageTag = function( imageTags, tagMapping ){
+    	return $pwImages.selectImageTag( imageTags, tagMapping );
     };
 
     $scope.setGridClass = function( imageTags ){
@@ -172,9 +175,9 @@ postworld.controller('pwGridItemCtrl',
     		return $scope.$parent.$parent.setGridClass( imageTags );
     };
 
-    $scope.setGridStyle = function( imageTags ){
+    $scope.setGridStyle = function( imageTags, tagMapping ){
     	if ( parentFunctionExists( "setGridStyle" ) )
-    		return $scope.$parent.$parent.setGridStyle( imageTags );
+    		return $scope.$parent.$parent.setGridStyle( imageTags, tagMapping );
     };
 
     $scope.tester = function(){

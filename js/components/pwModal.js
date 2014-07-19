@@ -301,9 +301,6 @@ postworld.controller('pwModalInstanceCtrl',
 			//$timeout( function(){
 			//	History.replaceState( {}, $scope.post.post_title, $scope.post.post_permalink );
 			//}, 0 );
-			
-
-
 		}
 	}); 
 
@@ -413,7 +410,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 
 			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
 
 			var modalInstance = $modal.open({
-			  templateUrl: pwData.pw_get_template( { subdir: 'panels', view: 'modal-edit-post' } ),
+			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
 			  controller: 'quickEditInstanceCtrl',
 			  windowClass: 'quick_edit',
 			  resolve: {

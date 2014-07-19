@@ -218,6 +218,8 @@ postworld.controller('adminPostDropdown',
     [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '_', '$timeout',
     function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout ) {
 
+    ///// MENU OPTIONS /////
+    // Default Menu Options
     $scope.menuOptions = [
         {
             name: "Quick Edit",
@@ -248,12 +250,40 @@ postworld.controller('adminPostDropdown',
         }
     ];
 
+    // Merge with over-rides
+    // Iterate through each one, based on 'action'
+    // Over-write Names / Icons if specified
+
+    // Menu Options
+    var overrideMenuOptions = $_.getObj( $window, 'pwSiteGlobals.controls.post.menu_options' );
+    if( overrideMenuOptions != false ){
+
+        var newMenuOptions = [];
+        var overrideMenuOption, newOption;
+        // Iterate through each default menu option
+        angular.forEach( $scope.menuOptions, function( menuOption ){
+            newOption = menuOption;
+            // Get the related override by action
+            overrideMenuOption = _.findWhere( overrideMenuOptions, { action: menuOption.action } );
+            // Override : NAME
+            if( $_.getObj( overrideMenuOption, 'name' ) )
+                newOption.name = overrideMenuOption.name;
+            // Override : ICON
+            if( $_.getObj( overrideMenuOption, 'icon' ) )
+                newOption.icon = overrideMenuOption.icon;
+
+            newMenuOptions.push(newOption);
+        });
+        $scope.menuOptions = newMenuOptions;
+    }
+
+
+    ///// ROLES /////
     // Define actions which each role has access to
     var actionsByRole = $window.pwSiteGlobals.controls.post.role_access;
 
     // Localize current user data
     $scope.current_user = $window.pwGlobals.current_user;
-
 
     /*
     $scope.$watch('post', function(value) {        

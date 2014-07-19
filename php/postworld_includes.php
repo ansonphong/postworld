@@ -16,10 +16,14 @@ function postworld_includes( $args ){
 
 	// Injections
 	global $pwInject;
+	
+	// Add injectors from Site Globals
 	$pwInject = ( isset( $pwSiteGlobals['inject'] ) ) ?
 		$pwSiteGlobals['inject'] : array();
 
-	
+	// Override with injectors from $args
+	$pwInject = ( isset( $args['inject'] ) ) ?
+		$args['inject'] : $pwInject;
 
 	// Build Angular Dependancies
 	global $angularDep;
@@ -209,7 +213,7 @@ function postworld_includes( $args ){
 
 
 		// ANGULAR : INFINITE SCROLL
-		wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/lib/ng-infinite-scroll/ng-infinite-scroll.js', $angularDep );
+		//wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/lib/ng-infinite-scroll/ng-infinite-scroll.js', $angularDep );
 		
 		// ANGULAR : TIMER
 		wp_enqueue_script( 'AngularJS-Timer',

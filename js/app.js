@@ -23,7 +23,7 @@ var depInject = [
 	'ngRoute',
 	'ngSanitize',
 	// 'ngAnimate', (animate removed for bootstrap carousel)
-	'infinite-scroll', 
+	//'infinite-scroll', 
 	'ui.bootstrap',
 	'monospaced.elastic',
 	'TruncateFilter',

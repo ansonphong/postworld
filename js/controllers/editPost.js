@@ -575,10 +575,10 @@ postworld.controller('editPost',
 					// ACTION BROADCAST
 					// For Quick Edit Mode - broadcast to children successful update
 					$rootScope.$broadcast('postUpdated', post_id);
-
 					// ACTION EMIT
 					// Any sibling or parent scope can listen on this action
 					$scope.$emit('postUpdated', post_id);
+					$log.debug( "pw-edit-post: $scope.savePost › $pwData.pw_save_post › SUCCESS : ACTION : BROADCAST & EMIT : 'postUpdated' ", post_id );
 
 					// EVALUATE CALLBACK
 					if( !_.isUndefined( $scope.initEditPost['saveSuccessCallback'] ) )

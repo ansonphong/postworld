@@ -89,38 +89,7 @@ postworld.controller('postController',
 		( $scope.clickTip != "" ) ? $scope.clickTip = "" : $scope.clickTip = clickTip ;
 	};
 
-	// Update the contents of post after Quick Edit
-	$rootScope.$on('postUpdated', function(event, post_id) {
-		if ( $scope.post.ID == post_id ){
-			var args = {
-				post_id: post_id,
-				fields: 'all'
-			};
-			$pwData.pw_get_post(args).then(
-				// Success
-				function(response) {
-					if (response.status==200) {
-						var post = response.data;
-						// Convert Post Content into Bindable HTML
-						if( !_.isUndefined( post.post_content ) &&
-							_.isString(post.post_content) ){
-							post.post_content = $sce.trustAsHtml(post.post_content);
-						}
-						$scope.post = response.data;
-						// Update Classes
-						$scope.setClass();
-					} else {
-						// handle error
-					}
-				},
-				// Failure
-				function(response) {
-					// $log.error('pwFeedController.pw_live_feed Failure',response);
-					// TODO Show User Friendly Message
-				}
-			);
-		}
-	});
+
 
 	///// TIME FUNCTIONS /////
 	$scope.jsDateToTimestamp = function(jsDate){
@@ -216,6 +185,52 @@ postworld.controller('postController',
 		);  
 	}
 
+	///// ACTION : POST UPDATED /////
+	// Update the contents of post after Quick Edit
+	$rootScope.$on('postUpdated', function(event, postId) {
+		$log.debug( 'pw-post : $rootScope.$on( "postUpdated" ) : ', postId );
+		if ( $scope.post.ID != postId ){
+			return false;
+		}
+		///// HANDLE FEED POSTS /////
+		// If the post has a feed
+		if ( _.isString( $_.getObj( $scope, 'post.feed.id' ) ) ){
+			// Call Update Feed Post
+			$pwPosts.reloadFeedPost( feedId, postId )
+		}
+		///// HANDLE STANDALONE POSTS /////
+		else{
+			var args = {
+				post_id: postId,
+				fields: 'all'
+			};
+			$pwData.pw_get_post(args).then(
+				// Success
+				function(response) {
+					if (response.status==200) {
+						var post = response.data;
+						// Convert Post Content into Bindable HTML
+						if( !_.isUndefined( post.post_content ) &&
+							_.isString(post.post_content) ){
+							post.post_content = $sce.trustAsHtml(post.post_content);
+						}
+						$scope.post = response.data;
+						// Update Classes
+						$scope.setClass();
+					} else {
+						// handle error
+					}
+				},
+				// Failure
+				function(response) {
+					// $log.error('pwFeedController.pw_live_feed Failure',response);
+					// TODO Show User Friendly Message
+				}
+			);
+		}
+
+	});
+
 	///// ACTION : FEED POST UPDATED /////
 	// This is run when the central feed post is updated with new data
 	$scope.$on( 'feedPostUpdated', function( e, vars ){
@@ -268,6 +283,73 @@ postworld.controller('postController',
 	// Make core service functions to set, and check for status
 
 	
+
+}]);
+
+
+
+
+'use strict';
+postworld.directive( 'pwFeedPost', [ function( $scope ){
+	return {
+		restrict: 'AE',
+		controller: 'pwFeedPostCtrl',
+		link: function( $scope, element, attrs ){
+			// OBSERVE Attribute
+			//attrs.$observe('postRequiredFields', function( value ) {
+			//	$scope.postRequiredFields = $scope.$eval( value );
+			//});
+		}
+	};
+}]);
+
+
+postworld.controller('pwFeedPostCtrl',
+	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", 
+	function($scope, $rootScope, $window, $sce, $pwData, $_, $log, $pwImages, $pw, $pwPosts, $timeout ) {
+
+	///// ACTION : POST UPDATED /////
+	// Update the contents of post after Quick Edit
+	$rootScope.$on('postUpdated', function(event, postId) {
+		if ( $scope.post.ID != postId ){
+			return false;
+		}
+		$log.debug( 'pw-feed-post : $rootScope.$on( "postUpdated" ) : ', postId );
+		// If the post has a feed
+		if ( _.isString( $_.getObj( $scope, 'post.feed.id' ) ) ){
+			// Call Update Feed Post
+			$_.clobber( 'postUpdated_' + postId, 100, function(){
+				$pwPosts.reloadFeedPost( $scope.post.feed.id, postId )
+			});
+			
+		}
+
+	});
+
+	///// ACTION : FEED POST UPDATED /////
+	// This is run when the central feed post is updated with new data
+	$scope.$on( 'feedPostUpdated', function( e, vars ){
+
+		//$_.clobber( 'feedPostUpdated_' + vars.postId, 100, function(){
+			// If the post does not know it's own feed
+			if( !$_.objExists( $scope, 'post.feed.id' ) )
+				return false;
+			// If the feed and post IDs are provided
+			if( $scope.post.feed.id == vars.feedId &&
+				$scope.post.ID == vars.postId ){
+				$log.debug( "$ON : feedPostUpdated : ", vars );
+				// Get the post with the updated data from the feed
+				var updatedPost = $pwPosts.getFeedPost( vars.feedId, vars.postId );
+				// Update the local scope post with foreach to avoid two-way binding
+				angular.forEach( updatedPost, function( value, key ){
+					$scope.post[key] = value;
+				});
+			}
+
+		//});
+
+	});
+
 
 }]);
 
