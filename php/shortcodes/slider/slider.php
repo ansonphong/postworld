@@ -6,6 +6,7 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 
 	// Extract Shortcode Attributes, set defaults
 	extract( shortcode_atts( array(
+		//"posts"			=>	array(),
 		"template"		=> "slider-default",
 		"query" 		=> "{}",
 		"id" 			=> hash( "md5", "1" ),
@@ -94,7 +95,7 @@ function pw_print_slider( $slider ){
 
 	///// QUERIES & OPTIONS /////
 	// If no 'posts' object provided, query for the posts
-	if( empty( $slider['posts'] ) ){
+	if( empty( $slider['posts'] ) || !isset( $slider['posts'] ) ){
 
 		///// SETUP QUERY /////
 		global $post;
@@ -232,7 +233,7 @@ function pw_print_slider( $slider ){
 			$filtered_posts = array();
 			foreach( $posts as $this_post ){
 				// If the image width is present
-				if( !empty($this_post['image']['full']['width']) )
+				if( !empty($this_post['image']['sizes']['full']['width']) )
 					$filtered_posts[] = $this_post;
 			}
 			$posts = $filtered_posts;
@@ -253,9 +254,10 @@ function pw_print_slider( $slider ){
 			$posts = $filtered_posts;
 		}
 
+
 	} // END QUERIES & OPTIONS
 
-	if( is_array( $slider['posts'] ) ){
+	if( is_array( $slider['posts'] ) && !empty( $slider['posts'] ) ){
 		$posts = $slider['posts'];
 	}
 
