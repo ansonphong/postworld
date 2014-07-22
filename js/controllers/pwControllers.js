@@ -25,16 +25,29 @@ postworld.controller('postController',
 	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", "$compile",
 	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout, $compile ) {
 
+
+	///// GET DEFAULT POST /////
 	// If $scope.post doesn't exist
-	// Get it from $window.post
-	if( _.isUndefined( $scope.post ) ){
+	if( _.isUndefined( $scope.post ) || _.isEmpty( $scope.post ) ){
+
+		// First get the post from the pw globals 
+		var globalPost = $_.getObj( $window, "pwGlobals.current_view.post" );
+		if( globalPost != false )
+			$scope.post = globalPost;
+
+		// Use the window post
 		if( !_.isUndefined( $window.post ) )
 			$scope.post = $window.post;
-		else
+		
+		// If there's no post from the above sources
+		if( _.isUndefined( $scope.post ) )
 			$scope.post = {};
 	}
 
-		
+	// POST META
+	if( !$_.objExists( $scope, 'post.meta' ) )
+		$scope.post.meta = {};
+
 	// RUN CUSTOM POST FUNCTIONS
 	// This function can be added to the $window object
 	// For performing theme-specific per-post operations
@@ -64,9 +77,7 @@ postworld.controller('postController',
 	});
 
 
-	// POST META
-	if( !$_.objExists( $scope, 'post.meta' ) )
-		$scope.post.meta = {};
+	
 
 	// IMPORT LANGUAGE
 	if(

@@ -10,7 +10,7 @@ function pw_slider_shortcode( $atts, $content = null, $tag ) {
 		//'posts'			=>	array(),
 		'template'		=> 'slider-default',
 		'query' 		=> '{}',
-		'id' 			=> hash( 'md5', '1' ),
+		'id' 			=> pw_random_hash(),
 		'class' 		=> 'shortcode-slider',
 		'interval' 		=> 5000,
 		'category' 		=> '',
@@ -277,8 +277,8 @@ function pw_print_slider( $slider ){
 
 	///// INSTANCE /////
 	// Generate random ID for slider Instance
-	$slider_hash = hash('md5', json_encode($query));
-	$slider['instance'] = "slider_".substr( $slider_hash, 1, 8 );
+	$slider_hash = pw_random_hash();
+	$slider['instance'] = "slider_".$slider_hash;
 
 	///// CLASS /////
 	if( $slider['transition'] == 'fade' || !isset($slider['transition']) )

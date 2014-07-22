@@ -46,8 +46,8 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
     return { 
         restrict: 'AE',
         scope : {
-            link_url:"@oEmbed",
-            autoplay:"@autoplay",
+            link_url:"=oEmbed",
+            autoplay:"=autoplay",
             run:"=run",
         },
         //template : '',
@@ -62,9 +62,9 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
             */
             
             // Set autoplay value if it updates
-            attrs.$observe('autoplay', function(value) {
-                $scope.setAutoplay();
-            });
+            //attrs.$observe('autoplay', function(value) {
+            //    $scope.setAutoplay();
+            //});
 
         }
     };
@@ -73,18 +73,18 @@ postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
 
 
 postworld.controller('pwOEmbedController',
-    [ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '_',
-    function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_ ) {
+    [ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '_', '$timeout',
+    function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout ) {
             
             // AUTOPLAY
-            $scope.setAutoplay = function(){
-                $scope.autoplay = (
-                    !_.isUndefined( $scope.autoplay ) &&
-                    $scope.autoplay !== null ) ?
+            $scope.getAutoplay = function(){
+                return (                                    // Autoplay Must be:
+                    !_.isUndefined( $scope.autoplay ) &&    // Not Undefined
+                    $scope.autoplay !== null &&             // Not Null
+                    $scope.autoplay != false &&             // Not Boolean False
+                    $scope.autoplay != 'false' ) ?          // Not String False
                     true : false;
             }
-            $scope.setAutoplay();
-
 
             // Status
             if( _.isUndefined( $scope.$parent.oEmbedStatus ) )
@@ -92,7 +92,6 @@ postworld.controller('pwOEmbedController',
             $scope.$parent.oEmbedStatus[$scope.link_ur] = "loading";
 
             $scope.status = "loading";
-
 
             // MEDIA GET
             $scope.oEmbedGet = function(){
@@ -113,7 +112,7 @@ postworld.controller('pwOEmbedController',
                 // Setup the variables
                 var vars = {
                     "link_url": $scope.link_url,
-                    "autoplay": $scope.autoplay
+                    "autoplay": $scope.getAutoplay(),
                     };
 
                 // AJAX Call
@@ -140,7 +139,7 @@ postworld.controller('pwOEmbedController',
 
             $scope.setEmbedCode = function( embedCode ){
                 
-                var sceEmbedCode = $sce.trustAsHtml(embedCode); //  
+                var sceEmbedCode = embedCode; //$sce.trustAsHtml( embedCode ); //  
 
                 $scope.$parent.oEmbed = sceEmbedCode;
                 $scope.$parent.oEmbedCode = embedCode; 
@@ -148,7 +147,6 @@ postworld.controller('pwOEmbedController',
                 // Check if there is a post link_url associated with the parent scope post
                 // And if it's the same as the a post link_url
                 if( $_.getObj( $scope.$parent, 'post.link_url' ) == $scope.link_url ){
-                    
                     // Add the embed code to 'post.link_url_embed'
                     $scope.$parent.post.link_url_embed = sceEmbedCode;
 
@@ -169,7 +167,11 @@ postworld.controller('pwOEmbedController',
 
             // Set autoplay value if it updates
             $scope.$watch('link_url', function(value) {
-                $scope.oEmbedGet();
+                $timeout( function(){
+                    $scope.oEmbedGet();
+                }, 0 )
+                
+
             });
      
 }]);

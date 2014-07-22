@@ -606,14 +606,19 @@ function pw_set_defaults( $obj, $defaults ){
 
 }
 
-function pw_ob_include( $path ){
+function pw_ob_include( $file, $vars = array() ){
+	if( !empty( $vars ) && is_array( $vars ) )
+		extract($vars);
 	ob_start();
-	include locate_template( $path );
+	include $file;
 	$content = ob_get_contents();
 	ob_end_clean();
 	return $content;
 }
 
+function pw_ob_include_template( $template_path, $vars = array() ){
+	return pw_ob_include( locate_template( $template_path ), $vars );
+}
 
 function pw_get_post_ids( $posts ){
 	// Returns just an array of IDs from an array of posts
@@ -656,7 +661,6 @@ function pw_strip_shortcode($code, $content)
     return $content;
 }
 
-
 // Strips the site URL from a URL
 // Returning the relative/absolute path
 function pw_strip_site_url( $url ){
@@ -671,5 +675,13 @@ function pw_strip_site_url( $url ){
 function pw_wrap_quotes( $string ){
     return "\"" . $string . "\"";
 }
+
+function pw_random_hash(){
+	$hash = hash('md5', rand( 0, 10000 ));
+	$hash = substr( $hash, 1, 8 );
+	return $hash;
+}
+
+
 
 ?>

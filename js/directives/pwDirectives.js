@@ -9,16 +9,25 @@
 											 
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
+///// POSTWORLD SRC DIRECTIVE /////
+postworld.directive('pwSrc', function() {
+	return {
+		scope:{
+		  pwSrc:"=pwSrc"
+		},
+		link: function(scope, element, attrs) {
+			attrs.$set('src', scope.pwSrc );
+		},
+	}
+});
 
-///// PW-HREF /////
-
+///// POSTWORLD HREF DIRECTIVE /////
 postworld.directive('pwHref', function() {
 	return {
 		scope:{
 		  pwHref:"=pwHref"
 		},
 		link: function(scope, element, attrs) {
-			
 			attrs.$set('href', scope.pwHref );
 
 			//var fullPathUrl = "http://.../";

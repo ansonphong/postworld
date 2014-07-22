@@ -79,6 +79,58 @@ postworld.factory('_',
 	function ( $rootScope, $resource, $q, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
+	///// SET OBJECT VALUES /////
+	function setObj( obj, key, value  ){
+			/* 	Sets the value of an object,
+			 * 	even if it or it's parent(s) doesn't exist.
+			 *
+			 *  PARAMETERS:
+			 *	obj     =   [object]
+			 *	key     =   [string] ie. ( "key.subkey.subsubkey" )
+			 *	value   =   [string/array/object]
+			*/
+
+			///// KEY PARTS /////
+			// FROM : "key.subkey.sub.subkey"
+			// TO   : [ "key", "subkey", "subkey" ]
+			var key_parts = key.split('.');
+			key_parts = key_parts.reverse();
+			// Count how many parts
+			var key_parts_count = key_parts.length;
+			// Prepare to catch finished key parts
+			var key_parts_done = [];
+			// Iterate through each key part
+			var seed = [];
+			var i = 0;
+			angular.forEach( key_parts, function( key_part ){
+				i++;
+				// First Key
+				if( i == 1 ){
+					// Create seed with first key
+					seed[i] = {};
+					seed[i][key_part] = value;
+				// Other Keys
+				} else{
+					// Nest previous seed in current key
+					seed[i] = {};
+					seed[i][key_part] = seed[(i-1)];
+				}
+				// Last Key
+				if( i == key_parts_count ){
+					// Return final seed result
+					seed = seed[i];
+				}
+			});
+			//$log.debug( "SEED : ", seed);
+			//$log.debug( "OBJ : ", obj);
+			// Merge $seed array with input $array
+			obj = deepmerge( obj, seed );
+			//$log.debug( "RESULT : ", obj);
+			return obj;
+		};
+
+
+
 	return {
 		exists: function(value){
 			if ( typeof value === 'undefined' )
@@ -183,52 +235,7 @@ postworld.factory('_',
             
         },
 		setObj : function( obj, key, value  ){
-			/* 	Sets the value of an object,
-			 * 	even if it or it's parent(s) doesn't exist.
-			 *
-			 *  PARAMETERS:
-			 *	obj     =   [object]
-			 *	key     =   [string] ie. ( "key.subkey.subsubkey" )
-			 *	value   =   [string/array/object]
-			*/
-
-			///// KEY PARTS /////
-			// FROM : "key.subkey.sub.subkey"
-			// TO   : [ "key", "subkey", "subkey" ]
-			var key_parts = key.split('.');
-			key_parts = key_parts.reverse();
-			// Count how many parts
-			var key_parts_count = key_parts.length;
-			// Prepare to catch finished key parts
-			var key_parts_done = [];
-			// Iterate through each key part
-			var seed = [];
-			var i = 0;
-			angular.forEach( key_parts, function( key_part ){
-				i++;
-				// First Key
-				if( i == 1 ){
-					// Create seed with first key
-					seed[i] = {};
-					seed[i][key_part] = value;
-				// Other Keys
-				} else{
-					// Nest previous seed in current key
-					seed[i] = {};
-					seed[i][key_part] = seed[(i-1)];
-				}
-				// Last Key
-				if( i == key_parts_count ){
-					// Return final seed result
-					seed = seed[i];
-				}
-			});
-			//$log.debug( "SEED : ", seed);
-			//$log.debug( "OBJ : ", obj);
-			// Merge $seed array with input $array
-			obj = deepmerge( obj, seed );
-			//$log.debug( "RESULT : ", obj);
-			return obj;
+			return setObj( obj, key, value  );
 		},
 
 		clobber: function( id, t, f ){ // id = unique string, t = timeout in ms, f = function to run
@@ -264,6 +271,18 @@ postworld.factory('_',
 		        results = regex.exec(location.search);
 		    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 		},
+		setScopeValues: function( $scope, values ){
+			// values is an associative array, where the key is the expression and the value is the value
+			var parts, firstKey, subKeys;
+			angular.forEach( values, function( value, key ){
+				parts = key.split('.');
+				firstKey = parts[0];
+				subKeys = key.slice( firstKey.length + 1, value.length );
+				//$log.debug( "FIRST KEY :", firstKey );
+				$scope[firstKey] = setObj( $scope, subKeys, value );
+			});
+
+		}
 	};
 
 }]);

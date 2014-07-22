@@ -133,8 +133,8 @@ postworld.directive('infiniteXScroll', [
 				}
 				scrollEnabled = true;
 				checkWhenEnabled = false;
-				if (attrs.infiniteScrollDisabled != null) {
-					scope.$watch(attrs.infiniteScrollDisabled, function(value) {
+				if (attrs.scrollDisabled != null) {
+					scope.$watch(attrs.scrollDisabled, function(value) {
 						scrollEnabled = !value;
 						if (scrollEnabled && checkWhenEnabled) {
 							checkWhenEnabled = false;
@@ -218,7 +218,7 @@ postworld.directive('infiniteXScroll', [
 					*/
 
 					if (shouldScroll && scrollEnabled) {
-						$log.debug("CALL SCROLL ACTION");
+						//$log.debug("X-SCROLL : CALL SCROLL ACTION");
 						if ($rootScope.$$phase) {
 							return scope.$eval(attrs.scrollAction);
 						} else {
@@ -279,7 +279,7 @@ postworld.directive('infiniteYScroll', [
 				}
 
 				container = $window;
-				$log.debug( "ATTRS.SCROLL CONTAINER", attrs.scrollContainer );
+
 				if ( attrs.scrollContainer != null && typeof attrs.scrollContainer !== 'undefined' ) {
 					var value = String( attrs.scrollContainer );
 					container = angular.element( attrs.scrollContainer );
@@ -303,6 +303,8 @@ postworld.directive('infiniteYScroll', [
 						return container = elem.parent();
 					});
 				}
+
+				//$log.debug( "SCROLL CONTAINER", container );
 
 				handler = function() {
 					var containerBottom, elementBottom, remaining, shouldScroll;
@@ -335,6 +337,7 @@ postworld.directive('infiniteYScroll', [
 						'containerBottom: ' + containerBottom + ' / ' + 
 						'remaining : ' + remaining
 					);
+					
 					$log.debug(
 						'shouldScroll: ' + shouldScroll + ' / ' +
 						'remaining: ' + remaining + ' / ' +
@@ -344,6 +347,7 @@ postworld.directive('infiniteYScroll', [
 					*/
 					
 					if (shouldScroll && scrollEnabled) {
+						//$log.debug("Y-SCROLL : CALL SCROLL ACTION");
 						if ($rootScope.$$phase) {
 							return scope.$eval(attrs.scrollAction);
 						} else {

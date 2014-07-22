@@ -18,6 +18,7 @@
 	class="pw-gallery-shortcode"
 	ng-controller="<?php echo $gallery['instance']; ?>">
 	<hr>
+
 	<masonry
 		column-width=".grid-sizer"
 		masonry-options='{ "gutter": 0, "transitionDuration":0 }'>
@@ -29,8 +30,9 @@
 				class="gallery-post masonry-brick"
 				ng-repeat="galleryPost in feed.posts"
 				ng-class="setGridClass( galleryPost.image.tags )"
-				ng-style="setGridStyle( galleryPost.image.tags )"
+				ng-style="setGridStyle( 333, galleryPost.image.tags )"
 				ng-click="openModal({ mode:'feed', post:galleryPost })">
+
 				<div class="overlay"></div>
 				<div class="gallery-image"
 					style="background-image:url({{ galleryPost.image.sizes[ getImageSize('thumb-', galleryPost.image.tags ) ].url }})">
