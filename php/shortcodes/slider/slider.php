@@ -270,7 +270,7 @@ function pw_print_slider( $slider ){
 		case 'menu':
 			///// MENU MODE /////
 			// Get the posts from a menu by menu_id
-			$fields = "all";
+			$fields = "preview";
 			$posts = pw_get_menu_posts( $slider['menu_vars']['menu_id'], $fields );
 			break;
 	}
