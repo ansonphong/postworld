@@ -136,9 +136,7 @@ postworld.controller('pwOEmbedController',
                 );
             };
 
-
             $scope.setEmbedCode = function( embedCode ){
-                
                 var sceEmbedCode = embedCode; //$sce.trustAsHtml( embedCode ); //  
 
                 $scope.$parent.oEmbed = sceEmbedCode;
@@ -160,9 +158,7 @@ postworld.controller('pwOEmbedController',
                         $pwPosts.mergeFeedPost( feedId, postId, { link_url_embed: sceEmbedCode } );
                         $log.debug( "MERGE FEED POST : SCE EMBED CODE : ", sceEmbedCode );
                     }
-
                 }
-
             }
 
             // Set autoplay value if it updates

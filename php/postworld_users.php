@@ -18,8 +18,8 @@ function pw_insert_user( $userdata ){
 		pw_activation_email(array("ID" => $user_id));
 
 		// Set the security mode to allow for system operations
-		global $pw_globals;
-		$pw_globals["security"]["mode"] = "system";
+		global $pw;
+		$pw["security"]["mode"] = "system";
 
 		// Set the context in a special usermeta
 		if( isset( $userdata['context'] ) ){
@@ -147,8 +147,8 @@ function pw_activate_autologin( $activation_key, $redirect = "" ){
 
     	///// CONTEXT /////
     	// Get context from usermeta array
-    	global $pw_globals;
-    	$pw_globals['security']['mode'] = "system";
+    	global $pw;
+    	$pw['security']['mode'] = "system";
 
     	$usermeta = array(
     		"user_id"	=>	$user->ID,

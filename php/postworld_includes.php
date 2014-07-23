@@ -425,29 +425,29 @@ function pwSiteGlobals_include(){
 		"postworld_dir" => WP_PLUGIN_DIR . '/postworld',
 		);
 
-	$pwGlobalsJs  = "";
-	$pwGlobalsJs .= "var pwSiteGlobals = ";
-	$pwGlobalsJs .= json_encode( $pwSiteGlobals );
-	$pwGlobalsJs .= ";";
+	$pwJs  = "";
+	$pwJs .= "var pwSiteGlobals = ";
+	$pwJs .= json_encode( $pwSiteGlobals );
+	$pwJs .= ";";
 
 	// ENCODE TEMPLATES
-	$pwGlobalsJs .= "\n\n";
-	$pwGlobalsJs .= "var pwTemplates = ";
-	$pwGlobalsJs .= json_encode( pw_get_templates() );
-	$pwGlobalsJs .= ";";	
+	$pwJs .= "\n\n";
+	$pwJs .= "var pwTemplates = ";
+	$pwJs .= json_encode( pw_get_templates() );
+	$pwJs .= ";";	
 
 	// ENCODE SITE LANGUAGE
 	global $pwSiteLanguage;	
-	$pwGlobalsJs .= "\n\n";
-	$pwGlobalsJs .= "var pwSiteLanguage = ";
-	$pwGlobalsJs .= json_encode( $pwSiteLanguage );
-	$pwGlobalsJs .= ";";
+	$pwJs .= "\n\n";
+	$pwJs .= "var pwSiteLanguage = ";
+	$pwJs .= json_encode( $pwSiteLanguage );
+	$pwJs .= ";";
 
-	$pwGlobalsJsFile = WP_PLUGIN_DIR.'/postworld/deploy/pwSiteGlobals.js';
-	$file = fopen( $pwGlobalsJsFile ,"w" );
-	fwrite($file,"$pwGlobalsJs");
+	$pwJsFile = WP_PLUGIN_DIR.'/postworld/deploy/pwSiteGlobals.js';
+	$file = fopen( $pwJsFile ,"w" );
+	fwrite($file,"$pwJs");
 	fclose($file);
-	chmod($pwGlobalsJsFile, 0755);
+	chmod($pwJsFile, 0755);
 
 	global $angularDep;
 	wp_enqueue_script( 'pw-SiteGlobals-JS',
@@ -460,29 +460,43 @@ function pwSiteGlobals_include(){
 ///// PARSE pwGlobals /////
 function pwGlobals_parse(){
 	/////////// USER / PAGE SPECIFIC GLOBALS //////////
-	global $pw_globals;
-	$pw_globals = array();
+	global $pw;
+	$pw = array();
 
-	///// CURRENT VIEW
-	$pw_globals['current_view'] = array();
+	///// CURRENT VIEW /////
+	$viewdata = array();
 
 	// URL
 	$protocol = (!empty($_SERVER['HTTPS'])) ?
 		"https" : "http";
-	$pw_globals['current_view']['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
-	$pw_globals['current_view']['protocol'] = $protocol;
+	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
+	$viewdata['protocol'] = $protocol;
 
-	///// POST /////
-	if( !empty($GLOBALS['post']->ID) ){
-		//$pw_globals["current_view"]["type"] = "post";
-		$pw_globals["current_view"]["type"] = $GLOBALS['post']->post_type;
-		$pw_globals["current_view"]["post"] = array(
-			"post_id" => $GLOBALS['post']->ID,
-			"post_name" => $GLOBALS['post']->post_name,
-			"post_title" => $GLOBALS['post']->post_title,
-			"post_status" => $GLOBALS['post']->post_status
-			);
+	// GET TYPE
+	// Determine the view type
+	$view_type = "default";
+	if( is_archive() )
+		$view_type = 'archive';
+	else if( is_page() )
+		$view_type = 'page';
+	else if( is_single() )
+		$view_type = 'post';
+
+	// SET TYPE
+	$viewdata["type"] = $view_type;
+
+	///// SET META BY TYPE /////
+	// POST OR PAGE
+	if( $view_type == 'page' || $view_type == 'post' )
+		$viewdata["post"] = $GLOBALS['post'];
+	// POST OR PAGE
+	else if( $view_type == 'archive' ){
+		$current_term = get_queried_object();
+		$viewdata["term"] = $current_term;
+		$viewdata["taxonomy"] = get_taxonomy( $current_term->taxonomy );
 	}
+
+	$pw['view'] = $viewdata;
 
 	///// CURRENT USER /////
 	$user_id = get_current_user_id();
@@ -501,7 +515,7 @@ function pwGlobals_parse(){
 		}
 	} else
 		$userdata = 0;
-	$pw_globals["current_user"] = $userdata;
+	$pw["user"] = $userdata;
 
 	///// DISPLAYED USER /////
 	// Support for Buddypress Globals
@@ -513,32 +527,32 @@ function pwGlobals_parse(){
 	if ( isset($displayed_user_id) )
 		$displayed_userdata = get_userdata( $displayed_user_id );
 
-	$pw_globals['displayed_user'] = array(
+	$pw['displayed_user'] = array(
 		"user_id" => $displayed_user_id,
 		"display_name" => $displayed_userdata->display_name,
 		"first_name" => $displayed_userdata->first_name,	
 		);
 
 	///// SECURITY /////
-	$pw_globals["security"] = array();
+	$pw["security"] = array();
 	// Set the default security mode
-	$pw_globals["security"]["mode"] = "user";
+	$pw["security"]["mode"] = "user";
 
 	/////////// SITE WIDE GLOBALS //////////
 	// TODO : MOVE THIS STUFF INTO pwSiteglobals
 
 	///// SITE INFO /////
-	$pw_globals["site_info"] = array(
+	$pw["site_info"] = array(
 		"name" => get_bloginfo( 'name' ),
 		"description" => get_bloginfo( 'description' ),
 		);
 
 	///// POST TYPES /////
-	$pw_globals["post_types"] = pw_get_post_types();
+	$pw["post_types"] = pw_get_post_types();
 
 	///// PATHS /////
 	// TODO : Remove - Already moved this to pwSiteglobals for JS
-	$pw_globals["paths"] = array(
+	$pw["paths"] = array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'plugin_url' => WP_PLUGIN_URL,
 		'plugin_dir' => WP_PLUGIN_DIR,
@@ -553,19 +567,19 @@ function pwGlobals_parse(){
 		);
 
 	///// LANGUAGE /////
-	$pw_globals['language'] = $pw_settings['language'];
+	$pw['language'] = $pw_settings['language'];
 
 
 	///// RETURN /////
-	return $pw_globals;
+	return $pw;
 }
 
 
 // Parse Globals After all Plugins Loaded
 function parse_postworld_globals(){
  	// Init Globals
-	global $pw_globals;
-	$pw_globals = pwGlobals_parse();
+	global $pw;
+	$pw = pwGlobals_parse();
 }
 add_action( 'plugins_loaded', 'parse_postworld_globals', 10, 2 );
 

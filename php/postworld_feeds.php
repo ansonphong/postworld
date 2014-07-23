@@ -247,8 +247,8 @@ function pw_print_feed( $args ){
 
 	// LINEAGE - DELETE
 	// Include h2o template engine
-	global $pw_globals;
-	require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
+	global $pw;
+	require_once $pw['paths']['postworld_dir'].'/lib/h2o/h2o.php';
 
 	// Include H2O Template Engine
 	//pw_include_h2o();

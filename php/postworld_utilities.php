@@ -44,8 +44,8 @@ function pw_check_user_id($user_id){
 
 	// Security Layer
 	// Mode whereby the system can access user meta for special operations
-	global $pw_globals;
-	if( $pw_globals['security']['mode'] !== 'system' )
+	global $pw;
+	if( $pw['security']['mode'] !== 'system' )
 		// Check if setting for current user, or if current user can edit users
 		if(	$user_id != $current_user_id &&
 			!current_user_can( 'edit_users' ) )
@@ -589,8 +589,8 @@ function pw_print_html_attr( $attribute, $value, $add_string = '' ){
 
 function pw_include_h2o(){
 	// Include h2o template engine
-	//global $pw_globals;
-	//require_once $pw_globals['paths']['postworld_dir'].'/lib/h2o/h2o.php';
+	//global $pw;
+	//require_once $pw['paths']['postworld_dir'].'/lib/h2o/h2o.php';
 }
 
 function pw_set_defaults( $obj, $defaults ){
