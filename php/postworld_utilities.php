@@ -683,5 +683,19 @@ function pw_random_hash(){
 }
 
 
+function pw_to_array($obj){
+    if (is_object($obj)) $obj = (array)$obj;
+    if (is_array($obj)) {
+        $new = array();
+        foreach ($obj as $key => $val) {
+            $new[$key] = pw_to_array($val);
+        }
+    } else {
+        $new = $obj;
+    }
+
+    return $new;
+}
+
 
 ?>

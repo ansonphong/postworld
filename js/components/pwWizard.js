@@ -304,7 +304,7 @@ postworld.controller('pwWizardCtrl',
 
 		// Get post_name
 		if( pwGlobals != {} )
-			var post_name = pwGlobals.current_view.post.post_name;
+			var post_name = pwGlobals.view.post.post_name;
 		else
 			return false;
 
@@ -451,7 +451,7 @@ postworld.controller('pwWizardCtrl',
 		// Setup String
 		var classes = '';
 		// Active (we are on the page)
-		if( postName == pwGlobals.current_view.post.post_name )
+		if( postName == pwGlobals.view.post.post_name )
 			classes = classes + 'active ';
 		// Complete
 		if( $scope.isStageComplete( stageId ) )

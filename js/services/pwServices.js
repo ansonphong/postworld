@@ -17,9 +17,9 @@ postworld.factory( '$pw',
 		$window.pwTemplates : {};
 
 	var pwUser = function(){
-		if( !$_.objExists( $window, "pwGlobals.current_user" ) )
+		if( !$_.objExists( $window, "pwGlobals.user" ) )
 			return false;
-		return $window.pwGlobals.current_user;
+		return $window.pwGlobals.user;
 	}
 
 	// DECLARATIONS
@@ -27,12 +27,12 @@ postworld.factory( '$pw',
 		version: "1.5.3",
 		templates: pwTemplates,
 
-		user: pwUser(), //$window.pwGlobals.current_user, // (or something) - refactor to go directly to pwUser
-    	// view: $window.pwGlobals.current_view
+		user: pwUser(), //$window.pwGlobals.user, // (or something) - refactor to go directly to pwUser
+    	// view: $window.pwGlobals.view
     	// language: $window.pwSiteLanguage,
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
     	
-    	view: $window.pwGlobals.current_view,
+    	view: $window.pwGlobals.view,
     	paths: $window.pwGlobals.paths, // Move this to pwSiteglobals
     	site: $window.pwSiteGlobals.site,
 
@@ -722,10 +722,10 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 			// Cycle through provided post_types
 			// Which post_types does the user have access to 'mode' operation?
 			var userPostTypeOptions = {};
-			if( $window.pwGlobals.current_user != 0 ){
+			if( $window.pwGlobals.user != 0 ){
 				angular.forEach( $window.pwGlobals.post_types , function( name, slug ){
 					var cap_type = mode + "_"+ slug + "s";
-					if( $window.pwGlobals.current_user.allcaps[cap_type] == true ){
+					if( $window.pwGlobals.user.allcaps[cap_type] == true ){
 						userPostTypeOptions[slug] = name;
 					}
 				});
@@ -734,11 +734,11 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 		},
 
 		pwGetPostStatusOptions: function( post_type ){
-			if ((!$window.pwGlobals.current_user) || (!$window.pwGlobals.current_user))
+			if ((!$window.pwGlobals.user) || (!$window.pwGlobals.user))
 				return;
 
 			// GET ROLE
-			var current_user_role = $window.pwGlobals.current_user.roles[0];
+			var current_user_role = $window.pwGlobals.user.roles[0];
 			// DEFINE : POST STATUS OPTIONS
 			var post_status_options = $window.pwSiteGlobals.post_options.post_status;
 			// DEFINE : POST STATUS OPTIONS PER ROLE BY POST TYPE
@@ -831,10 +831,10 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $window, $_) {
 	return{
 		setRoleAccess : function($scope){
-			$scope.current_user = $window.pwGlobals.current_user;
+			$scope.current_user = $window.pwGlobals.user;
 
 			( $scope.current_user != 0 ) ?
-				$scope.current_user_role = $window.pwGlobals.current_user.roles[0] :
+				$scope.current_user_role = $window.pwGlobals.user.roles[0] :
 				$scope.current_user_role = 'guest' ;
 
 			$scope.roles = {};

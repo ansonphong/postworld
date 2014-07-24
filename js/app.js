@@ -190,7 +190,7 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
 	});
 	*/
 
-   //$rootScope.current_user = $window.pwGlobals.current_user;
+   //$rootScope.current_user = $window.pwGlobals.user;
    //$log.debug('Current user: ', $rootScope.current_user );
 
 

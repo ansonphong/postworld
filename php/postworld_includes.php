@@ -493,10 +493,13 @@ function pwGlobals_parse(){
 	else if( $view_type == 'archive' ){
 		$current_term = get_queried_object();
 		$viewdata["term"] = $current_term;
+		$viewdata["term"]->term_link = get_term_link( $current_term );
+
 		$viewdata["taxonomy"] = get_taxonomy( $current_term->taxonomy );
+
 	}
 
-	$pw['view'] = $viewdata;
+	$pw['view'] = pw_to_array( $viewdata );
 
 	///// CURRENT USER /////
 	$user_id = get_current_user_id();

@@ -83,7 +83,6 @@ function pw_print_slider( $slider ){
 	$slider = pw_set_defaults( $slider, $slider_defaults ); 
 
 	///// TEMPLATES ////
-	$template_id = $slider['template'];
 	$slider_templates = pw_get_templates(
 		array(
 			'subdirs' => array('sliders'),
@@ -91,9 +90,7 @@ function pw_print_slider( $slider ){
 			'ext'=>'php',
 			)
 		);
-
 	$template_id = $slider['template'];
-
 	$slider_template = ( isset( $slider_templates['sliders'][$template_id] ) ) ?
 		$slider_templates['sliders'][$template_id] :
 		$slider_templates['sliders'][$default_template];
@@ -290,6 +287,7 @@ function pw_print_slider( $slider ){
 	include $slider_template;
 	$content = ob_get_contents();
 	ob_end_clean();
+	return $content;
 
 	// Return with everything in a string
 	return $content;
