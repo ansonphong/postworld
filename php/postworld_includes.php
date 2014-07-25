@@ -461,6 +461,7 @@ function pwSiteGlobals_include(){
 function pwGlobals_parse(){
 	/////////// USER / PAGE SPECIFIC GLOBALS //////////
 	global $pw;
+	global $wp_query;
 	$pw = array();
 
 	///// CURRENT VIEW /////
@@ -475,8 +476,14 @@ function pwGlobals_parse(){
 	// GET TYPE
 	// Determine the view type
 	$view_type = "default";
-	if( is_archive() )
-		$view_type = 'archive';
+	if( is_archive() && !is_date() )
+		$view_type = 'term_archive';
+	else if( is_archive() && is_date() && !is_year() )
+		$view_type = 'date_archive';
+	else if( is_archive() && is_date() && is_year() )
+		$view_type = 'year_archive';
+	else if( is_page() )
+		$view_type = 'page';
 	else if( is_page() )
 		$view_type = 'page';
 	else if( is_single() )
@@ -486,17 +493,29 @@ function pwGlobals_parse(){
 	$viewdata["type"] = $view_type;
 
 	///// SET META BY TYPE /////
-	// POST OR PAGE
-	if( $view_type == 'page' || $view_type == 'post' )
-		$viewdata["post"] = $GLOBALS['post'];
-	// POST OR PAGE
-	else if( $view_type == 'archive' ){
-		$current_term = get_queried_object();
-		$viewdata["term"] = $current_term;
-		$viewdata["term"]->term_link = get_term_link( $current_term );
+	
+	switch( $view_type ){
 
-		$viewdata["taxonomy"] = get_taxonomy( $current_term->taxonomy );
+		// POST OR PAGE
+		case "page":
+		case "post":
+			$viewdata["post"] = $GLOBALS['post'];
+			break;
 
+		// TERM ARCHIVE
+		case "term_archive":
+			$current_term = get_queried_object();
+			$viewdata["term"] = $current_term;
+			$viewdata["term"]->term_link = get_term_link( $current_term );
+			$viewdata["taxonomy"] = get_taxonomy( $current_term->taxonomy );
+			break;
+
+		// YEAR ARCHIVE
+		case "year_archive":
+			$viewdata["query"] = array(
+				"year"	=>	pw_to_array( $wp_query )['query_vars']['year'] ,
+				);
+			break;
 	}
 
 	$pw['view'] = pw_to_array( $viewdata );

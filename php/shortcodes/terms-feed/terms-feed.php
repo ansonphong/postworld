@@ -1,6 +1,5 @@
 <?php
-
-///// POSTWORLD SLIDER /////
+////////// POSTWORLD TERMS FEED //////////
 function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
 
 	// Extract Shortcode Attributes, set defaults
@@ -143,8 +142,17 @@ function pw_get_terms_feed( $vars ){
 				'include_galleries'	=>	[boolean],	// Deep-scan posts content for gallery shortcodes
 				'move_galleries'	=>	[boolean],	// Moves the galleries from the post to the feed
 				'require_image'		=>	[boolean],	// Only posts with a featured image are used
+			
 			),
 		)
+
+		TODO : 	- Add option for include_galleries only if there's less than the perscribed
+				number of posts found. Then it first queries not getting galleries
+				and then if it doesn't have enough, it scans each sequential post for galleries
+				- In this case, get the post_content but don't scan for galleries yet
+				On the second round, if there is not enough posts, then scan the posts
+				one at a time for galleries
+
 	 */
 
 	// Set defaults
@@ -238,7 +246,6 @@ function pw_get_terms_feed( $vars ){
 						array_push( $new_posts, $post );
 
 					//echo "REQUIRE IMAGE : " . json_encode( pw_require_image( array( $post ) )) . " // ";
-					//echo "GALLERY POSTS : " . json_encode( $gallery_posts ) . " // ";
 
 					// Add the gallery posts to the new posts array
 					$new_posts = array_merge( $new_posts, $gallery_posts );
