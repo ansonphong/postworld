@@ -1,58 +1,5 @@
 <?php
 
-////////// POSTWORLD RECURSIVE TERM QUERY //////////
-function pw_recursive_term_query( $vars ){
-	/*
-		Gets a series of terms using get_terms()
-		And then gets the posts associated with each term
-
-		$vars = array(
-			'terms' => array(
-				'taxonomies'    =>  [array] // Pass to get_terms()
-				'args'          =>  [array] // Pass to get_terms()
-				),
-			'query'  =>  array( // Pass to pw_query()
-				'post_type'	=>	
-				'fields'    =>  
-				),
-		)
-	 */
-
-	// Get the terms with get_terms()
-	$terms = get_terms( $vars['terms']['taxonomies'], $vars['terms']['args'] );
-	$terms = pw_to_array( $terms );
-
-	// Iterate through each term, and collect the posts
-	$output = array();
-
-	if( isset( $vars['query'] ) && !empty($terms) )
-		foreach( $terms as $term ){
-			$term_output = array();
-
-			$query = $vars['query'];
-			$query['tax_query']	=	array(
-					array(
-						'taxonomy' 	=> $term['taxonomy'],
-						'field' 	=> 'id',
-						'terms' 	=> $term['term_id']
-						)
-				);
-
-			$query_results = pw_query( $query );
-			$term_output['posts'] = $query_results->posts;
-			$term_output['term'] = $term;
-
-			$term_output['stats'] = array(
-				'post_count' => $query_results->post_count,
-				);
-
-			array_push( $output, $term_output );		
-
-		}
-
-	return $output;
-
-}
 
 ////////// POSTWORLD QUERY TERMS //////////
 function pw_query_terms( $args ){

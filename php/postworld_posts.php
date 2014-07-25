@@ -86,7 +86,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		);
 
 	////////// FIELDS MODEL //////////
-	$preview_fields =	array(
+
+	$preview_fields = array(
 		'ID',
 		'post_title',
 		'post_excerpt',
@@ -113,6 +114,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_meta(all)',
 		'fields',
 		);
+
+	$preview_fields = apply_filters( 'pw_get_post_preview_fields', $preview_fields );
 
 	$detail_fields =	array(
 		'post_path',
@@ -646,7 +649,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		} // END if
 
-
 	////////// GALLERY //////////
 		// Extract meta fields
 		$gallery_fields = extract_linear_fields( $fields, 'gallery', true );
@@ -662,11 +664,12 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			// Gallery Attachment Posts
 			if( in_array( 'posts', $gallery_fields ) ){
-				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, "all" );
+				$new_fields = array_diff( $fields, array( 'gallery(ids,posts)' ) );
+				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, $new_fields );
+				// TODO : Performance, prevent from checking every image for a gallery
 			}
 
 		}
-
 
 	////////// TAXONOMIES //////////
 

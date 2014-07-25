@@ -6,6 +6,16 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+
+function pw_core_print_generation_time() {
+?>
+<!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
+	<?php
+}
+if( !function_exists( 'bp_core_print_generation_time' ) )
+	add_action( 'wp_footer', 'pw_core_print_generation_time' );
+
+
 function pw_plugin_file( $path, $type = "dir" ){
 	if( $type == "dir" )
 		return WP_PLUGIN_DIR . "/postworld/" . $path;

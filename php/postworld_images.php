@@ -6,6 +6,41 @@ $aq_resizer_include = $template_paths['POSTWORLD_PATH'].'lib/wordpress/aq_resize
 include_once $aq_resizer_include;
 
 
+///// REQUIRE IMAGE /////
+function pw_require_image( $posts = array() ){
+	// Returns only the posts with images
+
+	$new_posts = array();
+
+	// Iterate through each post
+	foreach( $posts as $post ){
+		if(
+			isset( $post['image'] ) &&
+			!empty( $post['image']['sizes'] ) &&
+			is_array( $post['image']['sizes'] )
+			){
+			$has_image = true;
+			$missing_images = 0;
+			// Check through each image size, if it's null
+			foreach( $post['image']['sizes'] as $image_size ){
+				if( $image_size['url'] == null ){
+					$missing_images ++;
+				}
+			}
+			// If the number of null image sizes is equal to the total number of image sizes
+			if( $missing_images == count( $post['image']['sizes'] ) )
+				// It's missing an image
+				$has_image = false;
+			// If it has an image, add it to the posts
+			if( $has_image )
+				array_push( $new_posts, $post );
+		}
+
+	}
+	// Return the posts with images
+	return $new_posts;
+}
+
 
 ///// GENERATE IMAGE TAGS /////
 
