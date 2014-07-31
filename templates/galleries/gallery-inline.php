@@ -16,6 +16,7 @@
 
 <div
 	class="pw-gallery-shortcode"
+	ng-cloak
 	ng-controller="<?php echo $gallery['instance']; ?>">
 	<hr>
 

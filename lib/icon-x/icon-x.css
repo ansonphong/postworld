@@ -12,7 +12,7 @@
 
 [class^="icon-x-"],
 [class*=" icon-x-"] {
-  font-family:IconX;
+  font-family:IconX !important;
   font-weight: normal;
   font-style: normal;
   text-decoration: inherit;
@@ -121,7 +121,7 @@
   content: "\E011";
 }
 
-.icon-x-location3D:before {
+.icon-x-location3D:before, .icon-x-location3d:before {
   content: "\E032";
 }
 

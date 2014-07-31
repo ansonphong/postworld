@@ -12,11 +12,9 @@ module.exports = function(grunt) {
           //'deploy/postworld.min.js': ['js/*.js', 'js/**/*.js'],
           'deploy/postworld.min.js':[
         	  
-
             ///// ANGULAR /////
             // Angular
             'lib/'+angular_version+'/angular.min.js', // Angular.js has to go first
-
 
             ///// JS LIBRARIES /////
             // Underscore

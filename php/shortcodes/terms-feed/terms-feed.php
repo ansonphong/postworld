@@ -1,6 +1,8 @@
 <?php
 ////////// POSTWORLD TERMS FEED //////////
 function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
+	
+	
 
 	// Extract Shortcode Attributes, set defaults
 	$atts = shortcode_atts( array(
@@ -15,10 +17,10 @@ function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
 		'order-terms-by'=> 'count',
 		'order-terms'	=> 'DESC',
 		'order-posts-by'=> 'rand',
-		));
+		), $atts);
 
 	extract($atts);
-	
+
 	// Setup Feed Query
 	$vars = array(
 		'terms' => array(
@@ -63,7 +65,7 @@ function pw_print_terms_feed( $vars ){
 		'template'	=>	$default_template, 	// ID in : templates/shortcodes 
 
 		'terms' => array(
-			'taxonomies'    =>  array( 'post_tag'),
+			'taxonomies'    =>  array( 'post_tag' ),
 			'args'          =>  array(
 				'number'	=>	50,
 				'orderby'	=>	'count',
@@ -85,7 +87,11 @@ function pw_print_terms_feed( $vars ){
 
 		);
 
+	
+
 	$vars = pw_set_defaults( $vars, $default_vars ); 
+
+
 
 	///// TEMPLATES ////
 	$templates = pw_get_templates(

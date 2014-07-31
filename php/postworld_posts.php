@@ -52,6 +52,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	global $template_paths;
 	global $pw_post_meta_fields;
 
+	////////// EDIT FIELDS ///////////
 	$edit_fields = array(
 		'ID',
 		'post_id',
@@ -85,8 +86,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'related_post',
 		);
 
-	////////// FIELDS MODEL //////////
-
+	////////// PREVIEW FIELDS //////////
 	$preview_fields = array(
 		'ID',
 		'post_title',
@@ -117,6 +117,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	$preview_fields = apply_filters( 'pw_get_post_preview_fields', $preview_fields );
 
+	////////// DETAIL FIELDS //////////
 	$detail_fields =	array(
 		'post_path',
 		'image(full)',
@@ -129,6 +130,18 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	
 	$micro_fields =	array(
 		'post_title',
+		);
+
+	// TODO : Develop hooks to customize the post fields model
+	global $pwGetPostFieldsModel;
+	$pwGetPostFieldsModel = array();
+	$pwGetPostFieldsModel['gallery'] =	array(
+		'ID',
+		'post_title',
+		'post_excerpt',
+		'post_content',
+		'post_type',
+		'image(all)',
 		);
 
 	$viewer_fields =array(
@@ -655,6 +668,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if ( !empty($gallery_fields) ){
 
 			$post['gallery'] = array();
+			// TODO : If already has post_content from get_post, feed post_content directly
+			// 		  To bypass recursive query of the post_content
 			$gallery_post_ids = pw_get_post_galleries_attachment_ids( $post_id );
 
 			// Gallery Attachment IDs
@@ -664,9 +679,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			// Gallery Attachment Posts
 			if( in_array( 'posts', $gallery_fields ) ){
-				$new_fields = array_diff( $fields, array( 'gallery(ids,posts)' ) );
+				// For performance, prevent from checking every image for a gallery
+				$new_fields = array_diff( $pwGetPostFieldsModel['gallery'], array( 'gallery(ids,posts)', 'gallery(ids)', 'gallery(posts)' ) );
 				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, $new_fields );
-				// TODO : Performance, prevent from checking every image for a gallery
 			}
 
 		}

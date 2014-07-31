@@ -126,13 +126,14 @@ class menu_kit_widget extends WP_Widget {
 		
 		if ($menu_type == 'custom_menu') :
 
-		    // Get the menu template path
+		    // Get the menu templates
 		    $menu_templates = pw_get_menu_templates();
-			$menu_template = $OPTIONS['menu_template'];
-		    $template_path = $menu_templates[$menu_template] ;//'templates/custom_menu-walker.php';
-
-		    // Include the template path
-		    include $template_path;
+			// Get the menu template path
+		    $template_path = $menu_templates[ $OPTIONS['menu_template'] ] ;//'templates/custom_menu-walker.php';
+		    // Duplicate Slug as ID
+		    $OPTIONS['menu_id'] = $OPTIONS['menu_slug'];
+		    // Output Buffering to include template
+		    echo pw_ob_include( $template_path, $OPTIONS );
 
 		endif;
 		

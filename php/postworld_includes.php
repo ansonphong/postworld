@@ -16,7 +16,7 @@ function postworld_includes( $args ){
 
 	// Injections
 	global $pwInject;
-	
+
 	// Add injectors from Site Globals
 	$pwInject = ( isset( $pwSiteGlobals['inject'] ) ) ?
 		$pwSiteGlobals['inject'] : array();
@@ -52,6 +52,11 @@ function postworld_includes( $args ){
 			WP_PLUGIN_URL.'/postworld/lib/icon-x/icon-x.css' );
 	}
 
+	// Add GLYPHICONS
+	if( in_array( 'glyphicons-halflings', $pwInject ) ){
+		wp_enqueue_style( 'glyphicons-halflings',
+			WP_PLUGIN_URL.'/postworld/lib/glyphicons/glyphicons-halflings.css' );
+	}
 
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
@@ -591,6 +596,9 @@ function pwGlobals_parse(){
 	///// LANGUAGE /////
 	$pw['language'] = $pw_settings['language'];
 
+	///// INJECTIONS /////
+	global $pwInject;
+	$pw['inject'] = $pwInject;
 
 	///// RETURN /////
 	return $pw;

@@ -68,6 +68,7 @@ add_shortcode( 'callout-xl', 'pw_general_shortcode' );
 
 
 /////////////// ADVANCED SHORTCODES //////////
+include 'shortcodes/menu/menu.php';
 include 'shortcodes/headings/headings.php';
 include 'shortcodes/fonts/fonts.php';
 include 'shortcodes/slider/slider.php';

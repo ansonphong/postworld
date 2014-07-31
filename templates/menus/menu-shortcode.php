@@ -2,11 +2,11 @@
 $walker = new Menu_With_Description;
 $custom_menu_config = array(
 	'theme_location'  => '',
-	'menu'            => $OPTIONS['menu_slug'],
+	'menu'            => $menu_id, //$OPTIONS['menu_slug'],
 	'container'       => 'div',
 	'container_class' => '',
 	'container_id'    => '',
-	'menu_class'      => 'menu',
+	'menu_class'      => 'menu pw-shortcode ' . $vars['class'],
 	'menu_id'         => '',
 	'echo'            => true,
 	'fallback_cb'     => 'wp_page_menu',
@@ -18,9 +18,10 @@ $custom_menu_config = array(
 	'depth'           => 0,
 	'walker'          => $walker,
 	'walker_vars'	  => array(
-		'item_template_path' => dirname( __FILE__ ) . "/".$menu_template."/item.php",	
+		'item_template_path' => dirname( __FILE__ ) . "/".$menu_template."/item.php",
 		),
 );
 
 wp_nav_menu( $custom_menu_config );
+
 ?>
