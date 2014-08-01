@@ -109,6 +109,10 @@ function pw_activate_user( $auth_key ){
 			"role" => $role,
 			);
 		wp_update_user($args);
+
+		// Delete the activation key !!!
+    	delete_user_meta( $user->ID, 'activation_key' );
+    	
 		return $user;
 	}
 	else
@@ -169,9 +173,6 @@ function pw_activate_autologin( $activation_key, $redirect = "" ){
     	// If the context and redirect are configured
     	if( isset($redirect_config) )
     		$redirect = $redirect_config;
-
-    	// Delete the activation key !!!
-    	delete_user_meta( $user->ID, 'activation_key' );
 
     	// Login User
 		wp_clear_auth_cookie();
