@@ -17,12 +17,14 @@ include 'php/postworld_utilities.php';
 
 // GLOBAL VARIABLES
 global $pw_settings;
+global $postworld_version;
 global $postworld_db_version;
 global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
 
-$postworld_db_version = "1.0";
+$postworld_version = "1.5.3";
+$postworld_db_version = $postworld_version;
 
 //global $pw_prefix;
 //$pw_prefix = "postworld_";

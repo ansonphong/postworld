@@ -8,6 +8,7 @@ function postworld_includes( $args ){
 
 	extract( $args );
 
+	global $postworld_version;
 	global $pwSiteGlobals;
 
 	// Default Angular Version
@@ -87,7 +88,7 @@ function postworld_includes( $args ){
 		//	WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular.min.js');
 
 		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js' );
+		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js?ver='.$postworld_version );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
 
