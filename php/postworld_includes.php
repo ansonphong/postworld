@@ -457,7 +457,7 @@ function pwSiteGlobals_include(){
 
 	global $angularDep;
 	wp_enqueue_script( 'pw-SiteGlobals-JS',
-		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js' );
+		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js', array(), hash( 'md5', 4 ) );
 	
 }
 
