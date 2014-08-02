@@ -86,8 +86,7 @@ postworld.controller('editPost',
 
 
 	//////////////////// INITIALIZE ////////////////////
-
-	$scope.status = 'loading';
+	$scope.status = 'done';
 
 	// Set the default mode
 	if( _.isUndefined( $scope.mode ) )
@@ -174,7 +173,7 @@ postworld.controller('editPost',
 		// And set it in the Scope
 
 		//post_type, post_format
-		$scope.status = "loading";
+		//$scope.status = "loading";
 
 		///// DETECT POST TYPE /////
 		// Check for Post Type Defined by the 'input' Post Object
@@ -350,6 +349,7 @@ postworld.controller('editPost',
 
 	///// LOAD POST DATA /////
 	$scope.loadEditPost = function( post_id ){
+		$scope.status = 'loading';
 
 		// Post ID passed directly
 		if( !_.isUndefined(post_id) ){
@@ -784,8 +784,6 @@ postworld.controller('editPost',
 		if( !_.isUndefined($scope.lang) )
 			$scope.post.language_code = $scope.lang;
 	} );
-
-	
 
 
 }]);

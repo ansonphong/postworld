@@ -32,14 +32,17 @@ postworld.controller( 'pwEmbedlyExtractCtrl',
 	[ '$scope', '$window', '$timeout', '$log', 'pwData', 'embedly', 'pwEditPostFilters', '_',
 	function( $scope, $window, $timeout, $log, $pwData, $embedly, $pwEditPostFilters, $_ ) {
 
+	///// INIT STATES ////
+	if( _.isUndefined( $scope.$parent.states ) )
+		$scope.$parent.states = {};
+
+	// Set default state
+	$scope.$parent.states.extractUrl = 'done';
 
 	$scope.$parent.extractUrl = function() {
 		$scope.status = "busy";
 
-		// Update Status in Parent Scope
-		if( _.isUndefined( $scope.$parent.statusObj ) )
-			$scope.$parent.statusObj = {};
-		$scope.$parent.statusObj.extractUrl = 'busy';
+		$scope.$parent.states.extractUrl = 'busy';
 
 		$embedly.liveEmbedlyExtract( $scope.extractUrlModel ).then( // 
 				// Success
@@ -53,14 +56,14 @@ postworld.controller( 'pwEmbedlyExtractCtrl',
 					$scope.extractObjectModel = response;
 
 					$scope.status = "done";
-					$scope.$parent.statusObj.extractUrl = 'done';
+					$scope.$parent.states.extractUrl = 'done';
 				},
 				// Failure
 				function(response) {
 					//alert('Could not find URL.');
 					throw {message:'Embedly Error'+response};
 					$scope.status = "done";
-					$scope.$parent.statusObj.extractUrl = 'done';
+					$scope.$parent.states.extractUrl = 'done';
 				}
 			);
 	}
