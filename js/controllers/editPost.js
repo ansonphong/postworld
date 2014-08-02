@@ -43,12 +43,6 @@ postworld.directive( 'pwEditPost', [ function($scope){
 							$scope.editPostConfig.autoReload = false;
 							break;
 					}
-					/*
-					if( value == 'inline-submit' || value == 'quick-edit' ){
-						$scope.editPostConfig.routing = false;
-						$scope.editPostConfig.autoReload = false;
-					}
-					*/
 			});
 
 			// OBSERVE Attribute
@@ -90,6 +84,9 @@ postworld.controller('editPost',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_ ) {
 
+
+	//////////////////// INITIALIZE ////////////////////
+
 	$scope.status = 'loading';
 
 	// Set the default mode
@@ -107,14 +104,29 @@ postworld.controller('editPost',
 	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
 		$scope.postOptions = $window.pwSiteGlobals.post_options;
 
-	// If No Post Object exists, create one
+	///// SET POST OBJECT /////
+	// If No Post Object exists and routing is off, create one
 	$timeout( function(){
-		if( _.isUndefined( $scope.post ) ){
-			$scope.setPostObject({});
+		///// NEW QUICK EDIT POST /////
+		if( $scope.mode == 'quick-edit-new' ){
+			//alert( $scope.post.post_type );
+			$scope.newPost({ 'post_type':$scope.post.post_type });
+			//$scope.setPostObject(  );
+			$scope.status = "done";
 		}
-	}, 1 );
+		///// NEW POST IF ROUTING IS OFF /////
+		else if( 
+			$scope.editPostConfig.routing == false ){
+			$scope.newPost({});
+		}
 
+	}, 0 );
 
+	// ROLE ACCESS
+	// Sets booleans for role access variables : "editor", "author"
+	$pwRoleAccess.setRoleAccess($scope);
+
+	//////////////////// FUNCTIONS ////////////////////
 	// Define which post type to return within a set of options
 	// Allows to have a 'default' post type object
 	// With the option to over-ride with the current scope post type
@@ -129,11 +141,8 @@ postworld.controller('editPost',
 		
 		else
 			return false;
-
 	};
 
-
-	
 	$scope.clearAndClose = function(){
 		// Clear Embedly Extract
 		$scope.clearExtract();
@@ -158,12 +167,7 @@ postworld.controller('editPost',
 		return _.where( $scope.link_format_meta, { "slug" : link_format } );
 	}
 
-	$scope.$watch("post.link_format", function (){
-		var selectedLinkFormatMeta = $scope.getSelectedLinkFormatMeta();
-		$scope.selectedLinkFormatMeta = selectedLinkFormatMeta[0];
-	}, 1);
-
-
+	///// SET POST OBJECT /////
 	$scope.setPostObject = function( post ){
 		// Given any even incomplete post object
 		// This function will build it into a safe post object
@@ -197,12 +201,10 @@ postworld.controller('editPost',
 		else
 			var post_format = 'default';
 
-
 		///// GET DEFAULT POST OBJECT /////
 		// This function is safe to pass an 'undefined' post type / format
 		var post = $scope.getDefaultPostConfig( post_type, post_format );
 		
-
 		///// OVERRIDE WITH SCOPE POST /////
 		// If the Post Object is defined the current scope
 		// Override the defaults with those values
@@ -219,7 +221,7 @@ postworld.controller('editPost',
 		var default_post = {
 			post_title : "",
 			post_name : "",
-			//post_type : $scope.initEditPost.post_type,
+			post_type : $scope.getPostType(),
 			post_status : postDefaults.post_status,
 			post_class : postDefaults.post_class,
 			link_url : "",
@@ -243,18 +245,20 @@ postworld.controller('editPost',
 		$scope.default_post = post;
 		$scope.post = post;
 
+		// SET THE POST CLASS
+
+
 		// Post Initilize Callback
 		if( !_.isUndefined( $scope.initEditPost['initCallback'] ) )
 			$scope.$eval( $scope.initEditPost['initCallback'] );
 
 	};
 
-	$scope.getDefaultPostConfig = function( post_type, post_format ){
-
+	$scope.getPostType = function( post_type ){
 		///// DETECT POST TYPE /////
 		// If post type is empty or not defined
 		// Define Default Post Type
-		if( _.isUndefined(post_type) ||
+		if( _.isUndefined( post_type ) ||
 			_.isEmpty( post_type ) ||
 			post_type == '' ){
 			// Check for Post Type defined by directive
@@ -262,10 +266,23 @@ postworld.controller('editPost',
 				var post_type = $scope.initEditPost.post_type;
 			// Check for Post Type defined by scope post object
 			else if( $_.objExists( $scope, 'post.post_type' ) )
-				var post_type = $scope.post.post_type;
+				post_type = $scope.post.post_type;
+			else if( $_.objExists( postDefaults, 'post_type' ) )
+				post_type = postDefaults.post_type;
 			else
-				var post_type = 'post';
+				post_type = 'post';
+			return post_type;	
 		}
+		// TODO : Here validate the post_type
+		else
+			return post_type;
+
+	}
+
+	///// GET DEFAULT POST CONFIG /////
+	$scope.getDefaultPostConfig = function( post_type, post_format ){
+
+		post_type = $scope.getPostType( post_type );
 
 		// Define default Post Format
 		if( _.isUndefined(post_format) ||
@@ -304,13 +321,8 @@ postworld.controller('editPost',
 
 	};
 
-	// ROLE ACCESS
-	// Sets booleans for role access variables : "editor", "author"
-	$pwRoleAccess.setRoleAccess($scope);
-
 	///// CLEAR POST DATA /////
 	$scope.newPost = function( post ){
-		
 		// Set the new mode
 		$scope.mode = "new";
 
@@ -335,90 +347,6 @@ postworld.controller('editPost',
 
 	}
 
-	///// NEW QUICK EDIT POST /////
-	if( $scope.mode == 'quick-edit-new' ){
-		//alert( $scope.post.post_type ); 
-		$scope.setPostObject( { 'post_type':$scope.post.post_type } );
-		$scope.status = "done";
-	}
-	
-	///// WATCH : ROUTE /////
-
-	$scope.$on(
-		"$routeChangeSuccess",
-		function( $currentRoute, $previousRoute ){
-
-			// TEMP : For DEV
-			$scope.routeAction = $route.current.action;
-
-			// Stop here if routing is disabled
-			if( $scope.editPostConfig.routing == false )
-				return false;
-
-			//alert( JSON.stringify( $currentRoute ) );
-
-			///// ROUTE : NEW POST /////
-			if ( $route.current.action == "new_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
-				// SWITCH FROM MODE : EDIT > NEW
-				// If we're coming to 'new' mode from 'edit' mode
-				if($scope.mode == "edit"){
-					// Clear post Data
-					$scope.newPost();
-				}
-
-				// Get the post type from route
-				var post_type = ($routeParams.post_type || "");
-
-				// Set Default Post Type
-				if( post_type == "" ){
-					
-					// Get the post type from the directive attributes
-					if( !_.isUndefined( $scope.initEditPost.post_type ) )
-						post_type = $scope.initEditPost.post_type;
-
-					// Get the post type from the default post definition
-					if( !_.isUndefined( postDefaults.post_type ) ){
-						post_type = postDefaults.post_type;
-						alert( post_type );
-					}
-
-				}
-
-				// If Post Type has been defined in the route, update the post model
-				if ( post_type != "" ){
-					// If the post object is not defined, set it
-					if( _.isUndefined($scope.post) )
-						$scope.post = {};
-					// Set the post type
-					$scope.post.post_type = post_type;
-				}
-
-				// Set a new post object
-				$scope.setPostObject( { 'post_type':post_type } );
-
-				// Set the status
-				$scope.status = "done";
-				// Set the mode
-				$scope.mode = "new";
-			}
-			///// ROUTE : EDIT POST /////
-			else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
-				// Load the specified post data
-				$scope.loadEditPost();
-				$scope.mode = "edit";
-			}
-			///// ROUTE : SET DEFAULT /////
-			else if ( $route.current.action == "default"  ){
-				$location.path('/new/' + postDefaults.post_type );
-			}
-		}
-	);
-
-
-	///// QUICK EDIT : LOAD POST DATA /////
-	$scope.$on('loadPostData', function(event, post_id) {
-		$scope.loadEditPost( post_id );
-	});
 
 	///// LOAD POST DATA /////
 	$scope.loadEditPost = function( post_id ){
@@ -635,6 +563,129 @@ postworld.controller('editPost',
 		}, 250 );
 	};
 
+	///// ON : ROUTE CHANGE /////
+	$scope.$on(
+		"$routeChangeSuccess",
+		function( $currentRoute, $previousRoute ){
+
+			// TEMP : For DEV
+			$scope.routeAction = $route.current.action;
+
+			// Stop here if routing is disabled
+			if( $scope.editPostConfig.routing == false ){
+				return false;
+			}
+
+			//alert( JSON.stringify( $currentRoute ) );
+
+			///// ROUTE : NEW POST /////
+			if ( $route.current.action == "new_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
+				// SWITCH FROM MODE : EDIT > NEW
+				// If we're coming to 'new' mode from 'edit' mode
+				if($scope.mode == "edit"){
+					// Clear post Data
+					$scope.newPost();
+				}
+
+				// Get the post type from route
+				var post_type = ($routeParams.post_type || "");
+
+				// Set Default Post Type
+				if( post_type == "" ){
+					
+					// Get the post type from the directive attributes
+					if( !_.isUndefined( $scope.initEditPost.post_type ) )
+						post_type = $scope.initEditPost.post_type;
+
+					// Get the post type from the default post definition
+					if( !_.isUndefined( postDefaults.post_type ) ){
+						post_type = postDefaults.post_type;
+						//alert( post_type );
+					}
+
+				}
+
+				// If Post Type has been defined in the route, update the post model
+				if ( post_type != "" ){
+					// If the post object is not defined, set it
+					if( _.isUndefined($scope.post) )
+						$scope.post = {};
+					// Set the post type
+					$scope.post.post_type = post_type;
+				}
+
+				// Set a new post object
+				$scope.setPostObject( { 'post_type':post_type } );
+
+				// Set the status
+				$scope.status = "done";
+				// Set the mode
+				$scope.mode = "new";
+			}
+			///// ROUTE : EDIT POST /////
+			else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
+				// Load the specified post data
+				$scope.loadEditPost();
+				$scope.mode = "edit";
+			}
+			///// ROUTE : SET DEFAULT /////
+			else if ( $route.current.action == "default"  ){
+				$location.path('/new/' + postDefaults.post_type );
+			}
+		}
+	);
+
+	////////// FEATURED IMAGE //////////
+	// Media Upload Window
+	$scope.updateFeaturedImage = function(image_object){
+		//alert( JSON.stringify(image_object) );
+		$scope.post.image = {};
+		$scope.post.image.meta = image_object;
+		$scope.post.thumbnail_id = image_object.id;
+		if( typeof image_object !== 'undefined' ){
+			$scope.hasFeaturedImage = 'true';
+		}
+	}
+
+	// Check if Object Exists
+	$scope.hasFeaturedImage = function(){
+		if( $_.objExists( $scope, 'post.image' ) &&
+			!_.isEmpty($scope.post.image) )
+			return true;
+		else
+			return false;
+	}
+
+	$scope.removeFeaturedImage = function(){
+		$scope.post.image = {};
+		$scope.post.thumbnail_id = "delete";
+	}
+
+	///// GET POST_CONTENT FROM TINY MCE /////
+	$scope.getTinyMCEContent = function(){        
+	}
+
+	$scope.showEditorSource = function(){
+		var source = $('#post_content').val();
+		source = tinyMCE.get('post_content').getContent({format : 'raw'});
+		alert(source);
+	};
+
+
+	//////////////////// WATCHES ////////////////////
+
+	///// ON : LOAD POST DATA /////
+	// For Quick Edit
+	$scope.$on('loadPostData', function(event, post_id) {
+		$scope.loadEditPost( post_id );
+	});
+
+	///// WATCH : LINK FORMAT /////
+	$scope.$watch("post.link_format", function (){
+		var selectedLinkFormatMeta = $scope.getSelectedLinkFormatMeta();
+		$scope.selectedLinkFormatMeta = selectedLinkFormatMeta[0];
+	}, 1);
+	
 	///// LOAD IN DATA /////
 	// POST TYPE OPTIONS
 	$scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
@@ -680,7 +731,7 @@ postworld.controller('editPost',
 			}
 		}, 1);
 
-	// WATCH : LINK_URL
+	///// WATCH : LINK URL /////
 	// • Watch for changes in Link URL field
 	// • Evaluate the Post Format
 	$scope.$watchCollection('[ post.link_url, post.link_format ]',
@@ -692,113 +743,37 @@ postworld.controller('editPost',
 		
 		});
 
-	
-
 	// Wait for the controller to initialize
-	//$timeout( function(){
-		// WATCH : POST TYPE
-		$scope.$watch( "post.post_type",
-			function (){
+	///// WATCH : POST TYPE /////
+	$scope.$watch( "post.post_type", function(){
+			// Check if Post Type Exists, if not stop here
+			if( !$_.objExists( $scope, 'post.post_type' ) )
+				return false;
 
-				// Check if Post Type Exists, if not stop here
-				if( !$_.objExists( $scope, 'post.post_type' ) )
-					return false;
+			// ROUTE CHANGE
+			if( $scope.mode == "new" && $scope.editPostConfig.routing == true ){
+				//alert( "MODE:" + $scope.mode );
+				$location.path('/new/' + $scope.post.post_type);
+			}
 
-				// ROUTE CHANGE
-				if( $scope.mode == "new" && $scope.editPostConfig.routing == true ){
-					//alert( "MODE:" + $scope.mode );
-					$location.path('/new/' + $scope.post.post_type);
-				}
+			// BROADCAST CHANGE TO CHILD CONTROLLERS NODES
+			$rootScope.$broadcast('changePostType', $scope.post.post_type );
+ 
+			// POST STATUS OPTIONS
+			// Re-evaluate available post_status options on post_type switch
+			$scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post.post_type );
+			
+			// SET DEFAULT POST STATUS
+			if ( $scope.post.post_status == null || $scope.post.post_status == '' )
+				angular.forEach( $scope.post_status_options, function(value, key){
+					//return key;
+					$scope.post.post_status = key;
+				});
 
-				// BROADCAST CHANGE TO CHILD CONTROLLERS NODES
-				$rootScope.$broadcast('changePostType', $scope.post.post_type );
-	 
-				// POST STATUS OPTIONS
-				// Re-evaluate available post_status options on post_type switch
-				$scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post.post_type );
-				
-				// SET DEFAULT POST STATUS
-				if ( $scope.post.post_status == null || $scope.post.post_status == '' )
-					angular.forEach( $scope.post_status_options, function(value, key){
-						//return key;
-						$scope.post.post_status = key;
-					});
-
-			}, 1 );
-
-	//}, 1 );
-
-
-	////////// FEATURED IMAGE //////////
-	// Media Upload Window
-	$scope.updateFeaturedImage = function(image_object){
-		//alert( JSON.stringify(image_object) );
-		$scope.post.image = {};
-		$scope.post.image.meta = image_object;
-		$scope.post.thumbnail_id = image_object.id;
-		if( typeof image_object !== 'undefined' ){
-			$scope.hasFeaturedImage = 'true';
-		}
-	}
-
-	// FEATURE IMAGE WATCH : Watch the Featured Image
-	////// DEPRECIATED /////
-	/*
-	$scope.$watch( "post.image",
-		function (){
-
-		// Check if Object Exists
-		if( !$_.objExists( $scope, 'post.image' ) )
-			$scope.hasFeaturedImage = false;
-
-		if( !_.isUndefined($scope.post.thumbnail_id) &&
-			$scope.post.thumbnail_id !== "" &&
-			$scope.post.thumbnail_id !== "delete" )
-			$scope.hasFeaturedImage = true;
-		else
-			$scope.hasFeaturedImage = false;
 		}, 1 );
-	*/
-
-	// Check if Object Exists
-	$scope.hasFeaturedImage = function(){
-
-
-		if( $_.objExists( $scope, 'post.image' ) &&
-			!_.isEmpty($scope.post.image) )
-			return true;
-		else
-			return false;
-
-
-		//------------------------------------\\
-		/*
-		if( !$_.objExists( $scope, 'post.image' ) ||
-			_.isEmpty($scope.post.image) )
-			return false;
-
-		if( !_.isUndefined($scope.post.thumbnail_id) &&
-			$scope.post.thumbnail_id !== "" &&
-			$scope.post.thumbnail_id !== "delete" )
-			return true;
-		else
-			return false;
-		*/
-	}
-
-	$scope.removeFeaturedImage = function(){
-		$scope.post.image = {};
-		$scope.post.thumbnail_id = "delete";
-	}
-
-	///// GET POST_CONTENT FROM TINY MCE /////
-	$scope.getTinyMCEContent = function(){        
-	}
 
 	// FORM VALIDATION WATCH
-	$scope.$watch( "editPost.$valid",
-		function (){
-		}, 1 );
+	//$scope.$watch( "editPost.$valid", function (){}, 1 );
 
 	// LANGUAGE CODE WATCH
 	// If 'lang' is defined (by pw-language) then add it to the post object
@@ -812,11 +787,7 @@ postworld.controller('editPost',
 			$scope.post.language_code = $scope.lang;
 	} );
 
-	$scope.showEditorSource = function(){
-		var source = $('#post_content').val();
-		source = tinyMCE.get('post_content').getContent({format : 'raw'});
-		alert(source);
-	};
+	
 
 
 }]);
