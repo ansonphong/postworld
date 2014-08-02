@@ -736,11 +736,9 @@ postworld.controller('editPost',
 	// • Evaluate the Post Format
 	$scope.$watchCollection('[ post.link_url, post.link_format ]',
 		function ( newValue, oldValue ){
-
 			// Check if Object Exists
 			if( $_.objExists( $scope, 'post.link_url' ) )
 				$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url, $scope.link_format_meta );
-		
 		});
 
 	// Wait for the controller to initialize
