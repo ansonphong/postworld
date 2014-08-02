@@ -18,8 +18,6 @@
 	class="pw-gallery-shortcode"
 	ng-cloak
 	ng-controller="<?php echo $gallery['instance']; ?>">
-	<hr>
-
 	<masonry
 		column-width=".grid-sizer"
 		masonry-options='{ "gutter": 0, "transitionDuration":0 }'>
@@ -41,5 +39,4 @@
 			</div>
 		</div>
 	</masonry>
-	<hr>
 </div>
