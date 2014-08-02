@@ -88,9 +88,14 @@ postworld.controller('editPost',
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
 
+	///// MODES /////
 	// Set the default mode
 	if( _.isUndefined( $scope.mode ) )
 		$scope.mode = 'default';
+
+	// Set default status for quick-edit mode
+	if( $scope.mode == 'quick-edit' )
+		$scope.status = 'loading';
 
 	// Define Global Edit Post Defaults
 	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
@@ -349,7 +354,7 @@ postworld.controller('editPost',
 
 	///// LOAD POST DATA /////
 	$scope.loadEditPost = function( post_id ){
-		$scope.status = 'loading';
+		//$scope.status = 'loading';
 
 		// Post ID passed directly
 		if( !_.isUndefined(post_id) ){
@@ -625,6 +630,7 @@ postworld.controller('editPost',
 			///// ROUTE : EDIT POST /////
 			else if ( $route.current.action == "edit_post"  ){ // && typeof $scope.post.post_id !== 'undefined'
 				// Load the specified post data
+				$scope.status = 'loading';
 				$scope.loadEditPost();
 				$scope.mode = "edit";
 			}
