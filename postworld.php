@@ -23,7 +23,7 @@ global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
 
-$postworld_version = "1.5.3";
+$postworld_version = "1.5.5";
 $postworld_db_version = $postworld_version;
 
 //global $pw_prefix;
