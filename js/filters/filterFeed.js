@@ -209,12 +209,12 @@ postworld.directive('loadPanel', function() {
 });
 
 postworld.controller('pwLoadPanelCtrl',
-    function( $scope, $timeout, $log, $pwData ) {
+    function( $scope, $timeout, $log, pwData ) {
 
 		// Wait for pwData to initialize
 		$timeout( function(){
 			// Load Template URL
-			$scope.templateUrl = $pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
+			$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: $scope.panel_id } );
 			//$log.debug('Load Panel :' + $scope.panel_id, $scope.templateUrl );
 		},1 );
 
