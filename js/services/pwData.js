@@ -203,9 +203,14 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 			if( _.isUndefined(meta.view) )
 				return false;
 
-		
 			var template = getTemplate( this, meta ) + "?ver=" + $pw['version'] ; // ( this, subdir, post_type, name )
+		    
+		    // If on HTTPS / SSL, get on the same protocol
+		    if( $pw.view['protocol'] == 'https' )
+		    	template = template.replace('http://', 'https://');
+
 		    return template;
+
 
 		}, // END OF pw_get_template
 		convertFeedSettings: function (feedID,args1) {

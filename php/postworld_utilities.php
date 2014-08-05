@@ -7,6 +7,10 @@
 //////////////////////////////////*/
 
 
+function pw_is_associative( $arr ){
+    return array_keys($arr) !== range(0, count($arr) - 1);
+}
+
 function pw_core_print_generation_time() {
 ?>
 <!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->

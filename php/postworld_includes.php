@@ -536,13 +536,24 @@ function pwGlobals_parse(){
 		$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
 		$userdata["is_admin"] = is_admin();
 
+		// Force the roles as a flat array
+		if( isset( $userdata['roles'] ) &&
+			pw_is_associative( $userdata['roles'] ) ){
+			$userdata['roles'] = array_values( $userdata['roles'] );
+		}
+
 		// SUPPORT FOR WPMU MEMBERSHIP
 		if( function_exists('current_user_is_member') ){
 			$userdata["membership"] = array();
 			$userdata["membership"]["is_member"] = current_user_is_member();
 		}
+
+
 	} else
 		$userdata = 0;
+
+
+
 	$pw["user"] = $userdata;
 
 	///// DISPLAYED USER /////
