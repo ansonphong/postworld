@@ -206,8 +206,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 			var template = getTemplate( this, meta ) + "?ver=" + $pw['version'] ; // ( this, subdir, post_type, name )
 		    
 		    // If on HTTPS / SSL, get on the same protocol
-		    //if( $pw.view['protocol'] == 'https' )
-		    //	template = template.replace('http://', 'https://');
+		    if( $pw.view['protocol'] == 'https' )
+		    	template = template.replace('http://', 'https://');
 
 		    return template;
 

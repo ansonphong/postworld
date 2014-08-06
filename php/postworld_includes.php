@@ -407,6 +407,7 @@ function pwSiteGlobals_include(){
 		'description' => get_bloginfo('description'),
 	);
 
+	// Depreciated //
 	$pwSiteGlobals['wordpress'] = array( 
 		'ajax_url' => admin_url('admin-ajax.php'),
 		'stylesheet_directory_uri' => get_stylesheet_directory_uri(),
@@ -419,8 +420,8 @@ function pwSiteGlobals_include(){
 	///// PATHS /////
 	$pwSiteGlobals["paths"] = array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
-		'plugin_url' => WP_PLUGIN_URL,
-		'plugin_dir' => WP_PLUGIN_DIR,
+		'plugins_url' => WP_PLUGIN_URL,
+		'plugins_dir' => WP_PLUGIN_DIR,
 		"theme_dir"	=>	get_stylesheet_directory(),
 		"home_url" => get_bloginfo( 'url' ),
 		"wp_url" => get_bloginfo( 'wpurl' ),
@@ -593,8 +594,8 @@ function pwGlobals_parse(){
 	// TODO : Remove - Already moved this to pwSiteglobals for JS
 	$pw["paths"] = array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
-		'plugin_url' => WP_PLUGIN_URL,
-		'plugin_dir' => WP_PLUGIN_DIR,
+		'plugins_url' => WP_PLUGIN_URL,
+		'plugins_dir' => WP_PLUGIN_DIR,
 		"theme_dir"	=>	get_stylesheet_directory(),
 		"home_url" => get_bloginfo( 'url' ),
 		"wp_url" => get_bloginfo( 'wpurl' ),
