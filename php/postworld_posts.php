@@ -847,8 +847,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				)
 			);
 
+	$post = apply_filters( 'pw_get_post_complete_filter', $post );
 	
-
 	return $post;
 
 }
