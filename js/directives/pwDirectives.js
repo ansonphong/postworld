@@ -10,13 +10,15 @@
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
 ///// POSTWORLD SRC DIRECTIVE /////
-postworld.directive('pwSrc', function() {
+postworld.directive('pwSrc', function( $log ) {
 	return {
 		scope:{
 		  pwSrc:"=pwSrc"
 		},
-		link: function(scope, element, attrs) {
-			attrs.$set('src', scope.pwSrc );
+		link: function( scope, element, attrs ) {
+			scope.$watch( 'pwSrc', function(){
+				attrs.$set('src', scope.pwSrc );
+			});
 		},
 	}
 });
@@ -28,7 +30,10 @@ postworld.directive('pwHref', function() {
 		  pwHref:"=pwHref"
 		},
 		link: function(scope, element, attrs) {
-			attrs.$set('href', scope.pwHref );
+			
+			scope.$watch( 'pwHref', function(){
+				attrs.$set('href', scope.pwHref );
+			});
 
 			//var fullPathUrl = "http://.../";
 			/*
