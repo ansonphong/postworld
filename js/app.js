@@ -212,7 +212,8 @@ function pwRegisterController( controllerName, moduleName ) {
         if(call[0] == "$controllerProvider" &&
            call[1] == "register" &&
            call[2][0] == controllerName) {
-            controllerProvider.register(controllerName, call[2][1]);
+           	if( !_.isUndefined( controllerProvider ) )
+            	controllerProvider.register(controllerName, call[2][1]);
         }
     }
 }

@@ -196,8 +196,6 @@ postworld.controller('postVote',
 }]);
 
 
-
-
 /*   _       _           _         ____                      _                     
     / \   __| |_ __ ___ (_)_ __   |  _ \ _ __ ___  _ __   __| | _____      ___ __  
    / _ \ / _` | '_ ` _ \| | '_ \  | | | | '__/ _ \| '_ \ / _` |/ _ \ \ /\ / / '_ \ 
@@ -205,7 +203,6 @@ postworld.controller('postVote',
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
 ////////// ------------ ADMIN POSTS DROPDOWN ------------ //////////*/   
-
 
 postworld.directive( 'pwAdminPostMenu', [ function($scope){
     return {
@@ -215,8 +212,8 @@ postworld.directive( 'pwAdminPostMenu', [ function($scope){
 }]);
 
 postworld.controller('adminPostDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '_', '$timeout',
-    function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout ) {
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '_', '$timeout', '$pw',
+    function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout, $pw ) {
 
     ///// MENU OPTIONS /////
     // Default Menu Options
@@ -256,6 +253,7 @@ postworld.controller('adminPostDropdown',
 
     // Menu Options
     var overrideMenuOptions = $_.getObj( $window, 'pwSiteGlobals.controls.post.menu_options' );
+
     if( overrideMenuOptions != false ){
 
         var newMenuOptions = [];
@@ -283,8 +281,8 @@ postworld.controller('adminPostDropdown',
     var actionsByRole = $window.pwSiteGlobals.controls.post.role_access;
 
     // Localize current user data
-    $scope.current_user = $window.pwGlobals.user;
-
+    $scope.current_user = $pw.user;
+    
     /*
     $scope.$watch('post', function(value) {        
     },1);
@@ -292,13 +290,14 @@ postworld.controller('adminPostDropdown',
 
     var initAttempts = 0;
     $scope.initMenu = function(){
+        $log.debug( "initMenu" );
 
         // Try Initializing the menu until author ID is defined
         if( !$_.objExists( $scope, 'post.author.ID' ) ){
             initAttempts ++;
 
             // Stop trying after 100 tries
-            if( initAttempts < 100 ){
+            if( initAttempts <= 20 ){
                 $timeout(function() {
                     $scope.initMenu();
                 }, 200);  
@@ -339,6 +338,9 @@ postworld.controller('adminPostDropdown',
         // If no options added, set empty
         if ( $scope.userOptions == [] )
             $scope.userOptions = "0";
+
+        
+
     }
     // Run the function
     $scope.initMenu();
