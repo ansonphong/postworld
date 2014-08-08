@@ -280,9 +280,6 @@ postworld.controller('adminPostDropdown',
     // Define actions which each role has access to
     var actionsByRole = $window.pwSiteGlobals.controls.post.role_access;
 
-    // Localize current user data
-    $scope.current_user = $pw.user;
-    
     /*
     $scope.$watch('post', function(value) {        
     },1);
@@ -290,12 +287,20 @@ postworld.controller('adminPostDropdown',
 
     var initAttempts = 0;
     $scope.initMenu = function(){
-        //$log.debug( "initMenu" );
+        $log.debug( "$scope.post.author.ID", $_.getObj( $scope, 'post.author.ID' ) );
+        $log.debug( "$pw.view.post.post_author", $_.getObj( $pw, 'view.post.post_author' ) );
 
+        // Detect the Author ID
+        if( $_.objExists( $scope, 'post.author.ID' ) )
+            var author_id = $scope.post.author.ID;
+        else if( $_.objExists( $scope, 'post.post_author' ) )
+             var author_id = $scope.post.post_author;
+        else if( $_.objExists( $pw, 'view.post.post_author' ) )
+             var author_id = $pw.view.post.post_author;
+        
         // Try Initializing the menu until author ID is defined
-        if( !$_.objExists( $scope, 'post.author.ID' ) ){
+        if( _.isUndefined( author_id ) ){
             initAttempts ++;
-
             // Stop trying after 100 tries
             if( initAttempts <= 10 ){
                 $timeout(function() {
@@ -305,11 +310,10 @@ postworld.controller('adminPostDropdown',
             return false;
         }
 
-
         // Detect the user's possession in relation to the post
         // If the user's ID is same as the post author's ID
-        if ( typeof $scope.current_user.data !== 'undefined' && typeof $scope.post.author.ID !== 'undefined' ){
-            if( $scope.current_user.data.ID == $scope.post.author.ID )
+        if ( typeof $pw.user.data !== 'undefined' ){
+            if( $pw.user.data.ID == author_id )
                 $scope.postPossession = "own";
             else
                 $scope.postPossession = "other";
@@ -318,10 +322,10 @@ postworld.controller('adminPostDropdown',
         }
 
         // Detect current user's role
-        if ( $scope.current_user == 0 )
+        if ( $pw.user == 0 )
             $scope.currentRole = "guest";
-        else if ( typeof $scope.current_user.roles != undefined ){
-            $scope.currentRole = $scope.current_user.roles[0];
+        else if ( typeof $pw.user.roles != undefined ){
+            $scope.currentRole = $pw.user.roles[0];
         }
 
         // Setup empty menu options array
@@ -399,7 +403,7 @@ postworld.controller('adminPostDropdown',
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
 ////////// ------------ ADMIN COMMENTS DROPDOWN ------------ //////////*/   
-var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $log, pwCommentsService) {
+var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $log, pwCommentsService, $pw) {
 
     var comment = $scope.child;
 
@@ -424,13 +428,11 @@ var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $lo
     // Actions which each role has access to
     var actionsByRole = $window.pwSiteGlobals.controls.comment.role_access;
 
-    // Localize current user data
-    $scope.current_user = $window.pwGlobals.user;
-
+    
     // Detect if the user owns the comment
     // If the user's ID is same as the post author's ID
-    if ( typeof $scope.current_user.data !== 'undefined' && typeof comment !== 'undefined' ){
-        if( $scope.current_user.data.ID == comment.user_id )
+    if ( typeof $pw.user.data !== 'undefined' && typeof comment !== 'undefined' ){
+        if( $pw.user.data.ID == comment.user_id )
             $scope.postPossession = "own";
         else
             $scope.postPossession = "other";
@@ -439,10 +441,10 @@ var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $lo
     }
 
     // Detect current user's role
-    if ( $scope.current_user == 0 )
+    if ( $pw.user == 0 || $pw.user == false )
         $scope.currentRole = "guest";
-    else if ( typeof $scope.current_user.roles != undefined ){
-        $scope.currentRole = $scope.current_user.roles[0];
+    else if ( typeof $pw.user.roles != undefined ){
+        $scope.currentRole = $pw.user.roles[0];
     }
 
     // Setup empty menu options array

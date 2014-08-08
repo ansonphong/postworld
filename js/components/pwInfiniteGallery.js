@@ -101,6 +101,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 		$scope.addDisplayedPosts( addPosts );
 
 		// Console
+		/*
 		$log.debug(
 			"pwInfiniteGallery.galleryGetNext : " +
 			"getPostsCount: " + getPostsCount + " // " + 
@@ -110,6 +111,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 			"postsEndIndex: " + postsEndIndex + " // " + 
 			"addPosts: ", addPosts
 			);
+		*/
 	};
 
 }]);

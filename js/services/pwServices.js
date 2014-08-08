@@ -22,10 +22,20 @@ postworld.factory( '$pw',
 		return $window.pwGlobals.user;
 	}
 
+	var state = function(){
+		return {
+    		modals:{
+    			open:0,
+    		}
+    	};
+	}
+
 	// DECLARATIONS
 	return {
 		version: "1.5.5",
 		templates: pwTemplates,
+
+		state: state(),
 
 		user: pwUser(), //$window.pwGlobals.user, // (or something) - refactor to go directly to pwUser
     	// view: $window.pwGlobals.view

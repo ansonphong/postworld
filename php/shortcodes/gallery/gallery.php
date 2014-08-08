@@ -79,18 +79,7 @@ function pw_print_gallery( $gallery ){
 	$gallery_ids = $ids_integers;
 
 	// FIELDS
-	$query['fields'] = array(
-		'ID',
-		'post_title',
-		'post_excerpt',
-		'post_type',
-		'post_parent',
-		'post_permalink',
-		'post_excerpt',
-		'image(all)',
-		'image(stats)',
-		'image(tags)',
-		);
+	$query['fields'] = "gallery";
 
 	///// RUN QUERY /////
 	// Get Post Data for Attachments

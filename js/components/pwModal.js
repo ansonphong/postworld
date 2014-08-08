@@ -28,6 +28,10 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 			var windowClass = ( _.isUndefined( meta.windowClass ) ) ?
 				'pw-modal-default' : meta.windowClass;
 
+			// Track how many modals are open
+			meta.modalIndex = $pw.state.modals.open;
+			// Increase the number by 1
+			$pw.state.modals.open ++;
 
 			////////// SWITCH MODE //////////
 			// mode : Can be used to pass the preset mode
@@ -125,8 +129,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 ////////// MODAL INSTANCE CONTROL //////////
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', '$browser', // 'pwQuickEdit',
-	function( $scope, $rootScope, $document, $window, $location, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts, $browser ) { // , $pwQuickEdit
+	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', '$browser', '$modalStack', '$pw', // 'pwQuickEdit',
+	function( $scope, $rootScope, $document, $window, $location, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts, $browser, $modalStack, $pw ) { // , $pwQuickEdit
 
 	///// SET META /////
 	$scope.meta = meta;
@@ -231,6 +235,15 @@ postworld.controller('pwModalInstanceCtrl',
 		//$log.debug( "key press : " + e.keyCode + " : ", e );
 		var keyCode = parseInt( e.keyCode );
 	
+		$log.debug( "$pw.state.modals.open:", $pw.state.modals.open );
+		$log.debug( "meta.modalIndex-1:", meta.modalIndex-1 );
+
+		
+
+		// Check if the current modal is on top
+		if( $pw.state.modals.open != meta.modalIndex+1 )
+			return false;
+
 		///// FEED /////
 		if( !_.isUndefined( $scope.feed ) ){
 			switch( keyCode ){
@@ -258,6 +271,7 @@ postworld.controller('pwModalInstanceCtrl',
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
 	$scope.close = function () {
+		$pw.state.modals.open --;
 		$modalInstance.dismiss('close');
 	};
 
@@ -347,8 +361,8 @@ postworld.controller('pwModalAccessCtrl',
 
 
 postworld.controller('mediaModalInstanceCtrl',
-    [ '$scope', '$sce', '$modalInstance', 'meta', 'pwData',
-    function( $scope, $sce, $modalInstance, meta, pwData ) { 
+    [ '$scope', '$sce', '$modalInstance', 'meta', 'pwData', '$pw',
+    function( $scope, $sce, $modalInstance, meta, pwData, $pw ) { 
 
 
     // Import the passed post object into the Modal Scope
@@ -381,6 +395,7 @@ postworld.controller('mediaModalInstanceCtrl',
 
     // MODAL CLOSE
     $scope.close = function () {
+        $pw.state.modals.open --;
         $modalInstance.dismiss('close');
     };
 

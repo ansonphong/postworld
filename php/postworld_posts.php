@@ -130,6 +130,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	
 	$micro_fields =	array(
 		'post_title',
+		'post_excerpt',
+		'post_timeago',
+		'post_date',
+		'post_date_gmt',
+		'post_permalink',
 		);
 
 	// TODO : Develop hooks to customize the post fields model
@@ -141,10 +146,19 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_excerpt',
 		'post_content',
 		'post_type',
+		'post_parent',
+		'post_permalink',
+		'post_excerpt',
 		'image(all)',
+		'image(stats)',
+		'image(tags)',
+		'post_author',
+		'fields',
 		);
 
-	$viewer_fields =array(
+	$pwGetPostFieldsModel = apply_filters( 'pw_get_post_fields_model', $pwGetPostFieldsModel );
+
+	$viewer_fields = array(
 		'viewer(has_voted,is_favorite,is_view_later)',
 		);
 
@@ -162,10 +176,14 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		$mode = 'edit';
 	}
 
+	// Gallery Fields
+	else if ($fields == 'gallery'){
+		$fields = $pwGetPostFieldsModel['gallery'];
+	}
+
 	// Micro Fields
 	else if ($fields == 'micro')
 		$fields = $micro_fields;
-
 
 	///// ADD ACTION HOOK : PW GET POST INIT /////
 	do_action( 'pw_get_post_init',
