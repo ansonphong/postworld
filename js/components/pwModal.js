@@ -112,8 +112,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 				//$scope.post_title = post_title;
 			}, function () {
 				// WHEN CLOSE MODAL
+				$pw.state.modals.open --;
 				$log.debug('Modal dismissed at: ' + new Date());
-				
 				// Clear the URL params
 				//$location.url('/');
 				//$location.path('/');
@@ -271,7 +271,6 @@ postworld.controller('pwModalInstanceCtrl',
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
 	$scope.close = function () {
-		$pw.state.modals.open --;
 		$modalInstance.dismiss('close');
 	};
 
@@ -395,7 +394,6 @@ postworld.controller('mediaModalInstanceCtrl',
 
     // MODAL CLOSE
     $scope.close = function () {
-        $pw.state.modals.open --;
         $modalInstance.dismiss('close');
     };
 
@@ -413,8 +411,8 @@ postworld.controller('mediaModalInstanceCtrl',
 ////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData',
-	function ( $rootScope, $log, $location, $modal, pwData ) {
+postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '$pw',
+	function ( $rootScope, $log, $location, $modal, pwData, $pw ) {
 	return{
 		openQuickEdit : function( meta ){
 			
@@ -439,7 +437,6 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 
 			}, function () {
 				// WHEN CLOSE MODAL
 				$log.debug('Modal dismissed at: ' + new Date());
-				
 				// Clear the URL params
 				//$location.url('/');
 				$location.path('/');

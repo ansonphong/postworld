@@ -149,6 +149,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_parent',
 		'post_permalink',
 		'post_excerpt',
+		'link_url',
+		'link_format',
 		'image(all)',
 		'image(stats)',
 		'image(tags)',

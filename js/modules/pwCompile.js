@@ -20,6 +20,11 @@ angular.module('pw.compile', [], ['$compileProvider', function($compileProvider)
 					return scope.$eval( attrs.pwCompileCode );
 				},
 				function(value) {
+					// If value is empty
+					// Clear the value
+					if( _.isEmpty(value) )
+						value = "";
+
 					// when the 'compile' expression changes
 					// assign it into the current DOM element
 					element.html(value);
