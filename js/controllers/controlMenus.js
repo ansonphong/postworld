@@ -290,17 +290,17 @@ postworld.controller('adminPostDropdown',
 
     var initAttempts = 0;
     $scope.initMenu = function(){
-        $log.debug( "initMenu" );
+        //$log.debug( "initMenu" );
 
         // Try Initializing the menu until author ID is defined
         if( !$_.objExists( $scope, 'post.author.ID' ) ){
             initAttempts ++;
 
             // Stop trying after 100 tries
-            if( initAttempts <= 20 ){
+            if( initAttempts <= 10 ){
                 $timeout(function() {
                     $scope.initMenu();
-                }, 200);  
+                }, 500);  
             }
             return false;
         }
