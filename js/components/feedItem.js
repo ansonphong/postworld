@@ -101,6 +101,8 @@ postworld.controller('pwGridCtrl',
     //var imageTags = $scope.post.image['tags'];
     //var imageStats = $scope.post.image['stats'];
 
+
+
     $scope.selectImageTag = function( imageTags, tagMapping ){
     	return $pwImages.selectImageTag( imageTags, tagMapping );
     }
@@ -195,6 +197,11 @@ postworld.controller('pwGridItemCtrl',
 
     $scope.tester = function(){
         return "test";
+    }
+
+    $scope.gridImageStyle = function( prefix, tags ){
+        var imageUrl = $scope.post.image.sizes[ $scope.getImageSize(prefix, tags) ].url;
+        return { "background-image":"url( " + imageUrl + " )" };
     }
 
 

@@ -847,8 +847,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				)
 			);
 
+	$post = apply_filters( 'pw_get_post_complete_filter', $post );
 	
-
 	return $post;
 
 }
@@ -1135,7 +1135,13 @@ function pw_save_post($post_data){
 
 	////////// CHECK : POST TYPE ACCESS //////////
 	$post_type = detect_post_type( $post_data );
-
+	
+	// Get the post type object
+	$post_type_object = get_post_type_object( $post_type );
+	// If the post type has "capability_type" of "post"
+	if( $post_type_object->capability_type == 'post' )
+		// Set the post type to "post"
+		$post_type = 'post';
 		
 	///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
 	// The required capabilities of current action
