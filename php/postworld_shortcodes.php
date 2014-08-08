@@ -66,6 +66,9 @@ add_shortcode( 'blockquote', 'pw_general_shortcode' );
 add_shortcode( 'callout', 'pw_general_shortcode' );
 add_shortcode( 'callout-xl', 'pw_general_shortcode' );
 
+// HTML
+add_shortcode( 'br', 'pw_general_shortcode' );
+add_shortcode( 'hr', 'pw_general_shortcode' );
 
 /////////////// ADVANCED SHORTCODES //////////
 include 'shortcodes/menu/menu.php';
