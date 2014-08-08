@@ -69,6 +69,7 @@ postworld.factory( '$pw',
             // Fire the loading
             head.appendChild(script);
         },
+
         
 	};
 
@@ -515,6 +516,37 @@ postworld.factory('pwPosts',
 }]);
 
 
+
+
+postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', function( $pw, $pwData, $log, $_ ){
+
+	return{
+
+		get : function( partial ){
+
+			if( !$_.objExists( $pwData.partials, partial ) ){
+				$pwData.partials = $_.setObj( $pwData.partials, partial, 'LOADING' );
+
+				$pwData.get_template_partial( partial ).then(
+					function( response ){
+						$log.debug( "PW TEMPLATE PARTIAL : RESPONSE :", response );
+						var partialHtml = response.data;
+						$pwData.partials = $_.setObj( $pwData.partials, partial, partialHtml );
+					},
+					function( response ){
+					}
+				);
+
+			}
+			var partialData = $_.getObj( $pwData.partials, partial );
+			return partialData;
+		},
+
+	}
+
+}]);
+
+
 /* _                      ___                                 
   | |   _   _ ____      _|_ _|_ __ ___   __ _  __ _  ___  ___ 
  / __) (_) | '_ \ \ /\ / /| || '_ ` _ \ / _` |/ _` |/ _ \/ __|
@@ -584,108 +616,6 @@ postworld.factory('pwImages',
 	};
 
 }]);
-
-
-
-
-
-////// DEPRECIATED & MOST REFERENCES REMOVED 	/////
-///// USE $_ 									/////
-/* _                  _   
-  | |   _    _____  _| |_ 
- / __) (_)  / _ \ \/ / __|
- \__ \  _  |  __/>  <| |_ 
- (   / (_)  \___/_/\_\\__|
-  |_|                     
-////////// JAVASCRIPT EXTENTION SERVICE //////////*/ 
-
-/*
-postworld.service('ext', ['$log', function ($log) {
-	// SIMPLE JS FUNCTION HELPERS
-	// Extends the function vocabulary of JS
-
-	return {
-		exists: function(value){
-			if ( typeof value === 'undefined' )
-				return false;
-			else
-				return true;
-		},
-		extract_parentheses: function(string){
-			var pattern = /\((.+?)\)/g,
-				match,
-				matches = [];
-			while (match = pattern.exec(string)) {
-				matches.push(match[1]);
-			}
-			return matches;
-		},
-		isNumber: function(n) {
-			return !isNaN(parseFloat(n)) && isFinite(n);
-		},
-		isInArray: function(value, array) {
-			if (array)
-				return array.indexOf(value) > -1 ? true : false;
-			else
-				return false;
-		},
-		isEmpty: function(value){
-			if ( typeof value === 'undefined' || value == '' )
-				return true;
-			else
-				return false; //value[0].value ? true : false;  
-		},
-		isEmptyObj: function(obj){
-				for(var prop in obj) {
-					if(obj.hasOwnProperty(prop))
-						return false;
-				}
-				return true;
-		},
-		mergeRecursiveObj: function(obj1, obj2) {
-		  for (var p in obj2) {
-			try {
-			  // Property in destination object set; update its value.
-			  if ( obj2[p].constructor==Object ) {
-				obj1[p] = MergeRecursive(obj1[p], obj2[p]);
-			  } else {
-				obj1[p] = obj2[p];
-			  }
-			} catch(e) {
-			  // Property in destination object not set; create it and set its value.
-			  obj1[p] = obj2[p];
-			}
-		  }
-		  return obj1;
-		},
-		stringToBoolean : function(string){
-			switch(string.toLowerCase()){
-				case "true": case "yes": case "1": return true;
-				case "false": case "no": case "0": case null: return false;
-				default: return Boolean(string);
-			}
-		},
-		objExists : function(obj, prop){
-			var parts = prop.split('.');
-			for(var i = 0, l = parts.length; i < l; i++) {
-				
-				var part = parts[i];
-				if(obj !== null && typeof obj === "object" && part in obj) {
-					obj = obj[part];
-				}
-				else {
-					return false;
-				}
-				
-			}
-			return true;
-			
-		},
-
-	}
-}]);
-
-*/
 
 
 /*

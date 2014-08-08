@@ -1,5 +1,24 @@
 <?php
 
+function pw_get_template_partial( $partial ){
+	// Gets the result of a template partial function
+
+	// Set the object to be filled with template partials
+	$template_partials_obj = array();
+
+	// Run the filter which collects all the template partials
+	$template_partials_obj = apply_filters( 'pw_template_partials', $template_partials_obj );
+
+	// Get the specified template partial
+	$template_partial_function = pw_get_obj( $template_partials_obj, $partial );
+
+	// If the partial has a function defined
+	if( $template_partial_function )
+		// Get the result of the function from output buffering
+		return pw_ob_function( $template_partial_function );
+	else
+		return false;
+}
 
 function pw_get_dirs($path = '.') {
 	$dirs = array();

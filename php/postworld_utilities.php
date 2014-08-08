@@ -634,6 +634,14 @@ function pw_ob_include_template( $template_path, $vars = array() ){
 	return pw_ob_include( locate_template( $template_path ), $vars );
 }
 
+function pw_ob_function( $function, $vars = array() ){
+	ob_start();
+	call_user_func( $function, $vars );
+	$content = ob_get_contents();
+	ob_end_clean();
+	return $content;
+}
+
 function pw_get_post_ids( $posts ){
 	// Returns just an array of IDs from an array of posts
 

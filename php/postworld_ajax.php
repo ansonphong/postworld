@@ -13,6 +13,20 @@ function pwAjaxRespond( $response_data ){
 }
 
 
+//---------- PW GET TEMPLATE PARTIAL ----------//
+function pw_get_template_partial_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_template_partial( $params ); 
+
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_template_partial", "pw_get_template_partial_ajax");
+add_action("wp_ajax_pw_get_template_partial", "pw_get_template_partial_ajax");
+
+
 //---------- PW GET MENUS ----------//
 function pw_get_menus_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

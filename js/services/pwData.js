@@ -11,8 +11,8 @@
  *	$args = json_decode($args_text);
  * */
 
-postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
-	function ( $resource, $q, $log, $window, $pw ) {	  
+postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
+	function ( $resource, $q, $log, $window, $pw, $_ ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
@@ -65,9 +65,9 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
     return {
     	feed_settings: feed_settings,
     	feeds: feeds,
-
     	templates: $pw.templates, 
     	
+    	partials: {},
 
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
@@ -432,7 +432,12 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw',
 			var params = {args:args};
 			return this.wp_ajax('pw_get_menus',params);
 		},
-
+		get_template_partial: function(args) {
+			$log.debug('pwData.get_template_partial',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_template_partial',params);
+		},
+		
 
    }; // END OF pwData return value
 }]);

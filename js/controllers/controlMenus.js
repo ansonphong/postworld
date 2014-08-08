@@ -287,8 +287,8 @@ postworld.controller('adminPostDropdown',
 
     var initAttempts = 0;
     $scope.initMenu = function(){
-        $log.debug( "$scope.post.author.ID", $_.getObj( $scope, 'post.author.ID' ) );
-        $log.debug( "$pw.view.post.post_author", $_.getObj( $pw, 'view.post.post_author' ) );
+        //$log.debug( "$scope.post.author.ID", $_.getObj( $scope, 'post.author.ID' ) );
+        //$log.debug( "$pw.view.post.post_author", $_.getObj( $pw, 'view.post.post_author' ) );
 
         // Detect the Author ID
         if( $_.objExists( $scope, 'post.author.ID' ) )

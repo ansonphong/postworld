@@ -149,8 +149,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_parent',
 		'post_permalink',
 		'post_excerpt',
-		'link_url',
-		'link_format',
 		'image(all)',
 		'image(stats)',
 		'image(tags)',
@@ -896,6 +894,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	//return json_encode($postarr);
 	$post_id = wp_insert_post( $postarr, $wp_error );
 	
+	
+
 	if(gettype($post_id) == 'integer'){ // successful
 
 		///// ADD TERMS / TAXONOMIES //////
@@ -912,15 +912,14 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	
 		///// ADD/UPDATE META FIELDS //////
 		if( isset($postarr["post_meta"]) ){
+
 			foreach ( $postarr["post_meta"] as $meta_key => $meta_value ) {
-
 				// ENCODE ARRAYS AS JSON
-				if( is_array($meta_value) )
+				if( is_array($meta_value) || is_object($meta_value) ){
 					$meta_value = json_encode($meta_value);
-
+				}
 				// UPDATE META
 				update_post_meta($post_id, $meta_key, $meta_value);
-			
 			}
 		}
 

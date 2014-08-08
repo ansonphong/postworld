@@ -80,9 +80,9 @@ postworld.directive( 'pwEditPost', [ function($scope){
 
 postworld.controller('editPost',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window', 'pwRoleAccess', 'pwQuickEdit', '_',
+	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window', 'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_ ) {
+		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials ) {
 
 
 	//////////////////// INITIALIZE ////////////////////
@@ -790,6 +790,12 @@ postworld.controller('editPost',
 		if( !_.isUndefined($scope.lang) )
 			$scope.post.language_code = $scope.lang;
 	} );
+
+
+	// Alias of the template partials
+	$scope.pwTemplatePartial = function( partial ){
+		return $pwTemplatePartials.get( partial );
+	}
 
 
 }]);
