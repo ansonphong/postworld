@@ -1,7 +1,19 @@
 <?php
 
-function pw_get_template_partial( $partial ){
-	// Gets the result of a template partial function
+function pw_get_template_partial( $vars ){
+	/*
+		// Gets the result of a template partial function
+		$vars = array(
+			"partial"	=>	[string],	// virtual path to partial
+			"vars"		=>	[mixed]		// optional
+		)
+	*/
+	
+	extract($vars);
+
+	// Return early if no partial defined
+	if( !isset( $partial ) )
+		return false;
 
 	// Set the object to be filled with template partials
 	$template_partials_obj = array();
@@ -13,9 +25,13 @@ function pw_get_template_partial( $partial ){
 	$template_partial_function = pw_get_obj( $template_partials_obj, $partial );
 
 	// If the partial has a function defined
-	if( $template_partial_function )
-		// Get the result of the function from output buffering
-		return pw_ob_function( $template_partial_function );
+	if( $template_partial_function ){
+
+		if( !empty( $vars ) )
+			return call_user_func( $template_partial_function, $vars );
+		else
+			return call_user_func( $template_partial_function );
+	}
 	else
 		return false;
 }

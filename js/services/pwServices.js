@@ -516,34 +516,34 @@ postworld.factory('pwPosts',
 }]);
 
 
-
+/*_____                    _       _         ____            _   _       _     
+ |_   _|__ _ __ ___  _ __ | | __ _| |_ ___  |  _ \ __ _ _ __| |_(_) __ _| |___ 
+   | |/ _ \ '_ ` _ \| '_ \| |/ _` | __/ _ \ | |_) / _` | '__| __| |/ _` | / __|
+   | |  __/ | | | | | |_) | | (_| | ||  __/ |  __/ (_| | |  | |_| | (_| | \__ \
+   |_|\___|_| |_| |_| .__/|_|\__,_|\__\___| |_|   \__,_|_|   \__|_|\__,_|_|___/ */
 
 postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', function( $pw, $pwData, $log, $_ ){
-
 	return{
+		get : function( vars ){
+			//$log.debug( "GET TEMPLATE PARTIAL", vars );
+			if( !$_.objExists( $pwData.partials, vars.partial ) ){
+				$pwData.partials = $_.setObj( $pwData.partials, vars.partial, 'LOADING...' );
 
-		get : function( partial ){
-
-			if( !$_.objExists( $pwData.partials, partial ) ){
-				$pwData.partials = $_.setObj( $pwData.partials, partial, 'LOADING' );
-
-				$pwData.get_template_partial( partial ).then(
+				$pwData.get_template_partial( vars ).then(
 					function( response ){
 						$log.debug( "PW TEMPLATE PARTIAL : RESPONSE :", response );
 						var partialHtml = response.data;
-						$pwData.partials = $_.setObj( $pwData.partials, partial, partialHtml );
+						$pwData.partials = $_.setObj( $pwData.partials, vars.partial, partialHtml );
 					},
 					function( response ){
 					}
 				);
 
 			}
-			var partialData = $_.getObj( $pwData.partials, partial );
+			var partialData = $_.getObj( $pwData.partials, vars.partial );
 			return partialData;
 		},
-
 	}
-
 }]);
 
 

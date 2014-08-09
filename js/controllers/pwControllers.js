@@ -207,7 +207,7 @@ postworld.controller('postController',
 		// If the post has a feed
 		if ( _.isString( $_.getObj( $scope, 'post.feed.id' ) ) ){
 			// Call Update Feed Post
-			$pwPosts.reloadFeedPost( feedId, postId )
+			$pwPosts.reloadFeedPost( $scope.post.feed.id, postId )
 		}
 		///// HANDLE STANDALONE POSTS /////
 		else{
@@ -227,7 +227,8 @@ postworld.controller('postController',
 						}
 						$scope.post = response.data;
 						// Update Classes
-						$scope.setClass();
+						if( !_.isUndefined( $scope.setClass ) )
+							$scope.setClass();
 					} else {
 						// handle error
 					}

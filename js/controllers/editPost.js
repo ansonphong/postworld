@@ -793,8 +793,8 @@ postworld.controller('editPost',
 
 
 	// Alias of the template partials
-	$scope.pwTemplatePartial = function( partial ){
-		return $pwTemplatePartials.get( partial );
+	$scope.getTemplatePartial = function( vars ){
+		return $pwTemplatePartials.get( vars );
 	}
 
 
