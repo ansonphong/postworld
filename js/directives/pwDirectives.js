@@ -214,14 +214,19 @@ postworld.directive('pwTimeout', function( $timeout ) {
 		scope:{
 			pwTimeout:"@",
 			timeoutAction:"@",
+			timeoutMultiplier:"@",
 		},
 		link: function( $scope, element, attrs ) {
+			
+			var timeoutPeriod = ( _.isUndefined( $scope.timeoutMultiplier ) || _.isEmpty( $scope.timeoutMultiplier ) ) ?
+				$scope.pwTimeout : $scope.pwTimeout * $scope.timeoutMultiplier;
+
 			$timeout( function(){
 				// Evaluate passed local function
 				$scope.$eval( $scope.timeoutAction );
 				// Destroy Scope
 				$scope.$destroy();
-			}, parseInt( $scope.pwTimeout ) ); // 
+			}, parseInt(timeoutPeriod) ); // 
 
 			$scope.addClass = function( classes ){
 				element.addClass( classes );

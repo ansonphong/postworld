@@ -17,12 +17,27 @@ function pw_get_posts( $post_ids, $fields='all' ) {
 	if (!is_array($post_ids))
 		return false;
 
+	// Interator
+	$i = 0;
+
+	///// GET POSTS /////
 	// Cycle though each $post_id
 	$posts = array();
 	foreach ($post_ids as $post_id) {
 		$post = pw_get_post($post_id, $fields );
+
+		///// ADD META DATA //////
+		// FEED ORDER
+		if( in_array( 'feed_order', $fields ) || $fields == 'all' ){
+			$i++;
+			if( !isset( $post['feed'] ) )
+				$post['feed'] = array();
+			$post['feed']['order'] = $i;
+		}
+
 		array_push($posts, $post);
 	}
+
 
 	// Return Array of post data
 	return $posts;

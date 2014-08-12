@@ -8,7 +8,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Extract Shortcode Attributes, set defaults
 	extract( shortcode_atts( array(
 		"class" => "",
-		"view" 	=> "grid",
+		"view" 	=> "list-h2o",
 		"max"	=>	3
 	), $atts ) );
 
@@ -29,7 +29,10 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 		'post_title',
 		'post_parent',
 		'post_permalink',
-		'image(all)' );
+		'image(all)',
+		'feed_order',
+		'post_meta(all)',
+		);
 
 	// Generate query class
 	switch($tag){
@@ -59,6 +62,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// If Postworld is Activated, Return Print Feed
 	if( function_exists('pw_print_feed') ){
 		$shortcode = pw_print_feed( $feed_query_args );	
+		//$shortcode = json_encode( $feed_query_args );
 		return $shortcode;
 	}
 	else
