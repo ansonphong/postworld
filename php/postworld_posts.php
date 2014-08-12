@@ -824,6 +824,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			$post['fields'] = $fields;
 		}
 
+	///// ADD MODE WHEN EDITING /////
+		if( $mode == 'edit' )
+			$post['mode']= 'edit';
+
 	///// ADD ACTION HOOK : PW GET POST CONTENT /////
 		do_action( 'pw_get_post_content',
 			array(

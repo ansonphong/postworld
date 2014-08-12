@@ -1,5 +1,5 @@
 <?php
-class Menu_With_Description extends Walker_Nav_Menu {
+class PW_Menu_With_Description extends Walker_Nav_Menu {
 
     public function getTemplatePath() {
         return $this->template_path; 

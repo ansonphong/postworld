@@ -1,5 +1,5 @@
 <?
-$walker = new Menu_With_Description;
+$walker = new PW_Menu_With_Description;
 $custom_menu_config = array(
 	'theme_location'  => '',
 	'menu'            => $menu_id, //$OPTIONS['menu_slug'],
