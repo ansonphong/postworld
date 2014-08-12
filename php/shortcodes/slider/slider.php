@@ -175,6 +175,7 @@ function pw_print_slider( $slider ){
 					);
 			}
 
+			//$query['order'] = "";
 
 			///// RUN QUERY /////
 			$posts = (array) pw_query( $query )->posts;

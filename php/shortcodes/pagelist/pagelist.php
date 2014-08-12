@@ -6,11 +6,13 @@
 function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	
 	// Extract Shortcode Attributes, set defaults
-	extract( shortcode_atts( array(
-		"class" => "",
-		"view" 	=> "list-h2o",
-		"max"	=>	3
-	), $atts ) );
+	$atts = shortcode_atts( array(
+		"class" 	=> "",
+		"view" 		=> "list-h2o",
+		"max"		=>	3,
+		"orderby"	=>	"menu_order",
+	), $atts );
+	extract( $atts );
 
 	///// Generate Query /////
 	global $post;
@@ -41,6 +43,8 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 		'feed_order',
 		'post_meta(all)',
 		);
+	$query['orderby'] = $atts['orderby'];
+	$query['order'] = "ASC";
 
 	// Generate query class
 	switch($tag){
