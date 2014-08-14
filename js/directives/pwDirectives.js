@@ -47,6 +47,36 @@ postworld.directive('pwHref', function() {
 	}
 });
 
+///// POSTWORLD NEW TARGET DIRECTIVE /////
+postworld.directive('pwTarget', function( $log ) {
+	return {
+		link: function( scope, element, attrs ) {
+
+			scope.$watch(
+				function(scope) {
+					// watch the 'new target' expression for changes
+					return scope.$eval( attrs.pwTarget );
+				},
+				function(value) {
+					// If a boolean is provided
+					if( _.isBoolean( value ) ){
+						if( value )
+							attrs.$set('target', "_blank" );
+						else
+							attrs.$set('target', "_self" );
+					}
+					// Set target to the specified value
+					else if( !_.isNull( value ) && !_.isUndefined( value ) ){
+						attrs.$set('target', value );
+					}
+				}
+			);
+
+		},
+	}
+});
+
+
 ///// SUBMIT ON ENTER /////
 // Submit on Enter, without a real form
 postworld.directive('ngEnter', function() {
