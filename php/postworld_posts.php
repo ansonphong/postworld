@@ -28,7 +28,7 @@ function pw_get_posts( $post_ids, $fields='all' ) {
 
 		///// ADD META DATA //////
 		// FEED ORDER
-		if( in_array( 'feed_order', $fields ) || $fields == 'all' ){
+		if( is_array( $fields ) && in_array( 'feed_order', $fields ) || $fields == 'all' ){
 			$i++;
 			if( !isset( $post['feed'] ) )
 				$post['feed'] = array();
