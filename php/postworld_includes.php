@@ -45,6 +45,7 @@ function postworld_includes( $args ){
 	if( in_array( 'font-awesome-3', $pwInject ) ){
 		wp_enqueue_style( 'font-awesome-3',
 			"//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" );
+			// Todo : parse from LESS
 			//WP_PLUGIN_URL.'/postworld/lib/font-awesome-3/css/font-awesome.min.css' );
 	}
 
