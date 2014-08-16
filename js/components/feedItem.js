@@ -118,7 +118,9 @@ postworld.controller('pwGridCtrl',
     	return gridClass;
     };
 
-    $scope.setGridStyle = function( multiplier, imageTags, tagMapping ){
+    $scope.setGridStyle = function( multiplier, imageTags, tagMapping, values ){
+        if( _.isUndefined(values) )
+            values = [ 'width', 'height' ];
         if( _.isUndefined(multiplier) )
             multiplier = 300;
         if( !_.isEmpty( imageTags ) ){
@@ -132,7 +134,13 @@ postworld.controller('pwGridCtrl',
         }
         //$log.debug( 'setGridStyle : $pwImages.selectImageTag  : ', selectedTag );
         
-        var style = { width: width + "px", height: height + "px" };
+        if( $_.inArray( 'width', values ) && $_.inArray( 'width', values ) )
+            var style = { width: width + "px", height: height + "px" };
+        else if( $_.inArray( 'height', values ) )
+            var style = { height: height + "px" };
+        else if( $_.inArray( 'width', values ) )
+            var style = { width: width + "px" };
+
         //$log.debug( "setGridStyle: multiplier: " + multiplier + " // imageTags: " + imageTags + " // style: " + JSON.stringify(style) + " // tagMappings: ", tagMapping );
         return style;
     };

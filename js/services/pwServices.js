@@ -162,6 +162,13 @@ postworld.factory('_',
 			return !isNaN(parseFloat(n)) && isFinite(n);
 		},
 		isInArray: function(value, array) {
+			// DEPRECIATED
+			if (array)
+				return array.indexOf(value) > -1 ? true : false;
+			else
+				return false;
+		},
+		inArray: function(value, array) {
 			if (array)
 				return array.indexOf(value) > -1 ? true : false;
 			else

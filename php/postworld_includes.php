@@ -44,7 +44,8 @@ function postworld_includes( $args ){
 	// Add Font Awesome 3
 	if( in_array( 'font-awesome-3', $pwInject ) ){
 		wp_enqueue_style( 'font-awesome-3',
-			WP_PLUGIN_URL.'/postworld/lib/font-awesome-3/css/font-awesome.min.css' );
+			"//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" );
+			//WP_PLUGIN_URL.'/postworld/lib/font-awesome-3/css/font-awesome.min.css' );
 	}
 
 	// Add ICON X
