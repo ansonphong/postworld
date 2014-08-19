@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-fimnk');
-	src:url('fonts/icomoon.eot?#iefix-fimnk') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-fimnk') format('woff'),
-		url('fonts/icomoon.ttf?-fimnk') format('truetype'),
-		url('fonts/icomoon.svg?-fimnk#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?jsxxwt');
+	src:url('fonts/icomoon.eot?#iefixjsxxwt') format('embedded-opentype'),
+		url('fonts/icomoon.woff?jsxxwt') format('woff'),
+		url('fonts/icomoon.ttf?jsxxwt') format('truetype'),
+		url('fonts/icomoon.svg?jsxxwt#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,21 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-triadic-1:before {
+	content: "\e60f";
+}
+.icon-triadic-2:before {
+	content: "\e645";
+}
+.icon-triadic-3:before {
+	content: "\e646";
+}
+.icon-triadic-4:before {
+	content: "\e666";
+}
+.icon-triadic-5:before {
+	content: "\e675";
+}
 .icon-triangle-down-fill:before {
 	content: "\e601";
 }
@@ -71,40 +86,40 @@
 .icon-triangle-up-thin:before {
 	content: "\e6f2";
 }
-.icon-shapes-circle-fill:before {
+.icon-circle-fill:before {
 	content: "\e6f3";
 }
-.icon-shapes-circle-thick:before {
+.icon-circle-thick:before {
 	content: "\e6f4";
 }
-.icon-shapes-circle-medium:before {
+.icon-circle-medium:before {
 	content: "\e6f5";
 }
-.icon-shapes-circle-thin:before {
+.icon-circle-thin:before {
 	content: "\e6f6";
 }
-.icon-shapes-hexagon-fill:before {
+.icon-hexagon-fill:before {
 	content: "\e6f7";
 }
-.icon-shapes-hexagon-thick:before {
+.icon-hexagon-thick:before {
 	content: "\e6f8";
 }
-.icon-shapes-hexagon-medium:before {
+.icon-hexagon-medium:before {
 	content: "\e6f9";
 }
-.icon-shapes-hexagon-thin:before {
+.icon-hexagon-thin:before {
 	content: "\e6fa";
 }
-.icon-shapes-square-fill:before {
+.icon-square-fill:before {
 	content: "\e6fb";
 }
-.icon-shapes-square-thick:before {
+.icon-square-thick:before {
 	content: "\e6fc";
 }
-.icon-shapes-square-medium:before {
+.icon-square-medium:before {
 	content: "\e6fd";
 }
-.icon-shapes-square-thin:before {
+.icon-square-thin:before {
 	content: "\e6fe";
 }
 .icon-seed-of-life-fill:before {
@@ -181,9 +196,6 @@
 }
 .icon-music:before {
 	content: "\e60e";
-}
-.icon-headphones:before {
-	content: "\e60f";
 }
 .icon-play-youtube:before {
 	content: "\e610";
@@ -336,22 +348,7 @@
 	content: "\e6e2";
 }
 .icon-drawer:before {
-	content: "\e6e3";
-}
-.icon-drawer2:before {
-	content: "\e6e4";
-}
-.icon-drawer3:before {
 	content: "\e6e5";
-}
-.icon-box-add:before {
-	content: "\e6e6";
-}
-.icon-download:before {
-	content: "\e645";
-}
-.icon-upload:before {
-	content: "\e646";
 }
 .icon-disk:before {
 	content: "\e647";
@@ -560,14 +557,8 @@
 .icon-info:before {
 	content: "\e692";
 }
-.icon-close:before {
-	content: "\e693";
-}
-.icon-checkmark:before {
+.icon-check-2:before {
 	content: "\e694";
-}
-.icon-checkmark2:before {
-	content: "\e695";
 }
 .icon-minus2:before {
 	content: "\e696";
@@ -851,7 +842,7 @@
 .icon-check:before {
 	content: "\f00c";
 }
-.icon-times:before {
+.icon-close:before {
 	content: "\f00d";
 }
 .icon-gear:before {
@@ -872,7 +863,7 @@
 .icon-list-alt:before {
 	content: "\f022";
 }
-.icon-headphones2:before {
+.icon-headphones:before {
 	content: "\f025";
 }
 .icon-edit:before {
@@ -899,7 +890,7 @@
 .icon-flask:before {
 	content: "\f0c3";
 }
-.icon-navicon:before {
+.icon-nav:before {
 	content: "\f0c9";
 }
 .icon-magic:before {
