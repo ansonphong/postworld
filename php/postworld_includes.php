@@ -49,6 +49,12 @@ function postworld_includes( $args ){
 			//WP_PLUGIN_URL.'/postworld/lib/font-awesome-3/css/font-awesome.min.css' );
 	}
 
+	// Add ICOMOON
+	if( in_array( 'icomoon', $pwInject ) ){
+		wp_enqueue_style( 'icomoon',
+			WP_PLUGIN_URL.'/postworld/lib/icomoon/style.css' );
+	}
+
 	// Add ICON X
 	if( in_array( 'icon-x', $pwInject ) ){
 		wp_enqueue_style( 'icon-x',
