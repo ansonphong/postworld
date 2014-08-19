@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?jsxxwt');
-	src:url('fonts/icomoon.eot?#iefixjsxxwt') format('embedded-opentype'),
-		url('fonts/icomoon.woff?jsxxwt') format('woff'),
-		url('fonts/icomoon.ttf?jsxxwt') format('truetype'),
-		url('fonts/icomoon.svg?jsxxwt#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-3e3e09');
+	src:url('fonts/icomoon.eot?#iefix-3e3e09') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-3e3e09') format('woff'),
+		url('fonts/icomoon.ttf?-3e3e09') format('truetype'),
+		url('fonts/icomoon.svg?-3e3e09#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,30 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-facebook-square:before {
+	content: "\e61d";
+}
+.icon-facebook:before {
+	content: "\e61e";
+}
+.icon-twitter-square:before {
+	content: "\e64e";
+}
+.icon-twitter:before {
+	content: "\e64f";
+}
+.icon-reddit-square:before {
+	content: "\e653";
+}
+.icon-reddit:before {
+	content: "\e693";
+}
+.icon-seal-1:before {
+	content: "\e600";
+}
+.icon-seal-2:before {
+	content: "\e61a";
+}
 .icon-triadic-1:before {
 	content: "\e60f";
 }
@@ -137,7 +161,7 @@
 .icon-layers:before {
 	content: "\e602";
 }
-.icon-moon-fill:before {
+.icon-moon:before {
 	content: "\e65e";
 }
 .icon-target:before {
@@ -164,7 +188,7 @@
 .icon-newspaper:before {
 	content: "\e65a";
 }
-.icon-pencil2:before {
+.icon-pencil:before {
 	content: "\e604";
 }
 .icon-quill:before {
@@ -224,7 +248,7 @@
 .icon-file-3:before {
 	content: "\e618";
 }
-.icon-file4:before {
+.icon-file-4:before {
 	content: "\e619";
 }
 .icon-copy:before {
@@ -257,7 +281,7 @@
 .icon-cart:before {
 	content: "\e65b";
 }
-.icon-cart2:before {
+.icon-cart-2:before {
 	content: "\e627";
 }
 .icon-coin:before {
@@ -335,7 +359,7 @@
 .icon-mobile:before {
 	content: "\e641";
 }
-.icon-mobile2:before {
+.icon-mobile-wide:before {
 	content: "\e642";
 }
 .icon-tablet:before {
@@ -371,26 +395,14 @@
 .icon-bubbles-4:before {
 	content: "\e64d";
 }
-.icon-user:before {
-	content: "\e64e";
-}
-.icon-users:before {
-	content: "\e64f";
-}
-.icon-user-2:before {
+.icon-user-o:before {
 	content: "\e650";
 }
-.icon-users-2:before {
+.icon-users-o:before {
 	content: "\e651";
 }
-.icon-user-3:before {
+.icon-user:before {
 	content: "\e652";
-}
-.icon-busy:before {
-	content: "\e6e8";
-}
-.icon-spinner:before {
-	content: "\e653";
 }
 .icon-spinner-2:before {
 	content: "\e654";
@@ -539,7 +551,7 @@
 .icon-heart:before {
 	content: "\e68c";
 }
-.icon-heart2:before {
+.icon-heart-o:before {
 	content: "\e68d";
 }
 .icon-heart-broken:before {
@@ -563,7 +575,7 @@
 .icon-minus2:before {
 	content: "\e696";
 }
-.icon-plus2:before {
+.icon-plus:before {
 	content: "\e697";
 }
 .icon-enter:before {
@@ -695,22 +707,16 @@
 .icon-share:before {
 	content: "\e6c4";
 }
-.icon-facebook:before {
+.icon-facebook-2:before {
 	content: "\e6c5";
 }
-.icon-facebook2:before {
-	content: "\e6c6";
-}
-.icon-twitter:before {
+.icon-twitter-2:before {
 	content: "\e6c7";
-}
-.icon-twitter-square:before {
-	content: "\e6c8";
 }
 .icon-github:before {
 	content: "\e6c9";
 }
-.icon-github2:before {
+.icon-github-circle:before {
 	content: "\e6cb";
 }
 .icon-wordpress:before {
@@ -749,18 +755,6 @@
 .icon-file-css:before {
 	content: "\e6db";
 }
-.icon-plus:before {
-	content: "\e600";
-}
-.icon-minus:before {
-	content: "\e61a";
-}
-.icon-equals:before {
-	content: "\e61d";
-}
-.icon-divide:before {
-	content: "\e61e";
-}
 .icon-th-small:before {
 	content: "\e61f";
 }
@@ -785,7 +779,7 @@
 .icon-adjust-brightness:before {
 	content: "\e665";
 }
-.icon-atlas-outline:before {
+.icon-atlas-o:before {
 	content: "\e6eb";
 }
 .icon-flow-switch:before {
@@ -809,13 +803,13 @@
 .icon-columns:before {
 	content: "\e104";
 }
-.icon-cross:before {
+.icon-close-thin:before {
 	content: "\e117";
 }
 .icon-delete:before {
 	content: "\e119";
 }
-.icon-menu:before {
+.icon-nav-thin:before {
 	content: "\e120";
 }
 .icon-switch:before {
@@ -935,7 +929,7 @@
 .icon-quote-right:before {
 	content: "\f10e";
 }
-.icon-spinner7:before {
+.icon-spinner:before {
 	content: "\f110";
 }
 .icon-gamepad:before {
@@ -965,10 +959,7 @@
 .icon-edit-square:before {
 	content: "\f14b";
 }
-.icon-compass2:before {
-	content: "\f14e";
-}
-.icon-file5:before {
+.icon-file-5:before {
 	content: "\f15b";
 }
 .icon-file-text:before {
@@ -976,12 +967,6 @@
 }
 .icon-skype:before {
 	content: "\f17e";
-}
-.icon-reddit2:before {
-	content: "\f1a1";
-}
-.icon-reddit-square:before {
-	content: "\f1a2";
 }
 .icon-cube:before {
 	content: "\f1b2";
