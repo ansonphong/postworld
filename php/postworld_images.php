@@ -190,6 +190,16 @@ function first_image_obj( $post_id ) {
 		}
 }
 
+
+function pw_get_featured_image_obj( $post_id, $size = 'full' ){
+	// Get attachment ID from post ID
+	$attachment_id = get_post_thumbnail_id( $post_id );
+	// Get the image object
+	$image_obj = pw_get_image_obj( $attachment_id, $size );
+	// Return image object
+	return $image_obj;
+}
+
 ///// GET OBJECT OF AN IMAGE ATTACHMENT ATTRIBUTES /////
 function pw_get_image_obj( $attachment_id, $size = 'full' ){
 	$image_attributes = wp_get_attachment_image_src( $attachment_id, $size );

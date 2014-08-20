@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-3e3e09');
-	src:url('fonts/icomoon.eot?#iefix-3e3e09') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-3e3e09') format('woff'),
-		url('fonts/icomoon.ttf?-3e3e09') format('truetype'),
-		url('fonts/icomoon.svg?-3e3e09#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?6n9lgz');
+	src:url('fonts/icomoon.eot?#iefix6n9lgz') format('embedded-opentype'),
+		url('fonts/icomoon.woff?6n9lgz') format('woff'),
+		url('fonts/icomoon.ttf?6n9lgz') format('truetype'),
+		url('fonts/icomoon.svg?6n9lgz#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,24 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-reddit-square:before {
+	content: "\e653";
+}
+.icon-reddit:before {
+	content: "\e693";
+}
+.icon-pinterest-square:before {
+	content: "\e695";
+}
+.icon-pinterest:before {
+	content: "\e6bf";
+}
+.icon-google-plus-square:before {
+	content: "\e6c0";
+}
+.icon-google-plus:before {
+	content: "\e6c6";
+}
 .icon-facebook-square:before {
 	content: "\e61d";
 }
@@ -34,12 +52,6 @@
 }
 .icon-twitter:before {
 	content: "\e64f";
-}
-.icon-reddit-square:before {
-	content: "\e653";
-}
-.icon-reddit:before {
-	content: "\e693";
 }
 .icon-seal-1:before {
 	content: "\e600";
@@ -161,14 +173,14 @@
 .icon-layers:before {
 	content: "\e602";
 }
+.icon-sun-fill:before {
+	content: "\e6c8";
+}
 .icon-moon:before {
 	content: "\e65e";
 }
 .icon-target:before {
 	content: "\e664";
-}
-.icon-hyperlink:before {
-	content: "\e6f0";
 }
 .icon-alert:before {
 	content: "\f02d";
