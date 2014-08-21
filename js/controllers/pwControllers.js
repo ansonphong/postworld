@@ -22,8 +22,8 @@ postworld.directive( 'pwPost', [ function( $scope ){
 
 
 postworld.controller('postController',
-	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", "$compile",
-	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout, $compile ) {
+	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", "$compile", "pwTemplatePartials",
+	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout, $compile, $pwTemplatePartials ) {
 
 
 	///// GET DEFAULT POST /////
@@ -286,6 +286,13 @@ postworld.controller('postController',
 		if( post_id == $_.getObj( $scope, 'post.ID' ) )
 			$scope.loadPost( post_id );
 	});
+
+
+	///// GET TEMPLATE PARTIAL /////
+	// Alias of the template partials
+	$scope.getTemplatePartial = function( vars ){
+		return $pwTemplatePartials.get( vars );
+	}
 
 	///// DEV /////
 	//$pwPosts.mergeFeedPost( $scope.post.feed.id, $scope.post.ID, {post_date:"NOW"} );

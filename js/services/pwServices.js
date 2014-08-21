@@ -256,11 +256,16 @@ postworld.factory('_',
 			return setObj( obj, key, value  );
 		},
 
-		clobber: function( id, t, f ){ // id = unique string, t = timeout in ms, f = function to run
+		clobber: function( id, t, f, w ){ // id = unique string, t = timeout in ms, f = function to run, w = boolean, whether to wait until it stops firing before clobbering
 			/*	Times out for the given time before running a function.
 			 *	Any sequential functions that are clobbered with the same ID before the function runs
 			 *	Will over-write the previous action and again timeout.
 			 */
+
+			// Set defaults
+			// TODO : Impliment 'w' variable
+			if( _.isUndefined( w ) )
+				w = true;
 
 			// Establish the Clobber Object
 			if( _.isUndefined( $rootScope.clobber ) )
@@ -532,23 +537,39 @@ postworld.factory('pwPosts',
 postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', function( $pw, $pwData, $log, $_ ){
 	return{
 		get : function( vars ){
-			//$log.debug( "GET TEMPLATE PARTIAL", vars );
-			if( !$_.objExists( $pwData.partials, vars.partial ) ){
-				$pwData.partials = $_.setObj( $pwData.partials, vars.partial, 'LOADING...' );
+			/*
+			 	vars = {
+					partial: [string] 	// required, the object path to the registered partial function
+					vars: [mixed] 		// optional, variables to pass to the partial function
+					id: [string] 		// optional, additional identifier
+				}
+			*/
+			var cachePath = vars.partial;
+
+			// If an ID is defined
+			if( !_.isUndefined( vars['id'] ) )
+				// append the ID to the cache path
+				cachePath = cachePath + ".id" + vars['id'];
+			
+			//$log.debug( "GET TEMPLATE PARTIAL : " + cachePath, vars );
+
+			if( !$_.objExists( $pwData.partials, cachePath ) ){
+				$pwData.partials = $_.setObj( $pwData.partials, cachePath, '' ); // TODO : Add loading partial option
 
 				$pwData.get_template_partial( vars ).then(
 					function( response ){
 						$log.debug( "PW TEMPLATE PARTIAL : RESPONSE :", response );
 						var partialHtml = response.data;
-						$pwData.partials = $_.setObj( $pwData.partials, vars.partial, partialHtml );
+						$pwData.partials = $_.setObj( $pwData.partials, cachePath, partialHtml );
 					},
 					function( response ){
 					}
 				);
 
 			}
-			var partialData = $_.getObj( $pwData.partials, vars.partial );
+			var partialData = $_.getObj( $pwData.partials, cachePath );
 			return partialData;
+
 		},
 	}
 }]);
