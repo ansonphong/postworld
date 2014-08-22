@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-uhg7k');
-	src:url('fonts/icomoon.eot?#iefix-uhg7k') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-uhg7k') format('woff'),
-		url('fonts/icomoon.ttf?-uhg7k') format('truetype'),
-		url('fonts/icomoon.svg?-uhg7k#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-fl44fd');
+	src:url('fonts/icomoon.eot?#iefix-fl44fd') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-fl44fd') format('woff'),
+		url('fonts/icomoon.ttf?-fl44fd') format('truetype'),
+		url('fonts/icomoon.svg?-fl44fd#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -170,6 +170,9 @@
 .icon-meditation:before {
 	content: "\e702";
 }
+.icon-play-fill:before {
+	content: "\e611";
+}
 .icon-layers:before {
 	content: "\e602";
 }
@@ -238,9 +241,6 @@
 }
 .icon-play-youtube:before {
 	content: "\e610";
-}
-.icon-film:before {
-	content: "\e611";
 }
 .icon-dice:before {
 	content: "\e612";
@@ -596,6 +596,9 @@
 .icon-exit:before {
 	content: "\e699";
 }
+.icon-play-o:before {
+	content: "\e6d2";
+}
 .icon-play:before {
 	content: "\e69a";
 }
@@ -740,26 +743,11 @@
 .icon-paypal:before {
 	content: "\e6d0";
 }
-.icon-libreoffice:before {
-	content: "\e6d3";
-}
 .icon-file-pdf:before {
 	content: "\e6d4";
 }
-.icon-file-openoffice:before {
-	content: "\e6d5";
-}
-.icon-file-word:before {
-	content: "\e6d6";
-}
-.icon-file-excel:before {
-	content: "\e6d7";
-}
 .icon-file-zip:before {
 	content: "\e6d8";
-}
-.icon-file-powerpoint:before {
-	content: "\e6d9";
 }
 .icon-file-xml:before {
 	content: "\e6da";
