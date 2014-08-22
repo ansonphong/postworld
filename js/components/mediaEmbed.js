@@ -9,27 +9,27 @@
 
 var mediaEmbed = function ( $scope, $sce, pwData ) {
 
-    $scope.oEmbed = "";
-    $scope.oEmbedGet = function (link_url) {
-        var args = { "link_url":link_url };
-        var oEmbed = "";
-        pwData.wp_ajax('ajax_oembed_get', args ).then(
-            // Success
-            function(response) {    
-                $scope.oEmbed = $sce.trustAsHtml(response.data);
-            },
-            // Failure
-            function(response) {
-                //alert("error");
-            }
-        );
-    };
-    // Run oEmbedGet on Media
-    if(
-        $scope.post.link_format == 'video' ||
-        $scope.post.link_format == 'audio'
-        )
-        $scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
+	$scope.oEmbed = "";
+	$scope.oEmbedGet = function (link_url) {
+		var args = { "link_url":link_url };
+		var oEmbed = "";
+		pwData.wp_ajax('ajax_oembed_get', args ).then(
+			// Success
+			function(response) {    
+				$scope.oEmbed = $sce.trustAsHtml(response.data);
+			},
+			// Failure
+			function(response) {
+				//alert("error");
+			}
+		);
+	};
+	// Run oEmbedGet on Media
+	if(
+		$scope.post.link_format == 'video' ||
+		$scope.post.link_format == 'audio'
+		)
+		$scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
 };
 
 
@@ -39,135 +39,141 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
  | (_) |_____| |___| | | | | | |_) |  __/ (_| |
   \___/      |_____|_| |_| |_|_.__/ \___|\__,_|
 
-////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
+*/
 
-postworld.directive( 'oEmbed', ['$sce',function($scope, $sce){
+/*////////// ------------ O-EMBED SERVICE ------------ //////////*/  
+postworld.factory( 'oEmbedServe',
+	[ '$log', '$sce', '_', 'pwData', '$timeout', '$rootScope',
+	function( $log, $sce, $_, $pwData, $timeout, $rootScope ){
 
-    return { 
-        restrict: 'AE',
-        scope : {
-            link_url:"=oEmbed",
-            autoplay:"=autoplay",
-            run:"=run",
-        },
-        //template : '',
-        controller: 'pwOEmbedController',
-        link : function ($scope, element, attrs){
-            /*
-        	// When the oEmbed Value changes, then change the html here
-        	$scope.$watch('oEmbed', function(value) {
-        		//console.log('test',value);
-        		element.html(value);
-        	});
-            */
-            
-            // Set autoplay value if it updates
-            //attrs.$observe('autoplay', function(value) {
-            //    $scope.setAutoplay();
-            //});
+	var cacheEmbed = function( embedCode, embedId ){
+		// Cache the embed code in the pwData service 
+		$pwData['embeds'][ embedId ] = embedCode;
 
-        }
-    };
+	};
+
+	var getOEmbed = function( linkUrl, autoPlay ){
+
+		// Generate Embed ID from URL
+		var embedId = $_.sanitizeKey( linkUrl );
+
+		// Setup the variables
+		var vars = {
+			"link_url": linkUrl,
+			"autoplay": autoPlay,
+			};
+
+		// AJAX Call
+		$pwData.wp_ajax('ajax_oembed_get', vars ).then(
+			// Success
+			function( response ){
+
+				var embedCode = response.data;
+
+				// If not data, return false
+				if ( embedCode == false )
+					return false;
+
+				$log.debug( 'GOT O-EMBED CODE : ' + embedId + " : ", embedCode );
+
+				// Cache the embed code in the pwData service 
+				$pwData['embeds'][ embedId ] = embedCode;
+
+				//cacheEmbed( embedCode, embedId );
+
+			},
+			// Failure
+			function(response) {
+				$scope.status = "error";
+			}
+		);
+	}
+
+	return{
+		getOEmbed : function( linkUrl, autoPlay ){
+			return getOEmbed( linkUrl, autoPlay );
+		},
+
+		get: function( linkUrl, autoPlay ){
+			// Set defaults
+			if( _.isEmpty( autoPlay ) )
+				autoPlay = false;
+
+			// Make key from URL
+			var embedId = $_.sanitizeKey( linkUrl );
+
+			// Get the cached embed code
+			var code = $_.getObj( $pwData['embeds'], embedId );
+
+			// If the embed code doesn't exist yet
+			if( code == false ){
+				// Create placeholder object
+				$pwData['embeds'][ embedId ] = "loading";
+				// Get and cache it
+				getOEmbed( linkUrl, autoPlay );
+			}
+
+			// Return the embed code
+			return code;
+
+		},
+
+	}	
 
 }]);
 
 
+
+/*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
+
+postworld.directive( 'oEmbed', [ '$sce', function( $sce ){
+
+	return { 
+		restrict: 'AE',
+		/*
+		scope : {
+			link_url: 	"=oEmbed",
+			autoplay: 	"=autoplay",
+			run: 		"=run",
+		},
+		*/
+		//template : '',
+		controller: 'pwOEmbedController',
+		link : function ($scope, element, attrs){
+			/*
+			// When the oEmbed Value changes, then change the html here
+			$scope.$watch('oEmbed', function(value) {
+				//console.log('test',value);
+				element.html(value);
+			});
+			*/
+			
+			// Set autoplay value if it updates
+			//attrs.$observe('autoplay', function(value) {
+			//    $scope.setAutoplay();
+			//});
+
+		}
+	};
+
+}]);
+
 postworld.controller('pwOEmbedController',
-    [ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '_', '$timeout',
-    function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout ) {
-            
-            // AUTOPLAY
-            $scope.getAutoplay = function(){
-                return (                                    // Autoplay Must be:
-                    !_.isUndefined( $scope.autoplay ) &&    // Not Undefined
-                    $scope.autoplay !== null &&             // Not Null
-                    $scope.autoplay != false &&             // Not Boolean False
-                    $scope.autoplay != 'false' ) ?          // Not String False
-                    true : false;
-            }
+	[ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '_', '$timeout', '$rootScope', 'oEmbedServe',
+	function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout, $rootScope, $oEmbedServe ) {
 
-            // Status
-            if( _.isUndefined( $scope.$parent.oEmbedStatus ) )
-                $scope.$parent.oEmbedStatus = {};
-            $scope.$parent.oEmbedStatus[$scope.link_ur] = "loading";
+		$scope.getEmbedCode = function( linkUrl, autoPlay, run ){
+			// Set defaults
+			if( _.isUndefined( run )  )
+				run = true;
 
-            $scope.status = "loading";
+			// Return false if run is false
+			if( run != true )
+				return false;
 
-            // MEDIA GET
-            $scope.oEmbedGet = function(){
-                $scope.$parent.oEmbed = "";
+			// Get embed code
+			return $oEmbedServe.get( linkUrl, autoPlay );
 
-                // Check if RUN is false
-                if( $scope.run == false )
-                    return false;
+		}
 
-                // If it already has an embed code for the same link_url
-                // No need to get it again
-                if( $_.getObj( $scope.$parent, 'post.link_url' ) == $scope.link_url &&
-                    $_.getObj( $scope.$parent, 'post.link_url_embed' ) != false ){
-                    $log.debug( "Already have this embed code. Not getting it again." );
-                    return false;
-                }
-                    
-                // Setup the variables
-                var vars = {
-                    "link_url": $scope.link_url,
-                    "autoplay": $scope.getAutoplay(),
-                    };
-
-                // AJAX Call
-                $pwData.wp_ajax('ajax_oembed_get', vars ).then(
-                    // Success
-                    function(response) {    
-                        $scope.$parent.oEmbedStatus[$scope.link_url] = "done";
-
-                        // If not data, return false
-                        if ( response.data == false )
-                            return false;
-
-                        $log.debug( 'GOT EMBED CODE' );
-                        $scope.setEmbedCode( response.data )
-
-                    },
-                    // Failure
-                    function(response) {
-                        $scope.status = "error";
-                    }
-                );
-            };
-
-            $scope.setEmbedCode = function( embedCode ){
-                var sceEmbedCode = embedCode; //$sce.trustAsHtml( embedCode ); //  
-
-                $scope.$parent.oEmbed = sceEmbedCode;
-                $scope.$parent.oEmbedCode = embedCode; 
-
-                // Check if there is a post link_url associated with the parent scope post
-                // And if it's the same as the a post link_url
-                if( $_.getObj( $scope.$parent, 'post.link_url' ) == $scope.link_url ){
-                    // Add the embed code to 'post.link_url_embed'
-                    $scope.$parent.post.link_url_embed = sceEmbedCode;
-
-                    // Get Feed ID
-                    var feedId = $_.getObj( $scope.$parent, 'post.feed.id' );
-                    var postId = $_.getObj( $scope.$parent, 'post.ID' );
-
-                    // Check if there is a feed associated with the post
-                    if( _.isString( feedId ) ){
-                        // Store it in the central feed object
-                        $pwPosts.mergeFeedPost( feedId, postId, { link_url_embed: sceEmbedCode } );
-                        $log.debug( "MERGE FEED POST : SCE EMBED CODE : ", sceEmbedCode );
-                    }
-                }
-            }
-
-            // Set autoplay value if it updates
-            $scope.$watch('link_url', function(value) {
-                $timeout( function(){
-                    $scope.oEmbedGet();
-                }, 0 )
-                
-
-            });
-     
 }]);

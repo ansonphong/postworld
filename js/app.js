@@ -30,7 +30,7 @@ var depInject = [
 	'pwFilters',
 	'timer',
 	'angular-parallax',
-	'angularMoment',
+	//'angularMoment',
 	'wu.masonry',
 	'mgcrea.ngStrap.popover',
 	'pw.compile',
@@ -218,6 +218,16 @@ function pwRegisterController( controllerName, moduleName ) {
     }
 }
 
+////////// REPLACE ALL STRING PROTOTYPE //////////
+String.prototype.replaceAll = function(search, replace)
+{
+    //if replace is null, return original string otherwise it will
+    //replace search string with 'undefined'.
+    if(!replace) 
+        return this;
+
+    return this.replace(new RegExp('[' + search + ']', 'g'), replace);
+};
 
 
 /*
@@ -229,11 +239,12 @@ function pwRegisterController( controllerName, moduleName ) {
 /////////////////////////////////////////////////////////////////*/
 
 
+/*
 postworld.constant('angularMomentConfig', {
 	preprocess: 'unix', 				// optional
 	//timezone: 'America/Los_Angeles' 	// optional
 });
-
+*/
 
 /*
 postworld.run(function($rootScope, $templateCache) {

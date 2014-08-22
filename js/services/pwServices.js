@@ -140,8 +140,6 @@ postworld.factory('_',
 			return obj;
 		};
 
-
-
 	return {
 		exists: function(value){
 			if ( typeof value === 'undefined' )
@@ -305,7 +303,23 @@ postworld.factory('_',
 				$scope[firstKey] = setObj( $scope, subKeys, value );
 			});
 
-		}
+		},
+
+		sanitizeKey: function( input ){
+			// Pass this function anything such as URL
+			// And it will sanitize it for use as a key
+			input = input.replaceAll( 'http://', '' );
+			input = input.replaceAll( 'https://', '' );
+			input = input.replaceAll( ':', '-' );
+			input = input.replaceAll( '.', '-' );
+			input = input.replaceAll( '/', '-' );
+			input = input.replaceAll( '#', '-' );
+			input = input.replaceAll( '?', '-' );
+			input = input.replaceAll( '&', '-' );
+			input = input.replaceAll( '=', '-' );
+			return input;
+		},
+
 	};
 
 }]);

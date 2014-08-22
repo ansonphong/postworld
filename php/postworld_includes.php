@@ -31,6 +31,20 @@ function postworld_includes( $args ){
 	
 	//////////////////////// INJECTIONS //////////////////////
 
+	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
+	//wp_deregister_script('jquery');
+	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
+	wp_enqueue_script('jquery','');
+
+	// Add MASONRY
+	if( in_array( 'masonry.js', $pwInject ) ){
+		// MASONRY
+		wp_enqueue_script( 'Masonry-JS',
+			WP_PLUGIN_URL.'/postworld/lib/masonry/masonry.pkgd.min.js');		
+		wp_enqueue_script( 'ImagesLoaded-JS',
+			WP_PLUGIN_URL.'/postworld/lib/masonry/imagesloaded.pkgd.min.js');
+	}
+
 	// Add Google Maps to include before AngularJS app
 	if( in_array( 'google-maps', $pwInject ) ){
 		//array_push( $angularDep, 'google-maps' );
@@ -67,7 +81,6 @@ function postworld_includes( $args ){
 			WP_PLUGIN_URL.'/postworld/lib/glyphicons/glyphicons-halflings.css' );
 	}
 
-
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' => admin_url( 'admin-ajax.php' ),
 						'pluginurl' => WP_PLUGIN_URL,
@@ -82,10 +95,7 @@ function postworld_includes( $args ){
 	//wp_enqueue_style( "bootstrap-CSS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.css' );
 	//wp_enqueue_style( "Angular-Strap-Animation", WP_PLUGIN_URL.'/postworld/lib/angular-strap-2.0.0-rc.2/css/angular-motion.min.css' );
 
-	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
-	//wp_deregister_script('jquery');
-	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
-	wp_enqueue_script('jquery','');
+
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
 	///// DEPLOY FILE INCLUDES /////
@@ -99,17 +109,6 @@ function postworld_includes( $args ){
 		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js', array(), $postworld_version );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
-
-		// ADD GOOGLE MAPS
-		if( in_array('google-maps', $pwInject) ){
-			// GOOGLE MAPS
-			wp_enqueue_script( 'Google-Maps-API',
-				'//maps.googleapis.com/maps/api/js?sensor=false' );
-			// ANGULAR UI : GOOGLE MAPS
-			wp_enqueue_script( 'AngularJS-Google-Maps',
-				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', array('Postworld-Deploy') );
-		}
-
 
 
 	}
@@ -126,7 +125,7 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'DeepMerge',
 			WP_PLUGIN_URL.'/postworld/lib/deepmerge/deepmerge.js');
 
-		
+		/*
 		// MOMENT.JS
 		wp_enqueue_script( 'Moment-JS',
 			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment.min.js');
@@ -136,31 +135,15 @@ function postworld_includes( $args ){
 		// MOMENT-TIMEZONE DATA.JS
 		wp_enqueue_script( 'Moment-Timezone-Data-JS',
 			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment-timezone-data.js');
+		*/
 
-
-		// MASONRY
-		wp_enqueue_script( 'Masonry-JS',
-			WP_PLUGIN_URL.'/postworld/lib/masonry/masonry.pkgd.min.js');		
-
-		wp_enqueue_script( 'ImagesLoaded-JS',
-			WP_PLUGIN_URL.'/postworld/lib/masonry/imagesloaded.pkgd.min.js');
-		
 		// HISTORY.JS
 		//wp_enqueue_script( 'History-JS',
 		//	WP_PLUGIN_URL.'/postworld/lib/history.js/native.history.js');	
 
 		///// THIRD PARTY LIBRARIES /////
 
-		// ADD GOOGLE MAPS
-		if( in_array('google-maps', $pwInject) ){
-			// GOOGLE MAPS
-			wp_enqueue_script( 'Google-Maps-API',
-				'//maps.googleapis.com/maps/api/js?sensor=false' );
-			// ANGULAR UI : GOOGLE MAPS
-			wp_enqueue_script( 'AngularJS-Google-Maps',
-				plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js', $angularDep );
-		}
-
+		
 		// CREATE.JS
 		// Development Only ( Not in Grunt File / Deploy Version )
 		wp_enqueue_script( 'CreateJS-Easel',
@@ -233,9 +216,11 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Timer',
 			plugins_url().'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
 
+		/*
 		// ANGULAR : TIMER
 		wp_enqueue_script( 'AngularJS-Moment',
 			plugins_url().'/postworld/lib/angular-moment/angular-moment.min.js', $angularDep );
+		*/
 
 		// ANGULAR : PARALLAX
 		wp_enqueue_script( 'angularJS-Parallax',
@@ -367,6 +352,16 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
 			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
 
+	}
+
+	// ADD GOOGLE MAPS
+	if( in_array('google-maps', $pwInject) ){
+		// GOOGLE MAPS
+		wp_enqueue_script( 'Google-Maps-API',
+			'//maps.googleapis.com/maps/api/js?sensor=false' );
+		// ANGULAR UI : GOOGLE MAPS
+		wp_enqueue_script( 'AngularJS-Google-Maps',
+			plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js' );
 	}
 
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////

@@ -12,27 +12,39 @@ module.exports = function(grunt) {
           //'deploy/postworld.min.js': ['js/*.js', 'js/**/*.js'],
           'deploy/postworld.min.js':[
         	  
+            /*
+            // jQuery
+            'lib/jquery/jquery.min.js',
+
+            // Masonry
+            'lib/masonry.js/masonry.js',
+            'lib/masonry.js/imagesloaded.js',
+            */
+
             ///// ANGULAR /////
             // Angular
             'lib/'+angular_version+'/angular.min.js', // Angular.js has to go first
 
             ///// JS LIBRARIES /////
+
+            
             // Underscore
             'lib/underscore/underscore.min.js',
 
             // Deep Merge
             'lib/deepmerge/deepmerge.js',
 
+            /*
             // Moment.js
             'lib/moment.js/moment.min.js',
             // Moment-Timezone.js
             'lib/moment.js/moment-timezone.min.js',
             // Moment-Timezone Data.js
             'lib/moment.js/moment-timezone-data.js',
-
-            // Masonry
-            'lib/masonry.js/masonry.pkgd.min.js',
-            'lib/masonry.js/imagesloaded.pkgd.min.js',
+            */
+            
+            
+            
 
             ///// BOOTSTRAP /////
           	// Bootstrap JS
@@ -60,8 +72,10 @@ module.exports = function(grunt) {
             // Angular Parallax
             'lib/angular-parallax/angular-parallax.js',
 
+            /*
             // Angular Moment
             'lib/angular-moment/angular-moment.min.js',
+            */
 
             // Angular Elastic
             'lib/angular-elastic/angular-elastic.js',
@@ -81,6 +95,9 @@ module.exports = function(grunt) {
           	///// POSTWORLD /////
           	'js/*.js',
           	'js/**/*.js',
+
+
+            
 
           ],
         },
