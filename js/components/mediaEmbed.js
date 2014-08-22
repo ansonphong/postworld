@@ -108,7 +108,7 @@ postworld.factory( 'oEmbedServe',
 			// If the embed code doesn't exist yet
 			if( code == false ){
 				// Create placeholder object
-				$pwData['embeds'][ embedId ] = "loading";
+				$pwData['embeds'][ embedId ] = "<div class='pw-embed-loading'></div>"; // Cannot be empty
 				// Get and cache it
 				getOEmbed( linkUrl, autoPlay );
 			}

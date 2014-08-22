@@ -145,17 +145,27 @@ postworld.controller('pwModalInstanceCtrl',
 	if( !_.isUndefined( meta.post ) )
 		$scope.post = meta.post;
 
-	///// FEED HANDLING /////
-	if( $_.objExists( meta, 'post.feed.id' ) ){
+	///// DETECT FEED ID /////
+	/// FROM POST FEED
+	// Check the post for a feed ID
+	if( $_.getObj( meta, 'post.feed.id' ) ){
 		$scope.feed = {};
-
-		// Find and localize the feed
 		$scope.feed['id'] = meta.post.feed['id'];
-		//$scope.feed['data'] = $pwData.feeds[ $scope.feed['id'] ];
+		$log.debug( "FEED ID FROM : POST : ", $scope.feed['id'] );
+	}
+	// FROM MODAL META
+	// Check the modal meta for the feed ID
+	else if( $_.getObj( meta, 'feed.id' )  ){
+		$scope.feed = {};
+		$scope.feed['id'] = meta.feed['id'];
+		$log.debug( "FEED ID FROM : MODAL META : ", $scope.feed['id'] );
+	}
 
+	///// FEED HANDLING /////
+	if( $_.objExists( $scope.feed, 'id' ) ){
 		// Get the original full post object from the feed
 		// In the case that only a partial post object was passed
-		$scope.post = $pwPosts.getFeedPost( $scope.post.feed.id, $scope.post.ID );
+		$scope.post = $pwPosts.getFeedPost( $scope.feed['id'], $scope.post.ID );
 
 		// Get the current position of the feed
 		$scope.feed['currentIndex'] = _.indexOf( $pwPosts.getFeed( $scope.feed.id )['posts'], $scope.post );

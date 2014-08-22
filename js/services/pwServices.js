@@ -306,6 +306,9 @@ postworld.factory('_',
 		},
 
 		sanitizeKey: function( input ){
+			if( !_.isString(input) )
+				return false;
+			
 			// Pass this function anything such as URL
 			// And it will sanitize it for use as a key
 			input = input.replaceAll( 'http://', '' );

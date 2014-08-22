@@ -146,7 +146,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	$micro_fields =	array(
 		'post_title',
 		'post_excerpt',
-		'post_timeago',
+		'time_ago',
 		'post_date',
 		'post_date_gmt',
 		'post_permalink',
@@ -164,6 +164,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_parent',
 		'post_permalink',
 		'post_excerpt',
+		'link_url',
+		'link_format',
+		'post_date',
+		'post_date_gmt',
+		'time_ago',
 		'image(all)',
 		'image(stats)',
 		'image(tags)',
@@ -911,9 +916,11 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	 
 	* */
 	//return json_encode($postarr);
-	$post_id = wp_insert_post( $postarr, $wp_error );
 	
-	
+	if ($postarr['post_type'] == 'attachment')
+		$post_id = wp_insert_attachment( $postarr );
+	else
+		$post_id = wp_insert_post( $postarr, $wp_error );
 
 	if(gettype($post_id) == 'integer'){ // successful
 
@@ -996,7 +1003,7 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 	}
 
 	// First, get all of the original fields
-	$post = get_post($postarr['ID'], ARRAY_A);
+	$post = get_post( $postarr['ID'], ARRAY_A );
 	
 	//print_r($post);
 
@@ -1030,9 +1037,6 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 		$postarr['post_date'] = current_time('mysql');
 		$postarr['post_date_gmt'] = '';
 	}
-
-	if ($postarr['post_type'] == 'attachment')
-		return wp_insert_attachment($postarr);
 
 	//print_r($postarr);
 	return pw_insert_post( $postarr, $wp_error );

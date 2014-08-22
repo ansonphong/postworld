@@ -41,6 +41,17 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 				$scope.galleryGetNext( $scope.galleryPreload );
 			}
 
+			///// INSERT FEED /////
+			// Generate feed instance name
+			var galleryInstance = 'gallery-' + $scope.post.ID;
+			// Set instance name into the scope so it's accessible in the DOM
+			$scope.infiniteGallery.instance = galleryInstance;
+			// Insert the feed into the pwData.feeds
+			$pwPosts.insertFeed( galleryInstance, { posts: $scope.infiniteGallery.posts } );
+			// Log in Console
+			$log.debug( "INSERTED FEED : " + galleryInstance, $scope.infiniteGallery.posts );
+
+
 		// IF POST HAS NO GALLERY
 		} else{
 			$scope.infiniteGallery['posts'] = [];
@@ -74,6 +85,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 	};
 
 	$scope.galleryGetNext = function( getPostsCount ){
+		// Get next image(s) in infinite scroll
 
 		// Cast Get Posts Count as integer
 		getPostsCount = parseInt( getPostsCount );
