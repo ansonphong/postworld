@@ -113,7 +113,17 @@ function pw_image_tag_filters( $vars ){
 }
 
 function pw_generate_image_tags( $vars = array() ){
+	/*
+		$vars = array(
+			'width'		=> [integer]
+			'height'	=> [integer]
+			'ratio'		=> [number/decimal]
+		)
+	*/
 	if( empty( $vars ) )
+		return false;
+
+	if( empty($vars['width']) || empty($vars['height']) )
 		return false;
 
 	extract( $vars );
