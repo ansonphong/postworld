@@ -564,8 +564,11 @@ function pwGlobals_parse(){
 	// Support for Buddypress Globals
 	if ( function_exists('bp_displayed_user_id') ){
 		$displayed_user_id = bp_displayed_user_id();
-	} else
-		$displayed_user_id = $GLOBALS['post']->post_author;
+	} else{
+		global $post;
+		if( gettype( $post ) == 'object' )
+			$displayed_user_id = $post->post_author;
+	}
 
 	if ( isset($displayed_user_id) )
 		$displayed_userdata = get_userdata( $displayed_user_id );

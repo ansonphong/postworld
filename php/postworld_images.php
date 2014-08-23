@@ -131,7 +131,6 @@ function pw_generate_image_tags( $vars = array() ){
 	///// PROCESS FILTERS /////
 	// Iterate through each filter
 	foreach( $tag_filters as $tag_filter ){
-
 		$condition = ( string ) $tag_filter['condition'];
 		$condition = "return (" . $condition . ");";
 
@@ -141,11 +140,9 @@ function pw_generate_image_tags( $vars = array() ){
 			$tags[] = $tag_filter['tag'];
 
 	}
-
 	return $tags;
 
 }
-
 
 ///// GET IMAGE /////
 function pw_get_image( $vars ){

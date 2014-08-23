@@ -639,11 +639,18 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 						// Image Tags Object
 						// Threshold Format as ['Tags'] : 'square' / 'wide' / 'tall' / 'x-wide' / 'x-tall' , etc.
-						$post['image']['tags'] = pw_generate_image_tags( array(
-								"width" => $image_meta['width'],
-								"height" => $image_meta['height'],
-								)
-							);
+						
+						if( isset($image_meta) && $image_meta )
+							$image_tags = pw_generate_image_tags( array(
+									"width" => $image_meta['width'],
+									"height" => $image_meta['height'],
+									)
+								);
+						else
+							$image_tags = array();
+
+						$post['image']['tags'] = $image_tags;
+
 					}
 
 					// STATS : Get Image Stats
@@ -655,16 +662,19 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 							$image_meta = $post['image']['meta'];
 						} else if( !isset( $image_meta ) ){
 							// Otherwise get from database
-							$image_meta = wp_get_attachment_metadata($thumbnail_id);
+							$image_meta = wp_get_attachment_metadata( $thumbnail_id );
 						}
 
 						// Calculate Image Ratios
-						$image_stats = array(
-							"width" => $image_meta['width'],
-							"height" => $image_meta['height'],
-							"area"	=>	$image_meta['width'] * $image_meta['height'],
-							"ratio"	=>	$image_meta['width'] / $image_meta['height']
-							);
+						if( $image_meta )
+							$image_stats = array(
+								"width" => 	$image_meta['width'],
+								"height" => $image_meta['height'],
+								"area"	=>	$image_meta['width'] * $image_meta['height'],
+								"ratio"	=>	$image_meta['width'] / $image_meta['height']
+								);
+						else
+							$image_stats = array();
 
 						// TODO : Add "2:1 / 4:3 / etc" format
 					
