@@ -640,7 +640,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						// Image Tags Object
 						// Threshold Format as ['Tags'] : 'square' / 'wide' / 'tall' / 'x-wide' / 'x-tall' , etc.
 						
-						if( isset($image_meta) && $image_meta )
+						if( isset($image_meta) && gettype($image_meta) == 'array' )
 							$image_tags = pw_generate_image_tags( array(
 									"width" => $image_meta['width'],
 									"height" => $image_meta['height'],
@@ -666,7 +666,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 						}
 
 						// Calculate Image Ratios
-						if( $image_meta )
+						if( gettype($image_meta) == 'array' )
 							$image_stats = array(
 								"width" => 	$image_meta['width'],
 								"height" => $image_meta['height'],
