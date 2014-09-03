@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-fl44fd');
-	src:url('fonts/icomoon.eot?#iefix-fl44fd') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-fl44fd') format('woff'),
-		url('fonts/icomoon.ttf?-fl44fd') format('truetype'),
-		url('fonts/icomoon.svg?-fl44fd#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-akoqgd');
+	src:url('fonts/icomoon.eot?#iefix-akoqgd') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-akoqgd') format('woff'),
+		url('fonts/icomoon.ttf?-akoqgd') format('truetype'),
+		url('fonts/icomoon.svg?-akoqgd#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,15 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-quasm:before {
+	content: "\e6d3";
+}
+.icon-mail-square:before {
+	content: "\e6d5";
+}
+.icon-mail:before {
+	content: "\e6d6";
+}
 .icon-reddit-square:before {
 	content: "\e653";
 }
@@ -923,7 +932,7 @@
 .icon-caret-right:before {
 	content: "\f0da";
 }
-.icon-mail:before {
+.icon-mail2:before {
 	content: "\f0e0";
 }
 .icon-dashboard2:before {
