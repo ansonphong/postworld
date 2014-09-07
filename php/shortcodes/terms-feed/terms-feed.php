@@ -96,15 +96,15 @@ function pw_print_terms_feed( $vars ){
 	///// TEMPLATES ////
 	$templates = pw_get_templates(
 		array(
-			'subdirs' => array('shortcodes'),
+			'subdirs' => array('feeds'),
 			'path_type' => 'dir',
 			'ext'=>'php',
 			)
 		);
 	$template_id = $vars['template'];
-	$template = ( isset( $templates['shortcodes'][$template_id] ) ) ?
-		$templates['shortcodes'][$template_id] :
-		$templates['shortcodes'][$default_template];
+	$template = ( isset( $templates['feeds'][$template_id] ) ) ?
+		$templates['feeds'][$template_id] :
+		$templates['feeds'][$default_template];
 
 	///// GET TERMS FEED /////
 	$vars['terms_feed'] = pw_get_terms_feed( $vars );
