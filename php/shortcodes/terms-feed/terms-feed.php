@@ -87,11 +87,7 @@ function pw_print_terms_feed( $vars ){
 
 		);
 
-	
-
 	$vars = pw_set_defaults( $vars, $default_vars ); 
-
-
 
 	///// TEMPLATES ////
 	$templates = pw_get_templates(
@@ -148,7 +144,8 @@ function pw_get_terms_feed( $vars ){
 				'include_galleries'	=>	[boolean],	// Deep-scan posts content for gallery shortcodes
 				'move_galleries'	=>	[boolean],	// Moves the galleries from the post to the feed
 				'require_image'		=>	[boolean],	// Only posts with a featured image are used
-			
+				'output'			=>	[string],	// Optional: 'flat'
+				'post_term_fields'	=>	[array]		// Optional, which term values to transfer to posts: 'name', 'slug'
 			),
 		)
 
@@ -282,6 +279,39 @@ function pw_get_terms_feed( $vars ){
 			array_push( $output, $term_output );		
 
 		}
+
+
+	///// OPTIONS OUTPUT /////
+	if( isset($vars['options']['output']) ){
+
+		///// PROCESS FLAT OUTPUT /////
+		if( $vars['options']['output'] == 'flat' ){
+
+			$new_output = array();
+			
+			// Iterate through each object in output
+			foreach( $output as $object ){
+
+				// Iterate through each post in the object
+				foreach( $object['posts'] as $post ){
+
+					// Transfer the requested term values to the post
+					if( isset($vars['options']['post_term_fields']) ){
+						// Create empty object
+						$post['term_feed'] = array();
+						// Iterate through each requested term field
+						foreach( $vars['options']['post_term_fields'] as $term_field ){
+							$post['term_feed'][$term_field] = $object['term'][$term_field];
+						}
+					}
+					array_push($new_output, $post);
+				}
+			}
+
+			$output = $new_output;
+
+		}
+	}
 
 	return $output;
 

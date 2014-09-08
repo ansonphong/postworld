@@ -46,6 +46,22 @@ postworld.directive( 'pwEditPost', [ function($scope){
 			});
 
 			// OBSERVE Attribute
+			// Enable routing on the edit post - boolean
+			attrs.$observe('editRouting', function(value) {
+				if( !_.isUndefined( value ) )
+					// Calculate string into a boolean
+					$scope.editPostConfig['routing'] = ( value === 'true' );
+			});
+
+			// OBSERVE Attribute
+			// Enable routing on the edit post - boolean
+			attrs.$observe('editAutoReload', function(value) {
+				if( !_.isUndefined( value ) )
+					// Calculate string into a boolean
+					$scope.editPostConfig['autoReload'] = ( value === 'true' );
+			});
+
+			// OBSERVE Attribute
 			// Save Callback evaluates on submitting a post to be saved
 			attrs.$observe('saveSubmitCallback', function(value) {
 				if( !_.isUndefined( value ) )
@@ -84,6 +100,10 @@ postworld.controller('editPost',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials ) {
 
+	$timeout( function(){
+		$log.debug( 'editPost Controller', $scope.initEditPost );
+	}, 1 );
+	
 
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
@@ -114,7 +134,7 @@ postworld.controller('editPost',
 		///// NEW QUICK EDIT POST /////
 		if( $scope.mode == 'quick-edit-new' ){
 			//alert( $scope.post.post_type );
-			$scope.newPost({ 'post_type':$scope.post.post_type });
+			$scope.newPost({ 'post_type':$scope.getPostType() });
 			//$scope.setPostObject(  );
 			$scope.status = "done";
 		}
@@ -717,6 +737,16 @@ postworld.controller('editPost',
 		if( $_.objExists( $scope, 'post.tax_input' ) )
 			$scope.post.tax_input.post_tag = data;
 	});
+
+
+	/*
+	// ACTION : CREATE NEW POST OBJECT
+	// • Creates a new post object in the scope
+	$scope.$on( 'newPostObject', function( event, data ){
+		//var post_type = $scope.getPostType( data.post_type );
+		//$scope.newPost({ 'post_type': post_type });
+	});
+	*/
 
 	// GET : TAXONOMY TERMS
 	// • Gets live set of terms from the DB as $scope.tax_terms

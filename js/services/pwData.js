@@ -439,6 +439,11 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_get_template_partial',params);
 		},
+		get_terms_feed: function(args) {
+			$log.debug('pwData.get_terms_feed',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_terms_feed',params);
+		},
 		
 
    }; // END OF pwData return value

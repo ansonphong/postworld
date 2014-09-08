@@ -230,7 +230,7 @@ postworld.controller('adminPostDropdown',
         },
         {
             name: "WP Edit",
-            icon:"icon-edit-sign",
+            icon:"icon-edit-square",
             action:"wp-edit",
         },
         /*

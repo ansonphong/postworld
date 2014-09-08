@@ -6,6 +6,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 		openModal : function( meta ){
 			
+			$log.debug( "OPEN MODAL : ", meta );
+
 			///// DEFAULTS /////
 			if( _.isUndefined(meta) )
 				var meta = {};
