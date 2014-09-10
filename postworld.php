@@ -14,6 +14,8 @@ License: GPL2
 include 'php/postworld_variables.php';
 include 'php/postworld_utilities.php';
 
+/////////////// H2O ////////////////
+require_once 'lib/h2o/h2o.php';
 
 // GLOBAL VARIABLES
 global $pw_settings;
@@ -144,6 +146,8 @@ include 'php/postworld_shortcodes.php';
 
 /////////////// UPDATE / MIGRATE ////////////////
 include 'php/postworld_update.php';
+
+
 
 
 //To get user id from wordpress

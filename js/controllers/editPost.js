@@ -100,11 +100,15 @@ postworld.controller('editPost',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials ) {
 
+	$log.debug( "$scope.mode @ init", $scope.mode );
+
+	$log.debug( "$scope.meta @ init", $scope.meta );
+
 	$timeout( function(){
 		$log.debug( 'editPost Controller', $scope.initEditPost );
-	}, 1 );
+		$log.debug( "$scope.post @ 2ms", $scope.post );
+	}, 2 );
 	
-
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
 
@@ -128,20 +132,20 @@ postworld.controller('editPost',
 	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
 		$scope.postOptions = $window.pwSiteGlobals.post_options;
 
+
 	///// SET POST OBJECT /////
 	// If No Post Object exists and routing is off, create one
 	$timeout( function(){
 		///// NEW QUICK EDIT POST /////
-		if( $scope.mode == 'quick-edit-new' ){
-			//alert( $scope.post.post_type );
-			$scope.newPost({ 'post_type':$scope.getPostType() });
-			//$scope.setPostObject(  );
+		if( $scope.mode == 'new' ){
+			// Make a new post in the scope with the universally defined post type
+			$scope.newPost( $scope.getPost( { 'post_type':$scope.getPostType() } ) );
 			$scope.status = "done";
 		}
 		///// NEW POST IF ROUTING IS OFF /////
-		else if( 
-			$scope.editPostConfig.routing == false ){
-			$scope.newPost({});
+		else if( $scope.editPostConfig.routing == false ){
+			// Make a new post in the scope
+			$scope.newPost( $scope.getPost({}) );
 		}
 
 	}, 0 );
@@ -151,10 +155,26 @@ postworld.controller('editPost',
 	$pwRoleAccess.setRoleAccess($scope);
 
 	//////////////////// FUNCTIONS ////////////////////
-	// Define which post type to return within a set of options
-	// Allows to have a 'default' post type object
-	// With the option to over-ride with the current scope post type
+
+	$scope.getPost = function( post ){
+		// Checks to see if a post object already exists in the scope
+		// And merges the provided post object then returns that
+
+		// Set default provided post value
+		if( _.isUndefined( post ) )
+			post = {};
+		
+		// Get the post from the scope and merge it if defined
+		if( !_.isUndefined( $scope.post ) )
+			post = deepmerge( $scope.post, post );
+
+		return post;
+	}
+
 	$scope.getPostOptions = function( option, subkey ){
+		// Define which post type to return within a set of options
+		// Allows to have a 'default' post type object
+		// With the option to over-ride with the current scope post type
 		// option ~= "post_excerpt" / "post_title", etc
 
 		if( $_.objExists( $scope, 'postOptions.' + option + '.' + subkey ) )
@@ -350,7 +370,10 @@ postworld.controller('editPost',
 		// Set the new mode
 		$scope.mode = "new";
 
-		$scope.post = {};
+		// Set the default empty post if not provided
+		if( _.isUndefined( post ) )
+			post = {};
+
 		// Set the new post object in scope
 		$scope.setPostObject( post );
 
@@ -370,7 +393,6 @@ postworld.controller('editPost',
 			$location.path('/new/' + $scope.post.post_type);
 
 	}
-
 
 	///// LOAD POST DATA /////
 	$scope.loadEditPost = function( post_id ){

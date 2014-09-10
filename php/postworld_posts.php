@@ -142,6 +142,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_categories_list',
 		'post_tags_list',
 		);
+
+	$extended_fields = array(
+		'parent_post(micro)',	// Retreives the parent post as post_parent
+		);
 	
 	$micro_fields =	array(
 		'post_title',
@@ -848,6 +852,18 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		} // END foreach
 	} // END IF
+
+
+	////////// PARENT POST //////////
+		$parent_post_fields = extract_linear_fields( $fields, 'parent_post', true );
+		if ( !empty($parent_post_fields) ){
+			$post['parent_post'] = array();
+			if( $get_post['post_parent'] != 0 )
+				$post['parent_post'] = pw_get_post( $get_post['post_parent'], $parent_post_fields[0] );
+			else
+				$post['parent_post'] = array();
+		}
+	
 
 	///// FIELDS /////
 		if( in_array( 'fields', $fields ) ){

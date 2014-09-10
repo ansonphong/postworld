@@ -39,17 +39,16 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 			// mode : Can be used to pass the preset mode
 			// or if string not found, this substitutes as the panel id
 			switch( meta.mode ){
-				///// QUICK EDIT /////
-				case "quick-edit":
-					templateName = "modal-edit-post";
-					controller = "pwModalInstanceCtrl";
-					windowClass = "modal-edit-post";
-				break;
-				///// QUICK EDIT NEW /////
-				case "quick-edit-new":
-					templateName = "modal-edit-post";
-					controller = "pwModalInstanceCtrl";
-					windowClass = "modal-edit-post";
+				///// NEW /////
+				case "new":
+				///// EDIT /////
+				case "edit":
+					templateName = ( _.isUndefined( meta.templateName ) ) ?
+						'modal-edit-post' : meta.templateName;
+					controller = ( _.isUndefined( meta.controller ) ) ?
+						'pwModalInstanceCtrl' : meta.controller;
+					windowClass = ( _.isUndefined( meta.windowClass ) ) ?
+						'modal-edit-post' : meta.windowClass;
 				break;
 				///// VIEW /////
 				case "view":
