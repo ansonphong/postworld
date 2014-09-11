@@ -144,7 +144,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		);
 
 	$extended_fields = array(
-		'parent_post(micro)',	// Retreives the parent post as post_parent
+		'parent_post(micro)',	// Gets the parent post as post_parent
+		'child_post_count',		// Gets the number of posts which have this post as a parent
 		);
 	
 	$micro_fields =	array(
@@ -864,6 +865,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				$post['parent_post'] = array();
 		}
 	
+	////////// CHILD POST COUNT //////////
+		if( in_array( 'child_post_count', $fields ) ){
+			global $wpdb;
+			$post['child_post_count'] = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_parent = $post_id AND post_status = 'publish'"); 
+		}
 
 	///// FIELDS /////
 		if( in_array( 'fields', $fields ) ){
