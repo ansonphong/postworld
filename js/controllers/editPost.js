@@ -112,14 +112,13 @@ postworld.controller('editPost',
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
 
+	if( _.isUndefined( $scope.mode ) )
+		$scope.mode = 'default';
+
 	///// MODES /////
 	// Set the default mode
 	if( _.isUndefined( $scope.mode ) )
 		$scope.mode = 'default';
-
-	// Set default status for quick-edit mode
-	if( $scope.mode == 'quick-edit' )
-		$scope.status = 'loading';
 
 	// Define Global Edit Post Defaults
 	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
@@ -132,7 +131,6 @@ postworld.controller('editPost',
 	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
 		$scope.postOptions = $window.pwSiteGlobals.post_options;
 
-
 	///// SET POST OBJECT /////
 	// If No Post Object exists and routing is off, create one
 	$timeout( function(){
@@ -143,10 +141,16 @@ postworld.controller('editPost',
 			$scope.status = "done";
 		}
 		///// NEW POST IF ROUTING IS OFF /////
-		else if( $scope.editPostConfig.routing == false ){
-			// Make a new post in the scope
-			$scope.newPost( $scope.getPost({}) );
+		else if( $scope.mode == 'edit' ){
+
+			// If a post ID is specified
+			if( $_.objExists( $scope, 'post.ID' ) ){
+				// Load the post freshly in edit post mode
+				$scope.loadEditPost( $scope.post.ID );
+				$scope.status = 'loading';
+			}	
 		}
+		$log.debug( "SCOPE.MODE : ", $scope.mode );
 
 	}, 0 );
 
@@ -396,7 +400,6 @@ postworld.controller('editPost',
 
 	///// LOAD POST DATA /////
 	$scope.loadEditPost = function( post_id ){
-		//$scope.status = 'loading';
 
 		// Post ID passed directly
 		if( !_.isUndefined(post_id) ){

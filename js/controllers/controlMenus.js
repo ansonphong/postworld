@@ -254,8 +254,9 @@ postworld.controller('adminPostDropdown',
     // Menu Options
     var overrideMenuOptions = $_.getObj( $window, 'pwSiteGlobals.controls.post.menu_options' );
 
+    // If custom menu options are provided
     if( overrideMenuOptions != false ){
-
+        // Custom menu items to over-ride defaults
         var newMenuOptions = [];
         var overrideMenuOption, newOption;
         // Iterate through each default menu option
@@ -382,7 +383,7 @@ postworld.controller('adminPostDropdown',
                 break;
 
             case 'quick-edit':
-                $pwModal.openModal( { mode: 'quick-edit', post: $scope.post } );
+                $pwModal.openModal( { mode: 'edit', post: $scope.post } );
                 break;
 
             case 'trash':

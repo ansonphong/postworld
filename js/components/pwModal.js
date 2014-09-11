@@ -35,6 +35,15 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 			// Increase the number by 1
 			$pw.state.modals.open ++;
 
+			///// DETECT POST TYPE /////
+			// Check for a post type in the post
+			var postType = $_.getObj( meta, 'post.post_type' );
+			// If no post type
+			if( !postType ){
+				// Set the default post type
+				postType = 'post';
+			}
+
 			////////// SWITCH MODE //////////
 			// mode : Can be used to pass the preset mode
 			// or if string not found, this substitutes as the panel id
@@ -43,12 +52,22 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 				case "new":
 				///// EDIT /////
 				case "edit":
-					templateName = ( _.isUndefined( meta.templateName ) ) ?
-						'modal-edit-post' : meta.templateName;
+					///// SET DEFAULT TEMPLATE NAME /////
+					if ( _.isUndefined( meta.templateName ) ){
+						// Define the template name with post type
+						templateName = 'modal-edit-' + postType;
+						// Check if modal template exists with this name, will return false if not
+						var postTypeEditTemplate = $pwData.pw_get_template( { subdir: 'modals', view: templateName, } );
+						// If no template is found
+						if( !postTypeEditTemplate )
+							// Set the default template name
+							templateName = 'modal-edit-post';
+					}
+					///// SET DEFAULTS /////
 					controller = ( _.isUndefined( meta.controller ) ) ?
 						'pwModalInstanceCtrl' : meta.controller;
 					windowClass = ( _.isUndefined( meta.windowClass ) ) ?
-						'modal-edit-post' : meta.windowClass;
+						templateName : meta.windowClass;
 				break;
 				///// VIEW /////
 				case "view":
