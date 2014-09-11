@@ -265,10 +265,8 @@ postworld.controller('pwModalInstanceCtrl',
 		//$log.debug( "key press : " + e.keyCode + " : ", e );
 		var keyCode = parseInt( e.keyCode );
 	
-		$log.debug( "$pw.state.modals.open:", $pw.state.modals.open );
-		$log.debug( "meta.modalIndex-1:", meta.modalIndex-1 );
-
-		
+		//$log.debug( "$pw.state.modals.open:", $pw.state.modals.open );
+		//$log.debug( "meta.modalIndex-1:", meta.modalIndex-1 );
 
 		// Check if the current modal is on top
 		if( $pw.state.modals.open != meta.modalIndex+1 )

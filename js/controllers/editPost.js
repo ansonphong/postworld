@@ -136,13 +136,13 @@ postworld.controller('editPost',
 	$timeout( function(){
 		///// NEW QUICK EDIT POST /////
 		if( $scope.mode == 'new' ){
+			//$log.debug( 'SCOPE.POST : ', $scope.post );
 			// Make a new post in the scope with the universally defined post type
 			$scope.newPost( $scope.getPost( { 'post_type':$scope.getPostType() } ) );
 			$scope.status = "done";
 		}
 		///// NEW POST IF ROUTING IS OFF /////
 		else if( $scope.mode == 'edit' ){
-
 			// If a post ID is specified
 			if( $_.objExists( $scope, 'post.ID' ) ){
 				// Load the post freshly in edit post mode
