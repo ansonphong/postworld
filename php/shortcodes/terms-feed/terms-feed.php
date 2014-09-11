@@ -270,6 +270,10 @@ function pw_get_terms_feed( $vars ){
 			if( $require_image )
 				$posts = pw_require_image( $posts );
 
+			///// PROCESS DATA /////
+			// Convert name back to normal characters
+			$term['name'] = htmlspecialchars_decode( $term['name'] );
+
 			///// COMPILE DATA /////
 			$term_output['term'] = $term;
 			$term_output['term']['post_count'] = count( $posts );
