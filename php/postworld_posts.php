@@ -872,6 +872,25 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			$post['child_post_count'] = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_parent = $post_id AND post_status = 'publish'"); 
 		}
 
+	////////// CHILD POSTS COMMENT COUNT //////////
+		if( in_array( 'child_posts_comment_count', $fields ) ){
+			global $wpdb;
+			$post['child_posts_comment_count'] = $wpdb->get_var("SELECT SUM(comment_count) FROM $wpdb->posts WHERE post_parent = $post_id AND post_status = 'publish'"); 
+		}
+
+	////////// CHILD POSTS COMMENT COUNT //////////
+		if( in_array( 'child_posts_karma_count', $fields ) ){
+			global $wpdb;
+			$pw_post_meta_table = $wpdb->prefix . "postworld_post_meta";
+			$post['child_posts_karma_count'] = $wpdb->get_var(
+				"SELECT SUM(post_points)
+				FROM $pw_post_meta_table
+				INNER JOIN $wpdb->posts ON post_id = $wpdb->posts.ID
+				WHERE $wpdb->posts.post_parent = $post_id
+				AND $wpdb->posts.post_status = 'publish'"
+				);
+		}
+
 	///// FIELDS /////
 		if( in_array( 'fields', $fields ) ){
 			$post['fields'] = $fields;
