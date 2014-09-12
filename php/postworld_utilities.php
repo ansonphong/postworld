@@ -456,13 +456,11 @@ function post_exists_by_id($post_id){
 	if($post != null){ return true; } else{ return false; }
 }
 
-
-function crop_string_to_word( $string, $max_chars = 200 ){
-	
+function pw_crop_string_to_word( $string, $max_chars = 200, $suffix = "..." ){
 	if (strlen($string) > $max_chars) {
 	    $string = substr($string, 0, $max_chars);
 	    $string = substr($string, 0, strrpos($string, ' '));        
-	    $string .= '...';
+	    $string .= $suffix;
 	}
 	return $string;
 	//return substr($string, 0, strrpos(substr($string, 0, $max_chars), ' '));

@@ -106,6 +106,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'ID',
 		'post_title',
 		'post_excerpt',
+		'post_excerpt(256,post_content)',
 		'post_permalink',
 		'post_type',
 		'post_status',
@@ -909,6 +910,28 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			// Apply all content filters
 			$post['post_content'] = apply_filters('the_content', $post['post_content']);
+		}
+
+	///// POST EXCERPT /////
+		$post_excerpt_fields = extract_linear_fields( $fields, 'post_excerpt', true );
+		if ( !empty($post_excerpt_fields) ){
+			// If the first field is a number
+			if( is_numeric( $post_excerpt_fields[0] ) ){
+				$max_chars = intval($post_excerpt_fields[0]);
+				// If the second value is 'post_content'
+				if( $post_excerpt_fields[1] == 'post_content' ){
+					// Set the excerpt as the post content
+					$post_excerpt = $get_post['post_content'];
+					// Strip all shortcodes
+					$post_excerpt = strip_shortcodes( $post_excerpt );
+					// Strip all HTML tags
+					$post_excerpt = wp_strip_all_tags( $post_excerpt, true );
+					// Set it into the post object
+					$post['post_excerpt'] = $post_excerpt;
+				}
+				// Crop the post excerpt to the word
+				$post['post_excerpt'] = pw_crop_string_to_word( $post['post_excerpt'], $max_chars, "..." );
+			}
 		}
 
 	///// ADD ACTION HOOK : PW GET POST COMPLETE /////
