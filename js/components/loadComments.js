@@ -138,7 +138,6 @@ postworld.controller('pwTreeController',
 			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		}
 			
-		
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;

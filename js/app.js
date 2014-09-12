@@ -34,6 +34,7 @@ var depInject = [
 	'wu.masonry',
 	'mgcrea.ngStrap.popover',
 	'pw.compile',
+	//'ya.treeview',
 	];
 
 
