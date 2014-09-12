@@ -127,7 +127,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 		'comment_date',
 		'comment_date_gmt',
 		'comment_content',
-		//'comment_karma',
+		'comment_karma',
 		'comment_approved',
 		'comment_agent',
 		'comment_type',
@@ -145,12 +145,25 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 	// POSTWORLD USER FIELDS
 	$pw_userdata_fields = array(
 		'user_profile_url',
+		'location_city',
+		'location_region',
+		'location_country',
 		'display_name',
-	);
+		);
+
+	// POSTWORLD AVATAR FIELDS
+	$pw_avatar_fields = array(
+		'avatar(small,96)',
+		);
 
 	// All Fields
 	if ($fields == 'all'){
-		$all_fields = array_merge($wp_comment_fields, $pw_comment_fields, $pw_userdata_fields);
+		$all_fields = array_merge(
+			$wp_comment_fields,
+			$pw_comment_fields,
+			$pw_userdata_fields,
+			$pw_avatar_fields
+			);
 		$fields = $all_fields;
 	}
 
@@ -199,28 +212,19 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			$user_id = $wp_comment_data['user_id'];
 			// GET THE USER FIELD DATA
 			$pw_userdata = pw_get_userdata( $user_id, $get_pw_userdata_fields );
-			$comment_data = array_merge( $comment_data, $pw_userdata );					
+			$comment_data['author'] = $pw_userdata;					
 			break;
 		}
 	}
 
-	//global $wp_embed;
-	//add_filter('o_embed_filter2', array($wp_embed, 'autoembed'), 11);
-	//$comment_data['comment_content'] = apply_filters( "o_embed_filter2", $comment_data['comment_content'] );
-
-	/*
-	$o_embed_string = "o-embed action : \n http://www.youtube.com/watch?v=38peWm76l-U";
-	$o_embed_string = apply_filters( "o_embed_filter", $o_embed_string );
-	$comment_data['comment_content'] = $comment_data['comment_content'] . $o_embed_string;
-	*/
-
-	//$comment_data['comment_content'] = apply_filters( "o_embed_filter", $comment_data['comment_content'] );
-	
-
+	////////// AVATAR IMAGES //////////
+		// AVATAR FIELDS
+		$avatars_object = get_avatar_sizes( $user_id, $fields );
+		if ( !empty( $avatars_object ) )
+			$comment_data["avatar"] = $avatars_object;
 
 	return $comment_data;
 }
-
 
 
 function pw_get_comments( $query, $fields = 'all', $tree = true ){
