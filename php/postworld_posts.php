@@ -145,8 +145,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		);
 
 	$extended_fields = array(
-		'parent_post(micro)',	// Gets the parent post as post_parent
-		'child_post_count',		// Gets the number of posts which have this post as a parent
+		'parent_post(micro)',			// Gets the parent post as post_parent : parent_post( [field model] )
+		'child_post_count',				// Gets the number of posts which have this post as a parent
+		'child_posts_comment_count',	// Gets the sum of all comment counts on all child posts
+		'child_posts_karma_count',		// Gets a sum of all the karma on all child posts
+		'comments(3,all,comment_date_gmt)',	// Gets comments associated with the post : comments( [number of comments], [field model], [orderby] )
 		);
 	
 	$micro_fields =	array(
@@ -867,18 +870,21 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		}
 	
 	////////// CHILD POST COUNT //////////
+		// Gets the number of child posts
 		if( in_array( 'child_post_count', $fields ) ){
 			global $wpdb;
 			$post['child_post_count'] = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_parent = $post_id AND post_status = 'publish'"); 
 		}
 
 	////////// CHILD POSTS COMMENT COUNT //////////
+		// Gets the sum of all comment counts on all child posts
 		if( in_array( 'child_posts_comment_count', $fields ) ){
 			global $wpdb;
 			$post['child_posts_comment_count'] = $wpdb->get_var("SELECT SUM(comment_count) FROM $wpdb->posts WHERE post_parent = $post_id AND post_status = 'publish'"); 
 		}
 
-	////////// CHILD POSTS COMMENT COUNT //////////
+	////////// CHILD POSTS KARMA COUNT //////////
+		// Gets a sum of all the karma on all child posts
 		if( in_array( 'child_posts_karma_count', $fields ) ){
 			global $wpdb;
 			$pw_post_meta_table = $wpdb->prefix . "postworld_post_meta";
@@ -910,10 +916,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				)
 			);
 
-	global $dev;
-	if( !empty($dev) )
-		$post['dev'] = $dev;
-
 	///// POST CONTENT /////
 	// Condition Post Content
 		if ( in_array( 'post_content', $fields ) && $mode == 'view' ){
@@ -932,6 +934,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		}
 
 	///// POST EXCERPT /////
+		// Returns the post excerpt cropped to a certain number of characters
+		// Post_content is optionally used
 		$post_excerpt_fields = extract_linear_fields( $fields, 'post_excerpt', true );
 		if ( !empty($post_excerpt_fields) ){
 			// If the first field is a number
@@ -952,6 +956,43 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				$post['post_excerpt'] = pw_crop_string_to_word( $post['post_excerpt'], $max_chars, "..." );
 			}
 		}
+
+
+	///// COMMENTS /////
+		// 	Gets comments associated with the post
+		//	comments(3,all,comment_date_gmt)
+		$comment_linear_fields = extract_linear_fields( $fields, 'comments', true );
+		if ( !empty( $comment_linear_fields ) ){
+
+			$comments_query = array(
+				'post_id' => $post_id,
+				);
+
+			$comments_query['number'] = ( is_numeric( $comment_linear_fields[0] ) ) ?
+				$comment_linear_fields[0] : 3;
+
+			$comment_fields = ( is_string( $comment_linear_fields[1] ) ) ?
+				$comment_linear_fields[1] : 'all';
+
+			$comments_query['orderby'] = ( is_string( $comment_linear_fields[2] ) ) ?
+				$comment_linear_fields[2] : 'comment_date_gmt';
+
+			$comments = pw_get_comments( $comments_query, $comment_fields, false );
+
+			$post['comments'] = $comments;
+
+		}
+
+		//$post['comments'] = "test";
+
+		/*
+		// pw_get_comments ( $query, [$fields], [$tree] )
+		post_id
+		fields
+		orderby
+		number
+		*/
+
 
 	///// ADD ACTION HOOK : PW GET POST COMPLETE /////
 		do_action( 'pw_get_post_complete',

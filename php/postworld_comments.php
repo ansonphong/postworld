@@ -259,6 +259,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		'comment_points',
 		'viewer_points',
 		'time_ago',
+		'comment_excerpt(128)',
 		);
 
 	// POSTWORLD PW_GET_USERDATA() FIELD MODEL
@@ -302,9 +303,8 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		// Setup local vars
 		$user_id = $comment['user_id'];		
 
-		///// FOR EACH FIELD /////
-			foreach ($fields as $field) {
-				///// CUSTOM AUTHOR FIELDS /////
+		///// CUSTOM AUTHOR FIELDS /////
+			foreach ($fields as $field) {	
 				// If the current field is a custom author data field
 				// Use pw_get_userdata() to get the data
 				if ( in_array( $field, $pw_userdata_fields ) ){
@@ -329,28 +329,24 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 				}
 			}
 			
-		///// FOR EACH FIELD /////
+		///// WORDPRESS COMMMENT FIELDS /////
 			foreach ($fields as $field) {
-
-				///// WORDPRESS COMMMENT FIELDS /////
 				// If the current field is requested, move the data
 				if( in_array( $field, $wp_comment_fields ) ){
 					$comment_data[$field] = $comment[$field];
 				}
-
-				///// POSTWORLD COMMENT FIELDS /////
-				if( in_array( $field, $pw_comment_fields ) ){
-					if( $field == 'comment_points' ){
-						$comment_data['comment_points'] = get_comment_points( $comment['comment_ID'] );
-					}
-					else if( $field == 'viewer_points' ){
-						$comment_data[$field] = has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
-					}
-					// Post Time Ago
-					else if ( in_array('time_ago', $fields) )
-						$comment_data['time_ago'] = time_ago( strtotime ( $comment_data['comment_date_gmt'] ) );
-				}
 			}
+
+		///// POSTWORLD COMMENT FIELDS /////
+			if( in_array( 'comment_points', $fields ) )
+				$comment_data['comment_points'] = get_comment_points( $comment['comment_ID'] );
+			
+			if( in_array( 'viewer_points', $fields ) )
+				$comment_data['viewer_points'] = has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+			
+			if( in_array( 'time_ago', $fields ) )
+				$comment_data['time_ago'] = time_ago( strtotime ( $comment_data['comment_date_gmt'] ) );
+			
 
 		////////// AVATAR IMAGES //////////
 			// AVATAR FIELDS
@@ -369,6 +365,32 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 
 				$comment_data['comment_content'] = $comment_content;
 			}
+
+
+		///// COMMENT EXCERPT /////
+			// This must come after the content is filtered so that embedded content can be removed
+			// comment_excerpt(100)
+			$comment_excerpt_fields = extract_linear_fields( $fields, 'comment_excerpt', true );
+			if ( !empty( $comment_excerpt_fields ) ){
+				// If a number is provided in the first field
+				if( is_numeric( $comment_excerpt_fields[0] ) ){
+					// Set the max characters as an integer
+					$comment_excerpt_max_chars = intval($comment_excerpt_fields[0]);	
+					// Get it from comment content
+					$comment_excerpt = $comment['comment_content'];
+					// Strip all shortcodes
+					$comment_excerpt = strip_shortcodes( $comment_excerpt );
+					// Strip all HTML tags
+					$comment_excerpt = wp_strip_all_tags( $comment_excerpt, true );
+					// Remove all URLs
+					$comment_excerpt = preg_replace('|([A-Za-z]{3,9})://([-;:&=\+\$,\w]+@{1})?([-A-Za-z0-9\.]+)+:?(\d+)?((/[-\+~%/\.\w]+)?\??([-\+=&;%@\.\w]+)?#?([\w]+)?)?|', '', $comment_excerpt);
+					// Crop it down to the number of max characters
+					$comment_excerpt = pw_crop_string_to_word( $comment_excerpt, $comment_excerpt_max_chars, "..." );
+					// Set it into the post object
+					$comment_data['comment_excerpt'] = $comment_excerpt;	
+				}
+			}
+
 
 		array_push($comments_data, $comment_data);
 	}
