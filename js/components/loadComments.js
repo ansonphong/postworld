@@ -122,6 +122,8 @@ postworld.controller('pwTreeController',
 
 		$scope.minPoints = settings.min_points;
 
+		$scope.labels = settings.labels;
+
 		if (settings.query.orderby) $scope.orderBy = settings.query.orderby;
 		else $scope.orderBy = 'comment_points'; 
 
