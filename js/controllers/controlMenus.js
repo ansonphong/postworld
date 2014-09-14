@@ -252,8 +252,51 @@ postworld.controller('adminPostDropdown',
     // Over-write Names / Icons if specified
 
     // Menu Options
-    var overrideMenuOptions = $_.getObj( $window, 'pwSiteGlobals.controls.post.menu_options' );
 
+    $scope.getControlsObject = function( post ){
+        // Gets the controls object for the post's post type
+        // Using the 'post' object as default fallback
+
+        // Get the post type from the post
+        var getPostType = $_.getObj( post, 'post_type' );
+        var postType = ( getPostType ) ?
+            getPostType : 'post';
+
+        // Get the object for this post type
+        var postTypeObject = $_.getObj( $pw, 'controls.' + postType );
+        // Get the default object
+        var defaultObject =  $_.getObj( $pw, 'controls.post' );
+
+        // Use post type object if available, otherwise use default object
+        var output = ( postTypeObject ) ?
+            postTypeObject : defaultObject;
+
+        //$log.debug('GET CONTROLS OBJECT');
+
+        return output ;
+
+    }
+
+    var controlsObject = $scope.getControlsObject( $scope.post );
+
+    $scope.getOverrideMenuOptions = function( post ){
+        var getPostType = $_.getObj( post, 'post_type' );
+        var postType = ( getPostType ) ?
+            getPostType : 'post';
+
+        // Check if there's over ride menu options for this post type
+        var postTypeOverrideMenuOptions = $_.getObj( $window, 'pwSiteGlobals.controls.' + postType + '.menu_options' );
+        var defaultOverrideMenuOptions =  $_.getObj( $window, 'pwSiteGlobals.controls.post.menu_options' );
+
+        var output = ( postTypeOverrideMenuOptions ) ?
+            postTypeOverrideMenuOptions : defaultOverrideMenuOptions;
+
+        return output ;
+    
+    }
+
+    var overrideMenuOptions = controlsObject.menu_options; // $scope.getOverrideMenuOptions( $scope.post );
+    
     // If custom menu options are provided
     if( overrideMenuOptions != false ){
         // Custom menu items to over-ride defaults
@@ -279,7 +322,7 @@ postworld.controller('adminPostDropdown',
 
     ///// ROLES /////
     // Define actions which each role has access to
-    var actionsByRole = $window.pwSiteGlobals.controls.post.role_access;
+    var actionsByRole = controlsObject.role_access; //$window.pwSiteGlobals.controls.post.role_access;
 
     /*
     $scope.$watch('post', function(value) {        
