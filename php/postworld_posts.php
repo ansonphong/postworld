@@ -526,6 +526,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				if ($first_image_obj){
 					$thumbnail_url = $first_image_obj['url'];
 				}
+				/*
 				// If there is no image in the post, set fallbacks
 				else {
 					///// DEFAULT FALLBACK IMAGES /////
@@ -566,6 +567,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					}
 
 				} // END else
+				*/
 
 			}// END else
 

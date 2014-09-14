@@ -703,14 +703,14 @@ postworld.controller('editPost',
 		$scope.post.image.meta = image_object;
 		$scope.post.thumbnail_id = image_object.id;
 		if( typeof image_object !== 'undefined' ){
-			$scope.hasFeaturedImage = 'true';
+			$scope.hasFeaturedImage = true;
 		}
 	}
 
 	// Check if Object Exists
 	$scope.hasFeaturedImage = function(){
-		if( $_.objExists( $scope, 'post.image' ) &&
-			!_.isEmpty($scope.post.image) )
+		var fullImgUrl = $_.getObj( $scope, 'post.image.sizes.full.url' );
+		if( fullImgUrl && fullImgUrl != null )
 			return true;
 		else
 			return false;
