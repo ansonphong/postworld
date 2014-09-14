@@ -88,9 +88,8 @@ global $pw_shortcode_icons;
 $pw_shortcode_icons = array();
 
 ///// LOAD ICON SETS /////
-
-$pw_shortcode_icons = pw_shortcode_load_iconset( $pw_shortcode_icons, 'font-awesome-3' );
-$pw_shortcode_icons = pw_shortcode_load_iconset( $pw_shortcode_icons, 'icon-x' );
+//$pw_shortcode_icons = pw_shortcode_load_iconset( $pw_shortcode_icons, 'font-awesome-3' );
+$pw_shortcode_icons = pw_shortcode_load_iconset( $pw_shortcode_icons, 'icomoon' );
 
 function pw_get_shortcode_icons( ){
 	global $pw_shortcode_icons;
