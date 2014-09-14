@@ -26,7 +26,7 @@ var depInject = [
 	//'infinite-scroll', 
 	'ui.bootstrap',
 	'monospaced.elastic',
-	'TruncateFilter',
+	//'TruncateFilter',
 	'pwFilters',
 	'timer',
 	'angular-parallax',

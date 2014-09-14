@@ -368,10 +368,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	////////// DATE & TIME //////////
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
-			$post['time_ago'] = time_ago( strtotime ( $post['post_date_gmt'] ) );
+			$post['time_ago'] = time_ago( strtotime ( $get_post['post_date_gmt'] ) );
 		// Post Timestamp
 		if ( in_array('post_timestamp', $fields) )
-			$post['post_timestamp'] = (int) strtotime( $post['post_date_gmt'] ) ;
+			$post['post_timestamp'] = (int) strtotime( $get_post['post_date_gmt'] ) ;
 
 
 	////////// AVATAR IMAGES //////////
