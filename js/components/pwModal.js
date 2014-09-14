@@ -302,6 +302,24 @@ postworld.controller('pwModalInstanceCtrl',
 		$modalInstance.dismiss('close');
 	};
 
+	// MODAL CLOSE
+	// Will close the modal if mode is 'edit'
+	$scope.closeIfEditMode = function ( mode ) {
+		if( mode == 'edit' )
+			$modalInstance.dismiss('close');
+	};
+
+	// MODAL FORWARD IF NEW MODE
+	// Will forward to the given URL if mode is 'new'
+	$scope.forwardIfNewMode = function( mode, url ) {
+		if( $scope.mode == 'new' && !_.isUndefined( url ) )
+			window.location.assign(url);
+	};
+
+	$scope.alert = function(message){
+		alert(message);
+	}
+
 	// TRASH POST
 	$scope.trashPost = function(){
 		//$pwQuickEdit.trashPost($scope.post.ID, $scope);
@@ -318,9 +336,9 @@ postworld.controller('pwModalInstanceCtrl',
 
 
 	// WATCH : FOR CHANGE POST
+	/*
 	$scope.$watch( "post.ID", function (){
 		if( $_.objExists( $scope, 'post.post_permalink' )  ){
-
 			// Change the URL to the permalink of the post, and the title to the title
 			// TODO : Currently Causing Infinite Loops
 
@@ -344,6 +362,7 @@ postworld.controller('pwModalInstanceCtrl',
 			//}, 0 );
 		}
 	}); 
+	*/
 
 	$rootScope.$on('$routeChangeStart', function(event){ 
 	    event.preventDefault(); 

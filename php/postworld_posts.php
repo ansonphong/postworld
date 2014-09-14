@@ -887,7 +887,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		// Gets a sum of all the karma on all child posts
 		if( in_array( 'child_posts_karma_count', $fields ) ){
 			global $wpdb;
-			$pw_post_meta_table = $wpdb->prefix . "postworld_post_meta";
+			$pw_post_meta_table = $wpdb->pw_prefix . "post_meta";
 			$post['child_posts_karma_count'] = $wpdb->get_var(
 				"SELECT SUM(post_points)
 				FROM $pw_post_meta_table
@@ -1379,9 +1379,15 @@ function pw_save_post($post_data){
 	elseif ( !empty($thumbnail_url) && !empty($post_id) )
 		pw_set_post_thumbnail( $post_id, $thumbnail_url );
 	
-	if ( !empty($post_class)  ){
-		
-	}
+
+	///// RANK SCORE /////
+	// Cache the post's rank score
+	global $pwSiteGlobals;
+	$rank_post_types = pw_get_obj( $pwSiteGlobals, 'rank.post_types' );
+	if( in_array( $post_data['post_type'], $rank_post_types ) )
+		cache_rank_score ( $post_id );
+
+	if ( !empty($post_class) ){}
 
 	return $post_id;
 

@@ -76,6 +76,13 @@ postworld.directive( 'pwEditPost', [ function($scope){
 			});
 
 			// OBSERVE Attribute
+			// Save Success Callback evaluates on success of saving a post
+			attrs.$observe('loadSuccessCallback', function(value) {
+				if( !_.isUndefined( value ) )
+					$scope.initEditPost['loadSuccessCallback'] = value;
+			});
+
+			// OBSERVE Attribute
 			// Save Callback Error evaluates on error saving a post
 			attrs.$observe('saveErrorCallback', function(value) {
 				if( !_.isUndefined( value ) )
@@ -423,8 +430,7 @@ postworld.controller('editPost',
 			// Success
 			function(response) {
 				$log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
-				$scope.mode = "edit";
-
+			
 				// FILTER FOR INPUT
 				var get_post = response.data;
 
@@ -448,7 +454,6 @@ postworld.controller('editPost',
 				}
 				get_post['tax_input'] = tax_input; 
 				
-
 				///// LOAD POST CONTENT /////
 				// SET THE POST CONTENT
 				$scope.set_post_content( get_post.post_content );
@@ -461,7 +466,6 @@ postworld.controller('editPost',
 				}
 				// BROADCAST TO USERNAME AUTOCOMPLETE FIELD
 				$scope.$broadcast('updateUsername', get_post['post_author_name']);
-
 
 				///// POST META /////
 				if ( !_.isUndefined( get_post['post_meta'] ) ){
@@ -482,16 +486,21 @@ postworld.controller('editPost',
 				$scope.$emit('postLoaded', get_post);
 
 				// Set the Route
-				//$timeout( function(){
-					if( $scope.editPostConfig.routing == true )
-						$location.path('/edit/' + get_post.ID);
-				//}, 10 );
-				
+				if( $scope.editPostConfig.routing == true )
+					$location.path('/edit/' + get_post.ID);
 
 				// SET DATA INTO THE SCOPE
 				$scope.post = get_post;
+
+				// EVALUATE CALLBACK
+				if( !_.isUndefined( $scope.initEditPost['loadSuccessCallback'] ) )
+					$scope.$eval( $scope.initEditPost['loadSuccessCallback'] );
+
+				// UPDATE MODE
+				$scope.mode = "edit";
 				// UPDATE STATUS
 				$scope.status = "done";
+
 			},
 			// Failure
 			function(response) {
