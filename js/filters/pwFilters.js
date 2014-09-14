@@ -9,7 +9,7 @@
 
 /*////////////// ------------ FILTERS ------------ //////////////*/  
 
-angular.module('pwFilters', []).filter('htmlToPlaintext', function() {
+postworld.filter('htmlToPlaintext', function() {
     return function(text) {
         return String(text).replace(/<(?:.|\n)*?>/gm, '');
     };

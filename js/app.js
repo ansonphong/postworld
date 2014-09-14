@@ -27,7 +27,7 @@ var depInject = [
 	'ui.bootstrap',
 	'monospaced.elastic',
 	//'TruncateFilter',
-	'pwFilters',
+	//'pwFilters',
 	'timer',
 	'angular-parallax',
 	//'angularMoment',
