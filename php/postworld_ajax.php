@@ -397,7 +397,7 @@ function wp_user_query_anon(){
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
-	$response['data'] = $user_query;
+	$response['data'] = $user_query->results;
 	echo json_encode( $response );
 	die;
 }

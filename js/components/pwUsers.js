@@ -235,8 +235,8 @@ postworld.controller('pwUserSignupCtrl',
 		// Setup User Query
 		var query_args = {
 			number:1,
-			search_columns:['user_nicename'],
-			fields:['user_nicename'],
+			search_columns:['user_login', 'user_nicename'],
+			fields:['user_login', 'user_nicename'],
 			search: username,
 		};
 
@@ -246,12 +246,12 @@ postworld.controller('pwUserSignupCtrl',
 		// Query the DB
 		$pwData.wp_user_query( query_args ).then(
 			function(response) {
-				$log.debug('QUERY : ' + username , response.data.results);
+				$log.debug( 'WP USER QUERY RESULTS : ' + username , response.data );
 
 				// NOT AVAILABLE
 				// If the value is already taken
-				if ( response.data.results.length > 0 ){
-					if( response.data.results[0].user_nicename === username ){
+				if ( response.data.length > 0 ){
+					if( response.data[0].user_nicename === username ){
 						// Set Field Status
 						$scope.fieldStatus.username = "taken";
 						// Set Validity to FALSE
@@ -317,12 +317,12 @@ postworld.controller('pwUserSignupCtrl',
 			$pwData.wp_user_query( query_args ).then(
 				// Success
 				function(response) {
-					$log.debug('QUERY : ' + email , response.data.results);
+					$log.debug('QUERY : ' + email , response.data);
 
 					// NOT AVAILABLE
 					// If the value is already taken
-					if ( response.data.results.length > 0 ){
-						if( response.data.results[0].user_email === email ){
+					if ( response.data.length > 0 ){
+						if( response.data[0].user_email === email ){
 							// Set Field Status
 							$scope.fieldStatus.email = "taken";
 							// Set Validity to FALSE
@@ -565,9 +565,9 @@ postworld.controller('pwUserActivateCtrl',
 				function( response, email ){
 
 					// If the email is already taken
-					if ( response.data.results.length > 0 ){
+					if ( response.data.length > 0 ){
 						// If they are not a subscriber (they are already activated)
-						if( response.data.results[0].roles[0] != 'subscriber' ){
+						if( response.data[0].roles[0] != 'subscriber' ){
 							// Set Field Status
 							$scope.fieldStatus.email = "activated";
 							// Set Validity to FALSE
@@ -697,10 +697,10 @@ postworld.controller( 'pwUserPasswordResetCtrl',
 			$pwUsers.validateEmailExists( email,
 				function( response, email, formName ){
 					// Callback function
-					$log.debug( "VALIDATE-EMAIL-EXISTS-CALLBACK : ", response.data.results );
+					$log.debug( "VALIDATE-EMAIL-EXISTS-CALLBACK : ", response.data );
 
 					// If the email is already taken
-					if ( response.data.results.length > 0 ){
+					if ( response.data.length > 0 ){
 						// If they are not a subscriber (they are already activated)
 						$scope[ $scope.emailFormName ].email.$setValidity( 'exists', true );
 						$scope.fieldStatus.email = "done";
