@@ -106,7 +106,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'ID',
 		'post_title',
 		'post_excerpt',
-		'post_excerpt(256,post_content)',
 		'post_permalink',
 		'post_type',
 		'post_status',
@@ -150,6 +149,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'child_posts_comment_count',	// Gets the sum of all comment counts on all child posts
 		'child_posts_karma_count',		// Gets a sum of all the karma on all child posts
 		'comments(3,all,comment_date_gmt)',	// Gets comments associated with the post : comments( [number of comments], [field model], [orderby] )
+		//'post_excerpt(256,post_content)',
 		);
 	
 	$micro_fields =	array(
