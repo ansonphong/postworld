@@ -32,7 +32,7 @@ postworld.factory( '$pw',
 
 	// DECLARATIONS
 	return {
-		version: "1.5.7",
+		version: "1.5.8",
 		templates: pwTemplates,
 
 		state: state(),
