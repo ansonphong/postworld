@@ -32,7 +32,7 @@ function pw_live_feed ( $args ){
 		"feed_id" => 			$args["feed_id"],
 		"feed_query" => 		$args["feed_query"],
 		"feed_outline" => 		$feed_outline,
-		"feed_outline_json" => 	json_encode($feed_outline),
+		//"feed_outline_json" => 	json_encode($feed_outline),
 		"feed_outline_count" =>	count( $feed_outline ),
 		"loaded" => 			$preload_posts,
 		"preload" => 			count($posts),
