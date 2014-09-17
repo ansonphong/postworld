@@ -3,12 +3,18 @@
 ///// SHORTCODE /////
 function pw_menu_shortcode( $atts, $content = null, $tag ) {
 
-	$vars = shortcode_atts( array(
+	// Set the internal defaults
+	$shortcode_defaults = array(
 		'template'	=>	'shortcode',
 		'class' 	=>	'',
-		'term'		=>	'', // feture term name
+		'term'		=>	'', // feature term name
 		'name'		=>	'', // menu name
-	), $atts );
+	);
+
+	// Get over-ride defaults from the theme
+	$shortcode_defaults = apply_filters( 'pw_menu_shortcode_defaults', $shortcode_defaults, $tag );
+
+	$vars = shortcode_atts( $shortcode_defaults, $atts );
 
 	///// TEMPLATES ////
 	$subdir = 'menus';
