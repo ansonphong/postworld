@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?18fqmz');
-	src:url('fonts/icomoon.eot?#iefix18fqmz') format('embedded-opentype'),
-		url('fonts/icomoon.woff?18fqmz') format('woff'),
-		url('fonts/icomoon.ttf?18fqmz') format('truetype'),
-		url('fonts/icomoon.svg?18fqmz#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?wki4la');
+	src:url('fonts/icomoon.eot?#iefixwki4la') format('embedded-opentype'),
+		url('fonts/icomoon.woff?wki4la') format('woff'),
+		url('fonts/icomoon.ttf?wki4la') format('truetype'),
+		url('fonts/icomoon.svg?wki4la#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -590,9 +590,6 @@
 .icon-question:before {
 	content: "\e691";
 }
-.icon-info:before {
-	content: "\e692";
-}
 .icon-check-2:before {
 	content: "\e694";
 }
@@ -890,6 +887,9 @@
 .icon-pause:before {
 	content: "\f04c";
 }
+.icon-info-circle:before {
+	content: "\f05a";
+}
 .icon-crosshairs:before {
 	content: "\f05b";
 }
@@ -991,6 +991,9 @@
 }
 .icon-code-fork:before {
 	content: "\f126";
+}
+.icon-info:before {
+	content: "\f129";
 }
 .icon-microphone:before {
 	content: "\f130";

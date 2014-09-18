@@ -29,20 +29,10 @@ postworld.directive( 'pwEditPost', [ function($scope){
 			});
 
 			// OBSERVE Attribute
-			// Edit Mode is for changing the behavior of the routing while editing a post
-			// if edit-mode='inline', the routing functionality will be bypassed
+			// Edit Mode
 			attrs.$observe('editMode', function(value) {
-				if( !_.isUndefined( value ) )
-					$scope.initEditPost['editMode'] = value;
-					switch( value ){
-						case "inline":
-						case "inline-submit":
-						case "quick":
-						case "quick-edit":
-							$scope.editPostConfig.routing = false;
-							$scope.editPostConfig.autoReload = false;
-							break;
-					}
+				if( value == 'new' || value == 'edit' )
+					$scope.mode = value;
 			});
 
 			// OBSERVE Attribute
@@ -119,17 +109,12 @@ postworld.controller('editPost',
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
 
-	if( _.isUndefined( $scope.mode ) )
-		$scope.mode = 'default';
-
-	///// MODES /////
-	// Set the default mode
-	if( _.isUndefined( $scope.mode ) )
-		$scope.mode = 'default';
+	
 
 	// Define Global Edit Post Defaults
 	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
-	
+
+
 	// Localize Edit Post Object
 	if( $_.objExists( $window, 'pwSiteGlobals.edit_post' ) )
 		$scope.editPostGlobals = $window.pwSiteGlobals.edit_post;
@@ -138,26 +123,36 @@ postworld.controller('editPost',
 	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
 		$scope.postOptions = $window.pwSiteGlobals.post_options;
 
-	///// SET POST OBJECT /////
-	// If No Post Object exists and routing is off, create one
+
+	///// INITIALIZE /////
 	$timeout( function(){
-		///// NEW QUICK EDIT POST /////
-		if( $scope.mode == 'new' ){
-			//$log.debug( 'SCOPE.POST : ', $scope.post );
-			// Make a new post in the scope with the universally defined post type
-			$scope.newPost( $scope.getPost( { 'post_type':$scope.getPostType() } ) );
-			$scope.status = "done";
+
+		///// MODES /////
+		// Set the default mode
+		if( _.isUndefined( $scope.mode ) )
+			$scope.mode = 'new';
+
+		///// SWITCH MODE /////
+		switch( $scope.mode ){
+
+			///// MODE : NEW /////
+			case 'new':
+				// Make a new post in the scope with the universally defined post type
+				$scope.newPost( $scope.getPost( { 'post_type':$scope.getPostType() } ) );
+				$scope.status = "done";
+				break;
+
+			///// MODE : EDIT /////
+			case 'edit':
+				// If a post ID is specified
+				if( $_.objExists( $scope, 'post.ID' ) ){
+					// Load the post freshly in edit post mode
+					$scope.loadEditPost( $scope.post.ID );
+					$scope.status = 'loading';
+				}
+				break;
+
 		}
-		///// NEW POST IF ROUTING IS OFF /////
-		else if( $scope.mode == 'edit' ){
-			// If a post ID is specified
-			if( $_.objExists( $scope, 'post.ID' ) ){
-				// Load the post freshly in edit post mode
-				$scope.loadEditPost( $scope.post.ID );
-				$scope.status = 'loading';
-			}	
-		}
-		$log.debug( "SCOPE.MODE : ", $scope.mode );
 
 	}, 0 );
 
@@ -349,8 +344,7 @@ postworld.controller('editPost',
 
 		// Check if the requested post type is defined
 
-		//if( !$_.objExists( edit_post, post_type ) )
-		if( _.isUndefined( edit_post[post_type] ) )
+		if( !$_.objExists( edit_post, post_type ) )
 			// Fallback on post_type
 			post_type = 'post';
 
@@ -380,7 +374,6 @@ postworld.controller('editPost',
 	$scope.newPost = function( post ){
 		// Set the new mode
 		$scope.mode = "new";
-
 		// Set the default empty post if not provided
 		if( _.isUndefined( post ) )
 			post = {};
@@ -407,7 +400,6 @@ postworld.controller('editPost',
 
 	///// LOAD POST DATA /////
 	$scope.loadEditPost = function( post_id ){
-
 		// Post ID passed directly
 		if( !_.isUndefined(post_id) ){
 			$log.debug('editPost Controller : loadPost( *post_id* ) // Post ID passed directly : ', post_id);
