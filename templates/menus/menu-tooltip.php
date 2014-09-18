@@ -1,4 +1,8 @@
 <?
+// Import vars as options
+if( isset( $vars ) )
+	$OPTIONS = $vars;
+
 $walker = new PW_Menu_With_Description;
 $custom_menu_config = array(
 	'theme_location'  => '',

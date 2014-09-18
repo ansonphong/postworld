@@ -128,6 +128,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'time_ago',
 		'post_meta(all)',
 		'fields',
+		'feed_order',
 		);
 
 	$preview_fields = apply_filters( 'pw_get_post_preview_fields', $preview_fields );
