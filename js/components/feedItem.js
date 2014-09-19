@@ -208,6 +208,9 @@ postworld.controller('pwGridItemCtrl',
     }
 
     $scope.gridImageStyle = function( prefix, tags ){
+        if( _.isEmpty( tags ) || _.isUndefined( tags ) )
+            return false;
+
         var imageUrl = $scope.post.image.sizes[ $scope.getImageSize(prefix, tags) ].url;
         return { "background-image":"url( " + imageUrl + " )" };
     }
