@@ -706,6 +706,7 @@ function pw_random_hash(){
 
 
 function pw_to_array($obj){
+	// Recursively makes an object into an Associative Array
     if (is_object($obj)) $obj = (array)$obj;
     if (is_array($obj)) {
         $new = array();
@@ -717,6 +718,15 @@ function pw_to_array($obj){
     }
 
     return $new;
+}
+
+function pw_body_classes(){
+	// Returns a string with the Wordpress body classes
+	$body_classes = '';
+	foreach( get_body_class() as $class ){
+		$body_classes .= " " . $class;
+	}
+	return $body_classes;
 }
 
 
