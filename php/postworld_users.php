@@ -95,9 +95,8 @@ function pw_activate_user( $auth_key ){
 	);
 
 	// Set the Activated Role
-	if( isset( $pwSiteGlobals['role']['levels']['activated'] ) )
-		$role = $pwSiteGlobals['role']['levels']['activated'];	
-	else
+	$role = pw_get_obj( $pwSiteGlobals, 'role.levels.activated' );
+	if( !$role )
 		$role = 'contributor';
 
 	// Get the results from the query, returning the first user

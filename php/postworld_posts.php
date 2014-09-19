@@ -128,6 +128,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'time_ago',
 		'post_meta(all)',
 		'fields',
+		'feed_order',
 		);
 
 	$preview_fields = apply_filters( 'pw_get_post_preview_fields', $preview_fields );
@@ -141,6 +142,15 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'gallery(ids,posts)',
 		'post_categories_list',
 		'post_tags_list',
+		);
+
+	$extended_fields = array(
+		'parent_post(micro)',			// Gets the parent post as post_parent : parent_post( [field model] )
+		'child_post_count',				// Gets the number of posts which have this post as a parent
+		'child_posts_comment_count',	// Gets the sum of all comment counts on all child posts
+		'child_posts_karma_count',		// Gets a sum of all the karma on all child posts
+		'comments(3,all,comment_date_gmt)',	// Gets comments associated with the post : comments( [number of comments], [field model], [orderby] )
+		//'post_excerpt(256,post_content)',
 		);
 	
 	$micro_fields =	array(
@@ -359,10 +369,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	////////// DATE & TIME //////////
 		// Post Time Ago
 		if ( in_array('time_ago', $fields) )
-			$post['time_ago'] = time_ago( strtotime ( $post['post_date_gmt'] ) );
+			$post['time_ago'] = time_ago( strtotime ( $get_post['post_date_gmt'] ) );
 		// Post Timestamp
 		if ( in_array('post_timestamp', $fields) )
-			$post['post_timestamp'] = (int) strtotime( $post['post_date_gmt'] ) ;
+			$post['post_timestamp'] = (int) strtotime( $get_post['post_date_gmt'] ) ;
 
 
 	////////// AVATAR IMAGES //////////
@@ -517,6 +527,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				if ($first_image_obj){
 					$thumbnail_url = $first_image_obj['url'];
 				}
+				/*
 				// If there is no image in the post, set fallbacks
 				else {
 					///// DEFAULT FALLBACK IMAGES /////
@@ -557,6 +568,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					}
 
 				} // END else
+				*/
 
 			}// END else
 
@@ -849,6 +861,45 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		} // END foreach
 	} // END IF
 
+
+	////////// PARENT POST //////////
+		$parent_post_fields = extract_linear_fields( $fields, 'parent_post', true );
+		if ( !empty($parent_post_fields) ){
+			$post['parent_post'] = array();
+			if( $get_post['post_parent'] != 0 )
+				$post['parent_post'] = pw_get_post( $get_post['post_parent'], $parent_post_fields[0] );
+			else
+				$post['parent_post'] = array();
+		}
+	
+	////////// CHILD POST COUNT //////////
+		// Gets the number of child posts
+		if( in_array( 'child_post_count', $fields ) ){
+			global $wpdb;
+			$post['child_post_count'] = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->posts WHERE post_parent = $post_id AND post_status = 'publish'"); 
+		}
+
+	////////// CHILD POSTS COMMENT COUNT //////////
+		// Gets the sum of all comment counts on all child posts
+		if( in_array( 'child_posts_comment_count', $fields ) ){
+			global $wpdb;
+			$post['child_posts_comment_count'] = $wpdb->get_var("SELECT SUM(comment_count) FROM $wpdb->posts WHERE post_parent = $post_id AND post_status = 'publish'"); 
+		}
+
+	////////// CHILD POSTS KARMA COUNT //////////
+		// Gets a sum of all the karma on all child posts
+		if( in_array( 'child_posts_karma_count', $fields ) ){
+			global $wpdb;
+			$pw_post_meta_table = $wpdb->pw_prefix . "post_meta";
+			$post['child_posts_karma_count'] = $wpdb->get_var(
+				"SELECT SUM(post_points)
+				FROM $pw_post_meta_table
+				INNER JOIN $wpdb->posts ON post_id = $wpdb->posts.ID
+				WHERE $wpdb->posts.post_parent = $post_id
+				AND $wpdb->posts.post_status = 'publish'"
+				);
+		}
+
 	///// FIELDS /////
 		if( in_array( 'fields', $fields ) ){
 			$post['fields'] = $fields;
@@ -868,10 +919,6 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				)
 			);
 
-	global $dev;
-	if( !empty($dev) )
-		$post['dev'] = $dev;
-
 	///// POST CONTENT /////
 	// Condition Post Content
 		if ( in_array( 'post_content', $fields ) && $mode == 'view' ){
@@ -888,6 +935,67 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			// Apply all content filters
 			$post['post_content'] = apply_filters('the_content', $post['post_content']);
 		}
+
+	///// POST EXCERPT /////
+		// Returns the post excerpt cropped to a certain number of characters
+		// Post_content is optionally used
+		$post_excerpt_fields = extract_linear_fields( $fields, 'post_excerpt', true );
+		if ( !empty($post_excerpt_fields) ){
+			// If the first field is a number
+			if( is_numeric( $post_excerpt_fields[0] ) ){
+				$max_chars = intval($post_excerpt_fields[0]);
+				// If the second value is 'post_content'
+				if( $post_excerpt_fields[1] == 'post_content' ){
+					// Set the excerpt as the post content
+					$post_excerpt = $get_post['post_content'];
+					// Strip all shortcodes
+					$post_excerpt = strip_shortcodes( $post_excerpt );
+					// Strip all HTML tags
+					$post_excerpt = wp_strip_all_tags( $post_excerpt, true );
+					// Set it into the post object
+					$post['post_excerpt'] = $post_excerpt;
+				}
+				// Crop the post excerpt to the word
+				$post['post_excerpt'] = pw_crop_string_to_word( $post['post_excerpt'], $max_chars, "..." );
+			}
+		}
+
+
+	///// COMMENTS /////
+		// 	Gets comments associated with the post
+		//	comments(3,all,comment_date_gmt)
+		$comment_linear_fields = extract_linear_fields( $fields, 'comments', true );
+		if ( !empty( $comment_linear_fields ) ){
+
+			$comments_query = array(
+				'post_id' => $post_id,
+				);
+
+			$comments_query['number'] = ( is_numeric( $comment_linear_fields[0] ) ) ?
+				$comment_linear_fields[0] : 3;
+
+			$comment_fields = ( is_string( $comment_linear_fields[1] ) ) ?
+				$comment_linear_fields[1] : 'all';
+
+			$comments_query['orderby'] = ( is_string( $comment_linear_fields[2] ) ) ?
+				$comment_linear_fields[2] : 'comment_date_gmt';
+
+			$comments = pw_get_comments( $comments_query, $comment_fields, false );
+
+			$post['comments'] = $comments;
+
+		}
+
+		//$post['comments'] = "test";
+
+		/*
+		// pw_get_comments ( $query, [$fields], [$tree] )
+		post_id
+		fields
+		orderby
+		number
+		*/
+
 
 	///// ADD ACTION HOOK : PW GET POST COMPLETE /////
 		do_action( 'pw_get_post_complete',
@@ -1274,9 +1382,15 @@ function pw_save_post($post_data){
 	elseif ( !empty($thumbnail_url) && !empty($post_id) )
 		pw_set_post_thumbnail( $post_id, $thumbnail_url );
 	
-	if ( !empty($post_class)  ){
-		
-	}
+
+	///// RANK SCORE /////
+	// Cache the post's rank score
+	global $pwSiteGlobals;
+	$rank_post_types = pw_get_obj( $pwSiteGlobals, 'rank.post_types' );
+	if( in_array( $post_data['post_type'], $rank_post_types ) )
+		cache_rank_score ( $post_id );
+
+	if ( !empty($post_class) ){}
 
 	return $post_id;
 

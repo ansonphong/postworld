@@ -29,20 +29,26 @@ postworld.directive( 'pwEditPost', [ function($scope){
 			});
 
 			// OBSERVE Attribute
-			// Edit Mode is for changing the behavior of the routing while editing a post
-			// if edit-mode='inline', the routing functionality will be bypassed
+			// Edit Mode
 			attrs.$observe('editMode', function(value) {
+				if( value == 'new' || value == 'edit' )
+					$scope.mode = value;
+			});
+
+			// OBSERVE Attribute
+			// Enable routing on the edit post - boolean
+			attrs.$observe('editRouting', function(value) {
 				if( !_.isUndefined( value ) )
-					$scope.initEditPost['editMode'] = value;
-					switch( value ){
-						case "inline":
-						case "inline-submit":
-						case "quick":
-						case "quick-edit":
-							$scope.editPostConfig.routing = false;
-							$scope.editPostConfig.autoReload = false;
-							break;
-					}
+					// Calculate string into a boolean
+					$scope.editPostConfig['routing'] = ( value === 'true' );
+			});
+
+			// OBSERVE Attribute
+			// Enable routing on the edit post - boolean
+			attrs.$observe('editAutoReload', function(value) {
+				if( !_.isUndefined( value ) )
+					// Calculate string into a boolean
+					$scope.editPostConfig['autoReload'] = ( value === 'true' );
 			});
 
 			// OBSERVE Attribute
@@ -57,6 +63,13 @@ postworld.directive( 'pwEditPost', [ function($scope){
 			attrs.$observe('saveSuccessCallback', function(value) {
 				if( !_.isUndefined( value ) )
 					$scope.initEditPost['saveSuccessCallback'] = value;
+			});
+
+			// OBSERVE Attribute
+			// Save Success Callback evaluates on success of saving a post
+			attrs.$observe('loadSuccessCallback', function(value) {
+				if( !_.isUndefined( value ) )
+					$scope.initEditPost['loadSuccessCallback'] = value;
 			});
 
 			// OBSERVE Attribute
@@ -84,22 +97,24 @@ postworld.controller('editPost',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials ) {
 
+	$log.debug( "$scope.mode @ init", $scope.mode );
 
+	$log.debug( "$scope.meta @ init", $scope.meta );
+
+	$timeout( function(){
+		$log.debug( 'editPost Controller', $scope.initEditPost );
+		$log.debug( "$scope.post @ 2ms", $scope.post );
+	}, 2 );
+	
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
 
-	///// MODES /////
-	// Set the default mode
-	if( _.isUndefined( $scope.mode ) )
-		$scope.mode = 'default';
-
-	// Set default status for quick-edit mode
-	if( $scope.mode == 'quick-edit' )
-		$scope.status = 'loading';
+	
 
 	// Define Global Edit Post Defaults
 	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
-	
+
+
 	// Localize Edit Post Object
 	if( $_.objExists( $window, 'pwSiteGlobals.edit_post' ) )
 		$scope.editPostGlobals = $window.pwSiteGlobals.edit_post;
@@ -108,20 +123,35 @@ postworld.controller('editPost',
 	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
 		$scope.postOptions = $window.pwSiteGlobals.post_options;
 
-	///// SET POST OBJECT /////
-	// If No Post Object exists and routing is off, create one
+
+	///// INITIALIZE /////
 	$timeout( function(){
-		///// NEW QUICK EDIT POST /////
-		if( $scope.mode == 'quick-edit-new' ){
-			//alert( $scope.post.post_type );
-			$scope.newPost({ 'post_type':$scope.post.post_type });
-			//$scope.setPostObject(  );
-			$scope.status = "done";
-		}
-		///// NEW POST IF ROUTING IS OFF /////
-		else if( 
-			$scope.editPostConfig.routing == false ){
-			$scope.newPost({});
+
+		///// MODES /////
+		// Set the default mode
+		if( _.isUndefined( $scope.mode ) )
+			$scope.mode = 'new';
+
+		///// SWITCH MODE /////
+		switch( $scope.mode ){
+
+			///// MODE : NEW /////
+			case 'new':
+				// Make a new post in the scope with the universally defined post type
+				$scope.newPost( $scope.getPost( { 'post_type':$scope.getPostType() } ) );
+				$scope.status = "done";
+				break;
+
+			///// MODE : EDIT /////
+			case 'edit':
+				// If a post ID is specified
+				if( $_.objExists( $scope, 'post.ID' ) ){
+					// Load the post freshly in edit post mode
+					$scope.loadEditPost( $scope.post.ID );
+					$scope.status = 'loading';
+				}
+				break;
+
 		}
 
 	}, 0 );
@@ -131,10 +161,26 @@ postworld.controller('editPost',
 	$pwRoleAccess.setRoleAccess($scope);
 
 	//////////////////// FUNCTIONS ////////////////////
-	// Define which post type to return within a set of options
-	// Allows to have a 'default' post type object
-	// With the option to over-ride with the current scope post type
+
+	$scope.getPost = function( post ){
+		// Checks to see if a post object already exists in the scope
+		// And merges the provided post object then returns that
+
+		// Set default provided post value
+		if( _.isUndefined( post ) )
+			post = {};
+		
+		// Get the post from the scope and merge it if defined
+		if( !_.isUndefined( $scope.post ) )
+			post = deepmerge( $scope.post, post );
+
+		return post;
+	}
+
 	$scope.getPostOptions = function( option, subkey ){
+		// Define which post type to return within a set of options
+		// Allows to have a 'default' post type object
+		// With the option to over-ride with the current scope post type
 		// option ~= "post_excerpt" / "post_title", etc
 
 		if( $_.objExists( $scope, 'postOptions.' + option + '.' + subkey ) )
@@ -298,8 +344,7 @@ postworld.controller('editPost',
 
 		// Check if the requested post type is defined
 
-		//if( !$_.objExists( edit_post, post_type ) )
-		if( _.isUndefined( edit_post[post_type] ) )
+		if( !$_.objExists( edit_post, post_type ) )
 			// Fallback on post_type
 			post_type = 'post';
 
@@ -329,8 +374,10 @@ postworld.controller('editPost',
 	$scope.newPost = function( post ){
 		// Set the new mode
 		$scope.mode = "new";
+		// Set the default empty post if not provided
+		if( _.isUndefined( post ) )
+			post = {};
 
-		$scope.post = {};
 		// Set the new post object in scope
 		$scope.setPostObject( post );
 
@@ -351,11 +398,8 @@ postworld.controller('editPost',
 
 	}
 
-
 	///// LOAD POST DATA /////
 	$scope.loadEditPost = function( post_id ){
-		//$scope.status = 'loading';
-
 		// Post ID passed directly
 		if( !_.isUndefined(post_id) ){
 			$log.debug('editPost Controller : loadPost( *post_id* ) // Post ID passed directly : ', post_id);
@@ -378,8 +422,7 @@ postworld.controller('editPost',
 			// Success
 			function(response) {
 				$log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
-				$scope.mode = "edit";
-
+			
 				// FILTER FOR INPUT
 				var get_post = response.data;
 
@@ -403,7 +446,6 @@ postworld.controller('editPost',
 				}
 				get_post['tax_input'] = tax_input; 
 				
-
 				///// LOAD POST CONTENT /////
 				// SET THE POST CONTENT
 				$scope.set_post_content( get_post.post_content );
@@ -416,7 +458,6 @@ postworld.controller('editPost',
 				}
 				// BROADCAST TO USERNAME AUTOCOMPLETE FIELD
 				$scope.$broadcast('updateUsername', get_post['post_author_name']);
-
 
 				///// POST META /////
 				if ( !_.isUndefined( get_post['post_meta'] ) ){
@@ -437,16 +478,21 @@ postworld.controller('editPost',
 				$scope.$emit('postLoaded', get_post);
 
 				// Set the Route
-				//$timeout( function(){
-					if( $scope.editPostConfig.routing == true )
-						$location.path('/edit/' + get_post.ID);
-				//}, 10 );
-				
+				if( $scope.editPostConfig.routing == true )
+					$location.path('/edit/' + get_post.ID);
 
 				// SET DATA INTO THE SCOPE
 				$scope.post = get_post;
+
+				// EVALUATE CALLBACK
+				if( !_.isUndefined( $scope.initEditPost['loadSuccessCallback'] ) )
+					$scope.$eval( $scope.initEditPost['loadSuccessCallback'] );
+
+				// UPDATE MODE
+				$scope.mode = "edit";
 				// UPDATE STATUS
 				$scope.status = "done";
+
 			},
 			// Failure
 			function(response) {
@@ -649,14 +695,14 @@ postworld.controller('editPost',
 		$scope.post.image.meta = image_object;
 		$scope.post.thumbnail_id = image_object.id;
 		if( typeof image_object !== 'undefined' ){
-			$scope.hasFeaturedImage = 'true';
+			$scope.hasFeaturedImage = true;
 		}
 	}
 
 	// Check if Object Exists
 	$scope.hasFeaturedImage = function(){
-		if( $_.objExists( $scope, 'post.image' ) &&
-			!_.isEmpty($scope.post.image) )
+		var fullImgUrl = $_.getObj( $scope, 'post.image.sizes.full.url' );
+		if( fullImgUrl && fullImgUrl != null )
 			return true;
 		else
 			return false;
@@ -717,6 +763,16 @@ postworld.controller('editPost',
 		if( $_.objExists( $scope, 'post.tax_input' ) )
 			$scope.post.tax_input.post_tag = data;
 	});
+
+
+	/*
+	// ACTION : CREATE NEW POST OBJECT
+	// • Creates a new post object in the scope
+	$scope.$on( 'newPostObject', function( event, data ){
+		//var post_type = $scope.getPostType( data.post_type );
+		//$scope.newPost({ 'post_type': post_type });
+	});
+	*/
 
 	// GET : TAXONOMY TERMS
 	// • Gets live set of terms from the DB as $scope.tax_terms

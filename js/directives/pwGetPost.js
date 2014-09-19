@@ -29,7 +29,6 @@ postworld.controller('pwGetPostCtrl',
 	['$scope', '$window', '$timeout', '_', 'pwData',
 	function($scope, $window, $timeout, $_, $pwData) {
 
-	
 	// Create model if it doesn't exist
 	if( _.isUndefined( $scope.postModel ) )
 		$scope.postModel = [];
@@ -44,7 +43,7 @@ postworld.controller('pwGetPostCtrl',
 		}
 
 		if( _.isUndefined( $scope.postFields ) ){
-			$scope.postFields = "all";
+			$scope.postFields = "preview";
 		}
 
 		var vars = {
@@ -66,14 +65,11 @@ postworld.controller('pwGetPostCtrl',
 		);
 	}
 
-	
-	
 	// Action to Update Posts
 	$scope.$on('postUpdated', function(post) { 
         $scope.pwGetPost();
     });
 
-	
 	// Watch values and re-get post if they change
 	$scope.$watch('[postId, postFields]', function(value) {
 		if( !_.isUndefined($scope.postId) )
@@ -81,6 +77,5 @@ postworld.controller('pwGetPostCtrl',
 
 		//alert( $scope.postId );
 	},1);
-
 	
 }]);

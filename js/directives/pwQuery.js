@@ -28,8 +28,8 @@ postworld.directive( 'pwQuery', [ function($scope){
 }]);
 
 postworld.controller('pwQueryCtrl',
-	['$scope', '$window', '$timeout', '_', 'pwData',
-	function($scope, $window, $timeout, $_, $pwData) {
+	['$scope', '$log', '$window', '$timeout', '_', 'pwData',
+	function($scope, $log, $window, $timeout, $_, $pwData) {
 
 	// Create query model if it doesn't exist
 	if( _.isUndefined( $scope.queryResultsModel ) )
@@ -59,6 +59,9 @@ postworld.controller('pwQueryCtrl',
 	$scope.$watch('pwQueryVars', function(value) {
 		if( !_.isUndefined($scope.pwQueryVars) )
 			$scope.pwQuery( $scope.pwQueryVars );
+
+		$log.debug( '$scope.pwQueryVars', $scope.pwQueryVars );
+
 	});
 	
 
@@ -80,6 +83,74 @@ postworld.controller('pwQueryCtrl',
         // Emit Update
         $scope.$emit('postUpdated', post);
     });
+
+
+}]);
+
+
+
+/*              _____                       _____             _ 
+  _ ____      _|_   _|__ _ __ _ __ ___  ___|  ___|__  ___  __| |
+ | '_ \ \ /\ / / | |/ _ \ '__| '_ ` _ \/ __| |_ / _ \/ _ \/ _` |
+ | |_) \ V  V /  | |  __/ |  | | | | | \__ \  _|  __/  __/ (_| |
+ | .__/ \_/\_/   |_|\___|_|  |_| |_| |_|___/_|  \___|\___|\__,_|
+ |_|                                                            
+///////////// ----- PW TERMS FEED DIRECTIVE ------- //////////*/
+
+postworld.directive( 'pwTermsFeed', [ function($scope){
+	return {
+		restrict: 'A',
+		controller: 'pwTermsFeedCtrl',
+		scope:{
+			pwTermsFeed:"=pwTermsFeed",
+			queryResultsModel:"=queryResultsModel",
+			queryStatusModel:"=queryStatusModel",
+			queryId:"=queryId"
+		},
+		link: function( $scope, element, attrs ){
+			// OBSERVE Attribute
+			//attrs.$observe('postsModel', function(value) {
+			//	alert(value);
+			//});
+
+		}
+	};
+}]);
+
+postworld.controller('pwTermsFeedCtrl',
+	['$scope', '$log', '$window', '$timeout', '_', 'pwData',
+	function($scope, $log, $window, $timeout, $_, $pwData) {
+
+	// Create query model if it doesn't exist
+	if( _.isUndefined( $scope.queryResultsModel ) )
+		$scope.queryResultsModel = [];
+
+	// Create query model if it doesn't exist
+	//if( _.isUndefined( $scope.queryStatusModel ) )
+	$scope.queryStatusModel = 'loading';
+
+	$scope.getTermsFeed = function( queryVars ){
+		$pwData.get_terms_feed( queryVars ).then(
+			// Success
+			function(response) {
+				$scope.queryResultsModel = response.data;
+				$scope.queryStatusModel = "done";
+			},
+			// Failure
+			function(response) {
+				$scope.queryResultsModel = [{post_title:"Posts not loaded.", ID:"0"}];
+				$scope.queryStatusModel = "done";
+			}
+		);
+	}
+
+	$scope.$watch('pwTermsFeed', function(value) {
+		if( !_.isUndefined($scope.pwTermsFeed) )
+			$scope.getTermsFeed( $scope.pwTermsFeed );
+
+		$log.debug( '$scope.pwTermsFeed', $scope.pwTermsFeed );
+
+	});
 
 
 }]);

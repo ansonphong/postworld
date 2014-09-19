@@ -9,7 +9,7 @@
 
 /*////////////// ------------ FILTERS ------------ //////////////*/  
 
-angular.module('pwFilters', []).filter('htmlToPlaintext', function() {
+postworld.filter('htmlToPlaintext', function() {
     return function(text) {
         return String(text).replace(/<(?:.|\n)*?>/gm, '');
     };
@@ -31,8 +31,7 @@ angular.module('pwFilters', []).filter('htmlToPlaintext', function() {
  * @Param end, default is "..."
  * @return string
  */
-angular.module('TruncateFilter', []).
-    filter('truncate', function ($sce) {
+postworld.filter('truncate', function ($sce) {
         return function (text, length, end) {
         	// text = $sce.parseAsHtml(text);
             if (isNaN(length))

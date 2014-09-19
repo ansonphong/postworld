@@ -122,6 +122,8 @@ postworld.controller('pwTreeController',
 
 		$scope.minPoints = settings.min_points;
 
+		$scope.labels = settings.labels;
+
 		if (settings.query.orderby) $scope.orderBy = settings.query.orderby;
 		else $scope.orderBy = 'comment_points'; 
 
@@ -138,7 +140,6 @@ postworld.controller('pwTreeController',
 			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		}
 			
-		
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;

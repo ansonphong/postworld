@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-akoqgd');
-	src:url('fonts/icomoon.eot?#iefix-akoqgd') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-akoqgd') format('woff'),
-		url('fonts/icomoon.ttf?-akoqgd') format('truetype'),
-		url('fonts/icomoon.svg?-akoqgd#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?wki4la');
+	src:url('fonts/icomoon.eot?#iefixwki4la') format('embedded-opentype'),
+		url('fonts/icomoon.woff?wki4la') format('woff'),
+		url('fonts/icomoon.ttf?wki4la') format('truetype'),
+		url('fonts/icomoon.svg?wki4la#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,9 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-share:before {
+	content: "\e6c4";
+}
 .icon-quasm:before {
 	content: "\e6d3";
 }
@@ -185,7 +188,7 @@
 .icon-layers:before {
 	content: "\e602";
 }
-.icon-sun-fill:before {
+.icon-sun:before {
 	content: "\e6c8";
 }
 .icon-moon:before {
@@ -410,13 +413,13 @@
 .icon-bubbles-2:before {
 	content: "\e64a";
 }
-.icon-bubble-2:before {
+.icon-bubble-o:before {
 	content: "\e64b";
 }
-.icon-bubbles-3:before {
+.icon-bubbles-o:before {
 	content: "\e64c";
 }
-.icon-bubbles-4:before {
+.icon-bubbles-2-o:before {
 	content: "\e64d";
 }
 .icon-user-o:before {
@@ -560,13 +563,13 @@
 .icon-contrast:before {
 	content: "\e688";
 }
-.icon-star:before {
+.icon-star-o:before {
 	content: "\e689";
 }
-.icon-star2:before {
+.icon-star-half:before {
 	content: "\e68a";
 }
-.icon-star3:before {
+.icon-star:before {
 	content: "\e68b";
 }
 .icon-heart:before {
@@ -586,9 +589,6 @@
 }
 .icon-question:before {
 	content: "\e691";
-}
-.icon-info:before {
-	content: "\e692";
 }
 .icon-check-2:before {
 	content: "\e694";
@@ -727,9 +727,6 @@
 }
 .icon-console:before {
 	content: "\e6c3";
-}
-.icon-share:before {
-	content: "\e6c4";
 }
 .icon-facebook-2:before {
 	content: "\e6c5";
@@ -890,6 +887,9 @@
 .icon-pause:before {
 	content: "\f04c";
 }
+.icon-info-circle:before {
+	content: "\f05a";
+}
 .icon-crosshairs:before {
 	content: "\f05b";
 }
@@ -904,6 +904,21 @@
 }
 .icon-gears:before {
 	content: "\f085";
+}
+.icon-certificate:before {
+	content: "\f0a3";
+}
+.icon-arrow-circle-left:before {
+	content: "\f0a8";
+}
+.icon-arrow-circle-right:before {
+	content: "\f0a9";
+}
+.icon-arrow-circle-up:before {
+	content: "\f0aa";
+}
+.icon-arrow-circle-down:before {
+	content: "\f0ab";
 }
 .icon-tasks:before {
 	content: "\f0ae";
@@ -950,6 +965,9 @@
 .icon-file-text-o:before {
 	content: "\f0f6";
 }
+.icon-plus-square:before {
+	content: "\f0fe";
+}
 .icon-circle-o:before {
 	content: "\f10c";
 }
@@ -962,6 +980,9 @@
 .icon-spinner:before {
 	content: "\f110";
 }
+.icon-smile:before {
+	content: "\f118";
+}
 .icon-gamepad:before {
 	content: "\f11b";
 }
@@ -970,6 +991,9 @@
 }
 .icon-code-fork:before {
 	content: "\f126";
+}
+.icon-info:before {
+	content: "\f129";
 }
 .icon-microphone:before {
 	content: "\f130";
@@ -995,8 +1019,17 @@
 .icon-file-text:before {
 	content: "\f15c";
 }
+.icon-thumbs-up:before {
+	content: "\f164";
+}
+.icon-thumbs-down:before {
+	content: "\f165";
+}
 .icon-skype:before {
 	content: "\f17e";
+}
+.icon-plus-square-o:before {
+	content: "\f196";
 }
 .icon-cube:before {
 	content: "\f1b2";

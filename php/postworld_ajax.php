@@ -12,6 +12,19 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
+//---------- PW GET TEMPLATE PARTIAL ----------//
+function pw_get_terms_feed_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_terms_feed( $params ); 
+
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_terms_feed", "pw_get_terms_feed_ajax");
+add_action("wp_ajax_pw_get_terms_feed", "pw_get_terms_feed_ajax");
+
 
 //---------- PW GET TEMPLATE PARTIAL ----------//
 function pw_get_template_partial_ajax(){
@@ -384,7 +397,7 @@ function wp_user_query_anon(){
 
 	header('Content-Type: application/json');
 	$response['status'] = 200;
-	$response['data'] = $user_query;
+	$response['data'] = $user_query->results;
 	echo json_encode( $response );
 	die;
 }
@@ -952,6 +965,7 @@ function pw_get_comment_anon() {
 function pw_get_comments_anon() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
+
 	if($args['query']) $query = $args['query'];
 	else ErrorReturn($response, 400, 'missing argument query'); 
 	
@@ -962,14 +976,10 @@ function pw_get_comments_anon() {
 	else $tree = null;
 	
 	/* set the response type as JSON */
-	
-	$results = pw_get_comments($query,$fields,$tree);
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $results;
-	echo json_encode($response);
-	// documentation says that die() should be the end...
-	die();
+	$response_data = pw_get_comments( $query, $fields, $tree);
+
+	pwAjaxRespond( $response_data );
+
 }
 
 /* Action Hook for pw_get_comment() - Anonymous users */
@@ -978,6 +988,8 @@ add_action("wp_ajax_pw_get_comment", "pw_get_comment_anon");
 
 /* Action Hook for pw_get_comments() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
+add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
+
 /* Action Hook for pw_get_comments() - Anonymous users */
 //add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
 //add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");

@@ -32,7 +32,7 @@ postworld.factory( '$pw',
 
 	// DECLARATIONS
 	return {
-		version: "1.5.5",
+		version: "1.5.8",
 		templates: pwTemplates,
 
 		state: state(),
@@ -45,6 +45,7 @@ postworld.factory( '$pw',
     	view: $window.pwGlobals.view,
     	paths: $window.pwGlobals.paths, // Move this to pwSiteglobals
     	site: $window.pwSiteGlobals.site,
+    	controls: $window.pwSiteGlobals.controls,
 
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )

@@ -125,7 +125,7 @@ class menu_kit_widget extends WP_Widget {
 		////////// DRAW CUSTOM MENU WIDGET //////////
 		
 		if ($menu_type == 'custom_menu') :
-
+			
 		    // Get the menu templates
 		    $menu_templates = pw_get_menu_templates();
 			// Get the menu template path

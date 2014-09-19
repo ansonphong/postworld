@@ -42,14 +42,13 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
 		switch (subdir) {
 			case 'posts':
-				if (post_type) {
+				if (post_type)
 					template = $pw.templates.posts[post_type][view];						
-				} else {
-					template = $pw.templates.posts['post'][view];						
-				}
+				else 
+					template = $pw.templates.posts['post'][view];
 				break;
 			default:
-				template = $pw.templates[subdir][view];
+				template = $_.getObj( $pw.templates[subdir], view  ); // $pw.templates[subdir][view];
 				break;
 		}
 		// $log.debug('Service: pwData Method:getTemplate template=',template);
@@ -205,7 +204,12 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			if( _.isUndefined(meta.view) )
 				return false;
 
-			var template = getTemplate( this, meta ) + "?ver=" + $pw['version'] ; // ( this, subdir, post_type, name )
+			// Get the template
+			var template = getTemplate( this, meta );
+			
+			// If it exists, add the version number to the URL
+			if( template )
+				template = template + "?ver=" + $pw['version'] ; // ( this, subdir, post_type, name )
 		    
 		    // If on HTTPS / SSL, get on the same protocol
 		    if( $pw.view['protocol'] == 'https' )
@@ -438,6 +442,11 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			$log.debug('pwData.get_template_partial',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_get_template_partial',params);
+		},
+		get_terms_feed: function(args) {
+			$log.debug('pwData.get_terms_feed',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_terms_feed',params);
 		},
 		
 

@@ -6,6 +6,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 		openModal : function( meta ){
 			
+			$log.debug( "OPEN MODAL : ", meta );
+
 			///// DEFAULTS /////
 			if( _.isUndefined(meta) )
 				var meta = {};
@@ -33,21 +35,39 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 			// Increase the number by 1
 			$pw.state.modals.open ++;
 
+			///// DETECT POST TYPE /////
+			// Check for a post type in the post
+			var postType = $_.getObj( meta, 'post.post_type' );
+			// If no post type
+			if( !postType ){
+				// Set the default post type
+				postType = 'post';
+			}
+
 			////////// SWITCH MODE //////////
 			// mode : Can be used to pass the preset mode
 			// or if string not found, this substitutes as the panel id
 			switch( meta.mode ){
-				///// QUICK EDIT /////
-				case "quick-edit":
-					templateName = "modal-edit-post";
-					controller = "pwModalInstanceCtrl";
-					windowClass = "modal-edit-post";
-				break;
-				///// QUICK EDIT NEW /////
-				case "quick-edit-new":
-					templateName = "modal-edit-post";
-					controller = "pwModalInstanceCtrl";
-					windowClass = "modal-edit-post";
+				///// NEW /////
+				case "new":
+				///// EDIT /////
+				case "edit":
+					///// SET DEFAULT TEMPLATE NAME /////
+					if ( _.isUndefined( meta.templateName ) ){
+						// Define the template name with post type
+						templateName = 'modal-edit-' + postType;
+						// Check if modal template exists with this name, will return false if not
+						var postTypeEditTemplate = $pwData.pw_get_template( { subdir: 'modals', view: templateName, } );
+						// If no template is found
+						if( !postTypeEditTemplate )
+							// Set the default template name
+							templateName = 'modal-edit-post';
+					}
+					///// SET DEFAULTS /////
+					controller = ( _.isUndefined( meta.controller ) ) ?
+						'pwModalInstanceCtrl' : meta.controller;
+					windowClass = ( _.isUndefined( meta.windowClass ) ) ?
+						templateName : meta.windowClass;
 				break;
 				///// VIEW /////
 				case "view":
@@ -245,10 +265,8 @@ postworld.controller('pwModalInstanceCtrl',
 		//$log.debug( "key press : " + e.keyCode + " : ", e );
 		var keyCode = parseInt( e.keyCode );
 	
-		$log.debug( "$pw.state.modals.open:", $pw.state.modals.open );
-		$log.debug( "meta.modalIndex-1:", meta.modalIndex-1 );
-
-		
+		//$log.debug( "$pw.state.modals.open:", $pw.state.modals.open );
+		//$log.debug( "meta.modalIndex-1:", meta.modalIndex-1 );
 
 		// Check if the current modal is on top
 		if( $pw.state.modals.open != meta.modalIndex+1 )
@@ -284,6 +302,24 @@ postworld.controller('pwModalInstanceCtrl',
 		$modalInstance.dismiss('close');
 	};
 
+	// MODAL CLOSE
+	// Will close the modal if mode is 'edit'
+	$scope.closeIfEditMode = function ( mode ) {
+		if( mode == 'edit' )
+			$modalInstance.dismiss('close');
+	};
+
+	// MODAL FORWARD IF NEW MODE
+	// Will forward to the given URL if mode is 'new'
+	$scope.forwardIfNewMode = function( mode, url ) {
+		if( $scope.mode == 'new' && !_.isUndefined( url ) )
+			window.location.assign(url);
+	};
+
+	$scope.alert = function(message){
+		alert(message);
+	}
+
 	// TRASH POST
 	$scope.trashPost = function(){
 		//$pwQuickEdit.trashPost($scope.post.ID, $scope);
@@ -300,9 +336,9 @@ postworld.controller('pwModalInstanceCtrl',
 
 
 	// WATCH : FOR CHANGE POST
+	/*
 	$scope.$watch( "post.ID", function (){
 		if( $_.objExists( $scope, 'post.post_permalink' )  ){
-
 			// Change the URL to the permalink of the post, and the title to the title
 			// TODO : Currently Causing Infinite Loops
 
@@ -326,6 +362,7 @@ postworld.controller('pwModalInstanceCtrl',
 			//}, 0 );
 		}
 	}); 
+	*/
 
 	$rootScope.$on('$routeChangeStart', function(event){ 
 	    event.preventDefault(); 

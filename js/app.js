@@ -26,14 +26,15 @@ var depInject = [
 	//'infinite-scroll', 
 	'ui.bootstrap',
 	'monospaced.elastic',
-	'TruncateFilter',
-	'pwFilters',
+	//'TruncateFilter',
+	//'pwFilters',
 	'timer',
 	'angular-parallax',
 	//'angularMoment',
 	'wu.masonry',
 	'mgcrea.ngStrap.popover',
 	'pw.compile',
+	//'ya.treeview',
 	];
 
 

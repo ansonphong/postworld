@@ -168,9 +168,16 @@ function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 	 	if( $object[$i][$parent_key] == $parent ){
 	 		// Setup / Clear Branch Child Array
 			$branch_child = array();
-			// Transfer data
-			foreach ($fields as $field) {
-				$branch_child[$field] = $object[$i][$field];
+			// Get all fields
+			if( $fields == 'all' ){
+				$branch_child = $object[$i];
+			}
+			// Get an array of particular fields
+			else if( gettype($fields) == 'array' ){
+				// Transfer individual fields
+				foreach ($fields as $field) {
+					$branch_child[$field] = $object[$i][$field];
+				}
 			}
 			// Perform callback
 			if ( $callback ){
@@ -456,13 +463,11 @@ function post_exists_by_id($post_id){
 	if($post != null){ return true; } else{ return false; }
 }
 
-
-function crop_string_to_word( $string, $max_chars = 200 ){
-	
+function pw_crop_string_to_word( $string, $max_chars = 200, $suffix = "..." ){
 	if (strlen($string) > $max_chars) {
 	    $string = substr($string, 0, $max_chars);
 	    $string = substr($string, 0, strrpos($string, ' '));        
-	    $string .= '...';
+	    $string .= $suffix;
 	}
 	return $string;
 	//return substr($string, 0, strrpos(substr($string, 0, $max_chars), ' '));

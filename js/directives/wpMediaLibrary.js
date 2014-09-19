@@ -239,7 +239,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		// 2. Gets the new image sizes and populates the edit post image object
 		var thumbnail_id = selectedMedia.first().id;
 		$scope.$parent.post.thumbnail_id = thumbnail_id;
-		$scope.$parent.post.image = selectedMedia.first().attributes.sizes;
+		$scope.$parent.post.image = selectedMedia.first().attributes;
 
 		$log.debug( "Selected Media", selectedMedia.first() );
 	};

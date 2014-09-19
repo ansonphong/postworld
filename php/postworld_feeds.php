@@ -32,7 +32,7 @@ function pw_live_feed ( $args ){
 		"feed_id" => 			$args["feed_id"],
 		"feed_query" => 		$args["feed_query"],
 		"feed_outline" => 		$feed_outline,
-		"feed_outline_json" => 	json_encode($feed_outline),
+		//"feed_outline_json" => 	json_encode($feed_outline),
 		"feed_outline_count" =>	count( $feed_outline ),
 		"loaded" => 			$preload_posts,
 		"preload" => 			count($posts),
@@ -247,8 +247,8 @@ function pw_print_feed( $args ){
 
 	// LINEAGE - DELETE
 	// Include h2o template engine
-	global $pw;
-	require_once $pw['paths']['postworld_dir'].'/lib/h2o/h2o.php';
+	//global $pw;
+	//require_once $pw['paths']['postworld_dir'].'/lib/h2o/h2o.php';
 
 	// Include H2O Template Engine
 	//pw_include_h2o();
