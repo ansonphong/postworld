@@ -628,6 +628,10 @@ function pw_set_defaults( $obj, $defaults ){
 function pw_ob_include( $file, $vars = array() ){
 	if( !empty( $vars ) && is_array( $vars ) )
 		extract($vars);
+
+	if( empty( $file ) )
+		return "pw_ob_include : No file path provided.";
+
 	ob_start();
 	include $file;
 	$content = ob_get_contents();

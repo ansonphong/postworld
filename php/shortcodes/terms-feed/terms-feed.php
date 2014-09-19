@@ -1,8 +1,6 @@
 <?php
 ////////// POSTWORLD TERMS FEED //////////
 function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
-	
-	
 
 	// Extract Shortcode Attributes, set defaults
 	$atts = shortcode_atts( array(
