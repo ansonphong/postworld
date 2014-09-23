@@ -1,0 +1,1 @@
+<div class="pw-shortcode blockquote <?php echo $color; ?>"><?php echo $content; ?></div>

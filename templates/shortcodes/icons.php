@@ -1,0 +1,1 @@
+<i class="pw-shortcode icon <?php echo $tag; ?> <?php echo $color; ?> <?php echo $size; ?> <?php echo $class; ?>" style="<?php echo $style; ?>"></i>

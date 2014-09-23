@@ -1,0 +1,19 @@
+<div style="padding:15px; background:#f2f2f2">
+	Sort by:
+	<select ng-model="feed_data.order_by" >
+		<option value="post_title" >Title</option>
+		<option value="-post_title" >-Title</option>
+		<option value="post_date">Time</option>
+		<option value="-post_date">-Time</option>
+		<option value="post_points">Points</option>
+		<option value="-post_points">-Points</option>
+	</select>
+
+	View:
+	<select ng-model="feed_data.view.current">
+		<option value="list">List</option>
+		<option value="detail">Detail</option>
+		<option value="full">Full</option>
+	</select>
+
+</div>

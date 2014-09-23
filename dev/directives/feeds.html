@@ -1,0 +1,71 @@
+
+<!-- LOAD FEED DIRECTIVE -->
+<script>
+	var feed_init['front_page_feed'] = {
+		preload : 10,
+		load_increment : 10,
+		view : {
+			current : 'detail',
+			options : ['list','detail','grid']
+		},
+		order_by : 'post_title',
+	};
+</script>
+<div ng-load-feed="front_page_feed"></div>
+
+
+<!-- LIVE FEED DIRECTIVE -->
+<script>
+	feed_init['search_results'] = {
+		preload : 10,
+		load_increment : 10,
+		view : {
+			current : 'detail',
+			options : ['list','detail','grid']
+		},
+		order_by : 'rank_score',
+		panel : 'search_results',
+		query_args : {
+			// populated from URL routing
+		},
+	};
+</script>
+<div live-feed="search_results"></div>
+
+
+
+<!-- STRUCTURE -->
+
+
+<script>
+	var feed_init['front_page_feature'] = {
+		preload : 10,
+		load_increment : 10,
+		view : {
+			current : 'detail',
+			options : ['list','detail','grid']
+		},
+		order_by : 'post_title',
+		panel : 'feed_top',
+		query_args : {
+
+		},
+	};
+</script>
+
+<!-- LIVE-FEED DIRECTIVE -->
+<div live-feed="front_page_feature" id="front_page_feature">
+	<!-- CONTROLLER -->
+	<div ng-controller="postworld_feed">
+		<div ng-include src="templates.panels.feed_top"></div>
+		<!-- REPEAT TEMPLATE -->
+		<div class="post"
+			ng-repeat="post in posts | orderBy:feed_data.order_by">
+			<div ng-include src="get_template(post.post_type)"></div>
+		</div>
+	</div>
+</div>
+<!-- END FEED -->
+
+
+

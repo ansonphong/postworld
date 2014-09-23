@@ -1,0 +1,44 @@
+
+
+<div ng-controller="edit-form">
+	<div ng-controller="post-link">
+		<!-- SWITCH BASED ON STATUS -->
+		<div ng-switch="post_link.status" class="post_link">
+
+			<!-- DEFAULT -->
+			<div ng-switch-default></div>
+
+			<!-- URL INPUT FIELD -->
+			<div ng-switch-when="url_input || post_input">
+				
+				<div class="box">
+					<button class="post_a_link"><i class="icon-pushpin"></i> Post a link...</button>
+					<button><i class="icon-plus"></i> New Post</button>
+					<button><i class="icon-envelope-alt"></i> Send us a Story</button>
+				</div>
+
+				<div class="box url_input">
+					<div edit-field="link_url" data-input="text-url" data-maxlength="300" data-object="post_link"></div>
+					<button id="paste"><i class="icon-paste"></i></button>
+					<button id="reload" onClick="javascript:wp_embedly_extract('post_link.link_url','post_link.post_data')"><i class="icon-repeat"></i></button>
+				</div>
+			</div>
+
+			<!-- DATA FIELDS FIELD -->
+			<div ng-switch-when="post_input">
+				<div edit-field="post_title" data-input="text" data-maxlength="50" data-object="post_link.post_data"></div>
+				<img ng-src="post_link.post_image" class="post_image">
+				<div edit-field="post_excerpt" data-input="text" data-maxlength="160" data-object="post_link.post_data"></div>
+				<div edit-field="post_tags" data-input="textarea" data-maxlength="80" data-object="post_link.post_data"></div>
+				<div edit-field="taxonomy(topic)" data-input="select" data-object="post_link"></div>
+				<button id="submit" onClick="post_link_submit('post_link.')"><i class="icon-repeat"></i></button>
+			</div>
+
+			<!-- SUCCESS MESSAGE -->
+			<div ng-switch-when="sucess">
+				Thanks for submitting a link.
+			</div>
+
+		</div>
+	</div>
+</div>

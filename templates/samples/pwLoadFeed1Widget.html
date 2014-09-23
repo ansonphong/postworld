@@ -1,0 +1,22 @@
+<script>
+	feed_settings['front_page_features'] = {
+			feed_id : 'testt', // add feed id here in case you want to override the name of the feed id
+            preload : 10,
+            load_increment : 5,
+            offset: 3,
+            max_posts:100,
+            view : {
+                current : 'list',
+                options : ['list','detail']
+            },
+			blocks : {
+				  offset:3,
+				  increment: 3,
+				  max_blocks:50,
+				  template: 'ad-block'
+			},
+			feed_template: 'load_feed_1',	// Optional, needed in case of different widgets [having different panels for example] 
+        };
+</script>
+
+<div load-feed="front_page_features" ng-include="templateUrl"></div>

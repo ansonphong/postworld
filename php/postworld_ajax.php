@@ -1,0 +1,1147 @@
+<?php
+
+/* 	WP Ajax Tips
+ *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
+*/
+
+function pwAjaxRespond( $response_data ){
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+//---------- PW GET TEMPLATE PARTIAL ----------//
+function pw_get_terms_feed_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_terms_feed( $params ); 
+
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_terms_feed", "pw_get_terms_feed_ajax");
+add_action("wp_ajax_pw_get_terms_feed", "pw_get_terms_feed_ajax");
+
+
+//---------- PW GET TEMPLATE PARTIAL ----------//
+function pw_get_template_partial_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_template_partial( $params ); 
+
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_template_partial", "pw_get_template_partial_ajax");
+add_action("wp_ajax_pw_get_template_partial", "pw_get_template_partial_ajax");
+
+
+//---------- PW GET MENUS ----------//
+function pw_get_menus_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_menus( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+//add_action("wp_ajax_nopriv_pw_get_menus", "pw_set_option_obj_ajax");
+add_action("wp_ajax_pw_get_menus", "pw_get_menus_ajax");
+
+
+//---------- PW SET OPTION OBJECT ----------//
+function pw_set_option_obj_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_set_option_obj( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_set_option_obj", "pw_set_option_obj_ajax");
+add_action("wp_ajax_pw_set_option_obj", "pw_set_option_obj_ajax");
+
+
+//---------- PW GET OPTION OBJECT ----------//
+function pw_get_option_obj_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_get_option_obj( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_option_obj", "pw_get_option_obj_ajax");
+add_action("wp_ajax_pw_get_option_obj", "pw_get_option_obj_ajax");
+
+
+
+//---------- PW UPDATE OPTION ----------//
+function pw_update_option_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_update_option( $option, $value ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_update_option", "pw_update_option_ajax");
+add_action("wp_ajax_pw_update_option", "pw_update_option_ajax");
+
+
+//---------- PW LOAD IMAGE ----------//
+function pw_get_image_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_image( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_image", "pw_get_image_ajax");
+add_action("wp_ajax_pw_get_image", "pw_get_image_ajax");
+
+
+
+//---------- PW SET WIZARD STATUS ----------//
+function pw_set_wizard_status_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	//extract($params);
+
+	$response_data = pw_set_wizard_status( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_pw_set_wizard_status", "pw_set_wizard_status_ajax");
+
+
+//---------- PW GET WIZARD STATUS ----------//
+function pw_get_wizard_status_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	//extract($params);
+
+	$response_data = pw_get_wizard_status( $params ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_pw_get_wizard_status", "pw_get_wizard_status_ajax");
+
+
+//---------- PW GET USER DATA ----------//
+function pw_get_userdata_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_userdata( $user_id,  $fields ); 
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_userdata", "pw_get_userdata_ajax");
+add_action("wp_ajax_pw_get_userdata", "pw_get_userdata_ajax");
+
+
+//---------- PW GET USER DATAS ----------//
+function pw_get_userdatas_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	$response_data = pw_get_userdatas( $user_ids,  $fields );
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_get_userdatas", "pw_get_userdatas_ajax");
+add_action("wp_ajax_pw_get_userdatas", "pw_get_userdatas_ajax");
+
+
+
+
+//---------- PW SET POST IMAGE ----------//
+function pw_set_post_image_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	extract($params);
+
+	// Set the thumbnail
+	$set_post_thumbnail = set_post_thumbnail( $params['post_id'], $params['thumbnail_id'] );
+
+	// Return 
+	if( $set_post_thumbnail ){
+		$response_data = pw_get_post( $params['post_id'], $params['return_fields'] );	
+	} else {
+		$response_data = false;
+	}
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_pw_set_post_image_ajax", "set_post_image_ajax");
+add_action("wp_ajax_set_post_image", "pw_set_post_image_ajax");
+
+
+//---------- PW QUERY ----------//
+function pw_query_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_query($params);
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_pw_query", "pw_query_ajax");
+add_action("wp_ajax_pw_query", "pw_query_ajax");
+
+
+
+
+//---------- FLAG COMMENTS ----------//
+function flag_comment_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	// FLAG COMMENT >>> Requires plugin : "Safe Report Comments"
+	// If plugin is installed
+	if (class_exists('Safe_Report_Comments')){
+		$flag_comments = new Safe_Report_Comments();
+		$flag_comments->mark_flagged( $params['comment_ID'] );
+		$response_data = true;
+	// If plugin is not installed
+	} else{
+		$response_data = false;
+	}
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $response_data;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
+add_action("wp_ajax_flag_comment", "flag_comment_admin");
+
+
+
+
+//---------- SHARE REPORT - USER - OUTGOING ----------//
+function user_share_report_outgoing_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$user_share_report_outgoing = user_share_report_meta( user_share_report_outgoing( $params['displayed_user_id'] ) );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $user_share_report_outgoing;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_user_share_report_outgoing", "user_share_report_outgoing_anon");
+add_action("wp_ajax_user_share_report_outgoing", "user_share_report_outgoing_anon");
+
+
+
+//---------- SHARE REPORT - POST ----------//
+function post_share_report_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$post_share_report = post_share_report_meta( post_share_report( $params['post_id'] ) );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $post_share_report;
+	echo json_encode( $response );
+	die;
+}
+
+add_action("wp_ajax_nopriv_post_share_report", "post_share_report_anon");
+add_action("wp_ajax_post_share_report", "post_share_report_anon");
+
+
+//---------- TRASH POST ----------//
+function pw_trash_post_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$pw_trash_post = pw_trash_post( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_trash_post;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_pw_trash_post", "pw_trash_post_admin");
+
+
+
+//---------- RESET PASSWORD SUBMIT ----------//
+function pw_reset_password_submit_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$reset_password_submit = pw_reset_password_submit( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $reset_password_submit;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_reset_password_submit", "pw_reset_password_submit_ajax");
+add_action("wp_ajax_reset_password_submit", "pw_reset_password_submit_ajax");
+
+
+
+
+//---------- SEND RESET PASSWORD LINK ----------//
+function pw_reset_password_email_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$send_reset_password_link = pw_reset_password_email( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $send_reset_password_link;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_reset_password_email", "pw_reset_password_email_ajax");
+add_action("wp_ajax_reset_password_email", "pw_reset_password_email_ajax");
+
+
+
+//---------- ACTIVATE USER ----------//
+function pw_activate_user_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$pw_activate_user = pw_activate_user( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_activate_user;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_pw_activate_user", "pw_activate_user_anon");
+add_action("wp_ajax_pw_activate_user", "pw_activate_user_anon");
+
+
+
+//---------- SEND ACTIVATION LINK ----------//
+function send_activation_link_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$send_activation_link = send_activation_link( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $send_activation_link;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_send_activation_link", "send_activation_link_anon");
+add_action("wp_ajax_send_activation_link", "send_activation_link_anon");
+
+
+
+
+
+//---------- PW INSERT USER ----------//
+function pw_insert_user_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$pw_insert_user = pw_insert_user( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_insert_user;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_pw_insert_user", "pw_insert_user_anon");
+add_action("wp_ajax_pw_insert_user", "pw_insert_user_anon");
+
+
+
+//---------- WP USER QUERY ----------//
+function wp_user_query_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$user_query = new WP_User_Query( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $user_query->results;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_wp_user_query", "wp_user_query_anon");
+add_action("wp_ajax_wp_user_query", "wp_user_query_anon");
+
+
+
+//---------- SET AVATAR ----------//
+function pw_set_avatar_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$user_id = $params['user_id'];
+	$image_object = $params['image_object'];
+
+	$pw_set_avatar = pw_set_avatar( $image_object, $user_id );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_set_avatar;
+	echo json_encode( $response );
+	die;
+
+}
+add_action("wp_ajax_pw_set_avatar", "pw_set_avatar_admin");
+
+
+//---------- GET AVATAR ----------//
+function pw_get_avatar_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$pw_get_avatar = pw_get_avatar( $params );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_get_avatar; //$pw_get_avatar;
+	echo json_encode( $response );
+	die;
+
+}
+add_action("wp_ajax_nopriv_pw_get_avatar", "pw_get_avatar_anon");
+add_action("wp_ajax_pw_get_avatar", "pw_get_avatar_anon");
+
+
+//---------- SET COMMENT POINTS ----------//
+function set_comment_points_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$comment_id = $params['comment_id'];
+	$points = $params['points'];
+
+	$set_comment_points = set_comment_points( $comment_id, $points );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $set_comment_points;
+	echo json_encode( $response );
+	die;
+}
+
+//add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
+add_action("wp_ajax_set_comment_points", "set_comment_points_admin");
+
+
+//---------- SET POST POINTS ----------//
+function set_post_points_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$post_id = $params['post_id'];
+	$points = $params['points'];
+
+	$set_post_points = set_post_points( $post_id, $points );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $set_post_points;
+	echo json_encode( $response );
+	die;
+
+}
+
+//add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
+add_action("wp_ajax_set_post_points", "set_post_points_admin");
+
+
+
+
+//---------- SET POST RELATIONSHIP ----------//
+function set_post_relationship_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$params = $args['args'];
+	$relationship = $params['relationship'];
+	$switch = $params['switch'];
+	$post_id = $params['post_id'];
+
+	$set_post_relationship = set_post_relationship( $relationship, $switch, $post_id );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $set_post_relationship;
+	echo json_encode( $response );
+	die;
+
+}
+
+add_action("wp_ajax_nopriv_set_post_relationship", "set_post_relationship_admin");
+add_action("wp_ajax_set_post_relationship", "set_post_relationship_admin");
+
+
+
+
+//---------- TAGS AUTOCOMPLETE ----------//
+function tags_autocomplete_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+
+	$tag_query_results = pw_query_terms( $args['args'] );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $tag_query_results;
+	echo json_encode( $response );
+	die;
+
+}
+
+add_action("wp_ajax_nopriv_tags_autocomplete", "tags_autocomplete_anon");
+add_action("wp_ajax_tags_autocomplete", "tags_autocomplete_anon");
+
+
+
+
+//---------- USER QUERY AUTOCOMPLETE ----------//
+function user_query_autocomplete_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$pw_args = $args['args'];
+
+	$user_query = new WP_User_Query( $pw_args );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $user_query;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_user_query_autocomplete", "user_query_autocomplete_anon");
+add_action("wp_ajax_user_query_autocomplete", "user_query_autocomplete_anon");
+
+
+
+
+//---------- TAXONOMIES OUTLINE MIXED ----------//
+function taxonomies_outline_mixed_anon(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$pw_args = $args['args'];
+
+	$taxonomies_outline_mixed = taxonomies_outline_mixed( $pw_args );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $taxonomies_outline_mixed;
+	echo json_encode( $response );
+	die;
+}
+add_action("wp_ajax_nopriv_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
+add_action("wp_ajax_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
+
+
+
+
+//---------- SAVE POST ADMIN ----------//
+function pw_save_post_admin(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$pw_args = $args['args'];
+	$pw_save_post = pw_save_post($pw_args);
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $pw_save_post;
+	echo json_encode( $response );
+	die;
+}
+//add_action("wp_ajax_nopriv_pw_save_post", "pw_save_post_admin");
+add_action("wp_ajax_pw_save_post", "pw_save_post_admin");
+
+
+//---------- GET POST ADMIN ----------//
+
+function pw_get_post_edit_admin() {
+	list($response, $args, $nonce) = initAjaxResponse();	
+	// pw_get_post ( $post_id, $fields, [$user_id] );
+	$pw_args = $args['args'];
+
+	/* ADD SECURITY CHECK */
+
+	/*
+	if($args['post_id']) $query = $args['post_id'];
+	else ErrorReturn($response, 400, 'missing argument post_id'); 
+	if ($args['fields']) $fields = $args['fields'];
+	else $fields = 'all';
+	// Get User Id
+	$user_ID = get_current_user_id();
+	
+
+	$fields = array(
+		"ID",
+		"post_type",
+		"post_id",
+		"post_status",
+		"post_title",
+		"post_excerpt",
+		"post_content",
+		"link_format",
+		"post_class",
+		"link_url",
+		"post_name",
+		"post_permalink",
+		"taxonomy(all)",
+		"taxonomy_obj(post_tag)",
+		"author(ID,display_name,user_nicename,posts_url,user_profile_url)",
+		"image(id)",
+		"image(meta)"
+		);
+	*/
+
+	/* set the response type as JSON */
+	$results = pw_get_post( $pw_args, 'edit' ); //$post_id,$fields,$user_ID
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Action Hook for pw_get_post_types() - Logged in users */
+add_action("wp_ajax_pw_get_post_edit", "pw_get_post_edit_admin");
+
+
+
+
+
+
+
+
+//---------- oEMBED GET ----------//
+function ajax_oembed_get(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	extract($args);
+	$pw_args = $args;
+
+	// GET OEMBED
+	$oEmbed = wp_oembed_get( $pw_args['link_url'] );
+
+	// AUTOPLAY
+	if( !empty( $autoplay ) && $autoplay == true ){
+
+		// VIMEO
+		if (strpos($oEmbed, 'vimeo') !== false) {
+		    $oEmbed = str_replace("\" width=\"", "?autoplay=1\" width=\"", $oEmbed);
+		}
+
+		// YOUTUBE
+		if (strpos($oEmbed, 'youtube') !== false) {
+		    $oEmbed = str_replace("?feature=oembed", "?feature=oembed&autoplay=1", $oEmbed);
+		}
+		
+	}
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $oEmbed;
+	echo json_encode($response);
+	// die ( $oEmbed );
+	die;
+}
+add_action("wp_ajax_nopriv_ajax_oembed_get", "ajax_oembed_get");
+add_action("wp_ajax_ajax_oembed_get", "ajax_oembed_get");
+
+
+
+/* *************************
+ *	General Ajax Functions 
+ * 
+ ************************** */
+
+global $postworld_api_version;
+$postworld_api_version = "0.1";
+
+function ErrorReturn($response, $status, $message) {
+	$response['status'] = $status;
+	$response['message'] = $message;
+	echo json_encode($response);
+	die;
+}
+
+function initAjaxResponse() {
+	global $postworld_api_version;
+	// Create Response JSON Object, to include api version, status, error code if any, data results
+	$response = array();
+	$response['version'] = $postworld_api_version;
+	// data is received in the raw data, not in the post data http://stackoverflow.com/questions/10494574/what-is-the-difference-between-form-data-and-request-payload
+	// $args_text = $_POST['args']; // This will not work unless the Ajax Call is modified to post as a form with url encoded parameters
+	$params_text = file_get_contents("php://input");
+	// if no parameters then return error
+	if (!$params_text) {
+		ErrorReturn($response, 400, 'Error in parameters');	
+	}
+	$params = json_decode($params_text,true);
+	if (!$params) {
+		ErrorReturn($response, 400, 'Error in parameters');	
+	}
+	if (!isset($params['nonce'])) ErrorReturn($response, 400, 'Error in parameters');
+	$nonce = $params['nonce'];
+	// TODO check Nonce value
+	if (!isset($params['args'])) ErrorReturn($response, 400, 'Error in parameters');
+	$args = $params['args'];	
+	return array($response, $args, $nonce);
+}
+
+
+/* *************************
+ *	Feed Functions 
+ * 
+ ************************** */
+
+/* Actions for pw_live_feed() */
+
+function pw_live_feed_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	// $pw_args = $args['args']['feed_query'];
+	$pw_args = $args['args'];
+	// Get the results in array format, so that it is converted once to json along with the rest of the response
+	$results = pw_live_feed ( $pw_args );
+	// TODO check results are ok
+	// TODO return success code or failure code , as well as version number with the results.
+	/* set the response type as JSON */
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+
+
+/* Actions for pw_register_feed () */
+
+function pw_register_feed_admin() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	$func_args = $args['args'];
+	// TODO check results are ok
+	/* set the response type as JSON */
+	$results = pw_register_feed($args['args']);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Actions for pw_load_feed () */
+
+function pw_load_feed_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	$func_args = $args['args'];
+	// TODO check results are ok
+	/* set the response type as JSON */
+	// TODO check values are correct
+	if ($func_args['feed_id']) $feed_id = $func_args['feed_id']; else $feed_id = ''; 
+	if ($func_args['preload']) $preload = $func_args['preload']; else $preload = 0;
+	$results = pw_load_feed($feed_id,$preload);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Action Hook for pw_live_feed() - Logged in users */
+add_action("wp_ajax_pw_live_feed", "pw_live_feed_anon");
+
+/* Action Hook for pw_live_feed() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_live_feed", "pw_live_feed_anon");
+
+/* Action Hook for pw_load_feed() - Logged in users */
+add_action("wp_ajax_pw_load_feed", "pw_load_feed_anon");
+
+/* Action Hook for pw_load_feed() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_load_feed", "pw_load_feed_anon");
+
+/* Action Hook for pw_register_feed() - Logged in users */
+add_action("wp_ajax_pw_register_feed", "pw_register_feed_admin");
+
+/* Action Hook for pw_register_feed() - Anonymous users */
+// add_action("wp_ajax_nopriv_pw_register_feed", "pw_register_feed_anon");
+
+
+/* *************************
+ *	Posts Functions 
+ * 
+ ************************** */
+
+
+/* Actions for pw_get_posts () */
+
+function pw_get_posts_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	// $pw_args = $args['args']['feed_query'];
+	$pw_args = $args['args'];
+	// Get the results in array format, so that it is converted once to json along with the rest of the response
+	$results = pw_get_posts ( $args['post_ids'],$args['fields'] );
+	
+	// TODO check results are ok
+	/* set the response type as JSON */
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Action Hook for pw_get_posts() - Logged in users */
+add_action("wp_ajax_pw_get_posts", "pw_get_posts_anon");
+
+/* Action Hook for pw_get_posts() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_posts", "pw_get_posts_anon");
+
+
+
+function pw_get_post_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();	
+	// pw_get_post ( $post_id, $fields, [$user_id] );
+	
+	if($args['post_id']) $post_id = $args['post_id'];
+		else ErrorReturn($response, 400, 'missing argument post_id'); 
+	if ($args['fields']) $fields = $args['fields'];
+		else $fields = 'all';
+	// Get User Id
+	$user_ID = get_current_user_id();
+	/* set the response type as JSON */
+	$results = pw_get_post($post_id,$fields,$user_ID);
+
+	// Apply O-Embed and Hot-links
+	if( isset($results['post_content']) )
+		$results['post_content'] = pw_embed_content( $results['post_content'] );
+
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Action Hook for pw_get_post() - Logged in users */
+add_action("wp_ajax_pw_get_post", "pw_get_post_anon");
+
+/* Action Hook for pw_get_post() - Anonymous Users */
+add_action("wp_ajax_nopriv_pw_get_post", "pw_get_post_anon");
+
+
+
+
+/* Actions for pw_get_post_types () */
+
+function pw_get_post_types_admin() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	// $pw_args = $args['args']['feed_query'];
+	$pw_args = $args['args'];
+	// Get the results in array format, so that it is converted once to json along with the rest of the response
+	//$results = pw_get_posts ( $args['post_ids'],$args['fields'] );
+	// TODO check results are ok
+	/* set the response type as JSON */
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = 'hello universe!'; //$results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+/* Action Hook for pw_get_post_types() - Logged in users */
+add_action("wp_ajax_pw_get_post_types", "pw_get_post_types_admin");
+
+
+
+
+
+/* *************************
+ *	Tempalte Functions 
+ * 
+ ************************** */
+
+ /* Actions for pw_get_templates () */
+
+function pw_get_templates_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	// $pw_args = $args['args'];
+	// TODO check results are ok
+	// TODO return success code or failure code , as well as version number with the results.
+	/* set the response type as JSON */
+	$results = pw_get_templates($args['templates_object']);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+ 
+/* Action Hook for pw_get_templates() - Logged in users */
+add_action("wp_ajax_pw_get_templates", "pw_get_templates_anon");
+
+/* Action Hook for pw_get_templates() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_templates", "pw_get_templates_anon");
+
+
+/* *************************
+ *	Comments Functions 
+ * 
+ ************************** */
+
+/* Actions for pw_get_comment () */
+
+function pw_get_comment_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	if($args['comment_id']) $comment_id = $args['comment_id'];
+	else ErrorReturn($response, 400, 'missing argument comment_id'); 
+	
+	if ($args['fields']) $fields = $args['fields'];
+	else $fields = 'all';
+	
+	if ($args['viewer_user_id']) $viewer_user_id = $args['viewer_user_id'];
+	else $viewer_user_id = null;
+	
+	/* set the response type as JSON */
+	$results = pw_get_comment($comment_id, $fields, $viewer_user_id);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+ /* Actions for pw_get_comments () */
+
+function pw_get_comments_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+
+	if($args['query']) $query = $args['query'];
+	else ErrorReturn($response, 400, 'missing argument query'); 
+	
+	if ($args['fields']) $fields = $args['fields'];
+	else $fields = null;
+	
+	if ($args['tree'])	$tree = $args['tree'];
+	else $tree = null;
+	
+	/* set the response type as JSON */
+	$response_data = pw_get_comments( $query, $fields, $tree);
+
+	pwAjaxRespond( $response_data );
+
+}
+
+/* Action Hook for pw_get_comment() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_comment", "pw_get_comment_anon");
+add_action("wp_ajax_pw_get_comment", "pw_get_comment_anon");
+
+/* Action Hook for pw_get_comments() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
+add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
+
+/* Action Hook for pw_get_comments() - Anonymous users */
+//add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
+//add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
+
+
+
+ /* Actions for pw_save_comment () */
+
+function pw_save_comment_loggedIn() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	if($args['comment_data']) $commentdata = $args['comment_data'];
+	else ErrorReturn($response, 400, 'missing argument comment_data');
+	// had to rename it to return_value, since return in ajax javascript is a reserved word 
+	if ($args['return_value']) $return = $args['return_value'];
+	else $return = null;
+	
+	// TODO should we use wp_new_comment instead of wp_insert_comment http://codex.wordpress.org/Function_Reference/wp_new_comment?
+	// Sanitize
+	$commentdata = apply_filters('preprocess_comment', $commentdata);
+	
+	//wp_filter_nohtml_kses( $data )
+	
+	// If comment ID is provided
+	if ( $commentdata['comment_ID'] ){
+	// Check to see if comment already exists
+		$current_comment = get_comment( $commentdata['comment_ID'], "ARRAY_A" );
+		// If comment exists
+		if( $current_comment != null ){
+			$user_ID = $current_comment["user_id"];
+			// If user doesn't have access to moderate
+			if ( !current_user_can( 'moderate_comments' ) )
+				return array( "error" => "No access to moderate comments." );
+		}
+
+	} else{
+		// Get User ID, it must be real, since this function is called for logged in users only
+		$user_ID = get_current_user_id();
+		if (!$user_ID) ErrorReturn($response, 400, 'User must be authenticated to perform this action');
+		$commentdata['user_id'] = $user_ID;
+	}
+
+	// Get Author Info
+	$user_data = get_userdata( $user_ID );
+	if ($user_data->display_name) {
+		$commentdata['comment_author'] = $user_data->display_name; 
+	} else if ($user_data->user_nicename) {
+		$commentdata['comment_author'] = $user_data->user_nicename; 
+	} else 
+		$commentdata['comment_author'] = $user_data->user_login; 
+	
+	if ($user_data->user_email) {
+		$commentdata['comment_author_email'] = $user_data->user_email; 
+	}
+	  
+	if ($user_data->user_url) {
+		$commentdata['comment_author_url'] = $user_data->user_url; 
+	}
+
+	// Get IP, Agent
+	$commentdata['comment_author_IP'] = preg_replace( '/[^0-9a-fA-F:., ]/', '',$_SERVER['REMOTE_ADDR'] );
+	$commentdata['comment_agent']     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 ) : '';
+	
+	// Get Date
+	// $commentdata['comment_date']     = current_time('mysql');
+	$commentdata['comment_date_gmt'] = current_time('mysql', 1);
+
+
+	// Sanitize
+	$commentdata = wp_filter_comment($commentdata);
+	$commentdata['comment_approved'] = wp_allow_comment($commentdata);	
+	
+	// Remove HTML
+	$commentdata['comment_content'] = wp_filter_nohtml_kses( $commentdata['comment_content'] );
+
+	$results = pw_save_comment($commentdata,$return);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+ /* Actions for pw_delete_comment () */
+
+function pw_delete_comment_loggedIn() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	if($args['comment_id']) $comment_id = $args['comment_id'];
+	else ErrorReturn($response, 400, 'missing argument comment_id');
+		
+	// Get User ID, it must be real, since this function is called for logged in users only
+//	$user_ID = get_current_user_id();
+//	if (!$user_ID) ErrorReturn($response, 400, 'User must be authenticated to perform this action');
+//	$commentdata['user_id'] = $user_ID;					
+	
+	// $results = pw_save_comment($commentdata,$return);
+	$results = wp_delete_comment( $comment_id);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+
+
+
+/* Action Hook for pw_delete_comment() - Logged in users */
+add_action("wp_ajax_pw_delete_comment", "pw_delete_comment_loggedIn");
+
+ 
+/* Action Hook for pw_save_comment() - Logged in users */
+add_action("wp_ajax_pw_save_comment", "pw_save_comment_loggedIn");
+
+
+/* Action Hook for pw_get_comments() - Logged In users */
+add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
+
+
+/* *************************
+ *	Test Functions - used for testing and can be removed 
+ * 
+ ************************** */
+ 
+ function pw_test_code_admin() {
+	// list($response, $args, $nonce) = initAjaxResponse();
+	global $postworld_api_version;
+	// Create Response JSON Object, to include api version, status, error code if any, data results
+	$response = array();
+	$response['version'] = $postworld_api_version;
+	
+	$query = array(
+            'post_id' => 166220,            
+    	);
+		
+	// TODO check results are ok
+	/* set the response type as JSON */
+	// TODO check values are correct
+	$results = pw_get_comments ($query,'all',true);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+ 
+
+/* Action Hook for pw_test_code() - Logged in users */
+add_action("wp_ajax_pw_test_code", "pw_test_code_admin");
+
+
+?>
