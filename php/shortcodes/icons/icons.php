@@ -32,9 +32,10 @@ function pw_icons_shortcode( $atts, $content = null, $tag ) {
 ///// GET ICONS /////
 function pw_get_css_icons(
 	$icon_prefix = "icon-",
-	$css_file = "/css/font-awesome.css",
+	$css_file = "/lib/icomoon/style.css",
 	$return = "all",
-	$output = "array"){
+	$output = "array"
+	){
 	/*
 	 * Returns an Array of all the icon css classes in a given css file
 	 */

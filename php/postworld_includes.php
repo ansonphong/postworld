@@ -82,8 +82,8 @@ function postworld_includes( $args ){
 	}
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
-	$jsVars = array(	'ajaxurl' => admin_url( 'admin-ajax.php' ),
-						'pluginurl' => WP_PLUGIN_URL,
+	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
+						'pluginurl' 	=> WP_PLUGIN_URL,
 						'user_id'		=> get_current_user_id(),
 						'is_admin'		=> is_admin(),
 					);
@@ -189,7 +189,7 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS-UI-Bootstrap',
 		//	plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-			plugins_url().'/postworld/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js' );
+			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js' );
 
 		// ANGULAR STRAP : BOOTSTRAP
 		wp_enqueue_script( 'AngularJS-Strap-Dimensions',
@@ -214,7 +214,7 @@ function postworld_includes( $args ){
 		
 		// ANGULAR : TIMER
 		wp_enqueue_script( 'AngularJS-Timer',
-			plugins_url().'/postworld/lib/angular-timer/angular-timer.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-timer/angular-timer.js', $angularDep );
 
 		/*
 		// ANGULAR : TIMER
@@ -224,15 +224,15 @@ function postworld_includes( $args ){
 
 		// ANGULAR : PARALLAX
 		wp_enqueue_script( 'angularJS-Parallax',
-			plugins_url().'/postworld/lib/angular-parallax/angular-parallax.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-parallax/angular-parallax.js', $angularDep );
 
 		// ANGULAR : ELASTIC
 		wp_enqueue_script( 'angularJS-Elastic',
-			plugins_url().'/postworld/lib/angular-elastic/angular-elastic.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-elastic/angular-elastic.js', $angularDep );
 
 		// ANGULAR : MASONRY
 		wp_enqueue_script( 'angularJS-Masonry',
-			plugins_url().'/postworld/lib/angular-masonry/angular-masonry.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-masonry/angular-masonry.js', $angularDep );
 
 
 		/////// POSTWORLD APP /////	
@@ -349,7 +349,7 @@ function postworld_includes( $args ){
 
 		// WIZARD
 		wp_enqueue_script( 'pw-Wizard',
-			plugins_url().'/postworld/js/components/pwWizard.js', $angularDep );
+			POSTWORLD_URI.'/js/components/pwWizard.js', $angularDep );
 
 		// WORDPRESS DIRECTIVES
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
@@ -364,7 +364,7 @@ function postworld_includes( $args ){
 			'//maps.googleapis.com/maps/api/js?sensor=false' );
 		// ANGULAR UI : GOOGLE MAPS
 		wp_enqueue_script( 'AngularJS-Google-Maps',
-			plugins_url().'/postworld/lib/angular-google-maps/angular-google-maps.min.js' );
+			POSTWORLD_URI.'/lib/angular-google-maps/angular-google-maps.min.js' );
 	}
 
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
@@ -456,7 +456,7 @@ function pwSiteGlobals_include(){
 	$pwJs .= json_encode( $pwSiteLanguage );
 	$pwJs .= ";";
 
-	$pwJsFile = WP_PLUGIN_DIR.'/postworld/deploy/pwSiteGlobals.js';
+	$pwJsFile = POSTWORLD_PATH . '/deploy/pwSiteGlobals.js';
 	$file = fopen( $pwJsFile ,"w" );
 	fwrite($file,"$pwJs");
 	fclose($file);

@@ -1,7 +1,7 @@
 <?php
 // This code Generates the following array
 
-$icons_css_path = pw_plugin_file( "lib/icomoon/style.css" );
+$icons_css_path = POSTWORLD_PATH . "/lib/icomoon/style.css";
 $icons = pw_get_css_icons( 'icon-', $icons_css_path, 'keys', 'array' ); // fourth value otpional / string
 //echo $icon_x_icons;
 
