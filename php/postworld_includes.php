@@ -40,9 +40,9 @@ function postworld_includes( $args ){
 	if( in_array( 'masonry.js', $pwInject ) ){
 		// MASONRY
 		wp_enqueue_script( 'Masonry-JS',
-			WP_PLUGIN_URL.'/postworld/lib/masonry/masonry.pkgd.min.js');		
+			POSTWORLD_URI.'/lib/masonry/masonry.pkgd.min.js');		
 		wp_enqueue_script( 'ImagesLoaded-JS',
-			WP_PLUGIN_URL.'/postworld/lib/masonry/imagesloaded.pkgd.min.js');
+			POSTWORLD_URI.'/lib/masonry/imagesloaded.pkgd.min.js');
 	}
 
 	// Add Google Maps to include before AngularJS app
@@ -52,7 +52,7 @@ function postworld_includes( $args ){
 
 	// Add LESS Support
 	if( in_array( 'wp-less', $pwInject ) ){
-		require_once( WP_PLUGIN_DIR.'/postworld/lib/wp-less/wp-less.php' );
+		require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
 	}
 	
 	// Add Font Awesome 3
@@ -60,25 +60,25 @@ function postworld_includes( $args ){
 		wp_enqueue_style( 'font-awesome-3',
 			"//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" );
 			// Todo : parse from LESS
-			//WP_PLUGIN_URL.'/postworld/lib/font-awesome-3/css/font-awesome.min.css' );
+			//POSTWORLD_URI.'/lib/font-awesome-3/css/font-awesome.min.css' );
 	}
 
 	// Add ICOMOON
 	if( in_array( 'icomoon', $pwInject ) ){
 		wp_enqueue_style( 'icomoon',
-			WP_PLUGIN_URL.'/postworld/lib/icomoon/style.css' );
+			POSTWORLD_URI.'/lib/icomoon/style.css' );
 	}
 
 	// Add ICON X
 	if( in_array( 'icon-x', $pwInject ) ){
 		wp_enqueue_style( 'icon-x',
-			WP_PLUGIN_URL.'/postworld/lib/icon-x/icon-x.css' );
+			POSTWORLD_URI.'/lib/icon-x/icon-x.css' );
 	}
 
 	// Add GLYPHICONS
 	if( in_array( 'glyphicons-halflings', $pwInject ) ){
 		wp_enqueue_style( 'glyphicons-halflings',
-			WP_PLUGIN_URL.'/postworld/lib/glyphicons/glyphicons-halflings.css' );
+			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
 	}
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
@@ -92,8 +92,8 @@ function postworld_includes( $args ){
 
 	//BOOTSTRAP CSS
 	// Removed - move be added in theme
-	//wp_enqueue_style( "bootstrap-CSS", WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.css' );
-	//wp_enqueue_style( "Angular-Strap-Animation", WP_PLUGIN_URL.'/postworld/lib/angular-strap-2.0.0-rc.2/css/angular-motion.min.css' );
+	//wp_enqueue_style( "bootstrap-CSS", POSTWORLD_URI.'/lib/bootstrap/bootstrap.min.css' );
+	//wp_enqueue_style( "Angular-Strap-Animation", POSTWORLD_URI.'/lib/angular-strap-2.0.0-rc.2/css/angular-motion.min.css' );
 
 
 
@@ -103,10 +103,10 @@ function postworld_includes( $args ){
 	
 		// ANGULAR
 		//wp_enqueue_script( 'AngularJS',
-		//	WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular.min.js');
+		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
 
 		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", WP_PLUGIN_URL.'/postworld/deploy/postworld.min.js', array(), $postworld_version );
+		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $postworld_version );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
 
@@ -119,27 +119,27 @@ function postworld_includes( $args ){
 
 		// UNDERSCORE JS
 		wp_enqueue_script( 'UnderscoreJS',
-			WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
+			POSTWORLD_URI.'/lib/underscore/underscore.min.js');
 
 		// DEEP MERGE
 		wp_enqueue_script( 'DeepMerge',
-			WP_PLUGIN_URL.'/postworld/lib/deepmerge/deepmerge.js');
+			POSTWORLD_URI.'/lib/deepmerge/deepmerge.js');
 
 		/*
 		// MOMENT.JS
 		wp_enqueue_script( 'Moment-JS',
-			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment.min.js');
+			POSTWORLD_URI.'/lib/moment.js/moment.min.js');
 		// MOMENT-TIMEZONE.JS
 		wp_enqueue_script( 'Moment-Timezone-JS',
-			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment-timezone.min.js');
+			POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js');
 		// MOMENT-TIMEZONE DATA.JS
 		wp_enqueue_script( 'Moment-Timezone-Data-JS',
-			WP_PLUGIN_URL.'/postworld/lib/moment.js/moment-timezone-data.js');
+			POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js');
 		*/
 
 		// HISTORY.JS
 		//wp_enqueue_script( 'History-JS',
-		//	WP_PLUGIN_URL.'/postworld/lib/history.js/native.history.js');	
+		//	POSTWORLD_URI.'/lib/history.js/native.history.js');	
 
 		///// THIRD PARTY LIBRARIES /////
 
@@ -147,31 +147,31 @@ function postworld_includes( $args ){
 		// CREATE.JS
 		// Development Only ( Not in Grunt File / Deploy Version )
 		wp_enqueue_script( 'CreateJS-Easel',
-			WP_PLUGIN_URL.'/postworld/lib/create.js/easeljs-0.7.0.min.js');
+			POSTWORLD_URI.'/lib/create.js/easeljs-0.7.0.min.js');
 		wp_enqueue_script( 'CreateJS-Tween',
-			WP_PLUGIN_URL.'/postworld/lib/create.js/tweenjs-0.5.0.min.js');
+			POSTWORLD_URI.'/lib/create.js/tweenjs-0.5.0.min.js');
 		wp_enqueue_script( 'CreateJS-MovieClip',
-			WP_PLUGIN_URL.'/postworld/lib/create.js/movieclip-0.7.0.min.js');
+			POSTWORLD_URI.'/lib/create.js/movieclip-0.7.0.min.js');
 		
 		
 		///// ANGULAR VERSION CONTROL /////
 
 		// ANGULAR
 		wp_enqueue_script( 'AngularJS',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular.min.js');
+			POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
 
 		// ANGULAR SERVICES
 		wp_enqueue_script( 'AngularJS-Resource',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-resource.min.js');
+			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-resource.min.js');
 
 		wp_enqueue_script( 'AngularJS-Route',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-route.min.js');
+			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-route.min.js');
 
 		wp_enqueue_script( 'AngularJS-Sanitize',
-			WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-sanitize.min.js');
+			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-sanitize.min.js');
 
 		//wp_enqueue_script( 'AngularJS-Animate',
-		//	WP_PLUGIN_URL.'/postworld/lib/'.$angular_version.'/angular-animate.min.js');
+		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular-animate.min.js');
 
 
 		///// ANGULAR THIRD PARTY MODULES /////
@@ -179,11 +179,11 @@ function postworld_includes( $args ){
 		// ANGULAR UI UTILITIES
 		// Development only
 		//wp_enqueue_script( 'AngularJS-UI-Utils',
-		//	WP_PLUGIN_URL.'/postworld/lib/angular-ui-utils/angular-ui-utils.min.js');
+		//	POSTWORLD_URI.'/lib/angular-ui-utils/angular-ui-utils.min.js');
 		
 		//BOOTSTRAP JS
 		wp_enqueue_script( "bootstrap-JS",
-			WP_PLUGIN_URL.'/postworld/lib/bootstrap/bootstrap.min.js' );
+			POSTWORLD_URI.'/lib/bootstrap/bootstrap.min.js' );
 
 		// ANGULAR UI : BOOTSTRAP
 		//wp_enqueue_script( 'AngularJS-UI-Bootstrap',
@@ -193,13 +193,13 @@ function postworld_includes( $args ){
 
 		// ANGULAR STRAP : BOOTSTRAP
 		wp_enqueue_script( 'AngularJS-Strap-Dimensions',
-			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap-dimensions.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-strap/angular-strap-dimensions.js', $angularDep );
 
 		wp_enqueue_script( 'AngularJS-Strap-Tooltip',
-			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap-tooltip.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-strap/angular-strap-tooltip.js', $angularDep );
 
 		wp_enqueue_script( 'AngularJS-Strap-Popover',
-			WP_PLUGIN_URL.'/postworld/lib/angular-strap/angular-strap-popover.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-strap/angular-strap-popover.js', $angularDep );
 
 
 		//wp_enqueue_script( 'AngularJS-Strap',
@@ -237,115 +237,115 @@ function postworld_includes( $args ){
 
 		/////// POSTWORLD APP /////	
 		wp_enqueue_script( 	'pw-app-JS',
-			WP_PLUGIN_URL.'/postworld/js/app.js', $angularDep );
+			POSTWORLD_URI.'/js/app.js', $angularDep );
 
 
 		///// CREATE.JS /////
 		//if( in_array('create.js', $pwInject) ){	
 		// LOCAL COMPONENT
 		wp_enqueue_script( 'Postworld-FlashCanvas',
-			WP_PLUGIN_URL.'/postworld/js/components/flashCanvas.js', $angularDep);
+			POSTWORLD_URI.'/js/components/flashCanvas.js', $angularDep);
 		//}
 
 
 		// COMPONENTS
 		wp_enqueue_script( 'pw-FeedItem-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/feedItem.js', $angularDep );
+			POSTWORLD_URI.'/js/components/feedItem.js', $angularDep );
 
 		wp_enqueue_script( 'pw-TreeView-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/treeview.js', $angularDep );
+			POSTWORLD_URI.'/js/components/treeview.js', $angularDep );
 
 		//wp_enqueue_script( 'pw-Ya-TreeView-JS',
-		//	WP_PLUGIN_URL.'/postworld/js/components/ya-treeview.js', $angularDep );
+		//	POSTWORLD_URI.'/js/components/ya-treeview.js', $angularDep );
 
 		wp_enqueue_script( 'pw-LoadComments-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/loadComments.js', $angularDep );
+			POSTWORLD_URI.'/js/components/loadComments.js', $angularDep );
 		
 		wp_enqueue_script( 'pw-inputSearch-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/inputSearch.js', $angularDep );
+			POSTWORLD_URI.'/js/components/inputSearch.js', $angularDep );
 
 		wp_enqueue_script( 'pw-LiveFeed-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/liveFeed.js', $angularDep );
+			POSTWORLD_URI.'/js/components/liveFeed.js', $angularDep );
 
 		wp_enqueue_script( 'pw-MediaEmbed-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/mediaEmbed.js', $angularDep );
+			POSTWORLD_URI.'/js/components/mediaEmbed.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Users-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/pwUsers.js', $angularDep );
+			POSTWORLD_URI.'/js/components/pwUsers.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Modal-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/pwModal.js', $angularDep );
+			POSTWORLD_URI.'/js/components/pwModal.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Embedly-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/pwEmbedly.js', $angularDep );
+			POSTWORLD_URI.'/js/components/pwEmbedly.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Input-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/pwInput.js', $angularDep );
+			POSTWORLD_URI.'/js/components/pwInput.js', $angularDep );
 
 		wp_enqueue_script( 'pw-InfiniteGallery-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/pwInfiniteGallery.js', $angularDep );
+			POSTWORLD_URI.'/js/components/pwInfiniteGallery.js', $angularDep );
 
 
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/pwControllers.js', $angularDep );
+			POSTWORLD_URI.'/js/controllers/pwControllers.js', $angularDep );
 
 		wp_enqueue_script( 'pw-controlMenus-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/controlMenus.js', $angularDep );
+			POSTWORLD_URI.'/js/controllers/controlMenus.js', $angularDep );
 
 		wp_enqueue_script( 'pw-editPost-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/editPost.js', $angularDep );
+			POSTWORLD_URI.'/js/controllers/editPost.js', $angularDep );
 
 		wp_enqueue_script( 'pw-autoComplete-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/autoComplete.js', $angularDep );
+			POSTWORLD_URI.'/js/controllers/autoComplete.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Widgets-JS',
-			WP_PLUGIN_URL.'/postworld/js/controllers/pwWidgets.js', $angularDep );
+			POSTWORLD_URI.'/js/controllers/pwWidgets.js', $angularDep );
 
 		// FILTERS
 		wp_enqueue_script( 	'pw-Filters-JS',
-			WP_PLUGIN_URL.'/postworld/js/filters/pwFilters.js', $angularDep );
+			POSTWORLD_URI.'/js/filters/pwFilters.js', $angularDep );
 
 		wp_enqueue_script( 'pw-filterFeed-JS',
-			WP_PLUGIN_URL.'/postworld/js/filters/filterFeed.js', $angularDep );
+			POSTWORLD_URI.'/js/filters/filterFeed.js', $angularDep );
 
 		// SERVICES
 		wp_enqueue_script( 'pw-pwData-JS',
-			WP_PLUGIN_URL.'/postworld/js/services/pwData.js', $angularDep );
+			POSTWORLD_URI.'/js/services/pwData.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Services-JS',
-			WP_PLUGIN_URL.'/postworld/js/services/pwServices.js', $angularDep );
+			POSTWORLD_URI.'/js/services/pwServices.js', $angularDep );
 
 		wp_enqueue_script( 'pw-pwCommentsService-JS',
-			WP_PLUGIN_URL.'/postworld/js/services/pwCommentsService.js', $angularDep );
+			POSTWORLD_URI.'/js/services/pwCommentsService.js', $angularDep );
 
 		wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
 
 		// DIRECTIVES
 		wp_enqueue_script( 'pw-Directives-JS',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwDirectives.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/pwDirectives.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-ListUsers',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwUserList.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/pwUserList.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-pwQuery',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwQuery.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/pwQuery.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-pwGetPost',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwGetPost.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/pwGetPost.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-pwImage',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwImage.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/pwImage.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-pwMenu',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwMenu.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/pwMenu.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-pwWindow',
-			WP_PLUGIN_URL.'/postworld/js/directives/pwWindow.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/pwWindow.js', $angularDep );
 
 		// MODULES
 		wp_enqueue_script( 'pw-Modules-Compile',
-			WP_PLUGIN_URL.'/postworld/js/modules/pwCompile.js', $angularDep );
+			POSTWORLD_URI.'/js/modules/pwCompile.js', $angularDep );
 
 		// WIZARD
 		wp_enqueue_script( 'pw-Wizard',
@@ -353,7 +353,7 @@ function postworld_includes( $args ){
 
 		// WORDPRESS DIRECTIVES
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
-			WP_PLUGIN_URL.'/postworld/js/directives/wpMediaLibrary.js', $angularDep );
+			POSTWORLD_URI.'/js/directives/wpMediaLibrary.js', $angularDep );
 
 	}
 
@@ -464,7 +464,7 @@ function pwSiteGlobals_include(){
 
 	global $angularDep;
 	wp_enqueue_script( 'pw-SiteGlobals-JS',
-		WP_PLUGIN_URL.'/postworld/deploy/pwSiteGlobals.js', array(), hash( 'md5', 4 ) );
+		POSTWORLD_URI.'/deploy/pwSiteGlobals.js', array(), hash( 'md5', 4 ) );
 	
 }
 

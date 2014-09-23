@@ -64,7 +64,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		return false;
 
 	///// SETUP VARIABLES /////
-	global $template_paths;
+	global $pw_paths;
 	global $pw_post_meta_fields;
 
 	////////// EDIT FIELDS ///////////
@@ -539,13 +539,13 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					$default_thumb_filename = 				'default-thumb.jpg';
 
 					// SETUP DEFAULT IMAGE PATHS : /home/user/...
-					$theme_images_dir = 				$template_paths['THEME_PATH'].$template_paths['IMAGES_PATH'];
+					$theme_images_dir = 				$pw_paths['THEME_PATH'].$pw_paths['IMAGES_PATH'];
 					$default_type_format_thumb_path = 	$theme_images_dir . $default_type_format_thumb_filename;
 					$default_format_thumb_path = 		$theme_images_dir . $default_format_thumb_filename;
 					$default_thumb_path = 				$theme_images_dir . $default_thumb_filename;
 					
 					// SETUP DEFAULT IMAGE urlS : http://...
-					$theme_images_url = 				$template_paths['THEME_URL'].$template_paths['IMAGES_PATH'];
+					$theme_images_url = 				$pw_paths['THEME_URL'].$pw_paths['IMAGES_PATH'];
 					$default_type_format_thumb_url = 	$theme_images_url . $default_type_format_thumb_filename;
 					$default_format_thumb_url = 		$theme_images_url . $default_format_thumb_filename;
 					$default_thumb_url = 				$theme_images_url . $default_thumb_filename;
@@ -564,7 +564,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					}
 					// SET DEFAULT POST IMAGE PATH TO PLUGIN DEFAULT
 					else{
-						$thumbnail_url = $template_paths['PLUGINS_URL'].$template_paths['IMAGES_PATH'].$default_thumb_filename;
+						$thumbnail_url = $pw_paths['PLUGINS_URL'].$pw_paths['IMAGES_PATH'].$default_thumb_filename;
 					}
 
 				} // END else

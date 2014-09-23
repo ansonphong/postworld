@@ -9,9 +9,17 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 
-////////// POSTWORLD VARIABLES & HELPER FUNCTIONS ///////////
+/////////////// API ////////////////
+include 'php/postworld_api.php';
 
+/////////////// VARIABLES ///////////////
 include 'php/postworld_variables.php';
+
+/////////////// PATHS ///////////////
+define( POSTWORLD_PATH, dirname(__FILE__) );
+define( POSTWORLD_URI, get_postworld_uri() );
+
+////////// UTILITIES ///////////
 include 'php/postworld_utilities.php';
 
 /////////////// H2O ////////////////
@@ -39,29 +47,30 @@ $wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 include 'php/postworld_install_queries.php';
 
 ///// SET TEMPLATE PATHS /////
-function set_template_paths(){
-	$template_paths['PLUGINS_URL'] = plugins_url();
-	$template_paths['POSTWORLD_URL'] = $template_paths['PLUGINS_URL'].'/postworld';
-	$template_paths['POSTWORLD_PATH'] = plugin_dir_path(__FILE__);
 
-	$template_paths['THEME_URL'] = get_stylesheet_directory_uri(); 		// ABSOLUTE URI http://...
-	$template_paths['THEME_PATH'] = get_stylesheet_directory();			// ABSOLUTE PATH /home/user/... 
+function set_pw_paths(){
+	$pw_paths['PLUGINS_URL'] = plugins_url();
+	$pw_paths['POSTWORLD_URL'] = $pw_paths['PLUGINS_URL'].'/postworld';
+	$pw_paths['POSTWORLD_PATH'] = POSTWORLD_PATH;
 
-	$template_paths['CSS_PATH'] = '/postworld/css/';
-	$template_paths['JS_PATH'] = '/postworld/js/';
-	$template_paths['IMAGES_PATH'] = '/postworld/images/';
-	$template_paths['TEMPLATES_PATH'] = '/postworld/templates/';
+	$pw_paths['THEME_URL'] = get_stylesheet_directory_uri(); 		// ABSOLUTE URI http://...
+	$pw_paths['THEME_PATH'] = get_stylesheet_directory();			// ABSOLUTE PATH /home/user/... 
 
-	$template_paths['PW_CSS_URL'] = $template_paths['POSTWORLD_URL'].'/css/';
-	$template_paths['PW_JS_URL'] = $template_paths['POSTWORLD_URL'].'/js/';
-	$template_paths['PW_IMAGES_URL'] = $template_paths['POSTWORLD_URL'].'/images/';
-	$template_paths['PW_TEMPLATES_URL'] = $template_paths['POSTWORLD_URL'].'/templates/';
+	$pw_paths['CSS_PATH'] = '/postworld/css/';
+	$pw_paths['JS_PATH'] = '/postworld/js/';
+	$pw_paths['IMAGES_PATH'] = '/postworld/images/';
+	$pw_paths['TEMPLATES_PATH'] = '/postworld/templates/';
+
+	$pw_paths['PW_CSS_URL'] = $pw_paths['POSTWORLD_URL'].'/css/';
+	$pw_paths['PW_JS_URL'] = $pw_paths['POSTWORLD_URL'].'/js/';
+	$pw_paths['PW_IMAGES_URL'] = $pw_paths['POSTWORLD_URL'].'/images/';
+	$pw_paths['PW_TEMPLATES_URL'] = $pw_paths['POSTWORLD_URL'].'/templates/';
 
 
-	return $template_paths;
+	return $pw_paths;
 }
-global $template_paths;
-$template_paths = set_template_paths();
+global $pw_paths;
+$pw_paths = set_pw_paths();
 
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';
@@ -75,8 +84,6 @@ register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 ////////// META FUNCTIONS ///////////
 //include 'php/postworld_meta.php';
 
-/////////////// API ////////////////
-include 'php/postworld_api.php';
 
 /////////////// SOCIAL ////////////////
 include 'php/postworld_language.php';

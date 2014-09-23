@@ -381,7 +381,7 @@ function pw_get_avatar( $obj ){
 		}
 	}
 	else{
-		global $template_paths;
+		global $pw_paths;
 		return $default_avatar;
 	}
 
