@@ -611,8 +611,8 @@ function pwGlobals_parse(){
 		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
 
 		"template_url" => get_bloginfo( 'template_url' ),
-		"postworld_url" => WP_PLUGIN_URL . '/postworld',
-		"postworld_dir" => WP_PLUGIN_DIR . '/postworld',
+		"postworld_url" => POSTWORLD_URI,
+		"postworld_dir" => POSTWORLD_PATH,
 		);
 
 	///// LANGUAGE /////

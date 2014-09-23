@@ -1511,7 +1511,7 @@ function pw_print_post( $vars ){
 		$template = pw_get_post_template ( $post_id, $view, 'dir', true );
 
 	// H2O
-	require_once $pw['paths']['postworld_dir'].'/lib/h2o/h2o.php';
+	require_once POSTWORLD_PATH.'/lib/h2o/h2o.php';
 	$h2o = new h2o($template);
 	$post_html = $h2o->render($pw_post);
 
