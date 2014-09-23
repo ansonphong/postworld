@@ -30,11 +30,17 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 
 	///// WATCH : WHEN THE POST CHANGES /////
 	$scope.$watchCollection( '[ post.ID, post.gallery ]', function(){
-		// IF POST HAS GALLERY
-		if( $_.objExists( $scope, 'post.gallery.posts' ) &&
-			!_.isEmpty( $_.getObj( $scope, 'post.gallery.posts' ) ) ){
 
+		$log.debug( "::::: POST CHANGED :::::" );
+
+		// IF POST HAS GALLERY
+		if( !_.isEmpty( $_.getObj( $scope, 'post.gallery.posts' ) ) ){
+
+			// Establish the local posts object as the gallery
 			$scope.infiniteGallery.posts = $scope.post.gallery.posts;
+			
+			// Clear the displayed posts, in case switching from another gallery
+			$scope.infiniteGallery['displayed'] = [];
 
 			// Preload Posts
 			if( $scope.galleryDisplayedCount() == 0 ){

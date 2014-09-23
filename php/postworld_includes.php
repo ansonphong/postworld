@@ -255,8 +255,8 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-TreeView-JS',
 			WP_PLUGIN_URL.'/postworld/js/components/treeview.js', $angularDep );
 
-		wp_enqueue_script( 'pw-Ya-TreeView-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/ya-treeview.js', $angularDep );
+		//wp_enqueue_script( 'pw-Ya-TreeView-JS',
+		//	WP_PLUGIN_URL.'/postworld/js/components/ya-treeview.js', $angularDep );
 
 		wp_enqueue_script( 'pw-LoadComments-JS',
 			WP_PLUGIN_URL.'/postworld/js/components/loadComments.js', $angularDep );

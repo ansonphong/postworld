@@ -127,6 +127,8 @@ postworld.controller('editPost',
 	///// INITIALIZE /////
 	$timeout( function(){
 
+		$log.debug( "EDIT MODE : ", $scope.mode );
+
 		///// MODES /////
 		// Set the default mode
 		if( _.isUndefined( $scope.mode ) )
