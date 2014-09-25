@@ -1828,6 +1828,11 @@ $post_data = array(
   'link_url'       => [ <URL> ],
   'post_class'     => [ 'author' | 'contributor' ],
   'link_format'    => [ 'standard' | 'video' | 'audio' ]
+  'event_start'    => [ integer | UNIX timestamp ]
+  'event_end'      => [ integer | UNIX timestamp ]
+  'geo_latitude'   => [ number ]
+  'geo_longitude'  => [ number ]
+  'related_post'   => [ number ]
 
   ///// IMAGE INPUTS /////
   'thumbnail_url'  => [ <URL> ], // The URL of an image to be imported into the library

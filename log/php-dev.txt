@@ -1,0 +1,13 @@
+SAVE : ID : 45 : null 
+SAVE : ID : 45 :  
+SAVE : ID : 45 : { \"ID\": 45, \"post_class\": \"post_class\", \"geo_latitude\": \"0.00000000\", \"geo_longitude\": \"0.00000000\", \"event_start\": \"0\", \"event_end\": \"0\" } 
+SAVE : ID : 45 : { \"ID\": 45, \"post_class\": \"post_class\", \"geo_latitude\": \"0.00000000\", \"geo_longitude\": \"0.00000000\", \"event_start\": \"0\", \"event_end\": \"0\" } 
+SAVE : ID : 45 : { \"ID\": 45, \"post_class\": \"post_class\", \"geo_latitude\": \"0.00000000\", \"geo_longitude\": \"0.00000000\", \"event_start\": \"0\", \"event_end\": \"0\" } 
+SAVE : ID : 45 : null 
+SAVE : ID : 45 :  
+SAVE : ID : 45 : Array 
+SAVE : ID : 45 :  
+SAVE : ID : 45 : { \"ID\": 45, \"post_class\": \"post_class\", \"geo_latitude\": \"0.00000000\", \"geo_longitude\": \"0.00000000\", \"event_start\": \"0\", \"event_end\": \"0\" } 
+SAVE : ID : 45 :  
+SAVE : ID : 45 :  
+SAVE : ID : 45 : Array 

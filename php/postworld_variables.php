@@ -20,7 +20,7 @@ function get_postworld_uri(){
 		return $pw_url;	
 	// Otherwise return the default
 	else
-		return plugins_url().'/postworld';
+		return plugins_url().'/postworld/';
 }
 
 

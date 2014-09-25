@@ -5,40 +5,13 @@
  | |___| | | | |   <  | |_| |  _ <| |___ 
  |_____|_|_| |_|_|\_\  \___/|_| \_\_____|
 /////////////////////////////////////////*/
-
 //global $post;
 //echo $post->ID;
-
 ?>
-<style>
-	.link_url_field{
-		box-sizing:border-box;
-		width:100%;	
-	}
-
-	.link_format{
-		margin-top:5px;
-	}
-	
-	.link_format label{
-			padding:5px 10px;
-			display: inline-block;
-		}
-	.link_format input[type="radio"]{
-			display:none;
-		}
-	.link_format input[type="radio"]:checked+label{
-			background:#444;
-			color:#fff;
-			border-radius:3px;
-		}
-
-
-</style>
 
 <script>
 	///// LINK URL CONTROLLER /////
-	postworld.controller('linkUrlCtrl',
+	postworld.controller('pwLinkUrlCtrl',
 		['$scope', 'pwEditPostFilters', 'pwPostOptions',
 			function($scope, $pwEditPostFilters, $pwPostOptions ) {
 
@@ -60,8 +33,8 @@
 	}]);
 </script>
 
-<div ng-app="postworld">
-	<div ng-controller="linkUrlCtrl">
+<div ng-app="postworld" class="postworld pw-metabox">
+	<div ng-controller="pwLinkUrlCtrl">
 
 		<!-- LINK URL -->
 		<input
@@ -102,8 +75,4 @@
 	</div>
 	
 </div>
-
-
-
-
 

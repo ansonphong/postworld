@@ -9,6 +9,8 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 
+
+
 /////////////// API ////////////////
 include 'php/postworld_api.php';
 
@@ -132,11 +134,8 @@ include 'php/postworld_wizard.php';
 /////////////// OPTIONS ////////////////
 include 'php/postworld_options.php';
 
-/////////////// META BOXES ////////////////
-include 'php/postworld_metabox.php';
-
 /////////////// ADMIN ////////////////
-include 'php/postworld_admin.php';
+include 'admin/postworld_admin.php';
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
@@ -160,10 +159,6 @@ include 'php/postworld_update.php';
 //To get user id from wordpress
 
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
-
-
-// ADMIN
-//include 'admin/postworld_admin.php';
 
 
 ?>

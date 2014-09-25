@@ -1,4 +1,17 @@
 <?php
+////////// METABOXES //////////
+include 'metaboxes/link_url/metabox-link_url.php';	
+include 'metaboxes/event/metabox-event.php';	
+
+///// ENQUEUE STYLES & SCRIPTS /////
+add_action( 'admin_enqueue_scripts', 'pw_admin_enqueue' );
+function pw_admin_enqueue() {
+	wp_enqueue_style( 'pw-admin-styles', POSTWORLD_URI.'/admin/less/postworld-admin.less' );
+}
+
+
+/*
+////////// ADMIN MENU //////////
 include 'postworld_admin_panel.php';
 
 $pw_plugin_folder = '/postworld';
@@ -55,6 +68,6 @@ function postworld_admin_menu_page(){
 
 ///// REGISTER STYLES /////
 //wp_register_style( 'pw_admin_css', plugins_url() . '/postworld/admin/css/pw-admin.css' );
-
+*/
 
 ?>

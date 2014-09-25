@@ -423,24 +423,29 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			global $pwSiteGlobals;
 			if( isset( $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'] ) ){
 				$json_meta_keys = $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'];
-				foreach( $post['post_meta'] as $meta_key => $meta_value ){
-					if(
-						in_array($meta_key, $json_meta_keys) &&
-						is_string($meta_value) ){
-						$post['post_meta'][$meta_key] = json_decode($post['post_meta'][$meta_key], true);
+				if( is_array( $post['post_meta'] ) ){
+					foreach( $post['post_meta'] as $meta_key => $meta_value ){
+						if(
+							in_array($meta_key, $json_meta_keys) &&
+							is_string($meta_value) ){
+							$post['post_meta'][$meta_key] = json_decode($post['post_meta'][$meta_key], true);
+						}
 					}
 				}
 			}
 
 			///// SERIALIZED ARRAY META KEYS /////
 			$serialized_meta_keys = array( "_wp_attachment_metadata" );
-			foreach( $post['post_meta'] as $meta_key => $meta_value ){
-				if(
-					in_array($meta_key, $serialized_meta_keys) &&
-					is_string($meta_value) ){
-					$post['post_meta'][$meta_key] = unserialize( $post['post_meta'][$meta_key] );
+			if( is_array( $post['post_meta'] ) ){
+				foreach( $post['post_meta'] as $meta_key => $meta_value ){
+					if(
+						in_array($meta_key, $serialized_meta_keys) &&
+						is_string($meta_value) ){
+						$post['post_meta'][$meta_key] = unserialize( $post['post_meta'][$meta_key] );
+					}
 				}
 			}
+			
 
 		}
 
@@ -1014,6 +1019,33 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 }
 
 
+function pw_set_wp_postmeta_array( $post_id, $post_meta = array() ){
+	/*
+		$post_id = [integer]
+		$post_meta = array(
+			'key'	=>	[ string / array / object ]	
+		)
+	*/
+	// If the post array contains a populated 'post_meta' variable
+	// Iterate through each of the subkeys and encode the arrays as JSON
+	// Writing them to meta keys which match their array keys in the wp_postmeta table
+
+	///// ADD/UPDATE META FIELDS //////
+	if( !empty( $post_meta ) ){
+		foreach ( $post_meta as $meta_key => $meta_value ) {
+			// ENCODE ARRAYS AS JSON
+			if( is_array($meta_value) || is_object($meta_value) ){
+				$meta_value = json_encode($meta_value);
+			}
+			// UPDATE META
+			update_post_meta($post_id, $meta_key, $meta_value);
+		}
+	}
+
+	return true;
+
+}
+
 
 function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	
@@ -1054,17 +1086,9 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			set_post_format( $post_id , $postarr["post_format"] );
 		}
 	
-		///// ADD/UPDATE META FIELDS //////
-		if( isset($postarr["post_meta"]) ){
-
-			foreach ( $postarr["post_meta"] as $meta_key => $meta_value ) {
-				// ENCODE ARRAYS AS JSON
-				if( is_array($meta_value) || is_object($meta_value) ){
-					$meta_value = json_encode($meta_value);
-				}
-				// UPDATE META
-				update_post_meta($post_id, $meta_key, $meta_value);
-			}
+		///// WORDPRESS POSTMETA /////
+		if( isset( $postarr['post_meta']) ){
+			pw_set_wp_postmeta_array( $post_id, $postarr['post_meta'] );
 		}
 
 		///// ADD POSTWORLD META FIELDS //////

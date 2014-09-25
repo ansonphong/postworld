@@ -6,6 +6,9 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_log( $message ){
+	error_log( $message, 3, POSTWORLD_PATH . "/log/php-dev.txt");
+}
 
 function pw_is_associative( $arr ){
     return array_keys($arr) !== range(0, count($arr) - 1);
@@ -38,9 +41,9 @@ function pw_user_id_exists($user_id){
 		return true;
 }
 
-function pw_post_id_exists($post_id){
+function pw_post_id_exists( $post_id ){
 	$post = get_post( $post_id );
-	if( $post != null ){ return true; } else{ return false; }
+	return ( $post != null ) ? true : false;
 }
 
 function pw_check_user_id($user_id){
@@ -736,6 +739,25 @@ function pw_body_classes(){
 		$body_classes .= " " . $class;
 	}
 	return $body_classes;
+}
+
+
+function pw_get_menus(){
+	$menus = get_terms( 'nav_menu' );
+
+	// Convert some values to integers
+	if( !empty($menus) ){
+		$new_menus = array();
+		foreach( $menus as $menu ){
+			$menu->term_id = intval($menu->term_id);
+			$menu->term_group = intval($menu->term_group);
+			$menu->term_taxonomy_id = intval($menu->term_taxonomy_id);
+			array_push($new_menus, $menu);
+		}
+		$menus = $new_menus;
+	}
+
+	return $menus;
 }
 
 
