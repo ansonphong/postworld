@@ -47,41 +47,16 @@
 
 <hr>
 
-<input
-	ng-model="post.post_meta[ eventKey ].location.name"
-	placeholder="Venue Name">
-
-<input
-	ng-model="post.post_meta[ eventKey ].location.address"
-	placeholder="Address">
-
-<input
-	ng-model="post.post_meta[ eventKey ].location.city"
-	placeholder="City">
-
-<input
-	ng-model="post.post_meta[ eventKey ].location.region"
-	placeholder="State/Province">
-
-<input
-	ng-model="post.post_meta[ eventKey ].location.country"
-	placeholder="Country">
-
-<input
-	ng-model="post.post_meta[ eventKey ].location.postal_code"
-	placeholder="Postal Code">
-<input
-	ng-model="post.post_meta[ eventKey ].details.cost"
-	placeholder="Cost">
-
-<hr>
-
 
 <!-- LOCATION -->
 <div
-	class="input_module labeled"
 	pw-geo-autocomplete
-	unify-geocode-input>
+	
+	pw-geo-input
+	geo-post="post"
+	geo-location-obj="post.post_meta[ eventKey ].location"
+
+	class="input_module labeled">
 
 	<div ng-show="!showGeoModule()">
 		<h3>{{ language.edit.event.location_select[lang] }}</h3>
@@ -124,3 +99,35 @@
 	-->
 
 </div>
+
+<hr>
+
+<input
+	ng-model="post.post_meta[ eventKey ].location.name"
+	placeholder="Venue Name">
+
+<input
+	ng-model="post.post_meta[ eventKey ].location.address"
+	placeholder="Address">
+
+<input
+	ng-model="post.post_meta[ eventKey ].location.city"
+	placeholder="City">
+
+<input
+	ng-model="post.post_meta[ eventKey ].location.region"
+	placeholder="State/Province">
+
+<input
+	ng-model="post.post_meta[ eventKey ].location.country"
+	placeholder="Country">
+
+<input
+	ng-model="post.post_meta[ eventKey ].location.postal_code"
+	placeholder="Postal Code">
+	
+<input
+	ng-model="post.post_meta[ eventKey ].details.cost"
+	placeholder="Cost">
+
+<hr>

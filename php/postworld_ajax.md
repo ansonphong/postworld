@@ -18,7 +18,7 @@ The body of the function generally includes a call to the internal function(s), 
 #### Function Footer
 The function is ended with a call to the Postworld AJAX API function `pwAjaxRespond($response_data)` which sends the payload of response data back to the Javascript data service.
 
-#### Function Example
+#### Example
 Here is an example of a standard AJAX function with this format.
 
 ```php
@@ -33,7 +33,7 @@ function pw_get_template_partial_ajax(){
 ```
 
 
-### Post Function
+## Post Function
 
 Each function is followed by it's coorosponding calls to add them as Wordpress actions which are picked up by the Wordpress AJAX API.
 
