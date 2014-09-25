@@ -285,6 +285,8 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-InfiniteGallery-JS',
 			POSTWORLD_URI.'/js/components/pwInfiniteGallery.js', $angularDep );
 
+		wp_enqueue_script( 'pw-geocode-JS',
+			POSTWORLD_URI.'/js/components/pwGeocode.js', $angularDep );
 
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',
