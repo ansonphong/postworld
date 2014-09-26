@@ -288,6 +288,10 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-geocode-JS',
 			POSTWORLD_URI.'/js/components/pwGeocode.js', $angularDep );
 
+		wp_enqueue_script( 'pw-UI-JS',
+			POSTWORLD_URI.'/js/components/pwUi.js', $angularDep );
+
+
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',
 			POSTWORLD_URI.'/js/controllers/pwControllers.js', $angularDep );

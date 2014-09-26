@@ -70,8 +70,15 @@ function pw_event_meta_init(){
 			"start_date"		=>	'',
 			"end_date"			=>	''
 			),
+		'organizer'				=>	array(
+			'name'				=>	'',
+			'phone'				=>	'',
+			'email'				=>	'',
+			'link_url'			=>	'',
+			),
 		'details'	=>	array(
 			'cost'				=>	'',
+			'link_url'			=>	'',
 			),
 		);
 	// Apply filter for themes to over-ride default settings

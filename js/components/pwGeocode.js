@@ -131,6 +131,15 @@ postworld.controller('pwGeoInputCtrl',
 				location.street_number = address_component.short_name;
 			}
 
+			// Street Number (from 'street_number')
+			if( $_.inArray( 'point_of_interest', address_component.types) ||
+				$_.inArray( 'establishment', address_component.types) ){
+				location.name = address_component.long_name;
+			}
+
+			
+
+
 		});
 
 		// Location Formatted Address

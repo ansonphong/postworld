@@ -6,7 +6,7 @@ include 'metaboxes/event/metabox-event.php';
 ///// ENQUEUE STYLES & SCRIPTS /////
 add_action( 'admin_enqueue_scripts', 'pw_admin_enqueue' );
 function pw_admin_enqueue() {
-	wp_enqueue_style( 'pw-admin-styles', POSTWORLD_URI.'/admin/less/postworld-admin.less' );
+	wp_enqueue_style( 'pw-admin-styles', POSTWORLD_URI.'/admin/less/style.less' );
 }
 
 

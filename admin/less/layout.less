@@ -1,0 +1,33 @@
+.pw-row{
+	@column-spacing: 2px;
+	.make-row(@column-spacing);
+
+	.pw-col-12{
+		.make-xs-column( 12, @column-spacing );
+	}
+
+	.pw-col-10{
+		.make-xs-column( 12, @column-spacing );
+		.make-sm-column( 10, @column-spacing );
+	}
+
+	.pw-col-6{
+		.make-xs-column( 12, @column-spacing );
+		.make-sm-column( 6, @column-spacing );
+	}
+
+	.pw-col-4{
+		.make-xs-column( 12, @column-spacing );
+		.make-sm-column( 4, @column-spacing );
+	}
+
+	.pw-col-3{
+		.make-xs-column( 12, @column-spacing );
+		.make-sm-column( 3, @column-spacing );
+	}
+	.pw-col-2{
+		.make-xs-column( 12, @column-spacing );
+		.make-sm-column( 2, @column-spacing );
+	}
+
+}

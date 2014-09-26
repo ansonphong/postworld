@@ -1,11 +1,25 @@
 #poststuff .postworld{
+
+	///// BOOTSTRAP MODULES /////
 	@import 'bootstrap/variables.less';
 	@import 'bootstrap/mixins.less';
 	@import 'bootstrap/buttons.less';
 	@import 'bootstrap/button-groups.less';
 	@import 'bootstrap/wells.less';
 	@import 'bootstrap/dropdowns.less';
+	@import 'bootstrap/scaffolding.less';
+	@import 'bootstrap/tooltip.less';
+	@import 'bootstrap/utilities.less';
+	@import 'bootstrap/grid.less';
+	
 
+	///// POSTWORLD ADMIN LESS /////
+	@import 'layout.less';
+
+
+	hr.thin{
+		margin:5px 0;
+	}
 
 	.time .dropdown-menu{
 		padding:0;
@@ -16,7 +30,21 @@
 	}
 
 
+
 	/// HEADINGS ///
+
+	&.pw-metabox{
+		h3{
+			padding:10px 3px 5px;
+			opacity:.75;
+		}
+		h4{
+			margin:10px 2px 5px;
+			opacity:.66;
+		}
+	}
+
+	
 
 	h2.left{
 		float: left;
