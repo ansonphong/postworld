@@ -27,14 +27,14 @@ __return__ : `mixed` or `false`
 #### Example
 
 ```php
-    $myObj = array(
-        'key'   =>  array(
-            'subkey'    =>  'my value'
-            )
-        );
+$myObj = array(
+    'key'   =>  array(
+        'subkey'    =>  'my value'
+        )
+    );
 
-    $myValue = pw_get_obj( $myObj, 'key.subkey' );  // Returns 'my value'
-    $myValue = pw_get_obj( $myObj, 'key.other' );  // Returns false
+$myValue = pw_get_obj( $myObj, 'key.subkey' );  // Returns 'my value'
+$myValue = pw_get_obj( $myObj, 'key.other' );  // Returns false
 ```
 
 ------
@@ -61,23 +61,23 @@ __return__ : `array`
 #### Example
 
 ```php
-    $myObj = array(
-        'key'   =>  array(
-            'subkey'    =>  'my value'
-            )
-        );
+$myObj = array(
+    'key'   =>  array(
+        'subkey'    =>  'my value'
+        )
+    );
 
-    $myObj = pw_set_obj( $myObj, 'other.subkey', 'other value' );
+$myObj = pw_set_obj( $myObj, 'other.subkey', 'other value' );
 
-    // The new value of $myObj is now:
-    array(
-        'key'   =>  array(
-            'subkey'    =>  'my value'
-            ),
-        'other' =>  array(
-            'subkey'    =>  'other value'
-            )
-        );
+// The new value of $myObj is now:
+array(
+    'key'   =>  array(
+        'subkey'    =>  'my value'
+        ),
+    'other' =>  array(
+        'subkey'    =>  'other value'
+        )
+    );
 
 ```
 
@@ -157,13 +157,13 @@ __sub_key__ : *string* (optional)
 
 #### Example
 ```php
-    $vars = array(
-        'user_id'   =>  1,
-        'meta_key'  =>  'pw_meta',
-        "sub_key"   =>  'siteOptions.colors.background',
-        );
-    $value = pw_get_wp_usermeta( $vars );
-    // Returns the value '@blue' from previous example
+$vars = array(
+    'user_id'   =>  1,
+    'meta_key'  =>  'pw_meta',
+    "sub_key"   =>  'siteOptions.colors.background',
+    );
+$value = pw_get_wp_usermeta( $vars );
+// Returns the value '@blue' from previous example
 ```
 
 ------
@@ -193,13 +193,13 @@ __meta_key__ : *string* (optional)
 
 #### Example
 ```php
-    $vars = array(
-        'user_id'   =>  1,
-        'meta_key'  =>  'pw_meta',
-        'sub_key'   =>  'postOptions.colors.background',
-        'value'     =>  '@orange'
-        );
-    pw_set_wp_postmeta( $vars );
+$vars = array(
+    'user_id'   =>  1,
+    'meta_key'  =>  'pw_meta',
+    'sub_key'   =>  'postOptions.colors.background',
+    'value'     =>  '@orange'
+    );
+pw_set_wp_postmeta( $vars );
 ```
 
 This will update or create a JSON object string in the `wp_postmeta` table under the `meta_key` : `pw_meta`, with the value:
@@ -236,13 +236,13 @@ __sub_key__ : *string* (optional)
 
 #### Example
 ```php
-    $vars = array(
-        'post_id'   =>  55,
-        'meta_key'  =>  'pw_meta',
-        "sub_key"   =>  'postOptions.colors.background',
-        );
-    $value = pw_get_wp_postmeta( $vars );
-    // Returns the value '@orange' from previous example
+$vars = array(
+    'post_id'   =>  55,
+    'meta_key'  =>  'pw_meta',
+    "sub_key"   =>  'postOptions.colors.background',
+    );
+$value = pw_get_wp_postmeta( $vars );
+// Returns the value '@orange' from previous example
 ```
 
 ------
