@@ -25,7 +25,7 @@ global $pw_event_post;
 		<input type="hidden" name="pw_event_post" ng-value="post | json" style="width:100%;">
 		
 		<!-- DEV : Test Output -->
-		<hr>
+		
 		<hr><pre>{{ post | json }}</pre>
 		
 	</div>	

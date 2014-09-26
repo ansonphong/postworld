@@ -142,11 +142,21 @@ postworld.controller('pwGeoInputCtrl',
 
 		});
 
+		///// ADDRESS /////
+		// Default Street Number
+		location.street_number = ( _.isUndefined( location.street_number ) ) ?
+			'' : location.street_number + ' ';
+		// Default Street
+		location.street = ( _.isUndefined( location.street ) ) ?
+			'' : location.street;
+		// Construct the address
+		location.address = location.street_number + location.street;
+
 		// Location Formatted Address
 		location.formatted_address = geocode.formatted_address;
 
 
-		///// SET INTO SCOPE /////
+		///// SET SCOPE /////
 		// If location object is defined
 		if( !_.isUndefined( $scope.geoPost ) ){
 			// Set Location Object

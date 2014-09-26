@@ -11,7 +11,7 @@
 			<h3>Event Start</h3>
 			<!-- DATE DROPDOWN -->
 			<span class="time dropdown">
-				<button dropdown-toggle class="btn btn-blue">
+				<button dropdown-toggle class="button">
 					<i class="icon-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
@@ -32,7 +32,7 @@
 			<h3>Event End</h3>
 			<!-- DATE DROPDOWN -->
 			<span class="time dropdown">
-				<button dropdown-toggle class="btn btn-blue">
+				<button dropdown-toggle class="button">
 					<i class="icon-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
@@ -68,26 +68,37 @@
 
 	<div
 		pw-ui
-		ui-views="{ searchInput: false }">
+		ui-views="{ searchInput: false }"
+		class="well">
 		
-		UI VIEWS : <pre>{{ uiViews | json }}</pre>
-
-		<hr>
-
-		<button
-			id="searchLocations"
-			class="btn"
-			name="search"
-			type="button"
-			ng-click="toggleView('searchInput'); focusElement('#searchBarInput')"
-			ng-show="!showView('searchInput')">
-			<i class="icon-search"></i> Search Locations
-		</button>
-
+		<!-- UI VIEWS : <pre>{{ uiViews | json }}</pre><hr> -->
+		
+		<!-- SEARCH BUTTON -->
 		<div
-			ng-show="showView('searchInput')">
-			<label for="location" class="inner">
-					<i ng-show="loadingLocations" class="icon-spinner icon-spin"></i>
+			ng-show="!showView('searchInput')">
+			<button
+				id="searchLocations"
+				class="button float-left"
+				name="search"
+				type="button"
+				ng-click="toggleView('searchInput'); focusElement('#searchBarInput')">
+				<i class="icon-search"></i> Search Locations
+			</button>
+			<h4 class="float-left unit">
+				<i>Autocomplete Geocode</i>
+			</h4>
+			<div class="clearfix"></div>
+		</div>
+		
+		<!-- SEARCH INPUT -->
+		<div
+			ng-show="showView('searchInput')"
+			style="position:relative;">
+			<label for="location" class="inner inner-right unit">
+					<i ng-show="loadingLocations" class="icon-spinner-2 icon-spin"></i>
+			</label>
+			<label for="location" class="input-icon">
+					<i class="icon-search"></i>
 			</label>
 			<input
 				id="searchBarInput"
@@ -96,45 +107,39 @@
 				placeholder="Type Location..."
 				typeahead="address.formatted_address as address.formatted_address for address in getLocation($viewValue) | filter:$viewValue"
 				typeahead-loading="loadingLocations"
-				typeahead-on-select="addGeocode($item);toggleView('searchInput');"
+				typeahead-on-select="addGeocode($item);"
 				placeholder=""
-				class="">
+				ng-blur="toggleView('searchInput');"
+				class="input-icon-left">
+			<!--<button
+				class="button"
+				type="button"
+				ng-click="toggleView('searchInput');">
+				<i class="icon-close"></i>
+			</button>-->
 		</div>
 	
 	</div>
 
-
-
-	
-
-	<!-- 
-	<div ng-show="showGeoModule()">
-		
-		<h3>
-			{{ post.post_meta.location_obj.location_name }}
-			<button ng-click="clearGeocode()" class="btn pull-right"><i class="icon-remove"></i></button>
-		</h3>
-
-		<google-map
-			id="googleMap"
-			center='map.center'
-			zoom='map.zoom'
-			draggable='map.draggable'
-			options='map.options'
-			events="map.events">
-			<marker
-				coords='marker'
-				options='marker.options'
-				click="clickMarker()">
-			</marker>
-		</google-map>
-
-	</div>
+		<!-- TODO :
+		<div ng-show="showView('mapUnit')">
+			<google-map
+				id="googleMap"
+				center='map.center'
+				zoom='map.zoom'
+				draggable='map.draggable'
+				options='map.options'
+				events="map.events">
+				<marker
+					coords='marker'
+					options='marker.options'
+					click="clickMarker()">
+				</marker>
+			</google-map>
+		</div>
 	-->
 
 </div>
-
-<hr class="thin">
 
 <div class="pw-row">
 	<div class="pw-col-6">
@@ -254,17 +259,6 @@
 			placeholder="Cost">
 	</div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
 
 
 
