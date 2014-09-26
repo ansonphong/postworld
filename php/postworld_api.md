@@ -191,19 +191,6 @@ __meta_key__ : *string* (optional)
 - Which meta key to access, queried by the `meta_key` column in `wp_postmeta`
 - If no key is provided, the default `pw_meta` key is used
 
-
-    /*
-        
-        
-        PARAMETERS:
-        $vars = array(
-            "post_id"   =>  [integer],  (optional)
-            "sub_key"   =>  [string],   (required)
-            "value"     =>  [mixed],    (required)
-            "meta_key"  =>  [string]    (optional)
-            );
-    */
-
 #### Example
 ```php
     $vars = array(
