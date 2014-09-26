@@ -100,7 +100,7 @@ function pw_set_obj( $obj, $key, $value ){
 
 define( 'pw_usermeta_key',	'pw_meta' );
 
-function pw_set_wp_usermeta($vars){
+function pw_set_wp_usermeta( $vars ){
 	/*
 		- Sets meta key for the given user under the given key
 			in the `wp_usermeta` table
@@ -110,7 +110,7 @@ function pw_set_wp_usermeta($vars){
 		PARAMETERS:
 		$vars = array(
 			"user_id"	=>	[integer], 	(optional)
-			"sub_key"	=>	[string],	(required)
+			"sub_key"	=>	[string],	(optional)
 			"value" 	=>	[mixed],	(required)
 			"meta_key" 	=>	[string] 	(optional)
 			);
@@ -118,34 +118,38 @@ function pw_set_wp_usermeta($vars){
 
 	extract($vars);
 
+	///// SET DEFAULTS /////
 	if( !isset( $meta_key ) )
 		$meta_key = pw_usermeta_key;
+	if( !isset( $user_id ) )
+		$user_id = get_current_user_id();
 
 	///// USER ID /////
+	// Security check to see if user can access user meta
 	$user_id = pw_check_user_id( $user_id );
 	if( !is_numeric( $user_id ) )
 		return $user_id; // Will be: array('error'=>'[Error message]')
 
-	///// KEY /////
-	if( !isset($sub_key) )
-		return array( 'error' => 'Sub-key not specified.' ); 
+	///// SUBKEY ////
+	if( isset( $sub_key ) ){
+		///// SETUP DATA /////
+		// Check if the meta key exists
+		$meta_value = get_user_meta( $user_id, $meta_key, true );
 
-	///// SETUP DATA /////
-	// Check if the meta key exists
-	$meta_value = get_user_meta( $user_id, $meta_key, true );
+		// If it exists, decode it from a JSON string into an object
+		if( is_string( $meta_value ) && !empty($meta_value) )
+			$meta_value = json_decode($meta_value, true);
+		// If it does not exist, define it as an empty array
+		else
+			$meta_value = array();
 
-	// If it exists, decode it from a JSON string into an object
-	if( !empty($meta_value) )
-		$meta_value = json_decode($meta_value, true);
-	// If it does not exist, define it as an empty array
-	else
-		$meta_value = array();
+		///// SET VALUE /////
+		$meta_value = pw_set_obj( $meta_value, $sub_key, $value );
 
-	///// SET VALUE /////
-	$meta_value = pw_set_obj( $meta_value, $sub_key, $value );
-
-	// Encode back into JSON
-	$meta_value = json_encode( $meta_value );
+		// Encode back into JSON
+		$meta_value = json_encode( $meta_value );
+	}
+	
 
 	// Set user meta
 	$update_user_meta = update_user_meta( $user_id, $meta_key, $meta_value );
@@ -174,6 +178,7 @@ function pw_get_wp_usermeta($vars){
 	$meta_key = pw_usermeta_key;
 
 	///// USER ID /////
+	// Security check to see if user can access user meta
 	$user_id = pw_check_user_id( $user_id );
 	if( !is_numeric($user_id) )
 		return $user_id;
@@ -238,31 +243,41 @@ function pw_set_wp_postmeta($vars){
 	if( !isset( $meta_key ) )
 		$meta_key = pw_postmeta_key;
 
+	///// POST ID /////
+	if( !isset($post_id) ){
+		global $post;
+		$post_id = $post->ID;
+	}
+
 	///// USER ID /////
 	$post_id = pw_check_user_post( $post_id );
 	if( !is_numeric($post_id) )
 		return $post_id; // Will be: array('error'=>'[Error message]')
 
-	///// KEY /////
-	if( !isset($sub_key) )
-		return array( 'error' => 'Sub-key not specified.' ); 
+	///// SUB KEY /////
+	if( isset($sub_key) ){
+		///// SETUP DATA /////
+		// Check if the meta key exists
+		$meta_value = get_post_meta( $post_id, $meta_key, true );
 
-	///// SETUP DATA /////
-	// Check if the meta key exists
-	$meta_value = get_post_meta( $post_id, $meta_key, true );
+		// If it exists, decode it from a JSON string into an object
+		if( !empty($meta_value) )
+			$meta_value = json_decode($meta_value, true);
+		// If it does not exist, define it as an empty array
+		else
+			$meta_value = array();
 
-	// If it exists, decode it from a JSON string into an object
-	if( !empty($meta_value) )
-		$meta_value = json_decode($meta_value, true);
-	// If it does not exist, define it as an empty array
-	else
-		$meta_value = array();
+		///// SET VALUE /////
+		$meta_value = pw_set_obj( $meta_value, $sub_key, $value );
 
-	///// SET VALUE /////
-	$meta_value = pw_set_obj( $meta_value, $sub_key, $value );
+		// Encode back into JSON
+		$meta_value = json_encode( $meta_value );
 
-	// Encode back into JSON
-	$meta_value = json_encode( $meta_value );
+	} else{
+		if( is_array( $meta_value ) || is_object( $meta_value ) )
+			// Encode arrays and objects into JSON
+			$meta_value = json_encode( $meta_value );	
+	}
 
 	// Set user meta
 	$update_post_meta = update_post_meta( $post_id, $meta_key, $meta_value );
@@ -282,7 +297,6 @@ function pw_get_wp_postmeta($vars){
 		$vars = array(
 			"post_id"	=>	[integer], 	(optional)
 			"sub_key"	=>	[string],
-			"format" 	=>	[string] 	"JSON" / "ARRAY" (default),
 			"meta_key" 	=>	[string] 	(optional)
 			);
 	*/
@@ -311,15 +325,9 @@ function pw_get_wp_postmeta($vars){
 	$meta_value = json_decode( $meta_value, true );
 
 	// Get Subkey
-	$return = pw_get_obj( $meta_value, $sub_key );
-	if( $return == false )
-		return $return;
-
-	///// FORMAT /////
-	if( isset($format) && $format == 'JSON' )
-		return json_encode( $return );
+	$value = pw_get_obj( $meta_value, $sub_key );
 	
-	return $return;
+	return $value;
 
 }
 
