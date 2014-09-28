@@ -37,6 +37,15 @@ function pw_metabox_init_post_parent(){
     		// Break to next iteration
     		break;
 
+    	///// LABELS /////
+    	// TODO HERE : Make default labels object, merge into  $metabox_setting['labels']
+    	$default_labels = array();
+
+    	//$title = ( pw_obj_exists( $metabox_setting, 'labels.title' ) ) ? 
+    	//	$metabox_setting['labels']['title'] : 'Post Parent';
+
+    	$title = "Post Parent";
+
     	// If Post Types is a string
     	if( is_string($post_types) )
     		// Turn into array
@@ -53,7 +62,7 @@ function pw_metabox_init_post_parent(){
 			// Add the metabox
 			add_meta_box(
 	        	'pw_post_parent_meta',
-	        	'Post Parent',
+	        	$title,
 	        	'pw_post_parent_meta_init',
 	        	$post_type,
 	        	'side',
