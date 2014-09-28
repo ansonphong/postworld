@@ -11,7 +11,7 @@ global $pw_event_post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div ng-app="pwEventMetabox" id="pwEventMetabox" class="postworld pw-metabox">
+<div id="pwEventMetabox" class="postworld pw-metabox">
 	<div ng-controller="pwEventMetaboxCtrl">
 		<?php
 			// Include the UI template
@@ -34,7 +34,7 @@ global $pw_event_post;
 <!--///// METABOX SCRIPTS /////-->
 <script>
 	///// APP /////
-	var pwEventMetabox = angular.module( 'pwEventMetabox', ['infinite','postworld'] );
+	var pwEventMetabox = angular.module( 'pwEventMetabox', ['postworld'] );
 	///// CONTROLLER /////
 	pwEventMetabox.controller('pwEventMetaboxCtrl',
 		['$scope',

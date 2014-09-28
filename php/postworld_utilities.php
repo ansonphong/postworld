@@ -7,7 +7,7 @@
 //////////////////////////////////*/
 
 function pw_log( $message ){
-	error_log( $message, 3, POSTWORLD_PATH . "/log/php-dev.txt");
+	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-dev.txt");
 }
 
 function pw_is_associative( $arr ){
