@@ -22,11 +22,12 @@ global $post;
 			do_action('pw_post_parent_metabox_templates');
 		?>
 		<!-- HIDDEN FIELD -->
-		<input type="hidden" name="pw_event_post" ng-value="post | json" style="width:100%;">
+		<input type="hidden" name="pw_post_parent_post" ng-value="post | json" style="width:100%;">
 		
 		<!-- DEV : Test Output -->
 		
 		<hr><pre>POST : {{ post | json }}</pre>
+		<hr><pre>PARENT POST : {{ parent_post | json }}</pre>
 		<hr><pre>QUERY : {{ query | json }}</pre>
 		
 	</div>	
@@ -41,8 +42,15 @@ global $post;
 	pwPostParentMetabox.controller('pwPostParentMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
-			$scope.post = <?php echo json_encode($pw_parent_post); ?>;
+
+			// This is the post object which is saved
+			$scope.post = <?php echo json_encode( $pw_post ); ?>;
+			// The variables by which parent posts autocomplete are queried
 			$scope.query = <?php echo json_encode( $query ); ?>;
+			// Labels for the UI
+			$scope.labels = <?php echo json_encode( $labels ); ?>;
+			// The post which is selected as the post parent
+			$scope.parent_post = <?php echo json_encode( $pw_parent_post ); ?>;
 
 			$scope.getPosts = function( val ) {
 				var query = $scope.query;
@@ -58,7 +66,11 @@ global $post;
 			};
 
 			$scope.addPostParent = function( item ){
-				$log.debug( "SELECT POST PARENT : ", item );
+				$log.debug( "PW METABOX : POST PARENT : addPostParent( $item ) : ", item );
+				// Set the ID as the post parent
+				$scope.post['post_parent'] = item.ID;
+				// Populate the parent post object
+				$scope.parent_post = item;
 			}
 
 	}]);
@@ -74,7 +86,3 @@ global $post;
 	///// BOOTSTRAP APP /////
 	angular.bootstrap(document.getElementById("pwPostParentMetabox"),['pwPostParentMetabox']);
 </script>
-
-
-
-

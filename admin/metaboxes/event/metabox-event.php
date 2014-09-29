@@ -82,21 +82,25 @@ function pw_event_meta_init(){
 			),
 		);
 	// Apply filter for themes to over-ride default settings
-	$init_event_postmeta = apply_filters( 'pw_init_event_postmeta', $init_event_postmeta );
+	$init_event_postmeta = apply_filters( 'pw_metabox_event_postmeta', $init_event_postmeta );
 
 	///// CONSTRUCT POST OBJECT /////
 	global $pw_event_post;
-	// Get the pre-existing post data to populate the object
-	$pw_event_post = pw_get_post( $post->ID,
-		array(
+
+	$fields = array(
 			'ID',
 			'event_start',
 			'event_end',
 			'geo_latitude',
 			'geo_longitude',
 			'post_meta('.$event_postmeta_key.')'
-			)
-		);
+			);
+
+	// Apply filter for themes to over-ride default settings
+	$fields = apply_filters( 'pw_metabox_event_fields', $fields );
+
+	// Get the pre-existing post data to populate the object
+	$pw_event_post = pw_get_post( $post->ID, $fields );
 
 	// If the post meta is still in the form of a JSON string
 	$event_post_meta = pw_get_obj( $pw_event_post, 'post_meta.'.$event_postmeta_key );

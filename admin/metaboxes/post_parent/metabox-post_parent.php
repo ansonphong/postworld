@@ -38,13 +38,21 @@ function pw_metabox_init_post_parent(){
     		break;
 
     	///// LABELS /////
-    	// TODO HERE : Make default labels object, merge into  $metabox_setting['labels']
-    	$default_labels = array();
+    	// Define default Labels
+    	$default_labels = array(
+    		'title'			=>	'Post Parent',
+    		'search'		=>	'Search Posts...',
+    		'search_icon'	=>	'icon-search',
+    		'loading_icon'	=>	'icon-spinner-2 icon-spin',
+    		);
 
-    	//$title = ( pw_obj_exists( $metabox_setting, 'labels.title' ) ) ? 
-    	//	$metabox_setting['labels']['title'] : 'Post Parent';
+    	// Get labels from the site config
+    	$labels = pw_get_obj( $metabox_setting, 'labels' );
+    	if( !$labels )
+    		$labels = array();
 
-    	$title = "Post Parent";
+    	// Override default labels with site labels
+    	$labels = array_replace_recursive( $default_labels, $labels);
 
     	// If Post Types is a string
     	if( is_string($post_types) )
@@ -56,13 +64,14 @@ function pw_metabox_init_post_parent(){
     		
 			// Construct Variables for Callback
 			$args = array(
-				'query'	=>	$query,
+				'query'		=>	$query,
+				'labels'	=>	$labels,
 				);
 
 			// Add the metabox
 			add_meta_box(
 	        	'pw_post_parent_meta',
-	        	$title,
+	        	$labels['title'],
 	        	'pw_post_parent_meta_init',
 	        	$post_type,
 	        	'side',
@@ -92,10 +101,12 @@ function pw_post_parent_meta_init( $post, $metabox ){
     global $post;
     global $pwSiteGlobals;
 
-    pw_log( json_encode($vars) );
+    extract( $metabox['args'] );
+
+    //pw_log( json_encode($vars) );
 
     // Apply filters for themes to over-ride
-    $query = apply_filters( 'pw_post_parent_metabox_vars', $metabox['args']['query'] );
+    $query = apply_filters( 'pw_post_parent_metabox_vars', $query );
 
     // Define query return fields
     $fields = array(
@@ -107,53 +118,29 @@ function pw_post_parent_meta_init( $post, $metabox ){
     		'edit_post_link',
     		);
 
+    // Apply filter for themes to over-ride default settings
+	$fields = apply_filters( 'pw_metabox_post_parent_fields', $fields );
+
     ///// GET PARENT POST /////
     // If the post already has a post parent
     if( $post->post_parent != 0 ){
-    	// Define post fields
-    	
-    	// Get the post
+    	// Define the post
+    	$pw_post = array( 'post_parent' => $post->post_parent );
+    	// Get the parent post
     	$pw_parent_post = pw_get_post( $post->post_parent, $fields );
-
+    
+    // If there is no post parent
     } else{
-    	$pw_parent_post = array('post_parent'=>0);
+    	// Define the post
+    	$pw_post = array( 'post_parent' => 0 );
+		// Set the parent post
+    	$pw_parent_post = array();
     }
 
     ///// PREPARE QUERY /////
+    // Assign the query the same fields model
    	$query['fields'] = $fields;
-
-    /*
-    ///// POST META MODEL /////
-    // Define the default post meta model
-	$init_post_parent_postmeta = array(
-		'location'	=>	array(
-			'name'				=>	'',
-			'address'			=>	'',
-			'region'			=>	'',
-			'country'			=>	'',
-			'postal_code'		=>	'',
-			),
-		'date'	=>	array(
-			"start_date_obj"	=>	'',
-			"end_date_obj"		=>	'',
-			"start_date"		=>	'',
-			"end_date"			=>	''
-			),
-		'organizer'				=>	array(
-			'name'				=>	'',
-			'phone'				=>	'',
-			'email'				=>	'',
-			'link_url'			=>	'',
-			),
-		'details'	=>	array(
-			'cost'				=>	'',
-			'link_url'			=>	'',
-			),
-		);
-	// Apply filter for themes to over-ride default settings
-	$init_post_parent_postmeta = apply_filters( 'pw_init_post_parent_postmeta', $init_post_parent_postmeta );
-	*/
-
+	
 	///// INCLUDE TEMPLATE /////
 	include "metabox-post_parent-controller.php";
 
@@ -171,7 +158,6 @@ function pw_post_parent_meta_save( $post_id ){
 
 	// Strip slashes from the string
 	$post = stripslashes( $post );
-	//pw_log( "SAVE : ID : $post_id : $post \n" );
 
 	// Decode the object from JSON into Array
 	$post = json_decode( $post, true );
@@ -180,14 +166,20 @@ function pw_post_parent_meta_save( $post_id ){
 	if( empty($post) )
 		return false;
 
-	// Save Wordpress Postmeta
-	if( isset( $post['post_meta'] ) ){
-		// Write post_meta to pw_postmeta table
-		pw_set_wp_postmeta_array( $post_id, $post['post_meta'] );
-	}
+	// Set the Post ID
+	$post['ID'] = $post_id;
 
-	// Save the Postworld Postmeta
-	pw_set_post_meta( $post_id, $post );
+	///// SAVE POST /////
+	// Because this function fires on save_post action after wp_insert_post
+	// Recalling this function unconditionally would cause an infinite loop
+	// Check here if the post parent of the post is already set and the same value
+	// Only if this is not so, insert the post
+	$get_post = get_post( $post_id, ARRAY_A );
+
+	// If the post parent value is different
+	if( $get_post['post_parent'] != $post['post_parent'] )
+		// Insert the post
+		$post_id = wp_insert_post( $post ); 
 
     return $post_id;
 }

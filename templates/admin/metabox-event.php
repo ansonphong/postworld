@@ -98,7 +98,7 @@
 					<i ng-show="loadingLocations" class="icon-spinner-2 icon-spin"></i>
 			</label>
 			<label for="location" class="input-icon">
-					<i class="icon-search"></i>
+				<i class="icon-search"></i>
 			</label>
 			<input
 				id="searchBarInput"
