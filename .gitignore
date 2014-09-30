@@ -7,7 +7,7 @@ wp-config.php
 #############
 deploy/pwSiteGlobals.js
 pwSiteGlobals.js
-
+log/*.txt
 
 # Compiled source #
 ###################

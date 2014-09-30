@@ -25,11 +25,11 @@ global $post;
 		<input type="hidden" name="pw_post_parent_post" ng-value="post | json" style="width:100%;">
 		
 		<!-- DEV : Test Output -->
-		
+		<!--
 		<hr><pre>POST : {{ post | json }}</pre>
-		<hr><pre>PARENT POST : {{ parent_post | json }}</pre>
+		<hr><pre>PARENT POST ID : {{ parent_post.ID | json }}</pre>
 		<hr><pre>QUERY : {{ query | json }}</pre>
-		
+		-->
 	</div>	
 </div>
 
@@ -71,6 +71,14 @@ global $post;
 				$scope.post['post_parent'] = item.ID;
 				// Populate the parent post object
 				$scope.parent_post = item;
+			}
+
+			$scope.removePostParent = function(){
+				// Clear the post_parent field from the post
+				$scope.post['post_parent'] = 0;
+				// Clear the post_parent object
+				$scope.parent_post = false;
+				//alert('remove');
 			}
 
 	}]);

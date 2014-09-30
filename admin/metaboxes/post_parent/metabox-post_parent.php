@@ -44,6 +44,12 @@ function pw_metabox_init_post_parent(){
     		'search'		=>	'Search Posts...',
     		'search_icon'	=>	'icon-search',
     		'loading_icon'	=>	'icon-spinner-2 icon-spin',
+            'edit'          =>  'Edit',
+            'edit_icon'     =>  'icon-edit',
+            'view'          =>  'View',
+            'view_icon'     =>  'icon-arrow-up-right-thin',
+            'remove'        =>  'Remove',
+            'remove_icon'   =>  'icon-close',
     		);
 
     	// Get labels from the site config
@@ -125,7 +131,7 @@ function pw_post_parent_meta_init( $post, $metabox ){
     // If the post already has a post parent
     if( $post->post_parent != 0 ){
     	// Define the post
-    	$pw_post = array( 'post_parent' => $post->post_parent );
+    	$pw_post = array( 'post_parent' => (int) $post->post_parent );
     	// Get the parent post
     	$pw_parent_post = pw_get_post( $post->post_parent, $fields );
     
@@ -134,13 +140,20 @@ function pw_post_parent_meta_init( $post, $metabox ){
     	// Define the post
     	$pw_post = array( 'post_parent' => 0 );
 		// Set the parent post
-    	$pw_parent_post = array();
+    	$pw_parent_post = false;
     }
 
     ///// PREPARE QUERY /////
-    // Assign the query the same fields model
-   	$query['fields'] = $fields;
-	
+    // Define default query values
+    $default_query = array(
+        'posts_per_page'    =>  20,
+        'post_status'       =>  'publish',
+        'fields'            =>  $fields,
+        );
+
+    // Fill in default values
+    $query = array_replace_recursive( $default_query, $query );
+
 	///// INCLUDE TEMPLATE /////
 	include "metabox-post_parent-controller.php";
 
@@ -148,39 +161,36 @@ function pw_post_parent_meta_init( $post, $metabox ){
 
 ////////////// SAVE POST //////////////
 function pw_post_parent_meta_save( $post_id ){
+	// NOTE : Everything in the top portion of this function will be executed twice
 
 	// Stop autosave to preserve meta data
 	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
         return $post_id;
-
 	// Get the JSON string which represents the post to be saved 
 	$post = $_POST['pw_post_parent_post'];
-
 	// Strip slashes from the string
 	$post = stripslashes( $post );
-
 	// Decode the object from JSON into Array
 	$post = json_decode( $post, true );
-
 	// If the post is empty, or the decode fails
 	if( empty($post) )
 		return false;
 
-	// Set the Post ID
-	$post['ID'] = $post_id;
-
 	///// SAVE POST /////
 	// Because this function fires on save_post action after wp_insert_post
 	// Recalling this function unconditionally would cause an infinite loop
-	// Check here if the post parent of the post is already set and the same value
+	// So check here if the post parent of the post is already set and the same value
 	// Only if this is not so, insert the post
 	$get_post = get_post( $post_id, ARRAY_A );
 
 	// If the post parent value is different
-	if( $get_post['post_parent'] != $post['post_parent'] )
-		// Insert the post
-		$post_id = wp_insert_post( $post ); 
-
+	if( $get_post['post_parent'] != $post['post_parent'] ){
+		// Set the Post ID
+		$post['ID'] = $post_id;
+		// Update the post
+		$post_id = wp_update_post( $post ); 
+	}
+		
     return $post_id;
 }
 

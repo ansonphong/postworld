@@ -289,7 +289,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 		// Edit Post Link
 		if( in_array('edit_post_link', $fields) ){
-			$post["edit_post_link"] = get_edit_post_link($post_id);
+			$post["edit_post_link"] = htmlspecialchars_decode( get_edit_post_link($post_id) );
 			if ( $post["edit_post_link"] == false ) $post["edit_post_link"] = '#';
 		}
 
