@@ -9,8 +9,6 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 
-
-
 /////////////// API ////////////////
 include 'php/postworld_api.php';
 
@@ -18,8 +16,8 @@ include 'php/postworld_api.php';
 include 'php/postworld_variables.php';
 
 /////////////// PATHS ///////////////
-define( POSTWORLD_PATH, dirname(__FILE__) );
-define( POSTWORLD_URI, get_postworld_uri() );
+define( 'POSTWORLD_PATH', dirname(__FILE__) );
+define( 'POSTWORLD_URI', get_postworld_uri() );
 
 ////////// UTILITIES ///////////
 include 'php/postworld_utilities.php';

@@ -1,7 +1,6 @@
 <?php
 
 ///// POSTORLD SLIDER /////
-
 function pw_slider_shortcode( $atts, $content = null, $tag ) {
 
 	// Extract Shortcode Attributes, set defaults
@@ -269,7 +268,15 @@ function pw_print_slider( $slider ){
 			///// MENU MODE /////
 			// Get the posts from a menu by menu_id
 			$fields = "preview";
-			$posts = pw_get_menu_posts( $slider['menu_vars']['menu_id'], $fields );
+
+			// Get the Menu ID
+			$menu_id = pw_get_obj( $slider, 'menu_vars.menu_id' );
+
+			// Define the posts
+			$posts = ( !$menu_id ) ?
+				array() :
+				pw_get_menu_posts( $menu_id, $fields );
+
 			break;
 	}
 

@@ -1,21 +1,16 @@
 <div
 	pw-ui
 	ui-views="{ searchInput: false }">
-
 	<!-- DISPLAY PARENT POST -->
 	<div ng-show="parent_post">
-
 		<div class="align-center">
 			<img
 				ng-show="parent_post.image.sizes.thumbnail.url"
 				ng-src="{{ parent_post.image.sizes.thumbnail.url }}"
 				style="width:150px; height:150px;">
 		</div>
-
 		<h3>{{ parent_post.post_title }}</h3>
-
 		<hr class="thin">
-
 		<a ng-href="{{ parent_post.edit_post_link }}">
 			<button
 				type="button"
@@ -23,7 +18,6 @@
 				<i class="{{ labels.edit_icon }}"></i>
 				{{ labels.edit }}
 			</button></a>
-
 		<a ng-href="{{ parent_post.post_permalink }}" target="_blank">
 			<button
 				type="button"
@@ -31,7 +25,6 @@
 				<i class="{{ labels.view_icon }}"></i>
 				{{ labels.view }}
 			</button></a>
-
 		<button
 			type="button"
 			class="button button-small"
@@ -71,5 +64,4 @@
 				class="input-icon-left">
 		</div>
 	</div>
-
 </div>
