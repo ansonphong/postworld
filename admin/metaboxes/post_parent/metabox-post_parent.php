@@ -98,7 +98,7 @@ function pw_metabox_init_post_parent(){
 function pw_metabox_post_parent_scripts(){
 	// Add Styles
     wp_enqueue_style( 'metabox-post_parent-style',
-    	POSTWORLD_URI . 'admin/less/metabox-post_parent.less' );
+    	POSTWORLD_URI . '/admin/less/metabox-post_parent.less' );
 }
 add_action( 'admin_enqueue_scripts', 'pw_metabox_post_parent_scripts' );
 

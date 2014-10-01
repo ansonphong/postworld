@@ -30,7 +30,7 @@ function pw_metabox_init_link_url(){
 function pw_metabox_link_url_scripts(){
 	// Add Styles
     wp_enqueue_style( 'metabox-link_url-style',
-    	POSTWORLD_URI . 'admin/less/metabox-link_url.less' );
+    	POSTWORLD_URI . '/admin/less/metabox-link_url.less' );
 }
 add_action( 'admin_enqueue_scripts', 'pw_metabox_link_url_scripts' );
 

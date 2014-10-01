@@ -1,8 +1,7 @@
 <?php
 
 // Define Angular Dependancies
-global $angularDep;
-$angularDep = array('jquery','UnderscoreJS','DeepMerge','AngularJS','AngularJS-Resource','AngularJS-Route', 'AngularJS-Sanitize', 'UnderscoreJS');
+
 
 function postworld_includes( $args ){
 
@@ -26,8 +25,6 @@ function postworld_includes( $args ){
 	$pwInject = ( isset( $args['inject'] ) ) ?
 		$args['inject'] : $pwInject;
 
-	// Build Angular Dependancies
-	global $angularDep;
 	
 	//////////////////////// INJECTIONS //////////////////////
 
@@ -101,6 +98,11 @@ function postworld_includes( $args ){
 	///// DEPLOY FILE INCLUDES /////
 	if ( $mode == 'deploy' ){
 	
+		global $angularDep;
+		$angularDep = array(
+			'Postworld-Deploy',
+			);
+
 		// ANGULAR
 		//wp_enqueue_script( 'AngularJS',
 		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
@@ -110,11 +112,22 @@ function postworld_includes( $args ){
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
 
-
 	}
 	///// DEVELOPMENT FILE INCLUDES /////
 	else if ( $mode == 'dev' ){
 		
+		// Build Angular Dependancies
+		global $angularDep;
+		$angularDep = array(
+			'jquery',
+			'UnderscoreJS',
+			'DeepMerge',
+			'AngularJS',
+			'AngularJS-Resource',
+			'AngularJS-Route',
+			'AngularJS-Sanitize',
+			);
+
 		///// JAVASCRIPT LIBRARIES /////
 
 		// UNDERSCORE JS
