@@ -131,40 +131,47 @@ class PW_Query extends WP_Query {
 		///// get past events  /////
 		if(array_key_exists('event_past',  $this->query_vars)){
 			// Get past events
-			$current_timestamp = time();
+			if( $this->query_vars['event_past'] == true ){
+				$current_timestamp = time();
 
-			if($add_and == false){
-				$time_query .= "event_end < ".$current_timestamp;
-				$add_and = true;
-			} else {
-				$time_query .= " AND event_end < ".$current_timestamp;
+				if($add_and == false){
+					$time_query .= "event_end < ".$current_timestamp;
+					$add_and = true;
+				} else {
+					$time_query .= " AND event_end < ".$current_timestamp;
+				}
 			}
 		}
 
-		///// get past events  /////
+		///// get future events  /////
 		if(array_key_exists('event_future',  $this->query_vars)){
-			// Get past events
-			$current_timestamp = time();
+			// Get future events
+			if( $this->query_vars['event_future'] == true ){
+				$current_timestamp = time();
 
-			if($add_and == false){
-				$time_query .= "event_start > ".$current_timestamp;
-				$add_and = true;
-			} else {
-				$time_query .= " AND event_start > ".$current_timestamp;
+				if($add_and == false){
+					$time_query .= "event_start > ".$current_timestamp;
+					$add_and = true;
+				} else {
+					$time_query .= " AND event_start > ".$current_timestamp;
+				}
 			}
 		}
 
 		///// get current events  /////
 		if(array_key_exists('event_now', $this->query_vars)){
 			// Get past events
-			$current_timestamp = time();
-
-			if($add_and == false){
-				$time_query .= "event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
-				$add_and = true;
-			} else {
-				$time_query .= " AND event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
+			if( $this->query_vars['event_now'] == true ){
+				$current_timestamp = time();
+				
+				if($add_and == false){
+					$time_query .= "event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
+					$add_and = true;
+				} else {
+					$time_query .= " AND event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
+				}
 			}
+			
 		}
 
 		// Return Query

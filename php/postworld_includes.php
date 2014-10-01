@@ -488,7 +488,6 @@ function pwSiteGlobals_include(){
 }
 
 
-
 ///// PARSE pwGlobals /////
 function pwGlobals_parse(){
 	/////////// USER / PAGE SPECIFIC GLOBALS //////////
@@ -579,7 +578,6 @@ function pwGlobals_parse(){
 		$userdata = 0;
 
 
-
 	$pw["user"] = $userdata;
 
 	///// DISPLAYED USER /////
@@ -640,6 +638,9 @@ function pwGlobals_parse(){
 	///// INJECTIONS /////
 	global $pwInject;
 	$pw['inject'] = $pwInject;
+
+	///// URL QUERY VARS /////
+	$pw['url_vars'] = $_GET;
 
 	///// RETURN /////
 	return $pw;
