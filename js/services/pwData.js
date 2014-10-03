@@ -17,15 +17,18 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
 	var validSettings = true;
-	// Set feed_settings and feed_data in pwData Singleton
-	var feed_settings = $window['feed_settings'];
+	
+	/*
+	// Set feeds and feed_data in pwData Singleton
+	//var feed_settings = $window['feed_settings'];
 	// TODO check mandatory fields
 	if (feed_settings == null) {
 		validSettings = false;
 		$log.error('Service: pwData Method:Constructor  no valid feed_settings defined');
 	}
+	*/
 	
-	var feeds = {};
+	var feeds = $window['pw']['feeds'];
 	
 	// $log.debug('pwData() Registering feed_settings', feed_settings);
 	
@@ -62,7 +65,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			);
 	
     return {
-    	feed_settings: feed_settings,
+    	//feed_settings: feed_settings,
     	feeds: feeds,
     	templates: $pw.templates, 
 
@@ -105,7 +108,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			fargs = this.mergeQueryString(fargs,qsArgs); // will read args and override fargs
 			fargs = this.removeEmptyArgs(fargs);
 			// Get Query Arguments and save them in feed settings
-			var feedSettings = feed_settings[args.feed_id];
+			var feedSettings = feeds[args.feed_id];
 			feedSettings.finalFeedQuery = fargs.feed_query;
 			var params = {'args':fargs};
 			return this.wp_ajax('pw_live_feed',params);
@@ -121,7 +124,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			return this.wp_ajax('o_embed',params);
 		},
 		pw_get_posts: function(args) {
-			var feedSettings = feed_settings[args.feed_id];
+			var feedSettings = feeds[args.feed_id];
 			var feed = feeds[args.feed_id];
 
 			// If already all loaded, then return
@@ -225,8 +228,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			//if(!args.feed_query) args.feed_query = {};
 			// TODO use constants from app settings
 			
-			// Get Feed_Settings Parameters
-			var feed = feed_settings[feedID];
+			// Get feeds Parameters
+			var feed = feeds[feedID];
   			$log.info('Feed Query Override by Feed Settings',feedID, feed.query_args);
 			// Query Args will fill in the feed_query first, then any other parameter in the feed will override it, then any user parameter will override all
 			if (feed.query_args != null) fargs.feed_query = feed.query_args;  

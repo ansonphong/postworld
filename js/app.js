@@ -16,7 +16,11 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 */
 
 'use strict';
-var feed_settings = [];
+//var feed_settings = [];
+
+var pw = {
+	feeds:{},
+};
 
 var depInject = [
 	'ngResource',

@@ -158,7 +158,7 @@ Equivalent to the `pw_get_post()` PHP Method parameters
 
 ####Process:
 - Run `pw_get_posts()` PHP method via AJAX
-- Merge data into JS object : `feed_data[feed_id]['posts']`
+- Merge data into JS object : `feeds[feed_id]['posts']`
 
 __return__ : *boolean*
 
@@ -189,17 +189,17 @@ __return__ : *JSON*
 - Pushes the next set of posts for infinite scroll
 
 ####Process:
-1. Set `feed_data[feed_id]['status'] : 'loading'`
+1. Set `feeds[feed_id]['status'] : 'loading'`
 
-2. See which posts have already been loaded `feed_data[feed_id]['loaded']`
+2. See which posts have already been loaded `feeds[feed_id]['loaded']`
 3. Compare loaded posts to feed_outline.
-  * If they're all already loaded, return `feed_data[feed_id]['status'] : 'all_loaded'`
+  * If they're all already loaded, return `feeds[feed_id]['status'] : 'all_loaded'`
 
 4. If there are new posts to load:
-  * Make an array of the next set of posts to load by loading the next number of posts defined by `feed_data[feed_id]['load_increment']` in sequence from feed_outline
-  * Get fields from : `feed_data[feed_id]['feed_query']['fields']`
+  * Make an array of the next set of posts to load by loading the next number of posts defined by `feeds[feed_id]['load_increment']` in sequence from feed_outline
+  * Get fields from : `feeds[feed_id]['feed_query']['fields']`
   * Run `pw_get_posts ( feed_id, load_posts, fields )`
-  * Set `feed_data[feed_id]['status'] : 'loaded'`
+  * Set `feeds[feed_id]['status'] : 'loaded'`
 
 __return__ : *true*
 
@@ -209,7 +209,7 @@ __return__ : *true*
 
 ####Process:
 1. Access `pw_live_feed()` PHP Method via AJAX 
-2. Use returned data to populate `feed_data[feed_id]` JS Object with __feed_outline__, loaded and post data
+2. Use returned data to populate `feeds[feed_id]` JS Object with __feed_outline__, loaded and post data
 
 ####Parameters:
   - Same as `pw_live_feed()` PHP Method
@@ -563,13 +563,13 @@ Displays a live unregistered feed based on `feed_query pw_query()` args
 
 #### Process:
 
-1. Populate `feed_data[feed_id]` JS Object with `feed_settings[feed_id]`
+1. Populate `feeds[feed_id]` JS Object with `pw.feeds[feed_id]`
 2. Setup DOM structure with ng-controller and ng-repeat for displaying the feed
 3. Run JS method : `pw_live_feed()`
 
 
 #### Parameters:
-Parameters are passed via `feed_settings[feed_id]`.
+Parameters are passed via `pw.feeds[feed_id]`.
 
 __preload__ : *integer*  
 Number of posts to load at the beginning, before infinite scrolling
@@ -589,7 +589,7 @@ __feed_query__ : *string / object*
 
 ####Usage:
 ``` javascript
-feed_settings['feed_id'] = {
+pw.feeds['feed_id'] = {
      preload: 3,
      load_increment : 10,
      order_by : 'rank_score',
@@ -624,11 +624,11 @@ __PHP / AJAX :__
     feed_query
     ...
 
-2. Populate `feed_data[feed_id]` JS Object with __feed_outline__, and __feed_query__
-3. Populate `feed_data[feed_id][['posts']` Object with post posts
+2. Populate `feeds[feed_id]` JS Object with __feed_outline__, and __feed_query__
+3. Populate `feeds[feed_id][['posts']` Object with post posts
 
 __JAVASCRIPT :__  
-1. Populate `feed_data[feed_id]` Object with `feed_settings[feed_id]` Object 
+1. Populate `feeds[feed_id]` Object with `pw.feeds[feed_id]` Object 
 
 
 #### Parameters
@@ -657,7 +657,7 @@ __feed_template__ : *string* (panel ID)
 ####Usage
 
 ```javascript
-feed_settings['feed_id'] = {
+pw.feeds['feed_id'] = {
      title: "Load Feed",
      feed_outline : ["166725","166713","166716","166359","165840","166241","165969",...],
      preload: 3,
@@ -794,11 +794,11 @@ Example of images object from Embed.ly:
 
 ## Object Anatomy
 
-### feed_data *Object*
+### feeds *Object*
 + A meta object which contains feed status and data of all feeds on the DOM
 
 ``` javascript
-feed_data = {
+feeds = {
      feed_id : {
           feed_outline : [1,3,5,15,52,64],
           loaded : [1,3,5],
@@ -813,12 +813,12 @@ feed_data = {
 
 ------
 
-###feed_settings *Object*
+###pw.feeds *Object*
 + Used to initialize a feed directive
-+ The contents of this object are then transferred into feed_data[feed_id] after initialization
++ The contents of this object are then transferred into feeds[feed_id] after initialization
 
 ``` javascript
-feed_settings[feed_id] = {
+pw.feeds[feed_id] = {
   preload : 10,
   load_increment : 10,
   feed_outline : [24,48,45,...], // (Optional) Loads a pre-defined feed outline

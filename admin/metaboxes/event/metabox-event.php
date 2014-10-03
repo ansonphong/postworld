@@ -77,7 +77,9 @@ function pw_event_meta_init(){
 			'link_url'			=>	'',
 			),
 		'details'	=>	array(
-			'cost'				=>	'',
+			'tickets_cost'		=>	'',
+			'tickets_url'		=>	'',
+			'link_label'		=>	'',
 			'link_url'			=>	'',
 			),
 		);

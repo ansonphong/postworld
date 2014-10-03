@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-tey9rw');
-	src:url('fonts/icomoon.eot?#iefix-tey9rw') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-tey9rw') format('woff'),
-		url('fonts/icomoon.ttf?-tey9rw') format('truetype'),
-		url('fonts/icomoon.svg?-tey9rw#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-6drvoe');
+	src:url('fonts/icomoon.eot?#iefix-6drvoe') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-6drvoe') format('woff'),
+		url('fonts/icomoon.ttf?-6drvoe') format('truetype'),
+		url('fonts/icomoon.svg?-6drvoe#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -521,7 +521,7 @@
 .icon-powercord:before {
 	content: "\e67a";
 }
-.icon-menu2:before {
+.icon-nav-thick:before {
 	content: "\e67b";
 }
 .icon-tree:before {
@@ -764,7 +764,7 @@
 .icon-th-small:before {
 	content: "\e61f";
 }
-.icon-th-menu:before {
+.icon-nav-round:before {
 	content: "\e638";
 }
 .icon-th-list:before {
@@ -809,7 +809,7 @@
 .icon-layers-2:before {
 	content: "\e031";
 }
-.icon-box:before {
+.icon-cube-o:before {
 	content: "\e079";
 }
 .icon-grid:before {
@@ -871,9 +871,6 @@
 }
 .icon-refresh:before {
 	content: "\f021";
-}
-.icon-list-alt:before {
-	content: "\f022";
 }
 .icon-headphones:before {
 	content: "\f025";

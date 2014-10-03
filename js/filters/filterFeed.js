@@ -29,17 +29,17 @@ postworld.controller('pwFilterFeedController',
 		// Get Default Argument Values
 		$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
 
-			// DEFAULTS
+		// DEFAULTS
 		$scope.feedQuery.author_name = "";
 
 		// Taxonomy Object Model
 		$scope.taxInput = pwPostOptions.pwGetTaxInputModel();
 
 		// Get Default View Name
-		if (pwData.feed_settings[FeedID].panels[$attrs.filterFeed])
-				template = pwData.feed_settings[FeedID].panels[$attrs.filterFeed];			   	
+		if (pwData.feeds[FeedID].panels[$attrs.filterFeed])
+				template = pwData.feeds[FeedID].panels[$attrs.filterFeed];			   	
 		$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: template } );
-		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feed_settings);
+		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feeds);
 
 
 		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE

@@ -1,5 +1,4 @@
-.pw-row{
-	@column-spacing: 2px;
+.pw-make-grid( @column-spacing: 2px; ){
 	.make-row(@column-spacing);
 
 	.pw-col-12{
@@ -30,6 +29,13 @@
 		.make-sm-column( 2, @column-spacing );
 	}
 
+}
+
+.pw-row{
+	.pw-make-grid(20px);
+	.pw-row{
+		.pw-make-grid(2px);
+	}
 }
 
 .inner{

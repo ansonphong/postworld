@@ -9,14 +9,16 @@
 		<div class="pw-col-6">
 
 			<h3>Event Start</h3>
+
 			<!-- DATE DROPDOWN -->
 			<span class="time dropdown">
 				<button dropdown-toggle class="button">
 					<i class="icon-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
-				<!--<input type="hidden" ng-model="post.post_meta.date_obj.event_start_date_obj" dropdown-toggle>-->
-				<ul class="dropdown-menu pull-left"  prevent-default-click>
+				<ul
+					class="dropdown-menu pull-left" 
+					prevent-default-click>
 					<div class="well well-small pull-left stay-open">
 						<datepicker
 							ng-model="post.post_meta[ eventKey ].date.start_date_obj"
@@ -26,23 +28,73 @@
 				</ul>
 			</span>
 
+			<!-- TIME DROPDOWN -->
+			<span class="time dropdown">
+				<button dropdown-toggle class="button">
+					<i class="icon-clock"></i>
+					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'shortTime' }}
+				</button>
+				<ul class="dropdown-menu pull-left"  prevent-default-click>
+					<div
+						ng-model="post.post_meta[ eventKey ].date.start_date_obj"
+						class="well well-small stay-open"
+						style="display:inline-block;">
+						<timepicker
+							hour-step="1"
+							minute-step="1"
+							show-meridian="ismeridian">
+						</timepicker>
+						<button
+							class="button"
+							ng-click="ismeridian = !ismeridian">
+							12H / 24H
+						</button>
+					</div>
+				</ul>
+			</span>
+
 		</div>
 		<div class="pw-col-6">
 			
 			<h3>Event End</h3>
+
 			<!-- DATE DROPDOWN -->
 			<span class="time dropdown">
 				<button dropdown-toggle class="button">
 					<i class="icon-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
-				<!--<input type="hidden" ng-model="post.post_meta.date_obj.event_start_date_obj" dropdown-toggle>-->
 				<ul class="dropdown-menu pull-left"  prevent-default-click>
 					<div class="well well-small pull-left stay-open">
 						<datepicker
 							ng-model="post.post_meta[ eventKey ].date.end_date_obj"
 							show-weeks="false">
 						</datepicker>
+					</div>
+				</ul>
+			</span>
+
+			<!-- TIME DROPDOWN -->
+			<span class="time dropdown">
+				<button dropdown-toggle class="button">
+					<i class="icon-clock"></i>
+					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'shortTime' }}
+				</button>
+				<ul class="dropdown-menu pull-left"  prevent-default-click>
+					<div
+						ng-model="post.post_meta[ eventKey ].date.end_date_obj"
+						class="well well-small stay-open"
+						style="display:inline-block;">
+						<timepicker
+							hour-step="1"
+							minute-step="1"
+							show-meridian="ismeridian">
+						</timepicker>
+						<button
+							class="button"
+							ng-click="ismeridian = !ismeridian">
+							12H / 24H
+						</button>
 					</div>
 				</ul>
 			</span>
@@ -66,60 +118,7 @@
 
 	class="input_module labeled">
 
-	<div
-		pw-ui
-		ui-views="{ searchInput: false }"
-		class="well">
-		
-		<!-- UI VIEWS : <pre>{{ uiViews | json }}</pre><hr> -->
-		
-		<!-- SEARCH BUTTON -->
-		<div
-			ng-show="!showView('searchInput')">
-			<button
-				id="searchLocations"
-				class="button float-left"
-				name="search"
-				type="button"
-				ng-click="toggleView('searchInput'); focusElement('#searchBarInput')">
-				<i class="icon-search"></i> Search Locations
-			</button>
-			<h4 class="float-left unit">
-				<i>Autocomplete Geocode</i>
-			</h4>
-			<div class="clearfix"></div>
-		</div>
-		
-		<!-- SEARCH INPUT -->
-		<div
-			ng-show="showView('searchInput')"
-			style="position:relative;">
-			<label for="location" class="inner inner-right unit">
-					<i ng-show="loadingLocations" class="icon-spinner-2 icon-spin"></i>
-			</label>
-			<label for="location" class="input-icon">
-				<i class="icon-search"></i>
-			</label>
-			<input
-				id="searchBarInput"
-				type="text"
-				ng-model="post.post_meta[ eventKey ].location.geocode"
-				placeholder="Type Location..."
-				typeahead="address.formatted_address as address.formatted_address for address in getLocation($viewValue) | filter:$viewValue"
-				typeahead-loading="loadingLocations"
-				typeahead-on-select="addGeocode($item);"
-				placeholder=""
-				ng-blur="toggleView('searchInput');"
-				class="input-icon-left">
-			<!--<button
-				class="button"
-				type="button"
-				ng-click="toggleView('searchInput');">
-				<i class="icon-close"></i>
-			</button>-->
-		</div>
 	
-	</div>
 
 		<!-- TODO :
 		<div ng-show="showView('mapUnit')">
@@ -141,8 +140,63 @@
 
 </div>
 
-<div class="pw-row">
+<div class="pw-row row-primary">
+	<!-- LEFT COLUMN -->
 	<div class="pw-col-6">
+
+		<div
+			pw-ui
+			ui-views="{ searchInput: false }"
+			class="well">
+			<!-- UI VIEWS : <pre>{{ uiViews | json }}</pre><hr> -->
+			<!-- SEARCH BUTTON -->
+			<div
+				ng-show="!showView('searchInput')">
+				<button
+					id="searchLocations"
+					class="button float-left"
+					name="search"
+					type="button"
+					ng-click="toggleView('searchInput'); focusElement('#searchBarInput')">
+					<i class="icon-search"></i> Search Locations
+				</button>
+				<h4 class="float-left unit">
+					<i>Autocomplete Geocode</i>
+				</h4>
+				<div class="clearfix"></div>
+			</div>
+			
+			<!-- SEARCH INPUT -->
+			<div
+				ng-show="showView('searchInput')"
+				style="position:relative;">
+				<label for="location" class="inner inner-right unit">
+						<i ng-show="loadingLocations" class="icon-spinner-2 icon-spin"></i>
+				</label>
+				<label for="location" class="input-icon">
+					<i class="icon-search"></i>
+				</label>
+				<input
+					id="searchBarInput"
+					type="text"
+					ng-model="post.post_meta[ eventKey ].location.geocode"
+					placeholder="Type Location..."
+					typeahead="address.formatted_address as address.formatted_address for address in getLocation($viewValue) | filter:$viewValue"
+					typeahead-loading="loadingLocations"
+					typeahead-on-select="addGeocode($item);"
+					placeholder=""
+					ng-blur="toggleView('searchInput');"
+					class="input-icon-left">
+				<!--<button
+					class="button"
+					type="button"
+					ng-click="toggleView('searchInput');">
+					<i class="icon-close"></i>
+				</button>-->
+			</div>
+		</div>
+
+
 		<h3>Location</h3>
 		<div class="pw-row">
 			<div class="pw-col-12">
@@ -205,6 +259,8 @@
 			</div>
 		</div>
 	</div>
+
+	<!-- RIGHT COLUMN -->
 	<div class="pw-col-6">
 		<h3>Organizer</h3>
 		<div class="pw-row">
@@ -235,30 +291,52 @@
 				<input
 					type="url"
 					ng-model="post.post_meta[ eventKey ].organizer.link_url"
-					placeholder="Social Profile Link">
+					placeholder="http:// (Social Profile Link)">
 			</div>
 		</div>
+
+
+		<h3>Tickets</h3>
+		<div class="pw-row">
+			<div class="pw-col-2">	
+				<input
+					type="text"
+					ng-model="post.post_meta[ eventKey ].details.tickets_cost"
+					placeholder="Cost">
+			</div>
+			<div class="pw-col-10">
+				<input
+					type="url"
+					ng-model="post.post_meta[ eventKey ].details.tickets_url"
+					placeholder="http:// (Link to Buy Tickets)">
+			</div>
+		</div>
+
+
+		<h3>Additional Link</h3>
+		<div class="pw-row">
+			<div class="pw-col-2">	
+				<input
+					type="text"
+					ng-model="post.post_meta[ eventKey ].details.link_label"
+					placeholder="Label">
+			</div>
+			<div class="pw-col-10">
+				<input
+					type="url"
+					ng-model="post.post_meta[ eventKey ].details.link_url"
+					placeholder="http:// (Link to Offsite Event Page)">
+			</div>
+		</div>
+
+
+
+
 	</div>
 </div>
 
 
 <hr class="thin">
-
-<div class="pw-row">
-	<h3>Details</h3>
-	<div class="pw-col-10">
-		<input
-			type="url"
-			ng-model="post.post_meta[ eventKey ].details.link_url"
-			placeholder="http://">
-	</div>
-	<div class="pw-col-2">	
-		<input
-			type="text"
-			ng-model="post.post_meta[ eventKey ].details.cost"
-			placeholder="Cost">
-	</div>
-</div>
 
 
 
