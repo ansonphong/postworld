@@ -141,7 +141,9 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
 			// Slice Outline Array
 			var idBegin = feed.loaded;
-			var idEnd = idBegin+feedSettings.load_increment;
+			var idEnd = idBegin + feedSettings.load_increment;
+			$log.debug( 'Postworld Feeds : ', $window['pw']['feeds'] );
+
 			// TODO Check if load_increment exists
 			// Only when feed_outline exists and this is the first run, load from preload value, not from auto increment value
 			if (feed.loaded==0) {
@@ -151,6 +153,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 				else idEnd = idBegin+10;
 			}
 			var postIDs = feed.feed_outline.slice(idBegin,idEnd);
+
 			var fields;
 			if (feedSettings.query_args) {
 				if (feedSettings.query_args.fields != null) {

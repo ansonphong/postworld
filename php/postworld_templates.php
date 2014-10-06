@@ -129,6 +129,7 @@ function pw_get_templates( $vars = array() ){
 	$override_template_url = $pwSiteGlobals['templates']['url']['override'];
 
 
+
 	///// DEFAULT Templates Object /////
 	$default_template_obj_args = array(
 		'dir'	=>	$default_template_dir,
@@ -248,6 +249,8 @@ function pw_get_templates( $vars = array() ){
 		}
 
 	}
+
+
 
 	$template_obj['posts'] = $post_template_obj;
 

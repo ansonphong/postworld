@@ -196,8 +196,11 @@ postworld.controller('pwFeedController',
 		};
 		
 		$scope.fillFeedData = function(response) {
-			// Reset Feed Data
-			pwData.feeds[$scope.feed] = {};
+
+			// Create Feed Object if it doesn't exist
+			if( _.isUndefined( pwData.feeds[$scope.feed] ) )
+				pwData.feeds[$scope.feed] = {};
+
 			if ($scope.directive=="loadFeed") {
 				if (pwData.feeds[$scope.feed].offset)  {
 					// truncate feed outline in case of existing offset for load-feed only
@@ -464,7 +467,7 @@ postworld.controller('pwFeedController',
 			//$log.debug('pwFeedController.pwScrollFeed For',$scope.feed);
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
-			// console.log('Params=',$scope.args);
+
 			pwData.pw_get_posts($scope.args).then(
 				// Success
 				function(response) {

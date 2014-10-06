@@ -473,7 +473,8 @@ function pwSiteGlobals_include(){
 	$pwJs .= "\n\n";
 	$pwJs .= "var pwTemplates = ";
 	$pwJs .= json_encode( pw_get_templates() );
-	$pwJs .= ";";	
+	$pwJs .= ";";
+	//pw_log( "TEMPLATES : " . json_encode( pw_get_templates() ) );
 
 	// ENCODE SITE LANGUAGE
 	global $pwSiteLanguage;	
