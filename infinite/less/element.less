@@ -1,0 +1,63 @@
+
+body {
+	background-color:@body-background-color;
+	color:@body-color;
+}
+
+a { 
+	color:@a-color;
+	background-color:@a-background-color;
+	text-decoration: @a-text-decoration;
+	&:hover{
+		color:@a-color-hover;
+		background-color:@a-background-color-hover;
+		text-decoration: @a-text-decoration-hover;
+	}
+}
+
+h1 {
+	color: @h1-color;
+	font-size: @h1-font-size;
+	font-family: @h1-font-family;
+	letter-spacing: @h1-letter-spacing;
+	line-height: @h1-line-height;
+	background-color: @h1-background-color;
+	margin: @h1-margin;
+	padding: @h1-padding;
+}
+
+h2 {
+	color: @h2-color;
+	font-size: @h2-font-size;
+	font-family: @h2-font-family;
+	letter-spacing: @h2-letter-spacing;
+	line-height: @h2-line-height;
+	background-color: @h2-background-color;
+	margin: @h2-margin;
+	padding: @h2-padding;
+}
+
+h3 {
+	color: @h3-color;
+	font-size: @h3-font-size;
+	font-family: @h3-font-family;
+	letter-spacing: @h3-letter-spacing;
+	line-height: @h3-line-height;
+	background-color: @h3-background-color;
+	margin: @h3-margin;
+	padding: @h3-padding;
+}
+
+p {
+	color: @p-color;
+	font-size: @ispercentage(@percentageOrAnything)-font-size;
+	font-family: @p-font-family;
+	letter-spacing: @p-letter-spacing;
+	line-height: @p-line-height;
+	background-color: @p-background-color;
+	margin: @p-margin;
+	padding: @p-padding;
+}
+
+
+

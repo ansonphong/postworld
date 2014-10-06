@@ -1,0 +1,34 @@
+.pw-css-columns-shortcode-row{
+	&.columns-4{
+		.column-gap();
+		.column-rule();
+		@media @full { .column-count(4); }
+		@media @desktop-and-above { .column-count(3); }
+		@media @desktop-and-below { .column-count(2); }
+		@media @tablet-and-below { 	.column-count(1); }
+	}
+	&.columns-3{
+		.column-gap();
+		.column-rule();
+		@media @desktop-and-above { .column-count(3); }
+		@media @desktop-and-below { .column-count(2); }
+		@media @tablet-and-below { 	.column-count(1); }
+	}
+	&.columns-2{
+		.column-gap();
+		.column-rule();
+		@media @desktop-and-above { .column-count(2); }
+		@media @tablet-and-below { 	.column-count(1); }
+	}
+}
+
+
+.pw-columns-shortcode-row{
+	@gutter-width: 30px;
+	.make-row( @gutter-width );
+
+	.column-half, .half-column{
+		.make-xs-column( 6, @gutter-width );
+	}
+
+}

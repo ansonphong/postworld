@@ -78,6 +78,13 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
 	}
 
+	// Add INFINITE
+	if( in_array( 'infinite', $pwInject ) ){
+		////////// INFINITE //////////
+		include_once dirname(__FILE__) . "/../infinite/functions.php";
+	}
+
+
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
 						'pluginurl' 	=> WP_PLUGIN_URL,

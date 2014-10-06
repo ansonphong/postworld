@@ -1,0 +1,71 @@
+/*_    _       _           _          ___        _   _                 
+ (_)  / \   __| |_ __ ___ (_)_ __    / _ \ _ __ | |_(_) ___  _ __  ___ 
+ | | / _ \ / _` | '_ ` _ \| | '_ \  | | | | '_ \| __| |/ _ \| '_ \/ __|
+ | |/ ___ \ (_| | | | | | | | | | | | |_| | |_) | |_| | (_) | | | \__ \
+ |_/_/   \_\__,_|_| |_| |_|_|_| |_|  \___/| .__/ \__|_|\___/|_| |_|___/
+                                          |_|                          
+/////////////////////////////////////////////////////////////////////*/
+
+infinite.directive( 'iAdminOptions', [ function(){
+    return { 
+        controller: 'iAdminOptionsCtrl',
+        link:function( scope, element, attrs ){
+        	// Add Module Class
+        	element.addClass('i-admin-options');
+        }
+    };
+}]);
+
+infinite.controller('iAdminOptionsCtrl',
+	[ '$scope', '$window', '$parse', '$log', 'iData', 'pwData', '_',
+	function ( $scope, $window, $parse, $log, $iData, $pwData, $_ ) {
+
+	$scope.refreshOptions = function(){
+		//alert("UPDATE OPTIONS");
+	}
+
+	$scope.test = function(message){
+		alert(message);
+	}
+
+	///// ACTION • UPDATE OPTIONS /////
+	$scope.$on('updateOptions', function( scope, vars ) { 
+        $log.debug( "UPDATE OPTIONS : ", vars );
+
+        if( typeof vars == 'object' )
+	        $scope.iOptions = $_.setObj( $scope.iOptions, vars['key'], vars['value'] );
+
+    });
+
+
+	///// ACTION • SELECTED MEDIA /////
+	$scope.$on('selectedMedia', function( scope, vars ) { 
+        $log.debug( "SELECTED MEDIA : ", vars );
+
+        // SET SCOPE MODEL
+        if( vars.format == 'media-id' ){
+        	$scope.iOptions = $_.setObj( $scope.iOptions, vars['key'], vars['media'] );
+        }
+
+        // SAVE TO THE DATABASE
+        var vars = {
+        	option_name: 'i-options',
+        	key: 	vars['key'],
+        	value: 	vars['media']
+        };
+		$pwData.set_option_obj( vars ).then(
+			function(response){
+				$log.debug( "set_option_obj", response );
+			},
+			function(response) {}
+		);
+
+
+    });
+
+
+	//$scope.iOptions = $_.setObj( $scope.iOptions, 'buddha.dharma.sangha', 'love' );
+
+
+}]);
+

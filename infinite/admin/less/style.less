@@ -1,0 +1,212 @@
+/*!
+	* INFINITE WORDPRESS THEME STYLES
+	////////////////////////////////////
+	* DEFAULT VARIABLES : @{themeurl} / 
+ */
+// Bootstrap Variables & Mixins
+//@import "../packages/bootstrap/less/variables.less";
+//@import "../packages/bootstrap/less/mixins.less";
+
+// Font Awesome less package
+//@import "../packages/Font-Awesome/less/font-awesome.less";
+
+// INCLUDES
+
+//@import "../packages/Font-Awsome/css/font-awesome.css";
+
+#infinite_admin{
+	@import "colors-admin.less";
+
+	@import "panel-style.less";
+
+	hr.thick{
+		margin: 20px 0;
+		border-top: 2px solid #ccc;
+	}
+
+	.save-right{
+		float:right;
+		margin:0px 10px 0 0;
+	}
+
+	.button-panel-right{
+		float:right;
+		margin:5px 10px;
+	}
+
+	.radio_image_select{
+		input{
+			display:none;
+		}
+		input + img {
+			border:2px solid transparent;
+			padding:5px;
+		}
+		input[type="radio"]:checked + img {
+			border:2px solid #000;
+		}
+	}
+
+	.message{
+		border:1px solid #ccc;
+		border-left-width:5px;
+		padding:10px;
+		background: #fff;
+		&.success{
+			border-left-color:@green3;
+		}
+	}
+
+	.select-module{
+		padding:5px 15px;
+		//display:inline-block;
+
+		label{
+			display:inline-block;
+			margin-right:5px;
+			min-width:150px;
+
+		}
+	}
+
+	.module{
+		border-top:1px solid #ccc;
+		margin-top:10px;
+		padding:10px;
+	}
+
+	.module.sidebars{
+		select{
+			width: 112px;
+		}
+	}
+
+	.module.layout.default{
+		background:#fff;
+	}
+
+	tr.module > th, tr.module > td {
+		padding:20px 0 0px 20px;
+		background:#fff;
+	}
+
+	tr.module > td {
+		padding:10px 0 10px 20px;
+	}
+
+
+
+	&.styles {
+
+		td {
+			padding:1px;
+		}
+
+		.sample{
+			margin:20px 20px 10px 0;
+		}
+
+	}
+		
+
+	.font-micro{
+		font-size:13px;
+		opacity:0.66;
+		font-weight:normal;
+	}
+
+	.font-nano{
+		font-size:11px;
+		opacity:0.66;
+		font-weight:normal;
+	}
+
+	.icon-small{
+		display: inline-block;
+		width:24px;
+		text-align: center;
+	}
+
+
+	.align-top{
+		vertical-align: top;
+	}
+
+
+	table h3 {
+		margin:0
+	}
+
+	textarea.form-control{
+		width:100%;
+	}
+
+
+
+}
+
+.icon-md{
+	[class^="icon-"], [class*=" icon-"]{
+		display: inline-block;
+		width:24px;
+		text-align:center;
+	}
+	
+}
+
+.icon-md{
+	display:inline-block;
+	min-width:24px;
+}
+
+/* Animated rotating icon */
+.icon-spin {
+  display: inline-block;
+  -moz-animation: spin 2s infinite linear;
+  -o-animation: spin 2s infinite linear;
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+}
+
+@-moz-keyframes spin {
+  0% {
+    -moz-transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(359deg);
+  }
+}
+@-o-keyframes spin {
+  0% {
+    -o-transform: rotate(0deg);
+  }
+  100% {
+    -o-transform: rotate(359deg);
+  }
+}
+@-ms-keyframes spin {
+  0% {
+    -ms-transform: rotate(0deg);
+  }
+  100% {
+    -ms-transform: rotate(359deg);
+  }
+}
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(359deg);
+  }
+}
+
+

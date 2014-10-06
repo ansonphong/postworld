@@ -1,0 +1,160 @@
+.page{
+	background-color:@page-background-color;
+	border-radius:@page-border-radius;
+	box-shadow:@page-box-shadow;
+	border: @page-border;
+	margin: @page-margin;
+	padding: @page-padding;
+}
+
+
+.content{
+	background-color:@content-background-color;
+	border-radius:@content-border-radius;
+	box-shadow:@content-box-shadow;
+	border: @content-border;
+	padding: @content-padding;
+	font-family: @content-font-family;
+	font-size: @content-font-size;
+	color: @content-color;
+}
+
+
+.block{
+	background-color:@block-background-color;
+	box-shadow:@block-box-shadow;
+	border-radius:@block-border-radius;
+	border: @block-border;
+	margin: @block-margin;
+	padding: @block-padding;
+}
+
+.sidebar{
+	background-color:@sidebar-background-color;
+	border-radius:@sidebar-border-radius;
+	box-shadow:@sidebar-box-shadow;
+	border: @sidebar-border;
+}
+
+.sidebar-widget {
+	background-color:@sidebar-widget-background-color;
+	border-radius:@sidebar-widget-border-radius;
+	box-shadow:@sidebar-widget-box-shadow;
+	border: @sidebar-widget-border;
+	margin: @sidebar-widget-margin;
+	padding: @sidebar-widget-padding;
+}
+
+.sidebar-title {
+	color: @sidebar-title-color;
+	font-size: @sidebar-title-font-size;
+	font-family: @sidebar-title-font-family;
+	letter-spacing: @sidebar-title-letter-spacing;
+	line-height: @sidebar-title-line-height;
+	background-color: @sidebar-title-background-color;
+	margin: @sidebar-title-margin;
+	padding: @sidebar-title-padding;
+
+}
+
+.tag {
+	color: @tag-color;
+	background-color: @tag-background-color;
+	font-size: @tag-font-size;
+	font-family: @tag-font-family;
+	border: @tag-border;
+	border-radius: @tag-border-radius;
+	box-shadow:@tag-box-shadow;
+	margin: @tag-margin;
+	padding: @tag-padding;
+
+	text-decoration: @tag-text-decoration;
+
+	&:hover{
+		color: @tag-color-hover;
+		background-color: @tag-background-color-hover;
+		border: @tag-border-hover;
+		text-decoration: @tag-text-decoration-hover;
+	}
+
+}
+
+// sidebar-list
+.sidebar{
+	ul{
+		list-style-type: @sidebar-list-list-style-type;
+		margin: @sidebar-list-margin;
+		padding: @sidebar-list-padding;
+	}
+}
+
+// sidebar-list-link
+.sidebar{
+	ul li a {
+		transition: @sidebar-list-link-transition;
+		display: @sidebar-list-link-display;
+		color: @sidebar-list-link-color;
+		background-color: @sidebar-list-link-background-color;
+		font-size: @sidebar-list-link-font-size;
+		font-family: @sidebar-list-link-font-family;
+		border: @sidebar-list-link-border;
+		border-radius: @sidebar-list-link-border-radius;
+
+		margin: @sidebar-list-link-margin;
+		padding: @sidebar-list-link-padding;
+
+		text-decoration: @sidebar-list-link-text-decoration;
+		box-shadow: @sidebar-list-link-box-shadow;
+		text-shadow: @sidebar-list-link-text-shadow;
+
+		position: @sidebar-list-link-position;
+		top: @sidebar-list-link-top;
+		left: @sidebar-list-link-left;
+
+		&:hover{
+			color: @sidebar-list-link-color-hover;
+			background-color: @sidebar-list-link-background-color-hover;
+			border: @sidebar-list-link-border-hover;
+			text-decoration: @sidebar-list-link-text-decoration-hover;
+			top: @sidebar-list-link-top-hover;
+			left: @sidebar-list-link-left-hover;
+		}
+
+	}
+
+	ul li.selected a {
+		display: @sidebar-list-link-selected-display;
+		color: @sidebar-list-link-selected-color;
+		background-color: @sidebar-list-link-selected-background-color;
+		font-size: @sidebar-list-link-selected-font-size;
+		font-weight: @sidebar-list-link-selected-font-weight;
+		border: @sidebar-list-link-selected-border;
+		border-radius: @sidebar-list-link-selected-border-radius;
+
+		margin: @sidebar-list-link-selected-margin;
+		padding: @sidebar-list-link-selected-padding;
+
+		text-decoration: @sidebar-list-link-selected-text-decoration;
+		box-shadow: @sidebar-list-link-box-shadow;
+		text-shadow: @sidebar-list-link-selected-text-shadow;
+
+		top: @sidebar-list-link-selected-top;
+		left: @sidebar-list-link-selected-left;
+
+		&:hover{
+			color: @sidebar-list-link-selected-color-hover;
+			background-color: @sidebar-list-link-selected-background-color-hover;
+			border: @sidebar-list-link-selected-border-hover;
+			text-decoration: @sidebar-list-link-selected-text-decoration-hover;
+			top: @sidebar-list-link-selected-top-hover;
+			left: @sidebar-list-link-selected-left-hover;
+		}
+
+	}
+
+}
+
+
+
+
+
