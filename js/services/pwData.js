@@ -101,16 +101,16 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			return this.wp_ajax('pw_query',params);
 		},
 		pw_live_feed: function(args,qsArgs) {
-			// args: arguments received from Panel. fargs: is the final args sent along the ajax call.
-			// fargs will be filled initially with data from feed settings, 
-			// fargs will be filled next from data in the query string			
-			var fargs = this.convertFeedSettings(args.feed_id,args); // will read settings and put them in fargs
-			fargs = this.mergeQueryString(fargs,qsArgs); // will read args and override fargs
-			fargs = this.removeEmptyArgs(fargs);
+			// args: arguments received from Panel. fArgs: is the final args sent along the ajax call.
+			// feedArgs will be filled initially with data from feed settings, 
+			// feedArgs will be filled next from data in the query string			
+			var feedArgs = this.convertFeedSettings(args.feed_id,args); // will read settings and put them in feedArgs
+			feedArgs = this.mergeQueryString(feedArgs,qsArgs); // will read args and override feedArgs
+			feedArgs = this.removeEmptyArgs(feedArgs);
 			// Get Query Arguments and save them in feed settings
 			var feedSettings = feeds[args.feed_id];
-			feedSettings.finalFeedQuery = fargs.feed_query;
-			var params = {'args':fargs};
+			feedSettings.finalFeedQuery = feedArgs.feed_query;
+			var params = {'args':feedArgs};
 			return this.wp_ajax('pw_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {
@@ -226,8 +226,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
 		}, // END OF pw_get_template
 		convertFeedSettings: function (feedID,args1) {
-			var fargs = {};
-			fargs.feed_query = {};
+			var feedArgs = {};
+			feedArgs.feed_query = {};
 			//if(!args.feed_query) args.feed_query = {};
 			// TODO use constants from app settings
 			
@@ -235,44 +235,44 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var feed = feeds[feedID];
   			$log.info('Feed Query Override by Feed Settings',feedID, feed.query_args);
 			// Query Args will fill in the feed_query first, then any other parameter in the feed will override it, then any user parameter will override all
-			if (feed.query_args != null) fargs.feed_query = feed.query_args;  
-			if (feed.preload != null) fargs.preload = feed.preload; else fargs.preload = 10;  
-			if (feed.offset	!= null) fargs.offset = feed.offset; else fargs.offset = 0;  
-			if (feed.max_posts != null) fargs.feed_query.posts_per_page = feed.max_posts; else fargs.feed_query.posts_per_page = 1000;
+			if (feed.query_args != null) feedArgs.feed_query = feed.query_args;  
+			if (feed.preload != null) feedArgs.preload = feed.preload; else feedArgs.preload = 10;  
+			if (feed.offset	!= null) feedArgs.offset = feed.offset; else feedArgs.offset = 0;  
+			if (feed.max_posts != null) feedArgs.feed_query.posts_per_page = feed.max_posts; else feedArgs.feed_query.posts_per_page = 1000;
 			 
 			if (feed.order_by != null) {
 				// if + sort Ascending
-				if (feed.order_by.charAt(0)=='+') fargs.feed_query.order = 'ASC';
+				if (feed.order_by.charAt(0)=='+') feedArgs.feed_query.order = 'ASC';
 				// if - sort Descending				
-				else  if (feed.order_by.charAt(0)=='-') fargs.feed_query.order = 'DESC';
-				else fargs.feed_query.order = 'ASC';
+				else  if (feed.order_by.charAt(0)=='-') feedArgs.feed_query.order = 'DESC';
+				else feedArgs.feed_query.order = 'ASC';
 				// If + or - then remove the first character
 				if ((feed.order_by.charAt(0)=='+') || (feed.order_by.charAt(0)=='-')) {
-					fargs.feed_query.order_by = feed.order_by.slice(1);
+					feedArgs.feed_query.order_by = feed.order_by.slice(1);
 				}
 			}	// else the default whatever it is, is used
-			if (feed.offset != null) fargs.feed_query.offset = feed.offset; // else the default is zero 
-			fargs.feed_id = feedID;
-			return fargs;			
+			if (feed.offset != null) feedArgs.feed_query.offset = feed.offset; // else the default is zero 
+			feedArgs.feed_id = feedID;
+			return feedArgs;			
 		},
 		
-  		mergeQueryString: function (fargs,args) {
+  		mergeQueryString: function (feedArgs,args) {
   			$log.info('Feed Query Override by Query String',args);
   			for(var key in args){
 			    // $scope.args.feed_query[key] = params[key];
-			    fargs.feed_query[key] = args[key];
+			    feedArgs.feed_query[key] = args[key];
 			}			
-			return fargs;
+			return feedArgs;
   		},		
-		mergeFeedQuery: function (fargs,args) {
+		mergeFeedQuery: function (feedArgs,args) {
 			if (args.feed_query) {
 	  			$log.info('Feed Query Override by Search feedQuery',args.feed_query);
 				for (var prop in args.feed_query) {
-				    fargs.feed_query[prop] = args.feed_query[prop];
-				    //$log.debug("args.feed_query",prop,args.feed_query[prop],fargs.feed_query[prop]);
+				    feedArgs.feed_query[prop] = args.feed_query[prop];
+				    //$log.debug("args.feed_query",prop,args.feed_query[prop],feedArgs.feed_query[prop]);
 				}
 			}
-			return fargs;
+			return feedArgs;
 		},
   		removeEmptyArgs: function (args) {
   			$log.info('Feed Query Remove Empty Args',args);

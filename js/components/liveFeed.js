@@ -183,7 +183,6 @@ postworld.controller('pwFeedController',
 				if ( max < pwData.feeds[$scope.feed].feed_outline.length ) {					
 					pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
 				}
-					 
 				pwData.feeds[$scope.feed].count_feed_outline = pwData.feeds[$scope.feed].feed_outline.length;														
 			};						
 			pwData.feeds[$scope.feed].loaded = 0;						
@@ -279,18 +278,21 @@ postworld.controller('pwFeedController',
 			// identify the feeds feed_id
 			
 			$scope.posts = {};
+
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
+			
 			// get Query String Parameters,
 			var qsArgs = $scope.getQueryStringArgs();			
+			
 			// We need to work with a clone of the args value
 			var argsValue = JSON.parse( JSON.stringify( $scope.args ) );
-			
+
 			var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
 
 			$log.debug( "LIVE FEED (init) : ID : " + argsValue.feed_id, argsValue );
 
-			pwData.pw_live_feed(argsValue,qsArgsValue).then(
+			pwData.pw_live_feed( argsValue, qsArgsValue ).then(
 				// Success
 				function(response) {
 
@@ -316,8 +318,6 @@ postworld.controller('pwFeedController',
 							$scope.posts = pwData.feeds[$scope.feed].posts;
 
 							//response.data.posts = {};
-
-							
 
 							$scope.injectAds();
 							
