@@ -11,7 +11,7 @@
 			current : 'grid',
 			options : ['detail', 'grid','grid-horizontal']
 		},
-		query_args : {
+		query : {
 			post_type:['post','page'],
 			post_status:'publish',
 			tax_query:[

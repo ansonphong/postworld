@@ -1,7 +1,78 @@
 <?php
 
+<<<<<<< HEAD
 
 function pw_live_feed ( $args ){
+=======
+function pw_live_feed( $vars = array() ){
+
+	extract( $vars );
+
+	///// DEFAULT VARS /////
+	if( !isset( $element ) )
+		$element = 'div';
+
+	if( !isset( $directive ) )
+		$directive = 'live-feed';
+
+	if( !isset( $feed_id ) )
+		$feed_id = 'pwFeed_' . pw_random_hash();
+
+	if( !isset( $classes ) )
+		$classes = 'feed';
+
+	if( !isset( $attributes ) )
+		$attributes = '';
+
+	if( !isset( $echo ) )
+		$echo = true;
+	
+	///// DEFAULT ARRAYS /////
+	$default_query = array(
+		'post_status'		=>	'publish',
+		'post_type'			=>	'post',
+		'fields'			=>	'preview',
+		'posts_per_page'	=>	200,
+		);
+
+	$default_feed = array(
+		'preload'			=>	10,
+		'load_increment' 	=> 	10,
+		'offset'			=>	0,
+		'max_posts'			=>	200,
+		'order_by'			=>	'-post_date',
+		'view'	=>	array(
+			'current' 	=> 'list',
+			'options'	=>	array( 'list', 'grid' ),
+			),
+		'query' 		=> $default_query,
+		'feed_template'	=>	null,
+		);
+
+	// Over-ride default settings with provided settings
+	$feed = array_replace_recursive( $default_feed, $feed );
+
+	// Get the live feed data
+	$feed_data = pw_get_live_feed( $feed );
+
+	// Merge feed data with feed settings
+	$feed = array_replace_recursive( $feed, $feed_data );
+
+	//Print object with posts pre-populated
+	$output = '<script>pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .'</script>';
+	$output .= '<'.$element.' '.$directive.'="'.$feed_id.'" class="'.$classes.'" '.$attributes.'></'.$element.'>';
+
+	// Echo
+	if( $echo )
+		echo $output;
+	else
+		return $output;
+
+	return;
+}
+
+function pw_get_live_feed ( $args ){
+>>>>>>> e472a69498e6f2cc1dc42f2f1299c70c35ba3164
 
 	extract($args);
 
@@ -13,15 +84,15 @@ function pw_live_feed ( $args ){
 	$preload = (int) $preload;
 
 	// Get the Feed Outline
-	$feed_query = $args["feed_query"];
-	$feed_outline = pw_feed_outline( $feed_query );
+	$query = $args["query"];
+	$feed_outline = pw_feed_outline( $query );
 	
 	if( count( $feed_outline ) > 0 ){
 		// Select which posts to preload
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
 		
 		// Preload selected posts
-		$posts = pw_get_posts($preload_posts, $feed_query["fields"] );
+		$posts = pw_get_posts($preload_posts, $query["fields"] );
 	
 	}
 	else{
@@ -30,15 +101,11 @@ function pw_live_feed ( $args ){
 	}
 	
 	return array(
-		"feed_id" => 			$args["feed_id"],
-		"feed_query" => 		$args["feed_query"],
-		"feed_outline" => 		$feed_outline,
-		//"feed_outline_json" => 	json_encode($feed_outline),
-		"feed_outline_count" =>	count( $feed_outline ),
-		"loaded" => 			$preload_posts,
-		"preload" => 			count($posts),
-		"preload_posts" => 		$preload_posts,
-		"posts" =>	 			$posts,
+		"feed_id" 		=> 	$args["feed_id"],
+		"query" 		=> 	$args["query"],
+		"feed_outline" 	=> 	$feed_outline,
+		"preload" 		=> 	count($posts),
+		"posts"			=>	$posts,
 		);
 	
 }
@@ -62,13 +129,14 @@ function pw_feed_outline ( $pw_query_args ){
 5-pw_get_feed
 */
 
-function add_new_feed($feed_id,$feed_query){
+function add_new_feed( $feed_id, $feed_query ){
 	global $wpdb;
 	$wpdb->show_errors(); 
 	$query = "insert into $wpdb->pw_prefix"."feeds values('$feed_id','".json_encode($feed_query)."',null,null,null,null)";
 	//echo $query;
 	$wpdb->query($query);
 }
+
 function pw_register_feed ( $args ){
 	/*
 		Description:

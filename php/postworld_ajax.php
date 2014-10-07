@@ -729,15 +729,15 @@ function initAjaxResponse() {
  * 
  ************************** */
 
-/* Actions for pw_live_feed() */
+/* Actions for pw_get_live_feed() */
 
-function pw_live_feed_anon() {
+function pw_get_live_feed_anon() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
 	// $pw_args = $args['args']['feed_query'];
 	$pw_args = $args['args'];
 	// Get the results in array format, so that it is converted once to json along with the rest of the response
-	$results = pw_live_feed ( $pw_args );
+	$results = pw_get_live_feed ( $pw_args );
 	// TODO check results are ok
 	// TODO return success code or failure code , as well as version number with the results.
 	/* set the response type as JSON */
@@ -788,11 +788,11 @@ function pw_load_feed_anon() {
 	die();
 }
 
-/* Action Hook for pw_live_feed() - Logged in users */
-add_action("wp_ajax_pw_live_feed", "pw_live_feed_anon");
+/* Action Hook for pw_get_live_feed() - Logged in users */
+add_action("wp_ajax_pw_get_live_feed", "pw_get_live_feed_anon");
 
-/* Action Hook for pw_live_feed() - Anonymous users */
-add_action("wp_ajax_nopriv_pw_live_feed", "pw_live_feed_anon");
+/* Action Hook for pw_get_live_feed() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_get_live_feed", "pw_get_live_feed_anon");
 
 /* Action Hook for pw_load_feed() - Logged in users */
 add_action("wp_ajax_pw_load_feed", "pw_load_feed_anon");

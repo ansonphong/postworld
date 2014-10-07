@@ -100,7 +100,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {'args':args};
 			return this.wp_ajax('pw_query',params);
 		},
-		pw_live_feed: function(args,qsArgs) {
+		pw_get_live_feed: function(args,qsArgs) {
 			// args: arguments received from Panel. fArgs: is the final args sent along the ajax call.
 			// feedArgs will be filled initially with data from feed settings, 
 			// feedArgs will be filled next from data in the query string			
@@ -109,9 +109,9 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			feedArgs = this.removeEmptyArgs(feedArgs);
 			// Get Query Arguments and save them in feed settings
 			var feedSettings = feeds[args.feed_id];
-			feedSettings.finalFeedQuery = feedArgs.feed_query;
+			feedSettings.finalFeedQuery = feedArgs.query;
 			var params = {'args':feedArgs};
-			return this.wp_ajax('pw_live_feed',params);
+			return this.wp_ajax('pw_get_live_feed',params);
 		},
 		pw_scroll_feed: function(args) {
 			$log.debug('pwData.pw_scroll_feed',args);
@@ -124,40 +124,36 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			return this.wp_ajax('o_embed',params);
 		},
 		pw_get_posts: function(args) {
-			var feedSettings = feeds[args.feed_id];
-			var feed = feeds[args.feed_id];
+			var feedSettings = feeds[ args.feed_id ];
+			var feed = feeds[ args.feed_id ];
 
 			// If already all loaded, then return
 			if (feed.status == 'all_loaded')  {
 				$log.debug('pwData.pw_get_posts ALL LOADED');
 				// TODO should we return or set promise.?
 				 //var results = {'status':200,'data':[]};
-				 var response = $q.defer();
-				 response.promise.resolve(1);				
+				var response = $q.defer();
+				response.promise.resolve(1);				
 				return response.promise;
 			};
-			// else, get posts and recalculate
-			
-			// Set Post IDs - get ids from outline, [Loaded Length+1 to Loaded Length+Increment]
+	
 			// Slice Outline Array
-			var idBegin = feed.loaded;
-			var idEnd = idBegin + feedSettings.load_increment;
-			$log.debug( 'Postworld Feeds : ', $window['pw']['feeds'] );
+			var idBegin = feed.posts.length;
 
-			// TODO Check if load_increment exists
-			// Only when feed_outline exists and this is the first run, load from preload value, not from auto increment value
-			if (feed.loaded==0) {
-				if (feedSettings.preload)
-					idEnd = idBegin+feedSettings.preload;
-					// TODO, use constant here
-				else idEnd = idBegin+10;
-			}
+			// Use Preload value if no posts loaded, otherwise use load_increment
+			var idEnd = ( feed.posts.length == 0 ) ?
+				idBegin + feedSettings.preload :
+				idBegin + feedSettings.load_increment;
+			
+			$log.debug( 'pwData.feeds : ', feeds );
+			$log.debug( 'idBegin : ' + idBegin + ' // idEnd : ' + idEnd, $window['pw']['feeds'] );
+
 			var postIDs = feed.feed_outline.slice(idBegin,idEnd);
 
 			var fields;
-			if (feedSettings.query_args) {
-				if (feedSettings.query_args.fields != null) {
-					fields = feedSettings.query_args.fields;
+			if (feedSettings.query) {
+				if (feedSettings.query.fields != null) {
+					fields = feedSettings.query.fields;
 				}				
 			}
 			// $log.debug('pwData.pw_get_posts range:',idBegin, idEnd);
@@ -227,31 +223,31 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 		}, // END OF pw_get_template
 		convertFeedSettings: function (feedID,args1) {
 			var feedArgs = {};
-			feedArgs.feed_query = {};
-			//if(!args.feed_query) args.feed_query = {};
+			feedArgs.query = {};
+			//if(!args.query) args.query = {};
 			// TODO use constants from app settings
 			
 			// Get feeds Parameters
 			var feed = feeds[feedID];
-  			$log.info('Feed Query Override by Feed Settings',feedID, feed.query_args);
-			// Query Args will fill in the feed_query first, then any other parameter in the feed will override it, then any user parameter will override all
-			if (feed.query_args != null) feedArgs.feed_query = feed.query_args;  
+  			$log.info('Feed Query Override by Feed Settings',feedID, feed.query);
+			// Query Args will fill in the query first, then any other parameter in the feed will override it, then any user parameter will override all
+			if (feed.query != null) feedArgs.query = feed.query;  
 			if (feed.preload != null) feedArgs.preload = feed.preload; else feedArgs.preload = 10;  
 			if (feed.offset	!= null) feedArgs.offset = feed.offset; else feedArgs.offset = 0;  
-			if (feed.max_posts != null) feedArgs.feed_query.posts_per_page = feed.max_posts; else feedArgs.feed_query.posts_per_page = 1000;
+			if (feed.max_posts != null) feedArgs.query.posts_per_page = feed.max_posts; else feedArgs.query.posts_per_page = 1000;
 			 
 			if (feed.order_by != null) {
 				// if + sort Ascending
-				if (feed.order_by.charAt(0)=='+') feedArgs.feed_query.order = 'ASC';
+				if (feed.order_by.charAt(0)=='+') feedArgs.query.order = 'ASC';
 				// if - sort Descending				
-				else  if (feed.order_by.charAt(0)=='-') feedArgs.feed_query.order = 'DESC';
-				else feedArgs.feed_query.order = 'ASC';
+				else  if (feed.order_by.charAt(0)=='-') feedArgs.query.order = 'DESC';
+				else feedArgs.query.order = 'ASC';
 				// If + or - then remove the first character
 				if ((feed.order_by.charAt(0)=='+') || (feed.order_by.charAt(0)=='-')) {
-					feedArgs.feed_query.order_by = feed.order_by.slice(1);
+					feedArgs.query.order_by = feed.order_by.slice(1);
 				}
 			}	// else the default whatever it is, is used
-			if (feed.offset != null) feedArgs.feed_query.offset = feed.offset; // else the default is zero 
+			if (feed.offset != null) feedArgs.query.offset = feed.offset; // else the default is zero 
 			feedArgs.feed_id = feedID;
 			return feedArgs;			
 		},
@@ -259,31 +255,31 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
   		mergeQueryString: function (feedArgs,args) {
   			$log.info('Feed Query Override by Query String',args);
   			for(var key in args){
-			    // $scope.args.feed_query[key] = params[key];
-			    feedArgs.feed_query[key] = args[key];
+			    // $scope.args.query[key] = params[key];
+			    feedArgs.query[key] = args[key];
 			}			
 			return feedArgs;
   		},		
 		mergeFeedQuery: function (feedArgs,args) {
-			if (args.feed_query) {
-	  			$log.info('Feed Query Override by Search feedQuery',args.feed_query);
-				for (var prop in args.feed_query) {
-				    feedArgs.feed_query[prop] = args.feed_query[prop];
-				    //$log.debug("args.feed_query",prop,args.feed_query[prop],feedArgs.feed_query[prop]);
+			if (args.query) {
+	  			$log.info('Feed Query Override by Search feedQuery',args.query);
+				for (var prop in args.query) {
+				    feedArgs.query[prop] = args.query[prop];
+				    //$log.debug("args.query",prop,args.query[prop],feedArgs.query[prop]);
 				}
 			}
 			return feedArgs;
 		},
   		removeEmptyArgs: function (args) {
   			$log.info('Feed Query Remove Empty Args',args);
-  			for(var key in args.feed_query){
-  				if ((args.feed_query[key]=="null") && (key!= "s")){
-  					delete args.feed_query[key];
+  			for(var key in args.query){
+  				if ((args.query[key]=="null") && (key!= "s")){
+  					delete args.query[key];
   					continue;
   				}  				
-			    if ((args.feed_query[key]!==0) && (args.feed_query[key]!==false)) {
-			    	if (args.feed_query[key] == "") {
-			    		delete args.feed_query[key];
+			    if ((args.query[key]!==0) && (args.query[key]!==false)) {
+			    	if (args.query[key] == "") {
+			    		delete args.query[key];
 			    	}
 			    }  			    			    
 			}			
