@@ -36,16 +36,16 @@ Used to get Postworld values in the __wp_postworld_post_meta__ table
 
 __return__ : *Array*
 ```php
-  array(
-  	'post_id' => {{integer}}
-  	'author_id'	=> {{integer}}
-  	'post_class' => {{string}}
-  	'link_format' => {{string}}
-  	'link_url' => {{string}}
-  	'post_points' => {{integer}}
-  	'rank_score' => {{integer}}
-    //...
-  )
+	array(
+		'post_id' => {{integer}}
+		'author_id'	=> {{integer}}
+		'post_class' => {{string}}
+		'link_format' => {{string}}
+		'link_url' => {{string}}
+		'post_points' => {{integer}}
+		'rank_score' => {{integer}}
+		//...
+	)
 ```
 
 #### Usage:
@@ -79,9 +79,9 @@ __$post_meta__ : *Array*
 #### Usage:
 ```php
 $post_meta = array(
-     'post_class' => string,
-     'link_format' => string,
-     'link_url' => string
+		 'post_class' => string,
+		 'link_format' => string,
+		 'link_url' => string
 );
 pw_set_post_meta($post_id, $post_meta);
 ```
@@ -109,8 +109,8 @@ __META POINTS FUNCTIONS__
 __$point_type__ : *string*
 - Which type of points to set
 - Options :
-  - __post__ - Will set points for a *post_id*
-  - __comment__ - Will set points for *comment_id*
+	- __post__ - Will set points for a *post_id*
+	- __comment__ - Will set points for *comment_id*
 
 __$id__ : *integer*
 - The __post_id__ or __comment_id__
@@ -122,26 +122,26 @@ __$set_points__ : *integer*
 
 - Get the User ID
 - Get the user's vote power : `get_user_vote_power()`
-  - If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
+	- If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
 
 - Define the table and column names to work with :
-  - __Points Table__ : *post_points / comment_points*
-  - __ID Column__ : *post_id / comment_id*
-  - __Points Column__ : *post_points / comment_points*
+	- __Points Table__ : *post_points / comment_points*
+	- __ID Column__ : *post_id / comment_id*
+	- __Points Column__ : *post_points / comment_points*
 
 - Check if row exists in __Points Table__ for the given __ID Column__ and __User ID__
-  - If __no row__ , add row to coorosponding __Points Table__
-  - If __row exists__ , update the row
-  - If __$set_points = 0__ , delete row
+	- If __no row__ , add row to coorosponding __Points Table__
+	- If __row exists__ , update the row
+	- If __$set_points = 0__ , delete row
 
 - Add Unix timestamp to __time__ column in __Points Table__
 
 - If `$point_type == post` , Update cache in __Post Meta__ table
-  1. If row doesn't exist for given __post_id__ in __Post Meta__ table, create new row
-  2. Update cached __post_points__ row in __Post Meta__ table directly if there is a change in points
+	1. If row doesn't exist for given __post_id__ in __Post Meta__ table, create new row
+	2. Update cached __post_points__ row in __Post Meta__ table directly if there is a change in points
 
 - Update cache in __User Meta__ table, under the post/comment author, under coorosponding __Points Column__
-  1. `$point_type == post` update the value of __post_points_meta__ column in __user_meta__ table
+	1. `$point_type == post` update the value of __post_points_meta__ column in __user_meta__ table
 
 
 Anatomy of __post_points_meta__ column JSON object in __user_meta__ table : see *Database Structure* Document.
@@ -150,18 +150,18 @@ __return__ : *Array*
 
 ``` php
 array(
-     'point_type' => {{$point_type}} // (post/comment) << NEW
-     'user_id' => {{$user_id}} // (user ID) << NEW
-     'id' => {{$id}} // (post/comment ID) << NEW
+		 'point_type' => {{$point_type}} // (post/comment) << NEW
+		 'user_id' => {{$user_id}} // (user ID) << NEW
+		 'id' => {{$id}} // (post/comment ID) << NEW
 
-     'points_added' => {{integer}} // (points which were successfully added)
-     'points_total' => {{integer}} // (from wp_postworld_meta)
+		 'points_added' => {{integer}} // (points which were successfully added)
+		 'points_total' => {{integer}} // (from wp_postworld_meta)
 )
 ```
 
 __TODO:__
 - Check that user has not voted too many times recently <<<< Concept method <<< PHONG
-  - Use post_points_meta to store points activity << PHONG
+	- Use post_points_meta to store points activity << PHONG
 
 
 ------
@@ -294,13 +294,13 @@ __return__ : *Array*
 
 ```php
 array(
-  'total' => 640,
-  'post_type' => array(
-    'post' => 160,
-    'link' => 325,
-    'blog' => 65,
-    'event' => 90
-  )
+	'total' => 640,
+	'post_type' => array(
+		'post' => 160,
+		'link' => 325,
+		'blog' => 65,
+		'event' => 90
+	)
 )
 ```
 ------
@@ -396,8 +396,8 @@ post_id,author_id,total_points,post_type
 
 ```php 
 [
-         {"post_id":"13","author_id":"1","total_points":"10","post_type":"post"},
-         {"post_id":"19","author_id":"1","total_points":"10","post_type":"link"}
+				 {"post_id":"13","author_id":"1","total_points":"10","post_type":"post"},
+				 {"post_id":"19","author_id":"1","total_points":"10","post_type":"link"}
 ]
 ```
 ------
@@ -411,15 +411,15 @@ __$user_id__ : *integer*
 __$fields__ : *string*
 - Which fields to return
 - Options:
-  - __all__ (default)
-  - __post_id__ - If this is set as a string, then return flat array with only `post_id`
+	- __all__ (default)
+	- __post_id__ - If this is set as a string, then return flat array with only `post_id`
 
 __$direction__ : *string*
 - Filter the direction by which the user has voted posts
 - Options:
-  - *null* (Default) - Return all voted posts
-  - __up__
-  - __down__
+	- *null* (Default) - Return all voted posts
+	- __up__
+	- __down__
 
 __return__ : *Object / Array*
 
@@ -429,25 +429,25 @@ __return__ : *Object / Array*
 Parameters:
 
 ``` php
-  get_user_votes_on_posts ( 1, 'post_id', 'up' )
+	get_user_votes_on_posts ( 1, 'post_id', 'up' )
 ```
 Returns:
 
 ``` javascript
-  [234,235,2341,5,135,3151]
+	[234,235,2341,5,135,3151]
 ```
 Parameters:
 
 ``` php
-  get_user_votes_on_posts ( 1, 'all', 'up' )
+	get_user_votes_on_posts ( 1, 'all', 'up' )
 ```
 Returns:
 
 ``` php
-  #for_each
-  'post_id' => {{integer}}
-  'votes' => {{integer}}
-  'time' => {{timestamp}}
+	#for_each
+	'post_id' => {{integer}}
+	'votes' => {{integer}}
+	'time' => {{timestamp}}
 ```
 
 ------
@@ -463,9 +463,9 @@ Returns:
 
 __return__ : *Object*
 ``` php
-     'total_posts' => {{integer}} //(number of posts voted on)
-     'total_points' => {{integer}} //(number of points cast by up/down votes)
-     'average_points' => {{decimal}} //(average number of points per post)
+		 'total_posts' => {{integer}} //(number of posts voted on)
+		 'total_points' => {{integer}} //(number of points cast by up/down votes)
+		 'average_points' => {{decimal}} //(average number of points per post)
 ```
 
 ------
@@ -572,7 +572,7 @@ define( 'WP_MEMORY_LIMIT', '512M' );
 ```
 
 - Adapting the /.htaccess file of your WordPress installation
-  - (only works if PHP is running as a PHP module)
+	- (only works if PHP is running as a PHP module)
 
 ```
 php_value max_execution_time 600
@@ -609,24 +609,24 @@ Default : *false*
 
 #### Process
 - If `$cache_all = false`, just update the recently changed share reports
-  - Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
+	- Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
 
-  - __POSTS :__  
-  Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
-  Run `cache_post_shares($post_id)` for all recently updated shares
+	- __POSTS :__  
+	Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
+	Run `cache_post_shares($post_id)` for all recently updated shares
 
-  - __AUTHORS :__  
-  Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the last cache.  
-  Run `cache_user_shares($user_id,'incoming')` for all recently updated user's shares
+	- __AUTHORS :__  
+	Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the last cache.  
+	Run `cache_user_shares($user_id,'incoming')` for all recently updated user's shares
 
-   - __USERS :__  
-  Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the last cache.
-  Run `cache_user_shares($user_id,'outgoing')` for all recently updated user's shares
+	 - __USERS :__  
+	Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the last cache.
+	Run `cache_user_shares($user_id,'outgoing')` for all recently updated user's shares
 
 - If `$cache_all = true`
-  - Cycle through every post and run `cache_post_shares($post_id)`
-  - Cycle through every author and run `cache_user_shares($user_id,'incoming')`
-  - Cycle through every user and run `cache_user_shares($user_id,'outgoing')`
+	- Cycle through every post and run `cache_post_shares($post_id)`
+	- Cycle through every author and run `cache_user_shares($user_id,'incoming')`
+	- Cycle through every user and run `cache_user_shares($user_id,'outgoing')`
 
 __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
@@ -670,15 +670,15 @@ __$user_id__ : *integer*
 
 __$mode__ : *string* (optional)
 - Options :
-  - __both__ (default) : Return both __incoming__ and __outgoing__ 
-  - __incoming__ : Return shares attributed to the user's posts  
-  - __outgoing__ : Return shares that the user has initiated
+	- __both__ (default) : Return both __incoming__ and __outgoing__ 
+	- __incoming__ : Return shares attributed to the user's posts  
+	- __outgoing__ : Return shares that the user has initiated
 
 #### Process
 - Lookup the given __user_id__ in the __Shares__ table
 - Modes :
-  - For __incoming__ : Match to __author_id__ column in __Shares__ table 
-  - For __outgoing__ : Match to __user_id__ column in __Shares__ table
+	- For __incoming__ : Match to __author_id__ column in __Shares__ table 
+	- For __outgoing__ : Match to __user_id__ column in __Shares__ table
 - Add up *(SUM)* the total number of the __shares__ column attributed to the user, according to `$mode`
 
 __return__ : *Array* (number of shares)
@@ -817,30 +817,30 @@ __geo_range__ : *number*
 
 __link_format__ : *string / Array*
 - link_format column in wp_postworld_post_meta 
-  - __string__ - Return posts with that post_type
-  - __Array__ - Return posts in either post_type (IN/OR operator) 
+	- __string__ - Return posts with that post_type
+	- __Array__ - Return posts in either post_type (IN/OR operator) 
 
 __post_class__ : *string / Array*
 - post_class column in wp_postworld_post_meta
-  - __string__ - Return posts with that post_type
-  - __Array* - Return posts in either post_type (IN/OR operator) 
+	- __string__ - Return posts with that post_type
+	- __Array* - Return posts in either post_type (IN/OR operator) 
 
 ------
 
 __post_type__ : *string / Array*
 - post_type column in wp_posts
-  - __string__ - Return posts with that post_type
-  - __Array__ - Return posts in either post_type (IN/OR operator)
+	- __string__ - Return posts with that post_type
+	- __Array__ - Return posts in either post_type (IN/OR operator)
 
 __author__ : *integer / Array* 
 - Use author ID
-  - __integer__ - Return posts only written by that author
-  - __Array__ - Return posts written by any of the authors (IN/OR operator) 
+	- __integer__ - Return posts only written by that author
+	- __Array__ - Return posts written by any of the authors (IN/OR operator) 
 
 __author_name__ : *string / Array*
 - Use 'user_nicename' in wp_users (NOT 'name')
-  - __string__ - Return posts only written by that author
-  - __Array__ - Return posts written by any of the authors (IN/OR operator) 
+	- __string__ - Return posts only written by that author
+	- __Array__ - Return posts written by any of the authors (IN/OR operator) 
 
 __year__ : *integer*
 - 4 digit year (e.g. 2011)
@@ -865,17 +865,17 @@ __ORDERING:__
 
 __orderby__ : *string*
 - Options
-  - date (default)
-  - rank_score
-  - post_points
-  - modified
-  - rand
-  - comment_count
+	- date (default)
+	- rank_score
+	- post_points
+	- modified
+	- rand
+	- comment_count
 
 __order__ : *string*
 - Options
-  - DESC (default)
-  - ASC
+	- DESC (default)
+	- ASC
 
 ------
 
@@ -888,21 +888,21 @@ __offset__ : *integer*
 
 __post_count__ : *integer*
 - Maximum number of posts to return.
-  - 0 (default) - Return all
+	- 0 (default) - Return all
 
 __fields__ : *string / Array*
 - Set return values. Uses `pw_get_posts( $post_ids, $fields )` method
 - Pass this directly to `wp_get_posts()` method unless the value is 'ids'
-  - __ids__ (default) - Return an Array of post IDs
-  - __all__ - Return all fields
-  - __preview__ - Return basic fields
-  - `array( 'post_title', 'post_content', … )` - Array of fields which to return
+	- __ids__ (default) - Return an Array of post IDs
+	- __all__ - Return all fields
+	- __preview__ - Return basic fields
+	- `array( 'post_title', 'post_content', … )` - Array of fields which to return
 
 __$return_format__ : *string*
 - Options
-  - __WP_QUERY__ (default) - Return a [WP_Post Object](http://codex.wordpress.org/Class_Reference/WP_Post )
-  - __JSON__ - Return a JSON Object
-  - __ARRAY_A__ - Return an Associative Array
+	- __WP_QUERY__ (default) - Return a [WP_Post Object](http://codex.wordpress.org/Class_Reference/WP_Post )
+	- __JSON__ - Return a JSON Object
+	- __ARRAY_A__ - Return an Associative Array
 
 
 ####Usage:
@@ -964,40 +964,40 @@ __location__ : *string*
 
 __orderby__ : *string*
 - Options:
-  - __post_points__ - Points to the user's posts
-  - __comment_points__ - Points to user's comments
-  - __display_name__ - Use Display Name, alphabetical
-  - __username__ - Use *Nice Name*, alphabetical
-  - __date__ - Date joined
+	- __post_points__ - Points to the user's posts
+	- __comment_points__ - Points to user's comments
+	- __display_name__ - Use Display Name, alphabetical
+	- __username__ - Use *Nice Name*, alphabetical
+	- __date__ - Date joined
 
 __order__ : *string*
 - Options : 
-  - __ASC__ (default)
-  - __DESC__
+	- __ASC__ (default)
+	- __DESC__
 
 __fields__ : *Array*
 - Options : 
-  - __All__ (default)
-  - Any fields from `get_userdata()` Method : http://codex.wordpress.org/Function_Reference/get_userdata
-  - Any fields from `pw_get_userdata()` Method
+	- __All__ (default)
+	- Any fields from `get_userdata()` Method : http://codex.wordpress.org/Function_Reference/get_userdata
+	- Any fields from `pw_get_userdata()` Method
 
 __$return_format__ : *string*
 - Options:
-  - ARRAY_A (default)
-  - JSON
+	- ARRAY_A (default)
+	- JSON
 
 #### Usage:
 ``` php
 $args = array(
-     'location_country' => {{search_terms}}
-     'location_region' => {{search_terms}}
-     'location_city' => {{search_terms}}
-     'location' => {{search_terms}}
-     'role' => {{string}}
-     's' => {{search_terms}}
-     'orderby' => {{string}}
-     'order' => {{string}}
-     'fields' => array(ids) // default ids only // use pw_get_userdata() method
+		 'location_country' => {{search_terms}}
+		 'location_region' => {{search_terms}}
+		 'location_city' => {{search_terms}}
+		 'location' => {{search_terms}}
+		 'role' => {{string}}
+		 's' => {{search_terms}}
+		 'orderby' => {{string}}
+		 'order' => {{string}}
+		 'fields' => array(ids) // default ids only // use pw_get_userdata() method
 );
 $users = pw_user_query( $args, 'JSON' );
 ```
@@ -1014,8 +1014,8 @@ Here we have a series of functions which are used to read and write custom user 
 ### pw_set_avatar( *$image_object, $user_id* )
 - Sets an image/attachment ID has been delegated as the avatar for the given user
 - Stored in __Wordpress User Meta__ `wp_usermeta`
-  - Key : `pw_avatar`
-  - Value : Attachment ID in the Media Library  
+	- Key : `pw_avatar`
+	- Value : Attachment ID in the Media Library  
 
 #### Parameters
 
@@ -1023,7 +1023,7 @@ __$image_object__ : *Array* (required)
 - __id__ - ID of the attachment in Media Library
 - __url__ - URL of image which will be imported into the media library
 - __action__ (optional)
-  - __delete__ - Deletes the user's avatar
+	- __delete__ - Deletes the user's avatar
 
 __$user_id__ : *integer* (required)
 - ID of the user to set
@@ -1031,13 +1031,13 @@ __$user_id__ : *integer* (required)
 #### Usage
 
 ```php
-  pw_set_avatar( array( "id"=>1, [ "action" => "delete" ], [ "url" => "http://...jpg/gif/png" ] ), $user_id );
+	pw_set_avatar( array( "id"=>1, [ "action" => "delete" ], [ "url" => "http://...jpg/gif/png" ] ), $user_id );
 ```
 
 __return__  
 - On success
-  - __Array__ - Image Meta Data &  URLs
-  - `return['id']` is ID 
+	- __Array__ - Image Meta Data &  URLs
+	- `return['id']` is ID 
 - On Error returns error object
 
 ------
@@ -1066,36 +1066,36 @@ $avatar_object = pw_get_avatar( array("user_id"=>"1") );
 
 ``` javascript
 var avatar_object = {
-   "width":640,
-   "height":480,
-   "file":"2013\/11\/IMAGE.jpg",
-   "file_url":"http:\/\/localhost:8888\/wp-content\/uploads\/2013\/11\/IMAGE.jpg",
-   "sizes":{
-      "thumbnail":{
-         "file":"IMAGE-150x150.jpg",
-         "width":150,
-         "height":150,
-         "mime-type":"image\/jpeg"
-      },
-      "medium":{
-         "file":"IMAGE-275x300.jpg",
-         "width":275,
-         "height":300,
-         "mime-type":"image\/jpeg"
-      }
-   },
-   "image_meta":{
-      "aperture":0,
-      "credit":"",
-      "camera":"",
-      "caption":"",
-      "created_timestamp":0,
-      "copyright":"",
-      "focal_length":0,
-      "iso":0,
-      "shutter_speed":0,
-      "title":""
-   }
+	 "width":640,
+	 "height":480,
+	 "file":"2013\/11\/IMAGE.jpg",
+	 "file_url":"http:\/\/localhost:8888\/wp-content\/uploads\/2013\/11\/IMAGE.jpg",
+	 "sizes":{
+			"thumbnail":{
+				 "file":"IMAGE-150x150.jpg",
+				 "width":150,
+				 "height":150,
+				 "mime-type":"image\/jpeg"
+			},
+			"medium":{
+				 "file":"IMAGE-275x300.jpg",
+				 "width":275,
+				 "height":300,
+				 "mime-type":"image\/jpeg"
+			}
+	 },
+	 "image_meta":{
+			"aperture":0,
+			"credit":"",
+			"camera":"",
+			"caption":"",
+			"created_timestamp":0,
+			"copyright":"",
+			"focal_length":0,
+			"iso":0,
+			"shutter_speed":0,
+			"title":""
+	 }
 }
 ```
 
@@ -1104,7 +1104,7 @@ var avatar_object = {
 ### get_avatar_sizes( $user_id, $fields )
 
 - Takes input $fields in the following format
-  - `avatar(handle,size)`
+	- `avatar(handle,size)`
 
 __return__ : *Array* (of image objects)
 
@@ -1114,9 +1114,9 @@ $avatars_object = get_avatar_sizes( $user_id, $fields );
 
 //RESULT
 $avatars_object = array(
-  'small'=>array( "width"=>48, "height"=>48, "url"=>"http://...jpg" ),
-  'medium'=>array( "width"=>150, "height"=>150, "url"=>"http://...jpg" )
-  )
+	'small'=>array( "width"=>48, "height"=>48, "url"=>"http://...jpg" ),
+	'medium'=>array( "width"=>150, "height"=>150, "url"=>"http://...jpg" )
+	)
 ```
 
 ------
@@ -1142,44 +1142,44 @@ __$user_id__ : *integer*
 __$fields__ : (optional) *string / Array*
 - __all__ : Default - Return all fields
 - Standard __Wordpress__ User Fields:
-  - user_login
-  - user_nicename
-  - user_email
-  - user_url
-  - user_registered
-  - display_name
-  - user_firstname
-  - user_lastname
-  - nickname
-  - user_description
-  - wp_capabilities
-  - admin_color
-  - closedpostboxes_page
-  - primary_blog
-  - rich_editing
-  - source_domain
-  - roles
-  - capabilities
+	- user_login
+	- user_nicename
+	- user_email
+	- user_url
+	- user_registered
+	- display_name
+	- user_firstname
+	- user_lastname
+	- nickname
+	- user_description
+	- wp_capabilities
+	- admin_color
+	- closedpostboxes_page
+	- primary_blog
+	- rich_editing
+	- source_domain
+	- roles
+	- capabilities
 
 - Custom __Postworld__ User Fields:
-  - avatar(small,48) - *( handle, dimensions )*
-  - post_points
-  - post_points_meta
-  - comment_points
-  - share_points
-  - share_points_meta
-  - post_votes
-  - comment_votes
-  - location_country
-  - location_region
-  - location_city
-  - post_relationships :  
-    • viewed  
-    • favorites  
-    • view_later  
+	- avatar(small,48) - *( handle, dimensions )*
+	- post_points
+	- post_points_meta
+	- comment_points
+	- share_points
+	- share_points_meta
+	- post_votes
+	- comment_votes
+	- location_country
+	- location_region
+	- location_city
+	- post_relationships :  
+		• viewed  
+		• favorites  
+		• view_later  
 
 - __Buddypress__ User Fields:
-  - user_profile_url
+	- user_profile_url
 
 #### Usage
 ``` php
@@ -1233,9 +1233,9 @@ __USER / POST RELATIONSHIPS__
 __$relationship__ : *string*
 - The type of relationship to set
 - __Options__ :
-  - viewed
-  - favorites
-  - view_later
+	- viewed
+	- favorites
+	- view_later
 
 __$post_id__ : *integer*
 
@@ -1249,7 +1249,7 @@ __$switch__ : *boolean*
 - Add/remove the given __post_id__ to the given relationship array in __post_relationships__ column in __User Meta__ table
 
 - __Favorites__
-  - If `$relationship == favorite` : Add / remove a row to __Favorites__ table
+	- If `$relationship == favorite` : Add / remove a row to __Favorites__ table
 
 #### Usage
 ``` php
@@ -1261,9 +1261,9 @@ __$switch__ : *boolean*
 
 ``` javascript
 {
-    viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
-    favorites:[12,16,25],
-    read_later:[58,78],
+		viewed:[12,25,23,16,47,24,58,112,462,78,234,25,128],
+		favorites:[12,16,25],
+		read_later:[58,78],
 }
 ```
 
@@ -1281,10 +1281,10 @@ __return__ : *boolean*
 __$relationship__ : *string*
 - The type of relationship to set
 - __Options__ :
-  - all
-  - viewed
-  - favorites
-  - view_later
+	- all
+	- viewed
+	- favorites
+	- view_later
 
 __$post_id__ : *integer*
 
@@ -1350,11 +1350,11 @@ __POST RELATIONSHIP : "SET" ALIASES__
 
 __$post_id__ : *integer* (optional)
 - If undefined, get the current __post_id__ like:
-  
-  ``` php
-  global $post;
-  $post_id = $post->ID;
-  ```
+	
+	``` php
+	global $post;
+	$post_id = $post->ID;
+	```
 
 __$user_id__ : *integer* (optional)
 - If undefined, use: `$user_id = get_current_user_id();`
@@ -1438,11 +1438,11 @@ __POST RELATIONSHIP : "IS" ALIASES__
 
 __$post_id__ : *integer* (optional)
 - If undefined, get the current __post_id__ like:
-  
-  ``` php
-  global $post;
-  $post_id = $post->ID;
-  ```
+	
+	``` php
+	global $post;
+	$post_id = $post->ID;
+	```
 
 __$user_id__ : *integer* (optional)
 - If undefined, use: `$user_id = get_current_user_id();`
@@ -1486,7 +1486,7 @@ __return__ : *boolean*
 - Use `get_post_relationship()` method to return the post relationship status for the specified post relationship
 
 ``` php
-  get_post_relationship( $post_relationship, $post_id, $user_id )
+	get_post_relationship( $post_relationship, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
@@ -1553,25 +1553,25 @@ __$comment_id__
 
 __$fields__ : *Array*
 - __Worpress Comment Fields__ : All return fields from [WP get_comment()](http://codex.wordpress.org/Function_Reference/get_comment)
-  - comment_ID
-  - comment_post_ID
-  - comment_author
-  - comment_author_email
-  - comment_author_url
-  - comment_author_IP
-  - comment_date
-  - comment_date_gmt
-  - comment_content
-  - comment_karma
-  - comment_approved
-  - comment_agent
-  - comment_type
-  - comment_parent
-  - user_id
+	- comment_ID
+	- comment_post_ID
+	- comment_author
+	- comment_author_email
+	- comment_author_url
+	- comment_author_IP
+	- comment_date
+	- comment_date_gmt
+	- comment_content
+	- comment_karma
+	- comment_approved
+	- comment_agent
+	- comment_type
+	- comment_parent
+	- user_id
 - __Postworld Comment Fields__
-  - comment_points
-  - viewer_voted
-  - time_ago
+	- comment_points
+	- viewer_voted
+	- time_ago
 
 __$viewer_user_id__
 - The user ID of a user to return vote data by
@@ -1580,27 +1580,27 @@ __return__ : *Array*
 
 ``` php
 Array (
-  // WORDPRESS FIELDS
-  [comment_ID] => 1
-  [comment_post_ID] => 1
-  [comment_author] =>
-  [comment_author_email] =>
-  [comment_author_url] =>
-  [comment_author_IP] =>
-  [comment_date] => 2013-10-19 19:41:02
-  [comment_date_gmt] => 2013-10-19 19:41:02
-  [comment_content] => Hello universe.
-  [comment_approved] => 1
-  [comment_agent] =>
-  [comment_type] =>
-  [comment_parent] => 0
-  [user_id] => 1
-  
-  // POSTWORLD FIELDS
-  [comment_points] => 0
-  [user_voted] => 0
-  [time_ago] => 1 second ago
-  )
+	// WORDPRESS FIELDS
+	[comment_ID] => 1
+	[comment_post_ID] => 1
+	[comment_author] =>
+	[comment_author_email] =>
+	[comment_author_url] =>
+	[comment_author_IP] =>
+	[comment_date] => 2013-10-19 19:41:02
+	[comment_date_gmt] => 2013-10-19 19:41:02
+	[comment_content] => Hello universe.
+	[comment_approved] => 1
+	[comment_agent] =>
+	[comment_type] =>
+	[comment_parent] => 0
+	[user_id] => 1
+	
+	// POSTWORLD FIELDS
+	[comment_points] => 0
+	[user_voted] => 0
+	[time_ago] => 1 second ago
+	)
 ```
 
 ------
@@ -1623,7 +1623,7 @@ __$tree__ : *boolean*
 
 #### Process
 - Submit `$query` to Wordpress `get_comments()` function
-  - Preserve the selected fields
+	- Preserve the selected fields
 - If there are custom Postworld Comment fields defined, get their values
 - If `$tree == true` organize them into a hierarchical structure with `tree_obj()` function
 
@@ -1635,29 +1635,29 @@ __return__ : *Array* (of comments)
 
 #### Description
 - If `comment_ID` parameter is supplied (and comment exists), use `wp_update_comment`
-  - Otherwise use `wp_insert_comment()`
+	- Otherwise use `wp_insert_comment()`
 - Includes various security measures
 
 #### Parameters
 
 __$comment_data__ : *Array A*
 - Fields:
-  - comment_post_ID
-  - comment_content
-  - comment_type
-  - comment_parent
-  - user_id
-  - comment_author_IP
-  - comment_agent
-  - comment_date_gmt
-  - comment_date
-  - comment_approved
+	- comment_post_ID
+	- comment_content
+	- comment_type
+	- comment_parent
+	- user_id
+	- comment_author_IP
+	- comment_agent
+	- comment_date_gmt
+	- comment_date
+	- comment_approved
 
 __$return__ : *string*
 - How to return on a successful add
 - Options:
-  - __data__ (default) - Return with the post object from `pw_get_comment()`
-  - __id__ - Return just the ID of the new / updated comment
+	- __data__ (default) - Return with the post object from `pw_get_comment()`
+	- __id__ - Return just the ID of the new / updated comment
 
 
 #### Usage
@@ -1666,10 +1666,10 @@ __New Comment:__
 
 ``` php
 $comment_data = array(
-  'comment_content' => "Hello world.",
-  'comment_post_ID' => 27,
-  'comment_parent' => 0,
-  );
+	'comment_content' => "Hello world.",
+	'comment_post_ID' => 27,
+	'comment_parent' => 0,
+	);
 
 pw_save_comment($comment_data,'id');
 ```
@@ -1681,9 +1681,9 @@ __Edit Comment:__
 
 ``` php
 $comment_data = array(
-  'comment_ID' => 1,
-  'comment_content' => "Hello universe.",
-  );
+	'comment_ID' => 1,
+	'comment_content' => "Hello universe.",
+	);
 
 pw_save_comment($comment_data,'data');
 ```
@@ -1699,12 +1699,107 @@ __php/postworld_feeds.php__
 
 ------
 
-### pw_live_feed ( *$args* )
+
+### pw_live_feed ( *$vars* )
+- Used to insert a `live-feed` or `load-feed` feed
+- Prints the `<script>` and `html` tags for a feed
+
+#### Parameters : *$vars*
+
+__feed_id__ : *string* (optional)
+- Unique identifier for the feed (must be unique)
+- By default, a unique ID hash is generated for each feed
+
+__element__ : *string* (optional)
+- Which element the feed is wrapped in
+- *Default* : `div`
+
+__directive__ : *string* (optional)
+- Which directive to use to insert the feed
+- Options:
+	+ `live-feed` (default)
+	+ `load-feed`
+
+__class__ : *string* (optional)
+- Any classes to be added to the feed element
+- *Default* : `feed`
+
+__attributes__ : *string* (optional)
+- Any additional HTML attributes to be added to the feed element
+- *Example* : `id="myFeed" title="My Feed"`
+
+__echo__ : *boolean* (optional)
+- If `true`, this will echo the feed
+- If `false`, the function will return a string containing the feed JS + HTML
+- *Default*: `true`
+
+__feed__ : *array* (optional)
+- Feed values for the Angular directive
+
+
+#### Simple Example
+- Here is an example of a typical usage
+```php
+$feed_vars = array(
+	'feed'	=>	array(
+		'feed_template'	=>	'feed-grid',
+		'view'	=>	array(
+			'current' 	=> 'grid',
+			),
+		'query' 		=> array(
+			'post_status'		=>	'publish',
+			'post_type'			=>	'post',
+			'fields'			=>	'preview',
+			'posts_per_page'	=>	200,
+			),
+		),
+	);
+pw_live_feed( $feed_vars );
+```
+
+#### Full Example
+- Here is an example shown with all the default settings in place
+```php
+$feed_vars = array(
+	'feed_id'		=>	'myFeed',
+	'element'		=>	'div',
+	'directive'		=>	'live-feed',
+	'class'			=>	'feed',
+	'attributes'	=>	'',
+	'echo'			=>	true,
+	'feed'	=>	array(
+		'preload'			=>	10,
+		'load_increment' 	=> 	10,
+		'offset'			=>	0,
+		'max_posts'			=>	200,
+		'order_by'			=>	'-post_date',
+		'view'	=>	array(
+			'current' 	=> 'list',
+			'options'	=>	array( 'list', 'grid' ),
+			),
+		'query' 		=> array(
+			'post_status'		=>	'publish',
+			'post_type'			=>	'post',
+			'fields'			=>	'preview',
+			'posts_per_page'	=>	200,
+			),
+		'feed_template'	=>	null,	// The ID of a feed in /views/feeds/
+		),
+	);
+pw_live_feed( $feed_vars );
+```
+
+
+
+------
+
+
+### pw_get_live_feed ( *$args* )
 
 #### Description:
 - Used for custom search querying, etc.
-- Does not access *wp_postworld_feeds* caches at all
-- Helper function for the `pw_live_feed()` JS method
+- Does not access *wp_postworld_feeds* caches
+- Helper function for the `pw_get_live_feed()` JS method
 
 
 #### Parameters: $args
@@ -1728,13 +1823,13 @@ __feed_query__ : *Array*
 #### Usage:
 ``` php
 $args = array (
-     'feed_id' => {{string}},
-     'preload'  => {{integer}}
-     'feed_query' => array(
-          // pw_query args    
-     )
+		 'feed_id'        => 'myFeed',
+		 'preload'        => 10,
+		 'query' => array(
+					// pw_query args    
+		 )
 )
-$live_feed = pw_live_feed ( *$args* );
+$live_feed = pw_get_live_feed ( *$args* );
 ```
 
 __return__ : *Object*
@@ -1743,7 +1838,6 @@ __return__ : *Object*
 array(
 	'feed_id' => {{string}},
 	'feed_outline' => '12,356,3564,2362,236',
-	'loaded' => '12,356,3564',
 	'preload' => {{integer}},
 	'post_data' => array(), // Output from pw_get_posts() based on feed_query
 )
@@ -1758,8 +1852,8 @@ array(
 
 #### Process:
 1. If the __feed_id__ doesn't appear in the __wp_postworld_feeds__ table :
-  1. Create a new row
-  2. Enable `write_cache = true`
+	1. Create a new row
+	2. Enable `write_cache = true`
 
 2. Store `$args['feed_query']` in the __feed_query__ column in Postworld __Feeds__ table as a JSON Object
 
@@ -1777,8 +1871,8 @@ __feed_query__ : *array* (required)
 
 __write_cache__ : *boolean* (optional)
 - If the __feed_id__ is new to the __feeds__ table, set `write_cache = true`
-  - **false** (default) - Wait for cron job to update feed outline later, just update feed_query
-  - **true** - Cache the feed outline with method : run `pw_cache_feed( $feed_id )`
+	- **false** (default) - Wait for cron job to update feed outline later, just update feed_query
+	- **true** - Cache the feed outline with method : run `pw_cache_feed( $feed_id )`
 
 #### Usage :
 ``` php
@@ -1890,11 +1984,11 @@ __template__ : *string* (optional)
 ```php
 ///// PRINT LOAD FEED /////
 $print_feed_args = array(
-  'feed_id' =>  'features-front_page',
-  'posts'   =>  3,
-  'fields'  =>  array('ID','post_title', 'post_excerpt','post_permalink'),
-  'view'    =>  'list-h2o',
-  );
+	'feed_id' =>  'features-front_page',
+	'posts'   =>  3,
+	'fields'  =>  array('ID','post_title', 'post_excerpt','post_permalink'),
+	'view'    =>  'list-h2o',
+	);
 echo pw_print_feed( $print_feed_args );
 ```
 
@@ -1902,13 +1996,13 @@ echo pw_print_feed( $print_feed_args );
 ```php
 ///// PRINT LOAD FEED /////
 $print_feed_args = array(
-  'feed_query'  =>  array(
-    'post_type' =>  array('blog'),
-    'posts_per_page'  =>  '3',
-    'fields'  =>  array('ID','post_title', 'post_excerpt','post_permalink'),
-    ),
-  'view'    =>  'list-h2o',
-  );
+	'feed_query'  =>  array(
+		'post_type' =>  array('blog'),
+		'posts_per_page'  =>  '3',
+		'fields'  =>  array('ID','post_title', 'post_excerpt','post_permalink'),
+		),
+	'view'    =>  'list-h2o',
+	);
 echo pw_print_feed( $print_feed_args );
 ```
 
@@ -1919,11 +2013,11 @@ echo pw_print_feed( $print_feed_args );
 
 ```php
 /*
-    $vars = array(
-      "menu"    => ""     // Name or ID or slug of menu
-      "fields"  => array()  // Fields to pass to pw_get_post
-      "view"    => ""   // Which view to render
-    )
+		$vars = array(
+			"menu"    => ""     // Name or ID or slug of menu
+			"fields"  => array()  // Fields to pass to pw_get_post
+			"view"    => ""   // Which view to render
+		)
 */
 ```
 
@@ -1943,8 +2037,8 @@ __$post_view__ : *string*
 
 __$path_type__ : *string* (optional)
 - Options:
-  - __url__ (default): Returns absolute URL string of template file
-  - __dir__ : Returns absolute directory path of template file
+	- __url__ (default): Returns absolute URL string of template file
+	- __dir__ : Returns absolute directory path of template file
 
 
 #### Usage
@@ -1969,8 +2063,8 @@ __$panel_id__ : *string* (required)
 __$path_type__ : *string* (optional)
 - The type of path to return
 - Options:
-  + __url__ : (default) Absolute URL to the path
-  + __dir__ : Absolute system path, ie. /var/vhosts/www...
+	+ __url__ : (default) Absolute URL to the path
+	+ __dir__ : Absolute system path, ie. /var/vhosts/www...
 
 __return__ : *string / false*
 - The URL or absolute path of the template
@@ -1995,8 +2089,8 @@ __$ext__ : *string* (optional)
 __$path_type__ : *string* (optional)
 - The type of path to return
 - Options:
-  + __url__ : (default) Absolute URL to the path
-  + __dir__ : Absolute system path, ie. /var/vhosts/www...
+	+ __url__ : (default) Absolute URL to the path
+	+ __dir__ : Absolute system path, ie. /var/vhosts/www...
 
 __return__ : *string / false*
 - The URL or absolute path of the template
@@ -2017,13 +2111,13 @@ __subdirs__ : *Array* (optional)
 __posts__ : *Array* (optional)
 - Custom filtering for returning post templates
 - Options:
-  + __post_types__ : *Array* (optional) - Which post types to return templates for. *Default*: All post types
-  + __post_views__ : *Array* (optional) - Which post views to return templates for. *Default*: All post views registered in `pw-config`
+	+ __post_types__ : *Array* (optional) - Which post types to return templates for. *Default*: All post types
+	+ __post_views__ : *Array* (optional) - Which post views to return templates for. *Default*: All post views registered in `pw-config`
 
 __path_type__ : *string* (optional)
 - Options:
-  - __url__ (default): Returns absolute URL string of template file
-  - __dir__ (default): Returns absolute directory path of template file
+	- __url__ (default): Returns absolute URL string of template file
+	- __dir__ (default): Returns absolute directory path of template file
 
 __ext__ : *string* (optional)
 - The suffix / extension of file type which to search for
@@ -2033,35 +2127,35 @@ __ext__ : *string* (optional)
 __source__ : *string* (optional)
 - The method by which to merge the over-ride templates
 - Options:
-  + __merge__ (default) - A custom merge method
-  + __default__ - Default PHP merge method
+	+ __merge__ (default) - A custom merge method
+	+ __default__ - Default PHP merge method
 
 #### Process:
 
 __POST TEMPLATES OBJECT__
 
 - __Default__ post templates path :  
-  __/plugins__/postworld/templates/posts
+	__/plugins__/postworld/templates/posts
 
 - __Over-ride__ post templates path :  
-  __/theme_name__/postworld/templates/posts
+	__/theme_name__/postworld/templates/posts
 
 
 1. Generate list of template names :
-  - {{post_type}}-{{post_view}}.html  
-  post-list.html  
-  post-detail.html  
-  etc…
+	- {{post_type}}-{{post_view}}.html  
+	post-list.html  
+	post-detail.html  
+	etc…
 
 2. For each template name, check over-rides path for templates with `file_exists()` PHP Method
 
 3. If template __post_type__ doesn't exist, fallback:
-  - For __post_type__ default to __post__  
-  If ( __link-list.html__ ) doesn't exist use ( __post-list.html__ )
+	- For __post_type__ default to __post__  
+	If ( __link-list.html__ ) doesn't exist use ( __post-list.html__ )
 
 4. If template __post_view__ over-ride doesn't exist, fallback to default templates path
-  -  For __post_view__ default to plugin path  
-  If ( __/theme_name__/.../post-list.html ) doesn't exist, use ( __/plugins__/.../post-list.html )
+	-  For __post_view__ default to plugin path  
+	If ( __/theme_name__/.../post-list.html ) doesn't exist, use ( __/plugins__/.../post-list.html )
 
 5. Gather all the template files into an object
 
@@ -2069,16 +2163,16 @@ __POST TEMPLATES OBJECT__
 __TEMPLATES OBJECTS BY DIRECTORY__
 
 - Default panels template path :  
-  __/plugins__/postworld/templates/[panels/comments/modals]
+	__/plugins__/postworld/templates/[panels/comments/modals]
 
 - Over-ride panels template path:  
-  __/theme_name__/postworld/templates/[panels/comments/modals]
+	__/theme_name__/postworld/templates/[panels/comments/modals]
 
 
 1. Generate a url of the requester panel_id by checking both the Default and Over-ride template folders
-  - {{panel_id}}.html  
-  Key is __file_name__ without the HTML extension, value is the path relative to base domain
-   
+	- {{panel_id}}.html  
+	Key is __file_name__ without the HTML extension, value is the path relative to base domain
+	 
 2. If file exists in __over-ride__ paths, overwrite the __default__ paths
 
 __return__ : *Array* (with requested template paths)
@@ -2090,12 +2184,12 @@ __return__ : *Array* (with requested template paths)
 
 // To get Selective Post Templates Object
 $args =  array(
-  'subdirs' => array( 'posts', 'comments' ),
-  'posts'=> array( 
-    'post_types' => array('posts', 'pages'),
-    'post_views' => array('list','full'),
-    )
-  );
+	'subdirs' => array( 'posts', 'comments' ),
+	'posts'=> array( 
+		'post_types' => array('posts', 'pages'),
+		'post_views' => array('list','full'),
+		)
+	);
 $post_templates = pw_get_templates ($args);
 
 // To get Panel Templates Object
@@ -2114,13 +2208,13 @@ After JSON Encoded :
 
 ``` javascript
 {
-  posts : {
-   'post' : {
-      'list' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
-      'detail' : '/wp-content/plugins/postworld/templates/posts/post-detail.html',
-      'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
-      },
-  },
+	posts : {
+	 'post' : {
+			'list' : '/wp-content/plugins/postworld/templates/posts/post-list.html',
+			'detail' : '/wp-content/plugins/postworld/templates/posts/post-detail.html',
+			'full' : '/wp-content/theme_name/postworld/templates/posts/post-full.html',
+			},
+	},
 };
 
 ```
@@ -2133,7 +2227,7 @@ After JSON Encoded :
 {
 panels : {
 	'feed_top': '/wp-content/plugins/postworld/templates/panels/feed_top.html',
-  //...
+	//...
 	}
 };
 ```
@@ -2143,7 +2237,7 @@ panels : {
 ### pw_parse_template( *$template_path, $vars* )
 - Parses a PHP template
 - Injects the template with the provided `$vars` localized via extract
-  + `extract($vars)`
+	+ `extract($vars)`
 - Useful for turning parsed template HTML into a variable
 
 #### Parameters
@@ -2158,10 +2252,10 @@ __$vars__ : *array* (optional)
 #### Usage 
 ```php
 $vars = array(
-  'query' => array(
-    'post_type' => $post->post_type // Localized in template as $query['post_type']
-    )
-  );
+	'query' => array(
+		'post_type' => $post->post_type // Localized in template as $query['post_type']
+		)
+	);
 $template_html = pw_parse_template( $template_path, $vars );
 ```
 
@@ -2180,25 +2274,25 @@ __php/postworld_share.php__
 #### Description
 - Sets a record of a share in __Shares__ table
 - __Context__ : The URL leading to the share looks like : 
-  - `http://realitysandwich.com/?p=24&u=48`
-  - __p__ : The post ID
-  - __u__ : The user ID
+	- `http://realitysandwich.com/?p=24&u=48`
+	- __p__ : The post ID
+	- __u__ : The user ID
 
 
 #### Process
 1. Setup
-  - Check if user ID exists
-  - Check if post ID exists
-  - Get the ID of the post author from __Posts__ table 
-  - Get the user's IP address with `get_client_ip()`
+	- Check if user ID exists
+	- Check if post ID exists
+	- Get the ID of the post author from __Posts__ table 
+	- Get the user's IP address with `get_client_ip()`
 2. Process IP
-  - Check IP address against list of IPs stored in `recent_ips` column in __Shares__ table
-  - If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
-  - If the IP is in the list, do nothing
-  - If the array length of IPs is over {{100}}, remove old IPs
+	- Check IP address against list of IPs stored in `recent_ips` column in __Shares__ table
+	- If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
+	- If the IP is in the list, do nothing
+	- If the array length of IPs is over {{100}}, remove old IPs
 3. Add Share 
-  - If the IP is unique, add one point to the share
-  - Update __last_time__ with current GMT UNIX Timestamp
+	- If the IP is unique, add one point to the share
+	- Update __last_time__ with current GMT UNIX Timestamp
 
 __return__ : *boolean*
 - __true__ - if added share
@@ -2222,17 +2316,17 @@ __return__ : *Array*
 
 ``` php
 array(
-    array(
-        'post_id' => 8723,
-        'shares' => 385,
-        'last_time' => {{integer}}
-    	),
-    array(
-        'post_id' => 3463,
-        'shares' => 234,
-        'last_time' => {{integer}}
-    	),
-    ...
+		array(
+				'post_id' => 8723,
+				'shares' => 385,
+				'last_time' => {{integer}}
+			),
+		array(
+				'post_id' => 3463,
+				'shares' => 234,
+				'last_time' => {{integer}}
+			),
+		...
 
 	)
 ```
@@ -2250,13 +2344,13 @@ user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) );
 #### Output : Outgoing
 ``` javascript
 [
-  {
-    "post_id":"181217",
-    "shares":"1",
-    "last_time":"2013-11-11 07:11:21",
-    "post":{ "post_title":"title",... } // << Adds this object : output from pw_get_post
-  },
-  ...
+	{
+		"post_id":"181217",
+		"shares":"1",
+		"last_time":"2013-11-11 07:11:21",
+		"post":{ "post_title":"title",... } // << Adds this object : output from pw_get_post
+	},
+	...
 ]
 ```
 
@@ -2268,20 +2362,20 @@ user_share_report_meta( user_share_report_incoming( $displayed_user_id ) );
 #### Output : Incoming
 ``` javascript
 [
-  {
-    "post_id":"200047",
-    "total_shares":"1",
-    "post":{ "post_title":"title",... } // << Adds this object : output from pw_get_post
-    "user_shares":[
-      {
-        "user_id":"1",
-        "shares":"1",
-        "last_time":"2013-11-11 07:13:54"
-        "author":{ "display_name":"Name", ... } // << Adds this object : output from pw_get_userdata
-      }
-    ]
-  },
-  ...
+	{
+		"post_id":"200047",
+		"total_shares":"1",
+		"post":{ "post_title":"title",... } // << Adds this object : output from pw_get_post
+		"user_shares":[
+			{
+				"user_id":"1",
+				"shares":"1",
+				"last_time":"2013-11-11 07:13:54"
+				"author":{ "display_name":"Name", ... } // << Adds this object : output from pw_get_userdata
+			}
+		]
+	},
+	...
 ]
 
 ```
@@ -2301,40 +2395,40 @@ __return__ : *Array*
 
 ``` php
 array(
-    array(
-        'post_id' => 9348,
-        'total_shares' => 1385,
-        'users_shares' => array( 
-            array(
-                'user_id' => 843,
-                'shares' => 235,
-                'last_time' => {{integer}}
-            	),
-            array(
-                'user_id' => 733,
-                'shares' => 345,
-                'last_time' => {{integer}}
-            	),
-            ...
-        	)
-    	),
-    array(
-        'post_id' => 623,
-        'total_shares' => 4523,
-        'users_shares' => array( 
-            array(
-                'user_id' => 633,
-                'shares' => 785,
-                'last_time' => {{integer}}
-            	),
-            array(
-                'user_id' => 124,
-                'shares' => 573,
-                'last_time' => {{integer}}
-            	),
-            ...
-        	)
-    	),
+		array(
+				'post_id' => 9348,
+				'total_shares' => 1385,
+				'users_shares' => array( 
+						array(
+								'user_id' => 843,
+								'shares' => 235,
+								'last_time' => {{integer}}
+							),
+						array(
+								'user_id' => 733,
+								'shares' => 345,
+								'last_time' => {{integer}}
+							),
+						...
+					)
+			),
+		array(
+				'post_id' => 623,
+				'total_shares' => 4523,
+				'users_shares' => array( 
+						array(
+								'user_id' => 633,
+								'shares' => 785,
+								'last_time' => {{integer}}
+							),
+						array(
+								'user_id' => 124,
+								'shares' => 573,
+								'last_time' => {{integer}}
+							),
+						...
+					)
+			),
 	)
 ```
 
@@ -2412,8 +2506,8 @@ __taxonomy__ : *string* (required)
 #### Parameters
 __$taxonomies__ : *string/Array* (optional) 
 - Options
-  - __all__ (default) - Returns all hierarchical public taxonomies
-  - *Array* - Array of taxonomy names which to receive a term outline for
+	- __all__ (default) - Returns all hierarchical public taxonomies
+	- *Array* - Array of taxonomy names which to receive a term outline for
 
 __$max_depth__ : *integer* (optional)
 - Default : __2__
@@ -2422,14 +2516,14 @@ __$max_depth__ : *integer* (optional)
 __$fields__ : *Array* (optional)
 - Default : *all*
 - Options :
-  - term_id
-  - name
-  - slug
-  - description
-  - parent
-  - count
-  - taxonomy
-  - url
+	- term_id
+	- name
+	- slug
+	- description
+	- parent
+	- count
+	- taxonomy
+	- url
 
 #### Usage
 ``` php
@@ -2482,7 +2576,7 @@ array(
 #### Todo
 
 - Add option to limit/extend fields ($fields parameter)
-  - Include toggle for 'capabilities, url, description...'
+	- Include toggle for 'capabilities, url, description...'
 
 ------
 
@@ -2527,21 +2621,21 @@ $terms = array(
 
 __$input_format__ : *string*
 - Options:
-  - __ARRAY_A__ (default)
-  - __JSON__
+	- __ARRAY_A__ (default)
+	- __JSON__
 
 __$force_slugs__ : *boolean*
-  - Default : __false__
+	- Default : __false__
 
 #### Process
 - Uses `wp_insert_term()` - [Wordpress Codex](http://codex.wordpress.org/Function_Reference/wp_insert_term) - to insert a hierarchical array of terms
 - Cycle through each level, adding terms
 - If a **term** of the same `slug` already exists within __*the same taxonomy*__
-  - Do not add the term
-  - Update the name of the existing term
-  - Continue to add children if any, with the parent of the already existing term
+	- Do not add the term
+	- Update the name of the existing term
+	- Continue to add children if any, with the parent of the already existing term
 - If a **term*** with the same `slug` already exists within __*a different taxonomy*__
-  - If `$force_slugs == true`, change the other slug - appending an incremental number 
+	- If `$force_slugs == true`, change the other slug - appending an incremental number 
 
 __return__ : *true*
 
@@ -2549,51 +2643,51 @@ __return__ : *true*
 
 ```php
 $json_terms = "{
-    "topic" : [
-        {
-            slug:"psyche",
-            name:"/psyche",
-            children:{
-                ancient:"Ancient Mysteries",
-                astrology:"Astrology",
-                consciousness:"Consciousness",
-                dreams:"Dreams",
-                },
-        },
-        {
-            slug:"arts",
-            name:"/arts",
-            children:{
-                conferences:"Conferences",
-                digital_art:"Digital Art",
-                world_art:"World Art",
-                },
-        },
-        {
-            slug:"body",
-            name:"/body",
-            children:{
-                energy_medicine:"Energy Medicine",
-                food_nutrition:"Food & Nutrition",
-                healing:"Healing",
-                herbalism:"Herbalism",
-                },
-        },
-    ],
-    'section' : [
-        {
-            slug:"psychedelic",
-            name:"Psychedelic Culture",
-        },
-        {
-            slug:"conscious_convergences",
-            name:"Conscious Convergences",
-        },
-        {
-            slug:"psi",
-            name:"Psi Frontiers",
-        },
-    ";
+		"topic" : [
+				{
+						slug:"psyche",
+						name:"/psyche",
+						children:{
+								ancient:"Ancient Mysteries",
+								astrology:"Astrology",
+								consciousness:"Consciousness",
+								dreams:"Dreams",
+								},
+				},
+				{
+						slug:"arts",
+						name:"/arts",
+						children:{
+								conferences:"Conferences",
+								digital_art:"Digital Art",
+								world_art:"World Art",
+								},
+				},
+				{
+						slug:"body",
+						name:"/body",
+						children:{
+								energy_medicine:"Energy Medicine",
+								food_nutrition:"Food & Nutrition",
+								healing:"Healing",
+								herbalism:"Herbalism",
+								},
+				},
+		],
+		'section' : [
+				{
+						slug:"psychedelic",
+						name:"Psychedelic Culture",
+				},
+				{
+						slug:"conscious_convergences",
+						name:"Conscious Convergences",
+				},
+				{
+						slug:"psi",
+						name:"Psi Frontiers",
+				},
+		";
 
 pw_insert_terms($json_terms,"JSON", true);
 
@@ -2634,32 +2728,32 @@ __$depth__ : *integer*
 __$settings__ : __Array__
 
 - __fields__ : *Array*
-  - Default : `array('name')`
-  - The fields which to preserve into the new structure
+	- Default : `array('name')`
+	- The fields which to preserve into the new structure
 
 - __id_key__ : *string*
-  - Default : *id*
-  - The key which to use to deliniate the ID of an object
+	- Default : *id*
+	- The key which to use to deliniate the ID of an object
 
 - __parent_key__ : *string*
-  - Default : *parent*
-  - The key which to use to define the parent ID of an object
+	- Default : *parent*
+	- The key which to use to define the parent ID of an object
 
 - __child_key__ : *string*
-  - Default : *children*
-  - The key under which to nest the children
+	- Default : *children*
+	- The key under which to nest the children
 
 - __max_depth__ : *integer*
-  - Default : *10*
-  - The maximum depth of branches to parse
+	- Default : *10*
+	- The maximum depth of branches to parse
 
 - __callback__ : *string* (optional)
-  - The callback helper function which to call while populating the fields
+	- The callback helper function which to call while populating the fields
 
 - __callback_array__ : *array* (optional)
-  - The localized field values to pass to the callback function
-  - Derived directly from __object__ key of the same name
-  - Passes live values of the named keys in given order to __callback__ function
+	- The localized field values to pass to the callback function
+	- Derived directly from __object__ key of the same name
+	- Passes live values of the named keys in given order to __callback__ function
 
 #### Usage
 
@@ -2884,14 +2978,14 @@ __value__ : *JSON string / A_ARRAY* (required)
 __input_format__ : *string* (optional)
 - The format of the value being passed in and set
 - Options:
-    + __A_ARRAY__ (default)
-    + __JSON__
+		+ __A_ARRAY__ (default)
+		+ __JSON__
 
 __output_format__ : *string* (optional)
 - The format of the value being returned
 - Options:
-    + __A_ARRAY__ (default)
-    + __JSON__
+		+ __A_ARRAY__ (default)
+		+ __JSON__
 
 ##### Return : *Array*
 - The current full value of the `wizard_status` user meta value
@@ -2899,12 +2993,12 @@ __output_format__ : *string* (optional)
 __wizard_Status__ Model:
 ```javascript
 
-  wizard_status = {
-    organizeEvent : {
-      active: true,   // If it in in progress
-      visible: false, // If it is visible on the sidebar
-    },
-  };
+	wizard_status = {
+		organizeEvent : {
+			active: true,   // If it in in progress
+			visible: false, // If it is visible on the sidebar
+		},
+	};
 
 
 ```
@@ -2928,15 +3022,15 @@ __wizard_name__ : *string* (optional)
 __format__ : *string* (optional)
 - The format of the value to return
 - Options:
-    + __A_ARRAY__ (default)
-    + __JSON__
+		+ __A_ARRAY__ (default)
+		+ __JSON__
 
 #### Usage
 ```php
-    $wizard_status = unify_get_wizard_status( array(
-        'user_id' => 1,
-        'wizard_name' => 'organizerInit',
-        ) );
+		$wizard_status = unify_get_wizard_status( array(
+				'user_id' => 1,
+				'wizard_name' => 'organizerInit',
+				) );
 ```
 
 #### Return

@@ -598,7 +598,7 @@ pw.feeds['feed_id'] = {
           current : 'detail',
           options : [ 'list', 'detail', 'grid' ],
      }
-     feed_query : {}
+     query : {}
 
 }
 ```
@@ -621,7 +621,7 @@ __PHP / AJAX :__
   __returns__ : 
     feed_outline
     post
-    feed_query
+    query
     ...
 
 2. Populate `feeds[feed_id]` JS Object with __feed_outline__, and __feed_query__
@@ -838,7 +838,7 @@ pw.feeds[feed_id] = {
     max_blocks:50,
     template: 'ad-block'
   },
-  query_args : {
+  query : {
     // pw_query Args in JSON format
     'post_type':['feature','blog'],
     'post_class':'author',

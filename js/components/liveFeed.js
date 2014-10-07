@@ -43,9 +43,10 @@ postworld.controller('pwFeedController',
 		// Initialize
 		$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 		$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
+		
 		$scope.args = {};
-		$scope.args.feed_query = {};
-		$scope.feed_query = {};
+		$scope.args.query = {};
+		$scope.query = {};
 		$scope.scrollMessage = "";
 		$scope.posts = [];
 		$scope.message = "";   
@@ -182,11 +183,8 @@ postworld.controller('pwFeedController',
 				var max = pwData.feeds[$scope.feed].max_posts;
 				if ( max < pwData.feeds[$scope.feed].feed_outline.length ) {					
 					pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
-				}
-				pwData.feeds[$scope.feed].count_feed_outline = pwData.feeds[$scope.feed].feed_outline.length;														
-			};						
-			pwData.feeds[$scope.feed].loaded = 0;						
-			pwData.feeds[$scope.feed].count_loaded = 0;						
+				}								
+			};											
 			pwData.feeds[$scope.feed].posts = [];
 			// var argsValue = JSON.parse(JSON.stringify($scope.args));			
 			// $scope.posts = pwData.feeds[$scope.feed].posts;
@@ -221,15 +219,10 @@ postworld.controller('pwFeedController',
 			if (max <=response.data.feed_outline.length) {					
 				pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
 			}
-			pwData.feeds[$scope.feed].posts = response.data.posts;						
-			pwData.feeds[$scope.feed].loaded = response.data.posts.length;	
-
-			// Count Length of loaded and feed_outline
-			pwData.feeds[$scope.feed].count_loaded = response.data.posts.length;						
-			pwData.feeds[$scope.feed].count_feed_outline = pwData.feeds[$scope.feed].feed_outline.length;
+			pwData.feeds[$scope.feed].posts = response.data.posts;
 
 			// Set Feed load Status
-			if (pwData.feeds[$scope.feed].count_loaded >= pwData.feeds[$scope.feed].count_feed_outline) {
+			if ( pwData.feeds[$scope.feed].posts.length >= pwData.feeds[$scope.feed].feed_outline.length ) {
 				pwData.feeds[$scope.feed].status = 'all_loaded';													
 				$scope.scrollMessage = "No more posts to load.";						
 			} else {							
@@ -245,7 +238,6 @@ postworld.controller('pwFeedController',
 				$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
 				return;
 			}
-			$scope.busy = true;
 			// if running for the first time
 			if ( $scope.firstRun ) {
 				$scope.firstRun = false;
@@ -254,7 +246,7 @@ postworld.controller('pwFeedController',
 			}
 			else {
 				// Run Search
-				$scope.pwScrollFeed();				
+				$scope.scrollFeed();				
 			}
 		};
 		
@@ -262,37 +254,42 @@ postworld.controller('pwFeedController',
 		$scope.pwRestart = function() {
 			// TODO Can we break an existing Ajax Call? We cannot do that, but we can use an identifier for the request and ignore previous requests to the current id.
 			// This scenario might not happen since we're not allowing more than one feed request at a time, this might be a limitation, but it makes the data consistent.
-			// Set feeds equal to new feed_query
-			// pwData.feeds[$scope.feed].query_args = 
-			$scope.convertFeedQuery2QueryString($scope.args.feed_query);						
+			// Set feeds equal to new 'query'
+			// pwData.feeds[$scope.feed].query = 
+			$scope.convertFeedQuery2QueryString($scope.args.query);						
 			$scope.firstRun = true;			
 			this.getNext();
 		};
 
+
 		$scope.pwLiveFeed = function() {
-			
-
-			if (!$scope.args.feed_query)
-				$scope.args.feed_query = {};
-
-			// identify the feeds feed_id
-			
+			$scope.busy = true;
 			$scope.posts = {};
 
-			// TODO set Nonce from UI
+			// TODO : Set Nonce Authentically
 			pwData.setNonce(78);
 			
-			// get Query String Parameters,
+			// Get Query String Parameters, if any are provided
 			var qsArgs = $scope.getQueryStringArgs();			
-			
-			// We need to work with a clone of the args value
-			var argsValue = JSON.parse( JSON.stringify( $scope.args ) );
-
 			var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
 
-			$log.debug( "LIVE FEED (init) : ID : " + argsValue.feed_id, argsValue );
+			// Clone Args Value as 'feed'
+			var feed = JSON.parse( JSON.stringify( $scope.args ) );
 
-			pwData.pw_live_feed( argsValue, qsArgsValue ).then(
+			$log.debug( "LIVE FEED (init) : ID : " + feed.feed_id, feed );
+
+			///// GET FEED FROM PRELOADED DATA /////
+			// If posts have already been pre-loaded
+			if( _.isArray( pwData.feeds[ $scope.feed ].posts ) ){
+				$scope.addFeedMeta();
+				$scope.posts = pwData.feeds[$scope.feed].posts;
+				$scope.injectAds();
+				$scope.busy = false;
+				return;
+			}
+
+			///// GET FEED BY AJAX /////
+			pwData.pw_get_live_feed( feed, qsArgsValue ).then(
 				// Success
 				function(response) {
 
@@ -303,34 +300,27 @@ postworld.controller('pwFeedController',
 						$scope.busy = false;
 					}, 100 );
 
-					// $log.debug('pwFeedController.pwLiveFeed',$scope.args.feed_query.order_by,$scope.args.feed_query.order);						
+					// Handle Error					
 					if ( response.status === undefined ) {
-						$log.error('LIVE FEED : ID : ' + argsValue.feed_id + ' : response format is not recognized');
+						$log.error('LIVE FEED : ID : ' + feed.feed_id + ' : response format is not recognized');
 						return;
 					}
 					if ( response.status == 200 ) {
 						// Check if data exists
-						if (!(response.data instanceof Array) ) {
-
+						if ( _.isObject( response.data ) ) {
 							// Insert Response in Feed Data					
 							$scope.fillFeedData( response );
 							$scope.addFeedMeta();
 							$scope.posts = pwData.feeds[$scope.feed].posts;
-
-							//response.data.posts = {};
-
 							$scope.injectAds();
-							
-
 						} else {
 							$scope.message = "No Data Returned";
-							$log.debug('pwFeedController.pw_live_feed No Data Received');						
+							$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
 						}
-						//$scope.busy = false;							
 						return response.data;
 					} else {
 						// handle error
-						console.log('error',response.status,response.message);
+						$log.debug( 'error', response.status, response.message );
 						// TODO should we set busy to false when error is returned?
 					}
 					// return response.posts;
@@ -338,7 +328,7 @@ postworld.controller('pwFeedController',
 				// Failure
 				function(response) {
 					$scope.busy = false;
-					$log.error('pwFeedController.pw_live_feed Failure',response);
+					$log.error('pwFeedController.pw_get_live_feed Failure',response);
 					// TODO Show User Friendly Message
 				}
 			);
@@ -350,7 +340,7 @@ postworld.controller('pwFeedController',
 			// TODO : PERFORMANCE : Add Mechanism for scrollFeed, so it stores the value of the last index,
 			// so it doesn't have to re-iterate over the whole array
 			
-			// { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length }
+			// vars = { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length }
 
 			// Set the mode of the Meta Data
 			if( !$_.objExists( vars, 'mode' ) ){
@@ -392,10 +382,9 @@ postworld.controller('pwFeedController',
 
 
 		$scope.pwLoadFeed = function() {
-			if (!$scope.args.feed_query)	$scope.args.feed_query = {};
-			// identify the feeds feed_id
-			
+			$scope.busy = true;
 			$scope.posts = {};
+
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
 			var args = {};
@@ -409,7 +398,7 @@ postworld.controller('pwFeedController',
 				// Set loaded = 0, 
 				// pwData.feeds[$scope.feed].loaded = 0;
 				// Run Scroll Feed
-				$scope.pwScrollFeed();
+				$scope.scrollFeed();
 				return;
 			}
 			pwData.pw_load_feed(args).then(
@@ -448,27 +437,32 @@ postworld.controller('pwFeedController',
 				// Failure
 				function(response) {
 					$scope.busy = false;
-					$log.error('pwFeedController.pw_live_feed Failure',response);
+					$log.error('pwFeedController.pw_get_live_feed Failure',response);
 					// TODO Show User Friendly Message
 				}
 			);
 		  };
-		$scope.pwScrollFeed = function() {
+
+		$scope.scrollFeed = function() {
 			// Check if all Loaded, then return and do nothing
 			if (pwData.feeds[$scope.feed].status == 'all_loaded') {
-				//$log.debug('pwFeedController.pwScrollFeed ALL LOADED - NO MORE POSTS');				
+				$log.debug('pwFeedController.scrollFeed : ALL LOADED');				
 				$scope.busy = false;
 				return;
-			};		
+			};
 			// TODO do we need to set the loading status? or just use the busy flag?
 			pwData.feeds[$scope.feed].status = 'loading';
 			
-			
-			//$log.debug('pwFeedController.pwScrollFeed For',$scope.feed);
+			//$log.debug( ">>> SCROLL FEED <<<", $scope.args );
+
+			if( $scope.busy )
+				return;
+
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
 
-			pwData.pw_get_posts($scope.args).then(
+			$scope.busy = true;
+			pwData.pw_get_posts( $scope.args ).then(
 				// Success
 				function(response) {
 					
@@ -481,7 +475,7 @@ postworld.controller('pwFeedController',
 
 						var newItems = response.data;
 						var loadOrder = 0;
-						for (var i = 0; i < newItems.length; i++) {
+						for ( var i = 0; i < newItems.length; i++ ) {
 							// LOAD ORDER // feed.loadOrder
 							// Tells which order in the chunk of posts loaded each post is
 							// To allow for sequencing transitions, such as offset fade-ins on scroll
@@ -496,16 +490,12 @@ postworld.controller('pwFeedController',
 						}
 
 						// Add Feed Meta for only the new posts
-						var postsLoaded = parseInt( pwData.feeds[$scope.feed].loaded );
+						var postsLoaded = parseInt( pwData.feeds[$scope.feed].posts.length - 1 );
 						$scope.addFeedMeta( { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length } );
 						$scope.posts = pwData.feeds[$scope.feed].posts;
 
-						// Update the number of posts loaded
-						pwData.feeds[$scope.feed].loaded += newItems.length;
-
 						// Count Length of loaded, update scroll message
-						pwData.feeds[$scope.feed].count_loaded = pwData.feeds[$scope.feed].posts.length;
-						if (pwData.feeds[$scope.feed].count_loaded >= pwData.feeds[$scope.feed].count_feed_outline) {
+						if (pwData.feeds[$scope.feed].posts.length >= pwData.feeds[$scope.feed].feed_outline.length ) {
 							pwData.feeds[$scope.feed].status = 'all_loaded';	
 							$scope.scrollMessage = "No more posts to load!";																									
 						} else {
@@ -531,16 +521,6 @@ postworld.controller('pwFeedController',
 		};
 
 
-				// Definitions
-		/*
-		$scope.convertQueryString2FeedQuery= function (params) {
-			$log.info('Feed Query Override by Query String',params);
-			for(var key in params){
-				// The value is obj[key]
-				$scope.args.feed_query[key] = params[key];
-			}			
-		};
-		*/
 		$scope.convertFeedQuery2QueryString= function (params) {
 			// $log.info('pwFeedController convertFeedQuery2QueryString', params);
 			$log.info('Feed Query Override by Feed Query',params);			  			
@@ -557,7 +537,7 @@ postworld.controller('pwFeedController',
 					continue;
 				};
 				// The value is obj[key]
-				//$scope.args.feed_query[key] = params[key];
+				//$scope.args.query[key] = params[key];
 				// TODO objects like taxonomy?
 				// TODO arrays?
 				if ((params[key]!==0) && (params[key]!==false)) {
@@ -638,7 +618,7 @@ postworld.controller('pwLoadPostController',
 				},
 				// Failure
 				function(response) {
-					// $log.error('pwFeedController.pw_live_feed Failure',response);
+					// $log.error('pwFeedController.pw_get_live_feed Failure',response);
 					// TODO Show User Friendly Message
 				}
 			);

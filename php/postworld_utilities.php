@@ -710,9 +710,9 @@ function pw_wrap_quotes( $string ){
     return "\"" . $string . "\"";
 }
 
-function pw_random_hash(){
+function pw_random_hash( $length = 8 ){
 	$hash = hash('md5', rand( 0, 10000 ));
-	$hash = substr( $hash, 1, 8 );
+	$hash = substr( $hash, 1, $length );
 	return $hash;
 }
 
