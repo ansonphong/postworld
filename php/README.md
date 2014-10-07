@@ -1733,8 +1733,14 @@ __echo__ : *boolean* (optional)
 - If `false`, the function will return a string containing the feed JS + HTML
 - *Default*: `true`
 
+__aux_feed__ : *string* (optional)
+- String value is the php feed ID
+- Will print the feed with the attributed feed template from the `feeds` template subdir
+- Useful for printing hidden hard HTML feeds to suppliment for SEO
+
 __feed__ : *array* (optional)
 - Feed values for the Angular directive
+
 
 
 #### Simple Example
@@ -1743,6 +1749,7 @@ __feed__ : *array* (optional)
 $feed_vars = array(
 	'feed'	=>	array(
 		'feed_template'	=>	'feed-grid',
+		'aux_feed'		=>	'seo-list',
 		'view'	=>	array(
 			'current' 	=> 'grid',
 			),
@@ -1962,7 +1969,7 @@ __feed_id__ : *string*
 __feed_query__ : *Array*
 - Postworld Query args input directly into `pw_query()`
 
-__posts__ : *integer*
+__posts__ : *array*
 - Pass in pre-queried post data
 
 __fields__ : *string/Array* (optional) (default:null)

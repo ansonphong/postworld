@@ -1,0 +1,10 @@
+<hr>
+<article>
+	<hgroup>
+		<a href="{{ post.post_permalink }}"><h2>{{ post.post_title }}</h2></a>
+		<time datetime="{{ post.post_date_gmt }}">{{ post.time_ago }}</time>
+	</hgroup>
+	<section>
+		{{ post.post_excerpt }}
+	</section>
+</article>

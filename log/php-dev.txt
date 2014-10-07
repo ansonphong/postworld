@@ -1,0 +1,3 @@
+{"feeds":{"terms-feed-default":"\/Users\/phong\/Projects Clients\/Android\/_WWW\/wp-content\/themes\/infinite-artdroid\/views\/feeds\/terms-feed-default.php"}}
+{"feeds":{"seo-list":"\/Users\/phong\/Projects Clients\/Android\/_WWW\/wp-content\/themes\/infinite-artdroid\/postworld\/templates\/feeds\/seo-list.php","terms-feed-default":"\/Users\/phong\/Projects Clients\/Android\/_WWW\/wp-content\/themes\/infinite-artdroid\/views\/feeds\/terms-feed-default.php"}}
+{"feeds":{"seo-list":"\/Users\/phong\/Projects Clients\/Android\/_WWW\/wp-content\/themes\/infinite-artdroid\/postworld\/templates\/feeds\/seo-list.php","terms-feed-default":"\/Users\/phong\/Projects Clients\/Android\/_WWW\/wp-content\/themes\/infinite-artdroid\/views\/feeds\/terms-feed-default.php"}}

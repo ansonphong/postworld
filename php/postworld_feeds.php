@@ -22,6 +22,9 @@ function pw_live_feed( $vars = array() ){
 
 	if( !isset( $echo ) )
 		$echo = true;
+
+	if( !isset( $aux_feed ) )
+		$aux_feed = null;
 	
 	///// DEFAULT ARRAYS /////
 	$default_query = array(
@@ -48,17 +51,39 @@ function pw_live_feed( $vars = array() ){
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
 
-	// Get the live feed data
-	$feed_data = pw_get_live_feed( $feed );
+
+	///// GET FEED DATA /////
+	if( $directive == 'live-feed' )
+		// Get the live feed data
+		$feed_data = pw_get_live_feed( $feed );
+
+	// TODO : Add load-feed support
+	else if( $directive == 'load-feed' )
+		$feed_data = array( 'error' => 'Load Feed Not Supported Yet.' );
 
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
 
+
+	///// GENERATE OUTPUT /////
 	//Print object with posts pre-populated
 	$output = '<script>pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .'</script>';
 	$output .= '<'.$element.' '.$directive.'="'.$feed_id.'" class="'.$classes.'" '.$attributes.'></'.$element.'>';
 
-	// Echo
+
+	///// AUXILLARY FEED /////
+	if( !empty($aux_feed) ){
+		// Get the specified template path
+		$template = pw_get_template ( 'feeds', $aux_feed, 'php', 'dir' );
+		// If a template is found
+		if( $template ){
+			// Add it to the output
+			$output .= pw_ob_include( $template, $feed );
+		}
+
+	}
+
+	///// OUTPUT /////
 	if( $echo )
 		echo $output;
 	else
@@ -276,46 +301,35 @@ function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
 	
 }
 
-function pw_print_feed( $args ){
-
-
+function pw_print_feed( $vars ){
 
 	// Load a cached feed
-	if( isset($args['feed_id']) ){
+	if( isset($vars['feed_id']) ){
 		// LOAD A CACHED FEED
 		// Run Postworld Load Feed
-		$load_feed = pw_load_feed( $args['feed_id'], $args['posts'], $args['fields'] );
+		$load_feed = pw_load_feed( $vars['feed_id'], $vars['posts'], $vars['fields'] );
 		$posts = $load_feed['posts'];
 
-	} else if( isset($args['feed_query']) ) {
+	} else if( isset($vars['feed_query']) ) {
 		
 		// LOAD A FRESH QUERY
-		$feed_query = $args['feed_query'];
+		$feed_query = $vars['feed_query'];
 		
-		if( isset($args['fields']) )
+		if( isset($vars['fields']) )
 			// Override fields
-			$feed_query['fields'] = $args['fields'];
-
+			$feed_query['fields'] = $vars['fields'];
 
 		$pw_query = pw_query( $feed_query );
 		//return json_encode($pw_query);
 		$posts = $pw_query->posts;
 
-	} else if( isset( $args['posts'] ) ) {
-		$posts = $args['posts'];
+	} else if( isset( $vars['posts'] ) ) {
+		$posts = $vars['posts'];
 
 	} else {
 		// RETURN ERROR
 		return array('error' => 'No feed_id or feed_query defined.');
 	}
-
-	// LINEAGE - DELETE
-	// Include h2o template engine
-	//global $pw;
-	//require_once $pw['paths']['postworld_dir'].'/lib/h2o/h2o.php';
-
-	// Include H2O Template Engine
-	//pw_include_h2o();
 
 	$pw_post = array();
 	$post_html = "";
@@ -327,12 +341,12 @@ function pw_print_feed( $args ){
 		$post_id = $post['ID'];
 
 		// Get the template for this post
-		if( isset($args['view']) ){
+		if( isset($vars['view']) ){
 
-			$template_path = pw_get_post_template( $post_id, $args['view'], 'dir' );
+			$template_path = pw_get_post_template( $post_id, $vars['view'], 'dir' );
 		}
-		else if( isset($args['template']) )
-			$template_path = $args['template'];
+		else if( isset($vars['template']) )
+			$template_path = $vars['template'];
 
 		// Initialize h2o template engine
 		$h2o = new h2o($template_path);
