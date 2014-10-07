@@ -1,9 +1,6 @@
 <?php
 
-<<<<<<< HEAD
 
-function pw_live_feed ( $args ){
-=======
 function pw_live_feed( $vars = array() ){
 
 	extract( $vars );
@@ -97,7 +94,6 @@ function pw_live_feed( $vars = array() ){
 }
 
 function pw_get_live_feed ( $args ){
->>>>>>> e472a69498e6f2cc1dc42f2f1299c70c35ba3164
 
 	extract($args);
 
@@ -431,7 +427,6 @@ function pw_get_menu_posts( $menu, $fields ){
 	return $posts;
 
 }
-
 
 
 function get_panel_ids(){
