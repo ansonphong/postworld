@@ -324,6 +324,19 @@ postworld.factory('_',
 			return input;
 		},
 
+		makeHash: function( hashLength ){
+			if( _.isEmpty(hashLength) )
+				hashLength = 8;
+
+			var hash = "";
+		    var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+		    for( var i=0; i < hashLength; i++ )
+		        hash += alpha.charAt(Math.floor(Math.random() * alpha.length));
+
+		    return hash;
+		},
+
 	};
 
 }]);

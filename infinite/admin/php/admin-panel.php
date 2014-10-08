@@ -2,6 +2,15 @@
 // TODO : Add security wrappers
 
 ///// MAIN SCREEN /////
+function infinite_postworld_main(){
+	global $theme_admin;
+	i_include_admin_styles();
+	i_include_scripts();
+	//include 'page-options.php';
+	echo "<h1>".$theme_admin['main']['page_title']."</h1>";
+}
+
+///// THEME OPTIONS SCREEN /////
 function infinite_options_main(){
 	global $theme_admin;
 	i_include_admin_styles();
@@ -37,17 +46,19 @@ function infinite_options_social(){
 function infinite_options_sidebars(){
 	global $theme_admin;
 	global $i_language;
-	global $i_admin_urls;
 	i_include_admin_styles();
 	i_include_scripts();
 	include 'page-sidebars.php'; 
 } 
 
-add_action('admin_init', 'i_sidebar_redirect_delete_success' );
-
-function i_sidebar_redirect_delete_success(){
-
+///// FEEDS SCREEN /////
+function infinite_options_feeds(){
+	global $theme_admin;
+	i_include_admin_styles();
+	i_include_scripts();
+	include 'page-feeds.php';
 }
+
 
 /*
 ///// DISPLAY MESSAGES /////

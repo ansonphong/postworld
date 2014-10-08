@@ -39,7 +39,6 @@ function pw_live_feed( $vars = array() ){
 		'preload'			=>	10,
 		'load_increment' 	=> 	10,
 		'offset'			=>	0,
-		'max_posts'			=>	200,
 		'order_by'			=>	'-post_date',
 		'view'	=>	array(
 			'current' 	=> 'list',
@@ -47,6 +46,7 @@ function pw_live_feed( $vars = array() ){
 			),
 		'query' 		=> $default_query,
 		'feed_template'	=>	null,
+		'aux_feed'		=>	null,
 		);
 
 	// Over-ride default settings with provided settings

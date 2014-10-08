@@ -5,7 +5,6 @@
 		preload : 9,
 		load_increment : 3,
 		offset: 0,
-		max_posts:200,
 		order_by : '-post_date',
 		view : {
 			current : 'grid',

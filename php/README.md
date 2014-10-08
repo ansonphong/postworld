@@ -1778,7 +1778,6 @@ $feed_vars = array(
 		'preload'			=>	10,
 		'load_increment' 	=> 	10,
 		'offset'			=>	0,
-		'max_posts'			=>	200,
 		'order_by'			=>	'-post_date',
 		'view'	=>	array(
 			'current' 	=> 'list',

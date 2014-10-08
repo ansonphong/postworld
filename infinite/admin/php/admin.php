@@ -10,133 +10,132 @@ include 'functions-ajax.php';
 include 'style-model.php';
 include 'social-model.php';
 
-////////// POSTWORLD //////////
-/*
-if( function_exists('postworld_includes') ){
-	postworld_includes(array(
-		"mode"	=>	"deploy",
-		//"dep"	=>	array("create.js")
-		));
-}
-*/
 
 ////////// THEME OPTIONS //////////
 global $theme_admin;
+global $pw;
 
-global $theme_admin_menu_name;
-$theme_admin_menu_name = 'theme-options';
+function postworld_admin_menu(  ){
 
-$theme_admin = array(
-	'main' => array(
-		'page_title' => 'Theme Options',
-		'menu_title' => 'Theme Options',
-		'capability' => 'manage_options',
-		'menu_slug' => $theme_admin_menu_name,
-		'function' => 'infinite_options_main',
-		'icon_url' => '',//plugins_url( $migration_admin_folder.'/images/logo/pw_symbol-16.png' ),
-		'position' => ''
-		),
+	global $pw;
 
-	'layout' => array(
-		'parent_slug' => $theme_admin_menu_name,
-		'page_title' => 'Layout',
-		'menu_title' => 'Layout',
-		'capability' => 'manage_options',
-		'menu_slug' => $theme_admin_menu_name.'-layout',
-		'function' => 'infinite_options_layout',
-		),
+	$pw_admin_menu = array(
 
-	'sidebars' => array(
-		'parent_slug' => $theme_admin_menu_name,
-		'page_title' => 'Sidebars',
-		'menu_title' => 'Sidebars',
-		'capability' => 'manage_options',
-		'menu_slug' => $theme_admin_menu_name.'-sidebars',
-		'function' => 'infinite_options_sidebars',
-		),
+		'menu' => array(
+			'page_title' => 'Postworld',
+			'menu_title' => 'Postworld',
+			'capability' => 'manage_options',
+			'menu_slug' => $pw['slug'],
+			'function' => 'infinite_postworld_main',
+			//'icon_url' => '',//plugins_url( $migration_admin_folder.'/images/logo/pw_symbol-16.png' ),
+			'menu_icon'	=>	'dashicons-art',
+			'position' => ''
+			),
 
-	'styles' => array(
-		'parent_slug' => $theme_admin_menu_name,
-		'page_title' => 'Styles',
-		'menu_title' => 'Styles',
-		'capability' => 'manage_options',
-		'menu_slug' => $theme_admin_menu_name.'-styles',
-		'function' => 'infinite_options_styles',
-		),
+		'submenu' => array(
 
-	'social' => array(
-		'parent_slug' => $theme_admin_menu_name,
-		'page_title' => 'Social',
-		'menu_title' => 'Social',
-		'capability' => 'manage_options',
-		'menu_slug' => $theme_admin_menu_name.'-social',
-		'function' => 'infinite_options_social',
-		),
-	
-	);
+			'theme' => array(
+				'parent_slug' => $pw['slug'],
+				'page_title' => 'Site Options',
+				'menu_title' => 'Site Options',
+				'capability' => 'manage_options',
+				'menu_slug' => $pw['slug'].'-theme',
+				'function' => 'infinite_options_main',
+				),
+
+			'layout' => array(
+				'parent_slug' => $pw['slug'],
+				'page_title' => 'Layout',
+				'menu_title' => 'Layout',
+				'capability' => 'manage_options',
+				'menu_slug' => $pw['slug'].'-layout',
+				'function' => 'infinite_options_layout',
+				),
+
+			'sidebars' => array(
+				'parent_slug' => $pw['slug'],
+				'page_title' => 'Sidebars',
+				'menu_title' => 'Sidebars',
+				'capability' => 'manage_options',
+				'menu_slug' => $pw['slug'].'-sidebars',
+				'function' => 'infinite_options_sidebars',
+				),
+
+			'styles' => array(
+				'parent_slug' => $pw['slug'],
+				'page_title' => 'Styles',
+				'menu_title' => 'Styles',
+				'capability' => 'manage_options',
+				'menu_slug' => $pw['slug'].'-styles',
+				'function' => 'infinite_options_styles',
+				),
+
+			'social' => array(
+				'parent_slug' => $pw['slug'],
+				'page_title' => 'Social',
+				'menu_title' => 'Social',
+				'capability' => 'manage_options',
+				'menu_slug' => $pw['slug'].'-social',
+				'function' => 'infinite_options_social',
+				),
+
+			'feeds' => array(
+				'parent_slug' => $pw['slug'],
+				'page_title' => 'Feeds',
+				'menu_title' => 'Feeds',
+				'capability' => 'manage_options',
+				'menu_slug' => $pw['slug'].'-feeds',
+				'function' => 'infinite_options_feeds',
+				),
+
+			),
+
+		);
+
+	///// APPLY FILTERS /////
+	// Allow themes to add sub menus
+	$pw_admin_menu['submenu'] = apply_filters( 'pw_admin_submenu', $pw_admin_menu['submenu'] );	
+
+	return $pw_admin_menu;
+
+}
+
 
 ///// ADD ADMIN MENU PAGE /////
 add_action( 'admin_menu', 'theme_admin_menu', 8 );
 function theme_admin_menu(){
-	global $theme_admin;
-	//$page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position
+
+	$admin = postworld_admin_menu();
 	
+	///// MAIN MENU /////
+	// http://codex.wordpress.org/Function_Reference/add_menu_page
     add_menu_page(
-    	$theme_admin['main']['page_title'],
-    	$theme_admin['main']['menu_title'],
-    	$theme_admin['main']['capability'],
-    	$theme_admin['main']['menu_slug'],
-    	$theme_admin['main']['function'],
-    	$theme_admin['main']['icon_url']
+    	$admin['menu']['page_title'],
+    	$admin['menu']['menu_title'],
+    	$admin['menu']['capability'],
+    	$admin['menu']['menu_slug'],
+    	$admin['menu']['function'],
+    	$admin['menu']['menu_icon']
     	);
 
-    add_submenu_page(
-    	$theme_admin['layout']['parent_slug'],
-    	$theme_admin['layout']['page_title'],
-    	$theme_admin['layout']['menu_title'],
-    	$theme_admin['layout']['capability'],
-    	$theme_admin['layout']['menu_slug'],
-    	$theme_admin['layout']['function']
-    	);
-
-    add_submenu_page(
-    	$theme_admin['sidebars']['parent_slug'],
-    	$theme_admin['sidebars']['page_title'],
-    	$theme_admin['sidebars']['menu_title'],
-    	$theme_admin['sidebars']['capability'],
-    	$theme_admin['sidebars']['menu_slug'],
-    	$theme_admin['sidebars']['function']
-    	);
-
-    add_submenu_page(
-    	$theme_admin['styles']['parent_slug'],
-    	$theme_admin['styles']['page_title'],
-    	$theme_admin['styles']['menu_title'],
-    	$theme_admin['styles']['capability'],
-    	$theme_admin['styles']['menu_slug'],
-    	$theme_admin['styles']['function']
-    	);
-
-    add_submenu_page(
-    	$theme_admin['social']['parent_slug'],
-    	$theme_admin['social']['page_title'],
-    	$theme_admin['social']['menu_title'],
-    	$theme_admin['social']['capability'],
-    	$theme_admin['social']['menu_slug'],
-    	$theme_admin['social']['function']
-    	);
-
-    //call register settings function
-	//add_action( 'admin_init', 'register_theme_settings' );
+    ///// SUB MENUS /////
+    // http://codex.wordpress.org/Function_Reference/add_submenu_page
+    foreach( $admin['submenu'] as $key => $value ){
+    	add_submenu_page(
+	    	$value['parent_slug'],
+	    	$value['page_title'],
+	    	$value['menu_title'],
+	    	$value['capability'],
+	    	$value['menu_slug'],
+	    	$value['function']
+	    	);
+    }
 
 }
 
 
 ///// REGISTER STYLES /////
 //wp_register_style( 'pw_admin_css', plugins_url() . '/postworld/admin/css/pw-admin.css' );
-
-
-
 
 
 

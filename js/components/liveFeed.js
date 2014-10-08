@@ -179,11 +179,6 @@ postworld.controller('pwFeedController',
 			pwData.feeds[$scope.feed] = {};
 			if (pwData.feeds[$scope.feed].feed_outline) {
 				pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline;
-				// truncate based on max_posts
-				var max = pwData.feeds[$scope.feed].max_posts;
-				if ( max < pwData.feeds[$scope.feed].feed_outline.length ) {					
-					pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
-				}								
 			};											
 			pwData.feeds[$scope.feed].posts = [];
 			// var argsValue = JSON.parse(JSON.stringify($scope.args));			
@@ -206,19 +201,13 @@ postworld.controller('pwFeedController',
 					response.data.feed_outline = response.data.feed_outline.splice(offset,len);
 					// truncate response posts in case of existing offset for load-feed only															
 					response.data.posts = response.data.posts.splice(offset,len); 
-					$log.debug('FEED DATA : ' + pwData.feeds[$scope.feed].feed_id, response.data );
+					//$log.debug('FEED DATA : ' + pwData.feeds[$scope.feed].feed_id, response.data );
 					//response.data.posts = response.data.posts.splice(offset,len); 
 					// PHONG : replace post with posts 					
 				}
 			}
 			// Insert Response in Feed Data
 			pwData.feeds[$scope.feed].feed_outline = response.data.feed_outline;
-
-			// truncate based on max_posts
-			var max = pwData.feeds[$scope.feed].max_posts;
-			if (max <=response.data.feed_outline.length) {					
-				pwData.feeds[$scope.feed].feed_outline = pwData.feeds[$scope.feed].feed_outline.splice(0,max);
-			}
 			pwData.feeds[$scope.feed].posts = response.data.posts;
 
 			// Set Feed load Status

@@ -234,8 +234,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			if (feed.query != null) feedArgs.query = feed.query;  
 			if (feed.preload != null) feedArgs.preload = feed.preload; else feedArgs.preload = 10;  
 			if (feed.offset	!= null) feedArgs.offset = feed.offset; else feedArgs.offset = 0;  
-			if (feed.max_posts != null) feedArgs.query.posts_per_page = feed.max_posts; else feedArgs.query.posts_per_page = 1000;
-			 
+
 			if (feed.order_by != null) {
 				// if + sort Ascending
 				if (feed.order_by.charAt(0)=='+') feedArgs.query.order = 'ASC';

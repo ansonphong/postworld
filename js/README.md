@@ -660,14 +660,14 @@ __feed_template__ : *string* (panel ID)
 pw.feeds['feed_id'] = {
      title: "Load Feed",
      feed_outline : ["166725","166713","166716","166359","165840","166241","165969",...],
-     preload: 3,
+     preload: 5,
      load_increment : 10,
-     max_posts : 50,
      view : {
           current : 'detail',
           options : [ 'list', 'detail', 'grid' ],
      },
-     feed_template : 'load_feed_1'
+     feed_template : 'load_feed_1',
+     aux_feed: 'seo-list',
 }
 ```
 ```html
@@ -823,7 +823,6 @@ pw.feeds[feed_id] = {
   load_increment : 10,
   feed_outline : [24,48,45,...], // (Optional) Loads a pre-defined feed outline
   offset : 0,
-  max_posts : 0,
   order_by : 'rank_score',
   panels : {
     'panel2'  : 'feed_header',  

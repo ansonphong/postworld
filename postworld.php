@@ -9,6 +9,16 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 
+global $pw;
+$pw = array(
+	'version'	=>	"1.6.0",
+	'slug'	=>	'postworld',
+	'vars'	=>	array(
+		
+		),
+	);
+
+
 /////////////// API ////////////////
 include 'php/postworld_api.php';
 
@@ -33,8 +43,7 @@ global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
 
-$postworld_version = "1.6.0";
-$postworld_db_version = $postworld_version;
+$postworld_db_version = 0;
 
 //global $pw_prefix;
 //$pw_prefix = "postworld_";

@@ -7,7 +7,7 @@ function postworld_includes( $args ){
 
 	extract( $args );
 
-	global $postworld_version;
+	global $pw;
 	global $pwSiteGlobals;
 
 	// Default Angular Version
@@ -115,7 +115,7 @@ function postworld_includes( $args ){
 		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
 
 		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $postworld_version );
+		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['version'] );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
 
@@ -501,7 +501,6 @@ function pwGlobals_parse(){
 	/////////// USER / PAGE SPECIFIC GLOBALS //////////
 	global $pw;
 	global $wp_query;
-	$pw = array();
 
 	///// CURRENT VIEW /////
 	$viewdata = array();
