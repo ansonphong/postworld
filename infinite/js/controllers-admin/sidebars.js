@@ -16,11 +16,15 @@ infinite.directive( 'iAdminSidebars', [ function(){
     };
 }]);
 
-infinite.controller('iAdminSidebarsCtrl', function ( $scope, $window, $parse, iData ) {
+infinite.controller('iAdminSidebarsCtrl',
+	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions',
+	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
+	
 
-	$scope.default_sidebar = {
+	$scope.newSidebar = function(){
+		var newSidebar = {
 			'name': 		'New Sidebar',
-			'id': 			'newsidebar-1',
+			'id': 			"sidebar_" + $_.makeHash( 8 ),
 			'description': 	'Description goes here.',
 			'class': 		'widget',
 			'before_widget':'<div class="sidebar-widget">',
@@ -29,8 +33,8 @@ infinite.controller('iAdminSidebarsCtrl', function ( $scope, $window, $parse, iD
 			'after_title':  '</h3>'
 		};
 
-	$scope.newSidebar = function(){
-		$scope.sidebars.push( $scope.default_sidebar );
+		$scope.iSidebars.push( newSidebar );
+		$scope.selectItem( newSidebar );
 	}
 
 	$scope.removeSidebar = function(sidebar){
@@ -44,4 +48,4 @@ infinite.controller('iAdminSidebarsCtrl', function ( $scope, $window, $parse, iD
 	}
 
 	
-});
+}]);

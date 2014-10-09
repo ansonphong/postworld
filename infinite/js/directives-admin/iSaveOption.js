@@ -1,4 +1,3 @@
-
 infinite.directive( 'iSaveOption', [ function($scope){
 	return {
 		restrict: 'A',

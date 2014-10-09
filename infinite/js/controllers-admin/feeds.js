@@ -20,7 +20,6 @@ infinite.controller('iAdminFeedsCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
 	
-	$scope.editingFeed = {};
 	$scope.view = 'settings';
 
 	///// FEED OPTIONS /////
@@ -37,7 +36,7 @@ infinite.controller('iAdminFeedsCtrl',
 
 	////////// FUNCTIONS //////////
 	$scope.newFeed = function(){
-		var feedId = "feed_" + $_.makeHash( 16 );
+		var feedId = "feed_" + $_.makeHash( 8 );
 		var newFeed = {
 			id: feedId,
 			name: "New Feed",
@@ -55,13 +54,9 @@ infinite.controller('iAdminFeedsCtrl',
 				orderby: 'date',
 				order: 'DESC',
 				event_filter:null,
-				//event_future: false,
-				//event_past: false,
-				//event_now: false,
-				// link_format: 
-				// post_class: null,
-				// s: 
-				// tax_query:
+				// link_format:
+				// s:
+				// tax_query: // TODO : select tax, manually enter slug
 				offset:0,
 				posts_per_page: 200, 
 			},
@@ -69,73 +64,16 @@ infinite.controller('iAdminFeedsCtrl',
 			feed_template: null,	// Get HTML feeds from pwData
 			aux_feed: null,			// Get PHP feeds from pwData
 		};
+
 		$scope.iFeeds.push( newFeed );
-
-		$scope.editFeed( newFeed );
-
-	}
-
-	$scope.duplicateFeed = function(){
-		// TODO
-	}
-
-	$scope.deleteFeed = function( feed ){
-		$scope.iFeeds = _.reject( $scope.iFeeds, function( thisFeed ){ return thisFeed.id == feed.id } );
-		$scope.editingFeed = {};
-		$scope.view = '';
-	}
-
-	$scope.editFeed = function( feed ){
-		switch( feed ){
-			case 'settings':
-				$scope.view = 'settings';
-				$scope.editingFeed = {};
-				break;
-			default:
-				$scope.view = 'editFeed';
-				$scope.editingFeed = feed;
-				break;
-		}
-	}
-	
-	$scope.showView = function( viewId ){
-		if( viewId == $scope.view )
-			return true;
-		return false;
-	}
-
-	$scope.menuClass = function( menuItem ){
-		var selected = false;
-
-		switch( menuItem ){
-			case 'settings':
-				if( $scope.view == menuItem )
-					selected = true;
-				break;
-			default:
-				if( $scope.editingFeed.id == menuItem.id )
-					selected = true;
-				break;
-		}
-
-		if( selected )
-			return 'selected';
-
-		return;
-
+		$scope.editItem( newFeed );
 	}
 
 	$scope.postClassOptions = function(){
 		// Use a custom function since the response depends on selected post type
-		var post_type = $_.getObj( $scope.editingFeed, 'query.post_type' );
+		var post_type = $_.getObj( $scope.selectedItem, 'query.post_type' );
 		return $pwPostOptions.postClass( post_type );	
 	} 
-
-	$scope.selectItem = function( object, model, value ){
-		$scope[object] = $_.setObj( $scope[object], model, value );// 'test';
-		//$scope.eval(model) = value;
-	}
-
 
 	///// FEED SETTINGS OPTIONS /////
 	$scope.feedSettingsOptions = {
@@ -166,15 +104,14 @@ infinite.controller('iAdminFeedsCtrl',
 		],
 	};
 
-
-	////////// EVENTS INPUT //////////
-
-	// Watch the time filter value for changes
-	// Then set the feed settings accordingly
-	$scope.$watch( 'editingFeed.query.event_filter', function( value ){
-		if( _.isEmpty( value ) )
-			delete $scope.editingFeed.query.event_filter;
-	});
+	////////// REMOVE NULL VALUES //////////
+	// Watch the query value for changes
+	$scope.$watch( 'selectedItem.query', function( value ){
+		if( $_.getObj( $scope, 'selectedItem.query.event_filter' ) == null )
+			delete $scope.selectedItem.query.event_filter;
+		if( $_.getObj( $scope, 'selectedItem.query.post_class' ) == null )
+			delete $scope.selectedItem.query.post_class;
+	}, 1);
 
 	
 }]);

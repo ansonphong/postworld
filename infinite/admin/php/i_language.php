@@ -4,6 +4,7 @@
 global $i_language;
 $i_language = array(
 	'general'	=>	array(
+		'save'		=>	'Save',
 		'cancel'	=>	'Cancel',
 		'back'		=>	'‹ Back',
 		),
@@ -12,7 +13,9 @@ $i_language = array(
 		'name'				=>	'Name',
 		'name_info'			=>	'The name is how it appears on the widgets options page.',
 		'id'				=>	'ID',
-		'id_info'			=>	'The ID is the unique name for the sidebar. It is all lowercase and contains only letters, numbers, and hyphens. After creation, it cannot be changed.',
+		'id_info'			=>	'The ID is the unique name for the sidebar. It is all lowercase and contains only letters, numbers, and hyphens.',
+		'id_edit_info'		=>	'Editing the ID may cause instances of the sidebar to disappear.'	
+		
 		'description'		=>	'Description',
 		'description_info'	=>	'The description describes the intended use of the sidebar in the widgets options.',
 		'edit'				=>	'Edit Sidebar',
@@ -33,6 +36,9 @@ $i_language = array(
 
 		'after_title'		=> 	'After Title',
 		'after_title_info'	=> 	'HTML that goes after the title of each widget',
+		),
+	'feeds'	=>	array(
+		''
 		),
 
 	);

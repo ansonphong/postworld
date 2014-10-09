@@ -14,6 +14,7 @@ function i_include_admin_scripts(){
 	wp_enqueue_script('Infinite-Admin-Feeds', get_infinite_directory_uri().'/js/controllers-admin/feeds.js', $angularDep );
 	
 	// DIRECTIVES : ADMIN
+	wp_enqueue_script('Infinite-Admin', get_infinite_directory_uri().'/js/directives-admin/iAdmin.js', $angularDep );
 	wp_enqueue_script('Infinite-Save-Options', get_infinite_directory_uri().'/js/directives-admin/iSaveOption.js', $angularDep );
 	
 	// SERVICES : ADMIN
