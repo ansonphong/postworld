@@ -30,29 +30,25 @@ postworld.controller('inputSearch',
 postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
-    $scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions('read');
+    $scope.post_type_options = $pwPostOptions.postType('read');
     // POST YEAR OPTIONS
-    $scope.post_year_options = $pwPostOptions.pwGetPostYearOptions();
+    $scope.post_year_options = $pwPostOptions.postYear();
     // POST MONTH OPTIONS
-    $scope.post_month_options = $pwPostOptions.pwGetPostMonthOptions();
+    $scope.post_month_options = $pwPostOptions.postMonth();
     // POST STATUS OPTIONS
-    $scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( );
+    $scope.post_status_options = $pwPostOptions.postStatus( );
     // POST FORMAT OPTIONS
-    $scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
+    $scope.link_format_options = $pwPostOptions.linkFormat();
     // POST FORMAT META
-    $scope.link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
+    $scope.link_format_meta = $pwPostOptions.linkFormatMeta();
     // POST CLASS OPTIONS
-    $scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
-
-    // TEST OPTION IMPORT
-    //$scope.pw_site_options = $pwPostOptions.pw_site_options();
-
+    $scope.post_class_options = $pwPostOptions.postClass();
 
     // TAXONOMY TERMS
     // Gets live set of terms from the DB
     // as $scope.tax_terms
     // TODO : VERIFY THIS WORKS
-    $pwPostOptions.getTaxTerms($scope, 'tax_terms');
+    $pwPostOptions.taxTerms($scope, 'tax_terms');
 
     // TAXONOMY TERM WATCH : Watch for any changes to the post.tax_input
     // Make a new object which contains only the selected sub-objects

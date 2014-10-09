@@ -43,7 +43,7 @@ postworld.factory( '$pw',
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
     	
     	view: $window.pwGlobals.view,
-    	paths: $window.pwGlobals.paths, // Move this to pwSiteglobals
+    	paths: $window.pwSiteGlobals.paths, // Move this to pwSiteglobals
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,
 
@@ -686,11 +686,12 @@ postworld.factory('pwImages',
   |_|                                 |_|                          
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
-postworld.service('pwPostOptions', ['$window','$log', 'pwData',
-							function ($window, $log, $pwData) {
+postworld.service('pwPostOptions',
+		[ '$window','$log', 'pwData', '_',
+		function( $window, $log, $pwData, $_ ) {
 
 	return{
-		getTaxTerms: function( $scope, tax_obj ){ // , tax_obj
+		taxTerms: function( $scope, tax_obj ){ // , tax_obj
 
 			if ( typeof tax_obj === 'undefined' )
 				var tax_obj = "tax_terms";
@@ -709,12 +710,18 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 			);
 		},
 
-		pwGetPostTypeOptions: function( mode ){
+		postType: function( mode ){
 			// MODE OPTIONS
 			// read / edit / edit_others / publish / create / edit_published / edit_private
 			// IF READ MODE : Return all public post types
+			
+			if( _.isUndefined(mode) )
+				mode = 'read';
+
+			var post_types = $window.pwSiteGlobals.post_types;
+
 			if( mode == 'read' ){
-				return $window.pwGlobals.post_types;
+				return post_types;
 			}
 
 			// IF EDIT/OTHER MODE : Compare post types against their capabilities
@@ -722,7 +729,7 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 			// Which post_types does the user have access to 'mode' operation?
 			var userPostTypeOptions = {};
 			if( $window.pwGlobals.user != 0 ){
-				angular.forEach( $window.pwGlobals.post_types , function( name, slug ){
+				angular.forEach( post_types , function( name, slug ){
 					var cap_type = mode + "_"+ slug + "s";
 					if( $window.pwGlobals.user.allcaps[cap_type] == true ){
 						userPostTypeOptions[slug] = name;
@@ -732,87 +739,188 @@ postworld.service('pwPostOptions', ['$window','$log', 'pwData',
 			return userPostTypeOptions;
 		},
 
-		pwGetPostStatusOptions: function( post_type ){
+		postStatus: function( postType ){
+
+			if( _.isUndefined( postType ) )
+				return [
+					{
+						slug: 'any',
+						name: 'Any',
+					},
+					{
+						slug: 'publish',
+						name: 'Published',
+					},
+					{
+						slug: 'draft',
+						name: 'Draft',
+					},
+					{
+						slug: 'pending',
+						name: 'Pending',
+					},
+					{
+						slug: 'future',
+						name: 'Future',
+					},
+					{
+						slug: 'private',
+						name: 'Private',
+					},
+					{
+						slug: 'trash',
+						name: 'Trash',
+					}
+				];
+
 			if ((!$window.pwGlobals.user) || (!$window.pwGlobals.user))
 				return;
 
 			// GET ROLE
-			var current_user_role = $window.pwGlobals.user.roles[0];
+			var currentUserRole = $window.pwGlobals.user.roles[0];
 			// DEFINE : POST STATUS OPTIONS
-			var post_status_options = $window.pwSiteGlobals.post_options.post_status;
+			var postStatusOptions = $window.pwSiteGlobals.post_options.post_status;
 			// DEFINE : POST STATUS OPTIONS PER ROLE BY POST TYPE
-			var role_post_type_status_access = $window.pwSiteGlobals.post_options.role_post_type_status_access;
+			var rolePostTypeStatusAccess = $window.pwSiteGlobals.post_options.role_post_type_status_access;
 			// BUILD OPTIONS MENU OBJECT
-			var post_status_menu = {};
-			var user_role_options = role_post_type_status_access[current_user_role][post_type];
-			if( typeof user_role_options !== 'undefined' ){
-				angular.forEach(  user_role_options, function( post_status_slug ){
-					post_status_menu[post_status_slug] = post_status_options[post_status_slug];
+			var postStatusSelect = {};
+			var userRoleOptions = rolePostTypeStatusAccess[currentUserRole][postType];
+			if( typeof userRoleOptions !== 'undefined' ){
+				angular.forEach(  userRoleOptions, function( postStatusSlug ){
+					postStatusSelect[postStatusSlug] = postStatusOptions[postStatusSlug];
 				});
-				return post_status_menu;
+				return postStatusSelect;
 			} else{
 				// DEFAULT
-				return post_status_options;
+				return postStatusOptions;
 			}
 		},
 		
-		pwGetPostClassOptions: function(){
-			return $window.pwSiteGlobals.post_options.post_class;
+		postClass: function( postType ){
+			// Get the first item from an array
+			if( _.isArray( postType ) )
+				postType = postType[0];
+			// Get the options from site globals
+			var postClassOptions = $_.getObj( $window.pwSiteGlobals, 'post_options.post_class' );
+			// If none found, return false
+			if( !postClassOptions )
+				return {
+					"members": 	"Members Only",
+					"public": 	"Public",
+				};
+			// If no post type, return all
+			if( _.isEmpty( postType ) )
+				return postClassOptions;
+			// Get the post type subobject
+			var postClassSet = $_.getObj( postClassOptions, postType );
+			// If no subobject of specified post type
+			if( !postClassSet )
+				// Try default 'post' settings
+				postClassSet = $_.getObj( postClassOptions, 'post' );
+			return postClassSet;
 		},
 
-		pwGetLinkFormatOptions: function(){
-			return $window.pwSiteGlobals.post_options.link_format;
+		postView: function(){
+			return $_.getObj( $window.pwSiteGlobals, 'post_views' );
 		},
 
-		pwGetLinkFormatMeta: function(){
-			return $window.pwSiteGlobals.post_options.link_format_meta;
+		linkFormat: function(){
+			return $_.getObj( $window.pwSiteGlobals, 'post_options.link_format' );
 		},
 
-		pwGetPostYearOptions: function(){
-			return $window.pwSiteGlobals.post_options.year;
+		linkFormatMeta: function(){
+			return $_.getObj( $window.pwSiteGlobals, 'post_options.link_format_meta' );
 		},
 
-		pwGetPostMonthOptions: function(){
-			var months_obj = $window.pwSiteGlobals.post_options.month;
-			var months_array = [];
+		postYear: function(){
+			return $_.getObj( $window.pwSiteGlobals, 'post_options.year' );
+		},
+
+		postMonth: function(){
+			var monthsObj = $window.pwSiteGlobals.post_options.month;
+			var monthsArray = [];
 			// Convert from "1:January" Associative Object format to { number:1, name:"January" } 
-			angular.forEach( months_obj, function( value, key ){
+			angular.forEach( monthsObj, function( value, key ){
 				var month = {
 					'number' : parseInt(key),
 					'name' : value
 				};
-				months_array.push( month );
+				monthsArray.push( month );
 			});
-			return months_array;
+			return monthsArray;
 		},
 
-		pwGetTaxInputModel: function(){
+		order: function(){
+			return [
+				{
+					slug: 'DESC',
+					name: 'Descending',
+				},
+				{
+					slug: 'ASC',
+					name: 'Ascending',
+				},
+			];
+		},
+
+		orderBy: function(){
+			return [
+				{
+					slug: 'date',
+					name: 'Date',
+				},
+				{
+					slug: 'rank_score',
+					name: 'Rank Score',
+				},
+				{
+					slug: 'post_points',
+					name: 'Post Points',
+				},
+				{
+					slug: 'modified',
+					name: 'Date Modified',
+				},
+				{
+					slug: 'rand',
+					name: 'Random',
+				},
+				{
+					slug: 'comment_count',
+					name: 'Comment Count',
+				}
+			];
+		},
+
+		eventFilter: function(){
+			return [
+				{
+					value: 'future',
+					name: 'Upcoming Events',
+				},
+				{
+					value: 'now',
+					name: 'Current Events',
+				},
+				{
+					value: 'past',
+					name: 'Past Events',
+				},
+			];
+		},
+
+		taxInputModel: function(){
 			// TAXONOMY OBJECT MODEL
 			// Makes empty array in the taxInput object for each taxonomy inputs
-			var taxonomies = $window.pwSiteGlobals.post_options.taxonomies;
+			var taxonomies = $_.getObj( $window.pwSiteGlobals, 'post_options.taxonomies' );
+			if( !taxonomies )
+				return false;
+
 			var taxInput = {};
 			angular.forEach( taxonomies, function( value ){
 				taxInput[value] = [];
 			});
 			return taxInput;
-		},
-
-		pw_site_options: function( $scope ){
-			
-			var args = "";
-			$pwData.pw_site_options( args ).then(
-				// Success
-				function(response) {    
-					//alert( JSON.stringify(response.data.months) );
-					return response.data;
-					//alert(JSON.stringify(response.data));
-				},
-				// Failure
-				function(response) {
-					//alert('Error loading terms.');
-				}
-			);
-
 		},
 
 	}
@@ -939,7 +1047,7 @@ postworld.service('pwEditPostFilters',
 
 			// If Custom Link Format Meta isn't supplied, get the default
 			if ( _.isUndefined( link_format_meta ) )
-				link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
+				link_format_meta = $pwPostOptions.linkFormatMeta();
 
 			// Set the default format
 			var default_format = $window.pwSiteGlobals.post_options.link_format_defaults.none;

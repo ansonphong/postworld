@@ -10,7 +10,7 @@ function i_metabox_slider_scripts(){
 				//$scope.iMeta = <?php echo json_encode($iMeta); ?>;
 				
 				// Get tax outline by AJAX
-				//$pwPostOptions.getTaxTerms( $scope, 'tax_terms' );
+				//$pwPostOptions.taxTerms( $scope, 'tax_terms' );
 
 				// Define Options
 				$scope.sliderOptions = {

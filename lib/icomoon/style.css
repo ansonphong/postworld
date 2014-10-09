@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?j10ces');
-	src:url('fonts/icomoon.eot?#iefixj10ces') format('embedded-opentype'),
-		url('fonts/icomoon.woff?j10ces') format('woff'),
-		url('fonts/icomoon.ttf?j10ces') format('truetype'),
-		url('fonts/icomoon.svg?j10ces#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?35ouxp');
+	src:url('fonts/icomoon.eot?#iefix35ouxp') format('embedded-opentype'),
+		url('fonts/icomoon.woff?35ouxp') format('woff'),
+		url('fonts/icomoon.ttf?35ouxp') format('truetype'),
+		url('fonts/icomoon.svg?35ouxp#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -809,9 +809,6 @@
 .icon-pill:before {
 	content: "\e6e1";
 }
-.icon-close:before {
-	content: "\f00d";
-}
 .icon-search:before {
 	content: "\f002";
 }
@@ -944,7 +941,7 @@
 .icon-quote-right:before {
 	content: "\f10e";
 }
-.icon-spinner:before {
+.icon-spinner-1:before {
 	content: "\f110";
 }
 .icon-smile:before {

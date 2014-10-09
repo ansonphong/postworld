@@ -21,7 +21,7 @@
 		};
 
 		// Get Link Format Meta
-		$scope.link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
+		$scope.link_format_meta = $pwPostOptions.linkFormatMeta();
 
 		// LINK_URL WATCH : Watch for changes in link_url
 		// Evaluate the link_format

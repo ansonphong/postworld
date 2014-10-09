@@ -280,7 +280,7 @@ postworld.controller('editPost',
 			link_format : postDefaults.link_format,
 			post_date_gmt:"",
 			post_permalink : "",
-			tax_input : $pwPostOptions.pwGetTaxInputModel(),
+			tax_input : $pwPostOptions.taxInputModel(),
 			tags_input : "",
 			post_meta:{},
 		};
@@ -742,13 +742,13 @@ postworld.controller('editPost',
 	
 	///// LOAD IN DATA /////
 	// POST TYPE OPTIONS
-	$scope.post_type_options = $pwPostOptions.pwGetPostTypeOptions( 'edit' );
+	$scope.post_type_options = $pwPostOptions.postType( 'edit' );
 	// POST FORMAT OPTIONS
-	$scope.link_format_options = $pwPostOptions.pwGetLinkFormatOptions();
+	$scope.link_format_options = $pwPostOptions.linkFormat();
 	// POST FORMAT META
-	$scope.link_format_meta = $pwPostOptions.pwGetLinkFormatMeta();
+	$scope.link_format_meta = $pwPostOptions.linkFormatMeta();
 	// POST CLASS OPTIONS
-	$scope.post_class_options = $pwPostOptions.pwGetPostClassOptions();
+	$scope.post_class_options = $pwPostOptions.postClass();
 
 	// ACTION : AUTHOR NAME FROM AUTOCOMPLETE MODULE
 	// • Interacts with userAutocomplete() controller
@@ -778,7 +778,7 @@ postworld.controller('editPost',
 
 	// GET : TAXONOMY TERMS
 	// • Gets live set of terms from the DB as $scope.tax_terms
-	$pwPostOptions.getTaxTerms( $scope, 'tax_terms' );
+	$pwPostOptions.taxTerms( $scope, 'tax_terms' );
 
 	// WATCH : TAXONOMY TERMS
 	// • Watch for any changes to the post.tax_input
@@ -823,7 +823,7 @@ postworld.controller('editPost',
  
 			// POST STATUS OPTIONS
 			// Re-evaluate available post_status options on post_type switch
-			$scope.post_status_options = $pwPostOptions.pwGetPostStatusOptions( $scope.post.post_type );
+			$scope.post_status_options = $pwPostOptions.postStatus( $scope.post.post_type );
 			
 			// SET DEFAULT POST STATUS
 			if ( $scope.post.post_status == null || $scope.post.post_status == '' )

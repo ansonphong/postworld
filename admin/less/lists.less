@@ -5,7 +5,7 @@ ul{
 		border:1px solid #ccc;
 		border-top:none;
 		margin:0;
-		
+
 		li{
 			width:100%;
 			background:#fff;
@@ -21,7 +21,45 @@ ul{
 				background:fade(#f2f2f2, 50%);
 			}
 
+			&.selected{
+				background:#333;
+				color:#fff;
+			}
+
 		}
 	}
 }
 
+.dropdown{
+	ul.dropdown-menu{
+		&.grid{
+			min-width:260px;
+			li{
+				display:inline-block;
+				&:hover{
+					color:#fff;
+					background:#333;
+				}
+				&.select-icon{
+					box-sizing: border-box;
+					width:50px;
+					font-size:30px;
+					padding:10px 0;
+					text-align: center;
+				}
+			}
+		}
+	}
+}
+
+
+.area-select-icon{
+	display: inline-block;
+	font-size:32px;
+	background: #fff;
+	color:#000;
+	width:54px;
+	text-align: center;
+	padding:10px 0;
+	border: 1px solid #ccc;
+}

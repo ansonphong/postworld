@@ -127,14 +127,16 @@ function object_to_array($data){
 
 ////////// EDIT POST HELP FUNCTIONS //////////
 
-function pw_get_post_types(){
+function pw_get_post_types( $args = array() ){
 	//$user_role = get_user_role();
 
-	$args = array(
-	   'public'   => true,
-	   '_builtin' => false,
-	   //'capability_type' => 'post',
-	);
+	if( empty( $args ) )
+		$args = array(
+		   'public'   => true,
+		   //'_builtin' => true,
+		   //'capability_type' => 'post',
+		);
+
 	$post_types_obj = get_post_types( $args, 'objects');
 
 	$post_types = array();

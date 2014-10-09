@@ -439,16 +439,6 @@ function pwSiteGlobals_include(){
 		'description' => get_bloginfo('description'),
 	);
 
-	// Depreciated //
-	$pwSiteGlobals['wordpress'] = array( 
-		'ajax_url' => admin_url('admin-ajax.php'),
-		'stylesheet_directory_uri' => get_stylesheet_directory_uri(),
-		'template_directory_uri' => get_template_directory_uri(),
-		'plugins_dir' => WP_PLUGIN_DIR,
-		'plugins_url' => WP_PLUGIN_URL,
-		'pingback_url' => get_bloginfo('pingback_url'),
-	);
-
 	///// PATHS /////
 	$pwSiteGlobals["paths"] = array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -458,12 +448,16 @@ function pwSiteGlobals_include(){
 		"home_url" => get_bloginfo( 'url' ),
 		"wp_url" => get_bloginfo( 'wpurl' ),
 		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
-
 		"template_url" => get_bloginfo( 'template_url' ),
-		"postworld_url" => WP_PLUGIN_URL . '/postworld',
-		"postworld_dir" => WP_PLUGIN_DIR . '/postworld',
+		"postworld_url" => POSTWORLD_URI,
+		"postworld_dir" => POSTWORLD_PATH,
 		);
 
+	///// POST TYPES /////
+	$pwSiteGlobals["post_types"] = pw_get_post_types();
+
+
+	///// PRINT JAVASCRIPT /////
 	$pwJs  = "";
 	$pwJs .= "var pwSiteGlobals = ";
 	$pwJs .= json_encode( $pwSiteGlobals );
@@ -610,34 +604,6 @@ function pwGlobals_parse(){
 	$pw["security"] = array();
 	// Set the default security mode
 	$pw["security"]["mode"] = "user";
-
-	/////////// SITE WIDE GLOBALS //////////
-	// TODO : MOVE THIS STUFF INTO pwSiteglobals
-
-	///// SITE INFO /////
-	$pw["site_info"] = array(
-		"name" => get_bloginfo( 'name' ),
-		"description" => get_bloginfo( 'description' ),
-		);
-
-	///// POST TYPES /////
-	$pw["post_types"] = pw_get_post_types();
-
-	///// PATHS /////
-	// TODO : Remove - Already moved this to pwSiteglobals for JS
-	$pw["paths"] = array(
-		'ajax_url' => admin_url( 'admin-ajax.php' ),
-		'plugins_url' => WP_PLUGIN_URL,
-		'plugins_dir' => WP_PLUGIN_DIR,
-		"theme_dir"	=>	get_stylesheet_directory(),
-		"home_url" => get_bloginfo( 'url' ),
-		"wp_url" => get_bloginfo( 'wpurl' ),
-		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
-
-		"template_url" => get_bloginfo( 'template_url' ),
-		"postworld_url" => POSTWORLD_URI,
-		"postworld_dir" => POSTWORLD_PATH,
-		);
 
 	///// LANGUAGE /////
 	$pw['language'] = $pw_settings['language'];

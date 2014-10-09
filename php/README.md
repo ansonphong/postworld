@@ -778,7 +778,7 @@ __QUERYING :__
 
 ------
 
-__event_start__
+__event_start__ : *integer* (UNIX Timestamp)
 - All events with `event_end` after specified timestamp
 
 __event_end__ : *integer* (UNIX Timestamp)
@@ -790,14 +790,12 @@ __event_before__ : *integer* (UNIX Timestamp)
 __event_after__ : *integer* (UNIX Timestamp)
 - All events with `event_start` after specified timestamp
 
-__event_past__ : *boolean*
-- Get past events, where `event_end` is past current time
+__event_filter__ : *string*
+- Possible values:
+	+ `future` : Get future events, where `event_start` is in the future
+	+ `now` : Get events happening now, where current time is in between `event_start` and `event_end`
+	+ `past` : Get past events, where `event_end` is past current time
 
-__event_future__ : *boolean*
-- Get future events, where `event_start` is in the future
-
-__event_now__ : *boolean*
-- Get events happening now, where current time is in between `event_start` and `event_end`
 
 ------
 
