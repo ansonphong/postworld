@@ -9,12 +9,16 @@ $i_language = array(
 		'back'		=>	'‹ Back',
 		),
 	'sidebars'	=>	array(
+		'settings'			=>	'Sidebar Settings',
 		'add_new' 			=>	'Add New Sidebar',
+		'delete'			=>	'Delete Sidebar',
+		'duplicate'			=>	'Duplicate Sidebar',
+
 		'name'				=>	'Name',
 		'name_info'			=>	'The name is how it appears on the widgets options page.',
 		'id'				=>	'ID',
 		'id_info'			=>	'The ID is the unique name for the sidebar. It is all lowercase and contains only letters, numbers, and hyphens.',
-		'id_edit_info'		=>	'Editing the ID may cause instances of the sidebar to disappear.'	
+		'id_edit_info'		=>	'Editing the ID may cause instances of the sidebar to disappear.',	
 		
 		'description'		=>	'Description',
 		'description_info'	=>	'The description describes the intended use of the sidebar in the widgets options.',
@@ -38,10 +42,21 @@ $i_language = array(
 		'after_title_info'	=> 	'HTML that goes after the title of each widget',
 		),
 	'feeds'	=>	array(
-		''
+		'settings'			=>	'Feed Settings',
+		'add_new' 			=>	'Add New Feed',
+		'delete'			=>	'Delete Feed',
+		'duplicate'			=>	'Duplicate Feed',
 		),
 
 	);
 
+function ___( $item, $return = false ){
+	global $i_language;
+	$message = pw_get_obj( $i_language, $item );
+	if( !$return )
+		echo $message;
+	else
+		return $message;
+}
 
 ?>

@@ -17,7 +17,7 @@
 		<h2>
 			<i class="icon-map"></i>
 			Sidebars
-			<button class="add-new-h2" ng-click="newSidebar()">Add New Sidebar</button>
+			<button class="add-new-h2" ng-click="newSidebar()"><?php ___('sidebars.add_new'); ?></button>
 		</h2>
 		
 		<hr class="thick">
@@ -42,16 +42,16 @@
 			<div class="pw-col-9">
 				<div ng-show="showView('editItem')">
 
-					<h3><i class="icon-gear"></i> Sidebar Settings</h3>
+					<h3><i class="icon-gear"></i> <?php ___('sidebars.settings'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
 							<label
 								for="item-name"
 								class="inner"
-								tooltip="<?php echo $i_language['sidebars']['name_info']; ?>"
+								tooltip="<?php ___('sidebars.name_info'); ?>"
 								tooltip-popup-delay="333">
-								<?php echo $i_language['sidebars']['name']; ?>
+								<?php ___('sidebars.name'); ?>
 								<i class="icon-info-circle"></i>
 							</label>
 							<input
@@ -64,15 +64,15 @@
 							<label
 								for="item-id"
 								class="inner"
-								tooltip="<?php echo $i_language['sidebars']['id_info']; ?>"
+								tooltip="<?php ___('sidebars.id_info'); ?>"
 								tooltip-popup-delay="333">
-								<?php echo $i_language['sidebars']['id']; ?>
+								<?php ___('sidebars.id'); ?>
 								<i class="icon-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								tooltip="Editing the ID may cause instances of the feed to disappear"
+								tooltip="<?php ___('sidebars.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="icon-edit"></i>
@@ -87,98 +87,138 @@
 						</div>
 					</div>
 
+					<hr class="thin">
 
-
-
-
-
-					<div
-						style="border-top:2px solid #ccc; margin:10px; padding:10px;"
-						class="sidebar" >
-
-						<!-- DELETE BUTTON -->
-						<button
-							class="button deletion"
-							ng-click="deleteItem(selectedItem,'iSidebars')">
-							<i class="icon-close"></i>
-							Delete Sidebar
-						</button>
-
-
-
-						<div class="form-field">
-							<label for="tag-id"><b><?php echo $i_language['sidebars']['description']; ?></b></label>
-							<p><?php echo $i_language['sidebars']['description_info']; ?></p>
-							<input ng-model="selectedItem.description">
+					<div class="pw-row">
+						<div class="pw-col-9">
+							<label
+								for="item-description"
+								class="inner"
+								tooltip="<?php ___('sidebars.description_info'); ?>"
+								tooltip-popup-delay="333">
+								<?php ___('sidebars.description'); ?>
+								<i class="icon-info-circle"></i>
+							</label>
+							<input
+								id="item-description"
+								class="labeled"
+								type="text"
+								ng-model="selectedItem.description">
 						</div>
-
-						<div class="form-field">
-							<label for="tag-id"><b><?php echo $i_language['sidebars']['class']; ?></b></label>
-							<p><?php echo $i_language['sidebars']['class_info']; ?></p>
-							<input ng-model="selectedItem.class">
+						<div class="pw-col-3">
+							<label
+								for="item-class"
+								class="inner"
+								tooltip="<?php ___('sidebars.class_info'); ?>"
+								tooltip-popup-delay="333">
+								<?php ___('sidebars.class'); ?>
+								<i class="icon-info-circle"></i>
+							</label>
+							<input
+								class="labeled"
+								id="item-class"
+								type="text"
+								ng-model="selectedItem.class">
 						</div>
-
-						<div class="form-field">
-							<label for="tag-id"><b><?php echo $i_language['sidebars']['before_widget']; ?></b></label>
-							<p><?php echo $i_language['sidebars']['before_widget_info']; ?></p>
-							<textarea ng-model="selectedItem.before_widget"></textarea>
-						</div>
-
-						<div class="form-field">
-							<label for="tag-id"><b><?php echo $i_language['sidebars']['after_widget']; ?></b></label>
-							<p><?php echo $i_language['sidebars']['after_widget_info']; ?></p>
-							<textarea ng-model="selectedItem.after_widget"></textarea>
-						</div>
-
-						<div class="form-field">
-							<label for="tag-id"><b><?php echo $i_language['sidebars']['before_title']; ?></b></label>
-							<p><?php echo $i_language['sidebars']['before_title_info']; ?></p>
-							<textarea ng-model="selectedItem.before_title"></textarea>
-						</div>
-
-						<div class="form-field">
-							<label for="tag-id"><b><?php echo $i_language['sidebars']['after_title']; ?></b></label>
-							<p><?php echo $i_language['sidebars']['after_title_info']; ?></p>
-							<textarea ng-model="selectedItem.after_title"></textarea>
-						</div>
-
 					</div>
 
+					<hr class="thin">
 
+					<label
+						for="item-before_widget"
+						class="inner"
+						tooltip="<?php ___('sidebars.before_widget_info'); ?>"
+						tooltip-popup-delay="333">
+						<?php ___('sidebars.before_widget'); ?>
+					</label>
+					<textarea
+						id="item-before_widget"
+						msd-elastic
+						class="labeled elastic"
+						ng-model="selectedItem.before_widget">
+					</textarea>
 
+					<hr class="thin">
 
+					<label
+						for="item-after_widget"
+						class="inner"
+						tooltip="<?php ___('sidebars.after_widget_info'); ?>"
+						tooltip-popup-delay="333">
+						<?php ___('sidebars.after_widget'); ?>
+					</label>
+					<textarea
+						id="item-after_widget"
+						msd-elastic
+						class="labeled elastic"
+						ng-model="selectedItem.after_widget">
+					</textarea>
+				
+					<hr class="thin">
 
+					<label
+						for="item-before_title"
+						class="inner"
+						tooltip="<?php ___('sidebars.before_title_info'); ?>"
+						tooltip-popup-delay="333">
+						<?php ___('sidebars.before_title'); ?>
+					</label>
+					<textarea
+						id="item-before_title"
+						msd-elastic
+						class="labeled elastic"
+						ng-model="selectedItem.before_title">
+					</textarea>
 
+					<hr class="thin">
 
+					<label
+						for="item-after_title"
+						class="inner"
+						tooltip="<?php ___('sidebars.after_title_info'); ?>"
+						tooltip-popup-delay="333">
+						<?php ___('sidebars.after_title'); ?>
+					</label>
+					<textarea
+						id="item-after_title"
+						msd-elastic
+						class="labeled elastic"
+						ng-model="selectedItem.after_title">
+					</textarea>
 
+					<hr class="thick">
+
+	
+					<!-- SAVE BUTTON -->
+					<div class="save-right"><?php i_save_option_button('i-sidebars','iSidebars'); ?></div>
+		
+					<!-- DELETE BUTTON -->
+					<button
+						class="button deletion"
+						ng-click="deleteItem(selectedItem,'iSidebars')">
+						<i class="icon-close"></i>
+						<?php ___('sidebars.delete'); ?>
+					</button>
+
+					<!-- DUPLICATE BUTTON -->
+					<button
+						class="button"
+						ng-click="duplicateItem(selectedItem,'iSidebars')">
+						<i class="icon-copy-2"></i>
+						<?php ___('sidebars.duplicate'); ?>
+					</button>
 
 				</div>
+
 			</div>
-
-			<hr class="thick">
-
-
-
-
 
 
 		</div>
-
-
-
 
 		<hr class="thick">
 
-
-		<div class="sidebars form-wrap">
-			
-			
-
-		</div>
-
-
-		<hr>
 		<pre>{{ iSidebars | json }}</pre>
 
 	</div>
+
 </div>

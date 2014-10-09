@@ -339,7 +339,7 @@
 						Delete Feed
 					</button>
 
-					<!-- DELETE BUTTON -->
+					<!-- DUPLICATE BUTTON -->
 					<button
 						class="button deletion"
 						ng-click="duplicateItem(selectedItem,'iFeeds')">
