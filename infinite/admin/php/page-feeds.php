@@ -381,6 +381,7 @@
 								class="labeled"
 								ng-model="selectedItem.aux_template"
 								ng-options="key as key for (key, value) in phpFeedTemplates">
+								<option value=""><?php ___('general.none'); ?></option>
 							</select>
 						</div>
 
