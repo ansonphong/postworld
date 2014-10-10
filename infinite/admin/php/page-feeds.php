@@ -49,7 +49,7 @@
 				<!-- ///// EDIT SETTINGS ///// -->
 				<div ng-show="showView('settings')">
 					
-					<h3>Loading Icon</h3>
+					<h3><?php ___('feeds.settings.loading_icon') ?></h3>
 
 					<!-- DROPDOWN -->
 					<span
@@ -82,14 +82,17 @@
 				<!-- ///// EDIT SETTINGS ///// -->
 				<div ng-show="showView('editItem')">
 
-					<h3><i class="icon-gear"></i> Feed Settings</h3>
+					<h3><i class="icon-gear"></i> <?php ___('feeds.item_settings') ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
 							<label
 								for="item-name"
-								class="inner">
-								Feed Name
+								class="inner"
+								tooltip="<?php ___('feeds.name_info') ?>"
+								tooltip-popup-delay="333">
+								<?php ___('feeds.name') ?>
+								<i class="icon-info-circle"></i>
 							</label>
 							<input
 								id="item-name"
@@ -101,14 +104,15 @@
 							<label
 								for="item-id"
 								class="inner"
-								tooltip="Must be unique"
+								tooltip="<?php ___('feeds.id_info') ?>"
 								tooltip-popup-delay="333">
-								Feed ID <i class="icon-info-circle"></i>
+								<?php ___('feeds.id') ?>
+								<i class="icon-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								tooltip="Editing the ID may cause instances of the feed to disappear"
+								tooltip="<?php ___('feeds.id_edit_info') ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="icon-edit"></i>
@@ -119,7 +123,8 @@
 								type="text"
 								ng-model="selectedItem.id"
 								disabled
-								ng-blur="disableInput('#item-id')">
+								pw-sanitize="id"
+								ng-blur="disableInput('#item-id');">
 						</div>
 					</div>
 

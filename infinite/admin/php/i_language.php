@@ -9,14 +9,14 @@ $i_language = array(
 		'back'		=>	'‹ Back',
 		),
 	'sidebars'	=>	array(
-		'settings'			=>	'Sidebar Settings',
+		'item_settings'		=>	'Sidebar Settings',
 		'add_new' 			=>	'Add New Sidebar',
 		'delete'			=>	'Delete Sidebar',
 		'duplicate'			=>	'Duplicate Sidebar',
 
-		'name'				=>	'Name',
+		'name'				=>	'Sidebar Name',
 		'name_info'			=>	'The name is how it appears on the widgets options page.',
-		'id'				=>	'ID',
+		'id'				=>	'Sidebar ID',
 		'id_info'			=>	'The ID is the unique name for the sidebar. It is all lowercase and contains only letters, numbers, and hyphens.',
 		'id_edit_info'		=>	'Editing the ID may cause instances of the sidebar to disappear.',	
 		
@@ -42,10 +42,22 @@ $i_language = array(
 		'after_title_info'	=> 	'HTML that goes after the title of each widget',
 		),
 	'feeds'	=>	array(
-		'settings'			=>	'Feed Settings',
+		'item_settings'		=>	'Feed Settings',
 		'add_new' 			=>	'Add New Feed',
 		'delete'			=>	'Delete Feed',
 		'duplicate'			=>	'Duplicate Feed',
+
+		'name'				=>	'Feed Name',
+		'name_info'			=>	'The name is an aesthetic label for the feed.',
+		'id'				=>	'Feed ID',
+		'id_info'			=>	'The ID is the unique identifier for the feed. It is all lowercase and contains only letters, numbers, and hyphens.',
+		'id_edit_info'		=>	'Editing the ID may cause instances of the feed to disappear.',	
+		
+
+		'settings'	=>	array(
+			'loading_icon'	=>	'Loading Icon',
+			),
+
 		),
 
 	);

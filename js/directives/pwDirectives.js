@@ -9,6 +9,46 @@
 											 
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
+
+
+///// POSTWORLD SANITIZE DIRECTIVE /////
+
+postworld.directive('pwSanitize', function() {
+	return {
+		require: '?ngModel',
+		link: function( $scope, element, attrs, ngModel ) {
+
+			function process( value ){
+				switch( attrs.pwSanitize ){
+					case 'id':
+						value = value.replace( ' ', '-', 'm' );
+						break;
+				}
+				return value;
+			};
+
+			function update(){
+				var value = String( element.context.value );
+				value = process( value );
+				ngModel.$setViewValue( value );
+				ngModel.$render();
+			}
+
+			$scope.$watch( attrs.ngModel, function(n,o) {
+				update();
+			});
+			
+			/*
+			ngModel.$formatters.push(function(value) {
+				return value;
+			});
+			*/
+
+		},
+	}
+});
+
+
 ///// POSTWORLD SRC DIRECTIVE /////
 postworld.directive('pwSrc', function( $log ) {
 	return {

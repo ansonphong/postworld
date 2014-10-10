@@ -77,5 +77,4 @@ infinite.controller( 'iAdminCtrl',
 		element.attr('disabled', 'disabled');
 	}
 
-
 }]);
