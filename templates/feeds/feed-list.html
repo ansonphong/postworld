@@ -4,22 +4,20 @@
 	infinite-scroll-use-document-bottom="true">
 
 	<div
-		art-feed>
+		ng-repeat="post in posts"
+		class="feed-item">
 		<div
-			ng-repeat="post in posts"
-			class="feed-item">
-			<div
-				feed-item
-				post="post"
-				feed-settings="args"
-				class="feed-post">
-				<!-- feed-id="args.feed_id" -->
-			</div>
+			feed-item
+			post="post"
+			feed-settings="args"
+			class="feed-post">
+			<!-- feed-id="args.feed_id" -->
 		</div>
-		<div class="clearfix"></div>
 	</div>
+	<div class="clearfix"></div>
 
 </div>
+
 <div class="clearfix"></div>
 
 <div

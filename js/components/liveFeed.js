@@ -85,33 +85,23 @@ postworld.controller('pwFeedController',
 			'list';
 
 		$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view);
-		//$log.debug('pwFeedController Set Initial Feed Item View Type', $scope.feed_item_view_type);
-		
-	   	// Get Feed Template from feeds if it exists, otherwise get it from default path
+
+	   	// Get Feed Template from feeds if it exists
 	   	if (pwData.feeds[$scope.feed].feed_template) {
 			var template = pwData.feeds[$scope.feed].feed_template;			   	
 			$scope.templateUrl = pwData.pw_get_template( { subdir: 'feeds', view: template } );
-			//$log.debug('LiveFeed() Set Initial Feed Template to ',$scope.feed, template, $scope.templateUrl);
 	   	}
+	   	// Otherwise get it from default
 	   	else {
-			if ($scope.directive=='liveFeed')
-				$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/liveFeed.html';
-			else if ($scope.directive=='loadFeed')
-				$scope.templateUrl = jsVars.pluginurl+'/postworld/templates/directives/loadFeed.html';
-			// just use default template provided in directive settings, no action required
-			return;			   	
+	   		$scope.templateUrl = pwData.pw_get_template( { subdir: 'feeds', view: 'feed-list' } );   	
 	   	}
 
-		
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
 		   $log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
 			$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view); 
 		   // Broadcast to all children
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
 		   });
-		
-
-		
 
 		$scope.injectAds = function() {
 			// if ads settings exist, then inject ads, otherwise, just return.

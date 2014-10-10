@@ -667,7 +667,7 @@ pw.feeds['feed_id'] = {
           options : [ 'list', 'detail', 'grid' ],
      },
      feed_template : 'load_feed_1',
-     aux_feed: 'seo-list',
+     aux_template: 'seo-list',
 }
 ```
 ```html

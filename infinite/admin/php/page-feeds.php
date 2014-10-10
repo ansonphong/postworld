@@ -1,11 +1,32 @@
 <?php
+	///// GET DATA /////
+	// Feeds
 	$iFeeds = i_get_option( array( 'option_name' => 'i-feeds' ) );
+	// Feed Settings
 	$iFeedSettings = i_get_option( array( 'option_name' => 'i-feed-settings' ) );
+	// Feed Templates
+	$htmlFeedTemplates = pw_get_templates(
+		array(
+			'subdirs' => array('feeds'),
+			'path_type' => 'url',
+			'ext'=>'html',
+			)
+		)['feeds'];	
+	// Aux Feed Templates
+	$phpFeedTemplates = pw_get_templates(
+		array(
+			'subdirs' => array('feeds'),
+			'path_type' => 'url',
+			'ext'=>'php',
+			)
+		)['feeds'];
 ?>
 <script>
 	infinite.controller( 'pwFeedsDataCtrl', [ '$scope', function( $scope ){
 		$scope.iFeeds = <?php echo json_encode( $iFeeds ); ?>;
 		$scope.iFeedSettings = <?php echo json_encode( $iFeedSettings ); ?>;
+		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
+		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
 	}]);
 </script>
 
@@ -82,14 +103,14 @@
 				<!-- ///// EDIT SETTINGS ///// -->
 				<div ng-show="showView('editItem')">
 
-					<h3><i class="icon-gear"></i> <?php ___('feeds.item_settings') ?></h3>
+					<h3><i class="icon-gear"></i> <?php ___('feeds.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
 							<label
 								for="item-name"
 								class="inner"
-								tooltip="<?php ___('feeds.name_info') ?>"
+								tooltip="<?php ___('feeds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.name') ?>
 								<i class="icon-info-circle"></i>
@@ -104,7 +125,7 @@
 							<label
 								for="item-id"
 								class="inner"
-								tooltip="<?php ___('feeds.id_info') ?>"
+								tooltip="<?php ___('feeds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.id') ?>
 								<i class="icon-info-circle"></i>
@@ -112,7 +133,7 @@
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								tooltip="<?php ___('feeds.id_edit_info') ?>"
+								tooltip="<?php ___('feeds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="icon-edit"></i>
@@ -133,9 +154,10 @@
 							<label
 								for="item-preload"
 								class="inner"
-								tooltip="How many posts to preload"
+								tooltip="<?php ___('feeds.preload_info'); ?>"
 								tooltip-popup-delay="333">
-								Preload <i class="icon-info-circle"></i>
+								<?php ___('feeds.preload'); ?>
+								<i class="icon-info-circle"></i>
 							</label>
 							<input
 								id="item-preload"
@@ -147,9 +169,10 @@
 							<label
 								for="item-load_increment"
 								class="inner"
-								tooltip="How many posts to load each infinite scroll"
+								tooltip="<?php ___('feeds.increment_info'); ?>"
 								tooltip-popup-delay="333">
-								Load Increment <i class="icon-info-circle"></i>
+								<?php ___('feeds.increment'); ?>
+								<i class="icon-info-circle"></i>
 							</label>
 							<input
 								id="item-load_increment"
@@ -161,9 +184,10 @@
 							<label
 								for="item-offset"
 								class="inner"
-								tooltip="How many posts to skip at the UI level"
+								tooltip="<?php ___('feeds.offset_info'); ?>"
 								tooltip-popup-delay="333">
-								Offset <i class="icon-info-circle"></i>
+								<?php ___('feeds.offset'); ?>
+								<i class="icon-info-circle"></i>
 							</label>
 							<input
 								id="item-offset"
@@ -183,7 +207,7 @@
 							<label
 								for="query-post_type"
 								class="inner">
-								Post Type
+								<?php ___('feeds.query.post_type'); ?>
 							</label>
 							<select
 								id="query-post_type"
@@ -198,7 +222,7 @@
 							<label
 								for="query-post_status"
 								class="inner">
-								Post Status
+								<?php ___('feeds.query.post_status'); ?>
 							</label>
 							<select
 								id="query-post_status"
@@ -211,7 +235,7 @@
 							<label
 								for="query-post_class"
 								class="inner">
-								Post Class
+								<?php ___('feeds.query.post_class'); ?>
 							</label>
 							<select
 								id="query-post_class"
@@ -225,9 +249,10 @@
 							<label
 								for="query-offset"
 								class="inner"
-								tooltip="How many posts to skip at the Query level"
+								tooltip="<?php ___('feeds.query.offset_info'); ?>"
 								tooltip-popup-delay="333">
-								Offset <i class="icon-info-circle"></i>
+								<?php ___('feeds.query.offset'); ?>
+								<i class="icon-info-circle"></i>
 							</label>
 							<input
 								id="query-offset"
@@ -239,7 +264,7 @@
 							<label
 								for="query-orderby"
 								class="inner">
-								Order By
+								<?php ___('feeds.query.orderby'); ?>
 							</label>
 							<select
 								id="query-orderby"
@@ -253,7 +278,7 @@
 							<label
 								for="query-order"
 								class="inner">
-								Order
+								<?php ___('feeds.query.order'); ?>
 							</label>
 							<select
 								id="query-order"
@@ -266,9 +291,10 @@
 							<label
 								for="query-posts_per_page"
 								class="inner"
-								tooltip="Maximum number of posts"
+								tooltip="<?php ___('feeds.query.posts_per_page_info'); ?>"
 								tooltip-popup-delay="333">
-								Maxiumum Posts <i class="icon-info-circle"></i>
+								<?php ___('feeds.query.posts_per_page'); ?>
+								<i class="icon-info-circle"></i>
 							</label>
 							<input
 								id="query-posts_per_page"
@@ -281,14 +307,15 @@
 							<label
 								for="query-event_filter"
 								class="inner">
-								<i class="icon-calendar"></i>  Event Filter
+								<i class="icon-calendar"></i>
+								<?php ___('feeds.query.event_filter'); ?>
 							</label>
 							<select
 								id="query-event_filter"
 								class="labeled"
 								ng-options="item.value as item.name for item in feedOptions.query.event_filter"
 								ng-model="selectedItem.query.event_filter">
-								<option value="">None</option>
+								<option value=""><?php ___('general.none'); ?></option>
 							</select>
 						</div>
 
@@ -298,13 +325,13 @@
 					
 					<hr class="thin">
 					
-					<h3><i class="icon-cube"></i> Template</h3>
+					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
 					<div class="pw-row">
 						<div class="pw-col-3">
 							<label
 								for="feed_view"
 								class="inner">
-								View
+								<?php ___('feeds.view.current'); ?>
 							</label>
 							<select
 								id="feed_view"
@@ -318,7 +345,7 @@
 							<label
 								for="feed_view_options"
 								class="inner">
-								View Options
+								<?php ___('feeds.view.options'); ?>
 							</label>
 							<select
 								id="feed_view_options"
@@ -326,9 +353,37 @@
 								ng-model="selectedItem.view.options"
 								ng-options="value for value in feedOptions.view"
 								multiple>
-								<option value="">None</option>
 							</select>
 						</div>
+
+						<div class="pw-col-3">
+							<label
+								for="item-feed_template"
+								class="inner">
+								<?php ___('feeds.feed_template'); ?>
+							</label>
+							<select
+								id="item-feed_template"
+								class="labeled"
+								ng-model="selectedItem.feed_template"
+								ng-options="key as key for (key, value) in htmlFeedTemplates">
+							</select>
+						</div>
+
+						<div class="pw-col-3">
+							<label
+								for="item-aux_template"
+								class="inner">
+								<?php ___('feeds.aux_template'); ?>
+							</label>
+							<select
+								id="item-aux_template"
+								class="labeled"
+								ng-model="selectedItem.aux_template"
+								ng-options="key as key for (key, value) in phpFeedTemplates">
+							</select>
+						</div>
+
 					</div>
 					
 					<hr class="thick">
@@ -341,7 +396,7 @@
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'iFeeds')">
 						<i class="icon-close"></i>
-						Delete Feed
+						<?php ___('feeds.delete'); ?>
 					</button>
 
 					<!-- DUPLICATE BUTTON -->
@@ -349,7 +404,7 @@
 						class="button deletion"
 						ng-click="duplicateItem(selectedItem,'iFeeds')">
 						<i class="icon-copy-2"></i>
-						Duplicate Feed
+						<?php ___('feeds.duplicate'); ?>
 					</button>
 
 				</div>

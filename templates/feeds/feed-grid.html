@@ -1,13 +1,21 @@
-<div
+<masonry
+	column-width=".grid-sizer"
+	masonry-options='{ "gutter": 0, "transitionDuration":0 }'
 	infinite-scroll='getNext()'
-	infinite-scroll-disabled='busy'
-	infinite-scroll-use-document-bottom="true">
+		infinite-scroll-disabled='busy'
+		infinite-scroll-use-document-bottom="true">
 
 	<div
-		art-feed>
+		art-feed
+		>
+		<div class="grid-sizer"></div>
 		<div
 			ng-repeat="post in posts"
-			class="feed-item">
+			class="feed-item masonry-brick"
+			pw-grid
+			ng-class="setGridClass( post.image.tags )"
+			>
+			<!-- ng-style="setGridStyle( 333, post.image.tags, customTagMapping, [ 'height' ] )" -->
 			<div
 				feed-item
 				post="post"
@@ -15,11 +23,13 @@
 				class="feed-post">
 				<!-- feed-id="args.feed_id" -->
 			</div>
+
 		</div>
+
 		<div class="clearfix"></div>
 	</div>
 
-</div>
+</masonry>
 <div class="clearfix"></div>
 
 <div

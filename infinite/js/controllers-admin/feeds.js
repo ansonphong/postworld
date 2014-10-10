@@ -61,12 +61,12 @@ infinite.controller('iAdminFeedsCtrl',
 				posts_per_page: 200, 
 			},
 			//blocks:{},
-			feed_template: null,	// Get HTML feeds from pwData
-			aux_feed: null,			// Get PHP feeds from pwData
+			feed_template: 'feed-list',	// Get HTML feeds from pwData
+			aux_template: 'seo-list',		// Get PHP feeds from pwData
 		};
 
 		$scope.iFeeds.push( newFeed );
-		$scope.editItem( newFeed );
+		$scope.selectItem( newFeed );
 	}
 
 	$scope.postClassOptions = function(){

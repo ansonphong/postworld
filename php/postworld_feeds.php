@@ -1,9 +1,40 @@
 <?php
 
+function pw_get_feed_by_id( $feed_id ){
+	$feeds = i_get_option( array( 'option_name'	=>	'i-feeds' ) );
+	if( empty( $feeds ) )
+		return false;
+
+	foreach( $feeds as $feed ){
+		if( $feed['id'] == $feed_id )
+			return $feed;
+	}
+	return false;
+}
 
 function pw_live_feed( $vars = array() ){
 
-	extract( $vars );
+	/// $VARS : (ARRAY) ///
+	if( is_array( $vars ) ){
+		extract( $vars );
+	}
+
+	/// $VARS : (STRING) ///
+	else if( is_string( $vars ) ){
+		// Check if the $vars is a string
+		// If so, check if it's referencing a known feed ID
+		$feed = pw_get_feed_by_id( $vars );
+
+		if( !$feed )
+			return false;
+		else
+			$feed_id = $vars;
+	}
+
+	/// $VARS : (UNKNOWN) ///
+	else
+		return false;
+
 
 	///// DEFAULT VARS /////
 	if( !isset( $element ) )
@@ -24,9 +55,13 @@ function pw_live_feed( $vars = array() ){
 	if( !isset( $echo ) )
 		$echo = true;
 
-	if( !isset( $aux_feed ) )
-		$aux_feed = null;
+	if( !isset( $feed ) )
+		$feed = array();
+
+	if( !isset( $aux_template ) )
+		$aux_template = null;
 	
+
 	///// DEFAULT ARRAYS /////
 	$default_query = array(
 		'post_status'		=>	'publish',
@@ -44,9 +79,16 @@ function pw_live_feed( $vars = array() ){
 			'current' 	=> 'list',
 			'options'	=>	array( 'list', 'grid' ),
 			),
-		'query' 		=> $default_query,
-		'feed_template'	=>	null,
-		'aux_feed'		=>	null,
+		'query' 		=> 	$default_query,
+		'feed_template'	=>	'feed-list',
+		'aux_template'	=>	'seo-list',
+
+		// 'cache'	=>	array(
+		//		'posts'	=>	true, // determines whether the posts or just outline is cached	
+		//		'interval'	=>	5000,
+		//		),
+		// 
+
 		);
 
 	// Over-ride default settings with provided settings
@@ -59,6 +101,7 @@ function pw_live_feed( $vars = array() ){
 		$feed_data = pw_get_live_feed( $feed );
 
 	// TODO : Add load-feed support
+	// Or else banish load-feed, and simply use a cache feed subobject
 	else if( $directive == 'load-feed' )
 		$feed_data = array( 'error' => 'Load Feed Not Supported Yet.' );
 
@@ -68,14 +111,14 @@ function pw_live_feed( $vars = array() ){
 
 	///// GENERATE OUTPUT /////
 	//Print object with posts pre-populated
-	$output = '<script>pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .'</script>';
+	$output = '<script>pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .';</script>';
 	$output .= '<'.$element.' '.$directive.'="'.$feed_id.'" class="'.$classes.'" '.$attributes.'></'.$element.'>';
 
 
 	///// AUXILLARY FEED /////
-	if( !empty($aux_feed) ){
+	if( !empty($aux_template) ){
 		// Get the specified template path
-		$template = pw_get_template ( 'feeds', $aux_feed, 'php', 'dir' );
+		$template = pw_get_template ( 'feeds', $aux_template, 'php', 'dir' );
 		// If a template is found
 		if( $template ){
 			// Add it to the output

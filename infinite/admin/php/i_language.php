@@ -7,9 +7,10 @@ $i_language = array(
 		'save'		=>	'Save',
 		'cancel'	=>	'Cancel',
 		'back'		=>	'‹ Back',
+		'none'		=>	'None',
 		),
 	'sidebars'	=>	array(
-		'item_settings'		=>	'Sidebar Settings',
+		'item_title'		=>	'Sidebar Settings',
 		'add_new' 			=>	'Add New Sidebar',
 		'delete'			=>	'Delete Sidebar',
 		'duplicate'			=>	'Duplicate Sidebar',
@@ -17,7 +18,7 @@ $i_language = array(
 		'name'				=>	'Sidebar Name',
 		'name_info'			=>	'The name is how it appears on the widgets options page.',
 		'id'				=>	'Sidebar ID',
-		'id_info'			=>	'The ID is the unique name for the sidebar. It is all lowercase and contains only letters, numbers, and hyphens.',
+		'id_info'			=>	'The ID is the unique name for the sidebar. It contains only letters, numbers, and hyphens.',
 		'id_edit_info'		=>	'Editing the ID may cause instances of the sidebar to disappear.',	
 		
 		'description'		=>	'Description',
@@ -42,7 +43,7 @@ $i_language = array(
 		'after_title_info'	=> 	'HTML that goes after the title of each widget',
 		),
 	'feeds'	=>	array(
-		'item_settings'		=>	'Feed Settings',
+		'item_title'		=>	'Feed Settings',
 		'add_new' 			=>	'Add New Feed',
 		'delete'			=>	'Delete Feed',
 		'duplicate'			=>	'Duplicate Feed',
@@ -50,12 +51,49 @@ $i_language = array(
 		'name'				=>	'Feed Name',
 		'name_info'			=>	'The name is an aesthetic label for the feed.',
 		'id'				=>	'Feed ID',
-		'id_info'			=>	'The ID is the unique identifier for the feed. It is all lowercase and contains only letters, numbers, and hyphens.',
+		'id_info'			=>	'The ID is the unique identifier for the feed. It contains only letters, numbers, and hyphens.',
 		'id_edit_info'		=>	'Editing the ID may cause instances of the feed to disappear.',	
 		
+		'preload'			=>	'Preload',
+		'preload_info'		=>	'How many posts to preload',
+
+		'increment'			=>	'Load Increment',
+		'increment_info'	=>	'How many posts to load each infinite scroll',
+
+		'offset'			=>	'Offset',
+		'offset_info'		=>	'How many posts to skip at the Javascript level',
+
+		'feed_template'		=>	'Feed Template',
+		'aux_template'		=>	'Auxiliary Template',
 
 		'settings'	=>	array(
 			'loading_icon'	=>	'Loading Icon',
+			),
+
+		'query'		=>	array(
+			'post_type'				=>	'Post Type',
+			'post_status'			=>	'Post Status',
+			'post_class'			=>	'Post Class',
+
+			'offset'				=>	'Offset',
+			'offset_info'			=>	'How many posts to skip at the MySQL level',
+			'orderby'				=>	'Order By',
+
+			'order'					=>	'Order',
+
+			'posts_per_page'		=>	'Maximum Posts',
+			'posts_per_page_info'	=>	'Maximum number of posts',
+
+			'event_filter'			=>	'Event Filter',
+			'event_filter_none'		=>	'None',
+
+			),
+
+		'view'	=>	array(
+			'title'		=>	'Template',
+			'current'	=>	'View',
+			'options'	=>	'View Options',
+			'options_none'	=>	'None',
 			),
 
 		),

@@ -58,7 +58,7 @@ add_shortcode( 'terms-feed', 'pw_terms_feed_shortcode' );
 
 function pw_print_terms_feed( $vars ){
 
-	$default_template = 'terms-feed-default';
+	$default_template = 'term-feed-default';
 	$default_vars = array(
 		'template'	=>	$default_template, 	// ID in : templates/shortcodes 
 
@@ -90,7 +90,7 @@ function pw_print_terms_feed( $vars ){
 	///// TEMPLATES ////
 	$templates = pw_get_templates(
 		array(
-			'subdirs' => array('feeds'),
+			'subdirs' => array('term-feeds'),
 			'path_type' => 'dir',
 			'ext'=>'php',
 			)

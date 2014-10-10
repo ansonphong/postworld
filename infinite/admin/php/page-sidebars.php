@@ -42,7 +42,7 @@
 			<div class="pw-col-9">
 				<div ng-show="showView('editItem')">
 
-					<h3><i class="icon-gear"></i> <?php ___('sidebars.item_settings'); ?></h3>
+					<h3><i class="icon-gear"></i> <?php ___('sidebars.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
@@ -82,6 +82,7 @@
 								class="labeled"
 								type="text"
 								ng-model="selectedItem.id"
+								pw-sanitize="id"
 								disabled
 								ng-blur="disableInput('#item-id')">
 						</div>
