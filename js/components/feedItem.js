@@ -4,32 +4,34 @@ postworld.directive('feedItem', function() {
     return {
         restrict: 'A',
         replace: true,
-        controller: 'pwFeedItemController',
-        // template: '<div ng-include src="\'http://localhost/pdev/wp-content/plugins/postworld/templates/posts/post-list.html\'"></div>',
-        template: '<div ng-include src="itemTemplateUrl"></div>',        
-        scope: {
+        controller: 'pwFeedItemCtrl',
+        template: '<div ng-include="itemTemplateUrl"></div>',
+
+        // DELETE : NO NEED FOR ISOLATED SCOPE
+        /*scope: {
         	// this identifies the panel id, hence the panel template
-        	feedItem : '=',
+        	//feedItem : '=',
         	post : "=",	// Get from ng-repeat
         	//feedId : '=', // Get from Parent Scope of Live Feed
-        	feedSettings : '=', // Get from Parent Scope of Live Feed
-        	}
+        	//feedSettings : '=', // Get from Parent Scope of Live Feed
+        	}*/
     };
 });
 
-postworld.controller('pwFeedItemController',
-    function pwFeedItemController($scope, $location, $log, pwData, $attrs) {
+postworld.controller('pwFeedItemCtrl',
+    function($scope, $location, $log, pwData, $attrs) {
     	
 		var type = 'post';
-		if ($scope.post.post_type) type = $scope.post.post_type;
-		if (type == "ad") {
+		if ( $scope.post.post_type ) type = $scope.post.post_type;
+
+        if (type == "ad") {
 			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'panels', view: $scope.post.template } );				
 		}
 		else 
 			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: $scope.$parent.feed_item_view_type } );
-    		//$log.debug('pwFeedItemController New Template=',$scope.templateUrl,$scope.$parent.feed_item_view_type, type);    	
-	    	
-		
+
+        //$log.debug('template:', $scope.itemTemplateUrl);
+
         // Decodes Special characters in URIs
         $scope.decodeURI = function(URI) {
             URI = URI.replace("&amp;","&");
@@ -44,10 +46,6 @@ postworld.controller('pwFeedItemController',
 				var type = $scope.post.post_type;
 				$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: feed_item_view_type } );					
 			} 
-		
-		   // $log.debug('pwFeedItemController: Event Received FEED_TEMPLATE_UPDATE',feedTemplateUrl);
-		   // $scope.templateUrl = feed_item_view_type;
-		   
 		   });		  		      	
     }
 );
@@ -83,25 +81,9 @@ postworld.controller('pwGridCtrl',
     function($scope, $window,  $_, $log, $pwImages ) {
 
     ////////// GRIDS //////////
-
-    var gridSettings = ( $_.objExists( $scope, 'feedSettings.view.settings.grid' ) ) ?
-        $scope.feedSettings.view.settings.grid : 
-        {};
-
-    // $scope.post.image
-    //$log.debug( "LOAD GRID : " + $scope.post.post_title, gridSettings );
-
-    var gridWidth = gridSettings['width'];
-    var gridHeight = gridSettings['height'];
-
     $scope.getImageSize = function( prefix, imageTags ){
         return prefix + $scope.selectImageTag( imageTags ).name;
     }
-
-    //var imageTags = $scope.post.image['tags'];
-    //var imageStats = $scope.post.image['stats'];
-
-
 
     $scope.selectImageTag = function( imageTags, tagMapping ){
     	return $pwImages.selectImageTag( imageTags, tagMapping );
@@ -181,12 +163,12 @@ postworld.controller('pwGridItemCtrl',
     ////////// ALIAS FUNCTIONS //////////
 
     var parentFunctionExists = function( functionName ){
-    	return !_.isUndefined( $scope.$parent.$parent[ functionName ]() );
+    	return !_.isUndefined( $scope.$parent[ functionName ]() );
     }
 
     $scope.getImageSize = function( prefix, imageTags ){
     	if ( parentFunctionExists( "getImageSize" ) ) 
-        	return $scope.$parent.$parent.getImageSize( prefix, imageTags );
+        	return $scope.$parent.getImageSize( prefix, imageTags );
     }
 
     $scope.selectImageTag = function( imageTags, tagMapping ){
@@ -195,12 +177,12 @@ postworld.controller('pwGridItemCtrl',
 
     $scope.setGridClass = function( imageTags ){
     	if ( parentFunctionExists( "setGridClass" ) )
-    		return $scope.$parent.$parent.setGridClass( imageTags );
+    		return $scope.$parent.setGridClass( imageTags );
     };
 
     $scope.setGridStyle = function( imageTags, tagMapping ){
     	if ( parentFunctionExists( "setGridStyle" ) )
-    		return $scope.$parent.$parent.setGridStyle( imageTags, tagMapping );
+    		return $scope.$parent.setGridStyle( imageTags, tagMapping );
     };
 
     $scope.tester = function(){

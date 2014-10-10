@@ -114,7 +114,6 @@ function pw_live_feed( $vars = array() ){
 	$output = '<script>pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .';</script>';
 	$output .= '<'.$element.' '.$directive.'="'.$feed_id.'" class="'.$classes.'" '.$attributes.'></'.$element.'>';
 
-
 	///// AUXILLARY FEED /////
 	if( !empty($aux_template) ){
 		// Get the specified template path
