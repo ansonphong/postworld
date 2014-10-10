@@ -254,7 +254,6 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
   		mergeQueryString: function (feedArgs,args) {
   			$log.info('Feed Query Override by Query String',args);
   			for(var key in args){
-			    // $scope.args.query[key] = params[key];
 			    feedArgs.query[key] = args[key];
 			}			
 			return feedArgs;

@@ -144,7 +144,7 @@ postworld.directive('registerFeed', function($log, pwData) {
 });
 
 postworld.controller('pwRegisterFeedController',
-    function pwRegisterPanelController($scope, $location, $log, pwData, $attrs) {
+    function ($scope, $location, $log, pwData, $attrs) {
     	$scope.args= {};
     	$scope.args.write_cache = false;
     	$scope.args.feed_id = '';

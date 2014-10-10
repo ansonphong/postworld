@@ -37,15 +37,13 @@ postworld.directive('loadPost', function() {
 
 postworld.controller('pwFeedController',
 	[ '$scope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_',
-	function( $scope, $location, $log, $attrs, $timeout, pwData, $route, $_ ) {
+	function( $scope, $location, $log, $attrs, $timeout, $pwData, $route, $_ ) {
 		
 		
 		// Initialize
 		$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 		$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
-		
-		$scope.args = {};
-		$scope.args.query = {};
+
 		$scope.query = {};
 		$scope.scrollMessage = "";
 		$scope.posts = [];
@@ -56,16 +54,18 @@ postworld.controller('pwFeedController',
 		if ($attrs.liveFeed)    { 
 			$scope.directive = 		'liveFeed';
 			$scope.feedId	= 		$attrs.liveFeed;
-			$scope.args.feed_id = 	$attrs.liveFeed; // This Scope variable will propagate to all directives inside Live Feed
 		}
-
 		// LOAD FEED
 		else  if ($attrs.loadFeed)   {
 			$scope.directive = 		'loadFeed';
 			$scope.feedId	= 			$attrs.loadFeed;
-			$scope.args.feed_id = 	$attrs.loadFeed; // This Scope variable will propagate to all directives inside Live Feed
-		};    	
-						
+		};
+
+		$scope.feed = ( $_.objExists( $pwData.feeds, $scope.feedId ) ) ?
+			$pwData.feeds[$scope.feedId] : {};
+
+		$scope.feed.feed_id = 	$scope.feedId; // This Scope variable will propagate to all directives inside Live Feed
+
 		// NO FEED
 		if (!$scope.feedId) {
 			$log.debug('no valid Feed ID provided in Feed Settings',$scope);
@@ -76,32 +76,32 @@ postworld.controller('pwFeedController',
 
 
 		// Set Title
-		$scope.title = ( pwData.feeds[$scope.feedId].title ) ?
-			pwData.feeds[$scope.feedId].title : '';
+		$scope.title = ( $pwData.feeds[$scope.feedId].title ) ?
+			$pwData.feeds[$scope.feedId].title : '';
 
 		// Set View
-		$scope.args.view = ( pwData.feeds[$scope.feedId].view ) ?
-			pwData.feeds[$scope.feedId].view : {};
+		$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
+			$pwData.feeds[$scope.feedId].view : {};
 
-		var view =  (pwData.feeds[$scope.feedId].view.current) ?
-			pwData.feeds[$scope.feedId].view.current :
+		var view =  ($pwData.feeds[$scope.feedId].view.current) ?
+			$pwData.feeds[$scope.feedId].view.current :
 			'list';
 
 		$scope.feed_item_view_type = view;
 
 	   	// Get Feed Template from feeds if it exists
-	   	if (pwData.feeds[$scope.feedId].feed_template) {
-			var template = pwData.feeds[$scope.feedId].feed_template;			   	
-			$scope.templateUrl = pwData.pw_get_template( { subdir: 'feeds', view: template } );
+	   	if ($pwData.feeds[$scope.feedId].feed_template) {
+			var template = $pwData.feeds[$scope.feedId].feed_template;			   	
+			$scope.templateUrl = $pwData.pw_get_template( { subdir: 'feeds', view: template } );
 	   	}
 	   	// Otherwise get it from default
 	   	else {
-	   		$scope.templateUrl = pwData.pw_get_template( { subdir: 'feeds', view: 'feed-list' } );   	
+	   		$scope.templateUrl = $pwData.pw_get_template( { subdir: 'feeds', view: 'feed-list' } );   	
 	   	}
 
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
 		   $log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
-			$scope.feed_item_view_type = view; // pwData.pw_get_template('posts','post',view); 
+			$scope.feed_item_view_type = view; // $pwData.pw_get_template('posts','post',view); 
 		   // Broadcast to all children
 		   // TODO : Also broadcast the feed ID, so only the effected feed is updated
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
@@ -109,18 +109,18 @@ postworld.controller('pwFeedController',
 
 		$scope.injectAds = function() {
 			// if ads settings exist, then inject ads, otherwise, just return.
-			if (pwData.feeds[$scope.feedId].blocks) {
+			if ($pwData.feeds[$scope.feedId].blocks) {
 				// Initialize Ad Blocks
 				$scope.adBlocks = 0;
-				var len = pwData.feeds[$scope.feedId].posts.length;
+				var len = $pwData.feeds[$scope.feedId].posts.length;
 				var offset = 0;
-				if (pwData.feeds[$scope.feedId].blocks.offset) offset = pwData.feeds[$scope.feedId].blocks.offset;
+				if ($pwData.feeds[$scope.feedId].blocks.offset) offset = $pwData.feeds[$scope.feedId].blocks.offset;
 				var increment = 10;
-				if (pwData.feeds[$scope.feedId].blocks.increment) increment = pwData.feeds[$scope.feedId].blocks.increment;
+				if ($pwData.feeds[$scope.feedId].blocks.increment) increment = $pwData.feeds[$scope.feedId].blocks.increment;
 				var max_blocks = 5;
-				if (pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = pwData.feeds[$scope.feedId].blocks.max_blocks;
+				if ($pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = $pwData.feeds[$scope.feedId].blocks.max_blocks;
 				var adTemplate = "ad-block";
-				if (pwData.feeds[$scope.feedId].blocks.template) adTemplate = pwData.feeds[$scope.feedId].blocks.template;
+				if ($pwData.feeds[$scope.feedId].blocks.template) adTemplate = $pwData.feeds[$scope.feedId].blocks.template;
 				$scope.adNextID = offset;
 				// loop on scope.items starting from offset, with increments = increment, and break when max_blocks is reached
 				for (var i=offset;	i<len+$scope.adBlocks; 	i=i+increment)	{ 
@@ -143,13 +143,13 @@ postworld.controller('pwFeedController',
 		
 		$scope.injectNewAd = function() {
 			// check if ads enabled
-			if (pwData.feeds[$scope.feedId].blocks) {
+			if ($pwData.feeds[$scope.feedId].blocks) {
 				var max_blocks = 5;
-				if ( pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = pwData.feeds[$scope.feedId].blocks.max_blocks;
+				if ( $pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = $pwData.feeds[$scope.feedId].blocks.max_blocks;
 				var adTemplate = "ad-block";
-				if ( pwData.feeds[$scope.feedId].blocks.template) adTemplate = pwData.feeds[$scope.feedId].blocks.template;
+				if ( $pwData.feeds[$scope.feedId].blocks.template) adTemplate = $pwData.feeds[$scope.feedId].blocks.template;
 				var increment = 10;
-				if ( pwData.feeds[$scope.feedId].blocks.increment) increment = pwData.feeds[$scope.feedId].blocks.increment;
+				if ( $pwData.feeds[$scope.feedId].blocks.increment) increment = $pwData.feeds[$scope.feedId].blocks.increment;
 				// Check if max_blocks reached, return.
 				if ( $scope.adBlocks >= max_blocks ) return;				
 				var len = $scope.posts.length;
@@ -170,48 +170,42 @@ postworld.controller('pwFeedController',
 		
 		$scope.resetFeedData = function () {
 			// Reset Feed Data
-			pwData.feeds[$scope.feedId] = {};
-			if (pwData.feeds[$scope.feedId].feed_outline) {
-				pwData.feeds[$scope.feedId].feed_outline = pwData.feeds[$scope.feedId].feed_outline;
+			$pwData.feeds[$scope.feedId] = {};
+			if ($pwData.feeds[$scope.feedId].feed_outline) {
+				$pwData.feeds[$scope.feedId].feed_outline = $pwData.feeds[$scope.feedId].feed_outline;
 			};											
-			pwData.feeds[$scope.feedId].posts = [];
-			// var argsValue = JSON.parse(JSON.stringify($scope.args));			
-			// $scope.posts = pwData.feeds[$scope.feedId].posts;
-			$scope.posts = JSON.parse(JSON.stringify(pwData.feeds[$scope.feedId].posts));
+			$pwData.feeds[$scope.feedId].posts = [];
+			// var argsValue = JSON.parse(JSON.stringify($scope.feed));			
+			// $scope.posts = $pwData.feeds[$scope.feedId].posts;
+			$scope.posts = JSON.parse(JSON.stringify($pwData.feeds[$scope.feedId].posts));
 			// $scope.injectAds();
 		};
 		
 		$scope.fillFeedData = function(response) {
 
 			// Create Feed Object if it doesn't exist
-			if( _.isUndefined( pwData.feeds[$scope.feedId] ) )
-				pwData.feeds[$scope.feedId] = {};
+			if( _.isUndefined( $pwData.feeds[$scope.feedId] ) )
+				$pwData.feeds[$scope.feedId] = {};
 
 			if ($scope.directive=="loadFeed") {
-				if (pwData.feeds[$scope.feedId].offset)  {
+				if ($pwData.feeds[$scope.feedId].offset)  {
 					// truncate feed outline in case of existing offset for load-feed only
-					var offset = pwData.feeds[$scope.feedId].offset;
+					var offset = $pwData.feeds[$scope.feedId].offset;
 					var len = response.data.feed_outline.length;
 					response.data.feed_outline = response.data.feed_outline.splice(offset,len);
 					// truncate response posts in case of existing offset for load-feed only															
 					response.data.posts = response.data.posts.splice(offset,len); 
-					//$log.debug('FEED DATA : ' + pwData.feeds[$scope.feedId].feed_id, response.data );
+					//$log.debug('FEED DATA : ' + $pwData.feeds[$scope.feedId].feed_id, response.data );
 					//response.data.posts = response.data.posts.splice(offset,len); 
 					// PHONG : replace post with posts 					
 				}
 			}
 			// Insert Response in Feed Data
-			pwData.feeds[$scope.feedId].feed_outline = response.data.feed_outline;
-			pwData.feeds[$scope.feedId].posts = response.data.posts;
+			$pwData.feeds[$scope.feedId].feed_outline = response.data.feed_outline;
+			$pwData.feeds[$scope.feedId].posts = response.data.posts;
 
-			// Set Feed load Status
-			if ( pwData.feeds[$scope.feedId].posts.length >= pwData.feeds[$scope.feedId].feed_outline.length ) {
-				pwData.feeds[$scope.feedId].status = 'all_loaded';													
-				$scope.scrollMessage = "No more posts to load.";						
-			} else {							
-				pwData.feeds[$scope.feedId].status = 'loaded';						
-				$scope.scrollMessage = "Scroll down to load more.";						
-			}   			
+			$scope.updateStatus();
+						
 		};
 		
 		$scope.getNext = function() {
@@ -238,8 +232,8 @@ postworld.controller('pwFeedController',
 			// TODO Can we break an existing Ajax Call? We cannot do that, but we can use an identifier for the request and ignore previous requests to the current id.
 			// This scenario might not happen since we're not allowing more than one feed request at a time, this might be a limitation, but it makes the data consistent.
 			// Set feeds equal to new 'query'
-			// pwData.feeds[$scope.feedId].query = 
-			$scope.convertFeedQuery2QueryString($scope.args.query);						
+			// $pwData.feeds[$scope.feedId].query = 
+			$scope.convertFeedQuery2QueryString($scope.feed.query);						
 			$scope.firstRun = true;			
 			this.getNext();
 		};
@@ -250,29 +244,30 @@ postworld.controller('pwFeedController',
 			$scope.posts = {};
 
 			// TODO : Set Nonce Authentically
-			pwData.setNonce(78);
+			$pwData.setNonce(78);
 			
 			// Get Query String Parameters, if any are provided
 			var qsArgs = $scope.getQueryStringArgs();			
 			var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
 
 			// Clone Args Value as 'feed'
-			var feed = JSON.parse( JSON.stringify( $scope.args ) );
+			var feed = JSON.parse( JSON.stringify( $scope.feed ) );
 
 			$log.debug( "LIVE FEED (init) : ID : " + feed.feed_id, feed );
 
 			///// GET FEED FROM PRELOADED DATA /////
 			// If posts have already been pre-loaded
-			if( _.isArray( pwData.feeds[$scope.feedId].posts ) ){
+			if( _.isArray( $pwData.feeds[$scope.feedId].posts ) ){
 				$scope.addFeedMeta();
-				$scope.posts = pwData.feeds[$scope.feedId].posts;
+				$scope.posts = $pwData.feeds[$scope.feedId].posts;
 				$scope.injectAds();
+				$scope.updateStatus();
 				$scope.busy = false;
 				return;
 			}
 
 			///// GET FEED BY AJAX /////
-			pwData.pw_get_live_feed( feed, qsArgsValue ).then(
+			$pwData.pw_get_live_feed( feed, qsArgsValue ).then(
 				// Success
 				function(response) {
 
@@ -294,7 +289,7 @@ postworld.controller('pwFeedController',
 							// Insert Response in Feed Data					
 							$scope.fillFeedData( response );
 							$scope.addFeedMeta();
-							$scope.posts = pwData.feeds[$scope.feedId].posts;
+							$scope.posts = $pwData.feeds[$scope.feedId].posts;
 							$scope.injectAds();
 						} else {
 							$scope.message = "No Data Returned";
@@ -316,7 +311,7 @@ postworld.controller('pwFeedController',
 				}
 			);
 			// change url params after getting finalFeedQuery						
-			// $scope.convertFeedQuery2QueryString(pwData.feeds[$scope.feedId].finalFeedQuery);						
+			// $scope.convertFeedQuery2QueryString($pwData.feeds[$scope.feedId].finalFeedQuery);						
 		  };
 
 		$scope.addFeedMeta = function( vars ){
@@ -332,7 +327,7 @@ postworld.controller('pwFeedController',
 			}
 
 			// Localize the posts
-			var posts = pwData.feeds[$scope.feedId].posts;
+			var posts = $pwData.feeds[$scope.feedId].posts;
 			
 			var index = 0;
 			var loadOrder = 0;
@@ -342,7 +337,7 @@ postworld.controller('pwFeedController',
 			// Iterate through each post
 			angular.forEach( posts, function( post ){
 				// Add the Feed ID
-				post = $_.setObj( post, 'feed.id', $scope.feed );
+				post = $_.setObj( post, 'feed.id', $scope.feedId );
 
 				// Add new variables to post object
 				if( vars.mode == "newFeed" ){
@@ -359,7 +354,7 @@ postworld.controller('pwFeedController',
 			});
 
 			// Re-set the centralized posts object
-			pwData.feeds[$scope.feedId].posts = newPosts;
+			$pwData.feeds[$scope.feedId].posts = newPosts;
 
 		};
 
@@ -369,22 +364,22 @@ postworld.controller('pwFeedController',
 			$scope.posts = {};
 
 			// TODO set Nonce from UI
-			pwData.setNonce(78);
+			$pwData.setNonce(78);
 			var args = {};
 			args.feed_id = $scope.feed;
 			// if id is defined in feed_id of the settings array, then use it
-			if (pwData.feeds[$scope.feedId].feed_id) args.feed_id = pwData.feeds[$scope.feedId].feed_id; 
-			args.preload = pwData.feeds[$scope.feedId].preload;
+			if ($pwData.feeds[$scope.feedId].feed_id) args.feed_id = $pwData.feeds[$scope.feedId].feed_id; 
+			args.preload = $pwData.feeds[$scope.feedId].preload;
 			// If that feed already has an outline, then do not load feed, just go get new posts(scroll) and ignore
-			if (pwData.feeds[$scope.feedId].feed_outline) {
+			if ($pwData.feeds[$scope.feedId].feed_outline) {
 				$scope.resetFeedData();				
 				// Set loaded = 0, 
-				// pwData.feeds[$scope.feedId].loaded = 0;
+				// $pwData.feeds[$scope.feedId].loaded = 0;
 				// Run Scroll Feed
 				$scope.scrollFeed();
 				return;
 			}
-			pwData.pw_load_feed(args).then(
+			$pwData.pw_load_feed(args).then(
 				// Success
 				function(response) {
 					$scope.busy = false;
@@ -400,7 +395,7 @@ postworld.controller('pwFeedController',
 							// Insert Response in Feed Data					
 							$scope.fillFeedData( response );
 							$scope.addFeedMeta();
-							$scope.posts = pwData.feeds[$scope.feedId].posts;
+							$scope.posts = $pwData.feeds[$scope.feedId].posts;
 
 							$scope.injectAds();
 							
@@ -427,25 +422,27 @@ postworld.controller('pwFeedController',
 		  };
 
 		$scope.scrollFeed = function() {
+			
 			// Check if all Loaded, then return and do nothing
-			if (pwData.feeds[$scope.feedId].status == 'all_loaded') {
+			if ($pwData.feeds[$scope.feedId].status == 'all_loaded') {
 				$log.debug('pwFeedController.scrollFeed : ALL LOADED');				
 				$scope.busy = false;
 				return;
 			};
+
 			// TODO do we need to set the loading status? or just use the busy flag?
-			pwData.feeds[$scope.feedId].status = 'loading';
+			$pwData.feeds[$scope.feedId].status = 'loading';
 			
-			//$log.debug( ">>> SCROLL FEED <<<", $scope.args );
+			//$log.debug( ">>> SCROLL FEED <<<", $scope.feed );
 
 			if( $scope.busy )
 				return;
 
 			// TODO set Nonce from UI
-			pwData.setNonce(78);
+			$pwData.setNonce(78);
 
 			$scope.busy = true;
-			pwData.pw_get_posts( $scope.args ).then(
+			$pwData.pw_get_posts( $scope.feed ).then(
 				// Success
 				function(response) {
 					
@@ -466,25 +463,18 @@ postworld.controller('pwFeedController',
 							loadOrder ++;
 
 							// Push to central posts array
-							pwData.feeds[$scope.feedId].posts.push( newItems[i] );
+							$pwData.feeds[$scope.feedId].posts.push( newItems[i] );
 							// Inject Blocks						
 							$scope.injectNewAd();
 
 						}
 
 						// Add Feed Meta for only the new posts
-						var postsLoaded = parseInt( pwData.feeds[$scope.feedId].posts.length - 1 );
+						var postsLoaded = parseInt( $pwData.feeds[$scope.feedId].posts.length - 1 );
 						$scope.addFeedMeta( { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length } );
-						$scope.posts = pwData.feeds[$scope.feedId].posts;
+						$scope.posts = $pwData.feeds[$scope.feedId].posts;
 
-						// Count Length of loaded, update scroll message
-						if (pwData.feeds[$scope.feedId].posts.length >= pwData.feeds[$scope.feedId].feed_outline.length ) {
-							pwData.feeds[$scope.feedId].status = 'all_loaded';	
-							$scope.scrollMessage = "No more posts to load!";																									
-						} else {
-							pwData.feeds[$scope.feedId].status = 'loaded';						
-							$scope.scrollMessage = "Scroll down to load more";						
-						}
+						$scope.updateStatus();
 
 						$scope.busy = false;
 										
@@ -503,6 +493,17 @@ postworld.controller('pwFeedController',
 			);
 		};
 
+		$scope.updateStatus = function(){
+			// Count Length of loaded, update scroll message
+			if ($pwData.feeds[$scope.feedId].posts.length >= $pwData.feeds[$scope.feedId].feed_outline.length ) {
+				$pwData.feeds[$scope.feedId].status = 'all_loaded';	
+				$scope.scrollMessage = "No more posts to load!";																									
+			} else {
+				$pwData.feeds[$scope.feedId].status = 'loaded';						
+				$scope.scrollMessage = "Scroll down to load more";						
+			}
+		}
+
 
 		$scope.convertFeedQuery2QueryString= function (params) {
 			// $log.info('pwFeedController convertFeedQuery2QueryString', params);
@@ -520,7 +521,7 @@ postworld.controller('pwFeedController',
 					continue;
 				};
 				// The value is obj[key]
-				//$scope.args.query[key] = params[key];
+				//$scope.feed.query[key] = params[key];
 				// TODO objects like taxonomy?
 				// TODO arrays?
 				if ((params[key]!==0) && (params[key]!==false)) {
@@ -569,13 +570,13 @@ postworld.controller('pwLoadPostController',
 		if (!$scope.postSettings) throw {message:'pwLoadPostController: no post settings defined'};
 		$scope.postArgs = $scope.postSettings[$attrs.loadPost];
 		if (!$scope.postSettings[$attrs.loadPost]) throw {message:'pwLoadPostController: no post settings for '+$attrs.loadPost+'defined'};
-		$scope.args = {};
-		$scope.args.post_id = $scope.postArgs.post_id;    	     	    	    	  	
-		$scope.args.fields = $scope.postArgs.fields;    	     	    	    	  	
+		$scope.feed = {};
+		$scope.feed.post_id = $scope.postArgs.post_id;    	     	    	    	  	
+		$scope.feed.fields = $scope.postArgs.fields;    	     	    	    	  	
 						
 		$scope.pwLoadPost = function() {
 			
-			pwData.pw_get_post($scope.args).then(
+			pwData.pw_get_post($scope.feed).then(
 				// Success
 				function(response) {
 					$scope.busy = false;
