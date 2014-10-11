@@ -87,6 +87,11 @@ $i_language = array(
 			'event_filter'			=>	'Event Filter',
 			'event_filter_none'		=>	'None',
 
+			'post_parent'			=>	'Post Parent',
+			'post_parent_id'		=>	'Post Parent ID',
+			'post_parent_id_info'	=>	'Enter the ID of the parent post',
+			'post_parent_selector'	=>	'Select Post Parent',
+
 			),
 
 		'view'	=>	array(

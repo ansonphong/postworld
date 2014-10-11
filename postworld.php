@@ -93,6 +93,8 @@ register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 ////////// META FUNCTIONS ///////////
 //include 'php/postworld_meta.php';
 
+////////// FILTER FUNCTIONS ///////////
+include 'php/postworld_filters.php';
 
 /////////////// SOCIAL ////////////////
 include 'php/postworld_language.php';

@@ -200,7 +200,11 @@
 
 					<hr class="thin">
 
-					<h3><i class="icon-search"></i> Query</h3>
+					<h3
+						tooltip="{{ selectedItem.query | json }}"
+						tooltip-popup-delay="333">
+						<i class="icon-search"></i> Query
+					</h3>
 
 					<div class="pw-row">
 						<div class="pw-col-3">
@@ -317,6 +321,47 @@
 								ng-model="selectedItem.query.event_filter">
 								<option value=""><?php ___('general.none'); ?></option>
 							</select>
+						</div>
+
+					</div>
+
+					<div class="pw-row">
+						<div class="pw-col-3">
+							<label
+								for="query-post_parent_from"
+								class="inner">
+								<i class="icon-flow-children"></i>
+								<?php ___('feeds.query.post_parent'); ?>
+							</label>
+							<select
+								id="query-post_parent_from"
+								class="labeled"
+								ng-options="item.value as item.name for item in feedOptions.query.post_parent_from"
+								ng-model="selectedItem.query.post_parent_from"
+								tooltip="{{ postParentSelector().description }}"
+								tooltip-placement="bottom">
+								<option value=""><?php ___('general.none'); ?></option>
+							</select>
+						</div>
+
+						<div class="pw-col-3" ng-show="selectedItem.query.post_parent_from == 'post_id'">
+							<label
+								for="query-post_parent_id"
+								class="inner"
+								tooltip="<?php ___('feeds.query.post_parent_id_info'); ?>"
+								tooltip-popup-delay="333">
+								<?php ___('feeds.query.post_parent_id'); ?>
+							</label>
+							<input
+								id="query-post_parent_id"
+								class="labeled"
+								type="number"
+								ng-model="selectedItem.query.post_parent">
+
+						</div>
+
+						<div class="pw-col-6">
+							
 						</div>
 
 					</div>

@@ -39,17 +39,12 @@ postworld.controller('pwFeedController',
 	[ '$scope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_',
 	function( $scope, $location, $log, $attrs, $timeout, $pwData, $route, $_ ) {
 		
-		
 		// Initialize
 		$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 		$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
-
-		$scope.query = {};
 		$scope.scrollMessage = "";
 		$scope.posts = [];
-		$scope.message = "";   
-		// $scope.turl = "http://localhost/pdev/wp-content/plugins/postworld/templates/panels/live_feed_4.html"; 	
-		
+
 		// LIVE FEED
 		if ($attrs.liveFeed)    { 
 			$scope.directive = 		'liveFeed';
@@ -61,9 +56,11 @@ postworld.controller('pwFeedController',
 			$scope.feedId	= 			$attrs.loadFeed;
 		};
 
+		// FEED OBJECT
 		$scope.feed = ( $_.objExists( $pwData.feeds, $scope.feedId ) ) ?
 			$pwData.feeds[$scope.feedId] : {};
-
+		
+		// FEED ID
 		$scope.feed.feed_id = 	$scope.feedId; // This Scope variable will propagate to all directives inside Live Feed
 
 		// NO FEED
@@ -72,14 +69,7 @@ postworld.controller('pwFeedController',
 			return;
 		}
 		
-		//$log.debug( "SCOPE FEED : ", $scope.feed );
-
-
-		// Set Title
-		$scope.title = ( $pwData.feeds[$scope.feedId].title ) ?
-			$pwData.feeds[$scope.feedId].title : '';
-
-		// Set View
+		// SET VIEW
 		$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
 			$pwData.feeds[$scope.feedId].view : {};
 
@@ -292,7 +282,6 @@ postworld.controller('pwFeedController',
 							$scope.posts = $pwData.feeds[$scope.feedId].posts;
 							$scope.injectAds();
 						} else {
-							$scope.message = "No Data Returned";
 							$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
 						}
 						return response.data;
@@ -317,7 +306,6 @@ postworld.controller('pwFeedController',
 		$scope.addFeedMeta = function( vars ){
 			// TODO : PERFORMANCE : Add Mechanism for scrollFeed, so it stores the value of the last index,
 			// so it doesn't have to re-iterate over the whole array
-			
 			// vars = { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length }
 
 			// Set the mode of the Meta Data
@@ -358,7 +346,7 @@ postworld.controller('pwFeedController',
 
 		};
 
-
+		///// DEPRECIATED (DEV CACHE PROPERTIES OF LIVE FEED) /////
 		$scope.pwLoadFeed = function() {
 			$scope.busy = true;
 			$scope.posts = {};
@@ -400,7 +388,6 @@ postworld.controller('pwFeedController',
 							$scope.injectAds();
 							
 						} else {
-							$scope.message = "No Data Returned";
 							$log.debug('pwFeedController.pw_load_feed No Data Received');						
 						}
 						$scope.busy = false;							
@@ -607,8 +594,7 @@ postworld.controller('pwLoadPostController',
 				},
 				// Failure
 				function(response) {
-					// $log.error('pwFeedController.pw_get_live_feed Failure',response);
-					// TODO Show User Friendly Message
+					$log.error('pwFeedController.pw_get_live_feed Failure',response);
 				}
 			);
 		  };

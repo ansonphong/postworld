@@ -31,6 +31,35 @@ infinite.controller('iAdminFeedsCtrl',
 			orderby: $pwPostOptions.orderBy(),
 			order: $pwPostOptions.order(),
 			event_filter: $pwPostOptions.eventFilter(),
+			post_parent_from:[
+				{
+					value: 'top_level',
+					name: 'Top Level',
+					description: 'Show top level posts, with post_parent : 0.'
+				},
+				{
+					value: 'this_post_id',
+					name: 'This Post (Show Children)',
+					description: 'Show children of the current post, derived from : $post->ID global.'
+				},
+				{
+					value: 'this_post_parent',
+					name: 'This Post Parent (Show Siblings)',
+					description: 'Show siblings of the current post, derived from : $post->post_parent global.'
+				},
+				{
+					value: 'post_id',
+					name: 'Specific Post',
+					description: 'Select a specific post.'
+				},
+			],
+			post__not_in_from:[
+				{
+					value: 'this_post_id',
+					name: 'This Post',
+					description: 'Do not include the current post'
+				},
+			],
 		},
 	};
 
@@ -57,6 +86,9 @@ infinite.controller('iAdminFeedsCtrl',
 				// link_format:
 				// s:
 				// tax_query: // TODO : select tax, manually enter slug
+				
+				// post__not_in : << With options like post_parent to exclude current post
+
 				offset:0,
 				posts_per_page: 200, 
 			},
@@ -104,6 +136,29 @@ infinite.controller('iAdminFeedsCtrl',
 		],
 	};
 
+	////////// POST PARENT //////////
+	$scope.postParentSelector = function(){
+		var options = $_.getObj( $scope.feedOptions, 'query.post_parent_from' );
+		var selected = $_.getObj( $scope.selectedItem, 'query.post_parent_from' );
+		if( options && selected )
+			return _.findWhere( options, { value: selected } );
+		else
+			return false;
+	}
+
+	/// WATCH : QUERY › POST PARENT FROM ///
+	$scope.$watch('selectedItem.query.post_parent_from', function(value){
+		var objExists = $_.objExists( $scope.selectedItem, 'query.post_parent' );
+		var isPostId = ( value == 'post_id');
+		// If not 'post id' and post_parent object exists
+		if( !isPostId && objExists )
+			delete $scope.selectedItem.query.post_parent;
+		// If 'post id' and post_parent obect doesn't exist
+		else if( isPostId && !objExists )
+			$scope.selectedItem.query.post_parent = 0;
+	});
+
+
 	////////// REMOVE NULL VALUES //////////
 	// Watch the query value for changes
 	$scope.$watch( 'selectedItem.query', function( value ){
@@ -111,6 +166,8 @@ infinite.controller('iAdminFeedsCtrl',
 			delete $scope.selectedItem.query.event_filter;
 		if( $_.getObj( $scope, 'selectedItem.query.post_class' ) == null )
 			delete $scope.selectedItem.query.post_class;
+		if( $_.getObj( $scope, 'selectedItem.query.post_parent' ) == null )
+			delete $scope.selectedItem.query.post_parent;
 	}, 1);
 
 	

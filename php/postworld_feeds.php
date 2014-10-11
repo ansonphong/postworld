@@ -12,7 +12,9 @@ function pw_get_feed_by_id( $feed_id ){
 	return false;
 }
 
+
 function pw_live_feed( $vars = array() ){
+	global $post;
 
 	/// $VARS : (ARRAY) ///
 	if( is_array( $vars ) ){
@@ -93,6 +95,9 @@ function pw_live_feed( $vars = array() ){
 
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
+	
+	// Run query filters
+	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );
 
 
 	///// GET FEED DATA /////

@@ -20,13 +20,9 @@ class PW_Query extends WP_Query {
 	    }*/
 	
 	function prepare_fields(){
-		
 		$fields = $this->query_vars['fields'];
 		if($fields == null || $fields=='' ) 
-			$fields='all';
-		//else if($fields!='preview' && $fields!='ids' && gettype($fields)!='array')
-		//	$fields='all';
-		
+			$fields='preview';
 		return $fields;
 	}
 	
