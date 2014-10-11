@@ -1,6 +1,6 @@
 <?php
 
-///// PREPARE QUERY FILTER /////
+///// PREPARE QUERY FILTER : POST PARENT FROM /////
 function pw_prepare_query_post_parent_from( $query ){
 	global $post;
 	/// POST PARENT FROM FIELD ///
@@ -17,5 +17,22 @@ function pw_prepare_query_post_parent_from( $query ){
 	return $query;
 }
 add_filter( 'pw_prepare_query', 'pw_prepare_query_post_parent_from' );
+
+
+///// PREPARE QUERY FILTER : EXCLUDE POST FROM /////
+function pw_prepare_query_exclude_posts_from( $query ){
+	global $post;
+	/// POST PARENT FROM FIELD ///
+	if( isset( $query['exclude_posts_from'] ) ){
+		switch( $query['exclude_posts_from'] ){
+			case 'this_post_id':
+				$query['post__not_in'] = array( $post->ID );
+				break;
+		}
+	}
+	return $query;
+}
+add_filter( 'pw_prepare_query', 'pw_prepare_query_exclude_posts_from' );
+
 
 ?>

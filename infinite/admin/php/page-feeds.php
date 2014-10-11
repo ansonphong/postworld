@@ -211,7 +211,7 @@
 							<label
 								for="query-post_type"
 								class="inner">
-								<?php ___('feeds.query.post_type'); ?>
+								<?php ___('query.post_type'); ?>
 							</label>
 							<select
 								id="query-post_type"
@@ -226,7 +226,7 @@
 							<label
 								for="query-post_status"
 								class="inner">
-								<?php ___('feeds.query.post_status'); ?>
+								<?php ___('query.post_status'); ?>
 							</label>
 							<select
 								id="query-post_status"
@@ -239,7 +239,7 @@
 							<label
 								for="query-post_class"
 								class="inner">
-								<?php ___('feeds.query.post_class'); ?>
+								<?php ___('query.post_class'); ?>
 							</label>
 							<select
 								id="query-post_class"
@@ -253,9 +253,9 @@
 							<label
 								for="query-offset"
 								class="inner"
-								tooltip="<?php ___('feeds.query.offset_info'); ?>"
+								tooltip="<?php ___('query.offset_info'); ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.query.offset'); ?>
+								<?php ___('query.offset'); ?>
 								<i class="icon-info-circle"></i>
 							</label>
 							<input
@@ -268,7 +268,7 @@
 							<label
 								for="query-orderby"
 								class="inner">
-								<?php ___('feeds.query.orderby'); ?>
+								<?php ___('query.orderby'); ?>
 							</label>
 							<select
 								id="query-orderby"
@@ -282,7 +282,7 @@
 							<label
 								for="query-order"
 								class="inner">
-								<?php ___('feeds.query.order'); ?>
+								<?php ___('query.order'); ?>
 							</label>
 							<select
 								id="query-order"
@@ -295,9 +295,9 @@
 							<label
 								for="query-posts_per_page"
 								class="inner"
-								tooltip="<?php ___('feeds.query.posts_per_page_info'); ?>"
+								tooltip="<?php ___('query.posts_per_page_info'); ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.query.posts_per_page'); ?>
+								<?php ___('query.posts_per_page'); ?>
 								<i class="icon-info-circle"></i>
 							</label>
 							<input
@@ -312,7 +312,7 @@
 								for="query-event_filter"
 								class="inner">
 								<i class="icon-calendar"></i>
-								<?php ___('feeds.query.event_filter'); ?>
+								<?php ___('query.event_filter'); ?>
 							</label>
 							<select
 								id="query-event_filter"
@@ -331,14 +331,14 @@
 								for="query-post_parent_from"
 								class="inner">
 								<i class="icon-flow-children"></i>
-								<?php ___('feeds.query.post_parent'); ?>
+								<?php ___('query.post_parent'); ?>
 							</label>
 							<select
 								id="query-post_parent_from"
 								class="labeled"
 								ng-options="item.value as item.name for item in feedOptions.query.post_parent_from"
 								ng-model="selectedItem.query.post_parent_from"
-								tooltip="{{ postParentSelector().description }}"
+								tooltip="{{ selectOptionObj( 'query.post_parent_from' ).description }}"
 								tooltip-placement="bottom">
 								<option value=""><?php ___('general.none'); ?></option>
 							</select>
@@ -348,9 +348,9 @@
 							<label
 								for="query-post_parent_id"
 								class="inner"
-								tooltip="<?php ___('feeds.query.post_parent_id_info'); ?>"
+								tooltip="<?php ___('query.post_parent_id_info'); ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.query.post_parent_id'); ?>
+								<?php ___('query.post_parent_id'); ?>
 							</label>
 							<input
 								id="query-post_parent_id"
@@ -360,8 +360,21 @@
 
 						</div>
 
-						<div class="pw-col-6">
-							
+						<div class="pw-col-3">
+							<label
+								for="query-exclude_posts_from"
+								class="inner">
+								<?php ___('query.exclude_posts'); ?>
+							</label>
+							<select
+								id="query-exclude_posts_from"
+								class="labeled"
+								ng-options="item.value as item.name for item in feedOptions.query.exclude_posts_from"
+								ng-model="selectedItem.query.exclude_posts_from"
+								tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
+								tooltip-placement="bottom">
+								<option value=""><?php ___('general.none'); ?></option>
+							</select>
 						</div>
 
 					</div>

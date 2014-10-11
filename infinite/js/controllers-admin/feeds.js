@@ -53,11 +53,11 @@ infinite.controller('iAdminFeedsCtrl',
 					description: 'Select a specific post.'
 				},
 			],
-			post__not_in_from:[
+			exclude_posts_from:[
 				{
 					value: 'this_post_id',
 					name: 'This Post',
-					description: 'Do not include the current post'
+					description: 'Exclude the current post'
 				},
 			],
 		},
@@ -137,9 +137,9 @@ infinite.controller('iAdminFeedsCtrl',
 	};
 
 	////////// POST PARENT //////////
-	$scope.postParentSelector = function(){
-		var options = $_.getObj( $scope.feedOptions, 'query.post_parent_from' );
-		var selected = $_.getObj( $scope.selectedItem, 'query.post_parent_from' );
+	$scope.selectOptionObj = function( optionValue ){
+		var options = $_.getObj( $scope.feedOptions, optionValue );
+		var selected = $_.getObj( $scope.selectedItem, optionValue );
 		if( options && selected )
 			return _.findWhere( options, { value: selected } );
 		else
@@ -158,7 +158,6 @@ infinite.controller('iAdminFeedsCtrl',
 			$scope.selectedItem.query.post_parent = 0;
 	});
 
-
 	////////// REMOVE NULL VALUES //////////
 	// Watch the query value for changes
 	$scope.$watch( 'selectedItem.query', function( value ){
@@ -168,6 +167,8 @@ infinite.controller('iAdminFeedsCtrl',
 			delete $scope.selectedItem.query.post_class;
 		if( $_.getObj( $scope, 'selectedItem.query.post_parent' ) == null )
 			delete $scope.selectedItem.query.post_parent;
+		if( $_.getObj( $scope, 'selectedItem.query.exclude_posts_from' ) == null )
+			delete $scope.selectedItem.query.exclude_posts_from;
 	}, 1);
 
 	

@@ -42,6 +42,7 @@ $i_language = array(
 		'after_title'		=> 	'After Title',
 		'after_title_info'	=> 	'HTML that goes after the title of each widget',
 		),
+
 	'feeds'	=>	array(
 		'item_title'		=>	'Feed Settings',
 		'add_new' 			=>	'Add New Feed',
@@ -70,36 +71,39 @@ $i_language = array(
 			'loading_icon'	=>	'Loading Icon',
 			),
 
-		'query'		=>	array(
-			'post_type'				=>	'Post Type',
-			'post_status'			=>	'Post Status',
-			'post_class'			=>	'Post Class',
-
-			'offset'				=>	'Offset',
-			'offset_info'			=>	'How many posts to skip at the MySQL level',
-			'orderby'				=>	'Order By',
-
-			'order'					=>	'Order',
-
-			'posts_per_page'		=>	'Maximum Posts',
-			'posts_per_page_info'	=>	'Maximum number of posts',
-
-			'event_filter'			=>	'Event Filter',
-			'event_filter_none'		=>	'None',
-
-			'post_parent'			=>	'Post Parent',
-			'post_parent_id'		=>	'Post Parent ID',
-			'post_parent_id_info'	=>	'Enter the ID of the parent post',
-			'post_parent_selector'	=>	'Select Post Parent',
-
-			),
-
 		'view'	=>	array(
 			'title'		=>	'Template',
 			'current'	=>	'View',
 			'options'	=>	'View Options',
 			'options_none'	=>	'None',
 			),
+
+		),
+
+
+	'query'		=>	array(
+		'post_type'				=>	'Post Type',
+		'post_status'			=>	'Post Status',
+		'post_class'			=>	'Post Class',
+
+		'offset'				=>	'Offset',
+		'offset_info'			=>	'How many posts to skip at the MySQL level',
+		'orderby'				=>	'Order By',
+
+		'order'					=>	'Order',
+
+		'posts_per_page'		=>	'Maximum Posts',
+		'posts_per_page_info'	=>	'Maximum number of posts',
+
+		'event_filter'			=>	'Event Filter',
+		'event_filter_none'		=>	'None',
+
+		'post_parent'			=>	'Post Parent',
+		'post_parent_id'		=>	'Post Parent ID',
+		'post_parent_id_info'	=>	'Enter the ID of the parent post',
+		'post_parent_selector'	=>	'Select Post Parent',
+
+		'exclude_posts'			=>	'Exclude Posts',
 
 		),
 
