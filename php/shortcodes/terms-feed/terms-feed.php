@@ -1,6 +1,7 @@
 <?php
 ////////// POSTWORLD TERMS FEED //////////
 function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
+	// TODO : Rename all 'terms_feed' to 'term_feed'
 
 	// Extract Shortcode Attributes, set defaults
 	$atts = shortcode_atts( array(
@@ -88,17 +89,19 @@ function pw_print_terms_feed( $vars ){
 	$vars = pw_set_defaults( $vars, $default_vars ); 
 
 	///// TEMPLATES ////
+	$template_subdir = 'term-feeds';
 	$templates = pw_get_templates(
 		array(
-			'subdirs' => array('term-feeds'),
+			'subdirs' => array($template_subdir),
 			'path_type' => 'dir',
 			'ext'=>'php',
 			)
 		);
+
 	$template_id = $vars['template'];
-	$template = ( isset( $templates['feeds'][$template_id] ) ) ?
-		$templates['feeds'][$template_id] :
-		$templates['feeds'][$default_template];
+	$template = ( isset( $templates[$template_subdir][$template_id] ) ) ?
+		$templates[$template_subdir][$template_id] :
+		$templates[$template_subdir][$default_template];
 
 	///// GET TERMS FEED /////
 	$vars['terms_feed'] = pw_get_terms_feed( $vars );
