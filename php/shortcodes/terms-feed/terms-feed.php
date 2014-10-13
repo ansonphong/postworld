@@ -1,7 +1,7 @@
 <?php
 ////////// POSTWORLD TERMS FEED //////////
-function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
-	// TODO : Rename all 'terms_feed' to 'term_feed'
+function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
+	// TODO : Rename all 'term_feed' to 'term_feed'
 
 	// Extract Shortcode Attributes, set defaults
 	$atts = shortcode_atts( array(
@@ -44,10 +44,10 @@ function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
 		);
 
 	// Allow the theme to over-ride the shortcode variables
-	$vars = apply_filters( 'pw_terms_feed_shortcode', $vars );
+	$vars = apply_filters( 'pw_term_feed_shortcode', $vars );
 
 	//$shortcode = json_encode();	
-	$shortcode = pw_print_terms_feed( $vars );	
+	$shortcode = pw_print_term_feed( $vars );	
 
 	//$shortcode = json_encode( $vars );
 
@@ -55,9 +55,10 @@ function pw_terms_feed_shortcode( $atts, $content = null, $tag ) {
 
 }
 
-add_shortcode( 'terms-feed', 'pw_terms_feed_shortcode' );
+add_shortcode( 'terms-feed', 'pw_term_feed_shortcode' );
+add_shortcode( 'term-feed', 'pw_term_feed_shortcode' );
 
-function pw_print_terms_feed( $vars ){
+function pw_print_term_feed( $vars ){
 
 	$default_template = 'term-feed-default';
 	$default_vars = array(
@@ -104,12 +105,12 @@ function pw_print_terms_feed( $vars ){
 		$templates[$template_subdir][$default_template];
 
 	///// GET TERMS FEED /////
-	$vars['terms_feed'] = pw_get_terms_feed( $vars );
+	$vars['term_feed'] = pw_get_term_feed( $vars );
 
 	///// INSTANCE /////
 	// Generate random ID for slider Instance
 	$hash = pw_random_hash();
-	$vars['instance'] = "terms_feed_".$hash;
+	$vars['instance'] = "term_feed_".$hash;
 
 	///// INCLUDE TEMPLATE /////
 	// Include the template
@@ -127,7 +128,7 @@ function pw_add_gallery_field( $fields ){
 	return array_merge( $fields, array( 'gallery(ids,posts)' ) );
 }
 
-function pw_get_terms_feed( $vars ){
+function pw_get_term_feed( $vars ){
 	/*
 		Gets a series of terms using get_terms()
 		And then gets the posts associated with each term

@@ -129,8 +129,8 @@ postworld.controller('pwTermsFeedCtrl',
 	//if( _.isUndefined( $scope.queryStatusModel ) )
 	$scope.queryStatusModel = 'loading';
 
-	$scope.getTermsFeed = function( queryVars ){
-		$pwData.get_terms_feed( queryVars ).then(
+	$scope.getTermFeed = function( queryVars ){
+		$pwData.get_term_feed( queryVars ).then(
 			// Success
 			function(response) {
 				$scope.queryResultsModel = response.data;
@@ -144,9 +144,9 @@ postworld.controller('pwTermsFeedCtrl',
 		);
 	}
 
-	$scope.$watch('pwTermsFeed', function(value) {
+	$scope.$watch('pwTermFeed', function(value) {
 		if( !_.isUndefined($scope.pwTermsFeed) )
-			$scope.getTermsFeed( $scope.pwTermsFeed );
+			$scope.getTermFeed( $scope.pwTermsFeed );
 
 		$log.debug( '$scope.pwTermsFeed', $scope.pwTermsFeed );
 

@@ -13,17 +13,17 @@ function pwAjaxRespond( $response_data ){
 }
 
 //---------- PW GET TEMPLATE PARTIAL ----------//
-function pw_get_terms_feed_ajax(){
+function pw_get_term_feed_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$response_data = pw_get_terms_feed( $params ); 
+	$response_data = pw_get_term_feed( $params ); 
 
 	pwAjaxRespond( $response_data );
 }
 
-add_action("wp_ajax_nopriv_pw_get_terms_feed", "pw_get_terms_feed_ajax");
-add_action("wp_ajax_pw_get_terms_feed", "pw_get_terms_feed_ajax");
+add_action("wp_ajax_nopriv_pw_get_term_feed", "pw_get_term_feed_ajax");
+add_action("wp_ajax_pw_get_term_feed", "pw_get_term_feed_ajax");
 
 
 //---------- PW GET TEMPLATE PARTIAL ----------//
