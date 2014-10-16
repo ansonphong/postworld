@@ -11,7 +11,7 @@ License: GPL2
 
 global $pw;
 $pw = array(
-	'version'	=>	"1.6.2",
+	'version'	=>	"1.6.3",
 	'slug'	=>	'postworld',
 	'vars'	=>	array(
 		),

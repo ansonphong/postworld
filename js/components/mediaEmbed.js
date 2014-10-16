@@ -51,11 +51,7 @@ postworld.directive( 'oEmbed',
 		//template : '',
 		controller: 'pwOEmbedNewCtrl',
 		link : function ($scope, element, attrs){
-			$log.debug( ">>> O EMBED : NEW <<< : " + $scope.linkUrl );
-			$log.debug( ">>> O EMBED : AUTOPLAY <<< : " + $scope.getAutoplay() );
-			$log.debug( ">>> O EMBED : RUN <<< : " + $scope.getRun() );
 
-			
 			// WATCH : O-Embed Link Url for changes
 			$scope.$watch(
 				function( $scope ){
@@ -77,6 +73,8 @@ postworld.directive( 'oEmbed',
 					//$scope.setEmbedCode();
 					if( _.isString( value ) )
 						element.html( value );
+					else
+						element.html( '' );
 				}
 			);
 
@@ -165,21 +163,20 @@ postworld.factory( 'oEmbedServe',
 
 				var embedCode = response.data;
 
+				$log.debug( 'oEmbedServe.getOEmbed.$pwData.wp_ajax : RESPONSE : ' + embedId + " : ", embedCode );
+
 				// If not data, return false
 				if ( embedCode == false )
 					return false;
-
-				$log.debug( 'GOT O-EMBED CODE : ' + embedId + " : ", embedCode );
-
+				
 				// Cache the embed code in the pwData service 
-				//$pwData['embeds'][ embedId ] = embedCode;
-
 				cacheEmbed( embedId, embedCode );
 
 			},
 			// Failure
 			function(response) {
 				$scope.status = "error";
+				$log.error( 'oEmbedServe.getOEmbed.$pwData.wp_ajax : RESPONSE : ', response );
 			}
 		);
 	}
