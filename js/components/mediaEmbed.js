@@ -33,6 +33,99 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 };
 
 
+/*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
+
+postworld.directive( 'oEmbed',
+	[ '$sce', '$log', '$timeout', 'pwData', '_',
+	function( $sce, $log, $timeout, $pwData, $_ ){
+
+	return { 
+		restrict: 'AE',
+		
+		scope : {
+			linkUrl: 	"@oEmbed",
+			autoplay: 	"@embedAutoplay",
+			run: 		"@embedRun",
+		},
+		
+		//template : '',
+		controller: 'pwOEmbedNewCtrl',
+		link : function ($scope, element, attrs){
+			$log.debug( ">>> O EMBED : NEW <<< : " + $scope.linkUrl );
+			$log.debug( ">>> O EMBED : AUTOPLAY <<< : " + $scope.getAutoplay() );
+			$log.debug( ">>> O EMBED : RUN <<< : " + $scope.getRun() );
+
+			
+			// WATCH : O-Embed Link Url for changes
+			$scope.$watch(
+				function( $scope ){
+					return $scope.linkUrl;
+				},
+				function(value) {
+					$scope.getEmbedCode( $scope.linkUrl, $scope.getAutoplay() );
+				}
+			);
+
+			// WATCH : Embed Code for Changes
+			$scope.$watch(
+				function( $scope ){
+					var embedId = $_.sanitizeKey( $scope.linkUrl );
+					return $_.getObj( $pwData['embeds'], embedId );
+
+				},
+				function( value ) {
+					//$scope.setEmbedCode();
+					if( _.isString( value ) )
+						element.html( value );
+				}
+			);
+
+		}
+	};
+
+}]);
+
+postworld.controller('pwOEmbedNewCtrl',
+	[ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '_', '$timeout', '$rootScope', 'oEmbedServe',
+	function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout, $rootScope, $oEmbedServe ) {
+
+		$scope.getAutoplay = function(){
+			// Evaluate the value
+			var value = $scope.$parent.$eval( $scope.autoplay );
+			// Set default
+			if( _.isUndefined( value ) )
+				value = false;
+			// Cast as Boolean
+			if( !_.isBoolean( value ) )
+				value = ( value === 'true' || value === '1' );
+			return value;
+		}
+
+		$scope.getRun = function(){
+			// Evaluate the value
+			var value = $scope.$parent.$eval( $scope.run );
+			// Set default
+			if( _.isUndefined( value ) )
+				value = true;
+			// Cast as Boolean
+			if( !_.isBoolean( value ) )
+				value = ( value === 'true' || value === '1' );
+			return value;
+		}
+
+		$scope.getEmbedCode = function( linkUrl, autoPlay ){	
+			// Return false if run is false
+			if( $scope.getRun() == false )
+				return false;
+
+			// Get embed code
+			return $oEmbedServe.get( linkUrl, autoPlay );
+
+		}
+
+}]);
+
+
 /*            _____           _              _ 
    ___       | ____|_ __ ___ | |__   ___  __| |
   / _ \ _____|  _| | '_ ` _ \| '_ \ / _ \/ _` |
@@ -46,13 +139,15 @@ postworld.factory( 'oEmbedServe',
 	[ '$log', '$sce', '_', 'pwData', '$timeout', '$rootScope',
 	function( $log, $sce, $_, $pwData, $timeout, $rootScope ){
 
-	var cacheEmbed = function( embedCode, embedId ){
+	var cacheEmbed = function( embedId, embedCode ){
 		// Cache the embed code in the pwData service 
 		$pwData['embeds'][ embedId ] = embedCode;
 
 	};
 
 	var getOEmbed = function( linkUrl, autoPlay ){
+
+		$log.debug( "oEmbedServe.getOEmbed( " + linkUrl + ", " + autoPlay + " )" );
 
 		// Generate Embed ID from URL
 		var embedId = $_.sanitizeKey( linkUrl );
@@ -77,9 +172,9 @@ postworld.factory( 'oEmbedServe',
 				$log.debug( 'GOT O-EMBED CODE : ' + embedId + " : ", embedCode );
 
 				// Cache the embed code in the pwData service 
-				$pwData['embeds'][ embedId ] = embedCode;
+				//$pwData['embeds'][ embedId ] = embedCode;
 
-				//cacheEmbed( embedCode, embedId );
+				cacheEmbed( embedId, embedCode );
 
 			},
 			// Failure
@@ -95,8 +190,10 @@ postworld.factory( 'oEmbedServe',
 		},
 
 		get: function( linkUrl, autoPlay ){
+			$log.debug( "oEmbedServe.get( " + linkUrl + ", " + autoPlay + " )" );
+			
 			// Set defaults
-			if( _.isEmpty( autoPlay ) )
+			if( _.isUndefined( autoPlay ) )
 				autoPlay = false;
 
 			// Make key from URL
@@ -114,66 +211,10 @@ postworld.factory( 'oEmbedServe',
 			}
 
 			// Return the embed code
+			// Or false if it's still getting it from the server
 			return code;
-
 		},
 
 	}	
-
-}]);
-
-
-
-/*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
-
-postworld.directive( 'oEmbed', [ '$sce', function( $sce ){
-
-	return { 
-		restrict: 'AE',
-		/*
-		scope : {
-			link_url: 	"=oEmbed",
-			autoplay: 	"=autoplay",
-			run: 		"=run",
-		},
-		*/
-		//template : '',
-		controller: 'pwOEmbedController',
-		link : function ($scope, element, attrs){
-			/*
-			// When the oEmbed Value changes, then change the html here
-			$scope.$watch('oEmbed', function(value) {
-				//console.log('test',value);
-				element.html(value);
-			});
-			*/
-			
-			// Set autoplay value if it updates
-			//attrs.$observe('autoplay', function(value) {
-			//    $scope.setAutoplay();
-			//});
-
-		}
-	};
-
-}]);
-
-postworld.controller('pwOEmbedController',
-	[ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '_', '$timeout', '$rootScope', 'oEmbedServe',
-	function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout, $rootScope, $oEmbedServe ) {
-
-		$scope.getEmbedCode = function( linkUrl, autoPlay, run ){
-			// Set defaults
-			if( _.isUndefined( run )  )
-				run = true;
-
-			// Return false if run is false
-			if( run != true )
-				return false;
-
-			// Get embed code
-			return $oEmbedServe.get( linkUrl, autoPlay );
-
-		}
 
 }]);

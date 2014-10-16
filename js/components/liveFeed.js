@@ -97,7 +97,7 @@ postworld.controller('pwFeedController',
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
 		   });
 
-		$scope.injectAds = function() {
+		$scope.injectBlocks = function() {
 			// if ads settings exist, then inject ads, otherwise, just return.
 			if ($pwData.feeds[$scope.feedId].blocks) {
 				// Initialize Ad Blocks
@@ -109,8 +109,8 @@ postworld.controller('pwFeedController',
 				if ($pwData.feeds[$scope.feedId].blocks.increment) increment = $pwData.feeds[$scope.feedId].blocks.increment;
 				var max_blocks = 5;
 				if ($pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = $pwData.feeds[$scope.feedId].blocks.max_blocks;
-				var adTemplate = "ad-block";
-				if ($pwData.feeds[$scope.feedId].blocks.template) adTemplate = $pwData.feeds[$scope.feedId].blocks.template;
+				var blockTemplate = "ad-block";
+				if ($pwData.feeds[$scope.feedId].blocks.template) blockTemplate = $pwData.feeds[$scope.feedId].blocks.template;
 				$scope.adNextID = offset;
 				// loop on scope.items starting from offset, with increments = increment, and break when max_blocks is reached
 				for (var i=offset;	i<len+$scope.adBlocks; 	i=i+increment)	{ 
@@ -119,7 +119,7 @@ postworld.controller('pwFeedController',
 					if ($scope.adBlocks>=max_blocks) break;
 					var item = {
 						'post_type'	: 'ad',
-						'template'	: adTemplate,
+						'template'	: blockTemplate,
 					};
 					//console.log('item',item);
 					// inject here
@@ -131,13 +131,13 @@ postworld.controller('pwFeedController',
 			}
 		};
 		
-		$scope.injectNewAd = function() {
-			// check if ads enabled
+		$scope.injectNewBlock = function() {
+			// check if blocks enabled
 			if ($pwData.feeds[$scope.feedId].blocks) {
 				var max_blocks = 5;
 				if ( $pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = $pwData.feeds[$scope.feedId].blocks.max_blocks;
-				var adTemplate = "ad-block";
-				if ( $pwData.feeds[$scope.feedId].blocks.template) adTemplate = $pwData.feeds[$scope.feedId].blocks.template;
+				var blockTemplate = "ad-block";
+				if ( $pwData.feeds[$scope.feedId].blocks.template) blockTemplate = $pwData.feeds[$scope.feedId].blocks.template;
 				var increment = 10;
 				if ( $pwData.feeds[$scope.feedId].blocks.increment) increment = $pwData.feeds[$scope.feedId].blocks.increment;
 				// Check if max_blocks reached, return.
@@ -147,7 +147,7 @@ postworld.controller('pwFeedController',
 				if ($scope.adNextID==len) {
 					var item = {
 						'post_type'	: 'ad',
-						'template'	: adTemplate,
+						'template'	: blockTemplate,
 					};
 					// inject here
 					$scope.posts.push(item);					
@@ -168,7 +168,7 @@ postworld.controller('pwFeedController',
 			// var argsValue = JSON.parse(JSON.stringify($scope.feed));			
 			// $scope.posts = $pwData.feeds[$scope.feedId].posts;
 			$scope.posts = JSON.parse(JSON.stringify($pwData.feeds[$scope.feedId].posts));
-			// $scope.injectAds();
+			// $scope.injectBlocks();
 		};
 		
 		$scope.fillFeedData = function(response) {
@@ -250,7 +250,7 @@ postworld.controller('pwFeedController',
 			if( _.isArray( $pwData.feeds[$scope.feedId].posts ) ){
 				$scope.addFeedMeta();
 				$scope.posts = $pwData.feeds[$scope.feedId].posts;
-				$scope.injectAds();
+				$scope.injectBlocks();
 				$scope.updateStatus();
 				$scope.busy = false;
 				return;
@@ -280,7 +280,7 @@ postworld.controller('pwFeedController',
 							$scope.fillFeedData( response );
 							$scope.addFeedMeta();
 							$scope.posts = $pwData.feeds[$scope.feedId].posts;
-							$scope.injectAds();
+							$scope.injectBlocks();
 						} else {
 							$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
 						}
@@ -385,7 +385,7 @@ postworld.controller('pwFeedController',
 							$scope.addFeedMeta();
 							$scope.posts = $pwData.feeds[$scope.feedId].posts;
 
-							$scope.injectAds();
+							$scope.injectBlocks();
 							
 						} else {
 							$log.debug('pwFeedController.pw_load_feed No Data Received');						
@@ -452,7 +452,7 @@ postworld.controller('pwFeedController',
 							// Push to central posts array
 							$pwData.feeds[$scope.feedId].posts.push( newItems[i] );
 							// Inject Blocks						
-							$scope.injectNewAd();
+							$scope.injectNewBlock();
 
 						}
 
