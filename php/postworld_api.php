@@ -301,10 +301,16 @@ function pw_get_wp_postmeta($vars){
 			);
 	*/
 
-	extract($vars);
-
+	///// SET DEFAULTS /////
 	if( !isset( $vars['meta_key'] ) )
-		$meta_key = pw_postmeta_key;
+		$vars['meta_key'] = pw_postmeta_key;
+
+	if( !isset( $vars['meta_key'] ) ){
+		global $post;
+		$vars['post_id'] = $post->ID;
+	}
+
+	extract($vars);
 
 	///// USER ID /////
 	$user_id = pw_check_user_post( $post_id );

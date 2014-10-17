@@ -615,6 +615,12 @@ function pwGlobals_parse(){
 	///// URL QUERY VARS /////
 	$pw['url_vars'] = $_GET;
 
+
+	///// INFINITE /////
+	// Merge the Infinite Globals into $pw
+	// This is a temporary solution, as Infinite is being digested & refactored into Postworld
+	$pw = array_replace_recursive( $pw, iGlobals() );
+
 	///// RETURN /////
 	return $pw;
 }

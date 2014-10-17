@@ -11,7 +11,7 @@ global $post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div id="pwPostParentMetabox" class="postworld pw-metabox">
+<div id="pwPostParentMetabox" class="postworld pw-metabox metabox-post-parent">
 	<div ng-controller="pwPostParentMetaboxCtrl">
 		<?php
 			// Include the UI template

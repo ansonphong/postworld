@@ -50,16 +50,38 @@ ul{
 			}
 		}
 	}
+	&.dropdown-layouts{
+		ul.dropdown-menu{
+			&.grid{
+				min-width:initial;
+				width:auto;
+				white-space: nowrap;
+			}
+		}
+	}
 }
 
+.area{
+	border: 1px solid #ccc;
+	padding:10px 20px;
+	margin:0 10px 10px 0;
+}
 
-.area-select-icon{
+.area-select{
 	display: inline-block;
-	font-size:32px;
 	background: #fff;
 	color:#000;
-	width:54px;
-	text-align: center;
-	padding:10px 0;
+	min-width:54px;
+	padding:10px 20px;
 	border: 1px solid #ccc;
+	white-space: nowrap;
+	&:hover{
+		background: #f3f3f3;
+		cursor: crosshair;
+	}
+}
+
+.area-select-icon{
+	padding:10px 0;
+	font-size:32px;
 }

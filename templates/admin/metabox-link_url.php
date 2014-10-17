@@ -33,8 +33,8 @@
 	}]);
 </script>
 
-<div ng-app="postworld" class="postworld pw-metabox">
-	<div ng-controller="pwLinkUrlCtrl">
+<div ng-app="postworld" class="postworld">
+	<div class="pw-metabox" ng-controller="pwLinkUrlCtrl">
 
 		<!-- LINK URL -->
 		<input

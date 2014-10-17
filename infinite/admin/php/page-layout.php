@@ -56,59 +56,66 @@
 					<!-- SAVE BUTTON -->
 					<div class="save-right"><?php i_save_option_button('i-layouts','iLayouts'); ?></div>
 
-					<!-- LAYOUT OPTIONS -->
-					<label class="radio_image_select"
-						ng-repeat="option in iLayoutOptions.formats.options">
-						<input ng-model="iLayouts[layout.name].layout"
-							name="{{ layout.name }}"
-							value="{{ option.slug }}"
-							type="radio" />
-						<img ng-src="{{ option.image }}" title="{{ option.label }}" width="90" height="60" tooltip="{{ option.label }}" tooltip-popup-delay="200">
-					</label>
+					<!-- DROPDOWN -->
+					<div
+						class="select-layout dropdown dropdown-layouts pull-left">
+						<!-- SELECTED ITEM -->
+						<span
+							dropdown-toggle
+							class="area area-select">
+							<img
+								ng-src="{{ selectedLayout( iLayouts[layout.name].layout ).image }}"
+								style="width:45px; height: auto;">
+								<label>{{ selectedLayout( iLayouts[layout.name].layout ).label }}</label>
+						</span>
+						<!-- MENU -->
+						<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
+							
+							<!-- DEFAULT OPTION -->
+							<label ng-repeat="option in iLayoutOptions.formats.default"
+								ng-hide="layout.name == 'default'"
+								class="radio_image_select">
+								<input ng-model="iLayouts[layout.name].layout"
+									name="{{ layout.name }}"
+									value="{{ option.slug }}"
+									type="radio" />
+								<img ng-src="{{ option.image }}" title="Default" tooltip="Default" tooltip-popup-delay="200">
+							</label>
 
-					<!-- DEFAULT OPTION -->
-					<label ng-repeat="option in iLayoutOptions.formats.default"
-						ng-hide="layout.name == 'default'"
-						class="radio_image_select">
-						<input ng-model="iLayouts[layout.name].layout"
-							name="{{ layout.name }}"
-							value="{{ option.slug }}"
-							type="radio" />
-						<img ng-src="{{ option.image }}" title="Default" tooltip="Default" tooltip-popup-delay="200">
-					</label>
-
-					<hr class="thin">
-
-					<div class="row">
-						<div class="col-sm-3">
-							<!-- HEADER -->
-							<div class="" ng-show="showModule('header', layout.name)">
-								<span>
-									<label><b>Header</b></label>
-									<select
-											ng-model="iLayouts[layout.name].header.id"
-											ng-options="key as key for (key, value) in i_templates.header">
-											<option value="">Default</option>
-									</select>
-								</span>
-							</div>
-						</div>
-						<div class="col-sm-3">
-							<!-- FOOTER -->
-							<div class="" ng-show="showModule('footer', layout.name)">
-								<span>
-									<label><b>Footer</b></label>
-									<select
-											ng-model="iLayouts[layout.name].footer.id"
-											ng-options="key as key for (key, value) in i_templates.footer">
-											<option value="">Default</option>
-									</select>
-								</span>
-							</div>
-						</div>
+							<!-- LAYOUT FORMATING OPTIONS -->
+							<label class="radio_image_select"
+								ng-repeat="option in iLayoutOptions.formats.options">
+								<input ng-model="iLayouts[layout.name].layout"
+									name="{{ layout.name }}"
+									value="{{ option.slug }}"
+									type="radio" />
+								<img ng-src="{{ option.image }}" title="{{ option.label }}" width="90" height="60" tooltip="{{ option.label }}" tooltip-popup-delay="200">
+							</label>
+						</ul>
 					</div>
 
+					<div class="area header-footer pull-left" ng-show="showModule('headerFooter', layout.name)">
+						<!-- HEADER -->
+						<div>
+							<label><b>Header</b></label>
+							<select
+									ng-model="iLayouts[layout.name].header.id"
+									ng-options="key as key for (key, value) in i_templates.header">
+									<option value="">Default</option>
+							</select>
+						</div>
+						<!-- FOOTER -->
+						<div>
+							<label><b>Footer</b></label>
+							<select
+									ng-model="iLayouts[layout.name].footer.id"
+									ng-options="key as key for (key, value) in i_templates.footer">
+									<option value="">Default</option>
+							</select>
+						</div>
+					</div>
 					
+					<div class="clearfix"></div>
 
 					<!-- SIDEBARS -->
 					<div class=" sidebars" ng-show="showModule('sidebars', layout.name)">
@@ -121,7 +128,7 @@
 							<select
 								ng-model="iLayouts[layout.name].sidebars[location.slug].id"
 								ng-options="sidebar.id as sidebar.name for sidebar in i_sidebars">
-								<option value=""></option>
+								<option value="">--- Select Widget Area ---</option>
 							</select>
 							
 							<div ng-repeat="screen_size in iLayoutOptions.screen_sizes">

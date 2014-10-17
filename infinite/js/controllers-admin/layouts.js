@@ -17,8 +17,8 @@ infinite.directive( 'iAdminLayout', [ function(){
 }]);
 
 infinite.controller('iAdminLayoutCtrl',
-	[ '$scope', '$window', '$parse', 'iData', '_',
-	function ( $scope, $window, $parse, $iData, $_ ) {
+	[ '$scope', '$log', '$window', '$parse', 'iData', '_',
+	function ( $scope, $log, $window, $parse, $iData, $_ ) {
 
 	// Initialize Status
 	$scope.status = "done";
@@ -63,10 +63,35 @@ infinite.controller('iAdminLayoutCtrl',
 
 		});
 			
-		
-
-
 	});
+
+	////////// FUNCTIONS //////////
+
+	$scope.selectedLayout = function( layoutId ){
+		// If the layout options cache is undefined
+		if( _.isUndefined( $scope.layoutOptions ) ){
+			// Get the available layout options
+			var layoutOptions = $_.getObj($scope, 'iLayoutOptions.formats.options');
+			// Get the 'default' layout option
+			var defaultOption = $_.getObj($scope, 'iLayoutOptions.formats.default')[0];
+			// If we got layout options
+			if( layoutOptions ){
+				// Remove two-way data binding
+				options = angular.fromJson( angular.toJson( layoutOptions ) );
+				// If default option is an object
+				if( _.isObject( defaultOption ) )
+					// Push it to available options
+					options.push( defaultOption );
+			} else
+				// Set default array
+				options = [];
+			// Save options in a cache for performance
+			$scope.layoutOptions = options;
+		}
+		// Use underscore to return the selected option object based on slug key
+		return _.findWhere( $scope.layoutOptions, { slug: layoutId } );
+	}
+
 
 	////////// SHOW / HIDE LOGIC //////////
 	// Logic for showing / hiding modules
@@ -79,8 +104,7 @@ infinite.controller('iAdminLayoutCtrl',
 		///// SHOW LOGIC /////
 		switch( module ){
 			/// HEADER & FOOTER ///
-			case 'header':
-			case 'footer':
+			case 'headerFooter':
 				if( layout == 'default' || layout == '' )
 					return false;
 				else

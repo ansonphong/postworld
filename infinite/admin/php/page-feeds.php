@@ -65,7 +65,6 @@
 				<div class="space-6"></div>
 			</div>
 
-			
 			<div class="pw-col-9">
 				<!-- ///// EDIT SETTINGS ///// -->
 				<div ng-show="showView('settings')">
@@ -75,11 +74,13 @@
 					<!-- DROPDOWN -->
 					<span
 						class="dropdown">
+						<!-- SELECTED ITEM -->
 						<span
 							dropdown-toggle
 							class="area-select-icon">
 							<i class="{{ iFeedSettings.loading_icon }} icon-spin"></i>
 						</span>
+						<!-- MENU -->
 						<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
 							<li
 								class="select-icon"
@@ -88,7 +89,6 @@
 								<i
 									class="{{ icon }}"></i>
 							</li>
-
 						</ul>
 					</span>
 

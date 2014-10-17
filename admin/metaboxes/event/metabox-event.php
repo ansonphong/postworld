@@ -36,14 +36,6 @@ function pw_metabox_init_event(){
     add_action( 'save_post','pw_event_meta_save' );
 }
 
-////////////// ADD SCRIPTS & STYLES //////////////
-function pw_metabox_event_scripts(){
-	// Add Styles
-    wp_enqueue_style( 'metabox-event-style',
-    	POSTWORLD_URI . '/admin/less/metabox-event.less' );
-}
-add_action( 'admin_enqueue_scripts', 'pw_metabox_event_scripts' );
-
 ////////////// CREATE UI //////////////
 function pw_event_meta_init(){
     global $post;

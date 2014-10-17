@@ -26,14 +26,6 @@ function pw_metabox_init_link_url(){
     add_action('save_post','pw_link_url_meta_save');
 }
 
-////////////// ADD SCRIPTS & STYLES //////////////
-function pw_metabox_link_url_scripts(){
-	// Add Styles
-    wp_enqueue_style( 'metabox-link_url-style',
-    	POSTWORLD_URI . '/admin/less/metabox-link_url.less' );
-}
-add_action( 'admin_enqueue_scripts', 'pw_metabox_link_url_scripts' );
-
 ////////////// CREATE UI //////////////
 function pw_link_url_meta_ui(){
     global $post;

@@ -63,9 +63,9 @@ function i_insert_content($vars){
 
 // Infinite : Insert Column Classes
 function i_insert_column_classes( $column, $i_layout = array() ){
-	global $iGlobals;
+	global $pw;
 	if( empty( $i_layout ) )
-		$i_layout = $iGlobals['layout'];
+		$i_layout = $pw['layout'];
 
 	$classes = "";
 
@@ -151,10 +151,10 @@ function i_insert_column_classes( $column, $i_layout = array() ){
 
 // Infinite : Insert Responsive Clearfix
 function i_insert_clearfix( $column, $i_layout = array() ){
-	global $iGlobals;
+	global $pw;
 	// Get current layout
 	if( empty( $i_layout ) )
-		$i_layout = $iGlobals['layout'];
+		$i_layout = $pw['layout'];
 
 	$full_width = (int) 12;
 	$classes = "";
@@ -174,7 +174,7 @@ function i_insert_clearfix( $column, $i_layout = array() ){
 function i_print_layout( $vars ){
 	/*
 	$vars = array(
-		'layout'			=>	$iGlobals['layout']['layout'],
+		'layout'			=>	$pw['layout']['layout'],
 		'function'			=>	'page_content_function',
 		'content'			=>	apply_filters( 'the_content', $post->post_content ),
 		'before_content' 	=>	'<div>',
@@ -183,7 +183,7 @@ function i_print_layout( $vars ){
 		);
 	*/
 
-	global $iGlobals;
+	global $pw;
 
 	///// SETUP VARIABLES /////
 	// Apply filter so that layout can be over-ridden
@@ -193,7 +193,7 @@ function i_print_layout( $vars ){
 	$vars_defaults = array(
 		'function'	=>	'',
 		'content'	=>	'',
-		'layout'	=>	$iGlobals['layout']['layout'],
+		'layout'	=>	$pw['layout']['layout'],
 		'echo'		=>	true,
 		);
 	$vars = pw_set_defaults( $vars, $vars_defaults );
@@ -223,10 +223,10 @@ function i_print_layout( $vars ){
 
 // Infinite : Insert a Sidebar
 function i_insert_sidebar( $sidebar, $i_layout = array() ){
-	global $iGlobals;
+	global $pw;
 	// Get current layout
 	if( empty( $i_layout ) )
-		$i_layout = $iGlobals['layout'];
+		$i_layout = $pw['layout'];
 
 	$sidebar_id = pw_get_obj( $i_layout, 'sidebars.'. $sidebar .'.id' );
 
@@ -236,10 +236,10 @@ function i_insert_sidebar( $sidebar, $i_layout = array() ){
 
 // Infinite : Insert a Sidebar Template
 function i_insert_sidebar_template( $sidebar, $i_layout = array() ){
-	global $iGlobals;
+	global $pw;
 	// Get current layout
 	if( empty( $i_layout ) )
-		$i_layout = $iGlobals['layout'];
+		$i_layout = $pw['layout'];
 
 	$sidebar_id = $i_layout['sidebars'][$sidebar]['id'];
 	

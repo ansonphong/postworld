@@ -5,7 +5,9 @@ function iGlobals(){
 	// Import Options
 	// TODO : Use i_get_option() function
 	$i_options = json_decode(get_option('i-options'),true);
-	$i_layouts = json_decode(get_option('i-layouts'),true);
+
+	$i_layouts = i_get_option( array( 'option_name' => 'i-layouts' ) );
+
 	$i_sidebars = json_decode(get_option('i-sidebars'),true);
 	$i_social = json_decode(get_option('i-social'),true);
 
@@ -105,7 +107,7 @@ function iGlobals(){
 
 	}
 
-
+	//////////////////////// LAYOUT ////////////////////////
 	//////// GENERATE LAYOUT ID //////////
 	// The Layout ID is used to switch between layout settings
 	// This assigns the current context to the correct layout
@@ -127,18 +129,41 @@ function iGlobals(){
 
 
 	////////// CURRENT LAYOUT //////////
-	// Set the Current Layout
-	$layout_id = $context['layout']['id'];
-	$current_layout = $i_layouts[ $layout_id ];
+	///// GET : LAYOUT ID /////
+	$layout_id = false;
 
-	// If the layout is not defined or is set to 'default', load default layout
-	if( empty($current_layout['layout']) ||
-		$current_layout['layout'] == 'default' ){
-		$current_layout = $i_layouts['default'];
-	}
+	/// FROM : POST META : OVERRIDE ///
+	// Check for layout override in : post_meta.pw_meta.layout
+	$layout_id = pw_get_wp_postmeta( array( 'sub_key' => 'layout.id' ) );
 	
+	/// FROM : CONTEXT ///
+	// Set default layout based on context
+	if( !$layout_id || $layout_id == 'default' )
+		$layout_id = pw_get_obj( $context, 'layout.id' );
+	
+	/// FROM : DEFAULT ///
+	if( !$layout_id )
+		$layout_id = 'default';
+
+	// Apply filter so that $layout_id can be over-ridden
+	$layout_id = apply_filters( 'pw_layout_id', $layout_id );
+
+	///// GET : LAYOUT /////
+	$layout = false;
+
+	/// IF : CUSTOM LAYOUT ///
+	$layout = pw_get_obj( $i_layouts, $layout_id );
+
+	/// ID : DEFAULT LAYOUT : FALLBACK ///
+	if( !$layout )
+		$layout = pw_get_obj( $i_layouts, 'default' );
+
+	// Apply filter so that $layout can be over-ridden
+	$layout = apply_filters( 'pw_layout', $layout );
+
+	///// WRAP /////
 	// Embed the layout ID into the layout object
-	$current_layout['id'] = $layout_id;
+	$layout['id'] = $layout_id;
 
 
 	////////// DEFINE GLOBALS //////////
@@ -146,7 +171,7 @@ function iGlobals(){
 	$iGlobals = array(
 		"options" 	=> $i_options,
 		"layouts" 	=> $i_layouts,
-		"layout"	=> $current_layout,
+		"layout"	=> $layout,
 		"context"	=> $context,
 		"sidebars"	=> $i_sidebars,
 		"social"	=> $i_social,
