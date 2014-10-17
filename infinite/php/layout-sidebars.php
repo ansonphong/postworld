@@ -41,9 +41,9 @@ function i_footer(){
 
 
 // Infinite : Insert Content
-function i_insert_content($layout_args){
+function i_insert_content($vars){
 
-	extract($layout_args);
+	extract($vars);
 
 	if( !empty($function) )
 		call_user_func( $function );
@@ -62,7 +62,11 @@ function i_insert_content($layout_args){
 }
 
 // Infinite : Insert Column Classes
-function i_insert_column_classes( $i_layout, $column ){
+function i_insert_column_classes( $column, $i_layout = array() ){
+	global $iGlobals;
+	if( empty( $i_layout ) )
+		$i_layout = $iGlobals['layout'];
+
 	$classes = "";
 
 	$full_width = (int) 12;
@@ -146,7 +150,12 @@ function i_insert_column_classes( $i_layout, $column ){
 }
 
 // Infinite : Insert Responsive Clearfix
-function i_insert_clearfix( $i_layout, $column ){
+function i_insert_clearfix( $column, $i_layout = array() ){
+	global $iGlobals;
+	// Get current layout
+	if( empty( $i_layout ) )
+		$i_layout = $iGlobals['layout'];
+
 	$full_width = (int) 12;
 	$classes = "";
 
@@ -162,104 +171,75 @@ function i_insert_clearfix( $i_layout, $column ){
 }
 
 
-function i_print_layout( $layout_args ){
+function i_print_layout( $vars ){
+	/*
+	$vars = array(
+		'layout'			=>	$iGlobals['layout']['layout'],
+		'function'			=>	'page_content_function',
+		'content'			=>	apply_filters( 'the_content', $post->post_content ),
+		'before_content' 	=>	'<div>',
+		'after_content' 	=>	'</div>',
+		'echo'				=>	true,
+		);
+	*/
 
 	global $iGlobals;
-	extract($iGlobals);
 
-	extract($layout_args);
+	///// SETUP VARIABLES /////
+	// Apply filter so that layout can be over-ridden
+	$vars = apply_filters( 'pw_print_layout', $vars );
 
-	// Default Function Value
-	$function = ( isset($function) ) ? $function : "" ;
+	// Set the default variables
+	$vars_defaults = array(
+		'function'	=>	'',
+		'content'	=>	'',
+		'layout'	=>	$iGlobals['layout']['layout'],
+		'echo'		=>	true,
+		);
+	$vars = pw_set_defaults( $vars, $vars_defaults );
 
-	// Default Content Value
-	$content = ( isset($content) ) ? $content : "" ;
+	///// TEMPLATES ////
+	$subdir = 'layouts';
+	$layout_templates = pw_get_templates(
+		array(
+			'subdirs' => array( $subdir ),
+			'path_type' => 'dir',
+			'ext'=>'php',
+			)
+		)[$subdir];
 
-	if( !isset($layout) )
-		return array( "error"	=>	"No layout specified." );
+	///// INCLUDE TEMPLATE /////
+	$template_path = $layout_templates[ $vars['layout'] ];
+	$html = pw_ob_include( $template_path, $vars );
 
-	// Switch Layouts
-	switch( $layout ){
-
-		// TODO : Break each layout into individual template files
-		// And organized under the heirarchical templates structure
-		// So that templates can be added and removed
-
-		////////// FULL LAYOUT ////////////
-		case 'full-width'; ?>
-			<div class="row page">
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'content') ?>">
-					<?php i_insert_content($layout_args); ?>
-				</div>
-			</div>
-
-			<?php
-			break;
-
-		////////// LEFT & RIGHT SIDEBAR LAYOUT ////////////
-		case 'left-right-sidebar'; ?>
-			<div class="row page">
-				
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'left') ?> col-left sidebar">
-					<?php i_insert_sidebar($iGlobals['layout'], 'left'); ?>
-				</div>
-
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'content') ?> col-content">
-						<?php i_insert_content($layout_args); ?>
-				</div>
-
-				<?php i_insert_clearfix($iGlobals['layout'], 'right'); ?>
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'right') ?> col-right sidebar">
-					<?php i_insert_sidebar($iGlobals['layout'], 'right'); ?>
-				</div>
-
-			</div>
-
-			<?php
-			break;
-
-		////////// LEFT SIDEBAR LAYOUT ////////////
-		case 'left-sidebar'; ?>
-
-			<div class="row page">
-				
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'left') ?> col-left sidebar">
-					<?php i_insert_sidebar($iGlobals['layout'], 'left'); ?>
-				</div>
-
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'content') ?> col-content">
-					<?php i_insert_content($layout_args); ?>
-				</div>
-
-			</div>
-
-			<?php
-			break;
-
-		////////// RIGHT SIDEBAR LAYOUT ////////////
-		case 'right-sidebar'; ?>
-
-			<div class="row page">
-
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'content') ?> col-content">
-					<?php i_insert_content($layout_args); ?>
-				</div>
-
-				<?php i_insert_clearfix($iGlobals['layout'], 'right'); ?>
-				<div class="<?php i_insert_column_classes($iGlobals['layout'], 'right') ?> col-right sidebar">
-					<?php i_insert_sidebar_template( $iGlobals['layout'], 'right'); ?>
-				</div>
-
-			</div>
-
-			<?php
-			break;
-	}
+	///// ECHO /////
+	if( $vars['echo'] )
+		echo $html;
+	///// RETURN /////
+	else
+		return $html;
 
 }
 
+// Infinite : Insert a Sidebar
+function i_insert_sidebar( $sidebar, $i_layout = array() ){
+	global $iGlobals;
+	// Get current layout
+	if( empty( $i_layout ) )
+		$i_layout = $iGlobals['layout'];
+
+	$sidebar_id = pw_get_obj( $i_layout, 'sidebars.'. $sidebar .'.id' );
+
+	if( isset( $sidebar_id ) )
+		dynamic_sidebar( $sidebar_id );
+}
+
 // Infinite : Insert a Sidebar Template
-function i_insert_sidebar_template( $i_layout, $sidebar ){
+function i_insert_sidebar_template( $sidebar, $i_layout = array() ){
+	global $iGlobals;
+	// Get current layout
+	if( empty( $i_layout ) )
+		$i_layout = $iGlobals['layout'];
 
 	$sidebar_id = $i_layout['sidebars'][$sidebar]['id'];
 	
@@ -281,12 +261,5 @@ function i_insert_sidebar_template( $i_layout, $sidebar ){
 
 }
 
-// Infinite : Insert a Sidebar
-function i_insert_sidebar( $i_layout, $sidebar ){
-
-	if( isset($i_layout['sidebars'][$sidebar]['id']) )
-		dynamic_sidebar( $i_layout['sidebars'][$sidebar]['id'] );
-
-}
 
 ?>
