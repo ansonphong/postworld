@@ -18,7 +18,7 @@ function i_select_menus( $vars ){
 		'null_option' =>	[string] // What to label the null option
 		);
 	*/
-	return i_ob_include_template( 'admin/modules/select-menu.php', $vars );
+	return i_ob_include_template( 'admin/modules/layout-single.php', $vars );
 }
 
 ///// DOWNLOAD IMAGE /////
