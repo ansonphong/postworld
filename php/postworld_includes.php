@@ -509,11 +509,11 @@ function pwGlobals_parse(){
 	// Determine the view type
 	$view_type = "default";
 	if( is_archive() && !is_date() )
-		$view_type = 'term_archive';
+		$view_type = 'archive-term';
 	else if( is_archive() && is_date() && !is_year() )
-		$view_type = 'date_archive';
+		$view_type = 'archive-date';
 	else if( is_archive() && is_date() && is_year() )
-		$view_type = 'year_archive';
+		$view_type = 'archive-year';
 	else if( is_page() )
 		$view_type = 'page';
 	else if( is_page() )
@@ -535,7 +535,7 @@ function pwGlobals_parse(){
 			break;
 
 		// TERM ARCHIVE
-		case "term_archive":
+		case "archive-term":
 			$current_term = get_queried_object();
 			$viewdata["term"] = $current_term;
 			$viewdata["term"]->term_link = get_term_link( $current_term );
@@ -543,7 +543,7 @@ function pwGlobals_parse(){
 			break;
 
 		// YEAR ARCHIVE
-		case "year_archive":
+		case "archive-term":
 			$viewdata["query"] = array(
 				"year"	=>	pw_to_array( $wp_query )['query_vars']['year'] ,
 				);
