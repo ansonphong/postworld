@@ -70,10 +70,13 @@ postworld.directive( 'oEmbed',
 
 				},
 				function( value ) {
-					//$scope.setEmbedCode();
+					// If the value is a string (HTML)
 					if( _.isString( value ) )
+						// Insert the Embed Code
 						element.html( value );
+					// If false
 					else
+						// Remove the embed code
 						element.html( '' );
 				}
 			);
