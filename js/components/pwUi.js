@@ -16,8 +16,8 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 
 
 postworld.controller( 'pwUiCtrl',
-	[ '$scope', '$timeout', '_',
-	function( $scope, $timeout, $_ ){
+	[ '$scope', '$timeout', '_', '$log',
+	function( $scope, $timeout, $_, $log ){
 
 	$scope.toggleElementDisplay = function( element ){
 		element = angular.element( element );
@@ -28,15 +28,19 @@ postworld.controller( 'pwUiCtrl',
 	}
 
 	$scope.toggleView = function( viewId ){
+		$log.debug( 'toggleView', viewId );
 		// If the view is registered
 		if( $_.objExists( $scope, 'uiViews.'+viewId ) )
 			// Invert the value
 			$scope.uiViews[viewId] = !$scope.uiViews[viewId];
+		// If the view is not registered, start by toggling on
+		else
+			$scope.uiViews[viewId] = true;
 	}
 
 	$scope.showView = function( viewId ){
 		// If the view is registered
-		return $_.getObj( $scope, 'uiViews.'+viewId )
+		return $_.getObj( $scope, 'uiViews.'+viewId );
 	}
 
 	$scope.focusElement = function( element ){
@@ -45,7 +49,17 @@ postworld.controller( 'pwUiCtrl',
 		$timeout( function(){
 			element.focus();
 		}, 0 );
-		
+	}
+
+	$scope.setClass = function( viewId, className ){
+		// Set default class name
+		if( _.isUndefined(className) )
+			className = 'active';
+		// Return className if view is true
+		if( $scope.showView( viewId ) )
+			return className;
+		else
+			return '';
 	}
 
 

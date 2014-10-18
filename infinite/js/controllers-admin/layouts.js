@@ -81,7 +81,6 @@ infinite.controller('iAdminLayoutCtrl',
 		// Basically merge the default option into the layout options
 		// Get the available layout templates
 		var layoutOptions = $_.getObj($scope, 'iLayoutOptions.templates.options');
-		$log.debug( "GOT LAYOUT OPTIONS : " + layoutOptions );
 		// Get the 'default' layout templates
 		var defaultOption = $_.getObj($scope, 'iLayoutOptions.templates.default')[0];
 		// If we got layout options
@@ -109,7 +108,6 @@ infinite.controller('iAdminLayoutCtrl',
 	////////// SHOW / HIDE LOGIC //////////
 	// Logic for showing / hiding modules
 	$scope.showModule = function( module, layout, meta ){
-		$log.debug( "TEMPLATE NAME : " + template );
 
 		// Get the template from the layout
 		var template = $_.getObj( layout, 'template' );

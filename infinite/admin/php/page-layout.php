@@ -39,11 +39,10 @@
 		</table>
 
 		<hr class="thick">
+
+		<!--
 		iLayouts : <pre>{{ iLayouts | json }}</pre>
 		iLayoutOptions : <pre>{{ iLayoutOptions | json }}</pre>
-		<!--
-		
-		
 		iGlobals : <pre><?php echo htmlentities( json_encode( iGlobals(), JSON_PRETTY_PRINT ) ); ?></pre>
 		-->
 
