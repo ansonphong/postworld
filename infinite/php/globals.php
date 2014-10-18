@@ -129,33 +129,38 @@ function iGlobals(){
 
 
 	////////// CURRENT LAYOUT //////////
+	// TODO : Refactor ID to context or template - confusing naming convention
+
+
 	///// GET : LAYOUT ID /////
-	$layout_id = false;
+	$layout_context = false;
 
 	/// FROM : POST META : OVERRIDE ///
 	// Check for layout override in : post_meta.pw_meta.layout
-	$layout_id = pw_get_wp_postmeta( array( 'sub_key' => 'layout.id' ) );
+	$layout_context = pw_get_wp_postmeta( array( 'sub_key' => 'layout.id' ) );
 	
 	/// FROM : CONTEXT ///
 	// Set default layout based on context
-	if( !$layout_id || $layout_id == 'default' )
-		$layout_id = pw_get_obj( $context, 'layout.id' );
+	if( !$layout_context || $layout_context == 'default' )
+		$layout_context = pw_get_obj( $context, 'layout.id' );
 	
 	/// FROM : DEFAULT ///
-	if( !$layout_id )
-		$layout_id = 'default';
+	if( !$layout_context )
+		$layout_context = 'default';
 
-	// Apply filter so that $layout_id can be over-ridden
-	$layout_id = apply_filters( 'pw_layout_id', $layout_id );
+	// Apply filter so that $layout_context can be over-ridden
+	$layout_context = apply_filters( 'pw_layout_id', $layout_context );
+
+	//echo "LAYOUT CONTEXT : " . $layout_context;
 
 	///// GET : LAYOUT /////
 	$layout = false;
 
-	/// IF : CUSTOM LAYOUT ///
-	$layout = pw_get_obj( $i_layouts, $layout_id );
-
+	/// GET LAYOUT BASED ON CONTEXT ///
+	$layout = pw_get_obj( $i_layouts, $layout_context );
+	
 	/// ID : DEFAULT LAYOUT : FALLBACK ///
-	if( !$layout )
+	if( !$layout || $layout['template'] == 'default' )
 		$layout = pw_get_obj( $i_layouts, 'default' );
 
 	// Apply filter so that $layout can be over-ridden
@@ -163,8 +168,7 @@ function iGlobals(){
 
 	///// WRAP /////
 	// Embed the layout ID into the layout object
-	$layout['id'] = $layout_id;
-
+	$layout['context'] = $layout_context;
 
 	////////// DEFINE GLOBALS //////////
 	global $iGlobals;

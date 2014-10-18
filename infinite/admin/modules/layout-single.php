@@ -9,28 +9,28 @@
 		dropdown-toggle
 		class="area area-select">
 		<img
-			ng-src="{{ selectedLayout( <?php echo $ng_model; ?>.layout ).image }}"
+			ng-src="{{ selectedLayout( <?php echo $ng_model; ?>.template ).image }}"
 			style="width:45px; height: auto;">
-			<label>{{ selectedLayout( <?php echo $ng_model; ?>.layout ).label }}</label>
+			<label>{{ selectedLayout( <?php echo $ng_model; ?>.template ).label }}</label>
 	</span>
 	<!-- MENU -->
 	<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
 		
-		<!-- DEFAULT OPTION -->
+		<!-- DEFAULT TEMPLATE OPTION -->
 		<label ng-repeat="option in iLayoutOptions.templates.default"
 			ng-hide="context.name == 'default'"
 			class="radio_image_select">
-			<input ng-model="<?php echo $ng_model; ?>.layout"
+			<input ng-model="<?php echo $ng_model; ?>.template"
 				name="{{ context.name }}"
 				value="{{ option.slug }}"
 				type="radio" />
 			<img ng-src="{{ option.image }}" title="Default" tooltip="Default" tooltip-popup-delay="200">
 		</label>
 
-		<!-- LAYOUT FORMATING OPTIONS -->
+		<!-- TEMPLATE OPTIONS -->
 		<label class="radio_image_select"
 			ng-repeat="option in iLayoutOptions.templates.options">
-			<input ng-model="<?php echo $ng_model; ?>.layout"
+			<input ng-model="<?php echo $ng_model; ?>.template"
 				name="{{ context.name }}"
 				value="{{ option.slug }}"
 				type="radio" />

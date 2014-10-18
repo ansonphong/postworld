@@ -85,7 +85,7 @@ function i_insert_column_classes( $column, $i_layout = array() ){
 			(int) $screen_size['default_sidebar_width'];
 
 		// Switch Layouts
-		switch($i_layout['layout']){
+		switch($i_layout['template']){
 
 			// Full Width
 			case 'full-width';
@@ -174,7 +174,7 @@ function i_insert_clearfix( $column, $i_layout = array() ){
 function i_print_layout( $vars ){
 	/*
 	$vars = array(
-		'layout'			=>	$pw['layout']['layout'],
+		'template'			=>	$pw['layout']['template'],
 		'function'			=>	'page_content_function',
 		'content'			=>	apply_filters( 'the_content', $post->post_content ),
 		'before_content' 	=>	'<div>',
@@ -193,7 +193,7 @@ function i_print_layout( $vars ){
 	$vars_defaults = array(
 		'function'	=>	'',
 		'content'	=>	'',
-		'layout'	=>	$pw['layout']['layout'],
+		'template'	=>	$pw['layout']['template'],
 		'echo'		=>	true,
 		);
 	$vars = pw_set_defaults( $vars, $vars_defaults );
@@ -208,8 +208,11 @@ function i_print_layout( $vars ){
 			)
 		)[$subdir];
 
+
+
+
 	///// INCLUDE TEMPLATE /////
-	$template_path = $layout_templates[ $vars['layout'] ];
+	$template_path = $layout_templates[ $vars['template'] ];
 	$html = pw_ob_include( $template_path, $vars );
 
 	///// ECHO /////

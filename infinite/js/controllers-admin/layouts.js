@@ -25,12 +25,17 @@ infinite.controller('iAdminLayoutCtrl',
 
 	// Initialize iLayouts
 	if( _.isUndefined( $scope.iLayouts ) ||
-		!_.isObject( $scope.iLayouts ) )
+		!_.isObject( $scope.iLayouts ) || 
+		_.isEmpty( $scope.iLayouts ) )
 		$scope.iLayouts = {};
+
+
 
 	// Initialize Settings Object
 	angular.forEach( $scope.iLayoutOptions.contexts, function( value ){
-		
+
+		$log.debug( value );
+
 		// Initialize Layout Context Names
 		if( _.isUndefined( $scope.iLayouts[value.name] ) )
 			$scope.iLayouts[value.name] = {};
@@ -42,6 +47,15 @@ infinite.controller('iAdminLayoutCtrl',
 		// Initialize Sidebars
 		if( _.isUndefined( $scope.iLayouts[value.name].sidebars ) )
 			$scope.iLayouts[value.name].sidebars = {};
+
+		// Initialize Template
+		if( _.isUndefined( $scope.iLayouts[value.name].template ) ){
+			$scope.iLayouts[value.name].template = 'default';
+			// Set the default default template
+			if( value.name == 'default' )
+				$scope.iLayouts[value.name].template = 'full-width';
+		}
+
 
 		// Initialize Sidebar Locations
 		angular.forEach( $scope.iLayoutOptions.widget_areas, function( sidebar_location ){
@@ -97,15 +111,15 @@ infinite.controller('iAdminLayoutCtrl',
 	// Logic for showing / hiding modules
 	$scope.showModule = function( module, contextName, meta ){
 
-		var layout = $_.getObj( $scope.iLayouts, contextName + '.layout' );
-		if( !layout )
-			layout = '';
+		var template = $_.getObj( $scope.iLayouts, contextName + '.template' );
+		if( !template )
+			template = '';
 
 		///// SHOW LOGIC /////
 		switch( module ){
 			/// HEADER & FOOTER ///
 			case 'headerFooter':
-				if( layout == 'default' || layout == '' )
+				if( template == 'default' || template == '' )
 					return false;
 				else
 					return true;
@@ -115,9 +129,9 @@ infinite.controller('iAdminLayoutCtrl',
 			case 'sidebars':
 				// If any sidebars are registered
 				if( $scope.iSidebars.length > 0 ){
-					if( layout == 'default' ||
-						layout == 'full-width' ||
-						layout == '' )
+					if( template == 'default' ||
+						template == 'full-width' ||
+						template == '' )
 						return false;
 					else
 						return true;
@@ -128,14 +142,14 @@ infinite.controller('iAdminLayoutCtrl',
 			case 'sidebar-location':
 				// Left Sidebar
 				if( meta == "left" ){
-					if(	layout.indexOf("left") != -1 )
+					if(	template.indexOf("left") != -1 )
 						return true;
 					else
 						return false;
 				}
 				// Right Sidebar
 				if( meta == "right" ){
-					if(	layout.indexOf("right") != -1 )
+					if(	template.indexOf("right") != -1 )
 						return true;
 					else
 						return false;
