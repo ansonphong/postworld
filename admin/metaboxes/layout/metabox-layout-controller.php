@@ -61,6 +61,13 @@ global $post;
 			// ADD : If 'default' template selected, delete the layout object
 			// If no template selected, display as 'default'
 
+			// Provide context for the layouts controller
+			$scope.context = {
+				name: 'single',
+				label: 'Single',
+				icon: 'icon-circle-medium',
+			};
+
 	}]);
 	
 </script>

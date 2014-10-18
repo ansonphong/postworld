@@ -34,11 +34,11 @@
 				type="radio" />
 			<img ng-src="{{ option.image }}" title="{{ option.label }}" width="90" height="60" tooltip="{{ option.label }}" tooltip-popup-delay="200">
 		</label>
-		
+
 	</ul>
 </div>
 
-<div class="area header-footer pull-left" ng-show="showModule('headerFooter', context.name)">
+<div class="area header-footer pull-left" ng-show="showModule('headerFooter', <?php echo $ng_model; ?> )">
 	<!-- HEADER -->
 	<div>
 		<label><b>Header</b></label>
@@ -62,11 +62,11 @@
 <div class="clearfix"></div>
 
 <!-- SIDEBARS -->
-<div class=" sidebars" ng-show="showModule('sidebars', context.name)">
+<div class=" sidebars" ng-show="showModule('sidebars', <?php echo $ng_model; ?>)">
 
 	<span class="select-module"
 		ng-repeat="location in iLayoutOptions.widget_areas"
-		ng-show="showModule('sidebar-location', context.name, location.slug)">
+		ng-show="showModule('sidebar-location', <?php echo $ng_model; ?>, location.slug)">
 		<hr class="thin">
 		<label><b>{{ location.name }}</b></label>
 		<select

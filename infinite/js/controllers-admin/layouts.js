@@ -108,17 +108,21 @@ infinite.controller('iAdminLayoutCtrl',
 
 	////////// SHOW / HIDE LOGIC //////////
 	// Logic for showing / hiding modules
-	$scope.showModule = function( module, contextName, meta ){
+	$scope.showModule = function( module, layout, meta ){
+		$log.debug( "TEMPLATE NAME : " + template );
 
-		var template = $_.getObj( $scope.iLayouts, contextName + '.template' );
+		// Get the template from the layout
+		var template = $_.getObj( layout, 'template' );
 		if( !template )
-			template = '';
+			template = 'default';
+		if( _.isUndefined( 'template' ) || template == 'default' )
+			return false;
 
 		///// SHOW LOGIC /////
 		switch( module ){
 			/// HEADER & FOOTER ///
 			case 'headerFooter':
-				if( template == 'default' || template == '' )
+				if( template == 'default' || _.isEmpty(template) )
 					return false;
 				else
 					return true;

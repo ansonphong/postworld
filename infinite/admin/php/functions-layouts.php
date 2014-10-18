@@ -56,21 +56,25 @@ function i_layout_options(){
 					'label' =>	'Full Width',
 					'slug'	=>	'full-width',
 					'image'	=>	get_infinite_directory_uri().'/images/layouts/full.png',
+					'supports' =>	array(),
 					),
 				array(
 					'label' =>	'Left Sidebar',
 					'slug'	=>	'left-sidebar',
 					'image'	=>	get_infinite_directory_uri().'/images/layouts/left.png',
+					'supports' =>	array( 'sidebar-left' ),  // TODO : IMPLIMENT SUPPORTS
 					),
 				array(
 					'label' =>	'Right Sidebar',
 					'slug'	=>	'right-sidebar',
 					'image'	=>	get_infinite_directory_uri().'/images/layouts/right.png',
+					'supports' =>	array( 'sidebar-right' ),
 					),
 				array(
 					'label' =>	'Left & Right Sidebars',
 					'slug'	=>	'left-right-sidebar',
 					'image'	=>	get_infinite_directory_uri().'/images/layouts/left-right.png',
+					'supports' =>	array( 'sidebar-left', 'sidebar-right' ),
 					),
 				),
 			),
