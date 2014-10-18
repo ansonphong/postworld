@@ -17,6 +17,8 @@ $pw = array(
 		),
 	);
 
+define( 'pw_usermeta_key',	'pw_meta' );
+define( 'pw_postmeta_key',	'pw_meta' );
 
 /////////////// API ////////////////
 include 'php/postworld_api.php';

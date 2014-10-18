@@ -11,12 +11,18 @@ global $post;
 
 <!--///// METABOX WRAPPER /////-->
 <div id="pwLayoutMetabox" class="postworld pw-metabox metabox-layout">
-	<div ng-controller="pwLayoutMetaboxCtrl">
+	<div
+		i-admin-layout
+		ng-controller="pwLayoutMetaboxCtrl"
+		id="infinite_admin">
 		<?php
+
 			// Include the UI template
-			$metabox_template = pw_get_template ( 'admin', 'metabox-layout', 'php', 'dir' );
-			include $metabox_template;
-			
+			//$metabox_template = pw_get_template ( 'admin', 'metabox-layout', 'php', 'dir' );
+			//include $metabox_template;
+
+			echo i_layout_single_options( array( 'context'	=>	'postAdmin' ) );
+
 			// Action Hook
 			do_action('pw_layout_metabox_templates');
 		?>
@@ -24,8 +30,9 @@ global $post;
 		<input type="hidden" name="pw_layout_post" ng-value="post | json" style="width:100%;">
 		
 		<!-- DEV : Test Output -->
-		<!--
+		
 		<hr><pre>POST : {{ post | json }}</pre>
+		<!--
 		<hr><pre>PARENT POST ID : {{ parent_post.ID | json }}</pre>
 		<hr><pre>QUERY : {{ query | json }}</pre>
 		-->
@@ -41,11 +48,15 @@ global $post;
 	pwLayoutMetabox.controller('pwLayoutMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
+			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
+			$scope.iSidebars = <?php echo json_encode( i_get_option( array( 'option_name' => 'i-sidebars' ) ) ); ?>;
+			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
+			$scope.iLayouts = <?php echo json_encode( i_get_option( array( 'option_name' => 'i-layouts' ) ) ); ?>;
+			$scope.post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta(all)') ) ); ?>;
 
-			// This is the post object which is saved
-			$scope.post = <?php echo json_encode( $pw_post ); ?>;
-			// The variables by which parent posts autocomplete are queried
-			$scope.query = <?php echo json_encode( $query ); ?>;
+			// Create layout object
+			if( !$_.objExists( $scope.post, 'post_meta.layout' ) )
+				$scope.post = $_.setObj( $scope.post, 'post_meta.layout', {} );
 
 	}]);
 	

@@ -67,18 +67,18 @@ infinite.controller('iAdminLayoutCtrl',
 
 	////////// FUNCTIONS //////////
 
-	$scope.selectedLayout = function( layoutId ){
+	$scope.selectedLayout = function( contextId ){
 		// If the layout options cache is undefined
 		if( _.isUndefined( $scope.layoutOptions ) ){
-			// Get the available layout options
-			var layoutOptions = $_.getObj($scope, 'iLayoutOptions.formats.options');
-			// Get the 'default' layout option
-			var defaultOption = $_.getObj($scope, 'iLayoutOptions.formats.default')[0];
+			// Get the available layout templates
+			var layoutOptions = $_.getObj($scope, 'iLayoutOptions.templates.options');
+			// Get the 'default' layout templates
+			var defaultOption = $_.getObj($scope, 'iLayoutOptions.templates.default')[0];
 			// If we got layout options
 			if( layoutOptions ){
 				// Remove two-way data binding
 				options = angular.fromJson( angular.toJson( layoutOptions ) );
-				// If default option is an object
+				// If default template is an object
 				if( _.isObject( defaultOption ) )
 					// Push it to available options
 					options.push( defaultOption );
@@ -89,7 +89,7 @@ infinite.controller('iAdminLayoutCtrl',
 			$scope.layoutOptions = options;
 		}
 		// Use underscore to return the selected option object based on slug key
-		return _.findWhere( $scope.layoutOptions, { slug: layoutId } );
+		return _.findWhere( $scope.layoutOptions, { slug: contextId } );
 	}
 
 
@@ -114,7 +114,7 @@ infinite.controller('iAdminLayoutCtrl',
 			/// SIDEBARS ///
 			case 'sidebars':
 				// If any sidebars are registered
-				if( $scope.i_sidebars.length > 0 ){
+				if( $scope.iSidebars.length > 0 ){
 					if( layout == 'default' ||
 						layout == 'full-width' ||
 						layout == '' )

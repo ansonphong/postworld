@@ -17,11 +17,11 @@
 	<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
 		
 		<!-- DEFAULT OPTION -->
-		<label ng-repeat="option in iLayoutOptions.formats.default"
-			ng-hide="layout.name == 'default'"
+		<label ng-repeat="option in iLayoutOptions.templates.default"
+			ng-hide="context.name == 'default'"
 			class="radio_image_select">
 			<input ng-model="<?php echo $ng_model; ?>.layout"
-				name="{{ layout.name }}"
+				name="{{ context.name }}"
 				value="{{ option.slug }}"
 				type="radio" />
 			<img ng-src="{{ option.image }}" title="Default" tooltip="Default" tooltip-popup-delay="200">
@@ -29,9 +29,9 @@
 
 		<!-- LAYOUT FORMATING OPTIONS -->
 		<label class="radio_image_select"
-			ng-repeat="option in iLayoutOptions.formats.options">
+			ng-repeat="option in iLayoutOptions.templates.options">
 			<input ng-model="<?php echo $ng_model; ?>.layout"
-				name="{{ layout.name }}"
+				name="{{ context.name }}"
 				value="{{ option.slug }}"
 				type="radio" />
 			<img ng-src="{{ option.image }}" title="{{ option.label }}" width="90" height="60" tooltip="{{ option.label }}" tooltip-popup-delay="200">
@@ -39,13 +39,13 @@
 	</ul>
 </div>
 
-<div class="area header-footer pull-left" ng-show="showModule('headerFooter', layout.name)">
+<div class="area header-footer pull-left" ng-show="showModule('headerFooter', context.name)">
 	<!-- HEADER -->
 	<div>
 		<label><b>Header</b></label>
 		<select
 				ng-model="<?php echo $ng_model; ?>.header.id"
-				ng-options="key as key for (key, value) in i_templates.header">
+				ng-options="key as key for (key, value) in iTemplates.header">
 				<option value="">Default</option>
 		</select>
 	</div>
@@ -54,7 +54,7 @@
 		<label><b>Footer</b></label>
 		<select
 				ng-model="<?php echo $ng_model; ?>.footer.id"
-				ng-options="key as key for (key, value) in i_templates.footer">
+				ng-options="key as key for (key, value) in iTemplates.footer">
 				<option value="">Default</option>
 		</select>
 	</div>
@@ -63,16 +63,16 @@
 <div class="clearfix"></div>
 
 <!-- SIDEBARS -->
-<div class=" sidebars" ng-show="showModule('sidebars', layout.name)">
+<div class=" sidebars" ng-show="showModule('sidebars', context.name)">
 
 	<span class="select-module"
 		ng-repeat="location in iLayoutOptions.widget_areas"
-		ng-show="showModule('sidebar-location', layout.name, location.slug)">
+		ng-show="showModule('sidebar-location', context.name, location.slug)">
 		<hr class="thin">
 		<label><b>{{ location.name }}</b></label>
 		<select
 			ng-model="<?php echo $ng_model; ?>.sidebars[location.slug].id"
-			ng-options="sidebar.id as sidebar.name for sidebar in i_sidebars">
+			ng-options="sidebar.id as sidebar.name for sidebar in iSidebars">
 			<option value="">--- Select Widget Area ---</option>
 		</select>
 		

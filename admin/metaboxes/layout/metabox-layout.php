@@ -59,7 +59,7 @@ function pw_layout_meta_init( $post, $metabox ){
     extract( $metabox['args'] );
     //pw_log( json_encode($vars) );
 
-    $pw_post = pw_get_post( $post->ID, array( 'ID', 'post_meta(all)' ) );
+    //$pw_post = pw_get_post( $post->ID, array( 'ID', 'post_meta(all)' ) );
 
     // Apply filters for themes to over-ride
     $query = apply_filters( 'pw_layout_metabox_vars', $query );

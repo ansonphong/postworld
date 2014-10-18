@@ -225,6 +225,31 @@ function i_admin_slider_options( $vars = array() ){
 
 
 
+///// POST CONTENT COLUMNS /////
+function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
+
+	//$vars['options_model'] = "options.post_content.columns";
+
+	switch($vars['context']){
+		
+		///// SITE-WIDE SETTINGS /////
+		case 'siteAdmin': 
+				$vars['ng_model'] = "iLayouts[context.name]";
+			break;
+		
+		///// EDIT POST SETTINGS /////
+		case 'postAdmin':
+		case 'quickEdit':
+		default:
+				$vars['ng_model'] = "post.post_meta." . pw_postmeta_key . ".layout";
+			break;
+
+	}
+
+	return i_ob_include_template( 'admin/modules/layout-single.php', $vars );
+
+}
+
 
 
 ?>

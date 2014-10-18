@@ -1,62 +1,6 @@
 <?php
 
-
-function i_get_dirs($path = '.') {
-    $dirs = array();
-   
-    if( file_exists($path) ){
-    	$subpaths = new DirectoryIterator($path);
-	    foreach ( $subpaths as $file) {
-	        if ($file->isDir() && !$file->isDot()) {
-	            $dirs[] = $file->getFilename();
-	        }
-	    }	
-    }
-  
-    return $dirs;
-}
-
-
-function i_construct_template_obj( $args ){
-
-	extract($args);
-
-	// Set Defaults
-	if( !isset( $path_type ) )
-		$path_type = 'dir';
-	if( !isset( $ext ) )
-		$ext = '.php';
-	if( !isset( $url ) )
-		$url = '';
-
-	$subdirs = i_get_dirs( $dir );
-	$template_object = array();
-
-	// Iterate through each Directory
-	foreach( $subdirs as $subdir ){
-		$template_object[$subdir] = array();
-		$files = glob( trailingslashit($dir) . $subdir . '/*'.$ext );
-
-		// Iterate through each File
-		foreach( $files as $file ){
-			$basename = basename($file);
-			$basename_noext = basename($file, $ext);
-
-			// Output Directory Path
-			if( $path_type == 'dir' )
-				$template_object[$subdir][$basename_noext] = $file;
-			else if ( $path_type == 'url' )
-			// Output URL Path
-				$template_object[$subdir][$basename_noext] = trailingslashit($url) . $basename;
-			
-		}
-	
-	}
-
-	return $template_object;
-}
-
-
+// DEPRECIATED : Use pw_get_templates()
 function i_get_templates( $args = array() ){
 
 	global $i_paths;
@@ -130,13 +74,60 @@ function i_get_templates( $args = array() ){
 
 }
 
+function i_get_dirs($path = '.') {
+    $dirs = array();
+   
+    if( file_exists($path) ){
+    	$subpaths = new DirectoryIterator($path);
+	    foreach ( $subpaths as $file) {
+	        if ($file->isDir() && !$file->isDot()) {
+	            $dirs[] = $file->getFilename();
+	        }
+	    }	
+    }
+  
+    return $dirs;
+}
 
 
+function i_construct_template_obj( $args ){
 
+	extract($args);
 
+	// Set Defaults
+	if( !isset( $path_type ) )
+		$path_type = 'dir';
+	if( !isset( $ext ) )
+		$ext = '.php';
+	if( !isset( $url ) )
+		$url = '';
 
+	$subdirs = i_get_dirs( $dir );
+	$template_object = array();
 
+	// Iterate through each Directory
+	foreach( $subdirs as $subdir ){
+		$template_object[$subdir] = array();
+		$files = glob( trailingslashit($dir) . $subdir . '/*'.$ext );
 
+		// Iterate through each File
+		foreach( $files as $file ){
+			$basename = basename($file);
+			$basename_noext = basename($file, $ext);
+
+			// Output Directory Path
+			if( $path_type == 'dir' )
+				$template_object[$subdir][$basename_noext] = $file;
+			else if ( $path_type == 'url' )
+			// Output URL Path
+				$template_object[$subdir][$basename_noext] = trailingslashit($url) . $basename;
+			
+		}
+	
+	}
+
+	return $template_object;
+}
 
 
 

@@ -43,7 +43,7 @@ function i_layout_options(){
 				),
 			),
 
-		"formats"	=>	array(
+		"templates"	=>	array(
 			"default"	=>	array(
 				array(
 					'label' =>	'Default',

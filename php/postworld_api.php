@@ -98,8 +98,6 @@ function pw_set_obj( $obj, $key, $value ){
 
 ////////////////////////////////////////////////////////////////////*/
 
-define( 'pw_usermeta_key',	'pw_meta' );
-
 function pw_set_wp_usermeta( $vars ){
 	/*
 		- Sets meta key for the given user under the given key
@@ -219,8 +217,6 @@ function pw_get_wp_usermeta($vars){
                                                                    
 ////////////////////////////////////////////////////////////////////*/
 
-
-define( 'pw_postmeta_key',	'pw_meta' );
 
 function pw_set_wp_postmeta($vars){
 	/*
