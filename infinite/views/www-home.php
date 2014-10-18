@@ -21,7 +21,7 @@ SLIDER
 	// Create the main layout
 	global $iGlobals;
 	$layout_args = array(
-		'layout'	=>	$iGlobals['layout']['layout'],
+		//'layout'	=>	$iGlobals['layout']['layout'],
 		//'content'	=>	apply_filters( 'the_content', $post->post_content ),
 		'function'	=>	'page_content_function',
 		);

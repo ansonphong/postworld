@@ -20,7 +20,7 @@
 	// Create the main layout
 	global $iGlobals;
 	$layout_args = array(
-		'layout'			=>	$iGlobals['layout']['layout'],
+		//'layout'			=>	$iGlobals['layout']['layout'],
 		'function'			=>	'page_content_function',
 		'content'			=>	apply_filters( 'the_content', $post->post_content ),
 		'before_content' 	=> "<div class='post page block'><div class='post_content'>",

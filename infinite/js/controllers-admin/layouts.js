@@ -95,9 +95,9 @@ infinite.controller('iAdminLayoutCtrl',
 
 	////////// SHOW / HIDE LOGIC //////////
 	// Logic for showing / hiding modules
-	$scope.showModule = function( module, layoutName, meta ){
+	$scope.showModule = function( module, contextName, meta ){
 
-		var layout = $_.getObj( $scope.iLayouts, layoutName + '.layout' );
+		var layout = $_.getObj( $scope.iLayouts, contextName + '.layout' );
 		if( !layout )
 			layout = '';
 
