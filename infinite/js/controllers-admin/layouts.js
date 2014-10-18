@@ -30,11 +30,8 @@ infinite.controller('iAdminLayoutCtrl',
 		$scope.iLayouts = {};
 
 
-
 	// Initialize Settings Object
 	angular.forEach( $scope.iLayoutOptions.contexts, function( value ){
-
-		$log.debug( value );
 
 		// Initialize Layout Context Names
 		if( _.isUndefined( $scope.iLayouts[value.name] ) )
@@ -80,28 +77,30 @@ infinite.controller('iAdminLayoutCtrl',
 	});
 
 	////////// FUNCTIONS //////////
+	$scope.initLayoutOptions = function(){
+		// Basically merge the default option into the layout options
+		// Get the available layout templates
+		var layoutOptions = $_.getObj($scope, 'iLayoutOptions.templates.options');
+		$log.debug( "GOT LAYOUT OPTIONS : " + layoutOptions );
+		// Get the 'default' layout templates
+		var defaultOption = $_.getObj($scope, 'iLayoutOptions.templates.default')[0];
+		// If we got layout options
+		if( layoutOptions ){
+			// Remove two-way data binding
+			options = angular.fromJson( angular.toJson( layoutOptions ) );
+			// If default template is an object
+			if( _.isObject( defaultOption ) )
+				// Add the default context
+				options.push( defaultOption );
+		} else
+			// Set default array
+			options = [];
+		// Save options in a cache for performance
+		$scope.layoutOptions = options;
+	}
+	$scope.initLayoutOptions();
 
 	$scope.selectedLayout = function( contextId ){
-		// If the layout options cache is undefined
-		if( _.isUndefined( $scope.layoutOptions ) ){
-			// Get the available layout templates
-			var layoutOptions = $_.getObj($scope, 'iLayoutOptions.templates.options');
-			// Get the 'default' layout templates
-			var defaultOption = $_.getObj($scope, 'iLayoutOptions.templates.default')[0];
-			// If we got layout options
-			if( layoutOptions ){
-				// Remove two-way data binding
-				options = angular.fromJson( angular.toJson( layoutOptions ) );
-				// If default template is an object
-				if( _.isObject( defaultOption ) )
-					// Push it to available options
-					options.push( defaultOption );
-			} else
-				// Set default array
-				options = [];
-			// Save options in a cache for performance
-			$scope.layoutOptions = options;
-		}
 		// Use underscore to return the selected option object based on slug key
 		return _.findWhere( $scope.layoutOptions, { slug: contextId } );
 	}

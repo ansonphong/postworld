@@ -48,18 +48,24 @@ ul{
 					text-align: center;
 				}
 			}
-		}
-	}
-	&.dropdown-layouts{
-		ul.dropdown-menu{
-			&.grid{
-				min-width:initial;
-				width:auto;
-				white-space: nowrap;
+			label{
+				display: inline-block;
+				&:hover{
+					background:#eee;
+				}
 			}
 		}
 	}
 }
+
+.area{
+	+ul.dropdown-menu{
+		margin-top:-10px;
+		border-top-left-radius: 0;
+		border-top-right-radius: 0;
+	}
+}
+
 
 .area{
 	border: 1px solid #ccc;

@@ -1,6 +1,4 @@
-<?php 
-	extract( $vars );
-?>
+<?php extract( $vars ); ?>
 <!-- DROPDOWN -->
 <div
 	class="select-layout dropdown dropdown-layouts pull-left">
@@ -36,6 +34,7 @@
 				type="radio" />
 			<img ng-src="{{ option.image }}" title="{{ option.label }}" width="90" height="60" tooltip="{{ option.label }}" tooltip-popup-delay="200">
 		</label>
+		
 	</ul>
 </div>
 

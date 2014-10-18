@@ -10,11 +10,12 @@ global $post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div id="pwLayoutMetabox" class="postworld pw-metabox metabox-layout">
+<div id="pwLayoutMetabox" class="postworld">
 	<div
 		i-admin-layout
 		ng-controller="pwLayoutMetaboxCtrl"
-		id="infinite_admin">
+		id="infinite_admin"
+		class="pw-metabox metabox-side metabox-layout">
 		<?php
 
 			// Include the UI template
@@ -30,7 +31,6 @@ global $post;
 		<input type="hidden" name="pw_layout_post" ng-value="post | json" style="width:100%;">
 		
 		<!-- DEV : Test Output -->
-		
 		<hr><pre>POST : {{ post | json }}</pre>
 		<!--
 		<hr><pre>PARENT POST ID : {{ parent_post.ID | json }}</pre>
@@ -42,7 +42,7 @@ global $post;
 <!--///// METABOX SCRIPTS /////-->
 <script>
 	///// APP /////
-	var pwLayoutMetabox = angular.module( 'pwLayoutMetabox', ['postworld'] );
+	var pwLayoutMetabox = angular.module( 'pwLayoutMetabox', ['infinite'] );
 	
 	///// CONTROLLER /////
 	pwLayoutMetabox.controller('pwLayoutMetaboxCtrl',
@@ -57,6 +57,9 @@ global $post;
 			// Create layout object
 			if( !$_.objExists( $scope.post, 'post_meta.layout' ) )
 				$scope.post = $_.setObj( $scope.post, 'post_meta.layout', {} );
+
+			// ADD : If 'default' template selected, delete the layout object
+			// If no template selected, display as 'default'
 
 	}]);
 	
