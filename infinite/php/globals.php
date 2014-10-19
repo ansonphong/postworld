@@ -129,9 +129,6 @@ function iGlobals(){
 
 
 	////////// CURRENT LAYOUT //////////
-	// TODO : Refactor ID to context or template - confusing naming convention
-
-
 	///// GET : LAYOUT ID /////
 	$layout_context = false;
 
