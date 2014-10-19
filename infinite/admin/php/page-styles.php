@@ -6,8 +6,8 @@
 
 <div id="infinite_admin" ng-app="infinite" class="styles">
 	<h1>
-		<i class="icon-image"></i>
-		<?php echo $theme_admin['styles']['page_title']; ?>
+		<i class="icon-paint-format"></i>
+		Styles
 	</h1>
 	
 	<script type="text/javascript">

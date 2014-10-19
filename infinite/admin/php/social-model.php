@@ -41,6 +41,48 @@ if( isset( $i_child_social_model ) ){
 global $i_social_meta;
 $i_social_meta	=	array(
 	array(
+		"id"	=>	"networks",
+		"name"	=>	"Social Networks",
+		"icon"	=>	"icon-heart",
+		"fields"	=>	array(
+			array(
+				"id"			=>	"facebook",
+				"name"			=>	"Facebook",
+				"icon"			=>	"icon-facebook",
+				"description"	=>	"URL of your Facebook Page",
+				"prepend_url"	=>	"",
+				),
+			array(
+				"id"			=>	"facebook_app_id",
+				"name"			=>	"Facebook App ID",
+				"icon"			=>	"icon-facebook-square",
+				"description"	=>	"The ID of your Facebook App",
+				"prepend_url"	=>	"",
+				),
+			array(
+				"id"			=>	"twitter",
+				"name"			=>	"Twitter",
+				"icon"			=>	"icon-twitter",
+				"description"	=>	"Twitter Username, without the '@'",
+				"prepend_url"	=>	"http://twitter.com/",
+				),
+			array(
+				"id"			=>	"twitter_hashtags",
+				"name"			=>	"Twitter Hashtags",
+				"icon"			=>	"icon-twitter-square",
+				"description"	=>	"Optional hashtag(s) to include in tweets, without the '#'",
+				"prepend_url"	=>	"",
+				),
+			array(
+				"id"			=>	"tripadvisor",
+				"name"			=>	"Trip Advisor",
+				"icon"			=>	"icon-circle-medium",
+				"description"	=>	"URL of your Tripadvisor Page",
+				"prepend_url"	=>	"",
+				),
+			),
+		),
+	array(
 		"id"	=>	"contact",
 		"name"	=>	"Contact Info",
 		"icon"	=>	"icon-book",
@@ -102,48 +144,7 @@ $i_social_meta	=	array(
 				),
 			),
 		),
-	array(
-		"id"	=>	"networks",
-		"name"	=>	"Social Networks",
-		"icon"	=>	"icon-heart",
-		"fields"	=>	array(
-			array(
-				"id"			=>	"facebook",
-				"name"			=>	"Facebook",
-				"icon"			=>	"icon-facebook",
-				"description"	=>	"URL of your Facebook Page",
-				"prepend_url"	=>	"",
-				),
-			array(
-				"id"			=>	"facebook_app_id",
-				"name"			=>	"Facebook App ID",
-				"icon"			=>	"icon-facebook-square",
-				"description"	=>	"The ID of your Facebook App",
-				"prepend_url"	=>	"",
-				),
-			array(
-				"id"			=>	"twitter",
-				"name"			=>	"Twitter",
-				"icon"			=>	"icon-twitter",
-				"description"	=>	"Twitter Username, without the '@'",
-				"prepend_url"	=>	"http://twitter.com/",
-				),
-			array(
-				"id"			=>	"twitter_hashtags",
-				"name"			=>	"Twitter Hashtags",
-				"icon"			=>	"icon-twitter-square",
-				"description"	=>	"Optional hashtag(s) to include in tweets, without the '#'",
-				"prepend_url"	=>	"",
-				),
-			array(
-				"id"			=>	"tripadvisor",
-				"name"			=>	"Trip Advisor",
-				"icon"			=>	"icon-circle-medium",
-				"description"	=>	"URL of your Tripadvisor Page",
-				"prepend_url"	=>	"",
-				),
-			),
-		),
+	
 	);
 
 

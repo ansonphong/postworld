@@ -43,8 +43,21 @@
 
 		</ul>
 	</div>
+	
+	<button
+		class="button"
+		ng-show="<?php echo $ng_model; ?>.template != 'default'"
+		type="button"
+		ng-class="setClass('headerFooter')"
+		ng-click="toggleView('headerFooter')">
+		<i class="icon-layers"></i>
+		Header & Footer
+	</button>
+	<div class="clearfix"></div>
+	<div
+		class="area header-footer pull-left"
+		ng-show="showModule('headerFooter', <?php echo $ng_model; ?> ) && showView('headerFooter')">
 
-	<div class="area header-footer pull-left" ng-show="showModule('headerFooter', <?php echo $ng_model; ?> )">
 		<!-- HEADER -->
 		<div>
 			<label><b>Header</b></label>
@@ -69,18 +82,18 @@
 
 	<!-- SIDEBARS -->
 	<div class=" sidebars" ng-show="showModule('sidebars', <?php echo $ng_model; ?>)">
-
-		<span class="select-module"
+		<hr class="thin">
+		<div class="select-module"
 			ng-repeat="location in iLayoutOptions.widget_areas"
 			ng-show="showModule('sidebar-location', <?php echo $ng_model; ?>, location.slug)">
-			<hr class="thin">
+			
 			<label><b>{{ location.name }}</b></label>
 			<select
 				ng-model="<?php echo $ng_model; ?>.sidebars[location.slug].id"
 				ng-options="sidebar.id as sidebar.name for sidebar in iSidebars">
 				<option value="">--- Select Widget Area ---</option>
 			</select>
-			
+
 			<button
 				type="button"
 				class="button"
@@ -101,7 +114,12 @@
 				<i ng-class="screen_size.icon" class="icon-small"></i>
 			</div>
 
-		</span>
+		</div>
+
+		<hr class="thin">
+
+		
+
 
 	</div>
 

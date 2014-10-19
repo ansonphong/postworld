@@ -1,8 +1,8 @@
 <div id="infinite_admin" ng-app="infinite" class="social">
 
 	<h1>
-		<i class="icon-heart"></i>
-		<?php echo $theme_admin['social']['page_title']; ?>
+		<i class="icon-profile"></i>
+		Social
 	</h1>
 
 	<script>
