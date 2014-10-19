@@ -389,11 +389,9 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		if ( !empty($post_meta_fields) ){
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
-
 				// GET 'ALL' FIELDS
 				if ( in_array("all", $post_meta_fields) ||
 						$post_meta_field == "all" ){
-
 					// Return all meta data
 					$post['post_meta'] = get_metadata('post', $post_id, '', true);
 					// Convert to strings
@@ -405,31 +403,32 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 					// Break from the foreach
 					break;
 				}
-
 				// GET SPECIFIC FIELDS
 				else {
-
 					$post_meta_data = get_post_meta( $post_id, $post_meta_field, true );
-
 					if( !empty($post_meta_data) )
 						$post['post_meta'][$post_meta_field] = $post_meta_data;
-
 				}
-
 			}
 
 			///// JSON META KEYS /////
-			// Parse known JSON keys from JSON strings into objects
-			global $pwSiteGlobals;
-			if( isset( $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'] ) ){
-				$json_meta_keys = $pwSiteGlobals['db']['wp_postmeta']['json_meta_keys'];
-				if( is_array( $post['post_meta'] ) ){
-					foreach( $post['post_meta'] as $meta_key => $meta_value ){
-						if(
-							in_array($meta_key, $json_meta_keys) &&
-							is_string($meta_value) ){
-							$post['post_meta'][$meta_key] = json_decode($post['post_meta'][$meta_key], true);
-						}
+			if( is_array( $post['post_meta'] ) ){
+				// Parse known JSON keys from JSON strings into objects
+				global $pwSiteGlobals;
+				// Get known metakeys from the theme configuration
+				$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_postmeta.json_meta_keys' );
+				// If there are no set fields, define empty array
+				if( !$json_meta_keys ) $json_meta_keys = array();
+				// Add the globally defined postmeta key
+				$json_meta_keys[] = pw_postmeta_key;
+				// Iterate through each post_meta value
+				foreach( $post['post_meta'] as $meta_key => $meta_value ){
+					// If the key is known to be a JSON field
+					if(
+						in_array($meta_key, $json_meta_keys) &&
+						is_string($meta_value) ){
+						// Decode it from JSON into a PHP array
+						$post['post_meta'][$meta_key] = json_decode($post['post_meta'][$meta_key], true);
 					}
 				}
 			}

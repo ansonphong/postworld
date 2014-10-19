@@ -17,13 +17,7 @@ global $post;
 		id="infinite_admin"
 		class="pw-metabox metabox-side metabox-layout">
 		<?php
-
-			// Include the UI template
-			//$metabox_template = pw_get_template ( 'admin', 'metabox-layout', 'php', 'dir' );
-			//include $metabox_template;
-
 			echo i_layout_single_options( array( 'context'	=>	'postAdmin' ) );
-
 			// Action Hook
 			do_action('pw_layout_metabox_templates');
 		?>
@@ -32,10 +26,6 @@ global $post;
 		
 		<!-- DEV : Test Output -->
 		<hr><pre>POST : {{ post | json }}</pre>
-		<!--
-		<hr><pre>PARENT POST ID : {{ parent_post.ID | json }}</pre>
-		<hr><pre>QUERY : {{ query | json }}</pre>
-		-->
 	</div>	
 </div>
 
@@ -48,11 +38,13 @@ global $post;
 	pwLayoutMetabox.controller('pwLayoutMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
+
+			/// LOAD IN DATA SOURCES ///
 			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
 			$scope.iSidebars = <?php echo json_encode( i_get_option( array( 'option_name' => 'i-sidebars' ) ) ); ?>;
 			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
 			$scope.iLayouts = <?php echo json_encode( i_get_option( array( 'option_name' => 'i-layouts' ) ) ); ?>;
-			$scope.post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta(all)') ) ); ?>;
+			$scope.post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') ) ); ?>;
 
 			// Create layout object
 			if( !$_.objExists( $scope.post, 'post_meta.layout' ) )

@@ -78,6 +78,7 @@ function pw_layout_meta_save( $post_id ){
         return $post_id;
 	// Get the JSON string which represents the post to be saved 
 	$post = $_POST['pw_layout_post'];
+
 	// Strip slashes from the string
 	$post = stripslashes( $post );
 	// Decode the object from JSON into Array
@@ -86,9 +87,22 @@ function pw_layout_meta_save( $post_id ){
 	if( empty($post) )
 		return false;
 
-    // TODO : PW Set WP Post Meta
-		
+    $layout_meta = pw_get_obj( $post, 'post_meta.' . pw_postmeta_key . '.layout' );
 
+    pw_log( "layout_meta : " . $layout_meta );
+
+    if( $layout_meta !== false )
+        pw_set_wp_postmeta(
+            array(
+                "post_id"   =>  $post_id,
+                "meta_key"  =>  pw_postmeta_key,
+                "sub_key"   =>  'layout',
+                "value"     =>  $layout_meta,
+                )
+            );
+
+    // TODO : PW Set WP Post Meta
+	
     return $post_id;
 }
 

@@ -14,7 +14,6 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 	}
 }]);
 
-
 postworld.controller( 'pwUiCtrl',
 	[ '$scope', '$timeout', '_', '$log',
 	function( $scope, $timeout, $_, $log ){
@@ -28,7 +27,6 @@ postworld.controller( 'pwUiCtrl',
 	}
 
 	$scope.toggleView = function( viewId ){
-		$log.debug( 'toggleView', viewId );
 		// If the view is registered
 		if( $_.objExists( $scope, 'uiViews.'+viewId ) )
 			// Invert the value
