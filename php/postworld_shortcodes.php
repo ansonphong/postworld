@@ -69,9 +69,14 @@ add_shortcode( 'callout-xl', 'pw_general_shortcode' );
 add_shortcode( 'br', 'pw_general_shortcode' );
 add_shortcode( 'hr', 'pw_general_shortcode' );
 
+add_shortcode( 'h1', 'pw_general_shortcode' );
+add_shortcode( 'h2', 'pw_general_shortcode' );
+add_shortcode( 'h3', 'pw_general_shortcode' );
+add_shortcode( 'h4', 'pw_general_shortcode' );
+
+
 /////////////// ADVANCED SHORTCODES //////////
 include 'shortcodes/menu/menu.php';
-include 'shortcodes/headings/headings.php';
 include 'shortcodes/fonts/fonts.php';
 include 'shortcodes/slider/slider.php';
 include 'shortcodes/gallery/gallery.php';

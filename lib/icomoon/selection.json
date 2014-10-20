@@ -4111,6 +4111,30 @@
 		{
 			"icon": {
 				"paths": [
+					"M1024 282.5l-90.506-90.5-178.746 178.752-101.5-101.502 178.75-178.75-90.5-90.5-178.75 178.75-114.748-114.75-86.626 86.624 512.002 512.002 86.624-86.624-114.752-114.752zM274.748 749.254c165.768 165.762 385.194 36.362 519.292-75.464l-443.824-443.824c-111.824 134.096-241.228 353.522-75.468 519.288zM191.998 704.004l127.994 127.996-191.992 191.992-127.996-127.994z"
+				],
+				"tags": [
+					"power cord",
+					"cord",
+					"plugin",
+					"extension"
+				],
+				"grid": 16
+			},
+			"properties": {
+				"id": 178,
+				"order": 329,
+				"prevSize": 32,
+				"code": 59002,
+				"name": "plugin",
+				"ligatures": ""
+			},
+			"setIdx": 8,
+			"iconIdx": 178
+		},
+		{
+			"icon": {
+				"paths": [
 					"M64 192h896v192h-896zM64 448h896v192h-896zM64 704h896v192h-896z"
 				],
 				"tags": [
@@ -6500,7 +6524,7 @@
 			"properties": {
 				"id": 2,
 				"order": 227,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61442,
 				"name": "search",
 				"ligatures": ""
@@ -6523,7 +6547,7 @@
 			"properties": {
 				"id": 9,
 				"order": 201,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61449,
 				"name": "th-large2",
 				"ligatures": ""
@@ -6545,7 +6569,7 @@
 			"properties": {
 				"id": 10,
 				"order": 200,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61450,
 				"name": "th",
 				"ligatures": ""
@@ -6567,7 +6591,7 @@
 			"properties": {
 				"id": 11,
 				"order": 199,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61451,
 				"name": "th-list2",
 				"ligatures": ""
@@ -6589,7 +6613,7 @@
 			"properties": {
 				"id": 12,
 				"order": 176,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61452,
 				"name": "check",
 				"ligatures": ""
@@ -6612,7 +6636,7 @@
 			"properties": {
 				"id": 13,
 				"order": 177,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61453,
 				"name": "close",
 				"ligatures": ""
@@ -6635,7 +6659,7 @@
 			"properties": {
 				"id": 18,
 				"order": 226,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61459,
 				"name": "gear",
 				"ligatures": ""
@@ -6658,7 +6682,7 @@
 			"properties": {
 				"id": 19,
 				"order": 225,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61460,
 				"name": "trash-o",
 				"ligatures": ""
@@ -6680,7 +6704,7 @@
 			"properties": {
 				"id": 22,
 				"order": 224,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61463,
 				"name": "clock-o",
 				"ligatures": ""
@@ -6703,7 +6727,7 @@
 			"properties": {
 				"id": 29,
 				"order": 235,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61470,
 				"name": "rotate-right",
 				"ligatures": ""
@@ -6725,7 +6749,7 @@
 			"properties": {
 				"id": 30,
 				"order": 234,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61473,
 				"name": "refresh",
 				"ligatures": ""
@@ -6748,7 +6772,7 @@
 			"properties": {
 				"id": 34,
 				"order": 233,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61477,
 				"name": "headphones",
 				"ligatures": ""
@@ -6770,7 +6794,7 @@
 			"properties": {
 				"id": 60,
 				"order": 220,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61504,
 				"name": "edit",
 				"ligatures": ""
@@ -6793,7 +6817,7 @@
 			"properties": {
 				"id": 64,
 				"order": 219,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61508,
 				"name": "quick-edit",
 				"ligatures": ""
@@ -6815,7 +6839,7 @@
 			"properties": {
 				"id": 72,
 				"order": 309,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61516,
 				"name": "pause",
 				"ligatures": ""
@@ -6837,7 +6861,7 @@
 			"properties": {
 				"id": 85,
 				"order": 326,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61530,
 				"name": "info-circle",
 				"ligatures": ""
@@ -6859,7 +6883,7 @@
 			"properties": {
 				"id": 86,
 				"order": 231,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61531,
 				"name": "crosshairs",
 				"ligatures": ""
@@ -6882,7 +6906,7 @@
 			"properties": {
 				"id": 107,
 				"order": 232,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61554,
 				"name": "plane",
 				"ligatures": ""
@@ -6905,7 +6929,7 @@
 			"properties": {
 				"id": 118,
 				"order": 307,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61565,
 				"name": "arrows-v",
 				"ligatures": ""
@@ -6927,7 +6951,7 @@
 			"properties": {
 				"id": 119,
 				"order": 308,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61566,
 				"name": "arrows-h",
 				"ligatures": ""
@@ -6951,7 +6975,7 @@
 			"properties": {
 				"id": 125,
 				"order": 221,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61573,
 				"name": "gears",
 				"ligatures": ""
@@ -6973,7 +6997,7 @@
 			"properties": {
 				"id": 153,
 				"order": 324,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61603,
 				"name": "certificate",
 				"ligatures": ""
@@ -6995,7 +7019,7 @@
 			"properties": {
 				"id": 158,
 				"order": 318,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61608,
 				"name": "arrow-circle-left",
 				"ligatures": ""
@@ -7017,7 +7041,7 @@
 			"properties": {
 				"id": 159,
 				"order": 320,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61609,
 				"name": "arrow-circle-right",
 				"ligatures": ""
@@ -7039,7 +7063,7 @@
 			"properties": {
 				"id": 160,
 				"order": 319,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61610,
 				"name": "arrow-circle-up",
 				"ligatures": ""
@@ -7061,7 +7085,7 @@
 			"properties": {
 				"id": 161,
 				"order": 321,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61611,
 				"name": "arrow-circle-down",
 				"ligatures": ""
@@ -7083,7 +7107,7 @@
 			"properties": {
 				"id": 164,
 				"order": 202,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61614,
 				"name": "tasks",
 				"ligatures": ""
@@ -7107,7 +7131,7 @@
 			"properties": {
 				"id": 169,
 				"order": 187,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61633,
 				"name": "chain",
 				"ligatures": ""
@@ -7130,7 +7154,7 @@
 			"properties": {
 				"id": 171,
 				"order": 186,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61635,
 				"name": "flask",
 				"ligatures": ""
@@ -7154,7 +7178,7 @@
 			"properties": {
 				"id": 177,
 				"order": 217,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61641,
 				"name": "nav",
 				"ligatures": ""
@@ -7177,7 +7201,7 @@
 			"properties": {
 				"id": 183,
 				"order": 203,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61648,
 				"name": "magic",
 				"ligatures": ""
@@ -7200,7 +7224,7 @@
 			"properties": {
 				"id": 190,
 				"order": 205,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61655,
 				"name": "caret-down",
 				"ligatures": ""
@@ -7223,7 +7247,7 @@
 			"properties": {
 				"id": 191,
 				"order": 204,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61656,
 				"name": "caret-up",
 				"ligatures": ""
@@ -7246,7 +7270,7 @@
 			"properties": {
 				"id": 192,
 				"order": 206,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61657,
 				"name": "caret-left",
 				"ligatures": ""
@@ -7269,7 +7293,7 @@
 			"properties": {
 				"id": 193,
 				"order": 207,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61658,
 				"name": "caret-right",
 				"ligatures": ""
@@ -7292,7 +7316,7 @@
 			"properties": {
 				"id": 202,
 				"order": 208,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61668,
 				"name": "dashboard",
 				"ligatures": ""
@@ -7314,7 +7338,7 @@
 			"properties": {
 				"id": 203,
 				"order": 209,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61669,
 				"name": "comment-o",
 				"ligatures": ""
@@ -7336,7 +7360,7 @@
 			"properties": {
 				"id": 204,
 				"order": 210,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61670,
 				"name": "comments-o",
 				"ligatures": ""
@@ -7359,7 +7383,7 @@
 			"properties": {
 				"id": 209,
 				"order": 211,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61675,
 				"name": "lightbulb-o",
 				"ligatures": ""
@@ -7381,7 +7405,7 @@
 			"properties": {
 				"id": 219,
 				"order": 212,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61686,
 				"name": "file-text-o",
 				"ligatures": ""
@@ -7403,7 +7427,7 @@
 			"properties": {
 				"id": 227,
 				"order": 322,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61694,
 				"name": "plus-square",
 				"ligatures": ""
@@ -7425,7 +7449,7 @@
 			"properties": {
 				"id": 240,
 				"order": 170,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61708,
 				"name": "circle-o",
 				"ligatures": ""
@@ -7448,7 +7472,7 @@
 			"properties": {
 				"id": 241,
 				"order": 171,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61709,
 				"name": "quote-left",
 				"ligatures": ""
@@ -7471,7 +7495,7 @@
 			"properties": {
 				"id": 242,
 				"order": 172,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61710,
 				"name": "quote-right",
 				"ligatures": ""
@@ -7494,7 +7518,7 @@
 			"properties": {
 				"id": 243,
 				"order": 218,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61712,
 				"name": "spinner-1",
 				"ligatures": ""
@@ -7516,7 +7540,7 @@
 			"properties": {
 				"id": 249,
 				"order": 325,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61720,
 				"name": "smile",
 				"ligatures": ""
@@ -7539,7 +7563,7 @@
 			"properties": {
 				"id": 252,
 				"order": 213,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61723,
 				"name": "gamepad",
 				"ligatures": ""
@@ -7561,7 +7585,7 @@
 			"properties": {
 				"id": 254,
 				"order": 2,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61725,
 				"name": "flag-o",
 				"ligatures": ""
@@ -7584,7 +7608,7 @@
 			"properties": {
 				"id": 262,
 				"order": 223,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61734,
 				"name": "code-fork",
 				"ligatures": ""
@@ -7607,7 +7631,7 @@
 			"properties": {
 				"id": 265,
 				"order": 327,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61737,
 				"name": "info",
 				"ligatures": ""
@@ -7630,7 +7654,7 @@
 			"properties": {
 				"id": 271,
 				"order": 222,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61744,
 				"name": "microphone",
 				"ligatures": ""
@@ -7652,7 +7676,7 @@
 			"properties": {
 				"id": 284,
 				"order": 3,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61757,
 				"name": "anchor",
 				"ligatures": ""
@@ -7674,7 +7698,7 @@
 			"properties": {
 				"id": 292,
 				"order": 181,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61766,
 				"name": "minus-square",
 				"ligatures": ""
@@ -7697,7 +7721,7 @@
 			"properties": {
 				"id": 293,
 				"order": 180,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61767,
 				"name": "minus-square-o",
 				"ligatures": ""
@@ -7719,7 +7743,7 @@
 			"properties": {
 				"id": 296,
 				"order": 179,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61770,
 				"name": "check-square",
 				"ligatures": ""
@@ -7741,7 +7765,7 @@
 			"properties": {
 				"id": 297,
 				"order": 178,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61771,
 				"name": "edit-square",
 				"ligatures": ""
@@ -7763,7 +7787,7 @@
 			"properties": {
 				"id": 312,
 				"order": 215,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61787,
 				"name": "file-5",
 				"ligatures": ""
@@ -7785,7 +7809,7 @@
 			"properties": {
 				"id": 313,
 				"order": 214,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61788,
 				"name": "file-text",
 				"ligatures": ""
@@ -7808,7 +7832,7 @@
 			"properties": {
 				"id": 320,
 				"order": 315,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61796,
 				"name": "thumbs-up",
 				"ligatures": ""
@@ -7831,7 +7855,7 @@
 			"properties": {
 				"id": 321,
 				"order": 316,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61797,
 				"name": "thumbs-down",
 				"ligatures": ""
@@ -7853,7 +7877,7 @@
 			"properties": {
 				"id": 345,
 				"order": 216,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61822,
 				"name": "skype",
 				"ligatures": ""
@@ -7876,7 +7900,7 @@
 			"properties": {
 				"id": 367,
 				"order": 323,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61846,
 				"name": "plus-square-o",
 				"ligatures": ""
@@ -7898,7 +7922,7 @@
 			"properties": {
 				"id": 393,
 				"order": 184,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61874,
 				"name": "cube",
 				"ligatures": ""
@@ -7921,7 +7945,7 @@
 			"properties": {
 				"id": 394,
 				"order": 185,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61875,
 				"name": "cubes",
 				"ligatures": ""
@@ -7944,7 +7968,7 @@
 			"properties": {
 				"id": 405,
 				"order": 183,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61886,
 				"name": "soundcloud",
 				"ligatures": ""
@@ -7966,7 +7990,7 @@
 			"properties": {
 				"id": 406,
 				"order": 182,
-				"prevSize": 14,
+				"prevSize": 28,
 				"code": 61888,
 				"name": "database",
 				"ligatures": ""
@@ -8007,9 +8031,10 @@
 		},
 		"historySize": 100,
 		"showCodes": false,
-		"search": "spinner",
+		"search": "plugin",
 		"showLiga": true,
 		"gridSize": 16,
-		"showGrid": true
+		"showGrid": true,
+		"showSVGs": true
 	}
 }

@@ -55,6 +55,7 @@ postworld.controller('postController',
 		$window.pwPostFunctions( $scope );
 
 
+	/*
 	// Watch for changes to the post
 	$scope.$watchCollection( 'post', function(){
 
@@ -72,10 +73,8 @@ postworld.controller('postController',
 				}
 			}
 		}
-
-
 	});
-
+	*/
 
 	
 

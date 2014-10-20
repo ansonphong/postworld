@@ -209,10 +209,9 @@ function i_print_layout( $vars ){
 		)[$subdir];
 
 
-
-
 	///// INCLUDE TEMPLATE /////
 	$template_path = $layout_templates[ $vars['template'] ];
+
 	$html = pw_ob_include( $template_path, $vars );
 
 	///// ECHO /////

@@ -17,7 +17,6 @@ function i_general_shortcode( $atts, $content = null, $tag ) {
 	return do_shortcode($shortcode);
 }
 
-include_once 'shortcodes/shortcode-headings.php';
 include_once 'shortcodes/shortcode-columns.php';
 include_once 'shortcodes/shortcode-slider.php';
 include_once 'shortcodes/shortcode-pagelist.php';

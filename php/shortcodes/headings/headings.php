@@ -9,7 +9,7 @@ function pw_headings_shortcode( $atts, $content = null, $tag ) {
 	// Start Output Buffering
 	ob_start();
 	// Get the template
-	include pw_get_shortcode_template( "heading-" . strtolower($tag) );
+	include pw_get_shortcode_template( strtolower($tag) );
 	// Set included file into a string/variable
 	$shortcode = ob_get_contents();
 	// End Output Buffering

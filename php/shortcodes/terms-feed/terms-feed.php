@@ -180,6 +180,8 @@ function pw_get_term_feed( $vars ){
 	//echo "REQUIRE IMAGE : " . json_encode($require_image) . " // ";
 	$include_galleries = (bool) pw_get_obj( $vars, 'options.include_galleries' );
 
+
+	////////// GET TERMS //////////
 	// Get the terms with get_terms()
 	$terms = get_terms( $vars['terms']['taxonomies'], $vars['terms']['args'] );
 	//$terms = pw_to_array( $terms );
@@ -255,6 +257,8 @@ function pw_get_term_feed( $vars ){
 					// Add the gallery posts to the new posts array
 					$new_posts = array_merge( $new_posts, $gallery_posts );
 
+					
+
 					///// OPTION : MAX POSTS /////
 					// If the maximum number of posts is reached already, stop here
 					if( $max_posts && count( $new_posts ) >= $max_posts ){
@@ -271,6 +275,10 @@ function pw_get_term_feed( $vars ){
 			///// OPTION : REQUIRE IMAGE /////
 			if( $require_image )
 				$posts = pw_require_image( $posts );
+
+			// Go through the posts and remove duplicate items
+			// TODO : Fix/test this function, wasn't working as expected
+			//$posts = pw_unique_sub_key( $posts, 'image.sizes.full.url' );
 
 			///// PROCESS DATA /////
 			// Convert name back to normal characters

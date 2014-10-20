@@ -938,6 +938,10 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			// Apply all content filters
 			$post['post_content'] = apply_filters('the_content', $post['post_content']);
+
+			// Trim off whitespace at beginning and end of post content
+			$post['post_content'] = trim( $post['post_content'] );
+
 		}
 
 	///// POST EXCERPT /////
@@ -1013,6 +1017,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 	$post = apply_filters( 'pw_get_post_complete_filter', $post );
 	
+
+
 	return $post;
 
 }

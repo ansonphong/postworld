@@ -6,6 +6,41 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+
+
+
+function pw_unique_key( $posts, $key = 'ID' ){
+	$tmp = array();
+	$unique_posts = array();
+	foreach( $posts as $post ){
+		if (!in_array($post[$key], $tmp)) {
+			$unique_posts[] = $post;
+			$tmp[] = $post[$key];
+		}
+	}
+	return $unique_posts;
+}
+
+
+function pw_unique_sub_key( $posts, $sub_key = 'ID' ){
+	$tmp = array();
+	$unique_posts = array();
+	foreach( $posts as $post ){
+		$value = pw_get_obj( $post, $sub_key );
+		
+		if( $value == false )
+			return $posts;
+
+		if (!in_array($value, $tmp)) {
+			$unique_posts[] = $post;
+			$tmp[] = $value;
+		}
+	}
+	return $unique_posts;
+}
+
+
+
 function pw_log( $message ){
 	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-dev.txt");
 }
