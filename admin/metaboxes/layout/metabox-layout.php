@@ -74,8 +74,9 @@ function pw_layout_meta_save( $post_id ){
 	// NOTE : Everything in the top portion of this function will be executed twice
 
 	// Stop autosave to preserve meta data
-	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
+    if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
         return $post_id;
+    
 	// Get the JSON string which represents the post to be saved 
 	$post = $_POST['pw_layout_post'];
 

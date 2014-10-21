@@ -57,14 +57,13 @@ function i_child_postmeta_setup(){
 
 ///// SAVE THE DATA /////
 function i_postmeta_options_save( $post_id ){
+	// Stop autosave to preserve meta data
+	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
+        return $post_id;
 
 	//pw_log( "i_postmeta_options_save : POST ID : " . $post_id  );
 
 	$meta_key = "i_meta";
-
-	// STOP FROM DOING AUTOSAVE TO PRESERVE META DATA
-	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
-        return $post_id;
 
     $iMeta = $_POST['i_meta'];
 

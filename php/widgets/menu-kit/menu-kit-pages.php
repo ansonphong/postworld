@@ -98,7 +98,8 @@ function menu_kit_pages($OPTIONS){
 			foreach($sibling_pages as $page){
 				if ($page->ID == $current_page){
 					$sibling_menu .= "<li class='sibling_menu_item selected'><a href='" . get_permalink( $page->ID ) . "'>" .  $page->post_title . "</a></li>";
-					$sibling_menu .= "<div style='margin-left:20px;'>".$child_menu."</div>";
+					if( !empty($child_menu) )
+						$sibling_menu .= "<div class='child_menu'>".$child_menu."</div>";
 				}
 				else
 					$sibling_menu .= "<li class='sibling_menu_item'><a href='" . get_permalink( $page->ID ) . "'>" .  $page->post_title . "</a></li>";
@@ -113,7 +114,8 @@ function menu_kit_pages($OPTIONS){
 			foreach($parent_pages as $page){
 				if ($page->ID == $parent_page){
 					$parent_menu .= "<li class='parent_menu_item selected'><a href='" . get_permalink( $page->ID ) . "'>" .  $page->post_title . "</a></li>";
-					$parent_menu .= "<li style='margin-left:20px;'>".$sibling_menu."</div>";
+					if( !empty($sibling_menu) )
+						$parent_menu .= "<div class='sibling_menu'>".$sibling_menu."</div>";
 				}
 				else
 					$parent_menu .= "<li class='parent_menu_item'><a href='" . get_permalink( $page->ID ) . "'>" .  $page->post_title . "</a></li>";
@@ -123,12 +125,14 @@ function menu_kit_pages($OPTIONS){
 		
 		
 		///// INSERT THE RIGHT MENU /////
+		echo '<div class="postworld menu-kit">';
 		if ($parent_menu_exists)
 			echo $parent_menu;
 		else if ($sibling_menu_exists)
 			echo $sibling_menu;
 		else if ($child_menu_exists)
 			echo $child_menu;
+		echo '</div>';
 			
 	}
 	
