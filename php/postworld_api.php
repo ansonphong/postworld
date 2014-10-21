@@ -301,7 +301,7 @@ function pw_get_wp_postmeta($vars){
 	if( !isset( $vars['meta_key'] ) )
 		$vars['meta_key'] = pw_postmeta_key;
 
-	if( !isset( $vars['meta_key'] ) ){
+	if( !isset( $vars['post_id'] ) ){
 		global $post;
 		$vars['post_id'] = $post->ID;
 	}

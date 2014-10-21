@@ -11,27 +11,22 @@
 		</div>
 		<h3>{{ parent_post.post_title }}</h3>
 		<hr class="thin">
-		<a ng-href="{{ parent_post.edit_post_link }}">
-			<button
-				type="button"
-				class="button button-small">
-				<i class="{{ labels.edit_icon }}"></i>
-				{{ labels.edit }}
-			</button></a>
-		<a ng-href="{{ parent_post.post_permalink }}" target="_blank">
-			<button
-				type="button"
-				class="button button-small">
-				<i class="{{ labels.view_icon }}"></i>
-				{{ labels.view }}
-			</button></a>
 		<button
 			type="button"
-			class="button button-small"
+			class="button button-small float-right"
 			ng-click="removePostParent();">
 			<i class="{{ labels.remove_icon }}"></i>
 			{{ labels.remove }}
 		</button>
+		<a ng-href="{{ parent_post.edit_post_link }}" target="_blank">
+			<i class="{{ labels.edit_icon }}"></i>
+			{{ labels.edit }}
+		</a>
+		&nbsp;
+		<a ng-href="{{ parent_post.post_permalink }}" target="_blank">
+			<i class="{{ labels.view_icon }}"></i>
+			{{ labels.view }}
+		</a>
 	</div>
 
 	<!-- SELECT PARENT POST -->

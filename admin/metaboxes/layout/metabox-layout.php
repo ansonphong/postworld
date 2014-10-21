@@ -89,7 +89,7 @@ function pw_layout_meta_save( $post_id ){
 
     $layout_meta = pw_get_obj( $post, 'post_meta.' . pw_postmeta_key . '.layout' );
 
-    pw_log( "layout_meta : " . $layout_meta );
+    //pw_log( "layout_meta : " . $layout_meta );
 
     if( $layout_meta !== false )
         pw_set_wp_postmeta(

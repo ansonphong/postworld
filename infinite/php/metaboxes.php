@@ -58,16 +58,22 @@ function i_child_postmeta_setup(){
 ///// SAVE THE DATA /////
 function i_postmeta_save( $post_id ){
 
+	pw_log( "i_postmeta_save : POST ID : " . $post_id  );
+
 	$meta_key = "i_meta";
 
 	// STOP FROM DOING AUTOSAVE TO PRESERVE META DATA
 	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
         return $post_id;
 
+    $iMeta = $_POST['i_meta'];
+
 	// SAVE I META
-	if( !empty( $_POST['i_meta'] ) && is_string( $_POST['i_meta'] ) ){
-		$iMeta_json = (string) sanitize_text_field($_POST['i_meta']);
-		$i_postmeta = update_post_meta( $post_id, $meta_key, $iMeta_json );
+	if( !empty( $iMeta ) && is_string( $iMeta ) ){
+		// Sanitize JSON string
+		$iMeta_json = (string) sanitize_text_field( $iMeta );
+		// Update the post meta
+		update_post_meta( $post_id, $meta_key, $iMeta_json );
 	}
 	
     return $post_id;

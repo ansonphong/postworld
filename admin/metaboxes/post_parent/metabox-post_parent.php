@@ -50,6 +50,8 @@ function pw_metabox_init_post_parent(){
             'view_icon'     =>  'icon-arrow-up-right-thin',
             'remove'        =>  'Remove',
             'remove_icon'   =>  'icon-close',
+            'change'        =>  'Change',
+            'change_icon'   =>  'icon-edit',
     		);
 
     	// Get labels from the site config

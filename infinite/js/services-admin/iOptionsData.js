@@ -214,9 +214,6 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-plugin",
 					},
 					{
-						class: "icon-plugin",
-					},
-					{
 						class: "icon-seal-1",
 					},
 					{
@@ -308,9 +305,6 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 					{
 						class: "icon-user",
-					},
-					{
-						class: "icon-bell",
 					},
 					{
 						class: "icon-bell",

@@ -37,9 +37,9 @@ function iGlobals(){
 	}
 
 	/// CONTEXT : LAYOUT ///
-	$context['layout'] = array();
+	//$context['layout'] = array();
 	// Set default layout ID as the context class
-	$context['layout']['id'] = $context['class'];
+	$context['id'] = $context['class'];
 
 	////////// SWITCH : CLASS //////////
 	$context['meta'] = array();
@@ -117,56 +117,51 @@ function iGlobals(){
 			// Check if taxonomy is builtin
 			if( isset( $taxonomy_obj ) && !$taxonomy_obj->_builtin )
 				// If it's a custom taxonomy, assign custom layout ID
-				$context['layout']['id'] = 'term_'.$taxonomy.'_' . $context['class'];
+				$context['id'] = 'term_'.$taxonomy.'_' . $context['class'];
 			// Don't break 'archive' case here.
 		case 'single':
 			// Check if the post type is builtin
 			if( isset( $post_type_obj ) && !$post_type_obj->_builtin )
 				// If it's a custom point type, assign custom layout ID
-				$context['layout']['id'] = 'cpt_'.$post_type.'_' . $context['class'];
+				$context['id'] = 'cpt_'.$post_type.'_' . $context['class'];
 			break;
 	}
 
 
+
 	////////// CURRENT LAYOUT //////////
-	///// GET : LAYOUT ID /////
-	$layout_context = false;
-
-	/// FROM : POST META : OVERRIDE ///
-	// Check for layout override in : post_meta.pw_meta.layout
-	$layout_context = pw_get_wp_postmeta( array( 'sub_key' => 'layout.id' ) );
-	
-	/// FROM : CONTEXT ///
-	// Set default layout based on context
-	if( !$layout_context || $layout_context == 'default' )
-		$layout_context = pw_get_obj( $context, 'layout.id' );
-	
-	/// FROM : DEFAULT ///
-	if( !$layout_context )
-		$layout_context = 'default';
-
-	// Apply filter so that $layout_context can be over-ridden
-	$layout_context = apply_filters( 'pw_layout_id', $layout_context );
-
-	//echo "LAYOUT CONTEXT : " . $layout_context;
-
-	///// GET : LAYOUT /////
 	$layout = false;
 
-	/// GET LAYOUT BASED ON CONTEXT ///
-	$layout = pw_get_obj( $i_layouts, $layout_context );
+	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
+	// Check for layout override in : post_meta.pw_meta.layout
+	$override_layout = pw_get_wp_postmeta( array( 'sub_key' => 'layout' ) );
 	
-	/// ID : DEFAULT LAYOUT : FALLBACK ///
-	if( !$layout || $layout['template'] == 'default' )
+	// If override layout exists
+	if( $override_layout != false && !empty( $override_layout ) ){
+		// Get the default layout, incase of incomplete values
+		$default_layout = pw_get_obj( $i_layouts, 'default' );
+		// Merge it with the default layout
+		$layout = array_replace_recursive( $default_layout, $override_layout );
+		$layout['context'] = 'post_meta';
+	}
+
+	/// GET LAYOUT : FROM CONTEXT ///
+	if( !$layout ){
+		// Get layout based on context
+		$layout = pw_get_obj( $i_layouts, $context['id'] );
+		$layout['context'] = $context['id'];
+	}
+
+	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
+	if( !$layout || $layout['template'] == 'default' ){
 		$layout = pw_get_obj( $i_layouts, 'default' );
+		$layout['context'] = 'default';
+	}
 
 	// Apply filter so that $layout can be over-ridden
 	$layout = apply_filters( 'pw_layout', $layout );
 
 	///// WRAP /////
-	// Embed the layout ID into the layout object
-	$layout['context'] = $layout_context;
-
 	////////// DEFINE GLOBALS //////////
 	global $iGlobals;
 	$iGlobals = array(
