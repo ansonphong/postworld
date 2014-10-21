@@ -22,7 +22,7 @@ global $post;
 			do_action('pw_post_parent_metabox_templates');
 		?>
 		<!-- HIDDEN FIELD -->
-		<input type="hidden" name="pw_post_parent_post" ng-value="post | json" style="width:100%;">
+		<input type="hidden" name="pw_post_parent_post" ng-value="ppPost | json" style="width:100%;">
 		
 		<!-- DEV : Test Output -->
 		<!--
@@ -44,7 +44,7 @@ global $post;
 			function( $scope, $pwData, $_, $log ) {
 
 			// This is the post object which is saved
-			$scope.post = <?php echo json_encode( $pw_post ); ?>;
+			$scope.ppPost = <?php echo json_encode( $pw_post ); ?>;
 			// The variables by which parent posts autocomplete are queried
 			$scope.query = <?php echo json_encode( $query ); ?>;
 			// Labels for the UI
@@ -68,14 +68,14 @@ global $post;
 			$scope.addPostParent = function( item ){
 				$log.debug( "PW METABOX : POST PARENT : addPostParent( $item ) : ", item );
 				// Set the ID as the post parent
-				$scope.post['post_parent'] = item.ID;
+				$scope.ppPost['post_parent'] = item.ID;
 				// Populate the parent post object
 				$scope.parent_post = item;
 			}
 
 			$scope.removePostParent = function(){
 				// Clear the post_parent field from the post
-				$scope.post['post_parent'] = 0;
+				$scope.ppPost['post_parent'] = 0;
 				// Clear the post_parent object
 				$scope.parent_post = false;
 				//alert('remove');

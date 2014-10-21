@@ -188,8 +188,10 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 				],
 			},
+
+			// TODO : Auto-generate this by PHP
 			'icon':{
-				'iconx':[
+				'icomoon':[
 					{
 						class: "icon-merkaba",
 					},
@@ -203,10 +205,19 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-globe",
 					},
 					{
-						class: "icon-seal-1",
+						class: "icon-globe-o",
 					},
 					{
-						class: "icon-seal-2",
+						class: "icon-globe-wire",
+					},
+					{
+						class: "icon-plugin",
+					},
+					{
+						class: "icon-plugin",
+					},
+					{
+						class: "icon-seal-1",
 					},
 					{
 						class: "icon-triadic-1",
@@ -245,6 +256,12 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-target",
 					},
 					{
+						class: "icon-target-2",
+					},
+					{
+						class: "icon-magnet",
+					},
+					{
 						class: "icon-alert",
 					},
 					{
@@ -269,6 +286,9 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-images",
 					},
 					{
+						class: "icon-ticket",
+					},
+					{
 						class: "icon-dice",
 					},
 					{
@@ -287,13 +307,19 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-cart",
 					},
 					{
+						class: "icon-user",
+					},
+					{
+						class: "icon-bell",
+					},
+					{
+						class: "icon-bell",
+					},
+					{
 						class: "icon-notebook",
 					},
 					{
 						class: "icon-keyboard",
-					},
-					{
-						class: "icon-drawer",
 					},
 					{
 						class: "icon-bubble",
@@ -305,7 +331,10 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-key",
 					},
 					{
-						class: "icon-wrench",
+						class: "icon-lock",
+					},
+					{
+						class: "icon-unlock",
 					},
 					{
 						class: "icon-settings",
@@ -338,6 +367,9 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-lab",
 					},
 					{
+						class: "icon-fire",
+					},
+					{
 						class: "icon-magnet",
 					},
 					{
@@ -366,6 +398,12 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 					{
 						class: "icon-atlas-o",
+					},
+					{
+						class: "icon-wrench",
+					},
+					{
+						class: "icon-gear",
 					},
 					{
 						class: "icon-gears",
@@ -426,6 +464,96 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 					{
 						class: "icon-hexagon-thin",
+					},
+					{
+						class: "icon-wordpress",
+					},
+					{
+						class: "icon-github",
+					},
+					{
+						class: "icon-github-circle",
+					},
+					{
+						class: "icon-console",
+					},
+					{
+						class: "icon-code",
+					},
+					{
+						class: "icon-embed",
+					},
+					{
+						class: "icon-pilcrow",
+					},
+					{
+						class: "icon-table",
+					},
+					{
+						class: "icon-eye",
+					},
+					{
+						class: "icon-flag",
+					},
+					{
+						class: "icon-arrow-up-left-circle",
+					},
+					{
+						class: "icon-arrow-up-circle",
+					},
+					{
+						class: "icon-arrow-up-right-circle",
+					},
+					{
+						class: "icon-arrow-right-circle",
+					},
+					{
+						class: "icon-arrow-down-right-circle",
+					},
+					{
+						class: "icon-arrow-down-circle",
+					},
+					{
+						class: "icon-arrow-down-left-circle",
+					},
+					{
+						class: "icon-arrow-left-circle",
+					},
+					{
+						class: "icon-tv",
+					},
+					{
+						class: "icon-screen",
+					},
+					{
+						class: "icon-laptop",
+					},
+					{
+						class: "icon-tablet",
+					},
+					{
+						class: "icon-mobile",
+					},
+					{
+						class: "icon-mobile-wide",
+					},
+					{
+						class: "icon-print",
+					},
+					{
+						class: "icon-phone",
+					},
+					{
+						class: "icon-phone-hang-up",
+					},
+					{
+						class: "icon-coin",
+					},
+					{
+						class: "icon-qrcode",
+					},
+					{
+						class: "icon-paint-format",
 					},
 				],
 				'glyphicons':[

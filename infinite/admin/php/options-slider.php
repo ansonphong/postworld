@@ -77,7 +77,7 @@ add_action( 'i_admin_options_metabox_scripts', 'i_metabox_slider_scripts' );
 
 <div ng-controller="iMetaboxSliderOptionsCtrl">
 	<div class="well">
-		<h3><span class="icon-md"><i class="icon-cog"></i></span> Get Slides From</h3>
+		<h3><i class="icon-gear"></i> Get Slides From</h3>
 		<div class="btn-group">
 			<label
 				ng-repeat="type in sliderOptions.slider.mode"
@@ -86,10 +86,12 @@ add_action( 'i_admin_options_metabox_scripts', 'i_metabox_slider_scripts' );
 			</label>
 		</div>
 
+		<hr class="thin">
+
 		<!--///// QUERY /////-->
 		<div ng-show="iMeta.header.slider.mode == 'query'">
-			<h4>Query</h4>
-			<hr>
+			<h3><i class="icon-search"></i> Query</h3>
+			<hr class="thin">
 			<div>
 				<div class="icon-md"><i class="icon-pushpin"></i></div>
 				<input type="checkbox"
@@ -97,30 +99,34 @@ add_action( 'i_admin_options_metabox_scripts', 'i_metabox_slider_scripts' );
 					ng-model="iMeta.header.slider.query_vars.this_post">
 					<label for="input-this_post">Include This Post</label>
 			</div>
-			<hr>
+			<hr class="thin">
 			<div class="icon-md"><i class="icon-image"></i></div>
 			<input type="checkbox"
 				id="input-hasimage"
 				ng-model="iMeta.header.slider.query_vars.has_image">
 				<label for="input-hasimage">Only include posts with an image</label>
-			<hr>
+			<hr class="thin">
 			<div class="icon-md"><i class="icon-tree"></i></div>
 			<input type="checkbox"
 				id="input-children"
 				ng-model="iMeta.header.slider.query_vars.show_children">
 				<label for="input-children">Show Child Posts</label>
-			<hr>
-			<div class="icon-md"><i class="icon-list-alt"></i></div>
+			<hr class="thin">
+
+			<label for="select-feature_tax" class="inner">
+				<i class="icon-th-list"></i> taxonomy
+			</label>
 			<select
 				class="labeled"
-				id="select-feature_term"
+				id="select-feature_tax"
 				ng-model="iMeta.header.slider.query_vars.tax_query_taxonomy"
 				ng-options="key as tax.labels.name for (key,tax) in tax_terms">
 				<option value="">Select Taxonomy</option>
 			</select>
-			<label for="select-feature_term"> taxonomy</label>
-			<br>
-			<div class="icon-md"><i class="icon-search"></i></div>
+
+			<label for="select-feature_term" class="inner">
+				<i class="icon-search"></i> term
+			</label>
 			<select
 				class="labeled"
 				id="select-feature_term"
@@ -128,40 +134,37 @@ add_action( 'i_admin_options_metabox_scripts', 'i_metabox_slider_scripts' );
 				ng-options="term.term_id as term.name group by term.parent_name for term in tax_terms[ iMeta.header.slider.query_vars.tax_query_taxonomy ].terms">
 				<option value="">Select Term</option>
 			</select>
-			<label for="select-feature_term"> term</label>
-			<hr>
+			
 		</div>
 
 		<!--///// QUERY / THIS POST /////-->
 		<div  ng-show="iMeta.header.slider.mode == 'query' || iMeta.header.slider.mode == 'this_post'">
-			<h4>Galleries</h4>
-			<hr>
+			<h3><i class="icon-images"></i> Galleries</h3>
+			<hr class="thin">
 			<div class="icon-md"><i class="icon-th"></i></div>
 			<input type="checkbox"
 				id="input-galleries"
 				ng-model="iMeta.header.slider.query_vars.include_galleries">
 				<label for="input-galleries">Include images found in galleries</label>
 			<div class="indent" ng-show="iMeta.header.slider.query_vars.include_galleries">
-				<hr>
+				<hr class="thin">
 				<div class="icon-md"><i class="icon-eye"></i></div>
 				<input type="checkbox"
 					id="input-only_galleries"
 					ng-model="iMeta.header.slider.query_vars.only_galleries">
 					<label for="input-only_galleries">Only show images from galleries</label>
-				<hr>
+				<hr class="thin">
 				<div class="icon-md"><i class="icon-eye-closed"></i></div>
 				<input type="checkbox"
 					id="input-hide_galleries"
 					ng-model="iMeta.header.slider.query_vars.hide_galleries">
 					<label for="input-hide_galleries">Hide galleries in the post content</label>
 			</div>
-			<hr>
 		</div>
 
 		<!--///// MENU /////-->
 		<div  ng-show="iMeta.header.slider.mode == 'menu'">
-			<hr>
-			<div class="icon-md"><i class="icon-th-list"></i></div>
+			<h3><i class="icon-nav"></i> Select Menu</h3>
 			<?php
 				echo i_select_menus( array(
 					'options_model'	=>	'options.menus',
@@ -173,7 +176,7 @@ add_action( 'i_admin_options_metabox_scripts', 'i_metabox_slider_scripts' );
 	</div>
 	
 	<div class="well">
-		<h3><span class="icon-md"><i class="icon-cog"></i></span> Settings</h3>
+		<h3><span class="icon-md"><i class="icon-gear"></i></span> Settings</h3>
 		<?php
 			echo i_select_slider_settings( array(
 				'ng_model' 	=> 'iMeta.header.slider',

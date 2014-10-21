@@ -33,7 +33,8 @@ ul{
 .dropdown{
 	ul.dropdown-menu{
 		&.grid{
-			min-width:260px;
+			min-width:200px;
+			@media @full{ min-width:500px; }
 			li{
 				display:inline-block;
 				&:hover{
@@ -42,7 +43,7 @@ ul{
 				}
 				&.select-icon{
 					box-sizing: border-box;
-					width:50px;
+					width:48px;
 					font-size:30px;
 					padding:10px 0;
 					text-align: center;
@@ -90,4 +91,5 @@ ul{
 .area-select-icon{
 	padding:10px 0;
 	font-size:32px;
+	text-align: center;
 }

@@ -9,7 +9,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	$shortcode_defaults = array(
 		"class" 	=> 	"",
 		"view" 		=> 	"list-h2o",
-		"max"		=>	3,
+		"max"		=>	50,
 		"orderby"	=>	"menu_order",
 	);
 

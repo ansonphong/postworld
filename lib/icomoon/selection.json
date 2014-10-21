@@ -3638,7 +3638,7 @@
 				"order": 78,
 				"prevSize": 32,
 				"code": 58976,
-				"name": "unlocked",
+				"name": "unlock",
 				"ligatures": ""
 			},
 			"setIdx": 8,
@@ -4080,7 +4080,7 @@
 				"order": 96,
 				"prevSize": 32,
 				"code": 59000,
-				"name": "target2",
+				"name": "target-2",
 				"ligatures": ""
 			},
 			"setIdx": 8,
@@ -4895,7 +4895,7 @@
 				"order": 134,
 				"prevSize": 32,
 				"code": 59036,
-				"name": "loop2",
+				"name": "repost",
 				"ligatures": ""
 			},
 			"setIdx": 8,
@@ -8031,7 +8031,7 @@
 		},
 		"historySize": 100,
 		"showCodes": false,
-		"search": "plugin",
+		"search": "",
 		"showLiga": true,
 		"gridSize": 16,
 		"showGrid": true,

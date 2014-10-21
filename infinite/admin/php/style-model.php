@@ -75,7 +75,7 @@ $i_style_language = array(
 				),
 			),
 		"var"	=>	array(
-			"icon"	=>	"icon-cog",
+			"icon"	=>	"icon-gear",
 			"label"	=>	array(
 				"en"	=>	"Variables",
 				"jp"	=>	"要素",

@@ -77,7 +77,7 @@
 						<!-- SELECTED ITEM -->
 						<span
 							dropdown-toggle
-							class="area-select-icon">
+							class="area-select area-select-icon">
 							<i class="{{ iFeedSettings.loading_icon }} icon-spin"></i>
 						</span>
 						<!-- MENU -->
