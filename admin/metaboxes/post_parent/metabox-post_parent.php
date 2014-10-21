@@ -157,6 +157,8 @@ function pw_post_parent_meta_init( $post, $metabox ){
 function pw_post_parent_meta_save( $post_id ){
 	// NOTE : Everything in the top portion of this function will be executed twice
 
+    //pw_log( 'pw_post_parent_meta_save : ' . $post_id );
+
 	// Stop autosave to preserve meta data
 	if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
         return $post_id;

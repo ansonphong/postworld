@@ -25,7 +25,7 @@ function i_postmeta_metabox_init(){
     }
 
     // Add a callback function to save any data a user enters in
-    add_action('save_post','i_postmeta_save');
+    add_action('save_post','i_postmeta_options_save');
 
 }
 
@@ -56,9 +56,9 @@ function i_child_postmeta_setup(){
 }
 
 ///// SAVE THE DATA /////
-function i_postmeta_save( $post_id ){
+function i_postmeta_options_save( $post_id ){
 
-	pw_log( "i_postmeta_save : POST ID : " . $post_id  );
+	//pw_log( "i_postmeta_options_save : POST ID : " . $post_id  );
 
 	$meta_key = "i_meta";
 
