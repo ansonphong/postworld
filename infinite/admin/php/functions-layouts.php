@@ -191,7 +191,7 @@ function i_layout_options(){
 		array_push( $iLayoutOptions['contexts'],
 			array(
 				"label"	=>	"Category : Archive",
-				"name"	=>	"category_archive",
+				"name"	=>	"category",
 				"icon"	=>	"icon-folder",
 				)
 		 );
@@ -200,7 +200,7 @@ function i_layout_options(){
 		array_push( $iLayoutOptions['contexts'],
 			array(
 				"label"	=>	"Tag : Archive",
-				"name"	=>	"tag_archive",
+				"name"	=>	"tag",
 				"icon"	=>	"icon-tags",
 				)
 		 );

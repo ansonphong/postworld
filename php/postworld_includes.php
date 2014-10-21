@@ -510,10 +510,14 @@ function pwGlobals_parse(){
 	$view_type = "default";
 	if( is_archive() && !is_date() )
 		$view_type = 'archive-term';
-	else if( is_archive() && is_date() && !is_year() )
-		$view_type = 'archive-date';
-	else if( is_archive() && is_date() && is_year() )
+	//else if( is_archive() && is_date() && !is_year() )
+	//	$view_type = 'archive-date';
+	else if( is_year() )
 		$view_type = 'archive-year';
+	else if( is_month() )
+		$view_type = 'archive-month';
+	else if( is_day() )
+		$view_type = 'archive-day';
 	else if( is_page() )
 		$view_type = 'page';
 	else if( is_page() )
@@ -543,12 +547,12 @@ function pwGlobals_parse(){
 			break;
 
 		// YEAR ARCHIVE
-		case "archive-term":
-			$viewdata["query"] = array(
-				"year"	=>	pw_to_array( $wp_query )['query_vars']['year'] ,
-				);
+		case "archive-year":
+			
 			break;
 	}
+
+	$viewdata["query"] = pw_to_array( $wp_query )['query_vars'];
 
 	$pw['view'] = pw_to_array( $viewdata );
 

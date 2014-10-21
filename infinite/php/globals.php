@@ -22,6 +22,8 @@ function iGlobals(){
 		$context['class'] = 'search'; 	// Must come before Archive	 
 	} else if( is_tag() ) {
 		$context['class'] = 'tag'; 		// Must come before Archive
+	} else if( is_category() ) {
+		$context['class'] = 'category'; // Must come before Archive
 	} else if( is_archive() ) {
 		$context['class'] = 'archive'; 	// Must come before Blog
 	} else if( is_blog_page() ){
