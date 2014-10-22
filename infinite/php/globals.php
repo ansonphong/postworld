@@ -1,4 +1,6 @@
 <?php
+
+
 function iGlobals(){
 	global $post;
 
@@ -13,30 +15,7 @@ function iGlobals(){
 
 	////////// CONTEXT //////////
 	$context = array();
-
-	/// DEFINE CLASS ///
-	// home / archive / blog / page / single / attachment / default
-	if( is_front_page() ){
-		 $context['class'] = 'home';
-	} else if( is_search() ) {
-		$context['class'] = 'search'; 	// Must come before Archive	 
-	} else if( is_tag() ) {
-		$context['class'] = 'tag'; 		// Must come before Archive
-	} else if( is_category() ) {
-		$context['class'] = 'category'; // Must come before Archive
-	} else if( is_archive() ) {
-		$context['class'] = 'archive'; 	// Must come before Blog
-	} else if( is_blog_page() ){
-		$context['class'] = 'blog';
-	} else if( is_page() ) {
-		$context['class'] = 'page';
-	} else if( is_single() ) {
-		$context['class'] = 'single';
-	} else if( is_attachment() ) {
-		$context['class'] = 'attachment';
-	} else {
-		$context['class'] = 'default';
-	}
+	$context['class'] = pw_context_class();
 
 	/// CONTEXT : LAYOUT ///
 	//$context['layout'] = array();
@@ -152,13 +131,17 @@ function iGlobals(){
 		// Get layout based on context
 		$layout = pw_get_obj( $i_layouts, $context['id'] );
 		$layout['context'] = $context['id'];
+		
 	}
 
 	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
-	if( !$layout || $layout['template'] == 'default' ){
+	if( !$layout || $layout['template'] == 'default' || $layout['layout'] == 'default' ){
 		$layout = pw_get_obj( $i_layouts, 'default' );
 		$layout['context'] = 'default';
 	}
+
+	// Autocorrect layout in case of migrations
+	$layout = pw_autocorrect_layout( $layout );
 
 	// Apply filter so that $layout can be over-ridden
 	$layout = apply_filters( 'pw_layout', $layout );

@@ -189,8 +189,6 @@ function i_print_layout( $vars ){
 	// Apply filter so that layout can be over-ridden
 	$vars = apply_filters( 'pw_print_layout', $vars );
 
-
-
 	// Set the default variables
 	$vars_defaults = array(
 		'function'	=>	'',
@@ -198,7 +196,7 @@ function i_print_layout( $vars ){
 		'template'	=>	$pw['layout']['template'],
 		'echo'		=>	true,
 		);
-	$vars = pw_set_defaults( $vars, $vars_defaults );
+	$vars = array_replace_recursive( $vars_defaults, $vars );
 
 	//echo json_encode($pw['layout']);
 
@@ -215,7 +213,6 @@ function i_print_layout( $vars ){
 
 	///// INCLUDE TEMPLATE /////
 	$template_path = $layout_templates[ $vars['template'] ];
-
 	$html = pw_ob_include( $template_path, $vars );
 
 	///// ECHO /////

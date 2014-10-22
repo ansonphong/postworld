@@ -798,4 +798,42 @@ function pw_get_menus(){
 }
 
 
+
+function pw_context_class(){
+	/// DEFINE CLASS ///
+	// home / archive / blog / page / single / attachment / default
+	if( is_front_page() ){
+		$class = 'home';
+	} else if( is_search() ) {
+		$class = 'search'; 		// Must come before Archive	 
+	} else if( is_tag() ) {
+		$class = 'tag'; 		// Must come before Archive
+	} else if( is_category() ) {
+		$class = 'category'; 	// Must come before Archive
+	} else if( is_archive() ) {
+		$class = 'archive'; 	// Must come before Blog
+	} else if( is_blog_page() ){
+		$class = 'blog';
+	} else if( is_page() ) {
+		$class = 'page';
+	} else if( is_single() ) {
+		$class = 'single';
+	} else if( is_attachment() ) {
+		$class = 'attachment';
+	} else {
+		$class = 'default';
+	}
+
+	return $class;
+
+}
+
+function pw_autocorrect_layout( $layout ){
+	// In the case of an old data model, auto-correct layout settings
+	if( isset( $layout['layout'] ) && !isset( $layout['template'] ) )
+		$layout['template'] = $layout['layout'];
+	return $layout;
+}
+
+
 ?>
