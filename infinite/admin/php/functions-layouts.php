@@ -5,43 +5,7 @@ function i_layout_options(){
 
 	///// DEFINE OPTIONS /////
 	$iLayoutOptions = array(
-		"contexts"	=>	array(
-			array(
-				"label"	=>	"Default",
-				"name"	=>	"default",
-				"icon"	=>	"icon-circle-medium",
-				),
-			array(
-				"label"	=>	"Home",
-				"name"	=>	"home",
-				"icon"	=>	"icon-home",
-				),
-			array(
-				"label"	=>	"Blog",
-				"name"	=>	"blog",
-				"icon"	=>	"icon-pushpin",
-				),
-			array(
-				"label"	=>	"Page",
-				"name"	=>	"page",
-				"icon"	=>	"icon-file",
-				),
-			array(
-				"label"	=>	"Post",
-				"name"	=>	"single",
-				"icon"	=>	"icon-pushpin",
-				),
-			array(
-				"label"	=>	"Archive",
-				"name"	=>	"archive",
-				"icon"	=>	"icon-th-list",
-				),
-			array(
-				"label"	=>	"Search",
-				"name"	=>	"search",
-				"icon"	=>	"icon-search",
-				),
-			),
+		"contexts"	=>	pw_get_contexts(),
 
 		"templates"	=>	array(
 			"default"	=>	array(
@@ -156,6 +120,67 @@ function i_layout_options(){
 
 		);
 
+	///// FILTER /////
+	// Filter results so that themes can over-ride settings
+	$iLayoutOptions = apply_filters( 'i_layout_options', $iLayoutOptions );	
+
+	return $iLayoutOptions;
+
+}
+
+
+
+function pw_get_contexts(){
+	global $pw;
+
+	///// GET FROM CACHE /////
+	// If the contexts have already been generated
+	// Get them directly from the global object
+	if( isset( $pw['contexts'] ) && is_array( $pw['contexts'] ) ){
+		$pw['contexts'] = apply_filters( 'pw_contexts', $pw['contexts'] );
+		return $pw['contexts'];
+	}
+
+	///// ADD STANDARD CONTEXTS /////
+	// TODO : Add Multi-language support, draw values from Language array
+	$contexts = array(
+		array(
+			"label"	=>	"Default",
+			"name"	=>	"default",
+			"icon"	=>	"icon-circle-medium",
+			),
+		array(
+			"label"	=>	"Home",
+			"name"	=>	"home",
+			"icon"	=>	"icon-home",
+			),
+		array(
+			"label"	=>	"Blog",
+			"name"	=>	"blog",
+			"icon"	=>	"icon-pushpin",
+			),
+		array(
+			"label"	=>	"Page",
+			"name"	=>	"page",
+			"icon"	=>	"icon-file",
+			),
+		array(
+			"label"	=>	"Post",
+			"name"	=>	"single",
+			"icon"	=>	"icon-pushpin",
+			),
+		array(
+			"label"	=>	"Archive",
+			"name"	=>	"archive",
+			"icon"	=>	"icon-th-list",
+			),
+		array(
+			"label"	=>	"Search",
+			"name"	=>	"search",
+			"icon"	=>	"icon-search",
+			),
+		);
+
 
 	///// ADD CUSTOM POST TYPES /////
 	// Get registered custom post types
@@ -165,20 +190,20 @@ function i_layout_options(){
 	foreach( $custom_post_types as $post_type ){
 
 		/// SINGLES ///
-		array_push( $iLayoutOptions['contexts'],
+		array_push( $contexts,
 			array(
 				"label"	=>	$post_type->labels->singular_name . " : Single",
-				"name"	=>	"cpt_" . $post_type->name . "_single",
+				"name"	=>	"single-" . $post_type->name,
 				"icon"	=>	"icon-cube",
 				)
 		 );
 
 		/// ARCHIVES ///
 		if( $post_type->has_archive )
-			array_push( $iLayoutOptions['contexts'],
+			array_push( $contexts,
 				array(
 					"label"	=>	$post_type->labels->singular_name . " : Archive",
-					"name"	=>	"cpt_" . $post_type->name . "_archive",
+					"name"	=>	"archive-cpt-" . $post_type->name,
 					"icon"	=>	"icon-cubes",
 					)
 			 );
@@ -188,7 +213,7 @@ function i_layout_options(){
 	///// ADD BUILTIN TAXONOMIES /////
 	/// CATEGORIES ///
 	if( taxonomy_exists('category') )
-		array_push( $iLayoutOptions['contexts'],
+		array_push( $contexts,
 			array(
 				"label"	=>	"Category : Archive",
 				"name"	=>	"category",
@@ -197,7 +222,7 @@ function i_layout_options(){
 		 );
 	/// TAGS ///
 	if( taxonomy_exists('post_tag') )
-		array_push( $iLayoutOptions['contexts'],
+		array_push( $contexts,
 			array(
 				"label"	=>	"Tag : Archive",
 				"name"	=>	"tag",
@@ -205,7 +230,6 @@ function i_layout_options(){
 				)
 		 );
 	
-
 	///// ADD CUSTOM TAXONOMIES /////
 	// Get registered custom taxonomies
 	$custom_taxonomies = get_taxonomies( array( '_builtin' => false, ), 'objects' );
@@ -215,23 +239,111 @@ function i_layout_options(){
 		/// TAXONOMIES ///
 		// Only custom taxonomies
 		if( !$taxonomy->_builtin )
-			array_push( $iLayoutOptions['contexts'],
+			array_push( $contexts,
 				array(
 					"label"	=>	$taxonomy->labels->singular_name . " : Archive",
-					"name"	=>	"term_" . $taxonomy->name . "_archive",
+					"name"	=>	"archive-taxonomy-" . $taxonomy->name,
 					"icon"	=>	"icon-cube-o",
 					)
 			 );
-
 	}
 
 
-	///// FILTER /////
-	// Filter results so that themes can over-ride settings
-	$iLayoutOptions = apply_filters( 'i_layout_options', $iLayoutOptions );	
+	///// ADD BUDDYPRESS /////
+	if( pw_is_buddypress_active() ){
 
-	return $iLayoutOptions;
+		$contexts[] = array(
+			"label"	=>	"BuddyPress",
+			"name"	=>	"buddypress",
+			"icon"	=>	"icon-plugin",
+			);
+
+		$contexts[] = array(
+			"label"	=>	"BuddyPress User",
+			"name"	=>	"buddypress-user",
+			"icon"	=>	"icon-user",
+			);
+
+	}
+
+	// Apply contexts filter
+	$contexts = apply_filters( 'pw_contexts', $contexts );
+	
+	// Set into globals
+	$pw['contexts'] = $contexts;
+
+	return $contexts;
+}
+
+
+
+function pw_get_current_layout(){
+
+	// An array with the current context(s)
+	$contexts = pw_current_context();
+	// Set Layout Variable
+	$layout = false;
+
+	$i_layouts = i_get_option( array( 'option_name' => 'i-layouts' ) );
+
+	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
+	// Check for layout override in : post_meta.pw_meta.layout
+	$override_layout = pw_get_wp_postmeta( array( 'sub_key' => 'layout' ) );
+	
+	// If override layout exists
+	if( $override_layout != false && !empty( $override_layout ) ){
+		$layout = $override_layout;
+		$layout['source'] = 'post_meta';
+	}
+
+	/// GET LAYOUT : FROM CONTEXT ///
+	if( !$layout ){
+		// Iterate through all the current contexts
+		// And find a match for it
+		foreach( $contexts as $context ){
+			$test_layout = pw_get_obj( $i_layouts, $context );
+			// If there is a match
+			if( (bool) $test_layout ){
+				$layout = $test_layout;
+				$layout['source'] = $context;
+			}
+		}
+	}
+
+	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
+	if( !$layout || $layout['template'] == 'default' || $layout['layout'] == 'default' ){
+		$layout = pw_get_obj( $i_layouts, 'default' );
+		$layout['source'] = 'default';
+	}
+
+	// FILL IN DEFAULT VALUES
+	// In case of incomplete layout values
+	if( pw_get_obj( $layout, 'source' ) != 'default' ){
+		// Get the default layout
+		$default_layout = pw_get_obj( $i_layouts, 'default' );
+		// Merge it with the default layout, in case values are missing
+		$layout = array_replace_recursive( $default_layout, $layout );
+
+		// TODO : THIS BETTER TECHNIQUE
+		// Fill in default header and footer
+		if( empty( $layout['header']['id'] ) )
+			$layout['header']['id'] = $default_layout['header']['id'];
+		if( empty( $layout['footer']['id'] ) )
+			$layout['footer']['id'] = $default_layout['footer']['id'];
+
+	}
+
+	//echo json_encode( $default_layout );
+
+	// Autocorrect layout in case of migrations
+	$layout = pw_autocorrect_layout( $layout );
+
+	// Apply filter so that $layout can be over-ridden
+	$layout = apply_filters( 'pw_layout', $layout );
+
+	return $layout;
 
 }
+
 
 ?>

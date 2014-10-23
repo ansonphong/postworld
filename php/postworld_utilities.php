@@ -799,33 +799,74 @@ function pw_get_menus(){
 
 
 
-function pw_context_class(){
+///// DEPRECIATED /////
+function pw_get_view_type(){
+	// Determine the view type
+	$view_type = "default";
+	if( is_archive() && !is_date() )
+		$view_type = 'archive-term';
+	//else if( is_archive() && is_date() && !is_year() )
+	//	$view_type = 'archive-date';
+	else if( is_year() )
+		$view_type = 'archive-year';
+	else if( is_month() )
+		$view_type = 'archive-month';
+	else if( is_day() )
+		$view_type = 'archive-day';
+	else if( is_page() )
+		$view_type = 'page';
+	else if( is_page() )
+		$view_type = 'page';
+	else if( is_single() )
+		$view_type = 'post';
+
+	return $view_type;
+}
+
+///// DEPRECIATED /////
+function pw_current_context_class(){
 	/// DEFINE CLASS ///
 	// home / archive / blog / page / single / attachment / default
-	if( is_front_page() ){
+
+	if( is_front_page() )
 		$class = 'home';
-	} else if( is_search() ) {
-		$class = 'search'; 		// Must come before Archive	 
-	} else if( is_tag() ) {
-		$class = 'tag'; 		// Must come before Archive
-	} else if( is_category() ) {
-		$class = 'category'; 	// Must come before Archive
-	} else if( is_archive() ) {
-		$class = 'archive'; 	// Must come before Blog
-	} else if( is_blog_page() ){
-		$class = 'blog';
-	} else if( is_page() ) {
+
+	if( is_archive() )
+		$class = 'archive'; 	
+
+	if( is_search() )
+		$class = 'search';
+
+	if( is_tag() )
+		$class = 'tag'; 		
+
+	if( is_category() )
+		$class = 'category'; 
+
+	//if( is_blog_page() )
+	//	$class = 'blog';
+
+	if( is_page() )
 		$class = 'page';
-	} else if( is_single() ) {
+
+	if( is_single() )
 		$class = 'single';
-	} else if( is_attachment() ) {
+
+	if( is_attachment() )
 		$class = 'attachment';
-	} else {
+
+	if( !isset( $class ) )
 		$class = 'default';
-	}
 
 	return $class;
 
+}
+
+
+
+function pw_is_buddypress_active(){
+	global $bp;
+	return ( !empty( $bp ) && function_exists('bp_is_active') ) ? true : false;
 }
 
 function pw_autocorrect_layout( $layout ){

@@ -144,6 +144,9 @@ include 'php/postworld_wizard.php';
 /////////////// OPTIONS ////////////////
 include 'php/postworld_options.php';
 
+/////////////// VIEW ////////////////
+include 'php/postworld_view.php';
+
 /////////////// ADMIN ////////////////
 include 'admin/postworld_admin.php';
 

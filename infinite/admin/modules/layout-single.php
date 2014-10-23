@@ -4,7 +4,6 @@
 	pw-ui
 	ui-views="{}">
 
-
 	<!-- DROPDOWN -->
 	<div
 		class="select-layout dropdown dropdown-layouts pull-left">

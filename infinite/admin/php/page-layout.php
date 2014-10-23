@@ -24,7 +24,14 @@
 			<tr ng-repeat="context in iLayoutOptions.contexts"
 				ng-class="context.name"
 				valign="top" class="module layout context">
-				<th scope="row"><i class="{{context.icon}}"></i> {{context.label}}</th>
+				<th scope="row">
+					<span
+						tooltip="{{context.name}}"
+						tooltip-popup-delay="333">
+						<i class="{{context.icon}}"></i>
+						{{context.label}}
+						</th>
+					</span>
 				<td>
 					<!-- SAVE BUTTON -->
 					<div class="save-right"><?php i_save_option_button('i-layouts','iLayouts'); ?></div>

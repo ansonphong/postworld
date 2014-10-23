@@ -505,55 +505,14 @@ function pwGlobals_parse(){
 	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
 	$viewdata['protocol'] = $protocol;
 
-	// GET TYPE
-	// Determine the view type
-	$view_type = "default";
-	if( is_archive() && !is_date() )
-		$view_type = 'archive-term';
-	//else if( is_archive() && is_date() && !is_year() )
-	//	$view_type = 'archive-date';
-	else if( is_year() )
-		$view_type = 'archive-year';
-	else if( is_month() )
-		$view_type = 'archive-month';
-	else if( is_day() )
-		$view_type = 'archive-day';
-	else if( is_page() )
-		$view_type = 'page';
-	else if( is_page() )
-		$view_type = 'page';
-	else if( is_single() )
-		$view_type = 'post';
+	// TYPE
+	$viewdata["type"] = pw_get_view_type();
 
-	// SET TYPE
-	$viewdata["type"] = $view_type;
-
-	///// SET META BY TYPE /////
-	
-	switch( $view_type ){
-
-		// POST OR PAGE
-		case "page":
-		case "post":
-			$viewdata["post"] = $GLOBALS['post'];
-			break;
-
-		// TERM ARCHIVE
-		case "archive-term":
-			$current_term = get_queried_object();
-			$viewdata["term"] = $current_term;
-			$viewdata["term"]->term_link = get_term_link( $current_term );
-			$viewdata["taxonomy"] = get_taxonomy( $current_term->taxonomy );
-			break;
-
-		// YEAR ARCHIVE
-		case "archive-year":
-			
-			break;
-	}
-
+	// VIEW
+	$viewdata["context"] = pw_current_context();
+	$viewmeta = pw_get_view_meta( $viewdata["context"] );
+	$viewdata = array_replace_recursive( $viewdata, $viewmeta );
 	$viewdata["query"] = pw_to_array( $wp_query )['query_vars'];
-
 	$pw['view'] = pw_to_array( $viewdata );
 
 	///// CURRENT USER /////

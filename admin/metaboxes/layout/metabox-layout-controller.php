@@ -48,7 +48,9 @@ global $post;
 
 			// Create layout object
 			if( !$_.objExists( $scope.post, 'post_meta.layout' ) )
-				$scope.post = $_.setObj( $scope.post, 'post_meta.layout', {} );
+				$scope.post = $_.setObj( $scope.post, 'post_meta.pw_meta.layout', {} );
+
+			// TODO : Add a PW global for pw_postmeta_key and pw_usermeta_key, use that global here
 
 			// ADD : If 'default' template selected, delete the layout object
 			// If no template selected, display as 'default'
