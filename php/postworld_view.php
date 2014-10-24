@@ -1,6 +1,11 @@
 <?php
 
 function pw_current_context(){
+	// This function maps out the current relavant contexts of the current page
+	// The contexts are generally listed in reverse priority order
+	// So the lower down on the list, the higher priority it will get when selecting a layout
+	// As the layout selection will select the last relavant context
+
 	$context = array();
 
 	/// DEFINE CLASS ///
@@ -74,7 +79,6 @@ function pw_current_context(){
 			$context[] = 'single-'.$post_type;
 	}
 
-
 	// BUDDYPRESS
 	if( pw_is_buddypress_active() ){
 		// SEE : plugins/buddypress/bp-core/bp-core-template.php
@@ -84,6 +88,10 @@ function pw_current_context(){
 		if( bp_is_user_activity() || bp_is_user() )
 			$context[] = "buddypress-user";
 	}
+
+
+	// Apply Filters
+	$context = apply_filters( 'pw_current_context', $context );
 
 	return $context;
 }

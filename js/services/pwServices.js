@@ -324,6 +324,7 @@ postworld.factory('_',
 			return input;
 		},
 
+		// Call Nonce or rndom string
 		makeHash: function( hashLength ){
 			if( _.isEmpty(hashLength) )
 				hashLength = 8;

@@ -67,6 +67,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
     return {
     	//feed_settings: feed_settings,
     	feeds: feeds,
+    	
     	templates: $pw.templates, 
 
     	partials: {},	// Used to store partials

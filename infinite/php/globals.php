@@ -15,9 +15,7 @@ function iGlobals(){
 	$context = array();
 	$context['class'] = pw_current_context_class();
 
-
 	$layout = pw_get_current_layout();
-
 
 	///// WRAP /////
 	////////// DEFINE GLOBALS //////////
