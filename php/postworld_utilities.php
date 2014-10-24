@@ -7,8 +7,6 @@
 //////////////////////////////////*/
 
 
-
-
 function pw_unique_key( $posts, $key = 'ID' ){
 	$tmp = array();
 	$unique_posts = array();
@@ -874,6 +872,49 @@ function pw_autocorrect_layout( $layout ){
 	if( isset( $layout['layout'] ) && !isset( $layout['template'] ) )
 		$layout['template'] = $layout['layout'];
 	return $layout;
+}
+
+
+
+function pw_clean_input($input) {
+
+  $search = array(
+    '@<script[^>]*?>.*?</script>@si',   // Strip out javascript
+    '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+    '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+    '@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
+  );
+
+    $output = preg_replace($search, '', $input);
+    return $output;
+  }
+
+function pw_sanitize($input) {
+    if (is_array($input)) {
+        foreach($input as $var=>$val) {
+            $output[$var] = pw_sanitize($val);
+        }
+    }
+    else {
+        if (get_magic_quotes_gpc()) {
+            $input = stripslashes($input);
+        }
+        $input  = pw_clean_input($input);
+        $output = mysql_real_escape_string($input);
+    }
+    return $output;
+}
+
+function pw_sanitize_key( $key ){
+	// Convert string to lower case
+	$key = strtolower($key);
+	// Replace Spaces with Underscores ( _ )
+	$key = preg_replace('/\s+/', '_', $key);
+	
+	// Sanitize (overkill)
+	//$key = pw_sanitize($key);
+
+	return $key;
 }
 
 

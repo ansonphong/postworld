@@ -57,7 +57,19 @@ infinite.controller('iAdminFeedsCtrl',
 				{
 					value: 'this_post_id',
 					name: 'This Post',
-					description: 'Exclude the current post'
+					description: 'Exclude the current post',
+				},
+			],
+			include_posts_from:[
+				{
+					value: 'this_post_id',
+					name: 'This Post',
+					description: 'Include the current post',
+				},
+				{
+					value: 'this_post_parent',
+					name: 'This Post Parent',
+					description: 'Include the current posts parent',
 				},
 			],
 		},
@@ -169,6 +181,8 @@ infinite.controller('iAdminFeedsCtrl',
 			delete $scope.selectedItem.query.post_parent;
 		if( $_.getObj( $scope, 'selectedItem.query.exclude_posts_from' ) == null )
 			delete $scope.selectedItem.query.exclude_posts_from;
+		if( $_.getObj( $scope, 'selectedItem.query.include_posts_from' ) == null )
+			delete $scope.selectedItem.query.include_posts_from;
 	}, 1);
 
 	

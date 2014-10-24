@@ -1228,29 +1228,46 @@ function pw_trash_post( $post_id ){
 
 	// Does post exist?
 	if( pw_post_exists( $post_id ) ){ 
-
-		///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
-		// The required capabilities of current action	
-		$required_capabilities = array();
 		// DETECT POST TYPE
 		$post = get_post($post_id, "ARRAY_A");
 		$post_type = $post["post_type"];
+		
+		///// GENERATE : ARRAY OF REQUIRED CAPABILITIES /////
+		// The required capabilities of current action	
+		$required_capabilities = array();
+		// The fallback capabilities which will also pass
+		// If the specific capabilities aren't configured
+		$post_type_object = get_post_type_object( $post_type );
+		if( $post_type_object->capability_type == 'post' )
+			$fallback_capabilities = array();
+		
 		// Does user own post?
 		if( $current_user_id == $post["post_author"] ){
-			// REQUIRE : DELETE
+			// REQUIRE : DELETE {{CPT}}
 			array_push( $required_capabilities,"delete_".$post_type."s" );
+			// FALLBACK : DELETE POSTS
+			if( isset( $fallback_capabilities ) )
+				array_push( $fallback_capabilities,"delete_posts" );
 		} else {
-			// REQUIRE : DELETE OTHERS
+			// REQUIRE : DELETE OTHERS {{CPT}}
 			array_push( $required_capabilities,"delete_others_".$post_type."s" );
+			// FALLBACK : DELETE OTHERS POSTS
+			if( isset( $fallback_capabilities ) )
+				array_push( $fallback_capabilities,"delete_others_posts" );
 		}
 		// Is the post published?
 		if( $post["post_status"] == "published" ){
-			// REQUIRE : DELETE PUBLISHED
+			// REQUIRE : DELETE PUBLISHED {{CPT}}
 			array_push( $required_capabilities,"delete_published_".$post_type."s" );
-
+			// FALLBACK : DELETE PUBLISHED POSTS
+			if( isset( $fallback_capabilities ) )
+				array_push( $fallback_capabilities,"delete_published_posts" );
 		} else if( $post["post_status"] == "private" ){
-			// REQUIRE : DELETE PRIVATE
+			// REQUIRE : DELETE PRIVATE {{CPT}}
 			array_push( $required_capabilities,"delete_private_".$post_type."s" );
+			// FALLBACK : DELETE PRIVATE POSTS
+			if( isset( $fallback_capabilities ) )
+				array_push( $fallback_capabilities,"delete_private_posts" );
 		}
 
 		///// VALIDATE CAPABILITIES /////
@@ -1259,12 +1276,30 @@ function pw_trash_post( $post_id ){
 		$no_capabilities = array();
 		// Cycle through each required capability
 		foreach( $required_capabilities as $cap ){
-			// Does it not match value : true : in the current user's
-			if ( $current_userdata['allcaps'][ $cap ] != true )
+			// If the capability isn't true for the current user
+			if ( $current_userdata['allcaps'][ $cap ] != true ){
 				// If any one is false, it sets false
 				$pass = false;
-			// Push failed capability to error message
-			array_push( $no_capabilities, $cap );
+				// Push failed capability to error message
+				array_push( $no_capabilities, $cap );
+			}
+		}
+		//// VALIDATE FALLBACK CAPABILITIES /////
+		// If the post type has the capabilities of 'post'
+		// Then check against the post capabilities
+		if( $pass == false && isset( $fallback_capabilities ) ){
+			// Reset to pass
+			$pass = true;
+			// Iterate through fallback capabilities
+			foreach( $fallback_capabilities as $cap ){
+				// If the capability isn't true for the current user
+				if ( $current_userdata['allcaps'][ $cap ] != true ){
+					// If any one is false, it sets false
+					$pass = false;
+					// Push failed capability to error message
+					array_push( $no_capabilities, $cap );
+				}
+			}
 		}
 		if ( $pass == false ){
 			return "User No Capabilities: " . json_encode( $no_capabilities );

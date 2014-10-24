@@ -219,7 +219,6 @@
 								ng-options="key as value for (key, value) in feedOptions.query.post_type"
 								ng-model="selectedItem.query.post_type"
 								multiple>
-								
 							</select>
 						</div>
 						<div class="pw-col-3">
@@ -372,6 +371,23 @@
 								ng-options="item.value as item.name for item in feedOptions.query.exclude_posts_from"
 								ng-model="selectedItem.query.exclude_posts_from"
 								tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
+								tooltip-placement="bottom">
+								<option value=""><?php ___('general.none'); ?></option>
+							</select>
+						</div>
+
+						<div class="pw-col-3">
+							<label
+								for="query-include_posts_from"
+								class="inner">
+								<?php ___('query.include_posts'); ?>
+							</label>
+							<select
+								id="query-include_posts_from"
+								class="labeled"
+								ng-options="item.value as item.name for item in feedOptions.query.include_posts_from"
+								ng-model="selectedItem.query.include_posts_from"
+								tooltip="{{ selectOptionObj( 'query.include_posts_from' ).description }}"
 								tooltip-placement="bottom">
 								<option value=""><?php ___('general.none'); ?></option>
 							</select>

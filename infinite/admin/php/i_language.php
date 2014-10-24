@@ -104,6 +104,8 @@ $i_language = array(
 		'post_parent_selector'	=>	'Select Post Parent',
 
 		'exclude_posts'			=>	'Exclude Posts',
+		
+		'include_posts'			=>	'Include Posts',
 
 		),
 

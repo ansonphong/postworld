@@ -12,7 +12,12 @@ add_action('admin_init','i_postmeta_metabox_init');
 function i_postmeta_metabox_init(){    
 
 	// Add to Post Types
-	$post_types = array('post','page');
+	global $pwSiteGlobals;
+	$post_types = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.pw_meta.post_types' );
+	// Default Post Types
+	if( !$post_types )
+		$post_types = array('post','page','art');
+
     foreach( $post_types as $post_type ){
         add_meta_box(
         	'i_child_meta',

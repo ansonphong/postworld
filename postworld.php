@@ -147,8 +147,12 @@ include 'php/postworld_options.php';
 /////////////// VIEW ////////////////
 include 'php/postworld_view.php';
 
+/////////////// BUDDYPRESS ////////////////
+include 'php/postworld_buddypress.php';
+
 /////////////// ADMIN ////////////////
 include 'admin/postworld_admin.php';
+
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
