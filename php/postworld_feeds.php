@@ -1,5 +1,88 @@
 <?php
 
+
+function pw_merge_galleries( $posts, $options ){
+	// Take in a post array
+	// Return a post array with all gallery posts merged into the main feed
+	/*
+	$options = array(
+		'move_galleries'	=>	[ boolean ],	// Delete galleries in posts
+		'require_image'		=>	[ boolean ],	// Require posts to have an image
+		'include_posts'		=>	[ boolean ],	// Include the posts too
+		'max_posts'			=> 	[ integer ],	// Maxmimum number of posts total
+		);
+	*/
+
+	///// SETUP DEFAULT OPTIONS /////
+	$default_options = $options = array(
+		'move_galleries'	=>	true,
+		'require_image'		=>	true,
+		'include_posts'		=>	true,
+		'max_posts'			=> 	0,
+		);
+	$options = array_merge( $default_options, $options );
+	
+	///// PROCESS POSTS /////
+	$newPosts = array();
+
+	// Iterate through each post
+	foreach( $posts as $post ){
+
+		// Get the posts from the gallery
+		$gallery_posts = pw_get_obj( $post, 'gallery.posts' );
+		if( $gallery_posts == false ) $gallery_posts = array();
+
+		///// OPTION : MOVE GALLERIES /////
+		if( $options['move_galleries'] == true && !empty( $gallery_posts ) )
+			// Clear the array
+			$post['gallery']['posts'] = array();
+
+
+		///// OPTION : REQUIRE IMAGE /////
+		// If require image is on
+		if( $options['require_image'] == true ){
+			// Test if the post has an image
+			$post_array = pw_require_image( array( $post ) );
+			// If it failed the test
+			if( empty( $post_array ) )
+				// Empty the post
+				$post = array();
+		}
+		// If the post isn't empty
+		if( !empty( $post ) &&
+			$options['include_posts'] != false )
+			// Add it to the posts array
+			array_push( $newPosts, $post );
+
+		// Add the gallery posts to the new posts array
+		$newPosts = array_merge( $newPosts, $gallery_posts );
+
+		///// OPTION : MAX POSTS /////
+		// If the maximum number of posts is reached already, stop here
+		if( $options['max_posts'] != 0 &&
+			$options['max_posts'] != false &&
+			$options['max_posts'] &&
+			count( $newPosts ) >= $options['max_posts'] ){
+			// Slice the number of posts to the max number
+			$newPosts = array_slice( $newPosts, 0, $options['max_posts'] );
+			// Stop iterating here
+			break;
+		}
+	}
+
+	return $newPosts;
+
+}
+
+
+function pw_gallery_feed(){
+
+
+
+}
+
+
+
 function pw_get_feed_by_id( $feed_id ){
 	$feeds = i_get_option( array( 'option_name'	=>	'i-feeds' ) );
 	if( empty( $feeds ) )

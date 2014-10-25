@@ -83,6 +83,7 @@ function pw_print_term_feed( $vars ){
 			'include_galleries'	=>	false,	// Deep-scan posts content for gallery shortcodes
 			'move_galleries'	=>	true,	// Moves the galleries from the post to the feed
 			'require_image'		=>	false,	// Only posts with a featured image are used
+			'include_posts'		=>	true,	// Whether or not to keep the original posts
 			),
 
 		);
@@ -123,7 +124,6 @@ function pw_print_term_feed( $vars ){
 
 
 ////////// POSTWORLD RECURSIVE TERM QUERY //////////
-
 function pw_add_gallery_field( $fields ){
 	return array_merge( $fields, array( 'gallery(ids,posts)' ) );
 }
@@ -163,23 +163,22 @@ function pw_get_term_feed( $vars ){
 	// Set defaults
 	$default_vars = array(
 		'query'	=>	array(
-			'fields'	=>	'preview',	
+			'fields'	=>	'preview',
+			'post_type'	=>	'any',
 			),
 		'options'	=>	array(
 			'include_galleries'	=>	false, // set to false
 			'move_galleries'	=>	true,
 			'require_image'		=>	false, // set to false
+			'include_posts'		=>	true,
+			'max_posts'			=> 	(int) pw_get_obj( $vars, 'query.posts_per_page' ),
 			),
 		);
 
 	$vars = pw_set_defaults( $vars, $default_vars ); 
 
 	// Localize Options
-	$max_posts = (int) pw_get_obj( $vars, 'query.posts_per_page' );
-	$require_image = (bool) pw_get_obj( $vars, 'options.require_image' );
-	//echo "REQUIRE IMAGE : " . json_encode($require_image) . " // ";
 	$include_galleries = (bool) pw_get_obj( $vars, 'options.include_galleries' );
-
 
 	////////// GET TERMS //////////
 	// Get the terms with get_terms()
@@ -197,83 +196,41 @@ function pw_get_term_feed( $vars ){
 			array_push( $vars['query']['fields'], 'gallery(ids,posts)' );
 	}
 
+
 	///// FOR EACH TERM /////
 	// Iterate through each term, and collect the posts
 	$output = array();
 
-	if( isset( $vars['query'] ) && !empty($terms) )
+	if( !empty( $vars['query'] ) && !empty($terms) )
 		foreach( $terms as $term ){
-			$term_output = array();
-			$term_obj = $term;
-			$term = pw_to_array( $term );
+			// $term is a standard class object
 
+			$term_data = array();
 			$query = $vars['query'];
 			$query['tax_query']	=	array(
 					array(
-						'taxonomy' 	=> $term['taxonomy'],
+						'taxonomy' 	=> $term->taxonomy,
 						'field' 	=> 'id',
-						'terms' 	=> $term['term_id']
+						'terms' 	=> $term->term_id
 						)
 				);
 
 			$query_results = pw_query( $query );
 			$posts = pw_to_array( $query_results->posts );
 			
-			//echo "INCLUDE GALLERIES : " . $include_galleries;
 
 			////// OPTION : INCLUDE GALLERIES /////
 			// Iterate through each post and check if it has a gallery
 			// If so, get the posts from the gallery and push them to the new array
 			if( $include_galleries && !empty( $posts ) ){
-				$new_posts = array();
-				// Iterate through each post
-				foreach( $posts as $post ){
-					// If it has a gallery object and posts, get them
-					$gallery_posts = ( isset( $post['gallery'] ) && !empty( $post['gallery']['posts'] )  ) ?
-						$post['gallery']['posts'] : array();
 
-					///// OPTION : MOVE GALLERIES /////
-					if( $vars['options']['move_galleries'] == true )
-						// Clear the array
-						$post['gallery']['posts'] = array();
+				$posts = pw_merge_galleries( $posts, $vars['options'] );
 
-					///// OPTION : REQUIRE IMAGE /////
-					// If require image is on
-					if( $require_image == true ){
-						// Test if the post has an image
-						$post_array = pw_require_image( array( $post ) );
-						// If it failed the test
-						if( empty( $post_array ) )
-							// Empty the post
-							$post = array();
-					}
-					// If the post isn't empty
-					if( !empty( $post ) )
-						// Add it to the posts array
-						array_push( $new_posts, $post );
-
-					//echo "REQUIRE IMAGE : " . json_encode( pw_require_image( array( $post ) )) . " // ";
-
-					// Add the gallery posts to the new posts array
-					$new_posts = array_merge( $new_posts, $gallery_posts );
-
-					
-
-					///// OPTION : MAX POSTS /////
-					// If the maximum number of posts is reached already, stop here
-					if( $max_posts && count( $new_posts ) >= $max_posts ){
-						// Slice the number of posts to the max number
-						$new_posts = array_slice( $new_posts, 0, $max_posts );
-						// Stop iterating here
-						break;
-					}
-				}
-
-				$posts = $new_posts;
 			}
+
 			
 			///// OPTION : REQUIRE IMAGE /////
-			if( $require_image )
+			if( pw_get_obj( $vars, 'options.require_image' ) )
 				$posts = pw_require_image( $posts );
 
 			// Go through the posts and remove duplicate items
@@ -282,15 +239,15 @@ function pw_get_term_feed( $vars ){
 
 			///// PROCESS DATA /////
 			// Convert name back to normal characters
-			$term['name'] = htmlspecialchars_decode( $term['name'] );
+			$term->name = htmlspecialchars_decode( $term->name );
 
 			///// COMPILE DATA /////
-			$term_output['term'] = $term;
-			$term_output['term']['post_count'] = count( $posts );
-			$term_output['term']['url'] = get_term_link( $term_obj );
-			$term_output['posts'] = $posts;
+			$term_data['term'] = $term;
+			$term_data['term']->post_count = count( $posts );
+			$term_data['term']->url = get_term_link( $term );
+			$term_data['posts'] = $posts;
 			
-			array_push( $output, $term_output );		
+			array_push( $output, $term_data );		
 
 		}
 
