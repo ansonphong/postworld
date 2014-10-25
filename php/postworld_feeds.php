@@ -293,7 +293,7 @@ function pw_get_live_feed ( $args ){
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
 		
 		// Preload selected posts
-		$posts = pw_get_posts($preload_posts, $query["fields"] );
+		$posts = pw_get_posts( $preload_posts, $query["fields"] );
 	
 	}
 	else{
@@ -305,6 +305,7 @@ function pw_get_live_feed ( $args ){
 		"feed_id" 		=> 	$args["feed_id"],
 		"query" 		=> 	$args["query"],
 		"feed_outline" 	=> 	$feed_outline,
+		"loaded"		=>	$preload_posts,
 		"preload" 		=> 	count($posts),
 		"posts"			=>	$posts,
 		);

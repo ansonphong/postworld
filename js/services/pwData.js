@@ -124,42 +124,19 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = { url:url, args:args};
 			return this.wp_ajax('o_embed',params);
 		},
-		pw_get_posts: function(args) {
-			var feedSettings = feeds[ args.feed_id ];
-			var feed = feeds[ args.feed_id ];
-
-			// If already all loaded, then return
-			if (feed.status == 'all_loaded')  {
-				$log.debug('pwData.pw_get_posts ALL LOADED');
-				// TODO should we return or set promise.?
-				 //var results = {'status':200,'data':[]};
-				var response = $q.defer();
-				response.promise.resolve(1);				
-				return response.promise;
-			};
-	
-			// Slice Outline Array
-			var idBegin = feed.posts.length;
-
-			// Use Preload value if no posts loaded, otherwise use load_increment
-			var idEnd = ( feed.posts.length == 0 ) ?
-				idBegin + feedSettings.preload :
-				idBegin + feedSettings.load_increment;
+		pw_get_posts: function( params ) {
+			/*
+			 params = {
+				post_ids : 	[ array ],
+				fields: 	'string' / [ array ],
+				options: 	{ object }
+			 } 
+			*/
 			
-			$log.debug( 'pwData.feeds : ', feeds );
-			$log.debug( 'idBegin : ' + idBegin + ' // idEnd : ' + idEnd, $window['pw']['feeds'] );
-
-			var postIDs = feed.feed_outline.slice(idBegin,idEnd);
-
-			var fields;
-			if (feedSettings.query) {
-				if (feedSettings.query.fields != null) {
-					fields = feedSettings.query.fields;
-				}				
-			}
 			// $log.debug('pwData.pw_get_posts range:',idBegin, idEnd);
 			// Set Fields
-			var params = { feed_id:args.feed_id, post_ids:postIDs, fields:fields};
+			//var params = { post_ids:postIDs, fields:fields };
+
 			$log.debug('pwData.pw_get_posts',params);
 			return this.wp_ajax('pw_get_posts',params);
 		},

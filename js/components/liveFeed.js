@@ -165,18 +165,25 @@ postworld.controller('pwFeedController',
 				$pwData.feeds[$scope.feedId].feed_outline = $pwData.feeds[$scope.feedId].feed_outline;
 			};											
 			$pwData.feeds[$scope.feedId].posts = [];
+			$pwData.feeds[$scope.feedId].loaded = [];
+
 			// var argsValue = JSON.parse(JSON.stringify($scope.feed));			
 			// $scope.posts = $pwData.feeds[$scope.feedId].posts;
 			$scope.posts = JSON.parse(JSON.stringify($pwData.feeds[$scope.feedId].posts));
 			// $scope.injectBlocks();
 		};
 		
-		$scope.fillFeedData = function(response) {
+		$scope.fillFeedData = function( response ) {
+			// This function executes on the first run of a pwLiveFeed or pwLoadFeed
+			// After hearing back from the server AJAX call
+			// With the first payload of posts
+			// For feeds preloaded with post data on load, this function is not called
 
 			// Create Feed Object if it doesn't exist
 			if( _.isUndefined( $pwData.feeds[$scope.feedId] ) )
 				$pwData.feeds[$scope.feedId] = {};
 
+			// If we're handling the loadFeed directive
 			if ($scope.directive=="loadFeed") {
 				if ($pwData.feeds[$scope.feedId].offset)  {
 					// truncate feed outline in case of existing offset for load-feed only
@@ -186,13 +193,14 @@ postworld.controller('pwFeedController',
 					// truncate response posts in case of existing offset for load-feed only															
 					response.data.posts = response.data.posts.splice(offset,len); 
 					//$log.debug('FEED DATA : ' + $pwData.feeds[$scope.feedId].feed_id, response.data );
-					//response.data.posts = response.data.posts.splice(offset,len); 
-					// PHONG : replace post with posts 					
+					//response.data.posts = response.data.posts.splice(offset,len); 				
 				}
 			}
-			// Insert Response in Feed Data
+
+			/// INSERT FEED DATA RESPONSE ///
 			$pwData.feeds[$scope.feedId].feed_outline = response.data.feed_outline;
 			$pwData.feeds[$scope.feedId].posts = response.data.posts;
+			$pwData.feeds[$scope.feedId].loaded = response.data.loaded;
 
 			$scope.updateStatus();
 						
@@ -253,6 +261,8 @@ postworld.controller('pwFeedController',
 				$scope.injectBlocks();
 				$scope.updateStatus();
 				$scope.busy = false;
+				// Return the function here
+				// To avoid AJAX call
 				return;
 			}
 
@@ -428,16 +438,53 @@ postworld.controller('pwFeedController',
 			// TODO set Nonce from UI
 			$pwData.setNonce(78);
 
+
+			///// PREPARE GET POSTS /////
+
+			var feed = $pwData.feeds[$scope.feedId];
+
+			// If already all loaded, then return
+			if (feed.status == 'all_loaded')  {
+				$log.debug('pwData.pw_get_posts : ALL LOADED : ' + $scope.feedId );			
+				return;
+			};
+	
+			// Slice Outline Array
+			var idBegin = feed.loaded.length;
+
+			// Use Preload value if no posts loaded, otherwise use load_increment
+			var idEnd = ( feed.loaded.length == 0 ) ?
+				idBegin + feed.preload :
+				idBegin + feed.load_increment;
+			
+			//$log.debug( 'pwData.feeds : ', feeds );
+			$log.debug( 'pwFeedController.scrollFeed // idBegin : ' + idBegin + ' / idEnd : ' + idEnd );
+
+			// Set the post IDs
+			var postIDs = feed.feed_outline.slice( idBegin, idEnd );
+
+			// Set the fields
+			var fields = $_.getObj( feed, 'query.fields' );
+			if( fields == false )
+				fields = 'preview';
+
+			// Set the parameters
+			var params = {
+				post_ids : postIDs,
+				fields : fields,
+			};
+
+			////////////////////////////
+			$log.debug( "pw_get_posts : " , params );
+
 			$scope.busy = true;
-			$pwData.pw_get_posts( $scope.feed ).then(
+			$pwData.pw_get_posts( params ).then(
 				// Success
 				function(response) {
-					
 					if (response.status === undefined) {
 						$log.debug('Feed response format is not recognized.');
 						return;
 					}
-
 					if( response.status == 200) {
 
 						var newItems = response.data;
@@ -451,18 +498,25 @@ postworld.controller('pwFeedController',
 
 							// Push to central posts array
 							$pwData.feeds[$scope.feedId].posts.push( newItems[i] );
+
 							// Inject Blocks						
 							$scope.injectNewBlock();
-
 						}
+
+						/// UPDATE : LOADED ///
+						// Get the new 'loaded' array directly from which post IDs were requested
+						// Since in some cases of returning gallery posts, they will differ from the actual post data
+						var loaded = $pwData.feeds[$scope.feedId].loaded;
+						loaded = loaded.concat( postIDs );
+						$pwData.feeds[$scope.feedId].loaded = loaded;
 
 						// Add Feed Meta for only the new posts
 						var postsLoaded = parseInt( $pwData.feeds[$scope.feedId].posts.length - 1 );
 						$scope.addFeedMeta( { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length } );
 						$scope.posts = $pwData.feeds[$scope.feedId].posts;
 
+						// Update feed status
 						$scope.updateStatus();
-
 						$scope.busy = false;
 										
 					} else {
@@ -482,7 +536,7 @@ postworld.controller('pwFeedController',
 
 		$scope.updateStatus = function(){
 			// Count Length of loaded, update scroll message
-			if ($pwData.feeds[$scope.feedId].posts.length >= $pwData.feeds[$scope.feedId].feed_outline.length ) {
+			if ($pwData.feeds[$scope.feedId].loaded.length >= $pwData.feeds[$scope.feedId].feed_outline.length ) {
 				$pwData.feeds[$scope.feedId].status = 'all_loaded';	
 				$scope.scrollMessage = "No more posts to load!";																									
 			} else {
