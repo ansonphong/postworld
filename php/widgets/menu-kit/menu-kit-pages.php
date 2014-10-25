@@ -19,22 +19,24 @@ function menu_kit_pages($OPTIONS){
 	
 	///// SETUP OPTIONS /////
 	extract ($OPTIONS);
-	
+
+	// THIS PAGE
+	global $post;
 	$current_page_id = get_the_ID();
-	$current_page = get_page($current_page_id);
-	
+	$current_page = $post;
+
 	// GET PARENT PAGE ID
-	$parent_page_id = $current_page->post_parent;
+	$parent_page_id = $post->post_parent;
 	
 	// IF PARENT PAGE ID EXISTS
-	if ($parent_page_id){
-		$parent_page = get_page($parent_page_id);
+	if( $parent_page_id ){
+		$parent_page = get_post( $parent_page_id );
 		$grandparent_page_id = $parent_page->post_parent;
 		
 		// IF GRANDPARENT PAGE ID EXISTS
-		if ($grandparent_page_id){
-			$grandparent_page = get_page($grandparent_page_id);
-			}
+		if( $grandparent_page_id ){
+			$grandparent_page = get_post( $grandparent_page_id );
+		}
 	}
 	
 	// FUNCTION : GET CHILD PAGES // Returns an object with the child pages of $context
@@ -56,8 +58,11 @@ function menu_kit_pages($OPTIONS){
 	function render_page_menu($OPTIONS, $grandparent_page, $parent_page, $current_page){
 	
 		///// SETUP MENU DATA /////
-		
+
 		// ENABLE PARENT MENU
+		// Enable parent menu only for grandchildren
+		// To avoid listing all the pages on the site
+		// TODO : Add option to skip all top level pages, and still show parent pages
 		if ($OPTIONS['show_parent_pages'] == 1 && $grandparent_page){
 			$parent_menu_exists = 1;
 			// DEFINE PARENT PAGES
