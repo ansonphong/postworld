@@ -68,7 +68,7 @@
 									<!-- EDITOR -->
 									<td ng-show="showProperty( property, 'edit' )">
 										{{ property.name }}
-										<div class="font-nano">{{ property.key }}</div>
+										<div class="font-nano">@{{ property.key }}</div>
 									</td>
 									<td ng-show="showProperty( property, 'edit' )" style="position:relative;">
 										
@@ -80,15 +80,23 @@
 											
 										</div>
 
+										<!-- ICON -->
+										<div
+											class="inner-right inner-icon"
+											ng-show="property.icon">
+											<i ng-class="property.icon"></i>
+										</div>
+
 										<!-- TEXT -->
 										<input
 											type="text"
 											ng-model="iStyles[ type.key ][ section.key ][ property.key ]">
 
-
 									</td>
 									<td ng-show="showProperty( property, 'edit' )">
-										<div class="font-micro">{{ property.description }}</div>
+										<div class="font-micro">
+											{{ property.description }}
+										</div>
 									</td>
 		
 									<!-- SPACER -->
