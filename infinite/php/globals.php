@@ -7,14 +7,10 @@ function iGlobals(){
 	// Import Options
 	// TODO : Use i_get_option() function
 	$i_options = json_decode(get_option('i-options'),true);
-
 	$i_sidebars = json_decode(get_option('i-sidebars'),true);
 	$i_social = json_decode(get_option('i-social'),true);
 
-	////////// CONTEXT //////////
-	$context = array();
-	$context['class'] = pw_current_context_class();
-
+	// Layout
 	$layout = pw_get_current_layout();
 
 	///// WRAP /////

@@ -297,7 +297,7 @@ function pw_get_current_layout(){
 	}
 
 	/// GET LAYOUT : FROM CONTEXT ///
-	if( !$layout ){
+	if( !$layout || pw_get_obj( $layout, 'template' ) == 'default' ){
 		// Iterate through all the current contexts
 		// And find a match for it
 		foreach( $contexts as $context ){

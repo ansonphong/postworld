@@ -54,7 +54,6 @@ function i_download_image_option( $vars = array( "context" => "quickEdit" ) ){
 
 }
 
-
 ///// POST CONTENT COLUMNS /////
 function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 
@@ -81,7 +80,6 @@ function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 
 }
 
-
 function i_share_social_options(){
 	$vars['options_model'] = "options.share.meta";
 	$vars['option_key'] = "social.share.networks";
@@ -89,7 +87,6 @@ function i_share_social_options(){
 
 	return i_ob_include_template( 'admin/modules/share-social.php', $vars );
 }
-
 
 function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 
@@ -115,7 +112,6 @@ function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 	return i_ob_include_template( 'admin/modules/meta-gallery-options.php', $vars );
 
 }
-
 
 function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 
@@ -154,8 +150,6 @@ function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 	return i_ob_include_template( 'admin/modules/meta-link-url-options.php', $vars );
 
 }
-
-
 
 function option_check( $option, $test ){
 	if( $option == $test )
@@ -212,7 +206,6 @@ function i_select_featured_image_options( $vars ){
 	return i_ob_include_template( 'admin/modules/select-header-image-options.php', $vars );
 }
 
-
 ///// SLIDER OPTIONS : META FUNCTION /////
 function i_admin_slider_options( $vars = array() ){
 	// TODO:
@@ -222,8 +215,6 @@ function i_admin_slider_options( $vars = array() ){
 	return i_ob_include_template( "admin/php/options-slider.php", $vars );
 
 }
-
-
 
 ///// POST CONTENT COLUMNS /////
 function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
@@ -250,6 +241,10 @@ function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
 
 }
 
+///// SELECT ICON /////
+function i_select_icon_options( $vars = array( "ng_model" => "iMeta.icon.class" ) ){
+	return i_ob_include_template( 'admin/modules/select-icon.php', $vars );
+}
 
 
 ?>
