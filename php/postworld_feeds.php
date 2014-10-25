@@ -14,7 +14,7 @@ function pw_merge_galleries( $posts, $options ){
 	*/
 
 	///// SETUP DEFAULT OPTIONS /////
-	$default_options = $options = array(
+	$default_options = array(
 		'move_galleries'	=>	true,
 		'require_image'		=>	true,
 		'include_posts'		=>	true,
@@ -69,15 +69,64 @@ function pw_merge_galleries( $posts, $options ){
 			break;
 		}
 	}
-
 	return $newPosts;
 
 }
 
 
-function pw_gallery_feed(){
+function pw_gallery_feed( $vars = array() ){
+	/*
+	$vars = array(
+		'query'		=>	array(), 					// Query Vars for pw_query
+		'get_posts'	=>	array(
+			'post_ids'	=> [ array ]				// An array of post IDs to get using pw_get_posts
+			'fields'	=> [ array / string ]		// Field model for which posts to retreive
+			),
+		'options'	=>	array(
+			'move_galleries'	=>	[ boolean ],	// Delete galleries in posts
+			'require_image'		=>	[ boolean ],	// Require posts to have an image
+			'include_posts'		=>	[ boolean ],	// Include the posts too
+			'max_posts'			=> 	[ integer ],	// Maxmimum number of posts total
+			),
+		);
+	*/
 
+	$default_vars = array(
+		'query'		=>	array(),
+		'get_posts'	=>	array(
+			'fields'	=>	'preview',
+			),
+		'options'	=>	array(
+			'require_image'	=>	true,
+			'include_posts'	=>	false,
+			),
+		);
 
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	///// GET POSTS /////
+	// Add a filter to add gallery fields to preview field model
+	add_filter( 'pw_get_post_preview_fields', 'pw_add_gallery_field' );
+
+	$post_ids = pw_get_obj( $vars, 'get_posts.post_ids' );
+
+	/// USE PW GET POSTS ///
+	// If post IDs are provided
+	if( is_array( $post_ids ) ){
+		$posts = pw_get_posts( $post_ids, $vars['get_posts']['fields'] );
+	}
+	/// USE PW QUERY ///
+	else if( !empty( $vars['query'] ) ){
+		$posts = pw_query( $vars['query'] )->posts;
+	}
+	/// RETURN FALSE ///
+	else{
+		return false;
+	}
+
+	$posts = pw_merge_galleries( $posts, $vars['options'] );
+
+	return $posts;
 
 }
 
@@ -122,6 +171,7 @@ function pw_live_feed( $vars = array() ){
 
 
 	///// DEFAULT VARS /////
+	// TODO : Refactor as an array $default_vars and merge with $vars
 	if( !isset( $element ) )
 		$element = 'div';
 

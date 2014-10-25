@@ -12,7 +12,7 @@ function pw_post_exists ( $post_id ){
 
 function pw_get_posts( $post_ids, $fields='all' ) {
 	// • Run pw_post_data on each of the $post_ids, and return the given fields
-	if($fields == null) $fields='all';
+	if($fields == null) $fields='preview';
 	// If $post_ids isn't an Array, return
 	if (!is_array($post_ids))
 		return false;
