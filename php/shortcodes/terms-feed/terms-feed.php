@@ -124,9 +124,6 @@ function pw_print_term_feed( $vars ){
 
 
 ////////// POSTWORLD RECURSIVE TERM QUERY //////////
-function pw_add_gallery_field( $fields ){
-	return array_merge( $fields, array( 'gallery(ids,posts)' ) );
-}
 
 function pw_get_term_feed( $vars ){
 	/*
@@ -188,14 +185,8 @@ function pw_get_term_feed( $vars ){
 	///// OPTION : INCLUDE GALLERIES /////
 	// Filter get_posts
 	if( $include_galleries ){
-		// Add Galleries to Preview Fields
-		if( $vars['query']['fields'] == 'preview' )
-			add_filter( 'pw_get_post_preview_fields', 'pw_add_gallery_field' );
-		// Add galleries to fields
-		else if( is_array( $vars['query']['fields'] ) )
-			array_push( $vars['query']['fields'], 'gallery(ids,posts)' );
+		$vars['query']['fields'] = pw_add_gallery_field( $vars['query']['fields'] );
 	}
-
 
 	///// FOR EACH TERM /////
 	// Iterate through each term, and collect the posts

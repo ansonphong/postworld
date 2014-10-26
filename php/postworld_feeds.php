@@ -321,7 +321,8 @@ function pw_get_live_feed ( $args ){
 	$query = $args["query"];
 	$feed_outline = pw_feed_outline( $query );
 	
-	if( count( $feed_outline ) > 0 ){
+	// If the feed outline has contents
+	if( !empty( $feed_outline ) ){
 		// Select which posts to preload
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
 		

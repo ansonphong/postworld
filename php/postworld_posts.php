@@ -10,19 +10,38 @@ function pw_post_exists ( $post_id ){
 	    return false;
 }
 
-function pw_get_posts( $post_ids, $fields='all' ) {
-	// • Run pw_post_data on each of the $post_ids, and return the given fields
-	if($fields == null) $fields='preview';
+function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
+	// Returns an array of specified posts
+	/*
+		$post_ids 	= [ array ] 				// A numerical array of posts to retrieve
+		$fields 	= [ string / array ]		// pw_get_post() Field Model
+		$options 	= array(
+			'galleries'	=> array(
+				'include_galleries' =>  [ boolean ]	// Whether to include the gallery images in the posts
+				// All available options from include pw_merge_galleries() and pw_gallery_feed() functions
+				),
+			);
+
+	*/
+
+	///// SET DEFAULTS /////
+	// Set default fields value
+	if( $fields == null ) $fields = 'preview';
 	// If $post_ids isn't an Array, return
 	if (!is_array($post_ids))
 		return false;
 
-	// Interator
-	$i = 0;
+	///// OPTIONS : GALLERIES /////
+	// Condition field Model
+	$include_galleries = pw_get_obj( $options, 'galleries.include_galleries' );
+	if( (bool) $include_galleries ){
+		$fields = pw_add_gallery_field( $fields );
+	}
 
 	///// GET POSTS /////
 	// Cycle though each $post_id
 	$posts = array();
+	$i = 0; // Iterator
 	foreach ($post_ids as $post_id) {
 		$post = pw_get_post($post_id, $fields );
 
@@ -34,13 +53,19 @@ function pw_get_posts( $post_ids, $fields='all' ) {
 				$post['feed'] = array();
 			$post['feed']['order'] = $i;
 		}
-
 		array_push($posts, $post);
 	}
 
+	///// OPTIONS : GALLERIES /////
+	// Condition field Model
+	if( (bool) $include_galleries ){
+		// Merge the galleries with the gallery options passed directly in 
+		$posts = pw_merge_galleries( $posts, $options['galleries'] );
+	}
 
 	// Return Array of post data
 	return $posts;
+
 }
 
 ////////// GET POST DATA //////////
@@ -161,6 +186,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_date_gmt',
 		'post_permalink',
 		);
+
+	$micro_fields = apply_filters( 'pw_get_post_micro_fields', $micro_fields );
 
 	// TODO : Develop hooks to customize the post fields model
 	global $pwGetPostFieldsModel;
