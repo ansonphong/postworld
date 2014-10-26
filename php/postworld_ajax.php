@@ -819,17 +819,24 @@ function pw_get_posts_anon() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
 	// $pw_args = $args['args']['feed_query'];
-	$pw_args = $args['args'];
-	// Get the results in array format, so that it is converted once to json along with the rest of the response
-	$results = pw_get_posts ( $args['post_ids'],$args['fields'] );
+	//$pw_args = $args['args'];
 	
-	// TODO check results are ok
-	/* set the response type as JSON */
+	// Setup default args
+	$default_args = array(
+		'post_ids'	=>	array(),
+		'fields'	=>	'preview',
+		'options'	=>	array(),
+		);
+	$args = array_replace_recursive( $default_args, $args );
+
+	// Get the results in array format, so that it is converted once to json along with the rest of the response
+	$results = pw_get_posts ( $args['post_ids'], $args['fields'], $args['options'] );
+	
+	// RETURN
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $results;
 	echo json_encode($response);
-	// documentation says that die() should be the end...
 	die();
 }
 

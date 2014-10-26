@@ -1101,7 +1101,7 @@ class PW_Query extends WP_Query {
 		//log_me($this->request);
 		// Convert to WP_Post objects
 		if ( $this->posts )
-		$this->posts = pw_get_posts($this->posts,$fields);
+			$this->posts = pw_get_posts($this->posts,$fields);
 			//$this->posts = array_map( 'pw_get_post', $this->posts );
 
 		// Raw results filter. Prior to status checks.

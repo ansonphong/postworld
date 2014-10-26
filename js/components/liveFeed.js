@@ -468,10 +468,16 @@ postworld.controller('pwFeedController',
 			if( fields == false )
 				fields = 'preview';
 
+			// Set the options
+			var options = $_.getObj( feed, 'options' );
+			if( options == false )
+				options = {};
+
 			// Set the parameters
 			var params = {
 				post_ids : postIDs,
 				fields : fields,
+				options : options,
 			};
 
 			////////////////////////////

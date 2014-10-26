@@ -1,167 +1,6 @@
 <?php
 
 
-function pw_merge_galleries( $posts, $options ){
-	// Take in a post array
-	// Return a post array with all gallery posts merged into the main feed
-	/*
-	$options = array(
-		'move_galleries'	=>	[ boolean ],	// Delete galleries in posts
-		'require_image'		=>	[ boolean ],	// Require posts to have an image
-		'include_posts'		=>	[ boolean ],	// Include the posts too
-		'max_posts'			=> 	[ integer ],	// Maxmimum number of posts total
-		'post_parent'		=>	[ boolean ],	// Whether or not to insert the parent post of the gallery item into the gallery item as parent_post
-		);
-	*/
-
-	///// SETUP DEFAULT OPTIONS /////
-	$default_options = array(
-		'move_galleries'	=>	true,
-		'require_image'		=>	true,
-		'include_posts'		=>	true,
-		'max_posts'			=> 	0,
-		'post_parent'		=> 	true,
-		);
-	$options = array_merge( $default_options, $options );
-	
-	///// PROCESS POSTS /////
-	$newPosts = array();
-
-	// Iterate through each post
-	foreach( $posts as $post ){
-
-		// Get the posts from the gallery
-		$galleryPosts = pw_get_obj( $post, 'gallery.posts' );
-		if( $galleryPosts == false ) $galleryPosts = array();
-
-		///// OPTION : MOVE GALLERIES /////
-		if( $options['move_galleries'] == true && !empty( $galleryPosts ) )
-			// Clear the array
-			$post['gallery']['posts'] = array();
-
-
-		///// OPTION : REQUIRE IMAGE /////
-		// If require image is on
-		if( $options['require_image'] == true ){
-			// Test if the post has an image
-			$post_array = pw_require_image( array( $post ) );
-			// If it failed the test
-			if( empty( $post_array ) )
-				// Empty the post
-				$post = array();
-		}
-
-		
-		///// OPTION : PARENT POST /////
-		// Move the parent post into the gallery post as post_parent
-		// If the option is turned on
-		if( $options['parent_post'] == true &&
-			// And there are gallery posts
-			!empty( $galleryPosts ) ){
-			// Setup new array
-			$newGalleryPosts = array();
-			// Iterate through each gallery post
-			foreach( $galleryPosts as $galleryPost ){
-				// Clone the post
-				$parent_post = $post;
-				// Remove the gallery posts object from the post
-				$parent_post['gallery']['posts'] = array();
-				// Add it under parent_post key
-				$galleryPost['parent_post'] = $parent_post;
-				// Add it to the new array
-				$newGalleryPosts[] = $galleryPost;
-			}
-			// Overwrite the old galleryPosts with the new one
-			$galleryPosts = $newGalleryPosts;
-		}
-
-
-		///// ADD : POST /////
-		// If the post isn't empty
-		if( !empty( $post ) &&
-			// And include posts is true
-			///// OPTION : INCLUDE POSTS /////
-			$options['include_posts'] != false )
-			// Add it to the posts array
-			array_push( $newPosts, $post );
-
-
-		///// ADD : GALLERY POSTS /////
-		// Add the gallery posts to the new posts array
-		$newPosts = array_merge( $newPosts, $galleryPosts );
-
-		///// OPTION : MAX POSTS /////
-		// If the maximum number of posts is reached already, stop here
-		if( $options['max_posts'] != 0 &&
-			$options['max_posts'] != false &&
-			$options['max_posts'] &&
-			count( $newPosts ) >= $options['max_posts'] ){
-			// Slice the number of posts to the max number
-			$newPosts = array_slice( $newPosts, 0, $options['max_posts'] );
-			// Stop iterating here
-			break;
-		}
-	}
-	return $newPosts;
-
-}
-
-
-function pw_gallery_feed( $vars = array() ){
-	/*
-	$vars = array(
-		'query'		=>	array(), 					// Query Vars for pw_query
-		'get_posts'	=>	array(
-			'post_ids'	=> [ array ]				// An array of post IDs to get using pw_get_posts
-			'fields'	=> [ array / string ]		// Field model for which posts to retreive
-			),
-		'options'	=>	array(
-			'move_galleries'	=>	[ boolean ],	// Delete galleries in posts
-			'require_image'		=>	[ boolean ],	// Require posts to have an image
-			'include_posts'		=>	[ boolean ],	// Include the posts too
-			'max_posts'			=> 	[ integer ],	// Maxmimum number of posts total
-			),
-		);
-	*/
-
-	$default_vars = array(
-		'query'		=>	array(),
-		'get_posts'	=>	array(
-			'fields'	=>	'preview',
-			),
-		'options'	=>	array(
-			'require_image'	=>	true,
-			'include_posts'	=>	false,
-			),
-		);
-
-	$vars = array_replace_recursive( $default_vars, $vars );
-
-	///// GET POSTS /////
-	// Add a filter to add gallery fields to preview field model
-	add_filter( 'pw_get_post_preview_fields', 'pw_add_gallery_field' );
-
-	$post_ids = pw_get_obj( $vars, 'get_posts.post_ids' );
-
-	/// USE PW GET POSTS ///
-	// If post IDs are provided
-	if( is_array( $post_ids ) ){
-		$posts = pw_get_posts( $post_ids, $vars['get_posts']['fields'] );
-	}
-	/// USE PW QUERY ///
-	else if( !empty( $vars['query'] ) ){
-		$posts = pw_query( $vars['query'] )->posts;
-	}
-	/// RETURN FALSE ///
-	else{
-		return false;
-	}
-
-	$posts = pw_merge_galleries( $posts, $vars['options'] );
-
-	return $posts;
-
-}
 
 
 
@@ -250,7 +89,15 @@ function pw_live_feed( $vars = array() ){
 		'query' 		=> 	$default_query,
 		'feed_template'	=>	'feed-list',
 		'aux_template'	=>	'seo-list',
-
+		'options'		=>	array(
+			'galleries'	=>	array(
+				'include_galleries'	=>	false,
+				'move_galleries'	=>	true,
+				'parent_post'		=>	true,
+				'require_image'		=>	false,
+				'include_posts'		=>	true,
+				),
+			),
 		// 'cache'	=>	array(
 		//		'posts'	=>	true, // determines whether the posts or just outline is cached	
 		//		'interval'	=>	5000,
@@ -264,7 +111,6 @@ function pw_live_feed( $vars = array() ){
 	
 	// Run query filters
 	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );
-
 
 	///// GET FEED DATA /////
 	if( $directive == 'live-feed' )
@@ -306,19 +152,21 @@ function pw_live_feed( $vars = array() ){
 	return;
 }
 
-function pw_get_live_feed ( $args ){
+function pw_get_live_feed ( $vars ){
 
-	extract($args);
+	extract($vars);
 
 	// Defaults
 	if( !isset( $preload ) )
 		$preload = 10;
+	if( !isset( $options ) )
+		$options = array();
 
 	// Sanitize
 	$preload = (int) $preload;
 
 	// Get the Feed Outline
-	$query = $args["query"];
+	$query = $vars["query"];
 	$feed_outline = pw_feed_outline( $query );
 	
 	// If the feed outline has contents
@@ -327,7 +175,7 @@ function pw_get_live_feed ( $args ){
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
 		
 		// Preload selected posts
-		$posts = pw_get_posts( $preload_posts, $query["fields"] );
+		$posts = pw_get_posts( $preload_posts, $query["fields"], $options );
 	
 	}
 	else{
@@ -336,12 +184,13 @@ function pw_get_live_feed ( $args ){
 	}
 	
 	return array(
-		"feed_id" 		=> 	$args["feed_id"],
-		"query" 		=> 	$args["query"],
+		"feed_id" 		=> 	$vars["feed_id"],
+		"query" 		=> 	$vars["query"],
 		"feed_outline" 	=> 	$feed_outline,
 		"loaded"		=>	$preload_posts,
 		"preload" 		=> 	count($posts),
 		"posts"			=>	$posts,
+		"options"		=>	$options,
 		);
 	
 }
@@ -356,6 +205,115 @@ function pw_feed_outline ( $pw_query_args ){
 	return $post_ids; // Array of post IDs
 	//return array( 220034, 216613 );
 }
+
+
+
+function pw_merge_galleries( $posts, $options ){
+	// Take in a post array
+	// Return a post array with all gallery posts merged into the main feed
+	/*
+	$options = array(
+		'move_galleries'	=>	[ boolean ],	// Delete galleries in posts
+		'require_image'		=>	[ boolean ],	// Require posts to have an image
+		'include_posts'		=>	[ boolean ],	// Include the posts too
+		'max_posts'			=> 	[ integer ],	// Maxmimum number of posts total
+		'parent_post'		=>	[ boolean ],	// Whether or not to insert the parent post of the gallery item into the gallery item as parent_post
+		);
+	*/
+
+	///// SETUP DEFAULT OPTIONS /////
+	$default_options = array(
+		'move_galleries'	=>	true,
+		'require_image'		=>	true,
+		'include_posts'		=>	true,
+		'max_posts'			=> 	0,
+		'parent_post'		=> 	true,
+		);
+	$options = array_merge( $default_options, $options );
+	
+	///// PROCESS POSTS /////
+	$newPosts = array();
+
+	// Iterate through each post
+	foreach( $posts as $post ){
+
+		// Get the posts from the gallery
+		$galleryPosts = pw_get_obj( $post, 'gallery.posts' );
+		if( $galleryPosts == false ) $galleryPosts = array();
+
+		///// OPTION : MOVE GALLERIES /////
+		if( $options['move_galleries'] == true && !empty( $galleryPosts ) )
+			// Clear the array
+			$post['gallery']['posts'] = array();
+
+
+		///// OPTION : REQUIRE IMAGE /////
+		// If require image is on
+		if( $options['require_image'] == true ){
+			// Test if the post has an image
+			$post_array = pw_require_image( array( $post ) );
+			// If it failed the test
+			if( empty( $post_array ) )
+				// Empty the post
+				$post = array();
+		}
+
+		
+		///// OPTION : PARENT POST /////
+		// Move the parent post into the gallery post as parent_post
+		// If the option is turned on
+		if( $options['parent_post'] == true &&
+			// And there are gallery posts
+			!empty( $galleryPosts ) ){
+			// Setup new array
+			$newGalleryPosts = array();
+			// Iterate through each gallery post
+			foreach( $galleryPosts as $galleryPost ){
+				// Clone the post
+				$parent_post = $post;
+				// Remove the gallery posts object from the post
+				$parent_post['gallery']['posts'] = array();
+				// Add it under parent_post key
+				$galleryPost['parent_post'] = $parent_post;
+				// Add it to the new array
+				$newGalleryPosts[] = $galleryPost;
+			}
+			// Overwrite the old galleryPosts with the new one
+			$galleryPosts = $newGalleryPosts;
+		}
+
+
+		///// ADD : POST /////
+		// If the post isn't empty
+		if( !empty( $post ) &&
+			// And include posts is true
+			///// OPTION : INCLUDE POSTS /////
+			$options['include_posts'] != false )
+			// Add it to the posts array
+			array_push( $newPosts, $post );
+
+
+		///// ADD : GALLERY POSTS /////
+		// Add the gallery posts to the new posts array
+		$newPosts = array_merge( $newPosts, $galleryPosts );
+
+		///// OPTION : MAX POSTS /////
+		// If the maximum number of posts is reached already, stop here
+		if( $options['max_posts'] != 0 &&
+			$options['max_posts'] != false &&
+			$options['max_posts'] &&
+			count( $newPosts ) >= $options['max_posts'] ){
+			// Slice the number of posts to the max number
+			$newPosts = array_slice( $newPosts, 0, $options['max_posts'] );
+			// Stop iterating here
+			break;
+		}
+	}
+	return $newPosts;
+
+}
+
+
 
 /*
 1-pw_get_templates
@@ -642,6 +600,95 @@ function pw_get_menu_posts( $menu, $fields ){
 	return $posts;
 
 }
+
+
+
+
+function pw_feed( $vars ){
+	// PW Feed offers PW Query combined with PW Get Posts
+	// By first returning a feed outline, and then 
+	// This allows the additonal pw_get_posts() options to be passed in
+	/*
+		$vars = array(
+			'query'		=>	[ array ]			// Query for pw_query() method, excluding the 'fields' key
+			'fields'	=>	[ string / array ]	// Include the fields key
+			'options'	=>	[ array ]			// Options for
+			);
+	*/
+	// Set default variables
+	$default_vars = array(
+		'query'		=>	array(),
+		'fields'	=>	'preview',
+		'options'	=>	array(),
+		);
+	$vars = array_merge_recursive( $default_vars, $vars );
+	// Get Feed Outline
+	$feed_outline = pw_feed_outline( $vars['query'] );
+	// Get Posts
+	$posts = pw_get_posts( $feed_outline, $vars['fields'], $vars['options'] );
+	// Return Posts
+	return $posts;
+}
+
+
+function pw_gallery_feed( $vars = array() ){
+	/*
+	$vars = array(
+		'query'		=>	array(), 					// Query Vars for pw_query
+		'get_posts'	=>	array(
+			'post_ids'	=> [ array ]				// An array of post IDs to get using pw_get_posts
+			'fields'	=> [ array / string ]		// Field model for which posts to retreive
+			),
+		'options'	=>	array(
+			'move_galleries'	=>	[ boolean ],	// Delete galleries in posts
+			'require_image'		=>	[ boolean ],	// Require posts to have an image
+			'include_posts'		=>	[ boolean ],	// Include the posts too
+			'max_posts'			=> 	[ integer ],	// Maxmimum number of posts total
+			),
+		);
+	*/
+
+	$default_vars = array(
+		'query'		=>	array(),
+		'get_posts'	=>	array(
+			'fields'	=>	'preview',
+			),
+		'options'	=>	array(
+			'require_image'	=>	true,
+			'include_posts'	=>	false,
+			),
+		);
+
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	///// GET POSTS /////
+	// Add a filter to add gallery fields to preview field model
+	add_filter( 'pw_get_post_preview_fields', 'pw_add_gallery_field' );
+
+	$post_ids = pw_get_obj( $vars, 'get_posts.post_ids' );
+
+	/// USE PW GET POSTS ///
+	// If post IDs are provided
+	if( is_array( $post_ids ) ){
+		$posts = pw_get_posts( $post_ids, $vars['get_posts']['fields'] );
+	}
+	/// USE PW QUERY ///
+	else if( !empty( $vars['query'] ) ){
+		$posts = pw_query( $vars['query'] )->posts;
+	}
+	/// RETURN FALSE ///
+	else{
+		return false;
+	}
+
+	$posts = pw_merge_galleries( $posts, $vars['options'] );
+
+	return $posts;
+
+}
+
+
+
 
 
 function get_panel_ids(){

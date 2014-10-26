@@ -1,2 +1,7 @@
-$query : {"post_status":"any","post_type":[],"fields":"preview","posts_per_page":3,"orderby":"date","order":"DESC","offset":0,"include_posts_from":"this_post_parent","post__in":[124]}
-$query : {"post_status":"any","post_type":["journal-volume"],"fields":"preview","posts_per_page":3,"orderby":"date","order":"DESC","offset":0,"include_posts_from":"this_post_parent","post__in":[124]}
+pw_get_posts_anon : $args = {"post_ids":["144","142","86"],"fields":"preview"}
+pw_get_posts_anon : $args = {"post_ids":["55","45"],"fields":"preview"}
+pw_get_posts_anon : $args = {"post_ids":["144","142","86"],"fields":["preview","preview"],"options":[]}
+pw_get_posts_anon : $args = {"post_ids":["144","142","86"],"fields":"preview"}
+pw_get_posts_anon : $args = {"post_ids":["55","45"],"fields":"preview"}
+pw_get_posts_anon : $args = {"post_ids":["144","142","86"],"fields":"preview","options":[]}
+pw_get_posts_anon : $args = {"post_ids":["55","45"],"fields":"preview","options":[]}
