@@ -1097,22 +1097,17 @@ class PW_Query extends WP_Query {
 			$this->set_found_posts( $q, $limits );
 		}
 		
-		
 		$fields = $this->prepare_fields();
 		//log_me($this->request);
 		// Convert to WP_Post objects
 		if ( $this->posts )
 		$this->posts = pw_get_posts($this->posts,$fields);
 			//$this->posts = array_map( 'pw_get_post', $this->posts );
-		
-	
 
 		// Raw results filter. Prior to status checks.
 		if ( !$q['suppress_filters'] )
 			$this->posts = apply_filters_ref_array('posts_results', array( $this->posts, &$this ) );
 
-		
-			
 		if ( !empty($this->posts) && $this->is_comment_feed && $this->is_singular ) {
 			$cjoin = apply_filters_ref_array('comment_feed_join', array( '', &$this ) );
 			$cwhere = apply_filters_ref_array('comment_feed_where', array( "WHERE comment_post_ID = '{$this->posts[0]->ID}' AND comment_approved = '1'", &$this ) );

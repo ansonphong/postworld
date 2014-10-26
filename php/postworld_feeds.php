@@ -10,6 +10,7 @@ function pw_merge_galleries( $posts, $options ){
 		'require_image'		=>	[ boolean ],	// Require posts to have an image
 		'include_posts'		=>	[ boolean ],	// Include the posts too
 		'max_posts'			=> 	[ integer ],	// Maxmimum number of posts total
+		'post_parent'		=>	[ boolean ],	// Whether or not to insert the parent post of the gallery item into the gallery item as parent_post
 		);
 	*/
 
@@ -19,6 +20,7 @@ function pw_merge_galleries( $posts, $options ){
 		'require_image'		=>	true,
 		'include_posts'		=>	true,
 		'max_posts'			=> 	0,
+		'post_parent'		=> 	true,
 		);
 	$options = array_merge( $default_options, $options );
 	
@@ -29,11 +31,11 @@ function pw_merge_galleries( $posts, $options ){
 	foreach( $posts as $post ){
 
 		// Get the posts from the gallery
-		$gallery_posts = pw_get_obj( $post, 'gallery.posts' );
-		if( $gallery_posts == false ) $gallery_posts = array();
+		$galleryPosts = pw_get_obj( $post, 'gallery.posts' );
+		if( $galleryPosts == false ) $galleryPosts = array();
 
 		///// OPTION : MOVE GALLERIES /////
-		if( $options['move_galleries'] == true && !empty( $gallery_posts ) )
+		if( $options['move_galleries'] == true && !empty( $galleryPosts ) )
 			// Clear the array
 			$post['gallery']['posts'] = array();
 
@@ -48,14 +50,45 @@ function pw_merge_galleries( $posts, $options ){
 				// Empty the post
 				$post = array();
 		}
+
+		
+		///// OPTION : PARENT POST /////
+		// Move the parent post into the gallery post as post_parent
+		// If the option is turned on
+		if( $options['parent_post'] == true &&
+			// And there are gallery posts
+			!empty( $galleryPosts ) ){
+			// Setup new array
+			$newGalleryPosts = array();
+			// Iterate through each gallery post
+			foreach( $galleryPosts as $galleryPost ){
+				// Clone the post
+				$parent_post = $post;
+				// Remove the gallery posts object from the post
+				$parent_post['gallery']['posts'] = array();
+				// Add it under parent_post key
+				$galleryPost['parent_post'] = $parent_post;
+				// Add it to the new array
+				$newGalleryPosts[] = $galleryPost;
+			}
+			// Overwrite the old galleryPosts with the new one
+			$galleryPosts = $newGalleryPosts;
+		}
+
+
+		///// ADD : POST /////
 		// If the post isn't empty
 		if( !empty( $post ) &&
+			// And include posts is true
+			///// OPTION : INCLUDE POSTS /////
 			$options['include_posts'] != false )
 			// Add it to the posts array
 			array_push( $newPosts, $post );
 
+
+		///// ADD : GALLERY POSTS /////
 		// Add the gallery posts to the new posts array
-		$newPosts = array_merge( $newPosts, $gallery_posts );
+		$newPosts = array_merge( $newPosts, $galleryPosts );
 
 		///// OPTION : MAX POSTS /////
 		// If the maximum number of posts is reached already, stop here

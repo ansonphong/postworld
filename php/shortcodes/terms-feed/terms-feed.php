@@ -218,17 +218,13 @@ function pw_get_term_feed( $vars ){
 			$query_results = pw_query( $query );
 			$posts = pw_to_array( $query_results->posts );
 			
-
 			////// OPTION : INCLUDE GALLERIES /////
 			// Iterate through each post and check if it has a gallery
 			// If so, get the posts from the gallery and push them to the new array
 			if( $include_galleries && !empty( $posts ) ){
-
 				$posts = pw_merge_galleries( $posts, $vars['options'] );
-
 			}
 
-			
 			///// OPTION : REQUIRE IMAGE /////
 			if( pw_get_obj( $vars, 'options.require_image' ) )
 				$posts = pw_require_image( $posts );
