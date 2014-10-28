@@ -10,7 +10,12 @@ postworld.directive('liveFeed', function() {
 		replace: true,
 		controller: 'pwFeedController',
        	template: '<div ng-include="templateUrl" class="feed"></div>',
-		scope : {},
+		scope : {
+			//feedVars: '=',
+		},
+		link : function( $scope, element, attrs ){
+			
+		},
 	};
 });
 
@@ -24,21 +29,13 @@ postworld.directive('loadFeed', function() {
 	};
 });
 
-postworld.directive('loadPost', function() {
-	return {
-		restrict: 'A',
-		replace: true,
-		template: '<div ng-include="templateUrl" class="post"></div>',
-		controller: 'pwLoadPostController',
-		scope : {
-		}
-	};
-});
 
 postworld.controller('pwFeedController',
 	[ '$scope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_',
 	function( $scope, $location, $log, $attrs, $timeout, $pwData, $route, $_ ) {
 		
+		
+
 		// Initialize
 		$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 		$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
@@ -69,6 +66,9 @@ postworld.controller('pwFeedController',
 			return;
 		}
 		
+		// FEED VARIABLES
+		//$scope.feedOptions = $_.getObj( $scope.feed, 'options' )
+
 		// SET VIEW
 		$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
 			$pwData.feeds[$scope.feedId].view : {};
@@ -96,6 +96,16 @@ postworld.controller('pwFeedController',
 		   // TODO : Also broadcast the feed ID, so only the effected feed is updated
 			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
 		   });
+
+
+		$scope.setDefault = function( exp, defaultVal ){
+			var value = $scope.$eval( exp );
+			if( _.isUndefined( value ) )
+				return defaultVal;
+			else
+				return value;
+		}
+
 
 		$scope.injectBlocks = function() {
 			// if ads settings exist, then inject ads, otherwise, just return.
@@ -609,6 +619,20 @@ postworld.controller('pwFeedController',
 
 
 }]);
+
+
+
+
+postworld.directive('loadPost', function() {
+	return {
+		restrict: 'A',
+		replace: true,
+		template: '<div ng-include="templateUrl" class="post"></div>',
+		controller: 'pwLoadPostController',
+		scope : {
+		},
+	};
+});
 
 postworld.controller('pwLoadPostController',
 	function pwLoadPostController($scope, $location, $log, $attrs, $timeout, $sce, $sanitize, pwData) {

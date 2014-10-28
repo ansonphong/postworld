@@ -440,6 +440,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 
 			///// JSON META KEYS /////
 			if( is_array( $post['post_meta'] ) ){
+
 				// Parse known JSON keys from JSON strings into objects
 				global $pwSiteGlobals;
 				// Get known metakeys from the theme configuration
@@ -448,6 +449,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 				if( !$json_meta_keys ) $json_meta_keys = array();
 				// Add the globally defined postmeta key
 				$json_meta_keys[] = pw_postmeta_key;
+
 				// Iterate through each post_meta value
 				foreach( $post['post_meta'] as $meta_key => $meta_value ){
 					// If the key is known to be a JSON field
@@ -1064,10 +1066,26 @@ function pw_set_wp_postmeta_array( $post_id, $post_meta = array() ){
 
 	///// ADD/UPDATE META FIELDS //////
 	if( !empty( $post_meta ) ){
+		
+		///// JSON SETUP /////
+		// Parse known object to JSON strings
+		global $pwSiteGlobals;
+		// Get known metakeys from the theme configuration
+		$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_postmeta.json_meta_keys' );
+		// If there are no set fields, define empty array
+		if( !$json_meta_keys ) $json_meta_keys = array();
+		// Add the globally defined postmeta key
+		$json_meta_keys[] = pw_postmeta_key;
+
+		///// ITERATE : POST META ///// 
 		foreach ( $post_meta as $meta_key => $meta_value ) {
-			// ENCODE ARRAYS AS JSON
-			if( is_array($meta_value) || is_object($meta_value) ){
-				$meta_value = json_encode($meta_value);
+			// If the key is a known JSON meta key
+			if( in_array( $meta_key, $json_meta_keys ) ){
+				// And the value is an object or array
+				if( is_array($meta_value) || is_object($meta_value) ){
+					// Encode the array as JSON
+					$meta_value = json_encode($meta_value);
+				}
 			}
 			// UPDATE META
 			update_post_meta($post_id, $meta_key, $meta_value);
@@ -1113,10 +1131,12 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			}
 		}
 
+		/*
 		///// POST FORMAT //////
 		if(isset($postarr["post_format"])){
 			set_post_format( $post_id , $postarr["post_format"] );
 		}
+		*/
 	
 		///// WORDPRESS POSTMETA /////
 		if( isset( $postarr['post_meta']) ){
