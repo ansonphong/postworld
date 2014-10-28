@@ -22,19 +22,19 @@ The standard Bootstrap Breakpoints are defined as such:
     + Desktop / laptop with full screen or wide browser window
     +  Nexus 10 tablet on landscape orientation
 
-## @md-lg
+## @lg
 **md** : 992px - **lg** : 1200px
 - Includes:
     + Desktop / laptop with browser window not at full screen width
     + Wide screen tablets on landscape orientation
 
-## @sm-md
+## @md
 **sm** : 768px - **md** : 992px
 - Includes:
     + iPhone 6 Plus or Nexus 7 on landscape orientation
     + Nexus 10 tablet on portrait orientation
 
-## @xs-sm
+## @sm
 **xs** : 480px - **sm** : 768px
 
 ## @xs
@@ -47,15 +47,15 @@ All the breakpoints are as follows:
 @xl:                ~"only screen and (min-width: @{screen-lg})";
 
 @md-and-above:      ~"only screen and (min-width: @{screen-md})";
-@md-lg:             ~"only screen and (min-width: @{screen-md}) and (max-width: @{screen-lg})";
+@lg:                ~"only screen and (min-width: @{screen-md}) and (max-width: @{screen-lg})";
 @lg-and-below:      ~"only screen and (max-width: @{screen-lg})";
 
 @sm-and-above:      ~"only screen and (min-width: @{screen-sm})";
-@sm-md:             ~"only screen and (min-width: @{screen-sm}) and (max-width: @{screen-md})";
+@md:                ~"only screen and (min-width: @{screen-sm}) and (max-width: @{screen-md})";
 @md-and-below:      ~"only screen and (max-width: @{screen-md})";
 
 @xs-and-above:      ~"only screen and (min-width: @{screen-xs})";
-@xs-sm:             ~"only screen and (min-width: @{screen-xs}) and (max-width: @{screen-sm})";
+@sm:                ~"only screen and (min-width: @{screen-xs}) and (max-width: @{screen-sm})";
 @sm-and-below:      ~"only screen and (max-width: @{screen-sm})";
 
 @xs:                ~"only screen and (max-width: @{screen-xs})";
