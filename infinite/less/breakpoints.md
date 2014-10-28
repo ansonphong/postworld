@@ -18,12 +18,21 @@ The standard Bootstrap Breakpoints are defined as such:
 
 ## @full
 **lg** : 1200px (+ and above)
+- Includes:
+    + Desktop / laptop with full screen or wide browser window
+    +  Nexus 10 tablet on landscape orientation
 
 ## @desktop
 **md** : 992px - **lg** : 1200px
+- Includes:
+    + Desktop / laptop with browser window not at full screen width
+    + Wide screen tablets on landscape orientation
 
 ## @mobile-lg
 **sm** : 768px - **md** : 992px
+- Includes:
+    + iPhone 6 Plus or Nexus 7 on landscape orientation
+    + Nexus 10 tablet on portrait orientation
 
 ## @mobile-md
 **xs** : 480px - **sm** : 768px
