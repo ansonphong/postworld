@@ -3,7 +3,7 @@
 The Postworld breakpoint variables are based on the Bootstrap screen sizes. Variables are defined to make it easy to define responsive CSS styling.
 
 ```less
-	@media @tablet { .myStyles() }
+	@media @sm { .myMobileStyles() }
 ```
 
 ---
