@@ -1,23 +1,30 @@
-/* Breakpoints */
-@xl:		~"only screen and (min-width: @{screen-lg})";
+/* ///// VARIABLES ///// */
+// Extends Bootstrap 3 `variables.less`
+@screen-xs-min:              (@screen-xs + 1);
+@screen-sm-min:              (@screen-sm + 1);
+@screen-md-min:              (@screen-md + 1);
+@screen-lg-min:              (@screen-lg + 1);
 
-@lg-up:		~"only screen and (min-width: @{screen-md})";
-@lg:		~"only screen and (min-width: @{screen-md}) and (max-width: @{screen-lg})";
+
+/* ///// BREAKPOINTS ///// */
+@xl:		~"only screen and (min-width: @{screen-lg-min})";
+
+@lg-up:		~"only screen and (min-width: @{screen-md-min})";
+@lg:		~"only screen and (min-width: @{screen-md-min}) and (max-width: @{screen-lg})";
 @lg-down:	~"only screen and (max-width: @{screen-lg})";
 
-@md-up:		~"only screen and (min-width: @{screen-sm})";
-@md:		~"only screen and (min-width: @{screen-sm}) and (max-width: @{screen-md})";
+@md-up:		~"only screen and (min-width: @{screen-sm-min})";
+@md:		~"only screen and (min-width: @{screen-sm-min}) and (max-width: @{screen-md})";
 @md-down:	~"only screen and (max-width: @{screen-md})";
 
-@sm-up:		~"only screen and (min-width: @{screen-xs})";
-@sm:		~"only screen and (min-width: @{screen-xs}) and (max-width: @{screen-sm})";
+@sm-up:		~"only screen and (min-width: @{screen-xs-min})";
+@sm:		~"only screen and (min-width: @{screen-xs-min}) and (max-width: @{screen-sm})";
 @sm-down:	~"only screen and (max-width: @{screen-sm})";
 
 @xs:		~"only screen and (max-width: @{screen-xs})";
 
 
-
-/* Lineage Breakpoints : DEPRECIATED */
+/* ///// LINEAGE : DEPRECIATED ///// */
 @full:   				~"only screen and (min-width: @{screen-lg})";
 
 @desktop-and-above:   	~"only screen and (min-width: @{screen-sm})";

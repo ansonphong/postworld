@@ -14,6 +14,8 @@ The standard Bootstrap Breakpoints are defined as such:
 - **sm** : 768px
 - **xs** : 480px
 
+Unique from the way the Bootstrap assigns `xs` as mobile-first, media-query-less definitions, and then beginning the `sm` definitions above the `sm` breakpoint, Postworld offers greater control over the `sm` range, thus allowing for a `xl` option.
+
 ---
 
 ## @xl
