@@ -1,4 +1,4 @@
-# Postworld : LESS / CSS Breakpoint Variables
+# Postworld : LESS Breakpoint Variables
 
 The Postworld breakpoint variables are based on the Bootstrap screen sizes. Variables are defined to make it easy to define responsive CSS styling.
 
