@@ -9,27 +9,27 @@ The Postworld breakpoint variables are based on the Bootstrap screen sizes. Vari
 ---
 
 The standard Bootstrap Breakpoints are defined as such:
-- *lg* : 1200px
-- *md* : 992px
-- *sm* : 768px
-- *xs* : 480px
+- **lg** : 1200px
+- **md** : 992px
+- **sm** : 768px
+- **xs** : 480px
 
 ---
 
 ## @full
-*lg* : 1200px (+ and above)
+**lg** : 1200px (+ and above)
 
 ## @desktop
-*md* : 992px - *lg* : 1200px
+**md** : 992px - **lg** : 1200px
 
 ## @mobile-lg
-*sm* : 768px - *md* : 992px
+**sm** : 768px - **md** : 992px
 
 ## @mobile-md
-*xs* : 480px - *sm* : 768px
+**xs** : 480px - **sm** : 768px
 
 ## @mobile-sm
-*xs* : 480px (- and below)
+**xs** : 480px (- and below)
 
 --- 
 
