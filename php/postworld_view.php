@@ -42,7 +42,10 @@ function pw_current_context(){
 		$context[] = 'admin';
 
 	if( is_tax() )
-		$context[] = 'archive-term';
+		$context[] = 'archive-taxonomy';
+
+	if( is_year() || is_month() || is_day() )
+		$context[] = 'archive-date'; 
 
 	if( is_year() )
 		$context[] = 'archive-year'; 
@@ -58,7 +61,7 @@ function pw_current_context(){
 	
 
 	// CUSTOM TAXONOMIES
-	if( in_array( 'archive-term', $context ) ){
+	if( in_array( 'archive-taxonomy', $context ) ){
 		// Get the taxonomy object
 		$taxonomy = get_query_var( 'taxonomy' );
 		$taxonomy_obj = get_taxonomy( $taxonomy );
@@ -97,7 +100,6 @@ function pw_current_context(){
 }
 
 
-
 function pw_get_view_meta( $context = array() ){
 	global $post;
 
@@ -131,17 +133,17 @@ function pw_get_view_meta( $context = array() ){
 	if( in_array( 'archive', $context ) ){
 
 		// Check Context
-		$post_type = get_query_var( 'post_type' );
-
-		$taxonomy = get_query_var( 'taxonomy' );
+		//$taxonomy = get_query_var( 'taxonomy' );
 
 		/// POST TYPE ///
-		if( !isset($post_type) ){
+		if( in_array( 'archive-post-type', $context ) ){
+			$post_type = get_query_var( 'post_type' );
 			$post_type_obj = get_post_type_object( $post_type );
 			$meta['post_type'] = $post_type_obj;
+		}
 
 		/// TAXONOMY ///
-		} else if( !empty( $taxonomy ) ){
+		else if( !empty( $taxonomy ) ){
 
 			$taxonomy = get_query_var( 'taxonomy' );
 			$term_id = get_queried_object()->term_id;

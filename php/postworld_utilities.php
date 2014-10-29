@@ -798,24 +798,28 @@ function pw_get_menus(){
 
 
 ///// DEPRECIATED /////
+
 function pw_get_view_type(){
 	// Determine the view type
 	$view_type = "default";
+
 	if( is_archive() && !is_date() )
-		$view_type = 'archive-term';
+		$view_type = 'archive-taxonomy';
+	if( is_post_type_archive() )
+		$view_type = 'archive-post-type'; 
 	//else if( is_archive() && is_date() && !is_year() )
 	//	$view_type = 'archive-date';
-	else if( is_year() )
+	if( is_year() )
 		$view_type = 'archive-year';
-	else if( is_month() )
+	if( is_month() )
 		$view_type = 'archive-month';
-	else if( is_day() )
+	if( is_day() )
 		$view_type = 'archive-day';
-	else if( is_page() )
+	if( is_page() )
 		$view_type = 'page';
-	else if( is_page() )
+	if( is_page() )
 		$view_type = 'page';
-	else if( is_single() )
+	if( is_single() )
 		$view_type = 'post';
 
 	return $view_type;

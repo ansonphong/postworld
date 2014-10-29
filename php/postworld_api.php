@@ -8,6 +8,9 @@
                                                          
 /////////////////////////////////////////////////////////*/
 
+function _get( $obj, $key ){
+	return pw_get_obj( $obj, $key );
+}
 function pw_get_obj( $obj, $key ){
 	// Checks to see if a key exists in an object,
 	// and returns it if it does exist. Otherwise return false.
@@ -39,7 +42,9 @@ function pw_get_obj( $obj, $key ){
 
 }
 
-
+function _set( $obj, $key, $value ){
+	return pw_set_obj( $obj, $key, $value );
+}
 function pw_set_obj( $obj, $key, $value ){
 	// Sets the value of an object,
 	// even if it or it's parent(s) doesn't exist.

@@ -1,7 +1,6 @@
 <?php
 
-/*
-                      ____             _       _   __  __          _ _       
+/*                    ____             _       _   __  __          _ _       
   _ ____      __  _  / ___|  ___   ___(_) __ _| | |  \/  | ___  __| (_) __ _ 
  | '_ \ \ /\ / / (_) \___ \ / _ \ / __| |/ _` | | | |\/| |/ _ \/ _` | |/ _` |
  | |_) \ V  V /   _   ___) | (_) | (__| | (_| | | | |  | |  __/ (_| | | (_| |
@@ -11,6 +10,108 @@
 
 // SNIPPETS
 //include(locate_template('views//taxonomy-page-setup.php'));
+
+
+////////// SOCIAL SHARE //////////
+function pw_social_share( $post ){
+	$template = pw_get_template ( 'social', 'share', 'php', 'dir' );
+	return pw_ob_include( $template, $post);
+}
+
+
+
+function pw_get_social_share_meta( $vars ){
+
+	// Post from vars
+	$post = pw_to_array( $vars );
+
+	// Share Networks
+	$share_networks = i_get_option( array( "option_name" => "i-options", "key" => "social.share.networks" ) );
+
+	///// IMAGE URL /////
+	// Get the image url from the passed post object
+	$image_url_from_post = _get( $post, 'image.sizes.full.url' );
+	// If the image URL is set
+	$image_url = ( $image_url_from_post != false ) ?
+		// Use the image URL from the post
+		$image_url_from_post :
+		// Otherwise, get it manually
+		pw_get_featured_image_obj( $post['ID'] )['url'];
+	if( $image_url == null )
+		$image_url = '';
+	else
+		$image_url = urlencode($image_url);
+
+	///// PERMALINK /////
+	$permalink = _get( $post, 'post_permalink' );
+	if( $permalink == false )
+		$permalink = get_permalink( $post['ID'] );
+	$permalink = urlencode( $permalink );
+	// If permalink doesn't exist, get the URL from PHP URL of current page
+
+
+	///// TITLE & EXCERPT /////
+	$title = urlencode($post['post_title']);
+	$excerpt = urlencode($post['post_excerpt']);
+	
+	$site_name = urlencode( get_bloginfo( 'name' ) );
+	$title_and_site_name = $title . urlencode(" | ") . $site_name;
+
+	///// SOCIAL SHARE OBJECT /////
+	$s = array();
+
+	///// FACEBOOK /////
+	if( in_array( 'facebook', $share_networks ) ){
+		$facebook_link = "https://www.facebook.com/sharer/sharer.php?u=".$permalink;
+		$s = _set( $s, 'facebook.link', $facebook_link );
+	}
+	
+	///// TWITTER /////
+	if( in_array( 'twitter', $share_networks ) ){
+		$twitter_user = i_get_option(array( 'option_name' => 'i-social', 'key' => 'networks.twitter' ));
+
+		$twitter_via = ( $twitter_user ) ?
+			'via='.urlencode($twitter_user).'&' : '';
+
+		$twitter_related = ( $twitter_user ) ?
+			'related='.urlencode($twitter_user).'&' : '';
+
+		$twitter_hashtags = i_get_option(array( 'option_name' => 'i-social', 'key' => 'networks.twitter_hashtags' ));
+		$twitter_hashtags = ( $twitter_hashtags ) ?
+			'hashtags='.urlencode($twitter_hashtags) . '&' : '';
+
+		$twitter_text = 'text=' . $title_and_site_name . '&';
+
+		$twitter_url = 'url='.$permalink.'&';
+
+		$twitter_link = "https://twitter.com/intent/tweet?" . $twitter_hashtags . $twitter_related . $twitter_text . $twitter_url . $twitter_via;
+
+		$s = _set( $s, 'twitter.link', $twitter_link );
+	}
+
+
+	///// REDDIT LINK /////
+	if( in_array( 'reddit', $share_networks ) ){
+		$reddit_link = 'http://www.reddit.com/submit?url='.$permalink.'&title='.$title;
+		$s = _set( $s, 'reddit.link', $reddit_link );
+	}
+
+	///// GOOGLE PLUS LINK /////
+	if( in_array( 'google_plus', $share_networks ) ){
+		$google_plus_link = 'https://plus.google.com/share?url=' . $permalink;
+		$s = _set( $s, 'google_plus.link', $google_plus_link );
+	}
+
+	///// PINTEREST LINK /////
+	if( in_array( 'pinterest', $share_networks ) ){
+		$pinterest_link = 'https://pinterest.com/pin/create/button/?url='.$permalink.'&media='.$image_url.'&description='.$title_and_site_name;
+		$s = _set( $s, 'pinterest.link', $pinterest_link );
+	}
+
+	return $s;
+
+}
+
 
 
 function pw_social_widgets( $settings ){
