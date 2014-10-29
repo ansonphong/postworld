@@ -19,8 +19,8 @@ function pw_social_share( $post ){
 }
 
 
-
 function pw_get_social_share_meta( $vars ){
+	global $pw;
 
 	// Post from vars
 	$post = pw_to_array( $vars );
@@ -43,12 +43,16 @@ function pw_get_social_share_meta( $vars ){
 		$image_url = urlencode($image_url);
 
 	///// PERMALINK /////
-	$permalink = _get( $post, 'post_permalink' );
+
+	if( in_array( 'single', $pw['view']['context'] ) )
+		$permalink = _get( $post, 'post_permalink' );
+	if( in_array( 'archive', $pw['view']['context'] ) )
+		$permalink = _get( $pw, 'view.url' );
+
 	if( $permalink == false )
 		$permalink = get_permalink( $post['ID'] );
 	$permalink = urlencode( $permalink );
 	// If permalink doesn't exist, get the URL from PHP URL of current page
-
 
 	///// TITLE & EXCERPT /////
 	$title = urlencode($post['post_title']);
