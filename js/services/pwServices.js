@@ -251,7 +251,13 @@ postworld.factory('_',
             return obj;
             
         },
+        get : function( obj, key ){
+			return this.getObj( obj, key  );
+		},
 		setObj : function( obj, key, value  ){
+			return setObj( obj, key, value  );
+		},
+		set : function( obj, key, value  ){
 			return setObj( obj, key, value  );
 		},
 
@@ -337,6 +343,8 @@ postworld.factory('_',
 
 		    return hash;
 		},
+
+
 
 	};
 

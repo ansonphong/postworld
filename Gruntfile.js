@@ -34,6 +34,9 @@ module.exports = function(grunt) {
             // Deep Merge
             'lib/deepmerge/deepmerge.js',
 
+            // PHP.js
+            'lib/php.js/php.js',
+
             /*
             // Moment.js
             'lib/moment.js/moment.min.js',
@@ -43,9 +46,6 @@ module.exports = function(grunt) {
             'lib/moment.js/moment-timezone-data.js',
             */
             
-            
-            
-
             ///// BOOTSTRAP /////
           	// Bootstrap JS
             //'lib/bootstrap/bootstrap.min.js', // Main Bootstrap JS

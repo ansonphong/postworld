@@ -1,0 +1,9 @@
+<div
+	style="width:100%; height:100%; background:#fff; color: #000; font-size:20px; text-align:center; border:2px solid #000; "
+	class="i-transition-fadein"
+	pw-timeout="{{ (post.feed.loadOrder * 200) }}"
+    timeout-action="addClass('fadein-on')"
+    pw-feed-post>
+		block.index : {{ post.block.index | json }} // 
+		feed.loadOrder : {{ post.feed.loadOrder | json }}
+</div>

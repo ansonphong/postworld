@@ -145,6 +145,10 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'DeepMerge',
 			POSTWORLD_URI.'/lib/deepmerge/deepmerge.js');
 
+		// PHP.JS
+		wp_enqueue_script( 'PHP.JS',
+			POSTWORLD_URI.'/lib/php.js/php.js');
+
 		/*
 		// MOMENT.JS
 		wp_enqueue_script( 'Moment-JS',

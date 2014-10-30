@@ -34,8 +34,6 @@ postworld.controller('pwFeedController',
 	[ '$scope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_',
 	function( $scope, $location, $log, $attrs, $timeout, $pwData, $route, $_ ) {
 		
-		
-
 		// Initialize
 		$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 		$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
@@ -106,68 +104,6 @@ postworld.controller('pwFeedController',
 				return value;
 		}
 
-
-		$scope.injectBlocks = function() {
-			// if ads settings exist, then inject ads, otherwise, just return.
-			if ($pwData.feeds[$scope.feedId].blocks) {
-				// Initialize Ad Blocks
-				$scope.adBlocks = 0;
-				var len = $pwData.feeds[$scope.feedId].posts.length;
-				var offset = 0;
-				if ($pwData.feeds[$scope.feedId].blocks.offset) offset = $pwData.feeds[$scope.feedId].blocks.offset;
-				var increment = 10;
-				if ($pwData.feeds[$scope.feedId].blocks.increment) increment = $pwData.feeds[$scope.feedId].blocks.increment;
-				var max_blocks = 5;
-				if ($pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = $pwData.feeds[$scope.feedId].blocks.max_blocks;
-				var blockTemplate = "ad-block";
-				if ($pwData.feeds[$scope.feedId].blocks.template) blockTemplate = $pwData.feeds[$scope.feedId].blocks.template;
-				$scope.adNextID = offset;
-				// loop on scope.items starting from offset, with increments = increment, and break when max_blocks is reached
-				for (var i=offset;	i<len+$scope.adBlocks; 	i=i+increment)	{ 
-					console.log('Next Ad on ',$scope.adNextID);
-					if (i>=len) break;
-					if ($scope.adBlocks>=max_blocks) break;
-					var item = {
-						'post_type'	: 'ad',
-						'template'	: blockTemplate,
-					};
-					//console.log('item',item);
-					// inject here
-					$scope.posts.splice(i+$scope.adBlocks,0,item);
-					
-					$scope.adBlocks++;
-					$scope.adNextID += increment+1; // 1 is the new ad added					
-				}				
-			}
-		};
-		
-		$scope.injectNewBlock = function() {
-			// check if blocks enabled
-			if ($pwData.feeds[$scope.feedId].blocks) {
-				var max_blocks = 5;
-				if ( $pwData.feeds[$scope.feedId].blocks.max_blocks) max_blocks = $pwData.feeds[$scope.feedId].blocks.max_blocks;
-				var blockTemplate = "ad-block";
-				if ( $pwData.feeds[$scope.feedId].blocks.template) blockTemplate = $pwData.feeds[$scope.feedId].blocks.template;
-				var increment = 10;
-				if ( $pwData.feeds[$scope.feedId].blocks.increment) increment = $pwData.feeds[$scope.feedId].blocks.increment;
-				// Check if max_blocks reached, return.
-				if ( $scope.adBlocks >= max_blocks ) return;				
-				var len = $scope.posts.length;
-				// did we reach new id? insert
-				if ($scope.adNextID==len) {
-					var item = {
-						'post_type'	: 'ad',
-						'template'	: blockTemplate,
-					};
-					// inject here
-					$scope.posts.push(item);					
-					$scope.adBlocks++;
-					$scope.adNextID += increment+1; // 1 is the new ad added					
-				}
-				// else return
-			}
-		};
-		
 		$scope.resetFeedData = function () {
 			// Reset Feed Data
 			$pwData.feeds[$scope.feedId] = {};
@@ -266,11 +202,17 @@ postworld.controller('pwFeedController',
 			///// GET FEED FROM PRELOADED DATA /////
 			// If posts have already been pre-loaded
 			if( _.isArray( $pwData.feeds[$scope.feedId].posts ) ){
+
+				
+				//$scope.posts = $pwData.feeds[$scope.feedId].posts;
+				$scope.injectBlocks();
 				$scope.addFeedMeta();
 				$scope.posts = $pwData.feeds[$scope.feedId].posts;
-				$scope.injectBlocks();
+
+
 				$scope.updateStatus();
 				$scope.busy = false;
+
 				// Return the function here
 				// To avoid AJAX call
 				return;
@@ -504,20 +446,38 @@ postworld.controller('pwFeedController',
 					if( response.status == 200) {
 
 						var newItems = response.data;
+						
+						// Used to sequence the order of post fade-in transitions 
 						var loadOrder = 0;
-						for ( var i = 0; i < newItems.length; i++ ) {
-							// LOAD ORDER // feed.loadOrder
+						var injectBlock = false;
+
+						for ( var i = 0; i < newItems.length ; i++ ) {
+
+							/// LOAD ORDER ///
 							// Tells which order in the chunk of posts loaded each post is
 							// To allow for sequencing transitions, such as offset fade-ins on scroll
 							newItems[i] = $_.setObj( newItems[i], 'feed.loadOrder', loadOrder );
 							loadOrder ++;
 
+							$log.debug( ">>> INJECTED POST : loadOrder : " + newItems[i].feed.loadOrder + " : " + newItems[i].post_title );
+
 							// Push to central posts array
 							$pwData.feeds[$scope.feedId].posts.push( newItems[i] );
 
-							// Inject Blocks						
-							$scope.injectNewBlock();
+							/// INJECT BLOCKS ///					
+							var blockVars = { singleRun: true, post:{ feed:{ loadOrder: loadOrder } } };
+							// Used to know if a block has been injected
+							// Will return true if a block was added
+							injectBlock = $scope.injectBlock( blockVars );
+							if( injectBlock == true ){
+								$log.debug( ">>> INJECTED BLOCK : loadOrder : ", blockVars.post.feed.loadOrder );
+								loadOrder ++;
+							}
+
 						}
+
+						// Inject Blocks
+						//$scope.injectBlocks();
 
 						/// UPDATE : LOADED ///
 						// Get the new 'loaded' array directly from which post IDs were requested
@@ -529,7 +489,11 @@ postworld.controller('pwFeedController',
 						// Add Feed Meta for only the new posts
 						var postsLoaded = parseInt( $pwData.feeds[$scope.feedId].posts.length - 1 );
 						$scope.addFeedMeta( { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length } );
+						
+						// Set the posts into the scope
 						$scope.posts = $pwData.feeds[$scope.feedId].posts;
+
+						
 
 						// Update feed status
 						$scope.updateStatus();
@@ -549,6 +513,136 @@ postworld.controller('pwFeedController',
 				}
 			);
 		};
+
+
+		$scope.initBlocks = true;
+		$scope.injectBlocks = function() {
+			// Run at the initiation of a feed
+			// Injects blocks into the feed array
+			//$log.debug( "FEED : ", $pwData.feeds[$scope.feedId] );
+
+			///// INIT BLOCK INJECTION /////
+			// If this is the first time injecting, establish the blocks object
+			if( $scope.initBlocks ){
+				$scope.initBlocks = false;
+
+				// Get the blocks object
+				var blocks = $_.get( $pwData.feeds, $scope.feedId +'.blocks' );
+
+				// If blocks is defined as an object
+				if( _.isObject( blocks ) ){
+
+					// Define the default blocks settings
+					var defaultBlocks = {
+						offset: 3,				// How many posts in the feed before first block
+						increment: 10,			// Place blocks every X number of posts
+						max: 50,				// Maximum number of blocks to inject
+						template: 'ad-block',	// Name of panel template id
+						sidebar: false,			// Use a sidebar for blocks
+						query: false,			// Use a query for the blocks
+						classes: false,
+					};
+
+					// Replace the default settings with the settings from the feed
+					blocks = array_replace_recursive( defaultBlocks, blocks );
+
+					// Current number of blocks in the feed
+					blocks._count = 0;
+
+					// Establish where the next block will be added
+					blocks._nextIndex = blocks.offset;
+
+					// Set the object into the scope
+					$scope.blocks = blocks;
+
+				}
+				// If no blocks object is defined, return here
+				else
+					return;
+
+			}
+
+			///// IF : NO BLOCKS DEFINED /////
+			else if( !_.isObject( $scope.blocks ) )
+				// Return here
+				return;
+
+			// Get the number of posts loaded
+			//var postCount = $pwData.feeds[$scope.feedId].loaded.length;
+
+			$scope.injectBlock();
+	
+		};
+
+
+		
+		$scope.injectBlock = function( vars ){
+
+			// If no blocks configured, return here
+			if( _.isEmpty( $scope.blocks ) )
+				return;
+
+			/// SET DEFAULTS ///
+			if( _.isUndefined( vars ) )
+				vars = {};
+			if( _.isUndefined( vars.singleRun ) )
+				vars.singleRun = false;
+			if( _.isUndefined( vars.post ) )
+				vars.post = {};
+
+			// 	Try here add loaded.length + blocks._count
+			//	var feedLength = $scope.feed.loaded.length - $scope.blocks._count;
+
+			if( $scope.blocks._nextIndex <= $pwData.feeds[$scope.feedId].posts.length &&
+				$scope.blocks._count <= $scope.blocks.max ){
+
+				//////////////////////////////
+
+				// Console Log
+				//$log.debug('$scope.blocks._nextIndex : ', $scope.blocks._nextIndex );
+				//$log.debug('$scope.posts.length : ', $pwData.feeds[$scope.feedId].posts.length );
+				//$log.debug('feedLength : ', feedLength );
+				//$log.debug('$scope.blocks._count : ', $scope.blocks._count );
+				//$log.debug('$scope.blocks.max : ', $scope.blocks.max );
+
+				// The block item to inject into the feed 
+				var block = {
+					post_type	: '_pw_block',
+					template	: $scope.blocks.template,
+					block: {
+						'index'		: $scope.blocks._nextIndex,
+						'classes'	: $scope.blocks['classes'],
+					},
+				};
+
+				// If a post is provided, add the post data
+				if( !_.isEmpty( vars.post ) )
+					block = array_replace_recursive( block, vars.post );
+
+				// Inject the block into the feed at the pre-calculated next index
+				$pwData.feeds[$scope.feedId].posts.splice( $scope.blocks._nextIndex, 0, block );
+				//$scope.posts.splice( $scope.blocks._nextIndex, 0, block );
+
+				//$log.debug( ">>> INSERT BLOCK : _nextIndex : " + $scope.blocks._nextIndex );
+
+				// Increase number of blocks
+				$scope.blocks._count ++;
+				
+				// Set when the next block will be added
+				$scope.blocks._nextIndex += $scope.blocks.increment + 1; // + 1 to include the new block added					
+		
+				//////////////////////////////
+
+				// LOOP
+				if( !vars.singleRun )
+					$scope.injectBlock();
+				else
+					return true;
+			}
+
+			return false;
+
+		}
 
 		$scope.updateStatus = function(){
 			// Count Length of loaded, update scroll message
