@@ -540,6 +540,7 @@ postworld.controller('pwFeedController',
 						template: 'ad-block',	// Name of panel template id
 						sidebar: false,			// Use a sidebar for blocks
 						query: false,			// Use a query for the blocks
+						classes: false,
 					};
 
 					// Replace the default settings with the settings from the feed
@@ -610,6 +611,7 @@ postworld.controller('pwFeedController',
 					template	: $scope.blocks.template,
 					block: {
 						'index'		: $scope.blocks._nextIndex,
+						'classes'	: $scope.blocks['classes'],
 					},
 				};
 
