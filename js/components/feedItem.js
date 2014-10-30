@@ -24,7 +24,7 @@ postworld.controller('pwFeedItemCtrl',
 		var type = 'post';
 		if ( $scope.post.post_type ) type = $scope.post.post_type;
 
-        if (type == "ad") {
+        if (type == '_pw_block') {
 			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'panels', view: $scope.post.template } );				
 		}
 		else 
@@ -42,7 +42,7 @@ postworld.controller('pwFeedItemCtrl',
 		// Template Update Event
 		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, feed_item_view_type){
 			
-			if ( $scope.post.post_type != "ad" ) {
+			if ( $scope.post.post_type != '_pw_block' ) {
 				var type = $scope.post.post_type;
 				$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: feed_item_view_type } );					
 			} 
