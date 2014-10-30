@@ -454,10 +454,7 @@ postworld.controller('pwFeedController',
 							// Inject Blocks						
 							//$scope.injectNewBlock();
 
-							var injectBlock = $scope.injectBlock( { feed:{ loadOrder: loadOrder } } );
-							// If a block was injected
-							if( injectBlock == true )
-								loadOrder ++;
+							$scope.injectBlock();
 
 						}
 
@@ -553,19 +550,17 @@ postworld.controller('pwFeedController',
 
 			// Get the number of posts loaded
 			//var postCount = $pwData.feeds[$scope.feedId].loaded.length;
-			$scope.injectBlock(  ); // { feed:{ loadOrder: loadOrder } }
+
+			$scope.injectBlock();
 	
 		};
 
 
 		
-		$scope.injectBlock = function( block ){
+		$scope.injectBlock = function(){
 
 			if( _.isEmpty( $scope.blocks ) )
-				return false;
-
-			if( _.isEmpty( block ) )
-				block = {};
+				return;
 
 			// Try here add loaded.length + blocks._count
 			//var feedLength = $scope.feed.loaded.length - $scope.blocks._count;
@@ -584,7 +579,7 @@ postworld.controller('pwFeedController',
 				
 
 				// The block item to inject into the feed 
-				var defaultBlock = {
+				var block = {
 					post_type	: '_pw_block',
 					template	: $scope.blocks.template,
 					block: {
@@ -592,15 +587,11 @@ postworld.controller('pwFeedController',
 					},
 				};
 
-				var block = array_replace_recursive( defaultBlock, block );
-
-				/*
 				// Set the load order of the block
 				var previousPost = $scope.posts[ $scope.blocks._nextIndex - 1 ];
 				var loadOrder = $_.get( previousPost, 'feed.loadOrder' );
 				if( loadOrder != false || loadOrder == 0 )
 					block = $_.set( block, 'feed.loadOrder', loadOrder + 0.5 );
-				*/
 
 				// Inject the block into the feed at the pre-calculated next index
 				$scope.posts.splice( $scope.blocks._nextIndex, 0, block );
@@ -618,11 +609,8 @@ postworld.controller('pwFeedController',
 				// LOOP
 				$scope.injectBlock();
 
-				return true;
-
 			}
 
-			return false;
 
 		}
 
