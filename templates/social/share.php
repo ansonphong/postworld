@@ -1,9 +1,8 @@
 <?php
 	$s = pw_get_social_share_meta( $vars );
-
-	// REFACTOR AS FOREACH
-	// ACCESS CENTRAL SOCIAL NETWORK INFO DATAS
-
+	// TODO : REFACTOR AS FOREACH
+	// ACCESS CENTRAL SOCIAL NETWORK INFO DATAS / LANGUAGING - USE LIKE PW DATA FOR PHP
+	// IE. "Share on" & "Google Plus" & "icon-google-plus"
 ?>
 
 <?php if( array_key_exists( 'facebook', $s ) ){ ?> 

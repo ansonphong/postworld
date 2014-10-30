@@ -91,7 +91,7 @@ infinite.factory( 'iOptionsData', [ '_', function( $_ ){
 						name: 'Google Plus',
 						id: 'google_plus',
 						icon: 'icon-google-plus-square',
-						selected: false,
+						selected: true,
 					},
 					{
 						name: 'Pinterest',
