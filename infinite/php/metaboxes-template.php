@@ -7,7 +7,7 @@
 /////////////////////////////////////////*/?>
 
 <!--///// METABOX TEMPLATES /////-->
-<div ng-app="infiniteMetabox" id="infiniteMetabox" class="infinite postworld">
+<div id="infiniteMetabox" class="infinite postworld">
 	<div ng-controller="iMetaboxCtrl">
 		<?php
 			// Print the Templates
