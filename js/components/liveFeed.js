@@ -452,11 +452,16 @@ postworld.controller('pwFeedController',
 							$pwData.feeds[$scope.feedId].posts.push( newItems[i] );
 
 							// Inject Blocks						
-							$scope.injectNewBlock();
+							//$scope.injectNewBlock();
+
+							var injectBlock = $scope.injectBlock( { feed:{ loadOrder: loadOrder } } );
+							// If a block was injected
+							if( injectBlock == true )
+								loadOrder ++;
 
 						}
 
-						// Inject Blocks	
+						// Inject Blocks
 						//$scope.injectBlocks();
 
 						/// UPDATE : LOADED ///
@@ -541,95 +546,87 @@ postworld.controller('pwFeedController',
 
 			}
 
-			///// WHEN INJECTING TO NEW POSTS /////
-			else if( _.isObject( $scope.blocks ) )
-				var blocks = $scope.blocks;
-			
-			///// WHEN NO BLOCKS DEFINED /////
-			else
+			///// IF : NO BLOCKS DEFINED /////
+			else if( !_.isObject( $scope.blocks ) )
+				// Return here
 				return;
 
-
 			// Get the number of posts loaded
-			var postCount = $pwData.feeds[$scope.feedId].loaded.length;
+			//var postCount = $pwData.feeds[$scope.feedId].loaded.length;
+			$scope.injectBlock(  ); // { feed:{ loadOrder: loadOrder } }
+	
+		};
 
-			// Iterate through $scope.posts 
-			for( 	var i = blocks._nextIndex;		// Starting at blocks._nextIndex
-					i < postCount + blocks._count;	// For as long as there are posts
-					i = i + blocks.increment 		// Iterating by increment
-					){ 
-				
-				// Break here when past the end of the array
-				if ( i >= postCount ) break;
 
-				// Break here if the maximum number of blocks has been injected					
-				if ( blocks._count >= blocks.max) break;
+		
+		$scope.injectBlock = function( block ){
 
+			if( _.isEmpty( $scope.blocks ) )
+				return false;
+
+			if( _.isEmpty( block ) )
+				block = {};
+
+			// Try here add loaded.length + blocks._count
+			//var feedLength = $scope.feed.loaded.length - $scope.blocks._count;
+
+			if( $scope.blocks._nextIndex <= $scope.posts.length - 1 &&
+				$scope.blocks._count <= $scope.blocks.max ){
 
 				//////////////////////////////
 
 				// Console Log
-				$log.debug('blocks._nextIndex : ', blocks._nextIndex );
+				$log.debug('$scope.blocks._nextIndex : ', $scope.blocks._nextIndex );
+				$log.debug('$scope.posts.length : ', $scope.posts.length );
+				//$log.debug('feedLength : ', feedLength );
+				$log.debug('$scope.blocks._count : ', $scope.blocks._count );
+				//$log.debug('$scope.blocks.max : ', $scope.blocks.max );
 				
+
 				// The block item to inject into the feed 
-				var block = {
-					'post_type'	: '_pw_block',
-					'template'	: blocks.template,
+				var defaultBlock = {
+					post_type	: '_pw_block',
+					template	: $scope.blocks.template,
+					block: {
+						'index'		: $scope.blocks._nextIndex,
+					},
 				};
 
-				// Inject the block into the feed at the pre-calculated next index point
-				$scope.posts.splice( blocks._nextIndex, 0, block );
+				var block = array_replace_recursive( defaultBlock, block );
+
+				/*
+				// Set the load order of the block
+				var previousPost = $scope.posts[ $scope.blocks._nextIndex - 1 ];
+				var loadOrder = $_.get( previousPost, 'feed.loadOrder' );
+				if( loadOrder != false || loadOrder == 0 )
+					block = $_.set( block, 'feed.loadOrder', loadOrder + 0.5 );
+				*/
+
+				// Inject the block into the feed at the pre-calculated next index
+				$scope.posts.splice( $scope.blocks._nextIndex, 0, block );
+
+				$log.debug( ">>> INSERT BLOCK : _nextIndex : " + $scope.blocks._nextIndex );
 
 				// Increase number of blocks
-				blocks._count ++;
+				$scope.blocks._count ++;
 				
 				// Set when the next block will be added
-				blocks._nextIndex += blocks.increment + 1; // + 1 to include the new block added					
-			
+				$scope.blocks._nextIndex += $scope.blocks.increment + 1; // + 1 to include the new block added					
+		
 				//////////////////////////////
 
-			}
+				// LOOP
+				$scope.injectBlock();
 
-			
-		};
-		
-		$scope.injectNewBlock = function() {
-			// Run after inserting new posts into a feed
-			// Injects blocks into the feed array
-
-			// check if blocks enabled
-			if( _.isObject( $scope.blocks ) ) {
-
-				// Make a local instance of the scope object
-				// This has two-way data binding
-				var blocks = $scope.blocks;
-
-				// Check if max_blocks reached, return.
-				if ( blocks._count >= blocks.max ) return;
-
-				var len = $scope.posts.length;
-
-				// Has the next index been reached
-				if( blocks._nextIndex == len ) {
-					var item = {
-						'post_type'	: '_pw_block',
-						'template'	: blocks.template,
-					};
-
-					// Inject here
-					$scope.posts.push(item);					
-					
-					// Increase number of blocks
-					blocks._count ++;
-
-					// Set when the next block will be added
-					blocks._nextIndex += blocks.increment + 1; // 1 is the new ad added					
-				
-				}
+				return true;
 
 			}
 
-		};
+			return false;
+
+		}
+
+
 
 
 		$scope.updateStatus = function(){
