@@ -202,11 +202,17 @@ postworld.controller('pwFeedController',
 			///// GET FEED FROM PRELOADED DATA /////
 			// If posts have already been pre-loaded
 			if( _.isArray( $pwData.feeds[$scope.feedId].posts ) ){
+
+				
+				//$scope.posts = $pwData.feeds[$scope.feedId].posts;
+				$scope.injectBlocks();
 				$scope.addFeedMeta();
 				$scope.posts = $pwData.feeds[$scope.feedId].posts;
-				$scope.injectBlocks();
+
+
 				$scope.updateStatus();
 				$scope.busy = false;
+
 				// Return the function here
 				// To avoid AJAX call
 				return;
@@ -565,18 +571,17 @@ postworld.controller('pwFeedController',
 			// Try here add loaded.length + blocks._count
 			//var feedLength = $scope.feed.loaded.length - $scope.blocks._count;
 
-			if( $scope.blocks._nextIndex <= $scope.posts.length - 1 &&
+			if( $scope.blocks._nextIndex <= $pwData.feeds[$scope.feedId].posts.length - 1 &&
 				$scope.blocks._count <= $scope.blocks.max ){
 
 				//////////////////////////////
 
 				// Console Log
-				$log.debug('$scope.blocks._nextIndex : ', $scope.blocks._nextIndex );
-				$log.debug('$scope.posts.length : ', $scope.posts.length );
+				//$log.debug('$scope.blocks._nextIndex : ', $scope.blocks._nextIndex );
+				//$log.debug('$scope.posts.length : ', $pwData.feeds[$scope.feedId].posts.length );
 				//$log.debug('feedLength : ', feedLength );
-				$log.debug('$scope.blocks._count : ', $scope.blocks._count );
+				//$log.debug('$scope.blocks._count : ', $scope.blocks._count );
 				//$log.debug('$scope.blocks.max : ', $scope.blocks.max );
-				
 
 				// The block item to inject into the feed 
 				var block = {
@@ -587,14 +592,9 @@ postworld.controller('pwFeedController',
 					},
 				};
 
-				// Set the load order of the block
-				var previousPost = $scope.posts[ $scope.blocks._nextIndex - 1 ];
-				var loadOrder = $_.get( previousPost, 'feed.loadOrder' );
-				if( loadOrder != false || loadOrder == 0 )
-					block = $_.set( block, 'feed.loadOrder', loadOrder + 0.5 );
-
 				// Inject the block into the feed at the pre-calculated next index
-				$scope.posts.splice( $scope.blocks._nextIndex, 0, block );
+				$pwData.feeds[$scope.feedId].posts.splice( $scope.blocks._nextIndex, 0, block );
+				//$scope.posts.splice( $scope.blocks._nextIndex, 0, block );
 
 				$log.debug( ">>> INSERT BLOCK : _nextIndex : " + $scope.blocks._nextIndex );
 
