@@ -16,16 +16,18 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 */
 
 'use strict';
-//var feed_settings = [];
 
+// Setup $window.pw object to catch front-loaded data
 var pw = {
 	feeds:{},
+	widgets:{},
 };
 
 var depInject = [
 	'ngResource',
 	'ngRoute',
 	'ngSanitize',
+	'ngTouch',
 	// 'ngAnimate', (animate removed for bootstrap carousel)
 	//'infinite-scroll', 
 	'ui.bootstrap',

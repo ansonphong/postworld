@@ -4,6 +4,6 @@
 	pw-timeout="{{ (post.feed.loadOrder * 200) }}"
     timeout-action="addClass('fadein-on')"
     pw-feed-post>
-		block.index : {{ post.block.index | json }} // 
-		feed.loadOrder : {{ post.feed.loadOrder | json }}
+		<pre style="font-size:11px; text-align:left; padding:10px 20px;">block : {{ post.block | json }}</pre>
+		<pre style="font-size:11px; text-align:left; padding:10px 20px;">feed : {{ post.feed | json }}</pre>
 </div>

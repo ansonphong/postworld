@@ -88,6 +88,7 @@ module.exports = function(grunt) {
           	'lib/'+angular_version+'/angular-sanitize.min.js',
           	'lib/'+angular_version+'/angular-route.min.js',
           	'lib/'+angular_version+'/angular-resource.min.js',
+            'lib/'+angular_version+'/angular-touch.min.js',
 
             // Angular Google Maps
             //'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
@@ -95,9 +96,6 @@ module.exports = function(grunt) {
           	///// POSTWORLD /////
           	'js/*.js',
           	'js/**/*.js',
-
-
-            
 
           ],
         },

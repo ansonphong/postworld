@@ -37,7 +37,6 @@ function pw_live_feed( $vars = array() ){
 	else
 		return false;
 
-
 	///// DEFAULT VARS /////
 	// TODO : Refactor as an array $default_vars and merge with $vars
 	if( !isset( $element ) )
@@ -94,11 +93,25 @@ function pw_live_feed( $vars = array() ){
 				'include_posts'		=>	true,
 				),
 			),
+		'blocks'	=>	false,
+
+		/* BLOCKS OBJECT MODEL :
+		array(
+			'offset'	=>	0,
+			'increment'	=>	3,
+			'max' 		=> 	50,
+			'template' 	=> 	'widget-grid',
+			'classes'	=>	'x-wide',
+			'widgets'	=>	array(
+				'sidebar'	=>	'home-page-sidebar',
+				),
+			)
+		*/
+
 		// 'cache'	=>	array(
-		//		'posts'	=>	true, // determines whether the posts or just outline is cached	
+		//		'posts'	=>	true, 		// determines whether the posts or just outline is cached	
 		//		'interval'	=>	5000,
 		//		),
-		// 
 
 		);
 
@@ -121,11 +134,30 @@ function pw_live_feed( $vars = array() ){
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
 
+	///// BLOCKS : GET WIDGET DATA /////
+	$widgets = array();
+	$sidebar_id = _get( $feed, 'blocks.widgets.sidebar' ); 
+	if( is_string( $sidebar_id ) )
+		$widgets = pw_get_sidebar( $sidebar_id );
+	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
+
 
 	///// GENERATE OUTPUT /////
-	//Print object with posts pre-populated
-	$output = '<script>pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .';</script>';
+	// Print front-loaded data
+	$output  = '<script>';
+
+	// FEED
+	$output .= 'pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .';';
+
+	// WIDGETS
+	if( $has_widgets )
+		$output .= 'pw.widgets["'.$sidebar_id.'"] = '. json_encode($widgets) .';';
+
+	$output .= '</script>';
+
+	// HTML
 	$output .= '<'.$element.' '.$directive.'="'.$feed_id.'" class="'.$classes.'" '.$attributes.'></'.$element.'>';
+
 
 	///// AUXILLARY FEED /////
 	if( !empty($aux_template) ){

@@ -58,15 +58,16 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 		return template;			
 	};
 	
-	
 	// for Ajax Calls
-    var resource = $resource( $pw.paths.ajax_url, {action:'wp_action'}, 
+	var resource = $resource( $pw.paths.ajax_url, {action:'wp_action'}, 
 				{ wp_ajax: { method: 'POST', isArray: false, },	}
 			);
 	
-    return {
-    	//feed_settings: feed_settings,
+	return {
+
     	feeds: feeds,
+
+    	widgets: $window.pw.widgets,
     	
     	templates: $pw.templates, 
 

@@ -184,41 +184,40 @@ postworld.controller('pwFeedController',
 
 
 		$scope.pwLiveFeed = function() {
-			$scope.busy = true;
-			$scope.posts = {};
-
 			// TODO : Set Nonce Authentically
 			$pwData.setNonce(78);
-			
-			// Get Query String Parameters, if any are provided
-			var qsArgs = $scope.getQueryStringArgs();			
-			var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
-
-			// Clone Args Value as 'feed'
-			var feed = JSON.parse( JSON.stringify( $scope.feed ) );
-
-			$log.debug( "LIVE FEED (init) : ID : " + feed.feed_id, feed );
+			$log.debug( "LIVE FEED (init) : ID : " + $scope.feed.feed_id, $scope.feed );
 
 			///// GET FEED FROM PRELOADED DATA /////
 			// If posts have already been pre-loaded
 			if( _.isArray( $pwData.feeds[$scope.feedId].posts ) ){
-
-				
-				//$scope.posts = $pwData.feeds[$scope.feedId].posts;
+				// Inject blocks into the feed
 				$scope.injectBlocks();
+				// Add feed meta data
 				$scope.addFeedMeta();
+				// Localize the posts
 				$scope.posts = $pwData.feeds[$scope.feedId].posts;
-
-
+				// Update the status
 				$scope.updateStatus();
+				// Toggle off busy
 				$scope.busy = false;
-
-				// Return the function here
-				// To avoid AJAX call
+				// Return here to avoid AJAX call
 				return;
 			}
 
 			///// GET FEED BY AJAX /////
+			// Toggle on busy
+			$scope.busy = true;
+			// Establish scope posts object
+			$scope.posts = {};
+			// Clone Args Value as 'feed'
+			var feed = JSON.parse( JSON.stringify( $scope.feed ) );
+
+			// Get Query String Parameters, if any are provided
+			var qsArgs = $scope.getQueryStringArgs();			
+			var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
+
+			// Initiate the AJAX Call
 			$pwData.pw_get_live_feed( feed, qsArgsValue ).then(
 				// Success
 				function(response) {
@@ -240,9 +239,9 @@ postworld.controller('pwFeedController',
 						if ( _.isObject( response.data ) ) {
 							// Insert Response in Feed Data					
 							$scope.fillFeedData( response );
+							$scope.injectBlocks();
 							$scope.addFeedMeta();
 							$scope.posts = $pwData.feeds[$scope.feedId].posts;
-							$scope.injectBlocks();
 						} else {
 							$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
 						}
@@ -514,6 +513,35 @@ postworld.controller('pwFeedController',
 			);
 		};
 
+		$scope.initBlocksWidgets = function( blocks ){
+			// blocks = [ object ] // the blocks object
+			// If widgets are defined in blocks, localize the widgets item
+
+			// Get the Sidebar ID
+			var sidebarId = $_.get( blocks, 'widgets.sidebar' );
+			// If sidebar ID doesn't exist as a string, return here
+			if( !_.isString( sidebarId ) )
+				return blocks;
+
+			// Get the Widgets
+			var widgets = $_.get( $pwData.widgets, sidebarId );
+			// If widgets doesn't exist as an array, return here
+			if( !_.isArray( widgets ) )
+				return blocks;
+
+			// If there are less widgets than the max blocks value
+			if( blocks.max > widgets.length )
+				// Reduce the max to the number of widgets
+				blocks.max = widgets.length;
+
+			// Create scope object of widgets
+			$scope.widgets = widgets;
+			
+			// Return
+			return blocks;
+
+		}
+
 
 		$scope.initBlocks = true;
 		$scope.injectBlocks = function() {
@@ -552,8 +580,12 @@ postworld.controller('pwFeedController',
 					// Establish where the next block will be added
 					blocks._nextIndex = blocks.offset;
 
+					// Initiate widgets
+					blocks = $scope.initBlocksWidgets( blocks );
+
 					// Set the object into the scope
 					$scope.blocks = blocks;
+
 
 				}
 				// If no blocks object is defined, return here
@@ -566,6 +598,7 @@ postworld.controller('pwFeedController',
 			else if( !_.isObject( $scope.blocks ) )
 				// Return here
 				return;
+
 
 			// Get the number of posts loaded
 			//var postCount = $pwData.feeds[$scope.feedId].loaded.length;
@@ -590,50 +623,36 @@ postworld.controller('pwFeedController',
 			if( _.isUndefined( vars.post ) )
 				vars.post = {};
 
-			// 	Try here add loaded.length + blocks._count
-			//	var feedLength = $scope.feed.loaded.length - $scope.blocks._count;
-
+			// If the next block is within range of the current feed length
 			if( $scope.blocks._nextIndex <= $pwData.feeds[$scope.feedId].posts.length &&
-				$scope.blocks._count <= $scope.blocks.max ){
+				// And the maximum number of blocks has not been reached
+				$scope.blocks._count < $scope.blocks.max ){
 
-				//////////////////////////////
+				// Increase number of blocks
+				$scope.blocks._count ++;
 
-				// Console Log
-				//$log.debug('$scope.blocks._nextIndex : ', $scope.blocks._nextIndex );
-				//$log.debug('$scope.posts.length : ', $pwData.feeds[$scope.feedId].posts.length );
-				//$log.debug('feedLength : ', feedLength );
-				//$log.debug('$scope.blocks._count : ', $scope.blocks._count );
-				//$log.debug('$scope.blocks.max : ', $scope.blocks.max );
-
-				// The block item to inject into the feed 
-				var block = {
+				// Define the block item as a post to inject into the feed 
+				var post = {
 					post_type	: '_pw_block',
 					template	: $scope.blocks.template,
 					block: {
-						'index'		: $scope.blocks._nextIndex,
-						'classes'	: $scope.blocks['classes'],
+						'index'			: $scope.blocks._count - 1,
+						'feed_index'	: $scope.blocks._nextIndex,
+						'classes'		: $scope.blocks['classes'],
 					},
 				};
 
 				// If a post is provided, add the post data
 				if( !_.isEmpty( vars.post ) )
-					block = array_replace_recursive( block, vars.post );
+					post = array_replace_recursive( post, vars.post );
 
 				// Inject the block into the feed at the pre-calculated next index
-				$pwData.feeds[$scope.feedId].posts.splice( $scope.blocks._nextIndex, 0, block );
-				//$scope.posts.splice( $scope.blocks._nextIndex, 0, block );
-
-				//$log.debug( ">>> INSERT BLOCK : _nextIndex : " + $scope.blocks._nextIndex );
-
-				// Increase number of blocks
-				$scope.blocks._count ++;
+				$pwData.feeds[$scope.feedId].posts.splice( $scope.blocks._nextIndex, 0, post );
 				
 				// Set when the next block will be added
 				$scope.blocks._nextIndex += $scope.blocks.increment + 1; // + 1 to include the new block added					
 		
-				//////////////////////////////
-
-				// LOOP
+				// LOOP : Run this function again
 				if( !vars.singleRun )
 					$scope.injectBlock();
 				else

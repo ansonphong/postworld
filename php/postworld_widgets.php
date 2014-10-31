@@ -208,7 +208,7 @@ function pw_get_sidebar($index = 1) {
 
 
 
-
+///// INCOMPLETE : IN DEVELOPMENT /////
 function pw_get_widget_objs( $sidebar_id ){
 	// Returns an array of the captured HTML from each widget in the given sidebar
 

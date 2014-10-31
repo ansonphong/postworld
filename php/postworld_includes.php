@@ -194,6 +194,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Sanitize',
 			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-sanitize.min.js');
 
+		wp_enqueue_script( 'AngularJS-Touch',
+			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-touch.min.js');
+
 		//wp_enqueue_script( 'AngularJS-Animate',
 		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular-animate.min.js');
 

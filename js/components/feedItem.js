@@ -27,7 +27,7 @@ postworld.controller('pwFeedItemCtrl',
 		if ( $scope.post.post_type ) type = $scope.post.post_type;
 
 		if (type == '_pw_block') {
-			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'panels', view: $scope.post.template } );				
+			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );				
 		}
 		else 
 			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: $scope.$parent.feed_item_view_type } );
