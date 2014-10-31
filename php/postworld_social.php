@@ -55,12 +55,21 @@ function pw_get_social_share_meta( $vars ){
 	// If permalink doesn't exist, get the URL from PHP URL of current page
 
 	///// TITLE & EXCERPT /////
-	$title = urlencode($post['post_title']);
-	$excerpt = urlencode($post['post_excerpt']);
-	
 	$site_name = urlencode( get_bloginfo( 'name' ) );
-	$title_and_site_name = $title . urlencode(" | ") . $site_name;
 
+	// If Post Type Archive
+	if( is_post_type_archive() ){
+		$title = urlencode( wp_title( " | ", false, "right" ) );
+		$title_and_site_name = $title;
+	}
+	// If a Post or otherwise
+	else{
+		$title = urlencode( $post['post_title'] );
+		$title_and_site_name = $title . urlencode(" | ") . $site_name;
+	}
+	
+	$excerpt = urlencode( $post['post_excerpt'] );
+	
 	///// SOCIAL SHARE OBJECT /////
 	$s = array();
 
