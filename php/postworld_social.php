@@ -26,7 +26,7 @@ function pw_get_social_share_meta( $vars ){
 	$post = pw_to_array( $vars );
 
 	// Share Networks
-	$share_networks = i_get_option( array( "option_name" => "i-options", "key" => "social.share.networks" ) );
+	$share_networks = i_get_option( array( "option_name" => PW_OPTIONS_SITE, "key" => "social.share.networks" ) );
 
 	///// IMAGE URL /////
 	// Get the image url from the passed post object

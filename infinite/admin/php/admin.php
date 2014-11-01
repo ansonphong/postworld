@@ -34,13 +34,13 @@ function postworld_admin_menu(  ){
 
 		'submenu' => array(
 
-			'theme' => array(
+			'site' => array(
 				'parent_slug' => $pw['slug'],
 				'page_title' => 'Site Options',
 				'menu_title' => 'Site Options',
 				'capability' => 'manage_options',
-				'menu_slug' => $pw['slug'].'-theme',
-				'function' => 'infinite_options_main',
+				'menu_slug' => $pw['slug'].'-site',
+				'function' => 'infinite_options_site',
 				),
 
 			'layout' => array(

@@ -1,5 +1,5 @@
 <script>
-	infinite.controller( 'shareSocialCtrl', [ '$scope', '_', '$filter', '$log', function($scope, $_, $filter, $log){
+	postworld.controller( 'shareSocialCtrl', [ '$scope', '_', '$filter', '$log', function($scope, $_, $filter, $log){
 		
 		$scope.setNetworkIds = function( networkIds ){
 			if( $_.getObj( $scope.$parent.iOptions, "<?php echo $vars['option_key'];?>" ) == false )
@@ -54,8 +54,6 @@
 		);
 	}]);
 </script>
-
-Include share links on each post for the following networks:
 
 <div ng-controller="shareSocialCtrl" ng-init="shareSocialCtrlInit()">
 

@@ -13,8 +13,8 @@ postworld.factory( '$pw',
 	function ($resource, $q, $log, $window, $_ ) {   
 
 	// TEMPLATES
-	var pwTemplates = ( $_.objExists( $window, 'pwTemplates' ) ) ?
-		$window.pwTemplates : {};
+	var pwTemplates = ( $_.objExists( $window, 'pw.templates' ) ) ?
+		$window.pw.templates : {};
 
 	var pwUser = function(){
 		if( !$_.objExists( $window, "pwGlobals.user" ) )
@@ -32,7 +32,7 @@ postworld.factory( '$pw',
 
 	// DECLARATIONS
 	return {
-		version: "1.6.3",
+		version: "1.6.4",
 		templates: pwTemplates,
 
 		state: state(),
@@ -46,6 +46,9 @@ postworld.factory( '$pw',
     	paths: $window.pwSiteGlobals.paths, // Move this to pwSiteglobals
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,
+
+    	// Get the admin data, will only be present if is_admin()
+    	admin: $_.get( $window, 'pw.admin' ),
 
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )

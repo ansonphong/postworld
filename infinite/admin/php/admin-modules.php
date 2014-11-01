@@ -6,7 +6,17 @@ function i_save_option_button( $option_name, $option_model ){
 		'option_name'	=>	$option_name,
 		'option_model'	=>	$option_model,
 		);
-	echo i_ob_include_template( 'admin/modules/button-save-option.php', $vars );
+	echo pw_ob_admin_template( 'button-save-option', $vars );
+}
+
+///// SELECT SITE LOGO /////
+function i_select_image_logo(){
+	return pw_ob_admin_template( 'select-image-logo', $vars );
+}
+
+///// SELECT SITE FAVICON /////
+function i_select_image_favicon(){
+	return pw_ob_admin_template( 'select-image-favicon', $vars );
 }
 
 ///// SELECT A MENU /////
@@ -18,7 +28,7 @@ function i_select_menus( $vars ){
 		'null_option' =>	[string] // What to label the null option
 		);
 	*/
-	return i_ob_include_template( 'admin/modules/select-menu.php', $vars );
+	return pw_ob_admin_template( 'select-menu', $vars );
 }
 
 ///// DOWNLOAD IMAGE /////
@@ -50,8 +60,7 @@ function i_download_image_option( $vars = array( "context" => "quickEdit" ) ){
 			break;
 	}
 
-	return i_ob_include_template( 'admin/modules/meta-image-download.php', $vars );
-
+	return pw_ob_admin_template( 'meta-image-download', $vars );
 }
 
 ///// POST CONTENT COLUMNS /////
@@ -76,7 +85,7 @@ function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 			break;
 	}
 
-	return i_ob_include_template( 'admin/modules/meta-content-columns.php', $vars );
+	return pw_ob_admin_template( 'meta-content-columns', $vars );
 
 }
 
@@ -85,7 +94,7 @@ function i_share_social_options(){
 	$vars['option_key'] = "social.share.networks";
 	$vars['ng_model'] = "iOptions.".$vars['option_key'];
 
-	return i_ob_include_template( 'admin/modules/share-social.php', $vars );
+	return pw_ob_admin_template( 'share-social', $vars );
 }
 
 function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
@@ -109,8 +118,7 @@ function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 			break;
 	}
 
-	return i_ob_include_template( 'admin/modules/meta-gallery-options.php', $vars );
-
+	return pw_ob_admin_template( 'meta-gallery-options', $vars );
 }
 
 function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
@@ -147,7 +155,7 @@ function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 			break;
 	}
 
-	return i_ob_include_template( 'admin/modules/meta-link-url-options.php', $vars );
+	return pw_ob_admin_template( 'meta-link-url-options', $vars );
 
 }
 
@@ -185,16 +193,8 @@ function radio_image_select( $option_name, $options, $attributes = '' ){
 
 }
 
-function i_select_slider_settings( $vars ){
-	/*
-	 *	$vars = array(
-	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'iOptions.home.slider',
-	 *		'show'		=>	[ARRAY]		// Array of options to show : array( 'height', 'interval', 'max_slides', 'transition', 'no_pause' )
-	 *	)
-	 */
 
-	return i_ob_include_template( 'admin/modules/select-slider-settings.php', $vars );
-}
+
 
 function i_select_featured_image_options( $vars ){
 	/*
@@ -202,18 +202,15 @@ function i_select_featured_image_options( $vars ){
 	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'iOptions.home.slider',
 	 *	)
 	 */
-
-	return i_ob_include_template( 'admin/modules/select-header-image-options.php', $vars );
+	return pw_ob_admin_template( 'select-header-image-options', $vars );
 }
 
 ///// SLIDER OPTIONS : META FUNCTION /////
 function i_admin_slider_options( $vars = array() ){
 	// TODO:
-	// - Create a hash ID for the controller instance
+	// - Create a random ID for the controller instance
 	// - Pass in unique model prefix, to allow for multiple instances
-
-	return i_ob_include_template( "admin/php/options-slider.php", $vars );
-
+	return pw_ob_admin_template( 'options-slider', $vars );
 }
 
 ///// POST CONTENT COLUMNS /////
@@ -237,13 +234,35 @@ function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
 
 	}
 
-	return i_ob_include_template( 'admin/modules/layout-single.php', $vars );
+	return pw_ob_admin_template( 'layout-single', $vars );
 
 }
 
 ///// SELECT ICON /////
 function i_select_icon_options( $vars = array( "ng_model" => "iMeta.icon.class" ) ){
-	return i_ob_include_template( 'admin/modules/select-icon.php', $vars );
+	return pw_ob_admin_template( 'select-icon', $vars );
+}
+
+
+function i_select_slider_settings( $vars ){
+	/*
+	 *	$vars = array(
+	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'iOptions.home.slider',
+	 *		'show'		=>	[ARRAY]		// Array of options to show : array( 'height', 'interval', 'max_slides', 'transition', 'no_pause' )
+	 *	)
+	 */
+	return pw_ob_admin_template( 'select-slider-settings', $vars );
+}
+
+
+function i_select_blocks_settings( $vars ){
+	/*
+	 *	$vars = array(
+	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'iOptions.home.slider',
+	 *		'show'		=>	[ARRAY]		// Array of options to show : array( 'height', 'interval', 'max_slides', 'transition', 'no_pause' )
+	 *	)
+	 */
+	return pw_ob_admin_template( 'select-blocks-settings', $vars );
 }
 
 

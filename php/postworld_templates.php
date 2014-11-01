@@ -101,6 +101,7 @@ function pw_get_templates( $vars = array() ){
 			'path_type'			=>	[string] ( 'url' / 'dir' ),
 			'ext'				=>	[string] ( 'php' / 'html' ),
 			'source'			=>	[string] ( 'default' / 'merge' ),
+			'output'			=>	[string] (optional) 'default' / 'ids'
 			)
 
 	*/
@@ -249,10 +250,33 @@ function pw_get_templates( $vars = array() ){
 		}
 
 	}
-
-
-
 	$template_obj['posts'] = $post_template_obj;
+
+
+
+	///// OUTPUT /////
+	// If output is 'ids', strip the path data
+	if( $vars['output'] == 'ids' ){
+		$new_obj = array();
+		foreach( $template_obj as $key => $value ){
+			// Handle Posts (extra level of recursion)
+			if( $key == 'posts' ){
+				$new_obj[$key] = array();
+				foreach( $value as $subkey => $subvalue ){
+					$new_obj[$key][$subkey] = array();
+					foreach( $subvalue as $subsubkey => $subsubvalue ){
+						$new_obj[$key][$subkey][] = $subsubkey;
+					}
+				}
+			}
+			// Handle Others
+			else
+				foreach( $value as $subkey => $subvalue ){
+					$new_obj[$key][] = $subkey;
+				}
+		}
+		$template_obj = $new_obj;
+	}
 
 	return $template_obj;
 
@@ -336,6 +360,18 @@ function pw_get_shortcode_template( $template_id ){
 	return pw_get_template( 'shortcodes', $template_id, 'php', 'dir' );
 
 }
+
+
+function pw_get_admin_template( $template_id ){
+	return pw_get_template( 'admin', $template_id, 'php', 'dir' );
+}
+
+
+function pw_ob_admin_template( $template_id, $vars ){
+	$template = pw_get_admin_template( $template_id );
+	return pw_ob_include( $template, $vars );
+}
+
 
 // Include a Postworld Feed Template from templates/feeds
 function pw_parse_template( $template_path, $vars = array() ){

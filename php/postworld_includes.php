@@ -472,7 +472,7 @@ function pwSiteGlobals_include(){
 
 	// ENCODE TEMPLATES
 	$pwJs .= "\n\n";
-	$pwJs .= "var pwTemplates = ";
+	$pwJs .= "pw.templates = ";
 	$pwJs .= json_encode( pw_get_templates() );
 	$pwJs .= ";";
 	//pw_log( "TEMPLATES : " . json_encode( pw_get_templates() ) );
@@ -495,6 +495,7 @@ function pwSiteGlobals_include(){
 		POSTWORLD_URI.'/deploy/pwSiteGlobals.js', array(), hash( 'md5', 4 ) );
 	
 }
+
 
 
 ///// PARSE pwGlobals /////
@@ -609,5 +610,52 @@ function pw_injections(){
 	global $pwInject;
 	return $pwInject;
 }
+
+
+
+
+
+//////////// ADMIN GLOBALS ////////////
+function pwAdminGlobals_include(){
+
+	///// GENERATE JAVASCRIPT /////
+	$pwAdminGlobals = pwAdminGlobals_parse();
+	$js  = "";
+	$js .= "pw.admin = ";
+	$js .= json_encode( $pwAdminGlobals );
+	$js .= ";";
+
+	///// WRITE JAVASCRIPT FILE /////
+	$file_path = "/deploy/pwAdminGlobals.js";
+	$pwJsFile = POSTWORLD_PATH . $file_path;
+	$file = fopen( $pwJsFile ,"w" );
+	fwrite($file,"$js");
+	fclose($file);
+	chmod($pwJsFile, 0755);
+
+	///// INCLUDE JAVASCRIPT FILE /////
+	global $angularDep;
+	wp_enqueue_script( 'pw-AdminGlobals-JS',
+		POSTWORLD_URI.$file_path, array(), hash( 'md5', 4 ) );
+
+}
+
+function pwAdminGlobals_parse(){
+	global $pwAdminGlobals;
+
+	/// TEMPLATES ///
+	$pwAdminGlobals['templates'] = array();
+	$pwAdminGlobals['templates']['php'] = pw_get_templates( array( 'ext' => 'php', 'path_type' => 'dir', 'output' => 'ids' ) );
+	$pwAdminGlobals['templates']['html'] = pw_get_templates( array( 'ext' => 'html', 'path_type' => 'url', 'output' => 'ids' ) );
+
+	/// SIDEBARS ///
+	$pwAdminGlobals['sidebars'] = i_get_option( array( 'option_name' => 'i-sidebars' ) );
+
+	/// MENUS ///
+	$pwAdminGlobals['menus'] = pw_get_menus();
+
+	return $pwAdminGlobals;
+}
+
 
 ?>

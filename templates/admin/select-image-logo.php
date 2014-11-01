@@ -16,14 +16,15 @@
 	media-model-array="false">
 	Select Image
 </button>
-
+<hr class="thin">
 <div>
 	<img
 		pw-image
 		image-id="{{ iOptions.images.logo }}"
 		image-model="images['logo']"
 		ng-src="{{images.logo.url}}"
-		style="max-width:400px; height:auto;">
+		class="select-image"
+		style="width:400px; max-width:100%; height:auto;">
 </div>
 
 

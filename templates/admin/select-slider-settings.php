@@ -18,9 +18,9 @@
 	?>
 	<span class="icon-md"><i class="icon-arrows-v"></i></span>
 	<input
-		
 		id="input-height"
 		size="3"
+		type="number"
 		ng-model="<?php echo $ng_model; ?>.height">
 		<label for="input-height">% height</label>
 	<hr class="thin">
@@ -35,6 +35,7 @@
 	<input
 		id="input-interval"
 		size="3"
+		type="number"
 		ng-model="<?php echo $ng_model; ?>.interval">
 		<label for="input-interval">milliseconds interval</label>
 	<hr class="thin">

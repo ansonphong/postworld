@@ -11,14 +11,37 @@ License: GPL2
 
 global $pw;
 $pw = array(
-	'version'	=>	"1.6.3",
+	'version'	=>	"1.6.4",
 	'slug'	=>	'postworld',
 	'vars'	=>	array(
+		),
+	'db' =>	array(
+		'wp_options'	=>	array(
+			'option_name'	=>	array(
+				'site'		=>	'postworld-site',
+				'layouts'	=>	'postworld-layouts',
+				'sidebars'	=>	'postworld-sidebars',
+				'styles'	=>	'postworld-styles',
+				'feeds'		=>	'postworld-feeds',
+				'social'	=>	'postworld-social',
+				),
+			),
 		),
 	);
 
 define( 'pw_usermeta_key',	'pw_meta' );
 define( 'pw_postmeta_key',	'pw_meta' );
+
+///// DEFINE OPTION NAMES /////
+// Used in 'wp_options' table as 'option_name' key
+define( 'PW_OPTIONS_SITE', 		$pw['db']['wp_options']['option_name']['site'] );
+define( 'PW_OPTIONS_LAYOUTS', 	$pw['db']['wp_options']['option_name']['layouts'] );
+define( 'PW_OPTIONS_SIDEBARS', 	$pw['db']['wp_options']['option_name']['sidebars'] );
+define( 'PW_OPTIONS_STYLES', 	$pw['db']['wp_options']['option_name']['styles'] );
+define( 'PW_OPTIONS_FEEDS', 	$pw['db']['wp_options']['option_name']['feeds'] );
+define( 'PW_OPTIONS_SOCIAL', 	$pw['db']['wp_options']['option_name']['social'] );
+
+
 
 /////////////// API ////////////////
 include 'php/postworld_api.php';

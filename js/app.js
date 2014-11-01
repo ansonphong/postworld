@@ -19,8 +19,10 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 
 // Setup $window.pw object to catch front-loaded data
 var pw = {
+	templates:{},
 	feeds:{},
 	widgets:{},
+	admin:{},
 };
 
 var depInject = [

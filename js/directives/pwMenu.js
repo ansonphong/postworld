@@ -24,11 +24,19 @@ postworld.directive( 'pwMenus', [ function($scope){
 }]);
 
 postworld.controller( 'pwMenusCtrl',
-	[ '$scope', '$window', '$timeout', 'pwData', '$log', '_',
-	function( $scope, $window, $timeout, $pwData, $log, $_ ) {
+	[ '$scope', '$window', '$timeout', 'pwData', '$log', '_', '$pw',
+	function( $scope, $window, $timeout, $pwData, $log, $_, $pw ) {
 
 	$scope.getMenus = function(){
 
+		// If the menus are preloaded
+		var menus = $_.get( $pw, 'admin.menus' );
+		if( menus != false ){
+			$scope.pwMenus = menus;
+			return;
+		}
+
+		// If the data isn't preloaded, get it by AJAX
 		$pwData.get_menus({}).then(
 			// Success
 			function(response) {    
@@ -40,6 +48,7 @@ postworld.controller( 'pwMenusCtrl',
 				//$scope.movements = [{post_title:"Movements not loaded.", ID:"0"}];
 			}
 		);
+
 	};
 	$scope.getMenus();
 

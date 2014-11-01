@@ -4,24 +4,21 @@
 ///// MAIN SCREEN /////
 function infinite_postworld_main(){
 	global $theme_admin;
-	i_include_admin_styles();
 	i_include_scripts();
 	//include 'page-options.php';
 	echo "<h1>".$theme_admin['main']['page_title']."</h1>";
 }
 
 ///// THEME OPTIONS SCREEN /////
-function infinite_options_main(){
+function infinite_options_site(){
 	global $theme_admin;
-	i_include_admin_styles();
 	i_include_scripts();
-	include 'page-options.php';
+	include 'page-site.php';
 } 
 
 ///// LAYOUT SCREEN /////
 function infinite_options_layout(){
 	global $theme_admin;
-	i_include_admin_styles();
 	i_include_scripts();
 	include 'page-layout.php';
 }
@@ -29,7 +26,6 @@ function infinite_options_layout(){
 ///// STYLES SCREEN /////
 function infinite_options_styles(){
 	global $theme_admin;
-	i_include_admin_styles();
 	i_include_scripts();
 	include 'page-styles.php';
 }
@@ -37,7 +33,6 @@ function infinite_options_styles(){
 ///// SOCIAL SCREEN /////
 function infinite_options_social(){
 	global $theme_admin;
-	i_include_admin_styles();
 	i_include_scripts();
 	include 'page-social.php';
 }
@@ -46,7 +41,6 @@ function infinite_options_social(){
 function infinite_options_sidebars(){
 	global $theme_admin;
 	global $i_language;
-	i_include_admin_styles();
 	i_include_scripts();
 	include 'page-sidebars.php'; 
 } 
@@ -54,7 +48,6 @@ function infinite_options_sidebars(){
 ///// FEEDS SCREEN /////
 function infinite_options_feeds(){
 	global $theme_admin;
-	i_include_admin_styles();
 	i_include_scripts();
 	include 'page-feeds.php';
 }

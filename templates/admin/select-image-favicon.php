@@ -16,14 +16,15 @@
 	Select Image
 	<!-- { option_name: 'i-options', key:'images.favicon', value:'id' } -->
 </button>
-
+<hr class="thin">
 <div>
 	<img
 		pw-image
 		image-id="{{ iOptions.images.favicon }}"
 		image-model="images['favicon']"
 		ng-src="{{images.favicon.url}}"
-		style="max-width:16px; height:auto; border:4px solid #fff;">
+		class="select-image"
+		style="max-width:64px; height:auto;">
 </div>
 
 

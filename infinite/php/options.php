@@ -1,7 +1,8 @@
 <?php
 include_once 'utilities.php';
 
-function i_get_option( $vars ){
+
+function pw_get_option( $vars ){
 	// Returns a sub key stored in the `i-options` option name
 	//	From `wp_options` table
 	/*
@@ -10,31 +11,21 @@ function i_get_option( $vars ){
 			'key'			=> 	[string], // "images.logo",
 			'filter'		=>	[boolean] // Gives option to disable filtering
 
-			// TODO : Refactor into image sub-object
+			// TODO : Refactor into image sub-object, with sub-function call
 			'type'	=>	"image",
 			'format' => "url",
 			'size'	=>	"full",
 			);
 	*/
 
+	$default_vars = array(
+		'option_name'	=>	'i-options',
+		'key'			=>	false,
+		'filter'		=>	true,
+		);
+	$vars = array_replace_recursive( $default_vars, $vars );
+
 	extract($vars);
-
-	// Set Defaults
-	if( !isset($option_name) )
-		$option_name = 'i-options';
-	if( !isset($filter) )
-		$filter = true;
-
-	// Preformat Defaults
-	if( !isset($format) )
-		$format = 'url';
-	if( !isset($type) )
-		$type = '';
-	if( !isset($size) )
-		$size = 'full';
-	if( !isset($key) )
-		$key = '';
-	
 
 	///// CACHING LAYER /////
 	// Make a global to cache data at runtime
@@ -62,9 +53,14 @@ function i_get_option( $vars ){
 
 		///// APPLY FILTERS /////
 		// This allows themes to over-ride default settings for options
-		// ie. iOptions-i-styles, to modify the default styles
-		if( $filter )
+		// ie. iOptions-i-styles, to modify the default values
+		if( $filter ){
+			// Apply Filters
+			$value = apply_filters( 'pwGetOption-' . $option_name , $value );
+			// Depreciated
 			$value = apply_filters( 'iOptions-' . $option_name , $value );
+
+		}
 
 		///// CACHING LAYER /////
 		// Set the decoded data into the cache
@@ -77,11 +73,20 @@ function i_get_option( $vars ){
 		return $value;
 
 	// Get Option Value Object Key Value
-	$value = i_get_obj( $value, $key );
+	$value = _get( $value, $key );
 
 
 
+	//////////// DEPRECIATED : TODO : REFACTOR ////////////
 	///// PREFORMAT RETURN DATA /////
+	// Preformat Defaults
+	if( !isset($format) )
+		$format = 'url';
+	if( !isset($type) )
+		$type = '';
+	if( !isset($size) )
+		$size = 'full';
+
 	///// IMAGES /////
 	// If it's an Image type
 	if( $type == "image" && is_numeric($value) ){
@@ -102,9 +107,17 @@ function i_get_option( $vars ){
 		}
 
 	}
+	//////////// END DEPRECIATED ////////////
+
+
 
 	return $value;
 
+}
+
+// Depreciated
+function i_get_option( $vars ){
+	return pw_get_option( $vars );
 }
 
 
@@ -155,10 +168,10 @@ function i_get_postmeta_key( $vars ){
 }
 
 
-
-function i_site_logo( $size = 'full', $format = 'url' ){
-	return i_get_option(
+function pw_site_logo( $size = 'full', $format = 'url' ){
+	return pw_get_option(
 		array(
+			"option_name" => PW_OPTIONS_SITE,
 			"type" => "image",
 			"key" => "images.logo",
 			"format" => $format,
@@ -166,6 +179,14 @@ function i_site_logo( $size = 'full', $format = 'url' ){
 			)
 		);
 }
+
+// DEPRECIATED
+function i_site_logo( $size = 'full', $format = 'url' ){
+	return pw_site_logo( $size, $format );
+}
+
+
+
 
 function i_site_logo_overlay( $size = 'full', $format = 'url' ){
 	return i_get_option(

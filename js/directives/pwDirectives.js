@@ -1,7 +1,5 @@
 'use strict';
-
-/*
-  ____  _               _   _                
+/*____  _               _   _                
  |  _ \(_)_ __ ___  ___| |_(_)_   _____  ___ 
  | | | | | '__/ _ \/ __| __| \ \ / / _ \/ __|
  | |_| | | | |  __/ (__| |_| |\ V /  __/\__ \
@@ -10,9 +8,25 @@
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
 
+////////// PW GLOBALS //////////
+// This directive sets the $pw service object into the local scope
+// Just specifiy which scope object to map it to
+// EXAMPLE : <div pw-globals="pw"><pre>{{ pw | json }}</pre></div> 
+postworld.directive( 'pwGlobals',
+	[ '$pw', '_', '$log',
+	function( $pw, $_, $log ){
+	return{
+		scope:{
+			pwGlobals:"=",
+		},
+		link : function( $scope, element, attrs ){
+			$scope.pwGlobals = $pw;
+		}
+	}
+}]);
+
 
 ///// POSTWORLD SANITIZE DIRECTIVE /////
-
 postworld.directive('pwSanitize', function() {
 	return {
 		require: '?ngModel',
@@ -463,12 +477,37 @@ postworld.directive('pwScrollfix', function( $window, $log, $timeout ) {
 });
 
 
+//////////////////// ADMIN ////////////////////
 
+////////// TEMPLATES //////////
+postworld.directive( 'pwAdminTemplates',
+	[ '$pw', '_', '$log',
+	function( $pw, $_, $log ){
+	return{
+		scope:{
+			pwAdminTemplates:"=",
+		},
+		link : function( $scope, element, attrs ){
+			var templates = $_.get( $pw, 'admin.templates' );
+			$scope.pwAdminTemplates = templates;
+		}
+	}
+}]);
 
-
-
-
-
+////////// SIDEBARS //////////
+postworld.directive( 'pwAdminSidebars',
+	[ '$pw', '_', '$log',
+	function( $pw, $_, $log ){
+	return{
+		scope:{
+			pwAdminSidebars:"=",
+		},
+		link : function( $scope, element, attrs ){
+			var templates = $_.get( $pw, 'admin.sidebars' );
+			$scope.pwAdminSidebars = templates;
+		}
+	}
+}]);
 
 
 

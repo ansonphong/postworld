@@ -1,31 +1,27 @@
 <?
 	$iStyles = i_get_option( array( 'option_name' => 'i-styles' ) );
-	$i_styles_structure = apply_filters( 'iOptions-i-styles-structure', array() );
-
+	$i_styles_structure = apply_filters( 'pwOptions-styles-structure', array() );
 ?>
-
-<div id="infinite_admin" ng-app="infinite" class="styles">
-	<h1>
-		<i class="icon-paint-format"></i>
-		Styles
-	</h1>
-	
+<div id="poststuff" ng-app="infinite" class="postworld styles">
 	<script type="text/javascript">
 		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
 		infinite.controller('iStylesDataCtrl', [ '$scope', '$window', function( $scope, $window ){
 			$scope.lang = "en";
 			// Print Data
 			$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
-			$scope.iStyles = <?php echo json_encode( $iStyles ); ?>
-
+			$scope.iStyles = <?php echo json_encode( $iStyles ); ?>;
 			$scope.iStyleStructure = <?php echo json_encode( $i_styles_structure ); ?>;
-
 		}]);
 	</script>
 	<div
 		i-admin-style
 		ng-controller="iStylesDataCtrl"
 		ng-cloak>
+
+		<h1>
+			<i class="icon-paint-format"></i>
+			Styles
+		</h1>
 
 		<hr class="thick">
 

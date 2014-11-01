@@ -10,19 +10,6 @@ function i_include_styles(){
 }
 
 
-add_action( 'admin_enqueue_scripts', 'i_include_admin_styles' );
-function i_include_admin_styles(){
-	// BOOSTRAP LESS
-	//wp_enqueue_style( 'bootstrap-less', get_stylesheet_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
-
-	// MAIN LESS
-	wp_enqueue_style( 'infinite-style-admin-less', get_infinite_directory_uri() . '/admin/less/style.less' );
-
-	// FONT AWESOME
-	//wp_enqueue_style( 'font-awesome', get_infinite_directory_uri() . '/packages/Font-Awesome/css/font-awesome.min.css' );
-
-}
-
 // Prepare URL for Less Variable
 function i_less_prepare_url( $url ){
     if( function_exists( 'pw_wrap_quotes' ) )  

@@ -9,8 +9,8 @@
 		</label>
 	</div>
 
-	<div class="well" ng-show="<?php echo $vars['ng_model']; ?>.label.show == 'custom'">
-
+	<div ng-show="<?php echo $vars['ng_model']; ?>.label.show == 'custom'">
+		<hr class="thin">
 		<table>
 			<tr>
 				<td class="label">Label :</td>
