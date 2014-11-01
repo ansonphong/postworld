@@ -53,7 +53,7 @@ function pw_get_option( $vars ){
 
 		///// APPLY FILTERS /////
 		// This allows themes to over-ride default settings for options
-		// ie. iOptions-i-styles, to modify the default values
+		// ie. pwGetOption-postworld-styles-theme, to modify the default values
 		if( $filter ){
 			// Apply Filters
 			$value = apply_filters( 'pwGetOption-' . $option_name , $value );

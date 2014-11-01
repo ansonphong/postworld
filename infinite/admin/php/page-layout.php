@@ -4,7 +4,7 @@
 		[ '$scope', '$window', '$parse', 'iData',
 		function($scope, $window, $parse, iData){
 			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
-			$scope.iSidebars = <?php echo json_encode( i_get_option( array( 'option_name' => 'i-sidebars' ) ) ); ?>;
+			$scope.iSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
 			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
 			$scope.iLayouts = <?php echo json_encode( i_get_option( array( 'option_name' => 'i-layouts' ) ) ); ?>;
 	}]);

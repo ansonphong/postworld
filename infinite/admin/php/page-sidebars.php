@@ -1,5 +1,5 @@
 <?php
-	$iSidebars = i_get_option( array( 'option_name' => 'i-sidebars' ) );
+	$iSidebars = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
 ?>
 <script>
 	infinite.controller( 'pwSidebarsDataCtrl', [ '$scope', function( $scope ){
@@ -191,7 +191,7 @@
 
 	
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button('i-sidebars','iSidebars'); ?></div>
+					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_SIDEBARS,'iSidebars'); ?></div>
 		
 					<!-- DELETE BUTTON -->
 					<button

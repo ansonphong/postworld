@@ -1,5 +1,5 @@
 <?
-	$iStyles = i_get_option( array( 'option_name' => 'i-styles' ) );
+	$iStyles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
 	$i_styles_structure = apply_filters( 'pwOptions-styles-structure', array() );
 ?>
 <div id="poststuff" ng-app="infinite" class="postworld styles">
@@ -33,7 +33,7 @@
 		<div ng-repeat="type in iStyleStructure">
 
 			<!-- SAVE BUTTON -->
-			<div class="save-right"><?php i_save_option_button('i-styles','iStyles'); ?></div>
+			<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES,'iStyles'); ?></div>
 
 			<h2>
 				<i class="{{ type.icon }}"></i>
@@ -126,7 +126,7 @@
 		<hr class="thick">
 		
 		<!-- SAVE BUTTON -->
-		<div class="save-right"><?php i_save_option_button('i-styles','iStyles'); ?></div>
+		<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES, 'iStyles'); ?></div>
 
 
 		<button ng-click="resetDefaults()" class="button">Reset to Defaults</button>

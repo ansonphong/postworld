@@ -23,7 +23,7 @@ add_filter( 'less_vars', 'my_less_vars', 10, 2 );
 function my_less_vars( $vars, $handle ) {
 
 	////////// IMPORT STYLES //////////
-    $i_styles = i_get_styles();
+    $i_styles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
 
     //echo "<pre>". json_encode( $i_styles, JSON_PRETTY_PRINT ) ."</pre>" ;
 

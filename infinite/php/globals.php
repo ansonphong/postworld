@@ -6,9 +6,9 @@ function iGlobals(){
 
 	// Import Options
 	// TODO : Use i_get_option() function
-	$i_options = json_decode(get_option('i-options'),true);
-	$i_sidebars = json_decode(get_option('i-sidebars'),true);
-	$i_social = json_decode(get_option('i-social'),true);
+	$i_options = pw_get_option( array( 'option_name' => 'i-options' ) );
+	$i_sidebars = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+	$i_social = pw_get_option( array( 'option_name' => 'i-social' ) );
 
 	// Layout
 	$layout = pw_get_current_layout();

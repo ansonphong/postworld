@@ -37,10 +37,12 @@ define( 'pw_postmeta_key',	'pw_meta' );
 define( 'PW_OPTIONS_SITE', 		$pw['db']['wp_options']['option_name']['site'] );
 define( 'PW_OPTIONS_LAYOUTS', 	$pw['db']['wp_options']['option_name']['layouts'] );
 define( 'PW_OPTIONS_SIDEBARS', 	$pw['db']['wp_options']['option_name']['sidebars'] );
-define( 'PW_OPTIONS_STYLES', 	$pw['db']['wp_options']['option_name']['styles'] );
 define( 'PW_OPTIONS_FEEDS', 	$pw['db']['wp_options']['option_name']['feeds'] );
 define( 'PW_OPTIONS_SOCIAL', 	$pw['db']['wp_options']['option_name']['social'] );
 
+
+// MUST BE DEFINED BY THE THEME
+//define( 'PW_OPTIONS_STYLES', 	$pw['db']['wp_options']['option_name']['styles'] );
 
 
 /////////////// API ////////////////

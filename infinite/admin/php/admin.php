@@ -139,43 +139,6 @@ function theme_admin_menu(){
 
 
 
-////////// OPTIONS //////////
-global $iAdmin;
-
-///// PARSE OPTIONS /////
-// LAYOUT OPTIONS : including 'default'
-//$layout_options_default = $i_options["layout"]["options"];
-//array_push( $layout_options_default, $i_options["layout"]["default"] );
-
-///// OPTIONS ARRAY /////
-$iAdmin = array(
-	"layouts"	=>	array(
-		array(
-			"label"	=>	"Layouts",
-			"name"	=>	"i-layouts",
-			"icon"	=>	"icon-circle-medium",
-			),
-		),
-
-	"sidebars"	=>	array(
-		array(
-			"label"	=>	"Sidebars",
-			"name"	=>	"i-sidebars",
-			"icon"	=>	"icon-circle-medium",
-			),
-		),
-
-	"styles"	=>	array(
-		array(
-			"label"	=>	"Styles",
-			"name"	=>	"i-styles",
-			"icon"	=>	"icon-image",
-			),
-		),
-
-	);
-
-
 ///// ADMIN URLS /////
 global $i_admin_urls;
 $i_admin_urls = array(

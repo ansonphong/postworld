@@ -82,7 +82,7 @@ class I_Sidebars {
 	 * 	Arguments: name, id, description, class, before_widget, after_widget, before_title, after_title
 	 */
 
-	private $option = "i-sidebars";
+	private $option = PW_OPTIONS_SIDEBARS;
 	
 	public function new_sidebar ( $settings ){
 

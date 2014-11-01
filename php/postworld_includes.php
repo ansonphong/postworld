@@ -649,7 +649,7 @@ function pwAdminGlobals_parse(){
 	$pwAdminGlobals['templates']['html'] = pw_get_templates( array( 'ext' => 'html', 'path_type' => 'url', 'output' => 'ids' ) );
 
 	/// SIDEBARS ///
-	$pwAdminGlobals['sidebars'] = i_get_option( array( 'option_name' => 'i-sidebars' ) );
+	$pwAdminGlobals['sidebars'] = i_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
 
 	/// MENUS ///
 	$pwAdminGlobals['menus'] = pw_get_menus();

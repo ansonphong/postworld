@@ -46,7 +46,9 @@ function i_save_option(){
 	// Update Option
 	$update_option = update_option( $option_name, $option_value_sanitized );
 
-	if( $option_name == 'i-styles' ){
+	// If saving the styles
+	if( defined( 'PW_OPTIONS_STYLES' ) &&
+		$option_name == PW_OPTIONS_STYLES ){
 		// Reset PHP LESS Cache
 		i_reset_less_php_cache();
 	}
@@ -69,7 +71,7 @@ function i_save_option(){
 //add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
 add_action("wp_ajax_i_save_option", "i_save_option");
 
-
+/*
 //---------- LOAD LAYOUT OPTIONS ----------//
 function i_load_layout_options(){
 	list($response, $args, $nonce) = i_initAjaxResponse();
@@ -101,7 +103,7 @@ function i_load_layout_options(){
 
 //add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
 add_action("wp_ajax_i_load_layout_options", "i_load_layout_options");
-
+*/
 
 ////////// GENERAL AJAX FUNCTIONS //////////
 
