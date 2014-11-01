@@ -15,12 +15,11 @@ function i_social_menu( $vars ){
 	$template = ( isset($template) ) ?
 		$template : 'views/networks/social-menu.php';
 
-
 	// Set Globals
 	global $i_social_meta;
 
 	// Get Option Values & decode from JSON
-	$i_social = i_get_option( array( 'option_name'	=> "i-social" ));
+	$i_social = pw_get_option( array( 'option_name'	=> PW_OPTIONS_SOCIAL ));
 
 	// Get Networks Social Meta
 	$networks_social_meta = i_find_where( $i_social_meta, array( 'id' => 'networks' ) );

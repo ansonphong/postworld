@@ -10,12 +10,22 @@ function i_save_option_button( $option_name, $option_model ){
 }
 
 ///// SELECT SITE LOGO /////
-function i_select_image_logo(){
+function i_select_image_logo( $vars = array() ){
+	$defaultVars = array(
+		'option_var'	=>	'iOptions',
+		'option_subkey'	=>	'images.logo',
+		);
+	$vars = array_replace_recursive( $defaultVars, $vars );
 	return pw_ob_admin_template( 'select-image-logo', $vars );
 }
 
 ///// SELECT SITE FAVICON /////
-function i_select_image_favicon(){
+function i_select_image_favicon( $vars = array() ){
+	$defaultVars = array(
+		'option_var'	=>	'iOptions',
+		'option_subkey'	=>	'images.favicon',
+		);
+	$vars = array_replace_recursive( $defaultVars, $vars );
 	return pw_ob_admin_template( 'select-image-favicon', $vars );
 }
 
@@ -90,9 +100,11 @@ function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 }
 
 function i_share_social_options(){
+	$vars = array();
 	$vars['options_model'] = "options.share.meta";
-	$vars['option_key'] = "social.share.networks";
-	$vars['ng_model'] = "iOptions.".$vars['option_key'];
+	$vars['model_var'] = "iSocial";
+	$vars['model_key'] = "share.networks";
+	$vars['ng_model'] = $vars['model_var'] . '.' . $vars['model_key'];
 
 	return pw_ob_admin_template( 'share-social', $vars );
 }

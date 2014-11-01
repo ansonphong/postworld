@@ -26,7 +26,7 @@ function pw_get_social_share_meta( $vars ){
 	$post = pw_to_array( $vars );
 
 	// Share Networks
-	$share_networks = i_get_option( array( "option_name" => PW_OPTIONS_SITE, "key" => "social.share.networks" ) );
+	$share_networks = i_get_option( array( "option_name" => PW_OPTIONS_SOCIAL, "key" => "share.networks" ) );
 
 	///// IMAGE URL /////
 	// Get the image url from the passed post object
@@ -43,11 +43,12 @@ function pw_get_social_share_meta( $vars ){
 		$image_url = urlencode($image_url);
 
 	///// PERMALINK /////
-
-	if( in_array( 'single', $pw['view']['context'] ) )
-		$permalink = _get( $post, 'post_permalink' );
-	if( in_array( 'archive', $pw['view']['context'] ) )
+	if( is_array( $pw['view']['context'] ) &&
+		in_array( 'archive', $pw['view']['context'] ) )
 		$permalink = _get( $pw, 'view.url' );
+	else
+		$permalink = _get( $post, 'post_permalink' );
+	
 
 	if( $permalink == false )
 		$permalink = get_permalink( $post['ID'] );
@@ -81,7 +82,7 @@ function pw_get_social_share_meta( $vars ){
 	
 	///// TWITTER /////
 	if( in_array( 'twitter', $share_networks ) ){
-		$twitter_user = i_get_option(array( 'option_name' => 'i-social', 'key' => 'networks.twitter' ));
+		$twitter_user = pw_get_option(array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter' ));
 
 		$twitter_via = ( $twitter_user ) ?
 			'via='.urlencode($twitter_user).'&' : '';
@@ -89,7 +90,7 @@ function pw_get_social_share_meta( $vars ){
 		$twitter_related = ( $twitter_user ) ?
 			'related='.urlencode($twitter_user).'&' : '';
 
-		$twitter_hashtags = i_get_option(array( 'option_name' => 'i-social', 'key' => 'networks.twitter_hashtags' ));
+		$twitter_hashtags = pw_get_option(array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter_hashtags' ));
 		$twitter_hashtags = ( $twitter_hashtags ) ?
 			'hashtags='.urlencode($twitter_hashtags) . '&' : '';
 

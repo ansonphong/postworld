@@ -25,7 +25,7 @@ function i_pw_template_partials( $template_partials ){
 	// IMAGE DOWNLOAD
 	$template_partials = pw_set_obj( $template_partials,
 		'viewPost.social.shareLinks',			// partials model path
-		'i_share_social'						// function name
+		'pw_social_share'						// function name
 		);
 
 	return $template_partials;

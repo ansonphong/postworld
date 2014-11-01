@@ -3,38 +3,38 @@
 ////////// STRUCTURE STYLES MODEL //////////
 // This is to access a single style set
 
-function i_social_model(){
-	global $i_social_model;
-	return $i_social_model;
+function pw_social_model( $model ){
+
+	$default_model = array(
+		"contact"	=>	array(
+			"email"			=>	"",
+			"phone"			=>	"",
+			"phone_int"		=>	"",
+			"fax"			=>	"",
+			"name"			=>	"",
+			"address1"		=>	"",
+			"address2"		=>	"",
+			"postal_code"	=>	"",
+			"city"			=>	"",
+			"region"		=>	"",
+			"country"		=>	""
+			),
+		"networks"	=>	array(
+			"facebook"		=>	"",
+			"twitter"		=>	"",
+			"tripadvisor"	=>	"",
+			),
+		);
+
+	$model = array_replace_recursive( $default_model, $model );
+
+	return $model;
+
 }
 
-global $i_social_model;
-$i_social_model = array(
-	"contact"	=>	array(
-		"email"			=>	"",
-		"phone"			=>	"",
-		"phone_int"		=>	"",
-		"fax"			=>	"",
-		"name"			=>	"",
-		"address1"		=>	"",
-		"address2"		=>	"",
-		"postal_code"	=>	"",
-		"city"			=>	"",
-		"region"		=>	"",
-		"country"		=>	""
-		),
-	"networks"	=>	array(
-		"facebook"		=>	"",
-		"twitter"		=>	"",
-		"tripadvisor"	=>	"",
-		),
 
-	);
+add_filter( 'pwGetOption-' . PW_OPTIONS_SOCIAL, 'pw_social_model' );
 
-////////// MERGE CHILD SOCIAL MODEL //////////
-if( isset( $i_child_social_model ) ){
-	$i_social_model = array_merge_recursive( $i_social_model, $i_child_social_model );
-}
 
 ////////// SOCIAL ATTRIBUTES //////////
 // - Define how to handle the settings of each type
@@ -43,7 +43,7 @@ $i_social_meta	=	array(
 	array(
 		"id"	=>	"networks",
 		"name"	=>	"Social Networks",
-		"icon"	=>	"icon-heart",
+		"icon"	=>	"icon-globe-o",
 		"fields"	=>	array(
 			array(
 				"id"			=>	"facebook",

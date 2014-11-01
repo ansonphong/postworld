@@ -2,19 +2,22 @@
 	postworld.controller( 'shareSocialCtrl', [ '$scope', '_', '$filter', '$log', function($scope, $_, $filter, $log){
 		
 		$scope.setNetworkIds = function( networkIds ){
-			if( $_.getObj( $scope.$parent.iOptions, "<?php echo $vars['option_key'];?>" ) == false )
-				$scope.$parent.iOptions = $_.setObj( $scope.$parent.iOptions, "<?php echo $vars['option_key'];?>", networkIds );
+			if( $_.getObj( $scope.$parent.<?php echo $vars['model_var'];?>, "<?php echo $vars['model_key'];?>" ) == false )
+				$scope.$parent.<?php echo $vars['model_var'];?> = $_.setObj( $scope.$parent.<?php echo $vars['model_var'];?>, "<?php echo $vars['model_key'];?>", networkIds );
 			else
 				$scope.$parent.<?php echo $vars['ng_model'];?> = networkIds;
 
 			$log.debug( "Set networkIds:", networkIds );
 		};
+
 		$scope.getOptionsModel = function(){
 			return $_.getObj( $scope, "<?php echo $vars['options_model']; ?>" );
 		}
+
 		$scope.getSelectedNetworks = function () {
 		    return $filter('filter')( $_.getObj( $scope, "<?php echo $vars['options_model'] ?>" ), { selected: true });
 		}
+
 		$scope.shareSocialCtrlInit = function(){
 			// Get the saved settings 
 			var savedSettings = $_.getObj( $scope.$parent, "<?php echo $vars['ng_model']; ?>" );
@@ -34,6 +37,7 @@
 			$scope.<?php echo $vars['options_model']; ?> = metaValues;
 
 		}
+
 		$scope.selectedNetworkIds = function () {
 			var selectedNetworks = $scope.getSelectedNetworks();
 			var selectedNetworkIds = [];
@@ -42,6 +46,7 @@
 			});
 			return selectedNetworkIds;
 		}
+
 		// Watch for a change in the options model
 		$scope.$watch(
 			function(){

@@ -10,12 +10,6 @@ function pw_get_option( $vars ){
 			'option_name'	=>	[string], // "i-options",
 			'key'			=> 	[string], // "images.logo",
 			'filter'		=>	[boolean] // Gives option to disable filtering
-
-			// TODO : Refactor into image sub-object, with sub-function call
-			'type'	=>	"image",
-			'format' => "url",
-			'size'	=>	"full",
-			);
 	*/
 
 	$default_vars = array(
@@ -75,42 +69,6 @@ function pw_get_option( $vars ){
 	// Get Option Value Object Key Value
 	$value = _get( $value, $key );
 
-
-
-	//////////// DEPRECIATED : TODO : REFACTOR ////////////
-	///// PREFORMAT RETURN DATA /////
-	// Preformat Defaults
-	if( !isset($format) )
-		$format = 'url';
-	if( !isset($type) )
-		$type = '';
-	if( !isset($size) )
-		$size = 'full';
-
-	///// IMAGES /////
-	// If it's an Image type
-	if( $type == "image" && is_numeric($value) ){
-		$url = wp_get_attachment_image_src( $value, $size );
-		switch( $format ){
-			case 'url':
-				return $url[0];
-				break;
-			case 'array':
-				return $url;
-				break;
-			case 'object':
-				return array(
-					"url" => $url[0],
-					"width" => $url[1],
-					"height" => $url[2]
-					);
-		}
-
-	}
-	//////////// END DEPRECIATED ////////////
-
-
-
 	return $value;
 
 }
@@ -120,6 +78,29 @@ function i_get_option( $vars ){
 	return pw_get_option( $vars );
 }
 
+
+function pw_get_image_option( $vars ){
+	// Gets an image ID with pw_get_option
+	// Then gets the image object with pw_get_image_obj
+	/*
+		$vars = array(
+			'option_name'	=>	...
+			'key'			=>	...
+			'size'			=>  ...
+		)
+	*/
+	$defaultVars = array(
+		'size'	=>	'full',
+		);
+
+	$vars = array_replace_recursive( $defaultVars, $vars );
+	$image_id = pw_get_option( $vars );
+
+	if( (bool) $image_id )
+		return	pw_get_image_obj( $image_id, $vars['size'] );
+	else
+		return false;
+}
 
 
 function i_get_postmeta_key( $vars ){
@@ -168,10 +149,17 @@ function i_get_postmeta_key( $vars ){
 }
 
 
+// DEPRECIATED
+function i_site_logo( $size = 'full', $format = 'url' ){
+	return pw_site_logo( $size, $format );
+}
+
+
+
 function pw_site_logo( $size = 'full', $format = 'url' ){
 	return pw_get_option(
 		array(
-			"option_name" => PW_OPTIONS_SITE,
+			"option_name" => PW_OPTIONS_THEME,
 			"type" => "image",
 			"key" => "images.logo",
 			"format" => $format,
@@ -180,17 +168,24 @@ function pw_site_logo( $size = 'full', $format = 'url' ){
 		);
 }
 
-// DEPRECIATED
-function i_site_logo( $size = 'full', $format = 'url' ){
-	return pw_site_logo( $size, $format );
+
+function pw_site_favicon( $size = 'thumbnail' ){
+
+	return pw_get_image_option(
+		array(
+			'option_name' => PW_OPTIONS_SITE,
+			'key' => 'images.favicon',
+			'size' => $size
+			)
+		);
+
 }
-
-
 
 
 function i_site_logo_overlay( $size = 'full', $format = 'url' ){
 	return i_get_option(
 		array(
+			"option_name" => PW_OPTIONS_SITE,
 			"type" => "image",
 			"key" => "images.logo_overlay",
 			"format" => $format,
@@ -223,6 +218,7 @@ function i_header_image( $size = 'full', $format = 'url' ){
 		// Return default header image
 		return i_get_option(
 			array(
+				"option_name" => PW_OPTIONS_SITE,
 				"type" => "image",
 				"key" => "images.header",
 				"format" => $format,
@@ -233,15 +229,5 @@ function i_header_image( $size = 'full', $format = 'url' ){
 }
 
 
-function i_site_favicon( $size = 'thumbnail', $format = 'url' ){
-	return i_get_option(
-		array(
-			"type" => "image",
-			"key" => "images.favicon",
-			"format" => $format,
-			"size"	=>	$size
-			)
-		);
-}
 
 ?>

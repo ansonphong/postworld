@@ -1,5 +1,3 @@
-
-
 <button
 	class="button button-primary"
 	wp-media-library
@@ -10,28 +8,21 @@
 	media-default-tab="upload"
 	media-tabs="upload,library"
 	media-multiple="false"
-	media-callback="emitSelectedMediaId( 'images.favicon' )"
-	media-model="images['favicon']"
+	media-callback="setSelectedMediaId( '<?php echo $vars['option_var']; ?>', '<?php echo $vars['option_subkey']; ?>' )"
+	media-parent-callback="refreshOptions()"
+	media-model="images.favicon"
 	media-model-array="false">
 	Select Image
-	<!-- { option_name: 'i-options', key:'images.favicon', value:'id' } -->
 </button>
+
 <hr class="thin">
+
 <div>
 	<img
 		pw-image
-		image-id="{{ iOptions.images.favicon }}"
+		image-id="{{ <?php echo $vars['option_var']; ?>.<?php echo $vars['option_subkey']; ?> }}"
 		image-model="images['favicon']"
 		ng-src="{{images.favicon.url}}"
 		class="select-image"
-		style="max-width:64px; height:auto;">
+		style="width:32px; max-width:100%; height:auto;">
 </div>
-
-
-<!--
-<pre>images: {{ images | json }}</pre>
-
-ng-style="backgroundImage( images.link_thumbnail.sizes.medium.url, { 'background-size':'cover', 'background-position':'center' })"
-media-callback="setPostImage"
-media-parent-callback="localSetPostImage"
--->

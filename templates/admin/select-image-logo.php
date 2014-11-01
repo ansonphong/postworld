@@ -1,5 +1,3 @@
-
-
 <button
 	class="button button-primary"
 	wp-media-library
@@ -10,23 +8,24 @@
 	media-default-tab="upload"
 	media-tabs="upload,library"
 	media-multiple="false"
-	media-callback="emitSelectedMediaId( 'images.logo' )"
+	media-callback="setSelectedMediaId( '<?php echo $vars['option_var']; ?>', '<?php echo $vars['option_subkey']; ?>' )"
 	media-parent-callback="refreshOptions()"
 	media-model="images.logo"
 	media-model-array="false">
 	Select Image
 </button>
+
 <hr class="thin">
+
 <div>
 	<img
 		pw-image
-		image-id="{{ iOptions.images.logo }}"
+		image-id="{{ <?php echo $vars['option_var']; ?>.<?php echo $vars['option_subkey']; ?> }}"
 		image-model="images['logo']"
 		ng-src="{{images.logo.url}}"
 		class="select-image"
 		style="width:400px; max-width:100%; height:auto;">
 </div>
-
 
 <!--
 <pre>images: {{ images | json }}</pre>

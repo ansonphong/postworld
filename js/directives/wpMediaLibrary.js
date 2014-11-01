@@ -398,6 +398,12 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			});
 	};
 
+	$scope.setSelectedMediaId = function( scopeVar, subkey ){
+		var selectedMedia = $scope.returnMediaValue('id');
+		$scope.$parent[ scopeVar ] = $_.set( $scope.$parent[ scopeVar ], subkey, selectedMedia );
+		return;
+	};
+
 }]);
 
 

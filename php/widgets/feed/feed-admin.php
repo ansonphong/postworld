@@ -62,7 +62,7 @@ extract($OPTIONS);
 		<select name="<?php echo $this->get_field_name('feed_id'); ?>"  id="<?php echo $this->get_field_id('feed_id'); ?>">
 		<?php
 
-			$pw_feeds = i_get_option( array( 'option_name'  =>  'i-feeds' ) );
+			$pw_feeds = pw_get_option( array( 'option_name'  =>  PW_OPTIONS_SOCIAL ) );
 			
 			if( !empty( $pw_feeds ) ){
 				foreach($pw_feeds as $feed ) {

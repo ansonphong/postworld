@@ -1,7 +1,7 @@
 <?php
 	///// GET DATA /////
 	// Feeds
-	$iFeeds = i_get_option( array( 'option_name' => 'i-feeds' ) );
+	$iFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_FEEDS ) );
 	// Feed Settings
 	$iFeedSettings = i_get_option( array( 'option_name' => 'i-feed-settings' ) );
 	// Feed Templates
@@ -464,7 +464,7 @@
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button('i-feeds','iFeeds'); ?></div>
+					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_SOCIAL,'iFeeds'); ?></div>
 		
 					<!-- DELETE BUTTON -->
 					<button
