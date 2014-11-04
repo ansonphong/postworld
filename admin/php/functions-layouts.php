@@ -284,7 +284,7 @@ function pw_get_current_layout(){
 	// Set Layout Variable
 	$layout = false;
 
-	$i_layouts = i_get_option( array( 'option_name' => 'i-layouts' ) );
+	$i_layouts = i_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
 
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
 	// Check for layout override in : post_meta.pw_meta.layout
