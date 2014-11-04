@@ -119,15 +119,7 @@ function pw_get_view_meta( $context = array() ){
 		$meta['post_type'] = $post_type_obj;
 	}
 
-	///// TAG /////
-	if( in_array( 'tag', $context ) ){
-		// Get the tag
-		$taxonomy = 'post_tag';
-		$tag_slug = get_query_var( 'tag' );
-		$meta['term'] = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
-		$meta['term']['url'] = get_term_link( $tag_slug, $taxonomy );
-		$meta['taxonomy'] = get_taxonomy( 'post_tag' );
-	}
+	
 
 	////// ARCHIVE /////
 	if( in_array( 'archive', $context ) ){
@@ -140,6 +132,16 @@ function pw_get_view_meta( $context = array() ){
 			$post_type = get_query_var( 'post_type' );
 			$post_type_obj = get_post_type_object( $post_type );
 			$meta['post_type'] = $post_type_obj;
+		}
+
+		///// TAG /////
+		else if( in_array( 'tag', $context ) ){
+			// Get the tag
+			$taxonomy = 'post_tag';
+			$tag_slug = get_query_var( 'tag' );
+			$meta['term'] = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
+			$meta['term']['url'] = get_term_link( $tag_slug, $taxonomy );
+			$meta['taxonomy'] = get_taxonomy( 'post_tag' );
 		}
 
 		/// TAXONOMY ///
