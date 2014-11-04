@@ -10,7 +10,7 @@
 	}]);
 </script>
 
-<div id="infinite_admin" ng-app="infinite" class="layout postworld">
+<div id="poststuff" ng-app="infinite" class="layout postworld">
 	<h1>
 		<i class="icon-th-large"></i>
 		Layouts
