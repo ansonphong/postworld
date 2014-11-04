@@ -1,6 +1,6 @@
 <?
 	$iStyles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
-	$i_styles_structure = apply_filters( 'pwOptions-styles-structure', array() );
+	$i_styles_structure = apply_filters( PW_MODEL_STYLES, array() );
 ?>
 <div id="poststuff" ng-app="infinite" class="postworld styles">
 	<script type="text/javascript">

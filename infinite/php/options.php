@@ -50,7 +50,7 @@ function pw_get_option( $vars ){
 		// ie. pwGetOption-postworld-styles-theme, to modify the default values
 		if( $filter ){
 			// Apply Filters
-			$value = apply_filters( 'pwGetOption-' . $option_name , $value );
+			$value = apply_filters( $option_name , $value );
 			// Depreciated
 			$value = apply_filters( 'iOptions-' . $option_name , $value );
 
