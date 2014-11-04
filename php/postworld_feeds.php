@@ -16,6 +16,9 @@ function pw_get_feed_by_id( $feed_id ){
 function pw_live_feed( $vars = array() ){
 	global $post;
 
+	// Run filters on the feed vars
+	$vars = apply_filters( 'pw_feed', $vars );
+
 	/// $VARS : (ARRAY) ///
 	if( is_array( $vars ) ){
 		extract( $vars );

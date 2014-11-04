@@ -1,5 +1,6 @@
 <?php
 	global $pw;
+	$ng_model = $vars['option_var'].'.'.$vars['option_key'];
 ?>
 
 <!-- SIDEBAR -->
@@ -79,6 +80,36 @@
 	</label>
 
 	<hr class="thin">
+
+	<!-- BACKGROUND IMAGE -->
+
+	<?php
+		echo pw_select_image_id( array( 
+			'option_var'	=>	$option_var,
+			'option_key'	=>	$option_key.'.widgets.background_image.id',
+			'slug'			=>	'blocksBg',
+			'label'			=>	'Background Image',
+			'width'			=>	'400px',
+			//'attributes'	=>	'parallax parallax-ratio="{{'.$ng_model.'.widgets.background_image.parallax_ratio}}"',
+			'remove'		=>	true,
+		 	));?>
+
+	<!-- PARALLAX RATIO -->
+	<div
+		ng-show="<?php echo $ng_model; ?>.widgets.background_image.id">
+		<hr class="thin">
+		<span class="icon-md"><i class="icon-arrows-v"></i></span>
+		<input
+			id="feed-blocks-max"
+			type="number"
+			ng-model="<?php echo $ng_model; ?>.widgets.background_image.parallax_ratio"
+			placeholder="-0.5">
+		<label for="feed-blocks-max">
+			parallax ratio
+			<small>: a decimal number typically between 0 and -1 which specifies how the background image moves when scrolling down the page</small>
+		</label>
+	</div>
+
 
 	<!-- TEMPLATE -->
 	<!--

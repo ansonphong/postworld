@@ -9,6 +9,21 @@ function i_save_option_button( $option_name, $option_model ){
 	echo pw_ob_admin_template( 'button-save-option', $vars );
 }
 
+///// SELECT IMAGE ID /////
+function pw_select_image_id( $vars = array() ){
+	$defaultVars = array(
+		'option_var'	=>	'pwOptions',					// [string] The scope object to set the value in
+		'option_key'	=>	'images.logo',					// [string] The subkey of the scope object where the id is set
+		'slug'			=>	pw_random_hash( $length = 4 ),	// [string] The unique slug where the image object is kept temporatily for display
+		'label'			=>	'Image',						// [string] The label to put on the button and title
+		'width'			=>	'400px',						// [string] The width to display the image
+		'remove'		=>	true,							// [bool] 	Whether or not to include a button to un-set the background image
+		'attributes'	=>	'',								// [string]	Arbitrary attributes to be added to the image object
+		);
+	$vars = array_replace_recursive( $defaultVars, $vars );
+	return pw_ob_admin_template( 'select-image-id', $vars );
+}
+
 ///// SELECT SITE LOGO /////
 function i_select_image_logo( $vars = array() ){
 	$defaultVars = array(
@@ -270,8 +285,9 @@ function i_select_slider_settings( $vars ){
 function i_select_blocks_settings( $vars ){
 	/*
 	 *	$vars = array(
-	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'iOptions.home.slider',
-	 *		'show'		=>	[ARRAY]		// Array of options to show : array( 'height', 'interval', 'max_slides', 'transition', 'no_pause' )
+	 *		'option_var'	=> [string]
+	 *		'option_key'	=> [string]
+	 *		'show'			=> [ARRAY]	// Array of options to show : array( 'height', 'interval', 'max_slides', 'transition', 'no_pause' )
 	 *	)
 	 */
 	return pw_ob_admin_template( 'select-blocks-settings', $vars );

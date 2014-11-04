@@ -209,12 +209,14 @@ function pw_get_featured_image_obj( $post_id, $size = 'full' ){
 
 ///// GET OBJECT OF AN IMAGE ATTACHMENT ATTRIBUTES /////
 function pw_get_image_obj( $attachment_id, $size = 'full' ){
-	$image_attributes = wp_get_attachment_image_src( $attachment_id, $size );
-	$first_image_obj['url'] = $image_attributes[0];
-	$first_image_obj['width'] = $image_attributes[1];
-	$first_image_obj['height'] = $image_attributes[2];
-	$first_image_obj['ID'] = $attachment_id; //$attachment->ID;
-	return $first_image_obj;
+	$image_arr = wp_get_attachment_image_src( $attachment_id, $size );
+	$image_obj = array(
+		'url' 		=> $image_arr[0],
+		'width' 	=> $image_arr[1],
+		'height' 	=> $image_arr[2],
+		'ID'		=> $attachment_id,
+		);
+	return $image_obj;
 }
 
 

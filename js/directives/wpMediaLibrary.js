@@ -169,7 +169,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		// When an image is selected, run a callback.
 		$scope.file_frame.on( 'select', function() {
 			var selectedMedia = $scope.file_frame.state().get('selection');
-			$scope.setSelectedMedia(selectedMedia);
+			$scope.setSelectedMedia( selectedMedia );
 		});
 
 		// Finally, open the modal
@@ -182,7 +182,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 		///// MEDIA MODEL /////
 		// Set the selected Media Object into the specified Media Model
-		if( $_.objExists($scope, 'mediaModel') ){
+		//if( $_.objExists($scope, 'mediaModel') ){
 
 			// If there's only one image, and mediaModelArray is not set to true
 			if( selectedMedia.length == 1 && $scope.mediaModelArray != 'true' )
@@ -190,7 +190,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			else
 				$scope.mediaModel = selectedMedia;
 
-		}
+		//}
 
 		///// LOCAL CALLBACK /////
 		// Run Specified Callback in Local Scope
@@ -399,8 +399,11 @@ postworld.controller( 'wpMediaLibraryCtrl',
 	};
 
 	$scope.setSelectedMediaId = function( scopeVar, subkey ){
-		var selectedMedia = $scope.returnMediaValue('id');
+		var selectedMedia =  angular.fromJson( angular.toJson( $scope.returnMediaValue('id') ) );
+
+		$log.debug( "››› selectedMedia : ", selectedMedia );
 		$scope.$parent[ scopeVar ] = $_.set( $scope.$parent[ scopeVar ], subkey, selectedMedia );
+		//$scope.$apply();
 		return;
 	};
 
