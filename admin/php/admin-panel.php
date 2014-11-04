@@ -2,42 +2,42 @@
 // TODO : Add security wrappers
 
 ///// MAIN SCREEN /////
-function infinite_postworld_main(){
+function postworld_postworld_main(){
 	global $theme_admin;
 	i_include_scripts();
 	//include 'page-options.php';
 }
 
 ///// THEME OPTIONS SCREEN /////
-function infinite_options_site(){
+function postworld_options_site(){
 	global $theme_admin;
 	i_include_scripts();
 	include 'page-site.php';
 } 
 
 ///// LAYOUT SCREEN /////
-function infinite_options_layout(){
+function postworld_options_layout(){
 	global $theme_admin;
 	i_include_scripts();
 	include 'page-layout.php';
 }
 
 ///// STYLES SCREEN /////
-function infinite_options_styles(){
+function postworld_options_styles(){
 	global $theme_admin;
 	i_include_scripts();
 	include 'page-styles.php';
 }
 
 ///// SOCIAL SCREEN /////
-function infinite_options_social(){
+function postworld_options_social(){
 	global $theme_admin;
 	i_include_scripts();
 	include 'page-social.php';
 }
 
 ///// SIDEBARS SCREEN /////
-function infinite_options_sidebars(){
+function postworld_options_sidebars(){
 	global $theme_admin;
 	global $i_language;
 	i_include_scripts();
@@ -45,11 +45,19 @@ function infinite_options_sidebars(){
 } 
 
 ///// FEEDS SCREEN /////
-function infinite_options_feeds(){
+function postworld_options_feeds(){
 	global $theme_admin;
 	i_include_scripts();
 	include 'page-feeds.php';
 }
+
+///// FEEDS SCREEN /////
+function postworld_options_backgrounds(){
+	global $theme_admin;
+	i_include_scripts();
+	include 'page-backgrounds.php';
+}
+
 
 
 /*

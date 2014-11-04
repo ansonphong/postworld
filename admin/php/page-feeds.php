@@ -30,7 +30,7 @@
 	}]);
 </script>
 
-<div id="infinite_admin" ng-app="infinite" class="postworld feeds wrap">
+<div id="poststuff" ng-app="infinite" class="postworld feeds wrap">
 	<div
 		i-admin
 		i-admin-feeds

@@ -3,7 +3,7 @@
 Plugin Name: Postworld
 Plugin URI: htp://phong.com/
 Description: Wordpress API extension, with AngularJS client-side framework, LESS support, and standard libraries for developers to display posts in creative ways
-Version: 2.0
+Version: 2.2
 Author: phong
 Author URI: http://phong.com
 License: GPL2
@@ -29,6 +29,13 @@ $pw = array(
 				),
 			),
 		),
+	'models'	=>	array(
+		'styles'		=>	'postworld-model-styles',
+		'backgrounds'	=>	'postworld-model-backgrounds',
+		),
+	'defaults'	=>	array(
+		'styles'	=>	'postworld-default-styles',
+		),
 	);
 
 define( 'pw_usermeta_key',	'pw_meta' );
@@ -39,10 +46,18 @@ define( 'pw_postmeta_key',	'pw_meta' );
 define( 'PW_OPTIONS_SITE', 			$pw['db']['wp_options']['option_name']['site'] );
 define( 'PW_OPTIONS_LAYOUTS', 		$pw['db']['wp_options']['option_name']['layouts'] );
 define( 'PW_OPTIONS_SIDEBARS', 		$pw['db']['wp_options']['option_name']['sidebars'] );
+define( 'PW_OPTIONS_STYLES', 		$pw['db']['wp_options']['option_name']['styles'] );
 define( 'PW_OPTIONS_FEEDS', 		$pw['db']['wp_options']['option_name']['feeds'] );
 define( 'PW_OPTIONS_FEED_SETTINGS', $pw['db']['wp_options']['option_name']['feed_settings'] );
 define( 'PW_OPTIONS_SOCIAL', 		$pw['db']['wp_options']['option_name']['social'] );
 define( 'PW_OPTIONS_BACKGROUNDS', 	$pw['db']['wp_options']['option_name']['backgrounds'] );
+
+///// DEFINE MODEL FILTER NAMES /////
+define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
+define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
+
+///// DEFINE DEFAULT OPTIONS VALUE NAMES /////
+define( 'PW_DEFAULT_STYLES', 		$pw['defaults']['styles'] );
 
 
 // MUST BE DEFINED BY THE THEME
@@ -182,7 +197,14 @@ include 'php/postworld_buddypress.php';
 /////////////// ADMIN ////////////////
 include 'admin/postworld_admin.php';
 
+
+/////////////// ADMIN OPITONS ////////////////
 include 'admin/php/admin.php';
+
+
+/////////////// MODULES ////////////////
+include 'postworld-modules/backgrounds/postworld-backgrounds.php';
+
 
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////

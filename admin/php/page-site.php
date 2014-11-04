@@ -1,4 +1,4 @@
-<div id="poststuff" ng-app="infinite" class="main postworld">
+<div ng-app="infinite" class="main wrap postworld">
 	<h1>
 		<i class="icon-gears"></i>
 		Site Options

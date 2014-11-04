@@ -7,18 +7,18 @@
 	}]);
 </script>
 
-<div id="infinite_admin" ng-app="infinite" class="postworld sidebars wrap">
+<div ng-app="infinite" class="postworld sidebars wrap">
 	<div
 		i-admin
 		i-admin-sidebars
 		ng-controller="pwSidebarsDataCtrl"
 		ng-cloak>
 
-		<h2>
+		<h1>
 			<i class="icon-map"></i>
 			Sidebars
 			<button class="add-new-h2" ng-click="newSidebar()"><?php ___('sidebars.add_new'); ?></button>
-		</h2>
+		</h1>
 		
 		<hr class="thick">
 

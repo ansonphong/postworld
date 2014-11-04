@@ -33,7 +33,7 @@ function pw_social_model( $model ){
 }
 
 
-add_filter( 'pwGetOption-' . PW_OPTIONS_SOCIAL, 'pw_social_model' );
+add_filter( PW_OPTIONS_SOCIAL, 'pw_social_model' );
 
 
 ////////// SOCIAL ATTRIBUTES //////////

@@ -26,7 +26,7 @@ function postworld_admin_menu(  ){
 			'menu_title' => 'Postworld',
 			'capability' => 'manage_options',
 			'menu_slug' => $pw['slug'],
-			'function' => 'infinite_postworld_main',
+			'function' => 'postworld_postworld_main',
 			//'icon_url' => '',//plugins_url( $migration_admin_folder.'/images/logo/pw_symbol-16.png' ),
 			'menu_icon'	=>	'dashicons-art',
 			'position' => ''
@@ -40,7 +40,7 @@ function postworld_admin_menu(  ){
 				'menu_title' => 'Site Options',
 				'capability' => 'manage_options',
 				'menu_slug' => $pw['slug'].'-site',
-				'function' => 'infinite_options_site',
+				'function' => 'postworld_options_site',
 				),
 
 			'layout' => array(
@@ -49,7 +49,7 @@ function postworld_admin_menu(  ){
 				'menu_title' => 'Layout',
 				'capability' => 'manage_options',
 				'menu_slug' => $pw['slug'].'-layout',
-				'function' => 'infinite_options_layout',
+				'function' => 'postworld_options_layout',
 				),
 
 			'sidebars' => array(
@@ -58,7 +58,7 @@ function postworld_admin_menu(  ){
 				'menu_title' => 'Sidebars',
 				'capability' => 'manage_options',
 				'menu_slug' => $pw['slug'].'-sidebars',
-				'function' => 'infinite_options_sidebars',
+				'function' => 'postworld_options_sidebars',
 				),
 
 			'styles' => array(
@@ -67,7 +67,7 @@ function postworld_admin_menu(  ){
 				'menu_title' => 'Styles',
 				'capability' => 'manage_options',
 				'menu_slug' => $pw['slug'].'-styles',
-				'function' => 'infinite_options_styles',
+				'function' => 'postworld_options_styles',
 				),
 
 			'social' => array(
@@ -76,7 +76,7 @@ function postworld_admin_menu(  ){
 				'menu_title' => 'Social',
 				'capability' => 'manage_options',
 				'menu_slug' => $pw['slug'].'-social',
-				'function' => 'infinite_options_social',
+				'function' => 'postworld_options_social',
 				),
 
 			'feeds' => array(
@@ -85,7 +85,16 @@ function postworld_admin_menu(  ){
 				'menu_title' => 'Feeds',
 				'capability' => 'manage_options',
 				'menu_slug' => $pw['slug'].'-feeds',
-				'function' => 'infinite_options_feeds',
+				'function' => 'postworld_options_feeds',
+				),
+
+			'backgrounds' => array(
+				'parent_slug' => $pw['slug'],
+				'page_title' => 'Backgrounds',
+				'menu_title' => 'Backgrounds',
+				'capability' => 'manage_options',
+				'menu_slug' => $pw['slug'].'-backgrounds',
+				'function' => 'postworld_options_backgrounds',
 				),
 
 			),

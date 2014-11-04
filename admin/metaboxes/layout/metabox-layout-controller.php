@@ -14,7 +14,7 @@ global $post;
 	<div
 		i-admin-layout
 		ng-controller="pwLayoutMetaboxCtrl"
-		id="infinite_admin"
+		id="poststuff"
 		class="pw-metabox metabox-side metabox-layout">
 		<?php
 			echo i_layout_single_options( array( 'context'	=>	'postAdmin' ) );

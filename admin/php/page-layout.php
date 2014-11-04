@@ -10,11 +10,12 @@
 	}]);
 </script>
 
-<div id="poststuff" ng-app="infinite" class="layout postworld">
+<div ng-app="infinite" class="layout wrap postworld">
 	<h1>
 		<i class="icon-th-large"></i>
 		Layouts
 	</h1>
+	<hr class="thick">
 	<div
 		i-admin-layout
 		ng-controller="layoutDataCtrl"

@@ -31,6 +31,11 @@
 	@import 'metabox-link_url.less';
 	@import 'metabox-post_parent.less';
 
+
+	@import "colors-admin.less";
+	@import "panel-style.less";
+
+
 	button.add-new-h2{
 		line-height:1.4em;
 		cursor: pointer;
@@ -148,21 +153,10 @@
 	}
 
 
-}
-
-
-///// #POSTSTUFF OVERRIDES /////
-#poststuff.postworld{
-	@import "colors-admin.less";
-	@import "panel-style.less";
-
 	.well h2{
 		margin:10px;
 	}
 
-	h3{
-		padding-left:0;
-	}
 
 	img.select-image{
 		border:4px solid #fff;
@@ -200,15 +194,7 @@
 		}
 	}
 
-	.message{
-		border:1px solid #ccc;
-		border-left-width:5px;
-		padding:10px;
-		background: #fff;
-		&.success{
-			border-left-color:@green3;
-		}
-	}
+
 
 	.select-module{
 		padding:5px 15px;
@@ -296,6 +282,31 @@
 
 	small{
 		opacity:.6;
+	}
+
+
+
+}
+
+
+///// #POSTSTUFF OVERRIDES /////
+#poststuff.postworld{
+	
+	
+
+	h3{
+		padding-left:0;
+	}
+
+
+	.message{
+		border:1px solid #ccc;
+		border-left-width:5px;
+		padding:10px;
+		background: #fff;
+		&.success{
+			border-left-color:@green3;
+		}
 	}
 
 

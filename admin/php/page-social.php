@@ -1,9 +1,11 @@
-<div id="poststuff" ng-app="infinite" class="postworld social">
+<div ng-app="infinite" class="postworld wrap social">
 
 	<h1>
 		<i class="icon-profile"></i>
 		Social
 	</h1>
+	
+	<hr class="thick">
 
 	<script>
 		infinite.controller( 'iSocialDataCtrl',
