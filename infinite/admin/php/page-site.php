@@ -33,6 +33,9 @@
 
 				<!-- FAVICON -->
 				<div class="well">
+					<div class="save-right">
+						<?php i_save_option_button( PW_OPTIONS_SITE, 'iOptions'); ?>
+					</div>
 					<h2>
 						<span class="icon-md"><i class="icon-image"></i></span>
 						Favicon
