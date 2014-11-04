@@ -181,7 +181,7 @@ function _contains( $haystack, $needle ){
 
 add_action('wp_head','hook_header_code');
 function hook_header_code() {
-	$output = get_option( 'i-header-code', '' );
+	$output = get_option( 'postworld-header-code', '' );
 	echo $output;
 }
 

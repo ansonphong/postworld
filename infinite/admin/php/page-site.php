@@ -8,7 +8,7 @@
 		wp_enqueue_media();
 		///// GET OPTIONS /////
 		$iOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
-		$i_header_code = json_encode( get_option( 'i-header-code', '' ) );
+		$i_header_code = json_encode( get_option( 'postworld-header-code', '' ) );
 	?>
 	<script>
 		infinite.controller( 'optionsDataCtrl',
@@ -52,7 +52,7 @@
 
 		<div class="well">
 			<div class="save-right">
-				<?php i_save_option_button('i-header-code','iHeaderCode'); ?>
+				<?php i_save_option_button('postworld-header-code','iHeaderCode'); ?>
 			</div>
 			<h2>
 				<i class="icon-code"></i>
