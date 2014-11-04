@@ -18,12 +18,14 @@ $pw = array(
 	'db' =>	array(
 		'wp_options'	=>	array(
 			'option_name'	=>	array(
-				'site'		=>	'postworld-site',
-				'layouts'	=>	'postworld-layouts',
-				'sidebars'	=>	'postworld-sidebars',
-				'styles'	=>	'postworld-styles',
-				'feeds'		=>	'postworld-feeds',
-				'social'	=>	'postworld-social',
+				'site'				=>	'postworld-site',
+				'layouts'			=>	'postworld-layouts',
+				'sidebars'			=>	'postworld-sidebars',
+				'styles'			=>	'postworld-styles',
+				'feeds'				=>	'postworld-feeds',
+				'feed_settings'		=>	'postworld-feed-settings',
+				'social'			=>	'postworld-social',
+				'backgrounds'		=>	'postworld-backgrounds',
 				),
 			),
 		),
@@ -34,11 +36,13 @@ define( 'pw_postmeta_key',	'pw_meta' );
 
 ///// DEFINE OPTION NAMES /////
 // Used in 'wp_options' table as 'option_name' key
-define( 'PW_OPTIONS_SITE', 		$pw['db']['wp_options']['option_name']['site'] );
-define( 'PW_OPTIONS_LAYOUTS', 	$pw['db']['wp_options']['option_name']['layouts'] );
-define( 'PW_OPTIONS_SIDEBARS', 	$pw['db']['wp_options']['option_name']['sidebars'] );
-define( 'PW_OPTIONS_FEEDS', 	$pw['db']['wp_options']['option_name']['feeds'] );
-define( 'PW_OPTIONS_SOCIAL', 	$pw['db']['wp_options']['option_name']['social'] );
+define( 'PW_OPTIONS_SITE', 			$pw['db']['wp_options']['option_name']['site'] );
+define( 'PW_OPTIONS_LAYOUTS', 		$pw['db']['wp_options']['option_name']['layouts'] );
+define( 'PW_OPTIONS_SIDEBARS', 		$pw['db']['wp_options']['option_name']['sidebars'] );
+define( 'PW_OPTIONS_FEEDS', 		$pw['db']['wp_options']['option_name']['feeds'] );
+define( 'PW_OPTIONS_FEED_SETTINGS', $pw['db']['wp_options']['option_name']['feed_settings'] );
+define( 'PW_OPTIONS_SOCIAL', 		$pw['db']['wp_options']['option_name']['social'] );
+define( 'PW_OPTIONS_BACKGROUNDS', 	$pw['db']['wp_options']['option_name']['backgrounds'] );
 
 
 // MUST BE DEFINED BY THE THEME
@@ -178,6 +182,8 @@ include 'php/postworld_buddypress.php';
 /////////////// ADMIN ////////////////
 include 'admin/postworld_admin.php';
 
+include 'admin/php/admin.php';
+
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
 include 'php/postworld_ajax.php';
@@ -194,6 +200,8 @@ include 'php/postworld_shortcodes.php';
 
 /////////////// UPDATE / MIGRATE ////////////////
 include 'php/postworld_update.php';
+
+
 
 
 

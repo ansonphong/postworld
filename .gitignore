@@ -6,6 +6,7 @@ wp-config.php
 # Postworld #
 #############
 deploy/pwSiteGlobals.js
+deploy/pwAdminGlobals.js
 pwSiteGlobals.js
 log/*.txt
 

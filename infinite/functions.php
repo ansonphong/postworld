@@ -42,7 +42,7 @@ include_once 'php/metaboxes.php';
 
 
 // ADMIN
-include_once 'admin/php/admin.php';
+//include_once 'admin/php/admin.php';
 
 // IMPORT ALL CSS/LESS STYLESHEETS
 include_once 'php/styles.php';

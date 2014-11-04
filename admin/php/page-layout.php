@@ -6,7 +6,7 @@
 			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
 			$scope.iSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
 			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
-			$scope.iLayouts = <?php echo json_encode( i_get_option( array( 'option_name' => 'i-layouts' ) ) ); ?>;
+			$scope.iLayouts = <?php echo json_encode( i_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
 	}]);
 </script>
 
@@ -34,7 +34,7 @@
 					</span>
 				<td>
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button('i-layouts','iLayouts'); ?></div>
+					<div class="save-right"><?php i_save_option_button(PW_OPTIONS_SIDEBARS,'iLayouts'); ?></div>
 
 					<?php
 						echo i_layout_single_options( array( 'context'	=>	'siteAdmin' ) );

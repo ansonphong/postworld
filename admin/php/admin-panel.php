@@ -6,7 +6,6 @@ function infinite_postworld_main(){
 	global $theme_admin;
 	i_include_scripts();
 	//include 'page-options.php';
-	echo "<h1>".$theme_admin['main']['page_title']."</h1>";
 }
 
 ///// THEME OPTIONS SCREEN /////
