@@ -8,6 +8,27 @@
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 
+///// TODO : DIGEST INFINITE INTO POSTWORLD /////
+postworld.directive( 'iEditPost', [ function($scope){
+    return {
+        restrict: 'AE',
+        controller: 'iEditPostCtrl',
+        link: function( $scope, element, attrs ){}
+    };
+}]);
+postworld.controller('iEditPostCtrl',
+    ['$scope', '$rootScope', '$timeout', '$filter',
+        'pwData', '$log', '$route', '$routeParams', '$window',  '_', 'pwTemplatePartials', 'iOptionsData',
+    function($scope, $rootScope, $timeout, $filter, 
+        $pwData, $log, $route, $routeParams,  $window, $_, $pwTemplatePartials, $iOptionsData ) {
+
+        $scope['options'] = $iOptionsData['options'];
+
+}]);
+
+
+
+
 postworld.directive( 'pwEditPost', [ function($scope){
 	return {
 		restrict: 'AE',
