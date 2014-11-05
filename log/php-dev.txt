@@ -1566,3 +1566,4 @@ TEMPLATE POST TYPES : ["post","page","attachment","blog","event","block","journa
 TEMPLATE POST TYPES : ["post","page","attachment","blog","event","block","journal-volume","journal-article","art"]
 TEMPLATE POST TYPES : ["post","page","attachment","blog","event","block","journal-volume","journal-article","art"]
 TEMPLATE POST TYPES : ["post","page","attachment","blog","event","block","journal-volume","journal-article","art"]
+TEMPLATE POST TYPES : ["post","page","attachment","blog","event","block","journal-volume","journal-article","art"]
