@@ -10,21 +10,35 @@
  	function( $window, $timeout, $pwData, $log, $_ ){
 	return {
 		restrict: 'AE',
-		//controller: 'pwBackgroundCtrl',
 		scope: {
 			pwBackground:'=',
 		},
 		link: function( $scope, element, attrs ){
+
+			$scope.$watch('pwBackground', function( val ){
+				$scope.updateBackground( val );
+			}, 1 );
+
+			$scope.updateBackground = function(){
+				// Apply the background styles
+				$scope.applyBackgroundStyles();
+				// Check if there is an image ID
+				var imageId = $scope.getImageId();
+				if( imageId ){
+					// And there is no image post
+					if( !$scope.getImagePost() ){
+						// Populate it
+						$scope.populateImagePost( imageId );
+						return;
+					}
+				}
+			}
 
 			$scope.applyBackgroundStyles = function(){
 				var styles = $scope.parseBackgroundStyles();
 				element.css( styles );
 				$log.debug( "pwBackground › applyBackgroundStyles", styles );
 			}
-
-			$scope.$watch('pwBackground', function( val ){
-				$scope.updateBackground( val );
-			}, 1 );
 
 			$scope.getImageId = function(){
 				return $_.get( $scope.pwBackground, 'image.id' );;
@@ -47,31 +61,13 @@
 			}
 
 			$scope.getImageUrl = function(){
+				// TODO : Select the approriate size depending on screen size
 				// Check if there is an image post
 				var imagePost = $scope.getImagePost();
 				if( !imagePost )
 					return false;
 				// Get the image url
 				return $_.get( imagePost, 'image.sizes.full.url' );
-			}
-
-			$scope.updateBackground = function(){
-				// TODO : Select the approriate size depending on screen size
-				$log.debug('pwBackground › updateBackground : ', $scope.pwBackground );
-
-				// Apply the background styles
-				$scope.applyBackgroundStyles();
-
-				// Check if there is an image ID
-				var imageId = $scope.getImageId();
-				if( imageId ){
-					// And there is no image post
-					if( !$scope.getImagePost() ){
-						// Populate it
-						$scope.populateImagePost( imageId );
-						return;
-					}
-				}
 			}
 
 			$scope.populateImagePost = function( imageId ){
@@ -98,27 +94,21 @@
 				
 				// Delete empty values
 				angular.forEach( styles, function( value, key ){
-					// Empty Values
-					//if( _.isEmpty(value) )
-					//	delete styles[key];
-
 					// Opacity 
 					if( key == 'opacity' )
 						styles[key] = value/100; 
-
 					// Size
 					if( key == 'background-size' )
 						if( is_numeric( value ) )
 							styles[key] = value + '%'; 
-
 				});
 				
-
 				// Get image URL
 				var backgroundImageUrl = $scope.getImageUrl(); 
-				//if( backgroundImageUrl ){
-					styles['background-image'] = 'url("'+ backgroundImageUrl +'")'
-				//}
+				if( backgroundImageUrl )
+					styles['background-image'] = 'url("'+ backgroundImageUrl +'")';
+				else
+					styles['background-image'] = 'none';
 
 				return styles;
 			}

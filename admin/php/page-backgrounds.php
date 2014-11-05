@@ -33,7 +33,7 @@
 		<div class="pw-row">
 
 			<!-- ///// ITEMS MENU ///// -->
-			<div class="pw-col-3">
+			<div class="pw-col-2">
 				<ul class="list-menu">
 					<li
 						ng-repeat="item in pwBackgrounds"
@@ -48,7 +48,7 @@
 
 
 			<!-- ///// EDIT SETTINGS ///// -->
-			<div class="pw-col-9">
+			<div class="pw-col-10">
 				<div ng-show="showView('editItem')">
 
 					<?php
@@ -57,7 +57,7 @@
 					?>
 
 					<hr class="thick">
-					
+
 					<!-- SAVE BUTTON -->
 					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
 		

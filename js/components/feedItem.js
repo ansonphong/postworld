@@ -8,7 +8,6 @@ postworld.directive('feedItem', [ '_', function( $_ ) {
 		template: '<div ng-include="itemTemplateUrl"></div>',
 
 		link : function( $scope, element, attrs ){
-
 			// Add classes to the parent feed item set by the block
 			var blockClasses = $_.get( $scope, 'post.block.classes' );
 			if( blockClasses != false && _.isString( blockClasses ) ){

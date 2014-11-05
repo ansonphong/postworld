@@ -1,7 +1,7 @@
 <?php extract( $vars ); ?>
 
 <div class="pw-row">
-	<div class="pw-col-6">
+	<div class="pw-col-8">
 
 		<!-- /// PREVIEW /// -->
 		<div class="preview-module" style="position:relative;">
@@ -16,7 +16,7 @@
 		</div>
 
 	</div>
-	<div class="pw-col-6">
+	<div class="pw-col-4">
 		<!-- /// SETTINGS /// -->
 		<div class="content-wrapper">
 	
@@ -29,7 +29,7 @@
 					echo pw_select_image_id( array(
 						'ng_model'		=>	 $ng_model.'.primary.image.id',
 						'slug'			=>	'primary_image',
-						'label'			=>	'Primary Image',
+						'label'			=>	'Image',
 						'display'		=>	false,
 					 	));?>
 
@@ -86,7 +86,7 @@
 					echo pw_select_image_id( array(
 						'ng_model'		=>	$ng_model.'.secondary.image.id',
 						'slug'			=>	'secondary_background',
-						'label'			=>	'Secondary Image',
+						'label'			=>	'Image',
 						'display'		=>	false,
 					 	));?>
 
@@ -98,7 +98,7 @@
 				<hr class="thin">
 				<div
 					ui-slider="{orientation: 'horizontal', range: 'min'}" 
-					min="0"
+					min="1"
 					max="100"
 					step="1"
 					ng-model="<?php echo $ng_model; ?>.secondary.style.opacity">
@@ -112,11 +112,23 @@
 				<hr class="thin">
 				<div
 					ui-slider="{orientation: 'horizontal', range: 'min'}" 
-					min="0"
+					min="1"
 					max="100"
 					step="1"
 					ng-model="<?php echo $ng_model; ?>.secondary.style['background-size']">
 				</div>
+
+				<hr class="thin">
+
+				<!-- REPEAT -->
+				<span class="icon-md"><i class="icon-target"></i></span>
+				<select
+					id="secondary-repeat"
+					ng-options="value for value in optionsMeta.style.backgroundRepeat"
+					ng-model="<?php echo $ng_model; ?>.secondary.style['background-repeat']">
+					<option value="">Default</option>
+				</select>
+				<label for="secondary-repeat">repeat</label>
 
 				<hr class="thin">
 
