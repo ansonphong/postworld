@@ -11,10 +11,9 @@ postworld.directive( 'pwAdminBackgrounds', [ function(){
 }]);
 
 postworld.controller('pwAdminBackgroundsCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions',
-	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
+	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions', 'iOptionsData',
+	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions, $iOptionsData ) {
 	
-
 	$scope.newBackground = function(){
 		var newBackground = {
 			'name': 		'My Background',
@@ -22,23 +21,32 @@ postworld.controller('pwAdminBackgroundsCtrl',
 			'description': 	'',
 
 			'primary' : {
-				'id': null,
-				'css':{
-					'background-size': '100%',
+				'image':{
+					'id': null,
+					'size':'full',
+				},
+				'style':{
+					'background-size': null,
 					'background-position': null,
 					'background-repeat':null,
+					'background-color': null,
+					'background-attachment': null,
 					'background-color': null,
 				},
 			},
 
 			'secondary' : {
-				'id': null,
-				'css':{
-					'background-size': '100%',
+				'image':{
+					'id': null,
+					'size':'full',
+				},
+				'style':{
+					'background-size': 100,
 					'background-position': null,
 					'background-repeat':null,
 					'background-color': null,
-					'opacity': 1,
+					'background-attachment': null,
+					'opacity': 50,
 				},
 			},
 
@@ -57,6 +65,10 @@ postworld.controller('pwAdminBackgroundsCtrl',
 		});
 		$scope.pwBackgrounds = updatedBackgrounds;
 	}
+
+
+	$scope.optionsMeta = $iOptionsData.options;
+
 
 	
 }]);

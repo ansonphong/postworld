@@ -65,15 +65,17 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	
 	return {
 
+		posts: $window.pw['posts'],
+
     	feeds: feeds,
 
-    	widgets: $window.pw.widgets,
+    	widgets: $window.pw['widgets'],
     	
     	templates: $pw.templates, 
 
-    	partials: {},	// Used to store partials
+    	partials: $window.pw['partials'],	// Used to store partials
 
-    	embeds:{},		// Used to store embed codes
+    	embeds: $window.pw['embeds'],		// Used to store embed codes
 
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {

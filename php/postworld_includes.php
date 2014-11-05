@@ -263,8 +263,10 @@ function postworld_includes( $args ){
 
 
 		/////// POSTWORLD APP /////	
+		// TODO : blob through the dirs and get all the js files, auto-include in foreach
 		wp_enqueue_script( 	'pw-app-JS',
 			POSTWORLD_URI.'/js/app.js', $angularDep );
+
 
 
 		///// CREATE.JS /////
@@ -273,6 +275,8 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'Postworld-FlashCanvas',
 			POSTWORLD_URI.'/js/components/flashCanvas.js', $angularDep);
 		//}
+
+
 
 
 		// COMPONENTS
@@ -369,6 +373,9 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'pw-Directives-pwImage',
 			POSTWORLD_URI.'/js/directives/pwImage.js', $angularDep );
+
+		wp_enqueue_script( 'pw-Directives-Background',
+			POSTWORLD_URI.'/js/directives/pwBackground.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-pwMenu',
 			POSTWORLD_URI.'/js/directives/pwMenu.js', $angularDep );

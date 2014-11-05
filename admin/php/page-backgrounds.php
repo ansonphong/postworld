@@ -30,7 +30,6 @@
 
 		<hr class="thick">
 
-
 		<div class="pw-row">
 
 			<!-- ///// ITEMS MENU ///// -->
@@ -47,6 +46,7 @@
 			</div>
 
 
+
 			<!-- ///// EDIT SETTINGS ///// -->
 			<div class="pw-col-9">
 				<div ng-show="showView('editItem')">
@@ -55,6 +55,12 @@
 						echo pw_background_single_options( array( 'context'	=>	'siteAdmin' ) );
 						//echo i_ob_include_template( 'admin/modules/layout-single.php', $vars );
 					?>
+
+					<hr class="thick">
+					
+					<!-- SAVE BUTTON -->
+					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
+		
 
 					<h3><i class="icon-gear"></i> <?php ___('backgrounds.item_title'); ?></h3>
 
@@ -121,9 +127,7 @@
 					<hr class="thin">
 
 	
-					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
-		
+					
 					<!-- DELETE BUTTON -->
 					<button
 						class="button deletion"
@@ -151,21 +155,21 @@
 
 		</div>
 
+		<hr class="thick">
 
-
-
-
+		<!--
+		<hr class="thick">
+		<button ng-click="resetDefaults()" class="button">Reset to Defaults</button>
 
 		<hr class="thick">
-		
-		<!-- SAVE BUTTON -->
-		<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUNDS, 'pwBackgrounds'); ?></div>
+		<pre>images : {{ images | json }}</pre>
 
-		<button ng-click="resetDefaults()" class="button">Reset to Defaults</button>
-		
 		<hr class="thick">
 
 		<pre>pwBackgrounds : {{ pwBackgrounds | json }}</pre>
+		-->
+
+		
 
 	</div>
 

@@ -32,7 +32,7 @@ postworld.factory( '$pw',
 
 	// DECLARATIONS
 	return {
-		version: "1.6.4",
+		version: "1.6.4",		// Todo, front load from PHP var
 		templates: pwTemplates,
 
 		state: state(),
@@ -43,7 +43,7 @@ postworld.factory( '$pw',
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
     	
     	view: $window.pwGlobals.view,
-    	paths: $window.pwSiteGlobals.paths, // Move this to pwSiteglobals
+    	paths: $window.pwSiteGlobals.paths,
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,
 
@@ -1363,6 +1363,38 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					}
 				],
 			},
+
+
+			'style':{
+				'position':[
+					'center top',
+					'center center',
+					'center bottom',
+					'left top',
+					'left center',
+					'left bottom',
+					'right top',
+					'right center',
+					'right bottom',
+					'initial',
+				],
+				'backgroundAttachment':[
+					'scroll',
+					'fixed',
+					'local',
+				],
+				'backgroundRepeat':[
+					'repeat',
+					'repeat-x',
+					'repeat-y',
+					'no-repeat',
+				],
+				'backgroundSize':[
+					'cover',
+					'contain',
+				],				
+			},
+
 			'share':{
 				meta:[
 					{
