@@ -34,6 +34,8 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 		restrict: 'AE',
 		controller: 'wpMediaLibraryCtrl',
 		scope: {
+			mediaSetId:'=mediaSetId',
+
 			mediaModel:'=mediaModel',
 			mediaModelArray:'@mediaModelArray',
 			mediaTitle:'@mediaTitle',
@@ -398,13 +400,11 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			});
 	};
 
-	$scope.setSelectedMediaId = function( scopeVar, subkey ){
+	$scope.setSelectedMediaId = function(){
+		// Get the ID of the selected item
 		var selectedMedia =  angular.fromJson( angular.toJson( $scope.returnMediaValue('id') ) );
-
-		$log.debug( "››› selectedMedia : ", selectedMedia );
-		$scope.$parent[ scopeVar ] = $_.set( $scope.$parent[ scopeVar ], subkey, selectedMedia );
-		//$scope.$apply();
-		return;
+		// Set it in the specified scope model
+		$scope.mediaSetId = selectedMedia;
 	};
 
 }]);

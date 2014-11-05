@@ -43,6 +43,7 @@ var depInject = [
 	'mgcrea.ngStrap.popover',
 	'pw.compile',
 	//'ya.treeview',
+	'ui.slider',
 	];
 
 

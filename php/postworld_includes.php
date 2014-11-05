@@ -470,12 +470,12 @@ function pwSiteGlobals_include(){
 	$pwJs .= json_encode( $pwSiteGlobals );
 	$pwJs .= ";";
 
+	//pw_log( "PW INCLUDES " );
 	// ENCODE TEMPLATES
 	$pwJs .= "\n\n";
 	$pwJs .= "pw.templates = ";
 	$pwJs .= json_encode( pw_get_templates() );
 	$pwJs .= ";";
-	//pw_log( "TEMPLATES : " . json_encode( pw_get_templates() ) );
 
 	// ENCODE SITE LANGUAGE
 	global $pwSiteLanguage;	

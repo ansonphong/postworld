@@ -9,6 +9,29 @@ $i_language = array(
 		'back'		=>	'‹ Back',
 		'none'		=>	'None',
 		),
+
+	'backgrounds'	=>	array(
+		'item_title'		=>	'Background Settings',
+		'add_new' 			=>	'Add New Background',
+		'delete'			=>	'Delete Background',
+		'duplicate'			=>	'Duplicate Background',
+
+		'name'				=>	'Background Name',
+		'name_info'			=>	'The name makes it easy to find.',
+		'id'				=>	'Background ID',
+		'id_info'			=>	'The ID is the unique name for the vackground. It contains only letters, numbers, and hyphens.',
+		'id_edit_info'		=>	'Editing the ID may cause instances of the background to disappear.',	
+		
+		'description'		=>	'Description',
+		'description_info'	=>	'The description describes the intended use of the Background.',
+		
+		'edit'				=>	'Edit Background',
+		'delete' 			=> 	'Delete Background',
+		'update' 			=> 	'Update Background',
+
+
+		),
+
 	'sidebars'	=>	array(
 		'item_title'		=>	'Sidebar Settings',
 		'add_new' 			=>	'Add New Sidebar',

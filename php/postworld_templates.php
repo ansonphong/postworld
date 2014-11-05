@@ -212,7 +212,8 @@ function pw_get_templates( $vars = array() ){
 		}
 		$post_types = $post_types_final;
 	}
-		
+	
+	pw_log( "TEMPLATE POST TYPES : " . json_encode($post_types) );
 
 	///// GET VIEWS /////
 	$post_views = ( isset( $posts['post_views'] ) ) ?
@@ -256,7 +257,7 @@ function pw_get_templates( $vars = array() ){
 
 	///// OUTPUT /////
 	// If output is 'ids', strip the path data
-	if( $vars['output'] == 'ids' ){
+	if( isset( $vars['output'] ) && $vars['output'] == 'ids' ){
 		$new_obj = array();
 		foreach( $template_obj as $key => $value ){
 			// Handle Posts (extra level of recursion)

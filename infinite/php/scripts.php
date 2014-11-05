@@ -16,6 +16,7 @@ function i_include_admin_scripts(){
 	wp_enqueue_script('Infinite-Admin-Styles', get_infinite_directory_uri().'/js/controllers-admin/styles.js', $angularDep );
 	wp_enqueue_script('Infinite-Admin-Sidebars', get_infinite_directory_uri().'/js/controllers-admin/sidebars.js', $angularDep );
 	wp_enqueue_script('Infinite-Admin-Feeds', get_infinite_directory_uri().'/js/controllers-admin/feeds.js', $angularDep );
+	wp_enqueue_script('Infinite-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
 	
 	// DIRECTIVES : ADMIN
 	wp_enqueue_script('Infinite-Admin', get_infinite_directory_uri().'/js/directives-admin/iAdmin.js', $angularDep );
@@ -28,6 +29,17 @@ function i_include_admin_scripts(){
 
 	// DIRECTIVES
 	wp_enqueue_script('Infinite-Directives', get_infinite_directory_uri().'/js/directives/iDirectives.js', $angularDep );
+	
+
+	/////// ANGULAR : JQUERY SLIDER /////
+	wp_enqueue_script( 'angularJS-jQuery-Slider', POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );
+	///// JQUERY /////
+	// Required for Slider
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'jquery-ui-core' );
+	wp_enqueue_script( 'jquery-ui-slider' );
+	wp_enqueue_script( 'jquery-ui-widget' );
+	wp_enqueue_script( 'jquery-ui-mouse' );
 	
 
 }

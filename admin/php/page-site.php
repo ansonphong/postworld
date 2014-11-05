@@ -40,7 +40,14 @@
 						<span class="icon-md"><i class="icon-image"></i></span>
 						Favicon
 					</h2>
-					<?php echo i_select_image_favicon(); ?>
+					<?php
+						echo pw_select_image_id( array(
+							'ng_model'		=>	'iOptions.images.favicon',
+							'slug'			=>	'favicon',
+							'label'			=>	'Favicon',
+							'display'		=>	true,
+							'width'			=> 	'64px',
+						 	));?>
 				</div>
 
 			</div>
@@ -50,7 +57,6 @@
 
 			</div>
 		</div>
-
 
 
 		<div class="well">

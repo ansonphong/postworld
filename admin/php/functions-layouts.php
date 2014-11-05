@@ -284,7 +284,7 @@ function pw_get_current_layout(){
 	// Set Layout Variable
 	$layout = false;
 
-	$i_layouts = i_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+	$i_layouts = i_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) );
 
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
 	// Check for layout override in : post_meta.pw_meta.layout
@@ -311,7 +311,7 @@ function pw_get_current_layout(){
 	}
 
 	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
-	if( !$layout || $layout['template'] == 'default' || $layout['layout'] == 'default' ){
+	if( !$layout || $layout['template'] == 'default' ){ //  || $layout['layout'] == 'default'
 		$layout = pw_get_obj( $i_layouts, 'default' );
 		$layout['source'] = 'default';
 	}

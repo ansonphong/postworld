@@ -8,7 +8,8 @@
 	media-default-tab="upload"
 	media-tabs="upload,library"
 	media-multiple="false"
-	media-callback="setSelectedMediaId( '<?php echo $vars['option_var']; ?>', '<?php echo $vars['option_key']; ?>' )"
+	media-callback="setSelectedMediaId()"
+	media-set-id="<?php echo $vars['ng_model']; ?>"
 	media-parent-callback="refreshOptions()"
 	media-model="images.<?php echo $vars['slug']; ?>"
 	media-model-array="false">
@@ -16,12 +17,14 @@
 	Select <?php echo $vars['label']; ?>
 </button>
 
+<!-- '<?php //echo $vars['option_var']; ?>', '<?php echo $vars['option_key']; ?>'  -->
+
 <span
-	ng-show="<?php echo json_encode($vars['remove']); ?> && <?php echo $vars['option_var']; ?>.<?php echo $vars['option_key']; ?>">
+	ng-show="<?php echo json_encode($vars['remove']); ?> && <?php echo $vars['ng_model']; ?>">
 	<button
 		type="button"
 		class="button deletion"
-		ng-click="<?php echo $vars['option_var']; ?>.<?php echo $vars['option_key']; ?> = null;">
+		ng-click="<?php echo $vars['ng_model']; ?> = null;">
 		<i class="icon-close"></i>
 		Remove <?php echo $vars['label']; ?>
 	</button>
@@ -29,9 +32,9 @@
 
 <div
 	style="position:relative;"
-	ng-show="<?php echo $vars['option_var']; ?>.<?php echo $vars['option_key']; ?>"
+	ng-show="<?php echo $vars['ng_model']; ?> && <?php echo json_encode($vars['display']); ?> == true"
 	pw-image
-	image-id="{{ <?php echo $vars['option_var']; ?>.<?php echo $vars['option_key']; ?> }}"
+	image-id="{{ <?php echo $vars['ng_model']; ?> }}"
 	image-model="images.<?php echo $vars['slug']; ?>">
 	<div class="space-1"></div>
 	<img

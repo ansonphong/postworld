@@ -12,15 +12,16 @@ function i_save_option_button( $option_name, $option_model ){
 ///// SELECT IMAGE ID /////
 function pw_select_image_id( $vars = array() ){
 	$defaultVars = array(
-		'option_var'	=>	'pwOptions',					// [string] The scope object to set the value in
-		'option_key'	=>	'images.logo',					// [string] The subkey of the scope object where the id is set
+		'ng_model'		=>	null,
 		'slug'			=>	pw_random_hash( $length = 4 ),	// [string] The unique slug where the image object is kept temporatily for display
 		'label'			=>	'Image',						// [string] The label to put on the button and title
 		'width'			=>	'400px',						// [string] The width to display the image
 		'remove'		=>	true,							// [bool] 	Whether or not to include a button to un-set the background image
 		'attributes'	=>	'',								// [string]	Arbitrary attributes to be added to the image object
+		'display'		=>	true,							// [bool] 	Whether or not to display the selected image in-line
 		);
 	$vars = array_replace_recursive( $defaultVars, $vars );
+
 	return pw_ob_admin_template( 'select-image-id', $vars );
 }
 
@@ -240,30 +241,45 @@ function i_admin_slider_options( $vars = array() ){
 	return pw_ob_admin_template( 'options-slider', $vars );
 }
 
-///// POST CONTENT COLUMNS /////
+///// SINGLE LAYOUT OPTIONS /////
 function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
-
 	//$vars['options_model'] = "options.post_content.columns";
-
 	switch($vars['context']){
-		
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
 				$vars['ng_model'] = "iLayouts[context.name]";
 			break;
-		
 		///// EDIT POST SETTINGS /////
 		case 'postAdmin':
 		case 'quickEdit':
 		default:
 				$vars['ng_model'] = "post.post_meta." . pw_postmeta_key . ".layout";
 			break;
-
 	}
-
 	return pw_ob_admin_template( 'layout-single', $vars );
 
 }
+
+
+///// SINGLE BACKGROUND OPTIONS /////
+function pw_background_single_options( $vars = array( "context" => "quickEdit" ) ){
+	//$vars['options_model'] = "options.post_content.columns";
+	switch($vars['context']){
+		///// SITE-WIDE SETTINGS /////
+		case 'siteAdmin': 
+				$vars['ng_model'] = "selectedItem";
+			break;
+		///// EDIT POST SETTINGS /////
+		case 'postAdmin':
+		case 'quickEdit':
+		default:
+				$vars['ng_model'] = "post.post_meta." . pw_postmeta_key . ".background";
+			break;
+	}
+	return pw_ob_admin_template( 'background-single', $vars );
+
+}
+
 
 ///// SELECT ICON /////
 function i_select_icon_options( $vars = array( "ng_model" => "iMeta.icon.class" ) ){
