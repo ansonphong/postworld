@@ -9,6 +9,7 @@ deploy/pwSiteGlobals.js
 deploy/pwAdminGlobals.js
 pwSiteGlobals.js
 log/*.txt
+log/*
 
 # Compiled source #
 ###################
