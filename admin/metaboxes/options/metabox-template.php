@@ -6,9 +6,7 @@
  |_|_|  |_|\___|\__\__,_|_.__/ \___/_/\_\
 /////////////////////////////////////////*/
 global $post;
-
 $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTMETA_KEY ) );
-
 ?>
 
 <!--///// METABOX TEMPLATES /////-->
@@ -20,9 +18,8 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 		?>
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="<?php echo PW_POSTMETA_KEY; ?>" ng-value="pwMeta | json" style="width:100%;">
-		<!-- DEV : Test Output-->
-		<hr><pre>{{ pwMeta | json }}</pre>
-		
+		<!-- DEV : Test Output
+		<hr><pre>{{ pwMeta | json }}</pre> -->
 	</div>	
 </div>
 

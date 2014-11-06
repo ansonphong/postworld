@@ -138,7 +138,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 
 		<!--///// QUERY / THIS POST /////-->
 		<div  ng-show="pwMeta.header.slider.mode == 'query' || pwMeta.header.slider.mode == 'this_post'">
-			<h3><i class="icon-images"></i> Galleries</h3>
+			<h4><i class="icon-images"></i> Galleries</h4>
 			<hr class="thin">
 			<div class="icon-md"><i class="icon-th"></i></div>
 			<input type="checkbox"
