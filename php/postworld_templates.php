@@ -213,7 +213,7 @@ function pw_get_templates( $vars = array() ){
 		$post_types = $post_types_final;
 	}
 	
-	pw_log( "TEMPLATE POST TYPES : " . json_encode($post_types) );
+	//pw_log( "TEMPLATE POST TYPES : " . json_encode($post_types) );
 
 	///// GET VIEWS /////
 	$post_views = ( isset( $posts['post_views'] ) ) ?

@@ -371,7 +371,6 @@ function pw_get_postmeta( $vars = array() ){
 			return _get( $pw_postmeta_cache[$post_id][$meta_key], $vars['sub_key'] );
 	}
 
-
 	///// GET POST META /////
 	// Get Post Meta
 	$metadata = get_post_meta( $vars['post_id'], $vars['meta_key'], true );
@@ -380,10 +379,8 @@ function pw_get_postmeta( $vars = array() ){
 		$metadata = array();
 
 	// Convert from JSON to A_ARRAY
-	if( $vars['type'] == "json" )
+	if( $vars['type'] == "json" && is_string( $metadata ) )
 		$metadata = json_decode( $metadata, true );
-
-	
 
 	///// APPLY FILTERS /////
 	// If the value is from the default postmeta key
@@ -393,10 +390,6 @@ function pw_get_postmeta( $vars = array() ){
 	else
 		// Apply custom filter ID
 		$metadata = apply_filters( PW_POSTMETA.'-'.$meta_key, $metadata );
-
-
-	pw_log( '$metadata : ' . json_encode($metadata) );
-
 
 	///// CACHING LAYER /////
 	// Store meta data in a runtime cache
