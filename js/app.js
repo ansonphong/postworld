@@ -17,7 +17,7 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 
 'use strict';
 
-// Setup $window.pw object to catch front-loaded data
+///// POSTWORLD MODULE /////
 var pw = {
 	posts:{},
 	partials:{},
@@ -45,11 +45,16 @@ var depInject = [
 	'mgcrea.ngStrap.popover',
 	'pw.compile',
 	//'ya.treeview',
+	];
+var postworld = angular.module('postworld', depInject );
+
+///// POSTWORLD ADMIN MODULE /////
+var depInjectAdmin = [
+	'postworld',
 	'ui.slider',
 	];
+var postworldAdmin = angular.module('postworldAdmin', depInjectAdmin );
 
-
-var postworld = angular.module('postworld', depInject );
 
 var controllerProvider;
 

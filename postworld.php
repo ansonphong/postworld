@@ -33,9 +33,6 @@ $pw = array(
 		'styles'		=>	'postworld-model-styles',
 		'backgrounds'	=>	'postworld-model-backgrounds',
 		),
-	'defaults'	=>	array(
-		'styles'	=>	'postworld-default-styles',
-		),
 	);
 
 define( 'pw_usermeta_key',	'pw_meta' );
@@ -55,9 +52,6 @@ define( 'PW_OPTIONS_BACKGROUNDS', 	$pw['db']['wp_options']['option_name']['backg
 ///// DEFINE MODEL FILTER NAMES /////
 define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
-
-///// DEFINE DEFAULT OPTIONS VALUE NAMES /////
-define( 'PW_DEFAULT_STYLES', 		$pw['defaults']['styles'] );
 
 
 // MUST BE DEFINED BY THE THEME

@@ -19,18 +19,14 @@ function i_include_admin_scripts(){
 	wp_enqueue_script('Infinite-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
 	
 	// DIRECTIVES : ADMIN
-	wp_enqueue_script('Infinite-Admin', get_infinite_directory_uri().'/js/directives-admin/iAdmin.js', $angularDep );
+	wp_enqueue_script('Infinite-Admin', get_infinite_directory_uri().'/js/directives-admin/pwAdmin.js', $angularDep );
 	wp_enqueue_script('Infinite-Save-Options', get_infinite_directory_uri().'/js/directives-admin/iSaveOption.js', $angularDep );
 	
 	wp_enqueue_script('Infinite-iData', get_infinite_directory_uri().'/js/services/iData.js', $angularDep );
 
-	// SERVICES : ADMIN
-	wp_enqueue_script('Infinite-Admin-Options-Data', get_infinite_directory_uri().'/js/services-admin/iOptionsData.js', $angularDep );
-
 	// DIRECTIVES
 	wp_enqueue_script('Infinite-Directives', get_infinite_directory_uri().'/js/directives/iDirectives.js', $angularDep );
 	
-
 	/////// ANGULAR : JQUERY SLIDER /////
 	wp_enqueue_script( 'angularJS-jQuery-Slider', POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );
 	///// JQUERY /////

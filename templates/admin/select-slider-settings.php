@@ -19,10 +19,11 @@
 	<span class="icon-md"><i class="icon-arrows-v"></i></span>
 	<input
 		id="input-height"
+		class="short"
 		size="3"
 		type="number"
 		ng-model="<?php echo $ng_model; ?>.height">
-		<label for="input-height">% height</label>
+		<label for="input-height"><b>%</b> height</label>
 	<hr class="thin">
 	<?php
 	}
@@ -34,10 +35,11 @@
 	<span class="icon-md"><i class="icon-clock"></i></span>
 	<input
 		id="input-interval"
+		class="short"
 		size="3"
 		type="number"
 		ng-model="<?php echo $ng_model; ?>.interval">
-		<label for="input-interval">milliseconds interval</label>
+		<label for="input-interval"><b><span tooltip="milliseconds">ms</span></b> interval</label>
 	<hr class="thin">
 	<?php
 	}

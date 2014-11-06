@@ -12,7 +12,7 @@ global $post;
 <!--///// METABOX WRAPPER /////-->
 <div id="pwLayoutMetabox" class="postworld">
 	<div
-		i-admin-layout
+		pw-admin-layout
 		ng-controller="pwLayoutMetaboxCtrl"
 		id="poststuff"
 		class="pw-metabox metabox-side metabox-layout">

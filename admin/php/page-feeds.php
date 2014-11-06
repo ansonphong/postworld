@@ -22,7 +22,7 @@
 		)['feeds'];
 ?>
 <script>
-	infinite.controller( 'pwFeedsDataCtrl', [ '$scope', function( $scope ){
+	postworldAdmin.controller( 'pwFeedsDataCtrl', [ '$scope', function( $scope ){
 		$scope.iFeeds = <?php echo json_encode( $iFeeds ); ?>;
 		$scope.iFeedSettings = <?php echo json_encode( $iFeedSettings ); ?>;
 		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
@@ -30,18 +30,18 @@
 	}]);
 </script>
 
-<div id="poststuff" ng-app="infinite" class="postworld feeds wrap">
+<div ng-app="postworldAdmin" class="postworld feeds wrap">
 	<div
-		i-admin
-		i-admin-feeds
+		pw-admin
+		pw-admin-feeds
 		ng-controller="pwFeedsDataCtrl"
 		ng-cloak>
 		
-		<h2>
+		<h1>
 			<i class="icon-th-small"></i>
 			Feeds
 			<button class="add-new-h2" ng-click="newFeed()">Add New Feed</button>
-		</h2>
+		</h1>
 
 		<hr class="thick">
 
@@ -489,9 +489,11 @@
 		<hr>
 
 		<hr class="thick">
+
+		<!--
 		<pre>iFeedSettings : {{ iFeedSettings | json }}</pre>
 		<pre>iFeeds : {{ iFeeds | json }}</pre>
-		
+		-->
 
 		<!--
 		RADIO BUTTONS

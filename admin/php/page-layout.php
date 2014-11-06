@@ -1,6 +1,6 @@
 <script type="text/javascript">
 	//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
-	infinite.controller( 'layoutDataCtrl',
+	postworldAdmin.controller( 'layoutDataCtrl',
 		[ '$scope', '$window', '$parse', 'iData',
 		function($scope, $window, $parse, iData){
 			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
@@ -10,14 +10,14 @@
 	}]);
 </script>
 
-<div ng-app="infinite" class="layout wrap postworld">
+<div ng-app="postworldAdmin" class="layout wrap postworld">
 	<h1>
 		<i class="icon-th-large"></i>
 		Layouts
 	</h1>
 	<hr class="thick">
 	<div
-		i-admin-layout
+		pw-admin-layout
 		ng-controller="layoutDataCtrl"
 		ng-cloak>
 
@@ -35,7 +35,7 @@
 					</span>
 				<td>
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button(PW_OPTIONS_SIDEBARS,'iLayouts'); ?></div>
+					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_LAYOUTS, 'iLayouts'); ?></div>
 
 					<?php
 						echo i_layout_single_options( array( 'context'	=>	'siteAdmin' ) );

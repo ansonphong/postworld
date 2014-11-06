@@ -1,4 +1,4 @@
-infinite.directive( 'iSaveOption', [ function($scope){
+postworldAdmin.directive( 'iSaveOption', [ function($scope){
 	return {
 		restrict: 'A',
 		controller: 'iSaveOptionCtrl',
@@ -12,7 +12,7 @@ infinite.directive( 'iSaveOption', [ function($scope){
 	};
 }]);
 
-infinite.controller( 'iSaveOptionCtrl',
+postworldAdmin.controller( 'iSaveOptionCtrl',
 	['$scope', '$window', '$timeout', '$parse', '$log', 'iData', '_',
 	function($scope, $window, $timeout, $parse, $log, $iData, $_) {
 

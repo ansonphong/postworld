@@ -6,17 +6,17 @@
                                                            
 ////////////////////////////////////////////////////////////*/
 
-infinite.directive( 'iAdminFeeds', [ function(){
+postworldAdmin.directive( 'pwAdminFeeds', [ function(){
     return { 
-        controller: 'iAdminFeedsCtrl',
+        controller: 'pwAdminFeedsCtrl',
         link:function( scope, element, attrs ){
         	// Add Module Class
-        	element.addClass('i-admin-style');
+        	element.addClass('pw-admin-style');
         }
     };
 }]);
 
-infinite.controller('iAdminFeedsCtrl',
+postworldAdmin.controller('pwAdminFeedsCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
 	

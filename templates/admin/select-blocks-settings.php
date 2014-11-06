@@ -85,13 +85,12 @@
 
 	<?php
 		echo pw_select_image_id( array( 
-			'option_var'	=>	$option_var,
-			'option_key'	=>	$option_key.'.widgets.background_image.id',
+			'ng_model'		=>	$option_var . '.' . $option_key . '.widgets.background_image.id',
 			'slug'			=>	'blocksBg',
 			'label'			=>	'Background Image',
 			'width'			=>	'400px',
-			//'attributes'	=>	'parallax parallax-ratio="{{'.$ng_model.'.widgets.background_image.parallax_ratio}}"',
 			'remove'		=>	true,
+			'display'		=> 	true,
 		 	));?>
 
 	<!-- PARALLAX RATIO -->

@@ -1,22 +1,17 @@
-<?
-	$iStyles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
-	$i_styles_structure = apply_filters( PW_MODEL_STYLES, array() );
-?>
-<div ng-app="infinite" class="postworld styles wrap">
-	<script type="text/javascript">
-		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
-		infinite.controller('iStylesDataCtrl', [ '$scope', '$window', function( $scope, $window ){
-			$scope.lang = "en";
-			// Print Data
-			$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
-			$scope.iStyles = <?php echo json_encode( $iStyles ); ?>;
-			$scope.iStyleStructure = <?php echo json_encode( $i_styles_structure ); ?>;
-		}]);
-	</script>
+<script type="text/javascript">
+	postworldAdmin.controller('pwStylesDataCtrl', [ '$scope', '$window', function( $scope, $window ){
+		$scope.lang = "en";
+		$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
+		$scope.pwStyles = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) ) ); ?>;
+		$scope.pwStyleStructure = <?php echo json_encode( apply_filters( PW_MODEL_STYLES, array() ) ); ?>;
+		$scope.pwStyleDefaults = <?php echo json_encode( apply_filters( PW_OPTIONS_STYLES, array() ) ); ?>;
+	}]);
+</script>
+
+<div ng-app="postworldAdmin" class="postworld styles wrap">
 	<div
-		i-admin-style
-		ng-controller="iStylesDataCtrl"
-		ng-cloak>
+		pw-admin-style
+		ng-controller="pwStylesDataCtrl">
 
 		<h1>
 			<i class="icon-brush"></i>
@@ -26,14 +21,14 @@
 		<hr class="thick">
 
 
-		<!--<pre>{{ iStyleStructure | json }}</pre>-->
+		<!--<pre>{{ pwStyleStructure | json }}</pre>-->
 
 		<!-- ////////// VARIABLES ////////// -->
 
-		<div ng-repeat="type in iStyleStructure">
+		<div ng-repeat="type in pwStyleStructure">
 
 			<!-- SAVE BUTTON -->
-			<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES,'iStyles'); ?></div>
+			<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES,'pwStyles'); ?></div>
 
 			<h2>
 				<i class="{{ type.icon }}"></i>
@@ -72,7 +67,7 @@
 										<div
 											class="inner-right color-box"
 											ng-show="showProperty( property, 'edit-color' )"
-											ng-style="backgroundColor( iStyles[ type.key ][ section.key ][ property.key ] )">
+											ng-style="backgroundColor( pwStyles[ type.key ][ section.key ][ property.key ] )">
 											
 										</div>
 
@@ -86,7 +81,7 @@
 										<!-- TEXT -->
 										<input
 											type="text"
-											ng-model="iStyles[ type.key ][ section.key ][ property.key ]">
+											ng-model="pwStyles[ type.key ][ section.key ][ property.key ]">
 
 									</td>
 									<td ng-show="showProperty( property, 'edit' )">
@@ -120,19 +115,18 @@
 
 		</div>
 
-		
 		<!-- ////////// END VARIABLES ////////// -->
 
 		<hr class="thick">
 		
 		<!-- SAVE BUTTON -->
-		<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES, 'iStyles'); ?></div>
+		<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES, 'pwStyles'); ?></div>
 
 
-		<button ng-click="resetDefaults()" class="button">Reset to Defaults</button>
+		<button ng-click="resetStyleDefaults()" class="button">Reset to Defaults</button>
 		
 		<hr class="thick">
-		<pre>iStyles : {{ iStyles | json }}</pre>
+		<!--<pre>pwStyles : {{ pwStyles | json }}</pre>-->
 
 	</div>
 

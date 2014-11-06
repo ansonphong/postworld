@@ -1,7 +1,7 @@
-infinite.directive( 'iAdmin', [ function($scope){
+postworldAdmin.directive( 'pwAdmin', [ function($scope){
 	return {
 		restrict: 'A',
-		controller: 'iAdminCtrl',
+		controller: 'pwAdminCtrl',
 		link: function( $scope, element, attrs ){
 			/*
 			// OBSERVE Attribute
@@ -12,7 +12,7 @@ infinite.directive( 'iAdmin', [ function($scope){
 	};
 }]);
 
-infinite.controller( 'iAdminCtrl',
+postworldAdmin.controller( 'pwAdminCtrl',
 	['$scope', '$window', '$timeout', '$log', 'iData', '_',
 	function($scope, $window, $timeout, $log, $iData, $_) {
 

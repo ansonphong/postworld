@@ -5,10 +5,10 @@
 	$pwBackgrounds = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) );
 	$pw_backgrounds_structure = apply_filters( PW_MODEL_BACKGROUNDS, array() );
 ?>
-<div ng-app="infinite" class="postworld styles wrap">
+<div ng-app="postworldAdmin" class="postworld styles wrap">
 	<script type="text/javascript">
 		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
-		infinite.controller('pwBackgroundsDataCtrl', [ '$scope', '$window', function( $scope, $window ){
+		postworldAdmin.controller('pwBackgroundsDataCtrl', [ '$scope', '$window', function( $scope, $window ){
 			$scope.lang = "en";
 			// Print Data
 			$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
@@ -17,7 +17,7 @@
 		}]);
 	</script>
 	<div
-		i-admin
+		pw-admin
 		pw-admin-backgrounds
 		ng-controller="pwBackgroundsDataCtrl"
 		ng-cloak>
@@ -143,9 +143,6 @@
 						<i class="icon-copy-2"></i>
 						<?php ___('backgrounds.duplicate'); ?>
 					</button>
-
-
-
 
 
 				</div>

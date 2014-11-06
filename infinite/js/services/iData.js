@@ -2,7 +2,7 @@
  * AJAX DATA SERVICES
  */
 
-infinite.factory('iData', function ($resource, $q, $log, $window) {	  
+postworldAdmin.factory('iData', function ($resource, $q, $log, $window) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings

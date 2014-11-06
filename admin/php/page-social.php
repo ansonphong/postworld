@@ -1,4 +1,20 @@
-<div ng-app="infinite" class="postworld wrap social">
+<script>
+	postworldAdmin.controller( 'pwSocialDataCtrl',
+		[ '$scope', 'iOptionsData', function( $scope, $iOptionsData ){
+		// Social Option Values
+		$scope.iSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
+		$scope['options'] = $iOptionsData['options'];
+
+		// Social Meta Data
+		$scope.socialMeta = <?php
+			global $i_social_meta;
+			$i_social_meta = json_encode($i_social_meta);
+			echo $i_social_meta;
+			?>;
+	}]);
+</script>
+
+<div ng-app="postworldAdmin" class="postworld wrap social">
 
 	<h1>
 		<i class="icon-profile"></i>
@@ -7,30 +23,9 @@
 	
 	<hr class="thick">
 
-	<script>
-		infinite.controller( 'iSocialDataCtrl',
-			[ '$scope', 'iOptionsData', function( $scope, $iOptionsData ){
-			// Social Option Values
-			$scope.iSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
-
-			// Merge Default Model with Saved Values
-			//var mergedModel = angular.fromJson( angular.toJson( deepmerge( $scope.socialModel, $scope.iSocial ) ) );
-			//$scope.iSocial = $scope.socialModel; //deepmerge( $scope.socialModel, $scope.iSocial );
-
-			$scope['options'] = $iOptionsData['options'];
-
-			// Social Meta Data
-			$scope.socialMeta = <?php
-				global $i_social_meta;
-				$i_social_meta = json_encode($i_social_meta);
-				echo $i_social_meta;
-				?>;
-		}]);
-	</script>
-
 	<div
-		i-admin-social
-		ng-controller="iSocialDataCtrl"
+		pw-admin-social
+		ng-controller="pwSocialDataCtrl"
 		ng-cloak>
 
 
@@ -84,7 +79,7 @@
 		</div>
 
 		<hr class="thick">
-		<pre>iSocial : {{ iSocial | json }}</pre>
+		<!--<pre>iSocial : {{ iSocial | json }}</pre>-->
 		<!--<pre>socialMeta : {{ socialMeta | json }}</pre>-->
 
 	</div>

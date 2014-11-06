@@ -2,15 +2,15 @@
 	$iSidebars = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
 ?>
 <script>
-	infinite.controller( 'pwSidebarsDataCtrl', [ '$scope', function( $scope ){
+	postworldAdmin.controller( 'pwSidebarsDataCtrl', [ '$scope', function( $scope ){
 		$scope.iSidebars = <?php echo json_encode( $iSidebars ); ?>;
 	}]);
 </script>
 
-<div ng-app="infinite" class="postworld sidebars wrap">
+<div ng-app="postworldAdmin" class="postworld sidebars wrap">
 	<div
-		i-admin
-		i-admin-sidebars
+		pw-admin
+		pw-admin-sidebars
 		ng-controller="pwSidebarsDataCtrl"
 		ng-cloak>
 
@@ -218,7 +218,7 @@
 
 		<hr class="thick">
 
-		<pre>{{ iSidebars | json }}</pre>
+		<!--<pre>{{ iSidebars | json }}</pre>-->
 
 	</div>
 

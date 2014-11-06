@@ -1,4 +1,15 @@
-<div ng-app="infinite" class="main wrap postworld">
+<script>
+	postworldAdmin.controller( 'optionsDataCtrl',
+		[ '$scope', 'iOptionsData',
+		function( $scope, $iOptionsData ){
+		$scope.iOptions = <?php echo json_encode($iOptions); ?>;
+		$scope.iHeaderCode = <?php echo $i_header_code; ?>;
+		$scope['images'] = {};
+		$scope['options'] = $iOptionsData['options'];
+	}]);
+</script>
+
+<div ng-app="postworldAdmin" class="main wrap postworld">
 	<h1>
 		<i class="icon-gears"></i>
 		Site Options
@@ -10,18 +21,9 @@
 		$iOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
 		$i_header_code = json_encode( get_option( 'postworld-header-code', '' ) );
 	?>
-	<script>
-		infinite.controller( 'optionsDataCtrl',
-			[ '$scope', 'iOptionsData',
-			function( $scope, $iOptionsData ){
-			$scope.iOptions = <?php echo json_encode($iOptions); ?>;
-			$scope.iHeaderCode = <?php echo $i_header_code; ?>;
-			$scope['images'] = {};
-			$scope['options'] = $iOptionsData['options'];
-		}]);
-	</script>
+	
 	<div
-		i-admin-options
+		pw-admin-options
 		ng-cloak
 		ng-controller="optionsDataCtrl">
 
@@ -86,7 +88,7 @@
 		
 		<hr class="thick">
 
-		<pre>iOptions: {{ iOptions | json }}</pre>
+		<!--<pre>iOptions: {{ iOptions | json }}</pre>-->
 
 	</div>
 </div>

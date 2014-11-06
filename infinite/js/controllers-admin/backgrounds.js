@@ -1,6 +1,6 @@
 /*/////////////////////////////////////////////////////////////////////////////*/
 
-postworld.directive( 'pwAdminBackgrounds', [ function(){
+postworldAdmin.directive( 'pwAdminBackgrounds', [ function(){
     return { 
         controller: 'pwAdminBackgroundsCtrl',
         link:function( scope, element, attrs ){
@@ -10,7 +10,7 @@ postworld.directive( 'pwAdminBackgrounds', [ function(){
     };
 }]);
 
-postworld.controller('pwAdminBackgroundsCtrl',
+postworldAdmin.controller('pwAdminBackgroundsCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions', 'iOptionsData',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions, $iOptionsData ) {
 	

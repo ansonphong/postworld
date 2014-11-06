@@ -6,17 +6,17 @@
                                                |___/        
 ////////////////////////////////////////////////////////////*/
 
-infinite.directive( 'iAdminStyle', [ function(){
+postworldAdmin.directive( 'pwAdminStyle', [ function(){
     return { 
-        controller: 'iAdminStyleCtrl',
+        controller: 'pwAdminStyleCtrl',
         link:function( scope, element, attrs ){
         	// Add Module Class
-        	element.addClass('i-admin-style');
+        	element.addClass('pw-admin-style');
         }
     };
 }]);
 
-infinite.controller('iAdminStyleCtrl',
+postworldAdmin.controller('pwAdminStyleCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', '_',
 	function ( $scope, $log, $window, $parse, $iData, $_ ) {
 	// Initialize Status
@@ -24,9 +24,8 @@ infinite.controller('iAdminStyleCtrl',
 
 	$log.debug( "CTRL" );
 
-	$scope.resetDefaults = function(){
-		$scope.settings = $scope.style_model_default;
-		//alert('defaults');
+	$scope.resetStyleDefaults = function(){
+		$scope.pwStyles = angular.fromJson( angular.toJson( $scope.pwStyleDefaults ) );
 	};
 
 	///// SHOW / HIDE BUTTON /////
@@ -86,7 +85,7 @@ infinite.controller('iAdminStyleCtrl',
 			var keepGoing = true;
 			// Iterate through TYPES
 			if( keepGoing )
-			angular.forEach( $scope.iStyles, function( typeValues, typeKey ){
+			angular.forEach( $scope.pwStyles, function( typeValues, typeKey ){
 				// Iterate through SECTIONS
 				if( keepGoing )
 				angular.forEach( typeValues, function( sectionValues, sectionKey ){

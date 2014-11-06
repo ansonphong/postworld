@@ -40,7 +40,7 @@
 	<img
 		ng-src="{{ images.<?php echo $vars['slug']; ?>.url }}"
 		class="select-image"
-		style="width:<?php echo $vars['width']; ?>; max-width:100%; height:auto;"
+		style="width:<?php echo $vars['width']; ?>; max-width:100%; height:auto; background:#ccc;"
 		<?php echo $vars['attributes']; ?>
 		>
 </div>
