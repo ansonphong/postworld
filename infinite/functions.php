@@ -37,9 +37,6 @@ include_once 'php/options.php';
 // POST META
 include_once 'php/postmeta.php';
 
-// ADMINMETA BOXES
-include_once 'php/metaboxes.php';
-
 
 // ADMIN
 //include_once 'admin/php/admin.php';

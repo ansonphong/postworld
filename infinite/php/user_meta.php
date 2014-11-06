@@ -7,8 +7,6 @@
                                              
 ///////////////// --------- /////////////////*/
 
-define( 'i_user_meta_key',	'i_meta' );
-
 function i_set_user_meta($vars){
 	/*
 		- Sets meta key for the given user under the defined key
@@ -28,7 +26,7 @@ function i_set_user_meta($vars){
 	extract($vars);
 
 	if( !isset( $meta_key ) )
-		$meta_key = i_user_meta_key;
+		$meta_key = PW_USERMETA_KEY;
 
 	///// USER ID /////
 	$user_id = i_check_user_id( $user_id );
@@ -80,7 +78,7 @@ function i_get_user_meta($vars){
 	*/
 
 	extract($vars);
-	$meta_key = i_user_meta_key;
+	$meta_key = PW_USERMETA_KEY;
 
 	///// USER ID /////
 	$user_id = i_check_user_id( $user_id );

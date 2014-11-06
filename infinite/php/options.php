@@ -109,12 +109,12 @@ function i_get_postmeta_key( $vars ){
 	/*
 		vars = array(
 			'post_id'	=> 1,
-			'meta_key'	=> "i_meta",
+			'meta_key'	=> PW_POSTMETA_KEY,
 			'key' 		=> "images.logo",
 			);
 	*/
 	// FOR DEV TESTING
-	//echo "<pre style='margin-top:100px;'>". json_encode( $iMeta ) ."</pre>";
+	//echo "<pre style='margin-top:100px;'>". json_encode( $pwMeta ) ."</pre>";
 
 	extract($vars);
 
@@ -124,25 +124,25 @@ function i_get_postmeta_key( $vars ){
 		$post_id = $post->ID;
 	}
 	if( !isset($meta_key) )
-		$meta_key = 'i_meta';
+		$meta_key = PW_POSTMETA_KEY;
 	if( !isset($key) )
 		$key = '';
 
 	// Retreive Option
-	if( $meta_key == 'i_meta' ){
-		$iMeta = i_get_postmeta( $post_id );
+	if( $meta_key == PW_POSTMETA_KEY ){
+		$pwMeta = i_get_postmeta( $post_id );
 	}
 	else{
-		$iMeta = get_post_meta( $post_id, $meta_key, true );
+		$pwMeta = get_post_meta( $post_id, $meta_key, true );
 		// If it doesn't exist
-		if( empty($iMeta) )
+		if( empty($pwMeta) )
 			return false;
 		// Decode from JSON
-		$iMeta = json_decode( $iMeta, true );
+		$pwMeta = json_decode( $pwMeta, true );
 	}
 
 	// Get Option Value
-	$value = i_get_obj( $iMeta, $key );
+	$value = i_get_obj( $pwMeta, $key );
 
 	return $value;
 

@@ -297,8 +297,8 @@ function pw_get_wp_postmeta($vars){
 		PARAMETERS:
 		$vars = array(
 			"post_id"	=>	[integer], 	(optional)
-			"sub_key"	=>	[string],
 			"meta_key" 	=>	[string] 	(optional)
+			"sub_key"	=>	[string],
 			);
 	*/
 
@@ -339,6 +339,82 @@ function pw_get_wp_postmeta($vars){
 }
 
 
+//i_get_postmeta
+function pw_get_postmeta( $vars = array() ){
+	global $post;
+	
+	///// DEFAULT VALUES /////
+	$defaultVars = array(
+		'post_id' 	=> $post->ID,
+		'meta_key' 	=> PW_POSTMETA_KEY,
+		'sub_key'	=> false,
+		'type' 		=> 'json',
+		);
+
+	$vars = array_replace_recursive( $defaultVars, $vars );
+
+	extract( $vars );
+
+	///// CACHING LAYER /////
+	// Make a global to cache data at runtime
+	// To prevent making multiple queries on the same postmeta
+	global $pw_postmeta_cache;
+
+	// If cached data is already found
+	if( isset( $pw_postmeta_cache[$post_id][$meta_key] ) ){
+		// If no subkey
+		if( empty( $vars['sub_key'] ) )
+			// Return the whole value
+			return $pw_postmeta_cache[$post_id][$meta_key];
+		else
+			// Otherwise, get and return the subkey value
+			return _get( $pw_postmeta_cache[$post_id][$meta_key], $vars['sub_key'] );
+	}
+
+
+	///// GET POST META /////
+	// Get Post Meta
+	$metadata = get_post_meta( $vars['post_id'], $vars['meta_key'], true );
+	
+	if( empty( $metadata ) )
+		$metadata = array();
+
+	// Convert from JSON to A_ARRAY
+	if( $vars['type'] == "json" )
+		$metadata = json_decode( $metadata, true );
+
+	
+
+	///// APPLY FILTERS /////
+	// If the value is from the default postmeta key
+	if( $meta_key == PW_POSTMETA_KEY )
+		// Apply the standard filter ID
+		$metadata = apply_filters( PW_POSTMETA, $metadata );
+	else
+		// Apply custom filter ID
+		$metadata = apply_filters( PW_POSTMETA.'-'.$meta_key, $metadata );
+
+
+	pw_log( '$metadata : ' . json_encode($metadata) );
+
+
+	///// CACHING LAYER /////
+	// Store meta data in a runtime cache
+	if( !isset( $pw_postmeta_cache[$post_id] ) ) 
+		$pw_postmeta_cache[ $post_id ] = array();
+	$pw_postmeta_cache[ $post_id ][ $meta_key ] = $metadata;
+
+
+	///// SUB KEY /////
+	// If no subkey
+	if( empty( $vars['sub_key'] ) )
+		// Return the whole value
+		return $metadata;
+	else
+		// Otherwise, get and return the subkey value
+		return _get( $metadata, $vars['sub_key'] );
+
+}
 
 
 ?>

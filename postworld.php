@@ -28,6 +28,12 @@ $pw = array(
 				'backgrounds'		=>	'postworld-backgrounds',
 				),
 			),
+		'wp_postmeta'	=>	array(
+			'pw_meta'	=>	'postworld-postmeta',
+			),
+		'wp_usermeta'	=>	array(
+			'pw_meta'	=>	'postworld-usermeta',
+			),
 		),
 	'models'	=>	array(
 		'styles'		=>	'postworld-model-styles',
@@ -35,8 +41,7 @@ $pw = array(
 		),
 	);
 
-define( 'pw_usermeta_key',	'pw_meta' );
-define( 'pw_postmeta_key',	'pw_meta' );
+
 
 ///// DEFINE OPTION NAMES /////
 // Used in 'wp_options' table as 'option_name' key
@@ -52,6 +57,14 @@ define( 'PW_OPTIONS_BACKGROUNDS', 	$pw['db']['wp_options']['option_name']['backg
 ///// DEFINE MODEL FILTER NAMES /////
 define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
+
+///// DEFINE META FILTER NAMES /////
+define( 'PW_POSTMETA', $pw['db']['wp_postmeta']['pw_meta'] );
+define( 'PW_USERMETA', $pw['db']['wp_usermeta']['pw_meta'] );
+
+///// DEFINE META KEYS /////
+define( 'PW_POSTMETA_KEY',	'pw_meta', true ); // Case in-sensitive
+define( 'PW_USERMETA_KEY',	'pw_meta', true ); // Case in-sensitive
 
 
 // MUST BE DEFINED BY THE THEME

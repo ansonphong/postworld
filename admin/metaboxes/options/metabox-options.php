@@ -8,8 +8,8 @@
 /////////////////////////////////////////////*/
 
 ///// META BOX FUNCTIONS /////
-add_action('admin_init','i_postmeta_metabox_init');
-function i_postmeta_metabox_init(){    
+add_action('admin_init','pw_postmeta_metabox_init');
+function pw_postmeta_metabox_init(){    
 
 	// Add to Post Types
 	global $pwSiteGlobals;
@@ -20,9 +20,9 @@ function i_postmeta_metabox_init(){
 
     foreach( $post_types as $post_type ){
         add_meta_box(
-        	'i_child_meta',
+        	'pw_metabox_options',
         	'Options',
-        	'i_child_postmeta_setup',
+        	'pw_metabox_options_setup',
         	$post_type,
         	'normal',
         	'high'
@@ -30,54 +30,48 @@ function i_postmeta_metabox_init(){
     }
 
     // Add a callback function to save any data a user enters in
-    add_action('save_post','i_postmeta_options_save');
+    add_action('save_post','pw_metabox_options_save');
 
 }
 
 ///// ENQUEUE STYLES & SCRIPTS /////
-add_action( 'admin_enqueue_scripts', 'i_child_enqueue' );
-function i_child_enqueue() {
+add_action( 'admin_enqueue_scripts', 'pw_metabox_options_enqueue' );
+function pw_metabox_options_enqueue() {
 	$path = "/less/admin/";
 	wp_enqueue_style( 'i-child-admin', get_stylesheet_directory_uri().$path.'admin-styles.less' );
 	//wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/example.js', array(), '1.0.0', true );
 }
 
 ///// SETUP META DATA /////
-function i_child_postmeta_setup(){
-
+function pw_metabox_options_setup(){
+	/*
 	// Load Meta Model
 	$meta_model_file = plugin_dir_path(__FILE__).'meta-model.php';
 	if( file_exists( $meta_model_file ) )
 		include $meta_model_file;
-    
-	// Load Infinite Post Meta
-	global $post;
-	global $iMeta;
-	$iMeta = i_get_postmeta( $post->ID );
-
+    */
 	// Load Template
-	include 'metaboxes-template.php';
+	include 'metabox-template.php';
 
 }
 
 ///// SAVE THE DATA /////
-function i_postmeta_options_save( $post_id ){
+function pw_metabox_options_save( $post_id ){
 	// Stop autosave to preserve meta data
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
         return $post_id;
 
-	//pw_log( "i_postmeta_options_save : POST ID : " . $post_id  );
+	$meta_key = PW_POSTMETA_KEY;
 
-	$meta_key = "i_meta";
-
-    $iMeta = $_POST['i_meta'];
+    $pwMeta = $_POST[ PW_POSTMETA_KEY ];
 
 	// SAVE I META
-	if( !empty( $iMeta ) && is_string( $iMeta ) ){
+	if( !empty( $pwMeta ) && is_string( $pwMeta ) ){
 		// Sanitize JSON string
-		$iMeta_json = (string) sanitize_text_field( $iMeta );
+		$pwMeta_json = (string) sanitize_text_field( $pwMeta );
 		// Update the post meta
-		update_post_meta( $post_id, $meta_key, $iMeta_json );
+		update_post_meta( $post_id, $meta_key, $pwMeta_json );
+		//pw_log( "$pwMeta_json" . $pwMeta_json );
 	}
 	
     return $post_id;

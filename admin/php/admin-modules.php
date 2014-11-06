@@ -68,21 +68,21 @@ function i_download_image_option( $vars = array( "context" => "quickEdit" ) ){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
 				$vars['options_model'] = "options.general.doubleSwitch";
-				$vars['ng_model'] = "iOptions.posts.post.post_meta.i_meta.image.download";
+				$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".image.download";
 			break;
 
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
 		default:
 				$vars['options_model'] = "options.general.tripleSwitch";
-				$vars['ng_model'] = "iMeta.image.download";
+				$vars['ng_model'] = "pwMeta.image.download";
 			break;
 
 		///// QUICK EDIT SETTINGS /////
 		case 'quickEdit':
 		default:
 				$vars['options_model'] = "options.general.tripleSwitch";
-				$vars['ng_model'] = "post.post_meta.i_meta.image.download";
+				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".image.download";
 			break;
 	}
 
@@ -97,17 +97,17 @@ function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 	switch($vars['context']){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				$vars['ng_model'] = "iOptions.posts.post.post_meta.i_meta.post_content.columns";
+				$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
 			break;
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
 		default:
-				$vars['ng_model'] = "iMeta.post_content.columns";
+				$vars['ng_model'] = "pwMeta.post_content.columns";
 			break;
 		///// QUICK EDIT SETTINGS /////
 		case 'quickEdit':
 		default:
-				$vars['ng_model'] = "post.post_meta.i_meta.post_content.columns";
+				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
 			break;
 	}
 
@@ -132,17 +132,17 @@ function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 	switch( $vars['context'] ){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				//$vars['ng_model'] = "iOptions.posts.post.post_meta.i_meta.post_content.columns";
+				//$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
 			break;
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
 		default:
-				$vars['ng_model'] = "iMeta.gallery";
+				$vars['ng_model'] = "pwMeta.gallery";
 			break;
 		///// QUICK EDIT SETTINGS /////
 		case 'quickEdit':
 		default:
-				$vars['ng_model'] = "post.post_meta.i_meta.gallery";
+				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".gallery";
 			break;
 	}
 
@@ -157,7 +157,7 @@ function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 	switch( $vars['context'] ){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				$vars['ng_model'] = "iOptions.posts.post.post_meta.i_meta.link_url";
+				$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".link_url";
 				$vars['options_model']['show'] = "options.general.customSwitch";
 				$vars['options_model']['tooltip_show'] = "options.general.none";
 				$vars['options_model']['highlight'] = "options.general.doubleSwitch";
@@ -166,7 +166,7 @@ function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
 		default:
-				$vars['ng_model'] = "iMeta.link_url";
+				$vars['ng_model'] = "pwMeta.link_url";
 				$vars['options_model']['show'] = "options.general.defaultAndCustomDoubleSwitch";
 				$vars['options_model']['tooltip_show'] = "options.general.defaultCustomSwitch";
 				$vars['options_model']['highlight'] = "options.general.tripleSwitch";
@@ -175,7 +175,7 @@ function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 		///// QUICK EDIT SETTINGS /////
 		case 'quickEdit':
 		default:
-				$vars['ng_model'] = "post.post_meta.i_meta.link_url";
+				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".link_url";
 				$vars['options_model']['show'] = "options.general.defaultAndCustomDoubleSwitch";
 				$vars['options_model']['tooltip_show'] = "options.general.defaultCustomSwitch";
 				$vars['options_model']['highlight'] = "options.general.tripleSwitch";
@@ -282,7 +282,7 @@ function pw_background_single_options( $vars = array( "context" => "quickEdit" )
 
 
 ///// SELECT ICON /////
-function i_select_icon_options( $vars = array( "ng_model" => "iMeta.icon.class" ) ){
+function i_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
 	return pw_ob_admin_template( 'select-icon', $vars );
 }
 
