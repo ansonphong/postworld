@@ -13,7 +13,7 @@ function pw_get_option( $vars ){
 	*/
 
 	$default_vars = array(
-		'option_name'	=>	'i-options',
+		'option_name'	=>	PW_OPTIONS_SITE,
 		'key'			=>	false,
 		'filter'		=>	true,
 		);
@@ -35,10 +35,6 @@ function pw_get_option( $vars ){
 		///// GET OPTION /////
 		// Retreive Option
 		$value = get_option( $option_name, array() );
-
-		// If it doesn't exist
-		//if( empty($value) )
-		//	return false;
 		
 		// Decode from JSON, assuming it's a JSON string
 		// TODO : Handle non-JSON string values
@@ -62,14 +58,14 @@ function pw_get_option( $vars ){
 
 	}
 
+	//pw_log( 'pw_get_option : ' . $option_name . ' : ' . json_encode($value) );
+
 	// If no key set, return the value directly
 	if( empty( $key ) )
 		return $value;
-
 	// Get Option Value Object Key Value
-	$value = _get( $value, $key );
-
-	return $value;
+	else
+		return _get( $value, $key );
 
 }
 

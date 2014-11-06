@@ -1,9 +1,22 @@
+<?php
+	// Enable Media Library
+	wp_enqueue_media();
+	///// GET OPTIONS /////
+	$pwSiteOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
+	$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
+?>
 <script>
-	postworldAdmin.controller( 'optionsDataCtrl',
+	postworldAdmin.controller( 'pwOptionsDataCtrl',
 		[ '$scope', 'iOptionsData',
 		function( $scope, $iOptionsData ){
-		$scope.iOptions = <?php echo json_encode($iOptions); ?>;
-		$scope.iHeaderCode = <?php echo $i_header_code; ?>;
+
+		// Set default empty value as object, not array
+		var siteOptions = <?php echo json_encode( $pwSiteOptions ); ?>;
+		if( _.isEmpty( siteOptions ) )
+			siteOptions = {};
+
+		$scope.pwSiteOptions = siteOptions;
+		$scope.pwHeaderCode = <?php echo $pw_header_code; ?>;
 		$scope['images'] = {};
 		$scope['options'] = $iOptionsData['options'];
 	}]);
@@ -14,18 +27,12 @@
 		<i class="icon-gears"></i>
 		Site Options
 	</h1>
-	<?php
-		// Enable Media Library
-		wp_enqueue_media();
-		///// GET OPTIONS /////
-		$iOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
-		$i_header_code = json_encode( get_option( 'postworld-header-code', '' ) );
-	?>
+	
 	
 	<div
 		pw-admin-options
 		ng-cloak
-		ng-controller="optionsDataCtrl">
+		ng-controller="pwOptionsDataCtrl">
 
 		<!--///// THEME OPTIONS /////-->
 		<hr class="thick">
@@ -36,7 +43,7 @@
 				<!-- FAVICON -->
 				<div class="well">
 					<div class="save-right">
-						<?php i_save_option_button( PW_OPTIONS_SITE, 'iOptions'); ?>
+						<?php i_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
 					</div>
 					<h2>
 						<span class="icon-md"><i class="icon-image"></i></span>
@@ -44,7 +51,7 @@
 					</h2>
 					<?php
 						echo pw_select_image_id( array(
-							'ng_model'		=>	'iOptions.images.favicon',
+							'ng_model'		=>	'pwSiteOptions.images.favicon',
 							'slug'			=>	'favicon',
 							'label'			=>	'Favicon',
 							'display'		=>	true,
@@ -63,7 +70,7 @@
 
 		<div class="well">
 			<div class="save-right">
-				<?php i_save_option_button('postworld-header-code','iHeaderCode'); ?>
+				<?php i_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
 			</div>
 			<h2>
 				<i class="icon-code"></i>
@@ -78,7 +85,7 @@
 				<textarea
 					msd-elastic
 					class="form-control"
-					ng-model="iHeaderCode"></textarea>
+					ng-model="pwHeaderCode"></textarea>
 			</div>
 		</div>
 
@@ -88,7 +95,7 @@
 		
 		<hr class="thick">
 
-		<!--<pre>iOptions: {{ iOptions | json }}</pre>-->
+		<pre>pwSiteOptions: {{ pwSiteOptions | json }}</pre>
 
 	</div>
 </div>

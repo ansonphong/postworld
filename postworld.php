@@ -26,6 +26,7 @@ $pw = array(
 				'feed_settings'		=>	'postworld-feed-settings',
 				'social'			=>	'postworld-social',
 				'backgrounds'		=>	'postworld-backgrounds',
+				'header_code'		=>	'postworld-header-code',
 				),
 			),
 		'wp_postmeta'	=>	array(
@@ -42,7 +43,6 @@ $pw = array(
 	);
 
 
-
 ///// DEFINE OPTION NAMES /////
 // Used in 'wp_options' table as 'option_name' key
 define( 'PW_OPTIONS_SITE', 			$pw['db']['wp_options']['option_name']['site'] );
@@ -53,6 +53,9 @@ define( 'PW_OPTIONS_FEEDS', 		$pw['db']['wp_options']['option_name']['feeds'] );
 define( 'PW_OPTIONS_FEED_SETTINGS', $pw['db']['wp_options']['option_name']['feed_settings'] );
 define( 'PW_OPTIONS_SOCIAL', 		$pw['db']['wp_options']['option_name']['social'] );
 define( 'PW_OPTIONS_BACKGROUNDS', 	$pw['db']['wp_options']['option_name']['backgrounds'] );
+
+define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
+
 
 ///// DEFINE MODEL FILTER NAMES /////
 define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
@@ -204,14 +207,11 @@ include 'php/postworld_buddypress.php';
 /////////////// ADMIN ////////////////
 include 'admin/postworld_admin.php';
 
-
 /////////////// ADMIN OPITONS ////////////////
 include 'admin/php/admin.php';
 
-
 /////////////// MODULES ////////////////
 include 'postworld-modules/backgrounds/postworld-backgrounds.php';
-
 
 
 ////////// GET AJAX FUNCTIONS AND ACTION ///////////
@@ -232,6 +232,12 @@ include 'php/postworld_update.php';
 
 
 
+///// ADD HEADER CODE /////
+add_action('wp_head','pw_add_header_code');
+function pw_add_header_code() {
+	$output = get_option( PW_OPTIONS_HEADER_CODE, '' );
+	echo $output;
+}
 
 
 //To get user id from wordpress
