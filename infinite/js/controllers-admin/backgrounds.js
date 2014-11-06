@@ -24,6 +24,7 @@ postworld.controller('pwAdminBackgroundsCtrl',
 				'image':{
 					'id': null,
 					'size':'full',
+					'parallax':-0.66,
 				},
 				'style':{
 					'background-size': null,
@@ -39,6 +40,7 @@ postworld.controller('pwAdminBackgroundsCtrl',
 				'image':{
 					'id': null,
 					'size':'full',
+					'parallax':-0.33,
 				},
 				'style':{
 					'background-size': 100,

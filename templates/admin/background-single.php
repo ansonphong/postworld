@@ -36,7 +36,7 @@
 				<hr class="thin">
 
 				<!-- SIZE -->
-				<span class="icon-md"><i class="icon-target"></i></span>
+				<span class="icon-md"><i class="icon-arrows-alt"></i></span>
 				<select
 					id="primary-size"
 					ng-options="value for value in optionsMeta.style.backgroundSize"
@@ -47,11 +47,23 @@
 
 				<hr class="thin">
 
-				<!-- POSITION -->
+				<!-- REPEAT -->
 				<span class="icon-md"><i class="icon-target"></i></span>
 				<select
+					id="primary-repeat"
+					ng-options="value for value in optionsMeta.style.backgroundRepeat"
+					ng-model="<?php echo $ng_model; ?>.primary.style['background-repeat']">
+					<option value="">Default</option>
+				</select>
+				<label for="primary-repeat">repeat</label>
+
+				<hr class="thin">
+
+				<!-- POSITION -->
+				<span class="icon-md"><i class="icon-arrows"></i></span>
+				<select
 					id="primary-position"
-					ng-options="value for value in optionsMeta.style.position"
+					ng-options="value for value in optionsMeta.style.backgroundPosition"
 					ng-model="<?php echo $ng_model; ?>.primary.style['background-position']">
 					<option value="">Default</option>
 				</select>
@@ -59,8 +71,21 @@
 
 				<hr class="thin">
 
+				<!-- PARALLAX -->
+				<div
+					class="indent"
+					ng-show="'parallax' == <?php echo $ng_model; ?>.primary.style['background-position']">
+					<span class="icon-md"><i class="icon-arrows-v"></i></span>
+					<input
+						type="number"
+						id="primary-parallax"
+						ng-model="<?php echo $ng_model; ?>.primary.image.parallax">
+					<label for="primary-parallax">parallax ratio</label>
+					<hr class="thin">
+				</div>
+
 				<!-- ATTACHMENT -->
-				<span class="icon-md"><i class="icon-target"></i></span>
+				<span class="icon-md"><i class="icon-anchor"></i></span>
 				<select
 					id="primary-attachment"
 					ng-options="value for value in optionsMeta.style.backgroundAttachment"
@@ -73,8 +98,8 @@
 
 				<!-- COLOR -->
 				<span class="icon-md"><i class="icon-brush"></i></span>
-				color : <input type="text" ng-model="<?php echo $ng_model; ?>.primary.style['background-color']">
-				
+				<input id="primary-color" type="text" ng-model="<?php echo $ng_model; ?>.primary.style['background-color']">
+				<label for="primary-color">color</label>
 
 			</div>
 
@@ -93,8 +118,10 @@
 				<hr class="thin">
 
 				<!-- OPACITY -->
-				<span class="icon-md"><i class="icon-target"></i></span>
-				opacity : <input type="number" ng-model="<?php echo $ng_model; ?>.secondary.style.opacity">%
+				<span class="icon-md"><i class="icon-layers"></i></span>
+				
+				<input id="secondary-opacity" type="number" ng-model="<?php echo $ng_model; ?>.secondary.style.opacity">
+				<label for="secondary-opacity">% opacity</label>
 				<hr class="thin">
 				<div
 					ui-slider="{orientation: 'horizontal', range: 'min'}" 
@@ -107,8 +134,9 @@
 				<hr class="thin">
 
 				<!-- SIZE -->
-				<span class="icon-md"><i class="icon-target"></i></span>
-				size : <input type="number" ng-model="<?php echo $ng_model; ?>.secondary.style['background-size']">%
+				<span class="icon-md"><i class="icon-arrows-alt"></i></span>
+				<input id="secondary-size" type="number" ng-model="<?php echo $ng_model; ?>.secondary.style['background-size']">
+				<label for="secondary-size">% size</label>
 				<hr class="thin">
 				<div
 					ui-slider="{orientation: 'horizontal', range: 'min'}" 
@@ -133,10 +161,10 @@
 				<hr class="thin">
 
 				<!-- POSITION -->
-				<span class="icon-md"><i class="icon-target"></i></span>
+				<span class="icon-md"><i class="icon-arrows"></i></span>
 				<select
 					id="secondary-position"
-					ng-options="value for value in optionsMeta.style.position"
+					ng-options="value for value in optionsMeta.style.backgroundPosition"
 					ng-model="<?php echo $ng_model; ?>.secondary.style['background-position']">
 					<option value="">Default</option>
 				</select>
@@ -144,8 +172,21 @@
 
 				<hr class="thin">
 
+				<!-- PARALLAX -->
+				<div
+					class="indent"
+					ng-show="'parallax' == <?php echo $ng_model; ?>.secondary.style['background-position']">
+					<span class="icon-md"><i class="icon-arrows-v"></i></span>
+					<input
+						type="number"
+						id="secondary-parallax"
+						ng-model="<?php echo $ng_model; ?>.secondary.image.parallax">
+					<label for="secondary-parallax">parallax ratio</label>
+					<hr class="thin">
+				</div>
+
 				<!-- ATTACHMENT -->
-				<span class="icon-md"><i class="icon-target"></i></span>
+				<span class="icon-md"><i class="icon-anchor"></i></span>
 				<select
 					id="secondary-attachment"
 					ng-options="value for value in optionsMeta.style.backgroundAttachment"

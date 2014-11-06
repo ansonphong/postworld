@@ -15,6 +15,29 @@
 		},
 		link: function( $scope, element, attrs ){
 
+
+			//////////// PARALLAX ////////////
+			var setPosition = function () {
+				var parallaxRatio = $_.get( $scope.pwBackground, 'image.parallax' );
+				if( !parallaxRatio || !is_numeric( parallaxRatio ) )
+					return false;
+				parallaxRatio = Number(parallaxRatio);
+
+				var calcValY = ( element.prop('offsetTop') - $window.pageYOffset ) * parallaxRatio;
+				calcValY = parseInt(calcValY);
+				// horizontal positioning
+				element.css('background-position', "50% " + calcValY + "px");
+			};
+
+			// Set initial position - fixes webkit background render bug
+			angular.element($window).bind('load', function(e) {
+				setPosition();
+				$scope.$apply();
+			});
+
+			
+
+			//////////// STYLES ////////////
 			$scope.$watch('pwBackground', function( val ){
 				$scope.updateBackground( val );
 			}, 1 );
@@ -31,6 +54,29 @@
 						$scope.populateImagePost( imageId );
 						return;
 					}
+				}
+
+				// Bind / Unbind parallax
+				$scope.bindParallax();
+
+			}
+
+			$scope.bindParallax = function(){
+				// Check for Parallax values
+				var parallax = $_.get( $scope.pwBackground, 'image.parallax' );
+				var position = $_.get( $scope.pwBackground, 'style.background-position' );
+				// If parallax is present
+				if( is_numeric( parallax ) && parallax != 0 && position == 'parallax' ){
+					// Bind window scrolling to update the position
+					angular.element($window).on("scroll", setPosition);
+					// Init Parallax
+					setPosition();
+				}
+				else{
+					// Unbind window scrolling
+					angular.element($window).off("scroll", setPosition);
+					// Clear Parallax
+					//element.css('background-position', 'initial');
 				}
 			}
 
@@ -100,7 +146,11 @@
 					// Size
 					if( key == 'background-size' )
 						if( is_numeric( value ) )
-							styles[key] = value + '%'; 
+							styles[key] = value + '%';
+					// Position
+					//if( key == 'background-position' )
+					//	if( value == 'parallax' )
+					//		delete styles[key]; 
 				});
 				
 				// Get image URL

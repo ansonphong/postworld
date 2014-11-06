@@ -1366,7 +1366,8 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 
 
 			'style':{
-				'position':[
+				'backgroundPosition':[
+					'parallax',
 					'center top',
 					'center center',
 					'center bottom',
