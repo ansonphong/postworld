@@ -17,12 +17,14 @@ postworldAdmin.directive( 'pwAdminStyle', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminStyleCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'iData', '_',
-	function ( $scope, $log, $window, $parse, $iData, $_ ) {
+	[ '$scope', '$log', '$window', '$parse', 'iData', '_', 'iOptionsData',
+	function ( $scope, $log, $window, $parse, $iData, $_, $iOptionsData ) {
 	// Initialize Status
 	$scope.status = "done";
-
 	$log.debug( "CTRL" );
+
+	// Localize the core option set
+	$scope.options = $iOptionsData.options;
 
 	$scope.resetStyleDefaults = function(){
 		$scope.pwStyles = angular.fromJson( angular.toJson( $scope.pwStyleDefaults ) );

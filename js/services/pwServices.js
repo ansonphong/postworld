@@ -1393,7 +1393,12 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 				'backgroundSize':[
 					'cover',
 					'contain',
-				],				
+				],
+				'textAlign':[
+					'left',
+					'center',
+					'right',
+				],
 			},
 
 			'share':{

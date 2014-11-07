@@ -68,7 +68,6 @@
 											class="inner-right color-box"
 											ng-show="showProperty( property, 'edit-color' )"
 											ng-style="backgroundColor( pwStyles[ type.key ][ section.key ][ property.key ] )">
-											
 										</div>
 
 										<!-- ICON -->
@@ -80,9 +79,18 @@
 
 										<!-- TEXT -->
 										<input
+											ng-show="property.input == 'text' || property.input == 'color'"
 											type="text"
 											ng-model="pwStyles[ type.key ][ section.key ][ property.key ]">
 
+										<!-- SELECT -->
+										<select
+											ng-show="property.input == 'select'"
+											ng-options="value for value in {{ property.ng_options }}"
+											ng-model="pwStyles[ type.key ][ section.key ][ property.key ]">
+											
+										</select>
+										
 									</td>
 									<td ng-show="showProperty( property, 'edit' )">
 										<div class="font-micro">
