@@ -58,7 +58,7 @@ function my_less_vars( $vars, $handle ) {
             }
         }
         ///// VARIABLES /////
-        if( $typeSlug == 'var' ){
+        else{
             foreach( $typeObject as $elementSlug => $elementObject ){
                 ///// PROPERTIES /////
                 foreach( $elementObject as $propertySlug => $propertyValue ){
