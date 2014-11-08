@@ -21,7 +21,7 @@ postworldAdmin.controller('pwAdminStyleCtrl',
 	function ( $scope, $log, $window, $parse, $iData, $_, $iOptionsData ) {
 	// Initialize Status
 	$scope.status = "done";
-	$log.debug( "CTRL" );
+	//$log.debug( "CTRL" );
 
 	// Localize the core option set
 	$scope.options = $iOptionsData.options;
@@ -45,7 +45,7 @@ postworldAdmin.controller('pwAdminStyleCtrl',
 
 	$scope.showProperty = function( property, view ){
 
-		$log.debug( "property : ", property );
+		//$log.debug( "property : ", property );
 
 		switch( view ){
 			case 'edit':
