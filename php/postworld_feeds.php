@@ -1,7 +1,7 @@
 <?php
 
 function pw_get_feed_by_id( $feed_id ){
-	$feeds = pw_get_option( array( 'option_name'	=>	PW_OPTIONS_SOCIAL ) );
+	$feeds = pw_get_option( array( 'option_name'	=>	PW_OPTIONS_FEEDS ) );
 	if( empty( $feeds ) )
 		return false;
 
@@ -65,7 +65,7 @@ function pw_live_feed( $vars = array() ){
 
 	if( !isset( $aux_template ) )
 		$aux_template = null;
-	
+
 
 	///// DEFAULT ARRAYS /////
 	$default_query = array(
@@ -112,7 +112,7 @@ function pw_live_feed( $vars = array() ){
 		*/
 
 		// 'cache'	=>	array(
-		//		'posts'	=>	true, 		// determines whether the posts or just outline is cached	
+		//		'posts'	=>	true, 		// determines whether the posts or just outline is cached
 		//		'interval'	=>	5000,
 		//		),
 
@@ -120,7 +120,7 @@ function pw_live_feed( $vars = array() ){
 
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
-	
+
 	// Run query filters
 	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );
 
@@ -139,7 +139,7 @@ function pw_live_feed( $vars = array() ){
 
 	///// BLOCKS : GET WIDGET DATA /////
 	$widgets = array();
-	$sidebar_id = _get( $feed, 'blocks.widgets.sidebar' ); 
+	$sidebar_id = _get( $feed, 'blocks.widgets.sidebar' );
 	if( is_string( $sidebar_id ) )
 		$widgets = pw_get_sidebar( $sidebar_id );
 	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
@@ -199,21 +199,21 @@ function pw_get_live_feed ( $vars ){
 	// Get the Feed Outline
 	$query = $vars["query"];
 	$feed_outline = pw_feed_outline( $query );
-	
+
 	// If the feed outline has contents
 	if( !empty( $feed_outline ) ){
 		// Select which posts to preload
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
-		
+
 		// Preload selected posts
 		$posts = pw_get_posts( $preload_posts, $query["fields"], $options );
-	
+
 	}
 	else{
 		$posts = array();
 		$preload_posts = array();
 	}
-	
+
 	return array(
 		"feed_id" 		=> 	$vars["feed_id"],
 		"query" 		=> 	$vars["query"],
@@ -223,12 +223,12 @@ function pw_get_live_feed ( $vars ){
 		"posts"			=>	$posts,
 		"options"		=>	$options,
 		);
-	
+
 }
 
 function pw_feed_outline ( $pw_query_args ){
 	// • Uses pw_query() method to generate an array of post_ids based on the $pw_query_args
-	
+
 	$pw_query_args["fields"] = "ids";
 	$query_results = pw_query( $pw_query_args );
 	$post_ids = (array) $query_results->posts;
@@ -261,7 +261,7 @@ function pw_merge_galleries( $posts, $options ){
 		'parent_post'		=> 	true,
 		);
 	$options = array_merge( $default_options, $options );
-	
+
 	///// PROCESS POSTS /////
 	$newPosts = array();
 
@@ -289,7 +289,7 @@ function pw_merge_galleries( $posts, $options ){
 				$post = array();
 		}
 
-		
+
 		///// OPTION : PARENT POST /////
 		// Move the parent post into the gallery post as parent_post
 		// If the option is turned on
@@ -356,7 +356,7 @@ function pw_merge_galleries( $posts, $options ){
 
 function add_new_feed( $feed_id, $feed_query ){
 	global $wpdb;
-	$wpdb->show_errors(); 
+	$wpdb->show_errors();
 	$query = "insert into $wpdb->pw_prefix"."feeds values('$feed_id','".json_encode($feed_query)."',null,null,null,null)";
 	//echo $query;
 	$wpdb->query($query);
@@ -365,49 +365,49 @@ function add_new_feed( $feed_id, $feed_query ){
 function pw_register_feed ( $args ){
 	/*
 		Description:
-		
+
 		Registers the feed in feeds table
 		Process:
-		
+
 		If the feed_id doesn't appear in the wp_postworld_feeds table :
-		
+
 		Create a new row
 		Enable write_cache
 		Store $args['feed_query'] in the feed_query column in Postworld feeds table as a JSON Object
-		
+
 		If write_cache is true, run pw_cache_feed(feed_id)
-		
+
 		return : $args Array
-		
+
 		Parameters : $args
-		
+
 		feed_id : string
-		
+
 		feed_query : array
-		
+
 		default : none
 		The query object which is stored in feed_query in feeds table, which is input directly into pw_query
 		write_cache : boolean
-		
+
 		If the feed_id is new to the feeds table, set write_cache = true
 		false (default) - Wait for cron job to update feed outline later, just update feed_query
 		true - Cache the feed with method : run pw_cache_feed( $feed_id )
 		Usage :
-		
+
 		$args = array (
 		    'feed_id' => 'front_page_feed',
 		    'write_cache'  => true,
 		    'feed_query' => array(
-		        // pw_query() $args    
+		        // pw_query() $args
 		    )
 		);
 		pw_register_feed ($args);
-	 
+
 	 */
 	global $wpdb;
-	$wpdb->show_errors(); 
-	
-	
+	$wpdb->show_errors();
+
+
 	 if($args['feed_id']){
 	 	$feed_row = pw_get_feed($args['feed_id']);
 		// echo json_encode($feed_row);
@@ -415,7 +415,7 @@ function pw_register_feed ( $args ){
 			add_new_feed($args['feed_id'],$args['feed_query']);
 				$args['write_cache'] =  TRUE;
 				pw_cache_feed($args['feed_id']);
-			
+
 		}else{
 			// echo ($args['write_cache']);
 			//update feed query
@@ -431,66 +431,66 @@ function pw_register_feed ( $args ){
 }
 
 function update_feed_query($feed_id, $feed_query){
-		
-	global $wpdb;	
-	$wpdb->show_errors(); 
+
+	global $wpdb;
+	$wpdb->show_errors();
 	$query = "update $wpdb->pw_prefix"."feeds set feed_query='".json_encode($feed_query)."' where feed_id='".$feed_id."'";
 	//echo $query;
 	$wpdb->query($query);
 }
 
 function pw_cache_feed ( $feed_id ){
-	
+
 	$feed_row = pw_get_feed($feed_id);
 	if(!is_null($feed_row)){
-			
+
 		//echo ($feed_row->feed_query);
 		$time_start = date("Y-m-d H:i:s");
-		
+
 		$feed_query_finalized  = finalize_feed_query($feed_row->feed_query);
-		
+
 		$feed_outline = pw_feed_outline($feed_query_finalized);
 		$time_end = date("Y-m-d H:i:s");
 		$timer = (strtotime( $time_end )-strtotime( $time_start))*1000;
 		//echo json_encode($feed_outline);
 		global $wpdb;
-		$wpdb->show_errors(); 
+		$wpdb->show_errors();
 		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."',time_start='$time_start',time_end='$time_end',timer='$timer' where feed_id='".$feed_id."'";
 		//echo $query;
 		$wpdb->query($query);
 		return array('number_of_posts'=>count($feed_outline), 'feed_query'=> $feed_row->feed_query);
-	} 
+	}
 }
 
 function finalize_feed_query($feed_query_stringified){
 	$pw_query_args = (array)json_decode($feed_query_stringified);
 	if(isset($pw_query_args["tax_query"]))
 		$pw_query_args["tax_query"][0]= get_object_vars(($pw_query_args["tax_query"][0])) ;
-	
+
 	return $pw_query_args;
 }
 
 function pw_get_feed ( $feed_id ){
 	global $wpdb;
-	$wpdb->show_errors(); 
-	
+	$wpdb->show_errors();
+
 	$query = "select * from $wpdb->pw_prefix"."feeds where feed_id='".$feed_id."'";
 	$feed_row = $wpdb->get_row($query);
-	
+
 	return $feed_row;
-	
+
 }
-  
+
 function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
-	
+
 	$feed_row = (array) pw_get_feed($feed_id);
 	if($feed_row){
 		$feed_row['feed_outline'] = array_map("intval", explode(",", $feed_row['feed_outline']));
 
 		if($preload > 0){
 			// Get the top preload post IDs
-			$preload_posts = array_slice( $feed_row['feed_outline'], 0, $preload ); 
-			
+			$preload_posts = array_slice( $feed_row['feed_outline'], 0, $preload );
+
 			if( $fields == null ){
 				// Get the default fields
 				$feed_query = (array)json_decode($feed_row['feed_query']);
@@ -503,7 +503,7 @@ function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
 	}
 
 	return (array)$feed_row;
-	
+
 }
 
 function pw_print_feed( $vars ){
@@ -516,10 +516,10 @@ function pw_print_feed( $vars ){
 		$posts = $load_feed['posts'];
 
 	} else if( isset($vars['feed_query']) ) {
-		
+
 		// LOAD A FRESH QUERY
 		$feed_query = $vars['feed_query'];
-		
+
 		if( isset($vars['fields']) )
 			// Override fields
 			$feed_query['fields'] = $vars['fields'];
@@ -538,7 +538,7 @@ function pw_print_feed( $vars ){
 
 	$pw_post = array();
 	$post_html = "";
-	
+
 	// Iterate through each provided post
 	foreach( $posts as $post ){
 
@@ -637,7 +637,7 @@ function pw_get_menu_posts( $menu, $fields ){
 
 function pw_feed( $vars ){
 	// PW Feed offers PW Query combined with PW Get Posts
-	// By first returning a feed outline, and then 
+	// By first returning a feed outline, and then
 	// This allows the additonal pw_get_posts() options to be passed in
 	/*
 		$vars = array(
@@ -728,17 +728,17 @@ function get_panel_ids(){
 	$default_file_names = 	list_dir_file_names( $pwSiteGlobals['template_paths']['panels']['dir']['default'] ); //['default_panel_template_abs_path'] );
 
 	$final_panel_names = array();
-	for ($i=0; $i <count($default_file_names) ; $i++) { 
+	for ($i=0; $i <count($default_file_names) ; $i++) {
 		$final_panel_names[] = str_replace(".html", "", $default_file_names[$i]);
 	}
-	
+
 	for ($i=0; $i < count($override_file_names); $i++) {
 		$name = str_replace(".html", "", $override_file_names[$i] );
 		if(!in_array($name,$final_panel_names)){
 			$final_panel_names[] = $name;
 		}
 	}
-	
+
 	return $final_panel_names;
 }
 
@@ -748,42 +748,42 @@ function get_comment_ids(){
 	global $pwSiteGlobals;
 	$override_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['override'] ); //['override_comment_template_abs_path']);
 	$default_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['default'] );//['default_comment_template_abs_path']);
-	
-	
+
+
 	$final_comment_names = array();
-	for ($i=0; $i <count($default_file_names) ; $i++) { 
+	for ($i=0; $i <count($default_file_names) ; $i++) {
 		$final_comment_names[] = str_replace(".html", "", $default_file_names[$i]);
 	}
-	
+
 	for ($i=0; $i < count($override_file_names); $i++) {
 		$name = str_replace(".html", "", $override_file_names[$i] );
 		if(!in_array($name,$final_comment_names)){
 			$final_comment_names[] = $name;
 		}
 	}
-	
+
 	return $final_comment_names;
 }
 
 
 function list_dir_file_names($directory){
-		
+
 	$names_array=array();
 	//echo("<br>".$directory."<br>");
 	if (is_dir($directory)){
 		//echo 'is directoruuu';
-	
+
 	$dir = new RecursiveDirectoryIterator($directory,
 			    FilesystemIterator::SKIP_DOTS);
-			
+
 			// Flatten the recursive iterator, folders come before their files
 			$it  = new RecursiveIteratorIterator($dir,
 			    RecursiveIteratorIterator::SELF_FIRST);
-			
+
 			// Maximum depth is 1 level deeper than the base folder
 			$it->setMaxDepth(1);
-			
-			
+
+
 			// Basic loop displaying different messages based on file or folder
 			foreach ($it as $fileinfo) {
 			    if ($fileinfo->isFile()) {
@@ -793,7 +793,7 @@ function list_dir_file_names($directory){
 			    }
 			}
 	}
-			
+
 	return $names_array;
 }
 
