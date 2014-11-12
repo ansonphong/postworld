@@ -1,13 +1,12 @@
 <?
-/*_____             _  __        ___     _            _   
- |  ___|__  ___  __| | \ \      / (_) __| | __ _  ___| |_ 
+/*_____             _  __        ___     _            _
+ |  ___|__  ___  __| | \ \      / (_) __| | __ _  ___| |_
  | |_ / _ \/ _ \/ _` |  \ \ /\ / /| |/ _` |/ _` |/ _ \ __|
- |  _|  __/  __/ (_| |   \ V  V / | | (_| | (_| |  __/ |_ 
+ |  _|  __/  __/ (_| |   \ V  V / | | (_| | (_| |  __/ |_
  |_|  \___|\___|\__,_|    \_/\_/  |_|\__,_|\__, |\___|\__|
-										   |___/          
+										   |___/
 ////////////////// FEED WIDGET - ADMIN //////////////////*/
 ?>
-
 <?php
 
 if ( isset( $OPTIONS[ 'title' ] ) ) {
@@ -16,7 +15,6 @@ if ( isset( $OPTIONS[ 'title' ] ) ) {
 	else {
 	  $title = __( 'Widget', 'text_domain' );
 	}
-
 extract($OPTIONS);
 ?>
 
@@ -38,24 +36,23 @@ extract($OPTIONS);
 	<label for="<?php echo $this->get_field_id( 'title' ); ?>">
 		<input type="checkbox" value="1" title="Show Title" name="<?php echo $this->get_field_name('show_title'); ?>" id="<?php echo $this->get_field_id('show_title'); ?>" <?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
 		<?php _e( 'Title:' ); ?>
-	</label> 
+	</label>
 	<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 
-   
-   <!-- SELECT -->
-   <div class="type-wrapper">
+	<!-- SELECT -->
+	<div class="type-wrapper">
 
 	<div class="type-title">
 		<label><b>Feed</b></label>
 	</div>
-	
+
 	<div class="type-options">
-		
+
 		<select name="<?php echo $this->get_field_name('feed_id'); ?>"  id="<?php echo $this->get_field_id('feed_id'); ?>">
 		<?php
 
 			$pw_feeds = pw_get_option( array( 'option_name'  =>  PW_OPTIONS_FEEDS ) );
-			
+
 			if( !empty( $pw_feeds ) ){
 				foreach($pw_feeds as $feed ) {
 					$selected = '';
@@ -66,8 +63,8 @@ extract($OPTIONS);
 
 		?>
 		</select>
-		
+
 	</div>
-		
+
    </div>
 </div>

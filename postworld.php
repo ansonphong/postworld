@@ -21,7 +21,6 @@ $pw = array(
 				'site'				=>	'postworld-site',
 				'layouts'			=>	'postworld-layouts',
 				'sidebars'			=>	'postworld-sidebars',
-				'styles'			=>	'postworld-styles',
 				'feeds'				=>	'postworld-feeds',
 				'feed_settings'		=>	'postworld-feed-settings',
 				'social'			=>	'postworld-social',
@@ -48,7 +47,6 @@ $pw = array(
 define( 'PW_OPTIONS_SITE', 			$pw['db']['wp_options']['option_name']['site'] );
 define( 'PW_OPTIONS_LAYOUTS', 		$pw['db']['wp_options']['option_name']['layouts'] );
 define( 'PW_OPTIONS_SIDEBARS', 		$pw['db']['wp_options']['option_name']['sidebars'] );
-define( 'PW_OPTIONS_STYLES', 		$pw['db']['wp_options']['option_name']['styles'] );
 define( 'PW_OPTIONS_FEEDS', 		$pw['db']['wp_options']['option_name']['feeds'] );
 define( 'PW_OPTIONS_FEED_SETTINGS', $pw['db']['wp_options']['option_name']['feed_settings'] );
 define( 'PW_OPTIONS_SOCIAL', 		$pw['db']['wp_options']['option_name']['social'] );
@@ -71,7 +69,7 @@ define( 'PW_USERMETA_KEY',	'pw_meta', true ); // Case in-sensitive
 
 
 // MUST BE DEFINED BY THE THEME
-//define( 'PW_OPTIONS_STYLES', 	$pw['db']['wp_options']['option_name']['styles'] );
+//define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
 
 
 /////////////// API ////////////////
