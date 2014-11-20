@@ -60,7 +60,7 @@ function pw_current_context(){
 		$context[] = 'archive-post-type'; 
 	
 
-	// CUSTOM TAXONOMIES
+	// TAXONOMIES
 	if( in_array( 'archive-taxonomy', $context ) ){
 		// Define Taxonomy
 		if( is_tag() )
@@ -80,16 +80,28 @@ function pw_current_context(){
 
 	}
 
-	// CUSTOM POST TYPES
+	// SINGLE : POST TYPES
 	if( in_array( 'single', $context ) ){
 		global $post;
-		$post_type = $post->post_type; 
+		$post_type = $post->post_type;
 		$post_type_obj = get_post_type_object( $post_type );
 		// Check if the post type is builtin
-		if( isset( $post_type_obj ) && !$post_type_obj->_builtin )
+		if( isset( $post_type_obj ) )
 			// If it's a custom point type, assign custom layout ID
 			$context[] = 'single-'.$post_type;
 	}
+
+	// ARCHIVE : POST TYPE
+	if( in_array( 'archive-post-type', $context ) ){
+
+		$post_type = get_query_var( 'post_type' );
+		$post_type_obj = get_post_type_object( $post_type );
+		// Check if the post type is builtin
+		if( isset( $post_type_obj ) )
+			// If it's a custom point type, assign custom layout ID
+			$context[] = 'archive-post-type-'.$post_type;
+	}
+
 
 	// BUDDYPRESS
 	if( pw_is_buddypress_active() ){
