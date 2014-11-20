@@ -17,7 +17,8 @@ global $pw;
 
 function postworld_admin_menu(){
 	global $pw;
-	$modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+	
+	$enabled_modules = pw_enabled_modules();
 
 	$menu = array(
 		'menu' => array(
@@ -34,7 +35,7 @@ function postworld_admin_menu(){
 		'submenu' => array(),
 		);
 
-	if( in_array( 'site', $modules ) )
+	if( in_array( 'site', $enabled_modules ) )
 		$menu['submenu']['site'] = array(
 			'parent_slug' => $pw['slug'],
 			'page_title' => 'Site Options',
@@ -44,7 +45,7 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_site',
 			);
 
-	if( in_array( 'layouts', $modules ) )
+	if( in_array( 'layouts', $enabled_modules ) )
 		$menu['submenu']['layout'] = array(
 			'parent_slug' => $pw['slug'],
 			'page_title' => 'Layout',
@@ -54,7 +55,7 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_layout',
 			);
 
-	if( in_array( 'sidebars', $modules ) )
+	if( in_array( 'sidebars', $enabled_modules ) )
 		$menu['submenu']['sidebars'] = array(
 			'parent_slug' => $pw['slug'],
 			'page_title' => 'Sidebars',
@@ -64,7 +65,7 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_sidebars',
 			);
 
-	if( in_array( 'styles', $modules ) )
+	if( in_array( 'styles', $enabled_modules ) )
 		$menu['submenu']['styles'] = array(
 			'parent_slug' => $pw['slug'],
 			'page_title' => 'Styles',
@@ -74,7 +75,7 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_styles',
 			);
 
-	if( in_array( 'social', $modules ) )
+	if( in_array( 'social', $enabled_modules ) )
 		$menu['submenu']['social'] = array(
 			'parent_slug' => $pw['slug'],
 			'page_title' => 'Social',
@@ -84,7 +85,7 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_social',
 			);
 
-	if( in_array( 'feeds', $modules ) )
+	if( in_array( 'feeds', $enabled_modules ) )
 		$menu['submenu']['feeds'] = array(
 			'parent_slug' => $pw['slug'],
 			'page_title' => 'Feeds',
@@ -94,7 +95,7 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_feeds',
 			);
 
-	if( in_array( 'backgrounds', $modules ) )
+	if( in_array( 'backgrounds', $enabled_modules ) )
 		$menu['submenu']['backgrounds'] = array(
 			'parent_slug' => $pw['slug'],
 			'page_title' => 'Backgrounds',

@@ -61,13 +61,11 @@ function pw_available_modules(){
 	return $modules;
 }
 
-function pw_get_modules(){
-	return 	pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
-			
+function pw_enabled_modules(){
+	return 	pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );	
 }
 
 function pw_set_modules(){
-
 
 
 }
