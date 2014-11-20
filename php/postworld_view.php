@@ -41,7 +41,7 @@ function pw_current_context(){
 	if( is_admin() )
 		$context[] = 'admin';
 
-	if( is_tax() )
+	if( is_tax() || is_tag() )
 		$context[] = 'archive-taxonomy';
 
 	if( is_year() || is_month() || is_day() )
@@ -62,13 +62,22 @@ function pw_current_context(){
 
 	// CUSTOM TAXONOMIES
 	if( in_array( 'archive-taxonomy', $context ) ){
+		// Define Taxonomy
+		if( is_tag() )
+			$taxonomy = 'post_tag';
+		else if( is_category() )
+			$taxonomy = 'category';
+		else
+			$taxonomy = get_query_var( 'taxonomy' );
+
 		// Get the taxonomy object
-		$taxonomy = get_query_var( 'taxonomy' );
 		$taxonomy_obj = get_taxonomy( $taxonomy );
+
 		// Check if taxonomy is builtin
-		if( isset( $taxonomy_obj ) && !$taxonomy_obj->_builtin )
+		if( isset( $taxonomy_obj )  )
 			// If it's a custom taxonomy, assign custom layout ID
 			$context[] = 'archive-taxonomy-' . $taxonomy;
+
 	}
 
 	// CUSTOM POST TYPES
