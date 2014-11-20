@@ -18,6 +18,7 @@ $pw = array(
 	'db' =>	array(
 		'wp_options'	=>	array(
 			'option_name'	=>	array(
+				'modules'			=>	'postworld-modules',
 				'site'				=>	'postworld-site',
 				'layouts'			=>	'postworld-layouts',
 				'sidebars'			=>	'postworld-sidebars',
@@ -44,6 +45,7 @@ $pw = array(
 
 ///// DEFINE OPTION NAMES /////
 // Used in 'wp_options' table as 'option_name' key
+define( 'PW_OPTIONS_MODULES', 		$pw['db']['wp_options']['option_name']['modules'] );
 define( 'PW_OPTIONS_SITE', 			$pw['db']['wp_options']['option_name']['site'] );
 define( 'PW_OPTIONS_LAYOUTS', 		$pw['db']['wp_options']['option_name']['layouts'] );
 define( 'PW_OPTIONS_SIDEBARS', 		$pw['db']['wp_options']['option_name']['sidebars'] );
@@ -60,8 +62,9 @@ define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
 
 ///// DEFINE META FILTER NAMES /////
-define( 'PW_POSTMETA', $pw['db']['wp_postmeta']['pw_meta'] );
-define( 'PW_USERMETA', $pw['db']['wp_usermeta']['pw_meta'] );
+define( 'PW_POSTMETA', 	$pw['db']['wp_postmeta']['pw_meta'] );
+define( 'PW_USERMETA', 	$pw['db']['wp_usermeta']['pw_meta'] );
+define( 'PW_MODULES', 	$pw['db']['wp_options']['option_name']['modules'] );
 
 ///// DEFINE META KEYS /////
 define( 'PW_POSTMETA_KEY',	'pw_meta', true ); // Case in-sensitive
@@ -148,6 +151,9 @@ register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 
 ////////// FILTER FUNCTIONS ///////////
 include 'php/postworld_filters.php';
+
+////////// MODULE FUNCTIONS ///////////
+include 'php/postworld_modules.php';
 
 /////////////// SOCIAL ////////////////
 include 'php/postworld_language.php';

@@ -593,7 +593,10 @@ function pwGlobals_parse(){
 	///// URL QUERY VARS /////
 	$pw['url_vars'] = $_GET;
 
-
+	///// PW MODULES /////
+	$modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+	$pw['modules'] = $modules;
+	
 	///// INFINITE /////
 	// Merge the Infinite Globals into $pw
 	// This is a temporary solution, as Infinite is being digested & refactored into Postworld
@@ -617,9 +620,6 @@ function pw_injections(){
 	global $pwInject;
 	return $pwInject;
 }
-
-
-
 
 
 //////////// ADMIN GLOBALS ////////////

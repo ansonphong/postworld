@@ -34,7 +34,6 @@
 				$scope.$apply();
 			});
 
-
 			//////////// STYLES ////////////
 			$scope.$watch('pwBackground', function( val ){
 				$scope.updateBackground( val );

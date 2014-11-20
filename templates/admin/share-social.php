@@ -1,5 +1,5 @@
 <script>
-	postworld.controller( 'shareSocialCtrl', [ '$scope', '_', '$filter', '$log', function($scope, $_, $filter, $log){
+	postworldAdmin.controller( 'shareSocialCtrl', [ '$scope', '_', '$filter', '$log', function($scope, $_, $filter, $log){
 		
 		$scope.setNetworkIds = function( networkIds ){
 			if( $_.getObj( $scope.$parent.<?php echo $vars['model_var'];?>, "<?php echo $vars['model_key'];?>" ) == false )

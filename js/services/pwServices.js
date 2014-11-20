@@ -348,6 +348,38 @@ postworld.factory('_',
 		},
 
 
+		arrayFromObjectWatch: function( $scope, $array, $object ){
+			/*
+				•	This function is made to watch a specified $scope[ $object ]
+					And where the key values are true, a string with that key
+					Is added to $scope[ $array ]
+				•	Made for use in translating an object of boolean values
+					Into a flat array
+				•	Useful when using a series of checkboxes with ng-model
+					And turning the selected values into a flat array
+			*/
+
+			// Iterate through the flat array 
+			// And generate an object
+			$scope[ $object ] = {};
+			if( !_.isEmpty( $scope[ $array ] ) ){
+				angular.forEach( $scope[ $array ], function( value ){
+					$scope[ $object ][ value ] = true;
+				});
+			}
+			// Setup a watch on the object
+			$scope.$watch( $object, function( val ){
+				// Iterate through the object
+				// And generate a flat array
+				var flatArray = [];
+				angular.forEach( $scope[ $object ], function( value, key ){	
+					if( value == true )
+						flatArray.push( key );
+				});
+				$scope[ $array ] = flatArray;
+			}, 1 );
+		},
+
 
 	};
 
