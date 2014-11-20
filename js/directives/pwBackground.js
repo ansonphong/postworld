@@ -15,7 +15,6 @@
 		},
 		link: function( $scope, element, attrs ){
 
-
 			//////////// PARALLAX ////////////
 			var setPosition = function () {
 				var parallaxRatio = $_.get( $scope.pwBackground, 'image.parallax' );
@@ -35,7 +34,6 @@
 				$scope.$apply();
 			});
 
-			
 
 			//////////// STYLES ////////////
 			$scope.$watch('pwBackground', function( val ){

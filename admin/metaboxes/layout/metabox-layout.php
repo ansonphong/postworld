@@ -38,7 +38,7 @@ function pw_metabox_init_layout(){
                 'Layout',
                 'pw_layout_meta_init',
                 $post_type,
-                'advanced',
+                'normal',
                 'core',
                 $args //  Pass callback variables
                 );
