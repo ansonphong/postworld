@@ -2,6 +2,10 @@
 
 ////////// LAYOUT OPTIONS //////////
 function i_layout_options(){
+	// DEPRECIATED : use pw_layout_options()
+	return pw_layout_options();
+}
+function pw_layout_options(){
 
 	///// DEFINE OPTIONS /////
 	$iLayoutOptions = array(

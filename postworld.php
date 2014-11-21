@@ -18,15 +18,16 @@ $pw = array(
 	'db' =>	array(
 		'wp_options'	=>	array(
 			'option_name'	=>	array(
-				'modules'			=>	'postworld-modules',
-				'site'				=>	'postworld-site',
-				'layouts'			=>	'postworld-layouts',
-				'sidebars'			=>	'postworld-sidebars',
-				'feeds'				=>	'postworld-feeds',
-				'feed_settings'		=>	'postworld-feed-settings',
-				'social'			=>	'postworld-social',
-				'backgrounds'		=>	'postworld-backgrounds',
-				'header_code'		=>	'postworld-header-code',
+				'modules'				=>	'postworld-modules',
+				'site'					=>	'postworld-site',
+				'layouts'				=>	'postworld-layouts',
+				'sidebars'				=>	'postworld-sidebars',
+				'feeds'					=>	'postworld-feeds',
+				'feed_settings'			=>	'postworld-feed-settings',
+				'social'				=>	'postworld-social',
+				'backgrounds'			=>	'postworld-backgrounds',
+				'background_contexts'	=>	'postworld-background-contexts',
+				'header_code'			=>	'postworld-header-code',
 				),
 			),
 		'wp_postmeta'	=>	array(
@@ -45,14 +46,15 @@ $pw = array(
 
 ///// DEFINE OPTION NAMES /////
 // Used in 'wp_options' table as 'option_name' key
-define( 'PW_OPTIONS_MODULES', 		$pw['db']['wp_options']['option_name']['modules'] );
-define( 'PW_OPTIONS_SITE', 			$pw['db']['wp_options']['option_name']['site'] );
-define( 'PW_OPTIONS_LAYOUTS', 		$pw['db']['wp_options']['option_name']['layouts'] );
-define( 'PW_OPTIONS_SIDEBARS', 		$pw['db']['wp_options']['option_name']['sidebars'] );
-define( 'PW_OPTIONS_FEEDS', 		$pw['db']['wp_options']['option_name']['feeds'] );
-define( 'PW_OPTIONS_FEED_SETTINGS', $pw['db']['wp_options']['option_name']['feed_settings'] );
-define( 'PW_OPTIONS_SOCIAL', 		$pw['db']['wp_options']['option_name']['social'] );
-define( 'PW_OPTIONS_BACKGROUNDS', 	$pw['db']['wp_options']['option_name']['backgrounds'] );
+define( 'PW_OPTIONS_MODULES', 				$pw['db']['wp_options']['option_name']['modules'] );
+define( 'PW_OPTIONS_SITE', 					$pw['db']['wp_options']['option_name']['site'] );
+define( 'PW_OPTIONS_LAYOUTS', 				$pw['db']['wp_options']['option_name']['layouts'] );
+define( 'PW_OPTIONS_SIDEBARS', 				$pw['db']['wp_options']['option_name']['sidebars'] );
+define( 'PW_OPTIONS_FEEDS', 				$pw['db']['wp_options']['option_name']['feeds'] );
+define( 'PW_OPTIONS_FEED_SETTINGS', 		$pw['db']['wp_options']['option_name']['feed_settings'] );
+define( 'PW_OPTIONS_SOCIAL', 				$pw['db']['wp_options']['option_name']['social'] );
+define( 'PW_OPTIONS_BACKGROUNDS', 			$pw['db']['wp_options']['option_name']['backgrounds'] );
+define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name']['background_contexts'] );
 
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
 

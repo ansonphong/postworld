@@ -14,6 +14,21 @@
 			$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
 			$scope.pwBackgrounds = <?php echo json_encode( $pwBackgrounds ); ?>;
 			$scope.pwBackgroundsStructure = <?php echo json_encode( $pw_backgrounds_structure ); ?>;
+			$scope.contexts = <?php echo json_encode( pw_get_contexts() ); ?>;
+		
+			$scope.pwBackgroundContexts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUND_CONTEXTS ) ) ); ?>;
+			if( _.isEmpty( $scope.pwBackgroundContexts ) )
+				$scope.pwBackgroundContexts = {};
+			
+			// Watch Background Contexts
+			$scope.$watch( 'pwBackgroundContexts', function(val){
+				// Delete empty keys
+				angular.forEach( $scope.pwBackgroundContexts, function( value, key ){
+					if( _.isEmpty( value ) )
+						delete $scope.pwBackgroundContexts[ key ];
+				});
+			}, 1);
+
 		}]);
 	</script>
 	<div
@@ -36,6 +51,16 @@
 			<div class="pw-col-2">
 				<ul class="list-menu">
 					<li
+						ng-click="selectItem('contexts');"
+						ng-class="menuClass('contexts')">
+						<i class="icon-target"></i> Contexts
+					</li>
+				</ul>
+				
+				<hr class="thin">
+
+				<ul class="list-menu">
+					<li
 						ng-repeat="item in pwBackgrounds"
 						ng-click="selectItem(item)"
 						ng-class="menuClass(item)">
@@ -45,11 +70,43 @@
 				<div class="space-6"></div>
 			</div>
 
-
-
-			<!-- ///// EDIT SETTINGS ///// -->
 			<div class="pw-col-10">
-				<div ng-show="showView('editItem')">
+
+				<!-- ///// EDIT SETTINGS ///// -->
+				<div ng-show="showView('contexts')" class="well flush-top">
+
+					<!-- SAVE BUTTON -->
+					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUND_CONTEXTS, 'pwBackgroundContexts'); ?></div>
+
+					<h3>Contexts</h3>
+
+					<table>
+						<tr ng-repeat="context in contexts"
+							valign="top">
+							<th scope="row" align="left">
+								<span
+									tooltip="{{context.name}}"
+									tooltip-popup-delay="333">
+									<i class="{{context.icon}}"></i>
+									{{context.label}}
+									</th>
+								</span>
+							<td>
+								<select
+									ng-options="background.id as background.name for background in pwBackgrounds"
+									ng-model="pwBackgroundContexts[ context.name ]">
+									<option value="">Default</option>
+								</select>
+							</td>
+						</tr>
+					</table>
+
+					<pre>{{ pwBackgroundContexts | json }}</pre>
+
+				</div>
+
+				<!-- ///// EDIT BACKGROUND ///// -->
+				<div ng-show="showView('editItem')" class="well">
 
 					<?php
 						echo pw_background_single_options( array( 'context'	=>	'siteAdmin' ) );

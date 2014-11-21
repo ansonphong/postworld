@@ -1,5 +1,5 @@
 
-<div ng-app="postworldAdmin" class="postworld wrap social">
+<div ng-app="postworldAdmin" class="postworld  social">
 
 	<h1>
 		<i class="icon-seed-of-life"></i>

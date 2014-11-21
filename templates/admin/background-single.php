@@ -20,7 +20,7 @@
 		<!-- /// SETTINGS /// -->
 		<div class="content-wrapper">
 	
-			<div class="well">
+			<div class="well flush-top">
 
 				<h3>Primary</h3>
 
