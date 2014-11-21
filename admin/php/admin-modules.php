@@ -268,15 +268,34 @@ function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
 		case 'postAdmin':
 		case 'quickEdit':
 		default:
-				$vars['ng_model'] = "post.post_meta." . pw_postmeta_key . ".layout";
+				$vars['ng_model'] = "pw_layout_post.post_meta." . pw_postmeta_key . ".layout";
 			break;
 	}
 	return pw_ob_admin_template( 'layout-single', $vars );
 
 }
 
+///// SINGLE SELECT BACKGROUND OPTIONS /////
+function pw_background_select( $vars = array( "context" => "quickEdit" ) ){
+	//$vars['options_model'] = "options.post_content.columns";
+	switch($vars['context']){
+		///// SITE-WIDE SETTINGS /////
+		case 'siteAdmin': 
+				$vars['ng_model'] = "pwBackgroundContexts[ context.name ]";
+			break;
+		///// EDIT POST SETTINGS /////
+		case 'postAdmin':
+		case 'quickEdit':
+		default:
+				$vars['ng_model'] = "pw_background_post.post_meta." . pw_postmeta_key . ".background";
+			break;
+	}
+	return pw_ob_admin_template( 'background-select', $vars );
 
-///// SINGLE BACKGROUND OPTIONS /////
+}
+
+///// SINGLE CUSTOMIZE BACKGROUND OPTIONS /////
+// For all the controls of customizing a background
 function pw_background_single_options( $vars = array( "context" => "quickEdit" ) ){
 	//$vars['options_model'] = "options.post_content.columns";
 	switch($vars['context']){

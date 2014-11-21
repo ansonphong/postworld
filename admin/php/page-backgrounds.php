@@ -92,11 +92,7 @@
 									</th>
 								</span>
 							<td>
-								<select
-									ng-options="background.id as background.name for background in pwBackgrounds"
-									ng-model="pwBackgroundContexts[ context.name ]">
-									<option value="">Default</option>
-								</select>
+								<?php echo pw_background_select( array( 'context' => 'siteAdmin' ) ); ?>
 							</td>
 						</tr>
 					</table>

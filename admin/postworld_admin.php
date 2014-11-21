@@ -9,6 +9,10 @@ include 'metaboxes/post_parent/metabox-post_parent.php';
 if( in_array( 'layouts', $pw['modules'] ) )
 	include 'metaboxes/layout/metabox-layout.php';	
 
+///// MODULE : BACKGROUNDS /////
+if( in_array( 'backgrounds', $pw['modules'] ) )
+	include 'metaboxes/background/metabox-background.php';	
+
 ///// ENQUEUE STYLES & SCRIPTS /////
 add_action( 'admin_enqueue_scripts', 'pw_admin_enqueue' );
 function pw_admin_enqueue() {
