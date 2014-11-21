@@ -31,7 +31,7 @@ postworld.controller('postController',
 	if( _.isUndefined( $scope.post ) || _.isEmpty( $scope.post ) ){
 
 		// First get the post from the pw globals 
-		var globalPost = $_.getObj( $window, "pwGlobals.view.post" );
+		var globalPost = $_.getObj( $window, "pw.globals.view.post" );
 		if( globalPost != false )
 			$scope.post = globalPost;
 
@@ -81,13 +81,13 @@ postworld.controller('postController',
 	// IMPORT LANGUAGE
 	if(
 		typeof $window.pwSiteLanguage !== 'undefined' &&
-		typeof $window.pwGlobals.user !== 'undefined' &&
+		typeof $window.pw.globals.user !== 'undefined' &&
 		typeof $scope.post !== 'undefined'
 		){
 		$scope.language = $window.pwSiteLanguage;
-		$scope.current_user_id = $window.pwGlobals.user.ID;
+		$scope.current_user_id = $window.pw.globals.user.ID;
 		// GENERATE  SHARE LINK
-		$scope.share_link = $pw.paths.home_url + "/?u=" + $window.pwGlobals.user.ID + "&p=" + $scope.post.ID;
+		$scope.share_link = $pw.paths.home_url + "/?u=" + $window.pw.globals.user.ID + "&p=" + $scope.post.ID;
 	}
 
 	// Toggles class="expaned", used with ng-class="expanded" 

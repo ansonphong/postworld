@@ -203,8 +203,8 @@ postworld.controller('pwTreeController',
 	$scope.voteComment = function( points, child ){
 
 			// Get the voting power of the current user
-			if( typeof $window.pwGlobals.user.postworld !== 'undefined' )
-					var vote_power = parseInt($window.pwGlobals.user.postworld.vote_power);
+			if( typeof $window.pw.globals.user.postworld !== 'undefined' )
+					var vote_power = parseInt($window.pw.globals.user.postworld.vote_power);
 			// If they're not logged in, return false
 			if( typeof vote_power === 'undefined' ){
 					alert("Must be logged in to vote.");

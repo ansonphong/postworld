@@ -411,7 +411,8 @@ function postworld_includes( $args ){
 	function pwGlobals() {
 	?>
 		<script type="text/javascript">/* <![CDATA[ */
-			var pwGlobals = <?php echo json_encode( pwGlobals_parse() ); ?>;
+			pw.globals = <?php echo json_encode( pwGlobals_parse() ); ?>;
+			pw.background = {};
 		/* ]]> */</script>
 
 	<?php

@@ -17,8 +17,8 @@ postworld.controller('postShareReport',
 
     $scope.postShareReport = {};
 
-    if( typeof $window.pwGlobals.view.post != 'undefined' ){
-        $scope.post = $window.pwGlobals.view.post;
+    if( typeof $window.pw.globals.view.post != 'undefined' ){
+        $scope.post = $window.pw.globals.view.post;
         var args = { "post_id" : $scope.post.post_id };
         $pwData.post_share_report( args ).then(
             // Success
@@ -43,9 +43,9 @@ postworld.controller('userShareReportOutgoing',
 
     $scope.postShareReport = {};
 
-    if( typeof $window.pwGlobals.displayed_user.user_id != 'undefined' ){
+    if( typeof $window.pw.globals.displayed_user.user_id != 'undefined' ){
 
-        $scope.displayed_user_id = $window.pwGlobals.displayed_user.user_id;
+        $scope.displayed_user_id = $window.pw.globals.displayed_user.user_id;
 
         var args = { "displayed_user_id" : $scope.displayed_user_id };
 

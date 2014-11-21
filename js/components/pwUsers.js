@@ -645,7 +645,7 @@ postworld.controller( 'pwUserPasswordResetCtrl',
 	$timeout( function(){
 
 		// If user is logged in
-		if( $_.objExists( $window, 'pwGlobals.user.data.ID' ) ){
+		if( $_.objExists( $window, 'pw.globals.user.data.ID' ) ){
 			$scope.mode = 'loggedIn';			
 			return false;
 		}
