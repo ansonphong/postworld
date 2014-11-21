@@ -120,6 +120,23 @@ function pw_current_context(){
 	return $context;
 }
 
+function pw_get_current_view(){
+	// TODO : Refactor for efficientcy
+	global $wp_query;
+	$viewdata = array();
+
+	// URL
+	$protocol = (!empty($_SERVER['HTTPS'])) ?
+		"https" : "http";
+	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
+	$viewdata['protocol'] = $protocol;
+	$viewdata["context"] = pw_current_context();
+	$viewmeta = pw_get_view_meta( $viewdata["context"] );
+	$viewdata = array_replace_recursive( $viewdata, $viewmeta );
+	$viewdata["query"] = pw_to_array( $wp_query )['query_vars'];
+	$viewdata = pw_to_array( $viewdata );
+	return $viewdata;
+}
 
 function pw_get_view_meta( $context = array() ){
 	global $post;

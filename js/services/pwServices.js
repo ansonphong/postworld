@@ -38,11 +38,11 @@ postworld.factory( '$pw',
 		state: state(),
 
 		user: pwUser(), //$window.pw.globals.user, // (or something) - refactor to go directly to pwUser
-    	// view: $window.pw.globals.view
+    	// view: $window.pw.view
     	// language: $window.pwSiteLanguage,
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
     	
-    	view: $window.pw.globals.view,
+    	view: $window.pw.view,
     	paths: $window.pwSiteGlobals.paths,
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,

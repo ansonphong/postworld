@@ -31,7 +31,7 @@ postworld.controller('postController',
 	if( _.isUndefined( $scope.post ) || _.isEmpty( $scope.post ) ){
 
 		// First get the post from the pw globals 
-		var globalPost = $_.getObj( $window, "pw.globals.view.post" );
+		var globalPost = $_.getObj( $window, "pw.view.post" );
 		if( globalPost != false )
 			$scope.post = globalPost;
 

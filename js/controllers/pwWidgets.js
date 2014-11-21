@@ -17,8 +17,8 @@ postworld.controller('postShareReport',
 
     $scope.postShareReport = {};
 
-    if( typeof $window.pw.globals.view.post != 'undefined' ){
-        $scope.post = $window.pw.globals.view.post;
+    if( typeof $window.pw.view.post != 'undefined' ){
+        $scope.post = $window.pw.view.post;
         var args = { "post_id" : $scope.post.post_id };
         $pwData.post_share_report( args ).then(
             // Success

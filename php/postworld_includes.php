@@ -409,10 +409,29 @@ function postworld_includes( $args ){
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
 	function pwGlobals() {
+		pwGlobals_parse();
 	?>
 		<script type="text/javascript">/* <![CDATA[ */
-			pw.globals = <?php echo json_encode( pwGlobals_parse() ); ?>;
+
+			// GLOBALS
+			// This is Depreciated and non-neccessary
+			//pw.globals = <?php //echo json_encode( pwGlobals_parse() ); ?>;
+			
+			// VIEW
+			pw.view = <?php echo json_encode( pw_get_current_view() ); ?>;
+
+			// USER
+			pw.user = <?php echo json_encode( pw_get_current_user() ); ?>;
+
+			// BACKGROUND
+			// Make function here to parse the current background
 			pw.background = {};
+		
+			// Make function here to parse any preloaded posts, with a filter - either by query, or... direct injection
+			//pw.posts = [];
+
+
+
 		/* ]]> */</script>
 
 	<?php
@@ -499,33 +518,7 @@ function pwSiteGlobals_include(){
 }
 
 
-
-///// PARSE pwGlobals /////
-function pwGlobals_parse(){
-	/////////// USER / PAGE SPECIFIC GLOBALS //////////
-	global $pw;
-	global $wp_query;
-
-	///// CURRENT VIEW /////
-	$viewdata = array();
-
-	// URL
-	$protocol = (!empty($_SERVER['HTTPS'])) ?
-		"https" : "http";
-	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
-	$viewdata['protocol'] = $protocol;
-
-	// TYPE
-	$viewdata["type"] = pw_get_view_type();
-
-	// VIEW
-	$viewdata["context"] = pw_current_context();
-	$viewmeta = pw_get_view_meta( $viewdata["context"] );
-	$viewdata = array_replace_recursive( $viewdata, $viewmeta );
-	$viewdata["query"] = pw_to_array( $wp_query )['query_vars'];
-	$pw['view'] = pw_to_array( $viewdata );
-
-	///// CURRENT USER /////
+function pw_get_current_user(){
 	$user_id = get_current_user_id();
 	if( $user_id != 0 ){
 		$userdata = wp_get_current_user();
@@ -533,7 +526,6 @@ function pwGlobals_parse(){
 		$userdata = (array) $userdata;
 		$userdata["postworld"] = array();
 		$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
-		$userdata["is_admin"] = is_admin();
 
 		// Force the roles as a flat array
 		if( isset( $userdata['roles'] ) &&
@@ -547,12 +539,31 @@ function pwGlobals_parse(){
 			$userdata["membership"]["is_member"] = current_user_is_member();
 		}
 
-
 	} else
 		$userdata = 0;
 
+	return $userdata;
+}
 
-	$pw["user"] = $userdata;
+///// PARSE pwGlobals /////
+function pwGlobals_parse(){
+	/////////// USER / PAGE SPECIFIC GLOBALS //////////
+	global $pw;
+	global $wp_query;
+
+	///// CURRENT VIEW /////
+	$viewdata = array();
+
+	// TYPE
+	$viewdata["type"] = pw_get_view_type();
+
+	// VIEW
+	$pw["view"] = pw_get_current_view();
+
+	///// CURRENT USER /////
+	$pw["user"] = pw_get_current_user();
+
+	//$pw["user"] = $userdata;
 
 	///// DISPLAYED USER /////
 	// Support for Buddypress Globals
