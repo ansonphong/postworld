@@ -9,6 +9,7 @@
 
 ////////////// ADD METABOX //////////////
 // TODO : Check why this is being called twice each page view
+
 add_action('admin_init','pw_metabox_init_layout');
 function pw_metabox_init_layout(){    
 

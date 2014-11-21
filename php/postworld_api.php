@@ -213,8 +213,7 @@ function pw_get_wp_usermeta($vars){
 }
 
 
-/*
-     _    ____ ___       ____           _     __  __      _        
+/*   _    ____ ___       ____           _     __  __      _        
     / \  |  _ \_ _|  _  |  _ \ ___  ___| |_  |  \/  | ___| |_ __ _ 
    / _ \ | |_) | |  (_) | |_) / _ \/ __| __| | |\/| |/ _ \ __/ _` |
   / ___ \|  __/| |   _  |  __/ (_) \__ \ |_  | |  | |  __/ || (_| |
@@ -406,6 +405,82 @@ function pw_get_postmeta( $vars = array() ){
 	else
 		// Otherwise, get and return the subkey value
 		return _get( $metadata, $vars['sub_key'] );
+
+}
+
+
+/*   _    ____ ___        ___        _   _                 
+    / \  |  _ \_ _|  _   / _ \ _ __ | |_(_) ___  _ __  ___ 
+   / _ \ | |_) | |  (_) | | | | '_ \| __| |/ _ \| '_ \/ __|
+  / ___ \|  __/| |   _  | |_| | |_) | |_| | (_) | | | \__ \
+ /_/   \_\_|  |___| (_)  \___/| .__/ \__|_|\___/|_| |_|___/
+                              |_|                          
+//////////////////////////////////////////////////////////*/
+
+function pw_get_option( $vars ){
+	// Returns a sub key stored in the `i-options` option name
+	//	From `wp_options` table
+	/*
+		vars = array(
+			'option_name'	=>	[string], // "i-options",
+			'key'			=> 	[string], // "images.logo",
+			'filter'		=>	[boolean] // Gives option to disable filtering
+	*/
+
+	$default_vars = array(
+		'option_name'	=>	PW_OPTIONS_SITE,
+		'key'			=>	false,
+		'filter'		=>	true,
+		);
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	extract($vars);
+
+	///// CACHING LAYER /////
+	// Make a global to cache data at runtime
+	// To prevent making multiple queries and json_decodes on the same option
+	global $i_options_cache;
+
+	// If cached data is already found, return it instantly
+	if( isset( $i_options_cache[$option_name] ) ){
+		$value = $i_options_cache[$option_name];
+	}
+	else{
+
+		///// GET OPTION /////
+		// Retreive Option
+		$value = get_option( $option_name, array() );
+		
+		// Decode from JSON, assuming it's a JSON string
+		// TODO : Handle non-JSON string values
+		if( !empty( $value ) )
+			$value = json_decode( $value, true );
+
+		///// APPLY FILTERS /////
+		// This allows themes to over-ride default settings for options
+		// ie. pwGetOption-postworld-styles-theme, to modify the default values
+		if( $filter ){
+			// Apply Filters
+			$value = apply_filters( $option_name , $value );
+			// Depreciated
+			$value = apply_filters( 'iOptions-' . $option_name , $value );
+
+		}
+
+		///// CACHING LAYER /////
+		// Set the decoded data into the cache
+		$i_options_cache[$option_name] = $value;
+
+	}
+
+	//pw_log( 'pw_get_option : ' . $option_name . ' : ' . json_encode($value) );
+
+	// If no key set, return the value directly
+	if( empty( $key ) )
+		return $value;
+	// Get Option Value Object Key Value
+	else
+		return _get( $value, $key );
 
 }
 

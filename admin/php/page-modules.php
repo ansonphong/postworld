@@ -11,7 +11,17 @@
 	<div>
 		<!-- MODULES -->
 		<?php echo pw_select_modules(); ?>
-		<hr class="thick">
+	</div>
+
+	<hr class="thick">
+
+	<div>
+		<!-- META BOXES -->
+		<h2>Metboxes</h2>
+		<ul>
+			<li>Post Parent</li>
+			<li>Link URL</li>
+		</ul>
 	</div>
 
 </div>

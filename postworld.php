@@ -72,13 +72,23 @@ define( 'PW_MODULES', 	$pw['db']['wp_options']['option_name']['modules'] );
 define( 'PW_POSTMETA_KEY',	'pw_meta', true ); // Case in-sensitive
 define( 'PW_USERMETA_KEY',	'pw_meta', true ); // Case in-sensitive
 
-
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
 
-
 /////////////// API ////////////////
+// Load API functions
 include 'php/postworld_api.php';
+
+
+////////////// PW GLOBALS //////////////
+// This must come after the API functions
+// And before the rest of the Postworld includes
+$pw['modules'] = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+
+
+/////////////// INFINITE ////////////////
+// Load Infinite Lineage
+include "infinite/functions.php";
 
 /////////////// VARIABLES ///////////////
 include 'php/postworld_variables.php';
