@@ -10,36 +10,36 @@
  	function( $window, $timeout, $pwData, $log, $_ ){
 	return {
 		restrict: 'AE',
+		//controller: 'pwBackgroundCtrl',
 		scope: {
-			pwBackground:'=',
+			pwBackground:'@',
 		},
 		link: function( $scope, element, attrs ){
 
-			//////////// PARALLAX ////////////
-			var setPosition = function () {
-				var parallaxRatio = $_.get( $scope.pwBackground, 'image.parallax' );
-				if( !parallaxRatio || !is_numeric( parallaxRatio ) )
-					return false;
-				parallaxRatio = Number(parallaxRatio);
-
-				var calcValY = ( element.prop('offsetTop') - $window.pageYOffset ) * parallaxRatio;
-				calcValY = parseInt(calcValY);
-				// horizontal positioning
-				element.css('background-position', "50% " + calcValY + "px");
-			};
-
-			// Set initial position - fixes webkit background render bug
-			angular.element($window).bind('load', function(e) {
-				setPosition();
-				$scope.$apply();
-			});
-
-			//////////// STYLES ////////////
+			//////////// WATCH ////////////
 			$scope.$watch('pwBackground', function( val ){
 				$scope.updateBackground( val );
 			}, 1 );
 
+			$scope.getBackgroundObj = function(){
+
+				if( $scope.pwBackground == 'primary' )
+					return $pwData.background.primary;
+				
+				else if( $scope.pwBackground == 'secondary' )
+					return $pwData.background.secondary;
+
+				else
+					return $scope.$eval( $scope.pwBackground );
+
+			}
+
+			//////////// UPDATE ////////////
 			$scope.updateBackground = function(){
+
+				// Get the background Object
+				$scope.backgroundObj = $scope.getBackgroundObj();
+			
 				// Apply the background styles
 				$scope.applyBackgroundStyles();
 				// Check if there is an image ID
@@ -60,8 +60,8 @@
 
 			$scope.bindParallax = function(){
 				// Check for Parallax values
-				var parallax = $_.get( $scope.pwBackground, 'image.parallax' );
-				var position = $_.get( $scope.pwBackground, 'style.background-position' );
+				var parallax = $_.get( $scope.backgroundObj, 'image.parallax' );
+				var position = $_.get( $scope.backgroundObj, 'style.background-position' );
 				// If parallax is present
 				if( is_numeric( parallax ) && parallax != 0 && position == 'parallax' ){
 					// Bind window scrolling to update the position
@@ -80,11 +80,11 @@
 			$scope.applyBackgroundStyles = function(){
 				var styles = $scope.parseBackgroundStyles();
 				element.css( styles );
-				$log.debug( "pwBackground › applyBackgroundStyles", styles );
+				$log.debug( "backgroundObj › applyBackgroundStyles", styles );
 			}
 
 			$scope.getImageId = function(){
-				return $_.get( $scope.pwBackground, 'image.id' );;
+				return $_.get( $scope.backgroundObj, 'image.id' );;
 			}
 
 			$scope.getImagePost = function(){
@@ -121,7 +121,7 @@
 				$pwData.pw_get_post(get_post_vars).then(
 					function(response){
 						$pwData.posts[imageId] = response.data;
-						$log.debug( "pwBackground › populateImagePost › $pwData.posts ", $pwData.posts );
+						$log.debug( "backgroundObj › populateImagePost › $pwData.posts ", $pwData.posts );
 						$scope.updateBackground();
 					},
 					function(response){}
@@ -130,7 +130,7 @@
 
 			$scope.parseBackgroundStyles = function(){
 				// Define styles
-				var styles = angular.fromJson( angular.toJson( $_.get( $scope.pwBackground, 'style' ) ) ); 
+				var styles = angular.fromJson( angular.toJson( $_.get( $scope.backgroundObj, 'style' ) ) ); 
 				if( !styles )
 					styles = {};
 
@@ -159,6 +159,25 @@
 
 				return styles;
 			}
+
+			//////////// PARALLAX ////////////
+			var setPosition = function () {
+				var parallaxRatio = $_.get( $scope.backgroundObj, 'image.parallax' );
+				if( !parallaxRatio || !is_numeric( parallaxRatio ) )
+					return false;
+				parallaxRatio = Number(parallaxRatio);
+
+				var calcValY = ( element.prop('offsetTop') - $window.pageYOffset ) * parallaxRatio;
+				calcValY = parseInt(calcValY);
+				// horizontal positioning
+				element.css('background-position', "50% " + calcValY + "px");
+			};
+
+			// Set initial position - fixes webkit background render bug
+			angular.element($window).bind('load', function(e) {
+				setPosition();
+				$scope.$apply();
+			});
 
 		}
 	};

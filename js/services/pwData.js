@@ -77,6 +77,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
     	embeds: $window.pw['embeds'],		// Used to store embed codes
 
+    	background: $window.pw.background,	// Used to represent the current background object
+
     	// Set Nonce Value for Wordpress Security
     	setNonce: function(val) {
     		nonce = val;

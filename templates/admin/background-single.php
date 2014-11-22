@@ -6,11 +6,11 @@
 		<!-- /// PREVIEW /// -->
 		<div class="preview-module" style="position:relative;">
 			<div
-				pw-background="<?php echo $ng_model; ?>.primary"
+				pw-background="{{<?php echo $ng_model; ?>.primary}}"
 				style="width:100%;height:100%;position:absolute; z-index:1;"
 				class="pw-background-primary"></div>
 			<div
-				pw-background="<?php echo $ng_model; ?>.secondary"
+				pw-background="{{<?php echo $ng_model; ?>.secondary}}"
 				style="width:100%;height:100%;position:absolute; z-index:2;"
 				class="pw-background-secondary"></div>
 		</div>

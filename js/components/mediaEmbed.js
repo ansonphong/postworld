@@ -58,7 +58,10 @@ postworld.directive( 'oEmbed',
 					return $scope.linkUrl;
 				},
 				function(value) {
-					$scope.getEmbedCode( $scope.linkUrl, $scope.getAutoplay() );
+					// If link URL isn't empty
+					if( !_.isEmpty( $scope.linkUrl ) )
+						// Get the embed code
+						$scope.getEmbedCode( $scope.linkUrl, $scope.getAutoplay() );
 				}
 			);
 

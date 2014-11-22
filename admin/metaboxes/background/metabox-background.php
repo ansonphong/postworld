@@ -92,7 +92,7 @@ function pw_background_meta_save( $post_id ){
 
     ///// SET SUBKEY /////
     // If the subkey value exists
-    if( $meta !== false )
+    if( 1 )
         // Save it in postmeta
         pw_set_wp_postmeta(
             array(
