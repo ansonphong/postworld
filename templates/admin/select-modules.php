@@ -2,7 +2,7 @@
 	postworldAdmin.controller( 'pwModulesCtrl',
 		[ '$scope', '_', 'iOptionsData', '$log', function( $scope, $_, $iOptionsData, $log ){
 
-		$scope.pwModules = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) ) ); ?>;
+		$scope.pwModules = <?php echo json_encode( pw_enabled_modules() ); ?>;
 		$scope['options'] = $iOptionsData['options'];
 		$scope.availableModules = <?php echo json_encode( pw_available_modules() ); ?>;
 		

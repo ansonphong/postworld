@@ -10,7 +10,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="layout wrap postworld">
+<div ng-app="postworldAdmin" class="layout wrap postworld" ng-cloak>
 	<h1>
 		<i class="icon-th-large"></i>
 		Layouts

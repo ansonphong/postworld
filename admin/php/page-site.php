@@ -22,7 +22,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="main wrap postworld">
+<div ng-app="postworldAdmin" class="main wrap postworld" ng-cloak>
 	<h1>
 		<i class="icon-gears"></i>
 		Site Options

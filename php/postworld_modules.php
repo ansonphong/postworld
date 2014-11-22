@@ -56,21 +56,19 @@ function pw_available_modules(){
 		);
 
 	// Apply filters so themes can override / add new modules
-	$modules = apply_filters( PW_MODULES, $modules );	
+	//$modules = apply_filters( PW_MODULES, $modules );	
 
 	return $modules;
 }
 
 function pw_enabled_modules(){
-	
+	global $pwSiteGlobals;
+	// Get the saved enabled modules array
 	$enabled_modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
-
-	if( !is_array( $enabled_modules ) ){
-
+	// If the modules option hasn't been saved yet
+	if( !get_option( PW_OPTIONS_MODULES ) ){
 		// Check the Postworld Config for default modules
-		global $pwSiteGlobals;
 		$default_modules = _get( $pwSiteGlobals, 'modules' );
-
 		// If there are no modules set in the Postworld Config
 		if( !$default_modules )
 			// Configure the default Postworld modules
@@ -78,12 +76,9 @@ function pw_enabled_modules(){
 				'layouts',
 				'sidebars',
 				);
-
-		$modules = $default_modules;
+		$enabled_modules = $default_modules;
 	}
-
-	return $modules;
-
+	return $enabled_modules;
 }
 
 function pw_set_modules(){
