@@ -62,7 +62,28 @@ function pw_available_modules(){
 }
 
 function pw_enabled_modules(){
-	return 	pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );	
+	
+	$enabled_modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+
+	if( !is_array( $enabled_modules ) ){
+
+		// Check the Postworld Config for default modules
+		global $pwSiteGlobals;
+		$default_modules = _get( $pwSiteGlobals, 'modules' );
+
+		// If there are no modules set in the Postworld Config
+		if( !$default_modules )
+			// Configure the default Postworld modules
+			$default_modules = array(
+				'layouts',
+				'sidebars',
+				);
+
+		$modules = $default_modules;
+	}
+
+	return $modules;
+
 }
 
 function pw_set_modules(){

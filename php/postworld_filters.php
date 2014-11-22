@@ -1,22 +1,7 @@
 <?php
 
 function pw_default_modules( $modules ){
-	// If modules is set
-	if( $modules != null && isset( $modules ) )
-		return $modules;
-
-	// Check the Postworld Config for default modules
-	global $pwSiteGlobals;
-	$default_modules = _get( $pwSiteGlobals, 'modules' );
-	// If there are no modules set in the Postworld Config
-	if( !$default_modules )
-		// Configure the default Postworld modules
-		$default_modules = array(
-			'layouts',
-			'sidebars',
-			);
-
-	return $modules;
+	
 }
 add_filter( PW_OPTIONS_MODULES, 'pw_default_modules' );
 
