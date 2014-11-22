@@ -64,22 +64,24 @@ function pw_current_background( $vars ){
 		}
 	}
 
-
-
 	///// FROM : DEFAULT /////
 	// If a background is not defined yet
 	if( $background_id == false ){
 		// Check for a default
-		// If no default yet, then see if any backgrounds are defined, if so use the last one
+		$background_id = _get( $background_contexts, 'default' );
 	}
 
+	
 
 
-	///// GET BACKGROUND OBJECT /////
+	///// GET : BACKGROUND OBJECT /////
+	$backgrounds = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) );
+
+	///// MATCH : BACKGROUND ID /////
 	// If a background ID has been found
 	if( $background_id !== false && is_string( $background_id ) ){
 		// Get the backgrounds
-		$backgrounds = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) );
+		
 		// If backgrounds are defined
 		if( !empty( $backgrounds ) && is_array( $backgrounds ) ){
 			// Iterate through each of the saved backgrounds
@@ -90,6 +92,13 @@ function pw_current_background( $vars ){
 					return $background;
 			}
 		}
+	}
+
+	///// FROM : MOST RECENTLY ADDED /////
+	if( !empty( $backgrounds ) && is_array( $backgrounds ) ){
+		// If none matched yet, return the most recent background
+		$len = count( $backgrounds );
+		return $backgrounds[ $len - 1 ];
 	}
 
 	// If nothing returned yet

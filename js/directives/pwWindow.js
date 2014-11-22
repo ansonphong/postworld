@@ -72,12 +72,12 @@ postworld.directive('documentHeight', function( $window, $document, $log, $timeo
 					// TODO : Make this a $_ function
 					var body = document.body,
 					    html = document.documentElement;
-					var documentHeight =  Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
+					var maxHeight =  Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight );
 
 
 	            	var percentDecimal = parseFloat( value ) / 100.0;
 					//var documentHeight = $document.innerHeight;
-					var elementHeight = documentHeight * percentDecimal;
+					var elementHeight = body.offsetHeight * percentDecimal;
 					$elem.css( 'height', elementHeight + "px" );
 	            	
 	            });
