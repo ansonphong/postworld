@@ -17,9 +17,9 @@ postworld.factory( '$pw',
 		$window.pw.templates : {};
 
 	var pwUser = function(){
-		if( !$_.objExists( $window, "pw.globals.user" ) )
+		if( !$_.objExists( $window, "pw.user" ) )
 			return false;
-		return $window.pw.globals.user;
+		return $window.pw.user;
 	}
 
 	var state = function(){
@@ -37,7 +37,7 @@ postworld.factory( '$pw',
 
 		state: state(),
 
-		user: pwUser(), //$window.pw.globals.user, // (or something) - refactor to go directly to pwUser
+		user: pwUser(), //$window.pw.user, // (or something) - refactor to go directly to pwUser
     	// view: $window.pw.view
     	// language: $window.pwSiteLanguage,
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
@@ -772,10 +772,10 @@ postworld.service('pwPostOptions',
 			// Cycle through provided post_types
 			// Which post_types does the user have access to 'mode' operation?
 			var userPostTypeOptions = {};
-			if( $window.pw.globals.user != 0 ){
+			if( $window.pw.user != 0 ){
 				angular.forEach( post_types , function( name, slug ){
 					var cap_type = mode + "_"+ slug + "s";
-					if( $window.pw.globals.user.allcaps[cap_type] == true ){
+					if( $window.pw.user.allcaps[cap_type] == true ){
 						userPostTypeOptions[slug] = name;
 					}
 				});
@@ -817,11 +817,11 @@ postworld.service('pwPostOptions',
 					}
 				];
 
-			if ((!$window.pw.globals.user) || (!$window.pw.globals.user))
+			if ((!$window.pw.user) || (!$window.pw.user))
 				return;
 
 			// GET ROLE
-			var currentUserRole = $window.pw.globals.user.roles[0];
+			var currentUserRole = $window.pw.user.roles[0];
 			// DEFINE : POST STATUS OPTIONS
 			var postStatusOptions = $window.pwSiteGlobals.post_options.post_status;
 			// DEFINE : POST STATUS OPTIONS PER ROLE BY POST TYPE
@@ -982,10 +982,10 @@ postworld.service('pwPostOptions',
 postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $window, $_) {
 	return{
 		setRoleAccess : function($scope){
-			$scope.current_user = $window.pw.globals.user;
+			$scope.current_user = $window.pw.user;
 
 			( $scope.current_user != 0 ) ?
-				$scope.current_user_role = $window.pw.globals.user.roles[0] :
+				$scope.current_user_role = $window.pw.user.roles[0] :
 				$scope.current_user_role = 'guest' ;
 
 			$scope.roles = {};

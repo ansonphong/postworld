@@ -81,13 +81,13 @@ postworld.controller('postController',
 	// IMPORT LANGUAGE
 	if(
 		typeof $window.pwSiteLanguage !== 'undefined' &&
-		typeof $window.pw.globals.user !== 'undefined' &&
+		typeof $window.pw.user !== 'undefined' &&
 		typeof $scope.post !== 'undefined'
 		){
 		$scope.language = $window.pwSiteLanguage;
-		$scope.current_user_id = $window.pw.globals.user.ID;
+		$scope.current_user_id = $window.pw.user.ID;
 		// GENERATE  SHARE LINK
-		$scope.share_link = $pw.paths.home_url + "/?u=" + $window.pw.globals.user.ID + "&p=" + $scope.post.ID;
+		$scope.share_link = $pw.paths.home_url + "/?u=" + $window.pw.user.ID + "&p=" + $scope.post.ID;
 	}
 
 	// Toggles class="expaned", used with ng-class="expanded" 
