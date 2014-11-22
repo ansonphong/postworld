@@ -17,6 +17,24 @@ function pw_current_context(){
 	if( is_archive() )
 		$context[] = 'archive'; 	
 
+	if( is_tax() || is_tag() )
+		$context[] = 'archive-taxonomy';
+
+	if( is_post_type_archive() )
+		$context[] = 'archive-post-type';
+
+	if( is_year() || is_month() || is_day() )
+		$context[] = 'archive-date'; 
+
+	if( is_year() )
+		$context[] = 'archive-year'; 
+
+	if( is_month() )
+		$context[] = 'archive-month'; 
+
+	if( is_day() )
+		$context[] = 'archive-day';
+
 	if( is_search() )
 		$context[] = 'search';
 
@@ -24,7 +42,7 @@ function pw_current_context(){
 		$context[] = 'tag'; 		
 
 	if( is_category() )
-		$context[] = 'category'; 
+		$context[] = 'category';
 
 	if( is_page() )
 		$context[] = 'page';
@@ -41,24 +59,6 @@ function pw_current_context(){
 	if( is_admin() )
 		$context[] = 'admin';
 
-	if( is_tax() || is_tag() )
-		$context[] = 'archive-taxonomy';
-
-	if( is_year() || is_month() || is_day() )
-		$context[] = 'archive-date'; 
-
-	if( is_year() )
-		$context[] = 'archive-year'; 
-
-	if( is_month() )
-		$context[] = 'archive-month'; 
-
-	if( is_day() )
-		$context[] = 'archive-day'; 
-
-	if( is_post_type_archive() )
-		$context[] = 'archive-post-type'; 
-	
 
 	// TAXONOMIES
 	if( in_array( 'archive-taxonomy', $context ) ){
@@ -120,7 +120,7 @@ function pw_current_context(){
 	return $context;
 }
 
-function pw_get_current_view(){
+function pw_current_view(){
 	// TODO : Refactor for efficientcy
 	global $wp_query;
 	$viewdata = array();

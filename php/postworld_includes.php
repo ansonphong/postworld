@@ -409,28 +409,22 @@ function postworld_includes( $args ){
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
 	function pwGlobals() {
+		global $pw;
+
+		// Todo : Move this elsewhere, must execute to parse the globals for PHP
 		pwGlobals_parse();
+
 	?>
 		<script type="text/javascript">/* <![CDATA[ */
-
-			// GLOBALS
-			// This is Depreciated and non-neccessary
 			//pw.globals = <?php //echo json_encode( pwGlobals_parse() ); ?>;
-			
-			// VIEW
-			pw.view = <?php echo json_encode( pw_get_current_view() ); ?>;
-
-			// USER
-			pw.user = <?php echo json_encode( pw_get_current_user() ); ?>;
-
-			// BACKGROUND
-			// Make function here to parse the current background
-			pw.background = {};
+			pw.version = <?php echo json_encode( $pw['version'] ); ?>;
+			pw.modules = <?php echo json_encode( $pw['modules'] ); ?>;
+			pw.view = <?php echo json_encode( pw_current_view() ); ?>;
+			pw.user = <?php echo json_encode( pw_current_user() ); ?>;
+			pw.background = <?php echo json_encode( pw_current_background() ); ?>;
 		
 			// Make function here to parse any preloaded posts, with a filter - either by query, or... direct injection
 			//pw.posts = [];
-
-
 
 		/* ]]> */</script>
 
@@ -518,7 +512,7 @@ function pwSiteGlobals_include(){
 }
 
 
-function pw_get_current_user(){
+function pw_current_user(){
 	$user_id = get_current_user_id();
 	if( $user_id != 0 ){
 		$userdata = wp_get_current_user();
@@ -558,10 +552,10 @@ function pwGlobals_parse(){
 	$viewdata["type"] = pw_get_view_type();
 
 	// VIEW
-	$pw["view"] = pw_get_current_view();
+	$pw["view"] = pw_current_view();
 
 	///// CURRENT USER /////
-	$pw["user"] = pw_get_current_user();
+	$pw["user"] = pw_current_user();
 
 	//$pw["user"] = $userdata;
 

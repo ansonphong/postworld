@@ -38,16 +38,15 @@ class get_user_location_output {
 	public $region = '';
 }
 
-function get_current_userdata($field) {
+function pw_current_userdata($field) {
 	$user_data = pw_get_userdata(get_current_user_id(), 'all');
 	echo $user_data[$field];
 }
 
-function get_current_userdata_obj($fields) {
+function pw_current_userdata_obj($fields) {
 	$user_data = pw_get_userdata(get_current_user_id(), $fields);
 	echo $user_data;
 }
-
 
 function pw_can_edit_profile( $user_id ){
 	if( $user_id == get_current_user_id() ||
@@ -56,8 +55,6 @@ function pw_can_edit_profile( $user_id ){
 	else
 		return false;
 }
-
-
 
 function pw_get_xprofile( $user_id, $fields ){
 	// Get info from Bussypress extended profile
