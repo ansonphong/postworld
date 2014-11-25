@@ -142,7 +142,10 @@
 		<button ng-click="resetStyleDefaults()" class="button">Reset to Defaults</button>
 		
 		<hr class="thick">
+		
+		<!--
 		<pre>pwStyles : {{ pwStyles | json }}</pre>
+		-->
 
 	</div>
 
