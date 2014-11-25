@@ -25,6 +25,7 @@ var pw = {
 	feeds:{},
 	widgets:{},
 	admin:{},
+	embeds:{},
 };
 
 var depInject = [
