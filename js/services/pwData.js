@@ -69,7 +69,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
     	feeds: feeds,
 
-    	widgets: $window.pw['widgets'],
+    	widgets: $window.pw.widgets,
     	
     	templates: $pw.templates, 
 

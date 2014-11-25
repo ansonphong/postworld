@@ -144,6 +144,7 @@ function pw_live_feed( $vars = array() ){
 		$widgets = pw_get_sidebar( $sidebar_id );
 	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
 
+	pw_log( "widgets : " . json_encode($widgets) );
 
 	///// GENERATE OUTPUT /////
 	// Print front-loaded data

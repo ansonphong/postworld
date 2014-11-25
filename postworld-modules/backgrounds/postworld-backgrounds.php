@@ -1,8 +1,10 @@
 <?php
-
-function pw_current_background( $vars ){
+function pw_current_background( $vars = array() ){
 	// Returns the background for the current context
 	
+	if( is_admin() )
+		return false;
+
 	// Get Globals
 	global $post;
 	global $pw;

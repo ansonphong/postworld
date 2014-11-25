@@ -134,13 +134,15 @@ function insert_i_admin_scripts() {
 add_action('admin_head', 'insert_i_admin_scripts');
 
 //////////////////// REGISTER SIDEBARS ////////////////////
-add_action( 'widgets_init', 'i_register_sidebars' );
-function i_register_sidebars(){
-	$I_Sidebars = new I_Sidebars();
-	$sidebars = (array) $I_Sidebars->get_sidebars();
-	foreach($sidebars as $sidebar){
-		register_sidebar( $sidebar );
-	}
+add_action( 'widgets_init', 'pw_register_sidebars' );
+function pw_register_sidebars(){
+	//$I_Sidebars = new I_Sidebars();
+	//$sidebars = (array) $I_Sidebars->get_sidebars();
+	$sidebars = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+	if( is_array( $sidebars ) )
+		foreach($sidebars as $sidebar){
+			register_sidebar( $sidebar );
+		}
 }
 
 //////////////////// BOOTSTRAPPED FUNCTIONS ////////////////////
