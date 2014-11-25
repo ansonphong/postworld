@@ -333,7 +333,6 @@ postworld.factory('_',
 			return input;
 		},
 
-		// Call Nonce or rndom string
 		makeHash: function( hashLength ){
 			if( _.isEmpty(hashLength) )
 				hashLength = 8;
@@ -345,6 +344,38 @@ postworld.factory('_',
 		        hash += alpha.charAt(Math.floor(Math.random() * alpha.length));
 
 		    return hash;
+		},
+
+		randomString: function( randomLength, charTypes ){
+			// Generates a random string based on length
+			// and specified character types
+
+			if( _.isEmpty(randomLength) )
+				randomLength = 8;
+
+			if( _.isEmpty( charTypes ) )
+				charTypes = ['numbers','uppercase','lowercase','special'];
+
+			var randomString = "";
+
+		    var alpha = "";
+
+		    if( this.inArray( 'uppercase', charTypes ) )
+		    	alpha += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+		    if( this.inArray( 'lowercase', charTypes ) )
+		    	alpha += "abcdefghijklmnopqrstuvwxyz";
+
+		    if( this.inArray( 'numbers', charTypes ) )
+		    	alpha += "0123456789";
+
+		    if( this.inArray( 'special', charTypes ) )
+		    	alpha += "!@#$%^&*()_-+";
+
+		    for( var i=0; i < randomLength; i++ )
+		        randomString += alpha.charAt(Math.floor(Math.random() * alpha.length));
+
+		    return randomString;
 		},
 
 
