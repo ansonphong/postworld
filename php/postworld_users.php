@@ -381,13 +381,10 @@ function pw_get_avatar( $obj ){
 		}
 	}
 	else{
-		global $pw_paths;
 		return $default_avatar;
 	}
 
 }
-
-
 
 
 function pw_user_login( $user_id, $redirect = '/' ) {

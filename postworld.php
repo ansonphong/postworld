@@ -75,32 +75,40 @@ define( 'PW_USERMETA_KEY',	'pw_meta', true ); // Case in-sensitive
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
 
-/////////////// API ////////////////
+
+
+/////////////// HIGH PRIORITY ////////////////
+
+////// API //////
 // Load API functions
 include 'php/postworld_api.php';
 
+////// FILTER FUNCTIONS //////
+include 'php/postworld_filters.php';
 
-////////////// PW GLOBALS //////////////
+////// MODULE FUNCTIONS //////
+include 'php/postworld_modules.php';
+
+////// PW GLOBALS //////
 // This must come after the API functions
 // And before the rest of the Postworld includes
-$pw['modules'] = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+$pw['modules'] = pw_enabled_modules();	// pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
 
-
-/////////////// INFINITE ////////////////
+////// INFINITE //////
 // Load Infinite Lineage
 include "infinite/functions.php";
 
-/////////////// VARIABLES ///////////////
+////// VARIABLES //////
 include 'php/postworld_variables.php';
 
-/////////////// PATHS ///////////////
+////// PATHS //////
 define( 'POSTWORLD_PATH', dirname(__FILE__) );
 define( 'POSTWORLD_URI', get_postworld_uri() );
 
-////////// UTILITIES ///////////
+////// UTILITIES //////
 include 'php/postworld_utilities.php';
 
-/////////////// H2O ////////////////
+////// H2O //////
 require_once 'lib/h2o/h2o.php';
 
 // GLOBAL VARIABLES
@@ -123,31 +131,6 @@ $wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 // INSTALL QUERIES
 include 'php/postworld_install_queries.php';
 
-///// SET TEMPLATE PATHS /////
-
-function set_pw_paths(){
-	$pw_paths['PLUGINS_URL'] = plugins_url();
-	$pw_paths['POSTWORLD_URL'] = $pw_paths['PLUGINS_URL'].'/postworld';
-	$pw_paths['POSTWORLD_PATH'] = POSTWORLD_PATH;
-
-	$pw_paths['THEME_URL'] = get_stylesheet_directory_uri(); 		// ABSOLUTE URI http://...
-	$pw_paths['THEME_PATH'] = get_stylesheet_directory();			// ABSOLUTE PATH /home/user/... 
-
-	$pw_paths['CSS_PATH'] = '/postworld/css/';
-	$pw_paths['JS_PATH'] = '/postworld/js/';
-	$pw_paths['IMAGES_PATH'] = '/postworld/images/';
-	$pw_paths['TEMPLATES_PATH'] = '/postworld/templates/';
-
-	$pw_paths['PW_CSS_URL'] = $pw_paths['POSTWORLD_URL'].'/css/';
-	$pw_paths['PW_JS_URL'] = $pw_paths['POSTWORLD_URL'].'/js/';
-	$pw_paths['PW_IMAGES_URL'] = $pw_paths['POSTWORLD_URL'].'/images/';
-	$pw_paths['PW_TEMPLATES_URL'] = $pw_paths['POSTWORLD_URL'].'/templates/';
-
-
-	return $pw_paths;
-}
-global $pw_paths;
-$pw_paths = set_pw_paths();
 
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';
@@ -158,92 +141,91 @@ register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 
 //include 'php/postworld_debugger.php';
 
-////////// META FUNCTIONS ///////////
+
+/////////////// MEDIUM PRIORITY ////////////////
+
+////// META FUNCTIONS //////
 //include 'php/postworld_meta.php';
 
-////////// FILTER FUNCTIONS ///////////
-include 'php/postworld_filters.php';
-
-////////// MODULE FUNCTIONS ///////////
-include 'php/postworld_modules.php';
-
-/////////////// SOCIAL ////////////////
+////// SOCIAL //////
 include 'php/postworld_language.php';
 
-////////// POINTS FUNCTIONS ///////////
+////// POINTS FUNCTIONS //////
 include 'php/postworld_points.php';
 
-////////// RANK FUNCTIONS ///////////
+////// RANK FUNCTIONS //////
 include 'php/postworld_rank.php';
 
-////////// TEMPLATE FUNCTIONS ///////////
+////// TEMPLATE FUNCTIONS //////
 include 'php/postworld_templates.php';
 
-////////// FEED FUNCTIONS ///////////
+////// FEED FUNCTIONS //////
 include 'php/postworld_feeds.php';
 
-////////// CRON / SCHEDULED TASKS ///////////
+////// CRON / SCHEDULED TASKS //////
 include 'php/postworld_cron.php';
 
-////////// USER FUNCTIONS ///////////
+////// USER FUNCTIONS //////
 include 'php/postworld_user_meta.php';
 include 'php/postworld_users.php';
 
-////////// TAXONOMY FUNCTIONS ///////////
+////// TAXONOMY FUNCTIONS //////
 include 'php/postworld_taxonomies.php';
 
-////////// CACHE FUNCTIONS ///////////
+////// CACHE FUNCTIONS //////
 include 'php/postworld_cache.php';
 
-////////// GET POST FUNCTIONS ///////////
+////// GET POST FUNCTIONS //////
 include 'php/postworld_images.php';
 include 'php/postworld_posts.php';
 
-////////// QUERY FUNCTIONS ///////////
+////// QUERY FUNCTIONS //////
 include 'php/postworld_query.php';
 
-/////////////// WIDGETS ////////////////
+////// WIDGETS //////
 include 'php/postworld_widgets.php';
 
-/////////////// SOCIAL ////////////////
+////// SOCIAL //////
 include 'php/postworld_social.php';
 
-/////////////// WIZARD ////////////////
+////// WIZARD //////
 include 'php/postworld_wizard.php';
 
-/////////////// OPTIONS ////////////////
+////// OPTIONS //////
 include 'php/postworld_options.php';
 
-/////////////// VIEW ////////////////
+////// VIEW //////
 include 'php/postworld_view.php';
 
-/////////////// BUDDYPRESS ////////////////
+////// BUDDYPRESS //////
 include 'php/postworld_buddypress.php';
 
-/////////////// ADMIN ////////////////
+////// ADMIN //////
 include 'admin/postworld_admin.php';
 
-/////////////// ADMIN OPITONS ////////////////
+////// ADMIN OPITONS //////
 include 'admin/php/admin.php';
 
-/////////////// MODULES ////////////////
+////// MODULES //////
 include 'postworld-modules/backgrounds/postworld-backgrounds.php';
+include 'postworld-modules/sidebars/postworld-sidebars.php';
 
 
-////////// GET AJAX FUNCTIONS AND ACTION ///////////
+
+////// GET AJAX FUNCTIONS AND ACTION //////
 include 'php/postworld_ajax.php';
 include 'php/postworld_comments.php';
 include 'php/postworld_share.php';
 
 include 'php/postworld_meta.php';
 
-/////////////// INCLUDES ////////////////
+////// INCLUDES //////
 include 'php/postworld_includes.php';
 
-/////////////// SHORTCODES ////////////////
+////// SHORTCODES //////
 include 'php/postworld_shortcodes.php';
 
-/////////////// UPDATE / MIGRATE ////////////////
+////// UPDATE / MIGRATE //////
 include 'php/postworld_update.php';
 
 

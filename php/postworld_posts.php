@@ -89,7 +89,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		return false;
 
 	///// SETUP VARIABLES /////
-	global $pw_paths;
+	//global $pw_paths;
 	global $pw_post_meta_fields;
 
 	////////// EDIT FIELDS ///////////

@@ -61,10 +61,14 @@ function pw_available_modules(){
 	return $modules;
 }
 
-function pw_enabled_modules(){
+function pw_enabled_modules( $enabled_modules = array() ){
 	global $pwSiteGlobals;
-	// Get the saved enabled modules array
-	$enabled_modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+
+	if( empty($enabled_modules) )
+		// Get the saved enabled modules array
+		// Filter must be set to false otherwise it triggers infinite recursion
+		$enabled_modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES, 'filter' => false ) );
+	
 	// If the modules option hasn't been saved yet
 	if( !get_option( PW_OPTIONS_MODULES ) ){
 		// Check the Postworld Config for default modules
@@ -78,8 +82,13 @@ function pw_enabled_modules(){
 				);
 		$enabled_modules = $default_modules;
 	}
+	
 	return $enabled_modules;
+
 }
+
+add_filter( PW_OPTIONS_MODULES, 'pw_enabled_modules' );
+
 
 function pw_set_modules(){
 
