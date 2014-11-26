@@ -203,22 +203,33 @@ postworld.controller('pwModalInstanceCtrl',
 	}
 	
 
+
+
+
+
+
+
 	///// PREVIOUS & NEXT POSTS FUNCTIONS /////
-	// TODO : Add ability to go past loaded feed items, and load feed items based on feed_outline
+	// TODO : Add ability to go past loaded feed items, and load and cache new feed items based on feed_outline
 	// TODO : ... and then resort them in the feed_outline according to their position in feed_outline
 
+	/*
 	// Watch when feed.currentIndex changes
-	$scope.$watch( "feed.currentIndex", function ( value ){
-		$log.debug( '$watch:feed.currentIndex : ', value );
-		if( $_.objExists( $scope, 'feed.currentIndex' ) ){
-			//$rootScope.$$phase
-			// Set the current $scope.post object to reflect the current index
-			$scope.post = $pwPosts.getFeed( $scope.feed.id )['posts'][ $scope.feed.currentIndex ];
-			$log.debug( '$watch:feed.currentIndex : SWITCH POST : ', $scope.post );
-		}
-	}); 
+	$scope.$watch( "feed.currentIndex", function ( newValue, oldValue ){
+		$log.debug( '$watch:feed.currentIndex : OLD VALUE : ' + oldValue + ' : NEW VALUE : ' + newValue );
+		
+		if( _.isUndefined( oldValue ) )
+			oldValue = 0;
 
-	$scope.nextPost = function(){
+		if( $_.objExists( $scope, 'feed.currentIndex' ) )
+			$scope.offsetFeedIndex( newValue - oldValue );
+		
+	}); 
+	*/
+
+	$scope.offsetFeedIndex = function( offset ){		
+		// Set the current $scope.post object to reflect the current index
+		// var offset = [ number ] // how many to switch, ie. 1 (next), -1 (previous)
 		if( _.isUndefined( $scope.feed ) ){
 			$log.debug('nextPost() : No feed.');
 			return false;
@@ -227,40 +238,46 @@ postworld.controller('pwModalInstanceCtrl',
 		// Setup Vars
 		var feedLength = $pwPosts.getFeed( $scope.feed.id )['posts'].length;
 		var currentIndex = $scope.feed.currentIndex;
+		var newIndex = currentIndex + offset;
 
-		// If the feed is at the end, reset index to 0
-		if( currentIndex >= ( feedLength - 1 ) )
-			$scope.feed.currentIndex = 0;
-		else
-			$scope.feed.currentIndex ++;
+		// If the feed is at the end and offset positive, loop back to the beginning
+		if( newIndex > ( feedLength - 1 ) )
+			newIndex = 0;
 
-		//$log.debug('nextPost() // feed.currentIndex : ' + $scope.feed.currentIndex );
-		
-		if( $scope.post.post_type == '_pw_block' )
-			$scope.nextPost();
-	
+		// If the feed is at the beginning and offset negative, loop back to the end
+		if( newIndex < 0 )
+			newIndex = ( feedLength - 1 );
+
+		// Automatically skip over the following post types
+		var skipPostTypes = [ '_pw_block' ];
+
+		// Get the possible new post for testing
+		var newPost = $pwPosts.getFeed( $scope.feed.id )['posts'][ newIndex ];
+
+		// If the new possible post doesn't pass the test
+		if( $_.inArray( $_.get( newPost, 'post_type' ), skipPostTypes ) ){
+			// Recursively call this function, offsetting in the same direction
+			$scope.offsetFeedIndex( offset + offset );
+		}
+
+		// If the new possible post passes
+		else{
+			// Set the new currentIndex
+			$scope.feed.currentIndex = newIndex;
+			// Set the new scope post
+			$scope.post = $pwPosts.getFeed( $scope.feed.id )['posts'][ newIndex ];
+		}
+
+	}
+
+	$scope.nextPost = function(){
+		$scope.offsetFeedIndex( 1 );
 	};
 
 	$scope.previousPost = function(){
-		if( _.isUndefined( $scope.feed ) ){
-			$log.debug('previousPost() : No feed.');
-			return false;
-		}
-
-		// Setup Vars
-		var feedLength = $pwPosts.getFeed( $scope.feed.id )['posts'].length;
-		var currentIndex = $scope.feed.currentIndex;
-
-		// If the feed is at the beginning, set it to the end
-		if( currentIndex == 0 )
-			$scope.feed.currentIndex = ( feedLength - 1 );
-		// Otherwise just reduce the index by one
-		else
-			$scope.feed.currentIndex --;
-
-		$log.debug('previousPost() // feed.currentIndex : ' + $scope.feed.currentIndex );
-
+		$scope.offsetFeedIndex( -1 );
 	};
+
 
 	///// KEY PRESS /////
 	// Capture Keydown
