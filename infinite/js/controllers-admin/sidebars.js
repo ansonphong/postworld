@@ -20,11 +20,10 @@ postworldAdmin.controller('pwAdminSidebarsCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
 	
-
 	$scope.newSidebar = function(){
 		var newSidebar = {
 			'name': 		'New Sidebar',
-			'id': 			"sidebar_" + $_.makeHash( 8 ),
+			'id': 			"sidebar-" + $_.randomString( 8, ['numbers','lowercase'] ),
 			'description': 	'Description goes here.',
 			'class': 		'widget',
 			'before_widget':'<div class="sidebar-widget">',

@@ -6,7 +6,7 @@
 <!-- SIDEBAR -->
 <span class="icon-md"><i class="icon-circle-thick"></i></span>
 <span
-	pw-admin-sidebars="pw.sidebars">
+	pw-sidebars="pw.sidebars">
 	<select
 		id="feed-blocks-template"
 		ng-model="<?php echo $ng_model; ?>.widgets.sidebar"

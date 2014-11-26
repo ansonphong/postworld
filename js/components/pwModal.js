@@ -234,7 +234,11 @@ postworld.controller('pwModalInstanceCtrl',
 		else
 			$scope.feed.currentIndex ++;
 
-		$log.debug('nextPost() // feed.currentIndex : ' + $scope.feed.currentIndex );
+		//$log.debug('nextPost() // feed.currentIndex : ' + $scope.feed.currentIndex );
+		
+		if( $scope.post.post_type == '_pw_block' )
+			$scope.nextPost();
+	
 	};
 
 	$scope.previousPost = function(){

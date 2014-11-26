@@ -1,5 +1,6 @@
 <?php
 
+
 ///// SAVE BUTTON /////
 function i_save_option_button( $option_name, $option_model ){
 	$vars = array(
@@ -116,6 +117,9 @@ function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 }
 
 function i_share_social_options(){
+	return pw_share_social_options();
+}
+function pw_share_social_options(){
 	$vars = array();
 	$vars['options_model'] = "options.share.meta";
 	$vars['model_var'] = "iSocial";
@@ -124,6 +128,17 @@ function i_share_social_options(){
 
 	return pw_ob_admin_template( 'share-social', $vars );
 }
+
+
+function pw_select_modules(){
+	$vars = array();
+	$vars['options_model'] = "options.modules";
+	$vars['model_var'] = "pwModules";
+	//$vars['model_key'] = "share.networks";
+	//$vars['ng_model'] = $vars['model_var'] . '.' . $vars['model_key'];
+	return pw_ob_admin_template( 'select-modules', $vars );
+}
+
 
 function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 
@@ -253,15 +268,34 @@ function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
 		case 'postAdmin':
 		case 'quickEdit':
 		default:
-				$vars['ng_model'] = "post.post_meta." . pw_postmeta_key . ".layout";
+				$vars['ng_model'] = "pw_layout_post.post_meta." . pw_postmeta_key . ".layout";
 			break;
 	}
 	return pw_ob_admin_template( 'layout-single', $vars );
 
 }
 
+///// SINGLE SELECT BACKGROUND OPTIONS /////
+function pw_background_select( $vars = array( "context" => "quickEdit" ) ){
+	//$vars['options_model'] = "options.post_content.columns";
+	switch($vars['context']){
+		///// SITE-WIDE SETTINGS /////
+		case 'siteAdmin': 
+				$vars['ng_model'] = "pwBackgroundContexts[ context.name ]";
+			break;
+		///// EDIT POST SETTINGS /////
+		case 'postAdmin':
+		case 'quickEdit':
+		default:
+				$vars['ng_model'] = "pw_background_post.post_meta." . pw_postmeta_key . ".background";
+			break;
+	}
+	return pw_ob_admin_template( 'background-select', $vars );
 
-///// SINGLE BACKGROUND OPTIONS /////
+}
+
+///// SINGLE CUSTOMIZE BACKGROUND OPTIONS /////
+// For all the controls of customizing a background
 function pw_background_single_options( $vars = array( "context" => "quickEdit" ) ){
 	//$vars['options_model'] = "options.post_content.columns";
 	switch($vars['context']){

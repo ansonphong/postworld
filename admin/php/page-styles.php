@@ -8,7 +8,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld styles wrap">
+<div ng-app="postworldAdmin" class="postworld styles wrap" ng-cloak>
 	<div
 		pw-admin-style
 		ng-controller="pwStylesDataCtrl">
@@ -63,6 +63,14 @@
 									</td>
 									<td ng-show="showProperty( property, 'edit' )" style="position:relative;">
 										
+										<!--
+											TODO : 
+											Here what we want to do is
+											use a custom directive to ng-include
+											a transcluded scope templates
+											for each of the different input types.
+										-->
+
 										<!-- COLOR -->
 										<div
 											class="inner-right color-box"
@@ -134,7 +142,10 @@
 		<button ng-click="resetStyleDefaults()" class="button">Reset to Defaults</button>
 		
 		<hr class="thick">
-		<!--<pre>pwStyles : {{ pwStyles | json }}</pre>-->
+		
+		<!--
+		<pre>pwStyles : {{ pwStyles | json }}</pre>
+		-->
 
 	</div>
 

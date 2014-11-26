@@ -2,10 +2,10 @@
 // TODO : Add security wrappers
 
 ///// MAIN SCREEN /////
-function postworld_postworld_main(){
+function postworld_postworld_modules(){
 	global $theme_admin;
 	i_include_scripts();
-	//include 'page-options.php';
+	include 'page-modules.php';
 }
 
 ///// THEME OPTIONS SCREEN /////

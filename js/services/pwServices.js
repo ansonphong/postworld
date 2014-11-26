@@ -17,9 +17,9 @@ postworld.factory( '$pw',
 		$window.pw.templates : {};
 
 	var pwUser = function(){
-		if( !$_.objExists( $window, "pwGlobals.user" ) )
+		if( !$_.objExists( $window, "pw.user" ) )
 			return false;
-		return $window.pwGlobals.user;
+		return $window.pw.user;
 	}
 
 	var state = function(){
@@ -32,17 +32,17 @@ postworld.factory( '$pw',
 
 	// DECLARATIONS
 	return {
-		version: "1.6.4",		// Todo, front load from PHP var
+		version: $window.pw.version,		// Todo, front load from PHP var
 		templates: pwTemplates,
 
 		state: state(),
 
-		user: pwUser(), //$window.pwGlobals.user, // (or something) - refactor to go directly to pwUser
-    	// view: $window.pwGlobals.view
+		user: pwUser(), //$window.pw.user, // (or something) - refactor to go directly to pwUser
+    	// view: $window.pw.view
     	// language: $window.pwSiteLanguage,
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
     	
-    	view: $window.pwGlobals.view,
+    	view: $window.pw.view,
     	paths: $window.pwSiteGlobals.paths,
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,
@@ -333,7 +333,6 @@ postworld.factory('_',
 			return input;
 		},
 
-		// Call Nonce or rndom string
 		makeHash: function( hashLength ){
 			if( _.isEmpty(hashLength) )
 				hashLength = 8;
@@ -347,6 +346,70 @@ postworld.factory('_',
 		    return hash;
 		},
 
+		randomString: function( randomLength, charTypes ){
+			// Generates a random string based on length
+			// and specified character types
+
+			if( _.isEmpty(randomLength) )
+				randomLength = 8;
+
+			if( _.isEmpty( charTypes ) )
+				charTypes = ['numbers','uppercase','lowercase','special'];
+
+			var randomString = "";
+
+		    var alpha = "";
+
+		    if( this.inArray( 'uppercase', charTypes ) )
+		    	alpha += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+		    if( this.inArray( 'lowercase', charTypes ) )
+		    	alpha += "abcdefghijklmnopqrstuvwxyz";
+
+		    if( this.inArray( 'numbers', charTypes ) )
+		    	alpha += "0123456789";
+
+		    if( this.inArray( 'special', charTypes ) )
+		    	alpha += "!@#$%^&*()_-+";
+
+		    for( var i=0; i < randomLength; i++ )
+		        randomString += alpha.charAt(Math.floor(Math.random() * alpha.length));
+
+		    return randomString;
+		},
+
+
+		arrayFromObjectWatch: function( $scope, $array, $object ){
+			/*
+				•	This function is made to watch a specified $scope[ $object ]
+					And where the key values are true, a string with that key
+					Is added to $scope[ $array ]
+				•	Made for use in translating an object of boolean values
+					Into a flat array
+				•	Useful when using a series of checkboxes with ng-model
+					And turning the selected values into a flat array
+			*/
+
+			// Iterate through the flat array 
+			// And generate an object
+			$scope[ $object ] = {};
+			if( !_.isEmpty( $scope[ $array ] ) ){
+				angular.forEach( $scope[ $array ], function( value ){
+					$scope[ $object ][ value ] = true;
+				});
+			}
+			// Setup a watch on the object
+			$scope.$watch( $object, function( val ){
+				// Iterate through the object
+				// And generate a flat array
+				var flatArray = [];
+				angular.forEach( $scope[ $object ], function( value, key ){	
+					if( value == true )
+						flatArray.push( key );
+				});
+				$scope[ $array ] = flatArray;
+			}, 1 );
+		},
 
 
 	};
@@ -740,10 +803,10 @@ postworld.service('pwPostOptions',
 			// Cycle through provided post_types
 			// Which post_types does the user have access to 'mode' operation?
 			var userPostTypeOptions = {};
-			if( $window.pwGlobals.user != 0 ){
+			if( $window.pw.user != 0 ){
 				angular.forEach( post_types , function( name, slug ){
 					var cap_type = mode + "_"+ slug + "s";
-					if( $window.pwGlobals.user.allcaps[cap_type] == true ){
+					if( $window.pw.user.allcaps[cap_type] == true ){
 						userPostTypeOptions[slug] = name;
 					}
 				});
@@ -785,11 +848,11 @@ postworld.service('pwPostOptions',
 					}
 				];
 
-			if ((!$window.pwGlobals.user) || (!$window.pwGlobals.user))
+			if ((!$window.pw.user) || (!$window.pw.user))
 				return;
 
 			// GET ROLE
-			var currentUserRole = $window.pwGlobals.user.roles[0];
+			var currentUserRole = $window.pw.user.roles[0];
 			// DEFINE : POST STATUS OPTIONS
 			var postStatusOptions = $window.pwSiteGlobals.post_options.post_status;
 			// DEFINE : POST STATUS OPTIONS PER ROLE BY POST TYPE
@@ -950,10 +1013,10 @@ postworld.service('pwPostOptions',
 postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $window, $_) {
 	return{
 		setRoleAccess : function($scope){
-			$scope.current_user = $window.pwGlobals.user;
+			$scope.current_user = $window.pw.user;
 
 			( $scope.current_user != 0 ) ?
-				$scope.current_user_role = $window.pwGlobals.user.roles[0] :
+				$scope.current_user_role = $window.pw.user.roles[0] :
 				$scope.current_user_role = 'guest' ;
 
 			$scope.roles = {};

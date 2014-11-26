@@ -14,6 +14,8 @@ postworldAdmin.controller('pwAdminBackgroundsCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions', 'iOptionsData',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions, $iOptionsData ) {
 	
+	$scope.view = 'contexts';
+
 	$scope.newBackground = function(){
 		var newBackground = {
 			'name': 		'My Background',

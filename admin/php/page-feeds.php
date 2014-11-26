@@ -30,7 +30,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld feeds wrap">
+<div ng-app="postworldAdmin" class="postworld feeds wrap" ng-cloak>
 	<div
 		pw-admin
 		pw-admin-feeds

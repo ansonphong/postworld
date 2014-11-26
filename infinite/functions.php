@@ -133,16 +133,6 @@ function insert_i_admin_scripts() {
 }
 add_action('admin_head', 'insert_i_admin_scripts');
 
-//////////////////// REGISTER SIDEBARS ////////////////////
-add_action( 'widgets_init', 'i_register_sidebars' );
-function i_register_sidebars(){
-	$I_Sidebars = new I_Sidebars();
-	$sidebars = (array) $I_Sidebars->get_sidebars();
-	foreach($sidebars as $sidebar){
-		register_sidebar( $sidebar );
-	}
-}
-
 //////////////////// BOOTSTRAPPED FUNCTIONS ////////////////////
 
 /**

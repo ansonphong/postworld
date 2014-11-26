@@ -30,8 +30,8 @@ postworld.controller('pwWizardCtrl',
 	function($scope, $rootScope, $window, $timeout, $_, $pwData, $log, $modal, $pwWizardData) {
 
 	// Localize the current view from PW Globals
-	var pwGlobals = ( !_.isUndefined( $window.pwGlobals ) ) ?
-		$window.pwGlobals :
+	var pwGlobals = ( !_.isUndefined( $window.pw.globals ) ) ?
+		$window.pw.globals :
 		{};
 
 	// Setup Wizard Function

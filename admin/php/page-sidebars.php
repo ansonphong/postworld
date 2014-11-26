@@ -7,12 +7,11 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld sidebars wrap">
+<div ng-app="postworldAdmin" class="postworld sidebars wrap" ng-cloak>
 	<div
 		pw-admin
 		pw-admin-sidebars
-		ng-controller="pwSidebarsDataCtrl"
-		ng-cloak>
+		ng-controller="pwSidebarsDataCtrl">
 
 		<h1>
 			<i class="icon-map"></i>

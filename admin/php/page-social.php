@@ -14,7 +14,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld wrap social">
+<div ng-app="postworldAdmin" class="postworld wrap social" ng-cloak>
 
 	<h1>
 		<i class="icon-profile"></i>

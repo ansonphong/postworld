@@ -1,8 +1,12 @@
 <?php
 /////////////// LAYOUT & SIDEBAR FUNCTIONS ///////////////
 
-// Infinite : Insert the Header
+// Insert the Header
 function i_header(){
+	// DEPRECIATED : use pw_header()
+	pw_header();
+}
+function pw_header(){
 	iGlobals();
 	global $iGlobals;
 	
@@ -20,8 +24,12 @@ function i_header(){
 		include $templates['header'][$header_id];
 }
 
-// Infinite : Insert the Footer
+// Insert the Footer
 function i_footer(){
+	// DEPRECIATED : use pw_footer()
+	pw_footer();
+}
+function pw_footer(){
 	iGlobals();
 	global $iGlobals;
 
@@ -40,9 +48,12 @@ function i_footer(){
 }
 
 
-// Infinite : Insert Content
+// Insert Content
 function i_insert_content($vars){
-
+	// DEPRECIATED : use pw_insert_content()
+	return pw_insert_content($vars);
+}
+function pw_insert_content($vars){
 	extract($vars);
 
 	if( !empty($function) )
@@ -58,11 +69,14 @@ function i_insert_content($vars){
 		if( !empty( $after_content ) )
 			echo $after_content;
 	}
-
 }
 
-// Infinite : Insert Column Classes
+// Insert Column Classes
 function i_insert_column_classes( $column, $i_layout = array() ){
+	// DEPRECIATED : use pw_insert_column_classes()
+	return pw_insert_column_classes( $column, $i_layout );
+}
+function pw_insert_column_classes( $column, $i_layout = array() ){
 	global $pw;
 	if( empty( $i_layout ) )
 		$i_layout = $pw['layout'];
@@ -149,8 +163,12 @@ function i_insert_column_classes( $column, $i_layout = array() ){
 
 }
 
-// Infinite : Insert Responsive Clearfix
+// Insert Responsive Clearfix
 function i_insert_clearfix( $column, $i_layout = array() ){
+	// DEPRECIATED : use pw_insert_clearfix()
+	pw_insert_clearfix( $column, $i_layout = array() );
+}
+function pw_insert_clearfix( $column, $i_layout = array() ){
 	global $pw;
 	// Get current layout
 	if( empty( $i_layout ) )
@@ -171,7 +189,12 @@ function i_insert_clearfix( $column, $i_layout = array() ){
 }
 
 
-function i_print_layout( $vars ){
+function i_print_layout($vars){
+	// DEPRECIATED : use pw_print_layout()
+	return pw_print_layout( $vars );
+}
+
+function pw_print_layout( $vars ){
 	/*
 	$vars = array(
 		'template'			=>	$pw['layout']['template'],
@@ -226,6 +249,10 @@ function i_print_layout( $vars ){
 
 // Infinite : Insert a Sidebar
 function i_insert_sidebar( $sidebar, $i_layout = array() ){
+	// DEPRECIATED : use pw_insert_sidebar()
+	return pw_insert_sidebar( $sidebar, $i_layout );
+}
+function pw_insert_sidebar( $sidebar, $i_layout = array() ){
 	global $pw;
 	// Get current layout
 	if( empty( $i_layout ) )
@@ -239,6 +266,10 @@ function i_insert_sidebar( $sidebar, $i_layout = array() ){
 
 // Infinite : Insert a Sidebar Template
 function i_insert_sidebar_template( $sidebar, $i_layout = array() ){
+	// DEPRECIATED : use pw_insert_sidebar_template()
+	return pw_insert_sidebar_template( $sidebar, $i_layout );
+}
+function pw_insert_sidebar_template( $sidebar, $i_layout = array() ){
 	global $pw;
 	// Get current layout
 	if( empty( $i_layout ) )

@@ -7,6 +7,26 @@
 //////////////////////////////////*/
 
 
+function pw_get_posted_json( $post_var ){
+	// Gets a JSON string format $_POST var
+	// And converts it into an object / array
+	global $_POST;
+    // Get the JSON string which represents the post to be saved 
+    $post = $_POST[ $post_var ];
+    
+   // pw_log( 'post from $post_var : ' . $post_var . " : " . $post  );
+
+    // Strip slashes from the string
+    $post = stripslashes( $post );
+    // Decode the object from JSON into Array
+    $post = json_decode( $post, true );
+    // If the post is empty, or the decode fails
+    if( empty($post) )
+        return false;
+    else
+        return $post;
+}
+
 function pw_unique_key( $posts, $key = 'ID' ){
 	$tmp = array();
 	$unique_posts = array();

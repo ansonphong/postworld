@@ -495,16 +495,16 @@ postworld.directive( 'pwAdminTemplates',
 }]);
 
 ////////// SIDEBARS //////////
-postworld.directive( 'pwAdminSidebars',
+postworld.directive( 'pwSidebars',
 	[ '$pw', '_', '$log',
 	function( $pw, $_, $log ){
 	return{
 		scope:{
-			pwAdminSidebars:"=",
+			pwSidebars:"=",
 		},
 		link : function( $scope, element, attrs ){
-			var templates = $_.get( $pw, 'admin.sidebars' );
-			$scope.pwAdminSidebars = templates;
+			var sidebars = $_.get( $pw, 'admin.sidebars' );
+			$scope.pwSidebars = sidebars;
 		}
 	}
 }]);

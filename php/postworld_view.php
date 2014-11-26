@@ -17,6 +17,24 @@ function pw_current_context(){
 	if( is_archive() )
 		$context[] = 'archive'; 	
 
+	if( is_tax() || is_tag() )
+		$context[] = 'archive-taxonomy';
+
+	if( is_post_type_archive() )
+		$context[] = 'archive-post-type';
+
+	if( is_year() || is_month() || is_day() )
+		$context[] = 'archive-date'; 
+
+	if( is_year() )
+		$context[] = 'archive-year'; 
+
+	if( is_month() )
+		$context[] = 'archive-month'; 
+
+	if( is_day() )
+		$context[] = 'archive-day';
+
 	if( is_search() )
 		$context[] = 'search';
 
@@ -24,7 +42,7 @@ function pw_current_context(){
 		$context[] = 'tag'; 		
 
 	if( is_category() )
-		$context[] = 'category'; 
+		$context[] = 'category';
 
 	if( is_page() )
 		$context[] = 'page';
@@ -41,46 +59,49 @@ function pw_current_context(){
 	if( is_admin() )
 		$context[] = 'admin';
 
-	if( is_tax() )
-		$context[] = 'archive-taxonomy';
 
-	if( is_year() || is_month() || is_day() )
-		$context[] = 'archive-date'; 
-
-	if( is_year() )
-		$context[] = 'archive-year'; 
-
-	if( is_month() )
-		$context[] = 'archive-month'; 
-
-	if( is_day() )
-		$context[] = 'archive-day'; 
-
-	if( is_post_type_archive() )
-		$context[] = 'archive-post-type'; 
-	
-
-	// CUSTOM TAXONOMIES
+	// TAXONOMIES
 	if( in_array( 'archive-taxonomy', $context ) ){
+		// Define Taxonomy
+		if( is_tag() )
+			$taxonomy = 'post_tag';
+		else if( is_category() )
+			$taxonomy = 'category';
+		else
+			$taxonomy = get_query_var( 'taxonomy' );
+
 		// Get the taxonomy object
-		$taxonomy = get_query_var( 'taxonomy' );
 		$taxonomy_obj = get_taxonomy( $taxonomy );
+
 		// Check if taxonomy is builtin
-		if( isset( $taxonomy_obj ) && !$taxonomy_obj->_builtin )
+		if( isset( $taxonomy_obj )  )
 			// If it's a custom taxonomy, assign custom layout ID
 			$context[] = 'archive-taxonomy-' . $taxonomy;
+
 	}
 
-	// CUSTOM POST TYPES
+	// SINGLE : POST TYPES
 	if( in_array( 'single', $context ) ){
 		global $post;
-		$post_type = $post->post_type; 
+		$post_type = $post->post_type;
 		$post_type_obj = get_post_type_object( $post_type );
 		// Check if the post type is builtin
-		if( isset( $post_type_obj ) && !$post_type_obj->_builtin )
+		if( isset( $post_type_obj ) )
 			// If it's a custom point type, assign custom layout ID
 			$context[] = 'single-'.$post_type;
 	}
+
+	// ARCHIVE : POST TYPE
+	if( in_array( 'archive-post-type', $context ) ){
+
+		$post_type = get_query_var( 'post_type' );
+		$post_type_obj = get_post_type_object( $post_type );
+		// Check if the post type is builtin
+		if( isset( $post_type_obj ) )
+			// If it's a custom point type, assign custom layout ID
+			$context[] = 'archive-post-type-'.$post_type;
+	}
+
 
 	// BUDDYPRESS
 	if( pw_is_buddypress_active() ){
@@ -99,6 +120,23 @@ function pw_current_context(){
 	return $context;
 }
 
+function pw_current_view(){
+	// TODO : Refactor for efficientcy
+	global $wp_query;
+	$viewdata = array();
+
+	// URL
+	$protocol = (!empty($_SERVER['HTTPS'])) ?
+		"https" : "http";
+	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
+	$viewdata['protocol'] = $protocol;
+	$viewdata["context"] = pw_current_context();
+	$viewmeta = pw_get_view_meta( $viewdata["context"] );
+	$viewdata = array_replace_recursive( $viewdata, $viewmeta );
+	$viewdata["query"] = pw_to_array( $wp_query )['query_vars'];
+	$viewdata = pw_to_array( $viewdata );
+	return $viewdata;
+}
 
 function pw_get_view_meta( $context = array() ){
 	global $post;

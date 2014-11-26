@@ -142,8 +142,8 @@ postworld.controller('postVote',
     $scope.spinnerClass = "";
     $scope.votePost = function( points ){
         // Get the voting power of the current user
-        if( typeof $window.pwGlobals.user.postworld !== 'undefined' )
-            var vote_power = parseInt($window.pwGlobals.user.postworld.vote_power);
+        if( typeof $window.pw.user.postworld !== 'undefined' )
+            var vote_power = parseInt($window.pw.user.postworld.vote_power);
         // If they're not logged in, return false
         if( typeof vote_power === 'undefined' ){
             alert("Must be logged in to vote.");

@@ -78,12 +78,6 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
 	}
 
-	// Add INFINITE
-	if( in_array( 'infinite', $pwInject ) ){
-		////////// INFINITE //////////
-		include_once dirname(__FILE__) . "/../infinite/functions.php";
-	}
-
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
@@ -415,9 +409,23 @@ function postworld_includes( $args ){
 	///// WINDOW JAVASCRIPT DATA INJECTION /////
 	// Inject Current User Data into Window
 	function pwGlobals() {
+		global $pw;
+
+		// Todo : Move this elsewhere, must execute to parse the globals for PHP
+		pwGlobals_parse();
+
 	?>
 		<script type="text/javascript">/* <![CDATA[ */
-			var pwGlobals = <?php echo json_encode( pwGlobals_parse() ); ?>;
+			//pw.globals = <?php //echo json_encode( pwGlobals_parse() ); ?>;
+			pw.version = <?php echo json_encode( $pw['version'] ); ?>;
+			pw.modules = <?php echo json_encode( $pw['modules'] ); ?>;
+			pw.view = <?php echo json_encode( pw_current_view() ); ?>;
+			pw.user = <?php echo json_encode( pw_current_user() ); ?>;
+			pw.background = <?php echo json_encode( pw_current_background() ); ?>;
+		
+			// Make function here to parse any preloaded posts, with a filter - either by query, or... direct injection
+			//pw.posts = [];
+
 		/* ]]> */</script>
 
 	<?php
@@ -428,7 +436,6 @@ function postworld_includes( $args ){
 	add_action('wp_head', 'pwGlobals');
 
 }
-
 
 
 ///// PARSE pwSiteGlobals /////
@@ -504,33 +511,7 @@ function pwSiteGlobals_include(){
 }
 
 
-
-///// PARSE pwGlobals /////
-function pwGlobals_parse(){
-	/////////// USER / PAGE SPECIFIC GLOBALS //////////
-	global $pw;
-	global $wp_query;
-
-	///// CURRENT VIEW /////
-	$viewdata = array();
-
-	// URL
-	$protocol = (!empty($_SERVER['HTTPS'])) ?
-		"https" : "http";
-	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
-	$viewdata['protocol'] = $protocol;
-
-	// TYPE
-	$viewdata["type"] = pw_get_view_type();
-
-	// VIEW
-	$viewdata["context"] = pw_current_context();
-	$viewmeta = pw_get_view_meta( $viewdata["context"] );
-	$viewdata = array_replace_recursive( $viewdata, $viewmeta );
-	$viewdata["query"] = pw_to_array( $wp_query )['query_vars'];
-	$pw['view'] = pw_to_array( $viewdata );
-
-	///// CURRENT USER /////
+function pw_current_user(){
 	$user_id = get_current_user_id();
 	if( $user_id != 0 ){
 		$userdata = wp_get_current_user();
@@ -538,7 +519,6 @@ function pwGlobals_parse(){
 		$userdata = (array) $userdata;
 		$userdata["postworld"] = array();
 		$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
-		$userdata["is_admin"] = is_admin();
 
 		// Force the roles as a flat array
 		if( isset( $userdata['roles'] ) &&
@@ -552,12 +532,31 @@ function pwGlobals_parse(){
 			$userdata["membership"]["is_member"] = current_user_is_member();
 		}
 
-
 	} else
 		$userdata = 0;
 
+	return $userdata;
+}
 
-	$pw["user"] = $userdata;
+///// PARSE pwGlobals /////
+function pwGlobals_parse(){
+	/////////// USER / PAGE SPECIFIC GLOBALS //////////
+	global $pw;
+	global $wp_query;
+
+	///// CURRENT VIEW /////
+	$viewdata = array();
+
+	// TYPE
+	$viewdata["type"] = pw_get_view_type();
+
+	// VIEW
+	$pw["view"] = pw_current_view();
+
+	///// CURRENT USER /////
+	$pw["user"] = pw_current_user();
+
+	//$pw["user"] = $userdata;
 
 	///// DISPLAYED USER /////
 	// Support for Buddypress Globals
@@ -593,7 +592,10 @@ function pwGlobals_parse(){
 	///// URL QUERY VARS /////
 	$pw['url_vars'] = $_GET;
 
-
+	///// PW MODULES /////
+	$modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+	$pw['modules'] = $modules;
+	
 	///// INFINITE /////
 	// Merge the Infinite Globals into $pw
 	// This is a temporary solution, as Infinite is being digested & refactored into Postworld
@@ -617,9 +619,6 @@ function pw_injections(){
 	global $pwInject;
 	return $pwInject;
 }
-
-
-
 
 
 //////////// ADMIN GLOBALS ////////////
