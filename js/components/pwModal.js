@@ -203,12 +203,6 @@ postworld.controller('pwModalInstanceCtrl',
 	}
 	
 
-
-
-
-
-
-
 	///// PREVIOUS & NEXT POSTS FUNCTIONS /////
 	// TODO : Add ability to go past loaded feed items, and load and cache new feed items based on feed_outline
 	// TODO : ... and then resort them in the feed_outline according to their position in feed_outline
