@@ -39,6 +39,8 @@ class PW_Query extends WP_Query {
 		$orderby = str_replace("modified", "wp_posts.post_modified", $orderby);	
 		$orderby = str_replace("rand", "RAND()", $orderby);	
 		$orderby = str_replace("comment_count", "wp_posts.comment_count", $orderby);	
+		$orderby = str_replace("event_start", "wp_postworld_post_meta.event_start", $orderby);
+		$orderby = str_replace("event_end", "wp_postworld_post_meta.event_end", $orderby);
 		$orderby = "order by ".str_replace(' ', ',', $orderby);//." ".$args->order;
 		
 		$orderby.=" ".$this->query_vars['order'];
