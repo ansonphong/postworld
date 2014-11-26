@@ -97,7 +97,7 @@ function postworld_includes( $args ){
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
 	///// DEPLOY FILE INCLUDES /////
-	if ( $mode == 'deploy' ){
+	if ( pw_mode() == 'deploy' ){
 	
 		global $angularDep;
 		$angularDep = array(
@@ -115,7 +115,7 @@ function postworld_includes( $args ){
 
 	}
 	///// DEVELOPMENT FILE INCLUDES /////
-	else if ( $mode == 'dev' ){
+	else if ( pw_mode() == 'dev' ){
 		
 		// Build Angular Dependancies
 		global $angularDep;
@@ -418,10 +418,12 @@ function postworld_includes( $args ){
 		<script type="text/javascript">/* <![CDATA[ */
 			//pw.globals = <?php //echo json_encode( pwGlobals_parse() ); ?>;
 			pw.version = <?php echo json_encode( $pw['version'] ); ?>;
+			pw.mode = <?php echo json_encode( pw_mode() ); ?>;
 			pw.modules = <?php echo json_encode( $pw['modules'] ); ?>;
 			pw.view = <?php echo json_encode( pw_current_view() ); ?>;
 			pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 			pw.background = <?php echo json_encode( pw_current_background() ); ?>;
+			//pw.background = <?php echo json_encode( pw_current_background() ); ?>;
 		
 			// Make function here to parse any preloaded posts, with a filter - either by query, or... direct injection
 			//pw.posts = [];
@@ -477,21 +479,20 @@ function pwSiteGlobals_include(){
 	///// POST TYPES /////
 	$pwSiteGlobals["post_types"] = pw_get_post_types();
 
-
 	///// PRINT JAVASCRIPT /////
+	// SITE GLOBALS
 	$pwJs  = "";
 	$pwJs .= "var pwSiteGlobals = ";
 	$pwJs .= json_encode( $pwSiteGlobals );
 	$pwJs .= ";";
 
-	//pw_log( "PW INCLUDES " );
-	// ENCODE TEMPLATES
+	// TEMPLATES
 	$pwJs .= "\n\n";
 	$pwJs .= "pw.templates = ";
 	$pwJs .= json_encode( pw_get_templates() );
 	$pwJs .= ";";
 
-	// ENCODE SITE LANGUAGE
+	// SITE LANGUAGE
 	global $pwSiteLanguage;	
 	$pwJs .= "\n\n";
 	$pwJs .= "var pwSiteLanguage = ";

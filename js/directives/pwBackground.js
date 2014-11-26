@@ -160,17 +160,33 @@
 				return styles;
 			}
 
+			
 			//////////// PARALLAX ////////////
+			// Cache the page Y offset
+			$scope.pageYOffset = 0;
 			var setPosition = function () {
+
+				// Get the current Page Y Offset
+				var pageYOffset = $window.pageYOffset;
+
+				// If Offset is the same as the cached value, stop here
+				if( pageYOffset == $scope.pageYOffset )
+					return false;
+
+				// Cache the Page Y Offset
+				$scope.pageYOffset = pageYOffset;
+
+				// Get parallax ratio
 				var parallaxRatio = $_.get( $scope.backgroundObj, 'image.parallax' );
 				if( !parallaxRatio || !is_numeric( parallaxRatio ) )
 					return false;
 				parallaxRatio = Number(parallaxRatio);
 
-				var calcValY = ( element.prop('offsetTop') - $window.pageYOffset ) * parallaxRatio;
+				var calcValY = ( element.prop('offsetTop') - pageYOffset ) * parallaxRatio;
 				calcValY = parseInt(calcValY);
 				// horizontal positioning
 				element.css('background-position', "50% " + calcValY + "px");
+
 			};
 
 			// Set initial position - fixes webkit background render bug

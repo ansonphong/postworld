@@ -185,7 +185,9 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 
 	// SHOW / HIDE DEBUG LOGS IN CONSOLE
 	// Comment out for development
-	$logProvider.debugEnabled(true);
+
+	var debugEnabled = ( window.pw.mode == 'dev' ) ? true : false;
+	$logProvider.debugEnabled( debugEnabled );
 
 	$locationProvider.html5Mode(false);
 

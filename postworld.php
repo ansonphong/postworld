@@ -9,10 +9,16 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 
+function pw_mode(){
+	return ( defined('POSTWORLD_MODE') ) ?
+		POSTWORLD_MODE : 'deploy';
+}
+
 global $pw;
 $pw = array(
 	'version'	=>	"1.6.4",
 	'slug'	=>	'postworld',
+	'mode'	=>	pw_mode(),
 	'vars'	=>	array(
 		),
 	'db' =>	array(
