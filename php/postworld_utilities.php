@@ -360,6 +360,9 @@ function extract_fields( $fields_array, $query_string ){
 	// Extracts values starting with $query_string from $fields_array
 	// and returns them in a new Array.
 
+	if( !is_array( $fields_array ) )
+		return false;
+
 	$values_array = array();
 	foreach ($fields_array as $field) {
 		if ( strpos( $field, $query_string ) !== FALSE )

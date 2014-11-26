@@ -32,7 +32,8 @@ postworld.factory( '$pw',
 
 	// DECLARATIONS
 	return {
-		version: $window.pw.info.version,		// Todo, front load from PHP var
+		//version: $window.pw.info.version,		// Todo, front load from PHP var
+		info: $window.pw.info,
 		templates: pwTemplates,
 
 		state: state(),

@@ -27,6 +27,7 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 	///// SET DEFAULTS /////
 	// Set default fields value
 	if( $fields == null ) $fields = 'preview';
+
 	// If $post_ids isn't an Array, return
 	if (!is_array($post_ids))
 		return false;
@@ -68,210 +69,52 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 
 }
 
+pw_log( "POST FIELD MODEL : " . json_encode( pw_post_field_model() ) );
+
 ////////// GET POST DATA //////////
-function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
+function pw_get_post( $post_id, $fields = 'all', $viewer_user_id = null ){
 	
 	// Switch Modes (view/edit)
 	// 'Edit' mode toggles content display filtering (oEmbed, shortcodes, etc)
 	$mode = 'view';
 
-	//• Gets data fields for the specified post
-	if($fields == null) $fields='all';
-	if(gettype($post_id) == "array") $post_id = $post_id['ID'];	
-	else if(gettype($post_id) == "object")  {
+	// If no post ID, return here
+	if( $post_id == null ) return false;
+
+	// Get data fields for the specified post
+	if( $fields == null ) $fields = 'preview';
+
+	// If a post array is passed in
+	if( gettype( $post_id ) == "array" )
+		$post_id = $post_id['ID'];	
+
+	// If a post object is passed in
+	else if(gettype($post_id) == "object")  
 		  $post_id =  $post_id->ID;
-			//echo $post_id;
-	}	
-	// Check if the post exists
-	global $wpdb;
-	$post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $post_id . "'", 'ARRAY_A');
-	if (!$post_exists)
+
+	///// CHECK POST EXISTS /////
+	// Get the post and check if the post exists
+	$get_post = get_post( $post_id, ARRAY_A );
+	if( $get_post == null )
 		return false;
 
-	///// SETUP VARIABLES /////
-	//global $pw_paths;
-	global $pw_post_meta_fields;
+	///// GET THE FIELD MODEL /////
+	$field_model = pw_post_field_model();
+
+	$fields_value = $fields;
+	///// PRESET FIELD MODELS /////
+	if( is_string( $fields) ){
+		// Get the preset fields model
+		$fields = _get( $field_model, $fields );
+		// If the specified field model does not exist
+		if( $fields == false )
+			// Set the default field model
+			$fields = $field_model['preview'];
+		
+		pw_log( 'post id : ' . json_encode($post_id) . ' : fields : ' . $fields_value . ' : ' . json_encode( $fields ) );
 
 
-
-
-
-	//////////////////// FIELD MODELS ////////////////////
-	// TODO : 	Cache this whole post fields system as an external function
-	// 			For performance, so it doesn't have to calculate each time
-
-	$fields_model = array();
-
-	////////// EDIT FIELDS ///////////
-	$fields_model['edit'] = array(
-		'ID',
-		'post_id',
-		'post_type',
-		'post_status',
-		'post_title',
-		'post_content',
-		'post_format',
-		'post_excerpt',
-		'post_name',
-		'post_permalink',
-		'post_date',
-		'post_date_gmt',
-		'post_timestamp',
-		'post_class',
-		'link_format',
-		'link_url',
-		'image(id)',
-		'image(all)',
-		'image(meta)',
-		'taxonomy(all)',
-		'taxonomy_obj(post_tag)',
-		'comment_status',
-		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
-		'post_meta(all)',
-		'post_parent',
-		'event_start',
-		'event_end',
-		'geo_latitude',
-		'geo_longitude',
-		'related_post',
-		);
-
-	////////// PREVIEW FIELDS //////////
-	$fields_model['preview'] = array(
-		'ID',
-		'post_title',
-		'post_excerpt',
-		'post_permalink',
-		'post_type',
-		'post_status',
-		'post_date',
-		'post_date_gmt',
-		'post_timestamp',
-		'comment_count',
-		'link_url',
-		'image(all)',
-		'image(stats)',
-		'image(tags)',
-		'post_points',
-		'rank_score',
-		'edit_post_link',
-		'taxonomy(all)',
-		'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
-		'avatar(small,96)',
-		'link_format',
-		'post_format',
-		'time_ago',
-		'post_meta(all)',
-		'fields',
-		'feed_order',
-		);
-
-	// TODO : Refactor instances of this, then remove
-	$fields_model['preview'] = apply_filters( 'pw_get_post_preview_fields', $fields_model['preview'] );
-
-	////////// DETAIL FIELDS //////////
-	$fields_model['detail'] = array_merge(
-		$fields_model['preview'],
-		array(
-			'post_path',
-			'image(full)',
-			'post_content',
-			'post_type_labels',
-			'gallery(ids,posts)',
-			'post_categories_list',
-			'post_tags_list',
-			)
-		);
-
-	$fields_model['extended'] = array(
-		'parent_post(micro)',			// Gets the parent post as post_parent : parent_post( [field model] )
-		'child_post_count',				// Gets the number of posts which have this post as a parent
-		'child_posts_comment_count',	// Gets the sum of all comment counts on all child posts
-		'child_posts_karma_count',		// Gets a sum of all the karma on all child posts
-		'comments(3,all,comment_date_gmt)',	// Gets comments associated with the post : comments( [number of comments], [field model], [orderby] )
-		//'post_excerpt(256,post_content)',
-		);
-	
-	$fields_model['micro'] =	array(
-		'post_title',
-		'post_excerpt',
-		'time_ago',
-		'post_date',
-		'post_date_gmt',
-		'post_permalink',
-		);
-
-	// TODO : Refactor instances of this, then remove
-	$fields_model['micro'] = apply_filters( 'pw_get_post_micro_fields', $fields_model['micro'] );
-
-	// TODO : Develop hooks to customize the post fields model
-	global $pwGetPostFieldsModel;
-	$pwGetPostFieldsModel = array();
-	$pwGetPostFieldsModel['gallery'] =	array(
-		'ID',
-		'post_title',
-		'post_excerpt',
-		'post_content',
-		'post_type',
-		'post_parent',
-		'post_permalink',
-		'post_excerpt',
-		'link_url',
-		'link_format',
-		'post_date',
-		'post_date_gmt',
-		'time_ago',
-		'image(all)',
-		'image(stats)',
-		'image(tags)',
-		'post_author',
-		'fields',
-		);
-
-	$pwGetPostFieldsModel = apply_filters( 'pw_get_post_fields_model', $pwGetPostFieldsModel );
-
-	$viewer_fields = array(
-		'viewer(has_voted,is_favorite,is_view_later)',
-		);
-
-
-	///// APPLY FIELDS MODEL FILTERS /////
-	$fields_model = apply_filters( PW_MODEL_POST_FIELDS, $fields_model );
-
-
-	// All Fields
-	if ($fields == 'all')
-		$fields = array_merge(
-			$preview_fields,
-			$detail_fields,
-			$viewer_fields,
-			$pw_post_meta_fields
-			);
-	
-	// Preview Fields
-	else if ($fields == 'preview')
-		$fields = array_merge(
-			$preview_fields,
-			$viewer_fields
-			);
-
-	// Edit Fields
-	else if ($fields == 'edit'){
-		$fields = array_merge(
-			$edit_fields,
-			$pw_post_meta_fields
-			);
-		$mode = 'edit';
 	}
-
-	// Gallery Fields
-	else if ($fields == 'gallery'){
-		$fields = $pwGetPostFieldsModel['gallery'];
-	}
-
-	// Micro Fields
-	else if ($fields == 'micro')
-		$fields = $micro_fields;
 
 	///// ADD ACTION HOOK : PW GET POST INIT /////
 	do_action( 'pw_get_post_init',
@@ -282,22 +125,11 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			)
 		);
 
-
-
-
-
-
-
-
-
-
-
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
-	if ( !$viewer_user_id ){
+	if ( !$viewer_user_id )
 		$viewer_user_id = get_current_user_id();
-	}
-
+	
 	// Add User Fields of Current Logged in User who is viewing
 	if ( is_int($viewer_user_id) && $viewer_user_id != 0 ){
 		// Get User Data
@@ -311,10 +143,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	}
 	//$fields = array_merge($fields, $viewer_fields);
 	
-
 	////////// WP GET_POST METHOD //////////
 	// Get post data from Wordpress standard function
-	$get_post = get_post($post_id, ARRAY_A);
 	foreach ($get_post as $key => $value) {
 		if( in_array($key, $fields) ){
 			$post[$key] = $value;	

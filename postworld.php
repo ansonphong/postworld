@@ -46,7 +46,9 @@ $pw = array(
 			),
 		),
 	'models'	=>	array(
+		'fields'			=>	'postworld-model-fields',
 		'post_fields'		=>	'postworld-model-post-fields',
+		'user_fields'		=>	'postworld-model-user-fields',
 		'styles'			=>	'postworld-model-styles',
 		'backgrounds'		=>	'postworld-model-backgrounds',
 		),
@@ -68,7 +70,10 @@ define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name'
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
 
 ///// DEFINE MODEL FILTER NAMES /////
+define( 'PW_MODEL_FIELDS', 		$pw['models']['fields'] );
 define( 'PW_MODEL_POST_FIELDS', $pw['models']['post_fields'] );
+define( 'PW_MODEL_USER_FIELDS', $pw['models']['user_fields'] );
+
 define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
 
@@ -186,6 +191,7 @@ include 'php/postworld_taxonomies.php';
 include 'php/postworld_cache.php';
 
 ////// GET POST FUNCTIONS //////
+include 'php/postworld_fields.php';
 include 'php/postworld_images.php';
 include 'php/postworld_posts.php';
 
