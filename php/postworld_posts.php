@@ -69,8 +69,6 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 
 }
 
-pw_log( "POST FIELD MODEL : " . json_encode( pw_post_field_model() ) );
-
 ////////// GET POST DATA //////////
 function pw_get_post( $post_id, $fields = 'all', $viewer_user_id = null ){
 	
@@ -110,10 +108,6 @@ function pw_get_post( $post_id, $fields = 'all', $viewer_user_id = null ){
 		if( $fields == false )
 			// Set the default field model
 			$fields = $field_model['preview'];
-		
-		pw_log( 'post id : ' . json_encode($post_id) . ' : fields : ' . $fields_value . ' : ' . json_encode( $fields ) );
-
-
 	}
 
 	///// ADD ACTION HOOK : PW GET POST INIT /////

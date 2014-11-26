@@ -17,10 +17,10 @@ function pw_background_posts( $posts ){
 	$secondary_image_id = _get( $current_background, 'secondary.image.id' );
 
 	if( $primary_image_id != false )
-		$posts[] = pw_get_post( $primary_image_id, $fields );
+		$posts[ $primary_image_id ] = pw_get_post( $primary_image_id, $fields );
 
 	if( $secondary_image_id != false )
-		$posts[] = pw_get_post( $secondary_image_id, $fields );
+		$posts[ $secondary_image_id ] = pw_get_post( $secondary_image_id, $fields );
 	
 
 	return $posts;

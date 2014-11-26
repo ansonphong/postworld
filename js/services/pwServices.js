@@ -47,6 +47,7 @@ postworld.factory( '$pw',
     	paths: $window.pwSiteGlobals.paths,
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,
+    	fields: $window.pwSiteGlobals.fields,
 
     	// Get the admin data, will only be present if is_admin()
     	admin: $_.get( $window, 'pw.admin' ),
@@ -488,8 +489,79 @@ postworld.factory('pwPosts',
     		return updateFeedPost( feedId, postId, post );
     };
 
+    var getMissingFields = function( post, requiredFields ){
+    	// Detect if the post has the required fields
+		var missingFields = [];
+
+		// If no fields field, return empty handed
+		if( _.isUndefined( post.fields ) ){
+			$log.debug( "pwPosts.missingFields() ›› post.fields not defined." );
+			return false;
+		}
+
+		// Iterate through each required field
+		angular.forEach( requiredFields, function( requiredField ){
+			// If it's not in the fields
+			if( !$_.isInArray( requiredField, post.fields ) )
+				// Add it to the missing fields array
+				missingFields.push( requiredField );
+		});
+
+		return missingFields;
+
+    }
+
     ///// FACTORY FUNCTIONS /////
 	return {
+
+		get: function( vars ){
+			/* UNDER DEVELOPMENT */
+			// Gets a post by first checking the post cache
+			// If the post and the neccessary fields aren't contained in the post cache
+			// Then the post and/or fields are aquired from the server
+			/*
+			 *	vars = {
+			 *		post_id : [ number ],
+			 *		fields : [ string / array ]
+			 *	}
+			 */
+
+			 /*
+			 // Default Vars
+			 if( !_.isObject( vars ) )
+			 	vars = {};
+
+			 // If no post ID
+			 if( _.isUndefined( vars.post_id ) )
+			 	return false;
+
+			 // If no fields
+			 if( _.isUndefined( vars.fields ) )
+			 	vars.fields = 'preview';
+
+			 // If fields is a string
+			 if( _.isString( vars.fields ) )
+			 	vars.fields = $_.get( $pw.fields.post, vars.fields );
+
+			 // If the requested field string doesn't exist
+			 if( vars.fields == false )
+			 	return false;
+
+			 // Get the post
+			 var post = $_.get( $pwData, 'posts.' + vars.post_id );
+
+			 // If the post exists
+			 if( post ){
+			 	// Check if it has any missing fields
+			 	var missingFields = getMissingFields( post, vars.fields );
+			 	if( missingFields.length > 0 ){
+			 	}
+			 }
+
+			 // If the post doesn't exist, return the promise of getting it $pwData.get_post
+			*/
+			 
+		},
 		requiredFields: function( vars ){
 			// Checks a post to see if the specified required fields are present
 			// And if not, it gets from the server automatically and plants them in the feed
@@ -500,6 +572,8 @@ postworld.factory('pwPosts',
 			 *		fields: [array]		// Required
 			 *	}
 			 */
+
+			// Detect mode, if we're in a $pwData.feeds or $pwData.posts
 
 			$log.debug( "REQUIRED FIELDS : ", vars );
 
@@ -512,17 +586,7 @@ postworld.factory('pwPosts',
     		if( _.isUndefined( post.fields ) )
     			return false;
 
-			// Detect if the post has the required fields
-			var requiredFields = vars.fields;
-			var missingFields = [];
-
-			// Iterate through each required field
-			angular.forEach( requiredFields, function( requiredField ){
-				// If it's not in the fields
-				if( !$_.isInArray( requiredField, post.fields ) )
-					// Add it to the missing fields array
-					missingFields.push( requiredField );
-			});
+    		var missingFields = getMissingFields( post, vars.fields );
 
 			// If there are no missing fields
 			if( missingFields.length == 0 )
@@ -533,7 +597,7 @@ postworld.factory('pwPosts',
                 post_id: vars.postId,
                 fields: missingFields,
             };
-			$pwData.pw_get_post(args).then(
+			$pwData.get_post(args).then(
                 // Success
                 function(response) {
                     // Catch the new post data
@@ -573,14 +637,14 @@ postworld.factory('pwPosts',
                 post_id: postId,
                 fields: fields,
             };
-			$pwData.pw_get_post(args).then(
+			$pwData.get_post(args).then(
                 // Success
                 function(response) {
                     // Catch the new post data
                     var postData = response.data;
                     // Merge it into the feed post
                     var merged = mergeFeedPost( feedId, postId, postData );
-                    $log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.pw_get_post() : MERGE WITH FEED/POST : ", postData );
+                    $log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : MERGE WITH FEED/POST : ", postData );
                     // Broadcast event for child listeners to pick up the new data
                     $rootScope.$broadcast( 'feedPostUpdated', {
                     		feedId: feedId,
@@ -589,7 +653,7 @@ postworld.factory('pwPosts',
                 },
                 // Failure
                 function(response) {
-                	$log.error( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.pw_get_post() : UNKOWN ERROR" );
+                	$log.error( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : UNKOWN ERROR" );
                 }
             );
 

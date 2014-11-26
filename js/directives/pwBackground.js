@@ -6,8 +6,8 @@
  |_|                                 |___/                             
  ///////////////////////// LOAD BACKGROUND DIRECTIVE ////////////////////////*/
  postworld.directive( 'pwBackground',
- 	[ '$window', '$timeout', 'pwData', '$log', '_',
- 	function( $window, $timeout, $pwData, $log, $_ ){
+ 	[ '$window', '$timeout', 'pwData', 'pwPosts', '$log', '_',
+ 	function( $window, $timeout, $pwData, $pwPosts, $log, $_ ){
 	return {
 		restrict: 'AE',
 		//controller: 'pwBackgroundCtrl',
@@ -118,7 +118,7 @@
 					post_id: imageId,
 					fields: [ 'ID', 'image(full)', 'fields' ],
 				};
-				$pwData.pw_get_post( get_post_vars ).then(
+				$pwData.get_post( get_post_vars ).then(
 					function(response){
 						$pwData.posts[imageId] = response.data;
 						$log.debug( "backgroundObj › populateImagePost › $pwData.posts ", $pwData.posts );

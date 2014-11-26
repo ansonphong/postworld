@@ -170,7 +170,7 @@ postworld.controller('postController',
 			"fields" : "all"
 		};
 		///// GET THE POST DATA /////
-		$pwData.pw_get_post( vars ).then(
+		$pwData.get_post( vars ).then(
 			// Success
 			function(response) {
 				$log.debug('pwData.pw_get_post : RESPONSE : ', response.data);
@@ -214,7 +214,7 @@ postworld.controller('postController',
 				post_id: postId,
 				fields: 'all'
 			};
-			$pwData.pw_get_post(args).then(
+			$pwData.get_post(args).then(
 				// Success
 				function(response) {
 					if (response.status==200) {

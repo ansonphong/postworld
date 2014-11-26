@@ -92,13 +92,21 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			// $log.debug('pwData.wp_ajax', fname, 'args: ',args);
             var deferred = $q.defer();
             // works only for non array returns
-            resource.wp_ajax({action:fname},{args:args,nonce:this.getNonce()},
+            resource.wp_ajax(
+            	{
+            		action: fname
+            	},
+            	{
+            		args: args,
+            		nonce:this.getNonce()
+            	},
 				function (data) {
                     deferred.resolve(data);
                 },
                 function (response) {
                     deferred.reject(response);
-                });
+                }
+            );
             return deferred.promise;		
 		},
 		pw_query: function( args ){
@@ -161,34 +169,13 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_load_feed',params);
 		},
-		pw_get_post: function( vars ) {
+		get_post: function( vars ) {
 
 			// If no ID is set
 			if( _.isUndefined( vars.post_id ) ){
 				$log.debug( 'pwData.pw_get_post : No post ID specified.' );
 				return false;
 			}
-
-			// If vars.fields is not set
-			if( _.isUndefined( vars.fields ) )
-				// Set the default fields value
-				vars.fields = 'preview';
-
-			// If fields is an array
-			if( _.isArray( vars.fields ) )
-				// And 'fields' is not in the fields array
-				if( !$_.inArray( 'fields', vars.fields ) )
-					// Add 'fields' to fields array
-					vars.fields.push('fields');
-
-			// Get the post with the specified ID if it is already loaded
-			var post = _.findWhere( this.posts, { ID: vars.post_id } );
-
-			// If the post exists as an object
-			if( _.isObject( post ) ){
-				
-			}
-
 
 			$log.debug('pwData.pw_get_post',vars);
 			

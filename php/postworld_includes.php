@@ -471,6 +471,8 @@ function pwSiteGlobals_include(){
 	///// POST TYPES /////
 	$pwSiteGlobals["post_types"] = pw_get_post_types();
 
+	$pwSiteGlobals["fields"] = pw_field_model();
+
 	///// PRINT JAVASCRIPT /////
 	// SITE GLOBALS
 	$pwJs  = "";

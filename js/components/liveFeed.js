@@ -760,7 +760,7 @@ postworld.controller('pwLoadPostController',
 						
 		$scope.pwLoadPost = function() {
 			
-			pwData.pw_get_post($scope.feed).then(
+			pwData.get_post($scope.feed).then(
 				// Success
 				function(response) {
 					$scope.busy = false;
