@@ -65,7 +65,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	
 	return {
 
-		posts: $window.pw['posts'],
+		posts: $window.pw.posts,
 
     	feeds: feeds,
 
@@ -161,10 +161,41 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_load_feed',params);
 		},
-		pw_get_post: function(args) {
-			$log.debug('pwData.pw_get_post',args);
-			//var params = {args:args};
-			return this.wp_ajax('pw_get_post',args);
+		pw_get_post: function( vars ) {
+
+			// If no ID is set
+			if( _.isUndefined( vars.post_id ) ){
+				$log.debug( 'pwData.pw_get_post : No post ID specified.' );
+				return false;
+			}
+
+			// If vars.fields is not set
+			if( _.isUndefined( vars.fields ) )
+				// Set the default fields value
+				vars.fields = 'preview';
+
+			// If fields is an array
+			if( _.isArray( vars.fields ) )
+				// And 'fields' is not in the fields array
+				if( !$_.inArray( 'fields', vars.fields ) )
+					// Add 'fields' to fields array
+					vars.fields.push('fields');
+
+			// Get the post with the specified ID if it is already loaded
+			var post = _.findWhere( this.posts, { ID: vars.post_id } );
+
+			// If the post exists as an object
+			if( _.isObject( post ) ){
+				
+			}
+
+
+			$log.debug('pwData.pw_get_post',vars);
+			
+			//var params = {args:vars};
+			
+			return this.wp_ajax('pw_get_post',vars);
+
 		},
 		pw_get_template: function ( meta ) { // ( subdir, post_type, view)
 			// if templates object already exists, then get value, if not, then retrieve it first
@@ -194,7 +225,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			
 			// If it exists, add the version number to the URL
 			if( template )
-				template = template + "?ver=" + $pw['version'] ; // ( this, subdir, post_type, name )
+				template = template + "?ver=" + $pw['info']['version'] ; // ( this, subdir, post_type, name )
 		    
 		    // If on HTTPS / SSL, get on the same protocol
 		    if( $pw.view['protocol'] == 'https' )

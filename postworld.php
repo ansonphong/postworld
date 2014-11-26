@@ -16,9 +16,11 @@ function pw_mode(){
 
 global $pw;
 $pw = array(
-	'version'	=>	"1.6.4",
-	'slug'	=>	'postworld',
-	'mode'	=>	pw_mode(),
+	'info'	=>	array(
+		'version'	=>	"1.6.5",
+		'mode'	=>	pw_mode(),
+		'slug'	=>	'postworld',
+		),
 	'vars'	=>	array(
 		),
 	'db' =>	array(
@@ -44,8 +46,9 @@ $pw = array(
 			),
 		),
 	'models'	=>	array(
-		'styles'		=>	'postworld-model-styles',
-		'backgrounds'	=>	'postworld-model-backgrounds',
+		'post_fields'		=>	'postworld-model-post-fields',
+		'styles'			=>	'postworld-model-styles',
+		'backgrounds'		=>	'postworld-model-backgrounds',
 		),
 	);
 
@@ -64,12 +67,13 @@ define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name'
 
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
 
-
 ///// DEFINE MODEL FILTER NAMES /////
+define( 'PW_MODEL_POST_FIELDS', $pw['models']['post_fields'] );
 define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
 
 ///// DEFINE META FILTER NAMES /////
+define( 'PW_POSTS', 	'pw_posts' );
 define( 'PW_POSTMETA', 	$pw['db']['wp_postmeta']['pw_meta'] );
 define( 'PW_USERMETA', 	$pw['db']['wp_usermeta']['pw_meta'] );
 define( 'PW_MODULES', 	$pw['db']['wp_options']['option_name']['modules'] );
@@ -98,7 +102,7 @@ include 'php/postworld_modules.php';
 ////// PW GLOBALS //////
 // This must come after the API functions
 // And before the rest of the Postworld includes
-$pw['modules'] = pw_enabled_modules();	// pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
+$pw['info']['modules'] = pw_enabled_modules();	// pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
 
 ////// INFINITE //////
 // Load Infinite Lineage

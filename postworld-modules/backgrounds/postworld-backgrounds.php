@@ -1,4 +1,33 @@
 <?php
+
+
+function pw_background_posts( $posts ){
+
+	// Get the current background object
+	$current_background = pw_current_background();
+
+	// If there is no background, return here
+	if( $current_background == false )
+		return $posts;
+	
+	$fields = array( 'ID', 'image(full)', 'fields' );
+
+	// Get the background image IDs
+	$primary_image_id = _get( $current_background, 'primary.image.id' );
+	$secondary_image_id = _get( $current_background, 'secondary.image.id' );
+
+	if( $primary_image_id != false )
+		$posts[] = pw_get_post( $primary_image_id, $fields );
+
+	if( $secondary_image_id != false )
+		$posts[] = pw_get_post( $secondary_image_id, $fields );
+	
+
+	return $posts;
+
+}
+add_filter( PW_POSTS, 'pw_background_posts' );
+
 function pw_current_background( $vars = array() ){
 	// Returns the background for the current context
 	
@@ -10,7 +39,7 @@ function pw_current_background( $vars = array() ){
 	global $pw;
 
 	// If backgrounds module is not enabled, return here
-	if( !in_array( 'backgrounds', $pw['modules'] ) )
+	if( !in_array( 'backgrounds', $pw['info']['modules'] ) )
 		return false;
 
 	// Define the default passed-in vars

@@ -16,16 +16,16 @@ global $theme_admin;
 global $pw;
 
 function postworld_admin_menu(){
-	global $pw;
-	
+	global $pw;	
 	$enabled_modules = pw_enabled_modules();
+	$pw_slug = $pw['info']['slug'];
 
 	$menu = array(
 		'menu' => array(
 			'page_title' => 'Postworld',
 			'menu_title' => 'Postworld',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'],
+			'menu_slug' => $pw_slug,
 			'function' => 'postworld_postworld_modules',
 			//'icon_url' => '',//plugins_url( $migration_admin_folder.'/images/logo/pw_symbol-16.png' ),
 			'menu_icon'	=>	'dashicons-art',
@@ -37,71 +37,71 @@ function postworld_admin_menu(){
 
 	if( in_array( 'site', $enabled_modules ) )
 		$menu['submenu']['site'] = array(
-			'parent_slug' => $pw['slug'],
+			'parent_slug' => $pw_slug,
 			'page_title' => 'Site Options',
 			'menu_title' => 'Site Options',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'].'-site',
+			'menu_slug' => $pw_slug.'-site',
 			'function' => 'postworld_options_site',
 			);
 
 	if( in_array( 'layouts', $enabled_modules ) )
 		$menu['submenu']['layout'] = array(
-			'parent_slug' => $pw['slug'],
+			'parent_slug' => $pw_slug,
 			'page_title' => 'Layout',
 			'menu_title' => 'Layout',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'].'-layout',
+			'menu_slug' => $pw_slug.'-layout',
 			'function' => 'postworld_options_layout',
 			);
 
 	if( in_array( 'sidebars', $enabled_modules ) )
 		$menu['submenu']['sidebars'] = array(
-			'parent_slug' => $pw['slug'],
+			'parent_slug' => $pw_slug,
 			'page_title' => 'Sidebars',
 			'menu_title' => 'Sidebars',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'].'-sidebars',
+			'menu_slug' => $pw_slug.'-sidebars',
 			'function' => 'postworld_options_sidebars',
 			);
 
 	if( in_array( 'styles', $enabled_modules ) )
 		$menu['submenu']['styles'] = array(
-			'parent_slug' => $pw['slug'],
+			'parent_slug' => $pw_slug,
 			'page_title' => 'Styles',
 			'menu_title' => 'Styles',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'].'-styles',
+			'menu_slug' => $pw_slug.'-styles',
 			'function' => 'postworld_options_styles',
 			);
 
 	if( in_array( 'social', $enabled_modules ) )
 		$menu['submenu']['social'] = array(
-			'parent_slug' => $pw['slug'],
+			'parent_slug' => $pw_slug,
 			'page_title' => 'Social',
 			'menu_title' => 'Social',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'].'-social',
+			'menu_slug' => $pw_slug.'-social',
 			'function' => 'postworld_options_social',
 			);
 
 	if( in_array( 'feeds', $enabled_modules ) )
 		$menu['submenu']['feeds'] = array(
-			'parent_slug' => $pw['slug'],
+			'parent_slug' => $pw_slug,
 			'page_title' => 'Feeds',
 			'menu_title' => 'Feeds',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'].'-feeds',
+			'menu_slug' => $pw_slug.'-feeds',
 			'function' => 'postworld_options_feeds',
 			);
 
 	if( in_array( 'backgrounds', $enabled_modules ) )
 		$menu['submenu']['backgrounds'] = array(
-			'parent_slug' => $pw['slug'],
+			'parent_slug' => $pw_slug,
 			'page_title' => 'Backgrounds',
 			'menu_title' => 'Backgrounds',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw['slug'].'-backgrounds',
+			'menu_slug' => $pw_slug.'-backgrounds',
 			'function' => 'postworld_options_backgrounds',
 			);
 

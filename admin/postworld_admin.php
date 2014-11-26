@@ -6,11 +6,11 @@ include 'metaboxes/event/metabox-event.php';
 include 'metaboxes/post_parent/metabox-post_parent.php';	
 
 ///// MODULE : LAYOUTS /////
-if( in_array( 'layouts', $pw['modules'] ) )
+if( in_array( 'layouts', $pw['info']['modules'] ) )
 	include 'metaboxes/layout/metabox-layout.php';	
 
 ///// MODULE : BACKGROUNDS /////
-if( in_array( 'backgrounds', $pw['modules'] ) )
+if( in_array( 'backgrounds', $pw['info']['modules'] ) )
 	include 'metaboxes/background/metabox-background.php';	
 
 ///// ENQUEUE STYLES & SCRIPTS /////

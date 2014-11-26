@@ -92,8 +92,18 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 	//global $pw_paths;
 	global $pw_post_meta_fields;
 
+
+
+
+
+	//////////////////// FIELD MODELS ////////////////////
+	// TODO : 	Cache this whole post fields system as an external function
+	// 			For performance, so it doesn't have to calculate each time
+
+	$fields_model = array();
+
 	////////// EDIT FIELDS ///////////
-	$edit_fields = array(
+	$fields_model['edit'] = array(
 		'ID',
 		'post_id',
 		'post_type',
@@ -127,7 +137,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		);
 
 	////////// PREVIEW FIELDS //////////
-	$preview_fields = array(
+	$fields_model['preview'] = array(
 		'ID',
 		'post_title',
 		'post_excerpt',
@@ -156,20 +166,24 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'feed_order',
 		);
 
-	$preview_fields = apply_filters( 'pw_get_post_preview_fields', $preview_fields );
+	// TODO : Refactor instances of this, then remove
+	$fields_model['preview'] = apply_filters( 'pw_get_post_preview_fields', $fields_model['preview'] );
 
 	////////// DETAIL FIELDS //////////
-	$detail_fields =	array(
-		'post_path',
-		'image(full)',
-		'post_content',
-		'post_type_labels',
-		'gallery(ids,posts)',
-		'post_categories_list',
-		'post_tags_list',
+	$fields_model['detail'] = array_merge(
+		$fields_model['preview'],
+		array(
+			'post_path',
+			'image(full)',
+			'post_content',
+			'post_type_labels',
+			'gallery(ids,posts)',
+			'post_categories_list',
+			'post_tags_list',
+			)
 		);
 
-	$extended_fields = array(
+	$fields_model['extended'] = array(
 		'parent_post(micro)',			// Gets the parent post as post_parent : parent_post( [field model] )
 		'child_post_count',				// Gets the number of posts which have this post as a parent
 		'child_posts_comment_count',	// Gets the sum of all comment counts on all child posts
@@ -178,7 +192,7 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		//'post_excerpt(256,post_content)',
 		);
 	
-	$micro_fields =	array(
+	$fields_model['micro'] =	array(
 		'post_title',
 		'post_excerpt',
 		'time_ago',
@@ -187,7 +201,8 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'post_permalink',
 		);
 
-	$micro_fields = apply_filters( 'pw_get_post_micro_fields', $micro_fields );
+	// TODO : Refactor instances of this, then remove
+	$fields_model['micro'] = apply_filters( 'pw_get_post_micro_fields', $fields_model['micro'] );
 
 	// TODO : Develop hooks to customize the post fields model
 	global $pwGetPostFieldsModel;
@@ -219,17 +234,33 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 		'viewer(has_voted,is_favorite,is_view_later)',
 		);
 
+
+	///// APPLY FIELDS MODEL FILTERS /////
+	$fields_model = apply_filters( PW_MODEL_POST_FIELDS, $fields_model );
+
+
 	// All Fields
 	if ($fields == 'all')
-		$fields = array_merge($preview_fields, $detail_fields, $viewer_fields, $pw_post_meta_fields);
+		$fields = array_merge(
+			$preview_fields,
+			$detail_fields,
+			$viewer_fields,
+			$pw_post_meta_fields
+			);
 	
 	// Preview Fields
 	else if ($fields == 'preview')
-		$fields = array_merge($preview_fields, $viewer_fields );
+		$fields = array_merge(
+			$preview_fields,
+			$viewer_fields
+			);
 
 	// Edit Fields
 	else if ($fields == 'edit'){
-		$fields = array_merge($edit_fields, $pw_post_meta_fields);
+		$fields = array_merge(
+			$edit_fields,
+			$pw_post_meta_fields
+			);
 		$mode = 'edit';
 	}
 
@@ -250,6 +281,16 @@ function pw_get_post( $post_id, $fields='all', $viewer_user_id=null ){
 			'mode' => $mode,
 			)
 		);
+
+
+
+
+
+
+
+
+
+
 
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it

@@ -109,7 +109,7 @@ function postworld_includes( $args ){
 		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
 
 		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['version'] );
+		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
 		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
 
@@ -410,23 +410,15 @@ function postworld_includes( $args ){
 	// Inject Current User Data into Window
 	function pwGlobals() {
 		global $pw;
-
 		// Todo : Move this elsewhere, must execute to parse the globals for PHP
 		pwGlobals_parse();
-
 	?>
 		<script type="text/javascript">/* <![CDATA[ */
-			//pw.globals = <?php //echo json_encode( pwGlobals_parse() ); ?>;
-			pw.version = <?php echo json_encode( $pw['version'] ); ?>;
-			pw.mode = <?php echo json_encode( pw_mode() ); ?>;
-			pw.modules = <?php echo json_encode( $pw['modules'] ); ?>;
+			pw.info = <?php echo json_encode( $pw['info'] ); ?>;
 			pw.view = <?php echo json_encode( pw_current_view() ); ?>;
 			pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 			pw.background = <?php echo json_encode( pw_current_background() ); ?>;
-			//pw.background = <?php echo json_encode( pw_current_background() ); ?>;
-		
-			// Make function here to parse any preloaded posts, with a filter - either by query, or... direct injection
-			//pw.posts = [];
+			pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
 
 		/* ]]> */</script>
 
@@ -595,7 +587,7 @@ function pwGlobals_parse(){
 
 	///// PW MODULES /////
 	$modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
-	$pw['modules'] = $modules;
+	$pw['info']['modules'] = $modules;
 	
 	///// INFINITE /////
 	// Merge the Infinite Globals into $pw

@@ -2,7 +2,7 @@
 //////////////////// REGISTER SIDEBARS ////////////////////
 global $pw;
 
-if( in_array( 'sidebars', $pw['modules'] ) )
+if( in_array( 'sidebars', $pw['info']['modules'] ) )
 	add_action( 'widgets_init', 'pw_register_sidebars' );
 
 function pw_register_sidebars(){
