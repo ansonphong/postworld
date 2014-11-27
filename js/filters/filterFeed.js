@@ -124,14 +124,12 @@ postworld.controller('pwFilterFeedController',
 		    $scope.submit();
 		}, 1); 
 		
-
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function(view) {
 			//$log.debug('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
     		this.$emit("CHANGE_FEED_TEMPLATE", view);		    	
 		};	
 
-    	
     }
 );
 

@@ -11,16 +11,12 @@ function iGlobals(){
 	$i_social = pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) );
 	$i_layouts = pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) );
 
-	// Layout
-	$layout = pw_get_current_layout();
-
 	///// WRAP /////
 	////////// DEFINE GLOBALS //////////
 	global $iGlobals;
 	$iGlobals = array(
 		//"options" 	=> $i_options,
 		"layouts" 	=> $i_layouts,
-		"layout"	=> $layout,
 		//"context"	=> $context,
 		"sidebars"	=> $i_sidebars,
 		"social"	=> $i_social,

@@ -88,7 +88,7 @@ function pw_print_term_feed( $vars ){
 
 		);
 
-	$vars = pw_set_defaults( $vars, $default_vars ); 
+	$vars = array_replace_recursive( $default_vars, $vars ); 
 
 	///// TEMPLATES ////
 	$template_subdir = 'term-feeds';

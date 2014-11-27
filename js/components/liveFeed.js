@@ -71,11 +71,13 @@ postworld.controller('pwFeedController',
 		$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
 			$pwData.feeds[$scope.feedId].view : {};
 
-		var view =  ($pwData.feeds[$scope.feedId].view.current) ?
-			$pwData.feeds[$scope.feedId].view.current :
-			'list';
-
-		$scope.feed_item_view_type = view;
+		
+		$scope.currentView = function(){
+			// Get Current View
+			var currentView = $_.get( $pwData.feeds[$scope.feedId], 'view.current' );
+			var view =  ( currentView ) ? currentView : 'list';
+			return view;
+		}
 
 	   	// Get Feed Template from feeds if it exists
 	   	if ($pwData.feeds[$scope.feedId].feed_template) {
@@ -88,11 +90,10 @@ postworld.controller('pwFeedController',
 	   	}
 
 		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
-		   $log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
-			$scope.feed_item_view_type = view; // $pwData.pw_get_template('posts','post',view); 
-		   // Broadcast to all children
-		   // TODO : Also broadcast the feed ID, so only the effected feed is updated
-			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.feed_item_view_type);
+			$log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
+			// Broadcast to all children
+			// TODO : Also broadcast the feed ID, so only the effected feed is updated
+			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.currentView() );
 		   });
 
 

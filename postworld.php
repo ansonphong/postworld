@@ -201,6 +201,9 @@ include 'php/postworld_query.php';
 ////// WIDGETS //////
 include 'php/postworld_widgets.php';
 
+////// ARCHIVES //////
+include 'php/postworld_archives.php';
+
 ////// SOCIAL //////
 include 'php/postworld_social.php';
 
@@ -225,6 +228,7 @@ include 'admin/php/admin.php';
 ////// MODULES //////
 include 'postworld-modules/backgrounds/postworld-backgrounds.php';
 include 'postworld-modules/sidebars/postworld-sidebars.php';
+include 'postworld-modules/layouts/postworld-layouts.php';
 
 
 

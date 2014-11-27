@@ -548,6 +548,9 @@ function pwGlobals_parse(){
 	// VIEW
 	$pw["view"] = pw_current_view();
 
+	// LAYOUT
+	$pw['layout'] = pw_get_current_layout();
+
 	///// CURRENT USER /////
 	$pw["user"] = pw_current_user();
 
