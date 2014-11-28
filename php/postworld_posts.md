@@ -56,6 +56,7 @@ __$fields__ : *string / Array*
 - Options :
   - __'all'__ (default) 
   - __'preview'__ - Returns a basic set of commonly usable fields  
+  - __'micro'__ - Returns a basic set of commonly usable fields  
   - __'edit'__ - Returns a basic set of standard fields for editing a post
   - __Array__ - Use any of the following values in an Array :
 
@@ -67,6 +68,7 @@ __WP GET_POST METHOD__ : http://codex.wordpress.org/Function_Reference/get_post
 - __post_date_gmt__
 - __post_title__
 - __post_content__
+- __post_permalink__
 - __post_excerpt__
 - __post_path__
 - __post_name__

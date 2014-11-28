@@ -51,6 +51,15 @@ function postworld_options_feeds(){
 	include 'page-feeds.php';
 }
 
+/*
+///// FEEDS SCREEN /////
+function postworld_options_term_feeds(){
+	global $theme_admin;
+	i_include_scripts();
+	include 'page-term-feeds.php';
+}
+*/
+
 ///// FEEDS SCREEN /////
 function postworld_options_backgrounds(){
 	global $theme_admin;

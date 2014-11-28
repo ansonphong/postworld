@@ -16,6 +16,7 @@ function i_include_admin_scripts(){
 	wp_enqueue_script('Infinite-Admin-Styles', get_infinite_directory_uri().'/js/controllers-admin/styles.js', $angularDep );
 	wp_enqueue_script('Infinite-Admin-Sidebars', get_infinite_directory_uri().'/js/controllers-admin/sidebars.js', $angularDep );
 	wp_enqueue_script('Infinite-Admin-Feeds', get_infinite_directory_uri().'/js/controllers-admin/feeds.js', $angularDep );
+	//wp_enqueue_script('Infinite-Admin-Term-Feeds', get_infinite_directory_uri().'/js/controllers-admin/term-feeds.js', $angularDep );
 	wp_enqueue_script('Infinite-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
 	
 	// DIRECTIVES : ADMIN

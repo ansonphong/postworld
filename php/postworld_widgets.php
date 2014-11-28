@@ -10,6 +10,7 @@
 include 'widgets/panel/widget-panel.php';
 include 'widgets/menu-kit/widget-menu-kit.php';
 include 'widgets/feed/widget-feed.php';
+include 'widgets/term-feed/widget-term-feed.php';
 
 ///// POSTWORLD GET SIDEBAR /////
 // This is a slight remix of the WP code dynamic_sidebar function

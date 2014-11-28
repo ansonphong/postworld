@@ -31,6 +31,7 @@ $pw = array(
 				'layouts'				=>	'postworld-layouts',
 				'sidebars'				=>	'postworld-sidebars',
 				'feeds'					=>	'postworld-feeds',
+				'term_feeds'			=>	'postworld-term-feeds',
 				'feed_settings'			=>	'postworld-feed-settings',
 				'social'				=>	'postworld-social',
 				'backgrounds'			=>	'postworld-backgrounds',
@@ -52,6 +53,9 @@ $pw = array(
 		'styles'			=>	'postworld-model-styles',
 		'backgrounds'		=>	'postworld-model-backgrounds',
 		),
+	'filters'	=>	array(
+		'term_feed'	=>	'postworld-term-feed-'
+		),
 	);
 
 
@@ -63,6 +67,7 @@ define( 'PW_OPTIONS_LAYOUTS', 				$pw['db']['wp_options']['option_name']['layout
 define( 'PW_OPTIONS_SIDEBARS', 				$pw['db']['wp_options']['option_name']['sidebars'] );
 define( 'PW_OPTIONS_FEEDS', 				$pw['db']['wp_options']['option_name']['feeds'] );
 define( 'PW_OPTIONS_FEED_SETTINGS', 		$pw['db']['wp_options']['option_name']['feed_settings'] );
+//define( 'PW_OPTIONS_TERM_FEEDS', 			$pw['db']['wp_options']['option_name']['term_feeds'] );
 define( 'PW_OPTIONS_SOCIAL', 				$pw['db']['wp_options']['option_name']['social'] );
 define( 'PW_OPTIONS_BACKGROUNDS', 			$pw['db']['wp_options']['option_name']['backgrounds'] );
 define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name']['background_contexts'] );
@@ -76,6 +81,8 @@ define( 'PW_MODEL_USER_FIELDS', $pw['models']['user_fields'] );
 
 define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
+
+define( 'PW_TERM_FEED', 		$pw['filters']['term_feed'] );
 
 ///// DEFINE META FILTER NAMES /////
 define( 'PW_POSTS', 	'pw_posts' );

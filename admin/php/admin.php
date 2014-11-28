@@ -95,6 +95,18 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_feeds',
 			);
 
+	/*
+	if( in_array( 'term-feeds', $enabled_modules ) )
+		$menu['submenu']['term-feeds'] = array(
+			'parent_slug' => $pw_slug,
+			'page_title' => 'Term Feeds',
+			'menu_title' => 'Term Feeds',
+			'capability' => 'manage_options',
+			'menu_slug' => $pw_slug.'-term-feeds',
+			'function' => 'postworld_options_term_feeds',
+			);
+	*/
+
 	if( in_array( 'backgrounds', $enabled_modules ) )
 		$menu['submenu']['backgrounds'] = array(
 			'parent_slug' => $pw_slug,

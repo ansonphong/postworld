@@ -62,8 +62,7 @@ function pw_print_term_feed( $vars ){
 
 	$default_template = 'term-feed-default';
 	$default_vars = array(
-		'template'	=>	$default_template, 	// ID in : templates/shortcodes 
-
+		'template'	=>	$default_template, 	// PHP file in : templates/term-feeds 
 		'terms' => array(
 			'taxonomies'    =>  array( 'post_tag' ),
 			'args'          =>  array(
@@ -78,14 +77,12 @@ function pw_print_term_feed( $vars ){
 			'posts_per_page'	=>	10,
 			'fields'    		=> 'preview',
 			),
-		
 		'options'	=>	array(
 			'include_galleries'	=>	false,	// Deep-scan posts content for gallery shortcodes
 			'move_galleries'	=>	true,	// Moves the galleries from the post to the feed
 			'require_image'		=>	false,	// Only posts with a featured image are used
 			'include_posts'		=>	true,	// Whether or not to keep the original posts
 			),
-
 		);
 
 	$vars = array_replace_recursive( $default_vars, $vars ); 
@@ -94,16 +91,22 @@ function pw_print_term_feed( $vars ){
 	$template_subdir = 'term-feeds';
 	$templates = pw_get_templates(
 		array(
-			'subdirs' => array($template_subdir),
+			'subdirs' => array( $template_subdir ),
 			'path_type' => 'dir',
 			'ext'=>'php',
 			)
-		);
+		)[ $template_subdir ];
+	
+	// Confirm that the specified template actually exists
+	$vars['template'] = ( isset( $templates[ $vars['template'] ] ) ) ?
+		$vars['template'] :
+		$default_template;
 
-	$template_id = $vars['template'];
-	$template = ( isset( $templates[$template_subdir][$template_id] ) ) ?
-		$templates[$template_subdir][$template_id] :
-		$templates[$template_subdir][$default_template];
+	$template = $templates[ $vars['template'] ];
+
+	///// TEMPLATE : OVER-RIDE VARIABLES /////
+	// Allow term feed templates to filter the term feed variables
+	$vars = apply_filters( PW_TERM_FEED . $vars['template'], $vars );
 
 	///// GET TERMS FEED /////
 	$vars['term_feed'] = pw_get_term_feed( $vars );

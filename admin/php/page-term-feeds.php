@@ -1,46 +1,38 @@
 <?php
 	///// GET DATA /////
 	// Feeds
-	$pwFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_FEEDS ) );
+	$pwTermFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_TERM_FEEDS ) );
 	// Feed Settings
-	$pwFeedSettings = i_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
-	// Feed Templates
-	$htmlFeedTemplates = pw_get_templates(
+	//$pwFeedSettings = i_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
+
+	// Term Feed Templates
+	$termFeedTemplates = pw_get_templates(
 		array(
-			'subdirs' => array('feeds'),
-			'path_type' => 'url',
-			'ext'=>'html',
-			)
-		)['feeds'];	
-	// Aux Feed Templates
-	$phpFeedTemplates = pw_get_templates(
-		array(
-			'subdirs' => array('feeds'),
+			'subdirs' => array('term-feeds'),
 			'path_type' => 'url',
 			'ext'=>'php',
 			)
-		)['feeds'];
+		)['term-feeds'];
 ?>
 <script>
-	postworldAdmin.controller( 'pwFeedsDataCtrl', [ '$scope', function( $scope ){
-		$scope.pwFeeds = <?php echo json_encode( $pwFeeds ); ?>;
-		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;
-		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
-		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
+	postworldAdmin.controller( 'pwTermFeedsDataCtrl', [ '$scope', function( $scope ){
+		$scope.pwTermFeeds = <?php echo json_encode( $pwTermFeeds ); ?>;
+		//$scope.pwFeedSettings = <?php //echo json_encode( $pwFeedSettings ); ?>;
+		$scope.termFeedTemplates = <?php echo json_encode( $termFeedTemplates ); ?>;
 	}]);
 </script>
 
 <div ng-app="postworldAdmin" class="postworld feeds wrap" ng-cloak>
 	<div
 		pw-admin
-		pw-admin-feeds
-		ng-controller="pwFeedsDataCtrl"
+		pw-admin-term-feeds
+		ng-controller="pwTermFeedsDataCtrl"
 		ng-cloak>
 		
 		<h1>
-			<i class="icon-th-small"></i>
-			Feeds
-			<button class="add-new-h2" ng-click="newFeed()">Add New Feed</button>
+			<i class="icon-tag"></i>
+			Term Feeds
+			<button class="add-new-h2" ng-click="newTermFeed()">Add New Term Feed</button>
 		</h1>
 
 		<hr class="thick">
@@ -401,61 +393,18 @@
 					
 					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
 					<div class="pw-row">
-						<div class="pw-col-3">
-							<label
-								for="feed_view"
-								class="inner">
-								<?php ___('feeds.view.current'); ?>
-							</label>
-							<select
-								id="feed_view"
-								class="labeled"
-								ng-model="selectedItem.view.current"
-								ng-options="value for value in feedOptions.view">
-								
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="feed_view_options"
-								class="inner">
-								<?php ___('feeds.view.options'); ?>
-							</label>
-							<select
-								id="feed_view_options"
-								class="labeled"
-								ng-model="selectedItem.view.options"
-								ng-options="value for value in feedOptions.view"
-								multiple>
-							</select>
-						</div>
 
 						<div class="pw-col-3">
 							<label
-								for="item-feed_template"
+								for="item-template"
 								class="inner">
-								<?php ___('feeds.feed_template'); ?>
+								<?php ___('feeds.template'); ?>
 							</label>
 							<select
-								id="item-feed_template"
+								id="item-template"
 								class="labeled"
-								ng-model="selectedItem.feed_template"
-								ng-options="key as key for (key, value) in htmlFeedTemplates">
-							</select>
-						</div>
-
-						<div class="pw-col-3">
-							<label
-								for="item-aux_template"
-								class="inner">
-								<?php ___('feeds.aux_template'); ?>
-							</label>
-							<select
-								id="item-aux_template"
-								class="labeled"
-								ng-model="selectedItem.aux_template"
-								ng-options="key as key for (key, value) in phpFeedTemplates">
-								<option value=""><?php ___('general.none'); ?></option>
+								ng-model="selectedItem.template"
+								ng-options="key as key for (key, value) in termFeedTemplates">
 							</select>
 						</div>
 

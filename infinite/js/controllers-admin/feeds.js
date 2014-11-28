@@ -11,7 +11,7 @@ postworldAdmin.directive( 'pwAdminFeeds', [ function(){
         controller: 'pwAdminFeedsCtrl',
         link:function( scope, element, attrs ){
         	// Add Module Class
-        	element.addClass('pw-admin-style');
+        	element.addClass('pw-admin-feeds');
         }
     };
 }]);
@@ -109,7 +109,7 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 			aux_template: 'seo-list',		// Get PHP feeds from pwData
 		};
 
-		$scope.iFeeds.push( newFeed );
+		$scope.pwFeeds.push( newFeed );
 		$scope.selectItem( newFeed );
 	}
 

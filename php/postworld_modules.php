@@ -46,6 +46,15 @@ function pw_available_modules(){
 			'description'	=>	'',
 			),
 
+		/*
+		array(
+			'name'	=>	'Term Feeds',
+			'slug'	=>	'term-feeds',
+			'icon'	=>	'icon-tag',
+			'description'	=>	'',
+			),
+		*/
+
 		array(
 			'name'	=>	'Backgrounds',
 			'slug'	=>	'backgrounds',
