@@ -8,19 +8,19 @@ function pw_query_terms( $args ){
 
   $query_term = $search;
   $tags_query = "
-    SELECT
-      $wpdb->terms.term_id,
-      $wpdb->terms.name,
-      $wpdb->terms.slug
-    FROM
-      $wpdb->terms
-      INNER JOIN
-        $wpdb->term_taxonomy
-      ON
-        $wpdb->terms.term_id = $wpdb->term_taxonomy.term_id
-    WHERE
-      name LIKE '$query_term%' AND taxonomy = '$taxonomy'
-    ";
+	SELECT
+	  $wpdb->terms.term_id,
+	  $wpdb->terms.name,
+	  $wpdb->terms.slug
+	FROM
+	  $wpdb->terms
+	  INNER JOIN
+		$wpdb->term_taxonomy
+	  ON
+		$wpdb->terms.term_id = $wpdb->term_taxonomy.term_id
+	WHERE
+	  name LIKE '$query_term%' AND taxonomy = '$taxonomy'
+	";
 
   return $wpdb->get_results($tags_query,ARRAY_A);
 
@@ -228,12 +228,12 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 						//if not found at all or in defferent tax, insert	
 							//echo "<br><br> not found at all or found in differen tax<br><br>";
 							$insert_term_output = (wp_insert_term(
-                               $current_object[$j]["name"], // the term 
-                               $taxonomy_term_names[$i], // the taxonomy
-                               array(
-                                 'slug' => $current_object[$j]["slug"],
-                               )
-                      		));
+							   $current_object[$j]["name"], // the term 
+							   $taxonomy_term_names[$i], // the taxonomy
+							   array(
+								 'slug' => $current_object[$j]["slug"],
+							   )
+							));
 							$current_term_id=-1;
 							//print_r($insert_term_output);
 							if(gettype($insert_term_output)=='array')
@@ -313,6 +313,46 @@ function pw_get_child_terms_meta( $term_query, $taxonomy ){
 	return $sub_terms_meta;
 }
 
+
+
+
+/*
+ * Replace Taxonomy slug with Post Type slug in url
+ * Version: 1.1
+ * • Allows custom taxonomies to share the same slug as custom post types
+ * • Use like this : add_filter('generate_rewrite_rules', 'pw_taxonomy_slug_rewrite');
+ */
+
+function pw_taxonomy_slug_rewrite($wp_rewrite) {
+	$rules = array();
+	// get all custom taxonomies
+	$taxonomies = get_taxonomies(array('_builtin' => false), 'objects');
+	// get all custom post types
+	$post_types = get_post_types(array('public' => true, '_builtin' => false), 'objects');
+	 
+	foreach ($post_types as $post_type) {
+		foreach ($taxonomies as $taxonomy) {
+		 
+			// go through all post types which this taxonomy is assigned to
+			foreach ($taxonomy->object_type as $object_type) {
+				 
+				// check if taxonomy is registered for this custom type
+				if ($object_type == $post_type->rewrite['slug']) {
+			 
+					// get category objects
+					$terms = get_categories(array('type' => $object_type, 'taxonomy' => $taxonomy->name, 'hide_empty' => 0));
+			 
+					// make rules
+					foreach ($terms as $term) {
+						$rules[$object_type . '/' . $term->slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
+					}
+				}
+			}
+		}
+	}
+	// merge with global rules
+	$wp_rewrite->rules = $rules + $wp_rewrite->rules;
+}
 
 
 ?>

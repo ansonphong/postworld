@@ -68,7 +68,7 @@ extract($OPTIONS);
 	<!-- SELECT TEMPLATE -->
 	<div class="type-wrapper">
 		<div class="type-title">
-			<label><b>Term Feed</b></label>
+			<label><b>Template</b></label>
 		</div>
 		<div class="type-options">
 			<select name="<?php echo $this->get_field_name('template_id'); ?>"  id="<?php echo $this->get_field_id('template_id'); ?>">

@@ -183,7 +183,7 @@ function pw_get_view_meta( $context = array() ){
 		}
 
 		/// TAXONOMY ///
-		else if( !empty( $taxonomy ) ){
+		else if( in_array( 'archive-taxonomy', $context ) ){
 
 			$taxonomy = get_query_var( 'taxonomy' );
 			$term_id = get_queried_object()->term_id;

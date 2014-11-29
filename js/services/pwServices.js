@@ -96,6 +96,29 @@ postworld.factory('_',
 	function ( $rootScope, $resource, $q, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
+	function get( obj, key ){
+		// Returns a sub-object
+        // SYNTAX : key = 'object.subkey.subsubkey'
+
+        if( _.isUndefined( obj ) )
+            return false;
+        
+        ///// MINE OBJECT /////
+        var parts = key.split('.');
+        for(var i = 0, l = parts.length; i < l; i++) {
+            var part = parts[i];
+            if(obj !== null && typeof obj === "object" && part in obj) {
+                obj = obj[part];
+            }
+            else {
+                return false;
+            }
+        }
+
+        // Return findWhere
+        return obj;
+	}
+
 	///// SET OBJECT VALUES /////
 	function setObj( obj, key, value  ){
 			/* 	Sets the value of an object,
@@ -233,31 +256,12 @@ postworld.factory('_',
 			return true;
 			
 		},
-		getObj: function( obj, subKey ){
-            // Returns a sub-object
-            // SYNTAX : subKey = 'object.subkey.subsubkey'
-
-            if( _.isUndefined( obj ) )
-                return false;
-            
-            ///// MINE OBJECT /////
-            var parts = subKey.split('.');
-            for(var i = 0, l = parts.length; i < l; i++) {
-                var part = parts[i];
-                if(obj !== null && typeof obj === "object" && part in obj) {
-                    obj = obj[part];
-                }
-                else {
-                    return false;
-                }
-            }
-
-            // Return findWhere
-            return obj;
-            
+		getObj: function( obj, key ){
+			// DEPRECIATED
+            return get( obj, key );
         },
         get : function( obj, key ){
-			return this.getObj( obj, key  );
+			return get( obj, key  );
 		},
 		setObj : function( obj, key, value  ){
 			return setObj( obj, key, value  );
@@ -412,6 +416,19 @@ postworld.factory('_',
 				$scope[ $array ] = flatArray;
 			}, 1 );
 		},
+
+		deepWhere: function( list, key, val ){
+			// Deeply looks through each value in the list
+			// Returning an array of all the values where the key equals the value
+			var newList = [];
+			angular.forEach( list, function( item ){
+				var mineVal = get( item, key );
+				$log.debug( "item : ", item );
+				if( mineVal == val )
+					newList.push( item );
+			});
+			return newList;
+		}
 
 
 	};
