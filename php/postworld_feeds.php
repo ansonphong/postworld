@@ -15,6 +15,7 @@ function pw_get_feed_by_id( $feed_id ){
 
 function pw_live_feed( $vars = array() ){
 	global $post;
+	global $pw;
 
 	// Run filters on the feed vars
 	$vars = apply_filters( 'pw_feed', $vars );
@@ -68,12 +69,7 @@ function pw_live_feed( $vars = array() ){
 
 
 	///// DEFAULT ARRAYS /////
-	$default_query = array(
-		'post_status'		=>	'publish',
-		'post_type'			=>	'post',
-		'fields'			=>	'preview',
-		'posts_per_page'	=>	200,
-		);
+	
 
 	$default_feed = array(
 		'preload'			=>	10,
@@ -84,7 +80,7 @@ function pw_live_feed( $vars = array() ){
 			'current' 	=> 'list',
 			'options'	=>	array( 'list', 'grid' ),
 			),
-		'query' 		=> 	$default_query,
+		//'query' 		=> 	$default_query,
 		'feed_template'	=>	'feed-list',
 		'aux_template'	=>	'seo-list',
 		'options'		=>	array(
@@ -120,6 +116,18 @@ function pw_live_feed( $vars = array() ){
 
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
+
+	///// DEFAULT : QUERY /////
+	// If the feed is empty
+	if( !isset( $feed['query'] ) || empty( $feed['query'] ) ){
+		$default_query = array(
+			'post_status'		=>	'publish',
+			'post_type'			=>	'post',
+			'fields'			=>	'preview',
+			'posts_per_page'	=>	200,
+			);
+		$feed['query'] = array_replace_recursive( $default_query, $pw['query'] );
+	}
 
 	// Run query filters
 	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );

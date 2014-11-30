@@ -27,6 +27,7 @@
 		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;
 		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
 		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
+		$scope.contexts = <?php echo json_encode( pw_get_contexts( array( 'default', 'standard', 'archive', 'search', 'taxonomy', 'post-type' ) ) ); ?>;
 	}]);
 </script>
 
@@ -55,6 +56,9 @@
 						ng-class="menuClass('settings')">
 						<i class="icon-gear"></i> Settings
 					</li>
+				</ul>
+					<hr class="thin">
+				<ul class="list-menu">
 					<li
 						ng-repeat="item in pwFeeds"
 						ng-click="selectItem(item)"
@@ -69,34 +73,61 @@
 				<!-- ///// EDIT SETTINGS ///// -->
 				<div ng-show="showView('settings')">
 					
-					<h3><?php ___('feeds.settings.loading_icon') ?></h3>
+					<div class="well">
+						<h3><?php ___('feeds.settings.loading_icon') ?></h3>
 
-					<!-- DROPDOWN -->
-					<span
-						class="dropdown">
-						<!-- SELECTED ITEM -->
+						<!-- DROPDOWN -->
 						<span
-							dropdown-toggle
-							class="area-select area-select-icon">
-							<i class="{{ pwFeedSettings.loading_icon }} icon-spin"></i>
+							class="dropdown">
+							<!-- SELECTED ITEM -->
+							<span
+								dropdown-toggle
+								class="area-select area-select-icon">
+								<i class="{{ pwFeedSettings.loading_icon }} icon-spin"></i>
+							</span>
+							<!-- MENU -->
+							<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
+								<li
+									class="select-icon"
+									ng-repeat="icon in feedSettingsOptions.loadingIcon"
+									ng-click="pwFeedSettings.loading_icon = icon">
+									<i
+										class="{{ icon }}"></i>
+								</li>
+							</ul>
 						</span>
-						<!-- MENU -->
-						<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
-							<li
-								class="select-icon"
-								ng-repeat="icon in feedSettingsOptions.loadingIcon"
-								ng-click="pwFeedSettings.loading_icon = icon">
-								<i
-									class="{{ icon }}"></i>
-							</li>
-						</ul>
-					</span>
+					</div>
+
+					
 
 					<hr class="thick">
+
+					<div class="well">
+
+						<table>
+							<tr ng-repeat="context in contexts"
+								valign="top">
+								<th scope="row" align="left">
+									<span
+										tooltip="{{context.name}}"
+										tooltip-popup-delay="333">
+										<i class="{{context.icon}}"></i>
+										{{context.label}}
+										</th>
+									</span>
+								<td>
+									DROPDOWN
+								</td>
+							</tr>
+						</table>
+
+					</div>
 
 					<!-- SAVE BUTTON -->
 					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
 		
+					{{ pwFeedSettings }}
+
 				</div>
 
 

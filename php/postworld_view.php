@@ -132,10 +132,44 @@ function pw_current_view(){
 	$viewdata['protocol'] = $protocol;
 	$viewdata["context"] = pw_current_context();
 	$viewmeta = pw_get_view_meta( $viewdata["context"] );
+
 	$viewdata = array_replace_recursive( $viewdata, $viewmeta );
-	$viewdata["query"] = pw_to_array( $wp_query )['query_vars'];
+	
 	$viewdata = pw_to_array( $viewdata );
 	return $viewdata;
+}
+
+function pw_view_query( $view ){
+	// Generate the current query vars
+
+	if( empty( $view ) )
+		$context = pw_current_view();
+
+	// Start with the global wp_query
+	global $wp_query;
+	$query = $wp_query->query;
+
+
+	/// DATE ARCHIVE ///
+	if( in_array( 'archive-date', $view['context'] ) ){
+
+	}
+	
+	/// TAXONOMY ARCHIVE ///
+	if( in_array( 'archive-taxonomy', $view['context'] ) ){
+		$query['tax_query'] = array(
+			array(
+				'taxonomy'	=>	$view['term']['taxonomy'],
+				'field'		=>	'id',
+				'terms'		=>	$view['term']['term_id']
+				)
+			);
+	}
+
+	
+	return $query;
+
+
 }
 
 function pw_get_view_meta( $context = array() ){
@@ -252,6 +286,199 @@ function pw_get_bp_contexts(){
 
 	return $bp_contexts;
 }
+
+
+function pw_get_contexts( $types = array() ){
+	global $pw;
+
+	///// GET FROM CACHE /////
+	// If the contexts have already been generated
+	// Get them directly from the global object
+	if( empty( $types ) )
+		$cache = true;
+	else
+		$cache = false;
+	if( isset( $pw['contexts'] ) &&
+		is_array( $pw['contexts'] ) &&
+		$cache
+		){
+		$pw['contexts'] = apply_filters( 'pw_contexts', $pw['contexts'] );
+		return $pw['contexts'];
+	}
+
+	///// DEFAULT TYPES /////
+	if( empty( $types ) ){
+		$types = array(
+			'default',
+			'standard',
+			'single',
+			'archive',
+			'search',
+			'post-type',
+			'taxonomy',
+			'buddypress'
+			);
+	}
+
+	///// ADD STANDARD CONTEXTS /////
+	// TODO : Add Multi-language support, draw values from Language array
+	$contexts = array();
+
+	if( in_array( 'default', $types ) )
+		$contexts[] = array(
+			"label"	=>	"Default",
+			"name"	=>	"default",
+			"icon"	=>	"icon-circle-medium",
+			);
+
+	if( in_array( 'standard', $types ) )
+		$contexts[] = array(
+			"label"	=>	"Home",
+			"name"	=>	"home",
+			"icon"	=>	"icon-home",
+			);
+
+	if( in_array( 'standard', $types ) )
+		$contexts[] = array(
+			"label"	=>	"Blog",
+			"name"	=>	"blog",
+			"icon"	=>	"icon-pushpin",
+			);
+
+	if( in_array( 'single', $types ) )
+		$contexts[] = array(
+			"label"	=>	"Page",
+			"name"	=>	"page",
+			"icon"	=>	"icon-file",
+			);
+
+	if( in_array( 'single', $types ) )
+		$contexts[] = array(
+			"label"	=>	"Post",
+			"name"	=>	"single",
+			"icon"	=>	"icon-pushpin",
+			);
+
+	if( in_array( 'archive', $types ) )
+		$contexts[] = array(
+			"label"	=>	"Archive",
+			"name"	=>	"archive",
+			"icon"	=>	"icon-th-list",
+			);
+
+	if( in_array( 'search', $types ) )
+		$contexts[] = array(
+			"label"	=>	"Search",
+			"name"	=>	"search",
+			"icon"	=>	"icon-search",
+			);
+
+
+
+	///// ADD CUSTOM POST TYPES /////
+	if( in_array( 'post-type', $types ) ){
+
+		// Get registered custom post types
+		$custom_post_types = get_post_types( array( '_builtin' => false, ), 'objects' );
+
+		// Iterate through each post type and add it to contexts
+		foreach( $custom_post_types as $post_type ){
+
+			/// SINGLES ///
+			if( in_array( 'single', $types ) )
+				array_push( $contexts,
+					array(
+						"label"	=>	$post_type->labels->singular_name . " : Single",
+						"name"	=>	"single-" . $post_type->name,
+						"icon"	=>	"icon-cube",
+						)
+				 );
+
+			/// ARCHIVES ///
+			if( in_array( 'archive', $types ) )
+				if( $post_type->has_archive )
+					array_push( $contexts,
+						array(
+							"label"	=>	$post_type->labels->singular_name . " : Archive",
+							"name"	=>	"archive-post-type-" . $post_type->name,
+							"icon"	=>	"icon-cubes",
+							)
+					 );
+
+		}
+
+	}
+	
+
+	///// ADD BUILTIN TAXONOMIES /////
+	if( in_array( 'taxonomy', $types ) ){
+
+		/// CATEGORIES ///
+		if( taxonomy_exists('category') )
+			array_push( $contexts,
+				array(
+					"label"	=>	"Category : Archive",
+					"name"	=>	"category",
+					"icon"	=>	"icon-folder",
+					)
+			 );
+		/// TAGS ///
+		if( taxonomy_exists('post_tag') )
+			array_push( $contexts,
+				array(
+					"label"	=>	"Tag : Archive",
+					"name"	=>	"tag",
+					"icon"	=>	"icon-tags",
+					)
+			 );
+		
+		///// ADD CUSTOM TAXONOMIES /////
+		// Get registered custom taxonomies
+		$custom_taxonomies = get_taxonomies( array( '_builtin' => false, ), 'objects' );
+
+		foreach( $custom_taxonomies as $taxonomy ){
+
+			/// TAXONOMIES ///
+			// Only custom taxonomies
+			if( !$taxonomy->_builtin )
+				array_push( $contexts,
+					array(
+						"label"	=>	$taxonomy->labels->singular_name . " : Archive",
+						"name"	=>	"archive-taxonomy-" . $taxonomy->name,
+						"icon"	=>	"icon-cube-o",
+						)
+				 );
+		}
+
+	}
+
+	///// ADD BUDDYPRESS /////
+	if( pw_is_buddypress_active() &&
+		in_array( 'buddypress', $types ) ){
+
+		$contexts[] = array(
+			"label"	=>	"BuddyPress",
+			"name"	=>	"buddypress",
+			"icon"	=>	"icon-plugin",
+			);
+
+		$contexts[] = array(
+			"label"	=>	"BuddyPress User",
+			"name"	=>	"buddypress-user",
+			"icon"	=>	"icon-user",
+			);
+	}
+
+	// Apply contexts filter
+	$contexts = apply_filters( 'pw_contexts', $contexts );
+	
+	// Set into globals
+	if( $cache )
+		$pw['contexts'] = $contexts;
+
+	return $contexts;
+}
+
 
 
 ?>
