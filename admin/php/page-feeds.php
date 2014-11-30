@@ -74,6 +74,10 @@
 				<div ng-show="showView('settings')">
 					
 					<div class="well">
+
+						<!-- SAVE BUTTON -->
+						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
+		
 						<h3><?php ___('feeds.settings.loading_icon') ?></h3>
 
 						<!-- DROPDOWN -->
@@ -98,11 +102,11 @@
 						</span>
 					</div>
 
-					
-
-					<hr class="thick">
-
 					<div class="well">
+						<!-- SAVE BUTTON -->
+						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
+		
+						<h3>Contexts</h3>
 
 						<table>
 							<tr ng-repeat="context in contexts"
@@ -116,16 +120,27 @@
 										</th>
 									</span>
 								<td>
-									DROPDOWN
+									<label class="inner">View</label>
+									<select
+										id="feed_view"
+										class="labeled"
+										ng-model="pwFeedSettings.context[context.name].view.current"
+										ng-options="value for value in feedOptions.view">
+										<option value="">Default</option>
+									</select>
+
+									<!--
+									FEED TEMPLATE :
+									BLOCKS : 
+									-->
+								
 								</td>
 							</tr>
 						</table>
 
 					</div>
 
-					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
-		
+					
 					{{ pwFeedSettings }}
 
 				</div>
