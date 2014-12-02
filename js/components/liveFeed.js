@@ -72,30 +72,44 @@ postworld.controller('pwFeedController',
 			$pwData.feeds[$scope.feedId].view : {};
 
 		
-		$scope.currentView = function(){
+		$scope.getView = function(){
 			// Get Current View
 			var currentView = $_.get( $pwData.feeds[$scope.feedId], 'view.current' );
 			var view =  ( currentView ) ? currentView : 'list';
 			return view;
 		}
 
-	   	// Get Feed Template from feeds if it exists
-	   	if ($pwData.feeds[$scope.feedId].feed_template) {
-			var template = $pwData.feeds[$scope.feedId].feed_template;			   	
-			$scope.templateUrl = $pwData.pw_get_template( { subdir: 'feeds', view: template } );
-	   	}
-	   	// Otherwise get it from default
-	   	else {
-	   		$scope.templateUrl = $pwData.pw_get_template( { subdir: 'feeds', view: 'feed-list' } );   	
-	   	}
+		$scope.setView = function( view ){
 
-		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, view){
-			$log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',view);
+		}
+
+		// TODO : Refactor this into a function
+		// Which exectutes with a $watch on the function $scope.getView();
+
+	   	$scope.updateTemplateUrl = function(){
+	   		// Generate template IDs
+	   		var templateId = 'feed-' + $scope.getView();
+	   		var templateIdFallback = 'feed-list';
+
+	   		// Get the template path
+	   		var template = $pwData.pw_get_template( { subdir: 'feeds', view: templateId } )
+	   		
+	   		// If the template path doesn't exist
+	   		if( template == false )
+	   			// Get fallback
+	   			template = $pwData.pw_get_template( { subdir: 'feeds', view: templateIdFallback } )
+
+	   		// Set into the scope, this is picked up by the ng-include
+			$scope.templateUrl = template; //$pwData.pw_get_template( { subdir: 'feeds', view: template } );	   	
+	   	}
+	   	$scope.updateTemplateUrl();
+
+
+		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, vars){
+			$log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',vars);
 			// Broadcast to all children
-			// TODO : Also broadcast the feed ID, so only the effected feed is updated
-			$scope.$broadcast("FEED_TEMPLATE_UPDATE", $scope.currentView() );
-		   });
-
+			$scope.$broadcast("FEED_TEMPLATE_UPDATE", vars );
+		});
 
 		$scope.setDefault = function( exp, defaultVal ){
 			var value = $scope.$eval( exp );

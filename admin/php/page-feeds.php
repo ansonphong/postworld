@@ -22,12 +22,21 @@
 		)['feeds'];
 ?>
 <script>
-	postworldAdmin.controller( 'pwFeedsDataCtrl', [ '$scope', function( $scope ){
+	postworldAdmin.controller( 'pwFeedsDataCtrl',
+		[ '$scope', '_',
+		function( $scope, $_ ){
 		$scope.pwFeeds = <?php echo json_encode( $pwFeeds ); ?>;
 		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;
 		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
 		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
 		$scope.contexts = <?php echo json_encode( pw_get_contexts( array( 'default', 'standard', 'archive', 'search', 'taxonomy', 'post-type' ) ) ); ?>;
+	
+		// Watch Feed Settings
+		$scope.$watch( 'pwFeedSettings', function(val){
+			// Delete empty values
+			$_.removeEmpty( $scope.pwFeedSettings );
+		}, 1);
+
 	}]);
 </script>
 
@@ -120,20 +129,9 @@
 										</th>
 									</span>
 								<td>
-									<label class="inner">View</label>
-									<select
-										id="feed_view"
-										class="labeled"
-										ng-model="pwFeedSettings.context[context.name].view.current"
-										ng-options="value for value in feedOptions.view">
-										<option value="">Default</option>
-									</select>
 
-									<!--
-									FEED TEMPLATE :
-									BLOCKS : 
-									-->
-								
+									<?php echo pw_feed_template_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+											
 								</td>
 							</tr>
 						</table>
@@ -445,67 +443,7 @@
 					
 					<hr class="thin">
 					
-					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
-					<div class="pw-row">
-						<div class="pw-col-3">
-							<label
-								for="feed_view"
-								class="inner">
-								<?php ___('feeds.view.current'); ?>
-							</label>
-							<select
-								id="feed_view"
-								class="labeled"
-								ng-model="selectedItem.view.current"
-								ng-options="value for value in feedOptions.view">
-								
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="feed_view_options"
-								class="inner">
-								<?php ___('feeds.view.options'); ?>
-							</label>
-							<select
-								id="feed_view_options"
-								class="labeled"
-								ng-model="selectedItem.view.options"
-								ng-options="value for value in feedOptions.view"
-								multiple>
-							</select>
-						</div>
-
-						<div class="pw-col-3">
-							<label
-								for="item-feed_template"
-								class="inner">
-								<?php ___('feeds.feed_template'); ?>
-							</label>
-							<select
-								id="item-feed_template"
-								class="labeled"
-								ng-model="selectedItem.feed_template"
-								ng-options="key as key for (key, value) in htmlFeedTemplates">
-							</select>
-						</div>
-
-						<div class="pw-col-3">
-							<label
-								for="item-aux_template"
-								class="inner">
-								<?php ___('feeds.aux_template'); ?>
-							</label>
-							<select
-								id="item-aux_template"
-								class="labeled"
-								ng-model="selectedItem.aux_template"
-								ng-options="key as key for (key, value) in phpFeedTemplates">
-								<option value=""><?php ___('general.none'); ?></option>
-							</select>
-						</div>
-
-					</div>
+					<?php echo pw_feed_template_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 					
 					<hr class="thick">
 

@@ -2,12 +2,17 @@
 
 
 ///// SAVE BUTTON /////
-function i_save_option_button( $option_name, $option_model ){
+function pw_save_option_button( $option_name, $option_model ){
 	$vars = array(
 		'option_name'	=>	$option_name,
 		'option_model'	=>	$option_model,
 		);
 	echo pw_ob_admin_template( 'button-save-option', $vars );
+}
+
+function i_save_option_button( $option_name, $option_model ){
+	// DEPRECIATED
+	pw_save_option_button( $option_name, $option_model );
 }
 
 ///// SELECT IMAGE ID /////
@@ -314,6 +319,10 @@ function pw_background_single_options( $vars = array( "context" => "quickEdit" )
 
 }
 
+///// FEED TEMPLATE OPTIONS /////
+function pw_feed_template_options( $vars = array( "ng_model" => "selectedItem" ) ){
+	return pw_ob_admin_template( 'feed-template-options', $vars );
+}
 
 ///// SELECT ICON /////
 function i_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){

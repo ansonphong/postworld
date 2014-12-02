@@ -68,7 +68,7 @@ function pw_print_term_feed( $vars ){
 			'args'          =>  array(
 				'number'	=>	50,
 				'orderby'	=>	'count',
-				'order'		=>	'ASC',
+				'order'		=>	'DESC',
 				),
 			),
 		'query'  =>  array(

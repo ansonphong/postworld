@@ -428,7 +428,16 @@ postworld.factory('_',
 					newList.push( item );
 			});
 			return newList;
-		}
+		},
+
+		// Compact arrays with empty entries; delete keys from objects with empty value
+		removeEmpty: function(obj){
+			var isArray = obj instanceof Array;
+			for (var k in obj){
+				if ( _.isEmpty( obj[k] ) ) isArray ? obj.splice(k,1) : delete obj[k];
+				else if (typeof obj[k]=="object") this.removeEmpty(obj[k]);
+			}
+		},
 
 
 	};

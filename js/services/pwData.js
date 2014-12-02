@@ -43,15 +43,17 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
 		//$log.debug('getTemplate : META : ',meta);
 
-		switch (subdir) {
+		switch( subdir ) {
+			// Get a post template; includes the post_type and view
 			case 'posts':
-				if (post_type)
-					template = $pw.templates.posts[post_type][view];						
+				if( post_type )
+					template = $_.get( $pw.templates.posts, post_type + '.' + view ); // $pw.templates.posts[post_type][view];						
 				else 
-					template = $pw.templates.posts['post'][view];
+					template = $_.get( $pw.templates.posts, 'post.' + view ); // $pw.templates.posts['post'][view];
 				break;
+			// Get a standard template
 			default:
-				template = $_.getObj( $pw.templates[subdir], view  ); // $pw.templates[subdir][view];
+				template = $_.get( $pw.templates[ subdir ], view  ); // $pw.templates[subdir][view];
 				break;
 		}
 		// $log.debug('Service: pwData Method:getTemplate template=',template);
@@ -213,7 +215,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			// If it exists, add the version number to the URL
 			if( template )
 				template = template + "?ver=" + $pw['info']['version'] ; // ( this, subdir, post_type, name )
-		    
+		    // Otherwire return false
+		    else
+		    	return false;
+
 		    // If on HTTPS / SSL, get on the same protocol
 		    if( $pw.view['protocol'] == 'https' )
 		    	template = template.replace('http://', 'https://');

@@ -29,7 +29,7 @@ postworld.controller('pwFeedItemCtrl',
 			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );				
 		}
 		else 
-			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: $scope.$parent.currentView() } );
+			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: $scope.$parent.getView() } );
 
 		//$log.debug('template:', $scope.itemTemplateUrl);
 
@@ -41,11 +41,13 @@ postworld.controller('pwFeedItemCtrl',
 
 		// TODO set templateURL?		  
 		// Template Update Event
-		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, currentView ){
-			
+		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, vars ){
+
+			// TODO : Verify here that the current feed is matches `vars.feedId`
+
 			if ( $scope.post.post_type != '_pw_block' ) {
 				var type = $scope.post.post_type;
-				$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: currentView } );					
+				$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
 			} 
 		   });		  		      	
 	}

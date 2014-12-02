@@ -8,7 +8,9 @@
 <div ng-app="postworldAdmin" class="postworld styles wrap">
 	<script type="text/javascript">
 		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
-		postworldAdmin.controller('pwBackgroundsDataCtrl', [ '$scope', '$window', function( $scope, $window ){
+		postworldAdmin.controller('pwBackgroundsDataCtrl',
+			[ '$scope', '$window', '_',
+			function( $scope, $window, $_ ){
 			$scope.lang = "en";
 			// Print Data
 			$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
@@ -22,11 +24,8 @@
 			
 			// Watch Background Contexts
 			$scope.$watch( 'pwBackgroundContexts', function(val){
-				// Delete empty keys
-				angular.forEach( $scope.pwBackgroundContexts, function( value, key ){
-					if( _.isEmpty( value ) )
-						delete $scope.pwBackgroundContexts[ key ];
-				});
+				// Delete empty values
+				$_.removeEmpty( $scope.pwBackgroundContexts );
 			}, 1);
 
 		}]);
