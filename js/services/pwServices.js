@@ -423,7 +423,7 @@ postworld.factory('_',
 			var newList = [];
 			angular.forEach( list, function( item ){
 				var mineVal = get( item, key );
-				$log.debug( "item : ", item );
+				//$log.debug( "item : ", item );
 				if( mineVal == val )
 					newList.push( item );
 			});

@@ -104,9 +104,11 @@ postworld.controller('postController',
 	///// TIME FUNCTIONS /////
 	$scope.jsDateToTimestamp = function(jsDate){
 		var dateObject = new Date(jsDate);
-
 		return Date.parse(dateObject);
+	}
 
+	$scope.jsDate = function( timestamp ){
+		return new Date( timestamp );
 	}
 
 	///// IMAGE FUNCTIONS /////

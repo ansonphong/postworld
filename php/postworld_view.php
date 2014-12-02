@@ -141,6 +141,7 @@ function pw_current_view(){
 
 function pw_view_query( $view ){
 	// Generate the current query vars
+	global $pw;
 
 	if( empty( $view ) )
 		$context = pw_current_view();
@@ -149,12 +150,18 @@ function pw_view_query( $view ){
 	global $wp_query;
 	$query = $wp_query->query;
 
-
 	/// DATE ARCHIVE ///
 	if( in_array( 'archive-date', $view['context'] ) ){
 
 	}
 	
+	/// POST TYPE ARCHIVE ///
+	if( in_array( 'archive-post-type', $view['context'] ) ){
+		$post_type = _get( $pw, 'view.post_type.name' );
+		$query['post_type'] = $post_type;
+	}
+
+
 	/// TAXONOMY ARCHIVE ///
 	if( in_array( 'archive-taxonomy', $view['context'] ) ){
 		$query['tax_query'] = array(
@@ -166,9 +173,17 @@ function pw_view_query( $view ){
 			);
 	}
 
+	///// DEFAULT QUERY VARS /////
+	$default_query = array(
+		'post_status' 		=> 'publish',
+		'post_type'			=>	'any',
+		'fields'			=>	'preview',
+		'posts_per_page'	=>	100,
+		);
 	
-	return $query;
+	$query = array_replace_recursive( $default_query, $query );
 
+	return $query;
 
 }
 
