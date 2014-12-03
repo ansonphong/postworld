@@ -51,7 +51,7 @@ module.exports = function(grunt) {
             //'lib/bootstrap/bootstrap.min.js', // Main Bootstrap JS
 
             // Angular UI Bootstrap
-            'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js', // Angular UI Boostrap
+            'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js', // Angular UI Boostrap
             
             // Angular Strap Modules
             'lib/angular-strap/angular-strap-dimensions.js',

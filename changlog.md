@@ -10,4 +10,4 @@
 - __Breaking Change:__ Changed modal window template to auto-select based on post type
     + Formerly `templates/modals/modal-view-post.html` now would use `templates/posts/{{post_type}}-modal.html`
     + Fallback for all post types to `post-modal.html`
-    + __To Fix:__
+    + __To Fix:__ 1. Add post-modal template, 2. Add modal to `pwSiteGlobals.post_views`

@@ -56,7 +56,7 @@ postworld.controller('pwFeedController',
 			$pwData.feeds[$scope.feedId] : {};
 		
 		// FEED ID
-		$scope.feed.feed_id = 	$scope.feedId; // This Scope variable will propagate to all directives inside Live Feed
+		$scope.feed.feed_id = $scope.feedId; // This Scope variable will propagate to all directives inside Live Feed
 
 		// NO FEED
 		if (!$scope.feedId) {
@@ -71,36 +71,22 @@ postworld.controller('pwFeedController',
 		$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
 			$pwData.feeds[$scope.feedId].view : {};
 
-		
-		$scope.getView = function(){
-			// Get Current View
-			var currentView = $_.get( $pwData.feeds[$scope.feedId], 'view.current' );
-			var view =  ( currentView ) ? currentView : 'list';
-			return view;
-		}
-
-		$scope.setView = function( view ){
-
-		}
-
-		// TODO : Refactor this into a function
-		// Which exectutes with a $watch on the function $scope.getView();
-
 	   	$scope.updateTemplateUrl = function(){
-	   		// Generate template IDs
-	   		var templateId = 'feed-' + $scope.getView();
-	   		var templateIdFallback = 'feed-list';
+			// Generate template IDs
+			var templateId = 'feed-' + $pwData.getFeedView( $scope.feedId );
+			var templateIdFallback = 'feed-list';
 
-	   		// Get the template path
-	   		var template = $pwData.pw_get_template( { subdir: 'feeds', view: templateId } )
-	   		
-	   		// If the template path doesn't exist
-	   		if( template == false )
-	   			// Get fallback
-	   			template = $pwData.pw_get_template( { subdir: 'feeds', view: templateIdFallback } )
+			// Get the template path
+			var template = $pwData.pw_get_template( { subdir: 'feeds', view: templateId } )
 
-	   		// Set into the scope, this is picked up by the ng-include
+			// If the template path doesn't exist
+			if( template == false )
+				// Get fallback
+				template = $pwData.pw_get_template( { subdir: 'feeds', view: templateIdFallback } )
+
+			// Set into the scope, this is picked up by the ng-include
 			$scope.templateUrl = template; //$pwData.pw_get_template( { subdir: 'feeds', view: template } );	   	
+
 	   	}
 	   	$scope.updateTemplateUrl();
 

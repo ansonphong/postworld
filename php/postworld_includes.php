@@ -210,7 +210,7 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS-UI-Bootstrap',
 		//	plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.11.0.min.js' );
+			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js' );
 
 		// ANGULAR STRAP : BOOTSTRAP
 		wp_enqueue_script( 'AngularJS-Strap-Dimensions',

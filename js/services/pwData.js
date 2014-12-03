@@ -288,7 +288,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			    }  			    			    
 			}			
 			return args;
-  		},		
+  		},	
+  			
 		pw_get_post_types: function(args) {
 			//$log.debug('pwData.pw_load_feed',args);
 			var params = {args:args};
@@ -454,6 +455,20 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_get_term_feed',params);
 		},
+
+
+		///// FEEDS /////
+		getFeedView: function( feedId ){
+			// Get Current View
+			var currentView = $_.get( this.feeds, feedId + '.view.current' );
+			var defaultView = 'list';
+			var view =  ( currentView ) ? currentView : defaultView;
+			return view;
+		},
+		setFeedView: function( feedId, view ){
+
+		},
+
 		
 
    }; // END OF pwData return value

@@ -20,38 +20,46 @@ postworld.directive('feedItem', [ '_', function( $_ ) {
 }]);
 
 postworld.controller('pwFeedItemCtrl',
-	function($scope, $location, $log, pwData, $attrs) {
+	[ '$scope', '$location', '$log', 'pwData', '$attrs', '_',
+	function( $scope, $location, $log, $pwData, $attrs, $_ ) {
 		
-		var type = 'post';
-		if ( $scope.post.post_type ) type = $scope.post.post_type;
+	///// INIT /////
+	var type = ( $_.get( $scope.post, 'post_type' ) ) ? $scope.post.post_type : 'post';
+	var feedId = $_.get( $scope, 'feed.id' );
 
-		if (type == '_pw_block') {
-			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );				
-		}
-		else 
-			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: $scope.$parent.getView() } );
+	// Check for a local feed view, to override the global feed view
+	// This is used in special view instances such as a model window
+	var localView = $_.get( $scope, 'feed.view.current' );
+	var view = ( localView ) ? localView : $pwData.getFeedView( feedId );
 
-		//$log.debug('template:', $scope.itemTemplateUrl);
-
-		// Decodes Special characters in URIs
-		$scope.decodeURI = function(URI) {
-			URI = URI.replace("&amp;","&");
-			return decodeURIComponent( URI );
-		};
-
-		// TODO set templateURL?		  
-		// Template Update Event
-		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, vars ){
-
-			// TODO : Verify here that the current feed is matches `vars.feedId`
-
-			if ( $scope.post.post_type != '_pw_block' ) {
-				var type = $scope.post.post_type;
-				$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
-			} 
-		   });		  		      	
+	if (type == '_pw_block') {
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );				
 	}
-);
+	else{
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: view } );
+	}
+
+	//$log.debug('template:', $scope.itemTemplateUrl);
+
+	// Decodes Special characters in URIs
+	$scope.decodeURI = function(URI) {
+		URI = URI.replace("&amp;","&");
+		return decodeURIComponent( URI );
+	};
+
+	// TODO set templateURL?		  
+	// Template Update Event
+	$scope.$on("FEED_TEMPLATE_UPDATE", function(event, vars ){
+
+		// TODO : Verify here that the current feed is matches `vars.feedId`
+
+		if ( $scope.post.post_type != '_pw_block' ) {
+			var type = $scope.post.post_type;
+			$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
+		} 
+	});		  		      	
+
+}]);
 
 
 
