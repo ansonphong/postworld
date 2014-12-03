@@ -11,7 +11,7 @@
 			<h3>Event Start</h3>
 
 			<!-- DATE DROPDOWN -->
-			<span class="time dropdown">
+			<span dropdown class="time dropdown">
 				<button dropdown-toggle class="button">
 					<i class="icon-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'MMMM dd, yyyy' }}
@@ -29,7 +29,7 @@
 			</span>
 
 			<!-- TIME DROPDOWN -->
-			<span class="time dropdown">
+			<span dropdown class="time dropdown">
 				<button dropdown-toggle class="button">
 					<i class="icon-clock"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'shortTime' }}
@@ -59,7 +59,7 @@
 			<h3>Event End</h3>
 
 			<!-- DATE DROPDOWN -->
-			<span class="time dropdown">
+			<span dropdown class="time dropdown">
 				<button dropdown-toggle class="button">
 					<i class="icon-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'MMMM dd, yyyy' }}
@@ -75,7 +75,7 @@
 			</span>
 
 			<!-- TIME DROPDOWN -->
-			<span class="time dropdown">
+			<span dropdown class="time dropdown">
 				<button dropdown-toggle class="button">
 					<i class="icon-clock"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'shortTime' }}
@@ -121,7 +121,7 @@
 	
 
 		<!-- TODO :
-		<div ng-show="showView('mapUnit')">
+		<div ng-show="uiShowView('mapUnit')">
 			<google-map
 				id="googleMap"
 				center='map.center'
@@ -151,13 +151,13 @@
 			<!-- UI VIEWS : <pre>{{ uiViews | json }}</pre><hr> -->
 			<!-- SEARCH BUTTON -->
 			<div
-				ng-show="!showView('searchInput')">
+				ng-show="!uiShowView('searchInput')">
 				<button
 					id="searchLocations"
 					class="button float-left"
 					name="search"
 					type="button"
-					ng-click="toggleView('searchInput'); focusElement('#searchBarInput')">
+					ng-click="uiToggleView('searchInput'); uiFocusElement('#searchBarInput')">
 					<i class="icon-search"></i> Search Locations
 				</button>
 				<h4 class="float-left unit">
@@ -168,7 +168,7 @@
 			
 			<!-- SEARCH INPUT -->
 			<div
-				ng-show="showView('searchInput')"
+				ng-show="uiShowView('searchInput')"
 				style="position:relative;">
 				<label for="location" class="inner inner-right unit">
 						<i ng-show="loadingLocations" class="icon-spinner-2 icon-spin"></i>
@@ -185,7 +185,7 @@
 					typeahead-loading="loadingLocations"
 					typeahead-on-select="addGeocode($item);"
 					placeholder=""
-					ng-blur="toggleView('searchInput');"
+					ng-blur="uiToggleView('searchInput');"
 					class="input-icon-left">
 				<!--<button
 					class="button"

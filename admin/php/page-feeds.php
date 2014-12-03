@@ -45,7 +45,8 @@
 		pw-admin
 		pw-admin-feeds
 		ng-controller="pwFeedsDataCtrl"
-		ng-cloak>
+		ng-cloak
+		>
 		
 		<h1>
 			<i class="icon-th-small"></i>
@@ -117,10 +118,13 @@
 		
 						<h3>Contexts</h3>
 
-						<table>
+						<table
+							width="100%"
+							pw-ui
+							ui-views="{}">
 							<tr ng-repeat="context in contexts"
 								valign="top">
-								<th scope="row" align="left">
+								<th scope="row" align="left" width="25%">
 									<span
 										tooltip="{{context.name}}"
 										tooltip-popup-delay="333">
@@ -130,8 +134,20 @@
 									</span>
 								<td>
 
-									<?php echo pw_feed_template_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
-											
+									<button
+										type="button"
+										class="button"
+										ng-class="uiSetClass('template_'+context.name)"
+										ng-click="uiToggleView('template_'+context.name)">
+										<i class="icon-th-large"></i>
+										Template
+									</button>
+
+									<div
+										ng-show="uiShowView('template_'+context.name)">
+										<?php echo pw_feed_template_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+									</div>
+
 								</td>
 							</tr>
 						</table>
@@ -443,6 +459,7 @@
 					
 					<hr class="thin">
 					
+					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
 					<?php echo pw_feed_template_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 					
 					<hr class="thick">

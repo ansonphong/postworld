@@ -18,7 +18,7 @@ postworld.controller( 'pwUiCtrl',
 	[ '$scope', '$timeout', '_', '$log',
 	function( $scope, $timeout, $_, $log ){
 
-	$scope.toggleElementDisplay = function( element ){
+	$scope.uiToggleElementDisplay = function( element ){
 		element = angular.element( element );
 		if( element.css('display') == 'none' )
 			element.css('display', 'block');
@@ -26,7 +26,7 @@ postworld.controller( 'pwUiCtrl',
 			element.css('display', 'none');
 	}
 
-	$scope.toggleView = function( viewId ){
+	$scope.uiToggleView = function( viewId ){
 		// If the view is registered
 		if( $_.objExists( $scope, 'uiViews.'+viewId ) )
 			// Invert the value
@@ -36,12 +36,12 @@ postworld.controller( 'pwUiCtrl',
 			$scope.uiViews[viewId] = true;
 	}
 
-	$scope.showView = function( viewId ){
+	$scope.uiShowView = function( viewId ){
 		// If the view is registered
 		return $_.getObj( $scope, 'uiViews.'+viewId );
 	}
 
-	$scope.focusElement = function( element ){
+	$scope.uiFocusElement = function( element ){
 		element = angular.element( element );
 		// Timeout incase the specified element is hidden
 		$timeout( function(){
@@ -49,7 +49,7 @@ postworld.controller( 'pwUiCtrl',
 		}, 0 );
 	}
 
-	$scope.setClass = function( viewId, className ){
+	$scope.uiSetClass = function( viewId, className ){
 		// Set default class name
 		if( _.isUndefined(className) )
 			className = 'active';

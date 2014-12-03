@@ -4,6 +4,7 @@
 ?>
 <!-- DROPDOWN -->
 <span
+	dropdown
 	class="dropdown">
 	<!-- SELECTED ITEM -->
 	<span

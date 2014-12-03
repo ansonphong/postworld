@@ -6,6 +6,7 @@
 
 	<!-- DROPDOWN -->
 	<div
+		dropdown
 		class="select-layout dropdown dropdown-layouts pull-left">
 		<!-- SELECTED ITEM -->
 		<span
@@ -47,15 +48,15 @@
 		class="button"
 		ng-show="<?php echo $ng_model; ?>.template != 'default'"
 		type="button"
-		ng-class="setClass('headerFooter')"
-		ng-click="toggleView('headerFooter')">
+		ng-class="uiSetClass('headerFooter')"
+		ng-click="uiToggleView('headerFooter')">
 		<i class="icon-layers"></i>
 		Header & Footer
 	</button>
 	<div class="clearfix"></div>
 	<div
 		class="area header-footer pull-left"
-		ng-show="showModule('headerFooter', <?php echo $ng_model; ?> ) && showView('headerFooter')">
+		ng-show="showModule('headerFooter', <?php echo $ng_model; ?> ) && uiShowView('headerFooter')">
 
 		<!-- HEADER -->
 		<div>
@@ -96,14 +97,14 @@
 			<button
 				type="button"
 				class="button"
-				ng-class="setClass('customResponsive_'+location.slug)"
-				ng-click="toggleView('customResponsive_'+location.slug)">
+				ng-class="uiSetClass('customResponsive_'+location.slug)"
+				ng-click="uiToggleView('customResponsive_'+location.slug)">
 				<i class="icon-th-large"></i>
 				Resposive
 			</button>
 
 			<div
-				ng-show="showView('customResponsive_'+location.slug)"
+				ng-show="uiShowView('customResponsive_'+location.slug)"
 				ng-repeat="screen_size in iLayoutOptions.screen_sizes">
 				<label style="text-align:right">{{screen_size.name}}</label>
 				<select

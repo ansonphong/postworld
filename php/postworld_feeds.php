@@ -1,5 +1,6 @@
 <?php
 
+
 function pw_get_feed_by_id( $feed_id ){
 	$feeds = pw_get_option( array( 'option_name'	=>	PW_OPTIONS_FEEDS ) );
 	if( empty( $feeds ) )
@@ -10,6 +11,45 @@ function pw_get_feed_by_id( $feed_id ){
 			return $feed;
 	}
 	return false;
+}
+
+function pw_get_feed_by_context( $context = array() ){
+	// Gets a context-absed feed settings for the given context array
+
+	global $pw;
+	$feed = array();
+
+	// Get the context key of the feed settings
+	$context_feeds = pw_get_option( array(
+		'option_name'	=>	PW_OPTIONS_FEED_SETTINGS,
+		'key'			=> 'context',
+		));
+
+	// If there's no context key
+	if( empty( $context_feeds ) )
+		// Return empty array
+		return array();
+
+	// If no context parameter is given
+	if( empty( $context ) )
+		// Get the global context
+		$context = $pw['view']['context'];
+
+	// Iterate through each of the contexts
+	foreach( $context as $c ){
+		// Get the context feed coorosponding to the current context
+		$check_feed = _get( $context_feeds, $c );
+		// If it exists
+		if( $check_feed != false )
+			// Set it as the feed
+			$feed = $check_feed;
+	}
+
+	if( empty( $feed ) )
+		return array();
+	else
+		return $feed;
+
 }
 
 
@@ -81,7 +121,6 @@ function pw_live_feed( $vars = array() ){
 			'options'	=>	array( 'list', 'grid' ),
 			),
 		//'query' 		=> 	$default_query,
-		'feed_template'	=>	'feed-list',
 		'aux_template'	=>	'seo-list',
 		'options'		=>	array(
 			'galleries'	=>	array(
@@ -114,6 +153,16 @@ function pw_live_feed( $vars = array() ){
 
 		);
 
+
+	///// CONTEXT FEED SETTINGS /////
+	// If any context-based feed settings are specified, use those to over-ride
+	$context_feed = pw_get_feed_by_context();
+
+	// Over-ride default settings with context feed settings
+	$default_feed = array_replace_recursive( $default_feed, $context_feed );
+
+	
+
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
 
@@ -145,6 +194,7 @@ function pw_live_feed( $vars = array() ){
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
 
+
 	///// BLOCKS : GET WIDGET DATA /////
 	$widgets = array();
 	$sidebar_id = _get( $feed, 'blocks.widgets.sidebar' );
@@ -152,7 +202,7 @@ function pw_live_feed( $vars = array() ){
 		$widgets = pw_get_sidebar( $sidebar_id );
 	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
 
-	pw_log( "widgets : " . json_encode($widgets) );
+	//pw_log( "widgets : " . json_encode($widgets) );
 
 	///// GENERATE OUTPUT /////
 	// Print front-loaded data
