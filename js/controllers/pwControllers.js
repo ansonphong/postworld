@@ -54,30 +54,7 @@ postworld.controller('postController',
 	if( typeof $window.pwPostFunctions === "function" )
 		$window.pwPostFunctions( $scope );
 
-
 	/*
-	// Watch for changes to the post
-	$scope.$watchCollection( 'post', function(){
-
-		///// POST CONTENT /////
-		if( $_.objExists( $scope, 'post.post_content' )){
-			if( !_.isObject( $scope.post.post_content_html ) &&
-				_.isString( $scope.post.post_content ) ){
-				// Create an additional key 'post_content_html'
-				$scope.post.post_content_html = $sce.trustAsHtml( $scope.post.post_content );
-				// If the post has a feed 
-				if( _.isString( $_.getObj( $scope, 'post.feed.id' ) ) &&
-					$_.objExists( $scope, 'post.ID' ) ){
-					// Add it to the central feed
-					$pwPosts.mergeFeedPost( $scope.post.feed.id, $scope.post.ID, { post_content_html: $scope.post.post_content_html }  );
-				}
-			}
-		}
-	});
-	*/
-
-	
-
 	// IMPORT LANGUAGE
 	if(
 		typeof $window.pwSiteLanguage !== 'undefined' &&
@@ -89,7 +66,9 @@ postworld.controller('postController',
 		// GENERATE  SHARE LINK
 		$scope.share_link = $pw.paths.home_url + "/?u=" + $window.pw.user.ID + "&p=" + $scope.post.ID;
 	}
+	*/
 
+	/*
 	// Toggles class="expaned", used with ng-class="expanded" 
 	$scope.expanded = "";
 	var clickTip = "Click to expand";
@@ -98,7 +77,7 @@ postworld.controller('postController',
 		( $scope.expanded == "" ) ? $scope.expanded = "expanded" : $scope.expanded = "" ;
 		( $scope.clickTip != "" ) ? $scope.clickTip = "" : $scope.clickTip = clickTip ;
 	};
-
+	*/
 
 
 	///// TIME FUNCTIONS /////
@@ -145,6 +124,7 @@ postworld.controller('postController',
 		window.location = url;
 	};
 
+	/*
 	////////// LOAD POST DATA //////////
 	$scope.loadPost = function( post_id ){
 		$scope.status = "loading";
@@ -196,6 +176,7 @@ postworld.controller('postController',
 			}
 		);  
 	}
+	*/
 
 	///// ACTION : POST UPDATED /////
 	// Update the contents of post after Quick Edit
@@ -226,7 +207,7 @@ postworld.controller('postController',
 							_.isString(post.post_content) ){
 							post.post_content = $sce.trustAsHtml(post.post_content);
 						}
-						$scope.post = response.data;
+						$scope.post = post;
 						// Update Classes
 						if( !_.isUndefined( $scope.setClass ) )
 							$scope.setClass();
@@ -267,7 +248,6 @@ postworld.controller('postController',
 	// When the post or the required fields changes
 	// Check to make sure all the required fields are present
 	$scope.$watchCollection( '[ postRequiredFields, post.ID ]', function(){
-		
 		if( $_.objExists( $scope, 'post.feed.id' ) &&
 			$_.objExists( $scope, 'post.ID' ) &&
 			$_.objExists( $scope, 'postRequiredFields' ) &&

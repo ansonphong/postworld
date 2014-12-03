@@ -416,7 +416,7 @@ postworld.controller('editPost',
 
 		// Set the Route
 		if( $_.objExists( $scope, 'post.post_type' ) &&
-			$scope.editPostConfig.routing == true )
+			$_.get( $scope.editPostConfig, 'routing' ) == true )
 			$location.path('/new/' + $scope.post.post_type);
 
 	}
@@ -501,14 +501,14 @@ postworld.controller('editPost',
 				$scope.$emit('postLoaded', get_post);
 
 				// Set the Route
-				if( $scope.editPostConfig.routing == true )
+				if( $_.get( $scope.editPostConfig, 'routing' ) == true )
 					$location.path('/edit/' + get_post.ID);
 
 				// SET DATA INTO THE SCOPE
 				$scope.post = get_post;
 
 				// EVALUATE CALLBACK
-				if( !_.isUndefined( $scope.initEditPost['loadSuccessCallback'] ) )
+				if( $_.get( $scope.initEditPost, 'loadSuccessCallback' ) )
 					$scope.$eval( $scope.initEditPost['loadSuccessCallback'] );
 
 				// UPDATE MODE
@@ -646,7 +646,7 @@ postworld.controller('editPost',
 			$scope.routeAction = $route.current.action;
 
 			// Stop here if routing is disabled
-			if( $scope.editPostConfig.routing == false ){
+			if( $_.get( $scope.editPostConfig, 'routing' ) == false ){
 				return false;
 			}
 
@@ -834,7 +834,7 @@ postworld.controller('editPost',
 				return false;
 
 			// ROUTE CHANGE
-			if( $scope.mode == "new" && $scope.editPostConfig.routing == true ){
+			if( $scope.mode == "new" && $_.get( $scope.editPostConfig, 'routing' ) == true ){
 				//alert( "MODE:" + $scope.mode );
 				$location.path('/new/' + $scope.post.post_type);
 			}

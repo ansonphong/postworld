@@ -54,7 +54,10 @@ function userAutocomplete($scope, pwData) {
    |_|\__,_|\__, |___/ /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
 			|___/                                                |_|                   
 ////////// ------------ TAGS AUTOCOMPLETE CONTROLLER ------------ //////////*/
-function tagsAutocomplete($scope, $filter, pwData) {
+postworld.controller('tagsAutocomplete',
+	[ '$scope', '$filter', 'pwData',
+	function( $scope, $filter, pwData ){
+
 
 	$scope.tags_input = [];     // Array
 	$scope.tags_input_obj = []; // Object
@@ -129,4 +132,8 @@ function tagsAutocomplete($scope, $filter, pwData) {
 	// Catch broadcast of load in tags
 	$scope.$on('postTagsObject', function(event, data) { $scope.tags_input_obj = data; });
 
-}
+
+
+}]);
+
+	

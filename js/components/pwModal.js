@@ -50,7 +50,7 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 						});
 					
 					// If no template is found
-					if( !modalObj.templateUrl )
+					if( modalObj.templateUrl == false )
 						// Use the fallback template
 						modalObj.templateUrl = $pwData.pw_get_template({
 							subdir: 'modals',
@@ -95,7 +95,7 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 			///// GET CUSTOM OVERRIDE TEMPLATE URL /////
 			// Here the `meta.templateName` can be used to override the template
 			// If no inline template is defined
-			if( _.isString( meta.templateName ) ){
+			if( _.isString( meta.templateName ) && _.isEmpty( modalObj.templateUrl )  ){
 
 				// If there's a slash in the template, it's from another subdir
 				if( $_.isInArray( "/", meta.templateName ) ){

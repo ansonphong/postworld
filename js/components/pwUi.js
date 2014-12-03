@@ -7,7 +7,10 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 
 			// OBSERVE : UI Views
 			attrs.$observe('uiViews', function(value) {
-				$scope.uiViews = $scope.$eval( value );
+				if( !_.isEmpty( value ) )
+					$scope.uiViews = $scope.$eval( value );
+				else if( _.isUndefined( $scope.uiViews ) )
+					$scope.uiViews = {};
 			});
 			
 		},
@@ -58,6 +61,12 @@ postworld.controller( 'pwUiCtrl',
 			return className;
 		else
 			return '';
+	}
+
+	$scope.uiBoolean = function( val ){
+		// If the value is truthy and not empty, return true
+		var bool = ( Boolean( val ) && !_.isEmpty( val ) ) ? true : false;
+		return bool; 
 	}
 
 

@@ -41,7 +41,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 		var post_type = meta.post_type;
 		var view = meta.view;
 
-		//$log.debug('getTemplate : META : ',meta);
+		//$log.debug( 'getTemplate : META : ',meta);
+		//$log.debug( '$pw.templates[ subdir ]', $pw.templates[ subdir ] );
 
 		switch( subdir ) {
 			// Get a post template; includes the post_type and view
