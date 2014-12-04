@@ -236,7 +236,7 @@ $post_settings = array(
   'fields'    => 'all',
   'vars'      =>  array(
     'language'        =>  $pwSiteLanguage,
-    'social_widgets'  =>  pw_social_widgets($social_settings)
+    'social_widgets'  =>  pw_social_widgets()
     ),
   'js_vars' =>  array('post'),
   );

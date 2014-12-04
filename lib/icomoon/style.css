@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-ub88qt');
-	src:url('fonts/icomoon.eot?#iefix-ub88qt') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-ub88qt') format('woff'),
-		url('fonts/icomoon.ttf?-ub88qt') format('truetype'),
-		url('fonts/icomoon.svg?-ub88qt#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?occv5p');
+	src:url('fonts/icomoon.eot?#iefixoccv5p') format('embedded-opentype'),
+		url('fonts/icomoon.woff?occv5p') format('woff'),
+		url('fonts/icomoon.ttf?occv5p') format('truetype'),
+		url('fonts/icomoon.svg?occv5p#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,6 +23,30 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-angle-left:before {
+	content: "\e61a";
+}
+.icon-angle-down:before {
+	content: "\e650";
+}
+.icon-angle-up:before {
+	content: "\e651";
+}
+.icon-angle-right:before {
+	content: "\e670";
+}
+.icon-angle-left-thin:before {
+	content: "\e692";
+}
+.icon-angle-down-thin:before {
+	content: "\e6d4";
+}
+.icon-angle-up-thin:before {
+	content: "\e6d7";
+}
+.icon-angle-right-thin:before {
+	content: "\e6d8";
+}
 .icon-share:before {
 	content: "\e6c4";
 }

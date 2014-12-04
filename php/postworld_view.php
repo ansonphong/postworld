@@ -195,8 +195,10 @@ function pw_get_view_meta( $context = array() ){
 		// Use the current context
 		$context = pw_current_context();
 
-	////////// SWITCH : CLASS //////////
+	///// META OBJ /////
 	$meta = array();
+
+	$meta['title'] = wp_title( ' - ', false, 'right' );
 
 	////// SINGLE /////
 	if( in_array( 'single', $context ) ){
@@ -206,7 +208,6 @@ function pw_get_view_meta( $context = array() ){
 		$meta['post_type'] = $post_type_obj;
 	}
 
-	
 
 	////// ARCHIVE /////
 	if( in_array( 'archive', $context ) ){

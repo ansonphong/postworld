@@ -17,7 +17,7 @@ function pw_mode(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'	=>	"1.6.6",
+		'version'	=>	"1.6.7",
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),

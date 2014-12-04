@@ -4,13 +4,11 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 	return{
 		controller: 'pwUiCtrl',
 		link: function( $scope, element, attrs ){
-
+			$scope.uiViews = {};
 			// OBSERVE : UI Views
 			attrs.$observe('uiViews', function(value) {
 				if( !_.isEmpty( value ) )
 					$scope.uiViews = $scope.$eval( value );
-				else if( _.isUndefined( $scope.uiViews ) )
-					$scope.uiViews = {};
 			});
 			
 		},

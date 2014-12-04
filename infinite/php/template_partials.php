@@ -1,6 +1,6 @@
 <?php
 
-function i_pw_template_partials( $template_partials ){
+function pw_builtin_template_partials( $template_partials ){
 	// Define all the template partials 
 
 	// GALLERY OPTIONS
@@ -22,15 +22,21 @@ function i_pw_template_partials( $template_partials ){
 		);
 
 
-	// IMAGE DOWNLOAD
+	// SOCIAL SHARE LINKS
 	$template_partials = pw_set_obj( $template_partials,
 		'viewPost.social.shareLinks',			// partials model path
 		'pw_social_share'						// function name
 		);
 
+	// SOCIAL POST WIDGETS
+	$template_partials = pw_set_obj( $template_partials,
+		'viewPost.social.widgets',				// partials model path
+		'pw_social_widgets'						// function name
+		);
+
 	return $template_partials;
 }
 
-add_filter( 'pw_template_partials', 'i_pw_template_partials' )
+add_filter( 'pw_template_partials', 'pw_builtin_template_partials' )
 
 ?>

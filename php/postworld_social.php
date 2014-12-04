@@ -1,5 +1,4 @@
 <?php
-
 /*                    ____             _       _   __  __          _ _       
   _ ____      __  _  / ___|  ___   ___(_) __ _| | |  \/  | ___  __| (_) __ _ 
  | '_ \ \ /\ / / (_) \___ \ / _ \ / __| |/ _` | | | |\/| |/ _ \/ _` | |/ _` |
@@ -10,7 +9,6 @@
 
 // SNIPPETS
 //include(locate_template('views//taxonomy-page-setup.php'));
-
 
 ////////// SOCIAL SHARE //////////
 function pw_social_share( $post ){
@@ -103,7 +101,6 @@ function pw_get_social_share_meta( $vars ){
 		$s = _set( $s, 'twitter.link', $twitter_link );
 	}
 
-
 	///// REDDIT LINK /////
 	if( in_array( 'reddit', $share_networks ) ){
 		$reddit_link = 'http://www.reddit.com/submit?url='.$permalink.'&title='.$title;
@@ -127,8 +124,39 @@ function pw_get_social_share_meta( $vars ){
 }
 
 
+function pw_social_widgets( $meta = array() ){
+	/*
+		$meta = array(
+			'post_id'		=>	[integer],
+			'title'			=>	[string], 
+			'url'			=>	[string],	
+		);
+	*/
 
-function pw_social_widgets( $settings ){
+	global $pw;
+	$settings = array();
+
+	// Get Title and URL from post_id
+	$post_id = _get( $meta, 'post_id' );
+	if( !empty( $post_id ) ){
+		$meta['title'] = get_post( $post_id )->post_title;
+		$meta['url'] = get_permalink( $post_id );
+	}
+	// Set default Meta data
+	else{
+		$default_meta = array(
+			'title'	=>	$pw['view']['title'],
+			'url' 	=>	$pw['view']['url'],
+			);
+		$meta = array_replace_recursive( $default_meta, $meta );
+	}
+
+	// Set meta into settings
+	$settings['meta'] = $meta;
+
+	// Apply filters
+	$settings = apply_filters( 'pw_social_widgets', $settings );
+	//pw_log( "pw_social_widgets : " . json_encode( $settings ) );
 
 	$output = "";
 	foreach( $settings['networks'] as $network ){
@@ -144,7 +172,9 @@ function pw_social_widgets( $settings ){
 			
 		}
 	}
+	
 	return $output;
+
 }
 
 
@@ -207,6 +237,11 @@ function pw_social_widget_twitter( $meta, $widget_settings ){
 			" data-url=\"".$url."\"" :
 			null ;
 
+		// TWEET TEXT
+		$text = ( isset($meta['title']) ) ?
+			" data-text=\"".$meta['title']."\"" :
+			null ;
+
 		// VIA
 		$via = ( isset($settings['via']) ) ?
 			" data-via=\"".$settings['via']."\"" :
@@ -232,6 +267,8 @@ function pw_social_widget_twitter( $meta, $widget_settings ){
 			" data-size=\"".$settings['size']."\"" :
 			null ;
 
+		
+
 		// DO NOT TAILOR
 		$dnt = ( isset($settings['dnt']) ) ?
 			" data-dnt=\"".$settings['dnt']."\"" :
@@ -243,6 +280,7 @@ function pw_social_widget_twitter( $meta, $widget_settings ){
 		$output .= $related;
 		$output .= $hashtags;
 		$output .= $url;
+		$output .= $text;
 		$output .= $lang;
 		$output .= $size;
 		$output .= $dnt;
