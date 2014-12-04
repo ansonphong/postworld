@@ -656,7 +656,7 @@ function ajax_oembed_get(){
 
 	// GET OEMBED
 	$oEmbed = wp_oembed_get( $pw_args['link_url'] );
-
+	
 	// AUTOPLAY
 	if( !empty( $autoplay ) && $autoplay == true ){
 
@@ -672,12 +672,7 @@ function ajax_oembed_get(){
 		
 	}
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $oEmbed;
-	echo json_encode($response);
-	// die ( $oEmbed );
-	die;
+	pwAjaxRespond( $oEmbed );
 }
 add_action("wp_ajax_nopriv_ajax_oembed_get", "ajax_oembed_get");
 add_action("wp_ajax_ajax_oembed_get", "ajax_oembed_get");
@@ -689,8 +684,8 @@ add_action("wp_ajax_ajax_oembed_get", "ajax_oembed_get");
  * 
  ************************** */
 
-global $postworld_api_version;
-$postworld_api_version = "0.1";
+global $pw;
+$postworld_api_version = $pw['info']['version'];
 
 function ErrorReturn($response, $status, $message) {
 	$response['status'] = $status;
