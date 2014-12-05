@@ -102,7 +102,6 @@ function pw_set_obj( $obj, $key, $value ){
  /_/   \_\_|  |___| (_)  \___/|___/\___|_|    |_|  |_|\___|\__\__,_|
 
 ////////////////////////////////////////////////////////////////////*/
-
 function pw_set_wp_usermeta( $vars ){
 	/*
 		- Sets meta key for the given user under the given key
@@ -126,6 +125,8 @@ function pw_set_wp_usermeta( $vars ){
 		$meta_key = pw_usermeta_key;
 	if( !isset( $user_id ) )
 		$user_id = get_current_user_id();
+
+	// TODO : Use pw_auth_user() here
 
 	///// USER ID /////
 	// Security check to see if user can access user meta

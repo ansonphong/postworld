@@ -12,6 +12,22 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
+
+
+//---------- PW SET USER META ----------//
+function pw_set_wp_usermeta_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+
+	$response_data = pw_set_wp_usermeta( $params ); 
+
+	pwAjaxRespond( $response_data );
+}
+
+add_action("wp_ajax_nopriv_pw_set_wp_usermeta", "pw_set_wp_usermeta_ajax");
+add_action("wp_ajax_pw_set_wp_usermeta", "pw_set_wp_usermeta_ajax");
+
+
 //---------- PW GET TEMPLATE PARTIAL ----------//
 function pw_get_term_feed_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

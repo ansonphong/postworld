@@ -98,7 +98,7 @@ function pw_get_userdata($user_id, $fields = false) {
 
 function pw_get_user( $user_id, $fields = false ) {
 
-	$wordpress_user_fields = array('user_login', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'display_name', 'user_firstname', 'user_lastname', 'nickname', 'user_description', 'wp_capabilities', 'admin_color', 'closedpostboxes_page', 'primary_blog', 'rich_editing', 'source_domain', 'roles', 'capabilities', );
+	$wordpress_user_fields = array('ID','user_login', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'display_name', 'user_firstname', 'user_lastname', 'nickname', 'user_description', 'wp_capabilities', 'admin_color', 'closedpostboxes_page', 'primary_blog', 'rich_editing', 'source_domain', 'roles', 'capabilities', );
 	$postworld_user_fields = array('viewed', 'favorites', 'location_city', 'location_region', 'location_country', 'post_points', 'comment_points', 'post_points_meta');
 	$buddypress_user_fields = array('user_profile_url', );
 	$wordpress_usermeta_fields = array('usermeta(all)', );

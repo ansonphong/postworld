@@ -400,13 +400,42 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			});
 	};
 
+	$scope.getSelectedMediaId = function(){
+		return angular.fromJson( angular.toJson( $scope.returnMediaValue('id') ) );
+	}
+
 	$scope.setSelectedMediaId = function(){
 		// Get the ID of the selected item
-		var selectedMedia =  angular.fromJson( angular.toJson( $scope.returnMediaValue('id') ) );
+		var selectedMedia =  $scope.getSelectedMediaId();
 		// Set it in the specified scope model
 		$scope.mediaSetId = selectedMedia;
-		
+
 	};
+
+	$scope.setSelectedMediaIdAsUsermeta = function( userId, subKey, metaKey ){
+
+		var mediaId = $scope.getSelectedMediaId();
+
+		var vars = {
+			user_id: userId,
+			sub_key: subKey,
+			meta_key: metaKey,
+			value: mediaId,
+		};
+
+		$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : REQUEST : ', vars );
+
+		$pwData.setWpUsermeta( vars ).then(
+			function( response ){
+				$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : RESPONSE : ', response );
+			},
+			function( response ){
+
+			}
+		);
+
+
+	}
 
 }]);
 

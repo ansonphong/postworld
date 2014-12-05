@@ -368,6 +368,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Directives-pwGetPost',
 			POSTWORLD_URI.'/js/directives/pwGetPost.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Directives-pwUsers',
+			POSTWORLD_URI.'/js/directives/pwUsers.js', $angularDep );
+
 		wp_enqueue_script( 'pw-Directives-pwImage',
 			POSTWORLD_URI.'/js/directives/pwImage.js', $angularDep );
 

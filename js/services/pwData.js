@@ -472,6 +472,21 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
 		},
 
+		///// USER META /////
+		setWpUsermeta: function(args) {
+			/*
+				args = {
+					user_id		:	[integer], 	// optional
+					sub_key		:	[string],	// optional
+					value 		:	[mixed],	// required
+					meta_key 	:	[string]	// optional
+				}
+			*/
+			$log.debug('pwData.setWpUsermeta',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_set_wp_usermeta',params);
+		},
+
 		
 
    }; // END OF pwData return value
