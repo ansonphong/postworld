@@ -422,7 +422,7 @@ function postworld_includes( $args ){
 			pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 			pw.background = <?php echo json_encode( pw_current_background() ); ?>;
 			pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
-
+			pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
 		/* ]]> */</script>
 
 	<?php

@@ -1,5 +1,130 @@
 <?php
 
+function pw_auth_user( $vars = array() ){
+	// Returns a boolean based on a series of qualifying tests
+	// True means the user is authorized, false means they are not
+
+	$auth = true;
+
+	if( empty( $vars ) )
+		return false;
+
+	$default_vars = array(
+		'user_id'			=>	get_current_user_id(),
+		'relation'			=>	'AND', 		// Possible values : AND / OR
+		
+		'has_user_id'		=>	array(),	// An array of user IDs
+		'not_user_id'		=>	array(),	// An array of user IDs
+
+		'has_role'			=>	array(),	// An array of roles
+		'not_role'			=>	array(),	// An array of roles
+		
+		'has_cap'			=>	array(),	// An array of capabilities
+		);
+
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	extract( $vars );
+
+	///// GET USER DATA /////
+	$userdata = get_userdata( $user_id )  ;
+	//pw_log( "GET USERDATA : " . json_encode( $userdata ) );
+
+	////////// AUTH USER IDS //////////
+	$auth_user_ids = true;
+	$request_user_ids = false;
+	// If user ID authorization is requested
+	if( !empty( $has_user_id ) || !empty( $not_user_id ) ){
+		$auth_user_ids = false;
+		$request_user_ids = true;
+
+		$current_user_id = get_current_user_id();
+
+		///// IS USER ID /////
+		if( !empty( $has_user_id ) )
+			if( in_array( $user_id, $has_user_id ) )
+				$auth_user_ids = true;
+
+		///// IS NOT USER ID /////
+		if( !empty( $not_user_id ) )
+			if( in_array( $user_id, $not_user_id ) )
+				$auth_user_ids = false;
+
+	}
+
+
+	////////// AUTH ROLES //////////
+	$auth_roles = true;
+	$request_roles = false;
+	// If role authorization is requested
+	if( !empty( $has_role ) || !empty( $not_role ) ){
+		$auth_roles = false;
+		$request_roles = true;
+
+		///// IS ROLE /////
+		// If any of the given roles matches with any of the user's current roles
+		if( !empty( $has_role ) )
+			foreach( $has_role as $role ){
+				if( in_array( $role, $userdata->roles ) )
+					$auth_roles = true;
+			}
+
+		///// IS NOT ROLE /////
+		// If any of the given not roles matches with any of the user's current roles
+		if( !empty( $not_role ) )
+			foreach( $not_role as $role ){
+				if( in_array( $role, $userdata->roles ) )
+					$auth_roles = false;
+			}
+
+	}
+
+	////////// AUTH CAPABILITIES //////////
+	$auth_caps = true;
+	$request_caps = false;
+	// If capability authorization is requested
+	if( !empty( $has_cap ) ){
+		$auth_caps = false;
+		$request_caps = true;
+
+		// Iterare through each required capability
+		foreach( $has_cap as $cap ){
+			// Iterate through each of the user's capabilities
+			foreach( $userdata->allcaps as $allcap => $bool ){
+				// If the required capability matches and it's true
+				if( $cap == $allcap && $bool == true )
+					$auth_caps = true;
+			}
+		}
+
+	}
+
+	///// DEV READOUT /////
+	$dev = array(
+		'request_user_ids' 	=> 	$request_user_ids,
+		'auth_user_ids'		=>	$auth_user_ids,
+		'request_roles'		=>	$request_roles,
+		'auth_roles'		=>	$auth_roles,
+		'request_caps'		=>	$request_caps,
+		'auth_caps'			=>	$auth_caps,
+		);
+	//pw_log( "pw_auth_user : DEV : " . json_encode( $dev ) );
+
+
+	///// RETURN /////
+	if( $relation == 'AND' )
+		return ( $auth_user_ids && $auth_roles && $auth_caps );
+	if( $relation == 'OR' )
+		return (
+			($request_user_ids && $auth_user_ids) ||
+			($request_roles && $auth_roles) ||
+			($request_caps && $auth_caps) );
+
+	return false;
+
+}
+
+
 /////----- INSERT NEW USER -----/////
 function pw_insert_user( $userdata ){
 	global $pwSiteGlobals;
@@ -12,7 +137,7 @@ function pw_insert_user( $userdata ){
 	$user_id = wp_insert_user( $userdata );
 
 	// If it's successful, we have the new user ID
-	if( is_int($user_id) ){
+	if( has_int($user_id) ){
 
 		// Send Activation Email
 		pw_activation_email(array("ID" => $user_id));
@@ -268,7 +393,7 @@ function pw_reset_password_submit( $userdata ){
 			);
 		$user_id = wp_update_user( $args );
 
-		if( is_int($user_id) && $user_id == $user->ID ){
+		if( has_int($user_id) && $user_id == $user->ID ){
 			// Remove the used key
 			delete_user_meta( $user_id, 'reset_password_key' );
 		}
@@ -279,10 +404,6 @@ function pw_reset_password_submit( $userdata ){
 		return array("error" => "Wrong or no authorization code.");
 
 }
-
-
-
-
 
 
 function pw_set_avatar( $image_object, $user_id ){
@@ -311,13 +432,13 @@ function pw_set_avatar( $image_object, $user_id ){
 	}
 
 	// If Image has an 'ID' field
-	if( isset( $image_object['id'] ) && is_numeric($image_object['id']) ){
+	if( isset( $image_object['id'] ) && has_numeric($image_object['id']) ){
 		$attachment_id = $image_object['id'];
 
 		$previous_value = get_user_meta( $user_id,'pw_avatar', true);
 
 		// Is there a previous value?
-		if( is_numeric( $previous_value ) ){
+		if( has_numeric( $previous_value ) ){
 			// Update Meta Field
 			$success = update_user_meta( $user_id, 'pw_avatar', $attachment_id );
 		}
@@ -332,7 +453,7 @@ function pw_set_avatar( $image_object, $user_id ){
 	if( $success == true )
 		return pw_get_avatar( array( "user_id" => $user_id ) );
 	else{
-		if( is_numeric( $previous_value ) )
+		if( has_numeric( $previous_value ) )
 			return $user_id;
 	}
 
@@ -388,15 +509,12 @@ function pw_get_avatar( $obj ){
 
 
 function pw_user_login( $user_id, $redirect = '/' ) {
-
 	// Login User
 	wp_clear_auth_cookie();
     wp_set_current_user ( $user_id );
     wp_set_auth_cookie  ( $user_id );
-
     // Redirect
     wp_safe_redirect( $redirect );
-
 }
 
 

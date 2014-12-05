@@ -405,6 +405,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		var selectedMedia =  angular.fromJson( angular.toJson( $scope.returnMediaValue('id') ) );
 		// Set it in the specified scope model
 		$scope.mediaSetId = selectedMedia;
+		
 	};
 
 }]);

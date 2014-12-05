@@ -26,6 +26,8 @@ var pw = {
 	widgets:{},
 	admin:{},
 	embeds:{},
+	user:{},
+	users:{},
 };
 
 var depInject = [

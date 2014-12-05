@@ -86,6 +86,7 @@ define( 'PW_TERM_FEED', 		$pw['filters']['term_feed'] );
 
 ///// DEFINE META FILTER NAMES /////
 define( 'PW_POSTS', 	'pw_posts' );
+define( 'PW_USERS', 	'pw_users' );
 define( 'PW_POSTMETA', 	$pw['db']['wp_postmeta']['pw_meta'] );
 define( 'PW_USERMETA', 	$pw['db']['wp_usermeta']['pw_meta'] );
 define( 'PW_MODULES', 	$pw['db']['wp_options']['option_name']['modules'] );

@@ -92,16 +92,22 @@ function pw_get_userdatas( $user_ids, $fields = false ){
 
 
 function pw_get_userdata($user_id, $fields = false) {
+	// DEPRECIATED
+	return pw_get_userdata( $user_id, $fields );
+}
+
+function pw_get_user( $user_id, $fields = false ) {
 
 	$wordpress_user_fields = array('user_login', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'display_name', 'user_firstname', 'user_lastname', 'nickname', 'user_description', 'wp_capabilities', 'admin_color', 'closedpostboxes_page', 'primary_blog', 'rich_editing', 'source_domain', 'roles', 'capabilities', );
 	$postworld_user_fields = array('viewed', 'favorites', 'location_city', 'location_region', 'location_country', 'post_points', 'comment_points', 'post_points_meta');
 	$buddypress_user_fields = array('user_profile_url', );
+	$wordpress_usermeta_fields = array('usermeta(all)', );
 
 	$user_data = array();
 
 	// If Fields is empty or 'all', add all fields
 	if ( $fields == false || $fields == 'all') {
-		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields);
+		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields, $wordpress_usermeta_fields);
 	}
 
 	///// TRANSFER ONLY REQUESTED FIELDS!! /////
@@ -120,10 +126,10 @@ function pw_get_userdata($user_id, $fields = false) {
 				}
 				// Get user Roles
 				if (in_array('roles', $fields))
-					$user_data['roles'] = $wordpress_user_data -> roles;
+					$user_data['roles'] = $wordpress_user_data->roles;
 				// Get user Capabilities
 				if (in_array('capabilities', $fields))
-					$user_data['capabilities'] = $wordpress_user_data -> allcaps;
+					$user_data['capabilities'] = $wordpress_user_data->allcaps;
 			}
 			// Break out of foreach
 			break;
@@ -156,6 +162,79 @@ function pw_get_userdata($user_id, $fields = false) {
 		}
 	}
 
+
+
+	///// WORDPRESS USER META /////
+
+		$usermeta_fields = extract_linear_fields( $fields, 'usermeta', true );
+		if ( !empty($usermeta_fields) ){
+
+			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
+			foreach ($usermeta_fields as $usermeta_field ) {
+				// GET 'ALL' FIELDS
+				if ( in_array("all", $usermeta_fields) ||
+						$usermeta_field == "all" ){
+					// Return all meta data
+					$user_data['usermeta'] = get_metadata('user', $user_id, '', true);
+					// Convert to strings
+					if ( !empty( $user_data['usermeta'] ) ){
+						foreach( $user_data['usermeta'] as $meta_key => $meta_value ){
+							$user_data['usermeta'][$meta_key] = $user_data['usermeta'][$meta_key][0];
+						}
+					}
+					// Break from the foreach
+					break;
+				}
+				// GET SPECIFIC FIELDS
+				else {
+					$usermeta_data = get_user_meta( $user_id, $usermeta_field, true );
+					if( !empty($usermeta_data) )
+						$user_data['usermeta'][$usermeta_field] = $usermeta_data;
+				}
+			}
+
+
+			///// JSON META KEYS /////
+			if( is_array( $user_data['usermeta'] ) ){
+
+				// Parse known JSON keys from JSON strings into objects
+				global $pwSiteGlobals;
+				// Get known metakeys from the theme configuration
+				$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_usermeta.json_meta_keys' );
+				// If there are no set fields, define empty array
+				if( !$json_meta_keys ) $json_meta_keys = array();
+				// Add the globally defined postmeta key
+				$json_meta_keys[] = pw_usermeta_key;
+
+				// Iterate through each usermeta value
+				foreach( $user_data['usermeta'] as $meta_key => $meta_value ){
+					// If the key is known to be a JSON field
+					if(
+						in_array($meta_key, $json_meta_keys) &&
+						is_string($meta_value) ){
+						// Decode it from JSON into a PHP array
+						$user_data['usermeta'][$meta_key] = json_decode($user_data['usermeta'][$meta_key], true);
+					}
+				}
+			}
+
+			///// SERIALIZED ARRAY META KEYS /////
+			$serialized_meta_keys = array( "_wp_attachment_metadata" );
+			if( is_array( $user_data['usermeta'] ) ){
+				foreach( $user_data['usermeta'] as $meta_key => $meta_value ){
+					if(
+						in_array($meta_key, $serialized_meta_keys) &&
+						is_string($meta_value) ){
+						$user_data['usermeta'][$meta_key] = unserialize( $user_data['usermeta'][$meta_key] );
+					}
+				}
+			}
+
+
+		}
+
+
+
 	///// BUDDYPRESS PROFILE LINK /////
 	// Check to see if requested fields are Buddypress User Fields
 	foreach ($fields as $value) {
@@ -170,7 +249,6 @@ function pw_get_userdata($user_id, $fields = false) {
 
 
 	////////// BUDDYPRESS CUSTOM PROFILE FIELDS //////////
-		
 	// Extract meta fields
 	$buddypress_fields = extract_linear_fields( $fields, 'buddypress', true );
 	if ( !empty($buddypress_fields) && function_exists('bp_get_profile_field_data') ){
