@@ -92,8 +92,9 @@ define( 'PW_USERMETA', 	$pw['db']['wp_usermeta']['pw_meta'] );
 define( 'PW_MODULES', 	$pw['db']['wp_options']['option_name']['modules'] );
 
 ///// DEFINE META KEYS /////
-define( 'PW_POSTMETA_KEY',	'pw_meta', true ); // Case in-sensitive
-define( 'PW_USERMETA_KEY',	'pw_meta', true ); // Case in-sensitive
+define( 'PW_POSTMETA_KEY',	'pw_meta', 		true ); // Case in-sensitive
+define( 'PW_USERMETA_KEY',	'pw_meta', 		true ); // Case in-sensitive
+define( 'PW_AVATAR_KEY',	'pw_avatar', 	true ); // Case in-sensitive
 
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );

@@ -25,24 +25,26 @@ postworld.controller( 'editAvatarCtrl',
 	$scope.updateAvatarImage = function( selected_image_obj ){
 		// Set the image object into the model
 		$scope.status = "saving";
-		var args = {
+		var vars = {
 			user_id: $scope.user_id,
 			image_object: selected_image_obj,
 		};
-		$pwData.pw_set_avatar( args ).then(
-				// Success
+		$pwData.setAvatar( vars ).then(
 				function(response) {    
 					$scope.avatar_image = response.data;
 					$scope.status = "done";
-					// Load object into scope
+					
+					///// BROADCAST : UPDATE AVATAR /////
+					$rootScope.$broadcast( 'updatedAvatar', {
+						user_id: user_id,
+					});
+
+					// Load object into scope 
 					//$scope.loadAvatarObj( $scope.user_id );
+				
 				},
-				// Failure
-				function(response) {
-					//alert('Error loading terms.');
-				}
+				function(response){}
 			);
-		//$scope.avatar_image = selected_image;
 		$scope.status = "setting";
 	};
 
@@ -50,7 +52,7 @@ postworld.controller( 'editAvatarCtrl',
 	$scope.loadAvatarObj = function( user_id ){
 		$scope.status = "loading";
 		
-		// Hit pwData.pw_get_avatar with args
+		// Hit pwData.setAvatar with args
 		var args = {
 			user_id: user_id
 		};
@@ -90,7 +92,7 @@ postworld.controller( 'editAvatarCtrl',
 			image_object: selected_image_obj,
 		};
 
-		$pwData.pw_set_avatar( args ).then(
+		$pwData.setAvatar( args ).then(
 				// Success
 				function(response) {    
 					//alert(response.data);

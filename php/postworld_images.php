@@ -339,7 +339,7 @@ function curl_exec_follow($ch, &$maxredirect = null) {
 }
 
 ///// UPLOADS REMOTE URL TO WP IMAGE LIBRARY /////
-function url_to_media_library( $image_url, $post_id = 0){
+function pw_url_to_media_library( $image_url, $post_id = 0){
 
 	// Check if it's a URL string
 	if ( strpos($image_url,'//') == false )

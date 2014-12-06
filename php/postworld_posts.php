@@ -1121,7 +1121,7 @@ function pw_set_post_thumbnail( $post_id, $image ){
 	}
 	// Otherwise, assume it's a URL
 	else{
-		$attach_id = url_to_media_library($image,$post_id);
+		$attach_id = pw_url_to_media_library($image,$post_id);
 		if( is_numeric($attach_id) ){
 			set_post_thumbnail( $post_id, $attach_id );
 		}

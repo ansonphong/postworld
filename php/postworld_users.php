@@ -20,11 +20,18 @@ function pw_auth_user( $vars = array() ){
 		'not_role'			=>	array(),	// An array of roles
 		
 		'has_cap'			=>	array(),	// An array of capabilities
+
+		'allow_anonymous'	=>	false,
 		);
 
 	$vars = array_replace_recursive( $default_vars, $vars );
 
 	extract( $vars );
+
+	///// BLOCK ANON USERS /////
+	if( get_current_user_id() == 0 &&
+		$vars['allow_anonymous'] == false )
+		return false;
 
 	///// GET USER DATA /////
 	$userdata = get_userdata( $user_id )  ;
@@ -137,7 +144,7 @@ function pw_insert_user( $userdata ){
 	$user_id = wp_insert_user( $userdata );
 
 	// If it's successful, we have the new user ID
-	if( has_int($user_id) ){
+	if( is_int($user_id) ){
 
 		// Send Activation Email
 		pw_activation_email(array("ID" => $user_id));
@@ -393,7 +400,7 @@ function pw_reset_password_submit( $userdata ){
 			);
 		$user_id = wp_update_user( $args );
 
-		if( has_int($user_id) && $user_id == $user->ID ){
+		if( is_int($user_id) && $user_id == $user->ID ){
 			// Remove the used key
 			delete_user_meta( $user_id, 'reset_password_key' );
 		}
@@ -406,46 +413,76 @@ function pw_reset_password_submit( $userdata ){
 }
 
 
-function pw_set_avatar( $image_object, $user_id ){
+function pw_set_avatar( $obj ){
+	// Sets or deletes the user's avatar
+	// Setting the attachment ID as PW_AVATAR_KEY key in pw_usermeta table
+	/*
+		$obj = array(
+			'user_id'			=>	[integer]	(optional)	// 	The user ID for whom to set the avatar
+			'url' 				=> 	[string],	(optional)	//	If an image URL is provided, that image is gotten and used as the avatar
+			'attachment_id'		=>	[integer],	(optional)	// 	If a valid attachment_id is provided, that is used as the uer's avatar
+			'action'			=>	[string],	(optional) 	// 	OPTIONS : 'delete'
+		);
+	*/
+
 	//Get Current User
 	$current_user_id = get_current_user_id();
+	
+	// Define default Values
+	$default_obj = array(
+		'user_id'		=> 	$current_user_id,
+		'url'			=>	null,
+		'attachment_id'	=>	null,
+		'action'		=>	null,
+		);
 
-	// TODO : Check if is user OR can XX capabaility
-		// return array('error'=>'no access');
+	// Set default values
+	$obj = array_replace_recursive( $default_obj, $obj );
 
-	//return $image_object['action'];
 
-	if( $user_id == null )
-		return false;
+	///// SECURITY : AUTHORIZATION /////
+	// Setup authorization variables
+	$auth_user_vars = array(
+		'user_id'			=>	get_current_user_id(),
+		'relation'			=>	'OR', 				
+		'has_user_id'		=>	array( $obj['user_id'] ),
+		'has_role'			=>	array( 'administrator', 'editor' ),	
+		'has_cap'			=>	array( 'edit_user' ),
+		);
 
+	// Apply filters for theme to customize
+	$auth_user_vars = apply_filters( 'pw_set_avatar_auth_user', $auth_user_vars );
+
+	// Run the user authorization
+	$auth_user = pw_auth_user( $auth_user_vars );
+
+	// If the user isn't authorized, return here
+	if( !$auth_user )
+		return array( 'error' => 'No auth.' );
+
+
+	///// DELETE AVATAR /////
 	// Delete avatar meta data
-	if( $image_object['action'] == 'delete' ){
+	if( _get($obj,'action') == 'delete' )
 		// Delete User Meta
-		delete_user_meta( $user_id, 'pw_avatar' );
-		return true;
-	}
+		return delete_user_meta( $user_id, PW_AVATAR_KEY );
 
+
+	///// UPLOAD IMAGE FROM REMOTE URL /////
 	// Upload image from remote URL
-	if( isset( $image_object['url'] ) && !isset( $image_object['id'] ) ){
-		$attachment_id = url_to_media_library( $image_object['url'] );
-		$image_object['id'] = $attachment_id;
+	if( !empty( $obj['url'] ) && empty( $obj['attachment_id'] ) ){
+		$attachment_id = pw_url_to_media_library( $obj['url'] );
+		$obj['attachment_id'] = $attachment_id;
 	}
 
-	// If Image has an 'ID' field
-	if( isset( $image_object['id'] ) && has_numeric($image_object['id']) ){
-		$attachment_id = $image_object['id'];
 
-		$previous_value = get_user_meta( $user_id,'pw_avatar', true);
+	///// FROM ATTACHMENT ID /////
+	// If Image has an Attachment ID field
+	if( isset( $obj['attachment_id'] ) && is_numeric( $obj['attachment_id'] ) ){
+		
+		$attachment_id = (int) $obj['attachment_id'];
 
-		// Is there a previous value?
-		if( has_numeric( $previous_value ) ){
-			// Update Meta Field
-			$success = update_user_meta( $user_id, 'pw_avatar', $attachment_id );
-		}
-		else{
-			// Add Meta Field
-			$success = add_user_meta( $user_id, 'pw_avatar', $attachment_id, true );
-		}
+		$success = update_user_meta( $user_id, PW_AVATAR_KEY, $attachment_id );
 
 	} else
 		return array('error'=>'No add avatar.');
@@ -453,9 +490,10 @@ function pw_set_avatar( $image_object, $user_id ){
 	if( $success == true )
 		return pw_get_avatar( array( "user_id" => $user_id ) );
 	else{
-		if( has_numeric( $previous_value ) )
+		if( is_numeric( $previous_value ) )
 			return $user_id;
 	}
+
 
 }
 

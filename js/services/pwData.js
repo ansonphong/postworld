@@ -342,21 +342,30 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('set_post_points',params);
 		},
+		
 		set_comment_points: function(args) {
 			$log.debug('pwData.set_comment_points',args);
 			var params = {args:args};
 			return this.wp_ajax('set_comment_points',params);
 		},
-		pw_set_avatar: function(args) {
-			$log.debug('pwData.pw_set_avatar',args);
-			var params = {args:args};
-			return this.wp_ajax('pw_set_avatar',params);
+
+		pw_set_avatar: function( args ) {
+			// DEPRECIATED
+			return this.setAvatar( args );
 		},
+
+		setAvatar: function( args ){
+			$log.debug( 'pwData.setAvatar', args );
+			var params = { args:args };
+			return this.wp_ajax( 'pw_set_avatar', params );
+		},
+
 		pw_get_avatar: function(args) {
 			$log.debug('pwData.pw_get_avatar',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_get_avatar',params);
 		},
+		
 		wp_user_query: function(args) {
 			$log.debug('pwData.wp_user_query',args);
 			var params = {args:args};

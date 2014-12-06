@@ -423,7 +423,7 @@ add_action("wp_ajax_wp_user_query", "wp_user_query_anon");
 
 
 //---------- SET AVATAR ----------//
-function pw_set_avatar_admin(){
+function pw_set_avatar_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 
 	$params = $args['args'];
@@ -431,15 +431,10 @@ function pw_set_avatar_admin(){
 	$image_object = $params['image_object'];
 
 	$pw_set_avatar = pw_set_avatar( $image_object, $user_id );
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $pw_set_avatar;
-	echo json_encode( $response );
-	die;
-
+	
+	pwAjaxRespond( $pw_set_avatar );
 }
-add_action("wp_ajax_pw_set_avatar", "pw_set_avatar_admin");
+add_action("wp_ajax_pw_set_avatar", "pw_set_avatar_ajax");
 
 
 //---------- GET AVATAR ----------//

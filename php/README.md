@@ -2473,7 +2473,7 @@ Contains functions for getting registered images, resizing images and post attac
 
 ------
 
-### url_to_media_library( *$image_url* )
+### pw_url_to_media_library( *$image_url* )
 - Uploads a remote image URL to the local Media Library
 
 __return__ : *integer* (Attachment ID)
