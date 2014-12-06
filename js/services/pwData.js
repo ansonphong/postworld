@@ -174,20 +174,19 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_load_feed',params);
 		},
-		get_post: function( vars ) {
-
+		get_post: function( vars ){
+			// DEPRECIATED
+			return this.getPost( vars );
+		},
+		getPost: function( vars ) {
 			// If no ID is set
 			if( _.isUndefined( vars.post_id ) ){
 				$log.debug( 'pwData.pw_get_post : No post ID specified.' );
 				return false;
 			}
-
 			$log.debug('pwData.pw_get_post',vars);
-			
 			//var params = {args:vars};
-			
 			return this.wp_ajax('pw_get_post',vars);
-
 		},
 		pw_get_template: function ( meta ) { // ( subdir, post_type, view)
 			// if templates object already exists, then get value, if not, then retrieve it first

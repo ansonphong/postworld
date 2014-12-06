@@ -19,6 +19,9 @@ postworld.controller( 'pwUiCtrl',
 	[ '$scope', '$timeout', '_', '$log',
 	function( $scope, $timeout, $_, $log ){
 
+
+	////////// UI ELEMENT : DISPLAY //////////
+
 	$scope.uiToggleElementDisplay = function( element ){
 		element = angular.element( element );
 		if( element.css('display') == 'none' )
@@ -55,7 +58,7 @@ postworld.controller( 'pwUiCtrl',
 		if( _.isUndefined(className) )
 			className = 'active';
 		// Return className if view is true
-		if( $scope.showView( viewId ) )
+		if( $scope.uiShowView( viewId ) )
 			return className;
 		else
 			return '';
@@ -65,6 +68,23 @@ postworld.controller( 'pwUiCtrl',
 		// If the value is truthy and not empty, return true
 		var bool = ( Boolean( val ) && !_.isEmpty( val ) ) ? true : false;
 		return bool; 
+	}
+
+
+	////////// UI ELEMENT : STYLING //////////
+
+	$scope.backgroundImage = function( imageUrl, properties ){
+		// Set the Image URL
+		//var imageUrl = $scope.post.image[imageHandle].url;
+		var style = { 'background-image': "url(" + imageUrl + ")" };
+
+		// Add additional properties
+		if( !_.isUndefined( properties ) ){
+			angular.forEach( properties, function(value, key){
+				style[key] = value;
+			});
+		}
+		return style;
 	}
 
 

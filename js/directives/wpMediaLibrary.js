@@ -34,21 +34,47 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 		restrict: 'AE',
 		controller: 'wpMediaLibraryCtrl',
 		scope: {
-			mediaSetId:'=mediaSetId',
+			
+			// Bind the selected media's ID
+			mediaSetId:'=',
 
-			mediaModel:'=mediaModel',
-			mediaModelArray:'@mediaModelArray',
-			mediaTitle:'@mediaTitle',
-			mediaButton:'@mediaButton',
-			mediaTabs:'@mediaTabs',
-			mediaDefaultTab:'@mediaDefaultTab',
-			mediaMultiple:'@mediaMultiple',
-			mediaType:'@mediaType',
-			mediaId:'@mediaId',
+			// Bind the selected media's image object
+			mediaModel:'=',
 
-			mediaCallback:'@mediaCallback',
-			mediaParentCallback:'@mediaParentCallback',
+			// Bind the selection of an array of multiple images selected 
+			mediaModelArray:'=',
 
+			// Used by the setMediaPost() callback			
+			mediaPost:'=',
+
+			// The title of the media selector
+			mediaTitle:'@',
+			
+			// Test in the button in the media selector
+			mediaButton:'@',
+			
+			// Define which tabs are available
+			mediaTabs:'@',
+			
+			// Set which tab is selected by default
+			mediaDefaultTab:'@',
+			
+			// Toggle the option to select multiple pieces of media
+			mediaMultiple:'@',
+			
+			// Filter the media selection options
+			mediaType:'@',
+
+			// A callback to call in the current isolated scope of this directive
+			mediaCallback:'@',
+
+			// A callback to call in the parent scope in which the directive is placed
+			mediaParentCallback:'@',
+
+			// The ID of the media object (? is this still in use ?)
+			mediaId:'@',
+
+			// ???
 			mediaClick:'&'
 		},
 		link: function( $scope, element, attrs ){
@@ -75,14 +101,6 @@ postworld.controller( 'wpMediaLibraryCtrl',
 	[ '$scope', '$window', '$timeout', '$log', 'pwData', '_',
 	function( $scope, $window, $timeout, $log, $pwData, $_ ) {
 
-	///// SERVICE FUNCTIONS /////
-	$scope.stringToBoolean = function(string){
-		switch(string.toLowerCase()){
-			case "true": case "yes": case "1": return true;
-			case "false": case "no": case "0": case null: return false;
-			default: return Boolean(string);
-		}
-	};
 
 	///// SANDBOX /////
 	//alert("mediaMultiple : " + $scope.mediaMultiple);
@@ -98,12 +116,23 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		///// Load Settings /////
 			// Set Defaults 
 			var mediaModel = $scope.mediaModel;
-			var mediaTitle = ( !_.isUndefined($scope.mediaTitle) ) ? $scope.mediaTitle : "Upload Media" ;
-			var mediaButton = ( !_.isUndefined($scope.mediaButton) ) ? $scope.mediaButton : "Set Media" ;
-			var mediaTabs = ( !_.isUndefined($scope.mediaTabs) ) ? $scope.mediaTabs : "upload, library" ;
-			var mediaType = ( !_.isUndefined($scope.mediaType) ) ? $scope.mediaType : "" ;
-			var mediaMultiple = $scope.stringToBoolean($scope.mediaMultiple);
-			var mediaId = ( !_.isUndefined($scope.mediaId) ) ? $scope.mediaId : "" ;
+			
+			var mediaTitle = ( !_.isUndefined($scope.mediaTitle) ) ?
+				$scope.mediaTitle : "Upload Media" ;
+			
+			var mediaButton = ( !_.isUndefined($scope.mediaButton) ) ?
+				$scope.mediaButton : "Set Media" ;
+			var mediaTabs = ( !_.isUndefined($scope.mediaTabs) ) ?
+				$scope.mediaTabs : "upload, library" ;
+
+			var mediaType = ( !_.isUndefined($scope.mediaType) ) ?
+				$scope.mediaType : "" ;
+
+			var mediaMultiple = $_.stringToBoolean( $scope.mediaMultiple );
+
+			var mediaId = ( !_.isUndefined($scope.mediaId) ) ?
+				$scope.mediaId : "" ;
+
 			// Default Tab : uploadFiles
 			//var mediaDefaultTab =
 			//	( !_.isUndefined($scope.mediaDefaultTab) && $scope.mediaDefaultTab == 'upload' ) ?
@@ -413,9 +442,12 @@ postworld.controller( 'wpMediaLibraryCtrl',
 	};
 
 	$scope.setSelectedMediaIdAsUsermeta = function( userId, subKey, metaKey ){
+		// Saves the selected image's ID as a usermeta value
 
+		// Get the selected media's ID
 		var mediaId = $scope.getSelectedMediaId();
 
+		// Setup vars for AJAX cal
 		var vars = {
 			user_id: userId,
 			sub_key: subKey,
@@ -425,15 +457,40 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 		$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : REQUEST : ', vars );
 
+		// Do AJAX call
 		$pwData.setWpUsermeta( vars ).then(
 			function( response ){
 				$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : RESPONSE : ', response );
 			},
-			function( response ){
-
-			}
+			function( response ){}
 		);
 
+	}
+
+
+	$scope.setMediaPost = function( fields ){
+		// Gets the updated post object for a selected image
+		// And places it in the scope
+
+		if( _.isEmpty( fields ) )
+			fields = 'preview';
+
+		// Setup vars
+		var vars = {
+			post_id: $scope.getSelectedMediaId(),
+			fields: fields
+		};
+
+		// Send AJAX request
+		$pwData.getPost( vars ).then(
+			function( response ){
+				$log.debug('wpMediaLibrary.setMediaPost : $pwData.getPost() : RESPONSE : ', response );
+				//if( response. )
+				$scope.mediaPost = response.data;
+				return;
+			},
+			function( response ){}
+		);
 
 	}
 
