@@ -419,7 +419,7 @@ function pw_set_avatar( $obj ){
 	/*
 		$obj = array(
 			'user_id'			=>	[integer]	(optional)	// 	The user ID for whom to set the avatar
-			'url' 				=> 	[string],	(optional)	//	If an image URL is provided, that image is gotten and used as the avatar
+			'image_url' 		=> 	[string],	(optional)	//	If an image URL is provided, that image is gotten and used as the avatar
 			'attachment_id'		=>	[integer],	(optional)	// 	If a valid attachment_id is provided, that is used as the uer's avatar
 			'action'			=>	[string],	(optional) 	// 	OPTIONS : 'delete'
 		);
@@ -431,7 +431,7 @@ function pw_set_avatar( $obj ){
 	// Define default Values
 	$default_obj = array(
 		'user_id'		=> 	$current_user_id,
-		'url'			=>	null,
+		'image_url'		=>	null,
 		'attachment_id'	=>	null,
 		'action'		=>	null,
 		);
@@ -470,30 +470,21 @@ function pw_set_avatar( $obj ){
 
 	///// UPLOAD IMAGE FROM REMOTE URL /////
 	// Upload image from remote URL
-	if( !empty( $obj['url'] ) && empty( $obj['attachment_id'] ) ){
-		$attachment_id = pw_url_to_media_library( $obj['url'] );
+	if( !empty( $obj['image_url'] ) && empty( $obj['attachment_id'] ) ){
+		$attachment_id = pw_url_to_media_library( $obj['image_url'] );
 		$obj['attachment_id'] = $attachment_id;
 	}
 
-
-	///// FROM ATTACHMENT ID /////
+	///// ADD ATTACHMENT ID /////
 	// If Image has an Attachment ID field
 	if( isset( $obj['attachment_id'] ) && is_numeric( $obj['attachment_id'] ) ){
-		
 		$attachment_id = (int) $obj['attachment_id'];
-
 		$success = update_user_meta( $user_id, PW_AVATAR_KEY, $attachment_id );
-
 	} else
 		return array('error'=>'No add avatar.');
 
-	if( $success == true )
-		return pw_get_avatar( array( "user_id" => $user_id ) );
-	else{
-		if( is_numeric( $previous_value ) )
-			return $user_id;
-	}
-
+	///// RETURN THE AVATAR /////
+	return pw_get_avatar( array( "user_id" => $obj['user_id'] ) );
 
 }
 

@@ -12,6 +12,9 @@ postworld.directive('pwEditAvatar', function() {
 	return {
 		restrict: 'A',
 		controller: 'editAvatarCtrl',
+		scope:{
+			'avatarModel':'=',
+		},
 	};
 });
 
@@ -19,35 +22,90 @@ postworld.controller( 'editAvatarCtrl',
 	[ '$scope', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
 	function( $scope, $rootScope, $pwData, $timeout, $log, $pwUsers, $_ ) {
 
-
 	$scope.status = "empty";
 
-	$scope.updateAvatarImage = function( selected_image_obj ){
-		// Set the image object into the model
-		$scope.status = "saving";
-		var vars = {
-			user_id: $scope.user_id,
-			image_object: selected_image_obj,
+	///// NEW MODEL /////
+
+
+	$scope.updateAvatar = function( vars ){
+		
+		$log.debug( 'EDIT AVATAR', vars );
+		return false;
+
+		$_.set( $scope, 'user.avatar.status', 'updating' );
+
+		var defaultVars = {
+			user_id: $_.get( $scope, 'user.ID' ),
+			attachment_id: null,
+			image_url: null,
 		};
+	
+		vars = array_replace_recursive( defaultVars, vars );
+
 		$pwData.setAvatar( vars ).then(
 				function(response) {    
 					$scope.avatar_image = response.data;
 					$scope.status = "done";
-					
+
 					///// BROADCAST : UPDATE AVATAR /////
 					$rootScope.$broadcast( 'updatedAvatar', {
-						user_id: user_id,
+						userId: vars.user_id,
 					});
 
-					// Load object into scope 
-					//$scope.loadAvatarObj( $scope.user_id );
-				
 				},
 				function(response){}
 			);
 		$scope.status = "setting";
 	};
 
+
+	$scope.$on( 'updateAvatar', function( event, args ){
+		$log.debug( 'editAvatarCtrl.updateAvatar : RECEIVED : ', args );
+
+		// If the updated avatar user ID is the same as the current parent scope user ID
+		if( $_.get( args, 'userId' ) == $_.get( $scope.$parent, 'user.ID' ) )
+			// Update the avatar
+			$scope.getAvatars();
+
+	});
+
+
+	$scope.getAvatars = function( vars ){
+
+		if( _.isEmpty(vars) )
+			vars = {};
+
+		var defaultVars = {
+			model:'user.avatar',
+			user_id: $_.get( $scope.$parent, 'user.ID' ),
+			fields:[
+				'avatar(small,64)',
+				'avatar(medium,256)'
+			],
+		};
+
+		$log.debug( 'editAvatarCtrl.getAvatars : REQUEST : ', vars );
+
+		vars = array_replace_recursive( defaultVars, vars );
+
+		$scope.status = "loading";
+
+		$pwData.getAvatars( vars ).then(
+			function( response ){
+				$log.debug( 'editAvatarCtrl.getAvatars : RESPONSE : ', response );
+				if( response.status == 200 && $scope.avatarModel )
+					$scope.avatarModel = response.data;
+			},
+			function( response ){}
+		);
+
+	};
+
+
+
+
+
+	///// OLD MODEL /////
 
 	$scope.loadAvatarObj = function( user_id ){
 		$scope.status = "loading";
@@ -77,6 +135,8 @@ postworld.controller( 'editAvatarCtrl',
 			if( typeof $scope.user_id !== 'undefined'  )
 				$scope.loadAvatarObj( $scope.user_id );
 		});    
+
+
 
 	$scope.deleteAvatarImage = function(){
 		// Set the image object into the model
@@ -112,11 +172,7 @@ postworld.controller( 'editAvatarCtrl',
 		$scope.status = "setting";
 	};
 
-	$scope.loadAvatarImg = function( user_id, size ){
-		$scope.status = "loading";
-		// Hit $pwData.pw_get_avatar with args
-
-	};
+	
 
 }]);
 

@@ -118,13 +118,16 @@ function pw_set_wp_usermeta( $vars ){
 			);
 	*/
 
-	extract($vars);
+	$default_vars = array(
+		'user_id'	=>	get_current_user_id(),
+		'meta_key'	=>	PW_USERMETA_KEY,
+		'sub_key'	=>	null,
+		'value'		=>	null,
+		);
 
-	///// SET DEFAULTS /////
-	if( !isset( $meta_key ) )
-		$meta_key = pw_usermeta_key;
-	if( !isset( $user_id ) )
-		$user_id = get_current_user_id();
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	extract($vars);
 
 	// TODO : Use pw_auth_user() here
 
@@ -135,7 +138,7 @@ function pw_set_wp_usermeta( $vars ){
 		return $user_id; // Will be: array('error'=>'[Error message]')
 
 	///// SUBKEY ////
-	if( isset( $sub_key ) ){
+	if( !empty( $sub_key ) ){
 		///// SETUP DATA /////
 		// Check if the meta key exists
 		$meta_value = get_user_meta( $user_id, $meta_key, true );
@@ -152,8 +155,20 @@ function pw_set_wp_usermeta( $vars ){
 
 		// Encode back into JSON
 		$meta_value = json_encode( $meta_value );
+
+	}
+
+	///// NO SUBKEY /////
+	else if( !empty( $value ) ){
+		
+		if( is_array( $value ) )
+			$value = json_encode($value);
+
+		$meta_value = $value;
+
 	}
 	
+	//pw_log( 'pw_set_wp_usermeta : $update_user_meta : ' . $user_id . ' / ' . $meta_key .' / '. $meta_value );
 
 	// Set user meta
 	$update_user_meta = update_user_meta( $user_id, $meta_key, $meta_value );

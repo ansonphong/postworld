@@ -71,6 +71,9 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 			// A callback to call in the parent scope in which the directive is placed
 			mediaParentCallback:'@',
 
+			// Vars which are broadcast from the rootScope on media selection
+			mediaBroadcast:'@',
+
 			// The ID of the media object (? is this still in use ?)
 			mediaId:'@',
 
@@ -98,8 +101,8 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 }]);
 
 postworld.controller( 'wpMediaLibraryCtrl',
-	[ '$scope', '$window', '$timeout', '$log', 'pwData', '_',
-	function( $scope, $window, $timeout, $log, $pwData, $_ ) {
+	[ '$scope', '$rootScope', '$window', '$timeout', '$log', 'pwData', '_',
+	function( $scope, $rootScope, $window, $timeout, $log, $pwData, $_ ) {
 
 
 	///// SANDBOX /////
@@ -441,19 +444,45 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 	};
 
-	$scope.setSelectedMediaIdAsUsermeta = function( userId, subKey, metaKey ){
+	$scope.broadcastUpdate = function( broadcastObj ){
+		// Standardized Broadcast from RootScope
+
+		if( _.isEmpty( broadcastObj ) )
+			broadcastObj = {};
+
+		var defaultBroadcastObj = {
+			name: 'selectMedia',
+			args:{
+				mediaId: $scope.getSelectedMediaId(),
+				mediaObj: $scope.mediaModel.attributes,
+			},
+		};
+
+		broadcastObj = array_replace_recursive( defaultBroadcastObj, broadcastObj );
+
+		$log.debug( '>>> broadcastUpdate <<< ', broadcastObj );
+
+		$rootScope.$broadcast( broadcastObj.name, broadcastObj.args );
+
+	}
+
+	$scope.setSelectedMediaIdAsUsermeta = function( vars ){
 		// Saves the selected image's ID as a usermeta value
+		if( _.isEmpty( vars ) )
+			vars = {};
 
 		// Get the selected media's ID
 		var mediaId = $scope.getSelectedMediaId();
 
 		// Setup vars for AJAX cal
-		var vars = {
-			user_id: userId,
-			sub_key: subKey,
-			meta_key: metaKey,
+		var defaultVars = {
+			user_id: 0,
+			sub_key: '',
+			meta_key: '',
 			value: mediaId,
 		};
+
+		vars = array_replace_recursive( defaultVars, vars );
 
 		$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : REQUEST : ', vars );
 
@@ -461,6 +490,21 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		$pwData.setWpUsermeta( vars ).then(
 			function( response ){
 				$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : RESPONSE : ', response );
+			
+				if( $scope.mediaBroadcast ){
+					//$log.debug( 'mediaBroadcast : ', $scope.mediaBroadcast );
+
+					// Standardize a local function for this which
+					// Includes the image details in the broadcast
+				
+					//$scope.broadcastUpdate( $scope.mediaBroadcast );
+				
+					$scope.broadcastUpdate( $scope.$eval( $scope.mediaBroadcast ) );
+
+				}
+
+				
+
 			},
 			function( response ){}
 		);
@@ -486,7 +530,8 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			function( response ){
 				$log.debug('wpMediaLibrary.setMediaPost : $pwData.getPost() : RESPONSE : ', response );
 				//if( response. )
-				$scope.mediaPost = response.data;
+				if( $scope.mediaPost )
+					$scope.mediaPost = response.data;
 				return;
 			},
 			function( response ){}

@@ -365,6 +365,12 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_get_avatar',params);
 		},
+
+		getAvatars: function(args) {
+			$log.debug('pwData.getAvatars',args);
+			var params = {args:args};
+			return this.wp_ajax('pw_get_avatars',params);
+		},
 		
 		wp_user_query: function(args) {
 			$log.debug('pwData.wp_user_query',args);

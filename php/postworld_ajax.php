@@ -421,17 +421,21 @@ add_action("wp_ajax_nopriv_wp_user_query", "wp_user_query_anon");
 add_action("wp_ajax_wp_user_query", "wp_user_query_anon");
 
 
+//---------- GET AVATAR SIZES ----------//
+function pw_get_avatars_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$params = $args['args'];
+	$return = pw_get_avatars( $params );
+	pwAjaxRespond( $return );
+}
+add_action("wp_ajax_pw_get_avatars", "pw_get_avatars_ajax");
+
 
 //---------- SET AVATAR ----------//
 function pw_set_avatar_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
-
 	$params = $args['args'];
-	$user_id = $params['user_id'];
-	$image_object = $params['image_object'];
-
-	$pw_set_avatar = pw_set_avatar( $image_object, $user_id );
-	
+	$pw_set_avatar = pw_set_avatar( $params );
 	pwAjaxRespond( $pw_set_avatar );
 }
 add_action("wp_ajax_pw_set_avatar", "pw_set_avatar_ajax");

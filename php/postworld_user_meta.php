@@ -98,17 +98,55 @@ function pw_get_userdata($user_id, $fields = false) {
 
 function pw_get_user( $user_id, $fields = false ) {
 
-	$wordpress_user_fields = array('ID','user_login', 'user_nicename', 'user_email', 'user_url', 'user_registered', 'display_name', 'user_firstname', 'user_lastname', 'nickname', 'user_description', 'wp_capabilities', 'admin_color', 'closedpostboxes_page', 'primary_blog', 'rich_editing', 'source_domain', 'roles', 'capabilities', );
-	$postworld_user_fields = array('viewed', 'favorites', 'location_city', 'location_region', 'location_country', 'post_points', 'comment_points', 'post_points_meta');
-	$buddypress_user_fields = array('user_profile_url', );
-	$wordpress_usermeta_fields = array('usermeta(all)', );
+	$wordpress_user_fields = array(
+		'ID',
+		'user_login',
+		'user_nicename',
+		'user_email',
+		'user_url',
+		'user_registered',
+		'display_name',
+		'user_firstname',
+		'user_lastname',
+		'nickname',
+		'user_description',
+		'wp_capabilities',
+		'admin_color',
+		'closedpostboxes_page',
+		'primary_blog',
+		'rich_editing',
+		'source_domain',
+		'roles',
+		'capabilities',
+		);
+	$postworld_user_fields = array(
+		'viewed',
+		'favorites',
+		'location_city',
+		'location_region',
+		'location_country',
+		'post_points',
+		'comment_points',
+		'post_points_meta',
+		);
+	$buddypress_user_fields = array(
+		'user_profile_url',
+		);
+	$wordpress_usermeta_fields = array(
+		'usermeta(all)',
+		);
+	$postworld_avatar_fields = array(
+		'avatar(small,64)',
+		'avatar(medium,256)',
+		//'avatar(large,1024)',
+		);
 
 	$user_data = array();
 
 	// If Fields is empty or 'all', add all fields
-	if ( $fields == false || $fields == 'all') {
-		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields, $wordpress_usermeta_fields);
-	}
+	if ( $fields == false || $fields == 'all')
+		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields, $wordpress_usermeta_fields, $postworld_avatar_fields);
+	
 
 	///// TRANSFER ONLY REQUESTED FIELDS!! /////
 
@@ -267,20 +305,39 @@ function pw_get_user( $user_id, $fields = false ) {
 
 
 	// AVATAR FIELDS
-	$avatars_object = get_avatar_sizes($user_id, $fields);
-	if ( !empty($avatars_object) )
-		$user_data["avatar"] = $avatars_object;
+	$avatar = get_avatar_sizes($user_id, $fields);
+	if ( !empty($avatar) )
+		$user_data["avatar"] = $avatar;
 
 	// REMOVE PASSWORD
 	unset($user_data["user_pass"]);
+
 	return $user_data;
 
 }
 
+
 function get_avatar_sizes($user_id, $fields){
+	// DEPRECIATED
+	return pw_get_avatars( array(
+			'user_id' 	=> 	$user_id,
+			'fields'	=>	$fields,
+			)
+		);
+}
+
+function pw_get_avatars( $vars ){
 	// Takes input $fields in the following format "avatar(handle,size)"
 	// $fields = array( 'avatar(small,48)', 'avatar(medium, 150)', ... );
 	// Produces an object like : array( 'small'=>array( "width"=>48, "height"=>48, "url"=>"http://...jpg" ) )
+
+	$default_vars = array(
+		'user_id' 	=> 	$user_id,
+		'fields'	=>	array( 'avatar(small,64)', 'avatar(medium,256)' ),
+		);
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	extract( $vars );
 
 	// Extract avatar() fields
 	$avatars = extract_fields( $fields, 'avatar' );
@@ -303,6 +360,8 @@ function get_avatar_sizes($user_id, $fields){
 	} // END foreach
 	return $avatars_object;
 }
+
+
 
 
 //TODO: change to new schema
