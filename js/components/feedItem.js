@@ -180,6 +180,8 @@ postworld.controller('pwGridItemCtrl',
 	$scope.getImageSize = function( prefix, imageTags ){
 		if ( parentFunctionExists( "getImageSize" ) ) 
 			return $scope.$parent.getImageSize( prefix, imageTags );
+		else
+			return false;
 	}
 
 	$scope.selectImageTag = function( imageTags, tagMapping ){
@@ -204,7 +206,9 @@ postworld.controller('pwGridItemCtrl',
 		if( _.isEmpty( tags ) || _.isUndefined( tags ) )
 			return false;
 
-		var imageUrl = $scope.post.image.sizes[ $scope.getImageSize(prefix, tags) ].url;
+		var imageSize = $scope.getImageSize( prefix, tags );
+		var imageUrl = $scope.post.image.sizes[ imageSize ].url;
+		
 		return { "background-image":"url( " + imageUrl + " )" };
 	}
 
