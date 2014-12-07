@@ -74,6 +74,9 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 			// Vars which are broadcast from the rootScope on media selection
 			mediaBroadcast:'@',
 
+			// Indicates the current status of loading / saving media
+			//mediaStatus:'=',
+
 			// The ID of the media object (? is this still in use ?)
 			mediaId:'@',
 
@@ -478,13 +481,15 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		var defaultVars = {
 			user_id: 0,
 			sub_key: '',
-			meta_key: '',
+			//meta_key: null,
 			value: mediaId,
 		};
 
 		vars = array_replace_recursive( defaultVars, vars );
 
 		$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : REQUEST : ', vars );
+
+		//$scope.mediaStatus = 'busy';
 
 		// Do AJAX call
 		$pwData.setWpUsermeta( vars ).then(

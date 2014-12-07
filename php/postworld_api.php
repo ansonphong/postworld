@@ -121,11 +121,13 @@ function pw_set_wp_usermeta( $vars ){
 	$default_vars = array(
 		'user_id'	=>	get_current_user_id(),
 		'meta_key'	=>	PW_USERMETA_KEY,
-		'sub_key'	=>	null,
-		'value'		=>	null,
+		'sub_key'	=>	'',
+		'value'		=>	'',
 		);
 
 	$vars = array_replace_recursive( $default_vars, $vars );
+
+	pw_log( json_encode( $vars ) );
 
 	extract($vars);
 

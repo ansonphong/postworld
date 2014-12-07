@@ -14,6 +14,7 @@ postworld.directive('pwEditAvatar', function() {
 		controller: 'editAvatarCtrl',
 		scope:{
 			'avatarModel':'=',
+			//'avatarStatus':'=',
 		},
 	};
 });
@@ -24,15 +25,19 @@ postworld.controller( 'editAvatarCtrl',
 
 	$scope.status = "empty";
 
-	///// NEW MODEL /////
+	$scope.setAvatarStatus = function( status ){
+		//if( $scope.avatarStatus )
+			//$scope.avatarStatus = status;
+	}
 
+	///// NEW MODEL /////
 
 	$scope.updateAvatar = function( vars ){
 		
 		$log.debug( 'EDIT AVATAR', vars );
 		return false;
 
-		$_.set( $scope, 'user.avatar.status', 'updating' );
+		$scope.setAvatarStatus('busy');
 
 		var defaultVars = {
 			user_id: $_.get( $scope, 'user.ID' ),
@@ -44,8 +49,7 @@ postworld.controller( 'editAvatarCtrl',
 
 		$pwData.setAvatar( vars ).then(
 				function(response) {    
-					$scope.avatar_image = response.data;
-					$scope.status = "done";
+					$scope.setAvatarStatus('done');
 
 					///// BROADCAST : UPDATE AVATAR /////
 					$rootScope.$broadcast( 'updatedAvatar', {
@@ -71,6 +75,7 @@ postworld.controller( 'editAvatarCtrl',
 
 
 	$scope.getAvatars = function( vars ){
+		$scope.setAvatarStatus('busy');
 
 		if( _.isEmpty(vars) )
 			vars = {};
@@ -88,13 +93,13 @@ postworld.controller( 'editAvatarCtrl',
 
 		vars = array_replace_recursive( defaultVars, vars );
 
-		$scope.status = "loading";
-
 		$pwData.getAvatars( vars ).then(
 			function( response ){
 				$log.debug( 'editAvatarCtrl.getAvatars : RESPONSE : ', response );
 				if( response.status == 200 && $scope.avatarModel )
 					$scope.avatarModel = response.data;
+
+				$scope.setAvatarStatus('done');
 			},
 			function( response ){}
 		);
