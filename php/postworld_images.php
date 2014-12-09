@@ -6,6 +6,33 @@ $aq_resizer_include = POSTWORLD_PATH.'/lib/wordpress/aq_resizer.php';
 include_once $aq_resizer_include;
 
 
+function pw_featured_image_post( $post_id = null, $fields = 'preview' ){
+	global $post;
+
+	// Default post ID
+	if( empty( $post_id ) )
+		$post_id = $post->ID;
+	
+	// Get the featured image ID
+	$post_thumbnail_id = get_post_thumbnail_id( $post_id );
+	
+	if( empty($post_thumbnail_id) )
+		return false;	
+
+	// Reutn the postworld post object
+	return pw_get_post( $post_thumbnail_id, $fields );
+}
+
+
+function pw_featured_image_url( $size = 'full', $echo = true ){
+	$url = pw_featured_image_post()['image']['sizes'][$size]['url'];
+	if( $echo )
+		echo $url;
+	else
+		return $url;
+}
+
+
 ///// REQUIRE IMAGE /////
 function pw_require_image( $posts = array() ){
 	// Returns only the posts with images
