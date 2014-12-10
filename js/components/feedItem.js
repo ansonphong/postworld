@@ -1,6 +1,6 @@
 'use strict';
 
-postworld.directive('feedItem', [ '_', function( $_ ) {
+postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $log, $_ ) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -32,15 +32,11 @@ postworld.controller('pwFeedItemCtrl',
 	var localView = $_.get( $scope, 'feed.view.current' );
 	var view = ( localView ) ? localView : $pwData.getFeedView( feedId );
 
-	if (type == '_pw_block') {
-		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );				
-	}
-	else{
+	if (type == '_pw_block') 
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );
+	else
 		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: view } );
-	}
-
-	//$log.debug('template:', $scope.itemTemplateUrl);
-
+	
 	// Decodes Special characters in URIs
 	$scope.decodeURI = function(URI) {
 		URI = URI.replace("&amp;","&");
@@ -52,7 +48,6 @@ postworld.controller('pwFeedItemCtrl',
 	$scope.$on("FEED_TEMPLATE_UPDATE", function(event, vars ){
 
 		// TODO : Verify here that the current feed is matches `vars.feedId`
-
 		if ( $scope.post.post_type != '_pw_block' ) {
 			var type = $scope.post.post_type;
 			$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
