@@ -41,7 +41,8 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 			'fields'    		=> 	array( 'ID', 'post_title', 'image(thumbnail)', 'fields' ),    
 			),
 		'options'	=>	array(
-			'include_galleries'	=>	true,	// Deep-scan posts content for gallery shortcodes
+			'include_galleries'	=>	false,	// Deep-scan posts content for gallery shortcodes
+					// CAUSING A RECURSION ISSUE
 			'move_galleries'	=>	true,	// Moves the galleries from the post to the feed
 			'require_image'		=>	true,	// Only posts with a featured image are used
 			),
