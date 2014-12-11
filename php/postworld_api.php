@@ -127,7 +127,7 @@ function pw_set_wp_usermeta( $vars ){
 
 	$vars = array_replace_recursive( $default_vars, $vars );
 
-	pw_log( json_encode( $vars ) );
+	//pw_log( json_encode( $vars ) );
 
 	extract($vars);
 

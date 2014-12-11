@@ -123,8 +123,6 @@ function postworld_admin_menu(){
 	// Allow themes to add sub menus
 	$menu['submenu'] = apply_filters( 'pw_admin_submenu', $menu['submenu'] );	
 
-	pw_log( json_encode( $menu['submenu'] ) );
-
 	return $menu;
 
 }

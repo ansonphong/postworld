@@ -1,7 +1,9 @@
 <?php
 ////////// POSTWORLD TERMS FEED //////////
 function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
+
 	// TODO : Rename all 'term_feed' to 'term_feed'
+	
 
 	// Extract Shortcode Attributes, set defaults
 	$atts = shortcode_atts( array(
@@ -10,30 +12,32 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 		'taxonomy'		=> 'post_tag',
 		'id' 			=> pw_random_hash(),
 		'class' 		=> '',
-		'max-terms' 	=> 50,
-		'max-posts'		=> 10,
-		'post-type'		=> 'any',
-		'order-terms-by'=> 'count',
-		'order-terms'	=> 'DESC',
-		'order-posts-by'=> 'rand',
+		'max_terms' 	=> 50,
+		'max_posts'		=> 10,
+		'post_type'		=> 'any',
+		'order_terms_by'=> 'count',
+		'order_terms'	=> 'DESC',
+		'order_posts_by'=> 'rand',
 		), $atts);
 
-	extract($atts);
+	//extract($atts);
+
+	//pw_log( "INIT SHORTCODE : " . $tag . " : ATTS : " . json_encode( $atts ) );
 
 	// Setup Feed Query
 	$vars = array(
 		'terms' => array(
 			'taxonomies'    =>  array( $atts['taxonomy'] ),
 			'args'          =>  array(
-				'number'	=>	$atts['max-terms'],
-				'orderby'	=>	$atts['order-terms-by'],
-				'order'		=>	$atts['order-terms'],
+				'number'	=>	$atts['max_terms'],
+				'orderby'	=>	$atts['order_terms_by'],
+				'order'		=>	$atts['order_terms'],
 				),
 			),
 		'query'  =>  array(
-			'post_type'			=>	$atts['post-type'],
-			'orderby'			=>	$atts['order-posts-by'],
-			'posts_per_page'	=>	$atts['max-posts'],
+			'post_type'			=>	$atts['post_type'],
+			'orderby'			=>	$atts['order_posts_by'],
+			'posts_per_page'	=>	$atts['max_posts'],
 			'fields'    		=> 	array( 'ID', 'post_title', 'image(thumbnail)', 'fields' ),    
 			),
 		'options'	=>	array(
@@ -85,7 +89,11 @@ function pw_print_term_feed( $vars ){
 			),
 		);
 
+	//pw_log( "PRINT TERM FEED : VARS : " . json_encode( $vars ) );
+
 	$vars = array_replace_recursive( $default_vars, $vars ); 
+
+
 
 	///// TEMPLATES ////
 	$template_subdir = 'term-feeds';
