@@ -324,6 +324,11 @@ function pw_feed_template_options( $vars = array( "ng_model" => "selectedItem" )
 	return pw_ob_admin_template( 'feed-template-options', $vars );
 }
 
+///// FEED VARIABLE OPTIONS /////
+function pw_feed_variable_options( $vars = array( "ng_model" => "selectedItem" ) ){
+	return pw_ob_admin_template( 'feed-variable-options', $vars );
+}
+
 ///// SELECT ICON /////
 function i_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
 	return pw_ob_admin_template( 'select-icon', $vars );

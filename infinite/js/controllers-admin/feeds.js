@@ -25,6 +25,11 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 	///// FEED OPTIONS /////
 	$scope.feedOptions = {
 		view: $pwPostOptions.postView(),
+		views:{
+			grid:{
+				columns:[1,2,3,4,5,6],
+			}
+		},
 		query:{
 			post_type: $pwPostOptions.postType(),
 			post_status: $pwPostOptions.postStatus(),

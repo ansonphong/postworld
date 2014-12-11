@@ -54,7 +54,9 @@ $pw = array(
 		'backgrounds'		=>	'postworld-model-backgrounds',
 		),
 	'filters'	=>	array(
-		'term_feed'	=>	'postworld-term-feed-'
+		'feed_default'		=>	'postworld-feed-default',
+		'feed_override'		=>	'postworld-feed-override',
+		'term_feed'			=>	'postworld-term-feed-',
 		),
 	);
 
@@ -83,6 +85,8 @@ define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
 
 define( 'PW_TERM_FEED', 		$pw['filters']['term_feed'] );
+define( 'PW_FEED_DEFAULT', 		$pw['filters']['feed_default'] );
+define( 'PW_FEED_OVERRIDE', 	$pw['filters']['term_feed'] );
 
 ///// DEFINE META FILTER NAMES /////
 define( 'PW_POSTS', 	'pw_posts' );

@@ -28,6 +28,7 @@
 		</select>
 	</div>
 
+	<!--
 	<div class="pw-col-3">
 		<label
 			for="item-aux_template"
@@ -42,5 +43,6 @@
 			<option value=""><?php ___('general.none'); ?></option>
 		</select>
 	</div>
+	-->
 
 </div>

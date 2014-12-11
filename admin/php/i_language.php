@@ -8,6 +8,11 @@ $i_language = array(
 		'cancel'	=>	'Cancel',
 		'back'		=>	'‹ Back',
 		'none'		=>	'None',
+
+		'views'		=>	'Views',
+		'grid'		=>	'Grid',
+		'columns'	=> 	'Columns',
+		
 		),
 
 	'backgrounds'	=>	array(

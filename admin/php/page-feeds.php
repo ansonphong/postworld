@@ -23,10 +23,13 @@
 ?>
 <script>
 	postworldAdmin.controller( 'pwFeedsDataCtrl',
-		[ '$scope', '_',
-		function( $scope, $_ ){
+		[ '$scope', '_', '$timeout',
+		function( $scope, $_, $timeout ){
 		$scope.pwFeeds = <?php echo json_encode( $pwFeeds ); ?>;
 		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;
+		if( _.isEmpty($scope.pwFeedSettings) )
+			$scope.pwFeedSettings = {};
+
 		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
 		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
 		$scope.contexts = <?php echo json_encode( pw_get_contexts( array( 'default', 'standard', 'archive', 'search', 'taxonomy', 'post-type' ) ) ); ?>;
@@ -84,35 +87,6 @@
 				<div ng-show="showView('settings')">
 					
 					<div class="well">
-
-						<!-- SAVE BUTTON -->
-						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
-		
-						<h3><?php ___('feeds.settings.loading_icon') ?></h3>
-
-						<!-- DROPDOWN -->
-						<span
-							class="dropdown">
-							<!-- SELECTED ITEM -->
-							<span
-								dropdown-toggle
-								class="area-select area-select-icon">
-								<i class="{{ pwFeedSettings.loading_icon }} icon-spin"></i>
-							</span>
-							<!-- MENU -->
-							<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
-								<li
-									class="select-icon"
-									ng-repeat="icon in feedSettingsOptions.loadingIcon"
-									ng-click="pwFeedSettings.loading_icon = icon">
-									<i
-										class="{{ icon }}"></i>
-								</li>
-							</ul>
-						</span>
-					</div>
-
-					<div class="well">
 						<!-- SAVE BUTTON -->
 						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
 		
@@ -143,9 +117,26 @@
 										Template
 									</button>
 
+									<button
+										type="button"
+										class="button"
+										ng-class="uiSetClass('options_'+context.name)"
+										ng-click="uiToggleView('options_'+context.name)">
+										<i class="icon-gear"></i>
+										Options
+									</button>
+
 									<div
 										ng-show="uiShowView('template_'+context.name)">
 										<?php echo pw_feed_template_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+										<hr class="thin">
+										<?php echo pw_feed_variable_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+										<hr class="thin">
+									</div>
+
+									<div
+										ng-show="uiShowView('options_'+context.name)">
+										OPTIONS
 									</div>
 
 								</td>
@@ -156,6 +147,33 @@
 
 					
 					{{ pwFeedSettings }}
+
+					<div class="well">
+						<!-- SAVE BUTTON -->
+						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
+						<h3><?php ___('feeds.settings.loading_icon') ?></h3>
+						<!-- DROPDOWN -->
+						<span
+							dropdown
+							class="dropdown">
+							<!-- SELECTED ITEM -->
+							<span
+								dropdown-toggle
+								class="area-select area-select-icon">
+								<i class="{{ pwFeedSettings.loading_icon }} icon-spin"></i>
+							</span>
+							<!-- MENU -->
+							<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
+								<li
+									class="select-icon"
+									ng-repeat="icon in feedSettingsOptions.loadingIcon"
+									ng-click="pwFeedSettings.loading_icon = icon">
+									<i
+										class="{{ icon }}"></i>
+								</li>
+							</ul>
+						</span>
+					</div>
 
 				</div>
 
