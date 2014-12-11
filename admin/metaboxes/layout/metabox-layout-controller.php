@@ -25,7 +25,8 @@ global $post;
 		<input type="hidden" name="pw_layout_post" ng-value="pw_layout_post | json" style="width:100%;">
 		
 		<!-- DEV : Test Output 
-		<hr><pre>POST : {{ pw_layout_post | json }}</pre>--> 
+		<hr><pre>POST : {{ pw_layout_post.post_meta.pw_meta.layout | json }}</pre>
+		-->
 		
 	</div>	
 </div>
@@ -51,6 +52,11 @@ global $post;
 			if( !$_.objExists( $scope.pw_layout_post, 'post_meta.<?php echo pw_postmeta_key; ?>.layout' ) )
 				$scope.pw_layout_post = $_.setObj( $scope.pw_layout_post, 'post_meta.<?php echo pw_postmeta_key; ?>.layout', {} );
 
+			// If the Layout object is empty
+			if( _.isEmpty( $_.get( $scope.pw_layout_post, 'post_meta.pw_meta.layout' ) ) )
+				// Make it an object
+				$scope.pw_layout_post = $_.set( $scope.pw_layout_post, 'post_meta.pw_meta.layout', { template : 'default' } );
+
 			// TODO : Add a PW global for pw_postmeta_key and pw_usermeta_key, use that global here
 
 			// ADD : If 'default' template selected, delete the layout object
@@ -66,6 +72,8 @@ global $post;
 	}]);
 	
 </script>
+
+
 
 <?php
 	// Action hook to print the Javascript(s)
