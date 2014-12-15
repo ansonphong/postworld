@@ -319,11 +319,8 @@
 
 					<?php echo pw_feed_query_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 
-
 					<div class="space-2"></div>
 
-
-					
 					<hr class="thin">
 					
 					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
@@ -331,14 +328,11 @@
 					<hr class="thin">
 					<?php echo pw_feed_variable_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 
-
-
 					<h3>
 						<i class="icon-code"></i>
 						Shortcode
 					</h3>
 					<pre><code>[pw-feed id="{{ selectedItem.id }}"]</code></pre>
-
 
 					<hr class="thick">
 
