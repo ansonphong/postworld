@@ -1,12 +1,14 @@
 label.inner, .labeled label{
 	position:absolute;
 	z-index: 5;
-	padding:5px 10px;
+	padding:4px 10px;
+	margin:1px;
 	color:#999;
 	font-size: 13px;
 	letter-spacing:1px;
 	text-transform: uppercase;
-	width:100%;
+	//width:100%; // Usablity issues in multiple dropdown select
+	background:#fff;
 	white-space: nowrap;
 	.description{
 		text-transform: none;
@@ -31,6 +33,7 @@ input.labeled, textarea.labeled, div.labeled, select.labeled,
 	//border:2px solid @gray2;
 	margin:0 4px 2px 0;
 	line-height: normal;
+	box-shadow:none;
 }
 
 input.labeled, select.labeled{

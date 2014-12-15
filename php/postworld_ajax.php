@@ -574,12 +574,8 @@ function taxonomies_outline_mixed_anon(){
 	$pw_args = $args['args'];
 
 	$taxonomies_outline_mixed = taxonomies_outline_mixed( $pw_args );
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $taxonomies_outline_mixed;
-	echo json_encode( $response );
-	die;
+	
+	pwAjaxRespond( $taxonomies_outline_mixed );
 }
 add_action("wp_ajax_nopriv_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
 add_action("wp_ajax_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");

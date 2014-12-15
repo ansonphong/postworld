@@ -86,6 +86,8 @@ include 'shortcodes/alignments/alignments.php';
 include 'shortcodes/icons/icons.php';
 include 'shortcodes/help/shortcodes-help.php';
 
+include 'shortcodes/feed/feed.php';
+
 include 'shortcodes/terms-feed/terms-feed.php';
 
 ?>

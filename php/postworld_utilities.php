@@ -768,10 +768,14 @@ function pw_wrap_quotes( $string ){
     return "\"" . $string . "\"";
 }
 
-function pw_random_hash( $length = 8 ){
+function pw_random_hash(  $length = 8  ){
 	$hash = hash('md5', rand( 0, 10000 ));
 	$hash = substr( $hash, 1, $length );
 	return $hash;
+}
+
+function pw_random_string( $length = 8 ){
+	return pw_random_hash(  $length );
 }
 
 
@@ -942,6 +946,42 @@ function pw_sanitize_key( $key ){
 	//$key = pw_sanitize($key);
 
 	return $key;
+}
+
+function pw_sanitize_numeric( $val ){
+	// Casts all numeric calues as floats/numbers
+	if( is_numeric( $val ) )
+		return (float) $val ;
+	else
+		return $val;
+}
+
+function pw_sanitize_numeric_array( $vals = array() ){
+	// Numerically santize a flat array of values
+	for( $i; $i < count($vals); $i++ ){
+		$vals[$i] = pw_sanitize_numeric( $vals[$i] );
+	}
+	return $vals;
+}
+
+function pw_sanitize_numeric_a_array( $vals = array() ){
+	// Numerically sanitize an associative array of values
+
+	$sanitized = array();
+	foreach( $vals as $key => $val ){
+		$sanitized[$key] = pw_sanitize_numeric( $val );
+	}
+	return $sanitized;
+
+}
+
+function pw_sanitize_numeric_array_of_a_arrays( $vals ){
+	// Numerically sanitize an array of associative arrays
+
+	for( $i=0; $i < count($vals);  $i++ ){
+		$vals[$i] = pw_sanitize_numeric_a_array( $vals[$i] );
+	}
+	return $vals;
 }
 
 

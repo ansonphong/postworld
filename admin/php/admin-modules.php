@@ -324,6 +324,11 @@ function pw_feed_template_options( $vars = array( "ng_model" => "selectedItem" )
 	return pw_ob_admin_template( 'feed-template-options', $vars );
 }
 
+///// FEED QUERY OPTIONS /////
+function pw_feed_query_options( $vars = array( "ng_model" => "selectedItem" ) ){
+	return pw_ob_admin_template( 'feed-query-options', $vars );
+}
+
 ///// FEED VARIABLE OPTIONS /////
 function pw_feed_variable_options( $vars = array( "ng_model" => "selectedItem" ) ){
 	return pw_ob_admin_template( 'feed-variable-options', $vars );

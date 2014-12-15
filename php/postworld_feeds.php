@@ -66,57 +66,42 @@ function pw_live_feed( $vars = array() ){
 	// Run filters on the feed vars
 	$vars = apply_filters( 'pw_feed', $vars );
 
-	/// $VARS : (ARRAY) ///
-	if( is_array( $vars ) ){
-		extract( $vars );
-	}
-
 	/// $VARS : (STRING) ///
-	else if( is_string( $vars ) ){
-		// Check if the $vars is a string
-		// If so, check if it's referencing a known feed ID
-		$feed = pw_get_feed_by_id( $vars );
+	// Check if the $vars is a string or if a feed ID is defined in the vars
+	$feed_id = ( is_string( $vars ) ) ? $vars : _get( $vars, 'feed_id' ); 
 
+	if( !empty( $feed_id ) ){
+		// Check if it's referencing a known feed ID
+		$feed = pw_get_feed_by_id( $feed_id );
 		if( !$feed )
 			return false;
-		else
-			$feed_id = $vars;
+	} 
+	else{
+		$feed = array();
+		$feed_id = 'pwFeed_' . pw_random_string();
 	}
 
-	/// $VARS : (UNKNOWN) ///
-	else
-		return false;
-
 	///// DEFAULT VARS /////
-	// TODO : Refactor as an array $default_vars and merge with $vars
-	if( !isset( $element ) )
-		$element = 'div';
+	$default_vars = array(
+		'element'		=>	'div',
+		'directive'		=>	'live-feed',
+		'feed_id'		=>	$feed_id,
+		'classes'		=>	'feed',
+		'attributes'	=>	'',
+		'echo'			=>	true,
+		'feed'			=>	$feed,
+		'aux_template'	=>	null,
+		);
 
-	if( !isset( $directive ) )
-		$directive = 'live-feed';
-
-	if( !isset( $feed_id ) )
-		$feed_id = 'pwFeed_' . pw_random_hash();
-
-	if( !isset( $classes ) )
-		$classes = 'feed';
-
-	if( !isset( $attributes ) )
-		$attributes = '';
-
-	if( !isset( $echo ) )
-		$echo = true;
-
-	if( !isset( $feed ) )
-		$feed = array();
-
-	if( !isset( $aux_template ) )
-		$aux_template = null;
-
-
-	///// DEFAULT ARRAYS /////
+	if( is_array( $vars ) )
+		$vars = array_replace_recursive( $default_vars, $vars );
+	else
+		$vars = $default_vars;
 	
+	extract( $vars );
 
+
+	///// DEFAULT FEED /////
 	$default_feed = array(
 		'preload'			=>	10,
 		'load_increment' 	=> 	10,

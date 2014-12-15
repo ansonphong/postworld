@@ -14,6 +14,12 @@ function pw_mode(){
 		POSTWORLD_MODE : 'deploy';
 }
 
+function pw_config(){
+	global $pwSiteGlobals;
+	$pwSiteGlobals = apply_filters( 'pw_config', $pwSiteGlobals );
+	return $pwSiteGlobals;
+}
+
 global $pw;
 $pw = array(
 	'info'	=>	array(

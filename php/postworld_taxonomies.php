@@ -1,5 +1,33 @@
 <?php
 
+function pw_get_taxonomies( $args = array(), $output = 'names', $operator = 'and'  ){
+
+	$default_args = array(
+		'_builtin'	=>	true,
+		'public'	=>	true,
+		);
+
+	$args = array_replace_recursive($default_args, $args);
+
+	// Gives a proper output of get_taxonomies names
+	$taxonomies = get_taxonomies( $args, $output, $operator );
+
+	
+	if( $output == 'names' ){
+		// Process the names into a proper array
+		// Because for unknown reasons, the WP native function
+		// Outputs an associative array with the same values and keys
+		// Which doesn't make any sense, so this will fix that
+		$new_taxonomies = array();
+		foreach( $taxonomies as $key => $value ){
+			$new_taxonomies[] = $key;
+		}
+		$taxonomies = $new_taxonomies;
+	}
+
+	return $taxonomies;
+
+}
 
 ////////// POSTWORLD QUERY TERMS //////////
 function pw_query_terms( $args ){
@@ -57,6 +85,8 @@ function taxonomies_outline_mixed( $taxonomy_options ){
 ////////// TAXONOMIES OUTLINE //////////
 function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filter = false ) {
 
+
+
 	// If Taxonomies is not defined or 'all'
 	// Get all Public Taxonomies
 	if (!$taxonomies || $taxonomies == 'all') {
@@ -77,14 +107,15 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 
 	// Setup Taxonomy Outline Object
 	$tax_outline = array();
-	///// TAXONOMIES : Cycle through each Taxonomy //////
+
+	///// TAXONOMIES : Iterate through each Taxonomy //////
 	foreach ($taxonomies as $taxonomy) {
 		// Get the Taxonomy Object
 		$tax_obj = get_taxonomy($taxonomy);
 
 		// If it's not hierarchical, skip it
-		if (!$tax_obj->hierarchical)
-			continue;
+		//if (!$tax_obj->hierarchical)
+		//	continue;
 
 		// Process and order Terms Recursively
 		$tax_terms = get_terms($taxonomy, 'hide_empty=0');
@@ -98,6 +129,12 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 
 		// WP TREE_OBJ COMMAND
 		$tax_terms = get_terms($taxonomy, 'hide_empty=0');
+
+		// Sanitize numeric values
+		$tax_terms = pw_sanitize_numeric_array_of_a_arrays( $tax_terms );
+
+		//pw_log( json_encode($tax_terms) );
+
 		$args = array('object' => $tax_terms, 'fields' => $fields, 'id_key' => 'term_id', 'parent_key' => 'parent', 'child_key' => 'terms', 'max_depth' => $max_depth, 'callback' => $callback, 'callback_fields' => $callback_fields, );
 
 		$tax_outline[$taxonomy]['terms'] = wp_tree_obj($args);

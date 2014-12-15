@@ -135,6 +135,9 @@ $i_language = array(
 		
 		'include_posts'			=>	'Include Posts',
 
+		'taxonomy'				=>	'Taxonomy',
+		'term'					=>	'Term',
+
 		),
 
 	);

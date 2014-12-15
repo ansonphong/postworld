@@ -433,7 +433,7 @@ postworld.factory('_',
 		// Compact arrays with empty entries; delete keys from objects with empty value
 		removeEmpty: function( obj ){
 			for ( var k in obj ){
-				if ( _.isEmpty( obj[k] ) && !_.isNumber( obj[k] ) )
+				if ( _.isEmpty( obj[k] ) && !_.isNumber( obj[k] ) && !_.isBoolean( obj[k] ) )
 					_.isArray( obj ) ?
 						obj.splice(k,1) :
 						delete obj[k];
