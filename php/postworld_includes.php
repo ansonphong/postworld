@@ -569,7 +569,8 @@ function pwGlobals_parse(){
 	///// CURRENT USER /////
 	$pw["user"] = pw_current_user();
 
-	//$pw["user"] = $userdata;
+	///// GLOBAL OPTIONS /////
+	$pw["options"] = apply_filters( PW_GLOBAL_OPTIONS, array() );
 
 	///// DISPLAYED USER /////
 	// Support for Buddypress Globals
