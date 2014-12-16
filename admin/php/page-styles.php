@@ -20,7 +20,6 @@
 
 		<hr class="thick">
 
-
 		<!--<pre>{{ pwStyleStructure | json }}</pre>-->
 
 		<!-- ////////// VARIABLES ////////// -->

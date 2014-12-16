@@ -10,16 +10,13 @@
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 */
 
-
 function i_reset_less_php_cache(){
 	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
 	$file = fopen( $ghost_less_file ,"w" );
 	fwrite($file,"// Reset PHP LESS Cache");
 	fclose($file);
 	chmod($pwGlobalsJsFile, 0755);
-
 	return true;
-
 }	
 
 //---------- SAVE OPTIONS ----------//
@@ -51,6 +48,7 @@ function i_save_option(){
 		$option_name == PW_OPTIONS_STYLES ){
 		// Reset PHP LESS Cache
 		i_reset_less_php_cache();
+		pw_log( "RESET LESS CACHE" );
 	}
 
 	if( $update_option == true ){
