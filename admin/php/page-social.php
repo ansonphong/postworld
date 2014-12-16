@@ -6,11 +6,7 @@
 		$scope['options'] = $iOptionsData['options'];
 
 		// Social Meta Data
-		$scope.socialMeta = <?php
-			global $i_social_meta;
-			$i_social_meta = json_encode($i_social_meta);
-			echo $i_social_meta;
-			?>;
+		$scope.socialMeta = <?php echo json_encode( pw_social_meta() ); ?>;
 	}]);
 </script>
 

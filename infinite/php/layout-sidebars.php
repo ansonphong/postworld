@@ -6,7 +6,12 @@ function i_header(){
 	// DEPRECIATED : use pw_header()
 	pw_header();
 }
-function pw_header(){
+
+function pw_header( $debug = 'default' ){
+	// TODO : See why this is being instantiated 3 times, by index.php, home.php and single.php
+
+	//pw_log( 'pw_header : '. $debug );
+
 	iGlobals();
 	global $iGlobals;
 	

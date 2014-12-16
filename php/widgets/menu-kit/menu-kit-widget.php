@@ -1,6 +1,4 @@
 <?php
-
-
 // ADD MENU KIT WIDGET
 
 class menu_kit_widget extends WP_Widget {
@@ -125,7 +123,6 @@ class menu_kit_widget extends WP_Widget {
 		////////// DRAW CUSTOM MENU WIDGET //////////
 		
 		if ($menu_type == 'custom_menu') :
-			
 		    // Get the menu templates
 		    $menu_templates = pw_get_menu_templates();
 			// Get the menu template path
@@ -133,8 +130,9 @@ class menu_kit_widget extends WP_Widget {
 		    // Duplicate Slug as ID
 		    $OPTIONS['menu_id'] = $OPTIONS['menu_slug'];
 		    // Output Buffering to include template
+		    echo '<div class="menu-kit custom-menu">';
 		    echo pw_ob_include( $template_path, $OPTIONS );
-
+		    echo '</div>';
 		endif;
 		
 		// CLOSE
