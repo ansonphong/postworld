@@ -176,9 +176,6 @@
 
 					</div>
 
-					
-					{{ pwFeedSettings }}
-
 					<div class="well">
 						<!-- SAVE BUTTON -->
 						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
