@@ -49,6 +49,8 @@ postworld.factory( '$pw',
     	controls: $window.pwSiteGlobals.controls,
     	fields: $window.pwSiteGlobals.fields,
 
+    	options: $window.pw.options,
+
     	// Get the admin data, will only be present if is_admin()
     	admin: $_.get( $window, 'pw.admin' ),
 

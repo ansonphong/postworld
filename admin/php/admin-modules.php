@@ -34,7 +34,7 @@ function pw_select_image_id( $vars = array() ){
 ///// SELECT SITE LOGO /////
 function i_select_image_logo( $vars = array() ){
 	$defaultVars = array(
-		'option_var'	=>	'iOptions',
+		'option_var'	=>	'pwOptions',
 		'option_subkey'	=>	'images.logo',
 		);
 	$vars = array_replace_recursive( $defaultVars, $vars );
@@ -44,7 +44,7 @@ function i_select_image_logo( $vars = array() ){
 ///// SELECT SITE FAVICON /////
 function i_select_image_favicon( $vars = array() ){
 	$defaultVars = array(
-		'option_var'	=>	'iOptions',
+		'option_var'	=>	'pwOptions',
 		'option_subkey'	=>	'images.favicon',
 		);
 	$vars = array_replace_recursive( $defaultVars, $vars );
@@ -74,7 +74,7 @@ function i_download_image_option( $vars = array( "context" => "quickEdit" ) ){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
 				$vars['options_model'] = "options.general.doubleSwitch";
-				$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".image.download";
+				$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".image.download";
 			break;
 
 		///// PER-POST ADMIN SETTINGS /////
@@ -103,7 +103,7 @@ function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 	switch($vars['context']){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
+				$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
 			break;
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
@@ -152,7 +152,7 @@ function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 	switch( $vars['context'] ){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				//$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
+				//$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
 			break;
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
@@ -177,7 +177,7 @@ function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 	switch( $vars['context'] ){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				$vars['ng_model'] = "iOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".link_url";
+				$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".link_url";
 				$vars['options_model']['show'] = "options.general.customSwitch";
 				$vars['options_model']['tooltip_show'] = "options.general.none";
 				$vars['options_model']['highlight'] = "options.general.doubleSwitch";
@@ -247,7 +247,7 @@ function radio_image_select( $option_name, $options, $attributes = '' ){
 function i_select_featured_image_options( $vars ){
 	/*
 	 *	$vars = array(
-	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'iOptions.home.slider',
+	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'pwOptions.home.slider',
 	 *	)
 	 */
 	return pw_ob_admin_template( 'select-header-image-options', $vars );
@@ -343,7 +343,7 @@ function i_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class"
 function i_select_slider_settings( $vars ){
 	/*
 	 *	$vars = array(
-	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'iOptions.home.slider',
+	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'pwOptions.home.slider',
 	 *		'show'		=>	[ARRAY]		// Array of options to show : array( 'height', 'interval', 'max_slides', 'transition', 'no_pause' )
 	 *	)
 	 */

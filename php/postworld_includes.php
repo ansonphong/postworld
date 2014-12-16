@@ -492,6 +492,12 @@ function pwSiteGlobals_include(){
 	$pwJs .= json_encode( pw_get_templates() );
 	$pwJs .= ";";
 
+	// OPTIONS
+	$pwJs .= "\n\n";
+	$pwJs .= "pw.options = ";
+	$pwJs .= json_encode( apply_filters( PW_GLOBAL_OPTIONS, array() ) );
+	$pwJs .= ";";
+
 	// SITE LANGUAGE
 	global $pwSiteLanguage;	
 	$pwJs .= "\n\n";

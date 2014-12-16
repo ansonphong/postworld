@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'	=>	"1.6.8",
+		'version'	=>	"1.6.9",
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -105,6 +105,10 @@ define( 'PW_MODULES', 	$pw['db']['wp_options']['option_name']['modules'] );
 define( 'PW_POSTMETA_KEY',	'pw_meta', 		true ); // Case in-sensitive
 define( 'PW_USERMETA_KEY',	'pw_meta', 		true ); // Case in-sensitive
 define( 'PW_AVATAR_KEY',	'pw_avatar', 	true ); // Case in-sensitive
+
+///// DEFINE PRINT FILTERS /////
+define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
+
 
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
