@@ -28,9 +28,6 @@ function my_less_vars( $vars, $handle ) {
 
 	////////// IMPORT STYLES //////////
     $pwStyles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
-    pw_log( "pwStyles : " . json_encode($pwStyles) );
-
-    //echo "<pre>". json_encode( $pwStyles, JSON_PRETTY_PRINT ) ."</pre>" ;
 
 	///// Bootstrap Vars /////
     //$vars['body-bg'] = $pwStyles['element']['body']['background-color'];
@@ -60,11 +57,6 @@ function my_less_vars( $vars, $handle ) {
 
     $vars['i-templates-override'] = i_less_prepare_url( $i_paths['templates']['url']['override'] );
     $vars['i-templates-default'] = i_less_prepare_url( $i_paths['templates']['url']['default'] );
-
-
-
-    
-    pw_log( "vars : " . json_encode($vars) );
 
     ///// CACHE /////
     $phpLessVarsCache = $vars;
