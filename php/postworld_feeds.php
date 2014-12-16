@@ -147,6 +147,10 @@ function pw_live_feed( $vars = array() ){
 
 	///// FEED SETTINGS /////
 
+	// FILTER SETTINGS
+	// Allow themes to set default feed settings
+	$default_feed = apply_filters( PW_FEED_DEFAULT, $default_feed );
+
 	// SETTINGS FROM CONTEXT
 	// If any context-based feed settings are specified, use those to over-ride
 	$context_feed = pw_get_feed_by_context();
@@ -154,10 +158,6 @@ function pw_live_feed( $vars = array() ){
 	// MERGE DEFAULTS WITH CONTEXT SETTINGS
 	// Over-ride default settings with context feed settings
 	$default_feed = array_replace_recursive( $default_feed, $context_feed );
-
-	// FILTER SETTINGS
-	// Allow themes to set default feed settings
-	$default_feed = apply_filters( PW_FEED_DEFAULT, $default_feed );
 
 	// MERGE WITH INPUT FEED SETTINGS
 	// Over-ride default settings with provided settings
