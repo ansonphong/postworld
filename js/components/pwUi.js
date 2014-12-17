@@ -1,5 +1,3 @@
-
-
 postworld.directive( 'pwUi', [ '$log', function( $log ){
 	return{
 		controller: 'pwUiCtrl',
@@ -10,7 +8,6 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 				if( !_.isEmpty( value ) )
 					$scope.uiViews = $scope.$eval( value );
 			});
-			
 		},
 	}
 }]);
@@ -18,7 +15,6 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 postworld.controller( 'pwUiCtrl',
 	[ '$scope', '$timeout', '_', '$log',
 	function( $scope, $timeout, $_, $log ){
-
 
 	////////// UI ELEMENT : DISPLAY //////////
 
@@ -87,5 +83,53 @@ postworld.controller( 'pwUiCtrl',
 		return style;
 	}
 
+	$scope.uiToggleElementClass = function( className, $event ){
+		// $event must be passed in as the second parameter from the DOM
+		//$log.debug( "EVENT : ", $event.currentTarget  );
+		angular.element( $event.currentTarget ).toggleClass( className );
+	}
+
 
 }]);
+
+
+
+
+/*
+DEPRECIATED - USE `pwUi` DIRECTIVE
+///// TOGGLE AN ELEMENT'S DISPLAY ON CLICK /////
+postworld.directive('pwClickToggleDisplay', function( $log ) {
+		return {
+			restrict: 'A',
+			link: function (scope, element, attrs) {
+				element.bind('click', function (event) {
+					if( !_.isNull( attrs.pwClickToggleDisplay ) ){
+						var aElement = angular.element( attrs.pwClickToggleDisplay );
+						var display = aElement.css('display');
+						if( display == 'block' )
+							aElement.css('display', 'none');
+						else if( display == 'none' )
+							aElement.css('display', 'block');
+					}
+					$log.debug( "display:" + display );
+				});
+			}
+		};
+	});
+*/
+/*
+///// TOGGLE AN ELEMENT'S CLASS ON CLICK /////
+postworld.directive('pwClickToggleClass', function() {
+		return {
+			restrict: 'A',
+			link: function (scope, element, attrs) {
+				element.bind('click', function (event) {
+					if( !_.isNull( attrs.pwClickToggleClass ) ){
+						var aElement = angular.element( attrs.pwClickToggleClass );
+						aElement.toggleClass( attrs.toggleClass );
+					}
+				});
+			}
+		};
+	});
+*/
