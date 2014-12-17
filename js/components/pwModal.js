@@ -23,7 +23,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 				templateName: null,	// Used to override template
 				post:{
 					post_type: 'post'
-				}
+				},
+				keybindings: true,
 			};
 			meta = array_replace_recursive( defaultMeta, meta );
 
@@ -64,6 +65,9 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 					// Get default window value from meta
 					modalObj.windowClass = ( _.isUndefined( meta.windowClass ) ) ?
 						meta.templateName : meta.windowClass;
+
+					// Disable Key Bindings
+					meta.keybindings = false;
 
 				break;
 
@@ -315,9 +319,12 @@ postworld.controller('pwModalInstanceCtrl',
 		
 	}
 
-	$document.keydown( function( e ){
-		$scope.keyDown( e );
-	})
+	// Enable key bindings
+	if( $_.get( meta, 'keybindings' ) ){
+		$document.keydown( function( e ){
+			$scope.keyDown( e );
+		});
+	}
 
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
