@@ -70,11 +70,11 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 }
 
 ////////// GET POST DATA //////////
-function pw_get_post( $post_id, $fields = 'all', $viewer_user_id = null ){
+function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	
 	// Switch Modes (view/edit)
 	// 'Edit' mode toggles content display filtering (oEmbed, shortcodes, etc)
-	$mode = 'view';
+	$mode = ( $fields == 'edit' ) ? 'edit' : 'view';
 
 	// If no post ID, return here
 	if( $post_id == null ) return false;
@@ -83,11 +83,11 @@ function pw_get_post( $post_id, $fields = 'all', $viewer_user_id = null ){
 	if( $fields == null ) $fields = 'preview';
 
 	// If a post array is passed in
-	if( gettype( $post_id ) == "array" )
+	if( is_array( $post_id ) )
 		$post_id = $post_id['ID'];	
 
 	// If a post object is passed in
-	else if(gettype($post_id) == "object")  
+	else if( is_object( $post_id ) )  
 		  $post_id =  $post_id->ID;
 
 	///// CHECK POST EXISTS /////
@@ -99,7 +99,9 @@ function pw_get_post( $post_id, $fields = 'all', $viewer_user_id = null ){
 	///// GET THE FIELD MODEL /////
 	$field_model = pw_post_field_model();
 
+	// Preserve the $fields value
 	$fields_value = $fields;
+
 	///// PRESET FIELD MODELS /////
 	if( is_string( $fields) ){
 		// Get the preset fields model
@@ -806,6 +808,8 @@ function pw_get_post( $post_id, $fields = 'all', $viewer_user_id = null ){
 	///// ADD MODE WHEN EDITING /////
 		if( $mode == 'edit' )
 			$post['mode']= 'edit';
+		else
+			$post['mode']= 'view';
 
 	///// ADD ACTION HOOK : PW GET POST CONTENT /////
 		do_action( 'pw_get_post_content',
