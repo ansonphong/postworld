@@ -422,6 +422,7 @@ function postworld_includes( $args ){
 		<script type="text/javascript">/* <![CDATA[ */
 			pw.info = <?php echo json_encode( $pw['info'] ); ?>;
 			pw.view = <?php echo json_encode( pw_current_view() ); ?>;
+			pw.query = <?php echo json_encode( $pw['query'] ); ?>;
 			pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 			pw.background = <?php echo json_encode( pw_current_background() ); ?>;
 			pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;

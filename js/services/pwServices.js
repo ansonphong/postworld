@@ -44,10 +44,13 @@ postworld.factory( '$pw',
     	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
     	
     	view: $window.pw.view,
+    	query: $window.pw.query,
     	paths: $window.pwSiteGlobals.paths,
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,
     	fields: $window.pwSiteGlobals.fields,
+
+    	postTypes: $window.pwSiteGlobals.post_types,
 
     	options: $window.pw.options,
 
