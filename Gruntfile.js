@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  var angular_version = 'angular-1.3.4';
+  var angularVersion = 'angular-1.3.8';
 
   // Project configuration.
   grunt.initConfig({
@@ -23,7 +23,7 @@ module.exports = function(grunt) {
 
             ///// ANGULAR /////
             // Angular
-            'lib/'+angular_version+'/angular.min.js', // Angular.js has to go first
+            'lib/'+angularVersion+'/angular.min.js', // Angular.js has to go first
 
             ///// JS LIBRARIES /////
 
@@ -85,11 +85,11 @@ module.exports = function(grunt) {
 
             ///// ANGULAR NATIVE EXTENSIONS /////
             // Angular Extensions
-          	'lib/'+angular_version+'/angular-sanitize.min.js',
-          	'lib/'+angular_version+'/angular-route.min.js',
-          	'lib/'+angular_version+'/angular-resource.min.js',
-            'lib/'+angular_version+'/angular-touch.min.js',
-            'lib/'+angular_version+'/angular-aria.min.js',
+          	'lib/'+angularVersion+'/angular-sanitize.min.js',
+          	'lib/'+angularVersion+'/angular-route.min.js',
+          	'lib/'+angularVersion+'/angular-resource.min.js',
+            'lib/'+angularVersion+'/angular-touch.min.js',
+            'lib/'+angularVersion+'/angular-aria.min.js',
 
             // Angular Google Maps
             //'lib/angular-google-maps/angular-google-maps.min.js', // Angular Google Maps
