@@ -358,9 +358,11 @@ function pw_get_child_terms_meta( $term_query, $taxonomy ){
  * Version: 1.1
  * • Allows custom taxonomies to share the same slug as custom post types
  * • Use like this : add_filter('generate_rewrite_rules', 'pw_taxonomy_slug_rewrite');
+ * • Both the taxonomy and post_type registrations must contain a value for rewrite['slug']
  */
 
 function pw_taxonomy_slug_rewrite($wp_rewrite) {
+	global $wp_rewrite;
 	$rules = array();
 	// get all custom taxonomies
 	$taxonomies = get_taxonomies(array('_builtin' => false), 'objects');
@@ -370,26 +372,22 @@ function pw_taxonomy_slug_rewrite($wp_rewrite) {
 	foreach ($post_types as $post_type) {
 		foreach ($taxonomies as $taxonomy) {
 		 
-			// go through all post types which this taxonomy is assigned to
-			foreach ($taxonomy->object_type as $object_type) {
-				 
-				// check if taxonomy is registered for this custom type
-				if ($object_type == $post_type->rewrite['slug']) {
-			 
-					// get category objects
-					$terms = get_categories(array('type' => $object_type, 'taxonomy' => $taxonomy->name, 'hide_empty' => 0));
-			 
-					// make rules
-					foreach ($terms as $term) {
-						$rules[$object_type . '/' . $term->slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
-					}
+			// check if taxonomy is registered for this custom type
+			if ( $taxonomy->rewrite['slug'] == $post_type->rewrite['slug'] ) {
+
+				// get category objects
+				$terms = get_categories(array('type' => $object_type, 'taxonomy' => $taxonomy->name, 'hide_empty' => 0));
+		 		//pw_log( json_encode( $terms ) );
+
+				// make rules
+				foreach ($terms as $term) {
+					$rules[ $taxonomy->rewrite['slug'] . '/' . $term->slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;
 				}
 			}
+
 		}
 	}
+
 	// merge with global rules
 	$wp_rewrite->rules = $rules + $wp_rewrite->rules;
 }
-
-
-?>
