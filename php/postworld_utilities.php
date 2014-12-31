@@ -7,6 +7,39 @@
 //////////////////////////////////*/
 
 
+function pw_remap_keys( $array = array(), $key_map = array(), $keep_old_keys = false ){
+	// Remaps the keys in an array to new values
+	/*
+		$array = [ A_ARRAY ] // Associative array
+		$key_map = array(
+			'post_title' => 'title',	// 	Renames 'post_title' key to 'title'
+			'post_permalink' => 'url'	//	Renames 'post_permalink' key to 'url'
+			)
+		$keep_old_keys = [ BOOLEAN ] // Whether or not to keep the old keys in the returned array
+	*/
+
+	$newArray = array();
+	foreach( $array as $key => $value ){
+		foreach( $key_map as $old_key => $new_key ){
+			if( $key == $old_key )
+				$newArray[ $new_key ] = $value;
+			if( $key != $old_key || $keep_old_keys )
+				$newArray[ $key ] = $value;
+		}
+	}
+	return $newArray;
+}
+
+function pw_remap_keys_array( $arrays = array(), $key_map = array(), $keep_old_keys = false ){
+	// Runs an array of arrays through pw_remap_array()
+	$newArrays = array();
+	foreach( $arrays as $array ){
+		$newArrays[] = 	pw_remap_keys( $array, $key_map, $keep_old_keys );
+	}
+	return $newArrays;
+}
+
+
 function pw_mvc_class( $view, $model, $class = 'selected', $echo = true ){
 	if( $view == $model ){
 		if( $echo )

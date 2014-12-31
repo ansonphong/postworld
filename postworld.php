@@ -273,7 +273,6 @@ include 'php/postworld_shortcodes.php';
 include 'php/postworld_update.php';
 
 
-
 ///// ADD HEADER CODE /////
 add_action('wp_head','pw_add_header_code');
 function pw_add_header_code() {
