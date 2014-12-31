@@ -687,7 +687,7 @@ function pwAdminGlobals_include(){
 	///// INCLUDE JAVASCRIPT FILE /////
 	global $angularDep;
 	wp_enqueue_script( 'pw-AdminGlobals-JS',
-		POSTWORLD_URI.$file_path, array(), hash( 'md5', 4 ) );
+		POSTWORLD_URI.$file_path, array(), hash( 'md5', 4 ), true );
 
 }
 

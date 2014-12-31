@@ -1,8 +1,7 @@
 <?php
-add_action( 'wp_enqueue_scripts', 'i_include_scripts' );
-add_action( 'admin_enqueue_scripts', 'i_include_scripts' );
-add_action( 'admin_enqueue_scripts', 'i_include_admin_scripts' );
-
+add_action( 'wp_enqueue_scripts', 'i_include_scripts', 99 );
+add_action( 'admin_enqueue_scripts', 'i_include_scripts', 99 );
+add_action( 'admin_enqueue_scripts', 'i_include_admin_scripts', 99 );
 
 function i_include_admin_scripts(){
 	global $angularDep;
