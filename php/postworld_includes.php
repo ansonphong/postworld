@@ -31,6 +31,12 @@ function postworld_includes( $args ){
 	// Add Angular Modules to the Postworld Inject array
 	$pwInject = array_merge( $pwInject, $pw['angularModules'] );
 
+	// Add Glyphicons for Admin
+	if( is_admin() ){
+		array_push( $pwInject,
+			'glyphicons-halflings'
+			);
+	}
 
 	//////////////////////// INJECTIONS //////////////////////
 
@@ -416,7 +422,7 @@ function postworld_includes( $args ){
 	}
 
 	// + CALENDAR
-	if( in_array( 'ui-calendar', $pwInject ) ){
+	if( in_array( 'ui.calendar', $pwInject ) ){
 		// Full Calendar
 		wp_enqueue_script( 'Full-Calendar-Moment-JS',
 			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/moment.min.js' );
