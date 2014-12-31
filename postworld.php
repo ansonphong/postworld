@@ -27,6 +27,7 @@ $pw = array(
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
+	'angularModules'	=>	array(),
 	'vars'	=>	array(
 		),
 	'db' =>	array(

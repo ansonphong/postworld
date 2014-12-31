@@ -28,29 +28,28 @@ var pw = {
 	embeds:{},
 	user:{},
 	users:{},
+	angularModules:[],
 };
 
-var depInject = [
+
+// Add Standard Modules
+pw.angularModules = pw.angularModules.concat([
 	'ngResource',
 	'ngRoute',
 	'ngSanitize',
 	'ngTouch',
 	'ngAria',
-	// 'ngAnimate', (animate removed for bootstrap carousel)
-	//'infinite-scroll', 
 	'ui.bootstrap',
 	'monospaced.elastic',
-	//'TruncateFilter',
-	//'pwFilters',
 	'timer',
 	'angular-parallax',
-	//'angularMoment',
 	'wu.masonry',
 	'mgcrea.ngStrap.popover',
 	'pw.compile',
-	//'ya.treeview',
-	];
-var postworld = angular.module('postworld', depInject );
+]);
+
+
+var postworld = angular.module('postworld', pw.angularModules );
 
 ///// POSTWORLD ADMIN MODULE /////
 var depInjectAdmin = [

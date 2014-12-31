@@ -8,8 +8,9 @@ function pw_current_context(){
 
 	$context = array();
 
-	/// DEFINE CLASS ///
-	// home / archive / blog / page / single / attachment / default
+	/// ADD CONTEXTS ///
+	// List them in the order they will appear
+	// Later listings take higher priority
 
 	if( is_front_page() )
 		$context[] = 'home';

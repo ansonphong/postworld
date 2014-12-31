@@ -25,7 +25,13 @@ function postworld_includes( $args ){
 	$pwInject = ( isset( $args['inject'] ) ) ?
 		$args['inject'] : $pwInject;
 
-	
+	// Add Additional Angular Modules
+	$pw['angularModules'] = apply_filters( 'pw_angular_modules', $pw['angularModules'] );
+
+	// Add Angular Modules to the Postworld Inject array
+	$pwInject = array_merge( $pwInject, $pw['angularModules'] );
+
+
 	//////////////////////// INJECTIONS //////////////////////
 
 	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
@@ -33,7 +39,9 @@ function postworld_includes( $args ){
 	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery','');
 
-	// Add MASONRY
+	
+
+	// + MASONRY
 	if( in_array( 'masonry.js', $pwInject ) ){
 		// MASONRY
 		wp_enqueue_script( 'Masonry-JS',
@@ -42,17 +50,17 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/masonry/imagesloaded.pkgd.min.js');
 	}
 
-	// Add Google Maps to include before AngularJS app
+	// + Google Maps to include before AngularJS app
 	if( in_array( 'google-maps', $pwInject ) ){
 		//array_push( $angularDep, 'google-maps' );
 	}
 
-	// Add LESS Support
+	// + LESS Support
 	if( in_array( 'wp-less', $pwInject ) ){
 		require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
 	}
 	
-	// Add Font Awesome 3
+	// + Font Awesome 3
 	if( in_array( 'font-awesome-3', $pwInject ) ){
 		wp_enqueue_style( 'font-awesome-3',
 			"//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" );
@@ -60,19 +68,19 @@ function postworld_includes( $args ){
 			//POSTWORLD_URI.'/lib/font-awesome-3/css/font-awesome.min.css' );
 	}
 
-	// Add ICOMOON
+	// + ICOMOON
 	if( in_array( 'icomoon', $pwInject ) ){
 		wp_enqueue_style( 'icomoon',
 			POSTWORLD_URI.'/lib/icomoon/style.css' );
 	}
 
-	// Add ICON X
+	// + ICON X
 	if( in_array( 'icon-x', $pwInject ) ){
 		wp_enqueue_style( 'icon-x',
 			POSTWORLD_URI.'/lib/icon-x/icon-x.css' );
 	}
 
-	// Add GLYPHICONS
+	// + GLYPHICONS
 	if( in_array( 'glyphicons-halflings', $pwInject ) ){
 		wp_enqueue_style( 'glyphicons-halflings',
 			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
@@ -397,7 +405,7 @@ function postworld_includes( $args ){
 
 	}
 
-	// ADD GOOGLE MAPS
+	// + GOOGLE MAPS
 	if( in_array('google-maps', $pwInject) ){
 		// GOOGLE MAPS
 		wp_enqueue_script( 'Google-Maps-API',
@@ -407,40 +415,56 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/angular-google-maps/angular-google-maps.min.js' );
 	}
 
+	// + CALENDAR
+	if( in_array( 'ui-calendar', $pwInject ) ){
+		// Full Calendar
+		wp_enqueue_script( 'Full-Calendar-Moment-JS',
+			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/moment.min.js' );
+
+		wp_enqueue_script( 'Full-Calendar-JS',
+			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.js' );	
+		wp_enqueue_style( 'Full-Calendar-CSS',
+			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.css' );		
+
+		wp_enqueue_script( 'Full-Calendar-jQuery-UI-JS',
+			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/jquery-ui.custom.min.js' );
+
+		// Angular UI Calendar
+		wp_enqueue_script( 'Angular-UI-Calendar-JS',
+			POSTWORLD_URI.'/lib/ui-calendar-master/src/calendar.js' );
+	}
+
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
 	// Dynamically generate javascript file
 	// After all Plugins and Theme Loaded
-	add_action( 'init', 'pwSiteGlobals_include');
-	
-	///// WINDOW JAVASCRIPT DATA INJECTION /////
-	// Inject Current User Data into Window
-	function pwGlobals() {
-		global $pw;
-		// Todo : Move this elsewhere, must execute to parse the globals for PHP
-		pwGlobals_parse();
-	?>
-		<script type="text/javascript">/* <![CDATA[ */
-			pw.info = <?php echo json_encode( $pw['info'] ); ?>;
-			pw.view = <?php echo json_encode( pw_current_view() ); ?>;
-			pw.query = <?php echo json_encode( $pw['query'] ); ?>;
-			pw.user = <?php echo json_encode( pw_current_user() ); ?>;
-			pw.background = <?php echo json_encode( pw_current_background() ); ?>;
-			pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
-			pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
-		/* ]]> */</script>
+	//add_action( 'init', 'pwSiteGlobals_include');
+	pwSiteGlobals_include();
 
-	<?php
-	}
 	// Add hook for admin <head></head>
-	add_action('admin_head', 'pwGlobals');
+	add_action('admin_head', 'pwGlobals_print');
 	// Add hook for front-end <head></head>
-	add_action('wp_head', 'pwGlobals');
+	add_action('wp_head', 'pwGlobals_print');
 
+}
+
+///// WINDOW JAVASCRIPT DATA INJECTION /////
+// Inject Current User Data into Window
+function pwGlobals_print() {
+	global $pw;
+	?><script type="text/javascript">/* <![CDATA[ */
+		pw.angularModules = pw.angularModules.concat( <?php echo json_encode( $pw['angularModules'] ); ?> );
+		pw.info = <?php echo json_encode( $pw['info'] ); ?>;
+		pw.view = <?php echo json_encode( pw_current_view() ); ?>;
+		pw.query = <?php echo json_encode( $pw['query'] ); ?>;
+		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
+		pw.background = <?php echo json_encode( pw_current_background() ); ?>;
+		pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
+		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
+	/* ]]> */</script><?php
 }
 
 
 ///// PARSE pwSiteGlobals /////
-
 function pwSiteGlobals_include(){
 
 	///// DYNAMICALLY GENERATED JAVASCRIPT /////
@@ -506,15 +530,17 @@ function pwSiteGlobals_include(){
 	$pwJs .= json_encode( $pwSiteLanguage );
 	$pwJs .= ";";
 
-	$pwJsFile = POSTWORLD_PATH . '/deploy/pwSiteGlobals.js';
+	// WRITE THE FILE
+	$globals_path = '/deploy/pwSiteGlobals.js';
+	$pwJsFile = POSTWORLD_PATH . $globals_path;
 	$file = fopen( $pwJsFile ,"w" );
 	fwrite($file,"$pwJs");
 	fclose($file);
 	chmod($pwJsFile, 0755);
 
-	global $angularDep;
+	// ENQUEUE SCRIPT
 	wp_enqueue_script( 'pw-SiteGlobals-JS',
-		POSTWORLD_URI.'/deploy/pwSiteGlobals.js', array(), hash( 'md5', 4 ) );
+		POSTWORLD_URI . $globals_path, array(), hash( 'md5', 4 ) );
 	
 }
 
@@ -620,21 +646,19 @@ function pwGlobals_parse(){
 	return $pw;
 }
 
-
 // Parse Globals After all Plugins Loaded
 function parse_postworld_globals(){
  	// Init Globals
 	global $pw;
-	$pw = pwGlobals_parse();
+	$pw = array_replace_recursive( $pw, pwGlobals_parse() );	// pwGlobals_parse();
 }
-add_action( 'plugins_loaded', 'parse_postworld_globals', 10, 2 );
+add_action( 'wp', 'parse_postworld_globals', 10, 2 );
 
 
 function pw_injections(){
 	global $pwInject;
 	return $pwInject;
 }
-
 
 //////////// ADMIN GLOBALS ////////////
 function pwAdminGlobals_include(){

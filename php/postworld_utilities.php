@@ -7,6 +7,18 @@
 //////////////////////////////////*/
 
 
+function pw_mvc_class( $view, $model, $class = 'selected', $echo = true ){
+	if( $view == $model ){
+		if( $echo )
+			echo $class;
+		else
+			return $class;
+	}
+	else
+		return false;
+}
+	
+
 function pw_get_posted_json( $post_var ){
 	// Gets a JSON string format $_POST var
 	// And converts it into an object / array
@@ -58,9 +70,14 @@ function pw_unique_sub_key( $posts, $sub_key = 'ID' ){
 }
 
 
-
 function pw_log( $message ){
 	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-dev.txt");
+}
+
+function pw_print_code( $var ){
+	echo "<pre><code>";
+	echo htmlspecialchars( json_encode( $var, JSON_PRETTY_PRINT ) );
+	echo "</code></pre>";
 }
 
 function pw_is_associative( $arr ){
