@@ -8,6 +8,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Set the internal defaults
 	$shortcode_defaults = array(
 		"class" 	=> 	"",
+		"size" 		=> 	"medium",
 		"view" 		=> 	"list-h2o",
 		"max"		=>	50,
 		"orderby"	=>	"menu_order",
@@ -77,17 +78,15 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 		'view' => $view,
 		);
 
-	//return json_encode( pw_query( $query ) );
-	
-	// If Postworld is Activated, Return Print Feed
-	if( function_exists('pw_print_feed') ){
-		$shortcode = pw_print_feed( $feed_query_args );	
-		//$shortcode .= "<pre>" . json_encode( $feed_query_args, JSON_PRETTY_PRINT ) . "</pre>";
-		return $shortcode;
-	}
-	else
-		return false;
+	// Setup Vars
+	$vars = $atts;
+	$vars['feed'] = $feed_query_args;
 
+	$template = pw_get_shortcode_template( $tag );
+	$shortcode = pw_ob_include( $template, $vars );
+
+	return $shortcode;
+	
 }
 
 add_shortcode( 'subpages', 'pw_pagelist_shortcode' );
