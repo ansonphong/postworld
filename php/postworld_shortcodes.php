@@ -7,6 +7,10 @@
 
 /////////////// GENERAL SHORTCODE FUNCTION //////////*/
 function pw_general_shortcode( $atts, $content=null, $tag ) {
+	return pw_shortcode( $atts, $content, $tag );
+}
+
+function pw_shortcode( $atts, $content=null, $tag ) {
 	extract( shortcode_atts( array(
 		'class' => '',
 		'color' => '',
@@ -57,22 +61,22 @@ function pw_empty_shortcode(){
 
 /////////////// BASIC SHORTCODES //////////
 // BLOCKS
-add_shortcode( 'block', 'pw_general_shortcode' );
-add_shortcode( 'block-sub', 'pw_general_shortcode' );
-add_shortcode( 'blockquote', 'pw_general_shortcode' );
+add_shortcode( 'block', 		'pw_shortcode' );
+add_shortcode( 'block-sub', 	'pw_shortcode' );
+add_shortcode( 'blockquote', 	'pw_shortcode' );
 
 // CALLOUTS
-add_shortcode( 'callout', 'pw_general_shortcode' );
-add_shortcode( 'callout-xl', 'pw_general_shortcode' );
+add_shortcode( 'callout', 	'pw_shortcode' );
+add_shortcode( 'callout-xl', 'pw_shortcode' );
 
 // HTML
-add_shortcode( 'br', 'pw_general_shortcode' );
-add_shortcode( 'hr', 'pw_general_shortcode' );
+add_shortcode( 'br', 'pw_shortcode' );
+add_shortcode( 'hr', 'pw_shortcode' );
 
-add_shortcode( 'h1', 'pw_general_shortcode' );
-add_shortcode( 'h2', 'pw_general_shortcode' );
-add_shortcode( 'h3', 'pw_general_shortcode' );
-add_shortcode( 'h4', 'pw_general_shortcode' );
+add_shortcode( 'h1', 'pw_shortcode' );
+add_shortcode( 'h2', 'pw_shortcode' );
+add_shortcode( 'h3', 'pw_shortcode' );
+add_shortcode( 'h4', 'pw_shortcode' );
 
 
 /////////////// ADVANCED SHORTCODES //////////
