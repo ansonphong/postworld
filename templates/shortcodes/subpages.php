@@ -1,10 +1,8 @@
-
 <?php if( $vars['tag'] == 'siblings' ){
 	global $post;
 	$post_parent_id = $post->post_parent;
 	$post_parent = pw_get_post( $post_parent_id, 'micro' );
 	?>
-
 	<a href="<?php echo $post_parent['post_permalink'] ?>">
 	<h2>
 		<?php echo $post_parent['post_title'] ?> ›
