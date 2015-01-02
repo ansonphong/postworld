@@ -81,8 +81,9 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Setup Vars
 	$vars = $atts;
 	$vars['feed'] = $feed_query_args;
+	$vars['tag'] = $tag;
 
-	$template = pw_get_shortcode_template( $tag );
+	$template = pw_get_shortcode_template( 'subpages' );
 	$shortcode = pw_ob_include( $template, $vars );
 
 	return $shortcode;
