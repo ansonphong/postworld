@@ -116,6 +116,8 @@ function pw_post_parent_meta_init( $post, $metabox ){
     		'post_parent',
     		'post_permalink',
     		'edit_post_link',
+            'post_type',
+            'post_timestamp'
     		);
 
     // Apply filter for themes to over-ride default settings
