@@ -604,7 +604,7 @@ function pw_print_feed( $vars ){
 
 		// Get the template for this post
 		if( isset($vars['view']) ){
-
+			// TODO : Cache results for performance optimization
 			$template_path = pw_get_post_template( $post_id, $vars['view'], 'dir' );
 		}
 		else if( isset($vars['template']) )

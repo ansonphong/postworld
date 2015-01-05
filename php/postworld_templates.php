@@ -342,33 +342,33 @@ function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
 	
 	$templates_object = pw_get_templates( $args );
 	
-	
-
 	return $templates_object['posts'][$post_type][$post_view];
 
 }
 
-
-
-function pw_get_panel_template( $panel_id ){
+function pw_get_panel_template( $panel_id, $ext = 'html', $type = 'url' ){
 	// Returns a single string for panel template from ID
-	return pw_get_template( 'panels', $panel_id, 'html', 'url' );
-
+	return pw_get_template( 'panels', $panel_id, $ext, $url );
 }
 
-function pw_get_shortcode_template( $template_id ){
+function pw_get_shortcode_template( $template_id, $ext = 'php', $type = 'dir' ){
 	// Returns a single string for panel template from ID
-	return pw_get_template( 'shortcodes', $template_id, 'php', 'dir' );
-
+	return pw_get_template( 'shortcodes', $template_id, $ext, $type );
 }
 
-
-function pw_get_admin_template( $template_id ){
-	return pw_get_template( 'admin', $template_id, 'php', 'dir' );
+function pw_get_user_template( $template_id, $ext = 'html', $type = 'dir' ){
+	// Returns a single string for user template from ID
+	return pw_get_template( 'users', $template_id, $ext, $type );
 }
 
+function pw_get_admin_template( $template_id, $ext = 'php', $type = 'dir' ){
+	// Returns a single string for admin template from ID
+	return pw_get_template( 'admin', $template_id, $ext, $type );
+}
 
 function pw_ob_admin_template( $template_id, $vars ){
+	// Use output buffering to include an admin template
+	// And return the contents as a string
 	$template = pw_get_admin_template( $template_id );
 	return pw_ob_include( $template, $vars );
 }

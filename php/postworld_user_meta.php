@@ -80,16 +80,21 @@ function pw_get_xprofile( $user_id, $fields ){
 
 
 function pw_get_userdatas( $user_ids, $fields = false ){
+	// DEPRECIATED as of Version 1.7.2
+	return pw_get_users( $user_ids, $fields );
+}
+
+
+function pw_get_users( $user_ids, $fields = 'all' ){
 	$users_array = array();
 	foreach( $user_ids as $user_id ){
 		array_push(
 			$users_array,
-			pw_get_userdata($user_id, $fields)
+			pw_get_user($user_id, $fields)
 			);
 	}
 	return $users_array;
 }
-
 
 function pw_get_userdata($user_id, $fields = false) {
 	// DEPRECIATED

@@ -998,20 +998,42 @@ function pw_sanitize_key( $key ){
 	return $key;
 }
 
-function pw_sanitize_numeric( $val ){
+function pw_sanitize_numeric( $val, $require_numeric = false ){
 	// Casts all numeric calues as floats/numbers
-	if( is_numeric( $val ) )
+	if( is_numeric( $val ) ){
 		return (float) $val ;
-	else
-		return $val;
+	}
+	else{
+		if( $require_numeric )
+			return false;
+		else
+			return $val;
+	}
+
 }
 
-function pw_sanitize_numeric_array( $vals = array() ){
+function pw_sanitize_numeric_array( $vals = array(), $require_numeric = false, $remove_non_numeric = true, $reindex = true ){
 	// Numerically santize a flat array of values
-	for( $i; $i < count($vals); $i++ ){
-		$vals[$i] = pw_sanitize_numeric( $vals[$i] );
+	$new_vals = array();
+
+	// Iterate through each value
+	for( $i=0; $i < count($vals); $i++ ){
+		$numeric = pw_sanitize_numeric( $vals[$i], $require_numeric );
+		// If removing non-numerics, and it's not numeric
+		if( $remove_non_numeric && $numeric == false )
+			// Continue to next iteration
+			continue;
+		// If reindexing the array
+		else if( $reindex )
+			// Add it to the array with fresh index
+			$new_vals[] = $numeric;
+		// Otherwise
+		else		
+			// Add the value to the output array at the same index
+			$new_vals[$i] = $numeric;
+
 	}
-	return $vals;
+	return $new_vals;
 }
 
 function pw_sanitize_numeric_a_array( $vals = array() ){
