@@ -1,7 +1,8 @@
 <?php
-////////// CSS COLUMN PROPERTY SHORTCODE //////////
 
-///// COLUMNS /////
+add_shortcode( 'user-list', 'pw_user_list_shortcode' );
+add_shortcode( 'userlist', 'pw_user_list_shortcode' );
+
 function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 	
 	// Set the internal defaults
@@ -21,6 +22,9 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 
 	// Extract Shortcode Attributes, set defaults
 	$vars = shortcode_atts( $shortcode_defaults, $atts );
+
+	// Follow Iteration
+	$vars['i'] = 0;
 
 	///// USERNAMES INPUT /////
 	// If usernames attribute is provided
@@ -49,39 +53,74 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 		$vars['user_ids'] = pw_sanitize_numeric_array( $vars['user_ids'], true );
 
 
-	///// USERS DATA /////
-	$users = pw_get_users( $vars['user_ids'], $vars['fields'] );
-
-	///// GET TEMPLATE /////
-	$template_path = pw_get_user_template( 'user-' . $vars['view'] );
-	// Get fallback template
-	if( empty( $template_path ) )
-		$template_path = pw_get_user_template( 'user-' . 'list-h2o' );
-
-	///// GENERATE OUTPUT /////
-	$output = '';
-
-	// Iterate through each provided user
-	foreach( $users as $user ){
-		// Initialize h2o template engine
-		$h2o = new h2o($template_path);
-		// Inject the user for use in template, ie. {{post.post_title}}
-		$inject['user'] = $user;
-		// Inject local vars for referrence in template
-		$inject['vars'] = $vars;
-		// Inject JSON string for development referrence
-		$inject['json'] = json_encode( array( 'user' => $user, 'vars' => $vars ) );
-
-		// Add rendered HTML to the return data
-		$output .= $h2o->render($inject);
-	}
+	///// PRINT USER LIST /////
+	$output = pw_print_user_list( array(
+		'user_ids'	=>	$vars['user_ids'],
+		'fields'	=>	$vars['fields'],
+		'i'			=>	0,
+		'atts'		=>	$atts,
+		) );
 
 	return $output;
 	
 }
 
-add_shortcode( 'user-list', 'pw_user_list_shortcode' );
-add_shortcode( 'userlist', 'pw_user_list_shortcode' );
+
+
+function pw_print_user_list( $vars = array() ){
+
+	$default_vars = array(
+		'user_ids'	=>	array(),
+		'fields'	=>	array(),
+		'atts'		=>	array(),
+		'view'		=>	'list-h2o',
+		);
+
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	///// USERS DATA /////
+	$users = pw_get_users( $vars['user_ids'], $vars['fields'] );
+
+	///// GET TEMPLATE /////
+	$default_template = 'list-h2o';
+	$template_path = pw_get_user_template( $vars['view'] );
+
+	// Get fallback template
+	if( empty( $template_path ) ){
+		$template_path = pw_get_user_template( $default_template );
+		$vars['view'] = $default_template;
+	}
+
+	///// GENERATE OUTPUT /////
+	$users_html = '';
+
+	// Iterate through each provided user
+	foreach( $users as $user ){
+		$vars['i']++;
+		// Initialize h2o template engine
+		$h2o = new h2o($template_path);
+		// Inject the user for use in template, ie. {{post.post_title}}
+		$inject['user'] = $user;
+		// Inject local vars for referrence in template
+		$inject['atts'] = $vars;
+		// Inject JSON string for development referrence
+		$inject['json'] = json_encode( array( 'user' => $user, 'atts' => $atts ) );
+
+		// Add rendered HTML to the return data
+		$users_html .= $h2o->render($inject);
+	}
+
+	// Add the users HTML to the $vars array
+	$vars['users'] = $users_html;
+
+	// Get the wrapper list template
+	$list_template = pw_get_template( 'user-lists', $vars['view'], 'php', 'dir' );
+
+	// Return with the string continaing the list template
+	return pw_ob_include( $list_template, $vars );
+
+}
+
 
 
 ?>
