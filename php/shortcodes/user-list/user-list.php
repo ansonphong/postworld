@@ -1,9 +1,8 @@
 <?php
+add_shortcode( 'user-feed', 'pw_user_feed_shortcode' );
+add_shortcode( 'user-list', 'pw_user_feed_shortcode' );
 
-add_shortcode( 'user-list', 'pw_user_list_shortcode' );
-add_shortcode( 'userlist', 'pw_user_list_shortcode' );
-
-function pw_user_list_shortcode( $atts, $content = null, $tag ) {
+function pw_user_feed_shortcode( $atts, $content = null, $tag ) {
 	
 	// Set the internal defaults
 	$shortcode_defaults = array(
@@ -53,7 +52,7 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 
 
 	///// PRINT USER LIST /////
-	$output = pw_print_user_list( array(
+	$output = pw_print_user_feed( array(
 		'user_ids'	=>	$vars['user_ids'],
 		'fields'	=>	$vars['fields'],
 		'i'			=>	0,
@@ -66,7 +65,7 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 
 
 
-function pw_print_user_list( $vars = array() ){
+function pw_print_user_feed( $vars = array() ){
 	pw_get_xprofile_fields();
 
 	$default_vars = array(
