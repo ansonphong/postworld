@@ -56,26 +56,54 @@ function pw_can_edit_profile( $user_id ){
 		return false;
 }
 
-function pw_get_xprofile( $user_id, $fields ){
-	// Get info from Bussypress extended profile
+function pw_get_xprofile_fields(){
+	// Returns an array with all the names of the xProfile fields
+	global $wpdb;
+	$table_name =  $wpdb->prefix.'bp_xprofile_fields';
+	$column_name = 'name';
+	$xProfileFields = $wpdb->get_col( $wpdb->prepare( "SELECT $column_name FROM $table_name" ) );
+	//pw_log( json_encode($xProfileFields) );
+	return $xProfileFields;
+}
 
-	$xprofile = array();
-	
-	// If Buddypress isn't isntalled, return false
+function pw_get_xprofile( $user_id, $fields = array(), $vars = array() ){
+	// Get info from Bussypress extended profile
+	// 	$fields = [array/string] // IE. 'all' or array( 'First Field Name', 'Second Field Name' )
+
+	// If Buddypress isn't installed, return false
 	if( !function_exists('xprofile_get_field_data') )
 		return false;
 
-	// Get each requested field
-	foreach ( $fields as $field ){
-		$field_value = xprofile_get_field_data( $field, $user_id );
+	///// DEFAULTS /////
+	$default_vars = array(
+		'sanitize_keys' => true,	// Sanitizes the keys before output to lowercase & space = _
+		);
 
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	///// ALL FIELDS /////
+	if( $fields == 'all' )
+		$fields = pw_get_xprofile_fields();
+
+	// Get each requested field
+	$xprofile = array();
+	foreach ( $fields as $field ){
+		// Get data from Buddypress API
+		$field_value = xprofile_get_field_data( $field, $user_id );
 		$field = str_replace(' ', '_', $field);
 
+		// Sanitize Keys if option is set
+		if( $vars['sanitize_keys'] )
+			$field = sanitize_key( $field );
+
+		// If a value is set
 		if( isset($field_value) )
-			$xprofile[$field] = $field_value;
+			$xprofile[ $field ] = $field_value;
 
 	}
+
 	return $xprofile;
+
 }
 
 
@@ -97,8 +125,8 @@ function pw_get_users( $user_ids, $fields = 'all' ){
 }
 
 function pw_get_userdata($user_id, $fields = false) {
-	// DEPRECIATED
-	return pw_get_userdata( $user_id, $fields );
+	// DEPRECIATED as of Version 1.6
+	return pw_get_user( $user_id, $fields );
 }
 
 function pw_get_user( $user_id, $fields = false ) {
@@ -136,6 +164,7 @@ function pw_get_user( $user_id, $fields = false ) {
 		);
 	$buddypress_user_fields = array(
 		'user_profile_url',
+		'xprofile(all)',
 		);
 	$wordpress_usermeta_fields = array(
 		'usermeta(all)',
@@ -204,7 +233,6 @@ function pw_get_user( $user_id, $fields = false ) {
 			break;
 		}
 	}
-
 
 
 	///// WORDPRESS USER META /////
@@ -277,7 +305,6 @@ function pw_get_user( $user_id, $fields = false ) {
 		}
 
 
-
 	///// BUDDYPRESS PROFILE LINK /////
 	// Check to see if requested fields are Buddypress User Fields
 	foreach ($fields as $value) {
@@ -290,7 +317,8 @@ function pw_get_user( $user_id, $fields = false ) {
 	}
 
 
-
+	/*
+	// DEPRECIATED as of Version 1.7.2 - use field : 'xprofile(all)'
 	////////// BUDDYPRESS CUSTOM PROFILE FIELDS //////////
 	// Extract meta fields
 	$buddypress_fields = extract_linear_fields( $fields, 'buddypress', true );
@@ -306,6 +334,17 @@ function pw_get_user( $user_id, $fields = false ) {
 		        );
 			$user_data["buddypress"][$buddypress_field] = bp_get_profile_field_data( $args );
 		}
+	}
+	*/
+
+
+	///// BUDDYPRESS XPROFILE FIELDS /////
+	$xProfile_fields = extract_linear_fields( $fields, 'xprofile', true );
+	if ( !empty($usermeta_fields) ){
+		if( in_array("all", $xProfile_fields) )
+			$xProfile_fields = pw_get_xprofile_fields();
+		// Get the xProfile Fields
+		$user_data['xprofile'] = pw_get_xprofile( $user_id, $xProfile_fields );
 	}
 
 

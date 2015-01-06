@@ -1,5 +1,27 @@
 <?php
 
+function pw_usernames_to_ids( $usernames = array() ){
+	// Pass in an array of usernames
+	// Return a list of coorosponding user IDs
+	$user_ids = array();
+	// Iterate through each username
+	foreach( $usernames as $username ){
+		// Get the user by the slug as username
+		$user = get_user_by('slug', $username );
+		// If that doesn't exist
+		if( !$user )
+			// Try to get the user by the login as username
+			$user = get_user_by('login', $username );
+		// If still nothing found
+		if( !$user )
+			// Skip to next username
+			continue;
+		// Add the user ID to the array
+		$user_ids[] = $user->ID;
+	}
+	return $user_ids;
+}
+
 function pw_auth_user( $vars = array() ){
 	// Returns a boolean based on a series of qualifying tests
 	// True means the user is authorized, false means they are not

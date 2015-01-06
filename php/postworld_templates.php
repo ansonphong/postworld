@@ -356,9 +356,14 @@ function pw_get_shortcode_template( $template_id, $ext = 'php', $type = 'dir' ){
 	return pw_get_template( 'shortcodes', $template_id, $ext, $type );
 }
 
+function pw_get_user_feed_template( $template_id, $ext = 'html', $type = 'dir' ){
+	// Returns a single string for user template from ID
+	return pw_get_template( 'user-feeds', 'user-feed-'.$template_id, $ext, $type );
+}
+
 function pw_get_user_template( $template_id, $ext = 'html', $type = 'dir' ){
 	// Returns a single string for user template from ID
-	return pw_get_template( 'users', $template_id, $ext, $type );
+	return pw_get_template( 'users', 'user-'.$template_id, $ext, $type );
 }
 
 function pw_get_admin_template( $template_id, $ext = 'php', $type = 'dir' ){

@@ -1,5 +1,9 @@
 # Postworld Changelog
 
+### Version 1.7.2
+- Changed `wp_get_user()` field model, replacing 'buddypress()' with 'xprofile()'
+    + Example usage `wp_get_user( $user_id, array('xprofile(all)') )`
+
 ### Version 1.7.1
 - Changed the structure and timing of Postworld bootup. `postworld_includes()` is now to be run exclusively on the `wp_enqueue_scripts` and `admin_enqueue_scripts` action hooks
 - Added a filter to selectively activate and include AngularJS modules, with the `pw_angular_modules` filter. Simply add the string of the AngularJS module to enable to the array, and it will be selectively added and it's dependencies included.

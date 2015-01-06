@@ -23,9 +23,6 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 	// Extract Shortcode Attributes, set defaults
 	$vars = shortcode_atts( $shortcode_defaults, $atts );
 
-	// Follow Iteration
-	$vars['i'] = 0;
-
 	///// USERNAMES INPUT /////
 	// If usernames attribute is provided
 	if( !empty( $vars['usernames'] ) ){
@@ -34,7 +31,7 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 		// Trim white space
 		$vars['usernames'] = array_filter( array_map( 'trim', $vars['usernames'] ) );
 		// Convert usernames to IDs
-
+		$vars['user_ids'] = pw_usernames_to_ids( $vars['usernames'] );
 	}
 
 	///// USER IDS INPUT /////
@@ -44,6 +41,8 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 		// Trim white space
 		$vars['user_ids'] = array_filter( array_map( 'trim', $vars['user_ids'] ) );
 	}
+
+	///// TODO : Create way to create user lists with Postworld, embed by saved ID in postworld-user-lists
 
 	// If no user IDs in the list, return here
 	if( empty($vars['user_ids']) )
@@ -68,6 +67,7 @@ function pw_user_list_shortcode( $atts, $content = null, $tag ) {
 
 
 function pw_print_user_list( $vars = array() ){
+	pw_get_xprofile_fields();
 
 	$default_vars = array(
 		'user_ids'	=>	array(),
@@ -96,25 +96,23 @@ function pw_print_user_list( $vars = array() ){
 
 	// Iterate through each provided user
 	foreach( $users as $user ){
-		$vars['i']++;
 		// Initialize h2o template engine
 		$h2o = new h2o($template_path);
 		// Inject the user for use in template, ie. {{post.post_title}}
 		$inject['user'] = $user;
 		// Inject local vars for referrence in template
 		$inject['atts'] = $vars;
-		// Inject JSON string for development referrence
+		// Inject JSON string for development referrence. Access in template with : {{ json }}
 		$inject['json'] = json_encode( array( 'user' => $user, 'atts' => $atts ) );
-
 		// Add rendered HTML to the return data
 		$users_html .= $h2o->render($inject);
 	}
 
 	// Add the users HTML to the $vars array
-	$vars['users'] = $users_html;
+	$vars['users_html'] = $users_html;
 
-	// Get the wrapper list template
-	$list_template = pw_get_template( 'user-lists', $vars['view'], 'php', 'dir' );
+	// Get the user feed template
+	$list_template = pw_get_user_feed_template( $vars['view'], 'php', 'dir' );
 
 	// Return with the string continaing the list template
 	return pw_ob_include( $list_template, $vars );
