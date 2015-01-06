@@ -60,10 +60,15 @@ postworld.controller( 'pwUiCtrl',
 			return '';
 	}
 
-	$scope.uiBoolean = function( val ){
+	$scope.uiBool = function( val ){
 		// If the value is truthy and not empty, return true
 		var bool = ( Boolean( val ) && !_.isEmpty( val ) ) ? true : false;
 		return bool; 
+	}
+
+	$scope.uiBoolean = function( val ){
+		// DEPRECIATED as of Version 1.7.2
+		return $scope.uiBool( val );
 	}
 
 
