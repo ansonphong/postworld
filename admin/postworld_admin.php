@@ -4,6 +4,7 @@ include 'metaboxes/options/metabox-options.php';
 include 'metaboxes/link_url/metabox-link_url.php';
 include 'metaboxes/event/metabox-event.php';
 include 'metaboxes/post_parent/metabox-post_parent.php';	
+include 'metaboxes/wp_postmeta/metabox-wp_postmeta.php';	
 
 ///// MODULE : LAYOUTS /////
 if( in_array( 'layouts', $pw['info']['modules'] ) )
