@@ -1,26 +1,50 @@
-<table>
+<table
+	width="100%">
 	<?php foreach( $fields as $field ) : ?>
-		<tr>
-			<td>
-				<i class="<?php echo $field['icon']; ?>"></i>
-				<?php echo $field['label']; ?>
-			</td>
-			<td>
-				<?php
-					switch( $field['input_type'] ):
-						case 'text':
-						?>
-							<input
-								type="text"
-								name="pw_wp_postmeta_<?php echo $field['meta_key'] ?>"
-								placeholder="<?php echo $field['placeholder'] ?>"
-								value="<?php echo $field['meta_value'] ?>">
-						<?php
-						break;
-					endswitch;
-				?>
-			</td>
-		</tr>
+
+		<?php
+		switch( $field['type'] ):
+
+			///// HEADER /////
+			case 'header': ?>
+				<tr>
+					<td colspan="2">
+						<h4
+							style="border-bottom:1px solid #ccc; padding-bottom:5px; margin-bottom:5px;">
+							<i class="<?php echo $field['icon']; ?>"></i>
+							<?php echo $field['label']; ?>
+						</h4>
+					</td>
+				</tr>
+			<?php break; ?>
+
+
+			<?php
+			///// TEXT INPUT /////
+			case 'text-input': ?>
+				<tr>
+					<td>
+						<i class="<?php echo $field['icon']; ?>"></i>
+						<?php echo $field['label']; ?>
+					</td>
+					<td
+						width="75%">
+						
+						<input
+							type="text"
+							name="pw_wp_postmeta_<?php echo $field['meta_key'] ?>"
+							placeholder="<?php echo $field['placeholder'] ?>"
+							value="<?php echo $field['meta_value'] ?>"
+							style="width:100%">
+							
+					</td>
+				</tr>
+			<?php break; ?>
+
+
+
+		<?php endswitch; ?>
+
 	<?php endforeach; ?>
 </table>
 

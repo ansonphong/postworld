@@ -141,7 +141,10 @@ function pw_wp_postmeta_meta_save( $post_id ){
     // Iterate through each field
     foreach( $fields as $field ){
         // Get the meta key
-        $meta_key = $field['meta_key'];
+        $meta_key = _get( $field, 'meta_key' );
+        // If there's no meta key, skip it
+        if( $meta_key == false )
+            continue;
         // Define the key under which the value is posted
         $http_post_key = 'pw_wp_postmeta_'.$meta_key;
         // Collect the posted data an associative array
