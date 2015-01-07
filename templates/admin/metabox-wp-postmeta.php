@@ -10,9 +10,11 @@
 					switch( $field['input_type'] ):
 						case 'text':
 						?>
-
-							<input type="text" name="pw_wp_postmeta_<?php echo $field['meta_key']; ?>" placeholder="<?php echo $field['placeholder']; ?>">
-
+							<input
+								type="text"
+								name="pw_wp_postmeta_<?php echo $field['meta_key'] ?>"
+								placeholder="<?php echo $field['placeholder'] ?>"
+								value="<?php echo $field['meta_value'] ?>">
 						<?php
 						break;
 					endswitch;

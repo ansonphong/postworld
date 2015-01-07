@@ -22,6 +22,10 @@ function pw_user_feed_shortcode( $atts, $content = null, $tag ) {
 	// Extract Shortcode Attributes, set defaults
 	$vars = shortcode_atts( $shortcode_defaults, $atts );
 
+
+	// REFACTOR USERNAMES INPUT into pw_print_user_feed
+
+
 	///// USERNAMES INPUT /////
 	// If usernames attribute is provided
 	if( !empty( $vars['usernames'] ) ){

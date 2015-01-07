@@ -100,9 +100,17 @@ function pw_wp_postmeta_ui( $post, $vars ){
 
     // Populate previously saved postmeta into fields array
     for( $i=0; $i<count($fields); $i++ ){
-
-        
-
+        // Localize the current field
+        $field = $fields[$i];
+        // Get the meta key
+        $meta_key = _get( $field, 'meta_key' );
+        // If it's empty, continue
+        if( empty($meta_key) )
+            continue;
+        // Get the meta value
+        $meta_value = get_post_meta( $post->ID, $meta_key, true );
+        // Populate the model with the meta value
+        $fields[$i]['meta_value'] = $meta_value;
     }
 
 	///// INCLUDE TEMPLATE /////
@@ -146,10 +154,13 @@ function pw_wp_postmeta_meta_save( $post_id ){
 
     ///// SAVE POSTMETA /////
     foreach( $postmeta as $meta_key => $meta_value ){
-        update_postmeta( $post_id, $meta_key, $meta_value );
+        // Update Post Meta
+        update_post_meta( $post_id, $meta_key, $meta_value );
+        // If the value is provided and empty
+        if( is_string( $meta_value ) && empty( $meta_value ) )
+            // Delete post meta
+            delete_post_meta( $post_id, $meta_key );
     }
-
-    //pw_log( json_encode( $postmeta ) );
 
     return $post_id;
 
