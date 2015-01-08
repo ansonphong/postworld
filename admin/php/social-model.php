@@ -83,6 +83,13 @@ function pw_social_meta( $social_meta = array() ){
 					"prepend_url"	=>	"http://instagram.com/",
 					),
 				array(
+					"id"			=>	"youtube",
+					"name"			=>	"YouTube",
+					"icon"			=>	"icon-youtube-play",
+					"description"	=>	"Your YouTube username, not URL",
+					"prepend_url"	=>	"https://www.youtube.com/user/",
+					),
+				array(
 					"id"			=>	"tripadvisor",
 					"name"			=>	"Trip Advisor",
 					"icon"			=>	"icon-circle-medium",

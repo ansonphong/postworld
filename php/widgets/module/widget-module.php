@@ -1,22 +1,22 @@
 <?php
-/*____                  _  __        ___     _            _   
- |  _ \ __ _ _ __   ___| | \ \      / (_) __| | __ _  ___| |_ 
- | |_) / _` | '_ \ / _ \ |  \ \ /\ / /| |/ _` |/ _` |/ _ \ __|
- |  __/ (_| | | | |  __/ |   \ V  V / | | (_| | (_| |  __/ |_ 
- |_|   \__,_|_| |_|\___|_|    \_/\_/  |_|\__,_|\__, |\___|\__|
-                                               |___/          
-//////////////////////// PANEL WIDGET ////////////////////////*/
+/*__  __           _       _       __        ___     _            _   
+ |  \/  | ___   __| |_   _| | ___  \ \      / (_) __| | __ _  ___| |_ 
+ | |\/| |/ _ \ / _` | | | | |/ _ \  \ \ /\ / /| |/ _` |/ _` |/ _ \ __|
+ | |  | | (_) | (_| | |_| | |  __/   \ V  V / | | (_| | (_| |  __/ |_ 
+ |_|  |_|\___/ \__,_|\__,_|_|\___|    \_/\_/  |_|\__,_|\__, |\___|\__|
+                                                       |___/                    
+/////////////////////// MODULE WIDGET - CLASS ///////////////////////*/
 
-class panel_widget extends WP_Widget {
+class pw_module_widget extends WP_Widget {
 
 	/**
 	 * Register widget with WordPress.
 	 */
 	public function __construct() {
 		parent::__construct(
-	 		'pw_panel', // Base ID
-			'(Postworld) Panel', // Name
-			array( 'description' => __( 'Adds a panel to a widget from the panels templates', 'text_domain' ), ) // Args
+	 		'pw_module_widget', 	// Base ID
+			'(Postworld) Module', 	// Name
+			array( 'description' => __( 'Adds a module to a widget from /templates/modules', 'text_domain' ), ) // Args
 		);
 	}
 
@@ -33,7 +33,7 @@ class panel_widget extends WP_Widget {
 		
 		// PULL IN DATA
 		$title = $OPTIONS['title'];
-		$panel_id = $OPTIONS['panel_id'];
+		$module_id = $OPTIONS['module_id'];
 		$show_title = $OPTIONS['show_title'];
 		
 		////////// DRAW PAGES WIDGET //////////
@@ -45,7 +45,7 @@ class panel_widget extends WP_Widget {
 			////////// POST SHARE REPORT VIEW //////////
 			///// RENDER PAGE WIDGET /////
 			extract ($OPTIONS);
-			include 'panel-view.php';	
+			include pw_get_template( 'modules', $module_id, 'php', 'dir' );
 			
 		// CLOSE
 		echo $after_widget;
@@ -65,7 +65,7 @@ class panel_widget extends WP_Widget {
 		// GLOBAL SETTINGS : SAVE
 		$OPTIONS['title'] = strip_tags( $NEW_OPTIONS['title'] );
 		$OPTIONS['show_title'] = strip_tags( $NEW_OPTIONS['show_title'] );
-		$OPTIONS['panel_id'] = $NEW_OPTIONS['panel_id'];
+		$OPTIONS['module_id'] = $NEW_OPTIONS['module_id'];
 		return $OPTIONS;
 	}
 
@@ -75,11 +75,11 @@ class panel_widget extends WP_Widget {
 	 * @param array $OPTIONS Previously saved values from database.
 	 */
 	public function form( $OPTIONS ) {
-		include 'panel-admin.php';
+		include 'module-admin.php';
 	}
 
 } 
 
-add_action( 'widgets_init', create_function( '', 'register_widget( "panel_widget" );' ) );
+add_action( 'widgets_init', create_function( '', 'register_widget( "pw_module_widget" );' ) );
 
 ?>

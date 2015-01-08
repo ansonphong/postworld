@@ -7,7 +7,7 @@
                                           
 //////////////// SIDEBARS ////////////////*/
 
-include 'widgets/panel/widget-panel.php';
+include 'widgets/module/widget-module.php';
 include 'widgets/menu-kit/widget-menu-kit.php';
 include 'widgets/feed/widget-feed.php';
 include 'widgets/term-feed/widget-term-feed.php';

@@ -1,5 +1,9 @@
 # Postworld Changelog
 
+### Version 1.7.3
+- **R.I.P. Postworld Panel Widget** - has now been renamed to **Postworld Module Widget**, and uses `.php` files directly included rather than using angular to `ng-include` files with the extension `.html`
+    + __Breaking Change__ : Must rename all instances of `/templates/modules/`, as `/templates/modules` is now used as the seat of module widget options
+
 ### Version 1.7.2
 - Changed `wp_get_user()` field model, replacing 'buddypress()' with 'xprofile()'
     + Example usage `wp_get_user( $user_id, array('xprofile(all)') )`
