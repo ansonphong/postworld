@@ -131,6 +131,8 @@ function pw_wp_postmeta_meta_save( $post_id ){
     // This is the only way to know what fields to fetch
     $fields = json_decode( stripslashes( $_POST['pw_wp_postmeta_fields'] ), true );
     
+
+
     // Return Early if there are no fields
     if( empty($fields) )
         return $post_id;
