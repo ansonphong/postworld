@@ -166,8 +166,6 @@ function pw_live_feed( $vars = array() ){
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
 
-
-
 	///// DEFAULT : QUERY /////
 	// If the feed is empty
 	if( !isset( $feed['query'] ) || empty( $feed['query'] ) ){
@@ -183,7 +181,6 @@ function pw_live_feed( $vars = array() ){
 	// Run query filters
 	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );
 
-
 	///// GET FEED DATA /////
 	if( $directive == 'live-feed' )
 		// Get the live feed data
@@ -193,10 +190,6 @@ function pw_live_feed( $vars = array() ){
 	// Or else banish load-feed, and simply use a cache feed subobject
 	else if( $directive == 'load-feed' )
 		$feed_data = array( 'error' => 'Load Feed Not Supported Yet.' );
-
-
-	//pw_log( json_encode( $feed ) );
-
 
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
@@ -250,6 +243,8 @@ function pw_live_feed( $vars = array() ){
 
 function pw_get_live_feed ( $vars ){
 
+	// TODO : Cleanup logic pattern in this function
+
 	extract($vars);
 
 	// Defaults
@@ -262,25 +257,28 @@ function pw_get_live_feed ( $vars ){
 	$preload = (int) $preload;
 
 	// If no feed outline is defined
-	if( empty( $feed_outline ) ){
-		// Get the Feed Outline
+	// And Query is defined
+	// And there are no posts defined
+	if( empty( $feed_outline ) && !empty( $query ) && empty( $posts ) ){
+		// Get the Feed Outline from the query
 		$query = $vars["query"];
 		$feed_outline = pw_feed_outline( $query );
 	}
 	
-	
 	// If the posts have contents
 	if( !empty( $posts ) ){
 		// Add the post's IDs to preload_posts array
-		$preload_posts = array();
+		$feed_outline = array();
 		foreach( $posts as $post ){
 			if( is_object( $post ) )
-				$preload_posts[] = $post->ID;
+				$feed_outline[] = $post->ID;
 			elseif( is_array( $post ) )
-				$preload_posts[] = $post['ID'];
+				$feed_outline[] = $post['ID'];
 		}
+		// Set all in the outline as preloaded
+		$preload_posts = $feed_outline;
+	
 	}
-
 	// If the feed outline has contents
 	else if( !empty( $feed_outline ) ){
 		// Select which posts to preload
@@ -314,10 +312,9 @@ function pw_feed_outline ( $pw_query_args ){
 	$query_results = pw_query( $pw_query_args );
 	$post_ids = (array) $query_results->posts;
 
-	return $post_ids; // Array of post IDs
+	return pw_sanitize_numeric_array( $post_ids ); // Array of post IDs
 	//return array( 220034, 216613 );
 }
-
 
 
 function pw_merge_galleries( $posts, $options ){
