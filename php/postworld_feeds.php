@@ -105,6 +105,7 @@ function pw_live_feed( $vars = array() ){
 
 	///// DEFAULT FEED /////
 	$default_feed = array(
+		'feed_outline'		=>	array(),
 		'preload'			=>	10,
 		'load_increment' 	=> 	10,
 		'offset'			=>	0,
@@ -165,6 +166,8 @@ function pw_live_feed( $vars = array() ){
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
 
+
+
 	///// DEFAULT : QUERY /////
 	// If the feed is empty
 	if( !isset( $feed['query'] ) || empty( $feed['query'] ) ){
@@ -180,6 +183,7 @@ function pw_live_feed( $vars = array() ){
 	// Run query filters
 	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );
 
+
 	///// GET FEED DATA /////
 	if( $directive == 'live-feed' )
 		// Get the live feed data
@@ -189,6 +193,10 @@ function pw_live_feed( $vars = array() ){
 	// Or else banish load-feed, and simply use a cache feed subobject
 	else if( $directive == 'load-feed' )
 		$feed_data = array( 'error' => 'Load Feed Not Supported Yet.' );
+
+
+	//pw_log( json_encode( $feed ) );
+
 
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
@@ -253,10 +261,14 @@ function pw_get_live_feed ( $vars ){
 	// Sanitize
 	$preload = (int) $preload;
 
-	// Get the Feed Outline
-	$query = $vars["query"];
-	$feed_outline = pw_feed_outline( $query );
-
+	// If no feed outline is defined
+	if( empty( $feed_outline ) ){
+		// Get the Feed Outline
+		$query = $vars["query"];
+		$feed_outline = pw_feed_outline( $query );
+	}
+	
+	
 	// If the posts have contents
 	if( !empty( $posts ) ){
 		// Add the post's IDs to preload_posts array
@@ -268,8 +280,9 @@ function pw_get_live_feed ( $vars ){
 				$preload_posts[] = $post['ID'];
 		}
 	}
+
 	// If the feed outline has contents
-	elseif( !empty( $feed_outline ) ){
+	else if( !empty( $feed_outline ) ){
 		// Select which posts to preload
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
 		// Preload selected posts
@@ -683,19 +696,31 @@ function pw_get_menu_posts( $menu, $fields ){
 
 	$menu_items = pw_query( $query )->posts;
 
+	// If only the IDs are requested
+	if( $fields == 'ids' ){
+		$post_ids = array();
+		// Iterate through the posts
+		foreach( $menu_items as $item ){
+			// And collect just the associated IDs
+			$post_ids[] = $item['post_meta']['_menu_item_object_id'];
+		}
+		// Return, converting strings to numbers
+		return pw_sanitize_numeric_array( $post_ids );
+	}
+
+	// Get the posts
 	$posts = array();
 	foreach( $menu_items as $item ){
 		$post_id = $item['post_meta']['_menu_item_object_id'];
 		$post = pw_get_post( $post_id, $fields );
-
 		// Over-ride post title with menu title
 		if( !empty( $item['post_title'] ) )
 			$post['post_title'] = $item['post_title'];
 
+		// TODO : include menu description?
+
 		$posts[] = $post;
-
 	}
-
 	return $posts;
 
 }
