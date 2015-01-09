@@ -29,111 +29,30 @@ class menu_kit_widget extends WP_Widget {
 		$title = apply_filters( 'widget_menu-title', $OPTIONS['title'] );
 		$menu_type = apply_filters( 'widget_menu-type', $OPTIONS['menu_type'] );
 		
-		////////// DRAW PAGES WIDGET //////////
-		
 		$OPTIONS['show_title'] = apply_filters( 'widget_menu-show_title', $OPTIONS['show_title'] );
 		
-		// SHOW TITLE (?)
-			echo $before_widget;
-			if ( ! empty( $title ) && $OPTIONS['show_title'] == 1 )
-				echo $before_title . $title . $after_title;
-				
-		if ($menu_type == 'pages') :
-			
-			// EXTRACT SETTINGS FROM ADMIN & COMPRESS SETTINGS INTO ARRAY
-			$OPTIONS['show_parent_pages'] = apply_filters( 'widget_menu-show_parent_pages', $OPTIONS['show_parent_pages'] );
-			$OPTIONS['show_sibling_pages'] = apply_filters( 'widget_menu-show_sibling_pages', $OPTIONS['show_sibling_pages'] );
-			$OPTIONS['show_child_pages'] = apply_filters( 'widget_menu-show_child_pages', $OPTIONS['show_child_pages'] );
-			
+		echo $before_widget;
+		if ( ! empty( $title ) && $OPTIONS['show_title'] == 1 )
+			echo $before_title . $title . $after_title;
 
-			// RENDER MENU KIT PAGES
-			menu_kit_pages($OPTIONS);
-			
-		endif;
-		
-		
-		////////// DRAW CATEGORIES WIDGET //////////
-		
-		if ($menu_type == 'categories') :
-			
-			// EXTRACT SETTINGS FROM ADMIN & COMPRESS SETTINGS INTO ARRAY
-			
-			$TAXONOMY = apply_filters( 'widget_menu-taxonomy', $OPTIONS['taxonomy'] );
-			$POST_TYPE = apply_filters( 'widget_menu-post_type', $OPTIONS['post_type'] );
-		
-			$TAXONOMY_LAYOUT = apply_filters( 'widget_menu-taxonomy_layout', $OPTIONS['taxonomy_layout'] );
-			
-			$TAXONOMY_HIERARCHICAL = apply_filters( 'widget_menu-taxonomy_hierarchical', $OPTIONS['taxonomy_hierarchical'] );
-			$TAXONOMY_HIDE_EMPTY = apply_filters( 'widget_menu-taxonomy_hide_empty', $OPTIONS['taxonomy_hide_empty'] );
-			
-			$CONTAINER = "menu-taxonomy-".$TAXONOMY_LAYOUT;
-			
-			$OPTIONS = array(
-				'POST_TYPE'		=> $POST_TYPE,
-				'TAXONOMY'  	=> $TAXONOMY,
-				'CONTAINER' 	=> '#'.$CONTAINER,
-				'ITEM_CLASS'	=> 'menu-item',
-				'POST_STATUS'	=> 'publish',
-				'HIDE_EMPTY'	=> $TAXONOMY_HIDE_EMPTY,
-				'HIERARCHICAL' 	=> $TAXONOMY_HIERARCHICAL,
-				'DEPTH' 		=> 5,
-				'SHOW_COUNT'	=> 0,
-				'EXCLUDE_'		=> null,
-				'NUMBER'		=> null,
-				'TITLE'			=> '',
-				'STYLE'			=> 'list',
-				'LAYOUT'		=> $TAXONOMY_LAYOUT
-			);
-			
-			
-			// RENDER MENU KIT PAGES
-
-			echo "<ul id='".$CONTAINER."'>";
-			menu_kit_categories($OPTIONS);
-			echo "</ul>";
-
-		
-		endif;
-		
-		////////// DRAW CATEGORIES WIDGET //////////
-		
-		if ($menu_type == 'authors') :
-		
-			$AUTHORS_HIDE_EMPTY =	apply_filters( 'widget_menu-authors_hide_empty', $OPTIONS['authors_hide_empty'] );
-			$AUTHORS_SHOW_ADMINS = 	apply_filters( 'widget_menu-authors_show_admins', $OPTIONS['authors_show_admins'] );
-			$AUTHORS_AVATAR_SIZE = 	apply_filters( 'widget_menu-authors_avatar_size', $OPTIONS['authors_avatar_size'] );
-			$AUTHORS_ROLE = 		apply_filters( 'widget_menu-authors_role', $OPTIONS['authors_role'] );
-			$AUTHORS_ORDER_BY = 	apply_filters( 'widget_menu-authors_order_by', $OPTIONS['authors_order_by'] );
-			$AUTHORS_ORDER = 	apply_filters( 'widget_menu-authors_order', $OPTIONS['authors_order'] );
-		
-			$OPTIONS = array(
-				'AUTHORS_HIDE_EMPTY' => $AUTHORS_HIDE_EMPTY,
-				'AUTHORS_SHOW_ADMINS' => $AUTHORS_SHOW_ADMINS,
-				'AUTHORS_AVATAR_SIZE' => $AUTHORS_AVATAR_SIZE,
-				'AUTHORS_ROLE' => $AUTHORS_ROLE,
-				'AUTHORS_ORDER_BY' => $AUTHORS_ORDER_BY,
-				'AUTHORS_ORDER' => $AUTHORS_ORDER,
-				);
-		
-		
-			menu_kit_authors($OPTIONS);
-			
-		endif;
-		
-		////////// DRAW CUSTOM MENU WIDGET //////////
-		
-		if ($menu_type == 'custom_menu') :
-		    // Get the menu templates
-		    $menu_templates = pw_get_menu_templates();
-			// Get the menu template path
-		    $template_path = $menu_templates[ $OPTIONS['menu_template'] ] ;//'templates/custom_menu-walker.php';
-		    // Duplicate Slug as ID
-		    $OPTIONS['menu_id'] = $OPTIONS['menu_slug'];
-		    // Output Buffering to include template
-		    echo '<div class="menu-kit custom-menu">';
-		    echo pw_ob_include( $template_path, $OPTIONS );
-		    echo '</div>';
-		endif;
+		////////// INCLUDE WIDGET TEMPLATE //////////
+		switch( $menu_type ){
+			case "pages":
+				include "templates/menu-pages.php";
+				break;
+			case "categories":
+				include "templates/menu-terms.php";
+				break;
+			case "authors":
+				include "templates/menu-authors.php";
+				break;
+			case "custom_menu":
+				include "templates/menu-custom.php";
+				break;
+			case "menu_feed":
+				include "templates/menu-feed.php";
+				break;
+		}
 		
 		// CLOSE
 		echo $after_widget;
@@ -149,38 +68,7 @@ class menu_kit_widget extends WP_Widget {
 	 */
 	public function update( $NEW_OPTIONS, $OLD_OPTIONS ) {
 		$OPTIONS = array();
-		
-		// GLOBAL SETTINGS : SAVE
-		$OPTIONS['title'] = strip_tags( $NEW_OPTIONS['title'] );
-		$OPTIONS['show_title'] = strip_tags( $NEW_OPTIONS['show_title'] );
-		
-		$OPTIONS['menu_type'] = $NEW_OPTIONS['menu_type'];
-		
-		// PAGES SETTINGS : SAVE
-		$OPTIONS['show_parent_pages'] = $NEW_OPTIONS['show_parent_pages'];
-		$OPTIONS['show_sibling_pages'] = $NEW_OPTIONS['show_sibling_pages'];
-		$OPTIONS['show_child_pages'] = $NEW_OPTIONS['show_child_pages'];
-		
-		// TAXONOMY SETTINGS : SAVE
-		$OPTIONS['taxonomy'] = $NEW_OPTIONS['taxonomy'];
-		$OPTIONS['post_type'] = $NEW_OPTIONS['post_type'];
-		$OPTIONS['taxonomy_layout'] = $NEW_OPTIONS['taxonomy_layout'];
-		$OPTIONS['taxonomy_hierarchical'] = $NEW_OPTIONS['taxonomy_hierarchical'];
-		$OPTIONS['taxonomy_hide_empty'] = $NEW_OPTIONS['taxonomy_hide_empty'];
-		
-		// AUTHOR SETTINGS : SAVE
-		$OPTIONS['authors_hide_empty'] = $NEW_OPTIONS['authors_hide_empty'];
-		$OPTIONS['authors_show_admins'] = $NEW_OPTIONS['authors_show_admins'];
-		$OPTIONS['authors_avatar_size'] = $NEW_OPTIONS['authors_avatar_size'];
-		$OPTIONS['authors_role'] = $NEW_OPTIONS['authors_role'];
-		$OPTIONS['authors_order_by'] = $NEW_OPTIONS['authors_order_by'];
-		$OPTIONS['authors_order'] = $NEW_OPTIONS['authors_order'];
-
-		// MENUS SETTINGS : SAVE
-		$OPTIONS['menu_slug'] = $NEW_OPTIONS['menu_slug'];
-		$OPTIONS['menu_template'] = $NEW_OPTIONS['menu_template'];
-		
-		return $OPTIONS;
+		return $NEW_OPTIONS;
 	}
 
 	/**

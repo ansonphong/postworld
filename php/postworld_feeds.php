@@ -63,6 +63,8 @@ function pw_live_feed( $vars = array() ){
 	global $post;
 	global $pw;
 
+
+
 	// Run filters on the feed vars
 	$vars = apply_filters( 'pw_feed', $vars );
 
@@ -109,7 +111,7 @@ function pw_live_feed( $vars = array() ){
 		'order_by'			=>	'-post_date',
 		'view'	=>	array(
 			'current' 	=> 'list',
-			'options'	=>	array( 'list', 'grid' ),
+			'options'	=>	array( 'list' ),
 			),
 		//'query' 		=> 	$default_query,
 		'aux_template'	=>	'seo-list',
@@ -163,7 +165,6 @@ function pw_live_feed( $vars = array() ){
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
 
-
 	///// DEFAULT : QUERY /////
 	// If the feed is empty
 	if( !isset( $feed['query'] ) || empty( $feed['query'] ) ){
@@ -191,7 +192,6 @@ function pw_live_feed( $vars = array() ){
 
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
-
 
 	///// BLOCKS : GET WIDGET DATA /////
 	$widgets = array();
@@ -257,21 +257,30 @@ function pw_get_live_feed ( $vars ){
 	$query = $vars["query"];
 	$feed_outline = pw_feed_outline( $query );
 
+	// If the posts have contents
+	if( !empty( $posts ) ){
+		// Add the post's IDs to preload_posts array
+		$preload_posts = array();
+		foreach( $posts as $post ){
+			if( is_object( $post ) )
+				$preload_posts[] = $post->ID;
+			elseif( is_array( $post ) )
+				$preload_posts[] = $post['ID'];
+		}
+	}
 	// If the feed outline has contents
-	if( !empty( $feed_outline ) ){
+	elseif( !empty( $feed_outline ) ){
 		// Select which posts to preload
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
-
 		// Preload selected posts
 		$posts = pw_get_posts( $preload_posts, $query["fields"], $options );
-
 	}
 	else{
 		$posts = array();
 		$preload_posts = array();
 	}
 
-	return array(
+	$vars = array(
 		"feed_id" 		=> 	$vars["feed_id"],
 		"query" 		=> 	$vars["query"],
 		"feed_outline" 	=> 	$feed_outline,
@@ -280,6 +289,8 @@ function pw_get_live_feed ( $vars ){
 		"posts"			=>	$posts,
 		"options"		=>	$options,
 		);
+
+	return $vars;
 
 }
 

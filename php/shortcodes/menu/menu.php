@@ -5,7 +5,7 @@ function pw_menu_shortcode( $atts, $content = null, $tag ) {
 
 	// Set the internal defaults
 	$shortcode_defaults = array(
-		'template'	=>	'shortcode',
+		'template'	=>	'default',
 		'class' 	=>	'',
 		'term'		=>	'', // feature term name
 		'name'		=>	'', // menu name

@@ -58,10 +58,17 @@ extract($OPTIONS);
 	<div class="type-wrapper">
 	
 		<div class="type-title">
-
-			<input type="radio" value="pages" class="radio-type-select" id="<?php echo $this->get_field_id('menu_type'); ?>" name="<?php echo $this->get_field_name('menu_type'); ?>" <?php if( !empty($menu_type) && $menu_type == 'pages'){ echo 'checked="checked"'; } ?> />
-
-			<b>Pages</b>
+			<label>
+				<input
+					type="radio"
+					value="pages"
+					class="radio-type-select"
+					id="<?php echo $this->get_field_id('menu_type'); ?>"
+					name="<?php echo $this->get_field_name('menu_type'); ?>"
+					<?php if( !empty($menu_type) && $menu_type == 'pages'){ echo 'checked="checked"'; } ?>
+					/>
+				<b>Pages</b>
+			</label>
 		</div>
 		
 		<div class="type-options">
@@ -77,10 +84,17 @@ extract($OPTIONS);
    <div class="type-wrapper">
    
 		<div class="type-title">
-
-			<input type="radio" value="categories" class="radio-type-select" id="<?php echo $this->get_field_id('menu_type'); ?>" name="<?php echo $this->get_field_name('menu_type'); ?>" <?php if( !empty($menu_type) && $menu_type === 'categories'){ echo 'checked="checked"'; } ?> />
-
-			<label><b>Categories</b></label>
+			<label>
+				<input
+					type="radio"
+					value="categories"
+					class="radio-type-select"
+					id="<?php echo $this->get_field_id('menu_type'); ?>"
+					name="<?php echo $this->get_field_name('menu_type'); ?>"
+					<?php if( !empty($menu_type) && $menu_type === 'categories'){ echo 'checked="checked"'; } ?>
+					/>
+				<b>Categories</b>
+			</label>
 		</div>
 		
 		<div class="type-options">
@@ -152,30 +166,37 @@ extract($OPTIONS);
 		
    </div>
 
-   <!-- AUTHORS -->
-   <div class="type-wrapper">
+	<!-- AUTHORS -->
+	<div class="type-wrapper">
 	   
-	   <div class="type-title">
-
-		   <input type="radio" value="authors" class="radio-type-select" id="<?php echo $this->get_field_id('menu_type'); ?>" name="<?php echo $this->get_field_name('menu_type'); ?>" <?php if( !empty($menu_type) && $menu_type === 'authors'){ echo 'checked="checked"'; } ?> />
-
-		   <label><b>Authors</b></label>
-	   </div>
+	   	<div class="type-title">
+	   		<label>
+		  		<input 
+		  			type="radio"
+		  			value="authors"
+		  			class="radio-type-select"
+		  			id="<?php echo $this->get_field_id('menu_type'); ?>"
+		  			name="<?php echo $this->get_field_name('menu_type'); ?>"
+		  			<?php if( !empty($menu_type) && $menu_type === 'authors'){ echo 'checked="checked"'; } ?>
+		  			/>
+		  		<b>Authors</b>
+		  	</label>
+	   	</div>
 	   
-	   <div class="type-options">
+	   	<div class="type-options">
 	   
 
-		   <input type="checkbox" value="1"  name="<?php echo $this->get_field_name('authors_hide_empty'); ?>" id="<?php echo $this->get_field_id('authors_hide_empty'); ?>" <?php if( !empty($authors_hide_empty) && $authors_hide_empty == '1'){ echo 'checked="checked"'; } ?> >
+		   	<input type="checkbox" value="1"  name="<?php echo $this->get_field_name('authors_hide_empty'); ?>" id="<?php echo $this->get_field_id('authors_hide_empty'); ?>" <?php if( !empty($authors_hide_empty) && $authors_hide_empty == '1'){ echo 'checked="checked"'; } ?> >
 				Hide Empty<br>
 				
-		   <input type="checkbox" value="1"  name="<?php echo $this->get_field_name('authors_show_admins'); ?>" id="<?php echo $this->get_field_id('authors_show_admins'); ?>" <?php if( !empty($authors_show_admins) && $authors_show_admins == '1'){ echo 'checked="checked"'; } ?> >
+		   	<input type="checkbox" value="1"  name="<?php echo $this->get_field_name('authors_show_admins'); ?>" id="<?php echo $this->get_field_id('authors_show_admins'); ?>" <?php if( !empty($authors_show_admins) && $authors_show_admins == '1'){ echo 'checked="checked"'; } ?> >
 				Show Admins<br>
 				
 				Avatar Size :
-		   <input type="text" value="<?php if( !empty($authors_avatar_size) ) echo $authors_avatar_size; else echo '32'; ?>" size="3" name="<?php echo $this->get_field_name('authors_avatar_size'); ?>" id="<?php echo $this->get_field_id('authors_avatar_size'); ?>" >
+		   	<input type="text" value="<?php if( !empty($authors_avatar_size) ) echo $authors_avatar_size; else echo '32'; ?>" size="3" name="<?php echo $this->get_field_name('authors_avatar_size'); ?>" id="<?php echo $this->get_field_id('authors_avatar_size'); ?>" >
 
 				
-		   <br><br>
+		   	<br><br>
 			Role:
 			<select name="<?php echo $this->get_field_name('authors_role'); ?>"  id="<?php echo $this->get_field_id('authors_role'); ?>">
 
@@ -208,7 +229,7 @@ extract($OPTIONS);
 
 			</select>
 				
-	   </div>
+	   	</div>
 	   
 	   <!--/*
 		avatar_size
@@ -216,22 +237,42 @@ extract($OPTIONS);
 		order_by
 	   */-->
 	   
-   </div>
+	</div>
    
-   <!-- CUSTOM MENUS -->
+	<?php
+		///// MENUS /////
+	   $menus = get_terms( 'nav_menu' );
+
+	   // Templates
+	   $menu_templates = pw_get_menu_templates();
+
+	   // Views
+	   global $pwSiteGlobals;
+	   $menu_views = $pwSiteGlobals['post_views'];
+	?>
+
+
+   	<!-- CUSTOM MENU TEMPLATE -->
 	<div class="type-wrapper">
 		<div class="type-title">
 
-			<input type="radio" value="custom_menu" class="radio-type-select" id="<?php echo $this->get_field_id('menu_type'); ?>" name="<?php echo $this->get_field_name('menu_type'); ?>" <?php if( !empty($menu_type) && $menu_type === 'custom_menu'){ echo 'checked="checked"'; } ?> />
-
-			<label><b>Custom Menu</b></label>
+			<label>
+				<input
+					type="radio"
+					value="custom_menu"
+					class="radio-type-select"
+					id="<?php echo $this->get_field_id('menu_type'); ?>"
+					name="<?php echo $this->get_field_name('menu_type'); ?>"
+					<?php if( !empty($menu_type) && $menu_type === 'custom_menu'){ echo 'checked="checked"'; } ?>
+					/>
+				<b>Custom Menu Template</b>
+			</label>
 			<br>
 		</div>
 
 		Menu :
 		<select name="<?php echo $this->get_field_name('menu_slug'); ?>"  id="<?php echo $this->get_field_id('menu_slug'); ?>">
 			<?php
-				$menus = get_terms( 'nav_menu' );
 				foreach( $menus as $menu ){?>
 					<option value="<?php echo $menu->slug; ?>" <?php if( !empty($menu_slug) && $menu_slug == $menu->slug){ echo 'selected="selected"'; }?> ><?php echo $menu->name; ?></option>
 				<?php
@@ -243,9 +284,6 @@ extract($OPTIONS);
 		Template:
 		<select name="<?php echo $this->get_field_name('menu_template'); ?>"  id="<?php echo $this->get_field_id('menu_template'); ?>">
 			<?php
-				// Move this up, and re-use for other menu types
-				$menu_templates = pw_get_menu_templates();
-				
 				foreach( $menu_templates as $menu_template_key => $menu_template_value ){?>
 					<option value="<?php echo $menu_template_key; ?>" <?php if( !empty($menu_template) && $menu_template == $menu_template_key){ echo 'selected="selected"'; }?> ><?php echo $menu_template_key; ?></option>
 			
@@ -254,9 +292,66 @@ extract($OPTIONS);
 			?>
 
 		</select>
-
-
    </div>
 
+
+
+   <!-- CUSTOM MENU FEED -->
+	<div class="type-wrapper">
+		<div class="type-title">
+			<label>
+				<input
+					type="radio"
+					value="menu_feed"
+					class="radio-type-select"
+					id="<?php echo $this->get_field_id('menu_type'); ?>"
+					name="<?php echo $this->get_field_name('menu_type'); ?>"
+					<?php if( !empty($menu_type) && $menu_type === 'menu_feed'){ echo 'checked="checked"'; } ?>
+					/>
+				<b>Menu Feed</b>
+			</label>
+
+			<br>
+		</div>
+		<?php //echo "MENUS:". json_encode($menus);?>
+		Menu :
+		<select
+			name="<?php echo $this->get_field_name('menu_feed_id'); ?>"
+			id="<?php echo $this->get_field_id('menu_feed_id'); ?>">
+			
+			<?php
+				foreach( $menus as $menu ){?>
+					<option
+						value="<?php echo $menu->term_id; ?>"
+						<?php if( !empty($menu_feed_id) && $menu_feed_id == $menu->term_id){ echo 'selected="selected"'; }?>
+						>
+						<?php echo $menu->name; ?>
+					</option>
+				<?php
+				}
+			?>
+		</select>
+		<br>
+
+		View :
+		<select
+			name="<?php echo $this->get_field_name('menu_feed_view'); ?>"
+			id="<?php echo $this->get_field_id('menu_feed_view'); ?>">
+				
+				<?php foreach( $menu_views as $menu_view ):?>
+					<option
+						value="<?php echo $menu_view; ?>"
+						<?php if( !empty($menu_feed_view) && $menu_feed_view == $menu_view){ echo 'selected="selected"'; }?>
+						>
+						<?php echo $menu_view; ?>
+					</option>
+				<?php endforeach; ?>
+
+		</select>
+   </div>
+
+
+
 </div>
+<border-radius>
  
