@@ -140,16 +140,17 @@ function pw_print_slider( $slider ){
 				$query['posts_per_page'] = intval($slider['query_vars']['max_posts']);
 
 			// FIELDS
-			$query['fields'] = array(
-				'ID',
-				'post_title',
-				'post_excerpt',
-				'post_type',
-				'post_parent',
-				'post_permalink',
-				'post_excerpt',
-				'image(all)',
-				);
+			if( !isset( $query['fields'] ) )
+				$query['fields'] = array(
+					'ID',
+					'post_title',
+					'post_excerpt',
+					'post_type',
+					'post_parent',
+					'post_permalink',
+					'post_excerpt',
+					'image(all)',
+					);
 
 			// CATEGORY
 			// Add Category

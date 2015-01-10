@@ -60,6 +60,24 @@ postworld.controller( 'pwUiCtrl',
 			return '';
 	}
 
+	$scope.uiBoolClass = function( val, className, bool ){
+		// For use with ng-class
+		// Returns the className if val is truthy
+		
+		// Set default value for bool
+		if( bool == null )
+			bool = true;
+
+		// Get boolean from value
+		var valBool = $scope.uiBool(val);
+
+		// If bool value is the same as the boolean of val
+		if( valBool == bool )
+			// Return the given class
+			return className;
+
+	}
+
 	$scope.uiBool = function( val ){
 		// If the value is truthy and not empty, return true
 		var bool = ( Boolean( val ) && !_.isEmpty( val ) ) ? true : false;

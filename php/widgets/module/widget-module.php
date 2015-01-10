@@ -45,8 +45,9 @@ class pw_module_widget extends WP_Widget {
 			////////// POST SHARE REPORT VIEW //////////
 			///// RENDER PAGE WIDGET /////
 			extract ($OPTIONS);
+			echo '<div class="pw-module '.$module_id.'">';
 			include pw_get_template( 'modules', $module_id, 'php', 'dir' );
-			
+			echo "</div>";
 		// CLOSE
 		echo $after_widget;
 		
