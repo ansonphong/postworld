@@ -46,7 +46,6 @@ pw.angularModules = pw.angularModules.concat([
 	'wu.masonry',
 	'mgcrea.ngStrap.popover',
 	'pw.compile',
-	'ui.calendar',
 ]);
 
 
