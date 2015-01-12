@@ -12,12 +12,64 @@ include 'widgets/menu-kit/widget-menu-kit.php';
 include 'widgets/feed/widget-feed.php';
 include 'widgets/term-feed/widget-term-feed.php';
 
+
+///// PRINT WIDGETS /////
+function pw_print_widgets( $vars = array() ){
+	// Compiles and wraps a sidebar of widgets and wraps it.
+
+	// If a string is provided
+	if( is_string( $vars ) )
+		// Transplant the string into an array as the sidebar ID
+		$vars = array(
+			'sidebar'	=>	$vars,
+			);
+
+	// Set default variables
+	$defaultVars = array(
+		'sidebar'		=>	'',			// The ID of the sidebar
+		'before'		=>  '',			// Before the widgets printout
+		'after'			=>	'',			// After the widgets printout
+		'echo'			=>	true,		// Whether or not to echo
+		'show_empty'	=>	false,		// Sidebar is empty of widgets, return false
+		);
+	$vars = array_replace_recursive( $defaultVars, $vars );
+
+	// If no sidebar ID, return here
+	if( empty( $vars['sidebar'] ) )
+		return false;
+
+	// Get array of widget outputs
+	$sidebar_widgets = pw_get_sidebar( $vars['sidebar'] );
+
+	// If no widgets returned and show empty is false
+	if( empty( $sidebar_widgets ) && !empty( $vars['show_empty'] ) )
+		return false;
+
+	// Init output
+	$output = 	$vars['before'];
+
+	// Add widgets to output
+	foreach( $sidebar_widgets as $widget ){
+		$output .= 	$widget;
+	}
+
+	// Finish output
+	$output .= 	$vars['after'];
+
+	if( $vars['echo'] )
+		echo $output;
+	else
+		return $output;
+
+}
+
+
 ///// POSTWORLD GET SIDEBAR /////
 // This is a slight remix of the WP code dynamic_sidebar function
 // The main difference is near the end, rather than simply calling the sidebar functions
 // Output Buffering is used to capture the HTML output by the sidebar function
 // And the HTML for the sidebars is returned in an array.
-// This allows sidebars to be
+// This allows the contents of sidebars to be passed around as variables.
 
 function pw_get_sidebar($index = 1) {
 	global $wp_registered_sidebars, $wp_registered_widgets;
