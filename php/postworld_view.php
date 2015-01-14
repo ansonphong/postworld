@@ -233,6 +233,16 @@ function pw_get_view_meta( $context = array() ){
 			$meta['taxonomy'] = get_taxonomy( 'post_tag' );
 		}
 
+		///// CATEGORY /////
+		else if( in_array( 'category', $context ) ){
+			// Get the tag
+			$taxonomy = 'category';
+			$tag_slug = get_query_var( 'category_name' );
+			$meta['term'] = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
+			$meta['term']['url'] = get_term_link( $tag_slug, $taxonomy );
+			$meta['taxonomy'] = get_taxonomy( 'category' );
+		}
+
 		/// TAXONOMY ///
 		else if( in_array( 'archive-taxonomy', $context ) ){
 
