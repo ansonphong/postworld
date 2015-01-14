@@ -6,7 +6,7 @@
  |_|  |_|\___|\__,_|_|\__,_| |_____|_| |_| |_|_.__/ \___|\__,_|
 
 ////////// -------- MEDIA EMBED CONTROLLER -------- //////////*/   
-
+/*
 var mediaEmbed = function ( $scope, $sce, pwData ) {
 
 	$scope.oEmbed = "";
@@ -31,7 +31,7 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 		)
 		$scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
 };
-
+*/
 
 /*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
 
@@ -43,8 +43,9 @@ postworld.directive( 'oEmbed',
 		restrict: 'AE',
 		
 		scope : {
-			linkUrl: 	"@oEmbed",
+			url: 		"@oEmbed",
 			autoplay: 	"@embedAutoplay",
+			//theme: 		"@embedTheme",
 			run: 		"@embedRun",
 		},
 		
@@ -55,20 +56,30 @@ postworld.directive( 'oEmbed',
 			// WATCH : O-Embed Link Url for changes
 			$scope.$watch(
 				function( $scope ){
-					return $scope.linkUrl;
+					return $scope.url;
 				},
 				function(value) {
 					// If link URL isn't empty
-					if( !_.isEmpty( $scope.linkUrl ) )
+					if( !_.isEmpty( $scope.url ) ){
+						var vars = {
+							url: $scope.url,
+						};
+						
+						// Add autplay if it's not undefined
+						var autoplay = $scope.getAutoplay();
+						if( autoplay != undefined  )
+							vars.autoplay = autoplay;
+
 						// Get the embed code
-						$scope.getEmbedCode( $scope.linkUrl, $scope.getAutoplay() );
+						$scope.getEmbedCode(vars);
+					}
 				}
 			);
 
 			// WATCH : Embed Code for Changes
 			$scope.$watch(
 				function( $scope ){
-					var embedId = $_.sanitizeKey( $scope.linkUrl );
+					var embedId = $_.sanitizeKey( $scope.url );
 					return $_.getObj( $pwData['embeds'], embedId );
 
 				},
@@ -97,8 +108,8 @@ postworld.controller('pwOEmbedNewCtrl',
 			// Evaluate the value
 			var value = $scope.$parent.$eval( $scope.autoplay );
 			// Set default
-			if( _.isUndefined( value ) )
-				value = false;
+			if( _.isUndefined( value ) || _.isNull( value ) )
+				return undefined;
 			// Cast as Boolean
 			if( !_.isBoolean( value ) )
 				value = ( value === 'true' || value === '1' );
@@ -117,13 +128,13 @@ postworld.controller('pwOEmbedNewCtrl',
 			return value;
 		}
 
-		$scope.getEmbedCode = function( linkUrl, autoPlay ){	
+		$scope.getEmbedCode = function( vars ){	
 			// Return false if run is false
 			if( $scope.getRun() == false )
 				return false;
 
 			// Get embed code
-			return $oEmbedServe.get( linkUrl, autoPlay );
+			return $oEmbedServe.get( vars );
 
 		}
 
@@ -146,21 +157,19 @@ postworld.factory( 'oEmbedServe',
 	var cacheEmbed = function( embedId, embedCode ){
 		// Cache the embed code in the pwData service 
 		$pwData['embeds'][ embedId ] = embedCode;
-
 	};
 
-	var getOEmbed = function( linkUrl, autoPlay ){
+	var getOEmbed = function( vars ){
+		var defaultVars = {
+			url: 	'',
+			autoplay: 	'',
+			//theme: 		'',
+		};
 
-		$log.debug( "oEmbedServe.getOEmbed( " + linkUrl + ", " + autoPlay + " )" );
+		$log.debug( "oEmbedServe.getOEmbed()", vars );
 
 		// Generate Embed ID from URL
-		var embedId = $_.sanitizeKey( linkUrl );
-
-		// Setup the variables
-		var vars = {
-			"link_url": linkUrl,
-			"autoplay": autoPlay,
-			};
+		var embedId = $_.sanitizeKey( vars.url );
 
 		// AJAX Call
 		$pwData.wp_ajax('ajax_oembed_get', vars ).then(
@@ -188,19 +197,15 @@ postworld.factory( 'oEmbedServe',
 	}
 
 	return{
-		getOEmbed : function( linkUrl, autoPlay ){
-			return getOEmbed( linkUrl, autoPlay );
+		getOEmbed : function( vars ){
+			return getOEmbed( vars );
 		},
 
-		get: function( linkUrl, autoPlay ){
-			$log.debug( "oEmbedServe.get( " + linkUrl + ", " + autoPlay + " )" );
-			
-			// Set defaults
-			if( _.isUndefined( autoPlay ) )
-				autoPlay = false;
+		get: function( vars ){
+			$log.debug( "oEmbedServe.get( " + vars.url + ", " + vars.autoplay + " )" );
 
 			// Make key from URL
-			var embedId = $_.sanitizeKey( linkUrl );
+			var embedId = $_.sanitizeKey( vars.url );
 
 			// Get the cached embed code
 			var code = $_.getObj( $pwData['embeds'], embedId );
@@ -210,7 +215,7 @@ postworld.factory( 'oEmbedServe',
 				// Create placeholder object
 				$pwData['embeds'][ embedId ] = "<div class='pw-embed-loading'></div>"; // Cannot be empty
 				// Get and cache it
-				getOEmbed( linkUrl, autoPlay );
+				getOEmbed( vars );
 			}
 
 			// Return the embed code

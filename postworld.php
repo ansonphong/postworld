@@ -240,6 +240,9 @@ include 'php/postworld_options.php';
 ////// VIEW //////
 include 'php/postworld_view.php';
 
+////// EMBED //////
+include 'php/postworld_embed.php';
+
 ////// BUDDYPRESS //////
 include 'php/postworld_buddypress.php';
 

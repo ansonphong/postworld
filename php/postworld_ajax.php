@@ -654,35 +654,11 @@ add_action("wp_ajax_pw_get_post_edit", "pw_get_post_edit_admin");
 
 
 
-
-
-
-
-
 //---------- oEMBED GET ----------//
 function ajax_oembed_get(){
 	list($response, $args, $nonce) = initAjaxResponse();
-	extract($args);
-	$pw_args = $args;
-
 	// GET OEMBED
-	$oEmbed = wp_oembed_get( $pw_args['link_url'] );
-	
-	// AUTOPLAY
-	if( !empty( $autoplay ) && $autoplay == true ){
-
-		// VIMEO
-		if (strpos($oEmbed, 'vimeo') !== false) {
-		    $oEmbed = str_replace("\" width=\"", "?autoplay=1\" width=\"", $oEmbed);
-		}
-
-		// YOUTUBE
-		if (strpos($oEmbed, 'youtube') !== false) {
-		    $oEmbed = str_replace("?feature=oembed", "?feature=oembed&autoplay=1", $oEmbed);
-		}
-		
-	}
-
+	$oEmbed = pw_oembed_get( $args );
 	pwAjaxRespond( $oEmbed );
 }
 add_action("wp_ajax_nopriv_ajax_oembed_get", "ajax_oembed_get");
