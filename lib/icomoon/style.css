@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?v4lkan');
-	src:url('fonts/icomoon.eot?#iefixv4lkan') format('embedded-opentype'),
-		url('fonts/icomoon.woff?v4lkan') format('woff'),
-		url('fonts/icomoon.ttf?v4lkan') format('truetype'),
-		url('fonts/icomoon.svg?v4lkan#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?yf2fy5');
+	src:url('fonts/icomoon.eot?#iefixyf2fy5') format('embedded-opentype'),
+		url('fonts/icomoon.woff?yf2fy5') format('woff'),
+		url('fonts/icomoon.ttf?yf2fy5') format('truetype'),
+		url('fonts/icomoon.svg?yf2fy5#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -409,14 +409,6 @@
 
 .icon-folder-open:before {
 	content: "\e622";
-}
-
-.icon-tag:before {
-	content: "\e623";
-}
-
-.icon-tags:before {
-	content: "\e624";
 }
 
 .icon-qrcode:before {
@@ -1079,10 +1071,6 @@
 	content: "\e6e1";
 }
 
-.icon-trash-o:before {
-	content: "\f014";
-}
-
 .icon-search:before {
 	content: "\f002";
 }
@@ -1129,6 +1117,14 @@
 
 .icon-headphones:before {
 	content: "\f025";
+}
+
+.icon-tag:before {
+	content: "\f02b";
+}
+
+.icon-tags:before {
+	content: "\f02c";
 }
 
 .icon-edit:before {
