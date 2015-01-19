@@ -37,11 +37,15 @@ function pw_save_option(){
 
 	// If saving the styles
 	if( defined( 'PW_OPTIONS_STYLES' ) &&
-		$option_name == PW_OPTIONS_STYLES ){
+		$option_name == PW_OPTIONS_STYLES )
 		// Reset PHP LESS Cache
 		pw_reset_less_php_cache();
-		//pw_log( "RESET LESS CACHE" );
-	}
+
+	// If saving the theme settings
+	if( defined( 'PW_OPTIONS_THEME' ) &&
+		$option_name == PW_OPTIONS_THEME )
+		// Reset PHP LESS Cache
+		pw_reset_less_php_cache();
 
 	if( $update_option == true ){
 		// Return with the Option Value
