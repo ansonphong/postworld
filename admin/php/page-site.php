@@ -43,7 +43,7 @@
 				<!-- FAVICON -->
 				<div class="well">
 					<div class="save-right">
-						<?php i_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
 					</div>
 					<h2>
 						<span class="icon-md"><i class="icon-image"></i></span>
@@ -70,7 +70,7 @@
 
 		<div class="well">
 			<div class="save-right">
-				<?php i_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
+				<?php pw_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
 			</div>
 			<h2>
 				<i class="icon-code"></i>

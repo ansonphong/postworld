@@ -75,7 +75,7 @@
 				<div ng-show="showView('contexts')" class="well flush-top">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUND_CONTEXTS, 'pwBackgroundContexts'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_BACKGROUND_CONTEXTS, 'pwBackgroundContexts'); ?></div>
 
 					<h3>Contexts</h3>
 
@@ -111,7 +111,7 @@
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
 		
 
 					<h3><i class="icon-gear"></i> <?php ___('backgrounds.item_title'); ?></h3>

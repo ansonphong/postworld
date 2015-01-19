@@ -28,7 +28,7 @@
 		<!-- SHARE SOCIAL -->
 		<div class="well">
 			<div class="save-right">
-				<?php i_save_option_button( PW_OPTIONS_SOCIAL, 'iSocial'); ?>
+				<?php pw_save_option_button( PW_OPTIONS_SOCIAL, 'iSocial'); ?>
 			</div>
 			<h2>
 				<i class="icon-share"></i>
@@ -46,7 +46,7 @@
 			ng-repeat="sectionMeta in socialMeta">
 			<hr class="thick">
 			<!-- SAVE BUTTON -->
-			<div class="save-right"><?php i_save_option_button( PW_OPTIONS_SOCIAL,'iSocial'); ?></div>
+			<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SOCIAL,'iSocial'); ?></div>
 			<h2><i class="{{ sectionMeta.icon }}"></i> {{ sectionMeta.name }}</h2>
 			<table class="form-table pad">
 				<tr ng-repeat="inputMeta in sectionMeta.fields"

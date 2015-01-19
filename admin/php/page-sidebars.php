@@ -190,7 +190,7 @@
 
 	
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_SIDEBARS,'iSidebars'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SIDEBARS,'iSidebars'); ?></div>
 		
 					<!-- DELETE BUTTON -->
 					<button

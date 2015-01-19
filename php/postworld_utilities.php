@@ -1077,4 +1077,14 @@ function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 
 }
 
+
+function pw_reset_less_php_cache(){
+	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
+	$file = fopen( $ghost_less_file ,"w" );
+	fwrite($file,"// Reset PHP LESS Cache");
+	fclose($file);
+	chmod($pwGlobalsJsFile, 0755);
+	return true;
+}
+
 ?>

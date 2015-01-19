@@ -87,7 +87,7 @@
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
 		
 				</div>
 
@@ -413,7 +413,7 @@
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
 		
 					<!-- DELETE BUTTON -->
 					<button

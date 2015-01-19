@@ -41,10 +41,10 @@ postworldAdmin.controller( 'iSaveOptionCtrl',
 			};
 			
 			// Run the AJAX Function
-			$iData.i_save_option( vars ).then(
+			$iData.pw_save_option( vars ).then(
 				// Success
 				function(response) {
-					$log.debug('iData.i_save_option : RESPONSE : ', response);
+					$log.debug('iData.pw_save_option : RESPONSE : ', response);
 
 					/* ///// NOT REQUIRED /////
 					// Get the object value from the response

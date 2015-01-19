@@ -27,7 +27,7 @@
 		<div ng-repeat="type in pwStyleStructure">
 
 			<!-- SAVE BUTTON -->
-			<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES,'pwStyles'); ?></div>
+			<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_STYLES,'pwStyles'); ?></div>
 
 			<h2>
 				<i class="{{ type.icon }}"></i>
@@ -135,7 +135,7 @@
 		<!-- ////////// END VARIABLES ////////// -->
 
 		<!-- SAVE BUTTON -->
-		<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES, 'pwStyles'); ?></div>
+		<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_STYLES, 'pwStyles'); ?></div>
 
 
 		<button ng-click="resetStyleDefaults()" class="button">Reset to Defaults</button>

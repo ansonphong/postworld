@@ -35,7 +35,7 @@
 					</span>
 				<td>
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_LAYOUTS, 'iLayouts'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_LAYOUTS, 'iLayouts'); ?></div>
 
 					<?php
 						echo i_layout_single_options( array( 'context'	=>	'siteAdmin' ) );

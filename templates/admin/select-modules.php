@@ -30,7 +30,7 @@
 <div class="well" ng-controller="pwModulesCtrl" ng-init="modulesInit()">
 
 	<div class="save-right">
-		<?php i_save_option_button( PW_OPTIONS_MODULES, 'pwModules'); ?>
+		<?php pw_save_option_button( PW_OPTIONS_MODULES, 'pwModules'); ?>
 	</div>
 	<h2>
 		<i class="icon-th-large"></i>

@@ -18,8 +18,8 @@ function i_less_prepare_url( $url ){
 }
 
 // pass variables into all .less files
-add_filter( 'less_vars', 'my_less_vars', 10, 2 );
-function my_less_vars( $vars, $handle ) {
+add_filter( 'less_vars', 'pw_less_vars', 10, 2 );
+function pw_less_vars( $vars, $handle ) {
 
     ///// CACHE /////
     global $phpLessVarsCache;

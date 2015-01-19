@@ -600,6 +600,13 @@ function pwGlobals_parse(){
 	///// CURRENT USER /////
 	$pw["user"] = pw_current_user();
 
+	///// PATHS /////
+	$pw["paths"] = array(
+		'template_directory_uri'	=>	get_template_directory_uri(),
+		'stylesheet_directory_uri' 	=> get_stylesheet_directory_uri(),
+		);
+
+
 	///// GLOBAL OPTIONS /////
 	$pw["options"] = apply_filters( PW_GLOBAL_OPTIONS, array() );
 

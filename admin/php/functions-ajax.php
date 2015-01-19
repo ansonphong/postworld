@@ -10,17 +10,9 @@
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 */
 
-function i_reset_less_php_cache(){
-	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
-	$file = fopen( $ghost_less_file ,"w" );
-	fwrite($file,"// Reset PHP LESS Cache");
-	fclose($file);
-	chmod($pwGlobalsJsFile, 0755);
-	return true;
-}	
 
 //---------- SAVE OPTIONS ----------//
-function i_save_option(){
+function pw_save_option(){
 	list($response, $args, $nonce) = i_initAjaxResponse();
 	$params = $args['args'];
 	extract($params);
@@ -47,8 +39,8 @@ function i_save_option(){
 	if( defined( 'PW_OPTIONS_STYLES' ) &&
 		$option_name == PW_OPTIONS_STYLES ){
 		// Reset PHP LESS Cache
-		i_reset_less_php_cache();
-		pw_log( "RESET LESS CACHE" );
+		pw_reset_less_php_cache();
+		//pw_log( "RESET LESS CACHE" );
 	}
 
 	if( $update_option == true ){
@@ -67,7 +59,7 @@ function i_save_option(){
 }
 
 //add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
-add_action("wp_ajax_i_save_option", "i_save_option");
+add_action("wp_ajax_pw_save_option", "pw_save_option");
 
 /*
 //---------- LOAD LAYOUT OPTIONS ----------//
