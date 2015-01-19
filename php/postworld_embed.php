@@ -34,7 +34,7 @@ function pw_oembed_get( $vars = array() ){
 	// GET OEMBED
 	$oEmbed = wp_oembed_get( $vars['url'] );
 
-	pw_log( json_encode($vars) );
+	//pw_log( json_encode($vars) );
 
 	/// YOUTUBE ///
 	if (strpos($oEmbed, 'youtube') !== false) {

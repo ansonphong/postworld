@@ -175,33 +175,7 @@
 						</table>
 
 					</div>
-
-					<div class="well">
-						<!-- SAVE BUTTON -->
-						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
-						<h3><?php ___('feeds.settings.loading_icon') ?></h3>
-						<!-- DROPDOWN -->
-						<span
-							dropdown
-							class="dropdown">
-							<!-- SELECTED ITEM -->
-							<span
-								dropdown-toggle
-								class="area-select area-select-icon">
-								<i class="{{ pwFeedSettings.loading_icon }} icon-spin"></i>
-							</span>
-							<!-- MENU -->
-							<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
-								<li
-									class="select-icon"
-									ng-repeat="icon in feedSettingsOptions.loadingIcon"
-									ng-click="pwFeedSettings.loading_icon = icon">
-									<i
-										class="{{ icon }}"></i>
-								</li>
-							</ul>
-						</span>
-					</div>
+					
 
 				</div>
 

@@ -1258,6 +1258,7 @@ function detect_post_type( $post_data ){
 
 
 function pw_save_post($post_data){
+	// A catch-all post saving mechanism
 
 	extract($post_data);
 	

@@ -124,34 +124,6 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 		return $pwPostOptions.postClass( post_type );	
 	} 
 
-	///// FEED SETTINGS OPTIONS /////
-	$scope.feedSettingsOptions = {
-		'loadingIcon': [
-			'icon-spinner-1',
-			'icon-spinner-2',
-			'icon-spinner-3',
-			'icon-spinner-4',
-			'icon-spinner-5',
-			'icon-spinner-6',
-			'icon-seal-1',
-			'icon-triadic-1',
-			'icon-triadic-2',
-			'icon-triadic-3',
-			'icon-triadic-4',
-			'icon-triadic-5',
-			'icon-seed-of-life',
-			'icon-seed-of-life-fill',
-			'icon-merkaba',
-			'icon-target',
-			'icon-sun',
-			'icon-contrast',
-			'icon-loop',
-			'icon-hexagon-thick',
-			'icon-hexagon-medium',
-			'icon-hexagon-thin',
-			'icon-arrow-down-circle',
-		],
-	};
 
 	////////// POST PARENT //////////
 	$scope.selectOptionObj = function( optionValue ){
