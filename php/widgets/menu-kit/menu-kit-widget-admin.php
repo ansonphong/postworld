@@ -321,28 +321,41 @@ extract($OPTIONS);
 			<br>
 		</div>
 
-		Menu :
-		<select name="<?php echo $this->get_field_name('menu_slug'); ?>"  id="<?php echo $this->get_field_id('menu_slug'); ?>">
-			<?php
-				foreach( $menus as $menu ){?>
-					<option value="<?php echo $menu->slug; ?>" <?php if( !empty($menu_slug) && $menu_slug == $menu->slug){ echo 'selected="selected"'; }?> ><?php echo $menu->name; ?></option>
-				<?php
-				}
-			?>
-		</select>
-		<br>
+		<table>
+			<tr>
+				<td class="label">
+					Menu
+				</td>
+				<td>
+					<select name="<?php echo $this->get_field_name('menu_slug'); ?>"  id="<?php echo $this->get_field_id('menu_slug'); ?>">
+						<?php
+							foreach( $menus as $menu ){?>
+								<option value="<?php echo $menu->slug; ?>" <?php if( !empty($menu_slug) && $menu_slug == $menu->slug){ echo 'selected="selected"'; }?> ><?php echo $menu->name; ?></option>
+							<?php
+							}
+						?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					Template
+				</td>
+				<td>
+					<select name="<?php echo $this->get_field_name('menu_template'); ?>"  id="<?php echo $this->get_field_id('menu_template'); ?>">
+						<?php
+							foreach( $menu_templates as $menu_template_key => $menu_template_value ){?>
+								<option value="<?php echo $menu_template_key; ?>" <?php if( !empty($menu_template) && $menu_template == $menu_template_key){ echo 'selected="selected"'; }?> ><?php echo $menu_template_key; ?></option>
+						
+							<?php
+							}
+						?>
 
-		Template:
-		<select name="<?php echo $this->get_field_name('menu_template'); ?>"  id="<?php echo $this->get_field_id('menu_template'); ?>">
-			<?php
-				foreach( $menu_templates as $menu_template_key => $menu_template_value ){?>
-					<option value="<?php echo $menu_template_key; ?>" <?php if( !empty($menu_template) && $menu_template == $menu_template_key){ echo 'selected="selected"'; }?> ><?php echo $menu_template_key; ?></option>
-			
-				<?php
-				}
-			?>
-
-		</select>
+					</select>
+				</td>
+			</tr>
+		</table>
+		
    </div>
 
 
@@ -364,45 +377,56 @@ extract($OPTIONS);
 
 			<br>
 		</div>
-		<?php //echo "MENUS:". json_encode($menus);?>
-		Menu :
-		<select
-			name="<?php echo $this->get_field_name('menu_feed_id'); ?>"
-			id="<?php echo $this->get_field_id('menu_feed_id'); ?>">
-			
-			<?php
-				foreach( $menus as $menu ){?>
-					<option
-						value="<?php echo $menu->term_id; ?>"
-						<?php if( !empty($menu_feed_id) && $menu_feed_id == $menu->term_id){ echo 'selected="selected"'; }?>
-						>
-						<?php echo $menu->name; ?>
-					</option>
-				<?php
-				}
-			?>
-		</select>
-		<br>
 
-		View :
-		<select
-			name="<?php echo $this->get_field_name('menu_feed_view'); ?>"
-			id="<?php echo $this->get_field_id('menu_feed_view'); ?>">
-				
-				<?php foreach( $menu_views as $menu_view ):?>
-					<option
-						value="<?php echo $menu_view; ?>"
-						<?php if( !empty($menu_feed_view) && $menu_feed_view == $menu_view){ echo 'selected="selected"'; }?>
-						>
-						<?php echo $menu_view; ?>
-					</option>
-				<?php endforeach; ?>
+		<table>
+			<tr>
+				<td class="label">
+					Menu
+				</td>
+				<td>
+					<select
+						name="<?php echo $this->get_field_name('menu_feed_id'); ?>"
+						id="<?php echo $this->get_field_id('menu_feed_id'); ?>">
+						
+						<?php
+							foreach( $menus as $menu ){?>
+								<option
+									value="<?php echo $menu->term_id; ?>"
+									<?php if( !empty($menu_feed_id) && $menu_feed_id == $menu->term_id){ echo 'selected="selected"'; }?>
+									>
+									<?php echo $menu->name; ?>
+								</option>
+							<?php
+							}
+						?>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td class="label">
+					View
+				</td>
+				<td>
+					<select
+						name="<?php echo $this->get_field_name('menu_feed_view'); ?>"
+						id="<?php echo $this->get_field_id('menu_feed_view'); ?>">
+							
+							<?php foreach( $menu_views as $menu_view ):?>
+								<option
+									value="<?php echo $menu_view; ?>"
+									<?php if( !empty($menu_feed_view) && $menu_feed_view == $menu_view){ echo 'selected="selected"'; }?>
+									>
+									<?php echo $menu_view; ?>
+								</option>
+							<?php endforeach; ?>
 
-		</select>
+					</select>
+				</td>
+			</tr>
+		</table>
+
    </div>
 
 
-
 </div>
-<border-radius>
  
