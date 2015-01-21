@@ -31,22 +31,16 @@ class pw_term_feed_widget extends WP_Widget {
 	public function widget( $args, $OPTIONS ) {
 		extract( $args );
 		
-		// PULL IN DATA
-		$title = $OPTIONS['title'];
-		$show_title = $OPTIONS['show_title'];
-
-		$taxonomy = $OPTIONS['taxonomy'];
-		$template_id = $OPTIONS['template_id'];
+		$OPTIONS = apply_filters( 'pw_term_feed_widget', $OPTIONS );
 
 		////////// DRAW PAGES WIDGET //////////
 		// SHOW TITLE (?)
 			echo $before_widget;
-			if ( ! empty( $title ) && $show_title == 1 )
-				echo $before_title . $title . $after_title;
+			if ( !empty( $OPTIONS['title'] ) && $OPTIONS['show_title'] == 1 )
+				echo $before_title . $OPTIONS['title'] . $after_title;
 
 			////////// POST SHARE REPORT VIEW //////////
 			///// RENDER PAGE WIDGET /////
-			extract ($OPTIONS);
 			include 'term-feed-view.php';	
 			
 		// CLOSE
@@ -61,16 +55,12 @@ class pw_term_feed_widget extends WP_Widget {
 	 * @param array $OLD_OPTIONS Previously saved values from database.
 	 * @return array Updated safe values to be saved.
 	 */
-	public function update( $NEW_OPTIONS, $OLD_OPTIONS ) {
-		$OPTIONS = array();
-		
-		// GLOBAL SETTINGS : SAVE
-		$OPTIONS['title'] = strip_tags( $NEW_OPTIONS['title'] );
-		$OPTIONS['show_title'] = strip_tags( $NEW_OPTIONS['show_title'] );
-		
-		$OPTIONS['taxonomy'] = $NEW_OPTIONS['taxonomy'];
-		$OPTIONS['template_id'] = $NEW_OPTIONS['template_id'];
+	public function update( $OPTIONS, $OLD_OPTIONS ) {
+		$OPTIONS = apply_filters( 'pw_term_feed_widget', $OPTIONS );
 
+		// SANITIZE FIELDS
+		$OPTIONS['title'] = strip_tags( $OPTIONS['title'] );
+		$OPTIONS['show_title'] = strip_tags( $OPTIONS['show_title'] );
 		return $OPTIONS;
 	}
 
@@ -80,11 +70,29 @@ class pw_term_feed_widget extends WP_Widget {
 	 * @param array $OPTIONS Previously saved values from database.
 	 */
 	public function form( $OPTIONS ) {
+		$OPTIONS = apply_filters( 'pw_term_feed_widget', $OPTIONS );
 		include 'term-feed-admin.php';
 	}
 
 } 
 
 add_action( 'widgets_init', create_function( '', 'register_widget( "pw_term_feed_widget" );' ) );
+
+function pw_term_feed_widget_filter( $OPTIONS ){
+	///// SET DEFAULTS /////
+	if( empty( $OPTIONS['terms_number'] ) )
+		$OPTIONS['terms_number'] = 20;
+	if( empty( $OPTIONS['terms_order'] ) )
+		$OPTIONS['terms_order'] = 'DESC';
+	if( empty( $OPTIONS['terms_orderby'] ) )
+		$OPTIONS['terms_orderby'] = 'count';
+	if( empty( $OPTIONS['template_id'] ) )
+		$OPTIONS['template_id'] = 'term-feed-default';
+
+	return $OPTIONS;
+
+}
+add_filter( 'pw_term_feed_widget', 'pw_term_feed_widget_filter' );
+
 
 ?>

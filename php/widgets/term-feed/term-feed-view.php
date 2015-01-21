@@ -6,10 +6,17 @@
    |_|\___|_|  |_| |_| |_| |_|  \___|\___|\__,_|
                                                 
 /////////////// TERM FEED - VIEW ///////////////*/
+echo json_encode($OPTIONS);
+
 $print_term_feed = array(
-		'template'	=>	$template_id,
+		'template'	=>	$OPTIONS['template_id'],
 		'terms' => array(
-			'taxonomies'    =>  array( $taxonomy ),
+			'taxonomies'    =>  array( $OPTIONS['taxonomy'] ),
+			'args'          =>  array(
+				'number'	=>	$OPTIONS['terms_number'],
+				'orderby'	=>	$OPTIONS['terms_orderby'],
+				'order'		=>	$OPTIONS['terms_order'],
+				),
 			),
 		);
 echo pw_print_term_feed( $print_term_feed );
