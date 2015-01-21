@@ -96,7 +96,7 @@ extract($OPTIONS);
 					class="short"
 					id="<?php echo $this->get_field_id('terms_number'); ?>"
 					value="<?php echo $OPTIONS['terms_number']; ?>">
-					<small>: max number of terms</small>
+					<small>: maximum terms</small>
 				</td>
 			</tr>
 
