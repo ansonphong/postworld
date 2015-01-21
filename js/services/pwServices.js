@@ -1691,6 +1691,12 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-merkaba",
 					},
 					{
+						class: "icon-tag",
+					},
+					{
+						class: "icon-tags",
+					},
+					{
 						class: "icon-cloud",
 					},
 					{
@@ -1781,9 +1787,6 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 						class: "icon-ticket",
 					},
 					{
-						class: "icon-dice",
-					},
-					{
 						class: "icon-book",
 					},
 					{
@@ -1836,9 +1839,6 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 					{
 						class: "icon-wand",
-					},
-					{
-						class: "icon-pie",
 					},
 					{
 						class: "icon-stats",
@@ -1896,9 +1896,6 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 					{
 						class: "icon-gears",
-					},
-					{
-						class: "icon-gamepad",
 					},
 					{
 						class: "icon-cube",
@@ -1962,6 +1959,30 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 					{
 						class: "icon-github-circle",
+					},
+					{
+						class: "icon-facebook-square",
+					},
+					{
+						class: "icon-facebook",
+					},
+					{
+						class: "icon-twitter-square",
+					},
+					{
+						class: "icon-twitter",
+					},
+					{
+						class: "icon-instagram-square",
+					},
+					{
+						class: "icon-instagram",
+					},
+					{
+						class: "icon-pinterest-square",
+					},
+					{
+						class: "icon-pinterest",
 					},
 					{
 						class: "icon-console",

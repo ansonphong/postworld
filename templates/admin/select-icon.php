@@ -20,7 +20,7 @@
 			if( in_array( 'icomoon', $pwInject ) ){ ?>
 				<li
 					class="select-icon"
-					ng-repeat="icon in options.icon.icomoon"
+					ng-repeat="icon in ::options.icon.icomoon"
 					ng-click="<?php echo $vars['ng_model']; ?> = icon.class">
 					<i
 						class="{{ icon.class }}"></i>
@@ -31,7 +31,7 @@
 			if( in_array( 'glyphicons-halflings', $pwInject ) ){ ?>
 				<li
 					class="select-icon"
-					ng-repeat="icon in options.icon.glyphicons"
+					ng-repeat="icon in ::options.icon.glyphicons"
 					ng-click="<?php echo $vars['ng_model']; ?> = icon.class">
 					<i
 						class="{{ icon.class }}"></i>

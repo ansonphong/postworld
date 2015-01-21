@@ -165,7 +165,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 		<div  ng-show="pwMeta.header.slider.mode == 'menu'">
 			<h3><i class="icon-nav"></i> Select Menu</h3>
 			<?php
-				echo i_select_menus( array(
+				echo pw_select_menus( array(
 					'options_model'	=>	'options.menus',
 					'ng_model'	=>	'pwMeta.header.slider.menu_vars.menu_id',
 					));
@@ -177,7 +177,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 	<div class="well">
 		<h3><span class="icon-md"><i class="icon-gear"></i></span> Settings</h3>
 		<?php
-			echo i_select_slider_settings( array(
+			echo pw_select_slider_settings( array(
 				'ng_model' 	=> 'pwMeta.header.slider',
 				'show'		=>	'all',
 				'defaults'	=>	array(

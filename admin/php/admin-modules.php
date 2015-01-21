@@ -53,6 +53,10 @@ function i_select_image_favicon( $vars = array() ){
 
 ///// SELECT A MENU /////
 function i_select_menus( $vars ){
+	// DEPRECIATED
+	return pw_select_menus( $vars );
+}
+function pw_select_menus( $vars ){
 	/*
 	$vars = array(
 		'options_model' => 	[string] // Angular expression, where to store the results
@@ -64,7 +68,11 @@ function i_select_menus( $vars ){
 }
 
 ///// DOWNLOAD IMAGE /////
-function i_download_image_option( $vars = array( "context" => "quickEdit" ) ){
+function i_download_image_option( $vars ){
+	// DEPRECIATED
+	return pw_download_image_option( $vars );
+}
+function pw_download_image_option( $vars = array( "context" => "quickEdit" ) ){
 	/*
 		$vars = array(
 			'context'	=>	"quickEdit"
@@ -96,7 +104,11 @@ function i_download_image_option( $vars = array( "context" => "quickEdit" ) ){
 }
 
 ///// POST CONTENT COLUMNS /////
-function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
+function i_content_columns_option( $vars ){
+	// DEPRECIATED
+	return pw_content_columns_option( $vars );
+}
+function pw_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 
 	$vars['options_model'] = "options.post_content.columns";
 
@@ -122,6 +134,7 @@ function i_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 }
 
 function i_share_social_options(){
+	// DEPRECIATED
 	return pw_share_social_options();
 }
 function pw_share_social_options(){
@@ -145,7 +158,11 @@ function pw_select_modules(){
 }
 
 
-function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
+function i_gallery_options( $vars ){
+	// DEPRECIATED
+	return pw_gallery_options( $vars );
+}
+function pw_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 
 	//$vars['options_model'] = "options.post_content.columns";
 
@@ -169,7 +186,11 @@ function i_gallery_options( $vars = array( "context" => "quickEdit" ) ){
 	return pw_ob_admin_template( 'meta-gallery-options', $vars );
 }
 
-function i_link_url_options( $vars = array( "context" => "quickEdit" ) ){
+function i_link_url_options( $vars ){
+	// DEPRECIATED
+	return pw_link_url_options( $vars );
+}
+function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 
 	if( !isset($vars['options_model']) )
 		$vars['options_model'] = array();
@@ -335,12 +356,19 @@ function pw_feed_variable_options( $vars = array( "ng_model" => "selectedItem" )
 }
 
 ///// SELECT ICON /////
-function i_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
+function i_select_icon_options( $vars ){
+	return pw_select_icon_options( $vars );
+}
+function pw_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
 	return pw_ob_admin_template( 'select-icon', $vars );
 }
 
 
 function i_select_slider_settings( $vars ){
+	// DEPRECIATED
+	return pw_select_slider_settings( $vars );
+}
+function pw_select_slider_settings( $vars ){
 	/*
 	 *	$vars = array(
 	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'pwOptions.home.slider',
@@ -352,6 +380,10 @@ function i_select_slider_settings( $vars ){
 
 
 function i_select_blocks_settings( $vars ){
+	// DEPRECIATED
+	return pw_select_blocks_settings( $vars );
+}
+function pw_select_blocks_settings( $vars ){
 	/*
 	 *	$vars = array(
 	 *		'option_var'	=> [string]

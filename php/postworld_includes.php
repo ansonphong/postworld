@@ -12,26 +12,23 @@ function postworld_includes( $args ){
 	if( empty( $angular_version ) )
 		$angular_version = 'angular-1.3.0-beta.13';
 
-	// Injections
-	global $pwInject;
-
 	// Add injectors from Site Globals
-	$pwInject = ( isset( $pwSiteGlobals['inject'] ) ) ?
+	$pw['inject'] = ( isset( $pwSiteGlobals['inject'] ) ) ?
 		$pwSiteGlobals['inject'] : array();
 
 	// Override with injectors from $args
-	$pwInject = ( isset( $args['inject'] ) ) ?
-		$args['inject'] : $pwInject;
+	$pw['inject'] = ( isset( $args['inject'] ) ) ?
+		$args['inject'] : $pw['inject'];
 
 	// Add Additional Angular Modules
 	$pw['angularModules'] = apply_filters( 'pw_angular_modules', $pw['angularModules'] );
 
 	// Add Angular Modules to the Postworld Inject array
-	$pwInject = array_merge( $pwInject, $pw['angularModules'] );
+	$pw['inject'] = array_merge( $pw['inject'], $pw['angularModules'] );
 
 	// Add Glyphicons for Admin
 	if( is_admin() ){
-		array_push( $pwInject,
+		array_push( $pw['inject'],
 			'glyphicons-halflings'
 			);
 	}
@@ -46,7 +43,7 @@ function postworld_includes( $args ){
 	
 
 	// + MASONRY
-	if( in_array( 'masonry.js', $pwInject ) ){
+	if( in_array( 'masonry.js', $pw['inject'] ) ){
 		// MASONRY
 		wp_enqueue_script( 'Masonry-JS',
 			POSTWORLD_URI.'/lib/masonry/masonry.pkgd.min.js');		
@@ -55,17 +52,17 @@ function postworld_includes( $args ){
 	}
 
 	// + Google Maps to include before AngularJS app
-	if( in_array( 'google-maps', $pwInject ) ){
+	if( in_array( 'google-maps', $pw['inject'] ) ){
 		//array_push( $angularDep, 'google-maps' );
 	}
 
 	// + LESS Support
-	if( in_array( 'wp-less', $pwInject ) ){
+	if( in_array( 'wp-less', $pw['inject'] ) ){
 		require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
 	}
 	
 	// + Font Awesome 3
-	if( in_array( 'font-awesome-3', $pwInject ) ){
+	if( in_array( 'font-awesome-3', $pw['inject'] ) ){
 		wp_enqueue_style( 'font-awesome-3',
 			"//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" );
 			// Todo : parse from LESS
@@ -73,19 +70,19 @@ function postworld_includes( $args ){
 	}
 
 	// + ICOMOON
-	if( in_array( 'icomoon', $pwInject ) ){
+	if( in_array( 'icomoon', $pw['inject'] ) ){
 		wp_enqueue_style( 'icomoon',
 			POSTWORLD_URI.'/lib/icomoon/style.css' );
 	}
 
 	// + ICON X
-	if( in_array( 'icon-x', $pwInject ) ){
+	if( in_array( 'icon-x', $pw['inject'] ) ){
 		wp_enqueue_style( 'icon-x',
 			POSTWORLD_URI.'/lib/icon-x/icon-x.css' );
 	}
 
 	// + GLYPHICONS
-	if( in_array( 'glyphicons-halflings', $pwInject ) ){
+	if( in_array( 'glyphicons-halflings', $pw['inject'] ) ){
 		wp_enqueue_style( 'glyphicons-halflings',
 			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
 	}
@@ -279,7 +276,7 @@ function postworld_includes( $args ){
 
 
 		///// CREATE.JS /////
-		//if( in_array('create.js', $pwInject) ){	
+		//if( in_array('create.js', $pw['inject']) ){	
 		// LOCAL COMPONENT
 		wp_enqueue_script( 'Postworld-FlashCanvas',
 			POSTWORLD_URI.'/js/components/flashCanvas.js', $angularDep);
@@ -410,7 +407,7 @@ function postworld_includes( $args ){
 	}
 
 	// + GOOGLE MAPS
-	if( in_array('google-maps', $pwInject) ){
+	if( in_array('google-maps', $pw['inject']) ){
 		// GOOGLE MAPS
 		wp_enqueue_script( 'Google-Maps-API',
 			'//maps.googleapis.com/maps/api/js?sensor=false' );
@@ -420,7 +417,7 @@ function postworld_includes( $args ){
 	}
 
 	// + CALENDAR
-	if( in_array( 'ui.calendar', $pwInject ) ){
+	if( in_array( 'ui.calendar', $pw['inject'] ) ){
 		// Full Calendar
 		wp_enqueue_script( 'Full-Calendar-Moment-JS',
 			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/moment.min.js' );
@@ -638,8 +635,7 @@ function pwGlobals_parse(){
 	$pw['language'] = $pw_settings['language'];
 
 	///// INJECTIONS /////
-	global $pwInject;
-	$pw['inject'] = $pwInject;
+	//$pw['inject'] = $pw['inject'];
 
 	///// URL QUERY VARS /////
 	$pw['url_vars'] = $_GET;
@@ -667,8 +663,9 @@ add_action( 'wp', 'parse_postworld_globals', 10, 2 );
 
 
 function pw_injections(){
-	global $pwInject;
-	return $pwInject;
+	//global $pw['inject'];
+	global $pw;
+	return $pw['inject'];
 }
 
 //////////// ADMIN GLOBALS ////////////
