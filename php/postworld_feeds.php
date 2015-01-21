@@ -63,8 +63,6 @@ function pw_live_feed( $vars = array() ){
 	global $post;
 	global $pw;
 
-
-
 	// Run filters on the feed vars
 	$vars = apply_filters( 'pw_feed', $vars );
 

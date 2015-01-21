@@ -16,9 +16,9 @@ function pw_current_context(){
 		$context[] = 'home';
 
 	if( is_archive() )
-		$context[] = 'archive'; 	
+		$context[] = 'archive';
 
-	if( is_tax() || is_tag() )
+	if( is_tax() || is_tag() || is_category() )
 		$context[] = 'archive-taxonomy';
 
 	if( is_post_type_archive() )
