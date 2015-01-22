@@ -6,7 +6,7 @@
    |_|\___|_|  |_| |_| |_| |_|  \___|\___|\__,_|
                                                 
 /////////////// TERM FEED - VIEW ///////////////*/
-echo json_encode($OPTIONS);
+//echo json_encode($OPTIONS);
 
 $print_term_feed = array(
 		'template'	=>	$OPTIONS['template_id'],

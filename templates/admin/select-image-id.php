@@ -1,4 +1,5 @@
 <button
+	type="button"
 	class="button button-primary"
 	wp-media-library
 	media-id="setImage"
