@@ -15,7 +15,7 @@ function pw_get_current_layout(){
 	$layout = false;
 
 	// Get layouts
-	$pwLayouts = i_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) );
+	$pwLayouts = pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) );
 
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
 	// Check for layout override in : post_meta.pw_meta.layout
@@ -43,8 +43,16 @@ function pw_get_current_layout(){
 
 	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
 	if( !$layout || $layout['template'] == 'default' ){ //  || $layout['layout'] == 'default'
-		$layout = pw_get_obj( $pwLayouts, 'default' );
+
+		// Get from 'default' option setting
+		if( !empty( $pwLayouts ) )
+			$layout = pw_get_obj( $pwLayouts, 'default' );
+		// Get from theme filter
+		else
+			$layout = apply_filters( 'pw_default_layout', array() );
+
 		$layout['source'] = 'default';
+
 	}
 
 	// FILL IN DEFAULT VALUES

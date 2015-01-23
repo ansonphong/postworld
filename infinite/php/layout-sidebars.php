@@ -223,7 +223,9 @@ function pw_print_layout( $vars ){
 		);
 	$vars = array_replace_recursive( $vars_defaults, $vars );
 
-	//echo json_encode($pw['layout']);
+
+
+	pw_log( json_encode($vars['layout']));
 
 	///// TEMPLATES ////
 	$subdir = 'layouts';
@@ -234,7 +236,6 @@ function pw_print_layout( $vars ){
 			'ext'=>'php',
 			)
 		)[$subdir];
-
 
 	///// INCLUDE TEMPLATE /////
 	$template_path = $layout_templates[ $vars['template'] ];
