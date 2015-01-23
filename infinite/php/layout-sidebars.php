@@ -1,32 +1,43 @@
 <?php
 /////////////// LAYOUT & SIDEBAR FUNCTIONS ///////////////
+function pw_header_footer( $template = 'header' ){
+	// TODO : See why this is being instantiated 3 times, by index.php, home.php and single.php
+	global $pw;
+	// Get the set template ID
+	$template_id = _get( $pw, 'layout.'.$template.'.id' );
+	// If the template ID is empty, or not set, or default
+	if( empty( $template_id ) )
+		// Set it to the default template ID
+		$template_id = _get( $pw, 'layouts.default.'.$template.'.id' );
+	// If no default template is set
+	if( empty( $template_id ) ){
+		// Get the default layout
+		$default_layout = apply_filters( 'pw_default_layout', array() );
+		$template_id = _get( $default_layout, $template.'.id' );
+	}
+	// Get Templates
+	$templates = pw_get_templates( array(
+		'subdirs'	=>	array('header','footer'),
+		'path_type'	=>	'dir',
+		'ext'		=>	'php',
+		));
+	// Get the template path
+	$template_path = _get( $templates, $template.'.'.$template_id );
+	// If a template path exists
+	if( !empty( $template_path ) )
+		// Include the template
+		include $template_path;
+}
+
+
 
 // Insert the Header
 function i_header(){
 	// DEPRECIATED : use pw_header()
 	pw_header();
 }
-
 function pw_header( $debug = 'default' ){
-	// TODO : See why this is being instantiated 3 times, by index.php, home.php and single.php
-
-	//pw_log( 'pw_header : '. $debug );
-
-	iGlobals();
-	global $iGlobals;
-	
-	// Get the set header ID
-	$header_id = i_get_obj( $iGlobals, 'layout.header.id' );
-	// If the header ID is empty, or not set, or default
-	if( empty( $header_id ) )
-		// Set it to the default header ID
-		$header_id = i_get_obj( $iGlobals, 'layouts.default.header.id' );
-
-	// Get Templates
-	$templates = i_get_templates();
-
-	if( !empty( $templates['header'][$header_id] ) )
-		include $templates['header'][$header_id];
+	pw_header_footer('header');
 }
 
 // Insert the Footer
@@ -35,21 +46,7 @@ function i_footer(){
 	pw_footer();
 }
 function pw_footer(){
-	iGlobals();
-	global $iGlobals;
-
-	// Get the set footer ID
-	$footer_id = i_get_obj( $iGlobals, 'layout.footer.id' );
-	// If the footer ID is empty, or not set, or default
-	if( empty( $footer_id ) )
-		// Set it to the default footer ID
-		$footer_id = i_get_obj( $iGlobals, 'layouts.default.footer.id' );
-
-	// Get Templates
-	$templates = i_get_templates();
-	
-	if( !empty( $templates['footer'][$footer_id] ) )
-		include $templates['footer'][$footer_id];
+	pw_header_footer('footer');
 }
 
 
