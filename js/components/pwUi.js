@@ -80,7 +80,13 @@ postworld.controller( 'pwUiCtrl',
 
 	$scope.uiBool = function( val ){
 		// If the value is truthy and not empty, return true
-		var bool = ( Boolean( val ) && !_.isEmpty( val ) ) ? true : false;
+		var bool = ( Boolean( val ) ) ? true : false;
+		// If it's an empty object
+		if( _.isObject( val ) && _.isEmpty( val ) )
+			return false;
+		// If it's an empty string
+		if( _.isString( val ) && _.isEmpty( val ) )
+			return false;
 		return bool; 
 	}
 

@@ -913,7 +913,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 		number
 		*/
 
-
 	///// ADD ACTION HOOK : PW GET POST COMPLETE /////
 		do_action( 'pw_get_post_complete',
 			array(
@@ -924,9 +923,8 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 				)
 			);
 
+	///// FILTERS /////
 	$post = apply_filters( 'pw_get_post_complete_filter', $post );
-	
-
 
 	return $post;
 

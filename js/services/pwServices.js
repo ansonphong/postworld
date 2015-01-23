@@ -506,7 +506,6 @@ postworld.factory('pwPosts',
 
 		// Set the new posts into the feed
 		$pwData.feeds[feedId].posts = newPosts;
-
 		return true;
 		
 	};
@@ -517,7 +516,7 @@ postworld.factory('pwPosts',
     		if( post == false )
     			return false;
     		// Deep merge the new data with the post
-    		post = deepmerge( post, mergePost );
+    		post = array_replace_recursive( post, mergePost );
     		// Update the post
     		return updateFeedPost( feedId, postId, post );
     };
