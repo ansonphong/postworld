@@ -223,10 +223,6 @@ function pw_print_layout( $vars ){
 		);
 	$vars = array_replace_recursive( $vars_defaults, $vars );
 
-
-
-	pw_log( json_encode($vars['layout']));
-
 	///// TEMPLATES ////
 	$subdir = 'layouts';
 	$layout_templates = pw_get_templates(
