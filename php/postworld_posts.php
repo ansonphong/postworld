@@ -598,10 +598,21 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 					// Get Image ID
 					elseif( $image_handle == 'id' ){
 						$post['thumbnail_id']= $thumbnail_id;
-
 					}
 
-				} 
+					
+
+				}
+				elseif(
+					count($image_attributes) == 2 &&
+					$image_attributes[0] == 'post' &&
+					is_numeric($thumbnail_id) ){
+
+					// Get the post and deposit into post.image.post
+					// With the second image attribute representing the field model handle (micro,preview,full,etc)
+					$post['image']['post'] = pw_get_post( $thumbnail_id, $image_attributes[1] );
+
+				}
 				///// CUSTOM IMAGE SIZES /////
 				// If image attributes contains custom height and width parameters
 				else {

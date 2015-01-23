@@ -135,6 +135,7 @@ function pw_post_field_model(){
 	$field_model['all'] = array_merge(
 		$field_model['detail'],
 		array(
+			'image(post,micro)',	// (post, [ preset field handle ]) Gets the image post data as post.image.post
 			'parent_post(micro)',				// Gets the parent post as post_parent : parent_post( [field model] )
 			'child_post_count',					// Gets the number of posts which have this post as a parent
 			'child_posts_comment_count',		// Gets the sum of all comment counts on all child posts
