@@ -23,7 +23,7 @@
 			///// TEXT INPUT /////
 			case 'text-input': ?>
 				<tr>
-					<td>
+					<td valign="top">
 						<i class="<?php echo $field['icon']; ?>"></i>
 						<b><?php echo $field['label']; ?></b>
 						<?php if( !empty( $field['description'] ) ): ?>
@@ -47,7 +47,7 @@
 			///// TEXT INPUT /////
 			case 'image-id': ?>
 				<tr>
-					<td>
+					<td valign="top">
 						<i class="<?php echo $field['icon']; ?>"></i>
 						<b><?php echo $field['label']; ?></b>
 						<?php if( !empty( $field['description'] ) ): ?>
@@ -56,24 +56,22 @@
 					</td>
 					<td
 						width="75%">
-						
-						//////////
-						Image Input Here
-						//////////
-						Use WP MediaLibrary Directive, use callback to 
-
+						<?php
+							echo pw_select_image_id( array( 
+								'ng_model'		=>	'fields.'.$meta_key.'.meta_value',
+								'slug'			=>	'image_'.$meta_key,
+								'label'			=>	'Image',
+								'width'			=>	'250px',
+							 	));?>
 					</td>
 				</tr>
 			<?php break; ?>
-
-
 
 		<?php endswitch; ?>
 
 	<?php endforeach; ?>
 </table>
 
-<pre>{{ fields | json }}</pre>
-
+<!--<pre>{{ fields | json }}</pre>-->
 <input type="hidden" name="pw_wp_postmeta_fields" value="{{ fields | json }}">
 <!-- <?php echo json_encode( $fields );?> -->
