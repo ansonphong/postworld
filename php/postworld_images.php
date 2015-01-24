@@ -5,6 +5,265 @@
 $aq_resizer_include = POSTWORLD_PATH.'/lib/wordpress/aq_resizer.php';
 include_once $aq_resizer_include;
 
+////////// GET POST IMAGE //////////
+/**
+ * Add image data field.
+ *
+ * @param 	array 	$post 			- Post Array
+ * @param 	array 	$fields 		- Postworld fields array
+ * @param 	number 	$thumbnail_id 	- (Optional) Thumbnail ID Override
+ * @return 	array 	Post image array $post['image']
+ */
+function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
+
+	// Extract image() fields
+	$images = extract_fields( $fields, 'image' );
+	
+	// Check if there are images to process
+	if( empty($images) )
+		return false;
+	
+	// Localize Post ID
+	$post_id = $post['ID'];
+
+	// Setup Post Image Array
+	$post['image'] = array();
+
+	///// GET IMAGE TO USE /////
+	// Setup Thumbnail Image Variables
+	if( !empty( $thumbnail_id ) &&
+		is_numeric( $thumbnail_id ) &&
+		$thumbnail_id != 0 ){
+		$thumbnail_id = (int) $thumbnail_id;
+	}
+	elseif( $post['post_type'] == 'attachment' ){
+		// Handle Attachment Post Types
+		$thumbnail_id = $post_id;
+	} else{
+		// Handle Posts
+		$thumbnail_id = get_post_thumbnail_id( $post_id );
+	}
+
+	// If there is a set 'featured image' set the $thumbnail_url
+	if ( $thumbnail_id ){
+		$thumbnail_url = wp_get_attachment_url( $thumbnail_id ,'full');
+
+	}
+	// If there is no set 'featured image', get fallback - first image in post
+	else {
+		$first_image_obj = first_image_obj( $post_id );
+		// If there is an image in the post
+		if ($first_image_obj){
+			$thumbnail_url = $first_image_obj['url'];
+		}
+		/*
+		// If there is no image in the post, set fallbacks
+		else {
+			///// DEFAULT FALLBACK IMAGES /////
+
+			// SETUP DEFAULT IMAGE FILE NAMES : ...jpg
+			$link_format =  get_post_format( $post_id );
+			$default_type_format_thumb_filename = 	'default-'.$post['post_type'].'-'.$link_format.'-thumb.jpg';
+			$default_format_thumb_filename = 		'default-'.$link_format.'-thumb.jpg';
+			$default_thumb_filename = 				'default-thumb.jpg';
+
+			// SETUP DEFAULT IMAGE PATHS : /home/user/...
+			$theme_images_dir = 				$pw_paths['THEME_PATH'].$pw_paths['IMAGES_PATH'];
+			$default_type_format_thumb_path = 	$theme_images_dir . $default_type_format_thumb_filename;
+			$default_format_thumb_path = 		$theme_images_dir . $default_format_thumb_filename;
+			$default_thumb_path = 				$theme_images_dir . $default_thumb_filename;
+			
+			// SETUP DEFAULT IMAGE urlS : http://...
+			$theme_images_url = 				$pw_paths['THEME_URL'].$pw_paths['IMAGES_PATH'];
+			$default_type_format_thumb_url = 	$theme_images_url . $default_type_format_thumb_filename;
+			$default_format_thumb_url = 		$theme_images_url . $default_format_thumb_filename;
+			$default_thumb_url = 				$theme_images_url . $default_thumb_filename;
+			
+			// SET DEFAULT POST *TYPE + FORMAT* IMAGE PATH
+			if ( file_exists( $default_type_format_thumb_path ) ) {
+				$thumbnail_url = $default_type_format_thumb_url;
+			}
+			// SET DEFAULT POST *FORMAT* IMAGE PATH
+			elseif ( file_exists( $default_format_thumb_path ) ) {
+				$thumbnail_url = $default_format_thumb_url;
+			}
+			// SET DEFAULT POST IMAGE PATH
+			elseif ( file_exists( $default_thumb_path ) ) {
+				$thumbnail_url = $default_thumb_url;
+			}
+			// SET DEFAULT POST IMAGE PATH TO PLUGIN DEFAULT
+			else{
+				$thumbnail_url = $pw_paths['PLUGINS_URL'].$pw_paths['IMAGES_PATH'].$default_thumb_filename;
+			}
+
+		} // END else
+		*/
+
+	}// END else
+
+
+	///// PROCESS IMAGES /////
+	// Load in registered images attributes
+	$registered_images_obj = registered_images_obj();
+	$post['image']['sizes'] = array();
+
+	// Process each $image one at a time >> image(name,300,200,1) 
+	foreach ($images as $image) {
+
+		// Extract image attributes from parenthesis
+			$image_attributes = extract_parenthesis_values($image, true);
+
+		// Set $image_handle to name of requested image
+		$image_handle = $image_attributes[0];
+
+		///// REGISTERED IMAGE SIZES /////
+		// If image attributes contains only a handle
+		if ( count($image_attributes) == 1 ){
+
+			// FULL : Get 'full' image
+			if ( $image_handle == 'full' || $image_handle == 'all' ) {
+				$image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
+				$post['image']['sizes']['full']['url']	= $thumbnail_url;
+				$post['image']['sizes']['full']['width'] = (int)$image_obj['width'];
+				$post['image']['sizes']['full']['height'] = (int)$image_obj['height'];
+			}
+
+			// ALL : Get all registered images
+			if( $image_handle == 'all' ) {
+				$registered_images = registered_images_obj();
+
+				foreach( $registered_images as $image_handle => $image_attributes ){
+					//$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_handle );
+					$image_src = wp_get_attachment_image_src( $thumbnail_id, $image_handle );
+					$registered_images[$image_handle]["url"] = $image_src[0];
+					$registered_images[$image_handle]["width"] = $image_src[1];
+					$registered_images[$image_handle]["height"] = $image_src[2];
+					$registered_images[$image_handle]["hard_crop"] = $image_src[3];
+					$post['image']['sizes'] = array_merge( $post['image']['sizes'], $registered_images );
+				}
+			}
+
+			// HANDLE : Get registered image
+			// If it is a registered image format
+			elseif( array_key_exists($image_handle, $registered_images_obj) ) {
+				$image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
+				$post['image']['sizes'][$image_handle]['url']	= $image_obj['url'];
+				$post['image']['sizes'][$image_handle]['width'] = (int)$image_obj['width'];
+				$post['image']['sizes'][$image_handle]['height'] = (int)$image_obj['height'];
+			}
+
+			// META : Get Image Meta Data
+			elseif( $image_handle == 'meta' && is_numeric($thumbnail_id) ){
+				$post['image']['meta'] = wp_get_attachment_metadata($thumbnail_id);
+
+				// Get the actual file URLS and inject into the object
+				if( isset($post['image']['meta']) && is_array($post['image']['meta']) ){
+					
+					foreach( $post['image']['meta']['sizes'] as $key => $value ){
+						$image_size_meta = wp_get_attachment_image_src( $thumbnail_id, $key );
+						$post['image']['meta']['sizes'][$key]['url'] = $image_size_meta[0];
+					}
+				}
+
+			}
+
+			elseif( $image_handle == 'tags' && is_numeric($thumbnail_id) ){
+
+				// Get Image Meta Data
+				if( isset( $post['image']['meta'] ) ){
+					// If it already has been queried, get fro post object
+					$image_meta = $post['image']['meta'];
+				} else if( !isset( $image_meta ) ){
+					// Otherwise get from database
+					$image_meta = wp_get_attachment_metadata($thumbnail_id);
+				}
+
+				// Image Tags Object
+				// Threshold Format as ['Tags'] : 'square' / 'wide' / 'tall' / 'x-wide' / 'x-tall' , etc.
+				
+				if( isset($image_meta) && gettype($image_meta) == 'array' )
+					$image_tags = pw_generate_image_tags( array(
+							"width" => $image_meta['width'],
+							"height" => $image_meta['height'],
+							)
+						);
+				else
+					$image_tags = array();
+
+				$post['image']['tags'] = $image_tags;
+
+			}
+
+			// STATS : Get Image Stats
+			elseif( $image_handle == 'stats' && is_numeric($thumbnail_id) ){
+				
+				// Get Image Meta Data
+				if( isset( $post['image']['meta'] ) ){
+					// If it already has been queried, get fro post object
+					$image_meta = $post['image']['meta'];
+				} else if( !isset( $image_meta ) ){
+					// Otherwise get from database
+					$image_meta = wp_get_attachment_metadata( $thumbnail_id );
+				}
+
+				// Calculate Image Ratios
+				if( gettype($image_meta) == 'array' )
+					$image_stats = array(
+						"width" => 	$image_meta['width'],
+						"height" => $image_meta['height'],
+						"area"	=>	$image_meta['width'] * $image_meta['height'],
+						"ratio"	=>	$image_meta['width'] / $image_meta['height']
+						);
+				else
+					$image_stats = array();
+
+				// TODO : Add "2:1 / 4:3 / etc" format
+			
+				// Set Stats in Post Object
+				$post['image']['stats'] = $image_stats;
+
+			}
+
+			// Get Image ID
+			elseif( $image_handle == 'id' ){
+				$post['thumbnail_id']= $thumbnail_id;
+			}
+
+		}
+		elseif(
+			count($image_attributes) == 2 &&
+			$image_attributes[0] == 'post' &&
+			is_numeric($thumbnail_id) ){
+
+			// Get the post and deposit into post.image.post
+			// With the second image attribute representing the field model handle (micro,preview,full,etc)
+			$post['image']['post'] = pw_get_post( $thumbnail_id, $image_attributes[1] );
+
+		}
+		///// CUSTOM IMAGE SIZES /////
+		// If image attributes contains custom height and width parameters
+		else {
+			// Set image attributes
+			$thumb_width = $image_attributes[1];
+			$thumb_height = $image_attributes[2];
+			$hard_crop = $image_attributes[3];
+			if ( !$hard_crop )
+				$hard_crop = 1;
+
+			// Process custom image size, return url
+			$post['image']['sizes'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+			$post['image']['sizes'][$image_handle]['width'] = (int)$thumb_width;
+			$post['image']['sizes'][$image_handle]['height'] = (int)$thumb_height;
+		}
+
+	} // END foreeach
+
+	return $post['image'];
+
+}
+
+
+
 
 function pw_featured_image_post( $post_id = null, $fields = 'preview' ){
 	global $post;
