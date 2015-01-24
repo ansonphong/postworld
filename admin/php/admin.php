@@ -205,7 +205,6 @@ $i_layouts_model = array(
 	);
 
 
-
 ///// ADMIN SCRIPTS /////
 // Scripts which are inserted into the header in the admin
 // These contain globals accessible by the JS window object
@@ -231,8 +230,7 @@ function postworld_admin_icon_styles(){
 	?>
 	<style>
 		#toplevel_page_postworld .dashicons-before:before{
-			/*content: "\e6ff";*/
-			content: "\e700";
+			content: "\e612";
 			font-family: "icomoon"
 		}
 	</style>

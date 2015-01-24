@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?yf2fy5');
-	src:url('fonts/icomoon.eot?#iefixyf2fy5') format('embedded-opentype'),
-		url('fonts/icomoon.woff?yf2fy5') format('woff'),
-		url('fonts/icomoon.ttf?yf2fy5') format('truetype'),
-		url('fonts/icomoon.svg?yf2fy5#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?-ue290u');
+	src:url('fonts/icomoon.eot?#iefix-ue290u') format('embedded-opentype'),
+		url('fonts/icomoon.woff?-ue290u') format('woff'),
+		url('fonts/icomoon.ttf?-ue290u') format('truetype'),
+		url('fonts/icomoon.svg?-ue290u#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -59,6 +59,10 @@
 	content: "\e6c4";
 }
 
+.icon-postworld:before {
+	content: "\e612";
+}
+
 .icon-instagram:before {
 	content: "\e6d9";
 }
@@ -107,8 +111,16 @@
 	content: "\e61d";
 }
 
+.icon-facebook:before {
+	content: "\e61e";
+}
+
 .icon-twitter-square:before {
 	content: "\e64e";
+}
+
+.icon-twitter:before {
+	content: "\e64f";
 }
 
 .icon-seal-1:before {
@@ -941,14 +953,6 @@
 
 .icon-console:before {
 	content: "\e6c3";
-}
-
-.icon-facebook:before {
-	content: "\e6c5";
-}
-
-.icon-twitter:before {
-	content: "\e6c7";
 }
 
 .icon-github:before {
