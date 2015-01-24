@@ -32,11 +32,30 @@
 						
 						<input
 							type="text"
-							name="pw_wp_postmeta_<?php echo $field['meta_key'] ?>"
+							name="pw_wp_postmeta[<?php echo $field['meta_key'] ?>]"
 							placeholder="<?php echo $field['placeholder'] ?>"
 							value="<?php echo $field['meta_value'] ?>"
 							style="width:100%">
 							
+					</td>
+				</tr>
+			<?php break; ?>
+
+			<?php
+			///// TEXT INPUT /////
+			case 'image-id': ?>
+				<tr>
+					<td>
+						<i class="<?php echo $field['icon']; ?>"></i>
+						<?php echo $field['label']; ?>
+					</td>
+					<td
+						width="75%">
+						
+						//////////
+						Image Input Here
+						//////////
+						
 					</td>
 				</tr>
 			<?php break; ?>
