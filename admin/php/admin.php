@@ -28,7 +28,7 @@ function postworld_admin_menu(){
 			'menu_slug' => $pw_slug,
 			'function' => 'postworld_postworld_modules',
 			//'icon_url' => '',//plugins_url( $migration_admin_folder.'/images/logo/pw_symbol-16.png' ),
-			'menu_icon'	=>	'dashicons-art',
+			'menu_icon'	=>	'dashicons-admin-generic',
 			'position' => ''
 			),
 
@@ -221,6 +221,20 @@ function i_admin_scripts(){
 	//]]>
 	</script>
   <?php
+}
+
+///// ADMIN STYLES /////
+add_action('admin_print_styles', 'postworld_admin_icon_styles');
+function postworld_admin_icon_styles(){
+	?>
+	<style>
+		#toplevel_page_postworld .dashicons-before:before{
+			/*content: "\e6ff";*/
+			content: "\e700";
+			font-family: "icomoon"
+		}
+	</style>
+	<?
 }
 
 ?>
