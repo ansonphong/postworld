@@ -1,6 +1,6 @@
 <table
 	width="100%">
-	<?php foreach( $fields as $field ) : ?>
+	<?php foreach( $fields as $meta_key => $field ) : ?>
 
 		<?php
 		switch( $field['type'] ):
@@ -25,7 +25,10 @@
 				<tr>
 					<td>
 						<i class="<?php echo $field['icon']; ?>"></i>
-						<?php echo $field['label']; ?>
+						<b><?php echo $field['label']; ?></b>
+						<?php if( !empty( $field['description'] ) ): ?>
+							<br><small><?php echo $field['description']; ?></small>
+						<?php endif; ?>
 					</td>
 					<td
 						width="75%">
@@ -34,9 +37,8 @@
 							type="text"
 							name="pw_wp_postmeta[<?php echo $field['meta_key'] ?>]"
 							placeholder="<?php echo $field['placeholder'] ?>"
-							value="<?php echo $field['meta_value'] ?>"
+							ng-model="fields.<?php echo $meta_key ?>.meta_value"
 							style="width:100%">
-							
 					</td>
 				</tr>
 			<?php break; ?>
@@ -47,7 +49,10 @@
 				<tr>
 					<td>
 						<i class="<?php echo $field['icon']; ?>"></i>
-						<?php echo $field['label']; ?>
+						<b><?php echo $field['label']; ?></b>
+						<?php if( !empty( $field['description'] ) ): ?>
+							<br><small><?php echo $field['description']; ?></small>
+						<?php endif; ?>
 					</td>
 					<td
 						width="75%">
@@ -55,7 +60,8 @@
 						//////////
 						Image Input Here
 						//////////
-						
+						Use WP MediaLibrary Directive, use callback to 
+
 					</td>
 				</tr>
 			<?php break; ?>
@@ -67,5 +73,7 @@
 	<?php endforeach; ?>
 </table>
 
-<input type="hidden" name="pw_wp_postmeta_fields" value='<?php echo json_encode( $fields );?>'>
+<pre>{{ fields | json }}</pre>
 
+<input type="hidden" name="pw_wp_postmeta_fields" value="{{ fields | json }}">
+<!-- <?php echo json_encode( $fields );?> -->

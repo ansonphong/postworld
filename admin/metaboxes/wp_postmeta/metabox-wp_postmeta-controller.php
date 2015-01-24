@@ -15,6 +15,9 @@ global $post;
 <div id="pwWpPostmetaMetabox" class="postworld pw-metabox metabox-wp-postmeta">
 	<div ng-controller="pwWpPostmetaMetaboxCtrl">
 		
+
+		<?php include $metabox_template; ?>
+
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="pw_post_wp_postmeta" ng-value="wpPostmetaPost | json" style="width:100%;">
 		
@@ -35,13 +38,10 @@ global $post;
 	pwWpPostmetaMetabox.controller('pwWpPostmetaMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
-
 			// This is the post object which is saved
 			$scope.wpPostmetaPost = <?php echo json_encode( $pw_postmeta_post ); ?>;
-			
 			// The input fields to add
 			$scope.fields = <?php echo json_encode( $fields ); ?>;
-
 	}]);
 	
 </script>

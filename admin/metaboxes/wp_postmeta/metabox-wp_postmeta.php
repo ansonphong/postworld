@@ -86,8 +86,6 @@ function pw_metabox_init_wp_postmeta(){
 
     } // End Foreach : Setting
 
-    
-
 }
 
 ////////////// CREATE UI //////////////
@@ -96,12 +94,15 @@ function pw_wp_postmeta_ui( $post, $vars ){
     global $pwSiteGlobals;
 
     // Unpack fields into variable
-    $fields = _get( $vars, 'args.fields' );
+    $fieldsSrc = _get( $vars, 'args.fields' );
 
     // Populate previously saved postmeta into fields array
-    for( $i=0; $i<count($fields); $i++ ){
+    $fields = array();
+
+    for( $i=0; $i<count($fieldsSrc); $i++ ){
+
         // Localize the current field
-        $field = $fields[$i];
+        $field = $fieldsSrc[$i];
         // Get the meta key
         $meta_key = _get( $field, 'meta_key' );
         // If it's empty, continue
@@ -110,13 +111,19 @@ function pw_wp_postmeta_ui( $post, $vars ){
         // Get the meta value
         $meta_value = get_post_meta( $post->ID, $meta_key, true );
         // Populate the model with the meta value
-        $fields[$i]['meta_value'] = $meta_value;
+        $field['meta_value'] = $meta_value;
+
+        // Restructure Fields Array, from array into object
+        // Using the meta_key as the primary key
+        $fields[$meta_key] = $field;
+
     }
 
 	///// INCLUDE TEMPLATE /////
     // Include the UI template
     $metabox_template = pw_get_template ( 'admin', 'metabox-wp-postmeta', 'php', 'dir' );
-    include $metabox_template;
+    
+    include 'metabox-wp_postmeta-controller.php';
 
 }
 
@@ -135,19 +142,12 @@ function pw_wp_postmeta_meta_save( $post_id ){
     if( empty($fields) )
         return $post_id;
 
-    ///// COLLECT POSTMETA /////
-    $postmeta = $_POST['pw_wp_postmeta'];
-
-    // Return Early if there is no postmeta
-    if( empty( $postmeta ) )
-         return $post_id;
-
     ///// SAVE POSTMETA /////
-    foreach( $postmeta as $meta_key => $meta_value ){
+    foreach( $fields as $meta_key => $field ){
         // Update Post Meta
-        update_post_meta( $post_id, $meta_key, $meta_value );
+        update_post_meta( $post_id, $meta_key, $field['meta_value'] );
         // If the value is provided and empty
-        if( is_string( $meta_value ) && empty( $meta_value ) )
+        if( is_string( $meta_value ) && empty( $field['meta_value'] ) )
             // Delete post meta
             delete_post_meta( $post_id, $meta_key );
     }
