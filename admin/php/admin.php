@@ -10,12 +10,14 @@ include 'functions-ajax.php';
 include 'style-model.php';
 include 'social-model.php';
 
-
 ////////// THEME OPTIONS //////////
 global $theme_admin;
 global $pw;
 
 function postworld_admin_menu(){
+	// TODO : Make the $pw_slug filterable
+	// So that themes can re-map the postworld options under the theme main menu
+
 	global $pw;	
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];
