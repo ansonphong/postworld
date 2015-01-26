@@ -153,7 +153,7 @@ function pw_view_query( $view ){
 
 	/// DATE ARCHIVE ///
 	if( in_array( 'archive-date', $view['context'] ) ){
-
+		
 	}
 	
 	/// POST TYPE ARCHIVE ///
@@ -161,7 +161,6 @@ function pw_view_query( $view ){
 		$post_type = _get( $pw, 'view.post_type.name' );
 		$query['post_type'] = $post_type;
 	}
-
 
 	/// TAXONOMY ARCHIVE ///
 	if( in_array( 'archive-taxonomy', $view['context'] ) ){
@@ -207,53 +206,63 @@ function pw_get_view_meta( $context = array() ){
 		$post_type = $post->post_type;
 		$post_type_obj = get_post_type_object( $post_type );
 		$meta['post_type'] = $post_type_obj;
+		$meta['title'] = $post->post_title;
 	}
-
 
 	////// ARCHIVE /////
 	if( in_array( 'archive', $context ) ){
-
-		// Check Context
-		//$taxonomy = get_query_var( 'taxonomy' );
 
 		/// POST TYPE ///
 		if( in_array( 'archive-post-type', $context ) ){
 			$post_type = get_query_var( 'post_type' );
 			$post_type_obj = get_post_type_object( $post_type );
 			$meta['post_type'] = $post_type_obj;
-		}
-
-		///// TAG /////
-		else if( in_array( 'tag', $context ) ){
-			// Get the tag
-			$taxonomy = 'post_tag';
-			$tag_slug = get_query_var( 'tag' );
-			$meta['term'] = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
-			$meta['term']['url'] = get_term_link( $tag_slug, $taxonomy );
-			$meta['taxonomy'] = get_taxonomy( 'post_tag' );
-		}
-
-		///// CATEGORY /////
-		else if( in_array( 'category', $context ) ){
-			// Get the tag
-			$taxonomy = 'category';
-			$tag_slug = get_query_var( 'category_name' );
-			$meta['term'] = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
-			$meta['term']['url'] = get_term_link( $tag_slug, $taxonomy );
-			$meta['taxonomy'] = get_taxonomy( 'category' );
+			$meta['title'] = $post_type_obj->labels->name;
 		}
 
 		/// TAXONOMY ///
-		else if( in_array( 'archive-taxonomy', $context ) ){
+		// Get term data, with exception handling for tags and categories
+		else if(
+			in_array( 'archive-taxonomy', $context ) || 
+			in_array( 'category', $context ) ||
+			in_array( 'tag', $context )
+			){
 
-			$taxonomy = get_query_var( 'taxonomy' );
-			$term_id = get_queried_object()->term_id;
-			$term = (array) get_term( $term_id, $taxonomy );
+			// TAG
+			// Exception handling for tag terms
+			if( in_array( 'tag', $context ) ){
+				$taxonomy = 'post_tag';
+				$tag_slug = get_query_var( 'tag' );
+				$term = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
+			}
+
+			// CATEGORY
+			// Exception handling for category terms
+			elseif( in_array( 'category', $context ) ){
+				$taxonomy = 'category';
+				$tag_slug = get_query_var( 'category_name' );
+				$term = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
+			}
+
+			// OTHER/CUSTOM TAXONOMIES
+			else{
+				$taxonomy = get_query_var( 'taxonomy' );
+				$term_id = get_queried_object()->term_id;
+				$term = get_term( $term_id, $taxonomy, 'ARRAY_A' );
+			}
+
+			// Set term in meta
 			$meta['term'] = $term;
+
+			// Term URL
 			$meta['term']['url'] = get_term_link( intval($term_id) , $taxonomy );
+
 			// Taxonomy Object
 			$taxonomy_obj = get_taxonomy( $taxonomy );
 			$meta['taxonomy'] = $taxonomy_obj;
+
+			// View Title
+			$meta['title'] = $taxonomy_obj->labels->singular_name . ' : ' . $meta['term']['name'];
 
 			// If parent term exists
 			if( $term['parent'] != 0 ){
@@ -262,6 +271,14 @@ function pw_get_view_meta( $context = array() ){
 				$meta['term']['parent']['url'] = get_term_link( intval($term_parent['term_id']) , $taxonomy );
 			}
 
+		}
+
+		/// AUTHOR ///
+		else if( in_array( 'author', $context ) ){
+			///// GET AUTHOR POSTWORLD META HERE /////
+			$user = get_user_by( 'slug', get_query_var( 'author_name' ) );
+			$meta['user'] = pw_get_user( $user->ID, 'all' );
+			$meta['title'] = $user->display_name;
 		}
 
 	}
