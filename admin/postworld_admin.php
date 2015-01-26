@@ -6,6 +6,9 @@ include 'metaboxes/event/metabox-event.php';
 include 'metaboxes/post_parent/metabox-post_parent.php';	
 include 'metaboxes/wp_postmeta/metabox-wp_postmeta.php';	
 
+////////// USER META //////////
+include 'usermeta/pw_avatar/pw_avatar.php';
+
 ///// MODULE : LAYOUTS /////
 if( in_array( 'layouts', $pw['info']['modules'] ) )
 	include 'metaboxes/layout/metabox-layout.php';	

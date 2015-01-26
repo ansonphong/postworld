@@ -1,5 +1,11 @@
 # Postworld Changelog
 
+### Version 1.7.4
+- Added support in Postworld config for `wp_admin.usermeta.pw_avatar`.
+    + To enable, set value to `true`
+    + This will automatically add the postworld avatar image input box to user profiles, and it saves the selected attachment ID under `wp_usermeta.pw_avatar`
+    + To change the avatar usermeta key, set the value to `array('meta_key'=>'my_meta_key')`
+
 ### Version 1.7.3
 - **R.I.P. Postworld Panel Widget** - has now been renamed to **Postworld Module Widget**, and uses `.php` files directly included rather than using angular to `ng-include` files with the extension `.html`
     + __Breaking Change__ : Must rename all instances of `/templates/modules/`, as `/templates/modules` is now used as the seat of module widget options
