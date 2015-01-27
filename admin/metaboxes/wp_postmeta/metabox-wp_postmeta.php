@@ -134,6 +134,10 @@ function pw_wp_postmeta_meta_save( $post_id ){
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
       return $post_id;
 	
+    // Security Layer 
+    if ( !current_user_can( 'edit_post', $post_id ) )
+        return $post_id;
+
     // Get the fields from the http post
     // This is the only way to know what fields to fetch
     $fields = json_decode( stripslashes( $_POST['pw_wp_postmeta_fields'] ), true );

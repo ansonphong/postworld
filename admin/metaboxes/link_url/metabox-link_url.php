@@ -48,6 +48,10 @@ function pw_link_url_meta_save($post_id){
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
         return $post_id;
 
+    // Security Layer 
+    if ( !current_user_can( 'edit_post', $post_id ) )
+        return $post_id;
+
 	// SAVE URL
 	pw_set_post_meta($post_id,
 		array(

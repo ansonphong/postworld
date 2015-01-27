@@ -1,6 +1,18 @@
 # Postworld Changelog
 
 ### Version 1.7.4
+- Added support in Postworld config for `wp_admin.usermeta.contact_methods`
+    + Adding fields here, adds additional fields to the user profile
+    + Fields are stored using the given keys as the `meta_key` in `wp_usermeta`
+Example usage of `wp_admin.usermeta.contact_methods`:
+```php
+array(
+    'twitter'   =>  'Twitter Username',
+    'facebook'  =>  'Facebook URL',
+    'gplus'     =>  'Google+ URL',
+    )
+```
+
 - Added support in Postworld config for `wp_admin.usermeta.pw_avatar`.
     + To enable, set value to `true`
     + This will automatically add the postworld avatar image input box to user profiles, and it saves the selected attachment ID under `wp_usermeta.pw_avatar`

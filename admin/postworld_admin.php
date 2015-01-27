@@ -8,6 +8,7 @@ include 'metaboxes/wp_postmeta/metabox-wp_postmeta.php';
 
 ////////// USER META //////////
 include 'usermeta/pw_avatar/pw_avatar.php';
+include 'usermeta/contact_methods/contact_methods.php';
 
 ///// MODULE : LAYOUTS /////
 if( in_array( 'layouts', $pw['info']['modules'] ) )

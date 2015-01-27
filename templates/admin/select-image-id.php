@@ -38,6 +38,7 @@
 	image-id="{{ <?php echo $vars['ng_model']; ?> }}"
 	image-model="images.<?php echo $vars['slug']; ?>">
 	<div class="space-1"></div>
+	<hr class="thin">
 	<img
 		ng-src="{{ images.<?php echo $vars['slug']; ?>.url }}"
 		class="select-image"
