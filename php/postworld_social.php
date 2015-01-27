@@ -24,7 +24,7 @@ function pw_get_social_share_meta( $vars ){
 	$post = pw_to_array( $vars );
 
 	// Share Networks
-	$share_networks = i_get_option( array( "option_name" => PW_OPTIONS_SOCIAL, "key" => "share.networks" ) );
+	$share_networks = pw_get_option( array( "option_name" => PW_OPTIONS_SOCIAL, "key" => "share.networks" ) );
 
 	///// IMAGE URL /////
 	// Get the image url from the passed post object
@@ -190,33 +190,38 @@ function pw_social_widgets( $meta = array() ){
 
 
 
-function pw_social_widget_twitter( $meta, $widget_settings ){
+function pw_social_widget_twitter( $meta, $network ){
+	// Outputs a Twitter button
+
+	global $pw;
 
 	// META VALUES
-	extract( $meta );
-	/*	array(
-			"title"				=>	"Reality Sandwich",
-			"url"				=>	"http://realitysandwich.com", // get_permalink(),
-			"before_network"	=>	"<div class=\"social_widget %network%\">",
-			"after_network"		=>	"</div>"
-		)
-	*/
+	$defaultMeta = array(
+		'title'				=>	$pw['view']['title'],
+		'url'				=>	$pw['view']['url'],
+		'before_network'	=>	'',
+		'after_network'		=>	'',
+		);
+	$meta = array_replace_recursive( $defaultMeta, $meta );
 
-	// WIDGET SETTINGS
-	extract( $widget_settings );
-	/*	array(
-			"via"			=>	"realitysandwich",
-			"related"		=>	"realitysandwich",
-			"hashtags"		=>	"realitysandwich",
-			"size"			=>	"large",
-			"lang"			=>	"en",
-			"dnt"			=>	"true",
-		)
-	*/
-
+	// NETWORK SETTINGS
+	$defaultNetwork = array(
+		"widget"      		=>  "share",	// Options 'share' / 'follow'
+		"include_script"	=>  true,
+		"username"			=>	false,		// Required for widget:'follow'
+		"settings"    =>  array(
+			"via"       =>  "",
+			"related"   =>  "",
+			"hashtags"  =>  "",
+			"size"      =>  "small",
+			"lang"      =>  "en",
+			"dnt"       =>  "true",
+			),
+		);
+	$network = array_replace_recursive( $defaultNetwork, $network );
 
 	// SEARCH & REPLACE
-	$before_network = str_replace('%network%', 'twitter', $before_network); 
+	$meta['before_network'] = str_replace('%network%', 'twitter', $meta['before_network']); 
 
 	// SETUP CONSTANTS
 	$amp = "&amp;";
@@ -225,15 +230,15 @@ function pw_social_widget_twitter( $meta, $widget_settings ){
 	$output = "";
 
 	// INCLUDE SCRIPT
-	if( $include_script != false )
+	if( $network['include_script'] != false )
 		$output .= "<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>";
 
 	////////// SHARE BUTTON //////////
-	if( $widget == 'share' ){
+	if( $network['widget'] == 'share' ){
 
 		// URL
-		$url_link = ( isset( $url ) ) ? $url : null ;
-		$url = ( isset( $url ) ) ?
+		$url = ( isset( $meta['url'] ) ) ? $meta['url'] : null ;
+		$url = ( !empty( $url ) ) ?
 			" data-url=\"".$url."\"" :
 			null ;
 
@@ -243,35 +248,33 @@ function pw_social_widget_twitter( $meta, $widget_settings ){
 			null ;
 
 		// VIA
-		$via = ( isset($settings['via']) ) ?
-			" data-via=\"".$settings['via']."\"" :
+		$via = ( isset($network['settings']['via']) ) ?
+			" data-via=\"".$network['settings']['via']."\"" :
 			null ;
 
 		// RELATED
-		$related = ( isset($settings['related']) ) ?
-			" data-related=\"".$settings['related']."\"" :
+		$related = ( isset($network['settings']['related']) ) ?
+			" data-related=\"".$network['settings']['related']."\"" :
 			null ;
 
 		// HASHTAGS
-		$hashtags = ( isset($settings['hashtags']) ) ?
-			" data-hashtags=\"".$settings['hashtags']."\"" :
+		$hashtags = ( isset($network['settings']['hashtags']) ) ?
+			" data-hashtags=\"".$network['settings']['hashtags']."\"" :
 			null ;
 
 		// LANGUAGE
-		$lang = ( isset($settings['lang']) ) ?
-			" data-lang=\"".$settings['lang']."\"" :
+		$lang = ( isset($network['settings']['lang']) ) ?
+			" data-lang=\"".$network['settings']['lang']."\"" :
 			null ;
 
 		// SIZE
-		$size = ( isset($settings['size']) ) ?
-			" data-size=\"".$settings['size']."\"" :
+		$size = ( isset($network['settings']['size']) ) ?
+			" data-size=\"".$network['settings']['size']."\"" :
 			null ;
 
-		
-
 		// DO NOT TAILOR
-		$dnt = ( isset($settings['dnt']) ) ?
-			" data-dnt=\"".$settings['dnt']."\"" :
+		$dnt = ( isset($network['settings']['dnt']) ) ?
+			" data-dnt=\"".$network['settings']['dnt']."\"" :
 			null ;
 
 		// PARSE
@@ -288,7 +291,43 @@ function pw_social_widget_twitter( $meta, $widget_settings ){
 
 	}
 
-	return $before_network . $output . $after_network;
+	return $meta['before_network'] . $output . $meta['after_network'];
+
+}
+
+
+function pw_twitter_follow_button( $vars ){
+
+	$defaultVars = array(
+		'username'	=>	false,
+		'settings'	=>	array(
+			'include_script'	=>	true,
+			'show_count'		=>	true,
+			'size'				=>	'small',
+			),
+		);
+
+	$vars = array_replace_recursive( $defaultVars, $vars );
+
+	// If no username
+	if( _get($vars,'username') == false )
+		return false;
+
+	// Init Output
+	$output = '<a href="https://twitter.com/'.$vars['username'].'"';
+	$output .= 'class="twitter-follow-button"';
+
+	///// FIX SHOW COUNT /////
+	
+	$output .= 'data-show-count="'.json_encode( _get( $settings, 'show_count' ) ).'"';
+	$output .= 'data-size="'._get($settings,'size').'">';
+	$output .= 'Follow @'.$vars['username'].'</a>';
+	
+	// Include Script
+	if( _get( $vars, 'settings.include_script' ) )
+		$output .= "<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>";
+
+	return $output;
 
 }
 

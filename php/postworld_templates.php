@@ -361,6 +361,11 @@ function pw_get_user_feed_template( $template_id, $ext = 'html', $type = 'dir' )
 	return pw_get_template( 'user-feeds', 'user-feed-'.$template_id, $ext, $type );
 }
 
+function pw_get_social_template( $template_id, $ext = 'php', $type = 'dir' ){
+	// Returns a single string for social template from ID
+	return pw_get_template( 'social', $template_id, $ext, $type );
+}
+
 function pw_get_user_template( $template_id, $ext = 'html', $type = 'dir' ){
 	// Returns a single string for user template from ID
 	return pw_get_template( 'users', 'user-'.$template_id, $ext, $type );
@@ -375,6 +380,11 @@ function pw_ob_admin_template( $template_id, $vars ){
 	// Use output buffering to include an admin template
 	// And return the contents as a string
 	$template = pw_get_admin_template( $template_id );
+	return pw_ob_include( $template, $vars );
+}
+
+function pw_ob_social_template( $template_id, $vars ){
+	$template = pw_get_social_template( $template_id );
 	return pw_ob_include( $template, $vars );
 }
 

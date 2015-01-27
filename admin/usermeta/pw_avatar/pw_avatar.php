@@ -7,7 +7,7 @@ function pw_avatar_profile_field( $user ) {
 
 	// Get the settings
 	global $pwSiteGlobals;
-	$settings = _get( $pwSiteGlobals, 'wp_admin.usermeta.pw_avatar' );
+	$settings = _get( $pwSiteGlobals, 'wp_admin.user_meta.pw_avatar' );
 	if( $settings == false )
 		return false;
 
@@ -48,7 +48,7 @@ function pw_get_avatar_meta_key(){
 
 	global $pwSiteGlobals;
 	// Get config override
-	$avatar_meta_key = _get( $pwSiteGlobals, 'wp_admin.usermeta.pw_avatar.meta_key' );
+	$avatar_meta_key = _get( $pwSiteGlobals, 'wp_admin.user_meta.pw_avatar.meta_key' );
 	// Set default
 	if( !$avatar_meta_key )
 		$avatar_meta_key = PW_AVATAR_KEY;
