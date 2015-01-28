@@ -11,14 +11,21 @@ postworld.controller( 'userAutocomplete',
 	[ '$scope', 'pwData', '$log', '_',
 	function( $scope, $pwData, $log, $_ ){
 
-		// TODO : Filter through clobber function @ 200ms
-
 		$scope.username = '';
 		$scope.authors = [];
 		if (($scope.$parent.feedQuery) && ($scope.$parent.feedQuery.author_name)) {
 			$scope.username = $scope.$parent.feedQuery.author_name;
 		};    
-		$scope.queryList = function () {
+
+		$scope.queryList = function(){
+			// Clobber the Validation Function
+			$_.clobber( 'autocompleteUser', 200, function(){
+				$scope.queryListAjax();
+			} );
+		}
+
+		$scope.queryListAjax = function( searchTerm ) {
+
 			var searchTerm = $scope.username + "*";            
 			var query_args = {
 				number:20,
@@ -36,6 +43,7 @@ postworld.controller( 'userAutocomplete',
 				}
 			);
 		};
+
 
 		$scope.selectUser = function( user ){
 			$log.debug( "SELECT USER", user );

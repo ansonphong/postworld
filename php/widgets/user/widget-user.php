@@ -61,9 +61,6 @@ class pw_user_widget extends WP_Widget {
 		// SANITIZE FIELDS
 		$OPTIONS['title'] = strip_tags( $OPTIONS['title'] );
 		$OPTIONS['show_title'] = strip_tags( $OPTIONS['show_title'] );
-
-		//pw_log( $OPTIONS );
-
 		return $OPTIONS;
 	}
 

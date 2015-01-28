@@ -41,9 +41,9 @@
 			name="<?php echo $this->get_field_name( 'title' ); ?>"
 			type="text" value="<?php echo esc_attr( $title ); ?>" />
 
-
+		<!-- SELECT USER -->
 		<div class="type-wrapper">
-		
+
 			<div class="btn-group">
 				<label
 					class="btn btn-primary"
@@ -54,16 +54,18 @@
 				</label>
 		    </div>
 		    
-			<hr class="thin">
-
+		    <!-- SELECT : SPECIFIC USER -->
 			<div ng-show="settings.user_select == 'user_id'">
+				
+				<hr class="thin">
 
+				<!-- SELECT : SELECTED A USER -->
 				<div ng-hide="userIsSelected()">
 		         	<div class="labeled">
 						<label class="inner">Select User</label>
 						<span class='container-fluid' ng-controller="userAutocomplete">
 							<input
-								class="labeled gray"
+								class="labeled"
 								type="text"
 								typeahead-min-length="2"
 								typeahead-loading="status"
@@ -74,7 +76,6 @@
 								ng-model="username"
 								typeahead="author.user_nicename as author.display_name for author in authors | filter:$viewValue | limitTo:20"
 								autocomplete="off">
-
 							<!--
 							username : {{ username | json }}
 							<hr class="thin">
@@ -85,20 +86,26 @@
 					</div>
 				</div>
 
+				<!-- SELECT : SELECTED USER -->
 				<div ng-show="userIsSelected()">
-					SELECTED USER :
-					<h3>
-						{{ user.display_name }}
-						<button type="button" ng-click="widgetClearUser()">
+					<div class="labeled" style="position:relative;">
+						<button
+							type="button"
+							class="button"
+							ng-click="widgetClearUser()"
+							style="position:absolute; right:0;">
 							<i class="icon-close"></i>
 						</button>
-					</h3>
-					
+						<label class="inner">Selected User</label>
+						<input
+							class="labeled un-disabled bold"
+							type="text"
+							disabled
+							value="{{ user.display_name }}">
+					</div>
 				</div>
 
-
 			</div>
-
 
 			<input
 				type="hidden"
@@ -108,16 +115,20 @@
 				type="hidden"
 				name="<?php echo $this->get_field_name( 'user_id' ); ?>"
 				value="{{ settings.user_id }}">
-
 			<!--
 			<hr class="thin">
 			{{ settings }}
 			-->
-
 	   </div>
 
-	</div>
+	   	<!-- SELECT -->
+		<div class="type-wrapper">
 
+			SELECT VIEW
+
+		</div>
+
+	</div>
 </div>
 
 <!--///// METABOX SCRIPTS /////-->
@@ -133,7 +144,6 @@
 
 			$scope.user = <?php echo json_encode( $user ) ?>;
 
-			///// USER SELECT OPTIONS /////
 			$scope.userSelectOptions = [
 				{
 					name: 'Current Author',
@@ -146,12 +156,10 @@
 			];
 
 			$scope.userIsSelected = function(){
-				//return Boolean( $_.get( $scope.settings, 'user_id' ) );
 				return !_.isEmpty( $scope.user );
 			}
 
 			$scope.widgetUserSelected = function( user ){
-				//; setUserValue( $item, 'user' )
 				$scope.settings.user_id = user.ID;
 				$scope.user = user;
 			}
