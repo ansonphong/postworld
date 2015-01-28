@@ -1,6 +1,5 @@
 'use strict';
 
-
 /*_   _                    _         _                                  _      _       
  | | | |___  ___ _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
  | | | / __|/ _ \ '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
@@ -8,44 +7,63 @@
   \___/|___/\___|_|    /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
 																 |_|                   
 ////////// ------------ USER AUTOCOMPLETE CONTROLLER ------------ //////////*/
-function userAutocomplete($scope, pwData) {
-	$scope.username = undefined;
-	if (($scope.$parent.feedQuery) && ($scope.$parent.feedQuery.author_name)) {
-		$scope.username = $scope.$parent.feedQuery.author_name;
-	};    
-	$scope.queryList = function () {
-		var searchTerm = $scope.username + "*";            
-		var query_args = {
-			number:20,
-			fields:['user_nicename', 'display_name'],
-			search: searchTerm,
+postworld.controller( 'userAutocomplete',
+	[ '$scope', 'pwData', '$log', '_',
+	function( $scope, $pwData, $log, $_ ){
+
+		// TODO : Filter through clobber function @ 200ms
+
+		$scope.username = '';
+		$scope.authors = [];
+		if (($scope.$parent.feedQuery) && ($scope.$parent.feedQuery.author_name)) {
+			$scope.username = $scope.$parent.feedQuery.author_name;
+		};    
+		$scope.queryList = function () {
+			var searchTerm = $scope.username + "*";            
+			var query_args = {
+				number:20,
+				search: searchTerm,
+			};
+			$pwData.userQueryAutocomplete( query_args ).then(
+				// Success
+				function(response) {
+					$log.debug( 'userAutocomplete.querylist : RESPONSE', response.data );    
+					$scope.authors = response.data;
+				},
+				// Failure
+				function(response) {
+					throw { message:'Error: ' + JSON.stringify(response)};
+				}
+			);
 		};
-		pwData.user_query_autocomplete( query_args ).then(
-			// Success
-			function(response) {
-				//console.log(response);    
-				$scope.authors = response.data.results;
-			},
-			// Failure
-			function(response) {
-				throw { message:'Error: ' + JSON.stringify(response)};
-			}
-		);
-	};
 
-	// Watch on the value of username
-	$scope.$watch( "username",
-		function (){
-			// When it changes, emit it's value to the parent controller
-			if ($scope.username) $scope.$emit('updateUsername', $scope.username);
-		}, 1 );
-	
-	// Catch broadcast of username change
-	$scope.$on('updateUsername', function(event, data) { 
-		if (data) $scope.username = data; 
-		});
+		$scope.selectUser = function( user ){
+			$log.debug( "SELECT USER", user );
+		}
 
-}
+		$scope.setUserValue = function( userValue, model ){
+			$scope.$eval( model + '=' + JSON.stringify( userValue ) );
+			$log.debug( "SELECT USER", user );
+		}
+
+		// Watch on the value of username
+		$scope.$watch( "username",
+			function (){
+				// When it changes, emit it's value to the parent controller
+				if ($scope.username) $scope.$emit('updateUsername', $scope.username);
+			}, 1 );
+		
+		// Catch broadcast of username change
+		$scope.$on('updateUsername', function(event, data) { 
+			if (data) $scope.username = data; 
+			});
+
+
+}]);
+
+
+
+
 /*
   _____                    _         _                                  _      _       
  |_   _|_ _  __ _ ___     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 

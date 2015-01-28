@@ -322,8 +322,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('taxonomies_outline_mixed',params);
 		},
-		user_query_autocomplete: function(args) {
-			$log.debug('pwData.user_query_autocomplete',args);
+		userQueryAutocomplete: function(args) {
+			$log.debug('pwData.userQueryAutocomplete',args);
 			var params = {args:args};
 			return this.wp_ajax('user_query_autocomplete',params);
 		},

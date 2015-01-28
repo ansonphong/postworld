@@ -552,15 +552,11 @@ add_action("wp_ajax_tags_autocomplete", "tags_autocomplete_anon");
 //---------- USER QUERY AUTOCOMPLETE ----------//
 function user_query_autocomplete_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
-	$pw_args = $args['args'];
-
-	$user_query = new WP_User_Query( $pw_args );
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $user_query;
-	echo json_encode( $response );
-	die;
+	$vars = $args['args'];
+	$vars['fields'] = array( 'user_nicename', 'display_name', 'ID', 'user_login' );
+	$user_query = new WP_User_Query( $vars );
+	$results = $user_query->get_results();
+	pwAjaxRespond( $results );
 }
 add_action("wp_ajax_nopriv_user_query_autocomplete", "user_query_autocomplete_anon");
 add_action("wp_ajax_user_query_autocomplete", "user_query_autocomplete_anon");
