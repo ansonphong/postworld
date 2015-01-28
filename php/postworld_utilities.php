@@ -6,6 +6,9 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_bool_to_string( $bool ){
+	return ( $bool ) ? 'true' : 'false';
+}
 
 function pw_remap_keys( $array = array(), $key_map = array(), $keep_old_keys = false ){
 	// Remaps the keys in an array to new values

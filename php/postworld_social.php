@@ -300,11 +300,9 @@ function pw_twitter_follow_button( $vars ){
 
 	$defaultVars = array(
 		'username'	=>	false,
-		'settings'	=>	array(
-			'include_script'	=>	true,
-			'show_count'		=>	true,
-			'size'				=>	'small',
-			),
+		'include_script'	=>	true,
+		'show_count'		=>	false,
+		'size'				=>	'small',
 		);
 
 	$vars = array_replace_recursive( $defaultVars, $vars );
@@ -314,17 +312,15 @@ function pw_twitter_follow_button( $vars ){
 		return false;
 
 	// Init Output
-	$output = '<a href="https://twitter.com/'.$vars['username'].'"';
-	$output .= 'class="twitter-follow-button"';
+	$output = '<a href="https://twitter.com/'.$vars['username'].'" ';
+	$output .= 'class="twitter-follow-button" ';
 
-	///// FIX SHOW COUNT /////
-	
-	$output .= 'data-show-count="'.json_encode( _get( $settings, 'show_count' ) ).'"';
-	$output .= 'data-size="'._get($settings,'size').'">';
+	$output .= 'data-show-count="'.pw_bool_to_string( _get( $vars, 'show_count' ) ).'" ';
+	$output .= 'data-size="'._get( $vars, 'size' ).'">';
 	$output .= 'Follow @'.$vars['username'].'</a>';
 	
 	// Include Script
-	if( _get( $vars, 'settings.include_script' ) )
+	if( _get( $vars, 'include_script' ) )
 		$output .= "<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>";
 
 	return $output;

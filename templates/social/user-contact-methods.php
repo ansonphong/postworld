@@ -1,6 +1,8 @@
 <div class="user-contact-methods">
 	<?php
 		foreach( $vars as $contact ){
+			if( empty($contact['value']) )
+				continue;
 			?>
 			<a
 				tooltip="<?php echo $contact['label'] ?>"

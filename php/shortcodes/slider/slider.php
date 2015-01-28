@@ -141,7 +141,8 @@ function pw_print_slider( $slider ){
 
 			// FIELDS
 			if( !isset( $query['fields'] ) )
-				$query['fields'] = array(
+				$query['fields'] = 'preview';
+				/*array(
 					'ID',
 					'post_title',
 					'post_excerpt',
@@ -150,7 +151,7 @@ function pw_print_slider( $slider ){
 					'post_permalink',
 					'post_excerpt',
 					'image(all)',
-					);
+					)*/
 
 			// CATEGORY
 			// Add Category
@@ -281,14 +282,16 @@ function pw_print_slider( $slider ){
 			break;
 	}
 
+	///// CLASS /////
+	if( $slider['transition'] == 'fade' || !isset($slider['transition']) )
+		$slider['class'] .= " carousel-fade ";
+
 	///// INSTANCE /////
 	// Generate random ID for slider Instance
 	$slider_hash = pw_random_hash();
 	$slider['instance'] = "slider_".$slider_hash;
 
-	///// CLASS /////
-	if( $slider['transition'] == 'fade' || !isset($slider['transition']) )
-		$slider['class'] .= " carousel-fade ";
+	pw_log( json_encode( $posts ) );
 
 	///// INCLUDE TEMPLATE /////
 	// Include the template

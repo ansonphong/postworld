@@ -15,31 +15,36 @@ function pw_contact_methods_options_meta(){
 	$contact_methods_options_meta = array(
 		'twitter'	=>	array(
 			'icon'			=>	'icon-twitter-square',
-			'label'			=>	'Twitter',
+			'name'			=>	'Twitter',
+			'label'			=>	'On Twitter',
 			'description' 	=> 	'Twitter Username',
 			'prepend_url'	=>	'http://twitter.com/'
 			),
 		'facebook'	=>	array(
 			'icon'			=>	'icon-facebook-square',
-			'label'			=>	'Facebook',
+			'name'			=>	'Facebook',
+			'label'			=>	'On Facebook',
 			'description' 	=> 	'Facebook URL',
 			'prepend_url'	=>	''
 			),
 		'instagram'	=>	array(
 			'icon'			=>	'icon-instagram-square',
-			'label'			=>	'Instagram',
+			'name'			=>	'Instagram',
+			'label'			=>	'On Instagram',
 			'description' 	=> 	'Instagram Username',
 			'prepend_url'	=>	'http://instagram.com/'
 			),
 		'google_plus'	=>	array(
 			'icon'			=>	'icon-google-plus-square',
-			'label'			=>	'Google+',
+			'name'			=>	'Google+',
+			'label'			=>	'On Google+',
 			'description' 	=> 	'Google+ URL',
 			'prepend_url'	=>	''
 			),
 		'pinterest'	=>	array(
 			'icon'			=>	'icon-pinterest-square',
-			'label'			=>	'Pinterest',
+			'name'			=>	'Pinterest',
+			'label'			=>	'On Pinterest',
 			'description' 	=> 	'Pinterest URL',
 			'prepend_url'	=>	''
 			),
