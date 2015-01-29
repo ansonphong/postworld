@@ -53,6 +53,7 @@ function pw_social_meta( $social_meta = array() ){
 					"icon"			=>	"icon-facebook-square",
 					"description"	=>	"URL of your Facebook Page",
 					"prepend_url"	=>	"",
+					"_public"		=>	true,
 					),
 				array(
 					"id"			=>	"facebook_app_id",
@@ -60,6 +61,7 @@ function pw_social_meta( $social_meta = array() ){
 					"icon"			=>	"icon-facebook",
 					"description"	=>	"The ID of your Facebook App",
 					"prepend_url"	=>	"",
+					"_public"		=>	false,
 					),
 				array(
 					"id"			=>	"twitter",
@@ -67,6 +69,7 @@ function pw_social_meta( $social_meta = array() ){
 					"icon"			=>	"icon-twitter-square",
 					"description"	=>	"Twitter Username, without the '@'",
 					"prepend_url"	=>	"http://twitter.com/",
+					"_public"		=>	true,
 					),
 				array(
 					"id"			=>	"twitter_hashtags",
@@ -74,6 +77,7 @@ function pw_social_meta( $social_meta = array() ){
 					"icon"			=>	"icon-twitter",
 					"description"	=>	"Optional hashtag(s) to include in tweets, without the '#'",
 					"prepend_url"	=>	"",
+					"_public"		=>	false,
 					),
 				array(
 					"id"			=>	"instagram",
@@ -81,13 +85,23 @@ function pw_social_meta( $social_meta = array() ){
 					"icon"			=>	"icon-instagram-square",
 					"description"	=>	"Your instagram username, not URL",
 					"prepend_url"	=>	"http://instagram.com/",
+					"_public"		=>	true,
 					),
 				array(
 					"id"			=>	"youtube",
 					"name"			=>	"YouTube",
-					"icon"			=>	"icon-youtube-play",
+					"icon"			=>	"icon-circle-medium",
 					"description"	=>	"Your YouTube username, not URL",
 					"prepend_url"	=>	"https://www.youtube.com/user/",
+					"_public"		=>	true,
+					),
+				array(
+					"id"			=>	"linkedin",
+					"name"			=>	"LinkedIn",
+					"icon"			=>	"icon-circle-medium",
+					"description"	=>	"URL of your LinkedIn Profile",
+					"prepend_url"	=>	"",
+					"_public"		=>	true,
 					),
 				array(
 					"id"			=>	"tripadvisor",
@@ -95,6 +109,7 @@ function pw_social_meta( $social_meta = array() ){
 					"icon"			=>	"icon-circle-medium",
 					"description"	=>	"URL of your Tripadvisor Page",
 					"prepend_url"	=>	"",
+					"_public"		=>	true,
 					),
 				),
 			),

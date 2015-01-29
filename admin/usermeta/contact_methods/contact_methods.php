@@ -18,7 +18,7 @@ function pw_contact_methods_options_meta(){
 			'name'			=>	'Twitter',
 			'label'			=>	'On Twitter',
 			'description' 	=> 	'Twitter Username',
-			'prepend_url'	=>	'http://twitter.com/'
+			'prepend_url'	=>	'http://twitter.com/',
 			),
 		'facebook'	=>	array(
 			'icon'			=>	'icon-facebook-square',
