@@ -48,6 +48,13 @@ function pw_contact_methods_options_meta(){
 			'description' 	=> 	'Pinterest URL',
 			'prepend_url'	=>	''
 			),
+		'website'	=>	array(
+			'icon'			=>	'icon-globe',
+			'name'			=>	'Website',
+			'label'			=>	'Personal Website',
+			'description' 	=> 	'Website URL',
+			'prepend_url'	=>	''
+			),
 		);
 
 	// Allow the theme to filter the options meta
@@ -86,6 +93,8 @@ function pw_user_contact_methods( $user_id ){
 
 	// Get the available configured contact methods
 	$contact_methods_meta = pw_get_contact_methods_meta();
+	// Get User
+	$user = pw_to_array( get_user_by( 'id', $user_id ) );
 	// Get the user's meta fields
 	$usermeta = get_user_meta( $user_id );
 	// Setup the known contact methods
@@ -93,19 +102,37 @@ function pw_user_contact_methods( $user_id ){
 
 	// Iterate through each of the contact methods
 	foreach( $contact_methods_meta as $key => $value ){
-		// Get the contact method key from user meta
-		$usermeta_value = _get( $usermeta, $key );
-		// If a value exists
-		if( $usermeta_value != false ){
-			// Add the key in the meta
-			$value['key'] = $key;
-			// Embed the value into the meta
-			$value['value'] = $usermeta_value[0];
-			// Embed the URL into the meta
-			$value['url'] = _get($value, 'prepend_url') . $value['value'];
-			// Add the meta to the contact methods as a straight array
-			$contact_methods[] = $value;
+
+		switch( $key ){
+			case 'website':
+				// Add the key in the meta
+				$value['key'] = $key;
+				// Embed the URL into the meta
+				$value['url'] = _get($value, 'prepend_url') . _get( $user, 'data.user_url' );
+				// Add URL as the value
+				$value['value'] = $value['url'];
+				// Add the meta to the contact methods
+				$contact_methods[] = $value;
+				break;
+
+			default:
+				// Get the contact method key from user meta
+				$usermeta_value = _get( $usermeta, $key );
+				// If a value exists
+				if( $usermeta_value != false ){
+					// Add the key in the meta
+					$value['key'] = $key;
+					// Embed the value into the meta
+					$value['value'] = $usermeta_value[0];
+					// Embed the URL into the meta
+					$value['url'] = _get($value, 'prepend_url') . $value['value'];
+					// Add the meta to the contact methods
+					$contact_methods[] = $value;
+				}
+			break;
+
 		}
+
 	}
 	return $contact_methods;
 

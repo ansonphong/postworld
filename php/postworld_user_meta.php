@@ -151,6 +151,7 @@ function pw_get_user( $user_id, $fields = false ) {
 		'source_domain',
 		'roles',
 		'capabilities',
+		'posts_url',
 		);
 	$postworld_user_fields = array(
 		'viewed',
@@ -207,6 +208,10 @@ function pw_get_user( $user_id, $fields = false ) {
 			break;
 		}
 	}
+
+	// Author Posts URL
+	if( in_array('posts_url', $fields) )
+		$user_data['posts_url'] = get_author_posts_url( $user_id );
 
 	// POSTWORLD USER FIELDS
 	// Check to see if requested fields are custom Postworld User Fields

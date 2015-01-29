@@ -353,9 +353,26 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
    			////////// GET AUTHOR FIELDS DATA //////////
 
    			// Standard Wordpress get_the_author_meta() fields
-			$get_the_author_meta_fields = array('user_login','user_nicename','user_email','user_url','user_registered','user_activation_key',
-				'user_status','display_name','nickname','first_name','last_name','description','jabber','aim','yim','user_level',
-				'user_firstname','user_lastname','user_description','rich_editing','comment_shortcuts','admin_color','ID');
+			$get_the_author_meta_fields = array(
+				'user_login',
+				'user_nicename',
+				'user_email',
+				'user_url',
+				'user_registered',
+				'user_activation_key',
+				'user_status',
+				'display_name',
+				'nickname',
+				'first_name',
+				'last_name',
+				'description',
+				'user_level',
+				'user_firstname',
+				'user_lastname',
+				'user_description',
+				'comment_shortcuts',
+				'ID'
+				);
 
 			///// USE GET_THE_AUTHOR_META() FUNCTION /////
 			// Check if $author_fields are accessible by get_the_author_meta() Wordpress function

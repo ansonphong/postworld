@@ -108,7 +108,7 @@ function pw_unique_sub_key( $posts, $sub_key = 'ID' ){
 
 function pw_log( $message ){
 	if( is_array( $message ) || is_object( $message ) )
-		$message = 'JSON:' . json_encode($message);
+		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
 
 	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-log.txt");
 }
