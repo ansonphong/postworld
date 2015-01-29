@@ -27,8 +27,19 @@ function pw_select_image_id( $vars = array() ){
 		'display'		=>	true,							// [bool] 	Whether or not to display the selected image in-line
 		);
 	$vars = array_replace_recursive( $defaultVars, $vars );
-
 	return pw_ob_admin_template( 'select-image-id', $vars );
+}
+
+///// SELECT USER AUTOCOMPLETE /////
+function pw_select_user_autocomplete( $vars = array() ){
+	$defaultVars = array(
+		'ng_model'		=>	'searchTerm',
+		'class'			=>	'',
+		'on_select'		=>	'',
+		'limit_to'		=>	'20',
+		);
+	$vars = array_replace_recursive( $defaultVars, $vars );
+	return pw_ob_admin_template( 'select-user-autocomplete', $vars );
 }
 
 ///// SELECT SITE LOGO /////

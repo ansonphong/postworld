@@ -11,31 +11,18 @@ postworld.controller( 'userAutocomplete',
 	[ '$scope', 'pwData', '$log', '_',
 	function( $scope, $pwData, $log, $_ ){
 
-		$scope.username = '';
-		$scope.authors = [];
-		if (($scope.$parent.feedQuery) && ($scope.$parent.feedQuery.author_name)) {
-			$scope.username = $scope.$parent.feedQuery.author_name;
-		};    
-
-		$scope.queryList = function(){
-			// Clobber the Validation Function
-			$_.clobber( 'autocompleteUser', 200, function(){
-				$scope.queryListAjax();
-			} );
-		}
-
-		$scope.queryListAjax = function( searchTerm ) {
-
-			var searchTerm = $scope.username + "*";            
+		$scope.queryList = function( searchTerm ) {
+			$log.debug( searchTerm );
+			var searchTerm = searchTerm + "*";            
 			var query_args = {
 				number:20,
 				search: searchTerm,
 			};
-			$pwData.userQueryAutocomplete( query_args ).then(
+			return $pwData.userQueryAutocomplete( query_args ).then(
 				// Success
 				function(response) {
 					$log.debug( 'userAutocomplete.querylist : RESPONSE', response.data );    
-					$scope.authors = response.data;
+					return response.data;
 				},
 				// Failure
 				function(response) {
@@ -43,7 +30,6 @@ postworld.controller( 'userAutocomplete',
 				}
 			);
 		};
-
 
 		$scope.selectUser = function( user ){
 			$log.debug( "SELECT USER", user );
@@ -53,6 +39,13 @@ postworld.controller( 'userAutocomplete',
 			$scope.$eval( model + '=' + JSON.stringify( userValue ) );
 			$log.debug( "SELECT USER", user );
 		}
+
+		///// TODO : REFACTOR /////
+		
+		$scope.username = '';
+		if (($scope.$parent.feedQuery) && ($scope.$parent.feedQuery.author_name)) {
+			$scope.username = $scope.$parent.feedQuery.author_name;
+		};    
 
 		// Watch on the value of username
 		$scope.$watch( "username",

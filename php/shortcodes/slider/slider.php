@@ -291,7 +291,7 @@ function pw_print_slider( $slider ){
 	$slider_hash = pw_random_hash();
 	$slider['instance'] = "slider_".$slider_hash;
 
-	pw_log( json_encode( $posts ) );
+	//pw_log( json_encode( $posts ) );
 
 	///// INCLUDE TEMPLATE /////
 	// Include the template

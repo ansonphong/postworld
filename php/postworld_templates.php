@@ -91,8 +91,6 @@ function pw_construct_template_obj( $args ){
 }
 
 
-
-
 function pw_get_templates( $vars = array() ){
 	/*
 		$vars = array(
@@ -103,9 +101,7 @@ function pw_get_templates( $vars = array() ){
 			'source'			=>	[string] ( 'default' / 'merge' ),
 			'output'			=>	[string] (optional) 'default' / 'ids'
 			)
-
 	*/
-
 
 	global $pwSiteGlobals;
 	extract($vars);
@@ -257,7 +253,7 @@ function pw_get_templates( $vars = array() ){
 
 	///// OUTPUT /////
 	// If output is 'ids', strip the path data
-	if( isset( $vars['output'] ) && $vars['output'] == 'ids' ){
+	if( _get( $vars, 'output' ) == 'ids' ){
 		$new_obj = array();
 		foreach( $template_obj as $key => $value ){
 			// Handle Posts (extra level of recursion)
@@ -354,6 +350,11 @@ function pw_get_panel_template( $panel_id, $ext = 'html', $type = 'url' ){
 function pw_get_shortcode_template( $template_id, $ext = 'php', $type = 'dir' ){
 	// Returns a single string for panel template from ID
 	return pw_get_template( 'shortcodes', $template_id, $ext, $type );
+}
+
+function pw_get_user_widget_template( $template_id, $ext = 'php', $type = 'dir' ){
+	// Returns a single path string for template from ID
+	return pw_get_template( 'user-widget', $template_id, $ext, $type );
 }
 
 function pw_get_user_feed_template( $template_id, $ext = 'html', $type = 'dir' ){

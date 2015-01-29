@@ -110,7 +110,6 @@ extract($OPTIONS);
 					</td>
 				</tr>
 
-
 				<!-- SELECT TERMS ORDER BY -->
 				<tr>
 					<td>
@@ -171,5 +170,5 @@ extract($OPTIONS);
 	   </div>
 
 	</div>
-	
+
 </div>

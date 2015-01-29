@@ -80,6 +80,15 @@ class pw_user_widget extends WP_Widget {
 			);
 		$options = array_replace_recursive( $defaultOptions, $options);
 
+		$viewOptions = pw_get_templates(
+			array(
+				'subdirs'			=>	'user-widget',
+				'path_type'			=>	'dir',
+				'ext'				=>	'php',
+				'output'			=>	'ids',
+				)
+			)['user-widget'];
+
 		if( _get( $options, 'user_id' ) )
 			$user = get_user_by( 'id', _get( $options, 'user_id' ) )->data;
 		else

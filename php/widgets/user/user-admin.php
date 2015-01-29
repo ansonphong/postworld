@@ -61,29 +61,17 @@
 
 				<!-- SELECT : SELECTED A USER -->
 				<div ng-hide="userIsSelected()">
+
 		         	<div class="labeled">
 						<label class="inner">Select User</label>
 						<span class='container-fluid' ng-controller="userAutocomplete">
-							<input
-								class="labeled"
-								type="text"
-								typeahead-min-length="2"
-								typeahead-loading="status"
-								typeahead-wait-ms="100"
-								ng-change="queryList()"
-								typeahead-editable="0"
-								typeahead-on-select="widgetUserSelected($item)"
-								ng-model="username"
-								typeahead="author.user_nicename as author.display_name for author in authors | filter:$viewValue | limitTo:20"
-								autocomplete="off">
-							<!--
-							username : {{ username | json }}
-							<hr class="thin">
-							authors : {{ authors | json }}
-							<hr>
-							-->
+							<?php echo pw_select_user_autocomplete(array(
+								'class'		=>	'labeled',
+								'on_select' => 'widgetUserSelected($item)',
+								)); ?>
 						</span>
 					</div>
+
 				</div>
 
 				<!-- SELECT : SELECTED USER -->
@@ -102,19 +90,14 @@
 							type="text"
 							disabled
 							value="{{ user.display_name }}">
+						<small class="micro">
+							ID : {{ user.ID }} // {{ user.user_nicename }}
+						</small>
 					</div>
 				</div>
 
 			</div>
 
-			<input
-				type="hidden"
-				name="<?php echo $this->get_field_name( 'user_select' ); ?>"
-				value="{{ settings.user_select }}">
-			<input
-				type="hidden"
-				name="<?php echo $this->get_field_name( 'user_id' ); ?>"
-				value="{{ settings.user_id }}">
 			<!--
 			<hr class="thin">
 			{{ settings }}
@@ -123,10 +106,27 @@
 
 	   	<!-- SELECT -->
 		<div class="type-wrapper">
-
-			SELECT VIEW
-
+			<b>View :</b> 
+			<select
+				ng-options="key as key for (key , value) in viewOptions"
+				ng-model="settings.view">
+			</select>
 		</div>
+
+		<!-- HIDDEN INPUTS -->
+		<input
+			type="hidden"
+			name="<?php echo $this->get_field_name( 'user_select' ); ?>"
+			value="{{ settings.user_select }}">
+		<input
+			type="hidden"
+			name="<?php echo $this->get_field_name( 'user_id' ); ?>"
+			value="{{ settings.user_id }}">
+		<input
+			type="hidden"
+			name="<?php echo $this->get_field_name( 'view' ); ?>"
+			value="{{ settings.view }}">
+
 
 	</div>
 </div>
@@ -143,6 +143,8 @@
 			$scope.settings = <?php echo json_encode( $options ); ?>;
 
 			$scope.user = <?php echo json_encode( $user ) ?>;
+
+			$scope.viewOptions = <?php echo json_encode( $viewOptions ) ?>;
 
 			$scope.userSelectOptions = [
 				{
