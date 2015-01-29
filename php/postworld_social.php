@@ -10,12 +10,78 @@
 // SNIPPETS
 //include(locate_template('views//taxonomy-page-setup.php'));
 
+function pw_get_social_media_meta(){
+	// Provide the unfiltered meta data for contact methods options
+
+	$social_media_meta = array(
+		'twitter'	=>	array(
+			'icon'			=>	'icon-twitter-square',
+			'name'			=>	'Twitter',
+			'label'			=>	'On Twitter',
+			'share_label'	=>	'Share On Twitter',
+			'description' 	=> 	'Twitter Username',
+			'prepend_url'	=>	'http://twitter.com/',
+			),
+		'facebook'	=>	array(
+			'icon'			=>	'icon-facebook-square',
+			'name'			=>	'Facebook',
+			'label'			=>	'On Facebook',
+			'share_label'	=>	'Share On Facebook',
+			'description' 	=> 	'Facebook URL',
+			'prepend_url'	=>	''
+			),
+		'instagram'	=>	array(
+			'icon'			=>	'icon-instagram-square',
+			'name'			=>	'Instagram',
+			'label'			=>	'On Instagram',
+			'share_label'	=>	'Share On Instagram',
+			'description' 	=> 	'Instagram Username',
+			'prepend_url'	=>	'http://instagram.com/'
+			),
+		'google_plus'	=>	array(
+			'icon'			=>	'icon-google-plus-square',
+			'name'			=>	'Google+',
+			'label'			=>	'On Google+',
+			'share_label'	=>	'Share On Google+',
+			'description' 	=> 	'Google+ URL',
+			'prepend_url'	=>	''
+			),
+		'pinterest'	=>	array(
+			'icon'			=>	'icon-pinterest-square',
+			'name'			=>	'Pinterest',
+			'label'			=>	'On Pinterest',
+			'share_label'	=>	'Share On Pinterest',
+			'description' 	=> 	'Pinterest URL',
+			'prepend_url'	=>	''
+			),
+		'reddit'	=>	array(
+			'icon'			=>	'icon-reddit-square',
+			'name'			=>	'Reddit',
+			'label'			=>	'On Reddit',
+			'share_label'	=>	'Share On Reddit',
+			'description' 	=> 	'Reddit URL',
+			'prepend_url'	=>	''
+			),
+		'website'	=>	array(
+			'icon'			=>	'icon-globe',
+			'name'			=>	'Website',
+			'label'			=>	'Personal Website',
+			'share_label'	=>	'Visit Personal Website',
+			'description' 	=> 	'Website URL',
+			'prepend_url'	=>	''
+			),
+		);
+
+	// Allow the theme to filter the options meta
+	return apply_filters( 'pw_get_social_media_meta', $social_media_meta );
+}
+
+
 ////////// SOCIAL SHARE //////////
 function pw_social_share( $post ){
 	$template = pw_get_template ( 'social', 'share', 'php', 'dir' );
 	return pw_ob_include( $template, $post);
 }
-
 
 function pw_get_social_share_meta( $vars ){
 	global $pw;
@@ -47,7 +113,6 @@ function pw_get_social_share_meta( $vars ){
 	else
 		$permalink = _get( $post, 'post_permalink' );
 	
-
 	if( $permalink == false )
 		$permalink = get_permalink( $post['ID'] );
 	$permalink = urlencode( $permalink );

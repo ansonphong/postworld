@@ -9,58 +9,6 @@ function pw_contact_methods_config(){
 	return $contact_methods;
 }
 
-function pw_contact_methods_options_meta(){
-	// Provide the unfiltered meta data for contact methods options
-
-	$contact_methods_options_meta = array(
-		'twitter'	=>	array(
-			'icon'			=>	'icon-twitter-square',
-			'name'			=>	'Twitter',
-			'label'			=>	'On Twitter',
-			'description' 	=> 	'Twitter Username',
-			'prepend_url'	=>	'http://twitter.com/',
-			),
-		'facebook'	=>	array(
-			'icon'			=>	'icon-facebook-square',
-			'name'			=>	'Facebook',
-			'label'			=>	'On Facebook',
-			'description' 	=> 	'Facebook URL',
-			'prepend_url'	=>	''
-			),
-		'instagram'	=>	array(
-			'icon'			=>	'icon-instagram-square',
-			'name'			=>	'Instagram',
-			'label'			=>	'On Instagram',
-			'description' 	=> 	'Instagram Username',
-			'prepend_url'	=>	'http://instagram.com/'
-			),
-		'google_plus'	=>	array(
-			'icon'			=>	'icon-google-plus-square',
-			'name'			=>	'Google+',
-			'label'			=>	'On Google+',
-			'description' 	=> 	'Google+ URL',
-			'prepend_url'	=>	''
-			),
-		'pinterest'	=>	array(
-			'icon'			=>	'icon-pinterest-square',
-			'name'			=>	'Pinterest',
-			'label'			=>	'On Pinterest',
-			'description' 	=> 	'Pinterest URL',
-			'prepend_url'	=>	''
-			),
-		'website'	=>	array(
-			'icon'			=>	'icon-globe',
-			'name'			=>	'Website',
-			'label'			=>	'Personal Website',
-			'description' 	=> 	'Website URL',
-			'prepend_url'	=>	''
-			),
-		);
-
-	// Allow the theme to filter the options meta
-	return apply_filters( 'pw_contact_methods_options_meta', $contact_methods_options_meta );
-}
-
 function pw_get_contact_methods_meta(){
 	// Get the contact methods meta which has been configured for the site
 
@@ -69,7 +17,7 @@ function pw_get_contact_methods_meta(){
 	$contact_methods_config = pw_contact_methods_config();
 
 	// The available build-in options meta data
-	$contact_methods_options = pw_contact_methods_options_meta();
+	$contact_methods_options = pw_get_social_media_meta();
 
 	// Setup the meta array to return
 	$contact_methods_meta = array();

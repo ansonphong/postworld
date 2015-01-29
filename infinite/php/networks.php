@@ -7,6 +7,7 @@ function i_social_menu( $vars ){
 
 function pw_social_menu( $vars = array() ){
 
+	// Set Default Variables
 	$default_vars = array(
 		'style'		=>	'default',
 		'template'	=>	'views/networks/social-menu.php',
@@ -17,9 +18,8 @@ function pw_social_menu( $vars = array() ){
 			'target'	=>	'_blank',
 			),
 		);
-
 	$vars = array_replace_recursive( $default_vars, $vars );
-
+	
 	extract( $vars );
 
 	// Get Option Values & decode from JSON
@@ -37,7 +37,7 @@ function pw_social_menu( $vars = array() ){
 		$network = $networks[$i];
 		// Get the saved value
 		$network_value = _get( $social_options, 'networks.'.$network['id'] );
-		// If no value set, continue with next network
+		// If no value set, or not public, continue
 		if( empty( $network_value ) || !_get( $network, '_public' ) )
 			continue;
 		// Generate the link URL
@@ -48,8 +48,10 @@ function pw_social_menu( $vars = array() ){
 		$networks_menu[] = $network;
 	}
 
+	// Get template path
 	$template = pw_get_template ( 'social', 'links', 'php', 'dir' );
 
+	// OB include
 	return pw_ob_include( $template, $networks_menu );
 
 }
