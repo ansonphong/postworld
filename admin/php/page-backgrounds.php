@@ -96,7 +96,10 @@
 						</tr>
 					</table>
 
-					<pre>{{ pwBackgroundContexts | json }}</pre>
+					<?php if( pw_dev_mode() ) : ?>
+						<hr>
+						<pre><code>{{ pwBackgroundContexts | json }}</code></pre>
+					<?php endif; ?>
 
 				</div>
 

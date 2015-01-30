@@ -200,26 +200,29 @@
 		<h3>Location</h3>
 		<div class="pw-row">
 			<div class="pw-col-12">
+				<label class="inner">Name</label>
 				<input
 					type="text"
-					ng-model="post.post_meta[ eventKey ].location.name"
-					placeholder="Name">
+					class="labeled"
+					ng-model="post.post_meta[ eventKey ].location.name">
 			</div>
 		</div>
 		<div class="pw-row">
 			<div class="pw-col-12">
+				<label class="inner">Address</label>
 				<input
 					type="text"
-					ng-model="post.post_meta[ eventKey ].location.address"
-					placeholder="Address">
+					class="labeled"
+					ng-model="post.post_meta[ eventKey ].location.address">
 			</div>
 		</div>
 		<div class="pw-row">
 			<div class="pw-col-6">
+				<label class="inner">City</label>
 				<input
 					type="text"
-					ng-model="post.post_meta[ eventKey ].location.city"
-					placeholder="City">
+					class="labeled"
+					ng-model="post.post_meta[ eventKey ].location.city">
 			</div>
 			<div class="pw-col-6">
 				<input
@@ -329,15 +332,5 @@
 			</div>
 		</div>
 
-
-
-
 	</div>
 </div>
-
-
-<hr class="thin">
-
-
-
-<hr>

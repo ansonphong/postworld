@@ -303,7 +303,13 @@
 						<i class="icon-code"></i>
 						Shortcode
 					</h3>
-					<pre><code>[pw-feed id="{{ selectedItem.id }}"]</code></pre>
+					<input
+						type="text"
+						class="un-disabled"
+						style="width:100%;"
+						value='[pw-feed id="{{ selectedItem.id }}"]'
+						
+						select-on-click>
 
 					<hr class="thick">
 

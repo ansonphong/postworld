@@ -24,10 +24,11 @@ global $pw_event_post;
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="pw_event_post" ng-value="post | json" style="width:100%;">
 		
-		<!-- DEV : Test Output -->
-		
-		<hr><pre>{{ post | json }}</pre>
-		
+		<?php if( pw_dev_mode() ): ?>
+			<!-- DEV : Test Output -->
+			<hr><pre>{{ post | json }}</pre>
+		<?php endif; ?>
+
 	</div>	
 </div>
 

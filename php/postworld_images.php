@@ -31,13 +31,17 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 
 	///// GET IMAGE TO USE /////
 	// Setup Thumbnail Image Variables
-	if( $post['post_type'] == 'attachment' ){
+	if( !empty( $thumbnail_id ) ){
+		$thumbnail_id = (int) $thumbnail_id;
+	}
+
+	elseif( $post['post_type'] == 'attachment' ){
 		// Handle Attachment Post Types
 		$thumbnail_id = $post_id;
 	} else{
 		// Handle Posts
 		$thumbnail_id = get_post_thumbnail_id( $post_id );
-		pw_log( 'thumbnail_id : ' . $thumbnail_id );
+		//pw_log( 'thumbnail_id : ' . $thumbnail_id );
 	}
 
 

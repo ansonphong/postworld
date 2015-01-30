@@ -176,14 +176,16 @@ postworld.directive('stopPropagationClick', function() {
 	});
 
 ///// SELECT ON CLICK /////
-postworld.directive('selectOnClick', function() {
-		return function (scope, element, attrs) {
-			element.bind('click', function () {
-				this.select();
-			});
-		};
-	});
-
+postworld.directive('selectOnClick', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.on('click', function () {
+                this.select();
+            });
+        }
+    };
+});
 
 ///// AUTO FOCUS /////
 // Automatically focuses the input field it's applied to

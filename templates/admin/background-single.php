@@ -14,7 +14,13 @@
 				style="width:100%;height:100%;position:absolute; z-index:2;"
 				class="pw-background-secondary"></div>
 		</div>
-		{{<?php echo $ng_model; ?>.primary}}
+
+		<?php if( pw_dev_mode() ) : ?>
+			<hr>
+			<code>PRIMARY : {{<?php echo $ng_model; ?>.primary | json }}</code>
+			<hr class="thin">
+			<code>SECONDARY : {{<?php echo $ng_model; ?>.secondary | json }}</code>
+		<?php endif; ?>
 
 	</div>
 	<div class="pw-col-4">

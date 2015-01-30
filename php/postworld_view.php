@@ -198,7 +198,13 @@ function pw_get_view_meta( $context = array() ){
 	///// META OBJ /////
 	$meta = array();
 
+	// Set the default title
 	$meta['title'] = wp_title( ' - ', false, 'right' );
+
+	////// HOME /////
+	if( in_array( 'home', $context ) ){
+		$meta['title'] = get_bloginfo( 'name' );
+	}
 
 	////// SINGLE /////
 	if( in_array( 'single', $context ) ){

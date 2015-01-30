@@ -6,6 +6,11 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_dev_mode(){
+	// Returns a boolean, true if Postworld is in dev mode
+	return ( defined( 'POSTWORLD_MODE' ) && POSTWORLD_MODE == 'dev' );
+}
+
 function pw_bool_to_string( $bool ){
 	return ( $bool ) ? 'true' : 'false';
 }

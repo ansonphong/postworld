@@ -201,7 +201,7 @@ postworld.factory('_',
 				return false;
 		},
 		inArray: function(value, array) {
-			if (array)
+			if( _.isArray( array ) )
 				return array.indexOf(value) > -1 ? true : false;
 			else
 				return false;
