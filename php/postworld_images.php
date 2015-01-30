@@ -31,23 +31,20 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 
 	///// GET IMAGE TO USE /////
 	// Setup Thumbnail Image Variables
-	if( !empty( $thumbnail_id ) &&
-		is_numeric( $thumbnail_id ) &&
-		$thumbnail_id != 0 ){
-		$thumbnail_id = (int) $thumbnail_id;
-	}
-	elseif( $post['post_type'] == 'attachment' ){
+	if( $post['post_type'] == 'attachment' ){
 		// Handle Attachment Post Types
 		$thumbnail_id = $post_id;
 	} else{
 		// Handle Posts
 		$thumbnail_id = get_post_thumbnail_id( $post_id );
+		pw_log( 'thumbnail_id : ' . $thumbnail_id );
 	}
+
+
 
 	// If there is a set 'featured image' set the $thumbnail_url
 	if ( $thumbnail_id ){
 		$thumbnail_url = wp_get_attachment_url( $thumbnail_id ,'full');
-
 	}
 	// If there is no set 'featured image', get fallback - first image in post
 	else {
@@ -102,6 +99,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 	}// END else
 
 
+
 	///// PROCESS IMAGES /////
 	// Load in registered images attributes
 	$registered_images_obj = registered_images_obj();
@@ -111,7 +109,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 	foreach ($images as $image) {
 
 		// Extract image attributes from parenthesis
-			$image_attributes = extract_parenthesis_values($image, true);
+		$image_attributes = extract_parenthesis_values($image, true);
 
 		// Set $image_handle to name of requested image
 		$image_handle = $image_attributes[0];
@@ -126,6 +124,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 				$post['image']['sizes']['full']['url']	= $thumbnail_url;
 				$post['image']['sizes']['full']['width'] = (int)$image_obj['width'];
 				$post['image']['sizes']['full']['height'] = (int)$image_obj['height'];
+
 			}
 
 			// ALL : Get all registered images

@@ -10,7 +10,7 @@ function pw_background_posts( $posts ){
 	if( $current_background == false )
 		return $posts;
 	
-	$fields = array( 'ID', 'image(full)', 'fields' );
+	$fields = array( 'ID', 'post_type', 'image(full)', 'fields' );
 
 	// Get the background image IDs
 	$primary_image_id = _get( $current_background, 'primary.image.id' );

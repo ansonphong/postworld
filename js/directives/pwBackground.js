@@ -59,6 +59,10 @@
 			}
 
 			$scope.bindParallax = function(){
+				// Disable parallax binding for primary background
+				if( $scope.pwBackground == 'primary' )
+					return false;
+
 				// Check for Parallax values
 				var parallax = $_.get( $scope.backgroundObj, 'image.parallax' );
 				var position = $_.get( $scope.backgroundObj, 'style.background-position' );
@@ -100,6 +104,7 @@
 					// Check if the post exists
 					imagePost = $_.get( $pwData, 'posts.'+imageId );
 				}
+				$log.debug( '$scope.getImagePost', imagePost );
 				return imagePost;
 			}
 
@@ -116,7 +121,7 @@
 			$scope.populateImagePost = function( imageId ){
 				var get_post_vars = {
 					post_id: imageId,
-					fields: [ 'ID', 'image(full)', 'fields' ],
+					fields: [ 'ID', 'post_type', 'image(full)', 'fields' ],
 				};
 				$pwData.get_post( get_post_vars ).then(
 					function(response){
