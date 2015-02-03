@@ -63,9 +63,6 @@ function pw_live_feed( $vars = array() ){
 	global $post;
 	global $pw;
 
-	// Run filters on the feed vars
-	$vars = apply_filters( 'pw_feed', $vars );
-
 	/// $VARS : (STRING) ///
 	// Check if the $vars is a string or if a feed ID is defined in the vars
 	$feed_id = ( is_string( $vars ) ) ? $vars : _get( $vars, 'feed_id' ); 
@@ -80,6 +77,9 @@ function pw_live_feed( $vars = array() ){
 		$feed = array();
 		$feed_id = 'pwFeed_' . pw_random_string();
 	}
+
+	// Run filters on the feed vars
+	$vars = apply_filters( 'pw_feed', $vars );
 
 	///// DEFAULT VARS /////
 	$default_vars = array(

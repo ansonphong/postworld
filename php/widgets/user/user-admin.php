@@ -175,5 +175,10 @@
 </script>
 <script>
 	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("<?php echo $instance ?>"),['<?php echo $instance ?>']);
+
+	if( typeof <?php echo $instance ?>Init == 'undefined' ){
+		angular.bootstrap(document.getElementById("<?php echo $instance ?>"),['<?php echo $instance ?>']);
+		var <?php echo $instance ?>Init = true;
+	}
+
 </script>
