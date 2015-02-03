@@ -22,16 +22,14 @@
 			}, 1 );
 
 			$scope.getBackgroundObj = function(){
-
-				if( $scope.pwBackground == 'primary' )
+				if( $scope.pwBackground == 'primary' ){
+					//$log.debug( ">>> PRIMARY BG <<< ", $pwData.background.primary );
 					return $pwData.background.primary;
-				
+				}
 				else if( $scope.pwBackground == 'secondary' )
 					return $pwData.background.secondary;
-
 				else
 					return $scope.$eval( $scope.pwBackground );
-
 			}
 
 			//////////// UPDATE ////////////
@@ -59,9 +57,6 @@
 			}
 
 			$scope.bindParallax = function(){
-				// Disable parallax binding for primary background
-				if( $scope.pwBackground == 'primary' )
-					return false;
 
 				// Check for Parallax values
 				var parallax = $_.get( $scope.backgroundObj, 'image.parallax' );
@@ -139,7 +134,6 @@
 				if( !styles )
 					styles = {};
 
-				
 				// Delete empty values
 				angular.forEach( styles, function( value, key ){
 					// Opacity 
@@ -170,6 +164,10 @@
 			// Cache the page Y offset
 			$scope.pageYOffset = 0;
 			var setPosition = function () {
+
+				// Disable Parallax if it's not enabled
+				if( $_.get( $scope.backgroundObj, 'style.background-position' ) != 'parallax' )
+					return false;
 
 				// Get the current Page Y Offset
 				var pageYOffset = $window.pageYOffset;
