@@ -32,6 +32,7 @@ function pw_print_widgets( $vars = array() ){
 		'after'			=>	'',			// After the widgets printout
 		'echo'			=>	true,		// Whether or not to echo
 		'show_empty'	=>	false,		// Sidebar is empty of widgets, return false
+		'include_meta'	=>	false,		// Include meta data along with the widgets
 		);
 	$vars = array_replace_recursive( $defaultVars, $vars );
 
@@ -47,15 +48,28 @@ function pw_print_widgets( $vars = array() ){
 		return false;
 
 	// Init output
-	$output = 	$vars['before'];
+	$widgets_html = $vars['before'];
 
 	// Add widgets to output
 	foreach( $sidebar_widgets as $widget ){
-		$output .= 	$widget;
+		$widgets_html .= $widget;
 	}
 
 	// Finish output
-	$output .= 	$vars['after'];
+	$widgets_html .= $vars['after'];
+
+	// If returning meta-data along with the widgets
+	if( $vars['include_meta'] == true ){
+		$output = array();
+		$output['widgets'] = $widgets_html;
+		$output['meta'] = array(
+			'count'	=>	count($sidebar_widgets),
+			);
+
+	}
+	else
+		$output = $widgets_html;
+
 
 	if( $vars['echo'] )
 		echo $output;
