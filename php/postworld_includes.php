@@ -251,28 +251,12 @@ function postworld_includes( $args ){
 		// ANGULAR : MASONRY
 		wp_enqueue_script( 'angularJS-Masonry',
 			POSTWORLD_URI.'/lib/angular-masonry/angular-masonry.js', $angularDep );
-
-
-		///// ANGULAR : MOMENT /////
-		// MOMENT.JS
-		wp_enqueue_script( 'Moment-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment.min.js');
-		// ANGULAR - MOMENT
-		wp_enqueue_script( 'AngularJS-Moment',
-			POSTWORLD_URI.'/lib/angular-moment/angular-moment.min.js' );
-		// MOMENT-TIMEZONE.JS
-		wp_enqueue_script( 'Moment-Timezone-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js');
-		// MOMENT-TIMEZONE DATA.JS
-		wp_enqueue_script( 'Moment-Timezone-Data-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js');
 		
 
 		/////// POSTWORLD APP /////	
 		// TODO : blob through the dirs and get all the js files, auto-include in foreach
 		wp_enqueue_script( 	'pw-app-JS',
 			POSTWORLD_URI.'/js/app.js', $angularDep );
-
 
 
 		///// CREATE.JS /////
@@ -437,6 +421,26 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'Angular-UI-Calendar-JS',
 			POSTWORLD_URI.'/lib/ui-calendar-master/src/calendar.js' );
 	}
+
+	// + ANGULAR MOMENT
+	if( in_array( 'angularMoment', $pw['inject'] ) ){
+
+		///// ANGULAR : MOMENT /////
+		// MOMENT.JS
+		wp_enqueue_script( 'Moment-JS',
+			POSTWORLD_URI.'/lib/moment.js/moment.min.js', $angularDep);
+		// ANGULAR - MOMENT
+		wp_enqueue_script( 'AngularJS-Moment',
+			POSTWORLD_URI.'/lib/angular-moment/angular-moment.min.js', $angularDep );
+		// MOMENT-TIMEZONE.JS
+		wp_enqueue_script( 'Moment-Timezone-JS',
+			POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js', $angularDep);
+		// MOMENT-TIMEZONE DATA.JS
+		wp_enqueue_script( 'Moment-Timezone-Data-JS',
+			POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js', $angularDep);
+
+	}
+
 
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
 	// Dynamically generate javascript file
