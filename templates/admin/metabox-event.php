@@ -117,7 +117,6 @@
 
 	class="input_module labeled">
 
-	
 
 		<!-- TODO :
 		<div ng-show="uiShowView('mapUnit')">
@@ -142,11 +141,14 @@
 <div class="pw-row row-primary">
 	<!-- LEFT COLUMN -->
 	<div class="pw-col-6">
-
+		<h3>Location</h3>
+		
 		<div
 			pw-ui
 			ui-views="{ searchInput: false }"
 			class="well">
+			
+
 			<!-- UI VIEWS : <pre>{{ uiViews | json }}</pre><hr> -->
 			<!-- SEARCH BUTTON -->
 			<div
@@ -196,8 +198,20 @@
 			</div>
 		</div>
 
+		<div
+			class="well"
+			ng-show="uiBool( post.post_meta[ eventKey ].location.formatted_address )">
+			<label for="formatted_address" class="input-icon">
+				<i class="icon icon-location"></i>
+			</label>
+			<input
+				id="formatted_address"
+				type="text"
+				class="input-icon-left"
+				style="width:100%;"
+				ng-model="post.post_meta[ eventKey ].location.formatted_address">
+		</div>
 
-		<h3>Location</h3>
 		<div class="pw-row">
 			<div class="pw-col-12">
 				<label class="inner">Name</label>
