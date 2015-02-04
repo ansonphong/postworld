@@ -2,8 +2,12 @@
 
 // Define Angular Dependancies
 function postworld_includes( $args ){
-
 	extract( $args );
+
+	// Add hook for admin <head></head>
+	add_action('admin_print_scripts', 'pwGlobals_print', 8 );
+	// Add hook for front-end <head></head>
+	add_action('wp_head', 'pwGlobals_print', 8 );
 
 	global $pw;
 	global $pwSiteGlobals;
@@ -40,7 +44,6 @@ function postworld_includes( $args ){
 	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery','');
 
-	
 
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
@@ -448,10 +451,7 @@ function postworld_includes( $args ){
 	//add_action( 'init', 'pwSiteGlobals_include');
 	pwSiteGlobals_include();
 
-	// Add hook for admin <head></head>
-	add_action('admin_head', 'pwGlobals_print', 8 );
-	// Add hook for front-end <head></head>
-	add_action('wp_head', 'pwGlobals_print', 8 );
+	
 
 }
 

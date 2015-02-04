@@ -282,7 +282,6 @@
 			</div>
 		</div>
 		
-
 		<div
 			ng-show="uiBool(post.post_meta[ eventKey ].timezone.time_zone_name)"
 			pw-timezone
