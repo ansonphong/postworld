@@ -142,7 +142,7 @@
 	<!-- LEFT COLUMN -->
 	<div class="pw-col-6">
 		<h3>Location</h3>
-		
+
 		<div
 			pw-ui
 			ui-views="{ searchInput: false }"
@@ -281,6 +281,23 @@
 					placeholder="0.000">
 			</div>
 		</div>
+		
+
+		<div
+			ng-show="uiBool(post.post_meta[ eventKey ].timezone.time_zone_name)"
+			pw-timezone
+			timezone-latitude="post.geo_latitude"
+			timezone-longitude="post.geo_longitude"
+			timezone-obj="post.post_meta[ eventKey ].timezone">
+			<hr class="thin">
+			<button
+				type='button'
+				disabled>
+				<i class="icon-clock"></i>
+				Timezone : {{ post.post_meta[ eventKey ].timezone.time_zone_name }}
+			</button>
+		</div>
+
 	</div>
 
 	<!-- RIGHT COLUMN -->

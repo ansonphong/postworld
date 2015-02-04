@@ -18,19 +18,12 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 'use strict';
 
 ///// POSTWORLD MODULE /////
-var pw = {
-	posts:{},
-	partials:{},
-	templates:{},
-	feeds:{},
-	widgets:{},
-	admin:{},
-	embeds:{},
-	user:{},
-	users:{},
-	angularModules:[],
-};
-
+pw.partials = {};
+pw.templates = {};
+pw.feeds = {};
+pw.widgets = {};
+pw.admin = {};
+pw.embeds = {};
 
 // Add Standard Modules
 pw.angularModules = pw.angularModules.concat([
@@ -44,10 +37,9 @@ pw.angularModules = pw.angularModules.concat([
 	'timer',
 	'angular-parallax',
 	'wu.masonry',
-	'mgcrea.ngStrap.popover',
+	//'mgcrea.ngStrap.popover',
 	'pw.compile',
 ]);
-
 
 var postworld = angular.module('postworld', pw.angularModules );
 
@@ -261,12 +253,12 @@ String.prototype.replaceAll = function(search, replace)
 /////////////////////////////////////////////////////////////////*/
 
 
-/*
+
 postworld.constant('angularMomentConfig', {
-	preprocess: 'unix', 				// optional
+	//preprocess: 'unix', 				// optional
 	//timezone: 'America/Los_Angeles' 	// optional
 });
-*/
+
 
 /*
 postworld.run(function($rootScope, $templateCache) {
