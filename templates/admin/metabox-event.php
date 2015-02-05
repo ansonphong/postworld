@@ -29,7 +29,10 @@
 			</span>
 
 			<!-- TIME DROPDOWN -->
-			<span dropdown class="time dropdown">
+			<span
+				dropdown
+				class="time dropdown"
+				ng-hide="post.post_meta[ eventKey ].date.all_day">
 				<button dropdown-toggle class="button">
 					<i class="icon-clock"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'shortTime' }}
@@ -75,7 +78,10 @@
 			</span>
 
 			<!-- TIME DROPDOWN -->
-			<span dropdown class="time dropdown">
+			<span
+				dropdown
+				class="time dropdown"
+				ng-hide="post.post_meta[ eventKey ].date.all_day">
 				<button dropdown-toggle class="button">
 					<i class="icon-clock"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'shortTime' }}
@@ -101,6 +107,17 @@
 		</div>
 	</div>
 
+
+	<div class="event-all-day">
+		<hr class="thin">
+		<label>
+			<input
+				type="checkbox"
+				ng-model="post.post_meta[ eventKey ].date.all_day">
+				All Day Event
+		</label>
+	</div>
+
 </div>
 
 <hr>
@@ -114,9 +131,7 @@
 	geo-post="post"
 	geo-location-obj="post.post_meta[ eventKey ].location"
 	geo-return-obj=""
-
 	class="input_module labeled">
-
 
 		<!-- TODO :
 		<div ng-show="uiShowView('mapUnit')">
@@ -135,7 +150,6 @@
 			</google-map>
 		</div>
 	-->
-
 </div>
 
 <div class="pw-row row-primary">
@@ -145,10 +159,8 @@
 
 		<div
 			pw-ui
-			ui-views="{ searchInput: false }"
-			class="well">
+			ui-views="{ searchInput: false }">
 			
-
 			<!-- UI VIEWS : <pre>{{ uiViews | json }}</pre><hr> -->
 			<!-- SEARCH BUTTON -->
 			<div
@@ -197,6 +209,8 @@
 				</button>-->
 			</div>
 		</div>
+
+		<hr class="thin">
 
 		<div
 			class="well"

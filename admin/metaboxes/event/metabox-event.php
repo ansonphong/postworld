@@ -60,8 +60,16 @@ function pw_event_meta_init(){
 			"start_date_obj"	=>	'',
 			"end_date_obj"		=>	'',
 			"start_date"		=>	'',
-			"end_date"			=>	''
+			"end_date"			=>	'',
+			"all_day"			=>	false,
 			),
+		/*
+		'timezone'				=>	array(
+			'raw_offset'		=>	0,
+			'time_zone_id'		=>	'',
+			'time_zone_name'	=>	'',
+			),
+		*/
 		'organizer'				=>	array(
 			'name'				=>	'',
 			'phone'				=>	'',

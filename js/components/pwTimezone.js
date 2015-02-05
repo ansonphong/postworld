@@ -17,7 +17,9 @@ postworld.directive( 'pwTimezone', [function(){
     };
 }]);
 
-postworld.controller('pwTimezoneCtrl', ['$rootScope', '$scope','$http', '$window', '$log', function( $rootScope, $scope, $http, $window, $log ) {
+postworld.controller('pwTimezoneCtrl',
+	['$rootScope', '$scope','$http', '$window', '$log', '$timeout',
+	function( $rootScope, $scope, $http, $window, $log, $timeout ) {
 
 
 	var timezoneDataPreprocess = function( data ){
@@ -50,7 +52,7 @@ postworld.controller('pwTimezoneCtrl', ['$rootScope', '$scope','$http', '$window
 				date:
 				}
 		*/
-
+		
 		///// DEFAULTS ///// 
 		if( _.isUndefined( vars ) )
 			vars = {};
@@ -60,10 +62,6 @@ postworld.controller('pwTimezoneCtrl', ['$rootScope', '$scope','$http', '$window
 			vars.latitude = $scope.latitude;
 		if( _.isUndefined( vars.longitude ) )
 			vars.longitude = $scope.longitude;
-
-		// Return early if no lat/long
-		if( _.isEmpty( vars.latitude ) || _.isEmpty( vars.longitude ) )
-			return false;
 
 		// Init date object
 		var date = new Date(vars.date);
@@ -87,7 +85,14 @@ postworld.controller('pwTimezoneCtrl', ['$rootScope', '$scope','$http', '$window
 
 	$scope.$watch('[latitude,longitude]', function(val){
 		$log.debug( '$watch, [latitude,longitude]', val );
-		$scope.getTimezone();
+
+		$timeout( function(){
+			$scope.getTimezone();
+		}
+			
+		, 0 );
+		
+
 	});
 
 }]);
