@@ -354,7 +354,7 @@ function pw_get_user( $user_id, $fields = false ) {
 
 
 	// AVATAR FIELDS
-	$avatar = get_avatar_sizes($user_id, $fields);
+	$avatar = pw_get_avatar_sizes($user_id, $fields);
 	if ( !empty($avatar) )
 		$user_data["avatar"] = $avatar;
 

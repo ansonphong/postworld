@@ -8,10 +8,11 @@
                                                          
 /////////////////////////////////////////////////////////*/
 
-function _get( $obj, $key ){
-	return pw_get_obj( $obj, $key );
-}
 function pw_get_obj( $obj, $key ){
+	// DEPRECIATED
+	return _get( $obj, $key );
+}
+function _get( $obj, $key ){
 	// Checks to see if a key exists in an object,
 	// and returns it if it does exist. Otherwise return false.
 
@@ -42,10 +43,11 @@ function pw_get_obj( $obj, $key ){
 
 }
 
-function _set( $obj, $key, $value ){
-	return pw_set_obj( $obj, $key, $value );
-}
 function pw_set_obj( $obj, $key, $value ){
+	// DEPRECIATED
+	return _set( $obj, $key, $value );
+}
+function _set( $obj, $key, $value ){
 	// Sets the value of an object,
 	// even if it or it's parent(s) doesn't exist.
 	
@@ -258,6 +260,9 @@ function pw_set_wp_postmeta($vars){
 
 	extract($vars);
 
+	///// DEFAULT POSTMETA KEY /////
+	// TODO : 	Rather than set default key
+	// 			Get all the post meta values as array
 	if( !isset( $meta_key ) )
 		$meta_key = pw_postmeta_key;
 
@@ -274,6 +279,7 @@ function pw_set_wp_postmeta($vars){
 
 	///// SUB KEY /////
 	if( isset($sub_key) ){
+
 		///// SETUP DATA /////
 		// Check if the meta key exists
 		$meta_value = get_post_meta( $post_id, $meta_key, true );
@@ -425,6 +431,165 @@ function pw_get_postmeta( $vars = array() ){
 		return _get( $metadata, $vars['sub_key'] );
 
 }
+
+
+
+
+
+
+/*   _    ____ ___       _____            __  __      _        
+    / \  |  _ \_ _|  _  |_   _|_ ___  __ |  \/  | ___| |_ __ _ 
+   / _ \ | |_) | |  (_)   | |/ _` \ \/ / | |\/| |/ _ \ __/ _` |
+  / ___ \|  __/| |   _    | | (_| |>  <  | |  | |  __/ || (_| |
+ /_/   \_\_|  |___| (_)   |_|\__,_/_/\_\ |_|  |_|\___|\__\__,_|
+                                                               
+////////////////////////////////////////////////////////////////////*/
+
+
+function pw_set_wp_taxonomymeta($vars){
+	/*
+		- Sets meta key for the given term under the given key
+			in the `wp_taxonomymeta` table
+		- Object values passed in can be passed as PHP objects or Arrays,
+			and they will automatically be converted and stored as JSON
+		
+		PARAMETERS:
+		$vars = array(
+			"term_id"	=>	[integer], 	(optional)
+			"sub_key"	=>	[string],	(required)
+			"value" 	=>	[mixed],	(required)
+			"meta_key" 	=>	[string] 	(optional)
+			);
+	*/
+
+	// If the Taxonomy Metadata functions aren't loaded
+	if( !function_exists('update_term_meta') )
+		return false;
+
+	extract($vars);
+
+	///// DEFAULT META KEY /////
+	if( !isset( $meta_key ) )
+		$meta_key = PW_TAXMETA_KEY;
+
+	///// TERM ID /////
+	if( !isset($term_id) ){
+		global $pw;
+		$term_id = _get( $pw, 'view.term.term_id' );
+	}
+
+	///// SECURITY LAYER /////
+	if( !user_can('manage_categories') )
+		return array( 'error' => 'No user capabilities.' );
+
+	///// SUB KEY /////
+	if( isset($sub_key) ){
+
+		///// SETUP DATA /////
+		// Check if the meta key exists
+		$meta_value = get_term_meta( $term_id, $meta_key, true );
+
+		// If it exists, decode it from a JSON string into an object
+		if( !empty($meta_value) )
+			$meta_value = json_decode($meta_value, true);
+		// If it does not exist, define it as an empty array
+		else
+			$meta_value = array();
+
+		///// SET VALUE /////
+		$meta_value = _set( $meta_value, $sub_key, $value );
+
+		// Encode back into JSON
+		$meta_value = json_encode( $meta_value );
+
+	} else{
+		if( is_array( $meta_value ) || is_object( $meta_value ) )
+			// Encode arrays and objects into JSON
+			$meta_value = json_encode( $meta_value );	
+	}
+
+	// Set term meta
+	$update_term_meta = update_term_meta( $term_id, $meta_key, $meta_value );
+
+	// BOOLEAN : True on successful update, false on failure.
+	return $update_term_meta;
+
+}
+
+
+function pw_get_wp_taxonomymeta($vars){
+	/*
+	- Gets meta key for the given post under the given key
+		in the `wp_taxonomymeta` table
+	
+		PARAMETERS:
+		$vars = array(
+			"term_id"	=>	[integer], 	(optional)
+			"meta_key" 	=>	[string] 	(optional)
+			"sub_key"	=>	[string],
+			);
+	*/
+
+	// If the Taxonomy Metadata functions aren't loaded
+	if( !function_exists('get_term_meta') )
+		return false;
+
+	extract($vars);
+
+	///// TERM ID /////
+	if( !isset($term_id) ){
+		global $pw;
+		$term_id = _get( $pw, 'view.term.term_id' );
+	}
+
+	///// KEY /////
+	if( !isset($sub_key) )
+		$sub_key = '';
+
+	///// IF NO META KEY /////
+	if( !isset( $meta_key ) ){
+		// Get all the meta values for that term
+		$meta_values = get_term_meta( $term_id );
+
+		// If no values
+		if( empty( $meta_values ) )
+			return false;
+
+		// Iterate through each key
+		foreach( $meta_values as $key => $value ){
+			// If the value is array, and only one value
+			if( is_array( $value ) && count( $value ) == 1 ){
+				// Transform value to first value in array
+				$meta_values[$key] = pw_sanitize_numeric( $value[0] );
+			}
+		}
+		$value = $meta_values;
+
+	}
+	else{
+		///// GET DATA /////
+		// Check if the meta key exists
+		$meta_value = get_term_meta( $term_id, $meta_key, true );
+		if( empty($meta_value) )
+			return false;
+
+		// If a subkey is set
+		if( !empty( $sub_key ) ){
+			// Decode from JSON
+			$meta_value = json_decode( $meta_value, true );
+			// Get Subkey
+			$value = _get( $meta_value, $sub_key );
+		}
+		else
+			$value = $meta_value;
+	}
+
+	return $value;
+
+}
+
+
+
 
 
 /*   _    ____ ___        ___        _   _                 

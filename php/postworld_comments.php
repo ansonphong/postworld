@@ -219,7 +219,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 
 	////////// AVATAR IMAGES //////////
 		// AVATAR FIELDS
-		$avatars_object = get_avatar_sizes( $user_id, $fields );
+		$avatars_object = pw_get_avatar_sizes( $user_id, $fields );
 		if ( !empty( $avatars_object ) )
 			$comment_data["avatar"] = $avatars_object;
 
@@ -350,7 +350,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 
 		////////// AVATAR IMAGES //////////
 			// AVATAR FIELDS
-			$avatars_object = get_avatar_sizes( $user_id, $fields );
+			$avatars_object = pw_get_avatar_sizes( $user_id, $fields );
 			if ( !empty( $avatars_object ) )
 				$comment_data["avatar"] = $avatars_object;
 

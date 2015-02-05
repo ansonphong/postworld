@@ -6,8 +6,6 @@
 		[ '$scope', '_', 'iOptionsData',
 		function( $scope, $_, $iOptionsData ){
 		$scope['options'] = $iOptionsData['options'];
-		//$scope.termMeta = <?php echo json_encode( theme_get_term_meta( $vars->term_id ) ) ?>;
-
 		$scope.pwAvatar = <?php echo json_encode($vars) ?>;
 
 		// TODO : Fix issue with digest cycle not updating hidden form field

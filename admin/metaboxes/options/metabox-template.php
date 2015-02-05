@@ -18,8 +18,11 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 		?>
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="<?php echo PW_POSTMETA_KEY; ?>" ng-value="pwMeta | json" style="width:100%;">
-		<!-- DEV : Test Output
-		<hr><pre>{{ pwMeta | json }}</pre> -->
+		
+		<?php if( pw_dev_mode() ): ?>
+			<!-- DEV -->
+			<hr><pre>{{ pwMeta | json }}</pre> 
+		<?php endif; ?>
 	</div>	
 </div>
 

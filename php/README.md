@@ -1099,7 +1099,7 @@ var avatar_object = {
 
 ------
 
-### get_avatar_sizes( $user_id, $fields )
+### pw_get_avatar_sizes( $user_id, $fields )
 
 - Takes input $fields in the following format
 	- `avatar(handle,size)`
@@ -1108,7 +1108,7 @@ __return__ : *Array* (of image objects)
 
 ```
 $fields = array( 'avatar(small,48)', 'avatar(medium, 150)' );
-$avatars_object = get_avatar_sizes( $user_id, $fields );
+$avatars_object = pw_get_avatar_sizes( $user_id, $fields );
 
 //RESULT
 $avatars_object = array(
