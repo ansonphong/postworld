@@ -17,6 +17,53 @@
 		}
 	extract($options);
 ?>
+
+<!--///// METABOX SCRIPTS /////-->
+<script>
+	///// APP /////
+	//var <?php echo $instance ?> = angular.module( '<?php echo $instance ?>', ['postworldAdmin'] );
+	///// CONTROLLER /////
+	postworldAdmin.controller('<?php echo $instance ?>Ctrl',
+		['$scope', 'pwData', '_', '$log',
+		function( $scope, $pwData, $_, $log ) {
+
+			$scope.settings = <?php echo json_encode( $options ); ?>;
+
+			$scope.user = <?php echo json_encode( $user ) ?>;
+
+			$scope.viewOptions = <?php echo json_encode( $viewOptions ) ?>;
+
+			$scope.userSelectOptions = [
+				{
+					name: 'Current Author',
+					slug: 'current_author', 
+				},
+				{
+					name: 'Specific User',
+					slug: 'user_id', 
+				},
+			];
+
+			$scope.userIsSelected = function(){
+				return !_.isEmpty( $scope.user );
+			}
+
+			$scope.widgetUserSelected = function( user ){
+				$scope.settings.user_id = user.ID;
+				$scope.user = user;
+			}
+
+			$scope.widgetClearUser = function(){
+				$scope.settings.user_id = 0;
+				$scope.user = {};
+			}
+
+	}]);
+
+	//pwRegisterController( '<?php echo $instance ?>Ctrl', 'postworldAdmin' );
+
+</script>
+
 <div
 	id="<?php echo $instance ?>"
 	class="postworld">
@@ -131,54 +178,4 @@
 	</div>
 </div>
 
-<!--///// METABOX SCRIPTS /////-->
-<script>
-	///// APP /////
-	var <?php echo $instance ?> = angular.module( '<?php echo $instance ?>', ['postworldAdmin'] );
-	///// CONTROLLER /////
-	<?php echo $instance ?>.controller('<?php echo $instance ?>Ctrl',
-		['$scope', 'pwData', '_', '$log',
-		function( $scope, $pwData, $_, $log ) {
 
-			$scope.settings = <?php echo json_encode( $options ); ?>;
-
-			$scope.user = <?php echo json_encode( $user ) ?>;
-
-			$scope.viewOptions = <?php echo json_encode( $viewOptions ) ?>;
-
-			$scope.userSelectOptions = [
-				{
-					name: 'Current Author',
-					slug: 'current_author', 
-				},
-				{
-					name: 'Specific User',
-					slug: 'user_id', 
-				},
-			];
-
-			$scope.userIsSelected = function(){
-				return !_.isEmpty( $scope.user );
-			}
-
-			$scope.widgetUserSelected = function( user ){
-				$scope.settings.user_id = user.ID;
-				$scope.user = user;
-			}
-
-			$scope.widgetClearUser = function(){
-				$scope.settings.user_id = 0;
-				$scope.user = {};
-			}
-
-	}]);
-</script>
-<script>
-	///// BOOTSTRAP APP /////
-
-	if( typeof <?php echo $instance ?>Init == 'undefined' ){
-		angular.bootstrap(document.getElementById("<?php echo $instance ?>"),['<?php echo $instance ?>']);
-		var <?php echo $instance ?>Init = true;
-	}
-
-</script>

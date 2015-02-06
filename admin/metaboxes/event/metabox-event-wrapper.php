@@ -34,10 +34,8 @@ global $pw_event_post;
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwEventMetabox = angular.module( 'pwEventMetabox', ['postworld'] );
 	///// CONTROLLER /////
-	pwEventMetabox.controller('pwEventMetaboxCtrl',
+	postworldAdmin.controller('pwEventMetaboxCtrl',
 		['$scope',
 			function( $scope ) {
 			$scope.post = <?php echo json_encode($pw_event_post); ?>;
@@ -49,12 +47,5 @@ global $pw_event_post;
 	// Action hook to print the Javascript(s)
 	do_action('pw_event_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwEventMetabox"),['pwEventMetabox']);
-</script>
-
-
 
 

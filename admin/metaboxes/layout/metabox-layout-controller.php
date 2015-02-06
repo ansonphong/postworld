@@ -33,11 +33,8 @@ global $post;
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwLayoutMetabox = angular.module( 'pwLayoutMetabox', ['postworldAdmin'] );
-	
 	///// CONTROLLER /////
-	pwLayoutMetabox.controller('pwLayoutMetaboxCtrl',
+	postworldAdmin.controller('pwLayoutMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
@@ -73,14 +70,7 @@ global $post;
 	
 </script>
 
-
-
 <?php
 	// Action hook to print the Javascript(s)
 	do_action('pw_layout_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwLayoutMetabox"),['pwLayoutMetabox']);
-</script>

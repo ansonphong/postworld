@@ -8,7 +8,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld styles wrap" ng-cloak>
+<div class="postworld styles wrap" ng-cloak>
 	<div
 		pw-admin-style
 		ng-controller="pwStylesDataCtrl">

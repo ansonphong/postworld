@@ -10,17 +10,12 @@
 global $post;
 ?>
 
-
 <!--///// METABOX WRAPPER /////-->
 <div id="pwWpPostmetaMetabox" class="postworld pw-metabox metabox-wp-postmeta">
 	<div ng-controller="pwWpPostmetaMetaboxCtrl">
-		
-
 		<?php include $metabox_template; ?>
-
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="pw_post_wp_postmeta" ng-value="wpPostmetaPost | json" style="width:100%;">
-		
 		<!-- DEV : Test Output -->
 		<!--
 		<hr><pre>POST : {{ post | json }}</pre>
@@ -31,11 +26,8 @@ global $post;
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwWpPostmetaMetabox = angular.module( 'pwWpPostmetaMetabox', ['postworld'] );
-	
 	///// CONTROLLER /////
-	pwWpPostmetaMetabox.controller('pwWpPostmetaMetaboxCtrl',
+	postworldAdmin.controller('pwWpPostmetaMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 			// This is the post object which is saved
@@ -50,8 +42,3 @@ global $post;
 	// Action hook to print the Javascript(s)
 	do_action('pw_wp_postmeta_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwWpPostmetaMetabox"),['pwWpPostmetaMetabox']);
-</script>

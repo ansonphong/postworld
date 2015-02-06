@@ -6,6 +6,9 @@ function postworld_includes( $args ){
 
 	// Add hook for admin <head></head>
 	add_action('admin_print_scripts', 'pwGlobals_print', 8 );
+	add_action('admin_print_scripts', 'pwBootstrapPostworldAdmin_print', 20 );
+	
+
 	// Add hook for front-end <head></head>
 	add_action('wp_head', 'pwGlobals_print', 8 );
 
@@ -470,6 +473,17 @@ function pwGlobals_print() {
 		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
 	/* ]]> */</script><?php
+}
+
+function pwBootstrapPostworldAdmin_print() {
+	if( is_admin() ): ?>
+		<script>
+			///// BOOTSTRAP APP /////
+			angular.element(document).ready(function() {
+				angular.bootstrap(document, ['postworldAdmin']);
+			});
+		</script>
+	<?php endif;
 }
 
 ///// PARSE pwSiteGlobals /////

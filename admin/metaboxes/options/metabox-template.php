@@ -28,10 +28,8 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var postworldMetabox = angular.module( 'postworldMetabox', ['infinite','postworld'] );
 	///// CONTROLLER /////
-	postworldMetabox.controller('pwMetaboxCtrl',
+	postworldAdmin.controller('pwMetaboxCtrl',
 		['$scope',
 			function( $scope ) {
 			$scope.pwMeta = <?php echo json_encode($pwMeta); ?>;
@@ -41,7 +39,3 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 	// Print the Javascript(s)
 	do_action('pw_admin_options_metabox_scripts');
 ?>
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("postworldMetabox"),['postworldMetabox']);
-</script>
