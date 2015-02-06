@@ -20,17 +20,18 @@
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	//var <?php echo $instance ?> = angular.module( '<?php echo $instance ?>', ['postworldAdmin'] );
+
+	console.log( 'Init User Widget Script : ' + '<?php echo $instance ?>' );
+
 	///// CONTROLLER /////
 	postworldAdmin.controller('<?php echo $instance ?>Ctrl',
 		['$scope', 'pwData', '_', '$log',
 		function( $scope, $pwData, $_, $log ) {
 
+			$log.debug( 'Init User Widget Controller : ' + '<?php echo $instance ?>' );
+
 			$scope.settings = <?php echo json_encode( $options ); ?>;
-
 			$scope.user = <?php echo json_encode( $user ) ?>;
-
 			$scope.viewOptions = <?php echo json_encode( $viewOptions ) ?>;
 
 			$scope.userSelectOptions = [
@@ -60,7 +61,8 @@
 
 	}]);
 
-	//pwRegisterController( '<?php echo $instance ?>Ctrl', 'postworldAdmin' );
+	pwRegisterController( '<?php echo $instance ?>Ctrl', 'postworldAdmin' );
+	pwCompileElement( 'body', '<?php echo $instance ?>' );
 
 </script>
 
@@ -114,7 +116,7 @@
 						<span class='container-fluid' ng-controller="userAutocomplete">
 							<?php echo pw_select_user_autocomplete(array(
 								'class'		=>	'labeled',
-								'on_select' => 'widgetUserSelected($item)',
+								'on_select' => 	'widgetUserSelected($item)',
 								)); ?>
 						</span>
 					</div>

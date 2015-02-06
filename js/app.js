@@ -48,8 +48,8 @@ var depInjectAdmin = [
 	'postworld',
 	'ui.slider',
 	];
-var postworldAdmin = angular.module('postworldAdmin', depInjectAdmin );
 
+var postworldAdmin = angular.module('postworldAdmin', depInjectAdmin );
 
 var controllerProvider;
 
@@ -178,13 +178,10 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 	// $routeProvider.otherwise({redirectTo: '/home/'});
 
 	// SHOW / HIDE DEBUG LOGS IN CONSOLE
-	// Comment out for development
-
 	var debugEnabled = ( window.pw.info.mode == 'dev' ) ? true : false;
 	$logProvider.debugEnabled( debugEnabled );
 
 	$locationProvider.html5Mode(false);
-
 
 });
 
@@ -230,7 +227,33 @@ function pwRegisterController( controllerName, moduleName ) {
             	controllerProvider.register(controllerName, call[2][1]);
         }
     }
+
+    //console.log( 'pwRegisterController : ' + controllerName + ', ' + moduleName );
+
 }
+
+///// FUNCTION : COMPILE AND ELEMENT AFTER BOOTSTRAP /////
+function pwCompileElement( context, id ){
+	// Compile a new element, after the controller is registered
+	
+	var contextInjector = angular.element(context).injector();
+
+	if( _.isUndefined( contextInjector ) )
+		return false;
+
+	contextInjector.invoke(function($compile, $rootScope) {
+	    $compile( angular.element('#'+id))($rootScope);
+	    $rootScope.$apply();
+	});
+
+	/*// USING JQUERY
+	jQuery(context).injector().invoke(function($compile, $rootScope) {
+	    $compile(jQuery('#'+id))($rootScope);
+	    $rootScope.$apply();
+	});
+	*/
+}
+
 
 ////////// REPLACE ALL STRING PROTOTYPE //////////
 String.prototype.replaceAll = function(search, replace)
