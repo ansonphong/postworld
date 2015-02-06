@@ -17,7 +17,7 @@
 
 <h3><i class="icon-postworld"></i> Avatar</h3>
 
-<div ng-app="postworldAdmin">
+<div>
 	
 	<table
 		class="form-table"

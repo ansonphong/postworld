@@ -5,6 +5,7 @@
 	// Get icons if they're defined
 	$icons = _get( $vars, 'icons' );
 ?>
+
 <script>
 	postworld.controller( 'iconDataCtrl', [ '$scope', function($scope){
 		$scope.customIconOptions = <?php echo json_encode( $icons ) ?>;
@@ -45,6 +46,7 @@
 				</li>
 		<?php } ?>
 
+
 		<?php ///// ICOMOON /////
 			if( in_array( 'icomoon', $pwInject ) && !$icons ){ ?>
 				<li
@@ -56,6 +58,7 @@
 				</li>
 		<?php } ?>
 
+
 		<?php ///// GLYPHICONS /////
 			if( in_array( 'glyphicons-halflings', $pwInject ) && !$icons ){ ?>
 				<li
@@ -66,6 +69,7 @@
 						class="{{ icon.class }}"></i>
 				</li>
 		<?php } ?>
+
 
 	</ul>
 </span>
