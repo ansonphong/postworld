@@ -603,7 +603,7 @@ function pw_get_wp_taxonomymeta($vars){
 
 
 function pw_get_option( $vars ){
-	// Returns a sub key stored in the `i-options` option name
+	// Returns a sub key stored in the specified option name
 	//	From `wp_options` table
 	/*
 		vars = array(
@@ -654,7 +654,7 @@ function pw_get_option( $vars ){
 		}
 
 		///// CACHING LAYER /////
-		// Set the decoded data into the cache
+		// Set the decoded data into runtime cache
 		$pw_options_cache[$option_name] = array();
 		$pw_options_cache[$option_name]['filter_count']	= pw_filter_count( $option_name );
 		$pw_options_cache[$option_name]['value'] = $value;

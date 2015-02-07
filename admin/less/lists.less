@@ -34,7 +34,9 @@ ul{
 	ul.dropdown-menu{
 		&.grid{
 			min-width:200px;
-			@media @full{ min-width:600px; }
+			&.wide{
+				@media @full{ min-width:600px; }
+			}
 			li{
 				display:inline-block;
 				&:hover{
