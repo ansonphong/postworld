@@ -119,6 +119,9 @@ define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
 
 /////////////// HIGH PRIORITY ////////////////
 
+////// UTILITIES //////
+include 'php/postworld_utilities.php';
+
 ////// API //////
 // Load API functions
 include 'php/postworld_api.php';
@@ -145,8 +148,7 @@ include 'php/postworld_variables.php';
 define( 'POSTWORLD_PATH', dirname(__FILE__) );
 define( 'POSTWORLD_URI', get_postworld_uri() );
 
-////// UTILITIES //////
-include 'php/postworld_utilities.php';
+
 
 ////// H2O //////
 require_once 'lib/h2o/h2o.php';

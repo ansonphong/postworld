@@ -6,6 +6,35 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_log( $message ){
+	if( is_array( $message ) || is_object( $message ) )
+		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
+
+	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-log.txt");
+}
+
+
+// Recursively count array
+function pw_count_r($array, $i = 0){
+    foreach($array as $k){
+        if(is_array($k)){ $i += pw_count_r($k, 1); }
+        else{ $i++; }
+    }
+    return $i;
+}
+
+
+function pw_filter_count( $filter_hook ){
+	global $wp_filter;
+	$filters = _get( $wp_filter, $filter_hook );
+	
+	if( is_array( $filters ) && !empty( $filters ) )
+		return pw_count_r( $filters );
+	else
+		return 0;
+
+}
+
 function pw_dev_mode(){
 	// Returns a boolean, true if Postworld is in dev mode
 	return ( defined( 'POSTWORLD_MODE' ) && POSTWORLD_MODE == 'dev' );
@@ -108,14 +137,6 @@ function pw_unique_sub_key( $posts, $sub_key = 'ID' ){
 		}
 	}
 	return $unique_posts;
-}
-
-
-function pw_log( $message ){
-	if( is_array( $message ) || is_object( $message ) )
-		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
-
-	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-log.txt");
 }
 
 function pw_print_code( $var ){

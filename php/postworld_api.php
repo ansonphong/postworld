@@ -600,6 +600,8 @@ function pw_get_wp_taxonomymeta($vars){
                               |_|                          
 //////////////////////////////////////////////////////////*/
 
+
+
 function pw_get_option( $vars ){
 	// Returns a sub key stored in the `i-options` option name
 	//	From `wp_options` table
@@ -622,14 +624,18 @@ function pw_get_option( $vars ){
 	///// CACHING LAYER /////
 	// Make a global to cache data at runtime
 	// To prevent making multiple queries and json_decodes on the same option
-	global $i_options_cache;
-
-	// If cached data is already found, return it instantly
-	if( isset( $i_options_cache[$option_name] ) ){
-		$value = $i_options_cache[$option_name];
+	global $pw_options_cache;
+	// Get the number of filters on the option name
+	$filter_count = pw_filter_count( $option_name );
+	// Get the number of filtered on (possible) cached value
+	$cached_filter_count = _get( $pw_options_cache, $option_name .'.filter_count' );
+	// If there is the name number of filters (no new filters)
+	if( $filter_count === $cached_filter_count ){
+		// Get the cached value
+		$value = _get( $pw_options_cache, $option_name .'.value' );
 	}
+	// Otherwise, go through and get the option again and re-filter the value
 	else{
-
 		///// GET OPTION /////
 		// Retreive Option
 		$value = get_option( $option_name, array() );
@@ -645,18 +651,15 @@ function pw_get_option( $vars ){
 		if( $filter ){
 			// Apply Filters
 			$value = apply_filters( $option_name , $value );
-			// Depreciated
-			$value = apply_filters( 'iOptions-' . $option_name , $value );
-
 		}
 
 		///// CACHING LAYER /////
 		// Set the decoded data into the cache
-		$i_options_cache[$option_name] = $value;
+		$pw_options_cache[$option_name] = array();
+		$pw_options_cache[$option_name]['filter_count']	= pw_filter_count( $option_name );
+		$pw_options_cache[$option_name]['value'] = $value;
 
 	}
-
-	//pw_log( 'pw_get_option : ' . $option_name . ' : ' . json_encode($value) );
 
 	// If no key set, return the value directly
 	if( empty( $key ) )
