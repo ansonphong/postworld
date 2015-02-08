@@ -1524,7 +1524,6 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 				],
 			},
 
-
 			'style':{
 				'backgroundPosition':[
 					'parallax',
