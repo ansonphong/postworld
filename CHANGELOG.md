@@ -1,5 +1,10 @@
 # Postworld Changelog
 
+### Version 1.7.5
+- Restructured method of using `postworldAdmin` AngularJS module to Bootstrap metaboxes in WordPress Admin
+    + In Admin, `postworldAdmin` is Bootstrapped to the document `onLoad`
+    + All admin controllers can build and run controllers within `postworldAdmin` module
+
 ### Version 1.7.4
 - Added support in Postworld config for `wp_admin.usermeta.contact_methods`
     + Adding fields here, adds additional fields to the user profile

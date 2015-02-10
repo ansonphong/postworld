@@ -11,7 +11,7 @@
 
 <script>
 	///// LINK URL CONTROLLER /////
-	postworld.controller('pwLinkUrlCtrl',
+	postworldAdmin.controller('pwLinkUrlCtrl',
 		['$scope', 'pwEditPostFilters', 'pwPostOptions',
 			function($scope, $pwEditPostFilters, $pwPostOptions ) {
 
@@ -33,7 +33,7 @@
 	}]);
 </script>
 
-<div ng-app="postworld" class="postworld">
+<div class="postworld">
 	<div class="pw-metabox" ng-controller="pwLinkUrlCtrl">
 
 		<!-- LINK URL -->

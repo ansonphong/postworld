@@ -33,11 +33,9 @@ global $post;
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwBackgroundMetabox = angular.module( 'pwBackgroundMetabox', ['postworldAdmin'] );
-	
+
 	///// CONTROLLER /////
-	pwBackgroundMetabox.controller('pwBackgroundMetaboxCtrl',
+	postworldAdmin.controller('pwBackgroundMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
@@ -69,8 +67,3 @@ global $post;
 	// Action hook to print the Javascript(s)
 	do_action('pw_background_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwBackgroundMetabox"),['pwBackgroundMetabox']);
-</script>

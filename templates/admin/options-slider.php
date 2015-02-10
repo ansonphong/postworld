@@ -4,7 +4,7 @@ function pw_metabox_slider_scripts(){
 	?>
 	<script>
 		///// CONTROLLER /////
-		postworldMetabox.controller('pwMetaboxSliderOptionsCtrl',
+		postworldAdmin.controller('pwMetaboxSliderOptionsCtrl',
 			['$scope', '$log', 'pwPostOptions', '_',
 				function( $scope, $log, $pwPostOptions, $_ ) {
 

@@ -5,7 +5,7 @@
 	$pwBackgrounds = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) );
 	$pw_backgrounds_structure = apply_filters( PW_MODEL_BACKGROUNDS, array() );
 ?>
-<div ng-app="postworldAdmin" class="postworld styles wrap">
+<div class="postworld styles wrap">
 	<script type="text/javascript">
 		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
 		postworldAdmin.controller('pwBackgroundsDataCtrl',

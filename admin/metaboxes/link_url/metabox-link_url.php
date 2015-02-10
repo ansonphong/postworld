@@ -24,6 +24,8 @@ function pw_metabox_init_link_url(){
     }
     // Add Callback Function on Save
     add_action('save_post','pw_link_url_meta_save');
+    add_action('edit_attachment','pw_link_url_meta_save');
+    
 }
 
 ////////////// CREATE UI //////////////
@@ -44,6 +46,7 @@ function pw_link_url_meta_ui(){
 ////////////// SAVE POST //////////////
 function pw_link_url_meta_save($post_id){
 
+	pw_log( 'pw_link_url_meta_save: '. $post_id );
 	// Stop autosave to preserve meta data
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
         return $post_id;

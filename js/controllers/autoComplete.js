@@ -18,6 +18,10 @@ postworld.controller( 'userAutocomplete',
 				number:20,
 				search: searchTerm,
 			};
+			
+			if( _.isEmpty( searchTerm ) )
+				return [];
+
 			return $pwData.userQueryAutocomplete( query_args ).then(
 				// Success
 				function(response) {

@@ -112,12 +112,15 @@ postworld.controller( 'pwUiCtrl',
 		return style;
 	}
 
-	$scope.uiToggleElementClass = function( className, $event ){
-		// $event must be passed in as the second parameter from the DOM
-		//$log.debug( "EVENT : ", $event.currentTarget  );
-		angular.element( $event.currentTarget ).toggleClass( className );
+	$scope.uiToggleElementClass = function( className, selector ){
+		// If $event is passed as the second parameter
+		if( !_.isUndefined( selector.currentTarget ) )
+			// Toggle class on the current DOM item
+			angular.element( selector.currentTarget ).toggleClass( className );
+		else
+			// Otherwise use the standard selector
+			angular.element( selector ).toggleClass( className );
 	}
-
 
 }]);
 

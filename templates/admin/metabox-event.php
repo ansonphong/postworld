@@ -29,7 +29,10 @@
 			</span>
 
 			<!-- TIME DROPDOWN -->
-			<span dropdown class="time dropdown">
+			<span
+				dropdown
+				class="time dropdown"
+				ng-hide="post.post_meta[ eventKey ].date.all_day">
 				<button dropdown-toggle class="button">
 					<i class="icon-clock"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'shortTime' }}
@@ -75,7 +78,10 @@
 			</span>
 
 			<!-- TIME DROPDOWN -->
-			<span dropdown class="time dropdown">
+			<span
+				dropdown
+				class="time dropdown"
+				ng-hide="post.post_meta[ eventKey ].date.all_day">
 				<button dropdown-toggle class="button">
 					<i class="icon-clock"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'shortTime' }}
@@ -101,6 +107,17 @@
 		</div>
 	</div>
 
+
+	<div class="event-all-day">
+		<hr class="thin">
+		<label>
+			<input
+				type="checkbox"
+				ng-model="post.post_meta[ eventKey ].date.all_day">
+				All Day Event
+		</label>
+	</div>
+
 </div>
 
 <hr>
@@ -114,10 +131,7 @@
 	geo-post="post"
 	geo-location-obj="post.post_meta[ eventKey ].location"
 	geo-return-obj=""
-
 	class="input_module labeled">
-
-	
 
 		<!-- TODO :
 		<div ng-show="uiShowView('mapUnit')">
@@ -136,17 +150,17 @@
 			</google-map>
 		</div>
 	-->
-
 </div>
 
 <div class="pw-row row-primary">
 	<!-- LEFT COLUMN -->
 	<div class="pw-col-6">
+		<h3>Location</h3>
 
 		<div
 			pw-ui
-			ui-views="{ searchInput: false }"
-			class="well">
+			ui-views="{ searchInput: false }">
+			
 			<!-- UI VIEWS : <pre>{{ uiViews | json }}</pre><hr> -->
 			<!-- SEARCH BUTTON -->
 			<div
@@ -196,8 +210,22 @@
 			</div>
 		</div>
 
+		<hr class="thin">
 
-		<h3>Location</h3>
+		<div
+			class="well"
+			ng-show="uiBool( post.post_meta[ eventKey ].location.formatted_address )">
+			<label for="formatted_address" class="input-icon">
+				<i class="icon icon-location"></i>
+			</label>
+			<input
+				id="formatted_address"
+				type="text"
+				class="input-icon-left"
+				style="width:100%;"
+				ng-model="post.post_meta[ eventKey ].location.formatted_address">
+		</div>
+
 		<div class="pw-row">
 			<div class="pw-col-12">
 				<label class="inner">Name</label>
@@ -267,6 +295,22 @@
 					placeholder="0.000">
 			</div>
 		</div>
+		
+		<div
+			ng-show="uiBool(post.post_meta[ eventKey ].timezone.time_zone_name)"
+			pw-timezone
+			timezone-latitude="post.geo_latitude"
+			timezone-longitude="post.geo_longitude"
+			timezone-obj="post.post_meta[ eventKey ].timezone">
+			<hr class="thin">
+			<button
+				type='button'
+				disabled>
+				<i class="icon-clock"></i>
+				Timezone : {{ post.post_meta[ eventKey ].timezone.time_zone_name }}
+			</button>
+		</div>
+
 	</div>
 
 	<!-- RIGHT COLUMN -->

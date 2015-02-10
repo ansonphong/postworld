@@ -2,8 +2,15 @@
 
 // Define Angular Dependancies
 function postworld_includes( $args ){
-
 	extract( $args );
+
+	// Add hook for admin <head></head>
+	add_action('admin_print_scripts', 'pwGlobals_print', 8 );
+	add_action('admin_print_scripts', 'pwBootstrapPostworldAdmin_print', 20 );
+	
+
+	// Add hook for front-end <head></head>
+	add_action('wp_head', 'pwGlobals_print', 8 );
 
 	global $pw;
 	global $pwSiteGlobals;
@@ -40,7 +47,6 @@ function postworld_includes( $args ){
 	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery','');
 
-	
 
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
@@ -152,17 +158,6 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'PHP.JS',
 			POSTWORLD_URI.'/lib/php.js/php.js');
 
-		/*
-		// MOMENT.JS
-		wp_enqueue_script( 'Moment-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment.min.js');
-		// MOMENT-TIMEZONE.JS
-		wp_enqueue_script( 'Moment-Timezone-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js');
-		// MOMENT-TIMEZONE DATA.JS
-		wp_enqueue_script( 'Moment-Timezone-Data-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js');
-		*/
 
 		// HISTORY.JS
 		//wp_enqueue_script( 'History-JS',
@@ -170,7 +165,7 @@ function postworld_includes( $args ){
 
 		///// THIRD PARTY LIBRARIES /////
 
-		
+		/*
 		// CREATE.JS
 		// Development Only ( Not in Grunt File / Deploy Version )
 		wp_enqueue_script( 'CreateJS-Easel',
@@ -179,7 +174,7 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/create.js/tweenjs-0.5.0.min.js');
 		wp_enqueue_script( 'CreateJS-MovieClip',
 			POSTWORLD_URI.'/lib/create.js/movieclip-0.7.0.min.js');
-		
+		*/
 		
 		///// ANGULAR VERSION CONTROL /////
 
@@ -249,11 +244,7 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Timer',
 			POSTWORLD_URI.'/lib/angular-timer/angular-timer.js', $angularDep );
 
-		/*
-		// ANGULAR : TIMER
-		wp_enqueue_script( 'AngularJS-Moment',
-			plugins_url().'/postworld/lib/angular-moment/angular-moment.min.js', $angularDep );
-		*/
+		
 
 		// ANGULAR : PARALLAX
 		wp_enqueue_script( 'angularJS-Parallax',
@@ -266,13 +257,12 @@ function postworld_includes( $args ){
 		// ANGULAR : MASONRY
 		wp_enqueue_script( 'angularJS-Masonry',
 			POSTWORLD_URI.'/lib/angular-masonry/angular-masonry.js', $angularDep );
-
+		
 
 		/////// POSTWORLD APP /////	
 		// TODO : blob through the dirs and get all the js files, auto-include in foreach
 		wp_enqueue_script( 	'pw-app-JS',
 			POSTWORLD_URI.'/js/app.js', $angularDep );
-
 
 
 		///// CREATE.JS /////
@@ -324,6 +314,9 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'pw-geocode-JS',
 			POSTWORLD_URI.'/js/components/pwGeocode.js', $angularDep );
+
+		wp_enqueue_script( 'pw-timezone-JS',
+			POSTWORLD_URI.'/js/components/pwTimezone.js', $angularDep );
 
 		wp_enqueue_script( 'pw-UI-JS',
 			POSTWORLD_URI.'/js/components/pwUi.js', $angularDep );
@@ -435,16 +428,33 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/ui-calendar-master/src/calendar.js' );
 	}
 
+	// + ANGULAR MOMENT
+	if( in_array( 'angularMoment', $pw['inject'] ) ){
+
+		///// ANGULAR : MOMENT /////
+		// MOMENT.JS
+		wp_enqueue_script( 'Moment-JS',
+			POSTWORLD_URI.'/lib/moment.js/moment.min.js', $angularDep);
+		// ANGULAR - MOMENT
+		wp_enqueue_script( 'AngularJS-Moment',
+			POSTWORLD_URI.'/lib/angular-moment/angular-moment.min.js', $angularDep );
+		// MOMENT-TIMEZONE.JS
+		wp_enqueue_script( 'Moment-Timezone-JS',
+			POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js', $angularDep);
+		// MOMENT-TIMEZONE DATA.JS
+		wp_enqueue_script( 'Moment-Timezone-Data-JS',
+			POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js', $angularDep);
+
+	}
+
+
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
 	// Dynamically generate javascript file
 	// After all Plugins and Theme Loaded
 	//add_action( 'init', 'pwSiteGlobals_include');
 	pwSiteGlobals_include();
 
-	// Add hook for admin <head></head>
-	add_action('admin_head', 'pwGlobals_print');
-	// Add hook for front-end <head></head>
-	add_action('wp_head', 'pwGlobals_print');
+	
 
 }
 
@@ -453,17 +463,28 @@ function postworld_includes( $args ){
 function pwGlobals_print() {
 	global $pw;
 	?><script type="text/javascript">/* <![CDATA[ */
-		pw.angularModules = pw.angularModules.concat( <?php echo json_encode( $pw['angularModules'] ); ?> );
+		pw = {};
+		pw.angularModules = <?php echo json_encode( $pw['angularModules'] ) ?>;
 		pw.info = <?php echo json_encode( $pw['info'] ); ?>;
 		pw.view = <?php echo json_encode( pw_current_view() ); ?>;
 		pw.query = <?php echo json_encode( $pw['query'] ); ?>;
-		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 		pw.background = <?php echo json_encode( pw_current_background() ); ?>;
 		pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
+		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
 	/* ]]> */</script><?php
 }
 
+function pwBootstrapPostworldAdmin_print() {
+	if( is_admin() ): ?>
+		<script>
+			///// BOOTSTRAP APP /////
+			angular.element(document).ready(function() {
+				angular.bootstrap(document, ['postworldAdmin']);
+			});
+		</script>
+	<?php endif;
+}
 
 ///// PARSE pwSiteGlobals /////
 function pwSiteGlobals_include(){

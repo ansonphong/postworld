@@ -269,9 +269,14 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 	////////// AVATAR IMAGES //////////
 		// AVATAR FIELDS
-		$avatars_object = get_avatar_sizes($author_id, $fields);
-		if ( !empty($avatars_object) )
-			$post["avatar"] = $avatars_object;
+		//$avatars = pw_get_avatar_sizes( $author_id, $fields );
+		$avatars = pw_get_avatars( array(
+			'user_id' 	=> 	$author_id,
+			'fields'	=>	$fields,
+			));
+		
+		if ( !empty($avatars) )
+			$post["avatar"] = $avatars;
 
 
 	////////// META DATA //////////

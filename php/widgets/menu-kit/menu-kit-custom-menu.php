@@ -54,7 +54,7 @@ class PW_Menu_With_Description extends Walker_Nav_Menu {
         $output .= $indent;
         $output .= '<li id="menu-item-'.$item->ID.'" '.$class_names.' >';
         $output .= $args->before;
-
+        
         // Print the template body
         ob_start();
         include $args->walker_vars['item_template_path'];

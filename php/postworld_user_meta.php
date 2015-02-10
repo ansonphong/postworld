@@ -354,7 +354,7 @@ function pw_get_user( $user_id, $fields = false ) {
 
 
 	// AVATAR FIELDS
-	$avatar = get_avatar_sizes($user_id, $fields);
+	$avatar = pw_get_avatar_sizes($user_id, $fields);
 	if ( !empty($avatar) )
 		$user_data["avatar"] = $avatar;
 
@@ -366,7 +366,7 @@ function pw_get_user( $user_id, $fields = false ) {
 }
 
 
-function get_avatar_sizes($user_id, $fields){
+function pw_get_avatar_sizes( $user_id, $fields ){
 	// DEPRECIATED
 	return pw_get_avatars( array(
 			'user_id' 	=> 	$user_id,
@@ -382,7 +382,7 @@ function pw_get_avatars( $vars ){
 
 	$default_vars = array(
 		'user_id' 	=> 	$user_id,
-		'fields'	=>	array( 'avatar(small,64)', 'avatar(medium,256)' ),
+		'fields'	=>	array(), // 'avatar(small,64)', 'avatar(medium,256)' 
 		);
 	$vars = array_replace_recursive( $default_vars, $vars );
 

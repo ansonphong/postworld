@@ -6,8 +6,6 @@
 		[ '$scope', '_', 'iOptionsData',
 		function( $scope, $_, $iOptionsData ){
 		$scope['options'] = $iOptionsData['options'];
-		//$scope.termMeta = <?php echo json_encode( theme_get_term_meta( $vars->term_id ) ) ?>;
-
 		$scope.pwAvatar = <?php echo json_encode($vars) ?>;
 
 		// TODO : Fix issue with digest cycle not updating hidden form field
@@ -19,7 +17,7 @@
 
 <h3><i class="icon-postworld"></i> Avatar</h3>
 
-<div ng-app="postworldAdmin">
+<div>
 	
 	<table
 		class="form-table"

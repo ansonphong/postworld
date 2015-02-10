@@ -1,5 +1,5 @@
 
-<div ng-app="postworldAdmin" class="postworld social" ng-cloak>
+<div class="postworld social" ng-cloak>
 
 	<h1>
 		<i class="icon-postworld"></i>

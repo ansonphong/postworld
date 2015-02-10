@@ -7,7 +7,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld sidebars wrap" ng-cloak>
+<div class="postworld sidebars wrap" ng-cloak>
 	<div
 		pw-admin
 		pw-admin-sidebars
