@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'icomoon';
-	src:url('fonts/icomoon.eot?-ue290u');
-	src:url('fonts/icomoon.eot?#iefix-ue290u') format('embedded-opentype'),
-		url('fonts/icomoon.woff?-ue290u') format('woff'),
-		url('fonts/icomoon.ttf?-ue290u') format('truetype'),
-		url('fonts/icomoon.svg?-ue290u#icomoon') format('svg');
+	src:url('fonts/icomoon.eot?juq5ta');
+	src:url('fonts/icomoon.eot?#iefixjuq5ta') format('embedded-opentype'),
+		url('fonts/icomoon.woff?juq5ta') format('woff'),
+		url('fonts/icomoon.ttf?juq5ta') format('truetype'),
+		url('fonts/icomoon.svg?juq5ta#icomoon') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -475,7 +475,7 @@
 	content: "\e630";
 }
 
-.icon-location2:before {
+.icon-location-fill:before {
 	content: "\e631";
 }
 
@@ -647,16 +647,8 @@
 	content: "\e66f";
 }
 
-.icon-fire:before {
-	content: "\e672";
-}
-
 .icon-lab:before {
 	content: "\e673";
-}
-
-.icon-magnet:before {
-	content: "\e674";
 }
 
 .icon-trash:before {
@@ -723,14 +715,6 @@
 	content: "\e685";
 }
 
-.icon-brightness-medium:before {
-	content: "\e686";
-}
-
-.icon-brightness-contrast:before {
-	content: "\e687";
-}
-
 .icon-contrast:before {
 	content: "\e688";
 }
@@ -775,7 +759,7 @@
 	content: "\e694";
 }
 
-.icon-minus2:before {
+.icon-minus-2:before {
 	content: "\e696";
 }
 
@@ -1129,6 +1113,10 @@
 
 .icon-tags:before {
 	content: "\f02c";
+}
+
+.icon-font:before {
+	content: "\f031";
 }
 
 .icon-edit:before {
