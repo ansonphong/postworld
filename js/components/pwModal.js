@@ -94,6 +94,15 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 					};
 				break;
 
+				///// TEMPLATE /////
+				case "template":
+					modalObj = {
+						controller: 	"pwModalInstanceCtrl",
+						windowClass: 	"modal-template",
+						keybindings: 	false,
+					};
+				break;
+
 			}
 
 			///// GET CUSTOM OVERRIDE TEMPLATE URL /////
