@@ -416,9 +416,10 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/moment.min.js' );
 
 		wp_enqueue_script( 'Full-Calendar-JS',
-			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.js' );	
-		wp_enqueue_style( 'Full-Calendar-CSS',
-			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.css' );		
+			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.js' );
+
+		//wp_enqueue_style( 'Full-Calendar-CSS',
+		//	POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.css' );		
 
 		wp_enqueue_script( 'Full-Calendar-jQuery-UI-JS',
 			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/jquery-ui.custom.min.js' );
