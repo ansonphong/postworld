@@ -74,34 +74,35 @@ function pw_insert_content($vars){
 }
 
 // Insert Column Classes
-function i_insert_column_classes( $column, $i_layout = array() ){
+function i_insert_column_classes( $column, $pw_layout = array() ){
 	// DEPRECIATED : use pw_insert_column_classes()
-	return pw_insert_column_classes( $column, $i_layout );
+	return pw_insert_column_classes( $column, $pw_layout );
 }
-function pw_insert_column_classes( $column, $i_layout = array() ){
+function pw_insert_column_classes( $column, $pw_layout = array() ){
 	global $pw;
-	if( empty( $i_layout ) )
-		$i_layout = $pw['layout'];
+	if( empty( $pw_layout ) )
+		$pw_layout = $pw['layout'];
 
 	$classes = "";
 
 	$full_width = (int) 12;
 
 	// Cycle through each screen size
-	foreach( i_layout_options()['screen_sizes'] as $screen_size ){
+	$layout_options = pw_layout_options();
+	foreach( $layout_options['screen_sizes'] as $screen_size ){
 		//$screen_size_columns = array();
 		$screen_size_slug = $screen_size['slug'];
 
-		$left_sidebar_width = ( isset($i_layout['sidebars']['left']['width'][$screen_size_slug]) ) ?
-			(int) $i_layout['sidebars']['left']['width'][$screen_size_slug] :
+		$left_sidebar_width = ( isset($pw_layout['sidebars']['left']['width'][$screen_size_slug]) ) ?
+			(int) $pw_layout['sidebars']['left']['width'][$screen_size_slug] :
 			(int) $screen_size['default_sidebar_width'];
 
-		$right_sidebar_width = ( isset($i_layout['sidebars']['right']['width'][$screen_size_slug]) ) ?
-			(int) $i_layout['sidebars']['right']['width'][$screen_size_slug] :
+		$right_sidebar_width = ( isset($pw_layout['sidebars']['right']['width'][$screen_size_slug]) ) ?
+			(int) $pw_layout['sidebars']['right']['width'][$screen_size_slug] :
 			(int) $screen_size['default_sidebar_width'];
 
 		// Switch Layouts
-		switch($i_layout['template']){
+		switch($pw_layout['template']){
 
 			// Full Width
 			case 'full-width';
@@ -166,22 +167,23 @@ function pw_insert_column_classes( $column, $i_layout = array() ){
 }
 
 // Insert Responsive Clearfix
-function i_insert_clearfix( $column, $i_layout = array() ){
+function i_insert_clearfix( $column, $pw_layout = array() ){
 	// DEPRECIATED : use pw_insert_clearfix()
-	pw_insert_clearfix( $column, $i_layout = array() );
+	pw_insert_clearfix( $column, $pw_layout = array() );
 }
-function pw_insert_clearfix( $column, $i_layout = array() ){
+function pw_insert_clearfix( $column, $pw_layout = array() ){
 	global $pw;
 	// Get current layout
-	if( empty( $i_layout ) )
-		$i_layout = $pw['layout'];
+	if( empty( $pw_layout ) )
+		$pw_layout = $pw['layout'];
 
 	$full_width = (int) 12;
 	$classes = "";
 
-	foreach( i_layout_options()['screen_sizes'] as $screen_size ){
+	$layout_options = pw_layout_options();
+	foreach( $layout_options['screen_sizes'] as $screen_size ){
 		$screen_size_slug = $screen_size['slug'];
-		$column_width = $i_layout['sidebars'][$column]['width'][$screen_size_slug];
+		$column_width = $pw_layout['sidebars'][$column]['width'][$screen_size_slug];
 
 		if($column_width >= $full_width)
 			$classes .= " visible-".$screen_size_slug;
@@ -247,34 +249,34 @@ function pw_print_layout( $vars ){
 }
 
 // Infinite : Insert a Sidebar
-function i_insert_sidebar( $sidebar, $i_layout = array() ){
+function i_insert_sidebar( $sidebar, $pw_layout = array() ){
 	// DEPRECIATED : use pw_insert_sidebar()
-	return pw_insert_sidebar( $sidebar, $i_layout );
+	return pw_insert_sidebar( $sidebar, $pw_layout );
 }
-function pw_insert_sidebar( $sidebar, $i_layout = array() ){
+function pw_insert_sidebar( $sidebar, $pw_layout = array() ){
 	global $pw;
 	// Get current layout
-	if( empty( $i_layout ) )
-		$i_layout = $pw['layout'];
+	if( empty( $pw_layout ) )
+		$pw_layout = $pw['layout'];
 
-	$sidebar_id = pw_get_obj( $i_layout, 'sidebars.'. $sidebar .'.id' );
+	$sidebar_id = pw_get_obj( $pw_layout, 'sidebars.'. $sidebar .'.id' );
 
 	if( isset( $sidebar_id ) )
 		dynamic_sidebar( $sidebar_id );
 }
 
 // Infinite : Insert a Sidebar Template
-function i_insert_sidebar_template( $sidebar, $i_layout = array() ){
+function i_insert_sidebar_template( $sidebar, $pw_layout = array() ){
 	// DEPRECIATED : use pw_insert_sidebar_template()
-	return pw_insert_sidebar_template( $sidebar, $i_layout );
+	return pw_insert_sidebar_template( $sidebar, $pw_layout );
 }
-function pw_insert_sidebar_template( $sidebar, $i_layout = array() ){
+function pw_insert_sidebar_template( $sidebar, $pw_layout = array() ){
 	global $pw;
 	// Get current layout
-	if( empty( $i_layout ) )
-		$i_layout = $pw['layout'];
+	if( empty( $pw_layout ) )
+		$pw_layout = $pw['layout'];
 
-	$sidebar_id = $i_layout['sidebars'][$sidebar]['id'];
+	$sidebar_id = $pw_layout['sidebars'][$sidebar]['id'];
 	
 	$template_by_id = locate_template( 'views/sidebars/sidebar-'.$sidebar_id.'.php' );
 	$template_default = locate_template( 'views/sidebars/sidebar.php' );
@@ -289,7 +291,7 @@ function pw_insert_sidebar_template( $sidebar, $i_layout = array() ){
 
 	// Insert the sidebar directly, with no template
 	} else {
-		i_insert_sidebar( $i_layout, $sidebar );
+		pw_insert_sidebar( $pw_layout, $sidebar );
 	}
 
 }
