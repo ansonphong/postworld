@@ -19,12 +19,13 @@
 	pw-ui
 	ng-controller="iconDataCtrl">
 	<!-- SELECTED ITEM -->
-	<span
+	<button
+		type="button"
 		dropdown-toggle
 		class="area-select area-select-icon">
 		<i ng-show="uiBool(<?php echo $vars['ng_model']; ?>)" class="{{ <?php echo $vars['ng_model']; ?> }} <?php if( $vars['icon_spin'] == true ) echo 'icon-spin' ?>"></i>
 		<span class="select-icon-none" ng-hide="uiBool(<?php echo $vars['ng_model']; ?>)">None</span>
-	</span>
+	</button>
 	<!-- MENU -->
 	<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
 		<?php
@@ -48,8 +49,8 @@
 				<li
 					class="select-icon"
 					ng-repeat="icon in iconset.classes"
-					ng-click="<?php echo $vars['ng_model']; ?> = icon + ' ' + iconset.class">
-					<i class="{{ icon }} {{ iconset.class }}"></i>
+					ng-click="<?php echo $vars['ng_model']; ?> = icon">
+					<i class="{{ icon }}"></i>
 				</li>
 			</div>
 

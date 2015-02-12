@@ -247,7 +247,7 @@ function pw_get_css_icon_classes( $vars = array() ){
 		'prefix'	=>	'icon-',	// The CSS classes prefix
 		'add_class'	=>	'',			// Additional classes
 		'src'		=>	null,		// Absolute System Directory Path to CSS file
-		'return'	=>	'keys',		// 'all' / 'keys' / 'hash'
+		'return'	=>	'keys',		// 'all' / 'classes' / 'keys'
 		'output'	=>	'array',
 		);
 
@@ -274,7 +274,11 @@ function pw_get_css_icon_classes( $vars = array() ){
 		$icon_keys = array();
 
 		foreach( $icons as $key => $value ){
-			$icon_keys[] = $key;
+
+			if($vars['return'] == 'classes' && !empty($vars['add_class']) )
+				$icon_keys[] = $vars['add_class'] . ' ' . $key;
+			else
+				$icon_keys[] = $key;
 		}
 
 		$icons = $icon_keys;
