@@ -8,25 +8,6 @@
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 
-///// TODO : DIGEST INFINITE INTO POSTWORLD /////
-postworld.directive( 'iEditPost', [ function($scope){
-    return {
-        restrict: 'AE',
-        controller: 'iEditPostCtrl',
-        link: function( $scope, element, attrs ){}
-    };
-}]);
-postworld.controller('iEditPostCtrl',
-    ['$scope', '$rootScope', '$timeout', '$filter',
-        'pwData', '$log', '$route', '$routeParams', '$window',  '_', 'pwTemplatePartials', 'iOptionsData',
-    function($scope, $rootScope, $timeout, $filter, 
-        $pwData, $log, $route, $routeParams,  $window, $_, $pwTemplatePartials, $iOptionsData ) {
-
-        $scope['options'] = $iOptionsData['options'];
-
-}]);
-
-
 
 
 postworld.directive( 'pwEditPost', [ function($scope){
@@ -114,9 +95,13 @@ postworld.directive( 'pwEditPost', [ function($scope){
 
 postworld.controller('editPost',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window', 'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials',
+	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window',
+	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', 'iOptionsData',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials ) {
+		$pwData, $log, $route, $routeParams, $location, $http, $window,
+		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $iOptionsData ) {
+
+	$scope['options'] = $iOptionsData['options'];
 
 	$log.debug( "$scope.mode @ init", $scope.mode );
 
