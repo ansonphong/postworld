@@ -37,7 +37,7 @@ function pw_register_iconset( $vars = array() ){
 	/*	Registers an iconset.
 	 *	@param $vars - An associative array with the following structure:
 	 *	$vars = array(
-			'name'		=>	'Ico Moon',
+			'name'		=>	'IcoMoon',
 			'slug'		=>	'icomoon',
 			'src'		=>	'http://...icomoon.css',
 			'prefix'	=>	'icon-'
@@ -67,9 +67,10 @@ function pw_register_core_iconsets(){
 
 	$iconsets = array(
 		array(
-			'name'		=>	'Ico Moon',
+			'name'		=>	'IcoMoon',
 			'slug'		=>	'icomoon',
 			'prefix'	=>	'icon-',
+			'class'		=>	'',
 			'url'		=>	POSTWORLD_URI  . '/lib/icomoon/style.css',
 			'src'		=>	POSTWORLD_PATH . '/lib/icomoon/style.css',
 			),
@@ -77,6 +78,7 @@ function pw_register_core_iconsets(){
 			'name'		=>	'Glyphicons Halflings',
 			'slug'		=>	'glyphicons-halflings',
 			'prefix'	=>	'glyphicon-',
+			'class'		=>	'glyphicon',
 			'url'		=>	POSTWORLD_URI  . '/lib/glyphicons/glyphicons-halflings.css',
 			'src'		=>	POSTWORLD_PATH . '/lib/glyphicons/glyphicons-halflings.css',
 			),

@@ -119,6 +119,16 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_backgrounds',
 			);
 
+	if( in_array( 'iconsets', $enabled_modules ) )
+		$menu['submenu']['iconsets'] = array(
+			'parent_slug' => $pw_slug,
+			'page_title' => 'Iconsets',
+			'menu_title' => 'Iconsets',
+			'capability' => 'manage_options',
+			'menu_slug' => $pw_slug.'-iconsets',
+			'function' => 'postworld_options_iconsets',
+			);
+
 	//echo json_encode($pw['modules']);
 
 	///// APPLY FILTERS /////

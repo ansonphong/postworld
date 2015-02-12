@@ -174,7 +174,18 @@ function pw_required_modules(){
 
 function pw_set_modules(){
 
+}
 
+function pw_modules_outline(){
+	$enabled_modules = pw_enabled_modules();
+	$supported_modules = pw_supported_modules();
+	$required_modules = pw_required_modules();
+
+	return array(
+		'enabled'	=>	$enabled_modules,
+		'supported'	=>	$supported_modules,
+		'required'	=>	$required_modules,
+		);
 }
 
 function pw_module_is_enabled( $module ){

@@ -353,6 +353,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Services-JS',
 			POSTWORLD_URI.'/js/services/pwServices.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Iconsets-JS',
+			POSTWORLD_URI.'/js/services/pwIconsets.js', $angularDep );
+
 		wp_enqueue_script( 'pw-pwCommentsService-JS',
 			POSTWORLD_URI.'/js/services/pwCommentsService.js', $angularDep );
 
@@ -533,6 +536,12 @@ function pwSiteGlobals_include(){
 	$pwJs  = "";
 	$pwJs .= "var pwSiteGlobals = ";
 	$pwJs .= json_encode( $pwSiteGlobals );
+	$pwJs .= ";";
+
+	// MODULES
+	$pwJs .= "\n\n";
+	$pwJs .= "pw.modules = ";
+	$pwJs .= json_encode( pw_modules_outline() );
 	$pwJs .= ";";
 
 	// TEMPLATES
