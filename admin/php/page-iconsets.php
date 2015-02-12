@@ -8,6 +8,7 @@
 	</h1>
 
 	<li>ADD OPTION : Enable Iconset Shortcodes (select from iconsets)</li>
+	<li>ADD OPTION : Clear iconset cache (delete all options)</li>
 
 	<hr>
 

@@ -21,13 +21,22 @@ function pw_get_iconsets( $slugs = array() ){
 		return false;
 
 	global $pw;
+
+	// Get all of the registered iconsets
 	$iconsets = $pw['iconsets'];
 
-	// Remove the SRC key
+	// Empty array
 	$return_iconsets = array();
+
+	// Iterate through each of the registered iconsets
 	foreach( $iconsets as $key => $value ){
-		unset($value['src']); 
-		$return_iconsets[$key] = $value;
+		// If the iconset is enabled
+		if( pw_iconset_is_enabled( $key ) ){
+			// Remove the SRC key
+			unset($value['src']); 
+			// Transfer the iconset
+			$return_iconsets[$key] = $value;
+		}
 	}
 
 	return $return_iconsets;
@@ -36,13 +45,7 @@ function pw_get_iconsets( $slugs = array() ){
 function pw_register_iconset( $vars = array() ){
 	/*	Registers an iconset.
 	 *	@param $vars - An associative array with the following structure:
-	 *	$vars = array(
-			'name'		=>	'IcoMoon',
-			'slug'		=>	'icomoon',
-			'src'		=>	'http://...icomoon.css',
-			'prefix'	=>	'icon-'
-			)
-	*/
+	 */
 	global $pw;
 
 	// Check for string values	
@@ -52,6 +55,17 @@ function pw_register_iconset( $vars = array() ){
 		!is_string( $vars['src'] ) ||
 		!is_string( $vars['prefix'] ) )
 		return false;
+
+	$defaultVars = array(
+		'name'		=>	null,		// String
+		'slug'		=>	null,		// String
+		'prefix'	=>	'icon-',	// The icon class prefix
+		'add_class'	=>	'',			// Additional required class
+		'url'		=>	null,		// URL to .css file
+		'src'		=>	null,		// System path to .css file 
+		);
+
+	$vars = array_replace_recursive( $defaultVars, $vars );
 
 	// Add to Postworld Globals
 	$pw['iconsets'][ $vars['slug'] ] = $vars;
@@ -70,7 +84,7 @@ function pw_register_core_iconsets(){
 			'name'		=>	'IcoMoon',
 			'slug'		=>	'icomoon',
 			'prefix'	=>	'icon-',
-			'class'		=>	'',
+			'add_class'	=>	'',
 			'url'		=>	POSTWORLD_URI  . '/lib/icomoon/style.css',
 			'src'		=>	POSTWORLD_PATH . '/lib/icomoon/style.css',
 			),
@@ -78,7 +92,7 @@ function pw_register_core_iconsets(){
 			'name'		=>	'Glyphicons Halflings',
 			'slug'		=>	'glyphicons-halflings',
 			'prefix'	=>	'glyphicon-',
-			'class'		=>	'glyphicon',
+			'add_class'	=>	'glyphicon',
 			'url'		=>	POSTWORLD_URI  . '/lib/glyphicons/glyphicons-halflings.css',
 			'src'		=>	POSTWORLD_PATH . '/lib/glyphicons/glyphicons-halflings.css',
 			),
@@ -90,6 +104,7 @@ function pw_register_core_iconsets(){
 	foreach( $iconsets as $iconset ){
 		pw_register_iconset( $iconset );
 	}
+
 }
 add_action( 'init', 'pw_register_core_iconsets' );
 
@@ -129,16 +144,35 @@ function pw_load_iconsets( $iconsets = array(), $register_classes = true ){
 	else
 		return false;
 	
+	// Apply filters
+	$load_iconsets = apply_filters( 'pw_load_iconsets', $load_iconsets );
 
 	///// LOAD ICONSETS ///// 
 	// Iterate through iconsets
 	foreach( $load_iconsets as $slug => $iconset ){
+
+		// Only load those iconsets which are selected in pw-config
+		// Or saved in iconsets PW_OPTIONS_ICONSETS
+		if( !pw_iconset_is_enabled( $slug ) )
+			continue;
+
 		// Enqueue styles
 		wp_enqueue_style( $slug, $iconset['url'] );
 		// Load icon CSS classes
 		$pw['iconsets'][$slug]['classes'] = pw_get_iconset_classes( $slug );
 	}
 	
+}
+
+function pw_iconset_is_enabled( $iconset_slug ){
+	// Returns which iconsets are enabled
+	global $pwSiteGlobals;
+	$required_iconsets = _get( $pwSiteGlobals, 'iconsets.required' );
+
+	$enabled_iconsets = $required_iconsets;
+
+	return in_array( $iconset_slug, $enabled_iconsets );
+
 }
 
 
@@ -185,6 +219,7 @@ function pw_get_iconset_classes( $iconset_slug ){
 	$iconset_classes = pw_get_css_icon_classes( array(
 		'prefix'	=>	$iconset['prefix'],
 		'src'		=>	$iconset['src'],
+		'add_class'	=>	$iconset['add_class'],
 		'return'	=>	'classes',
 		));
 
@@ -209,7 +244,8 @@ function pw_get_css_icon_classes( $vars = array() ){
 	 * Returns an Array of all the icon css classes in a given css file
 	 */
 	$defaultVars = array(
-		'prefix'	=>	'icon-',	// The CSS classes prefix 
+		'prefix'	=>	'icon-',	// The CSS classes prefix
+		'add_class'	=>	'',			// Additional classes
 		'src'		=>	null,		// Absolute System Directory Path to CSS file
 		'return'	=>	'keys',		// 'all' / 'keys' / 'hash'
 		'output'	=>	'array',
