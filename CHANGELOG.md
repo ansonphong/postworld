@@ -1,4 +1,4 @@
-# Postworld Changelog
+# Postworld // Changelog
 
 ### Version 1.7.5
 - Restructured method of using `postworldAdmin` AngularJS module to Bootstrap metaboxes in WordPress Admin
