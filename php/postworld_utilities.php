@@ -14,6 +14,17 @@ function pw_log( $message ){
 }
 
 
+function pw_file_hash( $src, $type = 'sha256' ){
+	// Get file contents
+	$file_contents = file_get_contents( $src );
+	// Make a hash for the file contents
+	return hash( $type, $file_contents );
+}
+
+
+
+
+
 // Recursively count array
 function pw_count_r($array, $i = 0){
     foreach($array as $k){

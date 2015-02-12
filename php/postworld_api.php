@@ -21,6 +21,10 @@ function _get( $obj, $key ){
 		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
 	*/
 
+	// If the obj is not an array, return false
+	if( !is_array( $obj ) )
+		return false;
+
 	// If $key is empty, return the whole $obj
 	if( empty($key) )
 		return $obj;
@@ -155,7 +159,7 @@ function pw_set_wp_usermeta( $vars ){
 			$meta_value = array();
 
 		///// SET VALUE /////
-		$meta_value = pw_set_obj( $meta_value, $sub_key, $value );
+		$meta_value = _set( $meta_value, $sub_key, $value );
 
 		// Encode back into JSON
 		$meta_value = json_encode( $meta_value );
@@ -220,7 +224,7 @@ function pw_get_wp_usermeta($vars){
 	$meta_value = json_decode( $meta_value, true );
 
 	// Get Subkey
-	$return = pw_get_obj( $meta_value, $sub_key );
+	$return = _get( $meta_value, $sub_key );
 	if( $return == false )
 		return $return;
 
@@ -292,7 +296,7 @@ function pw_set_wp_postmeta($vars){
 			$meta_value = array();
 
 		///// SET VALUE /////
-		$meta_value = pw_set_obj( $meta_value, $sub_key, $value );
+		$meta_value = _set( $meta_value, $sub_key, $value );
 
 		// Encode back into JSON
 		$meta_value = json_encode( $meta_value );
@@ -355,7 +359,7 @@ function pw_get_wp_postmeta($vars){
 	$meta_value = json_decode( $meta_value, true );
 
 	// Get Subkey
-	$value = pw_get_obj( $meta_value, $sub_key );
+	$value = _get( $meta_value, $sub_key );
 	
 	return $value;
 
@@ -600,8 +604,6 @@ function pw_get_wp_taxonomymeta($vars){
                               |_|                          
 //////////////////////////////////////////////////////////*/
 
-
-
 function pw_get_option( $vars ){
 	// Returns a sub key stored in the specified option name
 	//	From `wp_options` table
@@ -641,7 +643,6 @@ function pw_get_option( $vars ){
 		$value = get_option( $option_name, array() );
 		
 		// Decode from JSON, assuming it's a JSON string
-		// TODO : Handle non-JSON string values
 		if( !empty( $value ) )
 			$value = json_decode( $value, true );
 
@@ -669,6 +670,47 @@ function pw_get_option( $vars ){
 		return _get( $value, $key );
 
 }
+
+function pw_set_option( $vars ){
+	// Modifies a sub key stored in the specified option name
+	//	From `wp_options` table
+	/*
+		$vars = array(
+			'option_name'	=>	[string], // "postworld-options",
+			'key'			=> 	[string], // "images.logo",
+			'value'			=>	[mixed],
+	*/
+
+	// If no option name or value is set, return
+	if( empty( $vars['option_name'] ) || 
+		empty( $vars['value'] ) )
+		return false;
+
+	extract($vars);
+
+	///// GET STORED VALUE /////
+	$option_value = get_option( $option_name, array() );
+
+	// Decode from JSON, assuming it's a JSON string
+	if( !empty( $option_value ) )
+		$option_value = json_decode( $option_value, true );
+
+	///// SET VALUE /////
+	$option_value = _set( $option_value, $key, $value );
+	// Encode to JSON
+	$option_value = json_encode($option_value);
+	// Update DB
+	$update_option = update_option( $option_name, $option_value );
+
+	return $update_option;
+
+}
+
+
+
+
+
+
 
 
 ?>
