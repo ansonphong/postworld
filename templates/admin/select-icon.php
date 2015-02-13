@@ -1,17 +1,17 @@
 <?php
 	global $pw;
 	$pwInject = $pw['inject'];
-
 	// Get icons if they're defined
 	$icons = _get( $vars, 'icons' );
 ?>
-
 <script>
-	postworld.controller( 'iconDataCtrl', [ '$scope', function($scope){
+	postworldAdmin.controller( 'iconDataCtrl', [ '$scope', 'pwIconsets', '$log',
+		function($scope, $pwIconsets, $log){
 		$scope.customIconOptions = <?php echo json_encode( $icons ) ?>;
+		$scope.iconsets = $pwIconsets.array();
+		//$log.debug( 'iconsets', $scope.iconsets );
 	}]);
 </script>
-
 <!-- DROPDOWN -->
 <span
 	dropdown
@@ -19,24 +19,18 @@
 	pw-ui
 	ng-controller="iconDataCtrl">
 	<!-- SELECTED ITEM -->
-	<span
+	<button
+		type="button"
 		dropdown-toggle
 		class="area-select area-select-icon">
 		<i ng-show="uiBool(<?php echo $vars['ng_model']; ?>)" class="{{ <?php echo $vars['ng_model']; ?> }} <?php if( $vars['icon_spin'] == true ) echo 'icon-spin' ?>"></i>
 		<span class="select-icon-none" ng-hide="uiBool(<?php echo $vars['ng_model']; ?>)">None</span>
-	</span>
+	</button>
 	<!-- MENU -->
 	<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
-		
-		<li
-			class="select-icon-none"
-			ng-show="uiBool(<?php echo $vars['ng_model']; ?>)"
-			ng-click="<?php echo $vars['ng_model']; ?> = false">
-			<span>None</span>
-		</li>
-
-		<?php ///// CUSTOM ICONS ARRAY /////
-			if( is_array( $icons ) ){ ?>
+		<?php
+		///// CUSTOM ICONS ARRAY /////
+		if( is_array( $icons ) ) : ?>
 				<li
 					class="select-icon"
 					ng-repeat="icon in ::customIconOptions"
@@ -44,32 +38,30 @@
 					<i
 						class="{{ icon }}"></i>
 				</li>
-		<?php } ?>
+		<?php endif; ?>
 
+		<?php
+		///// REGISTERED ICONSETS /////
+		if( !is_array( $icons ) ) : ?>
 
-		<?php ///// ICOMOON /////
-			if( in_array( 'icomoon', $pwInject ) && !$icons ){ ?>
+			<div ng-repeat="iconset in ::iconsets">
+				<h3>{{ iconset.name }}</h3>
 				<li
 					class="select-icon"
-					ng-repeat="icon in ::options.icon.icomoon"
-					ng-click="<?php echo $vars['ng_model']; ?> = icon.class">
-					<i
-						class="{{ icon.class }}"></i>
+					ng-repeat="icon in iconset.classes"
+					ng-click="<?php echo $vars['ng_model']; ?> = icon">
+					<i class="{{ icon }}"></i>
 				</li>
-		<?php } ?>
+			</div>
 
-
-		<?php ///// GLYPHICONS /////
-			if( in_array( 'glyphicons-halflings', $pwInject ) && !$icons ){ ?>
-				<li
-					class="select-icon"
-					ng-repeat="icon in ::options.icon.glyphicons"
-					ng-click="<?php echo $vars['ng_model']; ?> = icon.class">
-					<i
-						class="{{ icon.class }}"></i>
-				</li>
-		<?php } ?>
-
+		<?php endif; ?>
 
 	</ul>
+
+	<button
+		class="select-icon-none"
+		ng-show="uiBool(<?php echo $vars['ng_model']; ?>)"
+		ng-click="<?php echo $vars['ng_model']; ?> = false">
+		<span><i class="icon-close"></i></span>
+	</button>
 </span>

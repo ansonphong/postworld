@@ -62,6 +62,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'',
 			),
 
+		array(
+			'name'	=>	'Iconsets',
+			'slug'	=>	'iconsets',
+			'icon'	=>	'icon-circle-medium',
+			'description'	=>	'',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules
@@ -167,7 +174,33 @@ function pw_required_modules(){
 
 function pw_set_modules(){
 
+}
 
+function pw_modules_outline(){
+	$enabled_modules = pw_enabled_modules();
+	$supported_modules = pw_supported_modules();
+	$required_modules = pw_required_modules();
+
+	return array(
+		'enabled'	=>	$enabled_modules,
+		'supported'	=>	$supported_modules,
+		'required'	=>	$required_modules,
+		);
+}
+
+function pw_module_is_enabled( $module ){
+	$enabled_modules = pw_enabled_modules();
+	return in_array( $module, $enabled_modules );
+}
+
+function pw_module_is_supported( $module ){
+	$supported_modules = pw_supported_modules();
+	return in_array( $module, $supported_modules );
+}
+
+function pw_module_is_required( $module ){
+	$required_modules = pw_required_modules();
+	return in_array( $module, $required_modules );
 }
 
 

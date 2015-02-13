@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'	=>	"1.7.6",
+		'version'	=>	"1.7.7",
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -44,6 +44,7 @@ $pw = array(
 				'backgrounds'			=>	'postworld-backgrounds',
 				'background_contexts'	=>	'postworld-background-contexts',
 				'header_code'			=>	'postworld-header-code',
+				'cache_iconset'			=>	'postworld-cache-iconset-',
 				),
 			),
 		'wp_postmeta'	=>	array(
@@ -65,6 +66,7 @@ $pw = array(
 		'feed_override'		=>	'postworld-feed-override',
 		'term_feed'			=>	'postworld-term-feed-',
 		),
+	'iconsets'	=>	array(),
 	);
 
 
@@ -80,8 +82,10 @@ define( 'PW_OPTIONS_FEED_SETTINGS', 		$pw['db']['wp_options']['option_name']['fe
 define( 'PW_OPTIONS_SOCIAL', 				$pw['db']['wp_options']['option_name']['social'] );
 define( 'PW_OPTIONS_BACKGROUNDS', 			$pw['db']['wp_options']['option_name']['backgrounds'] );
 define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name']['background_contexts'] );
-
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
+
+///// DEFINE OPTION CACHES /////
+define( 'PW_CACHE_ICONSET', 	$pw['db']['wp_options']['option_name']['cache_iconset'] );
 
 ///// DEFINE MODEL FILTER NAMES /////
 define( 'PW_MODEL_FIELDS', 		$pw['models']['fields'] );
@@ -259,8 +263,7 @@ include 'admin/php/admin.php';
 include 'postworld-modules/backgrounds/postworld-backgrounds.php';
 include 'postworld-modules/sidebars/postworld-sidebars.php';
 include 'postworld-modules/layouts/postworld-layouts.php';
-
-
+include 'postworld-modules/iconsets/postworld-iconsets.php';
 
 ////// GET AJAX FUNCTIONS AND ACTION //////
 include 'php/postworld_ajax.php';

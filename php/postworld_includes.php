@@ -93,6 +93,7 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
 	}
 
+	pw_load_iconsets();
 
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
@@ -352,6 +353,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Services-JS',
 			POSTWORLD_URI.'/js/services/pwServices.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Iconsets-JS',
+			POSTWORLD_URI.'/js/services/pwIconsets.js', $angularDep );
+
 		wp_enqueue_script( 'pw-pwCommentsService-JS',
 			POSTWORLD_URI.'/js/services/pwCommentsService.js', $angularDep );
 
@@ -534,6 +538,12 @@ function pwSiteGlobals_include(){
 	$pwJs .= json_encode( $pwSiteGlobals );
 	$pwJs .= ";";
 
+	// MODULES
+	$pwJs .= "\n\n";
+	$pwJs .= "pw.modules = ";
+	$pwJs .= json_encode( pw_modules_outline() );
+	$pwJs .= ";";
+
 	// TEMPLATES
 	$pwJs .= "\n\n";
 	$pwJs .= "pw.templates = ";
@@ -544,6 +554,12 @@ function pwSiteGlobals_include(){
 	$pwJs .= "\n\n";
 	$pwJs .= "pw.options = ";
 	$pwJs .= json_encode( apply_filters( PW_GLOBAL_OPTIONS, array() ) );
+	$pwJs .= ";";
+
+	// ICON SETS
+	$pwJs .= "\n\n";
+	$pwJs .= "pw.iconsets = ";
+	$pwJs .= json_encode( pw_get_iconsets() );
 	$pwJs .= ";";
 
 	// SITE LANGUAGE

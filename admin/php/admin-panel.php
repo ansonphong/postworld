@@ -60,14 +60,19 @@ function postworld_options_term_feeds(){
 }
 */
 
-///// FEEDS SCREEN /////
+///// BACKGROUNDS SCREEN /////
 function postworld_options_backgrounds(){
 	global $theme_admin;
 	i_include_scripts();
 	include 'page-backgrounds.php';
 }
 
-
+///// ICONSETS SCREEN /////
+function postworld_options_iconsets(){
+	global $theme_admin;
+	i_include_scripts();
+	include 'page-iconsets.php';
+}
 
 /*
 ///// DISPLAY MESSAGES /////

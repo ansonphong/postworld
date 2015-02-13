@@ -1,4 +1,5 @@
 <?php
+
 ///// SHORTCODE /////
 function pw_icons_shortcode( $atts, $content = null, $tag ) {
 	extract( shortcode_atts( array(
@@ -25,10 +26,11 @@ function pw_icons_shortcode( $atts, $content = null, $tag ) {
 
 }
 
-//add_shortcode( 'icon', 'pw_icons_shortcode' );
 
 
+//////////// ICONS : LINGEAGE CODE //////////
 
+/*
 ///// GET ICONS /////
 function pw_get_css_icons(
 	$icon_prefix = "icon-",
@@ -36,9 +38,9 @@ function pw_get_css_icons(
 	$return = "all",
 	$output = "array"
 	){
-	/*
-	 * Returns an Array of all the icon css classes in a given css file
-	 */
+	
+	// Returns an Array of all the icon css classes in a given css file
+	 
 
 	$pattern = '/\.('.$icon_prefix.'(?:\w+(?:-)?)+):before\s+{\s*content:\s*"(.+)";\s+}/';
 	$subject = file_get_contents( $css_file );
@@ -71,7 +73,13 @@ function pw_get_css_icons(
 	return $icons;
 	
 }
+*/
 
+
+
+//add_shortcode( 'icon', 'pw_icons_shortcode' );
+
+/*
 function pw_shortcode_load_iconset( $all_icons, $iconset ){
 	// Define the path to the iconset
 	$iconset_file = plugin_dir_path(__FILE__) . "iconset-".$iconset.".php";
@@ -96,18 +104,19 @@ function pw_get_shortcode_icons( ){
 	global $pw_shortcode_icons;
 	return $pw_shortcode_icons;
 }
+*/
 
 // TODO : find a way to do this conditionally based on injections
 //if( in_array( 'font-awesome-3', pw_injections() ) ){
 //}
 
+/*
 ///// LOAD CUSTOM ICONS /////
 $pw_shortcode_custom_icons = (
 	isset( $pwSiteGlobals['icons']['shortcodes'] ) &&
 	is_array( $pwSiteGlobals['icons']['shortcodes'] )
 	) ? 
 	$pwSiteGlobals['icons']['shortcodes'] : array();
-
 
 //global $pwSiteGlobals;
 //echo json_encode( isset( $pwSiteGlobals['icons']['shortcodes'] ) );
@@ -116,7 +125,7 @@ $pw_shortcode_custom_icons = (
 foreach( $pw_shortcode_icons as $icon ){
 	add_shortcode( $icon, 'pw_icons_shortcode' );
 }
-
+*/
 
 
 ?>
