@@ -124,6 +124,23 @@ postworld.controller('postController',
 		window.location = url;
 	};
 
+	$scope.embedProvider = function( linkUrl ){
+		var provider;
+		// TODO : Integrate with data in PHP method : pw_embed_url()
+		var providers = {
+			youtube: 	'youtube.com',
+			vimeo: 		'vimeo.com',
+			soundcloud: 'soundcloud.com',
+			podbean: 	'podbean.com',
+		};
+		angular.forEach( providers, function( value, key ){
+			if( $_.inString( value, linkUrl ) ){
+				provider = key;
+			}
+		});
+		return provider;
+	}
+
 	/*
 	////////// LOAD POST DATA //////////
 	$scope.loadPost = function( post_id ){

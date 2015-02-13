@@ -206,6 +206,12 @@ postworld.factory('_',
 			else
 				return false;
 		},
+		inString: function(value, string) {
+			if( _.isString( string ) )
+				return string.indexOf(value) > -1 ? true : false;
+			else
+				return false;
+		},
 		isEmpty: function(value){
 			if ( typeof value === 'undefined' ||
 				value == '' ||
