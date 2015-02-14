@@ -525,7 +525,8 @@ function extract_hierarchical_fields( $fields_array, $query_string ){
 }
 
 
-function get_avatar_url( $user_id, $avatar_size ){
+// Previously get_avatar_url()
+function pw_get_avatar_url( $user_id, $avatar_size ){
 	// Get Buddypress Avatar Image
 	if ( function_exists('bp_core_fetch_avatar') ) {
 		// Set Buddypress Avatar 'Type' Attribute

@@ -61,6 +61,8 @@ function pw_less_vars( $vars, $handle ) {
     ///// CACHE /////
     $phpLessVarsCache = $vars;
 
+   // pw_log( $vars );
+
     return $vars;
 }
 
