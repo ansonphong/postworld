@@ -481,6 +481,13 @@ function pwGlobals_print() {
 }
 
 function pwBootstrapPostworldAdmin_print() {
+	
+	// Prevent bootstrapping on defined screens
+	$no_bootstrap = array( 'nav-menus' );
+	$screen = get_current_screen();
+	if( in_array( $screen->base, $no_bootstrap )  )
+		return false;
+
 	if( is_admin() ): ?>
 		<script>
 			///// BOOTSTRAP APP /////
@@ -764,9 +771,10 @@ function pw_include_google_fonts( $fonts = array() ){
 	// Get the fonts to include from a filter
 	$fonts = apply_filters( 'pw_include_google_fonts', $fonts );
 	// Iterate through each font and echo the include script
-	foreach( $fonts as $font ){
-		echo "\n<link href='http://fonts.googleapis.com/css?family=".$font['code']."' rel='stylesheet' type='text/css'>";
-	}
+	if( is_array( $fonts ) )
+		foreach( $fonts as $font ){
+			echo "\n<link href='http://fonts.googleapis.com/css?family=".$font['code']."' rel='stylesheet' type='text/css'>";
+		}
 	// Return the fonts, incase a function wants to see them
 	return $fonts;
 }

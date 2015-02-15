@@ -67,7 +67,7 @@ function pw_metabox_options_save( $post_id ){
 
 	$meta_key = PW_POSTMETA_KEY;
 
-    $pwMeta = $_POST[ PW_POSTMETA_KEY ];
+    $pwMeta = _get( $_POST, $meta_key );
 
 	// SAVE I META
 	if( !empty( $pwMeta ) && is_string( $pwMeta ) ){

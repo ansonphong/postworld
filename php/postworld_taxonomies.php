@@ -376,8 +376,9 @@ function pw_taxonomy_slug_rewrite($wp_rewrite) {
 			if ( $taxonomy->rewrite['slug'] == $post_type->rewrite['slug'] ) {
 
 				// get category objects
-				$terms = get_categories(array('type' => $object_type, 'taxonomy' => $taxonomy->name, 'hide_empty' => 0));
-				
+				$terms = get_categories(array( 'taxonomy' => $taxonomy->name, 'hide_empty' => 0));
+				//'type' => $object_type,
+
 				// make rules
 				foreach ($terms as $term) {
 					$rules[ $taxonomy->rewrite['slug'] . '/' . $term->slug . '/?$'] = 'index.php?' . $term->taxonomy . '=' . $term->slug;

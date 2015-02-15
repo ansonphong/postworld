@@ -54,11 +54,15 @@ function pw_link_url_meta_save($post_id){
     if ( !current_user_can( 'edit_post', $post_id ) )
         return $post_id;
 
-	// SAVE URL
+    // Get Vars
+    $link_url = _get( $_POST, 'link_url' );
+    $link_format = _get( $_POST, 'link_format' );
+
+    // SAVE URL
 	pw_set_post_meta($post_id,
 		array(
-			'link_url' 		=> $_POST['link_url'],
-			'link_format' 	=> $_POST['link_format'],
+			'link_url' 		=> $link_url,
+			'link_format' 	=> $link_format,
 			)
 		);
     return $post_id;
