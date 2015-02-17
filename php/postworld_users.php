@@ -3,7 +3,8 @@
 function pw_require_login( $login_url = 'wp-login.php' ){
 	// Require login for site
 	$user_id = get_current_user_id();
-	if( empty( $user_id ) && __FILE__ != $login_url ) { 
+	$current_file = basename($_SERVER['REQUEST_URI']);
+	if( empty( $user_id ) && $current_file != $login_url ) { 
 		header('Location: /' . $login_url);
 		exit(); 
 	}
