@@ -1,10 +1,10 @@
 <?php
 
-function pw_require_login( $login_url = '/wp-login.php' ){
+function pw_require_login( $login_url = 'wp-login.php' ){
 	// Require login for site
 	$user_id = get_current_user_id();
-	if( empty( $user_id ) ) { 
-		header('Location: ' . $login_url);
+	if( empty( $user_id ) && __FILE__ != $login_url ) { 
+		header('Location: /' . $login_url);
 		exit(); 
 	}
 }
