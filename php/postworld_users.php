@@ -1,5 +1,22 @@
 <?php
 
+function pw_require_login( $login_url = '/wp-login.php' ){
+	// Require login for site
+	if( empty( get_current_user_id() ) ) { 
+		header('Location: ' . $login_url);
+		exit(); 
+	}
+}
+
+function pw_runtime_require_login(){
+	if( !defined( 'PW_REQUIRE_LOGIN' ) )
+		return false;
+	if( PW_REQUIRE_LOGIN == true )
+		pw_require_login();
+}
+add_action( 'init', 'pw_runtime_require_login' );
+
+
 function pw_usernames_to_ids( $usernames = array() ){
 	// Pass in an array of usernames
 	// Return a list of coorosponding user IDs
