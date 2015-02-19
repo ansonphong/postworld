@@ -111,7 +111,7 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 			if( _.isString( meta.templateName ) && _.isEmpty( modalObj.templateUrl )  ){
 
 				// If there's a slash in the template, it's from another subdir
-				if( $_.isInArray( "/", meta.templateName ) ){
+				if( $_.inArray( "/", meta.templateName ) ){
 					var templateNameParts = meta.templateName.split("/");
 					// Use the first part as the subdir
 					var templateSubdir = templateNameParts[0];

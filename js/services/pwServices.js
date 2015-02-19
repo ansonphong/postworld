@@ -544,7 +544,7 @@ postworld.factory('pwPosts',
 		// Iterate through each required field
 		angular.forEach( requiredFields, function( requiredField ){
 			// If it's not in the fields
-			if( !$_.isInArray( requiredField, post.fields ) )
+			if( !$_.inArray( requiredField, post.fields ) )
 				// Add it to the missing fields array
 				missingFields.push( requiredField );
 		});
@@ -747,8 +747,37 @@ postworld.factory('pwPosts',
    | |  __/ | | | | | |_) | | (_| | ||  __/ |  __/ (_| | |  | |_| | (_| | \__ \
    |_|\___|_| |_| |_| .__/|_|\__,_|\__\___| |_|   \__,_|_|   \__|_|\__,_|_|___/ */
 
-postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', function( $pw, $pwData, $log, $_ ){
+postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeout', '$rootScope',
+	function( $pw, $pwData, $log, $_, $timeout, $rootScope ){
+
+	var evalCallbacks = function( vars ){
+
+		///// CALLBACK /////
+		// Evaluate given callback
+		if( _.isString( vars.callback ) ){
+			$timeout( function(){
+				$log.debug( 'pwTemplatePartials : callback : ' + vars.callback );
+				eval( vars.callback );
+			}, 0 );
+		}
+
+		///// CALLBACK EVENT /////
+		// Broadcast event callback event from the rootScope
+		if( _.isString( vars.callbackEvent ) ){
+			$log.debug( 'pwTemplatePartials : callbackEvent : ' + vars.callbackEvent );
+			$rootScope.$broadcast( vars.callbackEvent, vars );
+		}
+
+	}
+
+
 	return{
+		data : function(){
+			return $pwData.partials;
+		},
+		getId : function( id ){
+			return $_.get( $pwData.partials, id );
+		},
 		get : function( vars ){
 			/*
 			 	vars = {
@@ -771,16 +800,33 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', functio
 
 				$pwData.get_template_partial( vars ).then(
 					function( response ){
+
+						// Debug Log
 						$log.debug( "PW TEMPLATE PARTIAL : RESPONSE :", response );
+
+						// Get the response data
 						var partialHtml = response.data;
+
+						// Cache the data in the pwData partials cache path
 						$pwData.partials = $_.setObj( $pwData.partials, cachePath, partialHtml );
+
+						// Evaluate Callbacks
+						vars.firstRun = true;
+						evalCallbacks( vars );
+
 					},
 					function( response ){
 					}
 				);
 
 			}
+
 			var partialData = $_.getObj( $pwData.partials, cachePath );
+
+			// Evaluate Callbacks
+			vars.firstRun = false;
+			evalCallbacks( vars );
+
 			return partialData;
 
 		},

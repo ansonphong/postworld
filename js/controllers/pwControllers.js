@@ -304,8 +304,6 @@ postworld.controller('postController',
 }]);
 
 
-
-
 'use strict';
 postworld.directive( 'pwFeedPost', [ function( $scope ){
 	return {
@@ -319,7 +317,6 @@ postworld.directive( 'pwFeedPost', [ function( $scope ){
 		}
 	};
 }]);
-
 
 postworld.controller('pwFeedPostCtrl',
 	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", 

@@ -2,7 +2,7 @@
 	postworldAdmin.controller( 'pwSocialDataCtrl',
 		[ '$scope', 'iOptionsData', function( $scope, $iOptionsData ){
 		// Social Option Values
-		$scope.iSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
+		$scope.pwSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
 		$scope['options'] = $iOptionsData['options'];
 
 		// Social Meta Data
@@ -28,7 +28,7 @@
 		<!-- SHARE SOCIAL -->
 		<div class="well">
 			<div class="save-right">
-				<?php pw_save_option_button( PW_OPTIONS_SOCIAL, 'iSocial'); ?>
+				<?php pw_save_option_button( PW_OPTIONS_SOCIAL, 'pwSocial'); ?>
 			</div>
 			<h2>
 				<i class="icon-share"></i>
@@ -46,7 +46,7 @@
 			ng-repeat="sectionMeta in socialMeta">
 			<hr class="thick">
 			<!-- SAVE BUTTON -->
-			<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SOCIAL,'iSocial'); ?></div>
+			<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SOCIAL,'pwSocial'); ?></div>
 			<h2><i class="{{ sectionMeta.icon }}"></i> {{ sectionMeta.name }}</h2>
 			<table class="form-table pad">
 				<tr ng-repeat="inputMeta in sectionMeta.fields"
@@ -64,7 +64,7 @@
 						<div>
 							<input
 								type="text"
-								ng-model="iSocial[sectionMeta.id][inputMeta.id]">
+								ng-model="pwSocial[sectionMeta.id][inputMeta.id]">
 								<small>{{ inputMeta.description }}</small>
 						</div>
 					</td>
@@ -74,9 +74,12 @@
 
 		</div>
 
-		<hr class="thick">
-		<!--<pre>iSocial : {{ iSocial | json }}</pre>-->
-		<!--<pre>socialMeta : {{ socialMeta | json }}</pre>-->
+		<?php if( pw_dev_mode() ): ?>
+			<hr class="thick">
+			<pre>pwSocial : {{ pwSocial | json }}</pre>
+			<pre>socialMeta : {{ socialMeta | json }}</pre>
+		<?php endif; ?>
+
 
 	</div>
 
