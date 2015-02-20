@@ -402,6 +402,7 @@ function pw_select_blocks_settings( $vars ){
 	 *		'show'			=> [ARRAY]	// Array of options to show : array( 'height', 'interval', 'max_slides', 'transition', 'no_pause' )
 	 *	)
 	 */
+
 	return pw_ob_admin_template( 'select-blocks-settings', $vars );
 }
 
