@@ -49,6 +49,7 @@
 		<input
 			id="feed-blocks-offset"
 			type="number"
+			class="short"
 			ng-model="<?php echo $ng_model; ?>.offset">
 		<label for="feed-blocks-offset">
 			offset
@@ -63,6 +64,7 @@
 		<input
 			id="feed-blocks-increment"
 			type="number"
+			class="short"
 			ng-model="<?php echo $ng_model; ?>.increment">
 		<label for="feed-blocks-increment">
 			increment
@@ -77,6 +79,7 @@
 		<input
 			id="feed-blocks-max"
 			type="number"
+			class="short"
 			ng-model="<?php echo $ng_model; ?>.max">
 		<label for="feed-blocks-max">
 			max
@@ -121,6 +124,7 @@
 			<input
 				id="feed-blocks-max"
 				type="number"
+				class="short"
 				ng-model="<?php echo $ng_model; ?>.widgets.background_image.parallax_ratio"
 				placeholder="-0.5">
 			<label for="feed-blocks-max">

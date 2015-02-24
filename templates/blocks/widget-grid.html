@@ -1,10 +1,15 @@
 <div
-	class="pw-transition-fadein feed-block-widget"
+	class="pw-transition-fadein feed-block-widget sidebar"
 	pw-timeout="{{ (post.feed.loadOrder * 200) }}"
     timeout-action="addClass('fadein-on')"
     pw-feed-post>
-    <div
-    	class="widget"
-    	pw-compile-code="widgets[ post.block.index ]">
-        </div>
+    <div class="feed-block-wrapper">
+        <div
+        	style="background-image:url('{{ feed.blocks.widgets.background_image.obj.url }}'); background-width:100%;background-size:cover;background-position: center;"
+    	    parallax-background
+    	    parallax-ratio="{{ feed.blocks.widgets.background_image.parallax_ratio }}"
+        	class="widget"
+        	pw-compile-code="widgets[ post.block.index ]">
+            </div>
+    </div>
 </div>
