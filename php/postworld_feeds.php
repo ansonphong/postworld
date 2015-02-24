@@ -1,6 +1,5 @@
 <?php
 
-
 function pw_get_feed_by_id( $feed_id ){
 	$feeds = pw_get_option( array( 'option_name'	=>	PW_OPTIONS_FEEDS ) );
 	if( empty( $feeds ) )

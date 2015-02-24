@@ -481,7 +481,7 @@ function pwGlobals_print() {
 }
 
 function pwBootstrapPostworldAdmin_print() {
-	pw_log(get_current_screen());
+	//pw_log(get_current_screen());
 	// Prevent bootstrapping on defined screens
 	$no_bootstrap = array( 'nav-menus', 'edit', 'users' );
 	//$bootstrap = array( 'post', 'widgets' );

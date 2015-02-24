@@ -526,9 +526,10 @@ postworld.controller('pwFeedController',
 
 			// Get the Widgets
 			var widgets = $_.get( $pwData.widgets, sidebarId );
-			// If widgets doesn't exist as an array, return here
-			if( !_.isArray( widgets ) )
-				return blocks;
+
+			// If widgets doesn't exist as an array, or is empty, return here
+			if( !_.isArray( widgets ) || _.isEmpty( widgets ) )
+				return false;
 
 			// If there are less widgets than the max blocks value
 			if( blocks.max > widgets.length )
