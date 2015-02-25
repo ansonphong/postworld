@@ -481,12 +481,35 @@ function pwGlobals_print() {
 }
 
 function pwBootstrapPostworldAdmin_print() {
-	//pw_log(get_current_screen());
-	// Prevent bootstrapping on defined screens
-	$no_bootstrap = array( 'nav-menus', 'edit', 'users', 'plugin-install' );
-	//$bootstrap = array( 'post', 'widgets' );
+	// Bootstraps the postworldAdmin module to the document in select instances
 	$screen = get_current_screen();
-	if( in_array( $screen->base, $no_bootstrap )  )
+	//pw_log( $screen );
+
+	// Create filter here to add to array of pages it boostraps on
+	$bootstrap = array(
+		'base'				=>	array( 'post', 'edit', 'widgets' ),
+		'base_substring'	=>	array( 'postworld' ),
+		);
+
+	// Filter for themes to modify
+	$bootstrap = apply_filters( 'pw_admin_bootstrap_angular', $bootstrap );
+
+	// Boolean whether or not to bootstrap on current page
+	$do_boostrap = false;
+
+	// If the current screen base is a bootstrap base
+	if( in_array( $screen->base, $bootstrap['base'] ) )
+		$do_boostrap = true;
+
+	// Iterate through each of the base substrings
+	if( $do_boostrap == false )
+		foreach( $bootstrap['base_substring'] as $substring ){
+			if( strpos( $screen->base, $substring) !== false )
+				$do_boostrap = true;
+		}
+
+	// If nothing triggered bootstrapping
+	if( !$do_boostrap  )
 		return false;
 
 	if( is_admin() ): ?>
