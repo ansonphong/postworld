@@ -151,7 +151,7 @@ function i_share_social_options(){
 function pw_share_social_options(){
 	$vars = array();
 	$vars['options_model'] = "options.share.meta";
-	$vars['model_var'] = "iSocial";
+	$vars['model_var'] = "pwSocial";
 	$vars['model_key'] = "share.networks";
 	$vars['ng_model'] = $vars['model_var'] . '.' . $vars['model_key'];
 
@@ -167,7 +167,6 @@ function pw_select_modules(){
 	//$vars['ng_model'] = $vars['model_var'] . '.' . $vars['model_key'];
 	return pw_ob_admin_template( 'select-modules', $vars );
 }
-
 
 function i_gallery_options( $vars ){
 	// DEPRECIATED

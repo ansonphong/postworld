@@ -36,7 +36,7 @@
 			</h2>
 			<small>Include share links on each post for the following networks:</small>
 			<hr class="thin">
-			<?php echo i_share_social_options(); ?>
+			<?php echo pw_share_social_options(); ?>
 			<div style="clear:both"></div>
 		</div>
 
