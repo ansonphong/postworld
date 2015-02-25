@@ -60,6 +60,12 @@ function pw_get_xprofile_fields(){
 	// Returns an array with all the names of the xProfile fields
 	global $wpdb;
 	$table_name =  $wpdb->prefix.'bp_xprofile_fields';
+
+	//If table is not created
+	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+    	return array();
+	}
+
 	$column_name = 'name';
 	$xProfileFields = $wpdb->get_col( $wpdb->prepare( "SELECT $column_name FROM $table_name" ) );
 	//pw_log( json_encode($xProfileFields) );
