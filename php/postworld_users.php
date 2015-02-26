@@ -550,7 +550,7 @@ function pw_get_avatar( $obj ){
 	// If a user ID is provided
 	if( isset($user_id) )
 		// Get the attachment ID of the avatar image
-		$attachment_id = get_user_meta( $user_id, 'pw_avatar', true );
+		$attachment_id = get_user_meta( $user_id, PW_AVATAR_KEY, true );
 
 	// If no value is found, or the value is empty
 	if( !isset( $attachment_id ) || empty( $attachment_id ) )
