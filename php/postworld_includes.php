@@ -483,7 +483,7 @@ function pwGlobals_print() {
 function pwBootstrapPostworldAdmin_print() {
 	// Bootstraps the postworldAdmin module to the document in select instances
 	$screen = get_current_screen();
-	pw_log( $screen );
+	//pw_log( $screen );
 
 	// Create filter here to add to array of pages it boostraps on
 	$bootstrap = array(
