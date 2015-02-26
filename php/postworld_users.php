@@ -532,48 +532,71 @@ function pw_set_avatar( $obj ){
 
 /////----- GET POSTWORLD AVATAR -----/////
 function pw_get_avatar( $obj ){
+	// Get the Avatar Image URL
 	/*
 		$args = { user_id:"1", [ size: 256 ], [ width:256, height:256 ] }
 	*/
 
+	///// TODO : Add Caching Mechanism, based on user ID /////
+	/*
+	///// SETUP CACHE /////
+	global $pw_avatar_cache;
+	if( $pw_avatar_cache == null )
+		$pw_avatar_cache = array();
+	*/
+
 	extract($obj);
 
-	global $pwSiteGlobals;
-	$default_avatar = $pwSiteGlobals['avatar']['default'] ;
+	// If a user ID is provided
+	if( isset($user_id) )
+		// Get the attachment ID of the avatar image
+		$attachment_id = get_user_meta( $user_id, 'pw_avatar', true );
 
-	if ( !isset($user_id) ){
-		return $default_avatar;
-	}
+	// If no value is found, or the value is empty
+	if( !isset( $attachment_id ) || empty( $attachment_id ) )
+		// Get the default avatar image ID
+		$attachment_id = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE, 'key' => 'images.avatar' ) );
+
+	// If still nothing is found, or the value is not a number
+	if( empty( $attachment_id ) || !is_numeric( $attachment_id ) )
+		return false;
+
+	// Now that we have the attachment ID of the avatar image
+	// Get the attachment metadata
+	$attachment_meta = wp_get_attachment_metadata( $attachment_id );
+	// Get the full image SRC
+	$attachment_image_src = wp_get_attachment_image_src( $attachment_id, 'full' );
+	// Set the file URL in the array
+	$attachment_meta["file_url"] = $attachment_image_src[0];
+	// Set the ID in the array
+	$attachment_meta["id"] = $attachment_id;
+
+	// Boolean if the width and height are both set
+	$width_height_set = !( !isset($width) || !isset($height) );
+
+	// If no size, or height and width is set, return with image meta object
+	if ( !isset($size) && !$width_height_set )
+		return $attachment_meta;
 	
-	$attachment_id = get_user_meta( $user_id, 'pw_avatar', true );
+	// Now that we have the size, and the avatar image meta
+	$size = (int) $size;
 
-	if ( !empty($attachment_id) ){
-		$attachment_meta = wp_get_attachment_metadata( $attachment_id );
-		$attachment_image_src = wp_get_attachment_image_src( $attachment_id, 'full' );
-		$attachment_meta["file_url"] = $attachment_image_src[0];
-		$attachment_meta["id"] = $attachment_id;
-
-		// If no size is set, return with image meta object
-		if ( !isset($size) ){
-			return $attachment_meta;
-		}
-		// Size is set
-		else{	
-			$size = (int) $size;
-
-			// If requested avatar is larger than the original image
-			if( $size > $attachment_meta["width"] || $size > $attachment_meta["height"] ){
-				$size = min( $attachment_meta["width"], $attachment_meta["height"] );
-			}
-
-			$width = $size;
-			$height = $size;
-			return aq_resize( $attachment_image_src[0], $width, $height, true );
-		}
+	// If requested avatar is larger than the original image
+	if( $size > $attachment_meta["width"] || $size > $attachment_meta["height"] )
+		// Reduce the size to the size of the image
+		$size = min( $attachment_meta["width"], $attachment_meta["height"] );
+	
+	// If no width and height set
+	if( !$width_height_set ){
+		// Define width and height from the size
+		$width = $size;
+		$height = $size;
 	}
-	else{
-		return $default_avatar;
-	}
+
+	// Get the image URL with the AQ library
+	$image_url = aq_resize( $attachment_image_src[0], $width, $height, true );
+
+	return $image_url;
 
 }
 
