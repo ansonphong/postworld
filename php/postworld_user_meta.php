@@ -135,8 +135,18 @@ function pw_get_userdata($user_id, $fields = false) {
 	return pw_get_user( $user_id, $fields );
 }
 
-function pw_get_user( $user_id, $fields = false ) {
+function pw_get_current_user($fields){
+	$user_id = get_current_user_id();
+	return pw_get_user( $user_id, $fields );
+}
 
+function pw_get_user( $user_id, $fields = false ) {
+	// Gets user data from Wordpress, Postworld and Buddypress field APIs
+
+	// Set defaults
+	$single_field = false;
+
+	///// DEFINE FIELD MODELS /////
 	$wordpress_user_fields = array(
 		'ID',
 		'user_login',
@@ -187,7 +197,10 @@ function pw_get_user( $user_id, $fields = false ) {
 	// If Fields is empty or 'all', add all fields
 	if ( $fields == false || $fields == 'all')
 		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields, $wordpress_usermeta_fields, $postworld_avatar_fields);
-	
+	else if( is_string( $fields ) ){
+		$fields = array( $fields );
+		$single_field = true;
+	}
 
 	///// TRANSFER ONLY REQUESTED FIELDS!! /////
 
@@ -312,18 +325,20 @@ function pw_get_user( $user_id, $fields = false ) {
 				}
 			}
 
-
 		}
-
 
 	///// BUDDYPRESS PROFILE LINK /////
 	// Check to see if requested fields are Buddypress User Fields
 	foreach ($fields as $value) {
 		// If a requested field is Buddypress
 		if (in_array($value, $buddypress_user_fields)) {
+			
 			// Author Profile URL
-			if ($value == 'user_profile_url' && function_exists('bp_core_get_userlink'))
+			if ($value == 'user_profile_url' && function_exists('bp_core_get_userlink')){
 				$user_data['user_profile_url'] = bp_core_get_userlink($user_id, false, true);
+				//pw_log( $user_data['user_profile_url'] );
+			}
+
 		}
 	}
 
@@ -366,6 +381,12 @@ function pw_get_user( $user_id, $fields = false ) {
 
 	// REMOVE PASSWORD
 	unset($user_data["user_pass"]);
+
+	// SINGLE FIELD
+	// If it's a single field
+	if( $single_field )
+		// Return just the first field
+		return $user_data[ $fields[0] ];
 
 	return $user_data;
 

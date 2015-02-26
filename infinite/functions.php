@@ -107,6 +107,7 @@ function redirect_login_failed() {
 }
 */
 
+/*
 //////////////////// REMOVE ADMIN BAR FOR NON-ADMINS ////////////////////
 add_action('after_setup_theme', 'remove_admin_bar');
 function remove_admin_bar() {
@@ -114,6 +115,7 @@ function remove_admin_bar() {
 			show_admin_bar(false);
 		}
 }
+
 
 // ADJUST STYLING IN THE ADMIN ZONE
 function hide_admin_nags() {
@@ -126,6 +128,7 @@ function hide_admin_nags() {
 	<?php
 }
 add_action('admin_head', 'hide_admin_nags');
+*/
 
 // INSERT GLOBAL WINDOW SCRIPTS
 function insert_i_admin_scripts() {

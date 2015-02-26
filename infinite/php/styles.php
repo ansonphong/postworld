@@ -1,13 +1,15 @@
 <?php
+/*
 add_action( 'wp_enqueue_scripts', 'i_include_styles' );
 function i_include_styles(){
 	// BOOSTRAP LESS
-	wp_enqueue_style( 'bootstrap-less', get_infinite_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
+	//wp_enqueue_style( 'bootstrap-less', get_infinite_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
     //wp_enqueue_style( 'bootstrap-cdn', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
 
 	// INFINITE LESS
-	wp_enqueue_style( 'infinite-style-less', get_infinite_directory_uri() . '/less/style.less' );
+	//wp_enqueue_style( 'infinite-style-less', get_infinite_directory_uri() . '/less/style.less' );
 }
+*/
 
 // Prepare URL for Less Variable
 function i_less_prepare_url( $url ){
@@ -31,7 +33,10 @@ function pw_less_vars( $vars, $handle ) {
 
 	///// Bootstrap Vars /////
     //$vars['body-bg'] = $pwStyles['element']['body']['background-color'];
-    $vars['grid-gutter-width'] = $pwStyles['var']['bootstrap']['grid-gutter-width'];
+
+    // RECENTLY HIDDEN    
+    //$vars['grid-gutter-width'] = $pwStyles['var']['bootstrap']['grid-gutter-width'];
+
 
     ///// Infinite Style Vars /////
     // Systematically define all variables
