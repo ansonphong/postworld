@@ -1,5 +1,10 @@
 # Postworld // Changelog
 
+### Version 1.7.8
+- __Breaking Change__ - In themes using bootstrap base styles, require addition of `bootstrap` into theme injectors when calling `postworld_includes`
+    + If LESS is also included, a custom build will happen locally
+    + If LESS is not included, bootstrap will be used from CDN
+
 ### Version 1.7.7
 - Refactor Icon Core
     + Require `iconset` in modules
@@ -12,7 +17,6 @@
         ),
     ),
 ```
-
 
 ### Version 1.7.5
 - Restructured method of using `postworldAdmin` AngularJS module to Bootstrap metaboxes in WordPress Admin

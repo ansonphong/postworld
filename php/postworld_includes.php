@@ -803,5 +803,24 @@ function pw_include_google_fonts( $fonts = array() ){
 	return $fonts;
 }
 
+add_action( 'wp_enqueue_scripts', 'pw_include_bootstrap_styles', 11 );
+function pw_include_bootstrap_styles(){
+	global $pw;
+	$inject = $pw['inject'];
+
+	if( !in_array( 'bootstrap', $inject ) )
+		return false;
+
+	// If LESS is included in injectors
+	if( in_array( 'less', $inject ) || in_array( 'LESS', $inject ) ){
+		// BOOSTRAP LESS
+		wp_enqueue_style( 'bootstrap-less', get_infinite_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
+    	return;
+    }
+
+    // If LESS not included
+    wp_enqueue_style( 'bootstrap-cdn', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
+    
+}
 
 ?>
