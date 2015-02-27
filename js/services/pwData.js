@@ -232,11 +232,9 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 		convertFeedSettings: function (feedID,args1) {
 			var feedArgs = {};
 			feedArgs.query = {};
-			//if(!args.query) args.query = {};
-			// TODO use constants from app settings
-			
+
 			// Get feeds Parameters
-			var feed = feeds[feedID];
+			var feed = this.feeds[feedID];
   			$log.info('Feed Query Override by Feed Settings',feedID, feed.query);
 			// Query Args will fill in the query first, then any other parameter in the feed will override it, then any user parameter will override all
 			if (feed.query != null) feedArgs.query = feed.query;  

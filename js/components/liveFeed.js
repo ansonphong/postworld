@@ -173,15 +173,22 @@ postworld.controller('pwFeedController',
 		};
 		
 		// Searching from Filter Feed Directives will trigger this function, which in turn restarts the Feed Loading Process
-		$scope.pwRestart = function() {
+		$scope.reloadFeed = function() {
 			// TODO Can we break an existing Ajax Call? We cannot do that, but we can use an identifier for the request and ignore previous requests to the current id.
 			// This scenario might not happen since we're not allowing more than one feed request at a time, this might be a limitation, but it makes the data consistent.
 			// Set feeds equal to new 'query'
 			// $pwData.feeds[$scope.feedId].query = 
-			$scope.convertFeedQuery2QueryString($scope.feed.query);						
+			$log.debug( "$scope.reloadFeed" );
+			$scope.convertFeedQuery2QueryString( $scope.feed.query );						
+			$pwData.feeds[$scope.feedId].posts = false;
 			$scope.firstRun = true;			
 			this.getNext();
 		};
+
+		$scope.$on( 'feed.reload', function( e, feedId ){
+			$log.debug( "lifeFeed.$on : feed.reload : ", feedId );
+			$scope.reloadFeed();
+		});
 
 
 		$scope.pwLiveFeed = function() {

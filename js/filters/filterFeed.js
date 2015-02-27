@@ -9,38 +9,43 @@ postworld.directive('filterFeed', function($log, pwData) {
         // Must use an isolated scope, to allow for using multiple panel directives in the same page
         scope: {
         	feedId : '=',
-        	feedQuery : '=',
-        	submit	:'&',
+        	//submit	:'&',
         }
     };
 });
 
 postworld.controller('pwFilterFeedController',
-    function pwFilterFeedController($scope, $location, $log, pwData, $attrs, $window, pwPostOptions) {    	
+    function pwFilterFeedController($scope, $rootScope, $location, $log, pwData, $attrs, $window, pwPostOptions) {    	
 		var firstTime = true;
 		// Set Panel Template
 
+		$scope.feedId = $attrs.feedId;
 		var FeedID = $scope.feedId;
 		var template = 'feed_top';	// TODO get from Constant values
 		if (!$scope.feedId) {
 			$log.debug('no valid Feed ID provided in Feed Settings');
 			return;
 		}
+
 		// Get Default Argument Values
-		$scope.feedQuery = pwData.convertFeedSettings($scope.feedId).feed_query;
+		$scope.feedQuery = pwData.convertFeedSettings( $scope.feedId ).query;
+
+		$log.debug( '$scope.feedQuery', $scope.feedQuery );
 
 		// DEFAULTS
 		$scope.feedQuery.author_name = "";
 
 		// Taxonomy Object Model
-		$scope.taxInput = pwPostOptions.pwGetTaxInputModel();
+		$scope.taxInput = pwPostOptions.taxInputModel();
 
 		// Get Default View Name
+		/*
 		if (pwData.feeds[FeedID].panels[$attrs.filterFeed])
 				template = pwData.feeds[FeedID].panels[$attrs.filterFeed];			   	
-		$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: template } );
+		*/
+		$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: $attrs.filterFeed } );
+		$log.debug( 'pwFilterFeedController : templateUrl : ', $scope.templateUrl );
 		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feeds);
-
 
 		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
 		// Interacts with userAutocomplete() controller
@@ -48,7 +53,6 @@ postworld.controller('pwFilterFeedController',
 		$scope.$on('updateUsername', function( event, data ) { 
 	        $scope.feedQuery.author_name = data;
 	    });
-
 
     	// TODO : check best location for this code, should we create a panel child?
 		$scope.toggleOrder = function() {
@@ -121,8 +125,15 @@ postworld.controller('pwFilterFeedController',
 				}
 		    });
 
+
 		    $scope.submit();
+
 		}, 1); 
+
+		$scope.submit = function(){
+			$log.debug( "filterFeed.$broadcast : feed.reload : ", $scope.feedId );
+			$rootScope.$broadcast( 'feed.reload', $scope.feedId );
+		}
 		
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function( view ) {
@@ -132,7 +143,6 @@ postworld.controller('pwFilterFeedController',
     			'view'		: view,
     		};
     		this.$emit("CHANGE_FEED_TEMPLATE", vars );
-
 		};	
 
     }
