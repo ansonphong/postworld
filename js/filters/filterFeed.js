@@ -29,12 +29,8 @@ postworld.controller('pwFilterFeedController',
 
 		$scope.feed = pwData.feeds[$scope.feedId];
 
-		// Get Default Argument Values
-		$scope.feedQuery = pwData.convertFeedSettings( $scope.feedId ).query;
-		$log.debug( '$scope.feedQuery', $scope.feedQuery );
-
 		// DEFAULTS
-		$scope.feedQuery.author_name = "";
+		$scope.feed.query.author_name = "";
 
 		// Taxonomy Object Model
 		$scope.taxInput = pwPostOptions.taxInputModel();
@@ -52,34 +48,20 @@ postworld.controller('pwFilterFeedController',
 		// Interacts with userAutocomplete() controller
 		// Catches the recent value of the auto-complete
 		$scope.$on('updateUsername', function( event, data ) { 
-	        $scope.feedQuery.author_name = data;
+	        $scope.feed.query.author_name = data;
 	    });
 
     	// TODO : check best location for this code, should we create a panel child?
 		$scope.toggleOrder = function() {
-			if ($scope.feedQuery.order == 'ASC') {
-				$scope.feedQuery.order = 'DESC';
-			} else $scope.feedQuery.order = 'ASC';
+			if ($scope.feed.query.order == 'ASC') {
+				$scope.feed.query.order = 'DESC';
+			} else $scope.feed.query.order = 'ASC';
 		};	
 
 		// MONTH : Convert Month value into Integer (for model to work properly)
-		$scope.$watch('feedQuery.monthnum', function(value) {
-			if( typeof $scope.feedQuery.monthnum !== 'undefined' )
-				$scope.feedQuery.monthnum = parseInt($scope.feedQuery.monthnum);
-		});
-
-		$scope.$watch('feedQuery.order_by', function(value) {
-		//	$log.debug('pwFilterFeedController.changeFeedTemplate order by changed',$scope.feedQuery.order_by);
-		}); 
-
-		// SET ORDER ICON
-		$scope.$watch('feedQuery.order', function(value) {
-			$log.debug('pwFilterFeedController.changeFeedTemplate order changed',$scope.feedQuery.order);
- 			if (value == 'DESC') {
-				$scope.clsOrder = $window.pwSiteGlobals.icons.order.descending; 				
- 			} else  {
-				$scope.clsOrder = $window.pwSiteGlobals.icons.order.ascending;	
- 			}
+		$scope.$watch('feed.query.monthnum', function(value) {
+			if( typeof $scope.feed.query.monthnum !== 'undefined' )
+				$scope.feed.query.monthnum = parseInt($scope.feed.query.monthnum);
 		});
 
 		///// TRANSLATE TAXONOMY MODEL INPUT FOR WP_QUERY /////
@@ -91,7 +73,7 @@ postworld.controller('pwFilterFeedController',
 			}
 			$log.info('taxInput',value);
 			// Reset tax_query object
-			$scope.feedQuery.tax_query = [];
+			$scope.feed.query.tax_query = [];
 
 			// For each taxonomy
 			angular.forEach( $scope.taxInput, function( terms, taxonomy ){
@@ -120,8 +102,8 @@ postworld.controller('pwFilterFeedController',
 						//"operator":"AND"
 					};
 
-					// Push to feedQuery.tax_input
-					$scope.feedQuery.tax_query.push( termQueryObject );
+					// Push to feed.query.tax_input
+					$scope.feed.query.tax_query.push( termQueryObject );
 
 				}
 		    });
@@ -133,16 +115,6 @@ postworld.controller('pwFilterFeedController',
 			$log.debug( "filterFeed.$broadcast : feed.reload : ", $scope.feedId );
 			$rootScope.$broadcast( 'feed.reload', $scope.feedId );
 		}
-		
-		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
-		$scope.changeFeedTemplate = function( view ) {
-			$log.debug('pwFilterFeedController.changeFeedTemplate',view);
-    		var vars = {
-    			'feedId' 	: $scope.feedId,
-    			'view'		: view,
-    		};
-    		$rootScope.$broadcast( "feed.changeTemplate", vars );
-		};	
 
     }
 );
@@ -161,7 +133,7 @@ postworld.controller('pwRegisterFeedController',
     	$scope.args.write_cache = false;
     	$scope.args.feed_id = '';
 		$scope.registerFeed = function() {
-			$scope.args.feed_query = $scope.$parent.feedQuery;
+			$scope.args.feed_query = $scope.$parent.feed.query;
 			$log.debug('pwRegisterFeedController.pwRegisterFeed For',$scope.args);
 			// TODO set Nonce from UI
 			pwData.setNonce(78);
