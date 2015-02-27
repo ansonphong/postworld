@@ -89,14 +89,7 @@ postworld.controller('pwFeedController',
 
 	   	}
 	   	$scope.updateTemplateUrl();
-
-
-		$scope.$on("CHANGE_FEED_TEMPLATE", function(event, vars){
-			$log.debug('pwFeedController: Event Received:CHANGE_FEED_TEMPLATE',vars);
-			// Broadcast to all children
-			$scope.$broadcast("FEED_TEMPLATE_UPDATE", vars );
-		});
-
+	   	
 		$scope.setDefault = function( exp, defaultVal ){
 			var value = $scope.$eval( exp );
 			if( _.isUndefined( value ) )
@@ -104,7 +97,7 @@ postworld.controller('pwFeedController',
 			else
 				return value;
 		}
-
+		
 		$scope.resetFeedData = function () {
 			// Reset Feed Data
 			$pwData.feeds[$scope.feedId] = {};

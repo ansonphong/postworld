@@ -27,9 +27,10 @@ postworld.controller('pwFilterFeedController',
 			return;
 		}
 
+		$scope.feed = pwData.feeds[$scope.feedId];
+
 		// Get Default Argument Values
 		$scope.feedQuery = pwData.convertFeedSettings( $scope.feedId ).query;
-
 		$log.debug( '$scope.feedQuery', $scope.feedQuery );
 
 		// DEFAULTS
@@ -124,8 +125,6 @@ postworld.controller('pwFilterFeedController',
 
 				}
 		    });
-
-
 		    $scope.submit();
 
 		}, 1); 
@@ -137,12 +136,12 @@ postworld.controller('pwFilterFeedController',
 		
 		// Send request event to Live-Panel Directive [parent] to change the Feed Template		
 		$scope.changeFeedTemplate = function( view ) {
-			//$log.debug('pwFilterFeedController.changeFeedTemplate ChangeTemplate',view);
+			$log.debug('pwFilterFeedController.changeFeedTemplate',view);
     		var vars = {
     			'feedId' 	: $scope.feedId,
     			'view'		: view,
     		};
-    		this.$emit("CHANGE_FEED_TEMPLATE", vars );
+    		$rootScope.$broadcast( "feed.changeTemplate", vars );
 		};	
 
     }
@@ -196,7 +195,6 @@ postworld.controller('pwRegisterFeedController',
 		
     }
 );
-
 
 
 ///// LOAD PANEL /////

@@ -25,7 +25,9 @@ postworld.controller('pwFeedItemCtrl',
 		
 	///// INIT /////
 	var type = ( $_.get( $scope.post, 'post_type' ) ) ? $scope.post.post_type : 'post';
-	var feedId = $_.get( $scope, 'feed.id' );
+	var feedId = $_.get( $scope, 'feed.feed_id' );
+
+	$log.debug( "FEED ID >>> ", feedId );
 
 	// Check for a local feed view, to override the global feed view
 	// This is used in special view instances such as a model window
@@ -43,15 +45,15 @@ postworld.controller('pwFeedItemCtrl',
 		return decodeURIComponent( URI );
 	};
 
-	// TODO set templateURL?		  
-	// Template Update Event
-	$scope.$on("FEED_TEMPLATE_UPDATE", function(event, vars ){
-
-		// TODO : Verify here that the current feed is matches `vars.feedId`
-		if ( $scope.post.post_type != '_pw_block' ) {
-			var type = $scope.post.post_type;
-			$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
-		} 
+	$scope.$on( "feed.changeTemplate", function( event, vars ){
+		$log.debug( 'RECEIVED : feed.changeTemplate', vars );
+		if( vars.feedId != feedId )
+			return false;
+		if ( $scope.post.post_type == '_pw_block' )
+			return false;
+		var type = $scope.post.post_type;
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
+	 
 	});		  		      	
 
 }]);
