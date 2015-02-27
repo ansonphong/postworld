@@ -118,6 +118,7 @@ function postworld_install() {
       feed_id char(128) NOT NULL,
       feed_query TEXT NOT NULL,
       feed_outline MEDIUMTEXT  NULL,
+      feed_json LONGTEXT  NULL,
       time_start TIMESTAMP  NULL,
       time_end TIMESTAMP  NULL,
       timer INT  NULL,

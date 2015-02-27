@@ -812,7 +812,7 @@ function pw_include_bootstrap_styles(){
 		return false;
 
 	// If LESS is included in injectors
-	if( in_array( 'less', $inject ) || in_array( 'LESS', $inject ) ){
+	if( in_array( 'wp-less', $inject ) ){
 		// BOOSTRAP LESS
 		wp_enqueue_style( 'bootstrap-less', get_infinite_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
     	return;
