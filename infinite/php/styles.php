@@ -1,15 +1,18 @@
 <?php
-/*
+
 add_action( 'wp_enqueue_scripts', 'i_include_styles' );
 function i_include_styles(){
+    
+    // MAKE THIS ON AN INJECTION - 'bootstrap'
+
 	// BOOSTRAP LESS
-	//wp_enqueue_style( 'bootstrap-less', get_infinite_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
+	wp_enqueue_style( 'bootstrap-less', get_infinite_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
     //wp_enqueue_style( 'bootstrap-cdn', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
 
 	// INFINITE LESS
 	//wp_enqueue_style( 'infinite-style-less', get_infinite_directory_uri() . '/less/style.less' );
+
 }
-*/
 
 // Prepare URL for Less Variable
 function i_less_prepare_url( $url ){

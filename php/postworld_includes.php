@@ -487,7 +487,7 @@ function pwBootstrapPostworldAdmin_print() {
 
 	// Create filter here to add to array of pages it boostraps on
 	$bootstrap = array(
-		'base'				=>	array( 'post', 'edit', 'widgets', 'profile', 'edit-tags' ),
+		'base'				=>	array( 'post', 'edit', 'widgets', 'profile', 'user-edit', 'edit-tags' ),
 		'base_substring'	=>	array( 'postworld' ),
 		);
 
