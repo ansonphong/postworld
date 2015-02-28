@@ -224,19 +224,20 @@ function pw_social_widgets( $meta = array() ){
 	//pw_log( "pw_social_widgets : " . json_encode( $settings ) );
 
 	$output = "";
-	foreach( $settings['networks'] as $network ){
-		switch( $network['network'] ){
-			// FACEBOOK
-			case 'facebook':
-				$output .= pw_social_widget_facebook( $settings['meta'], $network );
-			break;
-			// TWITTER
-			case 'twitter':
-				$output .= pw_social_widget_twitter( $settings['meta'], $network );
-			break;
-			
+	if( is_array( $settings['networks'] ) )
+		foreach( $settings['networks'] as $network ){
+			switch( $network['network'] ){
+				// FACEBOOK
+				case 'facebook':
+					$output .= pw_social_widget_facebook( $settings['meta'], $network );
+				break;
+				// TWITTER
+				case 'twitter':
+					$output .= pw_social_widget_twitter( $settings['meta'], $network );
+				break;
+				
+			}
 		}
-	}
 	
 	return $output;
 

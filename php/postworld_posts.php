@@ -431,7 +431,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			}
 
 			// Gallery Attachment Posts
-			if( in_array( 'posts', $gallery_fields ) ){
+			if( in_array( 'posts', $gallery_fields ) && is_array($pwGetPostFieldsModel['gallery']) ){
 				// For performance, prevent from checking every image for a gallery
 				$new_fields = array_diff( $pwGetPostFieldsModel['gallery'], array( 'gallery(ids,posts)', 'gallery(ids)', 'gallery(posts)' ) );
 				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, $new_fields );
