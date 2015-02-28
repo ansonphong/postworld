@@ -148,7 +148,6 @@
 			class="labeled"
 			type="number"
 			ng-model="<?php echo $vars['ng_model'] ?>.query.post_parent">
-
 	</div>
 
 	<div class="pw-col-3">
@@ -183,6 +182,42 @@
 			tooltip-placement="bottom">
 			<option value=""><?php ___('general.none'); ?></option>
 		</select>
+	</div>
+
+</div>
+<div class="pw-row">
+
+	<div class="pw-col-3">
+		<label
+			for="query-author_from"
+			class="inner">
+			<i class="icon-user"></i>
+			<?php ___('query.author_from'); ?>
+		</label>
+		<select
+			id="query-author_from"
+			class="labeled"
+			ng-options="item.value as item.name for item in feedOptions.query.author_from"
+			ng-model="<?php echo $vars['ng_model'] ?>.query.author_from"
+			tooltip="{{ selectOptionObj( 'query.author_from' ).description }}"
+			tooltip-placement="bottom">
+			<option value=""><?php ___('general.none'); ?></option>
+		</select>
+	</div>
+
+	<div class="pw-col-3" ng-show="<?php echo $vars['ng_model'] ?>.query.author_from == 'author_id'">
+		<label
+			for="query-author"
+			class="inner"
+			tooltip="<?php ___('query.author_id_info'); ?>"
+			tooltip-popup-delay="333">
+			<?php ___('query.author_id'); ?>
+		</label>
+		<input
+			id="query-author"
+			class="labeled"
+			type="number"
+			ng-model="<?php echo $vars['ng_model'] ?>.query.author">
 	</div>
 
 </div>

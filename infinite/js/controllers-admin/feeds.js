@@ -77,6 +77,18 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 					description: 'Include the current posts parent',
 				},
 			],
+			author_from:[
+				{
+					value:'this_author',
+					name: 'This Author',
+					description: 'Include posts by the current post\'s author.',
+				},
+				{
+					value:'author_id',
+					name: 'Specific Author',
+					description: 'Select a specific author.',
+				},
+			],
 		},
 	};
 
@@ -145,6 +157,19 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 		// If 'post id' and post_parent obect doesn't exist
 		else if( isPostId && !objExists )
 			$scope.selectedItem.query.post_parent = 0;
+	});
+
+	/// WATCH : QUERY › AUTHOR FROM ///
+	$scope.$watch('selectedItem.query.author_from', function(value){
+		var objExists = $_.objExists( $scope.selectedItem, 'query.author' );
+		var isAuthorId = ( value == 'author_id');
+		// If not 'post id' and post_parent object exists
+		if( !isAuthorId && objExists )
+			delete $scope.selectedItem.query.author;
+		// If 'author id' and post_parent obect doesn't exist
+		else if( isAuthorId && !objExists )
+			$scope.selectedItem.query.author = 0;
+	
 	});
 
 	////////// REMOVE NULL VALUES //////////

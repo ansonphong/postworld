@@ -89,6 +89,28 @@ function pw_prepare_query_include_posts_from( $query ){
 }
 add_filter( 'pw_prepare_query', 'pw_prepare_query_include_posts_from' );
 
+
+///// PREPARE QUERY FILTER : AUTHOR FROM /////
+function pw_prepare_query_author_from( $query ){
+	global $post;
+	/// AUTHOR FROM FIELD ///
+	if( isset( $query['author_from'] ) ){
+		switch( $query['author_from'] ){
+			// If 'this author', get the current post's author
+			case 'this_author':
+				$query['author'] = $post->post_author;
+				break;
+			// If author id, then author ID is already set, so unset author_from
+			case 'author_id':
+				unset( $query['author_from'] );
+				break;
+		}
+	}
+	return $query;
+}
+add_filter( 'pw_prepare_query', 'pw_prepare_query_author_from' );
+
+
 ///// PREPARE QUERY FILTER : INCLUDE POST FROM /////
 function pw_prepare_query_default_post( $query ){
 	// Set the post type to 'any' if not defined

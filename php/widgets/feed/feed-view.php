@@ -8,5 +8,5 @@
 ////////////////// FEED WIDGET - VIEW //////////////////*/
 ?>
 <?php
-	pw_live_feed( $feed_id );
+	pw_live_feed( $feed_id, false );
 ?>

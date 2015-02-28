@@ -36,19 +36,29 @@ class pw_feed_widget extends WP_Widget {
 		$feed_id = $OPTIONS['feed_id'];
 		$show_title = $OPTIONS['show_title'];
 		
-		////////// DRAW PAGES WIDGET //////////
-		// SHOW TITLE (?)
-			echo $before_widget;
-			if ( ! empty( $title ) && $show_title == 1 )
-				echo $before_title . $title . $after_title;
+		$output = '';
 
-			////////// POST SHARE REPORT VIEW //////////
-			///// RENDER PAGE WIDGET /////
+		////////// DRAW WIDGET //////////
+		// SHOW TITLE (?)
+		$output .= $before_widget;
+		if ( ! empty( $title ) && $show_title == 1 )
+			$output .= $before_title . $title . $after_title;
+
+			///// RENDER FEED WIDGET /////
+			ob_start();
+
 			extract ($OPTIONS);
-			include 'feed-view.php';	
+			include 'feed-view.php';
+			$feed = ob_get_contents();
+			ob_end_clean();
 			
+			$output .= $feed;
+
 		// CLOSE
-		echo $after_widget;
+		$output .= $after_widget;
+
+		if( !empty( $feed ) )
+			echo $output;
 		
 	}
 

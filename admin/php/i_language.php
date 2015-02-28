@@ -132,8 +132,11 @@ $i_language = array(
 		'post_parent_selector'	=>	'Select Post Parent',
 
 		'exclude_posts'			=>	'Exclude Posts',
-		
 		'include_posts'			=>	'Include Posts',
+
+		'author_from'			=>	'Author',
+		'author_id'				=>	'Author ID',
+		'author_id_info'		=>	'The user ID of the author',
 
 		'taxonomy'				=>	'Taxonomy',
 		'term'					=>	'Term',

@@ -58,7 +58,7 @@ function pw_get_feed_by_context( $context = array() ){
 }
 
 
-function pw_live_feed( $vars = array() ){
+function pw_live_feed( $vars = array(), $return_empty = true ){
 	global $post;
 	global $pw;
 
@@ -191,12 +191,17 @@ function pw_live_feed( $vars = array() ){
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
 
+	// If no posts, and not set to return empty, return false
+	if( empty($feed['feed_outline']) && $return_empty == false )
+		return false;
+
 	///// BLOCKS : GET WIDGET DATA /////
 	$widgets = array();
 	$sidebar_id = _get( $feed, 'blocks.widgets.sidebar' );
 	if( is_string( $sidebar_id ) )
 		$widgets = pw_get_sidebar( $sidebar_id );
 	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
+
 
 	//pw_log( "widgets : " . json_encode($widgets) );
 
