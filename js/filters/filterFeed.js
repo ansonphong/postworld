@@ -40,7 +40,7 @@ postworld.controller('pwFilterFeedController',
 		if (pwData.feeds[FeedID].panels[$attrs.filterFeed])
 				template = pwData.feeds[FeedID].panels[$attrs.filterFeed];			   	
 		*/
-		$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: $attrs.filterFeed } );
+		$scope.templateUrl = pwData.pw_get_template( { subdir: 'feed-filters', view: $attrs.filterFeed } );
 		$log.debug( 'pwFilterFeedController : templateUrl : ', $scope.templateUrl );
 		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feeds);
 
