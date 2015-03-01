@@ -62,6 +62,38 @@ function pw_get_social_media_meta(){
 			'description' 	=> 	'Reddit URL',
 			'prepend_url'	=>	''
 			),
+		'deviant_art'	=>	array(
+			'icon'			=>	'icon-circle-medium',
+			'name'			=>	'Deviant Art',
+			'label'			=>	'On Deviant Art',
+			'share_label'	=>	'Share On Deviant Art',
+			'description' 	=> 	'Deviant Art URL',
+			'prepend_url'	=>	''
+			),
+		'flickr'	=>	array(
+			'icon'			=>	'icon-circle-medium',
+			'name'			=>	'Flickr',
+			'label'			=>	'On Flickr',
+			'share_label'	=>	'Share On Flickr',
+			'description' 	=> 	'Flickr URL',
+			'prepend_url'	=>	''
+			),
+		'youtube'	=>	array(
+			'icon'			=>	'icon-circle-medium',
+			'name'			=>	'YouTube',
+			'label'			=>	'On YouTube',
+			'share_label'	=>	'Share On YouTube',
+			'description' 	=> 	'YouTube URL',
+			'prepend_url'	=>	''
+			),
+		'vimeo'	=>	array(
+			'icon'			=>	'icon-circle-medium',
+			'name'			=>	'Vimeo',
+			'label'			=>	'On Vimeo',
+			'share_label'	=>	'Share On Vimeo',
+			'description' 	=> 	'Vimeo URL',
+			'prepend_url'	=>	''
+			),
 		'website'	=>	array(
 			'icon'			=>	'icon-globe',
 			'name'			=>	'Website',

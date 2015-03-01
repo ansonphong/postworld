@@ -121,6 +121,11 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			)
 		);
 
+	// Add ID to the post
+	$post = array(
+		'ID' => $post_id,
+		);
+
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
 	if ( !$viewer_user_id )

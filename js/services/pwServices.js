@@ -639,7 +639,7 @@ postworld.factory('pwPosts',
                 post_id: vars.postId,
                 fields: missingFields,
             };
-			$pwData.get_post(args).then(
+			$pwData.getPost(args).then(
                 // Success
                 function(response) {
                     // Catch the new post data

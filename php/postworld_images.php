@@ -44,8 +44,6 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 		//pw_log( 'thumbnail_id : ' . $thumbnail_id );
 	}
 
-
-
 	// If there is a set 'featured image' set the $thumbnail_url
 	if ( $thumbnail_id ){
 		$thumbnail_url = wp_get_attachment_url( $thumbnail_id ,'full');

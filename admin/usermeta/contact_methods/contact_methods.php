@@ -52,6 +52,7 @@ function pw_user_contact_methods( $user_id ){
 	foreach( $contact_methods_meta as $key => $value ){
 
 		switch( $key ){
+			/*
 			case 'website':
 				// Add the key in the meta
 				$value['key'] = $key;
@@ -62,6 +63,7 @@ function pw_user_contact_methods( $user_id ){
 				// Add the meta to the contact methods
 				$contact_methods[] = $value;
 				break;
+			*/
 
 			default:
 				// Get the contact method key from user meta
@@ -92,6 +94,8 @@ function pw_contact_methods_user_menu( $user_id ){
 
 	// Get the user saved contact methods
 	$contact_methods = pw_user_contact_methods( $user_id );
+
+	//pw_log($contact_methods);
 
 	// Use an ob_include on an admin template, so it can be customized by the theme
 	return pw_ob_social_template( 'user-contact-methods', $contact_methods );
