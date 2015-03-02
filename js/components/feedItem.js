@@ -98,6 +98,7 @@ postworld.controller('pwGridCtrl',
 	}
 
 	$scope.setGridClass = function( imageTags ){
+		//$log.debug('SET GRID CLASS', imageTags);
 		if( !_.isEmpty( imageTags ) ){
 			var selectedTag = $scope.selectImageTag( imageTags );
 			var gridClass = selectedTag.name;

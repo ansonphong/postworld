@@ -23,7 +23,6 @@ function pw_print_gallery( $gallery ){
 
 	$gallery = array_replace_recursive( $gallery_defaults, $gallery );
 
-
 	///// TEMPLATES ////
 	$default_template = "gallery-inline";
 	$template_id = $gallery['template'];

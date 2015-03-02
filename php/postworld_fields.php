@@ -153,6 +153,7 @@ function pw_post_field_model(){
 		'post_excerpt',
 		'post_content',
 		'post_type',
+		'post_status',
 		'post_parent',
 		'post_permalink',
 		'post_excerpt',
