@@ -849,6 +849,7 @@ postworld.factory('pwImages',
 	function ( $log, $window ) {  
 
 	///// UNIVERSALS /////
+	// TODO : Get Tag mapping from pwConfig
 	var tagMappings = [
     	{
     		name: 'square',

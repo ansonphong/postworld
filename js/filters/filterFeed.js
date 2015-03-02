@@ -1,6 +1,8 @@
 'use strict';
 
-postworld.directive('editFeed', [ '$rootScope', '$log', 'pwData', '_', '$pw', function( $rootScope, $log, $pwData, $_, $pw ) {
+postworld.directive('editFeed',
+	[ '$rootScope', '$log', 'pwData', '_', '$pw', '$timeout',
+	function( $rootScope, $log, $pwData, $_, $pw, $timeout ) {
 	return {
 		restrict: 'EA',
 		require: 'ngModel',
@@ -12,18 +14,28 @@ postworld.directive('editFeed', [ '$rootScope', '$log', 'pwData', '_', '$pw', fu
 		},
 		link: function( $scope, element, attrs ){
 
+			var firstRun = true;
+
 			///// WATCH : MODEL VALUE /////
 			$scope.$watch( 'ngModel', function( val ){
 
 				// If the feed doesn't exist, stop here
 				if( !feedExists() )
 					return false;
-				
-				// Update the new value in the feed service
-				updateValue( val );
 
-				// Reload the feed
-				reloadFeed();
+				// On first run
+				if( firstRun ){
+					// Set the model value to coorospond with the feed value
+					updateModelValue();
+					// Set first run false
+					firstRun = false;
+				}
+
+				// Update the new value in the feed service
+				updateFeedValue( val );
+
+				// Refresh the feed
+				refreshFeed( val );
 
 			} );
 
@@ -31,17 +43,40 @@ postworld.directive('editFeed', [ '$rootScope', '$log', 'pwData', '_', '$pw', fu
 				return $_.objExists( $pwData.feeds, $scope.feedId );
 			}
 
-			var updateValue = function(val){
-				// Construct the path to the feed key
-				var path = $scope.feedId + '.' + $scope.feedKey;
-				// Log
-				$log.debug( 'FEED: ' + path + ' // ngModel changed :', val );
+			var keyParts = function(){
+				// Split the feed key on the dot, get the first key
+				return $scope.feedKey.split('.');
+			}
+
+			var updateModelValue = function(){
+				if( _.isUndefined( $scope.ngModel ) || _.isNull( $scope.ngModel ) )
+					$scope.ngModel = $_.get( $pwData.feeds[$scope.feedId], $scope.feedKey );
+			}
+
+			var getPath = function(){
+				return $scope.feedId + '.' + $scope.feedKey;
+			}
+
+			var updateFeedValue = function(val){
 				// Get the feed
 				var feed = $_.get( $pwData.feeds, $scope.feedId );
 				// Log
-				$log.debug( 'FEED : ', feed );
+				$log.debug( 'updateFeedValue : ' + $scope.feedId + ' : FEED : ', feed );
 				// Set the feed data
 				$pwData.feeds[$scope.feedId] = $_.set( feed, $scope.feedKey, val );
+			}
+
+			var refreshFeed = function(val){
+				///// HANDLE FEED KEYS /////
+				// Switch on primary key
+				switch( keyParts()[0] ){
+					case 'query':
+						reloadFeed();
+						break;
+					case 'view':
+						updateView(val);
+						break;
+				}
 			}
 
 			var reloadFeed = function(){
@@ -55,6 +90,15 @@ postworld.directive('editFeed', [ '$rootScope', '$log', 'pwData', '_', '$pw', fu
 					$log.debug( "editFeed.$broadcast : feed.reload : ", $scope.feedId );
 					$rootScope.$broadcast( 'feed.reload', $scope.feedId );
 				}
+			}
+
+			var updateView = function( val ){
+				$log.debug( 'editFeed : updateView : ', val );
+				var vars = {
+					'feedId' 	: $scope.feedId,
+					'view'		: val,
+				};
+				$rootScope.$broadcast( "feed.changeTemplate", vars );
 			}
 
 		},

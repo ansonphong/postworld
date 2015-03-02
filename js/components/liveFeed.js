@@ -38,7 +38,7 @@ postworld.controller('pwFeedController',
 	$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 	$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 	$scope.scrollMessage = "";
-	$scope.posts = [];
+	//$scope.posts = [];
 
 	// LIVE FEED
 	if ($attrs.liveFeed)    { 
@@ -64,12 +64,31 @@ postworld.controller('pwFeedController',
 		return;
 	}
 	
+	$scope.getFeed = function(){
+		return $pwData.feeds[$scope.feedId];
+	}
+
+	$scope.posts = function(){
+		return $pwData.feeds[$scope.feedId].posts;
+	}
+
+	/*
+	$scope.$watch( 
+		function(){
+			return $pwData.feeds[$scope.feedId];
+		},
+		function( val ){
+			$scope.feed = $pwData.feeds[$scope.feedId];
+		}
+	);
+	*/
+
 	// FEED VARIABLES
 	//$scope.feedOptions = $_.getObj( $scope.feed, 'options' )
 
 	// SET VIEW
-	$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
-		$pwData.feeds[$scope.feedId].view : {};
+	//$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
+	//	$pwData.feeds[$scope.feedId].view : {};
 
    	$scope.updateTemplateUrl = function(){
 		// Generate template IDs
@@ -98,6 +117,7 @@ postworld.controller('pwFeedController',
 			return value;
 	}
 
+	/*
 	$scope.resetFeedData = function () {
 		// Reset Feed Data
 		$pwData.feeds[$scope.feedId] = {};
@@ -109,9 +129,10 @@ postworld.controller('pwFeedController',
 
 		// var argsValue = JSON.parse(JSON.stringify($scope.feed));			
 		// $scope.posts = $pwData.feeds[$scope.feedId].posts;
-		$scope.posts = JSON.parse(JSON.stringify($pwData.feeds[$scope.feedId].posts));
+		//$scope.posts = JSON.parse(JSON.stringify($pwData.feeds[$scope.feedId].posts));
 		// $scope.injectBlocks();
 	};
+	*/
 	
 	$scope.fillFeedData = function( response ) {
 		// This function executes on the first run of a pwLiveFeed or pwLoadFeed
@@ -197,7 +218,7 @@ postworld.controller('pwFeedController',
 			// Add feed meta data
 			$scope.addFeedMeta();
 			// Localize the posts
-			$scope.posts = $pwData.feeds[$scope.feedId].posts;
+			//$scope.posts = $pwData.feeds[$scope.feedId].posts;
 			// Update the status
 			$scope.updateStatus();
 			// Toggle off busy
@@ -210,9 +231,9 @@ postworld.controller('pwFeedController',
 		// Toggle on busy
 		$scope.busy = true;
 		// Establish scope posts object
-		$scope.posts = {};
+		//$scope.posts = {};
 		// Clone Args Value as 'feed'
-		var feed = JSON.parse( JSON.stringify( $scope.feed ) );
+		var feed = JSON.parse( JSON.stringify( $pwData.feeds[$scope.feedId] ) );
 
 		// Get Query String Parameters, if any are provided
 		var qsArgs = $scope.getQueryStringArgs();			
@@ -242,7 +263,7 @@ postworld.controller('pwFeedController',
 						$scope.fillFeedData( response );
 						$scope.injectBlocks();
 						$scope.addFeedMeta();
-						$scope.posts = $pwData.feeds[$scope.feedId].posts;
+						//$scope.posts = $pwData.feeds[$scope.feedId].posts;
 					} else {
 						$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
 					}
@@ -308,6 +329,7 @@ postworld.controller('pwFeedController',
 
 	};
 
+	/*
 	///// DEPRECIATED (DEV CACHE PROPERTIES OF LIVE FEED) /////
 	$scope.pwLoadFeed = function() {
 		$scope.busy = true;
@@ -368,7 +390,8 @@ postworld.controller('pwFeedController',
 				// TODO Show User Friendly Message
 			}
 		);
-	  };
+	};
+	*/
 
 	$scope.scrollFeed = function() {
 		
@@ -491,7 +514,7 @@ postworld.controller('pwFeedController',
 					$scope.addFeedMeta( { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length } );
 					
 					// Set the posts into the scope
-					$scope.posts = $pwData.feeds[$scope.feedId].posts;
+					//$scope.posts = $pwData.feeds[$scope.feedId].posts;
 
 					
 
@@ -727,19 +750,6 @@ postworld.controller('pwFeedController',
 		return params;
 		//$scope.convertQueryString2FeedQuery(params);  			
 	};
-
-
-	$scope.$watch( 'feed.view.current', function( val ){
-		$log.debug( 'liveFeed.$watch:FEED.VIEW.CURRENT', val );
-
-		$log.debug('pwFilterFeedController.changeFeedTemplate',val);
-		var vars = {
-			'feedId' 	: $scope.feed.feed_id,
-			'view'		: val,
-		};
-		$rootScope.$broadcast( "feed.changeTemplate", vars );
-
-	});
 
 	$log.debug( 'feed : ', $scope.feed );
 
