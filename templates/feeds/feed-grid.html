@@ -10,7 +10,7 @@
 		>
 		<div class="grid-sizer"></div>
 		<div
-			ng-repeat="post in posts"
+			ng-repeat="post in posts()"
 			class="feed-item masonry-brick"
 			pw-grid
 			ng-class="setGridClass( post.image.tags )"

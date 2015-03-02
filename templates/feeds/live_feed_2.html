@@ -13,7 +13,7 @@
 	<input type="hidden">	
     <div id="scrollMe"  class="infinite-scroll">
 	  <div infinite-scroll='getNext()' infinite-scroll-disabled='busy' infinite-scroll-parent>
-	    <div ng-repeat='post in posts' >
+	    <div ng-repeat='post in posts()' >
 	    	<div feed-item post="post" feed-id='args.feed_id'></div>
 			<hr>
 	      <div style='clear: both;'></div>

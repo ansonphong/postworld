@@ -1,5 +1,10 @@
 # Postworld // Changelog
 
+### Version 1.7.9
+- __Breaking Change__ - Feed Posts object is now a function, not an array, so all instances of feeds must be changed:
+    + FROM :  `post in posts`
+    + TO :  `post in posts()`
+
 ### Version 1.7.8
 - __Breaking Change__ - In themes using bootstrap base styles, require addition of `bootstrap` into theme injectors when calling `postworld_includes`
     + If LESS is also included, a custom build will happen locally
