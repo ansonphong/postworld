@@ -110,10 +110,6 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 		{
 			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadPanelWidget.html',                
 		});
-	$routeProvider.when('/register-feed/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwRegisterFeedWidget.html',             
-		});
 	$routeProvider.when('/home/',
 		{
 				template: '<h2>Coming Soon</h2>',               

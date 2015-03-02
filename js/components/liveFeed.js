@@ -88,6 +88,7 @@ postworld.controller('pwFeedController',
 		$scope.templateUrl = template; //$pwData.pw_get_template( { subdir: 'feeds', view: template } );	   	
 
    	}
+   	// TODO : Run this on view change
    	$scope.updateTemplateUrl();
 
 	$scope.setDefault = function( exp, defaultVal ){

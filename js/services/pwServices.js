@@ -715,6 +715,14 @@ postworld.factory('pwPosts',
     	getFeed: function( feedId ){
     		return getFeed( feedId );
     	},
+    	setFeedView: function( feedId, view ){
+    		$log.debug( 'pwPosts : setFeedView : ' + feedId + ' ', view );
+			var vars = {
+				'feedId' 	: feedId,
+				'view'		: view,
+			};
+			$rootScope.$broadcast( "feed.changeTemplate", vars );
+    	},
     	insertFeed: function( feedId, feed ){
     		/* Inserts a feed into the $pwData.feeds service
     		 * feedId = [ string ]

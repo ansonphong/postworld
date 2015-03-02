@@ -486,7 +486,6 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			return this.wp_ajax('pw_get_term_feed',params);
 		},
 
-
 		///// FEEDS /////
 		getFeedView: function( feedId ){
 			// Get Current View
@@ -495,6 +494,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var view =  ( currentView ) ? currentView : defaultView;
 			return view;
 		},
+		
 		setFeedView: function( feedId, view ){
 
 		},

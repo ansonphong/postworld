@@ -1,11 +1,11 @@
 'use strict';
 
 postworld.directive('editFeed',
-	[ '$rootScope', '$log', 'pwData', '_', '$pw', '$timeout',
-	function( $rootScope, $log, $pwData, $_, $pw, $timeout ) {
+	[ '$rootScope', '$log', 'pwData', '_', '$pw', '$timeout', 'pwPosts',
+	function( $rootScope, $log, $pwData, $_, $pw, $timeout, $pwPosts ) {
 	return {
 		restrict: 'EA',
-		require: 'ngModel',
+		//require: 'ngModel',
 		scope: {
 			feedId : '@editFeed',
 			feedKey:'@',
@@ -35,12 +35,46 @@ postworld.directive('editFeed',
 				updateFeedValue( val );
 
 				// Refresh the feed
-				refreshFeed( val );
+				if( getFeedReload() == 'change' )
+					refreshFeed( val );
 
 			} );
 
+			///// WATCH : FEED RELOAD /////
+			$scope.$watch( 'feedReload', function( val, oldVal ){
+				switch( getFeedReload() ){
+					/// ENTER ///
+					case 'enter':
+						element.bind("keydown keypress", function(event) {
+						  	if(event.which === 13) {
+								reloadFeed();
+								event.preventDefault();
+							}
+						});
+						break;
+					/// CLICK ///
+					case 'click':
+						element.bind("mousedown", function(event) {
+							$timeout(function(){
+								reloadFeed()
+							},0);
+							//event.preventDefault();
+						});
+						break;
+				}
+			});
+
 			var feedExists = function(){
 				return $_.objExists( $pwData.feeds, $scope.feedId );
+			}
+
+			var getFeedReload = function(){
+				// Return false if not defined
+				if( _.isUndefined( $scope.feedReload ) ||
+					_.isNull( $scope.feedReload ) )
+					return 'change';
+				else
+					return $scope.feedReload;
 			}
 
 			var keyParts = function(){
@@ -49,8 +83,11 @@ postworld.directive('editFeed',
 			}
 
 			var updateModelValue = function(){
-				if( _.isUndefined( $scope.ngModel ) || _.isNull( $scope.ngModel ) )
-					$scope.ngModel = $_.get( $pwData.feeds[$scope.feedId], $scope.feedKey );
+				if( _.isUndefined( $scope.ngModel ) || _.isNull( $scope.ngModel ) ){
+					var value = $_.get( $pwData.feeds[$scope.feedId], $scope.feedKey );
+					if( value )
+						$scope.ngModel = value;
+				}
 			}
 
 			var getPath = function(){
@@ -80,25 +117,13 @@ postworld.directive('editFeed',
 			}
 
 			var reloadFeed = function(){
-				// Set default value for feedReload
-				if( _.isUndefined( $scope.feedReload ) || _.isNull( $scope.feedReload ) )
-					$scope.feedReload = 'true';
-				// If reload feed is true
-				if( $_.stringToBool( $scope.feedReload ) ){
-					// Reload the Feed
-					if(  $scope.feedReload )
-					$log.debug( "editFeed.$broadcast : feed.reload : ", $scope.feedId );
-					$rootScope.$broadcast( 'feed.reload', $scope.feedId );
-				}
+				// Reload the Feed
+				$log.debug( "editFeed.$broadcast : feed.reload : ", $scope.feedId );
+				$rootScope.$broadcast( 'feed.reload', $scope.feedId );
 			}
 
 			var updateView = function( val ){
-				$log.debug( 'editFeed : updateView : ', val );
-				var vars = {
-					'feedId' 	: $scope.feedId,
-					'view'		: val,
-				};
-				$rootScope.$broadcast( "feed.changeTemplate", vars );
+				$pwPosts.setFeedView( $scope.feedId, val );
 			}
 
 		},
@@ -130,7 +155,7 @@ postworld.controller('pwFilterFeedController',
 			return;
 		}
 
-		$scope.feed = pwData.feeds[$scope.feedId];
+		//$scope.feed = pwData.feeds[$scope.feedId];
 
 		// DEFAULTS
 		//$scope.feed.query.author_name = "";

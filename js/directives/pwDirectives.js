@@ -134,20 +134,24 @@ postworld.directive('pwTarget', function( $log ) {
 ///// SUBMIT ON ENTER /////
 // Submit on Enter, without a real form
 postworld.directive('ngEnter', function() {
-	  return function(scope, element, attrs) {
-		  element.bind("keydown keypress", function(event) {
-			  if(event.which === 13) {
-				  scope.$apply(function(){
+
+  	return function(scope, element, attrs) {
+			
+		element.bind("keydown keypress", function(event) {
+		  	if(event.which === 13) {
+				scope.$apply(function(){
 					if( attrs.ngEnter )
-					  scope.$eval(attrs.ngEnter);
+						scope.$eval(attrs.ngEnter);
 					else
-					  scope.$eval("submit()");
-				  });
-				  event.preventDefault();
-			  }
-		  });
-	  };
-  });
+						scope.$eval("submit()");
+				});
+				event.preventDefault();
+			}
+		});
+		
+	};
+
+});
 
 
 ///// PREVENT DEFAULT ON CLICK /////

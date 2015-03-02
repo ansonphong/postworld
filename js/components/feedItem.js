@@ -25,7 +25,7 @@ postworld.controller('pwFeedItemCtrl',
 		
 	///// INIT /////
 	var type = ( $_.get( $scope.post, 'post_type' ) ) ? $scope.post.post_type : 'post';
-	var feedId = $_.get( $scope, 'feed.feed_id' );
+	var feedId = $_.get( $scope.feed(), 'feed_id' );
 
 	$log.debug( "FEED ID >>> ", feedId );
 
@@ -53,7 +53,7 @@ postworld.controller('pwFeedItemCtrl',
 			return false;
 		var type = $scope.post.post_type;
 		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
-	 
+	 	
 	});		  		      	
 
 }]);

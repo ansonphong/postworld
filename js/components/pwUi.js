@@ -122,6 +122,16 @@ postworld.controller( 'pwUiCtrl',
 			angular.element( selector ).toggleClass( className );
 	}
 
+	$scope.uiToggleValue = function( key, values ){
+		$log.debug( "uiToggleValue : " + key );
+		// Get the current key value
+		var currentValue = $_.get( $scope, key );
+		// Determine the new value
+		var newValue = ( currentValue == values[0] ) ? values[1] : values[0];
+		// Set the new value as a string
+		$scope.$eval( key + ' = "' + newValue + '"' );
+	}
+
 }]);
 
 
