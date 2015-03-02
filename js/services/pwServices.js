@@ -250,6 +250,9 @@ postworld.factory('_',
 		  }
 		  return obj1;
 		},
+		stringToBool : function(string){
+			return this.stringToBoolean(string);
+		},
 		stringToBoolean : function(string){
 			switch(string.toLowerCase()){
 				case "true": case "yes": case "1": return true;
@@ -1065,6 +1068,7 @@ postworld.service('pwPostOptions',
 		},
 
 		postMonth: function(){
+			/*
 			var monthsObj = $window.pwSiteGlobals.post_options.month;
 			var monthsArray = [];
 			// Convert from "1:January" Associative Object format to { number:1, name:"January" } 
@@ -1075,6 +1079,57 @@ postworld.service('pwPostOptions',
 				};
 				monthsArray.push( month );
 			});
+			*/
+			var monthsArray = [
+				{
+					number:1,
+					name:'January'
+				},
+				{
+					number:2,
+					name:'February'
+				},
+				{
+					number:3,
+					name:'March'
+				},
+				{
+					number:4,
+					name:'April'
+				},
+				{
+					number:5,
+					name:'May'
+				},
+				{
+					number:6,
+					name:'June'
+				},
+				{
+					number:7,
+					name:'July'
+				},
+				{
+					number:8,
+					name:'August'
+				},
+				{
+					number:9,
+					name:'September'
+				},
+				{
+					number:10,
+					name:'October'
+				},
+				{
+					number:11,
+					name:'November'
+				},
+				{
+					number:12,
+					name:'December'
+				},
+			];
 			return monthsArray;
 		},
 

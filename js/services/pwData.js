@@ -11,6 +11,22 @@
  *	$args = json_decode($args_text);
  * */
 
+
+postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
+	return{
+		scope:{
+			pwDataGet:"@",
+		},
+		link: function( $scope, element, attrs ){
+			$log.debug("ACTIVATE : pwDataGet", element);
+			element.html( JSON.stringify( $_.get( $pwData, $scope.pwDataGet ) ) );
+		}
+
+	}
+}]);
+
+
+
 postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	function ( $resource, $q, $log, $window, $pw, $_ ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
