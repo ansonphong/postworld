@@ -424,7 +424,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 		// Extract meta fields
 		$gallery_fields = extract_linear_fields( $fields, 'gallery', true );
 		if ( !empty($gallery_fields) ){
-
 			$post['gallery'] = array();
 			// TODO : If already has post_content from get_post, feed post_content directly
 			// 		  To bypass recursive query of the post_content
@@ -434,11 +433,12 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			if( in_array( 'ids', $gallery_fields ) ){
 				$post['gallery']['ids'] = $gallery_post_ids;
 			}
-
+			
 			// Gallery Attachment Posts
-			if( in_array( 'posts', $gallery_fields ) && is_array($pwGetPostFieldsModel['gallery']) ){
+			if( in_array( 'posts', $gallery_fields ) && is_array($field_model['gallery']) ){
+				
 				// For performance, prevent from checking every image for a gallery
-				$new_fields = array_diff( $pwGetPostFieldsModel['gallery'], array( 'gallery(ids,posts)', 'gallery(ids)', 'gallery(posts)' ) );
+				$new_fields = array_diff( $field_model['gallery'], array( 'gallery(ids,posts)', 'gallery(ids)', 'gallery(posts)' ) );
 				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, $new_fields );
 			}
 
