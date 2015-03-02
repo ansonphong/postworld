@@ -83,9 +83,14 @@ postworld.directive('editFeed',
 			}
 
 			var updateModelValue = function(){
-				if( _.isUndefined( $scope.ngModel ) || _.isNull( $scope.ngModel ) ){
+				// If no model value is defined, and the feed key is defined
+				if( _.isUndefined( $scope.ngModel ) && !_.isUndefined( $scope.feedKey ) ){
+
+					// Get the value of the feed key from the feed
 					var value = $_.get( $pwData.feeds[$scope.feedId], $scope.feedKey );
+					// If a value was found
 					if( value )
+						// Set the value in the model
 						$scope.ngModel = value;
 				}
 			}
@@ -99,8 +104,10 @@ postworld.directive('editFeed',
 				var feed = $_.get( $pwData.feeds, $scope.feedId );
 				// Log
 				$log.debug( 'updateFeedValue : ' + $scope.feedId + ' : FEED : ', feed );
+
 				// Set the feed data
-				$pwData.feeds[$scope.feedId] = $_.set( feed, $scope.feedKey, val );
+				if( !_.isUndefined( $scope.feedKey ) )
+					$pwData.feeds[$scope.feedId] = $_.set( feed, $scope.feedKey, val );
 			}
 
 			var refreshFeed = function(val){

@@ -1,13 +1,22 @@
 'use strict';
-
 /*_   _                    _         _                                  _      _       
  | | | |___  ___ _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
  | | | / __|/ _ \ '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
  | |_| \__ \  __/ |     / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
   \___/|___/\___|_|    /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
 																 |_|                   
-////////// ------------ USER AUTOCOMPLETE CONTROLLER ------------ //////////*/
-postworld.controller( 'userAutocomplete',
+/////////////// ------------ USER AUTOCOMPLETE CONTROLLER ------------ ///////////////*/
+
+postworld.directive( 'userAutocomplete', [ '$log', '_', function( $log, $_ ){
+	return {
+		controller: 'UserAutocompleteController',
+		link: function( $scope, element, attrs ){
+
+		}
+	}
+}]);
+
+postworld.controller( 'UserAutocompleteController',
 	[ '$scope', 'pwData', '$log', '_',
 	function( $scope, $pwData, $log, $_ ){
 
@@ -44,24 +53,29 @@ postworld.controller( 'userAutocomplete',
 			$log.debug( "SELECT USER", user );
 		}
 
+		$scope.setValue = function( value, ngModel ){
+			// Take the passed in value ( ie. $item ) and assign value to ngModel
+			$log.debug( 'userAutocomplete : setValue() // model : ' + ngModel, value );
+			$scope.$eval( ngModel + ' = ' + JSON.stringify( value ) );
+		}
+
+		/*
 		///// TODO : REFACTOR /////
-		
 		$scope.username = '';
 		if (($scope.$parent.feedQuery) && ($scope.$parent.feedQuery.author_name)) {
 			$scope.username = $scope.$parent.feedQuery.author_name;
 		};    
-
 		// Watch on the value of username
 		$scope.$watch( "username",
 			function (){
 				// When it changes, emit it's value to the parent controller
 				if ($scope.username) $scope.$emit('updateUsername', $scope.username);
 			}, 1 );
-		
 		// Catch broadcast of username change
 		$scope.$on('updateUsername', function(event, data) { 
 			if (data) $scope.username = data; 
 			});
+		*/
 
 
 }]);

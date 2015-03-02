@@ -27,6 +27,13 @@ postworld.controller('inputSearch',
  |____/ \___|\__,_|_|  \___|_| |_| |_|   |_|\___|_|\__,_|___/
                                                              
 ////////// ------------ SEARCH FIELDS CONTROLLER ------------ //////////*/
+
+postworld.directive( 'pwSearchFields', [function(){
+        return { 
+            controller: 'searchFields'
+        };
+}]);
+
 postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
@@ -62,10 +69,11 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
         
         }, 1 );
 
-    /*
-    $scope.$on('updateUsername', function(username) { 
-        $scope.feedQuery.author_name = username;
-    });
-    */
+
+    // SOME COOL STUFF HERE FOR AUTHOR
+    // selectAuthor( $item )
+    // removeAuthor
+
+
     
 }]);

@@ -129,49 +129,7 @@ postworld.controller( 'pwUiCtrl',
 		// Determine the new value
 		var newValue = ( currentValue == values[0] ) ? values[1] : values[0];
 		// Set the new value as a string
-		$scope.$eval( key + ' = "' + newValue + '"' );
+		$scope.$eval( key + ' = ' + JSON.stringify( newValue ) );
 	}
 
 }]);
-
-
-
-
-/*
-DEPRECIATED - USE `pwUi` DIRECTIVE
-///// TOGGLE AN ELEMENT'S DISPLAY ON CLICK /////
-postworld.directive('pwClickToggleDisplay', function( $log ) {
-		return {
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				element.bind('click', function (event) {
-					if( !_.isNull( attrs.pwClickToggleDisplay ) ){
-						var aElement = angular.element( attrs.pwClickToggleDisplay );
-						var display = aElement.css('display');
-						if( display == 'block' )
-							aElement.css('display', 'none');
-						else if( display == 'none' )
-							aElement.css('display', 'block');
-					}
-					$log.debug( "display:" + display );
-				});
-			}
-		};
-	});
-*/
-/*
-///// TOGGLE AN ELEMENT'S CLASS ON CLICK /////
-postworld.directive('pwClickToggleClass', function() {
-		return {
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				element.bind('click', function (event) {
-					if( !_.isNull( attrs.pwClickToggleClass ) ){
-						var aElement = angular.element( attrs.pwClickToggleClass );
-						aElement.toggleClass( attrs.toggleClass );
-					}
-				});
-			}
-		};
-	});
-*/
