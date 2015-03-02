@@ -38,7 +38,6 @@ postworld.controller('pwFeedController',
 	$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 	$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 	$scope.scrollMessage = "";
-	//$scope.posts = [];
 
 	// LIVE FEED
 	if ($attrs.liveFeed)    { 
@@ -64,31 +63,13 @@ postworld.controller('pwFeedController',
 		return;
 	}
 	
-	$scope.getFeed = function(){
+	$scope.feed = function(){
 		return $pwData.feeds[$scope.feedId];
 	}
 
 	$scope.posts = function(){
 		return $pwData.feeds[$scope.feedId].posts;
 	}
-
-	/*
-	$scope.$watch( 
-		function(){
-			return $pwData.feeds[$scope.feedId];
-		},
-		function( val ){
-			$scope.feed = $pwData.feeds[$scope.feedId];
-		}
-	);
-	*/
-
-	// FEED VARIABLES
-	//$scope.feedOptions = $_.getObj( $scope.feed, 'options' )
-
-	// SET VIEW
-	//$scope.feed.view = ( $pwData.feeds[$scope.feedId].view ) ?
-	//	$pwData.feeds[$scope.feedId].view : {};
 
    	$scope.updateTemplateUrl = function(){
 		// Generate template IDs
@@ -116,23 +97,6 @@ postworld.controller('pwFeedController',
 		else
 			return value;
 	}
-
-	/*
-	$scope.resetFeedData = function () {
-		// Reset Feed Data
-		$pwData.feeds[$scope.feedId] = {};
-		if ($pwData.feeds[$scope.feedId].feed_outline) {
-			$pwData.feeds[$scope.feedId].feed_outline = $pwData.feeds[$scope.feedId].feed_outline;
-		};											
-		$pwData.feeds[$scope.feedId].posts = [];
-		$pwData.feeds[$scope.feedId].loaded = [];
-
-		// var argsValue = JSON.parse(JSON.stringify($scope.feed));			
-		// $scope.posts = $pwData.feeds[$scope.feedId].posts;
-		//$scope.posts = JSON.parse(JSON.stringify($pwData.feeds[$scope.feedId].posts));
-		// $scope.injectBlocks();
-	};
-	*/
 	
 	$scope.fillFeedData = function( response ) {
 		// This function executes on the first run of a pwLiveFeed or pwLoadFeed
@@ -193,7 +157,7 @@ postworld.controller('pwFeedController',
 		// Set feeds equal to new 'query'
 		// $pwData.feeds[$scope.feedId].query = 
 		$log.debug( "$scope.reloadFeed" );
-		$scope.convertFeedQuery2QueryString( $scope.feed.query );						
+		$scope.convertFeedQuery2QueryString( $scope.feed().query );						
 		$pwData.feeds[$scope.feedId].posts = false;
 		$scope.firstRun = true;			
 		this.getNext();
@@ -208,7 +172,7 @@ postworld.controller('pwFeedController',
 	$scope.pwLiveFeed = function() {
 		// TODO : Set Nonce Authentically
 		$pwData.setNonce(78);
-		$log.debug( "LIVE FEED (init) : ID : " + $scope.feed.feed_id, $scope.feed );
+		$log.debug( "LIVE FEED (init) : ID : " + $scope.feedId, $scope.feed() );
 
 		///// GET FEED FROM PRELOADED DATA /////
 		// If posts have already been pre-loaded
@@ -217,8 +181,6 @@ postworld.controller('pwFeedController',
 			$scope.injectBlocks();
 			// Add feed meta data
 			$scope.addFeedMeta();
-			// Localize the posts
-			//$scope.posts = $pwData.feeds[$scope.feedId].posts;
 			// Update the status
 			$scope.updateStatus();
 			// Toggle off busy
@@ -230,8 +192,6 @@ postworld.controller('pwFeedController',
 		///// GET FEED BY AJAX /////
 		// Toggle on busy
 		$scope.busy = true;
-		// Establish scope posts object
-		//$scope.posts = {};
 		// Clone Args Value as 'feed'
 		var feed = JSON.parse( JSON.stringify( $pwData.feeds[$scope.feedId] ) );
 
@@ -263,7 +223,6 @@ postworld.controller('pwFeedController',
 						$scope.fillFeedData( response );
 						$scope.injectBlocks();
 						$scope.addFeedMeta();
-						//$scope.posts = $pwData.feeds[$scope.feedId].posts;
 					} else {
 						$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
 					}
@@ -329,70 +288,6 @@ postworld.controller('pwFeedController',
 
 	};
 
-	/*
-	///// DEPRECIATED (DEV CACHE PROPERTIES OF LIVE FEED) /////
-	$scope.pwLoadFeed = function() {
-		$scope.busy = true;
-		$scope.posts = {};
-
-		// TODO set Nonce from UI
-		$pwData.setNonce(78);
-		var args = {};
-		args.feed_id = $scope.feed;
-		// if id is defined in feed_id of the settings array, then use it
-		if ($pwData.feeds[$scope.feedId].feed_id) args.feed_id = $pwData.feeds[$scope.feedId].feed_id; 
-		args.preload = $pwData.feeds[$scope.feedId].preload;
-		// If that feed already has an outline, then do not load feed, just go get new posts(scroll) and ignore
-		if ($pwData.feeds[$scope.feedId].feed_outline) {
-			$scope.resetFeedData();				
-			// Set loaded = 0, 
-			// $pwData.feeds[$scope.feedId].loaded = 0;
-			// Run Scroll Feed
-			$scope.scrollFeed();
-			return;
-		}
-		$pwData.pw_load_feed(args).then(
-			// Success
-			function(response) {
-				$scope.busy = false;
-				if (response.status === undefined) {
-					console.log('response format is not recognized');
-					return;
-				}
-				if (response.status==200) {
-					//$log.debug('pwFeedController.pw_load_feed Success',response.data);						
-					// Check if data exists
-					if (!(response.data instanceof Array) ) {
-
-						// Insert Response in Feed Data					
-						$scope.fillFeedData( response );
-						$scope.addFeedMeta();
-						$scope.posts = $pwData.feeds[$scope.feedId].posts;
-
-						$scope.injectBlocks();
-						
-					} else {
-						$log.debug('pwFeedController.pw_load_feed No Data Received');						
-					}
-					$scope.busy = false;							
-					return response.data;						
-				} else {
-					// handle error
-					console.log('error',response.status,response.message);
-					// TODO should we set busy to false when error is returned?
-				}
-				// return response.posts;
-			},
-			// Failure
-			function(response) {
-				$scope.busy = false;
-				$log.error('pwFeedController.pw_get_live_feed Failure',response);
-				// TODO Show User Friendly Message
-			}
-		);
-	};
-	*/
-
 	$scope.scrollFeed = function() {
 		
 		// Check if all Loaded, then return and do nothing
@@ -405,8 +300,6 @@ postworld.controller('pwFeedController',
 		// TODO do we need to set the loading status? or just use the busy flag?
 		$pwData.feeds[$scope.feedId].status = 'loading';
 		
-		//$log.debug( ">>> SCROLL FEED <<<", $scope.feed );
-
 		if( $scope.busy )
 			return;
 
@@ -512,11 +405,6 @@ postworld.controller('pwFeedController',
 					// Add Feed Meta for only the new posts
 					var postsLoaded = parseInt( $pwData.feeds[$scope.feedId].posts.length - 1 );
 					$scope.addFeedMeta( { mode: 'scrollFeed', postsLoaded: postsLoaded, newItems: newItems.length } );
-					
-					// Set the posts into the scope
-					//$scope.posts = $pwData.feeds[$scope.feedId].posts;
-
-					
 
 					// Update feed status
 					$scope.updateStatus();
@@ -750,8 +638,6 @@ postworld.controller('pwFeedController',
 		return params;
 		//$scope.convertQueryString2FeedQuery(params);  			
 	};
-
-	$log.debug( 'feed : ', $scope.feed );
 
 }]);
 
