@@ -378,6 +378,10 @@ postworld.controller('pwFeedController',
 
 						$log.debug( ">>> INJECTED POST : loadOrder : " + newItems[i].feed.loadOrder + " : " + newItems[i].post_title );
 
+						// If Posts doesn't exist as an array
+						if( _.isUndefined( $pwData.feeds[$scope.feedId].posts ) )
+							$pwData.feeds[$scope.feedId].posts = [];
+						
 						// Push to central posts array
 						$pwData.feeds[$scope.feedId].posts.push( newItems[i] );
 

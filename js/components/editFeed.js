@@ -78,7 +78,10 @@ postworld.directive('editFeed',
 			}
 
 			var keyParts = function(){
-				// Split the feed key on the dot, get the first key
+				// If the feedKey is not a string, return here
+				if( !_.isString( $scope.feedKey ) )
+					return false;
+				// Split the feed key on the dot
 				return $scope.feedKey.split('.');
 			}
 
@@ -99,15 +102,165 @@ postworld.directive('editFeed',
 				return $scope.feedId + '.' + $scope.feedKey;
 			}
 
-			var updateFeedValue = function(val){
+			var prepareTaxQuery = function( terms ){
+				// Prepares the taxonomy query from an array into a tax_query Object
+				$log.debug( 'editFeed : prepareTaxQuery : INPUT', terms );
+
+				if( _.isUndefined(terms) || _.isNull(terms) )
+					return false;
+
+				// Convert string values into arrays
+				if( _.isString(terms) )
+					terms = [terms];
+
+				// Determine the tax query field
+				var field = ( $_.isNumeric( terms[0] ) ) ? 'term_id' : 'slug';
+
+				// Determine the taxonomy
+				var taxonomy = keyParts()[2];
+
+				var taxQueryUnit = {
+					taxonomy: taxonomy,
+					field: field,
+					terms: terms	
+				};
+
+				$log.debug( 'editFeed : prepareTaxQuery : OUTPUT', taxQueryUnit );
+
+				return taxQueryUnit;
+			}
+
+			var addTaxQueryUnit = function( taxQueryUnit, taxQuery ){
+
+				/// ADDING TO NEW EMPTY QUERIES ///
+				// If the unit is not empty, and the taxQuery is empty
+				if( _.isEmpty( taxQuery ) ){
+					// Set the tax query unit into it
+					taxQuery[0] = taxQueryUnit;
+					// Log
+					$log.debug( 'editFeed : addTaxQueryUnit : ADD UNIT TO EMPTY QUERY : ', taxQueryUnit );
+					// Return here
+					return taxQuery;
+				}
+
+				/// REPLACING TAX QUERIES ///
+				// Setup variable to determine if the tax query has been inserted
+				var insertedTaxQuery = false;
+				// Iterate through each of the existing taxQuery objects
+				for( var i = 0; i < taxQuery.length; i++ ){
+					// If the taxonomy is matching
+					if( taxQueryUnit.taxonomy == taxQuery[i].taxonomy ){
+						// Add the new query
+						taxQuery[i] = taxQueryUnit;
+						// And mark as having inserted
+						insertedTaxQuery = true;
+						// Log
+						$log.debug( 'editFeed : addTaxQueryUnit : REPLACE QUERY : ', taxQueryUnit );
+					}
+				}
+				if( insertedTaxQuery )
+					return taxQuery;
+
+				/// ADDING NEW TAX QUERIES ///
+				// If no insertion has been made and if there are terms defined
+				taxQuery.push(taxQueryUnit);
+				// Log
+				$log.debug( 'editFeed : addTaxQueryUnit : ADD NEW QUERY : ', taxQueryUnit );
+				return taxQuery;
+
+			}
+
+			var removeTaxQueryUnit = function( removeTax, taxQuery ){
+				// Log
+				$log.debug( "editFeed : removeTaxQueryUnit : INPUT : " + removeTax, taxQuery );
+				// Create new tax query array
+				var newTaxQuery = [];
+				// Iterate through each tax query object
+				for( var i = 0; i < taxQuery.length; i++ ){
+					// If it's not set to be removed
+					if( taxQuery[i].taxonomy != removeTax )
+						// Add it to the new array
+						newTaxQuery.push( taxQuery[i] );
+				}
+				// Replace the taxQuery with the new one
+				taxQuery = newTaxQuery;
+				// Log
+				$log.debug( "editFeed : removeTaxQueryUnit : OUTPUT : ", taxQuery );
+				return taxQuery;
+			}
+
+
+			var setFeedTaxQuery = function( taxQueryUnit ){
+				// Sets the tax query unit into the feed tax query
+
+				$log.debug( "editFeed : setFeedTaxQuery : INPUT : ", taxQueryUnit );
+
+				///// GET EXISTING TAX QUERY /////
+				// Get the already existing tax query
+				var taxQuery = $_.get( getFeed(), 'query.tax_query' );
+				// If it doesn't exist, or it's empty, or it's not an array
+				if( taxQuery == false || _.isEmpty(taxQuery) || !_.isArray( taxQuery ) )
+					// Create it as an empty array
+					taxQuery = [];
+				
+				///// SET : MODE /////
+				// Establish the mode : ADD/REPLACE, REMOVE
+				var mode;
+				// If it's an empty or null value or not an object
+				if( !_.isObject( taxQueryUnit ) )
+					mode = 'remove';
+				else
+					// If there are no terms, set to remove
+					mode = ( taxQueryUnit.terms.length == 0 ) ? 'remove' : 'add';
+					
+				///// SWITCH : MODE /////
+				switch( mode ){
+					case 'add':
+						// Add unit to the tax query
+						taxQuery = addTaxQueryUnit( taxQueryUnit, taxQuery );
+						break;
+					case 'remove':
+						// Remove item from the tax query
+						var removeTax = keyParts()[2];
+						taxQuery = removeTaxQueryUnit( removeTax, taxQuery );
+						break;
+				}
+
+				// Set the feed data
+				$pwData.feeds[$scope.feedId].query.tax_query = taxQuery;
+
+				$log.debug( "editFeed : setFeedTaxQuery : OUTPUT : ", $pwData.feeds[$scope.feedId].query.tax_query );
+
+			}
+
+			var getFeed = function(){
+				// Gets the associated feed object
+				return $_.get( $pwData.feeds, $scope.feedId );
+			}
+
+			var setFeedValue = function( val ){
 				// Get the feed
-				var feed = $_.get( $pwData.feeds, $scope.feedId );
+				var feed = getFeed();
 				// Log
 				$log.debug( 'updateFeedValue : ' + $scope.feedId + ' : FEED : ', feed );
-
 				// Set the feed data
 				if( !_.isUndefined( $scope.feedKey ) )
 					$pwData.feeds[$scope.feedId] = $_.set( feed, $scope.feedKey, val );
+
+			}
+
+			var updateFeedValue = function(val){
+				///// HANDLE TAXONOMY QUERIES /////
+				// If the primary key is query, and the secondary key is taxonomy
+				// Handle differently
+				if( keyParts()[0] == 'query' && keyParts()[1] == 'taxonomy' ){
+					$log.debug( "editFeed : updateFeedValue : TAXONOMY QUERY : ", val );
+					var taxQueryUnit = prepareTaxQuery( val );
+					setFeedTaxQuery( taxQueryUnit );
+					return;
+				}
+				///// HANDLE OTHER VALUES /////
+				setFeedValue( val );
 			}
 
 			var refreshFeed = function(val){
@@ -140,10 +293,6 @@ postworld.directive('editFeed',
 
 
 
-
-
-
-
 postworld.controller('pwFilterFeedController',
 	function pwFilterFeedController($scope, $rootScope, $location, $log, pwData, $attrs, $window, pwPostOptions) {    	
 		var firstTime = true;
@@ -171,14 +320,12 @@ postworld.controller('pwFilterFeedController',
 		$scope.taxInput = pwPostOptions.taxInputModel();
 
 
-
-
-
 		// Get Default View Name
 		/*
 		if (pwData.feeds[FeedID].panels[$attrs.filterFeed])
 				template = pwData.feeds[FeedID].panels[$attrs.filterFeed];			   	
 		*/
+
 		//$scope.templateUrl = pwData.pw_get_template( { subdir: 'feed-filters', view: $attrs.filterFeed } );
 		//$log.debug( 'pwFilterFeedController : templateUrl : ', $scope.templateUrl );
 		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feeds);
@@ -215,6 +362,7 @@ postworld.controller('pwFilterFeedController',
 				return;
 			}
 			$log.info('taxInput',value);
+
 			// Reset tax_query object
 			$scope.feed.query.tax_query = [];
 

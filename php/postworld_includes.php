@@ -322,6 +322,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-UI-JS',
 			POSTWORLD_URI.'/js/components/pwUi.js', $angularDep );
 
+		wp_enqueue_script( 'pw-filterFeed-JS',
+			POSTWORLD_URI.'/js/components/editFeed.js', $angularDep );
+
 
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',
@@ -342,9 +345,6 @@ function postworld_includes( $args ){
 		// FILTERS
 		wp_enqueue_script( 	'pw-Filters-JS',
 			POSTWORLD_URI.'/js/filters/pwFilters.js', $angularDep );
-
-		wp_enqueue_script( 'pw-filterFeed-JS',
-			POSTWORLD_URI.'/js/filters/filterFeed.js', $angularDep );
 
 		// SERVICES
 		wp_enqueue_script( 'pw-pwData-JS',

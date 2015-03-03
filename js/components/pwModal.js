@@ -538,7 +538,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 
 					function(response) {
 						if (response.status==200) {
 							$log.debug('Post Trashed RETURN : ',response.data);                  
-							if ( _.isNumber(response.data) ){
+							if ( _.isNumeric(response.data) ){
 								var trashed_post_id = response.data;
 								if( typeof scope != undefined ){
 									// SUCESSFULLY TRASHED

@@ -194,7 +194,7 @@ postworld.factory('_',
 			}
 			return matches;
 		},
-		isNumber: function(n) {
+		isNumeric: function(n) {
 			return !isNaN(parseFloat(n)) && isFinite(n);
 		},
 		isInArray: function(value, array) {
@@ -451,7 +451,7 @@ postworld.factory('_',
 		// Compact arrays with empty entries; delete keys from objects with empty value
 		removeEmpty: function( obj ){
 			for ( var k in obj ){
-				if ( _.isEmpty( obj[k] ) && !_.isNumber( obj[k] ) && !_.isBoolean( obj[k] ) )
+				if ( _.isEmpty( obj[k] ) && !_.isNumeric( obj[k] ) && !_.isBoolean( obj[k] ) )
 					_.isArray( obj ) ?
 						obj.splice(k,1) :
 						delete obj[k];
@@ -1516,7 +1516,7 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 
 				// If a offset number is given
 				// Subtract that many milliseconds
-				if( _.isNumber(offset) ){
+				if( _.isNumeric(offset) ){
 					var localDateObj = new Date(dateObj);
 					var parsedDateObj = Date.parse(localDateObj);
 					var newTime = parsedDateObj - offset;
@@ -1548,7 +1548,7 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 				// If a offset number is given
 				// Add that many milliseconds
 				offset = parseInt(offset);
-				if( _.isNumber(offset) ){
+				if( _.isNumeric(offset) ){
 					var localDateObj = new Date(dateObj);
 					var parsedDateObj = Date.parse(localDateObj);
 					var newTime = parsedDateObj + offset;
