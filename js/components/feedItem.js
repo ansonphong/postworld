@@ -31,10 +31,7 @@ postworld.controller('pwFeedItemCtrl',
 	///// IN FEED POSTS /////
 	if( typeof $scope.feed == 'function' ){
 		var feedId = $_.get( $scope.feed(), 'feed_id' );
-		var view = $_.get( $scope.feed(), 'view.current' );
-		// Check for a local feed view, to override the global feed view
-		// This is used in special view instances such as a model window
-		//var view = ( localView ) ? localView : $pwData.getFeedView( feedId );
+		var view = $pwData.getFeedView( feedId ); // $_.get( $scope.feed(), 'view.current' );
 	}
 
 	///// MODAL WINDOW /////
