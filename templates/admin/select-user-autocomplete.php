@@ -1,5 +1,5 @@
 <input
-	user-autocomplete
+	pw-user-autocomplete
 	class="<?php echo $vars['class']?>"
 	type="text"
 	typeahead-min-length="2"

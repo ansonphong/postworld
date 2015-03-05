@@ -18,8 +18,6 @@
 	Select <?php echo $vars['label']; ?>
 </button>
 
-<!-- '<?php //echo $vars['option_var']; ?>', '<?php echo $vars['option_key']; ?>'  -->
-
 <span
 	ng-show="<?php echo json_encode($vars['remove']); ?> && <?php echo $vars['ng_model']; ?>">
 	<button
@@ -47,11 +45,6 @@
 		>
 </div>
 
-
-
-<!--
+<?php /*
 <pre>images: {{ images | json }}</pre>
-ng-style="backgroundImage( pw.images.<?php echo $vars['slug']; ?>.sizes.medium.url, { 'background-size':'cover', 'background-position':'center' })"
-media-callback="setPostImage"
-media-parent-callback="localSetPostImage"
--->
+*/ ?>

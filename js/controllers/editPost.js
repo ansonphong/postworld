@@ -391,9 +391,10 @@ postworld.controller('editPost',
 
 		// Clear TinyMCE
 		$timeout(function() {
-			if( typeof tinyMCE !== 'undefined' ){
-				if( typeof tinyMCE.get('post_content') !== 'undefined' ){
-					//$log.debug('RESET tinyMCE : ', tinyMCE);
+			if( !_.isUndefined( tinyMCE ) ){
+				if( !_.isUndefined( tinyMCE.get('post_content') ) &&
+					!_.isNull( tinyMCE.get('post_content') ) ){
+					$log.debug('Clear tinyMCE : ', tinyMCE);
 					tinyMCE.get('post_content').setContent( "" );
 				}
 			}
@@ -435,6 +436,9 @@ postworld.controller('editPost',
 				var get_post = response.data;
 
 				///// LOAD TAXONOMIES /////
+				// This takes the post.taxonomy key, which contains all the tag meta-data
+				// And re-configures it into a tax_input model
+				// Then deletes the original taxonomy object
 				// RENAME THE KEY : TAXONOMY > TAX_INPUT
 				var tax_input = {};
 				if( !_.isUndefined( get_post['taxonomy'] ) ){
@@ -765,13 +769,12 @@ postworld.controller('editPost',
 	});
 
 	// ACTION : POST TAGS FROM AUTOCOMPLETE MODULE
-	// • Interacts with tagsAutocomplete() controller
+	// • Interacts with tagsAutocomplete() controller / pw-autocomplete-tags directive
 	// • Catches the recent value of the tags_input and inject into tax_input
 	$scope.$on('updateTagsInput', function( event, data ) { 
 		if( $_.objExists( $scope, 'post.tax_input' ) )
 			$scope.post.tax_input.post_tag = data;
 	});
-
 
 	/*
 	// ACTION : CREATE NEW POST OBJECT

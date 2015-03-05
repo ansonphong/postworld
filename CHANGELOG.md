@@ -1,5 +1,14 @@
 # Postworld // Changelog
 
+### Version 1.80
+- Updated to numeric versioning, so use `1.80` format, instead of `1.8.0` when attributing postworld versions
+- __Breaking Change__ - All instances of `tagsAutocomplete` controller must be updated to new structure
+    + Use directive `pw-autocomplete-tags` in place of controller
+    + In `typeahead` directive, use `tag.slug as tag.name for tag in queryTags($viewValue)`
+    + In `typeahead-on-select attribute`, use `addTag($item)`
+    + `$scope.tags_input_obj` renamed to `$scope.tagsInput`
+    + When adding a new tag, use `ng-click='newTag(inputModel)'` where `inputModel` is the `ng-model` of the typeahead input field
+
 ### Version 1.7.9
 - __Breaking Change__ - Feed Posts object is now a function, not an array, so all instances of feeds must be changed:
     + FROM :  `post in posts`
