@@ -25,14 +25,25 @@ postworld.controller('pwFeedItemCtrl',
 		
 	///// INIT /////
 	var type = ( $_.get( $scope.post, 'post_type' ) ) ? $scope.post.post_type : 'post';
-	var feedId = $_.get( $scope.feed(), 'feed_id' );
 
-	$log.debug( "FEED ID >>> ", feedId );
+	//$log.debug( 'INIT : feedItem : TYPE : ', type );
 
-	// Check for a local feed view, to override the global feed view
-	// This is used in special view instances such as a model window
-	var localView = $_.get( $scope, 'feed.view.current' );
-	var view = ( localView ) ? localView : $pwData.getFeedView( feedId );
+	///// IN FEED POSTS /////
+	if( typeof $scope.feed == 'function' ){
+		var feedId = $_.get( $scope.feed(), 'feed_id' );
+		var view = $_.get( $scope.feed(), 'view.current' );
+		// Check for a local feed view, to override the global feed view
+		// This is used in special view instances such as a model window
+		//var view = ( localView ) ? localView : $pwData.getFeedView( feedId );
+	}
+
+	///// MODAL WINDOW /////
+	if( typeof $scope.modalFeed == 'object' ){
+		var feedId = $_.get( $scope.modalFeed, 'id' );
+		var view = 'modal';
+	}
+
+	$log.debug( "feedItem : Feed ID : ", feedId );
 
 	if (type == '_pw_block') 
 		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );

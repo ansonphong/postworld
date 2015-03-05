@@ -187,29 +187,29 @@ postworld.controller('pwModalInstanceCtrl',
 	/// FROM POST FEED
 	// Check the post for a feed ID
 	if( $_.getObj( meta, 'post.feed.id' ) ){
-		$scope.feed = {};
-		$scope.feed['id'] = meta.post.feed['id'];
-		$log.debug( "FEED ID FROM : POST : ", $scope.feed['id'] );
+		$scope.modalFeed = {};
+		$scope.modalFeed['id'] = meta.post.feed['id'];
+		$log.debug( "FEED ID FROM : POST : ", $scope.modalFeed['id'] );
 	}
 	// FROM MODAL META
 	// Check the modal meta for the feed ID
 	else if( $_.getObj( meta, 'feed.id' )  ){
-		$scope.feed = {};
-		$scope.feed['id'] = meta.feed['id'];
-		$log.debug( "FEED ID FROM : MODAL META : ", $scope.feed['id'] );
+		$scope.modalFeed = {};
+		$scope.modalFeed['id'] = meta.feed['id'];
+		$log.debug( "FEED ID FROM : MODAL META : ", $scope.modalFeed['id'] );
 	}
 
 	///// FEED HANDLING /////
-	if( $_.objExists( $scope.feed, 'id' ) ){
+	if( $_.objExists( $scope.modalFeed, 'id' ) ){
 		// Get the original full post object from the feed
 		// In the case that only a partial post object was passed
-		$scope.post = $pwPosts.getFeedPost( $scope.feed['id'], $scope.post.ID );
-
+		$scope.post = $pwPosts.getFeedPost( $scope.modalFeed['id'], $scope.post.ID );
 		// Get the current position of the feed
-		$scope.feed['currentIndex'] = _.indexOf( $pwPosts.getFeed( $scope.feed.id )['posts'], $scope.post );
-
+		$scope.modalFeed['currentIndex'] = _.indexOf( $pwPosts.getFeed( $scope.modalFeed.id )['posts'], $scope.post );
 		// Set the view to modal
-		$scope.feed = $_.set( $scope.feed, 'view.current', 'modal' );
+		$scope.modalFeed = $_.set( $scope.modalFeed, 'view.current', 'modal' );
+
+		$log.debug( 'FEED :', $scope.modalFeed );
 
 	}
 
@@ -245,14 +245,14 @@ postworld.controller('pwModalInstanceCtrl',
 	$scope.offsetFeedIndex = function( offset ){		
 		// Set the current $scope.post object to reflect the current index
 		// var offset = [ number ] // how many to switch, ie. 1 (next), -1 (previous)
-		if( _.isUndefined( $scope.feed ) ){
+		if( _.isUndefined( $scope.modalFeed ) ){
 			$log.debug('nextPost() : No feed.');
 			return false;
 		}
 
 		// Setup Vars
-		var feedLength = $pwPosts.getFeed( $scope.feed.id )['posts'].length;
-		var currentIndex = $scope.feed.currentIndex;
+		var feedLength = $pwPosts.getFeed( $scope.modalFeed.id )['posts'].length;
+		var currentIndex = $scope.modalFeed.currentIndex;
 		var newIndex = currentIndex + offset;
 
 		// If the feed is at the end and offset positive, loop back to the beginning
@@ -267,7 +267,7 @@ postworld.controller('pwModalInstanceCtrl',
 		var skipPostTypes = [ '_pw_block' ];
 
 		// Get the possible new post for testing
-		var newPost = $pwPosts.getFeed( $scope.feed.id )['posts'][ newIndex ];
+		var newPost = $pwPosts.getFeed( $scope.modalFeed.id )['posts'][ newIndex ];
 
 		// If the new possible post doesn't pass the test
 		if( $_.inArray( $_.get( newPost, 'post_type' ), skipPostTypes ) ){
@@ -278,9 +278,9 @@ postworld.controller('pwModalInstanceCtrl',
 		// If the new possible post passes
 		else{
 			// Set the new currentIndex
-			$scope.feed.currentIndex = newIndex;
+			$scope.modalFeed.currentIndex = newIndex;
 			// Set the new scope post
-			$scope.post = $pwPosts.getFeed( $scope.feed.id )['posts'][ newIndex ];
+			$scope.post = $pwPosts.getFeed( $scope.modalFeed.id )['posts'][ newIndex ];
 		}
 
 	}
@@ -309,7 +309,7 @@ postworld.controller('pwModalInstanceCtrl',
 			return false;
 
 		///// FEED /////
-		if( !_.isUndefined( $scope.feed ) ){
+		if( !_.isUndefined( $scope.modalFeed ) ){
 			switch( keyCode ){
 				// Right Key
 				case 39:
