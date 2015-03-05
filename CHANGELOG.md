@@ -13,6 +13,7 @@
 - __Breaking Change__ - Feed Posts object is now a function, not an array, so all instances of feeds must be changed:
     + FROM :  `post in posts`
     + TO :  `post in posts()`
+- Addiitonally, all instances of `feed` as a scope variable, have been switched to `feed()` as a function, and so must be updated from, for example, `feed.options...` to `feed().options...`
 
 ### Version 1.7.8
 - __Breaking Change__ - In themes using bootstrap base styles, require addition of `bootstrap` into theme injectors when calling `postworld_includes`
