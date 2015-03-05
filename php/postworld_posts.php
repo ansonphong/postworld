@@ -837,10 +837,19 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 		// Adds support for an `author_name` parameter
 		if( isset($postarr["post_author_name"]) ){
 			$user = get_user_by( 'slug', $postarr["post_author_name"] );
+
+			// If the author name is valid and the user can edit others posts
 			if( isset($user->data->ID) && current_user_can('edit_others_posts') ){
+				// Set the post author to the ID of the specified username
 				wp_update_post( array( "ID" => $post_id, "post_author" => $user->data->ID ) );
 			}
+			// Otherwise, set the post to the user ID of the current user
+			else{
+				$current_user_id = get_current_user_id();
+				wp_update_post( array( "ID" => $post_id, "post_author" => $current_user_id ) );
+			}
 		}
+		
 		
 	}
 	
