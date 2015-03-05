@@ -832,7 +832,6 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 				pw_set_post_meta( $post_id, $postarr );
 			} 
 
-
 		///// AUTHOR NAME/SLUG FIELD /////
 		// Adds support for an `author_name` parameter
 		if( isset($postarr["post_author_name"]) ){
@@ -849,7 +848,7 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 				wp_update_post( array( "ID" => $post_id, "post_author" => $current_user_id ) );
 			}
 		}
-		
+
 		
 	}
 	
