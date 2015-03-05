@@ -1,21 +1,17 @@
 'use strict';
-
 postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $log, $_ ) {
 	return {
 		restrict: 'A',
 		replace: true,
 		controller: 'pwFeedItemCtrl',
 		template: '<div ng-include="itemTemplateUrl"></div>',
-
 		link : function( $scope, element, attrs ){
 			// Add classes to the parent feed item set by the block
 			var blockClasses = $_.get( $scope, 'post.block.classes' );
 			if( blockClasses != false && _.isString( blockClasses ) ){
 				element.parent().addClass( blockClasses );
 			}
-
 		},
-
 	};
 }]);
 
@@ -28,16 +24,17 @@ postworld.controller('pwFeedItemCtrl',
 
 	//$log.debug( 'INIT : feedItem : TYPE : ', type );
 
+	var feedId, view;
 	///// IN FEED POSTS /////
 	if( typeof $scope.feed == 'function' ){
-		var feedId = $_.get( $scope.feed(), 'feed_id' );
-		var view = $pwData.getFeedView( feedId ); // $_.get( $scope.feed(), 'view.current' );
+		feedId = $_.get( $scope.feed(), 'feed_id' );
+		view = $pwData.getFeedView( feedId );
 	}
 
 	///// MODAL WINDOW /////
 	if( typeof $scope.modalFeed == 'object' ){
-		var feedId = $_.get( $scope.modalFeed, 'id' );
-		var view = 'modal';
+		feedId = $_.get( $scope.modalFeed, 'id' );
+		view = 'modal';
 	}
 
 	$log.debug( "feedItem : Feed ID : ", feedId );
@@ -75,7 +72,6 @@ postworld.controller('pwFeedItemCtrl',
   \____|_|  |_|\__,_|  \_/  |_|\___| \_/\_/  
 
 ////////// GRID FEED CONTROLLER //////////*/
-
 
 postworld.directive( 'pwGrid', [ function($scope){
 	return {
