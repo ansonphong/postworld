@@ -97,8 +97,8 @@ postworld.directive('pwAutocompleteTags', [function () {
 }])
 
 postworld.controller('tagsAutocomplete',
-	[ '$scope', '$filter', 'pwData',
-	function( $scope, $filter, pwData ){
+	[ '$scope', '$filter', 'pwData', '$log',
+	function( $scope, $filter, $pwData, $log ){
 
 	$scope.tagsAutocompleteLoading = false;
 	$scope.tagsInput = []; // Object
@@ -108,7 +108,7 @@ postworld.controller('tagsAutocomplete',
 			search: viewValue,
 			taxonomy:"post_tag"
 		}
-		return pwData.tags_autocomplete( args ).then(
+		return $pwData.tags_autocomplete( args ).then(
 			// Success
 			function(response) {
 				console.log(response.data);    
@@ -156,11 +156,15 @@ postworld.controller('tagsAutocomplete',
 				tagSlugs.push(tag.slug);
 			});
 			// Emit it's value to the parent controller
+			$log.debug( 'pwAutocompleteTags : $watch.tagsInput : $emit.updateTagsInput ', tagSlugs );
 			$scope.$emit('updateTagsInput', tagSlugs);
 		}, 1 );
 	
 	// Catch broadcast of load in tags
-	$scope.$on('postTagsObject', function(event, data) { $scope.tagsInput = data; });
+	$scope.$on('postTagsObject', function(event, data) {
+		$log.debug( 'pwAutocompleteTags : $on.postTagsObject : ', data );
+		$scope.tagsInput = data;
+	});
 
 }]);
 

@@ -181,7 +181,7 @@ function pw_update_pw1_event_meta( $options = array() ) {
 		////////// INSERT DATA //////////
 
 		///// Insert Postworld Post Meta //////
-		if( $options['mode'] == "migrate" )
+		//if( $options['mode'] == "migrate" )
 			$pw_set_post_meta = pw_set_post_meta($post_id, $pw_postmeta);
 
 		////////// + 1. create new model, 2. delete the old post meta entry

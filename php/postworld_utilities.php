@@ -6,6 +6,37 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_get_filename(){
+	return pathinfo( parse_url( $_SERVER['REQUEST_URI'] )['path'] )['filename'];
+}
+
+function pw_is_filename( $filename ){
+	return ( $filename == pw_get_filename() );
+}
+
+function pw_is_admin_ajax(){
+	return pw_is_filename( 'admin-ajax' );
+}
+
+function pw_is_base( $mixed ){
+	// @param $mixed = [ array / string ]
+	// Returns boolean whether or not the user is on the given screen base(s)
+
+	// Make sure we're working with an array
+	if( is_string( $mixed ) )
+		$screen_bases = array( $mixed );
+	elseif( is_array( $mixed ) )
+		$screen_bases = $mixed;
+	else
+		return false;
+
+	// Get the current screen
+	$screen = get_current_screen();
+	
+	// If the current screen base is one of those specified
+	return in_array( $screen->base, $screen_bases );
+}
+
 function pw_log( $message ){
 	if( is_array( $message ) || is_object( $message ) )
 		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
@@ -248,8 +279,6 @@ function pw_check_user_post( $post_id, $mode = "edit" ){
 	return $post_id;
 
 }
-
-
 
 function pw_empty_array( $format ){
 	// Return an empty array
