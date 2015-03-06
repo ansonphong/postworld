@@ -9,10 +9,23 @@
                                                          
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
-postworld.directive( 'pwPostActions', [ function($scope){
+postworld.directive( 'pwPostActions',
+    [ '$pw', '$log', '_',
+    function( $pw, $log, $_ ){
     return {
         restrict: 'AE',
         controller: 'postActions',
+        link: function( $scope, element, attrs ){
+
+            
+
+            var userId = $_.get( $pw, 'user.ID' );
+            $log.debug( 'pwPostActions : userId', userId );
+
+            if( !$_.isNumeric( userId ) )
+                element.addClass('ng-hide');
+
+        },
     };
 }]);
 

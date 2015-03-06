@@ -691,6 +691,10 @@ _load-panel_ : *string*
 - The panel ID of the panel to load
 - Panel ID coorosponds with the file name with `.html` extension, found in the `templates/panels`. ie. for  `templates/panels/myPanel.html` the ID is simply `myPanel`
 
+_panel-post_ : *Binding* (optional)
+- Post object to bind to panel
+- If provided, will bind to panel scope interior object `$scope.post`
+
 _panel-meta_ : *Angular Expression* (optional)
 - Input an expression which is passed into the isolated scope of the panel as `$scope.panelMeta`
 
@@ -701,53 +705,18 @@ _panel-meta_ : *Angular Expression* (optional)
   load-panel="myPanel"
   panel-meta="example.myPanelMeta"></div> 
 
-~OR~
-
 <div
   load-panel="myPanel"
   panel-meta="{ key: 'value' }"></div> 
+
+<div
+  load-panel="myPanel"
+  panel-post="post"></div> 
 ```
 
-- Developer can optionally add a custom __ng-controller__ to the html here.
 
-#### Usage : With Standard Javascript Parameters
-
-__load_panel__ : *object*
-- Default : *null*
-- Sub-object is the __panel_id__
-- An Object which is transplanted into the scope of the template
-- First level keys are attributed to `window[]` context object of the same name
-
-- Example :
-
-Javascript :
-
-``` javascript
-load_panel['post_link'] = {
-	'post_object' : {
-		'tax_input' : {'topic':['eco']},
-		'post_image' : 'default_image.jpg',
-	},
-	'feed_id' : 'front_page_blog'
-};
-```
-HTML:
-
-``` HTML
-<div load-panel="post_link"></div>
-```
-
-- Inner scope: 
-
-```javascript
-var post_object = {
-		'tax_input' : {'topic':['eco']},
-		'post_image' : 'default_image.jpg',
-	};
-var feed_id = 'front_page_blog';
-
-```
 ------
+
 
 ### post-link *[ controller ]*
 

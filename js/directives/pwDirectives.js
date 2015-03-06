@@ -7,7 +7,6 @@
 											 
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
-
 ////////// PW GLOBALS //////////
 // This directive sets the $pw service object into the local scope
 // Just specifiy which scope object to map it to
@@ -24,6 +23,41 @@ postworld.directive( 'pwGlobals',
 		}
 	}
 }]);
+
+
+///// LOAD PANEL /////
+postworld.directive('loadPanel', function($log, $timeout, pwData) {
+	return {
+		restrict: 'EA',
+		template: '<div ng-include="templateUrl" class="load-panel"></div>',
+		scope:{
+			// Must use an isolated scope, to allow for using multiple panel directives in the same page
+			panelVars:"@",
+			panelMeta:"=",
+			panelPost:"=",
+		},
+		link: function($scope, element, attrs){
+
+			// Timeout : wait for pwData to initialize
+			$timeout( function(){
+				$scope.templateUrl = pwData.pw_get_template( { subdir: 'panels', view: attrs.loadPanel } );
+				$log.debug('loadPanel :' + attrs.loadPanel, $scope.templateUrl );
+			},0 );
+
+			attrs.$observe( 'panelVars', function( val ){
+				var panelVars = $scope.$eval( $scope.panelVars );
+				$log.debug( 'loadPanel : panelVars :', panelVars );
+			});
+
+			$scope.$watch('panelPost', function( val ){
+				$log.debug( 'loadPanel : panelPost', val );
+				if( !_.isUndefined( val ) )
+					$scope.post = $scope.panelPost;
+			}, 1 );
+
+		}
+	};
+});
 
 
 ///// POSTWORLD SANITIZE DIRECTIVE /////
@@ -76,6 +110,7 @@ postworld.directive('pwSrc', function( $log ) {
 		},
 	}
 });
+
 
 ///// POSTWORLD HREF DIRECTIVE /////
 postworld.directive('pwHref', function() {
@@ -167,6 +202,7 @@ postworld.directive('preventDefaultClick', function() {
 		};
 	});
 
+
 ///// PREVENT DEFAULT ON CLICK /////
 postworld.directive('stopPropagationClick', function() {
 		return {
@@ -179,6 +215,7 @@ postworld.directive('stopPropagationClick', function() {
 		};
 	});
 
+
 ///// SELECT ON CLICK /////
 postworld.directive('selectOnClick', function () {
     return {
@@ -190,6 +227,7 @@ postworld.directive('selectOnClick', function () {
         }
     };
 });
+
 
 ///// AUTO FOCUS /////
 // Automatically focuses the input field it's applied to
@@ -290,7 +328,6 @@ postworld.controller('pwLanguageCtrl',
 
 
 
-
 /*_____ _                            _   
  |_   _(_)_ __ ___   ___  ___  _   _| |_ 
    | | | | '_ ` _ \ / _ \/ _ \| | | | __|
@@ -325,10 +362,6 @@ postworld.directive('pwTimeout', function( $timeout ) {
 		},
 	}
 });
-
-
-
-
 
 
 
@@ -442,14 +475,12 @@ postworld.directive('pwScrollfix', function( $window, $log, $timeout ) {
 				// Run onYScroll function when window is scrolled 
 				angular.element($window).bind("scroll", onYScroll);
 
-
 		},
 	}
 });
 
 
 //////////////////// ADMIN ////////////////////
-
 ////////// TEMPLATES //////////
 postworld.directive( 'pwAdminTemplates',
 	[ '$pw', '_', '$log',
@@ -465,6 +496,7 @@ postworld.directive( 'pwAdminTemplates',
 	}
 }]);
 
+
 ////////// SIDEBARS //////////
 postworld.directive( 'pwSidebars',
 	[ '$pw', '_', '$log',
@@ -479,6 +511,4 @@ postworld.directive( 'pwSidebars',
 		}
 	}
 }]);
-
-
 

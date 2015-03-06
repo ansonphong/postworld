@@ -1,5 +1,8 @@
 # Postworld // Changelog
 
+### Version 1.81
+- Replace `ng-controller="tagsAutocomplete"` and `pw-autocomplete-tags` with `pw-input-tags` directive
+
 ### Version 1.80
 - Updated to numeric versioning, so use `1.80` format, instead of `1.8.0` when attributing postworld versions
 - __Breaking Change__ - All instances of `tagsAutocomplete` controller must be updated to new structure
