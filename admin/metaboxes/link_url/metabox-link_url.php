@@ -1,6 +1,8 @@
 <?php
 ////////////// ADD METABOX //////////////
-add_action('admin_init','pw_metabox_init_link_url');
+if( !pw_is_admin_ajax() )
+	add_action('admin_init','pw_metabox_init_link_url');
+
 function pw_metabox_init_link_url(){    
 	global $pwSiteGlobals;
 
@@ -59,12 +61,14 @@ function pw_link_url_meta_save($post_id){
     $link_format = _get( $_POST, 'link_format' );
 
     // SAVE URL
-	pw_set_post_meta($post_id,
-		array(
-			'link_url' 		=> $link_url,
-			'link_format' 	=> $link_format,
-			)
-		);
+    if( !empty( $link_url ) || !empty( $link_format ) )
+		pw_set_post_meta($post_id,
+			array(
+				'link_url' 		=> $link_url,
+				'link_format' 	=> $link_format,
+				)
+			);
+
     return $post_id;
 }
  

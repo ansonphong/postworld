@@ -4,7 +4,6 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 
 	// TODO : Rename all 'term_feed' to 'term_feed'
 	
-
 	// Extract Shortcode Attributes, set defaults
 	$atts = shortcode_atts( array(
 		'template'		=> 'default',
@@ -19,8 +18,6 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 		'order_terms'	=> 'DESC',
 		'order_posts_by'=> 'rand',
 		), $atts);
-
-	//extract($atts);
 
 	//pw_log( "INIT SHORTCODE : " . $tag . " : ATTS : " . json_encode( $atts ) );
 
@@ -94,8 +91,6 @@ function pw_print_term_feed( $vars ){
 
 	$vars = array_replace_recursive( $default_vars, $vars ); 
 
-
-
 	///// TEMPLATES ////
 	$template_subdir = 'term-feeds';
 	$templates = pw_get_templates(
@@ -116,6 +111,8 @@ function pw_print_term_feed( $vars ){
 	///// TEMPLATE : OVER-RIDE VARIABLES /////
 	// Allow term feed templates to filter the term feed variables
 	$vars = apply_filters( PW_TERM_FEED . $vars['template'], $vars );
+
+	//pw_log($vars);
 
 	///// GET TERMS FEED /////
 	$vars['term_feed'] = pw_get_term_feed( $vars );
@@ -171,6 +168,12 @@ function pw_get_term_feed( $vars ){
 
 	// Set defaults
 	$default_vars = array(
+		'terms'	=>	array(
+			'args'	=>	array(
+				'number'		=>	50,
+				'pad_counts'	=>	true,
+				),
+			),
 		'query'	=>	array(
 			'fields'	=>	'preview',
 			'post_type'	=>	'any',
@@ -180,14 +183,14 @@ function pw_get_term_feed( $vars ){
 			'move_galleries'	=>	true,
 			'require_image'		=>	false, // set to false
 			'include_posts'		=>	true,
-			'max_posts'			=> 	(int) pw_get_obj( $vars, 'query.posts_per_page' ),
+			'max_posts'			=> 	(int) _get( $vars, 'query.posts_per_page' ),
 			),
 		);
 
 	$vars = pw_set_defaults( $vars, $default_vars ); 
 
 	// Localize Options
-	$include_galleries = (bool) pw_get_obj( $vars, 'options.include_galleries' );
+	$include_galleries = (bool) _get( $vars, 'options.include_galleries' );
 
 	////////// GET TERMS //////////
 	// Get the terms with get_terms()
@@ -224,12 +227,11 @@ function pw_get_term_feed( $vars ){
 			////// OPTION : INCLUDE GALLERIES /////
 			// Iterate through each post and check if it has a gallery
 			// If so, get the posts from the gallery and push them to the new array
-			if( $include_galleries && !empty( $posts ) ){
+			if( $include_galleries && !empty( $posts ) )
 				$posts = pw_merge_galleries( $posts, $vars['options'] );
-			}
-
+			
 			///// OPTION : REQUIRE IMAGE /////
-			if( pw_get_obj( $vars, 'options.require_image' ) )
+			if( _get( $vars, 'options.require_image' ) )
 				$posts = pw_require_image( $posts );
 
 			// Go through the posts and remove duplicate items

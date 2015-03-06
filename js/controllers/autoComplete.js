@@ -20,7 +20,7 @@ postworld.controller( 'UserAutocompleteController',
 
 		$scope.queryList = function( searchTerm ) {
 			$log.debug( searchTerm );
-			var searchTerm = searchTerm + "*";            
+			var searchTerm =  "*" + searchTerm + "*";            
 			var query_args = {
 				number:20,
 				search: searchTerm,
@@ -85,12 +85,12 @@ postworld.controller( 'UserAutocompleteController',
    | | (_| | (_| \__ \  / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
    |_|\__,_|\__, |___/ /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
 			|___/                                                |_|                   
-/////////////// ------------ TAGS AUTOCOMPLETE CONTROLLER ------------ ///////////////*/
+//////////////////////////// TAGS AUTOCOMPLETE CONTROLLER ////////////////////////////*/
 
 postworld.directive('pwInputTags', [ '$filter', 'pwData',
 	function( $filter, $pwData ){
 	return {
-		restrict: 'A',
+		restrict: 'AE',
 		link: function ($scope, element, attrs) {
 
 			$scope.tagsAutocompleteLoading = false;
@@ -117,7 +117,6 @@ postworld.directive('pwInputTags', [ '$filter', 'pwData',
 			$scope.addTag = function( item ){
 				// Cycle through the tagOptions Object
 				$scope.tagsInput.push( item );
-				//$scope.queryTag = "";
 			}
 
 			$scope.removeTag = function( tag ){

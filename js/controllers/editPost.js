@@ -298,7 +298,9 @@ postworld.controller('editPost',
 		});
 
 		// CHECK TERMS CATEGORY / SUBCATEGORY ORDER
+		// RSV2 SPECIFIC
 		post = $pwEditPostFilters.sortTaxTermsInput( post, $scope.tax_terms, 'tax_input' );
+
 
 		$scope.default_post = post;
 		$scope.post = post;
@@ -771,9 +773,14 @@ postworld.controller('editPost',
 	// ACTION : POST TAGS FROM AUTOCOMPLETE MODULE
 	// • Interacts with tagsAutocomplete() controller / pw-autocomplete-tags directive
 	// • Catches the recent value of the tags_input and inject into tax_input
-	$scope.$on('updateTagsInput', function( event, data ) { 
-		if( $_.objExists( $scope, 'post.tax_input' ) )
-			$scope.post.tax_input.post_tag = data;
+	$scope.$on('updateTagsInput', function( event, tagSlugs ) { 
+		$log.debug( 'pwEditPost : $on.updateTagsInput : ', tagSlugs );
+		if( _.isUndefined( $scope.post ) )
+			return false;
+		if( _.isUndefined( $scope.post.tax_input ) )
+			$scope.post.tax_input = {};
+		$scope.post.tax_input.post_tag = tagSlugs;
+		//$scope.post = $_.set( $scope.post, 'tax_input.post_tag', tagSlugs );
 	});
 
 	/*
@@ -789,20 +796,7 @@ postworld.controller('editPost',
 	// • Gets live set of terms from the DB as $scope.tax_terms
 	$pwPostOptions.taxTerms( $scope, 'tax_terms' );
 
-	// WATCH : TAXONOMY TERMS
-	// • Watch for any changes to the post.tax_input
-	// • Make a new object which contains only the selected sub-objects
-	$scope.selected_tax_terms = {};
-	$scope.$watch('[ post.tax_input, tax_terms ]',
-		function ( newValue, oldValue ){
-			if ( !_.isUndefined($scope.tax_terms) &&
-				$_.objExists( $scope, 'post.tax_input' ) ){
-				// Create selected terms object
-				$scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post.tax_input);
-				// Clear irrelivent sub-terms
-				$scope.post.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post.tax_input, $scope.selected_tax_terms );
-			}
-		}, 1);
+
 
 	///// WATCH : LINK URL /////
 	// • Watch for changes in Link URL field

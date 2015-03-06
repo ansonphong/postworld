@@ -1,5 +1,35 @@
 <?php
 
+
+function pw_current_user_has_role( $check_roles = array() ){
+	// Returns boolean matching if the current logged in used has any of the specified roles
+
+	// Init Postworld Globals
+	global $pw;
+
+	// Get the current user's roles
+	$has_roles = _get( $pw, 'user.roles' );
+
+	// If no roles, or not logged in, or no roles specified
+	if( empty( $has_roles ) || empty( $check_roles ) )
+		return false;
+
+	// Convert string value to array
+	if( is_string( $check_roles ) )
+		$check_roles = array( $check_roles );
+
+	// Iterate through each of the specified roles
+	foreach( $check_roles as $check_role ){
+		// If the role is in the 
+		if( in_array( $check_role, $has_roles ) )
+			return true;
+	}
+	
+	return false;
+
+}
+
+
 function pw_require_login( $login_url = 'wp-login.php' ){
 	// Require login for site
 	$user_id = get_current_user_id();

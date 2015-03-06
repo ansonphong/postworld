@@ -8,7 +8,9 @@
 //////////////////////////////////////////////////*/
 
 ////////////// ADD METABOX //////////////
-add_action('admin_init','pw_metabox_init_event');
+if( !pw_is_admin_ajax() )
+	add_action('admin_init','pw_metabox_init_event');
+
 function pw_metabox_init_event(){    
 
 	global $pwSiteGlobals;

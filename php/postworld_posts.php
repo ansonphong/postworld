@@ -763,7 +763,6 @@ function pw_set_wp_postmeta_array( $post_id, $post_meta = array() ){
 
 
 function pw_insert_post ( $postarr, $wp_error = TRUE ){
-	
 	/*
 	  
 	 * Extends wp_insert_post : http://codex.wordpress.org/Function_Reference/wp_insert_post
@@ -787,7 +786,8 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 	else
 		$post_id = wp_insert_post( $postarr, $wp_error );
 
-	if(gettype($post_id) == 'integer'){ // successful
+	// If WP insert post was successful
+	if( gettype($post_id) == 'integer' ){
 
 		///// ADD TERMS / TAXONOMIES //////
 		if(isset($postarr["tax_input"])){
@@ -814,19 +814,16 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			if( !isset($postarr['post_author']) )
 				$postarr['post_author'] = get_current_user_id();
 
-
 			// Define which fields are Postworld Post Meta
-			global $pw_post_meta_fields;
-			
+			$field_model = pw_post_field_model();
 			// Check to see if the post array has any Postworld Post Meta Field Values
 			$has_pw_post_meta_fields = false;
 			foreach( $postarr as $key => $value ){
-				if( in_array( $key, $pw_post_meta_fields) && !empty($value) ){
+				if( in_array( $key, $field_model['pw_post_meta']) && !empty($value) ){
 					$has_pw_post_meta_fields = true;
 					break;
 				}
 			}
-
 			// If it has Postworld Post Meta, Set it
 			if( $has_pw_post_meta_fields ){
 				pw_set_post_meta( $post_id, $postarr );
@@ -861,7 +858,6 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 	Extends wp_update_post() : http://codex.wordpress.org/Function_Reference/wp_update_post
 	Include additional Postworld fields as inputs (see pw_insert_post() ) 
 	 */
-	 
 	
 	if ( is_object($postarr) ) {
 		// non-escaped post was passed
@@ -905,7 +901,6 @@ function pw_update_post ( $postarr ,$wp_error = TRUE){
 		$postarr['post_date_gmt'] = '';
 	}
 
-	//print_r($postarr);
 	return pw_insert_post( $postarr, $wp_error );
 
 }
@@ -1324,11 +1319,9 @@ function pw_print_post( $vars ){
 		}
 		
 	}
-
 	return $post_html;
 
 }
-
 
 function pw_editor( $content, $editor_id, $settings = array() ){
 	ob_start();
@@ -1337,9 +1330,5 @@ function pw_editor( $content, $editor_id, $settings = array() ){
 	ob_end_clean();
 	return $editor;
 }
-
-
-
-
 
 ?>

@@ -1,21 +1,17 @@
 'use strict';
-
 postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $log, $_ ) {
 	return {
 		restrict: 'A',
 		replace: true,
 		controller: 'pwFeedItemCtrl',
 		template: '<div ng-include="itemTemplateUrl"></div>',
-
 		link : function( $scope, element, attrs ){
 			// Add classes to the parent feed item set by the block
 			var blockClasses = $_.get( $scope, 'post.block.classes' );
 			if( blockClasses != false && _.isString( blockClasses ) ){
 				element.parent().addClass( blockClasses );
 			}
-
 		},
-
 	};
 }]);
 
@@ -25,14 +21,23 @@ postworld.controller('pwFeedItemCtrl',
 		
 	///// INIT /////
 	var type = ( $_.get( $scope.post, 'post_type' ) ) ? $scope.post.post_type : 'post';
-	var feedId = $_.get( $scope.feed(), 'feed_id' );
 
-	$log.debug( "FEED ID >>> ", feedId );
+	//$log.debug( 'INIT : feedItem : TYPE : ', type );
 
-	// Check for a local feed view, to override the global feed view
-	// This is used in special view instances such as a model window
-	var localView = $_.get( $scope, 'feed.view.current' );
-	var view = ( localView ) ? localView : $pwData.getFeedView( feedId );
+	var feedId, view;
+	///// IN FEED POSTS /////
+	if( typeof $scope.feed == 'function' ){
+		feedId = $_.get( $scope.feed(), 'feed_id' );
+		view = $pwData.getFeedView( feedId );
+	}
+
+	///// MODAL WINDOW /////
+	if( typeof $scope.modalFeed == 'object' ){
+		feedId = $_.get( $scope.modalFeed, 'id' );
+		view = 'modal';
+	}
+
+	$log.debug( "feedItem : Feed ID : ", feedId );
 
 	if (type == '_pw_block') 
 		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );
@@ -67,7 +72,6 @@ postworld.controller('pwFeedItemCtrl',
   \____|_|  |_|\__,_|  \_/  |_|\___| \_/\_/  
 
 ////////// GRID FEED CONTROLLER //////////*/
-
 
 postworld.directive( 'pwGrid', [ function($scope){
 	return {

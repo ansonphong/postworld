@@ -554,6 +554,7 @@ function user_query_autocomplete_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$vars = $args['args'];
 	$vars['fields'] = array( 'user_nicename', 'display_name', 'ID', 'user_login' );
+	$vars['search_columns'] = array( 'user_login', 'user_nicename', 'user_email', 'display_name', 'user_url' );
 	$user_query = new WP_User_Query( $vars );
 	$results = $user_query->get_results();
 	pwAjaxRespond( $results );

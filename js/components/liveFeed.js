@@ -4,7 +4,7 @@ postworld.config(function($locationProvider){
 	// $locationProvider.html5Mode(true).hashPrefix('!');
 });
 
-postworld.directive('liveFeed', function() {
+postworld.directive('liveFeed', function($log) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -14,7 +14,7 @@ postworld.directive('liveFeed', function() {
 			//feedVars: '=',
 		},
 		link : function( $scope, element, attrs ){
-			
+			$log.debug( 'INIT LIVE FEED', $scope.templateUrl );
 		},
 	};
 });
@@ -41,13 +41,13 @@ postworld.controller('pwFeedController',
 
 	// LIVE FEED
 	if ($attrs.liveFeed)    { 
-		$scope.directive = 		'liveFeed';
-		$scope.feedId	= 		$attrs.liveFeed;
+		$scope.directive = 	'liveFeed';
+		$scope.feedId	= 	$attrs.liveFeed;
 	}
 	// LOAD FEED
 	else  if ($attrs.loadFeed)   {
-		$scope.directive = 		'loadFeed';
-		$scope.feedId	= 			$attrs.loadFeed;
+		$scope.directive = 	'loadFeed';
+		$scope.feedId	= 	$attrs.loadFeed;
 	};
 
 	// FEED OBJECT
