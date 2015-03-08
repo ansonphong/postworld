@@ -452,8 +452,16 @@ postworld.controller('editPost',
 							tax_input[taxonomy].push(term.slug);
 						});
 						// BROADCAST TAX OBJECT TO AUTOCOMPLETE CONTROLLER
-						if( taxonomy == "post_tag")
-							$scope.$broadcast('postTagsObject', terms);
+						if( taxonomy == "post_tag"){
+
+							$log.debug( 'postTagsObject : $broadcast : Post ID : ' + get_post.ID, terms );
+							$rootScope.$broadcast('postTagsObject', {
+								postId: get_post.ID,
+								taxonomy:'post_tag',
+								terms: terms,
+							});
+
+						}
 					});
 					delete get_post['taxonomy'];
 
@@ -769,18 +777,25 @@ postworld.controller('editPost',
 		if( !_.isUndefined( $scope.post ) )
 			$scope.post.post_author_name = data;
 	});
-
+ 
 	// ACTION : POST TAGS FROM AUTOCOMPLETE MODULE
 	// • Interacts with tagsAutocomplete() controller / pw-autocomplete-tags directive
 	// • Catches the recent value of the tags_input and inject into tax_input
-	$scope.$on('updateTagsInput', function( event, tagSlugs ) { 
-		$log.debug( 'pwEditPost : $on.updateTagsInput : ', tagSlugs );
-		if( _.isUndefined( $scope.post ) )
-			return false;
-		if( _.isUndefined( $scope.post.tax_input ) )
-			$scope.post.tax_input = {};
-		$scope.post.tax_input.post_tag = tagSlugs;
+	$scope.$on('updateTagsInput', function( event, data ) { 
+		// TODO : Support all non-heirarchical taxonomies
+
+		// TAGS PASS-BACK AND FORTH MECHANISM IS BROKEN - DO TESTING PASSING BOTH WAYS
+
+		$log.debug( 'pwEditPost : $on.updateTagsInput : ', data );
+
+		if( data.taxonomy == 'post_tag' && data.postId == $_.get( $scope, 'post.ID' ) ){
+			if( _.isUndefined( $scope.post.tax_input ) )
+				$scope.post.tax_input = {};
+			$scope.post.tax_input.post_tag = data.terms;
+		}
+
 		//$scope.post = $_.set( $scope.post, 'tax_input.post_tag', tagSlugs );
+
 	});
 
 	/*

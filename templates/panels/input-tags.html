@@ -3,8 +3,8 @@
 	pw-input-tags
 	class="tags">
 		<div ng-repeat="tag in tagsInput" class="tag">
-				<b ng-bind-html="tag.name"></b>
-				<button ng-click="removeTag(tag)" class="gray">
+			<span class="tag-name" ng-bind-html="tag.name"></span>
+			<button ng-click="removeTag(tag)" class="close">
 				<i class="icon-close"></i>
 			</button>
 		</div>

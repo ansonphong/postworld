@@ -87,8 +87,8 @@ postworld.controller( 'UserAutocompleteController',
 			|___/                                                |_|                   
 //////////////////////////// TAGS AUTOCOMPLETE CONTROLLER ////////////////////////////*/
 
-postworld.directive('pwInputTags', [ '$filter', 'pwData',
-	function( $filter, $pwData ){
+postworld.directive('pwInputTags', [ '$filter', 'pwData', '$log', '_',
+	function( $filter, $pwData, $log, $_ ){
 	return {
 		restrict: 'AE',
 		link: function ($scope, element, attrs) {
@@ -145,11 +145,24 @@ postworld.directive('pwInputTags', [ '$filter', 'pwData',
 						tagSlugs.push(tag.slug);
 					});
 					// Emit it's value to the parent controller
-					$scope.$emit('updateTagsInput', tagSlugs);
+					$scope.$emit('updateTagsInput', {
+						postId:$scope.post.ID,
+						taxonomy:'post_tag',
+						terms:tagSlugs,
+					});
+
 				}, 1 );
 			
 			// Catch broadcast of load in tags
-			$scope.$on('postTagsObject', function(event, data) { $scope.tagsInput = data; });
+			$scope.$on('postTagsObject', function(event, data) {
+				$log.debug( 'postTagsObject : $on : Post ID : ' + data.postId, data );
+
+				$log.debug( 'postTagsObject : Post ID : ' + $_.get( $scope, 'post.ID' ), data );
+
+				if( data.taxonomy == 'post_tag' && data.postId == $_.get( $scope, 'post.ID' ) )
+
+					$scope.tagsInput = data.terms;
+			});
 
 		}
 	};
