@@ -50,7 +50,7 @@
 		type="button"
 		ng-class="uiSetClass('headerFooter')"
 		ng-click="uiToggleView('headerFooter')">
-		<i class="icon-layers"></i>
+		<i class="pwi-layers"></i>
 		Header & Footer
 	</button>
 	<div class="clearfix"></div>
@@ -99,7 +99,7 @@
 				class="button"
 				ng-class="uiSetClass('customResponsive_'+location.slug)"
 				ng-click="uiToggleView('customResponsive_'+location.slug)">
-				<i class="icon-th-large"></i>
+				<i class="pwi-th-large"></i>
 				Resposive
 			</button>
 
@@ -111,7 +111,7 @@
 					ng-model="<?php echo $ng_model; ?>.sidebars[location.slug].width[screen_size.slug]"
 					ng-options="sidebar_width.slug as sidebar_width.name for sidebar_width in iLayoutOptions.column_widths | orderBy:'name'">
 				</select>
-				<i ng-class="screen_size.icon" class="icon-small"></i>
+				<i ng-class="screen_size.icon" class="pwi-small"></i>
 			</div>
 
 		</div>

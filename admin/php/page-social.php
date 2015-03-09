@@ -13,7 +13,7 @@
 <div class="postworld wrap social" ng-cloak>
 
 	<h1>
-		<i class="icon-profile"></i>
+		<i class="pwi-profile"></i>
 		Social
 	</h1>
 	
@@ -30,7 +30,7 @@
 				<?php pw_save_option_button( PW_OPTIONS_SOCIAL, 'pwSocial'); ?>
 			</div>
 			<h2>
-				<i class="icon-share"></i>
+				<i class="pwi-share"></i>
 				Sharing
 			</h2>
 			<small>Include share links on each post for the following networks:</small>
@@ -53,7 +53,7 @@
 					class="module layout">
 					<th scope="row">
 						<b>
-							<span class="icon-md"><i class="{{inputMeta.icon}}"></i></span>
+							<span class="pwi-md"><i class="{{inputMeta.icon}}"></i></span>
 							{{inputMeta.name}}
 						</b>
 					</th>

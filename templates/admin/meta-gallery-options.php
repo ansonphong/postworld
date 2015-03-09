@@ -18,12 +18,12 @@
 				
 				<!-- X SCROLL OPTIONS -->
 				<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'horizontal'">
-					<span class="icon-md"><i class="icon-arrows-h"></i></span>
+					<span class="pwi-md"><i class="pwi-arrows-h"></i></span>
 					<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.x_scroll_distance" id="horizontal-scroll-distance">
 					<label for="horizontal-scroll-distance"><b>horizontal scroll distance</b></label>
 					<small> - Number of pixels on the right before load more images <i>(default: 1500)</i></small>
 					<hr class="thin">
-					<span class="icon-md"><i class="icon-arrows-v"></i></span>
+					<span class="pwi-md"><i class="pwi-arrows-v"></i></span>
 					<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.height" id="gallery-height">
 					<label for="gallery-height"><b>% height</b></label>
 					<small> - Percentage height of the window to size the horizontal scroll gallery</small>
@@ -34,12 +34,12 @@
 
 				<!-- Y SCROLL OPTIONS -->
 				<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'vertical'">
-					<span class="icon-md"><i class="icon-arrows-v"></i></span>
+					<span class="pwi-md"><i class="pwi-arrows-v"></i></span>
 					<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.y_scroll_distance" id="vertical-scroll-distance">
 					<label for="vertical-scroll-distance"><b>vertical scroll distance</b></label>
 					<small> - Number of pixels on the bottom before load more images <i>(default: 1000)</i></small>
 					<hr class="thin">
-					<span class="icon-md"><i class="icon-arrows-h"></i></span>
+					<span class="pwi-md"><i class="pwi-arrows-h"></i></span>
 					<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.width" id="gallery-width">
 					<label for="gallery-width"><b>% width</b></label>
 					<small> - Percentage width of the window to size the vertical scroll gallery</small>

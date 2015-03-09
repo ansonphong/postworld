@@ -37,7 +37,7 @@
 		ng-cloak>
 
 		<h1>
-			<i class="icon-paint-format"></i>
+			<i class="pwi-paint-format"></i>
 			Backgrounds
 			<button class="add-new-h2" ng-click="newBackground()"><?php ___('backgrounds.add_new'); ?></button>
 		</h1>
@@ -52,7 +52,7 @@
 					<li
 						ng-click="selectItem('contexts');"
 						ng-class="menuClass('contexts')">
-						<i class="icon-target"></i> Contexts
+						<i class="pwi-target"></i> Contexts
 					</li>
 				</ul>
 				
@@ -117,7 +117,7 @@
 					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
 		
 
-					<h3><i class="icon-gear"></i> <?php ___('backgrounds.item_title'); ?></h3>
+					<h3><i class="pwi-gear"></i> <?php ___('backgrounds.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
@@ -127,7 +127,7 @@
 								tooltip="<?php ___('backgrounds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('backgrounds.name'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-name"
@@ -142,7 +142,7 @@
 								tooltip="<?php ___('backgrounds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('backgrounds.id'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
@@ -150,7 +150,7 @@
 								tooltip="<?php ___('backgrounds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
-								<i class="icon-edit"></i>
+								<i class="pwi-edit"></i>
 							</button>
 							<input
 								id="item-id"
@@ -171,7 +171,7 @@
 						tooltip="<?php ___('backgrounds.description_info'); ?>"
 						tooltip-popup-delay="333">
 						<?php ___('backgrounds.description'); ?>
-						<i class="icon-info-circle"></i>
+						<i class="pwi-info-circle"></i>
 					</label>
 					<input
 						id="item-description"
@@ -187,7 +187,7 @@
 					<button
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'pwBackgrounds')">
-						<i class="icon-close"></i>
+						<i class="pwi-close"></i>
 						<?php ___('backgrounds.delete'); ?>
 					</button>
 
@@ -195,7 +195,7 @@
 					<button
 						class="button"
 						ng-click="duplicateItem(selectedItem,'pwBackgrounds')">
-						<i class="icon-copy-2"></i>
+						<i class="pwi-copy-2"></i>
 						<?php ___('backgrounds.duplicate'); ?>
 					</button>
 

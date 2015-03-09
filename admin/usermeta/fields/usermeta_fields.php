@@ -20,7 +20,7 @@ function pw_user_meta_field_input( $user ) {
 			'label'				=>	'Extended Bio',
 			'description'		=>	'An extended biography',	
 			'meta_key'			=>	'theme_biography',
-			'icon'				=>	'icon-profile',
+			'icon'				=>	'pwi-profile',
 			'settings'	=>	array(
 				'drag_drop_upload'	=>	true,
 				),

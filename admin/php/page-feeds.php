@@ -83,7 +83,7 @@
 
 		
 		<h1>
-			<i class="icon-th-small"></i>
+			<i class="pwi-th-small"></i>
 			Feeds
 			<button class="add-new-h2" ng-click="newFeed()">Add New Feed</button>
 		</h1>
@@ -98,7 +98,7 @@
 					<li
 						ng-click="selectItem('settings');"
 						ng-class="menuClass('settings')">
-						<i class="icon-gear"></i> Settings
+						<i class="pwi-gear"></i> Settings
 					</li>
 				</ul>
 					<hr class="thin">
@@ -144,7 +144,7 @@
 										class="button"
 										ng-class="uiSetClass('template_'+context.name)"
 										ng-click="uiToggleView('template_'+context.name)">
-										<i class="icon-th-large"></i>
+										<i class="pwi-th-large"></i>
 										Template
 									</button>
 
@@ -153,7 +153,7 @@
 										class="button"
 										ng-class="uiSetClass('options_'+context.name)"
 										ng-click="uiToggleView('options_'+context.name)">
-										<i class="icon-gear"></i>
+										<i class="pwi-gear"></i>
 										Options
 									</button>
 
@@ -185,7 +185,7 @@
 
 
 
-					<h3><i class="icon-gear"></i> <?php ___('feeds.item_title'); ?></h3>
+					<h3><i class="pwi-gear"></i> <?php ___('feeds.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
@@ -195,7 +195,7 @@
 								tooltip="<?php ___('feeds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.name') ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-name"
@@ -210,7 +210,7 @@
 								tooltip="<?php ___('feeds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.id') ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
@@ -218,7 +218,7 @@
 								tooltip="<?php ___('feeds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
-								<i class="icon-edit"></i>
+								<i class="pwi-edit"></i>
 							</button>
 							<input
 								id="item-id"
@@ -239,7 +239,7 @@
 								tooltip="<?php ___('feeds.preload_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.preload'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-preload"
@@ -254,7 +254,7 @@
 								tooltip="<?php ___('feeds.increment_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.increment'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-load_increment"
@@ -269,7 +269,7 @@
 								tooltip="<?php ___('feeds.offset_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.offset'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-offset"
@@ -285,7 +285,7 @@
 					<h3
 						tooltip="{{ selectedItem.query | json }}"
 						tooltip-popup-delay="333">
-						<i class="icon-search"></i> Query
+						<i class="pwi-search"></i> Query
 					</h3>
 
 					<?php echo pw_feed_query_options( array( 'ng_model' => 'selectedItem' ) ); ?>
@@ -294,13 +294,13 @@
 
 					<hr class="thin">
 					
-					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
+					<h3><i class="pwi-cube"></i> <?php ___('feeds.view.title'); ?></h3>
 					<?php echo pw_feed_template_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 					<hr class="thin">
 					<?php echo pw_feed_variable_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 
 					<h3>
-						<i class="icon-code"></i>
+						<i class="pwi-code"></i>
 						Shortcode
 					</h3>
 					<input
@@ -320,7 +320,7 @@
 					<button
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'pwFeeds')">
-						<i class="icon-close"></i>
+						<i class="pwi-close"></i>
 						<?php ___('feeds.delete'); ?>
 					</button>
 
@@ -328,7 +328,7 @@
 					<button
 						class="button deletion"
 						ng-click="duplicateItem(selectedItem,'pwFeeds')">
-						<i class="icon-copy-2"></i>
+						<i class="pwi-copy-2"></i>
 						<?php ___('feeds.duplicate'); ?>
 					</button>
 
@@ -347,7 +347,7 @@
 
 		<!--
 		RADIO BUTTONS
-		<b><i class="icon-calendar"></i> Events Filter</b>
+		<b><i class="pwi-calendar"></i> Events Filter</b>
 		<br>
 		<div class="btn-group">
 			<label

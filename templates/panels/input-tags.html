@@ -5,7 +5,7 @@
 		<div ng-repeat="tag in tagsInput" class="tag">
 			<span class="tag-name" ng-bind-html="tag.name"></span>
 			<button ng-click="removeTag(tag)" class="close">
-				<i class="icon-close"></i>
+				<i class="pwi-close-thin"></i>
 			</button>
 		</div>
 		<div class="input-group">
@@ -23,8 +23,8 @@
 				<button
 					class="btn btn-default blue"
 					ng-click="newTag(tagInputTemp);tagInputTemp=''">
-					<i ng-show="!loadingTagsAutocomplete" class="icon-plus"></i>
-					<i ng-show="loadingTagsAutocomplete" class="icon-spin icon-spinner-2"></i>
+					<i ng-show="!loadingTagsAutocomplete" class="pwi-plus"></i>
+					<i ng-show="loadingTagsAutocomplete" class="pwi-spinner-2 pwi-spin"></i>
 					New Tag
 				</button>
 			</span>

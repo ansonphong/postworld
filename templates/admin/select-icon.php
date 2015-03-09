@@ -62,6 +62,6 @@
 		class="select-icon-none"
 		ng-show="uiBool(<?php echo $vars['ng_model']; ?>)"
 		ng-click="<?php echo $vars['ng_model']; ?> = false">
-		<span><i class="icon-close"></i></span>
+		<span><i class="pwi-close"></i></span>
 	</button>
 </span>

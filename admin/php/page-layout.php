@@ -12,7 +12,7 @@
 
 <div class="layout wrap postworld" ng-cloak>
 	<h1>
-		<i class="icon-th-large"></i>
+		<i class="pwi-th-large"></i>
 		Layouts
 	</h1>
 	<hr class="thick">

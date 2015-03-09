@@ -4,10 +4,10 @@
 		<!-- LOADING -->
 		<div ng-switch="status">
 			<div ng-switch-when="loading" style="text-align:center;">
-				<i class="icon-spinner icon-spin icon-large" style="font-size:48px;"></i>
+				<i class="pwi-spinner icon-spin icon-large" style="font-size:48px;"></i>
 			</div>
 			<div ng-switch-when="error">
-				<i class="icon-asterisk icon-spin icon-large" style="font-size:24px;"></i> Media Not loaded. Please Try again.
+				<i class="pwi-asterisk icon-spin icon-large" style="font-size:24px;"></i> Media Not loaded. Please Try again.
 			</div>
 		</div>
 
@@ -25,11 +25,11 @@
 
 	<div class="modal-header" ng-switch="post.link_format">
 		<h3>
-			<span ng-switch-when="video" class="video"><i class="icon-youtube-play"></i></span>
-			<span ng-switch-when="audio" class="audio"><i class="icon-headphones"></i></span>
+			<span ng-switch-when="video" class="video"><i class="pwi-youtube-play"></i></span>
+			<span ng-switch-when="audio" class="audio"><i class="pwi-headphones"></i></span>
 			<a href="{{post.post_permalink}}">{{post.post_title}}</a> // {{post.post_id}}
-			<a href="{{post.link_url}}" target="_blank"><i class="icon-external-link"></i></a>
-			<button class="btn close" ng-click="close()" style="color:#ccc;"><i class="icon-remove"></i></button>
+			<a href="{{post.link_url}}" target="_blank"><i class="pwi-external-link"></i></a>
+			<button class="btn close" ng-click="close()" style="color:#ccc;"><i class="pwi-remove"></i></button>
 		</h3>
 		Favorite / Share / View Later
 	</div>
@@ -39,7 +39,7 @@
 			<img src="{{post.avatar.small.url}}" width="{{post.avatar.small.width/2}}" height="{{post.avatar.small.height/2}}">
 			<a href="{{ post.author.user_profile_url }}">{{post.author.display_name}}</a>
 				• {{post.time_ago}}
-				• <a href="{{post.post_permalink}}#comments"><i class="icon-comment"></i> 56 Comments</a>
+				• <a href="{{post.post_permalink}}#comments"><i class="pwi-comment"></i> 56 Comments</a>
 		</div>
 		<div>
 			Like Facebook / Tweet / etc...
@@ -48,7 +48,7 @@
 		<hr>
 
 		<div style="text-align:left;">
-			<h3 style="padding:20px 20px; border-bottom:2px solid #666;"><i class="icon-comment"></i> Comments</h3>
+			<h3 style="padding:20px 20px; border-bottom:2px solid #666;"><i class="pwi-comment"></i> Comments</h3>
 
 			<script type="text/javascript" charset="utf-8">
 

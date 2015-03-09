@@ -76,7 +76,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 
 <div ng-controller="pwMetaboxSliderOptionsCtrl">
 	<div class="well">
-		<h3><i class="icon-gear"></i> Get Slides From</h3>
+		<h3><i class="pwi-gear"></i> Get Slides From</h3>
 		<div class="btn-group">
 			<label
 				ng-repeat="type in sliderOptions.slider.mode"
@@ -89,23 +89,23 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 
 		<!--///// QUERY /////-->
 		<div ng-show="pwMeta.header.slider.mode == 'query'">
-			<h3><i class="icon-search"></i> Query</h3>
+			<h3><i class="pwi-search"></i> Query</h3>
 			<hr class="thin">
 			<div>
-				<div class="icon-md"><i class="icon-pushpin"></i></div>
+				<div class="pwi-md"><i class="pwi-pushpin"></i></div>
 				<input type="checkbox"
 					id="input-this_post"
 					ng-model="pwMeta.header.slider.query_vars.this_post">
 					<label for="input-this_post">Include This Post</label>
 			</div>
 			<hr class="thin">
-			<div class="icon-md"><i class="icon-image"></i></div>
+			<div class="pwi-md"><i class="pwi-image"></i></div>
 			<input type="checkbox"
 				id="input-hasimage"
 				ng-model="pwMeta.header.slider.query_vars.has_image">
 				<label for="input-hasimage">Only include posts with an image</label>
 			<hr class="thin">
-			<div class="icon-md"><i class="icon-tree"></i></div>
+			<div class="pwi-md"><i class="pwi-tree"></i></div>
 			<input type="checkbox"
 				id="input-children"
 				ng-model="pwMeta.header.slider.query_vars.show_children">
@@ -113,7 +113,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 			<hr class="thin">
 
 			<label for="select-feature_tax" class="inner">
-				<i class="icon-th-list"></i> taxonomy
+				<i class="pwi-th-list"></i> taxonomy
 			</label>
 			<select
 				class="labeled"
@@ -124,7 +124,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 			</select>
 
 			<label for="select-feature_term" class="inner">
-				<i class="icon-search"></i> term
+				<i class="pwi-search"></i> term
 			</label>
 			<select
 				class="labeled"
@@ -138,22 +138,22 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 
 		<!--///// QUERY / THIS POST /////-->
 		<div  ng-show="pwMeta.header.slider.mode == 'query' || pwMeta.header.slider.mode == 'this_post'">
-			<h4><i class="icon-images"></i> Galleries</h4>
+			<h4><i class="pwi-images"></i> Galleries</h4>
 			<hr class="thin">
-			<div class="icon-md"><i class="icon-th"></i></div>
+			<div class="pwi-md"><i class="pwi-th"></i></div>
 			<input type="checkbox"
 				id="input-galleries"
 				ng-model="pwMeta.header.slider.query_vars.include_galleries">
 				<label for="input-galleries">Include images found in galleries</label>
 			<div class="indent" ng-show="pwMeta.header.slider.query_vars.include_galleries">
 				<hr class="thin">
-				<div class="icon-md"><i class="icon-eye"></i></div>
+				<div class="pwi-md"><i class="pwi-eye"></i></div>
 				<input type="checkbox"
 					id="input-only_galleries"
 					ng-model="pwMeta.header.slider.query_vars.only_galleries">
 					<label for="input-only_galleries">Only show images from galleries</label>
 				<hr class="thin">
-				<div class="icon-md"><i class="icon-eye-closed"></i></div>
+				<div class="pwi-md"><i class="pwi-eye-closed"></i></div>
 				<input type="checkbox"
 					id="input-hide_galleries"
 					ng-model="pwMeta.header.slider.query_vars.hide_galleries">
@@ -163,7 +163,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 
 		<!--///// MENU /////-->
 		<div  ng-show="pwMeta.header.slider.mode == 'menu'">
-			<h3><i class="icon-nav"></i> Select Menu</h3>
+			<h3><i class="pwi-nav"></i> Select Menu</h3>
 			<?php
 				echo pw_select_menus( array(
 					'options_model'	=>	'options.menus',
@@ -175,7 +175,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 	</div>
 	
 	<div class="well">
-		<h3><span class="icon-md"><i class="icon-gear"></i></span> Settings</h3>
+		<h3><span class="pwi-md"><i class="pwi-gear"></i></span> Settings</h3>
 		<?php
 			echo pw_select_slider_settings( array(
 				'ng_model' 	=> 'pwMeta.header.slider',

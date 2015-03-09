@@ -30,7 +30,7 @@
 	class="postworld">
 
 	<h1>
-		<i class="icon-circle-medium"></i>
+		<i class="pwi-circle-medium"></i>
 		Iconsets
 	</h1>
 

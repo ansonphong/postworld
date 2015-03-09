@@ -43,7 +43,7 @@
 				<hr class="thin">
 
 				<!-- SIZE -->
-				<span class="icon-md"><i class="icon-arrows-alt"></i></span>
+				<span class="pwi-md"><i class="pwi-arrows-alt"></i></span>
 				<select
 					id="primary-size"
 					ng-options="value for value in optionsMeta.style.backgroundSize"
@@ -55,7 +55,7 @@
 				<hr class="thin">
 
 				<!-- REPEAT -->
-				<span class="icon-md"><i class="icon-target"></i></span>
+				<span class="pwi-md"><i class="pwi-target"></i></span>
 				<select
 					id="primary-repeat"
 					ng-options="value for value in optionsMeta.style.backgroundRepeat"
@@ -67,7 +67,7 @@
 				<hr class="thin">
 
 				<!-- POSITION -->
-				<span class="icon-md"><i class="icon-arrows"></i></span>
+				<span class="pwi-md"><i class="pwi-arrows"></i></span>
 				<select
 					id="primary-position"
 					ng-options="value for value in optionsMeta.style.backgroundPosition"
@@ -82,7 +82,7 @@
 				<div
 					class="indent"
 					ng-show="'parallax' == <?php echo $ng_model; ?>.primary.style['background-position']">
-					<span class="icon-md"><i class="icon-arrows-v"></i></span>
+					<span class="pwi-md"><i class="pwi-arrows-v"></i></span>
 					<input
 						type="number"
 						id="primary-parallax"
@@ -92,7 +92,7 @@
 				</div>
 
 				<!-- ATTACHMENT -->
-				<span class="icon-md"><i class="icon-anchor"></i></span>
+				<span class="pwi-md"><i class="pwi-anchor"></i></span>
 				<select
 					id="primary-attachment"
 					ng-options="value for value in optionsMeta.style.backgroundAttachment"
@@ -104,7 +104,7 @@
 				<hr class="thin">
 
 				<!-- COLOR -->
-				<span class="icon-md"><i class="icon-brush"></i></span>
+				<span class="pwi-md"><i class="pwi-brush"></i></span>
 				<input id="primary-color" type="text" ng-model="<?php echo $ng_model; ?>.primary.style['background-color']">
 				<label for="primary-color">color</label>
 
@@ -125,7 +125,7 @@
 				<hr class="thin">
 
 				<!-- OPACITY -->
-				<span class="icon-md"><i class="icon-layers"></i></span>
+				<span class="pwi-md"><i class="pwi-layers"></i></span>
 				
 				<input id="secondary-opacity" type="number" ng-model="<?php echo $ng_model; ?>.secondary.style.opacity">
 				<label for="secondary-opacity">% opacity</label>
@@ -141,7 +141,7 @@
 				<hr class="thin">
 
 				<!-- SIZE -->
-				<span class="icon-md"><i class="icon-arrows-alt"></i></span>
+				<span class="pwi-md"><i class="pwi-arrows-alt"></i></span>
 				<input id="secondary-size" type="number" ng-model="<?php echo $ng_model; ?>.secondary.style['background-size']">
 				<label for="secondary-size">% size</label>
 				<hr class="thin">
@@ -156,7 +156,7 @@
 				<hr class="thin">
 
 				<!-- REPEAT -->
-				<span class="icon-md"><i class="icon-target"></i></span>
+				<span class="pwi-md"><i class="pwi-target"></i></span>
 				<select
 					id="secondary-repeat"
 					ng-options="value for value in optionsMeta.style.backgroundRepeat"
@@ -168,7 +168,7 @@
 				<hr class="thin">
 
 				<!-- POSITION -->
-				<span class="icon-md"><i class="icon-arrows"></i></span>
+				<span class="pwi-md"><i class="pwi-arrows"></i></span>
 				<select
 					id="secondary-position"
 					ng-options="value for value in optionsMeta.style.backgroundPosition"
@@ -183,7 +183,7 @@
 				<div
 					class="indent"
 					ng-show="'parallax' == <?php echo $ng_model; ?>.secondary.style['background-position']">
-					<span class="icon-md"><i class="icon-arrows-v"></i></span>
+					<span class="pwi-md"><i class="pwi-arrows-v"></i></span>
 					<input
 						type="number"
 						id="secondary-parallax"
@@ -193,7 +193,7 @@
 				</div>
 
 				<!-- ATTACHMENT -->
-				<span class="icon-md"><i class="icon-anchor"></i></span>
+				<span class="pwi-md"><i class="pwi-anchor"></i></span>
 				<select
 					id="secondary-attachment"
 					ng-options="value for value in optionsMeta.style.backgroundAttachment"

@@ -87,8 +87,8 @@ postworld.controller( 'UserAutocompleteController',
 			|___/                                                |_|                   
 //////////////////////////// TAGS AUTOCOMPLETE CONTROLLER ////////////////////////////*/
 
-postworld.directive('pwInputTags', [ '$filter', 'pwData', '$log', '_',
-	function( $filter, $pwData, $log, $_ ){
+postworld.directive('pwInputTags', [ '$filter', 'pwData', '$log', '_', '$timeout',
+	function( $filter, $pwData, $log, $_, $timeout ){
 	return {
 		restrict: 'AE',
 		link: function ($scope, element, attrs) {
@@ -155,13 +155,14 @@ postworld.directive('pwInputTags', [ '$filter', 'pwData', '$log', '_',
 			
 			// Catch broadcast of load in tags
 			$scope.$on('postTagsObject', function(event, data) {
-				$log.debug( 'postTagsObject : $on : Post ID : ' + data.postId, data );
-
-				$log.debug( 'postTagsObject : Post ID : ' + $_.get( $scope, 'post.ID' ), data );
-
-				if( data.taxonomy == 'post_tag' && data.postId == $_.get( $scope, 'post.ID' ) )
-
-					$scope.tagsInput = data.terms;
+				// Wait for $scope.post to initialize on the first round with $timeout
+				$timeout( function(){
+					$log.debug( 'postTagsObject : $on : Post ID : ' + data.postId, data );
+					$log.debug( 'postTagsObject : Post ID : ' + $_.get( $scope.post, 'ID' ), data );
+					$log.debug( 'postTagsObject : Scope Post : ', $scope.post );
+					if( data.taxonomy == 'post_tag' && data.postId == $_.get( $scope, 'post.ID' ) )
+						$scope.tagsInput = data.terms;
+				}, 0 );
 			});
 
 		}

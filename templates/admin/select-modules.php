@@ -33,7 +33,7 @@
 		<?php pw_save_option_button( PW_OPTIONS_MODULES, 'pwModules'); ?>
 	</div>
 	<h2>
-		<i class="icon-th-large"></i>
+		<i class="pwi-th-large"></i>
 		Modules
 	</h2>
 	<small>Here you can enable the modules you would like to use, and disable the ones you do not need.</small>

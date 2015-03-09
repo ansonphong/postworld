@@ -120,7 +120,7 @@ function pw_modify_contact_methods( $profile_fields ) {
 	// Add new fields
 	foreach( $contact_methods as $meta_key => $value ){
 		// If the value is an array
-		// ie. array( 'icon' => 'icon-twitter', 'description' => 'Twitter Username' )
+		// ie. array( 'icon' => 'pwi-twitter', 'description' => 'Twitter Username' )
 		if( is_array( $value ) ){
 			$meta_icon = _get( $value, 'icon' );
 			$meta_icon = '<i class="icon '.$meta_icon.'"></i> ';

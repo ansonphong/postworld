@@ -1,5 +1,13 @@
 # Postworld // Changelog
 
+### Version 1.84
+- Iconsets Module
+    + Refactored Postworld Iconsets to allow for custom enabling and disabling of iconsets within the theme
+- Restructure Postworld Icons font
+    + Changed Postworld Icon name from `icomoon` to `Postworld-Icons`
+    + Changed prefix from `icon-` to `pwi-`, since the `icon-` class prefix was having collisions with plugins using *Font Awesome 3*
+    + __Breaking Change__ - All instances of `icon-` must be renamed to `pwi-`
+
 ### Version 1.81
 - Replace `ng-controller="tagsAutocomplete"` and `pw-autocomplete-tags` with `pw-input-tags` directive
 

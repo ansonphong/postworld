@@ -26,7 +26,7 @@
 
 <div class="main wrap postworld" ng-cloak>
 	<h1>
-		<i class="icon-gears"></i>
+		<i class="pwi-gears"></i>
 		Site Options
 	</h1>
 	
@@ -47,7 +47,7 @@
 						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
 					</div>
 					<h2>
-						<span class="icon-md"><i class="icon-image"></i></span>
+						<span class="pwi-md"><i class="pwi-image"></i></span>
 						Favicon
 					</h2>
 					<div class="well">
@@ -74,7 +74,7 @@
 						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
 					</div>
 					<h2>
-						<span class="icon-md"><i class="icon-image"></i></span>
+						<span class="pwi-md"><i class="pwi-image"></i></span>
 						Default Avatar
 					</h2>
 					<div class="well">
@@ -99,7 +99,7 @@
 				<?php pw_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
 			</div>
 			<h2>
-				<i class="icon-code"></i>
+				<i class="pwi-code"></i>
 				Header Code
 			</h2>
 			<small>
