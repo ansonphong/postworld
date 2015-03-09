@@ -240,6 +240,7 @@ function pw_get_view_meta( $context = array() ){
 				$taxonomy = 'post_tag';
 				$tag_slug = get_query_var( 'tag' );
 				$term = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
+				$term_id = $term['term_id'];
 			}
 
 			// CATEGORY
@@ -248,6 +249,7 @@ function pw_get_view_meta( $context = array() ){
 				$taxonomy = 'category';
 				$tag_slug = get_query_var( 'category_name' );
 				$term = get_term_by( 'slug', $tag_slug, $taxonomy, 'ARRAY_A' );
+				$term_id = $term['term_id'];
 			}
 
 			// OTHER/CUSTOM TAXONOMIES
