@@ -44,6 +44,7 @@ $pw = array(
 				'backgrounds'			=>	'postworld-backgrounds',
 				'background_contexts'	=>	'postworld-background-contexts',
 				'header_code'			=>	'postworld-header-code',
+				'iconsets'				=>	'postworld-iconsets',
 				'cache_iconset'			=>	'postworld-cache-iconset-',
 				),
 			),
@@ -80,6 +81,7 @@ define( 'PW_OPTIONS_FEEDS', 				$pw['db']['wp_options']['option_name']['feeds'] 
 define( 'PW_OPTIONS_FEED_SETTINGS', 		$pw['db']['wp_options']['option_name']['feed_settings'] );
 //define( 'PW_OPTIONS_TERM_FEEDS', 			$pw['db']['wp_options']['option_name']['term_feeds'] );
 define( 'PW_OPTIONS_SOCIAL', 				$pw['db']['wp_options']['option_name']['social'] );
+define( 'PW_OPTIONS_ICONSETS', 				$pw['db']['wp_options']['option_name']['iconsets'] );
 define( 'PW_OPTIONS_BACKGROUNDS', 			$pw['db']['wp_options']['option_name']['backgrounds'] );
 define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name']['background_contexts'] );
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );

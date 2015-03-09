@@ -83,6 +83,9 @@ module.exports = function(grunt) {
             // Angular Masonry
             'lib/angular-masonry/angular-masonry.js',
 
+            // Angular Checklist Model
+            'lib/checklist-model/checklist-model.js',
+
             ///// ANGULAR NATIVE EXTENSIONS /////
             // Angular Extensions
           	'lib/'+angularVersion+'/angular-sanitize.min.js',

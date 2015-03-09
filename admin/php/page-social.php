@@ -24,7 +24,6 @@
 		ng-controller="pwSocialDataCtrl"
 		ng-cloak>
 
-
 		<!-- SHARE SOCIAL -->
 		<div class="well">
 			<div class="save-right">

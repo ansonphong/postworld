@@ -73,6 +73,11 @@ function pw_register_iconset( $vars = array() ){
 	return true;
 }
 
+function pw_get_registered_iconsets(){
+	global $pw;
+	return $pw['iconsets'];
+}
+
 function pw_register_core_iconsets(){
 	// Defines and registers the Postworld Core iconsets
 
@@ -81,12 +86,28 @@ function pw_register_core_iconsets(){
 
 	$iconsets = array(
 		array(
-			'name'		=>	'IcoMoon',
-			'slug'		=>	'icomoon',
+			'name'		=>	'Postworld Icons',
+			'slug'		=>	'postworld-icons',
 			'prefix'	=>	'icon-',
 			'add_class'	=>	'',
-			'url'		=>	POSTWORLD_URI  . '/lib/icomoon/style.css',
-			'src'		=>	POSTWORLD_PATH . '/lib/icomoon/style.css',
+			'url'		=>	POSTWORLD_URI  . '/lib/Postworld-Icons/style.css',
+			'src'		=>	POSTWORLD_PATH . '/lib/Postworld-Icons/style.css',
+			),
+		array(
+			'name'		=>	'Nature Icons',
+			'slug'		=>	'nature-icons',
+			'prefix'	=>	'ni-',
+			'add_class'	=>	'',
+			'url'		=>	POSTWORLD_URI  . '/lib/Nature-Icons/style.css',
+			'src'		=>	POSTWORLD_PATH . '/lib/Nature-Icons/style.css',
+			),
+		array(
+			'name'		=>	'Far East Icons',
+			'slug'		=>	'far-east-icons',
+			'prefix'	=>	'fe-',
+			'add_class'	=>	'',
+			'url'		=>	POSTWORLD_URI  . '/lib/Far-East-Icons/style.css',
+			'src'		=>	POSTWORLD_PATH . '/lib/Far-East-Icons/style.css',
 			),
 		array(
 			'name'		=>	'Glyphicons Halflings',
@@ -150,12 +171,10 @@ function pw_load_iconsets( $iconsets = array(), $register_classes = true ){
 	///// LOAD ICONSETS ///// 
 	// Iterate through iconsets
 	foreach( $load_iconsets as $slug => $iconset ){
-
 		// Only load those iconsets which are selected in pw-config
 		// Or saved in iconsets PW_OPTIONS_ICONSETS
 		if( !pw_iconset_is_enabled( $slug ) )
 			continue;
-
 		// Enqueue styles
 		wp_enqueue_style( $slug, $iconset['url'] );
 		// Load icon CSS classes
@@ -164,16 +183,50 @@ function pw_load_iconsets( $iconsets = array(), $register_classes = true ){
 	
 }
 
-function pw_iconset_is_enabled( $iconset_slug ){
-	// Returns which iconsets are enabled
+function pw_get_required_iconsets(){
+	
+	// Get required iconsets from Postworld Config
 	global $pwSiteGlobals;
 	$required_iconsets = _get( $pwSiteGlobals, 'iconsets.required' );
 
-	$enabled_iconsets = $required_iconsets;
+	// If it's not defined, set an empty array
+	if( $required_iconsets === false )
+		$required_iconsets = array();
+
+	return $required_iconsets;
+}
+
+function pw_iconset_is_enabled( $iconset_slug ){
+	// Returns which iconsets are enabled
+
+	$iconsetOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_ICONSETS ) );
+
+	$enabled_iconsets = $iconsetOptions['enabled'];
 
 	return in_array( $iconset_slug, $enabled_iconsets );
 
 }
+
+
+function pw_filter_options_iconsets( $options ){
+	// Filters options for PW_OPTIONS_ICONSETS
+	// Get required iconsets from theme postworld config
+	$required_iconsets = pw_get_required_iconsets();
+	// Set default options
+	$defaultOptions = array(
+		'enabled'	=>	$required_iconsets,
+		);
+	$options = array_replace_recursive( $defaultOptions, $options );
+	// Force on enabled iconsets
+	foreach( $required_iconsets as $required_iconset ){
+		// If the required iconset is not enabled
+		if( !in_array( $required_iconset, $options['enabled'] ) )
+			// Add it to enabled iconsets
+			$options['enabled'][] = $required_iconset;
+	}
+	return $options;
+}
+add_filter( PW_OPTIONS_ICONSETS, 'pw_filter_options_iconsets' );
 
 
 function pw_get_iconset_classes( $iconset_slug ){
@@ -201,7 +254,6 @@ function pw_get_iconset_classes( $iconset_slug ){
 	if( !empty( $cache ) )
 		// Assume it's JSON, and decode
 		$cache = json_decode( $cache, true );
-
 
 	///// GET THE ICONSET HASH /////
 	// Get the hash of the iconset

@@ -258,6 +258,10 @@ function postworld_includes( $args ){
 		// ANGULAR : MASONRY
 		wp_enqueue_script( 'angularJS-Masonry',
 			POSTWORLD_URI.'/lib/angular-masonry/angular-masonry.js', $angularDep );
+
+		// ANGULAR : CHECKLIST MODEL
+		wp_enqueue_script( 'angularJS-ChecklistModel',
+			POSTWORLD_URI.'/lib/checklist-model/checklist-model.js', $angularDep );
 		
 
 		/////// POSTWORLD APP /////	

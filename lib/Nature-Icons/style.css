@@ -1,0 +1,41 @@
+@font-face {
+	font-family: 'Nature-Icons';
+	src:url('fonts/Nature-Icons.eot?-ecfbnb');
+	src:url('fonts/Nature-Icons.eot?#iefix-ecfbnb') format('embedded-opentype'),
+		url('fonts/Nature-Icons.woff?-ecfbnb') format('woff'),
+		url('fonts/Nature-Icons.ttf?-ecfbnb') format('truetype'),
+		url('fonts/Nature-Icons.svg?-ecfbnb#Nature-Icons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="ni-"], [class*=" ni-"] {
+	font-family: 'Nature-Icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.ni-bird-fly:before {
+	content: "\e602";
+}
+
+.ni-bird-walk:before {
+	content: "\e604";
+}
+
+.ni-rose:before {
+	content: "\e600";
+}
+
+.ni-lotus:before {
+	content: "\e601";
+}
+
