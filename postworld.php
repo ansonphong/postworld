@@ -128,6 +128,7 @@ define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
 ////// UTILITIES //////
 include 'php/postworld_utilities.php';
 
+
 ////// API //////
 // Load API functions
 include 'php/postworld_api.php';
@@ -291,10 +292,8 @@ function pw_add_header_code() {
 	echo $output;
 }
 
-
 //To get user id from wordpress
 
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
-
 
 ?>

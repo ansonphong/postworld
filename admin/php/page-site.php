@@ -47,7 +47,7 @@
 						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
 					</div>
 					<h2>
-						<span class="pwi-md"><i class="pwi-image"></i></span>
+						<span class="icon-md"><i class="pwi-image"></i></span>
 						Favicon
 					</h2>
 					<div class="well">
@@ -74,7 +74,7 @@
 						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
 					</div>
 					<h2>
-						<span class="pwi-md"><i class="pwi-image"></i></span>
+						<span class="icon-md"><i class="pwi-image"></i></span>
 						Default Avatar
 					</h2>
 					<div class="well">

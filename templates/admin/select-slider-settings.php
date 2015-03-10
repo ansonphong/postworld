@@ -16,7 +16,7 @@
 	///// HEIGHT /////
 	if( in_array( 'height', $show ) ){
 	?>
-	<span class="pwi-md"><i class="pwi-arrows-v"></i></span>
+	<span class="icon-md"><i class="pwi-arrows-v"></i></span>
 	<input
 		id="input-height"
 		class="short"
@@ -32,7 +32,7 @@
 	///// INTERVAL /////
 	if( in_array( 'interval', $show ) ){
 	?>
-	<span class="pwi-md"><i class="pwi-clock"></i></span>
+	<span class="icon-md"><i class="pwi-clock"></i></span>
 	<input
 		id="input-interval"
 		class="short"
@@ -48,7 +48,7 @@
 	///// MAXIMUM SLIDES /////
 	if( in_array( 'max_slides', $show ) ){
 	?>
-	<span class="pwi-md"><i class="pwi-plus"></i></span>
+	<span class="icon-md"><i class="pwi-plus"></i></span>
 	<input type="text"
 		id="input-maxposts"
 		size="3"
@@ -78,7 +78,7 @@
 	///// HYPERLINK /////
 	if( in_array( 'hyperlink', $show ) ){
 	?>
-	<span class="pwi-md"><i class="pwi-link"></i></span>
+	<span class="icon-md"><i class="pwi-link"></i></span>
 	<input type="checkbox"
 		id="input-hyperlink"
 		ng-model="<?php echo $ng_model; ?>.hyperlink">
@@ -91,7 +91,7 @@
 	///// NO PAUSE /////
 	if( in_array( 'no_pause', $show ) ){
 	?>
-	<span class="pwi-md"><i class="pwi-pause"></i></span>
+	<span class="icon-md"><i class="pwi-pause"></i></span>
 	<input type="checkbox"
 		id="input-no_pause"
 		ng-model="<?php echo $ng_model; ?>.no_pause">
@@ -104,7 +104,7 @@
 	///// SHOW TITLE /////
 	if( in_array( 'show_title', $show ) ){
 	?>
-	<span class="pwi-md"><i class="pwi-eye"></i></span>
+	<span class="icon-md"><i class="pwi-eye"></i></span>
 	<input type="checkbox"
 		id="input-show_title"
 		ng-model="<?php echo $ng_model; ?>.show_title">
@@ -117,7 +117,7 @@
 	///// SHOW EXCERPT /////
 	if( in_array( 'show_excerpt', $show ) ){
 	?>
-	<span class="pwi-md"><i class="pwi-eye"></i></span>
+	<span class="icon-md"><i class="pwi-eye"></i></span>
 	<input type="checkbox"
 		id="input-show_excerpt"
 		ng-model="<?php echo $ng_model; ?>.show_excerpt">

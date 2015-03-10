@@ -53,7 +53,7 @@
 					class="module layout">
 					<th scope="row">
 						<b>
-							<span class="pwi-md"><i class="{{inputMeta.icon}}"></i></span>
+							<span class="icon-md"><i class="{{inputMeta.icon}}"></i></span>
 							{{inputMeta.name}}
 						</b>
 					</th>

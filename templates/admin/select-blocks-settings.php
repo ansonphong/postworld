@@ -20,7 +20,7 @@
 
 <?php if( in_array( 'sidebar', $show ) ): ?>
 	<!-- SIDEBAR -->
-	<span class="pwi-md"><i class="pwi-circle-thick"></i></span>
+	<span class="icon-md"><i class="pwi-circle-thick"></i></span>
 	<span
 		pw-sidebars="pw.sidebars">
 		<select
@@ -45,7 +45,7 @@
 
 	<?php if( in_array( 'offset', $show ) ): ?>
 		<!-- OFFSET -->
-		<span class="pwi-md"><i class="pwi-arrow-right-thin"></i></span>
+		<span class="icon-md"><i class="pwi-arrow-right-thin"></i></span>
 		<input
 			id="feed-blocks-offset"
 			type="number"
@@ -60,7 +60,7 @@
 
 	<?php if( in_array( 'increment', $show ) ): ?>
 		<!-- INCREMENT -->
-		<span class="pwi-md"><i class="pwi-arrow-right-thin"></i></span>
+		<span class="icon-md"><i class="pwi-arrow-right-thin"></i></span>
 		<input
 			id="feed-blocks-increment"
 			type="number"
@@ -75,7 +75,7 @@
 
 	<?php if( in_array( 'max', $show ) ): ?>
 		<!-- MAX -->
-		<span class="pwi-md"><i class="pwi-plus"></i></span>
+		<span class="icon-md"><i class="pwi-plus"></i></span>
 		<input
 			id="feed-blocks-max"
 			type="number"
@@ -90,7 +90,7 @@
 
 	<?php if( in_array( 'classes', $show ) ): ?>
 		<!-- CLASSES -->
-		<span class="pwi-md"><i class="pwi-code"></i></span>
+		<span class="icon-md"><i class="pwi-code"></i></span>
 		<input
 			id="feed-blocks-classes"
 			type="text"
@@ -120,7 +120,7 @@
 		<div
 			ng-show="<?php echo $ng_model; ?>.widgets.background_image.id">
 			<hr class="thin">
-			<span class="pwi-md"><i class="pwi-arrows-v"></i></span>
+			<span class="icon-md"><i class="pwi-arrows-v"></i></span>
 			<input
 				id="feed-blocks-max"
 				type="number"
@@ -137,7 +137,7 @@
 
 	<!-- TEMPLATE -->
 	<!--
-	<span class="pwi-md"><i class="pwi-circle-thick"></i></span>
+	<span class="icon-md"><i class="pwi-circle-thick"></i></span>
 	<span
 		pw-admin-templates="pw.templates">
 		<select

@@ -92,20 +92,20 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 			<h3><i class="pwi-search"></i> Query</h3>
 			<hr class="thin">
 			<div>
-				<div class="pwi-md"><i class="pwi-pushpin"></i></div>
+				<div class="icon-md"><i class="pwi-pushpin"></i></div>
 				<input type="checkbox"
 					id="input-this_post"
 					ng-model="pwMeta.header.slider.query_vars.this_post">
 					<label for="input-this_post">Include This Post</label>
 			</div>
 			<hr class="thin">
-			<div class="pwi-md"><i class="pwi-image"></i></div>
+			<div class="icon-md"><i class="pwi-image"></i></div>
 			<input type="checkbox"
 				id="input-hasimage"
 				ng-model="pwMeta.header.slider.query_vars.has_image">
 				<label for="input-hasimage">Only include posts with an image</label>
 			<hr class="thin">
-			<div class="pwi-md"><i class="pwi-tree"></i></div>
+			<div class="icon-md"><i class="pwi-tree"></i></div>
 			<input type="checkbox"
 				id="input-children"
 				ng-model="pwMeta.header.slider.query_vars.show_children">
@@ -140,20 +140,20 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 		<div  ng-show="pwMeta.header.slider.mode == 'query' || pwMeta.header.slider.mode == 'this_post'">
 			<h4><i class="pwi-images"></i> Galleries</h4>
 			<hr class="thin">
-			<div class="pwi-md"><i class="pwi-th"></i></div>
+			<div class="icon-md"><i class="pwi-th"></i></div>
 			<input type="checkbox"
 				id="input-galleries"
 				ng-model="pwMeta.header.slider.query_vars.include_galleries">
 				<label for="input-galleries">Include images found in galleries</label>
 			<div class="indent" ng-show="pwMeta.header.slider.query_vars.include_galleries">
 				<hr class="thin">
-				<div class="pwi-md"><i class="pwi-eye"></i></div>
+				<div class="icon-md"><i class="pwi-eye"></i></div>
 				<input type="checkbox"
 					id="input-only_galleries"
 					ng-model="pwMeta.header.slider.query_vars.only_galleries">
 					<label for="input-only_galleries">Only show images from galleries</label>
 				<hr class="thin">
-				<div class="pwi-md"><i class="pwi-eye-closed"></i></div>
+				<div class="icon-md"><i class="pwi-eye-closed"></i></div>
 				<input type="checkbox"
 					id="input-hide_galleries"
 					ng-model="pwMeta.header.slider.query_vars.hide_galleries">
@@ -175,7 +175,7 @@ add_action( 'pw_admin_options_metabox_scripts', 'pw_metabox_slider_scripts' );
 	</div>
 	
 	<div class="well">
-		<h3><span class="pwi-md"><i class="pwi-gear"></i></span> Settings</h3>
+		<h3><span class="icon-md"><i class="pwi-gear"></i></span> Settings</h3>
 		<?php
 			echo pw_select_slider_settings( array(
 				'ng_model' 	=> 'pwMeta.header.slider',
