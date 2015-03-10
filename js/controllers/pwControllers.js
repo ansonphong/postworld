@@ -12,10 +12,12 @@ postworld.directive( 'pwPost', [ function( $scope ){
 		restrict: 'AE',
 		controller: 'postController',
 		link: function( $scope, element, attrs ){
+
 			// OBSERVE Attribute
 			attrs.$observe('postRequiredFields', function( value ) {
 				$scope.postRequiredFields = $scope.$eval( value );
 			});
+
 		}
 	};
 }]);
@@ -31,7 +33,7 @@ postworld.controller('postController',
 	if( _.isUndefined( $scope.post ) || _.isEmpty( $scope.post ) ){
 
 		// First get the post from the pw globals 
-		var globalPost = $_.getObj( $window, "pw.view.post" );
+		var globalPost = $_.get( $window, "pw.view.post" );
 		if( globalPost != false )
 			$scope.post = globalPost;
 
@@ -141,60 +143,6 @@ postworld.controller('postController',
 		return provider;
 	}
 
-	/*
-	////////// LOAD POST DATA //////////
-	$scope.loadPost = function( post_id ){
-		$scope.status = "loading";
-
-		///// DETECT ID /////
-		// Post ID passed directly
-		if( !_.isUndefined(post_id) ){
-			$log.debug('pw-post : loadPost( *post_id* ) // Post ID passed directly : ', post_id);
-
-		// Post ID passed by Route
-		} else if ( typeof $routeParams.post_id !== 'undefined' &&
-			$routeParams.post_id > 0 ){
-			var post_id = $routeParams.post_id;
-			$log.debug('pw-post : loadPost() // Post ID from Route : ', post_id);
-		}
-
-		// Post ID passed by Post Object
-		else if( !_.isUndefined($scope.post.ID) && $scope.post.ID > 0 ){
-			var post_id = $scope.post.ID;
-			$log.debug('pw-post : loadPost() // Post ID from Post Object : ', post_id);
-		}
-		
-		var vars = {
-			"post_id" : post_id,
-			"fields" : "all"
-		};
-		///// GET THE POST DATA /////
-		$pwData.get_post( vars ).then(
-			// Success
-			function(response) {
-				$log.debug('pwData.pw_get_post : RESPONSE : ', response.data);
-
-				// FILTER FOR INPUT
-				var get_post = response.data;
-
-				// LOCAL CALLBACK ACTION EMIT
-				// Any sibling or parent scope can listen on this action
-				$scope.$emit('postLoaded', get_post);
-
-				// SET DATA INTO THE SCOPE
-				$scope.post = get_post;
-				// UPDATE STATUS
-				$scope.status = "done";
-			},
-			// Failure
-			function(response) {
-				//alert('error');
-				$scope.status = "error";
-			}
-		);  
-	}
-	*/
-
 	///// ACTION : POST UPDATED /////
 	// Update the contents of post after Quick Edit
 	$rootScope.$on('postUpdated', function(event, postId) {
@@ -204,7 +152,7 @@ postworld.controller('postController',
 		}
 		///// HANDLE FEED POSTS /////
 		// If the post has a feed
-		if ( _.isString( $_.getObj( $scope, 'post.feed.id' ) ) ){
+		if ( _.isString( $_.get( $scope, 'post.feed.id' ) ) ){
 			// Call Update Feed Post
 			$pwPosts.reloadFeedPost( $scope.post.feed.id, postId )
 		}
@@ -268,7 +216,7 @@ postworld.controller('postController',
 		if( $_.objExists( $scope, 'post.feed.id' ) &&
 			$_.objExists( $scope, 'post.ID' ) &&
 			$_.objExists( $scope, 'postRequiredFields' ) &&
-			$_.getObj( $scope, 'postRequiredFields' ) != null ){
+			$_.get( $scope, 'postRequiredFields' ) != null ){
 			
 			$log.debug( "DIRECTIVE : pwPost -> postRequiredFields : ", $scope.postRequiredFields );
 			$pwPosts.requiredFields({
@@ -276,12 +224,13 @@ postworld.controller('postController',
 					postId: $scope.post.ID,
 					fields: $scope.postRequiredFields
 				});
+
 		}	
 	});
 	
 	///// ACTION : LOAD POST DATA /////
 	$scope.$on('loadPostData', function(event, post_id) {
-		if( post_id == $_.getObj( $scope, 'post.ID' ) )
+		if( post_id == $_.get( $scope, 'post.ID' ) )
 			$scope.loadPost( post_id );
 	});
 
@@ -330,7 +279,7 @@ postworld.controller('pwFeedPostCtrl',
 		}
 		$log.debug( 'pw-feed-post : $rootScope.$on( "postUpdated" ) : ', postId );
 		// If the post has a feed
-		if ( _.isString( $_.getObj( $scope, 'post.feed.id' ) ) ){
+		if ( _.isString( $_.get( $scope, 'post.feed.id' ) ) ){
 			// Call Update Feed Post
 			$_.clobber( 'postUpdated_' + postId, 100, function(){
 				$pwPosts.reloadFeedPost( $scope.post.feed.id, postId )

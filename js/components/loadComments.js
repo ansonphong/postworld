@@ -83,7 +83,7 @@ postworld.directive('loadComments', function() {
 	return {
 		restrict: 'A',
 		replace: true,
-		controller: 'pwTreeController',
+		controller: 'pwCommentsTreeController',
 		template: '<div ng-include="templateUrl" class="comments"></div>',
 		scope: {
 			postId : '=',
@@ -91,7 +91,7 @@ postworld.directive('loadComments', function() {
 	};
 });
 
-postworld.controller('pwTreeController',
+postworld.controller('pwCommentsTreeController',
 	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw',
 	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw) {
 		$scope.json = '';
@@ -109,11 +109,11 @@ postworld.controller('pwTreeController',
 		$scope.commentsLoaded = false;
 		$scope.key = 0;
 		$scope.commentsCount = 0;
-		$scope.feed = $attrs.loadComments;
+		$scope.loadCommentsInstance = $attrs.loadComments;
 		$scope.pluginUrl = jsVars.pluginurl;
 		$scope.templateLoaded = false;
 		$log.debug('Comments post ID is:', $scope.postId);
-		var settings = pwCommentsService.comments_settings[$scope.feed];
+		var settings = pwCommentsService.comments_settings[$scope.loadCommentsInstance];
 
 		// Set the Post ID
 		if ( $scope.postId ) {
@@ -139,12 +139,17 @@ postworld.controller('pwTreeController',
 			$scope.templateUrl = $pw.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
 			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		}
+
+		$scope.$watch( 'postId', function( val ){
+			$scope.loadComments();
+		});
 			
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;
+			settings.query.post_id = $scope.postId;
 
-			pwCommentsService.pw_get_comments($scope.feed).then(function(value) {
+			pwCommentsService.pw_get_comments($scope.loadCommentsInstance).then(function(value) {
 				$log.debug('Got Comments: ', value.data );
 				$scope.treedata = {children: value.data};
 				$scope.commentsLoaded = true;

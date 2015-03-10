@@ -44,6 +44,9 @@ postworld.controller('pwFeedItemCtrl',
 	else
 		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: view } );
 	
+	if( view == 'modal' )
+		$log.debug( 'feedItem : itemTemplateUrl : ', $scope.itemTemplateUrl );
+
 	// Decodes Special characters in URIs
 	$scope.decodeURI = function(URI) {
 		URI = URI.replace("&amp;","&");
