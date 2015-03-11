@@ -45,12 +45,12 @@ function pw_social_meta( $social_meta = array() ){
 		array(
 			"id"	=>	"networks",
 			"name"	=>	"Social Networks",
-			"icon"	=>	"icon-globe-o",
+			"icon"	=>	"pwi-globe-o",
 			"fields"	=>	array(
 				array(
 					"id"			=>	"facebook",
 					"name"			=>	"Facebook",
-					"icon"			=>	"icon-facebook-square",
+					"icon"			=>	"pwi-facebook-square",
 					"description"	=>	"URL of your Facebook Page",
 					"prepend_url"	=>	"",
 					"_public"		=>	true,
@@ -58,7 +58,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"facebook_app_id",
 					"name"			=>	"Facebook App ID",
-					"icon"			=>	"icon-facebook",
+					"icon"			=>	"pwi-facebook",
 					"description"	=>	"The ID of your Facebook App",
 					"prepend_url"	=>	"",
 					"_public"		=>	false,
@@ -66,7 +66,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"twitter",
 					"name"			=>	"Twitter",
-					"icon"			=>	"icon-twitter-square",
+					"icon"			=>	"pwi-twitter-square",
 					"description"	=>	"Twitter Username, without the '@'",
 					"prepend_url"	=>	"http://twitter.com/",
 					"_public"		=>	true,
@@ -74,7 +74,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"twitter_hashtags",
 					"name"			=>	"Twitter Hashtags",
-					"icon"			=>	"icon-twitter",
+					"icon"			=>	"pwi-twitter",
 					"description"	=>	"Optional hashtag(s) to include in tweets, without the '#'",
 					"prepend_url"	=>	"",
 					"_public"		=>	false,
@@ -82,7 +82,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"instagram",
 					"name"			=>	"Instagram",
-					"icon"			=>	"icon-instagram-square",
+					"icon"			=>	"pwi-instagram-square",
 					"description"	=>	"Your instagram username, not URL",
 					"prepend_url"	=>	"http://instagram.com/",
 					"_public"		=>	true,
@@ -90,7 +90,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"youtube",
 					"name"			=>	"YouTube",
-					"icon"			=>	"icon-circle-medium",
+					"icon"			=>	"pwi-circle-medium",
 					"description"	=>	"Your YouTube username, not URL",
 					"prepend_url"	=>	"https://www.youtube.com/user/",
 					"_public"		=>	true,
@@ -98,7 +98,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"linkedin",
 					"name"			=>	"LinkedIn",
-					"icon"			=>	"icon-circle-medium",
+					"icon"			=>	"pwi-circle-medium",
 					"description"	=>	"URL of your LinkedIn Profile",
 					"prepend_url"	=>	"",
 					"_public"		=>	true,
@@ -106,7 +106,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"tripadvisor",
 					"name"			=>	"Trip Advisor",
-					"icon"			=>	"icon-circle-medium",
+					"icon"			=>	"pwi-circle-medium",
 					"description"	=>	"URL of your Tripadvisor Page",
 					"prepend_url"	=>	"",
 					"_public"		=>	true,
@@ -116,62 +116,62 @@ function pw_social_meta( $social_meta = array() ){
 		array(
 			"id"	=>	"contact",
 			"name"	=>	"Contact Info",
-			"icon"	=>	"icon-book",
+			"icon"	=>	"pwi-book",
 			"fields"	=>	array(
 				array(
 					"id"	=>	"email",
 					"name"	=>	"Email",
-					"icon"	=>	"icon-mail",
+					"icon"	=>	"pwi-mail",
 					),
 				array(
 					"id"	=>	"phone",
 					"name"	=>	"Phone Number",
-					"icon"	=>	"icon-phone",
+					"icon"	=>	"pwi-phone",
 					),
 				array(
 					"id"	=>	"phone_int",
 					"name"	=>	"International Phone",
-					"icon"	=>	"icon-phone",
+					"icon"	=>	"pwi-phone",
 					),
 				array(
 					"id"	=>	"fax",
 					"name"	=>	"Fax Number",
-					"icon"	=>	"icon-file-2",
+					"icon"	=>	"pwi-file-2",
 					),
 				array(
 					"id"	=>	"address_name",
 					"name"	=>	"Address Name",
-					"icon"	=>	"icon-globe",
+					"icon"	=>	"pwi-globe",
 					),
 				array(
 					"id"	=>	"address1",
 					"name"	=>	"Address",
-					"icon"	=>	"icon-globe",
+					"icon"	=>	"pwi-globe",
 					),
 				array(
 					"id"	=>	"address2",
 					"name"	=>	"Address Details",
-					"icon"	=>	"icon-globe",
+					"icon"	=>	"pwi-globe",
 					),
 				array(
 					"id"	=>	"postal_code",
 					"name"	=>	"Postal Code",
-					"icon"	=>	"icon-globe",
+					"icon"	=>	"pwi-globe",
 					),
 				array(
 					"id"	=>	"city",
 					"name"	=>	"City",
-					"icon"	=>	"icon-globe",
+					"icon"	=>	"pwi-globe",
 					),
 				array(
 					"id"	=>	"region",
 					"name"	=>	"Province/State",
-					"icon"	=>	"icon-globe",
+					"icon"	=>	"pwi-globe",
 					),
 				array(
 					"id"	=>	"country",
 					"name"	=>	"Country",
-					"icon"	=>	"icon-globe",
+					"icon"	=>	"pwi-globe",
 					),
 				),
 			),

@@ -1,4 +1,4 @@
-<div class="icon-md"><i class="icon-arrows-v"></i></div>
+<div class="icon-md"><i class="pwi-arrows-v"></i></div>
 <input
 	id="input-height"
 	size="3"

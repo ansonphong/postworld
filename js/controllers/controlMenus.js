@@ -460,24 +460,27 @@ postworld.controller('adminPostDropdown',
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
 ////////// ------------ ADMIN COMMENTS DROPDOWN ------------ //////////*/   
-var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $log, pwCommentsService, $pw) {
+
+postworld.controller( 'adminCommentDropdown',
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwCommentsService', '$pw',
+    function($scope, $rootScope, $location, $window, $log, pwCommentsService, $pw){
 
     var comment = $scope.child;
 
     $scope.menuOptions = [
         {
             name: "Edit",
-            icon:"icon-edit",
+            icon:"pwi-edit",
             action:"edit",
         },
         {
             name: "Flag",
-            icon:"icon-flag",
+            icon:"pwi-flag",
             action:"flag",
         },
         {
             name: "Trash",
-            icon:"icon-trash",
+            icon:"pwi-trash",
             action:"trash",
         }
     ];
@@ -538,4 +541,6 @@ var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $lo
         }
     };
 
-};
+
+
+}]);

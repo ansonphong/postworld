@@ -65,7 +65,7 @@
 
 			<!--
 			<span ng-show="post.link_url.length">
-				<span  style="float:right; padding:5px 10px;"><a href="{{post.link_url}}" target="_blank">View <i class="icon-external-link"></i></a></span>
+				<span  style="float:right; padding:5px 10px;"><a href="{{post.link_url}}" target="_blank">View <i class="pwi-external-link"></i></a></span>
 			</span>
 			-->
 		</div>

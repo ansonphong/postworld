@@ -14,7 +14,7 @@
 		ng-controller="pwStylesDataCtrl">
 
 		<h1>
-			<i class="icon-brush"></i>
+			<i class="pwi-brush"></i>
 			Styles
 		</h1>
 

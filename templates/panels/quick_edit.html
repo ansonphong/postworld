@@ -5,7 +5,7 @@
 
   <!-- LOADING -->
   <div ng-show="status=='loading'" style="text-align:center;">
-    <i class="icon-spinner icon-spin icon-large" style="font-size:48px;"></i>
+    <i class="pwi-spinner pwi-spin pwi-large" style="font-size:48px;"></i>
   </div>
 
 <!-- WRAPPER (Cloak until loaded) -->
@@ -33,10 +33,10 @@
 
           <button type="submit" ng-click="savePost()" class="btn btn-blue save pull-right">
             <span ng-switch="status">
-              <i ng-switch-default class="icon-save"></i>
-              <i ng-switch-when="saving" class="icon-spinner icon-spin"></i>
-              <i ng-switch-when="success" class="icon-ok"></i>
-              <i ng-switch-when="error" class="icon-warning-sign"></i>
+              <i ng-switch-default class="pwi-save"></i>
+              <i ng-switch-when="saving" class="pwi-spinner pwi-spin"></i>
+              <i ng-switch-when="success" class="pwi-ok"></i>
+              <i ng-switch-when="error" class="pwi-warning-sign"></i>
             </span>
             Save
           </button>
@@ -83,17 +83,17 @@
                   </label>
               </span>
               <span ng-show="post.link_url.length">
-                <span  style="float:right; padding:5px 10px;"><a href="{{post.link_url}}" target="_blank">View <i class="icon-external-link"></i></a></span>
+                <span  style="float:right; padding:5px 10px;"><a href="{{post.link_url}}" target="_blank">View <i class="pwi-external-link"></i></a></span>
               </span>
             </div>
 
 
             <!-- TRASH -->
-            <button class="red" ng-click="trashPost()"><i class="icon-trash"></i> Trash</button>
+            <button class="red" ng-click="trashPost()"><i class="pwi-trash"></i> Trash</button>
 
             <!-- CANCEL -->
             <button class="gray" ng-click="close()">
-              <i class="icon-remove"></i> Cancel
+              <i class="pwi-remove"></i> Cancel
             </button>
           
           </div>
@@ -106,7 +106,7 @@
                   <div ng-repeat="tag in tags_input_obj" class="tag">
                       <b>{{tag.name}}</b>
                       <button ng-click="removeTag('{{tag.slug}}')" class="gray">
-                      <i class="icon-remove"></i>
+                      <i class="pwi-remove"></i>
                     </button>
                   </div>
                   <div class="input-group">
@@ -115,7 +115,7 @@
                       typeahead="tag.slug as tag.name for tag in tagOptions | filter:$viewValue | limitTo:20"
                       typeahead-on-select="addTag()" class="form-control blue">
                     <span class="input-group-btn">
-                      <button class="btn btn-default blue" ng-click="newTag()"><i class="icon-plus"></i> New Tag</button>
+                      <button class="btn btn-default blue" ng-click="newTag()"><i class="pwi-plus"></i> New Tag</button>
                     </span>
                   </div>
               </div>
@@ -134,7 +134,7 @@
                 ng-options="value.slug as value.name for value in tax_terms.section">
                 <option value="">None</option>
               </select>
-              <i class="select-arrow icon-caret-down"></i>
+              <i class="select-arrow pwi-caret-down"></i>
             </div>
             <!-- TAXONOMY : TYPE -->
             <div class="labeled module">
@@ -143,7 +143,7 @@
                 ng-options="term.slug as term.name group by term.parent_name for term in tax_terms.hilight">
                 <option value="">None</option>
               </select>
-              <i class="select-arrow icon-caret-down"></i>
+              <i class="select-arrow pwi-caret-down"></i>
             </div>
             <!-- POST CLASS -->
             <div class="labeled module">
@@ -151,7 +151,7 @@
               <select class="labeled" ng-model="post.post_class"
                 ng-options="key as value for (key,value) in post_class_options">
               </select>
-              <i class="select-arrow icon-caret-down"></i>
+              <i class="select-arrow pwi-caret-down"></i>
             </div>
             <!-- POST AUTHOR OVER-RIDE -->
             <div class="labeled module">

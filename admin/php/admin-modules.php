@@ -274,8 +274,11 @@ function radio_image_select( $option_name, $options, $attributes = '' ){
 
 
 
-
 function i_select_featured_image_options( $vars ){
+	// DEPRECIATED
+	return pw_select_featured_image_options( $vars );
+}
+function pw_select_featured_image_options( $vars ){
 	/*
 	 *	$vars = array(
 	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'pwOptions.home.slider',
@@ -286,6 +289,10 @@ function i_select_featured_image_options( $vars ){
 
 ///// SLIDER OPTIONS : META FUNCTION /////
 function i_admin_slider_options( $vars = array() ){
+	// DEPRECIATED
+	return pw_admin_slider_options( $vars );
+}
+function pw_admin_slider_options( $vars = array() ){
 	// TODO:
 	// - Create a random ID for the controller instance
 	// - Pass in unique model prefix, to allow for multiple instances
@@ -367,9 +374,14 @@ function pw_feed_variable_options( $vars = array( "ng_model" => "selectedItem" )
 
 ///// SELECT ICON /////
 function i_select_icon_options( $vars ){
-	return pw_select_icon_options( $vars );
+	// DEPRECIATED
+	return pw_admin_select_icon( $vars );
 }
-function pw_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
+function pw_select_icon_options( $vars ){
+	// DEPRECIATED
+	return pw_admin_select_icon( $vars );
+}
+function pw_admin_select_icon( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
 	return pw_ob_admin_template( 'select-icon', $vars );
 }
 

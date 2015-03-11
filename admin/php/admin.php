@@ -241,7 +241,7 @@ function postworld_admin_icon_styles(){
 	<style>
 		#toplevel_page_postworld .dashicons-before:before{
 			content: "\e612";
-			font-family: "icomoon"
+			font-family: "Postworld-Icons"
 		}
 	</style>
 	<?

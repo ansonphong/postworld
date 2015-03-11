@@ -99,6 +99,7 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 	
 	extract( $vars );
 
+	//pw_set_microtimer('pw_live_feed-'.$feed_id);
 
 	///// DEFAULT FEED /////
 	$default_feed = array(
@@ -233,6 +234,8 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 		}
 
 	}
+
+	//pw_log_microtimer('pw_live_feed-'.$feed_id);
 
 	///// OUTPUT /////
 	if( $echo )

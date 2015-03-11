@@ -42,16 +42,16 @@ function pw_metabox_init_post_parent(){
     	$default_labels = array(
     		'title'			=>	'Post Parent',
     		'search'		=>	'Search Posts...',
-    		'search_icon'	=>	'icon-search',
-    		'loading_icon'	=>	'icon-spinner-2 icon-spin',
+    		'search_icon'	=>	'pwi-search',
+    		'loading_icon'	=>	'pwi-spinner-2 icon-spin',
             'edit'          =>  'Edit',
-            'edit_icon'     =>  'icon-edit',
+            'edit_icon'     =>  'pwi-edit',
             'view'          =>  'View',
-            'view_icon'     =>  'icon-arrow-up-right-thin',
+            'view_icon'     =>  'pwi-arrow-up-right-thin',
             'remove'        =>  'Remove',
-            'remove_icon'   =>  'icon-close',
+            'remove_icon'   =>  'pwi-close',
             'change'        =>  'Change',
-            'change_icon'   =>  'icon-edit',
+            'change_icon'   =>  'pwi-edit',
     		);
 
     	// Get labels from the site config

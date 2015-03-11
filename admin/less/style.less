@@ -51,6 +51,15 @@
 		outline:none;
 	}
 
+	.pw-invisible{
+		width:0;
+		height:0;
+		overflow:hidden;
+		position:absolute;
+		right:0;
+		opacity:0
+	}
+
 	hr.thin{
 		margin:5px 0;
 		border-top-color: #f2f2f2;
@@ -358,7 +367,7 @@
 
 
 /* Animated rotating icon */
-.icon-spin {
+.icon-spin, .pwi-spin {
   display: inline-block;
   -moz-animation: spin 2s infinite linear;
   -o-animation: spin 2s infinite linear;

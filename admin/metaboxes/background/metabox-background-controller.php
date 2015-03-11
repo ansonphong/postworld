@@ -56,7 +56,7 @@ global $post;
 			$scope.context = {
 				name: 'single',
 				label: 'Single',
-				icon: 'icon-circle-medium',
+				icon: 'pwi-circle-medium',
 			};
 
 	}]);

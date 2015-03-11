@@ -6,6 +6,45 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_set_microtimer( $timer_id ){
+	// Sets the microtime of a timer ID
+	global $pw_microtimer;
+	if( is_null( $pw_microtimer ) )
+		$pw_microtimer = array();
+
+	$pw_microtimer[ $timer_id ] = microtime();
+}
+
+function pw_get_microtimer( $timer_id ){
+	// Gets the microtime of a timer ID, in seconds
+	global $pw_microtimer;
+	$timer = _get( $pw_microtimer, $timer_id );
+	if( $timer_time !== false )
+		return pw_microtime_diff( $timer );//$current_time - $timer_time;
+	else
+		return false;
+}
+
+function pw_log_microtimer( $timer_id, $note = '' ){
+	// Logs the difference of time in seconds
+	$time = pw_get_microtimer( $timer_id );
+	if( !empty($note) )
+		$note = $note . ' : ';
+	pw_log( 'MICROTIMER : '.$timer_id.' : ' . $note . $time );
+}
+
+
+function pw_microtime_diff( $start, $end=NULL ) { 
+	if( !$end ) { 
+		$end= microtime(); 
+	} 
+	list($start_usec, $start_sec) = explode(" ", $start); 
+	list($end_usec, $end_sec) = explode(" ", $end); 
+	$diff_sec= intval($end_sec) - intval($start_sec); 
+	$diff_usec= floatval($end_usec) - floatval($start_usec); 
+	return floatval( $diff_sec ) + $diff_usec; 
+} 
+
 function pw_get_filename(){
 	return pathinfo( parse_url( $_SERVER['REQUEST_URI'] )['path'] )['filename'];
 }

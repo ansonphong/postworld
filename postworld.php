@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'	=>	"1.82",
+		'version'	=>	"1.84",
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -127,6 +127,7 @@ define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
 
 ////// UTILITIES //////
 include 'php/postworld_utilities.php';
+
 
 ////// API //////
 // Load API functions
@@ -266,6 +267,7 @@ include 'postworld-modules/backgrounds/postworld-backgrounds.php';
 include 'postworld-modules/sidebars/postworld-sidebars.php';
 include 'postworld-modules/layouts/postworld-layouts.php';
 include 'postworld-modules/iconsets/postworld-iconsets.php';
+include 'postworld-modules/taxonomy-meta/postworld-taxonomy-meta.php';
 
 ////// GET AJAX FUNCTIONS AND ACTION //////
 include 'php/postworld_ajax.php';
@@ -291,10 +293,8 @@ function pw_add_header_code() {
 	echo $output;
 }
 
-
 //To get user id from wordpress
 
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
-
 
 ?>

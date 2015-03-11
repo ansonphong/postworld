@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'Far-East-Icons';
-	src:url('fonts/Far-East-Icons.eot?ac8rkb');
-	src:url('fonts/Far-East-Icons.eot?#iefixac8rkb') format('embedded-opentype'),
-		url('fonts/Far-East-Icons.woff?ac8rkb') format('woff'),
-		url('fonts/Far-East-Icons.ttf?ac8rkb') format('truetype'),
-		url('fonts/Far-East-Icons.svg?ac8rkb#Far-East-Icons') format('svg');
+	src:url('fonts/Far-East-Icons.eot?hjgot7');
+	src:url('fonts/Far-East-Icons.eot?#iefixhjgot7') format('embedded-opentype'),
+		url('fonts/Far-East-Icons.woff?hjgot7') format('woff'),
+		url('fonts/Far-East-Icons.ttf?hjgot7') format('truetype'),
+		url('fonts/Far-East-Icons.svg?hjgot7#Far-East-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -23,35 +23,55 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.fe-tibetan-ah:before {
+.fe-conch:before {
+	content: "\e608";
+}
+
+.fe-shiva-sanskrit:before {
+	content: "\e609";
+}
+
+.fe-dharma-wheel:before {
 	content: "\e600";
+}
+
+.fe-hindu-swastika:before {
+	content: "\e604";
+}
+
+.fe-om:before {
+	content: "\e605";
+}
+
+.fe-buddha-mandarin:before {
+	content: "\e60a";
+}
+
+.fe-yin-yang:before {
+	content: "\e606";
 }
 
 .fe-lu-symbol:before {
 	content: "\e601";
 }
 
-.fe-endless-knot-2:before {
-	content: "\e602";
+.fe-three-realms-o:before {
+	content: "\e60b";
+}
+
+.fe-three-realms:before {
+	content: "\e60c";
+}
+
+.fe-tibetan-ah:before {
+	content: "\e607";
 }
 
 .fe-endless-knot:before {
 	content: "\e603";
 }
 
-.fe-dharma-wheel:before {
-	content: "\e604";
-}
-
-.fe-yin-yang:before {
-	content: "\e605";
-}
-
-.fe-hindu-swastika:before {
-	content: "\e606";
-}
-
-.fe-om:before {
-	content: "\e607";
+.fe-endless-knot-2:before {
+	content: "\e602";
 }
 

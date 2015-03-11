@@ -14,7 +14,7 @@
 	media-parent-callback="refreshOptions()"
 	media-model="images.<?php echo $vars['slug']; ?>"
 	media-model-array="false">
-	<i class="icon-image"></i>
+	<i class="pwi-image"></i>
 	Select <?php echo $vars['label']; ?>
 </button>
 
@@ -24,7 +24,7 @@
 		type="button"
 		class="button deletion"
 		ng-click="<?php echo $vars['ng_model']; ?> = null;">
-		<i class="icon-close"></i>
+		<i class="pwi-close"></i>
 		Remove <?php echo $vars['label']; ?>
 	</button>
 </span>

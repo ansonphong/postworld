@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?orzh7m');
-	src:url('fonts/Postworld-Icons.eot?#iefixorzh7m') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff?orzh7m') format('woff'),
-		url('fonts/Postworld-Icons.ttf?orzh7m') format('truetype'),
-		url('fonts/Postworld-Icons.svg?orzh7m#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?-olfw6x');
+	src:url('fonts/Postworld-Icons.eot?#iefix-olfw6x') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff?-olfw6x') format('woff'),
+		url('fonts/Postworld-Icons.ttf?-olfw6x') format('truetype'),
+		url('fonts/Postworld-Icons.svg?-olfw6x#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -287,10 +287,6 @@
 	content: "\e602";
 }
 
-.pwi-sun:before {
-	content: "\e6c8";
-}
-
 .pwi-moon:before {
 	content: "\e65e";
 }
@@ -375,6 +371,10 @@
 	content: "\e610";
 }
 
+.pwi-podcast:before {
+	content: "\e623";
+}
+
 .pwi-book-2:before {
 	content: "\e613";
 }
@@ -455,10 +455,6 @@
 	content: "\e62b";
 }
 
-.pwi-phone-hang-up:before {
-	content: "\e62c";
-}
-
 .pwi-address-book:before {
 	content: "\e62d";
 }
@@ -475,20 +471,12 @@
 	content: "\e630";
 }
 
-.pwi-location-fill:before {
-	content: "\e631";
-}
-
 .pwi-compass:before {
 	content: "\e632";
 }
 
 .pwi-map:before {
 	content: "\e633";
-}
-
-.pwi-map-o:before {
-	content: "\e634";
 }
 
 .pwi-history:before {
@@ -619,32 +607,12 @@
 	content: "\e663";
 }
 
-.pwi-hammer:before {
-	content: "\e667";
-}
-
 .pwi-wand:before {
 	content: "\e668";
 }
 
-.pwi-aid:before {
-	content: "\e669";
-}
-
-.pwi-stats:before {
-	content: "\e66c";
-}
-
 .pwi-bars:before {
 	content: "\e66d";
-}
-
-.pwi-bars-2:before {
-	content: "\e66e";
-}
-
-.pwi-gift:before {
-	content: "\e66f";
 }
 
 .pwi-fire:before {
@@ -661,10 +629,6 @@
 
 .pwi-trash:before {
 	content: "\e676";
-}
-
-.pwi-briefcase:before {
-	content: "\e677";
 }
 
 .pwi-target-2:before {
@@ -723,24 +687,12 @@
 	content: "\e685";
 }
 
-.pwi-brightness-medium:before {
-	content: "\e686";
-}
-
-.pwi-brightness-contrast:before {
-	content: "\e687";
-}
-
 .pwi-contrast:before {
 	content: "\e688";
 }
 
 .pwi-star-o:before {
 	content: "\e689";
-}
-
-.pwi-star-half:before {
-	content: "\e68a";
 }
 
 .pwi-star:before {
@@ -753,10 +705,6 @@
 
 .pwi-heart-o:before {
 	content: "\e68d";
-}
-
-.pwi-heart-broken:before {
-	content: "\e68e";
 }
 
 .pwi-warning:before {
@@ -781,14 +729,6 @@
 
 .pwi-plus:before {
 	content: "\e697";
-}
-
-.pwi-enter:before {
-	content: "\e698";
-}
-
-.pwi-exit:before {
-	content: "\e699";
 }
 
 .pwi-play-o:before {
@@ -907,32 +847,8 @@
 	content: "\e6b5";
 }
 
-.pwi-checkbox-checked:before {
-	content: "\e6b6";
-}
-
-.pwi-checkbox-unchecked:before {
-	content: "\e6b7";
-}
-
-.pwi-checkbox-partial:before {
-	content: "\e6b8";
-}
-
-.pwi-radio-checked:before {
-	content: "\e6b9";
-}
-
-.pwi-radio-unchecked:before {
-	content: "\e6ba";
-}
-
 .pwi-crop:before {
 	content: "\e6bb";
-}
-
-.pwi-scissors:before {
-	content: "\e6bc";
 }
 
 .pwi-table:before {
@@ -951,24 +867,12 @@
 	content: "\e6c2";
 }
 
-.pwi-console:before {
-	content: "\e6c3";
-}
-
-.pwi-github:before {
-	content: "\e6c9";
-}
-
 .pwi-github-circle:before {
 	content: "\e6cb";
 }
 
 .pwi-wordpress:before {
 	content: "\e6ce";
-}
-
-.pwi-wordpress-square:before {
-	content: "\e6cf";
 }
 
 .pwi-paypal:before {
@@ -1003,24 +907,12 @@
 	content: "\e6ea";
 }
 
-.pwi-adjust-brightness:before {
+.pwi-sun:before {
 	content: "\e665";
 }
 
 .pwi-atlas-o:before {
 	content: "\e6eb";
-}
-
-.pwi-flow-switch:before {
-	content: "\e6ec";
-}
-
-.pwi-flow-parallel:before {
-	content: "\e6ed";
-}
-
-.pwi-flow-merge:before {
-	content: "\e6ee";
 }
 
 .pwi-cloud:before {
@@ -1069,10 +961,6 @@
 
 .pwi-atom:before {
 	content: "\e6e0";
-}
-
-.pwi-pill:before {
-	content: "\e6e1";
 }
 
 .pwi-search:before {
@@ -1321,10 +1209,6 @@
 
 .pwi-thumbs-down:before {
 	content: "\f165";
-}
-
-.pwi-skype:before {
-	content: "\f17e";
 }
 
 .pwi-plus-square-o:before {

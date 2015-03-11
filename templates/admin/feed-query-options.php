@@ -47,7 +47,7 @@
 			tooltip="<?php ___('query.offset_info'); ?>"
 			tooltip-popup-delay="333">
 			<?php ___('query.offset'); ?>
-			<i class="icon-info-circle"></i>
+			<i class="pwi-info-circle"></i>
 		</label>
 		<input
 			id="query-offset"
@@ -89,7 +89,7 @@
 			tooltip="<?php ___('query.posts_per_page_info'); ?>"
 			tooltip-popup-delay="333">
 			<?php ___('query.posts_per_page'); ?>
-			<i class="icon-info-circle"></i>
+			<i class="pwi-info-circle"></i>
 		</label>
 		<input
 			id="query-posts_per_page"
@@ -102,7 +102,7 @@
 		<label
 			for="query-event_filter"
 			class="inner">
-			<i class="icon-calendar"></i>
+			<i class="pwi-calendar"></i>
 			<?php ___('query.event_filter'); ?>
 		</label>
 		<select
@@ -121,7 +121,7 @@
 		<label
 			for="query-post_parent_from"
 			class="inner">
-			<i class="icon-flow-children"></i>
+			<i class="pwi-flow-children"></i>
 			<?php ___('query.post_parent'); ?>
 		</label>
 		<select
@@ -191,7 +191,7 @@
 		<label
 			for="query-author_from"
 			class="inner">
-			<i class="icon-user"></i>
+			<i class="pwi-user"></i>
 			<?php ___('query.author_from'); ?>
 		</label>
 		<select
@@ -226,7 +226,7 @@
 
 <button
 	ng-click="addTaxQuery(<?php echo $vars['ng_model'] ?>.query)">
-	<i class="icon-plus"></i> Taxonomy Query
+	<i class="pwi-plus"></i> Taxonomy Query
 </button>
 
 <hr class="thin">
@@ -256,7 +256,7 @@
 		<div class="pw-col-3">
 
 			<label for="select-feature_term" class="inner">
-				<i class="icon-search"></i> term
+				<i class="pwi-search"></i> term
 			</label>
 			<select
 				class="labeled"
@@ -292,7 +292,7 @@
 		<div class="pw-col-3">
 			<button
 				ng-click="removeTaxQuery(<?php echo $vars['ng_model'] ?>.query, taxQuery )">
-				<i class="icon-close-thin"></i>
+				<i class="pwi-close-thin"></i>
 			</button>
 		</div>
 	</div>

@@ -3,9 +3,11 @@
 	$pwInject = $pw['inject'];
 	// Get icons if they're defined
 	$icons = _get( $vars, 'icons' );
+	$controller_id = 'iconDataCtrl_'.pw_random_string();
 ?>
 <script>
-	postworldAdmin.controller( 'iconDataCtrl', [ '$scope', 'pwIconsets', '$log',
+	// TODO : MAKE MODAL WINDOW FOR SELECTING ICONS, PASS IN DATA
+	postworldAdmin.controller( '<?php echo $controller_id ?>', [ '$scope', 'pwIconsets', '$log',
 		function($scope, $pwIconsets, $log){
 		$scope.customIconOptions = <?php echo json_encode( $icons ) ?>;
 		$scope.iconsets = $pwIconsets.array();
@@ -17,13 +19,17 @@
 	dropdown
 	class="dropdown"
 	pw-ui
-	ng-controller="iconDataCtrl">
+	ng-controller="<?php echo $controller_id ?>">
 	<!-- SELECTED ITEM -->
 	<button
 		type="button"
 		dropdown-toggle
 		class="area-select area-select-icon">
-		<i ng-show="uiBool(<?php echo $vars['ng_model']; ?>)" class="{{ <?php echo $vars['ng_model']; ?> }} <?php if( $vars['icon_spin'] == true ) echo 'icon-spin' ?>"></i>
+		<i
+			ng-show="uiBool(<?php echo $vars['ng_model']; ?>)"
+			ng-class="<?php echo $vars['ng_model']; ?>"
+			class="<?php if( $vars['icon_spin'] == true ) echo 'icon-spin' ?>">
+		</i>
 		<span class="select-icon-none" ng-hide="uiBool(<?php echo $vars['ng_model']; ?>)">None</span>
 	</button>
 	<!-- MENU -->
@@ -59,9 +65,11 @@
 	</ul>
 
 	<button
-		class="select-icon-none"
+		class="button select-icon-none"
+		style="vertical-align:top;"
 		ng-show="uiBool(<?php echo $vars['ng_model']; ?>)"
-		ng-click="<?php echo $vars['ng_model']; ?> = false">
-		<span><i class="icon-close"></i></span>
+		ng-click="<?php echo $vars['ng_model']; ?> = ''"
+		prevent-default-click>
+		<span><i class="pwi-close"></i></span>
 	</button>
 </span>

@@ -13,7 +13,7 @@
 			<!-- DATE DROPDOWN -->
 			<span dropdown class="time dropdown">
 				<button dropdown-toggle class="button">
-					<i class="icon-calendar"></i>
+					<i class="pwi-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
 				<ul
@@ -34,7 +34,7 @@
 				class="time dropdown"
 				ng-hide="post.post_meta[ eventKey ].date.all_day">
 				<button dropdown-toggle class="button">
-					<i class="icon-clock"></i>
+					<i class="pwi-clock"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'shortTime' }}
 				</button>
 				<ul class="dropdown-menu pull-left" stop-propagation-click>
@@ -64,7 +64,7 @@
 			<!-- DATE DROPDOWN -->
 			<span dropdown class="time dropdown">
 				<button dropdown-toggle class="button">
-					<i class="icon-calendar"></i>
+					<i class="pwi-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
 				<ul class="dropdown-menu pull-left" stop-propagation-click>
@@ -83,7 +83,7 @@
 				class="time dropdown"
 				ng-hide="post.post_meta[ eventKey ].date.all_day">
 				<button dropdown-toggle class="button">
-					<i class="icon-clock"></i>
+					<i class="pwi-clock"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'shortTime' }}
 				</button>
 				<ul class="dropdown-menu pull-left" stop-propagation-click>
@@ -171,7 +171,7 @@
 					name="search"
 					type="button"
 					ng-click="uiToggleView('searchInput'); uiFocusElement('#searchBarInput')">
-					<i class="icon-search"></i> Search Locations
+					<i class="pwi-search"></i> Search Locations
 				</button>
 				<h4 class="float-left unit">
 					<i>Autocomplete Geocode</i>
@@ -184,10 +184,10 @@
 				ng-show="uiShowView('searchInput')"
 				style="position:relative;">
 				<label for="location" class="inner inner-right unit transparent">
-					<i ng-show="loadingLocations" class="icon-spinner-2 icon-spin"></i>
+					<i ng-show="loadingLocations" class="pwi-spinner-2 icon-spin"></i>
 				</label>
 				<label for="location" class="input-icon">
-					<i class="icon-search"></i>
+					<i class="pwi-search"></i>
 				</label>
 				<input
 					id="searchBarInput"
@@ -205,7 +205,7 @@
 					class="button"
 					type="button"
 					ng-click="toggleView('searchInput');">
-					<i class="icon-close"></i>
+					<i class="pwi-close"></i>
 				</button>-->
 			</div>
 		</div>
@@ -306,7 +306,7 @@
 			<button
 				type='button'
 				disabled>
-				<i class="icon-clock"></i>
+				<i class="pwi-clock"></i>
 				Timezone : {{ post.post_meta[ eventKey ].timezone.time_zone_name }}
 			</button>
 		</div>

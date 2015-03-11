@@ -49,7 +49,7 @@ $i_style_language = array(
 	///// META DATA /////
 	"meta"	=>	array(
 		"element"	=>	array(
-			"icon"	=>	"icon-code",
+			"icon"	=>	"pwi-code",
 			"label"	=>	array(
 				"en"	=>	"Elements",
 				"jp"	=>	"要素",
@@ -62,7 +62,7 @@ $i_style_language = array(
 				),
 			),
 		"class"	=>	array(
-			"icon"	=>	"icon-asterisk",
+			"icon"	=>	"pwi-asterisk",
 			"label"	=>	array(
 				"en"	=>	"Classes",
 				"jp"	=>	"要素",
@@ -75,7 +75,7 @@ $i_style_language = array(
 				),
 			),
 		"var"	=>	array(
-			"icon"	=>	"icon-gear",
+			"icon"	=>	"pwi-gear",
 			"label"	=>	array(
 				"en"	=>	"Variables",
 				"jp"	=>	"要素",

@@ -139,7 +139,7 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 			///// LAUNCH THE MODAL /////
 			//$log.debug( 'MODAL META : ', meta );
-			$log.debug( 'modalObj : ', modalObj );
+			$log.debug( '$modal.open : modalObj : ', modalObj );
 
 			var modalInstance = $modal.open( modalObj );
 
