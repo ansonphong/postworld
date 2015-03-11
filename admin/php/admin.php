@@ -129,6 +129,16 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_iconsets',
 			);
 
+
+	$menu['submenu']['cache'] = array(
+		'parent_slug' => $pw_slug,
+		'page_title' => 'Cache',
+		'menu_title' => 'Cache',
+		'capability' => 'manage_options',
+		'menu_slug' => $pw_slug.'-cache',
+		'function' => 'postworld_options_cache',
+		);
+
 	//echo json_encode($pw['modules']);
 
 	///// APPLY FILTERS /////

@@ -23,7 +23,8 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'	=>	"1.84",
+		'version'		=>	1.84,
+		'db_version'	=>	1.1,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -117,6 +118,8 @@ define( 'PW_AVATAR_KEY',	'pw_avatar', 	true ); // Case in-sensitive
 ///// DEFINE PRINT FILTERS /////
 define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
 
+///// DB VERSION /////
+define( 'PW_DB_VERSION', 'postworld-db-version' );
 
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
@@ -162,13 +165,10 @@ require_once 'lib/h2o/h2o.php';
 
 // GLOBAL VARIABLES
 global $pw_settings;
-global $postworld_version;
-global $postworld_db_version;
 global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
 
-$postworld_db_version = 0;
 
 //global $pw_prefix;
 //$pw_prefix = "postworld_";

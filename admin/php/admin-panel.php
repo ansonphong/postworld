@@ -74,6 +74,13 @@ function postworld_options_iconsets(){
 	include 'page-iconsets.php';
 }
 
+///// CACHE SCREEN /////
+function postworld_options_cache(){
+	global $theme_admin;
+	i_include_scripts();
+	include 'page-cache.php';
+}
+
 /*
 ///// DISPLAY MESSAGES /////
 function i_display_messages($message = null){
