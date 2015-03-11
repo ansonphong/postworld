@@ -7,42 +7,42 @@ function pw_registered_modules( $format = 'arrays' ){
 		array(
 			'name'			=>	'Site Options',
 			'slug'			=>	'site',
-			'icon'			=>	'icon-globe',
+			'icon'			=>	'pwi-globe',
 			'description'	=>	'',
 			),
 
 		array(
 			'name'			=>	'Layouts',
 			'slug'			=>	'layouts',
-			'icon'			=>	'icon-th-large',
+			'icon'			=>	'pwi-th-large',
 			'description'	=>	'',
 			),
 
 		array(
 			'name'	=>	'Sidebars',
 			'slug'	=>	'sidebars',
-			'icon'	=>	'icon-map',
+			'icon'	=>	'pwi-map',
 			'description'	=>	'',
 			),
 
 		array(
 			'name'			=>	'Styles',
 			'slug'			=>	'styles',
-			'icon'			=>	'icon-brush',
+			'icon'			=>	'pwi-brush',
 			'description'	=>	'',
 			),
 		
 		array(
 			'name'	=>	'Social',
 			'slug'	=>	'social',
-			'icon'	=>	'icon-heart',
+			'icon'	=>	'pwi-heart',
 			'description'	=>	'',
 			),
 
 		array(
 			'name'	=>	'Feeds',
 			'slug'	=>	'feeds',
-			'icon'	=>	'icon-file',
+			'icon'	=>	'pwi-file',
 			'description'	=>	'',
 			),
 
@@ -50,7 +50,7 @@ function pw_registered_modules( $format = 'arrays' ){
 		array(
 			'name'	=>	'Term Feeds',
 			'slug'	=>	'term-feeds',
-			'icon'	=>	'icon-tag',
+			'icon'	=>	'pwi-tag',
 			'description'	=>	'',
 			),
 		*/
@@ -58,14 +58,14 @@ function pw_registered_modules( $format = 'arrays' ){
 		array(
 			'name'	=>	'Backgrounds',
 			'slug'	=>	'backgrounds',
-			'icon'	=>	'icon-paint-format',
+			'icon'	=>	'pwi-paint-format',
 			'description'	=>	'',
 			),
 
 		array(
 			'name'	=>	'Iconsets',
 			'slug'	=>	'iconsets',
-			'icon'	=>	'icon-circle-medium',
+			'icon'	=>	'pwi-circle-medium',
 			'description'	=>	'',
 			),
 

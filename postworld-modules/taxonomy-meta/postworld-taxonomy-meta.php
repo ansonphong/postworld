@@ -1,12 +1,36 @@
 <?php
-
+////////// INIT TAXONOMY METADATA //////////
+// Load the is_plugin_active() function
+include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 // If the Postworld taxonomy-meta module is enabled
 if( pw_module_is_enabled('taxonomy-meta') &&
 	// And the Taxonomy Metadata class doesn't exist
-	!class_exists('Taxonomy_Metadata') )
+	!class_exists('Taxonomy_Metadata') &&
+	// And the Taxonomy Metadata plugin isn't activated
+	!is_plugin_active( 'taxonomy-metadata/taxonomy-metadata.php' ) ){
+
 	// Include the Taxonomy Metadata core
 	include "taxonomy-metadata.php";
 
+	///// CHECK IF TABLE EXISTS /////
+	global $wpdb;
+	$tables = $wpdb->get_results("show tables like '{$wpdb->prefix}taxonomymeta'");
+	// If table doesn't exist
+	if (!count($tables)){
+		// Create the table
+	    postworld_activate_taxonomy_meta();
+	}
+}
+
+
+///// ACTIVATE THEME /////
+// When switching to the theme with Postworld activated
+add_action("after_switch_theme", 'postworld_activate_taxonomy_meta');
+// Create the database tables 
+function postworld_activate_taxonomy_meta(){
+	$taxonomy_metadata = new Taxonomy_Metadata;
+	$taxonomy_metadata->activate();
+}
 
 // Add Core supported input types
 add_filter( 'pw_admin_taxonomy_meta_input_types', 'pw_admin_core_taxonomy_meta_input_types' );

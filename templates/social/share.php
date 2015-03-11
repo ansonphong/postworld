@@ -1,7 +1,6 @@
 <?php
 	$s = pw_get_social_share_meta( $vars );
 	$meta = pw_get_social_media_meta();
-	//pw_log($vars);
 ?>
 <?php foreach( $s as $key => $value ): ?>
 	<a

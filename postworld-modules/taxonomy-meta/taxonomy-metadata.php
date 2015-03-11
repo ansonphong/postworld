@@ -1,21 +1,4 @@
 <?php
-/*
-function theme_tax_meta_active(){
-	// Return true if the taxonomy metadata plugin is activated
-	// Otherwise return false
-	include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	return is_plugin_active( 'taxonomy-metadata/taxonomy-metadata.php' ); 
-}
-*/
-
-///// ACTIVATE FOR THEME /////
-add_action("after_switch_theme", 'postworld_activate_taxonomy_meta');
-function postworld_activate_taxonomy_meta(){
-	$taxonomy_metadata = new Taxonomy_Metadata;
-	$taxonomy_metadata->activate();
-}
-
-
 //////////////////////////////////////////////////////////////////////////
 
 /*

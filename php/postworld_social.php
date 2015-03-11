@@ -15,7 +15,7 @@ function pw_get_social_media_meta(){
 
 	$social_media_meta = array(
 		'twitter'	=>	array(
-			'icon'			=>	'icon-twitter-square',
+			'icon'			=>	'pwi-twitter-square',
 			'name'			=>	'Twitter',
 			'label'			=>	'On Twitter',
 			'share_label'	=>	'Share On Twitter',
@@ -23,7 +23,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	'http://twitter.com/',
 			),
 		'facebook'	=>	array(
-			'icon'			=>	'icon-facebook-square',
+			'icon'			=>	'pwi-facebook-square',
 			'name'			=>	'Facebook',
 			'label'			=>	'On Facebook',
 			'share_label'	=>	'Share On Facebook',
@@ -31,7 +31,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'instagram'	=>	array(
-			'icon'			=>	'icon-instagram-square',
+			'icon'			=>	'pwi-instagram-square',
 			'name'			=>	'Instagram',
 			'label'			=>	'On Instagram',
 			'share_label'	=>	'Share On Instagram',
@@ -39,7 +39,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	'http://instagram.com/'
 			),
 		'google_plus'	=>	array(
-			'icon'			=>	'icon-google-plus-square',
+			'icon'			=>	'pwi-google-plus-square',
 			'name'			=>	'Google+',
 			'label'			=>	'On Google+',
 			'share_label'	=>	'Share On Google+',
@@ -47,7 +47,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'pinterest'	=>	array(
-			'icon'			=>	'icon-pinterest-square',
+			'icon'			=>	'pwi-pinterest-square',
 			'name'			=>	'Pinterest',
 			'label'			=>	'On Pinterest',
 			'share_label'	=>	'Share On Pinterest',
@@ -55,7 +55,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'reddit'	=>	array(
-			'icon'			=>	'icon-reddit-square',
+			'icon'			=>	'pwi-reddit-square',
 			'name'			=>	'Reddit',
 			'label'			=>	'On Reddit',
 			'share_label'	=>	'Share On Reddit',
@@ -63,7 +63,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'deviant_art'	=>	array(
-			'icon'			=>	'icon-circle-medium',
+			'icon'			=>	'pwi-circle-medium',
 			'name'			=>	'Deviant Art',
 			'label'			=>	'On Deviant Art',
 			'share_label'	=>	'Share On Deviant Art',
@@ -71,7 +71,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'flickr'	=>	array(
-			'icon'			=>	'icon-circle-medium',
+			'icon'			=>	'pwi-circle-medium',
 			'name'			=>	'Flickr',
 			'label'			=>	'On Flickr',
 			'share_label'	=>	'Share On Flickr',
@@ -79,7 +79,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'youtube'	=>	array(
-			'icon'			=>	'icon-circle-medium',
+			'icon'			=>	'pwi-circle-medium',
 			'name'			=>	'YouTube',
 			'label'			=>	'On YouTube',
 			'share_label'	=>	'Share On YouTube',
@@ -87,7 +87,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'vimeo'	=>	array(
-			'icon'			=>	'icon-circle-medium',
+			'icon'			=>	'pwi-circle-medium',
 			'name'			=>	'Vimeo',
 			'label'			=>	'On Vimeo',
 			'share_label'	=>	'Share On Vimeo',
@@ -95,7 +95,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'website'	=>	array(
-			'icon'			=>	'icon-globe',
+			'icon'			=>	'pwi-globe',
 			'name'			=>	'Website',
 			'label'			=>	'Personal Website',
 			'share_label'	=>	'Visit Personal Website',
