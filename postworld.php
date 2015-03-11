@@ -267,6 +267,7 @@ include 'postworld-modules/backgrounds/postworld-backgrounds.php';
 include 'postworld-modules/sidebars/postworld-sidebars.php';
 include 'postworld-modules/layouts/postworld-layouts.php';
 include 'postworld-modules/iconsets/postworld-iconsets.php';
+include 'postworld-modules/taxonomy-meta/postworld-taxonomy-meta.php';
 
 ////// GET AJAX FUNCTIONS AND ACTION //////
 include 'php/postworld_ajax.php';

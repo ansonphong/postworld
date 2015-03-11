@@ -374,9 +374,14 @@ function pw_feed_variable_options( $vars = array( "ng_model" => "selectedItem" )
 
 ///// SELECT ICON /////
 function i_select_icon_options( $vars ){
-	return pw_select_icon_options( $vars );
+	// DEPRECIATED
+	return pw_admin_select_icon( $vars );
 }
-function pw_select_icon_options( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
+function pw_select_icon_options( $vars ){
+	// DEPRECIATED
+	return pw_admin_select_icon( $vars );
+}
+function pw_admin_select_icon( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
 	return pw_ob_admin_template( 'select-icon', $vars );
 }
 
