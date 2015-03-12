@@ -310,15 +310,30 @@ function pw_get_live_feed ( $vars ){
 
 }
 
-function pw_feed_outline ( $pw_query_args ){
-	// • Uses pw_query() method to generate an array of post_ids based on the $pw_query_args
+function pw_feed_outline ( $query ){
+	// Generates an array of post_ids based on the $query
 
-	$pw_query_args["fields"] = "ids";
-	$query_results = pw_query( $pw_query_args );
+	///// CACHING LAYER /////
+	$cache_hash = hash( 'sha256', json_encode( $query ) );
+	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+	if( !empty( $get_cache ) ){
+		return json_decode($get_cache['cache_content'], true);
+	}
+
+	///// GET FEED OUTLINE /////
+	$query["fields"] = "ids";
+	$query_results = pw_query( $query );
 	$post_ids = (array) $query_results->posts;
+	$post_ids = pw_sanitize_numeric_array( $post_ids );
 
-	return pw_sanitize_numeric_array( $post_ids ); // Array of post IDs
-	//return array( 220034, 216613 );
+	///// CACHING LAYER /////
+	pw_set_cache( array(
+		'cache_type'	=>	'feed-outline',
+		'cache_hash' 	=> 	$cache_hash,
+		'cache_content'	=>	json_encode($post_ids),
+		));
+
+	return $post_ids;
 }
 
 

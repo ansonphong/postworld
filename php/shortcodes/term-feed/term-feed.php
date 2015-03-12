@@ -307,17 +307,6 @@ function pw_get_term_feed( $vars ){
 
 }
 
-///// CLEAR CACHES /////
-// When adding or updating posts
-add_action( 'wp_insert_post', 'pw_delete_cache_type_term_feed' );
-add_action( 'update_postmeta', 'pw_delete_cache_type_term_feed' );
-// When adding or updating terms
-add_action( 'created_term', 'pw_delete_cache_type_term_feed' );
-add_action( 'edited_term', 'pw_delete_cache_type_term_feed' );
-
-function pw_delete_cache_type_term_feed(){
-	pw_delete_cache_type( 'term-feed' );
-}
 
 
 ?>
