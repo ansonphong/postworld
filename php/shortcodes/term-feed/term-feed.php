@@ -1,6 +1,4 @@
 <?php
-
-
 ////////// POSTWORLD TERMS FEED //////////
 function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 
