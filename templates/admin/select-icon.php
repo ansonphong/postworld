@@ -85,6 +85,7 @@
 			<?php
 			///// CUSTOM ICONS ARRAY /////
 			if( is_array( $icons ) ) : ?>
+				<ul class="iconset">
 					<li
 						class="select-icon"
 						ng-repeat="icon in customIconOptions"
@@ -92,6 +93,7 @@
 						<i
 							class="{{ icon }}"></i>
 					</li>
+				</ul>
 			<?php endif; ?>
 
 			<?php
