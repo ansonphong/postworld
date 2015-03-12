@@ -11,7 +11,6 @@
  *	$args = json_decode($args_text);
  * */
 
-
 postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
 	return{
 		scope:{
@@ -24,8 +23,6 @@ postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log,
 
 	}
 }]);
-
-
 
 postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	function ( $resource, $q, $log, $window, $pw, $_ ) {	  

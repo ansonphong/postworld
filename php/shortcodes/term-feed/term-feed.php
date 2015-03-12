@@ -1,4 +1,6 @@
 <?php
+
+
 ////////// POSTWORLD TERMS FEED //////////
 function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 
@@ -166,6 +168,8 @@ function pw_get_term_feed( $vars ){
 
 	 */
 
+	//pw_set_microtimer( 'termFeed' );
+
 	// Set defaults
 	$default_vars = array(
 		'terms'	=>	array(
@@ -191,6 +195,14 @@ function pw_get_term_feed( $vars ){
 
 	// Localize Options
 	$include_galleries = (bool) _get( $vars, 'options.include_galleries' );
+
+	///// CACHING LAYER /////
+	$cache_hash = hash( 'sha256', json_encode( $vars ) );
+	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+	if( !empty( $get_cache ) ){
+		//pw_log_microtimer( 'termFeed', 'CACHED' );
+		return json_decode($get_cache['cache_content'], true);
+	}
 
 	////////// GET TERMS //////////
 	// Get the terms with get_terms()
@@ -252,7 +264,6 @@ function pw_get_term_feed( $vars ){
 
 		}
 
-
 	///// OPTIONS OUTPUT /////
 	if( isset($vars['options']['output']) ){
 
@@ -285,8 +296,30 @@ function pw_get_term_feed( $vars ){
 		}
 	}
 
+	///// CACHING LAYER /////
+	pw_set_cache( array(
+		'cache_type'	=>	'term-feed',
+		'cache_hash' 	=> 	$cache_hash,
+		'cache_content'	=>	json_encode($output),
+		));
+
+	//pw_log_microtimer( 'termFeed', 'NON-CACHED' );
+
 	return $output;
 
 }
+
+///// CLEAR CACHES /////
+// When adding or updating posts
+add_action( 'wp_insert_post', 'pw_delete_cache_type_term_feed' );
+add_action( 'update_postmeta', 'pw_delete_cache_type_term_feed' );
+// When adding or updating terms
+add_action( 'created_term', 'pw_delete_cache_type_term_feed' );
+add_action( 'edited_term', 'pw_delete_cache_type_term_feed' );
+
+function pw_delete_cache_type_term_feed(){
+	pw_delete_cache_type( 'term-feed' );
+}
+
 
 ?>

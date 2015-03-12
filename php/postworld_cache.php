@@ -46,6 +46,25 @@ function pw_set_cache( $data ){
 	global $pw;
 	global $wpdb;
 	
+	///// CONTENT /////
+	// Content is required
+	$cache_content = _get( $data, 'cache_content' );
+	if( empty( $cache_content ) )
+		return false;
+
+	///// HASH /////
+	// Hash is required to validate the cache content
+	$cache_hash = _get( $data, 'cache_hash' );
+	if( empty( $cache_hash ) )
+		return false;
+
+	///// SETUP DATA /////
+	$defaultData = array(
+		'cache_type'	=>	'undefined',
+		'cache_name'	=>	pw_random_string(),
+		);
+	$data = array_replace_recursive($defaultData, $data);
+
 	///// UNIQUE CACHE NAME & CACHE HASH /////
 	// Ensure that the data entered doesn't have have the same name or hash as data already cached
 	$unique_keys = array( 'cache_name', 'cache_hash' );
