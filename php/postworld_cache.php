@@ -1,52 +1,74 @@
 <?php
 
-
-function pw_get_cache( $vars ){
+function pw_get_cache( $fields, $operator = 'AND' ){
 	// Gets the first matching row from the cache table
 	// Available sub-params are 'cache_name' and 'cache_hash'
 
 	global $wpdb;
 	$table_name = $wpdb->pw_prefix . 'cache';
+	$supported_fields = array( 'cache_name', 'cache_hash' );
+	$suported_operators = array( 'AND', 'OR' );
 
-	$fields = array( 'cache_name', 'cache_hash' );
+	$count = count( $fields );
+	if( empty($count) )
+		return false;
 
-	$where = 'cache_name = "phong"';
+	if( !in_array( $operator, $suported_operators ) )
+		$operator = 'AND';
+	
+	///// WHERE /////
+	// Generate where query clause
+	$where = '';
+	$i = 1;
+	$last = false;
+	foreach( $fields as $key => $value ){
+		if( $i == $count )
+			$last = true;
+		if( in_array( $key, $supported_fields ) ){
+			$where .= $key.'="'.$value.'"';
+			if( !$last )
+				$where .= ' '.$operator.' ';
+		}
+		$i++;
+	}
 
-	return $wpdb->get_row('
+	$query = '
 		SELECT *
 		FROM '.$table_name.'
-		WHERE '.$where.'
-		', 'ARRAY_A');
+		WHERE '.$where;
+
+	return $wpdb->get_row( $wpdb->prepare( $query ) , 'ARRAY_A');
 
 }
 
 function pw_set_cache( $data ){
-	// 
-
-}
-
-function pw_insert_cache( $data ){
-	// Low level function, avoid using in production
 
 	global $pw;
 	global $wpdb;
+	
+	///// UNIQUE CACHE NAME & CACHE HASH /////
+	// Ensure that the data entered doesn't have have the same name or hash as data already cached
+	$unique_keys = array( 'cache_name', 'cache_hash' );
+	// Iterate through each unique key
+	foreach( $unique_keys as $key ){
+		// Key associated value
+		$value = _get( $data, $key );
+		// If there is a cache name
+		if( !empty( $value ) ){
+			// Delete all instances of that cache name
+			pw_delete_cache( array( $key => $value ) );
+		}
+	}
+
+	///// INSERT /////
 	return $wpdb->insert(
 		$wpdb->pw_prefix . 'cache',
 		$data
 		);
-}
-
-
-function pw_update_cache( $data, $where ){
 
 }
-
 
 function pw_delete_cache( $where ){
-
-	if( !current_user_can('manage_options') )
-		return false;
-
 	global $pw;
 	global $wpdb;
 	return $wpdb->delete(
@@ -64,7 +86,7 @@ function pw_delete_cache_type( $type ){
 }
 
 function pw_delete_cache_name( $name ){
-	// Deletes coorosponding cache types
+	// Deletes coorosponding cache names
 	$where = array(
 		'cache_name' => $name,
 		);
@@ -72,10 +94,23 @@ function pw_delete_cache_name( $name ){
 }
 
 
-
 function pw_get_cache_hash_content( $cache_hash ){
 	// Gets the first matching row with the given hash
 	// And returns the content field
+}
+
+
+function pw_get_cache_types_readout(){
+	// Returns an array containing the counts of each of the cache types
+	// ie. [{"cache_type":"feed","type_count":"4"},{"cache_type":"term-feed","type_count":"2"}]
+	global $wpdb;
+	$table_name = $wpdb->pw_prefix . 'cache';
+	$query = $wpdb->prepare('
+		SELECT cache_type, count(distinct cache_hash) as type_count
+		FROM '.$table_name.'
+		GROUP BY cache_type
+	');
+	return $wpdb->get_results($query);
 }
 
 

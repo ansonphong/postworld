@@ -22,11 +22,13 @@ Table name : __wp_postworld_cache__
 - __cache_content__
     + The actual content in the cache, such as a JSON string
 
+-----------
 ## Methods
+-----------
 
-### pw_insert_cache( *$data* )
+### pw_set_cache( *$data* )
 - Inserts data into the cache table
-- Low level function, avoid using in production
+- Deletes other cache entries with the same `cache_name` or `cache_hash`
 
 ```php
 $data = array(
@@ -36,12 +38,6 @@ $data = array(
     'cache_content' =>  [string]  
 )
 ```
-
-### pw_set_cache( *$data* )
-- Inserts data into the cache
-- Check if the cache name or hash is already in-use
-- If name is in use, replace that row
-- If hash is in use, return
 
 
 ### pw_delete_cache( *$data* )
@@ -58,7 +54,7 @@ $data = array(
 ```
 
 
-### pw_get_cache( *$vars* )
+### pw_get_cache( *$vars*, *$operator* )
 - Gets first matching row from the cache table
 
 ```php
@@ -68,6 +64,16 @@ $vars = array(
 )
 ```
 
+#### Parameters
+__$vars__ : *array*
+- Supported keys:
+    + __cache_hash__
+    + __cache_name__
+
+__$operator__ : *string*
+- Options:
+    + __AND__ *(default)*
+    + __OR__
 
 ### pw_set_feed_cache( *$vars* )
 - Preprocesses and saves the feed in the cache

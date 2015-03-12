@@ -1,57 +1,81 @@
+<?php
+	// DEV TEST CACHE INPUT
+	$data = array(
+		'cache_type' => 'test',
+		'cache_name' => pw_random_string(8),
+		'cache_hash' => pw_random_hash(16),
+		'cache_content' => 'JSON'
+		);
+	//pw_set_cache( $data );
+?>
+
 <script type="text/javascript">
 	//////////////////// DATA CONTROLLER ////////////////////
 	postworldAdmin.controller('pwCacheDataCtrl',
-		[ '$scope', '$window', '_',
-		function( $scope, $window, $_ ){
-
+		[ '$scope', '$window', '_', 'pwData',
+		function( $scope, $window, $_, $pwData ){
+		$scope.cacheTypeReadout = <?php echo json_encode(pw_get_cache_types_readout()); ?>;
 	}]);
 </script>
 
 <div
 	pw-admin
-	pw-admin-iconsets
+	pw-admin-cache
 	ng-controller="pwCacheDataCtrl"
 	ng-cloak
 	class="postworld">
 
 	<h1>
-		<i class="pwi-circle-medium"></i>
+		<i class="pwi-database"></i>
 		Cache
 	</h1>
 
 	<hr class="thick">
 
-	<?php
-
-	$data = array(
-		'cache_type' => 'test',
-		'cache_name' => 'phong',
-		'cache_hash' => pw_random_hash(),
-		'cache_content' => '{"dove_name":"vishnu"}'
-		);
-	//echo json_encode( pw_insert_cache( $data ) );
-
-	$delete = array(
-		'cache_type' => 'test'
-		);
-	//echo json_encode( pw_delete_cache( $delete ) );
-
-	
-	echo json_encode( pw_get_cache( array(
-		'cache_name' => '',
-		'cache_hash' => '',
-		)));
-
-
-	?>
-
-
-
-
 	<div class="row">
 		<div class="col-md-6">
 
-			
+		<div class="well">
+			<h3>Cache Status</h3>
+
+			<div ng-show="cacheTypeReadoutIsEmpty()" class="well">
+				<b>
+					<i class="pwi-notification"></i>
+					Cache is empty.
+				</b>
+			</div>
+
+			<table
+				ng-show="!cacheTypeReadoutIsEmpty()"
+				class="wp-list-table widefat">
+				<thead>
+					<tr>
+						<th width="33%">Type</th>
+						<th width="33%">Count</th>
+						<th width="33%"></th>
+					</tr>
+				</thead>
+				<tr ng-repeat="readout in cacheTypeReadout">
+					<td class="column-title">
+						<b>{{ readout.cache_type }}</b>
+					</td>
+					<td>
+						{{ readout.type_count }}
+					</td>
+					<td>
+						<button
+							type="button"
+							class="button"
+							ng-click="deleteCacheType(readout.cache_type)">
+							<i class="pwi-trash"></i>
+							Delete Cache
+						</button>
+					</td>
+				</tr>
+			</table>
+
+
+		</div>
 
 		</div>
 	</div>

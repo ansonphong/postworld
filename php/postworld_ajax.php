@@ -1,5 +1,4 @@
 <?php
-
 /* 	WP Ajax Tips
  *	http://wp.smashingmagazine.com/2011/10/18/how-to-use-ajax-in-wordpress/
 */
@@ -12,7 +11,18 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
+//---------- PW DELTE CACHE TYPE ----------//
+function pw_delete_cache_type_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
 
+	if( current_user_can('manage_options') )
+		$delete_cache = pw_delete_cache_type( $args['cache_type'] );
+
+	$response_data = pw_get_cache_types_readout();
+	
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_delete_cache_type", "pw_delete_cache_type_ajax");
 
 //---------- PW SET USER META ----------//
 function pw_set_wp_usermeta_ajax(){
