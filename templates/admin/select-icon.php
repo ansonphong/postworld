@@ -70,18 +70,6 @@
 		<!-- MENU -->
 		<div class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
 
-			<div class="search-input-wrapper">
-				<i class="input-icon pwi-search"></i>
-				<input
-					class="input-icon-left"
-					id="filterString"
-					type="text"
-					ng-model="filterString"
-					placeholder="Search Icons..."
-					prevent-default-click
-					stop-propagation-click>
-			</div>
-
 			<?php
 			///// CUSTOM ICONS ARRAY /////
 			if( is_array( $icons ) ) : ?>
@@ -99,6 +87,18 @@
 			<?php
 			///// REGISTERED ICONSETS /////
 			if( !is_array( $icons ) ) : ?>
+
+				<div class="search-input-wrapper">
+					<i class="input-icon pwi-search"></i>
+					<input
+						class="input-icon-left"
+						id="filterString"
+						type="text"
+						ng-model="filterString"
+						placeholder="Search Icons..."
+						prevent-default-click
+						stop-propagation-click>
+				</div>
 
 				<div ng-repeat="iconset in iconsets">
 					<div
