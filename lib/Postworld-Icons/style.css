@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?-olfw6x');
-	src:url('fonts/Postworld-Icons.eot?#iefix-olfw6x') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff?-olfw6x') format('woff'),
-		url('fonts/Postworld-Icons.ttf?-olfw6x') format('truetype'),
-		url('fonts/Postworld-Icons.svg?-olfw6x#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?syuotx');
+	src:url('fonts/Postworld-Icons.eot?#iefixsyuotx') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff?syuotx') format('woff'),
+		url('fonts/Postworld-Icons.ttf?syuotx') format('truetype'),
+		url('fonts/Postworld-Icons.svg?syuotx#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -273,6 +273,90 @@
 
 .pwi-meditation:before {
 	content: "\e702";
+}
+
+.pwi-th-small:before {
+	content: "\e61f";
+}
+
+.pwi-nav-round:before {
+	content: "\e638";
+}
+
+.pwi-th-list:before {
+	content: "\e6ca";
+}
+
+.pwi-th-large:before {
+	content: "\e6cc";
+}
+
+.pwi-home:before {
+	content: "\e65c";
+}
+
+.pwi-flow-children:before {
+	content: "\e6d1";
+}
+
+.pwi-atlas:before {
+	content: "\e6ea";
+}
+
+.pwi-sun:before {
+	content: "\e665";
+}
+
+.pwi-atlas-o:before {
+	content: "\e6eb";
+}
+
+.pwi-cloud:before {
+	content: "\e6cd";
+}
+
+.pwi-thermometer:before {
+	content: "\e6ef";
+}
+
+.pwi-layers-2:before {
+	content: "\e031";
+}
+
+.pwi-cube-o:before {
+	content: "\e079";
+}
+
+.pwi-grid:before {
+	content: "\e102";
+}
+
+.pwi-grid-2:before {
+	content: "\e103";
+}
+
+.pwi-columns:before {
+	content: "\e104";
+}
+
+.pwi-close-thin:before {
+	content: "\e117";
+}
+
+.pwi-delete:before {
+	content: "\e119";
+}
+
+.pwi-nav-thin:before {
+	content: "\e120";
+}
+
+.pwi-switch:before {
+	content: "\e6df";
+}
+
+.pwi-atom:before {
+	content: "\e6e0";
 }
 
 .pwi-play-fill:before {
@@ -877,90 +961,6 @@
 
 .pwi-paypal:before {
 	content: "\e6d0";
-}
-
-.pwi-th-small:before {
-	content: "\e61f";
-}
-
-.pwi-nav-round:before {
-	content: "\e638";
-}
-
-.pwi-th-list:before {
-	content: "\e6ca";
-}
-
-.pwi-th-large:before {
-	content: "\e6cc";
-}
-
-.pwi-home:before {
-	content: "\e65c";
-}
-
-.pwi-flow-children:before {
-	content: "\e6d1";
-}
-
-.pwi-atlas:before {
-	content: "\e6ea";
-}
-
-.pwi-sun:before {
-	content: "\e665";
-}
-
-.pwi-atlas-o:before {
-	content: "\e6eb";
-}
-
-.pwi-cloud:before {
-	content: "\e6cd";
-}
-
-.pwi-thermometer:before {
-	content: "\e6ef";
-}
-
-.pwi-layers-2:before {
-	content: "\e031";
-}
-
-.pwi-cube-o:before {
-	content: "\e079";
-}
-
-.pwi-grid:before {
-	content: "\e102";
-}
-
-.pwi-grid-2:before {
-	content: "\e103";
-}
-
-.pwi-columns:before {
-	content: "\e104";
-}
-
-.pwi-close-thin:before {
-	content: "\e117";
-}
-
-.pwi-delete:before {
-	content: "\e119";
-}
-
-.pwi-nav-thin:before {
-	content: "\e120";
-}
-
-.pwi-switch:before {
-	content: "\e6df";
-}
-
-.pwi-atom:before {
-	content: "\e6e0";
 }
 
 .pwi-search:before {

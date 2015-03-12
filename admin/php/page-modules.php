@@ -2,7 +2,7 @@
 <div class="postworld social" ng-cloak>
 
 	<h1>
-		<i class="icon-postworld"></i>
+		<i class="pwi-postworld"></i>
 		Postworld
 	</h1>
 	

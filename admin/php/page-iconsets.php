@@ -68,25 +68,28 @@
 	<hr class="thick">
 
 	<?php if( pw_dev_mode() ): ?>
+		<div class="pw-dev well">
+			<h3>Dev Mode</h3>
 
-		{{ pwIconsets | json }}
+			<div class="well">
+				<h3>$scope.pwIconsets</h3>
+				<pre><code>{{ pwIconsets | json }}</code></pre>
+			</div>
 
-		<hr class="thick">
-		
-		<div class="well">
-			<h3>Registered Iconsets</h3>
-			<pre><code><?php //echo json_encode( pw_get_registered_iconsets(), JSON_PRETTY_PRINT ) ?></code></pre>
-		</div>
+			<div class="well">
+				<h3>Registered Iconsets</h3>
+				<pre><code><?php echo json_encode( pw_get_registered_iconsets(), JSON_PRETTY_PRINT ) ?></code></pre>
+			</div>
 
-		<hr>
-		<div class="well">
-			<h3>Loaded Iconsets</h3>
-			<pre><code><?php echo json_encode( pw_get_iconsets(), JSON_PRETTY_PRINT ) ?></code></pre>
-		</div>
-		<hr>
-		<div class="well">
-			<li>ADD OPTION : Enable Iconset Shortcodes (select from iconsets)</li>
-			<li>ADD OPTION : Clear iconset cache (delete all options)</li>
+			<div class="well">
+				<h3>Loaded Iconsets</h3>
+				<pre><code><?php echo json_encode( pw_get_iconsets(), JSON_PRETTY_PRINT ) ?></code></pre>
+			</div>
+			<hr>
+			<div class="well">
+				<li>ADD OPTION : Enable Iconset Shortcodes (select from iconsets)</li>
+				<li>ADD OPTION : Clear iconset cache (delete all options)</li>
+			</div>
 		</div>
 	<?php endif; ?>
 

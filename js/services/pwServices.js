@@ -216,6 +216,15 @@ postworld.factory('_',
 			else
 				return false;
 		},
+		stringInArray: function( value, array ){
+			if( !_.isArray( array ) )
+				return false;
+			for( var i = 0; i < array.length; i++ ){
+				if( this.inString( value, array[i] ) )
+					return true;
+			}
+			return false;
+		},
 		isEmpty: function(value){
 			if ( typeof value === 'undefined' ||
 				value == '' ||

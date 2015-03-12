@@ -246,31 +246,19 @@ function pw_get_iconset_classes( $iconset_slug ){
 	if( empty($iconset) )
 		return false;
 
+
 	///// CACHING LAYER /////
-	// Get the option cache of the iconset
-	// If the icon cache exists it will look like :
-	// { 'hash':'asdf987sd', 'classes':['icon-tag','icon-circle'] }
-	$cache = get_option( PW_CACHE_ICONSET . $iconset['slug'], false );
-
-	// If there's a value
-	if( !empty( $cache ) )
-		// Assume it's JSON, and decode
-		$cache = json_decode( $cache, true );
-
-	///// GET THE ICONSET HASH /////
 	// Get the hash of the iconset
 	$iconset_hash = pw_file_hash( $iconset['src'], 'sha256' );
-
-	// Compare iconset cache to the cached hash
-	if( $iconset_hash == _get( $cache, 'hash' ) ){
-		//pw_log_microtimer( 'pw_get_iconset_classes-'.$iconset_slug, 'CACHED');
-		// If the hash is the same, return the classes from the cached
-		return $cache['classes'];
+	$get_cache = pw_get_cache( array( 'cache_hash' => $iconset_hash ) );
+	if( !empty( $get_cache ) ){
+		return json_decode( $get_cache['cache_content'], true);
 	}
+
 
 	///// PROCESS CLASSES /////
 	// If the icon cache doesn't exist or the hash is different
-	// Get the iconset classes  as an array
+	// Get the iconset classes as an array
 	$iconset_classes = pw_get_css_icon_classes( array(
 		'prefix'	=>	$iconset['prefix'],
 		'src'		=>	$iconset['src'],
@@ -278,15 +266,14 @@ function pw_get_iconset_classes( $iconset_slug ){
 		'return'	=>	'classes',
 		));
 
-	///// CACHING LAYER /////
-	// Setup the new cache object
-	$cache = array(
-		'hash'		=>	$iconset_hash,
-		'classes'	=>	$iconset_classes,
-		);
 
-	// Update the cache
-	$update_cache = update_option( PW_CACHE_ICONSET . $iconset['slug'], json_encode( $cache ) );
+	///// CACHING LAYER /////
+	pw_set_cache( array(
+		'cache_type'	=>	'iconset',
+		'cache_hash' 	=> 	$iconset_hash,
+		'cache_content'	=>	json_encode($iconset_classes),
+		));
+
 
 	//pw_log_microtimer( 'pw_get_iconset_classes-'.$iconset_slug, 'NOT CACHED' );
 
