@@ -1,7 +1,8 @@
+<?php $slider = $vars ?>
 <script>
 	postworld.controller( '<?php echo $slider['instance']; ?>', [ '$scope', function($scope){
 		$scope.sliderInterval = <?php echo $slider['interval']; ?>;
-		$scope.slides = <?php echo json_encode($posts); ?>;
+		$scope.slides = <?php echo json_encode($slider['posts']); ?>;
 	}]);
 </script>
 

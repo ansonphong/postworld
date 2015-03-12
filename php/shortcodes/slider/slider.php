@@ -60,7 +60,7 @@ function pw_print_slider( $slider ){
 
 	///// POSTS /////
 	// The slides go in here
-	$posts = array();
+	$slider['posts'] = array();
 
 	///// Set Defaults /////
 	$default_template = "slider-default";
@@ -79,7 +79,7 @@ function pw_print_slider( $slider ){
 		'transition'	=>	'fade',
 		);
 
-	$slider = pw_set_defaults( $slider, $slider_defaults ); 
+	$slider = array_replace_recursive( $slider_defaults, $slider );
 
 	///// TEMPLATES ////
 	$slider_templates = pw_get_templates(
@@ -104,7 +104,6 @@ function pw_print_slider( $slider ){
 
 		case 'override':
 			///// OVERRIDE POSTS /////
-			$posts = $slider['posts'];
 			break;
 
 		case 'query':
@@ -179,7 +178,7 @@ function pw_print_slider( $slider ){
 			//$query['order'] = "";
 
 			///// RUN QUERY /////
-			$posts = (array) pw_query( $query )->posts;
+			$slider['posts'] = (array) pw_query( $query )->posts;
 
 
 		// Do not break case 'query' here, continue with this_post mode
@@ -191,14 +190,14 @@ function pw_print_slider( $slider ){
 				// Get current post
 				$this_post = array( pw_get_post( $post->ID, $query['fields'] ) );
 				// Prepend to the posts array
-				$posts = array_merge( $this_post, $posts );
+				$slider['posts'] = array_merge( $this_post, $slider['posts'] );
 			}
 			
 			///// GET GALLERIES /////
 			// Get attachments from all galleries in found posts
 			if( $slider['query_vars']['include_galleries'] == true ){
 				// Get all the IDs of the queried posts
-				$post_ids = pw_get_post_ids( $posts );
+				$post_ids = pw_get_post_ids( $slider['posts'] );
 
 				// Add the current post ID
 				if( $slider['query_vars']['this_post'] == true ){
@@ -214,7 +213,7 @@ function pw_print_slider( $slider ){
 				$gallery_posts = pw_get_posts( $gallery_attachment_ids, $query['fields'] );
 
 				// Append Galleries 
-				$posts = array_merge( $posts, $gallery_posts );
+				$slider['posts'] = array_merge( $slider['posts'], $gallery_posts );
 
 			}
 
@@ -241,12 +240,12 @@ function pw_print_slider( $slider ){
 			if( $slider['query_vars']['has_image'] == true ){
 				
 				$filtered_posts = array();
-				foreach( $posts as $this_post ){
+				foreach( $slider['posts'] as $this_post ){
 					// If the image width is present
 					if( !empty($this_post['image']['sizes']['full']['width']) )
 						$filtered_posts[] = $this_post;
 				}
-				$posts = $filtered_posts;
+				$slider['posts'] = $filtered_posts;
 				
 			}
 			
@@ -256,12 +255,12 @@ function pw_print_slider( $slider ){
 			if(	$slider['query_vars']['include_galleries'] == true &&
 				$slider['query_vars']['only_galleries'] == true ){
 				$filtered_posts = array();
-				foreach( $posts as $this_post ){
+				foreach( $slider['posts'] as $this_post ){
 					// If the image width is present
 					if( $this_post['post_type'] == 'attachment' )
 						$filtered_posts[] = $this_post;
 				}
-				$posts = $filtered_posts;
+				$slider['posts'] = $filtered_posts;
 			}
 
 			break; // break case for 'query' and 'this_post'
@@ -275,7 +274,7 @@ function pw_print_slider( $slider ){
 			$menu_id = pw_get_obj( $slider, 'menu_vars.menu_id' );
 
 			// Define the posts
-			$posts = ( !$menu_id ) ?
+			$slider['posts'] = ( !$menu_id ) ?
 				array() :
 				pw_get_menu_posts( $menu_id, $fields );
 
@@ -291,16 +290,11 @@ function pw_print_slider( $slider ){
 	$slider_hash = pw_random_hash();
 	$slider['instance'] = "slider_".$slider_hash;
 
-	//pw_log( json_encode( $posts ) );
 
 	///// INCLUDE TEMPLATE /////
 	// Include the template
-	ob_start();
-	include $slider_template;
-	$content = ob_get_contents();
-	ob_end_clean();
-	return $content;
-
+	$content = pw_ob_include( $slider_template, $slider );
+	
 	// Return with everything in a string
 	return $content;
 	

@@ -1,5 +1,14 @@
 # Postworld // Changelog
 
+### Version 1.86
+- __Breaking Change__ - Changed Sliders template format
+    + Template context has changed from a basic include, to an `ob_include`, with all variables being passed through the `$var` array
+    + Refactor local templates by changing instances of `$posts` to `$var['posts']` 
+
+### Version 1.85
+- Added unified caching system to `pw_get_posts()` method, iconsets and term feeds
+    + __5-10x__ PHP execution time performance increase can be expected on pages with feeds or term feeds
+
 ### Version 1.84
 - Iconsets Module
     + Refactored Postworld Iconsets to allow for custom enabling and disabling of iconsets within the theme
