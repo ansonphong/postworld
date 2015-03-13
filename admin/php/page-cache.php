@@ -32,6 +32,9 @@
 
 	<hr class="thick">
 
+	<!-- ADD "UPDATE" CACHE STATUS BUTTON - icon spins while updating -->
+	<!-- ADD CLEAR ALL CACHES BUTTON -->
+
 	<div class="row">
 		<div class="col-md-6">
 
