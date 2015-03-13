@@ -1199,4 +1199,10 @@ function pw_reset_less_php_cache(){
 	return true;
 }
 
+
+
+function pw_in_string( $haystack, $needle ){
+	return ( strpos( $haystack, $needle ) == false ) ? true : false;
+}
+
 ?>

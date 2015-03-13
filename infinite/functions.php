@@ -160,9 +160,7 @@ function is_blog_page() {
 
 }
 
-function _contains( $haystack, $needle ){
-	return ( strpos( $haystack, $needle ) == false ) ? true : false;
-}
+
 
 //////////////////// INCLUDES ////////////////////
 
