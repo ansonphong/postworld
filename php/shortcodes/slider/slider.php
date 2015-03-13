@@ -81,6 +81,7 @@ function pw_print_slider( $slider ){
 
 	$slider = array_replace_recursive( $slider_defaults, $slider );
 
+
 	///// TEMPLATES ////
 	$slider_templates = pw_get_templates(
 		array(
@@ -94,10 +95,22 @@ function pw_print_slider( $slider ){
 		$slider_templates['sliders'][$template_id] :
 		$slider_templates['sliders'][$default_template];
 
+
+	///// CACHING LAYER /////
+	// Generate unique hash from un-pre-processed slider variables
+	$slider_hash = hash( 'sha256', json_encode( $slider ) );
+	$get_cache = pw_get_cache( array( 'cache_hash' => $slider_hash ) );
+	if( !empty( $get_cache ) ){
+		$slider = json_decode($get_cache['cache_content'], true);
+		return pw_ob_include( $slider_template, $slider );
+	}
+
+
 	///// SET OVERRIDE MODE /////
 	if( !empty( $slider['posts'] ) && is_array( $slider['posts'] ) ){
 		$slider['mode'] = 'override';
 	}
+
 
 	////////// MODE //////////
 	switch( $slider['mode'] ){
@@ -281,22 +294,29 @@ function pw_print_slider( $slider ){
 			break;
 	}
 
-	///// CLASS /////
+
+	///// TRANSITION CLASS /////
 	if( $slider['transition'] == 'fade' || !isset($slider['transition']) )
 		$slider['class'] .= " carousel-fade ";
 
+
 	///// INSTANCE /////
-	// Generate random ID for slider Instance
-	$slider_hash = pw_random_hash();
+	// Generate slider Instance string
 	$slider['instance'] = "slider_".$slider_hash;
+
+
+	///// CACHING LAYER /////
+	pw_set_cache( array(
+		'cache_type'	=>	'slider',
+		'cache_hash' 	=> 	$slider_hash,
+		'cache_content'	=>	json_encode($slider),
+		));
 
 
 	///// INCLUDE TEMPLATE /////
 	// Include the template
-	$content = pw_ob_include( $slider_template, $slider );
-	
 	// Return with everything in a string
-	return $content;
+	return pw_ob_include( $slider_template, $slider );
 	
 }
 

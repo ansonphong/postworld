@@ -12,6 +12,7 @@ function pw_delete_post_caches_action(){
 	pw_delete_cache_type( 'pw-query' );
 	pw_delete_cache_type( 'feed-outline' );
 	pw_delete_cache_type( 'feed-posts' );
+	pw_delete_cache_type( 'slider' );
 }
 
 function pw_get_cache( $fields, $operator = 'AND' ){
