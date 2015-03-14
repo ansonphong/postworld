@@ -220,16 +220,17 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
 			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js' );
 
+		/*
 		// ANGULAR STRAP : BOOTSTRAP
 		wp_enqueue_script( 'AngularJS-Strap-Dimensions',
-			POSTWORLD_URI.'/lib/angular-strap/angular-strap-dimensions.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-strap-2.1.6/angular-strap-dimensions.js', $angularDep );
 
 		wp_enqueue_script( 'AngularJS-Strap-Tooltip',
-			POSTWORLD_URI.'/lib/angular-strap/angular-strap-tooltip.js', $angularDep );
+			POSTWORLD_URI.'/lib/angular-strap-2.1.6/angular-strap-tooltip.js', $angularDep );
 
 		wp_enqueue_script( 'AngularJS-Strap-Popover',
-			POSTWORLD_URI.'/lib/angular-strap/angular-strap-popover.js', $angularDep );
-
+			POSTWORLD_URI.'/lib/angular-strap-2.1.6/angular-strap-popover.js', $angularDep );
+		*/
 
 		//wp_enqueue_script( 'AngularJS-Strap',
 		//	plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.js', $angularDep );

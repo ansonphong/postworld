@@ -460,7 +460,7 @@ postworld.factory('_',
 		// Compact arrays with empty entries; delete keys from objects with empty value
 		removeEmpty: function( obj ){
 			for ( var k in obj ){
-				if ( _.isEmpty( obj[k] ) && !_.isNumeric( obj[k] ) && !_.isBoolean( obj[k] ) )
+				if ( _.isEmpty( obj[k] ) && !_.isNumber( obj[k] ) && !_.isBoolean( obj[k] ) )
 					_.isArray( obj ) ?
 						obj.splice(k,1) :
 						delete obj[k];
@@ -1269,6 +1269,89 @@ postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $wind
 
 
 
+/* ___        _      _      _____    _ _ _   
+  / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
+ | | | | | | | |/ __| |/ / |  _| / _` | | __|
+ | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
+  \__\_\\__,_|_|\___|_|\_\ |_____\__,_|_|\__|
+											 
+////////// ------------ QUICK EDIT ------------ //////////*/  
+
+/*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
+postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '$pw', '_',
+	function ( $rootScope, $log, $location, $modal, pwData, $pw, $_ ) {
+	return{
+		openQuickEdit : function( meta ){
+			
+			// Default Defaults
+			if( _.isUndefined( meta.mode ) )
+				meta.mode = 'quick-edit';
+
+			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
+
+			var modalInstance = $modal.open({
+			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
+			  controller: 'quickEditInstanceCtrl',
+			  windowClass: 'quick_edit',
+			  resolve: {
+				meta: function(){
+					return meta;
+				}
+			  }
+			});
+			modalInstance.result.then(function (selectedItem) {
+				//$scope.post_title = post_title;
+			}, function () {
+				// WHEN CLOSE MODAL
+				$log.debug('Modal dismissed at: ' + new Date());
+				// Clear the URL params
+				//$location.url('/');
+				$location.path('/');
+				//$rootScope.$apply();
+
+			});
+		},
+
+		trashPost : function ( post_id, $scope ){
+			if ( window.confirm("Are you sure you want to trash : \n" + $scope.post.post_title) ) {
+				pwData.pw_trash_post( post_id ).then(
+					// Success
+					function(response) {
+						if (response.status==200) {
+							$log.debug('Post Trashed RETURN : ',response.data);                  
+							if ( _.isNumber(response.data) ){
+								var trashedPostId = response.data;
+								if( typeof $scope != undefined ){
+									// SUCESSFULLY TRASHED
+									//var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
+									$scope.post.post_status = 'trash';
+									// Emit Trash Event : post_id
+									$scope.$emit('trashPost', trashedPostId );
+									// Broadcast Trash Event : post_id
+									$scope.$broadcast('trashPost', trashedPostId );
+								}
+							}
+							else{
+								alert( "Error trashing post : " + response.data );
+							}
+						} else {
+							// handle error
+						}
+					},
+					// Failure
+					function(response) {
+						// Failed Delete
+					}
+				);
+			}
+		},
+	}
+}]);
+
+
+
+
+
 /*
    _        _____    _ _ _     ____           _     _____ _ _ _                
   | |   _  | ____|__| (_) |_  |  _ \ ___  ___| |_  |  ___(_) | |_ ___ _ __ ___ 
@@ -1525,7 +1608,7 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 
 				// If a offset number is given
 				// Subtract that many milliseconds
-				if( _.isNumeric(offset) ){
+				if( _.isNumber(offset) ){
 					var localDateObj = new Date(dateObj);
 					var parsedDateObj = Date.parse(localDateObj);
 					var newTime = parsedDateObj - offset;
@@ -1557,7 +1640,7 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 				// If a offset number is given
 				// Add that many milliseconds
 				offset = parseInt(offset);
-				if( _.isNumeric(offset) ){
+				if( _.isNumber(offset) ){
 					var localDateObj = new Date(dateObj);
 					var parsedDateObj = Date.parse(localDateObj);
 					var newTime = parsedDateObj + offset;
@@ -1816,3 +1899,7 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 	}
 
 }]);
+
+
+
+

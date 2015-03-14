@@ -136,6 +136,38 @@ postworld.directive('pwHref', function() {
 	}
 });
 
+
+///// POSTWORLD HREF DIRECTIVE /////
+postworld.directive('pwEval', function($timeout, $log) {
+	return {
+		scope:{
+		  pwEval:"@",
+		  evalTimeout:"@",
+		  evalContext:"@",
+		},
+		link: function($scope, element, attrs) {
+			if( _.isUndefined( $scope.evalTimeout ) )
+				$scope.evalTimeout = 0;
+			if( _.isUndefined( $scope.evalContext ) )
+				$scope.evalContext = 'window';
+			$timeout(
+				function(){
+					$log.debug( 'pw-eval : ', $scope.pwEval );
+					try{
+						if( $scope.evalContext == 'scope' )
+							$scope.$eval($scope.pwEval);
+						else
+							eval($scope.pwEval);
+					}
+					catch(err){
+						$log.debug('pw-eval : ERROR : ' + $scope.pwEval, err);
+					}
+				}, $scope.evalTimeout
+			);
+		},
+	}
+});
+
 ///// POSTWORLD NEW TARGET DIRECTIVE /////
 postworld.directive('pwTarget', function( $log ) {
 	return {

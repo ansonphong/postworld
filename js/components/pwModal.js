@@ -101,6 +101,8 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 						windowClass: 	"modal-template",
 						keybindings: 	false,
 					};
+					if( $_.get( meta, 'windowClass' ) )
+						modalObj.windowClass = $_.get( meta, 'windowClass' );
 				break;
 
 			}
@@ -484,87 +486,6 @@ postworld.controller('mediaModalInstanceCtrl',
     };
 
 
-}]);
-
-
-
-/* ___        _      _      _____    _ _ _   
-  / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
- | | | | | | | |/ __| |/ / |  _| / _` | | __|
- | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
-  \__\_\\__,_|_|\___|_|\_\ |_____\__,_|_|\__|
-											 
-////////// ------------ QUICK EDIT ------------ //////////*/  
-
-/*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '$pw',
-	function ( $rootScope, $log, $location, $modal, pwData, $pw ) {
-	return{
-		openQuickEdit : function( meta ){
-			
-			// Default Defaults
-			if( _.isUndefined( meta.mode ) )
-				meta.mode = 'quick-edit';
-
-			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
-
-			var modalInstance = $modal.open({
-			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
-			  controller: 'quickEditInstanceCtrl',
-			  windowClass: 'quick_edit',
-			  resolve: {
-				meta: function(){
-					return meta;
-				}
-			  }
-			});
-			modalInstance.result.then(function (selectedItem) {
-				//$scope.post_title = post_title;
-			}, function () {
-				// WHEN CLOSE MODAL
-				$log.debug('Modal dismissed at: ' + new Date());
-				// Clear the URL params
-				//$location.url('/');
-				$location.path('/');
-				//$rootScope.$apply();
-
-			});
-		},
-
-		trashPost : function ( post_id, scope ){
-			if ( window.confirm("Are you sure you want to trash : \n" + scope.post.post_title) ) {
-				pwData.pw_trash_post( post_id ).then(
-					// Success
-					function(response) {
-						if (response.status==200) {
-							$log.debug('Post Trashed RETURN : ',response.data);                  
-							if ( _.isNumeric(response.data) ){
-								var trashed_post_id = response.data;
-								if( typeof scope != undefined ){
-									// SUCESSFULLY TRASHED
-									//var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
-									scope.post.post_status = 'trash';
-									// Emit Trash Event : post_id
-									scope.$emit('trashPost', trashed_post_id );
-									// Broadcast Trash Event : post_id
-									scope.$broadcast('trashPost', trashed_post_id );
-								}
-							}
-							else{
-								alert( "Error trashing post : " + response.data );
-							}
-						} else {
-							// handle error
-						}
-					},
-					// Failure
-					function(response) {
-						// Failed Delete
-					}
-				);
-			}
-		},
-	}
 }]);
 
 

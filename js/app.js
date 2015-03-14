@@ -37,7 +37,6 @@ pw.angularModules = pw.angularModules.concat([
 	'timer',
 	'angular-parallax',
 	'wu.masonry',
-	//'mgcrea.ngStrap.popover',
 	'pw.compile',
 	'checklist-model',
 ]);
