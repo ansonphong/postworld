@@ -52,6 +52,7 @@ function pw_get_dirs($path = '.') {
 }
 
 function pw_construct_template_obj( $args ){
+
 	extract($args);
 
 	// Set Defaults
@@ -86,6 +87,8 @@ function pw_construct_template_obj( $args ){
 		}
 	
 	}
+	
+	//pw_log($template_object);
 
 	return $template_object;
 }
@@ -102,6 +105,8 @@ function pw_get_templates( $vars = array() ){
 			'output'			=>	[string] (optional) 'default' / 'ids'
 			)
 	*/
+
+	pw_set_microtimer('pw_get_templates');
 
 	global $pwSiteGlobals;
 	extract($vars);
@@ -184,9 +189,11 @@ function pw_get_templates( $vars = array() ){
 	///// RETURN : BEFORE POSTS /////
 	// If 'subdirs' is specified, and 'posts' is not specified
 	if( isset($subdirs) &&
-		!in_array( 'posts', $subdirs ))
+		!in_array( 'posts', $subdirs )){
+		pw_log_microtimer('pw_get_templates', 'NON-POSTS');
 		// Return before processing post templates
 		return $template_obj;
+	}
 
 
 	////////// POST TEMPLATES : OBJECT STRUCTURE //////////
@@ -274,6 +281,8 @@ function pw_get_templates( $vars = array() ){
 		}
 		$template_obj = $new_obj;
 	}
+
+	pw_log_microtimer('pw_get_templates', 'WITH POSTS');
 
 	return $template_obj;
 
