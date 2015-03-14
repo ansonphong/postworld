@@ -316,7 +316,7 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/js/components/pwInput.js', $angularDep );
 
 		wp_enqueue_script( 'pw-InfiniteGallery-JS',
-			POSTWORLD_URI.'/js/components/pwInfiniteGallery.js', $angularDep );
+			POSTWORLD_URI.'/js/components/pwGallery.js', $angularDep );
 
 		wp_enqueue_script( 'pw-geocode-JS',
 			POSTWORLD_URI.'/js/components/pwGeocode.js', $angularDep );

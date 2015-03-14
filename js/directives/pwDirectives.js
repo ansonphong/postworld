@@ -49,10 +49,18 @@ postworld.directive('loadPanel', function($log, $timeout, pwData) {
 				$log.debug( 'loadPanel : panelVars :', panelVars );
 			});
 
+			// Pipe post data into the isolated panel scope as 'post' object
 			$scope.$watch('panelPost', function( val ){
 				$log.debug( 'loadPanel : panelPost', val );
 				if( !_.isUndefined( val ) )
 					$scope.post = $scope.panelPost;
+			}, 1 );
+
+			// Pipe post data into the isolated panel scope as 'meta' object
+			$scope.$watch('panelMeta', function( val ){
+				$log.debug( 'loadPanel : panelMeta', val );
+				if( !_.isUndefined( val ) )
+					$scope.meta = $scope.panelMeta;
 			}, 1 );
 
 		}

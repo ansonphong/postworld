@@ -1,3 +1,170 @@
+///// GALLERY VIEWER /////
+postworld.directive( 'pwGalleryViewer',
+	[ 'pwData', '$pw', '$log', '_', '$document', '$timeout',
+	function( $pwData, $pw, $log, $_, $document, $timeout ){
+	return {
+		restrict: 'AE',
+		//controller: 'themePostCtrl',
+		link: function( $scope, element, attrs ){
+
+			$scope.gallery = {
+				index:0,
+				count:0,
+				posts:[],
+			};
+
+			///// WATCH : INCOMING GALLERY POSTS /////
+			$scope.$watch(
+				function(){
+					if( attrs.galleryPosts === null )
+						return false;
+					var galleryPosts = $scope.$eval( attrs.galleryPosts );
+					return galleryPosts;
+				},
+				function( galleryPosts, oldGalleryPosts ){
+					if( !$_.objEquality( galleryPosts, oldGalleryPosts ) && _.isArray(galleryPosts) ){
+						$log.debug( 'NON OBJECT EQUALITY' );
+						$scope.gallery.posts = galleryPosts;
+					}
+				}
+			,1);
+
+			///// WATCH : GALLERY /////
+			$scope.$watch( 'gallery', function( gallery, oldGallery ){
+				if( $_.get( gallery, 'index' ) < 0 )
+					$scope.gallery.index = 0;
+
+
+				// If posts is an array, get the count
+				if( _.isArray( gallery.posts ) ){
+					var count = gallery.posts.length;
+					$log.debug( 'gallery.posts.count : CHANGE : ' + count, gallery.posts );
+					$scope.gallery.count = count;
+				}
+				
+				// If posts switched, reset index to 0
+				if( !$_.objEquality( gallery.posts, oldGallery.posts ) )
+					$scope.gallery.index = 0;
+
+
+			},1);
+
+			///// WATCH : GALLERY POSTS /////
+			$scope.$watch( 'gallery.posts', function(posts, oldPosts){
+				$log.debug( 'gallery.posts : CHANGE : ', posts );
+			},1);
+
+			$scope.nextImage = function(){
+				var gallery = $scope.gallery;
+				if( gallery.index < gallery.count - 1 )
+					$scope.gallery.index ++;
+				else
+					$scope.gallery.index = 0;
+			}
+
+			$scope.previousImage = function(){
+				var gallery = $scope.gallery;
+				if( gallery.index <= 0 )
+					$scope.gallery.index = gallery.count-1;
+				else
+					$scope.gallery.index --;
+			}
+
+			$scope.gotoIndex = function(index){
+				$scope.gallery.index = index;
+			}
+
+			$scope.getImageIndex = function(imagePost){
+				var imagePostId = $_.get( imagePost, 'ID');
+				var index = _.findIndex( $scope.gallery.posts, function( post ){ return post.ID === imagePostId } );
+				return index;
+
+				/*
+
+				var imagePostId = $_.get( imagePost, 'ID');
+				var posts = $scope.gallery.posts;
+
+				$log.debug( 'gallery : getImageIndex : PRE-IF : POSTS : ', posts);
+				if( !_.isEmpty(posts) && imagePostId !== false ){
+
+					$log.debug( 'gallery : getImageIndex : PRE-FOR : posts.length ', posts.length );
+
+					for( var i = 0; i < posts.length; i++ ){
+						$log.debug( 'gallery : getImageIndex : POST ID : ', posts[i].ID );
+						if( posts[i].ID == imagePostId ){
+							$log.debug( 'gallery : getImageIndex : ', i );
+							return i;
+						}
+					}
+				}
+
+				$log.debug( 'gallery : getImageIndex : ERROR : ', -1 );
+				return -1;
+
+				/*
+				$log.debug( 'gallery : getImageIndex : ' + index, imagePost.ID );
+				$log.debug( 'gallery : getImageIndex : POSTS : ' + index, $scope.gallery.posts );
+				return index;
+				*/
+			}
+
+			$scope.gotoImage = function(imagePost){
+				$scope.gallery.index = $scope.getImageIndex(imagePost);
+			}
+
+			$scope.imageIsSelected = function(imagePost){
+				if( $scope.getImageIndex(imagePost) == $scope.gallery.index )
+					return 'selected';
+			}
+
+			$scope.thumbnailImageBg = function( imagePost, imageSize ){
+				var url = $_.get( imagePost, 'image.sizes.' + imageSize + '.url' );
+				return {
+					'background-image': 'url('+ url +')',
+				}
+			}
+
+			$scope.selectedImage = function(){
+				var posts = $_.get( $scope, 'gallery.posts' );
+				if( _.isArray( posts ) )
+					return posts[ $scope.gallery.index ];
+				else
+					return {};
+			}
+
+			$scope.keyDown = function( e ){
+				var keyCode = parseInt( e.keyCode );
+				switch( keyCode ){
+					// Right Key
+					case 39:
+						$log.debug( "keyDown: nextImage" );
+						$scope.nextImage();
+						break;
+					// Left Key
+					case 37:
+						$log.debug( "keyDown: previousImage" );
+						$scope.previousImage();
+						break;
+				}
+				$scope.$apply();
+			}
+			// Enable key bindings
+			if( 1==0 ){
+				$document.keydown( function( e ){
+					$scope.keyDown( e );
+				});
+			}
+
+			$scope.trackingPosts = function( imagePost ){
+				// Use in ng-repeat to avoid carry-over artifacts in modal viewer
+				// ng-repeat="imagePost in gallery.posts track by trackingPosts(imagePost)"
+				return imagePost.ID;
+			}
+
+
+		}
+	};
+}]);
 
 
 postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
