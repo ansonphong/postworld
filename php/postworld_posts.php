@@ -189,8 +189,12 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	////////// WORDPRESS //////////
 
 		// Permalink
-		if( in_array('post_permalink', $fields) )
-			$post['post_permalink'] = get_permalink( $post_id );
+		if( in_array('post_permalink', $fields) ){
+			if( $post['post_type'] == 'attachment' )
+				$post['post_permalink'] = get_attachment_link( $post_id );
+			else 
+				$post['post_permalink'] = get_permalink( $post_id );
+		}
 
 		// Post Path (Permalink without Home url)
 		if( in_array('post_path', $fields) )
@@ -459,7 +463,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			// Gallery Attachment Posts
 			if( in_array( 'posts', $gallery_fields ) && is_array($field_model['gallery']) ){
 				
-				// For performance, prevent from checking every image for a gallery
+				// For performance, prevent from recusive checking every image for a gallery
 				$new_fields = array_diff( $field_model['gallery'], array( 'gallery(ids,posts)', 'gallery(ids)', 'gallery(posts)' ) );
 				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, $new_fields );
 			}
