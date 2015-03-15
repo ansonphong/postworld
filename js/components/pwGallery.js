@@ -60,7 +60,10 @@ postworld.directive( 'pwGalleryViewer',
 			},1);
 
 			$scope.galleryLoaded = function(){
-				return ( $scope.gallery.posts.length > 0 );
+				var posts = $_.get( $scope.gallery, 'posts' );
+				if( !_.isUndefined( posts.length ) )
+					return ( posts.length > 0 );
+				return false;
 			}
 
 			$scope.nextImage = function(){
