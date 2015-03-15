@@ -88,36 +88,23 @@ postworld.directive( 'pwGalleryViewer',
 
 			$scope.getImageIndex = function(imagePost){
 				var imagePostId = $_.get( imagePost, 'ID');
-				var index = _.findIndex( $scope.gallery.posts, function( post ){ return post.ID === imagePostId } );
-				return index;
+				
+				// Wait until more people are using updated underscore
+				// This function works well, although often plugins use an old version of underscore
+				// Which doesn't contain this function
+				//var index = _.findIndex( $scope.gallery.posts, function( post ){ return post.ID === imagePostId } );
+				//return index;
 
-				/*
-
-				var imagePostId = $_.get( imagePost, 'ID');
 				var posts = $scope.gallery.posts;
-
-				$log.debug( 'gallery : getImageIndex : PRE-IF : POSTS : ', posts);
+				
 				if( !_.isEmpty(posts) && imagePostId !== false ){
-
-					$log.debug( 'gallery : getImageIndex : PRE-FOR : posts.length ', posts.length );
-
 					for( var i = 0; i < posts.length; i++ ){
-						$log.debug( 'gallery : getImageIndex : POST ID : ', posts[i].ID );
 						if( posts[i].ID == imagePostId ){
-							$log.debug( 'gallery : getImageIndex : ', i );
 							return i;
 						}
 					}
 				}
-
-				$log.debug( 'gallery : getImageIndex : ERROR : ', -1 );
 				return -1;
-
-				/*
-				$log.debug( 'gallery : getImageIndex : ' + index, imagePost.ID );
-				$log.debug( 'gallery : getImageIndex : POSTS : ' + index, $scope.gallery.posts );
-				return index;
-				*/
 			}
 
 			$scope.gotoImage = function(imagePost){
