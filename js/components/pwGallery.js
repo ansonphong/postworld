@@ -4,26 +4,33 @@ postworld.directive( 'pwGalleryViewer',
 	function( $pwData, $pw, $log, $_, $document, $timeout ){
 	return {
 		restrict: 'AE',
-		//controller: 'themePostCtrl',
 		link: function( $scope, element, attrs ){
+
+			/*
+				Additonal attributes:
+					gallery-posts="post.gallery.posts"
+						- Scope expression resulting in the gallery posts
+					gallery-keybind="true/false"
+						- Enables previous/next keystrokes to switch image
+			*/
 
 			$scope.gallery = {
 				index:0,
 				count:0,
 				posts:[],
-			};
+			};	
 
 			///// WATCH : INCOMING GALLERY POSTS /////
 			$scope.$watch(
 				function(){
 					if( attrs.galleryPosts === null )
-						return false;
+						return [];
 					var galleryPosts = $scope.$eval( attrs.galleryPosts );
 					return galleryPosts;
 				},
 				function( galleryPosts, oldGalleryPosts ){
-					if( !$_.objEquality( galleryPosts, oldGalleryPosts ) && _.isArray(galleryPosts) ){
-						$log.debug( 'NON OBJECT EQUALITY' );
+					$log.debug( 'pwGalleryViewer : oldGalleryPosts', oldGalleryPosts );
+					if( !$_.objEquality( galleryPosts, oldGalleryPosts ) || _.isEmpty( $scope.gallery.posts ) ){ // && _.isArray(galleryPosts)
 						$scope.gallery.posts = galleryPosts;
 					}
 				}
@@ -33,7 +40,6 @@ postworld.directive( 'pwGalleryViewer',
 			$scope.$watch( 'gallery', function( gallery, oldGallery ){
 				if( $_.get( gallery, 'index' ) < 0 )
 					$scope.gallery.index = 0;
-
 
 				// If posts is an array, get the count
 				if( _.isArray( gallery.posts ) ){
@@ -46,13 +52,16 @@ postworld.directive( 'pwGalleryViewer',
 				if( !$_.objEquality( gallery.posts, oldGallery.posts ) )
 					$scope.gallery.index = 0;
 
-
 			},1);
 
 			///// WATCH : GALLERY POSTS /////
 			$scope.$watch( 'gallery.posts', function(posts, oldPosts){
 				$log.debug( 'gallery.posts : CHANGE : ', posts );
 			},1);
+
+			$scope.galleryLoaded = function(){
+				return ( $scope.gallery.posts.length > 0 );
+			}
 
 			$scope.nextImage = function(){
 				var gallery = $scope.gallery;
@@ -148,12 +157,18 @@ postworld.directive( 'pwGalleryViewer',
 				}
 				$scope.$apply();
 			}
+
 			// Enable key bindings
-			if( 1==0 ){
-				$document.keydown( function( e ){
+			attrs.$observe( 'galleryKeybind', function(val){
+				if( val === null )
+					return false;
+				var bool = $_.stringToBool( val );
+				if( bool ){
+					$document.keydown( function( e ){
 					$scope.keyDown( e );
 				});
-			}
+				}
+			});
 
 			$scope.trackingPosts = function( imagePost ){
 				// Use in ng-repeat to avoid carry-over artifacts in modal viewer
