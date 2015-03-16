@@ -60,6 +60,8 @@ function pw_current_context(){
 	if( is_admin() )
 		$context[] = 'admin';
 
+	if( is_404() )
+		$context[] = '404';
 
 	// TAXONOMIES
 	if( in_array( 'archive-taxonomy', $context ) ){

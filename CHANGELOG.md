@@ -1,5 +1,10 @@
 # Postworld // Changelog
 
+### Version 1.87
+- __Breaking Change__ - Changed `post.image` model structure
+    + Now instead of nesting the image's post (`post_title`, `post_excerpt`) under `post.image.post`, it's not located directly under `post.image`
+    + For example, all instances of `post.image.post.post_title` are replaced with `post.image.post_title`
+
 ### Version 1.86
 - __Breaking Change__ - Changed Sliders template format
     + Template context has changed from a basic include, to an `ob_include`, with all variables being passed through the `$var` array

@@ -238,7 +238,9 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 
 			// Get the post and deposit into post.image.post
 			// With the second image attribute representing the field model handle (micro,preview,full,etc)
-			$post['image']['post'] = pw_get_post( $thumbnail_id, $image_attributes[1] );
+			$image_post = pw_get_post( $thumbnail_id, $image_attributes[1] );
+			// Merge the image post (post_title,post_excerpt) into the post.image object
+			$post['image'] = array_replace_recursive( $post['image'], $image_post );
 
 		}
 		///// CUSTOM IMAGE SIZES /////
@@ -262,8 +264,6 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 	return $post['image'];
 
 }
-
-
 
 
 function pw_featured_image_post( $post_id = null, $fields = 'preview' ){
