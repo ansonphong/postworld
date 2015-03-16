@@ -61,6 +61,8 @@ postworld.directive( 'pwGalleryViewer',
 
 			$scope.galleryLoaded = function(){
 				var posts = $_.get( $scope.gallery, 'posts' );
+				if( !$_.isArray( posts ) )
+					return false;
 				if( !_.isUndefined( posts.length ) )
 					return ( posts.length > 0 );
 				return false;
@@ -125,10 +127,11 @@ postworld.directive( 'pwGalleryViewer',
 
 			$scope.selectedImage = function(){
 				var posts = $_.get( $scope, 'gallery.posts' );
-				if( _.isArray( posts ) )
+				if( $_.isArray( posts ) )
 					return posts[ $scope.gallery.index ];
 				else
-					return {};
+					// Returning an empty object causes infinite loop, so return false
+					return false;
 			}
 
 			$scope.keyDown = function( e ){

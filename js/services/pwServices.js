@@ -210,6 +210,9 @@ postworld.factory('_',
 			else
 				return false;
 		},
+		isArray: function( data ){
+			return (Object.prototype.toString.call(data) == '[object Array]');
+		},
 		inString: function(value, string) {
 			if( _.isString( string ) )
 				return string.indexOf(value) > -1 ? true : false;
