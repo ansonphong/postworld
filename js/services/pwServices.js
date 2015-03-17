@@ -512,13 +512,14 @@ postworld.factory('pwPosts',
 		return post;
 	}
 
-	var updateFeedPost = function( feedId, postId, newPost ){
+	var updateFeedPost = function( feedId, newPost ){
 		///// Updates a post in a Feed by ID /////
 
 		// Check if feed exists
 		if( !$_.objExists( $pwData, 'feeds.'+feedId+'.posts' ) )
 			return false;
 
+		
 		// Get the posts array
 		var posts = $pwData.feeds[feedId].posts;
 
@@ -526,7 +527,7 @@ postworld.factory('pwPosts',
 		var newPosts = [];
 		angular.forEach( posts, function( post ){
 			// If we're on the new post, update it
-			if( post.ID == postId )
+			if( post.ID == newPost.ID )
 				// Deep merge the old post with the new one
 				post = newPost;
 			// Push posts to array
@@ -535,31 +536,43 @@ postworld.factory('pwPosts',
 
 		// Set the new posts into the feed
 		$pwData.feeds[feedId].posts = newPosts;
+		
 		return true;
 		
 	};
 
-	var mergeFeedPost = function( feedId, postId, mergePost ){
+	var setFeedPostKeyValue = function( feedId, postId, key, value ){
+		if( $_.get( $pwData, 'feeds.' + feedId ) == false )
+			return false;
+		// Iterate through feed posts
+		for( var i; i < $pwData.feeds[feedId].posts.length; i++ ){
+			// Check for post ID
+			if( $pwData.feeds[feedId].posts[i].ID == postId ){
+				// Get the post
+				var post = $pwData.feeds[feedId].posts[i];
+				// Set the value into the post
+				post = $_.set( post, key, value );
+				// Replace the post in the feed
+				$pwData.feeds[feedId].posts[i] = post;
+			}
+		}
+		return true;
+	}
+
+	var mergeFeedPost = function( feedId, mergePost ){
     		// Get the original Post
-    		var post = getFeedPost( feedId, postId );
+    		var post = getFeedPost( feedId, mergePost.ID );
     		
     		$log.debug( "mergeFeedPost : mergePost : ", mergePost );
 
     		if( post == false )
     			return false;
 
-    		/*
-    		for( var key in mergePost ){
-    			$log.debug( 'mergeFeedPost : MERGE KEY :', key );
-    			post[key] = mergePost[key];
-    		}
-    		*/
-
     		// Deep merge the new data with the post
     		post = pw_array_replace_recursive( post, mergePost );
 
     		// Update the post
-    		return updateFeedPost( feedId, postId, post );
+    		return updateFeedPost( feedId, post );
     };
 
     var getMissingFields = function( post, requiredFields ){
@@ -678,7 +691,7 @@ postworld.factory('pwPosts',
                     // Add the previously missing fields to the 'fields' field
 					newPostData.fields = missingFields;
                     // Merge it into the feed post
-                    var merged = mergeFeedPost( vars.feedId, vars.postId, newPostData );
+                    var merged = mergeFeedPost( vars.feedId, newPostData );
                     $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
                     // Broadcast event for child listeners to pick up the new data
                     $rootScope.$broadcast( 'feedPostUpdated', {
@@ -716,7 +729,7 @@ postworld.factory('pwPosts',
                     // Catch the new post data
                     var postData = response.data;
                     // Merge it into the feed post
-                    var merged = mergeFeedPost( feedId, postId, postData );
+                    var merged = mergeFeedPost( feedId, postData );
                     $log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : MERGE WITH FEED/POST : ", postData );
                     // Broadcast event for child listeners to pick up the new data
                     $rootScope.$broadcast( 'feedPostUpdated', {
@@ -734,11 +747,14 @@ postworld.factory('pwPosts',
     	getFeedPost: function( feedId, postId ){
     		return getFeedPost( feedId, postId );
     	},
-    	updateFeedPost: function( feedId, postId, post ){
-    		return updateFeedPost( feedId, postId, post );
+    	updateFeedPost: function( feedId, post ){
+    		return updateFeedPost( feedId, post );
     	},
-    	mergeFeedPost: function( feedId, postId, mergePost ){
-    		return mergeFeedPost( feedId, postId, mergePost );
+    	setFeedPostKeyValue: function( feedId, postId, key, value ){
+    		return setFeedPostKeyValue( feedId, postId, key, value );
+    	},
+    	mergeFeedPost: function( feedId, mergePost ){
+    		return mergeFeedPost( feedId, mergePost );
     	},
     	getFeed: function( feedId ){
     		return getFeed( feedId );
@@ -1863,6 +1879,11 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 						slug: 'inline',
 						name: 'Inline',
 						description: 'Galleries appear inline with the post content as a grid of images.',
+					},
+					{
+						slug: 'frame',
+						name: 'Frame',
+						description: 'All galleries in the post are merged into a single frame gallery.',
 					},
 					{
 						slug: 'horizontal',

@@ -1,23 +1,24 @@
 <div class="btn-group">
 	<label
-		ng-repeat="template in options.gallery.template"
+		ng-repeat="template in ::options.gallery.template"
 		class="btn" ng-model="<?php echo $vars['ng_model']; ?>.template" btn-radio="template.slug">
 		{{ template.name }}
 	</label>
 </div>
-<div class="well" ng-show="<?php echo $vars['ng_model']; ?>.template != 'inline'">
+<div class="well">
 	<table>
 		<tr>
 			<td valign="top">
 				<img
 					style="float:left; margin-right:15px;"
-					ng-src="<?php echo get_infinite_directory_uri(); ?>/images/layouts/galleries/i-gallery-layout-{{ <?php echo $vars['ng_model']; ?>.template }}.png">
+					ng-src="<?php echo get_infinite_directory_uri(); ?>/images/layouts/galleries/gallery-{{ <?php echo $vars['ng_model']; ?>.template }}.png">
 			</td>
 			<td>
 				{{ getSelectedOption('gallery.template').description }}
 				
 				<!-- X SCROLL OPTIONS -->
 				<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'horizontal'">
+					<hr class="thin">
 					<span class="icon-md"><i class="pwi-arrows-h"></i></span>
 					<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.x_scroll_distance" id="horizontal-scroll-distance">
 					<label for="horizontal-scroll-distance"><b>horizontal scroll distance</b></label>
@@ -34,6 +35,7 @@
 
 				<!-- Y SCROLL OPTIONS -->
 				<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'vertical'">
+					<hr class="thin">
 					<span class="icon-md"><i class="pwi-arrows-v"></i></span>
 					<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.y_scroll_distance" id="vertical-scroll-distance">
 					<label for="vertical-scroll-distance"><b>vertical scroll distance</b></label>
@@ -43,15 +45,11 @@
 					<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.width" id="gallery-width">
 					<label for="gallery-width"><b>% width</b></label>
 					<small> - Percentage width of the window to size the vertical scroll gallery</small>
-					
 				</div>
 
 			</td>
 		</tr>	
 	</table>
-
-
-
 
 	<div style="clear:both;"></div>
 </div>

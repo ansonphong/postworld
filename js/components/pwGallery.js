@@ -1,7 +1,7 @@
 ///// GALLERY VIEWER /////
 postworld.directive( 'pwGalleryViewer',
-	[ 'pwData', '$pw', '$log', '_', '$document', '$timeout',
-	function( $pwData, $pw, $log, $_, $document, $timeout ){
+	[ 'pwData', '$pw', '$log', '_', '$document', '$timeout', 'pwPosts',
+	function( $pwData, $pw, $log, $_, $document, $timeout, $pwPosts ){
 	return {
 		restrict: 'AE',
 		link: function( $scope, element, attrs ){
@@ -38,21 +38,36 @@ postworld.directive( 'pwGalleryViewer',
 
 			///// WATCH : GALLERY /////
 			$scope.$watch( 'gallery', function( gallery, oldGallery ){
+
+				// If for whatever reason, the index goes negative, set to 0
 				if( $_.get( gallery, 'index' ) < 0 )
 					$scope.gallery.index = 0;
 
-				// If posts is an array, get the count
+				// If posts is an array, update the count
 				if( _.isArray( gallery.posts ) ){
 					var count = gallery.posts.length;
-					$log.debug( 'gallery.posts.count : CHANGE : ' + count, gallery.posts );
+					$log.debug( 'pwGallery : gallery.posts.count : CHANGE : ' + count, gallery.posts );
 					$scope.gallery.count = count;
 				}
 				
-				// If posts switched, reset index to 0
-				if( !$_.objEquality( gallery.posts, oldGallery.posts ) )
-					$scope.gallery.index = 0;
-
 			},1);
+
+			///// WATCH : POST /////
+			$scope.$watch( 'post', function( post, oldPost ){
+				var postGalleryIndex = $_.get( $scope, 'post.gallery.index' );
+				if( $_.isNumeric( postGalleryIndex ) )
+					$scope.gallery.index = parseInt( postGalleryIndex );
+				else
+					$scope.gallery.index = 0;
+			});
+
+			/*
+			///// ON : MODAL CHANGE POST /////
+			$scope.$on( 'modalChangePost', function( e, meta ){
+				$log.debug( 'pwGallery : $on.modalChangePost', meta );
+
+			});
+			*/	
 
 			///// WATCH : GALLERY POSTS /////
 			$scope.$watch( 'gallery.posts', function(posts, oldPosts){
@@ -68,12 +83,36 @@ postworld.directive( 'pwGalleryViewer',
 				return false;
 			}
 
+			var saveGalleryIndex = function(){
+				// Saves the current gallery index into the post.gallery object
+				// Requires post to be defined, such as panel-post="post"
+
+				var feedId = $_.get( $scope, 'post.feed.id' );
+				var postId = $_.get( $scope, 'post.ID' );
+				var postGallery = $_.get( $scope, 'post.gallery' );
+
+				// If post gallery is defined
+				if( postGallery )
+					// Save the gallery index into the post
+					$scope.post.gallery.index = $scope.gallery.index;
+
+				// If feed and post IDs are defined
+				if( feedId && postId )
+					// Save the value into the central feed
+					$pwPosts.setFeedPostKeyValue( feedId, postId, 'gallery.index', $scope.gallery.index );
+
+				$log.debug( 'pwGallery : saveGalleryIndex', $scope.post );
+
+			}
+
 			$scope.nextImage = function(){
 				var gallery = $scope.gallery;
 				if( gallery.index < gallery.count - 1 )
 					$scope.gallery.index ++;
 				else
 					$scope.gallery.index = 0;
+
+				saveGalleryIndex();
 			}
 
 			$scope.previousImage = function(){
@@ -82,13 +121,17 @@ postworld.directive( 'pwGalleryViewer',
 					$scope.gallery.index = gallery.count-1;
 				else
 					$scope.gallery.index --;
+
+				saveGalleryIndex();
 			}
 
 			$scope.gotoIndex = function(index){
+				$log.debug( 'pwGallery : gotoIndex() ', index );
 				$scope.gallery.index = index;
+				saveGalleryIndex();
 			}
 
-			$scope.getImageIndex = function(imagePost){
+			$scope.getImageIndex = function( imagePost ){
 				var imagePostId = $_.get( imagePost, 'ID');
 				
 				// Wait until more people are using updated underscore
@@ -110,7 +153,9 @@ postworld.directive( 'pwGalleryViewer',
 			}
 
 			$scope.gotoImage = function(imagePost){
-				$scope.gallery.index = $scope.getImageIndex(imagePost);
+				$log.debug( 'pwGallery : gotoImage() ', imagePost );
+				$scope.gallery.index = $scope.getImageIndex( imagePost );
+				saveGalleryIndex();
 			}
 
 			$scope.imageIsSelected = function(imagePost){

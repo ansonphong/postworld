@@ -111,6 +111,12 @@ function pw_delete_cache( $where ){
 		);
 }
 
+function pw_truncate_cache(){
+	global $pw;
+	global $wpdb;
+	return $wpdb->query("TRUNCATE TABLE `" . $wpdb->pw_prefix . "cache`");
+}
+
 function pw_delete_cache_type( $type ){
 	// Deletes coorosponding cache types
 	$where = array(

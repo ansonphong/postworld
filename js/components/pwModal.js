@@ -283,6 +283,12 @@ postworld.controller('pwModalInstanceCtrl',
 			$scope.modalFeed.currentIndex = newIndex;
 			// Set the new scope post
 			$scope.post = $pwPosts.getFeed( $scope.modalFeed.id )['posts'][ newIndex ];
+		
+			$scope.$broadcast( 'modalChangePost', {
+				offset: offset,
+				postId: $_.get( $scope.post, 'ID' ),
+			});
+
 		}
 
 	}

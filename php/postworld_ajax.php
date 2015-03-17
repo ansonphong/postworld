@@ -11,18 +11,36 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
+//---------- PW TRUNCATE CACHE ----------//
+function pw_truncate_cache_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	if( current_user_can('manage_options') )
+		$truncate_cache = pw_truncate_cache();
+	$response_data = pw_get_cache_types_readout();
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_truncate_cache", "pw_truncate_cache_ajax");
+
+
 //---------- PW DELTE CACHE TYPE ----------//
 function pw_delete_cache_type_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
-
 	if( current_user_can('manage_options') )
 		$delete_cache = pw_delete_cache_type( $args['cache_type'] );
-
 	$response_data = pw_get_cache_types_readout();
-	
 	pwAjaxRespond( $response_data );
 }
 add_action("wp_ajax_pw_delete_cache_type", "pw_delete_cache_type_ajax");
+
+
+//---------- PW GET CACHE TYPES READOUT ----------//
+function pw_get_cache_types_readout_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	$response_data = pw_get_cache_types_readout();
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_get_cache_types_readout", "pw_get_cache_types_readout_ajax");
+
 
 //---------- PW SET USER META ----------//
 function pw_set_wp_usermeta_ajax(){

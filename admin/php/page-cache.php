@@ -23,6 +23,7 @@
 	pw-admin-cache
 	ng-controller="pwCacheDataCtrl"
 	ng-cloak
+	pw-ui
 	class="postworld">
 
 	<h1>
@@ -39,6 +40,17 @@
 		<div class="col-md-6">
 
 		<div class="well">
+			
+			<button
+				type="button"
+				class="button button-primary pull-right"
+				ng-click="refreshCacheReadout()">
+				<i
+					class="pwi-refresh"
+					ng-class="uiBoolClass(loading.cacheTypeReadout,'icon-spin')">
+				</i>
+			</button>
+
 			<h3>Cache Status</h3>
 
 			<div ng-show="cacheTypeReadoutIsEmpty()" class="well">
@@ -55,7 +67,17 @@
 					<tr>
 						<th width="33%">Type</th>
 						<th width="33%">Count</th>
-						<th width="33%"></th>
+						<th width="33%">
+							<button
+								type="button"
+								class="button"
+								ng-click="truncateCache()"
+								ng-disabled="loading.cacheTypeReadout">
+								<i class="pwi-trash"></i>
+								Delete All
+							</button>
+							
+						</th>
 					</tr>
 				</thead>
 				<tr ng-repeat="readout in cacheTypeReadout">
@@ -69,7 +91,8 @@
 						<button
 							type="button"
 							class="button"
-							ng-click="deleteCacheType(readout.cache_type)">
+							ng-click="deleteCacheType(readout.cache_type)"
+							ng-disabled="loading.cacheTypeReadout">
 							<i class="pwi-trash"></i>
 							Delete Cache
 						</button>
