@@ -115,6 +115,8 @@ postworld.directive( 'pwGalleryViewer',
 					$scope.gallery.index = 0;
 
 				saveGalleryIndex();
+
+				$log.debug( 'pwGallery : nextImage', $scope.gallery.index );
 			}
 
 			$scope.previousImage = function(){
@@ -125,6 +127,8 @@ postworld.directive( 'pwGalleryViewer',
 					$scope.gallery.index --;
 
 				saveGalleryIndex();
+
+				$log.debug( 'pwGallery : previousImage', $scope.gallery.index );
 			}
 
 			$scope.gotoIndex = function(index){
@@ -200,12 +204,16 @@ postworld.directive( 'pwGalleryViewer',
 				setGalleryKeybindings();
 			});
 
+			$scope.onFirstImage = function(){
+				return ( $scope.gallery.index == 0 && $scope.gallery.count > 0 );
+			}
+
 			$scope.onLastImage = function(){
 				return ( $scope.gallery.count > 0 && $scope.gallery.index == $scope.gallery.count - 1 );
 			}
 
-			$scope.onFirstImage = function(){
-				return ( $scope.gallery.index == 0 && $scope.gallery.count > 0 );
+			$scope.onFeedPost = function(){
+				return ( $_.get( $scope, 'post.feed.id' ) != false ) ? true : false;
 			}
 
 			///// KEYBINDINGS : KEYDOWN /////
@@ -220,10 +228,16 @@ postworld.directive( 'pwGalleryViewer',
 					case 39:
 						$log.debug( "keyDown: nextImage" );
 
-						// Check if first image, and if in modal feed, and if modal keybindings enabled
-						// Emit to Modal - nextpost()
+						// If on the last image, and in a feed
+						if( $scope.onLastImage() && $scope.onFeedPost() ){
+							// Emit to the modal to switch to the next post
+							var vars = { feedId: $scope.post.feed.id };
+							$log.debug( 'pwGallery : keyDown : $emit : modalNextPost', vars );
+							$scope.$emit( 'modalNextPost', vars );
+						}
+						else
+							$scope.nextImage();
 
-						$scope.nextImage();
 						break;
 					// Left Key
 					case 37:
@@ -232,7 +246,16 @@ postworld.directive( 'pwGalleryViewer',
 						// Check if first image, and if in modal feed, and if modal keybindings enabled
 						// Emit to Modal : previouspost()
 
-						$scope.previousImage();
+						// If on the first image, and in a feed
+						if( $scope.onFirstImage() && $scope.onFeedPost() ){
+							// Emit to the modal to switch to the previous post
+							var vars = { feedId: $scope.post.feed.id };
+							$log.debug( 'pwGallery : keyDown : $emit : modalPreviousPost', vars );
+							$scope.$emit( 'modalPreviousPost', vars );
+						}
+						else
+							$scope.previousImage();
+
 						break;
 				}
 				$scope.$apply();
@@ -271,8 +294,15 @@ postworld.directive( 'pwGalleryViewer',
 					bool = false;
 				// If passes tests
 				if( bool ){
+
 					// Set the keybindings globally
-					$pw.setKeybindings( getKeyBindingsObj() );
+					// Timeout in order to avoid double binding
+					$timeout( function(){
+						var keybindingsObj = getKeyBindingsObj();
+						$pw.setKeybindings( keybindingsObj );
+						$log.debug( 'pwGallery : setGalleryKeybindings()', keybindingsObj );
+					}, 0 );
+					
 					// Bind only once
 					if( firstKeybind ){
 						firstKeybind = false;
@@ -281,6 +311,7 @@ postworld.directive( 'pwGalleryViewer',
 							$scope.keyDown( e );
 						});
 					}
+
 				}
 			}
 
@@ -325,9 +356,10 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 	};
 
 	///// WATCH : WHEN THE POST CHANGES /////
-	$scope.$watchCollection( '[ post.ID, post.gallery ]', function(){
+	$scope.$watch( 'post', function(){
+		// PREVIOUSLY a watch collection on post.id and post.gallery
 
-		$log.debug( "::::: POST CHANGED :::::" );
+		$log.debug( "pwInfiniteGallery : $watch : post" );
 
 		// IF POST HAS GALLERY
 		if( !_.isEmpty( $_.getObj( $scope, 'post.gallery.posts' ) ) ){
@@ -351,7 +383,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 			// Insert the feed into the pwData.feeds
 			$pwPosts.insertFeed( galleryInstance, { posts: $scope.infiniteGallery.posts } );
 			// Log in Console
-			$log.debug( "INSERTED FEED : " + galleryInstance, $scope.infiniteGallery.posts );
+			$log.debug( "pwInfiniteGallery : INSERTED FEED : " + galleryInstance, $scope.infiniteGallery.posts );
 
 
 		// IF POST HAS NO GALLERY

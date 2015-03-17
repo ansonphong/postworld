@@ -193,7 +193,7 @@ postworld.controller('postController',
 	///// ACTION : FEED POST UPDATED /////
 	// This is run when the central feed post is updated with new data
 	$scope.$on( 'feedPostUpdated', function( e, vars ){
-		$log.debug( "$ON : feedPostUpdated : ", vars );
+		$log.debug( "pwPost : $ON : feedPostUpdated : ", vars );
 		// If the post does not know it's own feed
 		if( !$_.objExists( $scope, 'post.feed.id' ) )
 			return false;

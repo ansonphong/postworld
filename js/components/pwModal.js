@@ -305,6 +305,18 @@ postworld.controller('pwModalInstanceCtrl',
 	};
 
 
+	///// ON : MODAL NEXT/PREVIOUS POST /////
+	// Event listeners for switching post
+	$scope.$on( 'modalNextPost', function( e, vars ){
+		if( $_.get(vars,'feedId') == $scope.modalFeed.id )
+			$scope.nextPost();
+	});
+	$scope.$on( 'modalPreviousPost', function( e, vars ){
+		if( $_.get(vars,'feedId') == $scope.modalFeed.id )
+			$scope.previousPost();
+	});
+
+
 	///// KEY PRESS /////
 	// Capture Keydown
 	
