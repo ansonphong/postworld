@@ -289,6 +289,9 @@ postworld.controller('pwModalInstanceCtrl',
 				postId: $_.get( $scope.post, 'ID' ),
 			});
 
+			// Set the feed keybindings to this post
+			setFeedKeybindings();
+
 		}
 
 	}
@@ -306,17 +309,19 @@ postworld.controller('pwModalInstanceCtrl',
 	// Capture Keydown
 	
 	$scope.keyDown = function( e ){
-		//$log.debug( "key press : " + e.keyCode + " : ", e );
-		var keyCode = parseInt( e.keyCode );
 	
 		//$log.debug( "$pw.state.modals.open:", $pw.state.modals.open );
 		//$log.debug( "meta.modalIndex-1:", meta.modalIndex-1 );
+
+		if( !$pw.hasKeybindings({ feedId: $scope.modalFeed.id }) )
+			return false;
 
 		// Check if the current modal is on top
 		if( $pw.state.modals.open != meta.modalIndex+1 )
 			return false;
 
-		///// FEED /////
+		//// BIND KEYCODE TO ACTIONS ///
+		var keyCode = parseInt( e.keyCode );
 		if( !_.isUndefined( $scope.modalFeed ) ){
 			switch( keyCode ){
 				// Right Key
@@ -336,8 +341,24 @@ postworld.controller('pwModalInstanceCtrl',
 		
 	}
 
+	var getKeyBindingsObj = function(){
+		return {
+			feedId: $scope.modalFeed.id,
+		};
+	}
+
+	var setFeedKeybindings = function(){
+		// Enable keybindings
+		//$pw.state.modals.enableKeyBindings = true;		
+		$pw.setKeybindings( getKeyBindingsObj() );
+	}
+
 	// Enable key bindings
 	if( $_.get( meta, 'keybindings' ) ){
+		
+		setFeedKeybindings();
+
+		// Bind keys to keyDown function
 		$document.keydown( function( e ){
 			$scope.keyDown( e );
 		});

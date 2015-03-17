@@ -54,6 +54,11 @@ postworld.directive( 'pwGalleryViewer',
 
 			///// WATCH : POST /////
 			$scope.$watch( 'post', function( post, oldPost ){
+				if( _.isNull( post ) || _.isUndefined( post ) )
+					return false;
+
+				$log.debug( 'pwGallery : $watch.post', post );
+
 				var postGalleryIndex = $_.get( $scope, 'post.gallery.index' );
 				if( $_.isNumeric( postGalleryIndex ) )
 					$scope.gallery.index = parseInt( postGalleryIndex );
@@ -61,18 +66,15 @@ postworld.directive( 'pwGalleryViewer',
 					$scope.gallery.index = 0;
 			});
 
-			/*
-			///// ON : MODAL CHANGE POST /////
-			$scope.$on( 'modalChangePost', function( e, meta ){
-				$log.debug( 'pwGallery : $on.modalChangePost', meta );
-
-			});
-			*/	
-
 			///// WATCH : GALLERY POSTS /////
+			// Deeply watch the gallery posts object
 			$scope.$watch( 'gallery.posts', function(posts, oldPosts){
 				$log.debug( 'gallery.posts : CHANGE : ', posts );
-			},1);
+				
+				// When the post changes, re-set keybindings
+				setGalleryKeybindings();
+
+			}, 1);
 
 			$scope.galleryLoaded = function(){
 				var posts = $_.get( $scope.gallery, 'posts' );
@@ -179,7 +181,20 @@ postworld.directive( 'pwGalleryViewer',
 					return false;
 			}
 
+
+			///// OBSERVE : KEYBINDINGS /////
+			// Observe key bindings attribute
+			attrs.$observe( 'galleryKeybind', function( val ){
+				// Observe keybeindings attribute for a change
+				setGalleryKeybindings();
+			});
+
+			///// KEYBINDINGS : KEYDOWN /////
 			$scope.keyDown = function( e ){
+
+				if( !$pw.hasKeybindings( getKeyBindingsObj() ) )
+					return false;
+
 				var keyCode = parseInt( e.keyCode );
 				switch( keyCode ){
 					// Right Key
@@ -196,17 +211,51 @@ postworld.directive( 'pwGalleryViewer',
 				$scope.$apply();
 			}
 
-			// Enable key bindings
-			attrs.$observe( 'galleryKeybind', function(val){
-				if( val === null )
+			///// KEYBINDINGS : OBJ /////
+			var getKeyBindingsObj = function(){
+				// Construct the keybindings object for current gallery
+				// Object
+				var obj = {
+					context: 'gallery',
+				};
+				// Feed ID
+				var feedId = $_.get( $scope, 'post.feed.id' );
+				if( feedId )
+					obj.feedId = feedId;
+				// Post ID
+				var postId = $_.get( $scope, 'post.ID' );
+				if( postId )
+					obj.postId = postId;
+				return obj;
+			}
+
+			///// KEYBINDINGS : SET /////
+			var firstKeybind = true;
+			var setGalleryKeybindings = function(){
+				// Check galleryKeybind attribute
+				if( attrs.galleryKeybind === null )
 					return false;
-				var bool = $_.stringToBool( val );
+				// Sanitize value
+				var bool = $_.stringToBool( attrs.galleryKeybind );
+				// Get the posts length
+				var postsLength = $_.get( $scope, 'gallery.posts.length' );
+				// If no posts or no length, return falre
+				if( postsLength == 0 || postsLength == false )
+					bool = false;
+				// If passes tests
 				if( bool ){
-					$document.keydown( function( e ){
-					$scope.keyDown( e );
-				});
+					// Set the keybindings globally
+					$pw.setKeybindings( getKeyBindingsObj() );
+					// Bind only once
+					if( firstKeybind ){
+						firstKeybind = false;
+						// Bind the keyDown function
+						$document.keydown( function( e ){
+							$scope.keyDown( e );
+						});
+					}
 				}
-			});
+			}
 
 			$scope.trackingPosts = function( imagePost ){
 				// Use in ng-repeat to avoid carry-over artifacts in modal viewer

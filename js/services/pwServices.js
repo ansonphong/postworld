@@ -22,21 +22,18 @@ postworld.factory( '$pw',
 		return $window.pw.user;
 	}
 
-	var state = function(){
-		return {
-    		modals:{
-    			open:0,
-    		}
-    	};
-	}
-
 	// DECLARATIONS
 	return {
 		//version: $window.pw.info.version,		// Todo, front load from PHP var
 		info: $window.pw.info,
 		templates: pwTemplates,
 
-		state: state(),
+		state:{
+			modals:{
+    			open:0,
+    		},
+    		keybindings:{},
+		},
 
 		user: pwUser(), //$window.pw.user, // (or something) - refactor to go directly to pwUser
     	// view: $window.pw.view
@@ -85,6 +82,45 @@ postworld.factory( '$pw',
             head.appendChild(script);
         },
 
+        setKeybindings: function( contextObj ){
+        	// Sets a context to enable keybindings for
+			/*
+				contextObj = {
+					feedId: 	// optional
+					postId: 	// optional
+					context: 	// optional, could be 'gallery' etc
+				}
+			*/
+			this.state.keybindings = contextObj;
+        	$log.debug( '$pw.setkeybindings() : ', this.state.keybindings );
+        },
+
+        hasKeybindings: function( contextObj ){
+        	// Returns true/false if the key/value matches the keybindings state
+        	if( _.isEmpty(contextObj) )
+        		return false;
+        	if( _.size(contextObj) != _.size(this.state.keybindings) )
+        		return false;
+
+        	var has = true;
+        	// Localize this state
+        	var thisState = this.state;
+        	// Iterate through provided context checks
+        	angular.forEach( contextObj, function( value, key ){
+        		// If any checks fail, return false
+        		if( $_.get( thisState, 'keybindings.' + key ) != value )
+        			has = false; 
+        	});
+        	$log.debug( '$pw.hasKeybindings() : ' + JSON.stringify(has), contextObj );
+        	return has;
+        },
+
+        revertKeybindings: function(){
+        	// Reverses keybindings to their previous state
+        	
+        },
+
+        // TODO : retain history of keybindgs, when unset keybinding, reverse to previous
         
 	};
 
