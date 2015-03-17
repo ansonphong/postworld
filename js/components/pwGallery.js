@@ -182,12 +182,31 @@ postworld.directive( 'pwGalleryViewer',
 			}
 
 
+			/*
+			///// ON : MODAL CHANGE POST /////
+			$scope.$on( 'modalChangePost', function( e, meta ){
+				$log.debug( 'pwGallery : $on.modalChangePost', meta );
+				4- If on first gallery post, and goto previous (via keybinding), or
+					if on last gallery post and go next (via keybinding)
+					disable own keybindings
+					$emit to modal controller, to go previous/next and re-enable it's bindings
+			});
+			*/	
+
 			///// OBSERVE : KEYBINDINGS /////
 			// Observe key bindings attribute
 			attrs.$observe( 'galleryKeybind', function( val ){
 				// Observe keybeindings attribute for a change
 				setGalleryKeybindings();
 			});
+
+			$scope.onLastImage = function(){
+				return ( $scope.gallery.count > 0 && $scope.gallery.index == $scope.gallery.count - 1 );
+			}
+
+			$scope.onFirstImage = function(){
+				return ( $scope.gallery.index == 0 && $scope.gallery.count > 0 );
+			}
 
 			///// KEYBINDINGS : KEYDOWN /////
 			$scope.keyDown = function( e ){
@@ -200,11 +219,19 @@ postworld.directive( 'pwGalleryViewer',
 					// Right Key
 					case 39:
 						$log.debug( "keyDown: nextImage" );
+
+						// Check if first image, and if in modal feed, and if modal keybindings enabled
+						// Emit to Modal - nextpost()
+
 						$scope.nextImage();
 						break;
 					// Left Key
 					case 37:
 						$log.debug( "keyDown: previousImage" );
+
+						// Check if first image, and if in modal feed, and if modal keybindings enabled
+						// Emit to Modal : previouspost()
+
 						$scope.previousImage();
 						break;
 				}
