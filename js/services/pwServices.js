@@ -803,30 +803,7 @@ postworld.factory('pwPosts',
 			};
 			$rootScope.$broadcast( "feed.changeTemplate", vars );
     	},
-    	insertFeed: function( feedId, feed ){
-    		/* Inserts a feed into the $pwData.feeds service
-    		 * feedId = [ string ]
-			 * feed = { posts:[], ... }
-    		 */
-    		feedId = new String( feedId );
-   			///// ADD FEED OBJECT TO POSTS /////
-    		// If the feed has posts
-    		if( $_.objExists( feed, 'posts' ) ){
-    			// Create a new feed container
-    			var newPosts = [];
-    			// Interate through each post in the feed
-	    		angular.forEach( feed.posts, function( post ){
-	    			// And add the 'feed.id' value if it doesn't exist
-	    			if( !$_.objExists( post, 'feed.id' ) )
-	    				post = $_.setObj( post, 'feed.id', feedId );
-	    			newPosts.push( post );
-	    		});
-	    		feed.posts = newPosts;
-    		}
-    		// Add it to the central pwData service
-    		$pwData.feeds[feedId] = feed;
-    		return true;
-    	},
+    	
 	};
 
 }]);

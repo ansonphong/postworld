@@ -381,7 +381,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 			// Set instance name into the scope so it's accessible in the DOM
 			$scope.infiniteGallery.instance = galleryInstance;
 			// Insert the feed into the pwData.feeds
-			$pwPosts.insertFeed( galleryInstance, { posts: $scope.infiniteGallery.posts } );
+			$pwData.insertFeed( galleryInstance, { posts: $scope.infiniteGallery.posts } );
 			// Log in Console
 			$log.debug( "pwInfiniteGallery : INSERTED FEED : " + galleryInstance, $scope.infiniteGallery.posts );
 

@@ -393,13 +393,16 @@ postworld.controller('editPost',
 
 		// Clear TinyMCE
 		$timeout(function() {
-			if( !_.isUndefined( tinyMCE ) ){
+
+			if( typeof tinyMCE !== 'undefined' ){
 				if( !_.isUndefined( tinyMCE.get('post_content') ) &&
 					!_.isNull( tinyMCE.get('post_content') ) ){
 					$log.debug('Clear tinyMCE : ', tinyMCE);
 					tinyMCE.get('post_content').setContent( "" );
 				}
 			}
+
+
 		}, 2);
 
 		// Set the Route

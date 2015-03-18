@@ -29,6 +29,7 @@ postworld.controller('pwFeedItemCtrl',
 	if( typeof $scope.feed == 'function' ){
 		feedId = $_.get( $scope.feed(), 'feed_id' );
 		view = $pwData.getFeedView( feedId );
+		$log.debug( 'feedItem : BOOT : ', $scope.feed() );
 	}
 
 	///// MODAL WINDOW /////
@@ -37,7 +38,7 @@ postworld.controller('pwFeedItemCtrl',
 		view = 'modal';
 	}
 
-	$log.debug( "feedItem : Feed ID : ", feedId );
+	$log.debug( "feedItem : INIT : Feed ID : ", feedId );
 
 	if (type == '_pw_block') 
 		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );

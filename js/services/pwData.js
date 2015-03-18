@@ -41,7 +41,18 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	}
 	*/
 	
-	var feeds = $window['pw']['feeds'];
+	/*
+	var feeds = function(){
+		var feeds = $window['pw']['feeds'];
+
+		// Deposit the feed_id into each feed
+		angular.forEach( feeds, function( value, key ){
+			if( _.isUndefined( value.feed_id ) ){
+			}
+		});
+		return ;
+	};
+	*/
 	
 	// $log.debug('pwData() Registering feed_settings', feed_settings);
 	
@@ -83,7 +94,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
 		posts: $window.pw.posts,
 
-    	feeds: feeds,
+    	feeds: {},
 
     	widgets: $window.pw.widgets,
     	
@@ -510,6 +521,37 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_set_wp_usermeta',params);
 		},
+
+		insertFeed: function( feedId, feed ){
+    		/* Inserts a feed into the $pwData.feeds service
+    		 * feedId = [ string ]
+			 * feed = { posts:[], ... }
+    		 */
+    		 
+    		// Add/replace the feed_id key with the feedId
+    		feed.feed_id = feedId;
+
+   			///// ADD FEED OBJECT TO POSTS /////
+    		// If the feed has posts
+    		if( $_.objExists( feed, 'posts' ) ){
+    			// Create a new feed container
+    			var newPosts = [];
+    			// Interate through each post in the feed
+	    		angular.forEach( feed.posts, function( post ){
+	    			// And add the 'feed.id' value if it doesn't exist
+	    			if( !$_.objExists( post, 'feed.id' ) )
+	    				post = $_.setObj( post, 'feed.id', feedId );
+	    			newPosts.push( post );
+	    		});
+	    		feed.posts = newPosts;
+    		}
+
+    		$log.debug( "pwData.insertFeed : ID : " + feedId, feed );
+
+    		// Add it to the central pwData service
+    		this.feeds[feedId] = feed;
+    		return true;
+    	},
 
 		
 

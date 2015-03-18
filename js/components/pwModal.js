@@ -354,15 +354,16 @@ postworld.controller('pwModalInstanceCtrl',
 	}
 
 	var getKeyBindingsObj = function(){
-		return {
-			feedId: $scope.modalFeed.id,
-		};
+		var obj = {};
+		obj.feedId = $_.get($scope,'modalFeed.id');
+		return obj;
 	}
 
 	var setFeedKeybindings = function(){
 		// Enable keybindings
-		//$pw.state.modals.enableKeyBindings = true;		
-		$pw.setKeybindings( getKeyBindingsObj() );
+		//$pw.state.modals.enableKeyBindings = true;
+		if( $_.objExists( $scope, 'modalFeed.id' ) )
+			$pw.setKeybindings( getKeyBindingsObj() );
 	}
 
 	// Enable key bindings

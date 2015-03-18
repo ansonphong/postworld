@@ -31,38 +31,27 @@ postworld.directive('loadFeed', function() {
 
 
 postworld.controller('pwFeedController',
-	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_',
-	function( $scope, $rootScope, $location, $log, $attrs, $timeout, $pwData, $route, $_ ) {
+	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_', '$window',
+	function( $scope, $rootScope, $location, $log, $attrs, $timeout, $pwData, $route, $_, $window ) {
 		
 	// Initialize
-	$scope.busy = false; 			// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
-	$scope.firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
+	$scope.busy = false; 		// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
+	var firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 	$scope.scrollMessage = "";
+	$scope.feedId = $attrs.liveFeed;
 
-	// LIVE FEED
-	if ($attrs.liveFeed)    { 
-		$scope.directive = 	'liveFeed';
-		$scope.feedId	= 	$attrs.liveFeed;
-	}
-	// LOAD FEED
-	else  if ($attrs.loadFeed)   {
-		$scope.directive = 	'loadFeed';
-		$scope.feedId	= 	$attrs.loadFeed;
-	};
-
-	// FEED OBJECT
-	$scope.feed = ( $_.objExists( $pwData.feeds, $scope.feedId ) ) ?
-		$pwData.feeds[$scope.feedId] : {};
-	
-	// FEED ID
-	$scope.feed.feed_id = $scope.feedId; // This Scope variable will propagate to all directives inside Live Feed
-
-	// NO FEED
-	if (!$scope.feedId) {
-		$log.debug('no valid Feed ID provided in Feed Settings',$scope);
+	// IF NO FEED ID
+	if( !$scope.feedId ){
+		$log.debug( 'liveFeed : ERROR : No valid Feed ID provided' );
 		return;
 	}
-	
+
+	// INSERT FEED
+	if( $_.objExists( $window.pw, 'feeds.' + $scope.feedId ) )
+		$pwData.insertFeed( $scope.feedId, $window.pw.feeds[$scope.feedId] )
+	else
+		$log.debug( 'liveFeed : ERROR : No valid feed provided in $window.pw.feeds.' + $scope.feedId );
+
 	$scope.feed = function(){
 		return $pwData.feeds[$scope.feedId];
 	}
@@ -70,6 +59,8 @@ postworld.controller('pwFeedController',
 	$scope.posts = function(){
 		return $pwData.feeds[$scope.feedId].posts;
 	}
+
+	$log.debug( 'liveFeed : BOOT : feedId : ' + $scope.feedId, $scope.feed() );
 
    	$scope.updateTemplateUrl = function(){
 		// Generate template IDs
@@ -109,20 +100,6 @@ postworld.controller('pwFeedController',
 		if( _.isUndefined( $pwData.feeds[$scope.feedId] ) )
 			$pwData.feeds[$scope.feedId] = {};
 
-		// If we're handling the loadFeed directive
-		if ($scope.directive=="loadFeed") {
-			if ($pwData.feeds[$scope.feedId].offset)  {
-				// truncate feed outline in case of existing offset for load-feed only
-				var offset = $pwData.feeds[$scope.feedId].offset;
-				var len = response.data.feed_outline.length;
-				response.data.feed_outline = response.data.feed_outline.splice(offset,len);
-				// truncate response posts in case of existing offset for load-feed only															
-				response.data.posts = response.data.posts.splice(offset,len); 
-				//$log.debug('FEED DATA : ' + $pwData.feeds[$scope.feedId].feed_id, response.data );
-				//response.data.posts = response.data.posts.splice(offset,len); 				
-			}
-		}
-
 		/// INSERT FEED DATA RESPONSE ///
 		$pwData.feeds[$scope.feedId].feed_outline = response.data.feed_outline;
 		$pwData.feeds[$scope.feedId].posts = response.data.posts;
@@ -139,11 +116,14 @@ postworld.controller('pwFeedController',
 			$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
 			return;
 		}
+		
+		$log.debug( "liveFeed : getNext : firstRun = " + JSON.stringify(firstRun), $scope.feed() );
+
 		// if running for the first time
-		if ( $scope.firstRun ) {
-			$scope.firstRun = false;
-			if 		($scope.directive == 'liveFeed')	$scope.pwLiveFeed();
-			else if ($scope.directive == 'loadFeed')	$scope.pwLoadFeed();
+		if ( firstRun ) {
+			firstRun = false;
+			$scope.pwLiveFeed();
+
 		}
 		else {
 			// Run Search
@@ -160,7 +140,7 @@ postworld.controller('pwFeedController',
 		$log.debug( "$scope.reloadFeed" );
 		$scope.convertFeedQuery2QueryString( $scope.feed().query );						
 		$pwData.feeds[$scope.feedId].posts = false;
-		$scope.firstRun = true;			
+		firstRun = true;			
 		this.getNext();
 	};
 
@@ -173,11 +153,12 @@ postworld.controller('pwFeedController',
 	$scope.pwLiveFeed = function() {
 		// TODO : Set Nonce Authentically
 		$pwData.setNonce(78);
-		$log.debug( "LIVE FEED (init) : ID : " + $scope.feedId, $scope.feed() );
+		$log.debug( "liveFeed : INIT : ID : " + $scope.feedId, $pwData.feeds[$scope.feedId] );
 
 		///// GET FEED FROM PRELOADED DATA /////
 		// If posts have already been pre-loaded
 		if( _.isArray( $pwData.feeds[$scope.feedId].posts ) ){
+			$log.debug( "liveFeed : INIT : PRELOADED : " + $scope.feedId, $scope.feed().posts );
 			// Inject blocks into the feed
 			$scope.injectBlocks();
 			// Add feed meta data
@@ -376,7 +357,7 @@ postworld.controller('pwFeedController',
 						newItems[i] = $_.setObj( newItems[i], 'feed.loadOrder', loadOrder );
 						loadOrder ++;
 
-						$log.debug( ">>> INJECTED POST : loadOrder : " + newItems[i].feed.loadOrder + " : " + newItems[i].post_title );
+						$log.debug( "liveFeed : INJECTED POST : loadOrder : " + newItems[i].feed.loadOrder + " : " + newItems[i].post_title );
 
 						// If Posts doesn't exist as an array
 						if( _.isUndefined( $pwData.feeds[$scope.feedId].posts ) )
@@ -391,7 +372,7 @@ postworld.controller('pwFeedController',
 						// Will return true if a block was added
 						injectBlock = $scope.injectBlock( blockVars );
 						if( injectBlock == true ){
-							$log.debug( ">>> INJECTED BLOCK : loadOrder : ", blockVars.post.feed.loadOrder );
+							$log.debug( "liveFeed : INJECTED BLOCK : loadOrder : ", blockVars.post.feed.loadOrder );
 							loadOrder ++;
 						}
 
@@ -416,14 +397,14 @@ postworld.controller('pwFeedController',
 					$scope.busy = false;
 									
 				} else {
-					$log.debug('FEED ERROR : ',response.status,response.message);
+					$log.debug('liveFeed : ERROR : ',response.status,response.message);
 					$scope.busy = false;
 
 				}
 			},
 			// Failure
 			function(response) {
-				$log.error('pwFeedController.pwScrollFeed Failure',response);
+				$log.error('liveFeed : pwFeedController.pwScrollFeed Failure',response);
 				$scope.busy = false;
 				// TODO Show User Friendly Error Message
 			}
