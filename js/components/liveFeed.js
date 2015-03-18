@@ -38,39 +38,29 @@ postworld.controller('pwFeedController',
 	$scope.busy = false; 		// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 	var firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 	$scope.scrollMessage = "";
-
-	// LIVE FEED
 	$scope.feedId = $attrs.liveFeed;
 
+	// IF NO FEED ID
+	if( !$scope.feedId ){
+		$log.debug( 'liveFeed : ERROR : No valid Feed ID provided' );
+		return;
+	}
+
+	// INSERT FEED
 	if( $_.objExists( $window.pw, 'feeds.' + $scope.feedId ) )
 		$pwData.insertFeed( $scope.feedId, $window.pw.feeds[$scope.feedId] )
 	else
 		$log.debug( 'liveFeed : ERROR : No valid feed provided in $window.pw.feeds.' + $scope.feedId );
 
-	/*
-	// FEED OBJECT
-	$scope.feed = ( $_.objExists( $pwData.feeds, $scope.feedId ) ) ?
-		$pwData.feeds[$scope.feedId] : {};
-	// FEED ID
-	$scope.feed.feed_id = $scope.feedId; // This Scope variable will propagate to all directives inside Live Feed
-	*/
-
-	// NO FEED
-	if( !$scope.feedId ){
-		$log.debug( 'liveFeed : ERROR : No valid Feed ID provided' );
-		return;
-	}
-	
 	$scope.feed = function(){
 		return $pwData.feeds[$scope.feedId];
 	}
 
-	$log.debug( 'liveFeed : BOOT : feedId : ' + $scope.feedId, $scope.feed() );
-
-
 	$scope.posts = function(){
 		return $pwData.feeds[$scope.feedId].posts;
 	}
+
+	$log.debug( 'liveFeed : BOOT : feedId : ' + $scope.feedId, $scope.feed() );
 
    	$scope.updateTemplateUrl = function(){
 		// Generate template IDs
@@ -367,7 +357,7 @@ postworld.controller('pwFeedController',
 						newItems[i] = $_.setObj( newItems[i], 'feed.loadOrder', loadOrder );
 						loadOrder ++;
 
-						$log.debug( ">>> INJECTED POST : loadOrder : " + newItems[i].feed.loadOrder + " : " + newItems[i].post_title );
+						$log.debug( "liveFeed : INJECTED POST : loadOrder : " + newItems[i].feed.loadOrder + " : " + newItems[i].post_title );
 
 						// If Posts doesn't exist as an array
 						if( _.isUndefined( $pwData.feeds[$scope.feedId].posts ) )
@@ -382,7 +372,7 @@ postworld.controller('pwFeedController',
 						// Will return true if a block was added
 						injectBlock = $scope.injectBlock( blockVars );
 						if( injectBlock == true ){
-							$log.debug( ">>> INJECTED BLOCK : loadOrder : ", blockVars.post.feed.loadOrder );
+							$log.debug( "liveFeed : INJECTED BLOCK : loadOrder : ", blockVars.post.feed.loadOrder );
 							loadOrder ++;
 						}
 
@@ -407,14 +397,14 @@ postworld.controller('pwFeedController',
 					$scope.busy = false;
 									
 				} else {
-					$log.debug('FEED ERROR : ',response.status,response.message);
+					$log.debug('liveFeed : ERROR : ',response.status,response.message);
 					$scope.busy = false;
 
 				}
 			},
 			// Failure
 			function(response) {
-				$log.error('pwFeedController.pwScrollFeed Failure',response);
+				$log.error('liveFeed : pwFeedController.pwScrollFeed Failure',response);
 				$scope.busy = false;
 				// TODO Show User Friendly Error Message
 			}
