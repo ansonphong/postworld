@@ -190,7 +190,7 @@ function pw_get_templates( $vars = array() ){
 	// If 'subdirs' is specified, and 'posts' is not specified
 	if( isset($subdirs) &&
 		!in_array( 'posts', $subdirs )){
-		pw_log_microtimer('pw_get_templates', 'NON-POSTS');
+		//pw_log_microtimer('pw_get_templates', 'NON-POSTS');
 		// Return before processing post templates
 		return $template_obj;
 	}
@@ -282,7 +282,7 @@ function pw_get_templates( $vars = array() ){
 		$template_obj = $new_obj;
 	}
 
-	pw_log_microtimer('pw_get_templates', 'WITH POSTS');
+	//pw_log_microtimer('pw_get_templates', 'WITH POSTS');
 
 	return $template_obj;
 
