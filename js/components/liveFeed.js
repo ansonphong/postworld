@@ -60,7 +60,7 @@ postworld.controller('pwFeedController',
 		return $pwData.feeds[$scope.feedId].posts;
 	}
 
-	$log.debug( 'liveFeed : BOOT : feedId : ' + $scope.feedId, $scope.feed() );
+	//$log.debug( 'liveFeed : BOOT : feedId : ' + $scope.feedId, $scope.feed() );
 
    	$scope.updateTemplateUrl = function(){
 		// Generate template IDs

@@ -1870,6 +1870,22 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 				],
 			},
+			'featured_image':{
+				'placement':[
+					{
+						slug: 'none',
+						name: 'None',
+					},
+					{
+						slug: 'header',
+						name: 'In Header',
+					},
+					{
+						slug: 'article',
+						name: 'In Article',
+					},
+				],
+			},
 			'slider':{
 				'transition':[
 					{
