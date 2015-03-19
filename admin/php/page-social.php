@@ -75,10 +75,12 @@
 
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
-			<pre>pwSocial : {{ pwSocial | json }}</pre>
-			<pre>socialMeta : {{ socialMeta | json }}</pre>
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>pwSocial : {{ pwSocial | json }}</code></pre>
+				<pre><code>socialMeta : {{ socialMeta | json }}</code></pre>
+			</div>
 		<?php endif; ?>
-
 
 	</div>
 

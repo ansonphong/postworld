@@ -97,8 +97,11 @@
 					</table>
 
 					<?php if( pw_dev_mode() ) : ?>
-						<hr>
-						<pre><code>{{ pwBackgroundContexts | json }}</code></pre>
+						<hr class="thick">
+						<div class="pw-dev well">
+							<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+							<pre><code>{{ pwBackgroundContexts | json }}</code></pre>
+						</div>
 					<?php endif; ?>
 
 				</div>
@@ -204,24 +207,24 @@
 
 			</div>
 
-
 		</div>
 
-		<hr class="thick">
+		<?php if( pw_dev_mode() ) : ?>
+			<hr class="thick">
+			<div class="pw-dev well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<div class="well">
+					<h3>$scope.pwBackgrounds</h3>
+					<pre><code>{{ pwBackgrounds | json }}</code></pre>
+				</div>
 
-		<!--
-		<hr class="thick">
-		<button ng-click="resetDefaults()" class="button">Reset to Defaults</button>
+				<div class="well">
+					<h3>$scope.images</h3>
+					<pre><code>{{ images | json }}</code></pre>
+				</div>
+			</div>
+		<?php endif; ?>
 
-		<hr class="thick">
-		<pre>images : {{ images | json }}</pre>
-
-		<hr class="thick">
-
-		<pre>pwBackgrounds : {{ pwBackgrounds | json }}</pre>
-		-->
-
-		
 
 	</div>
 

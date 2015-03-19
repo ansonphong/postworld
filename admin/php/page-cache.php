@@ -105,11 +105,14 @@
 		</div>
 	</div>
 
-	<hr class="thick">
-
-	<?php if( pw_dev_mode() ): ?>
-
-
+	<?php if( pw_dev_mode() ) : ?>
+		<hr class="thick">
+		<div class="pw-dev well">
+			<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+			<div class="well">
+				<h3>$scope.cacheTypeReadout</h3>
+				<pre><code>{{ cacheTypeReadout | json }}</code></pre>
+			</div>
 	<?php endif; ?>
 
 </div>

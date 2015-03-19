@@ -21,6 +21,7 @@ function postworld_admin_menu(){
 	global $pw;	
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];
+	$submenu_slug = apply_filters( 'pw_admin_submenu_slug', $pw_slug );
 
 	$menu = array(
 		'menu' => array(
@@ -39,103 +40,113 @@ function postworld_admin_menu(){
 
 	if( in_array( 'site', $enabled_modules ) )
 		$menu['submenu']['site'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Site Options',
 			'menu_title' => 'Site Options',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-site',
+			'menu_slug' => $submenu_slug.'-site',
 			'function' => 'postworld_options_site',
 			);
 
 	if( in_array( 'layouts', $enabled_modules ) )
 		$menu['submenu']['layout'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Layout',
 			'menu_title' => 'Layout',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-layout',
+			'menu_slug' => $submenu_slug.'-layout',
 			'function' => 'postworld_options_layout',
 			);
 
 	if( in_array( 'sidebars', $enabled_modules ) )
 		$menu['submenu']['sidebars'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Sidebars',
 			'menu_title' => 'Sidebars',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-sidebars',
+			'menu_slug' => $submenu_slug.'-sidebars',
 			'function' => 'postworld_options_sidebars',
 			);
 
 	if( in_array( 'styles', $enabled_modules ) )
 		$menu['submenu']['styles'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Styles',
 			'menu_title' => 'Styles',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-styles',
+			'menu_slug' => $submenu_slug.'-styles',
 			'function' => 'postworld_options_styles',
 			);
 
 	if( in_array( 'social', $enabled_modules ) )
 		$menu['submenu']['social'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Social',
 			'menu_title' => 'Social',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-social',
+			'menu_slug' => $submenu_slug.'-social',
 			'function' => 'postworld_options_social',
 			);
 
 	if( in_array( 'feeds', $enabled_modules ) )
 		$menu['submenu']['feeds'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Feeds',
 			'menu_title' => 'Feeds',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-feeds',
+			'menu_slug' => $submenu_slug.'-feeds',
 			'function' => 'postworld_options_feeds',
 			);
 
 	/*
 	if( in_array( 'term-feeds', $enabled_modules ) )
 		$menu['submenu']['term-feeds'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Term Feeds',
 			'menu_title' => 'Term Feeds',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-term-feeds',
+			'menu_slug' => $submenu_slug.'-term-feeds',
 			'function' => 'postworld_options_term_feeds',
 			);
 	*/
 
 	if( in_array( 'backgrounds', $enabled_modules ) )
 		$menu['submenu']['backgrounds'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Backgrounds',
 			'menu_title' => 'Backgrounds',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-backgrounds',
+			'menu_slug' => $submenu_slug.'-backgrounds',
 			'function' => 'postworld_options_backgrounds',
 			);
 
 	if( in_array( 'iconsets', $enabled_modules ) )
 		$menu['submenu']['iconsets'] = array(
-			'parent_slug' => $pw_slug,
+			'parent_slug' => $submenu_slug,
 			'page_title' => 'Iconsets',
 			'menu_title' => 'Iconsets',
 			'capability' => 'manage_options',
-			'menu_slug' => $pw_slug.'-iconsets',
+			'menu_slug' => $submenu_slug.'-iconsets',
+			'function' => 'postworld_options_iconsets',
+			);
+
+	if( in_array( 'shortcodes', $enabled_modules ) )
+		$menu['submenu']['iconsets'] = array(
+			'parent_slug' => $submenu_slug,
+			'page_title' => 'Iconsets',
+			'menu_title' => 'Iconsets',
+			'capability' => 'manage_options',
+			'menu_slug' => $submenu_slug.'-iconsets',
 			'function' => 'postworld_options_iconsets',
 			);
 
 
 	$menu['submenu']['cache'] = array(
-		'parent_slug' => $pw_slug,
+		'parent_slug' => $submenu_slug,
 		'page_title' => 'Cache',
 		'menu_title' => 'Cache',
 		'capability' => 'manage_options',
-		'menu_slug' => $pw_slug.'-cache',
+		'menu_slug' => $submenu_slug.'-cache',
 		'function' => 'postworld_options_cache',
 		);
 
@@ -150,7 +161,7 @@ function postworld_admin_menu(){
 }
 
 ///// ADD ADMIN MENU PAGE /////
-add_action( 'admin_menu', 'theme_admin_menu', 8 );
+add_action( 'admin_menu', 'theme_admin_menu', 10 );
 function theme_admin_menu(){
 
 	$admin = postworld_admin_menu();

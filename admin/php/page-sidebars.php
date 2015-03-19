@@ -216,7 +216,13 @@
 
 		<hr class="thick">
 
-		<!--<pre>{{ iSidebars | json }}</pre>-->
+		<?php if( pw_dev_mode() ): ?>
+			<hr class="thick">
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>iSidebars : {{ iSidebars | json }}</code></pre>
+			</div>
+		<?php endif; ?>
 
 	</div>
 

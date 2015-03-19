@@ -46,13 +46,21 @@
 			</tr>
 		</table>
 
-		<hr class="thick">
+		<?php if( pw_dev_mode() ) : ?>
+			<hr class="thick">
+			<div class="pw-dev well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<div class="well">
+					<h3>$scope.iLayouts</h3>
+					<pre><code>{{ iLayouts | json }}</code></pre>
+				</div>
 
-		<!--
-		iLayouts : <pre>{{ iLayouts | json }}</pre>
-		iLayoutOptions : <pre>{{ iLayoutOptions | json }}</pre>
-		iGlobals : <pre><?php echo htmlentities( json_encode( iGlobals(), JSON_PRETTY_PRINT ) ); ?></pre>
-		-->
+				<div class="well">
+					<h3>$scope.iLayoutOptions</h3>
+					<pre><code>{{ iLayoutOptions | json }}</code></pre>
+				</div>
+			</div>
+		<?php endif; ?>
 
 	</div>
 </div>

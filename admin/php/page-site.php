@@ -117,7 +117,10 @@
 
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
-			<pre>pwSiteOptions: {{ pwSiteOptions | json }}</pre>
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>pwSiteOptions: {{ pwSiteOptions | json }}</code></pre>
+			</div>
 		<?php endif; ?>
 
 	</div>

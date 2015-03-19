@@ -336,29 +336,37 @@
 			</div>
 		</div>
 
-		<hr>
+		<?php if( pw_dev_mode() ) : ?>
+			<hr class="thick">
+			<div class="pw-dev well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<div class="well">
+					<h3>$scope.pwFeedSettings</h3>
+					<pre><code>{{ pwFeedSettings | json }}</code></pre>
+				</div>
 
-		<hr class="thick">
+				<div class="well">
+					<h3>$scope.pwFeeds</h3>
+					<pre><code>{{ pwFeeds | json }}</code></pre>
+				</div>
+			</div>
 
-		<!--
-		<pre>pwFeedSettings : {{ pwFeedSettings | json }}</pre>
-		<pre>pwFeeds : {{ pwFeeds | json }}</pre>
-		-->
-
-		<!--
-		RADIO BUTTONS
-		<b><i class="pwi-calendar"></i> Events Filter</b>
-		<br>
-		<div class="btn-group">
-			<label
-				ng-repeat="option in eventOptions.timeFilter"
-				class="btn"
-				ng-model="eventInput.timeFilter"
-				btn-radio="option.value">
-				{{ option.name }}
-			</label>
-		</div>
-		-->
+			<!--
+			RADIO BUTTONS
+			<b><i class="pwi-calendar"></i> Events Filter</b>
+			<br>
+			<div class="btn-group">
+				<label
+					ng-repeat="option in eventOptions.timeFilter"
+					class="btn"
+					ng-model="eventInput.timeFilter"
+					btn-radio="option.value">
+					{{ option.name }}
+				</label>
+			</div>
+			-->
+				
+		<?php endif; ?>
 
 
 

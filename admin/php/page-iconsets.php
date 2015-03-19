@@ -69,7 +69,7 @@
 
 	<?php if( pw_dev_mode() ): ?>
 		<div class="pw-dev well">
-			<h3>Dev Mode</h3>
+			<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
 
 			<div class="well">
 				<h3>$scope.pwIconsets</h3>

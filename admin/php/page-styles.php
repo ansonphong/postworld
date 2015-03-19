@@ -140,11 +140,13 @@
 
 		<button ng-click="resetStyleDefaults()" class="button">Reset to Defaults</button>
 		
-		<hr class="thick">
-		
-		<!--
-		<pre>pwStyles : {{ pwStyles | json }}</pre>
-		-->
+		<?php if( pw_dev_mode() ): ?>
+			<hr class="thick">
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>pwStyles : {{ pwStyles | json }}</code></pre>
+			</div>
+		<?php endif; ?>
 
 	</div>
 

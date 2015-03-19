@@ -13,16 +13,21 @@
 		<?php echo pw_select_modules(); ?>
 	</div>
 
-	<hr class="thick">
+	<?php if( pw_dev_mode() ): ?>
+		<hr class="thick">
+		<div class="well">
+			<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
 
-	<div>
-		<!-- META BOXES -->
-		<h2>Metboxes</h2>
-		<ul>
-			<li>Post Parent</li>
-			<li>Link URL</li>
-		</ul>
-	</div>
+			<!-- META BOXES -->
+			<h4>Metaboxes</h4>
+			<ul>
+				<li>Post Parent</li>
+				<li>Link URL</li>
+			</ul>
+		</div>
+	<?php endif; ?>
+
+	
 
 </div>
 
