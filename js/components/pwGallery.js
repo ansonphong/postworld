@@ -199,7 +199,7 @@ postworld.directive( 'pwGalleryViewer',
 
 			///// OBSERVE : KEYBINDINGS /////
 			// Observe key bindings attribute
-			attrs.$observe( 'galleryKeybind', function( val ){
+			attrs.$observe( 'galleryKeybinding', function( val ){
 				// Observe keybeindings attribute for a change
 				setGalleryKeybindings();
 			});
@@ -282,11 +282,11 @@ postworld.directive( 'pwGalleryViewer',
 			///// KEYBINDINGS : SET /////
 			var firstKeybind = true;
 			var setGalleryKeybindings = function(){
-				// Check galleryKeybind attribute
-				if( attrs.galleryKeybind === null )
+				// Check galleryKeybinding attribute
+				if( attrs.galleryKeybinding === null )
 					return false;
 				// Sanitize value
-				var bool = $_.stringToBool( attrs.galleryKeybind );
+				var bool = $_.stringToBool( attrs.galleryKeybinding );
 				// Get the posts length
 				var postsLength = $_.get( $scope, 'gallery.posts.length' );
 				// If no posts or no length, return falre

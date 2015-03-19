@@ -6,11 +6,11 @@
 
 ////////////////////////////////////////////////
 
-A Wordpress plugin for
+A Javascript and PHP Wordpress framework for
 • Extending the Wordpress functions API
 • Displaying posts in creative ways.
 
-Framework by : AngularJS
+JS Framework : AngularJS
 GitHub Repo  : https://github.com/phongmedia/postworld/
 ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 */
@@ -59,96 +59,6 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 	controllerProvider = $controllerProvider;
 
 	var plugin_url = jsVars.pluginurl;
-
-	////////// ROUTE PROVIDERS //////////
-	$routeProvider.when('/live-feed-1/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed1Widget.html',                           
-		});
-	$routeProvider.when('/live-feed-2/',    
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed2Widget.html',
-			// reloadOnSearch: false,                
-		});
-	$routeProvider.when('/live-feed-2-feeds/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
-		});
-	$routeProvider.when('/live-feed-with-ads/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed6Widget.html',                
-		});
-	$routeProvider.when('/live-feed-2-feeds-auto/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
-		});
-	$routeProvider.when('/live-feed-params/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed5Widget.html',                
-		});
-	$routeProvider.when('/load-feed-1/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed1Widget.html',                
-		});
-	$routeProvider.when('/load-feed-2/',
-		{
-			template: '<h2>Coming Soon</h2>',               
-		});
-	$routeProvider.when('/load-feed-2-feeds/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed3Widget.html',                
-		});
-	$routeProvider.when('/load-feed-cached-outline/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
-		});
-	$routeProvider.when('/load-feed-ads/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed5Widget.html',                
-		});
-	$routeProvider.when('/load-panel/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadPanelWidget.html',                
-		});
-	$routeProvider.when('/home/',
-		{
-				template: '<h2>Coming Soon</h2>',               
-		});
-	$routeProvider.when('/edit-post/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/editPost.html',                
-		});
-
-	$routeProvider.when('/load-comments/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
-		});            
-	$routeProvider.when('/embedly/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwEmbedlyWidget.html',             
-		});            
-	$routeProvider.when('/load-post/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadPostWidget.html',             
-		});            
-	$routeProvider.when('/o-embed/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwEmbedWidget.html',             
-		});       
-	$routeProvider.when('/media-modal/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/mediaModal.html',             
-		});  
-	$routeProvider.when('/post-link/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/postLink.html',             
-		});  
-	$routeProvider.when('/test-post/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwTestWidget.html',             
-		});  
-
-
 
 	$routeProvider.when('/new/:post_type',
 		{
@@ -200,8 +110,6 @@ postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {
    //$rootScope.current_user = $window.pwGlobals.user;
    //$log.debug('Current user: ', $rootScope.current_user );
 
-
-   
 
 });
 

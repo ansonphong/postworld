@@ -120,28 +120,33 @@ function i_content_columns_option( $vars ){
 	return pw_content_columns_option( $vars );
 }
 function pw_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
-
 	$vars['options_model'] = "options.post_content.columns";
+
+	if( is_string( $vars['ng_model'] ) )
+		$vars['context'] = 'custom';
 
 	switch($vars['context']){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
+			$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
 			break;
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
 		default:
-				$vars['ng_model'] = "pwMeta.post_content.columns";
+			$vars['ng_model'] = "pwMeta.post_content.columns";
 			break;
 		///// QUICK EDIT SETTINGS /////
 		case 'quickEdit':
 		default:
-				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
+			$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
+			break;
+
+		///// CUSTOM NG MODEL /////
+		default:
+			// Keep current ng_model
 			break;
 	}
-
 	return pw_ob_admin_template( 'meta-content-columns', $vars );
-
 }
 
 function i_share_social_options(){
@@ -156,6 +161,37 @@ function pw_share_social_options(){
 	$vars['ng_model'] = $vars['model_var'] . '.' . $vars['model_key'];
 
 	return pw_ob_admin_template( 'share-social', $vars );
+}
+
+
+function pw_featured_image_placement_options( $vars = array( "context" => "quickEdit" ) ){
+	
+	$vars['options_model'] = "options.featured_image.placement";
+
+	if( is_string( $vars['ng_model'] ) )
+		$vars['context'] = 'custom';
+
+	switch($vars['context']){
+		///// SITE-WIDE SETTINGS /////
+		case 'siteAdmin': 
+			$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".featured_image.placement";
+			break;
+		///// PER-POST ADMIN SETTINGS /////
+		case 'postAdmin':
+		default:
+			$vars['ng_model'] = "pwMeta.featured_image.placement";
+			break;
+		///// QUICK EDIT SETTINGS /////
+		case 'quickEdit':
+		default:
+			$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".featured_image.placement";
+			break;
+		///// CUSTOM NG MODEL /////
+		default:
+			// Keep current ng_model
+			break;
+	}
+	return pw_ob_admin_template( 'select-featured-image-placement-options', $vars );
 }
 
 

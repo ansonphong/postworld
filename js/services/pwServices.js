@@ -1881,8 +1881,8 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 						name: 'In Header',
 					},
 					{
-						slug: 'article',
-						name: 'In Article',
+						slug: 'content',
+						name: 'In Content',
 					},
 				],
 			},

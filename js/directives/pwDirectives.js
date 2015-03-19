@@ -33,11 +33,11 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 	// And double binds the passed post object into the isolated scope 
 	return {
 		restrict: 'EA',
-		replace: true,
+		//replace: true,
 		template: '<div ng-include="includeUrl" class="pw-include" ng-class="includeClass"></div>',
 		scope:{
 			// Must use an isolated scope, to allow for using multiple include directives in the same page
-			includeVars:"@",		//	Vars to assigned within the include as $scope.vars
+			vars:"=includeVars",		//	Vars to assigned within the include as $scope.vars
 			includeMeta:"=",		// 	Object to be assigned as $scope.meta within the include
 			includePost:"=",		//	Object to be assigned as $scope.post within the include
 			includeEnable:"=",		// 	Whether or not to actually enable the load the include
@@ -45,7 +45,8 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 		},
 		link: function($scope, element, attrs){
 
-			attrs.$observe( 'pwInclude', function( pwInclude ){
+			var setTemplateUrl = function(){
+				var pwInclude = attrs.pwInclude;
 				var parts = pwInclude.split('/');
 				if( parts.length < 2 ){
 					$log.debug( 'pwInclude : ERROR : Include must contain 2 parts, dir/basename.' )
@@ -53,28 +54,42 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 				}
 				if($scope.includeEnable !== false )
 					$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
+				else
+					$scope.includeUrl = '';
 				$log.debug('pwInclude : ' + attrs.pwInclude, $scope.includeUrl );
+			}
+
+			attrs.$observe( 'pwInclude', function( pwInclude ){
+				setTemplateUrl();
 			});
 
-			attrs.$observe( 'includeVars', function( val ){
-				var includeVars = $scope.$eval( $scope.includeVars );
-				$log.debug( 'pwInclude : includeVars :', includeVars );
-				if( !_.isUndefined( includeVars ) )
-					$scope.vars = $scope.vars;
+			$scope.$watch('includeEnable', function(val){
+				setTemplateUrl();
 			});
 
 			// Pipe post data into the isolated include scope as 'post' object
 			$scope.$watch('includePost', function( val ){
-				$log.debug( 'pwInclude : includePost', val );
+				//$log.debug( 'pwInclude : includePost', val );
 				if( !_.isUndefined( val ) )
 					$scope.post = $scope.includePost;
 			}, 1 );
 
 			// Pipe post data into the isolated include scope as 'meta' object
 			$scope.$watch('includeMeta', function( val ){
-				$log.debug( 'includePanel : includeMeta', val );
+				//$log.debug( 'includePanel : includeMeta', val );
 				if( !_.isUndefined( val ) )
 					$scope.meta = $scope.includeMeta;
+			}, 1 );
+
+			// Watch Include Enable and hide element if it's not enabled
+			$scope.$watch('includeEnable', function( val ){
+				//$log.debug( 'pwInclude : includeEnable', val );
+				if( !_.isUndefined( val ) && !_.isNull( val ) ){
+					if( val === false )
+						element.addClass( 'ng-hide' );
+					else
+						element.removeClass( 'ng-hide' );
+				}
 			}, 1 );
 
 		}

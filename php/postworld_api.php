@@ -424,7 +424,6 @@ function pw_get_postmeta( $vars = array() ){
 		$pw_postmeta_cache[ $post_id ] = array();
 	$pw_postmeta_cache[ $post_id ][ $meta_key ] = $metadata;
 
-
 	///// SUB KEY /////
 	// If no subkey
 	if( empty( $vars['sub_key'] ) )

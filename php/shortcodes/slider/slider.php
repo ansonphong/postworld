@@ -81,7 +81,6 @@ function pw_print_slider( $slider ){
 
 	$slider = array_replace_recursive( $slider_defaults, $slider );
 
-
 	///// TEMPLATES ////
 	$slider_templates = pw_get_templates(
 		array(
@@ -311,6 +310,7 @@ function pw_print_slider( $slider ){
 		'cache_hash' 	=> 	$slider_hash,
 		'cache_content'	=>	json_encode($slider),
 		));
+
 
 
 	///// INCLUDE TEMPLATE /////
