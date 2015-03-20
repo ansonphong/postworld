@@ -426,8 +426,8 @@ postworld.factory('_',
 			// Generates a random string based on length
 			// and specified character types
 
-			if( _.isEmpty(randomLength) )
-				randomLength = 8;
+			//if( _.isEmpty(randomLength) )
+			//	randomLength = 8;
 
 			if( _.isEmpty( charTypes ) )
 				charTypes = ['numbers','uppercase','lowercase','special'];

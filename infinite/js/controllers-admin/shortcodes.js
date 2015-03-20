@@ -23,8 +23,8 @@ postworldAdmin.controller('pwAdminShortcodesCtrl',
 	$scope.newShortcode = function(){
 		var newShortcode = {
 			'name': 			'New Shortcode',
-			'id': 				'shortcode-' + $_.randomString( 8, ['numbers','lowercase'] ),
-			'type': 			'self-enclosing', // enclosing / self-inclosing
+			'id': 				'shortcode-' + $_.randomString( 4, ['numbers','lowercase'] ),
+			'type': 			'self-enclosing', // enclosing / self-enclosing
 			'description': 		'',
 			'before_content': 	'<div>',
 			'after_content': 	'</div>',
@@ -38,16 +38,17 @@ postworldAdmin.controller('pwAdminShortcodesCtrl',
 	$scope.removeShortcode = function(shortcode){
 		var updatedShortcodes = [];
 		angular.forEach( $scope.pwShortcodeSnippets, function( value ){
-			if( sidebar != value ){
+			if( sidebar != value )
 				updatedShortcodes.push(value);
-			}
 		});
 		$scope.pwShortcodeSnippets = updatedShortcodes;
 	}
 
 	$scope.generateShortcode = function( item ){
-		return "[pw-shortcode id='" + item.id + "']";
+		if( item.type == 'self-enclosing' )
+			return "[" + item.id + "]";
+		if( item.type == 'enclosing' )
+			return "[" + item.id + "]" + "Content here." + "[/" + item.id + "]";
 	}
 
-	
 }]);

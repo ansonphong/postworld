@@ -70,22 +70,7 @@
 					<h3><i class="pwi-gear"></i> <?php ___('shortcodes.item_title'); ?></h3>
 
 					<div class="pw-row">
-						<div class="pw-col-6">
-							<label
-								for="item-name"
-								class="inner"
-								tooltip="<?php ___('shortcodes.name_info'); ?>"
-								tooltip-popup-delay="333">
-								<?php ___('shortcodes.name'); ?>
-								<i class="pwi-info-circle"></i>
-							</label>
-							<input
-								id="item-name"
-								class="labeled"
-								type="text"
-								ng-model="selectedItem.name">
-						</div>
-						<div class="pw-col-6">
+						<div class="pw-col-4">
 							<label
 								for="item-id"
 								class="inner"
@@ -101,6 +86,21 @@
 								type="text"
 								ng-model="selectedItem.id"
 								pw-sanitize="id">
+						</div>
+						<div class="pw-col-8">
+							<label
+								for="item-name"
+								class="inner"
+								tooltip="<?php ___('shortcodes.name_info'); ?>"
+								tooltip-popup-delay="333">
+								<?php ___('shortcodes.name'); ?>
+								<i class="pwi-info-circle"></i>
+							</label>
+							<input
+								id="item-name"
+								class="labeled"
+								type="text"
+								ng-model="selectedItem.name">
 						</div>
 					</div>
 
