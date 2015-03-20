@@ -43,11 +43,21 @@ input.labeled, select.labeled{
 	height:64px !important; // Override WP Admin height of 36px
 }
 
-input.labeled, textarea.labeled, select.labeled, .labeled input{
+input.labeled, textarea.labeled, select.labeled, .labeled input, .labeled-area{
 	padding:25px 15px 8px 10px;
 	&.icon_right{
 		padding-right:50px;
 	};
+}
+
+.labeled-area{
+	label.inner{
+		top:0;
+		left:0;
+		background:transparent;
+	}
+	position:relative;
+	display: block;
 }
 
 select.labeled{

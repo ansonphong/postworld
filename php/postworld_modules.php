@@ -69,6 +69,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'',
 			),
 
+		array(
+			'name'	=>	'Shortcodes',
+			'slug'	=>	'shortcodes',
+			'icon'	=>	'pwi-code',
+			'description'	=>	'',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules

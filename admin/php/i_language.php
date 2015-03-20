@@ -71,6 +71,35 @@ $i_language = array(
 		'after_title_info'	=> 	'HTML that goes after the title of each widget',
 		),
 
+	'shortcodes'	=>	array(
+		'shortcode'			=>	'Shortcode',
+		'item_title'		=>	'Shortcode Settings',
+		'add_new' 			=>	'Add New Shortcode',
+		'delete'			=>	'Delete Shortcode',
+		'duplicate'			=>	'Duplicate Shortcode',
+
+		'name'				=>	'Shortcode Snippet Name',
+		'id'				=>	'Shortcode ID',
+		'id_info'			=>	'The ID is the unique name for the shortcode. This is used to invoke the shortcode.',
+		'id_edit_info'		=>	'Editing the ID may cause instances of the shortcode to disappear.',	
+		
+		'edit'				=>	'Edit Shortcode Snippet',
+		'delete' 			=> 	'Delete Shortcode Snippet',
+		'update' 			=> 	'Update Shortcode Snippet',
+
+		'before_content'	=>	'Before Content',
+		'after_content'		=>	'After Content',
+
+		'content'			=>	'Content',
+
+		'enclosing'			=>	'Enclosing',
+		'self_enclosing'	=>	'Self-enclosing',
+
+		'enclosing_description'			=>	'Contains two parts, a beginning and end, which enclose content.',
+		'self_enclosing_description'	=>	'Contains one part, which is self-contained.',
+
+		),
+
 	'feeds'	=>	array(
 		'item_title'		=>	'Feed Settings',
 		'add_new' 			=>	'Add New Feed',

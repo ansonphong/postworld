@@ -44,6 +44,8 @@ $pw = array(
 				'social'				=>	'postworld-social',
 				'backgrounds'			=>	'postworld-backgrounds',
 				'background_contexts'	=>	'postworld-background-contexts',
+				'shortcodes'			=>	'postworld-shortcodes',
+				'shortcode_snippets'	=>	'postworld-shortcode-snippets',
 				'header_code'			=>	'postworld-header-code',
 				'iconsets'				=>	'postworld-iconsets',
 				'cache_iconset'			=>	'postworld-cache-iconset-',
@@ -85,6 +87,8 @@ define( 'PW_OPTIONS_SOCIAL', 				$pw['db']['wp_options']['option_name']['social'
 define( 'PW_OPTIONS_ICONSETS', 				$pw['db']['wp_options']['option_name']['iconsets'] );
 define( 'PW_OPTIONS_BACKGROUNDS', 			$pw['db']['wp_options']['option_name']['backgrounds'] );
 define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name']['background_contexts'] );
+define( 'PW_OPTIONS_SHORTCODES', 			$pw['db']['wp_options']['option_name']['shortcodes'] );
+define( 'PW_OPTIONS_SHORTCODE_SNIPPETS', 	$pw['db']['wp_options']['option_name']['shortcode_snippets'] );
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
 
 ///// DEFINE OPTION CACHES /////
@@ -268,6 +272,7 @@ include 'postworld-modules/sidebars/postworld-sidebars.php';
 include 'postworld-modules/layouts/postworld-layouts.php';
 include 'postworld-modules/iconsets/postworld-iconsets.php';
 include 'postworld-modules/taxonomy-meta/postworld-taxonomy-meta.php';
+include 'postworld-modules/shortcodes/postworld-shortcodes.php';
 
 ////// GET AJAX FUNCTIONS AND ACTION //////
 include 'php/postworld_ajax.php';

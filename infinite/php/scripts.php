@@ -10,19 +10,19 @@ function i_include_admin_scripts(){
 	wp_enqueue_script('Infinite-App', get_infinite_directory_uri().'/js/app.js', $angularDep );
 
 	// CONTROLLERS : ADMIN
-	wp_enqueue_script('Infinite-Admin-Options', get_infinite_directory_uri().'/js/controllers-admin/options.js', $angularDep );
-	wp_enqueue_script('Infinite-Admin-Layouts', get_infinite_directory_uri().'/js/controllers-admin/layouts.js', $angularDep );
-	wp_enqueue_script('Infinite-Admin-Styles', get_infinite_directory_uri().'/js/controllers-admin/styles.js', $angularDep );
-	wp_enqueue_script('Infinite-Admin-Sidebars', get_infinite_directory_uri().'/js/controllers-admin/sidebars.js', $angularDep );
-	wp_enqueue_script('Infinite-Admin-Feeds', get_infinite_directory_uri().'/js/controllers-admin/feeds.js', $angularDep );
-	//wp_enqueue_script('Infinite-Admin-Term-Feeds', get_infinite_directory_uri().'/js/controllers-admin/term-feeds.js', $angularDep );
-	wp_enqueue_script('Infinite-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
-	wp_enqueue_script('Infinite-Admin-Iconsets', get_infinite_directory_uri().'/js/controllers-admin/iconsets.js', $angularDep );
-	wp_enqueue_script('Infinite-Admin-Cache', get_infinite_directory_uri().'/js/controllers-admin/cache.js', $angularDep );
-	
+	wp_enqueue_script('Postworld-Admin-Options', get_infinite_directory_uri().'/js/controllers-admin/options.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Layouts', get_infinite_directory_uri().'/js/controllers-admin/layouts.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Styles', get_infinite_directory_uri().'/js/controllers-admin/styles.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Sidebars', get_infinite_directory_uri().'/js/controllers-admin/sidebars.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Feeds', get_infinite_directory_uri().'/js/controllers-admin/feeds.js', $angularDep );
+	//wp_enqueue_script('Postworld-Admin-Term-Feeds', get_infinite_directory_uri().'/js/controllers-admin/term-feeds.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Iconsets', get_infinite_directory_uri().'/js/controllers-admin/iconsets.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Shortcodes', get_infinite_directory_uri().'/js/controllers-admin/shortcodes.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Cache', get_infinite_directory_uri().'/js/controllers-admin/cache.js', $angularDep );
 	
 	// DIRECTIVES : ADMIN
-	wp_enqueue_script('Infinite-Admin', get_infinite_directory_uri().'/js/directives-admin/pwAdmin.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin', get_infinite_directory_uri().'/js/directives-admin/pwAdmin.js', $angularDep );
 	wp_enqueue_script('Infinite-Save-Options', get_infinite_directory_uri().'/js/directives-admin/iSaveOption.js', $angularDep );
 	
 	wp_enqueue_script('Infinite-iData', get_infinite_directory_uri().'/js/services/iData.js', $angularDep );
@@ -40,14 +40,13 @@ function i_include_admin_scripts(){
 	wp_enqueue_script( 'jquery-ui-widget' );
 	wp_enqueue_script( 'jquery-ui-mouse' );
 	
-
 }
 
 function i_include_scripts(){
 
 	///// JQUERY /////
-	wp_enqueue_script('jquery');
-	wp_enqueue_script('jquery-ui-core');
+	//wp_enqueue_script('jquery');
+	//wp_enqueue_script('jquery-ui-core');
 
 	// UNDERSCORE JS
 	//wp_enqueue_script('Underscore-JS', get_infinite_directory_uri().'/packages/underscore.js/underscore.min.js' );
@@ -62,7 +61,7 @@ function i_include_scripts(){
 	//wp_enqueue_script('AngularJS-Sanitize', get_template_directory_uri().'/packages/AngularJS/angular-sanitize.min.js', 'AngularJS' );
 	
 	// ANGULAR DEPENDENCIES
-	$angularDep = array(); //, 'Angular-JS' 'Infinite-App'
+	//$angularDep = array(); //, 'Angular-JS' 'Infinite-App'
 
 	// APP
 	//wp_enqueue_script('Infinite-App', get_infinite_directory_uri().'/js/app.js', $angularDep );

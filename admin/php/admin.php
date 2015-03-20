@@ -131,15 +131,14 @@ function postworld_admin_menu(){
 			);
 
 	if( in_array( 'shortcodes', $enabled_modules ) )
-		$menu['submenu']['iconsets'] = array(
+		$menu['submenu']['shortcodes'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Iconsets',
-			'menu_title' => 'Iconsets',
+			'page_title' => 'Shortcodes',
+			'menu_title' => 'Shortcodes',
 			'capability' => 'manage_options',
-			'menu_slug' => $submenu_slug.'-iconsets',
-			'function' => 'postworld_options_iconsets',
+			'menu_slug' => $submenu_slug.'-shortcodes',
+			'function' => 'postworld_options_shortcodes',
 			);
-
 
 	$menu['submenu']['cache'] = array(
 		'parent_slug' => $submenu_slug,
