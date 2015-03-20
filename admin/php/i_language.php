@@ -100,6 +100,14 @@ $i_language = array(
 
 		),
 
+	'iconsets'	=>	array(
+		'icons'				=>	'Icons',
+		'icon_shortcode'	=>	'Icon Shortcode',
+		'icon_shortcode_description'	=>	'Select an icon to get it\'s shortcode',
+		'enabled_iconsets'	=>	'Enabled Iconsets',
+		'shortcode_how_to'	=>	'To use the shortcode, paste the following text into a post.'
+		),
+
 	'feeds'	=>	array(
 		'item_title'		=>	'Feed Settings',
 		'add_new' 			=>	'Add New Feed',

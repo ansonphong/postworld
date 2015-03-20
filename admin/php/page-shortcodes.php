@@ -1,6 +1,9 @@
 <?php
 	$pwShortcodes = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODES ) );
 	$pwShortcodeSnippets = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODE_SNIPPETS ) );
+
+	$enabled_modules = pw_enabled_modules();
+
 ?>
 <script>
 	postworldAdmin.controller( 'pwShortcodesDataCtrl', [ '$scope', function( $scope ){
@@ -25,6 +28,7 @@
 	<div
 		pw-admin
 		pw-admin-shortcodes
+		pw-ui
 		ng-controller="pwShortcodesDataCtrl">
 
 		<h1>
@@ -41,6 +45,14 @@
 			<div class="pw-col-3">
 				<ul class="list-menu">
 					<li
+						ng-click="selectItem('settings');"
+						ng-class="menuClass('settings')">
+						<i class="pwi-gear"></i> Settings
+					</li>
+				</ul>
+				<hr class="thin">
+				<ul class="list-menu">
+					<li
 						ng-repeat="item in pwShortcodeSnippets"
 						ng-click="selectItem(item)"
 						ng-class="menuClass(item)">
@@ -50,8 +62,18 @@
 				<div class="space-6"></div>
 			</div>
 
-			<!-- ///// EDIT SETTINGS ///// -->
 			<div class="pw-col-9">
+
+				<!-- ///// EDIT SETTINGS ///// -->
+				<div ng-show="showView('settings')">
+
+					<div class="well">
+						
+					</div>
+
+				</div>
+
+				<!-- ///// EDIT ITEMS ///// -->
 				<div ng-show="showView('editItem')">
 
 					<label

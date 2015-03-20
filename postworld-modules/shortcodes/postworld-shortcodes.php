@@ -1,12 +1,20 @@
 <?php
+
+/*____  _                _                _           
+ / ___|| |__   ___  _ __| |_ ___ ___   __| | ___  ___ 
+ \___ \| '_ \ / _ \| '__| __/ __/ _ \ / _` |/ _ \/ __|
+  ___) | | | | (_) | |  | || (_| (_) | (_| |  __/\__ \
+ |____/|_| |_|\___/|_|   \__\___\___/ \__,_|\___||___/
+
+////////////////////////////////////////////////////////////*/
 //////////////////// REGISTER SHORTCODES ////////////////////
+
 global $pw;
 
 if( in_array( 'shortcodes', $pw['info']['modules'] ) )
 	add_action( 'init', 'pw_register_shortcodes' );
 
 function pw_register_shortcodes(){
-
 	// Enable shortcodes to be invoked by [pw-shortcode id="shortcodeId"]
 	add_shortcode( 'pw-shortcode', 'pw_custom_shortcode_by_id' );
 
@@ -96,5 +104,139 @@ function pw_custom_shortcode_by_id( $atts, $content=null, $tag ){
 	return false;
 
 }
+
+////////// SHORTCODE //////////
+function pw_icons_shortcode( $atts, $content = null, $tag ) {
+
+	$atts = shortcode_atts( array(
+		'icon' => '',
+		'class' => '',
+		'color' => '',
+		'size' => '',
+	), $atts );
+	$vars = $atts;
+
+	$vars['tag'] = $tag;
+	$template = pw_get_shortcode_template( "icons" );
+
+	// Generate output	
+	$output = pw_ob_include( $template, $vars );
+
+	// Remove any line breaks
+	$output = str_replace(array("\r", "\n", "\t"), "", $output);
+
+	// Return template
+	return $output; //do_shortcode();
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function pw_general_shortcode( $atts, $content=null, $tag ) {
+	return pw_shortcode( $atts, $content, $tag );
+}
+
+function pw_shortcode( $atts, $content=null, $tag ) {
+	extract( shortcode_atts( array(
+		'class' => '',
+		'color' => '',
+	), $atts ) );
+	// Start Output Buffering
+	ob_start();
+	// Get the template
+	include pw_get_shortcode_template( $tag );
+	// Set included file into a string/variable
+	$shortcode = ob_get_contents();
+	// End Output Buffering
+	ob_end_clean();
+
+	// Return template
+	return do_shortcode($shortcode);
+}
+
+function pw_skip_shortcode( $string ){
+	$string = str_replace("[", "&#91;", $string);
+	$string = str_replace("]", "&#93;", $string);
+	return $string;
+}
+
+function pw_shortcode_example( $string, $echo = true ){
+
+	$shortcode_string = pw_skip_shortcode($string);
+	$shortcode_parsed = do_shortcode($string);
+
+	// Start Output Buffering
+	ob_start();
+	// Get the template
+	include pw_get_shortcode_template( "shortcodes-help-example" );
+	// Set included file into a string/variable
+	$html = ob_get_contents();
+	// End Output Buffering
+	ob_end_clean();
+
+	if( $echo )
+		echo $html;
+	else
+		return $html;
+
+}
+
+function pw_empty_shortcode(){
+	return "";
+}
+
+
+if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
+
+	add_shortcode( 'pw-icon', 		'pw_icons_shortcode' );
+
+	/////////////// BASIC SHORTCODES //////////
+	// BLOCKS
+	add_shortcode( 'block', 		'pw_shortcode' );
+	add_shortcode( 'block-sub', 	'pw_shortcode' );
+	add_shortcode( 'blockquote', 	'pw_shortcode' );
+
+	// CALLOUTS
+	add_shortcode( 'callout', 	'pw_shortcode' );
+	add_shortcode( 'callout-xl', 'pw_shortcode' );
+
+	// HTML
+	add_shortcode( 'br', 'pw_shortcode' );
+	add_shortcode( 'hr', 'pw_shortcode' );
+
+	add_shortcode( 'h1', 'pw_shortcode' );
+	add_shortcode( 'h2', 'pw_shortcode' );
+	add_shortcode( 'h3', 'pw_shortcode' );
+	add_shortcode( 'h4', 'pw_shortcode' );
+
+
+	/////////////// ADVANCED SHORTCODES //////////
+	include 'menu/menu.php';
+	include 'fonts/fonts.php';
+	include 'slider/slider.php';
+	include 'gallery/gallery.php';
+	include 'pagelist/pagelist.php';
+	include 'columns/columns.php';
+	include 'alignments/alignments.php';
+	include 'help/shortcodes-help.php';
+	include 'feed/feed.php';
+	include 'term-feed/term-feed.php';
+	include 'user-feed/user-feed.php';
+
+}
+
 
 ?>

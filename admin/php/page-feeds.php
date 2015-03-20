@@ -101,7 +101,7 @@
 						<i class="pwi-gear"></i> Settings
 					</li>
 				</ul>
-					<hr class="thin">
+				<hr class="thin">
 				<ul class="list-menu">
 					<li
 						ng-repeat="item in pwFeeds"
@@ -176,11 +176,10 @@
 
 					</div>
 					
-
 				</div>
 
 
-				<!-- ///// EDIT SETTINGS ///// -->
+				<!-- ///// EDIT ITEMS ///// -->
 				<div ng-show="showView('editItem')">
 
 

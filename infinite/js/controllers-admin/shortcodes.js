@@ -20,6 +20,8 @@ postworldAdmin.controller('pwAdminShortcodesCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
 	
+	$scope.view = 'settings';
+
 	$scope.newShortcode = function(){
 		var newShortcode = {
 			'name': 			'New Shortcode',

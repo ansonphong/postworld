@@ -284,9 +284,6 @@ include 'php/postworld_meta.php';
 ////// INCLUDES //////
 include 'php/postworld_includes.php';
 
-////// SHORTCODES //////
-include 'php/postworld_shortcodes.php';
-
 ////// UPDATE / MIGRATE //////
 include 'php/postworld_update.php';
 
