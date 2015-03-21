@@ -94,6 +94,7 @@
 											<select
 												ng-options="class for class in value.classes"
 												ng-model="shortcodeAtts[key]">
+												<option value="">None</option>
 											</select>
 										</td>
 									</tr>

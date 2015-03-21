@@ -187,10 +187,13 @@ include 'php/postworld_install_queries.php';
 
 ////////// INSTALL POSTWORLD ///////////
 include 'php/postworld_install.php';
+
+/*
 register_activation_hook( __FILE__, 'postworld_install' );
 register_activation_hook( __FILE__, 'postworld_install_data' );
 register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
 register_activation_hook( __FILE__, 'postworld_install_Triggers' );
+*/
 
 //include 'php/postworld_debugger.php';
 

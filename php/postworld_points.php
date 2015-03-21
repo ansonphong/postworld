@@ -309,10 +309,11 @@
 				If $set_points is greater than the user's role vote_points , reduce to vote_points
 		
 		 */
-		 $user_id = get_current_user_id();
-		 $user_vote_power = get_user_vote_power($user_id);
-		 if ( abs($user_vote_power) < abs($set_points) )
-    		$set_points = $user_vote_power * (abs($set_points)/$set_points); 
+		$user_id = get_current_user_id();
+
+		$user_vote_power = get_user_vote_power($user_id);
+		if ( abs($user_vote_power) < abs($set_points) )
+			$set_points = $user_vote_power * (abs($set_points)/$set_points); 
 	 	
 	 /*
 	 	$update_points = $set_points - $old_user_points; // calculate the difference in points
@@ -329,7 +330,9 @@
 		
 		 */
 		global $wpdb;	
-		$wpdb-> show_errors();
+
+		if( pw_dev_mode() )
+			$wpdb->show_errors();
 		
 		  $table_name;
 		  $points_column='' ;
@@ -373,8 +376,10 @@
 			//echo("update_points:".$update_points);	
 		}
 		
+
+
 		//check if it is required to delete the row and update cashed points (triggers)
-		if ($set_points == 0) {
+		if ($set_points == 0) { 
 			if($points_row){
 				$query = "delete from ".$table_name." where $column_id=" . $id . " and user_id=" . $user_id;
 				$wpdb -> query($query);
@@ -382,10 +387,13 @@
 				$update_points = 0;
 			}
 			
-		} else { //set points not 0
+		} else { //set points not 0 
 			
+
 			if($points_row){
+
 				if($point_type =='post') {
+
 					update_post_points($id, $user_id, $set_points);
 					//$points_total = cache_post_points($id);
 				}
@@ -395,6 +403,7 @@
 				}
 			}
 			else{
+
 			//	echo "row not founddd";
 				if($point_type =='post') {
 				//	echo "postt";
@@ -407,8 +416,11 @@
 				}
 				$update_points= $set_points;
 			}
+
 			
 		}
+
+
 
 		if ($point_type =='post') {
 			// Cache Post Points
@@ -480,13 +492,23 @@
 	function update_post_points($post_id, $user_id, $points){
 			global $wpdb;
 			$wpdb -> show_errors();
-			$query="update $wpdb->pw_prefix"."post_points set post_points=".$points ." where post_id=".$post_id." and user_id=".$user_id;
+			$query="update $wpdb->pw_prefix"."post_points set post_points=".$points." where post_id=".$post_id." and user_id=".$user_id;
 			$wpdb->query($query);
+	
+		// Caching causing an issue
+
+		// Update the post_points value in postworld_post_meta
+
+		/*
+			update wp_postworld_post_meta set post_points = (select COALESCE(SUM(post_points),0) from wp_postworld_post_points where post_id = NEW.post_id) where post_id = NEW.post_id
+		*/
+
 	}
+
 	function update_comment_points($comment_id, $user_id, $points){
 			global $wpdb;
 			$wpdb -> show_errors();
-			$query="update $wpdb->pw_prefix"."comment_points set points=".$points ." where comment_id=".$comment_id." and user_id=".$user_id;
+			$query="update $wpdb->pw_prefix"."comment_points set points=".$points." where comment_id=".$comment_id." and user_id=".$user_id;
 			$wpdb->query($query);
 	}
 	
@@ -538,7 +560,7 @@
 			else return FALSE;
 	}
 	
-	function set_post_points($post_id, $set_points) {
+	function set_post_points( $post_id, $set_points ) {
 		$post_points = set_points( 'post', $post_id, $set_points );
 		if ( isset( $post_points ) )
 			cache_rank_score ( $post_id );

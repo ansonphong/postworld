@@ -198,7 +198,6 @@ function pw_empty_shortcode(){
 	return "";
 }
 
-
 if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 
 	add_shortcode( 'pw-icon', 		'pw_icons_shortcode' );

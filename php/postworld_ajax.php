@@ -512,18 +512,10 @@ add_action("wp_ajax_set_comment_points", "set_comment_points_admin");
 function set_post_points_admin(){
 	list($response, $args, $nonce) = initAjaxResponse();
 
-	$params = $args['args'];
-	$post_id = $params['post_id'];
-	$points = $params['points'];
-
-	$set_post_points = set_post_points( $post_id, $points );
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $set_post_points;
-	echo json_encode( $response );
-	die;
-
+	$vars = $args['args'];
+	$response_data = set_post_points( $vars['post_id'], $vars['points'] );
+	
+	pwAjaxRespond( $response_data );
 }
 
 //add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");

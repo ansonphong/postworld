@@ -38,7 +38,8 @@ postworldAdmin.controller( 'pwAdminIconsetsCtrl',
 
 		if( !_.isEmpty( $scope.shortcodeAtts ) )
 			angular.forEach( $scope.shortcodeAtts, function( value, key ){
-				additionalAtts += ' ' + key + "='" + value + "'";
+				if( !_.isNull(value) )
+					additionalAtts += ' ' + key + "='" + value + "'";
 			});
 		
 		return "[pw-icon class='" + iconClass + "'"+ additionalAtts +"]";

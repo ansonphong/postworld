@@ -141,6 +141,8 @@ postworld.controller('postVote',
 
 
     // SWITCH CSS CLASSES BASED ON VOTE
+    // TODO : REFACTOR THIS WITHOUT WATCH - ??
+    
     $scope.$watch( "post.viewer.has_voted",
         function (){
             ( $scope.post.viewer.has_voted > 0 ) ? $scope.hasVotedUp = "selected" : $scope.hasVotedUp = "" ;
@@ -150,6 +152,7 @@ postworld.controller('postVote',
                 $scope.hasVotedDown = "";
             }
         }, 1 );
+    
 
     // CAST VOTE ON THE POST
     $scope.spinnerClass = "";
@@ -159,7 +162,7 @@ postworld.controller('postVote',
             var vote_power = parseInt($window.pw.user.postworld.vote_power);
         // If they're not logged in, return false
         if( typeof vote_power === 'undefined' ){
-            alert("Must be logged in to vote.");
+            alert( "Must be logged in to vote." );
             return false;
         }
         // Define how many points have they already given to this post
@@ -172,20 +175,21 @@ postworld.controller('postVote',
             //alert( "Normalizing : " + setPoints );
         }
         // Setup parameters
-        var args = {
+        var vars = {
             post_id: $scope.post.ID,
             points: setPoints,
         };
         // Set Status
         $scope.voteStatus = "busy";
         $scope.spinnerClass = "icon-spin";
+
         // AJAX Call 
-        pwData.set_post_points ( args ).then(
+        $log.debug('pwPostVote : VOTE SUBMIT : ', vars );
+        pwData.set_post_points ( vars ).then(
             // ON : SUCCESS
-            function(response) {    
-                //alert( JSON.stringify(response.data) );
+            function(response) {
                 // RESPONSE.DATA FORMAT : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
-                $log.debug('VOTE RETURN : ' + JSON.stringify(response) );
+                $log.debug('pwPostVote : VOTE RETURN : ' + JSON.stringify(response) );
                 if ( response.data.id == $scope.post.ID ){
                     // UPDATE POST POINTS
                     $scope.post.post_points = response.data.points_total;
