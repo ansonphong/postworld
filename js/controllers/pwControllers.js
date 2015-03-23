@@ -56,32 +56,6 @@ postworld.controller('postController',
 	if( typeof $window.pwPostFunctions === "function" )
 		$window.pwPostFunctions( $scope );
 
-	/*
-	// IMPORT LANGUAGE
-	if(
-		typeof $window.pwSiteLanguage !== 'undefined' &&
-		typeof $window.pw.user !== 'undefined' &&
-		typeof $scope.post !== 'undefined'
-		){
-		$scope.language = $window.pwSiteLanguage;
-		$scope.current_user_id = $window.pw.user.ID;
-		// GENERATE  SHARE LINK
-		$scope.share_link = $pw.paths.home_url + "/?u=" + $window.pw.user.ID + "&p=" + $scope.post.ID;
-	}
-	*/
-
-	/*
-	// Toggles class="expaned", used with ng-class="expanded" 
-	$scope.expanded = "";
-	var clickTip = "Click to expand";
-	$scope.clickTip = clickTip;
-	$scope.toggleExpanded = function(){
-		( $scope.expanded == "" ) ? $scope.expanded = "expanded" : $scope.expanded = "" ;
-		( $scope.clickTip != "" ) ? $scope.clickTip = "" : $scope.clickTip = clickTip ;
-	};
-	*/
-
-
 	///// TIME FUNCTIONS /////
 	$scope.jsDateToTimestamp = function(jsDate){
 		var dateObject = new Date(jsDate);

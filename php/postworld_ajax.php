@@ -51,7 +51,6 @@ function pw_set_wp_usermeta_ajax(){
 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_set_wp_usermeta", "pw_set_wp_usermeta_ajax");
 add_action("wp_ajax_pw_set_wp_usermeta", "pw_set_wp_usermeta_ajax");
 
@@ -65,7 +64,6 @@ function pw_get_term_feed_ajax(){
 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_get_term_feed", "pw_get_term_feed_ajax");
 add_action("wp_ajax_pw_get_term_feed", "pw_get_term_feed_ajax");
 
@@ -79,7 +77,6 @@ function pw_get_template_partial_ajax(){
 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_get_template_partial", "pw_get_template_partial_ajax");
 add_action("wp_ajax_pw_get_template_partial", "pw_get_template_partial_ajax");
 
@@ -92,7 +89,6 @@ function pw_get_menus_ajax(){
 	$response_data = pw_get_menus( $params ); 
 	pwAjaxRespond( $response_data );
 }
-
 //add_action("wp_ajax_nopriv_pw_get_menus", "pw_set_option_obj_ajax");
 add_action("wp_ajax_pw_get_menus", "pw_get_menus_ajax");
 
@@ -105,7 +101,6 @@ function pw_set_option_obj_ajax(){
 	$response_data = pw_set_option_obj( $params ); 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_set_option_obj", "pw_set_option_obj_ajax");
 add_action("wp_ajax_pw_set_option_obj", "pw_set_option_obj_ajax");
 
@@ -118,10 +113,8 @@ function pw_get_option_obj_ajax(){
 	$response_data = pw_get_option_obj( $params ); 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_get_option_obj", "pw_get_option_obj_ajax");
 add_action("wp_ajax_pw_get_option_obj", "pw_get_option_obj_ajax");
-
 
 
 //---------- PW UPDATE OPTION ----------//
@@ -133,7 +126,6 @@ function pw_update_option_ajax(){
 	$response_data = pw_update_option( $option, $value ); 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_update_option", "pw_update_option_ajax");
 add_action("wp_ajax_pw_update_option", "pw_update_option_ajax");
 
@@ -147,10 +139,8 @@ function pw_get_image_ajax(){
 	$response_data = pw_get_image( $params ); 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_get_image", "pw_get_image_ajax");
 add_action("wp_ajax_pw_get_image", "pw_get_image_ajax");
-
 
 
 //---------- PW SET WIZARD STATUS ----------//
@@ -162,7 +152,6 @@ function pw_set_wizard_status_ajax(){
 	$response_data = pw_set_wizard_status( $params ); 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_pw_set_wizard_status", "pw_set_wizard_status_ajax");
 
 
@@ -175,7 +164,6 @@ function pw_get_wizard_status_ajax(){
 	$response_data = pw_get_wizard_status( $params ); 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_pw_get_wizard_status", "pw_get_wizard_status_ajax");
 
 
@@ -188,7 +176,6 @@ function pw_get_userdata_ajax(){
 	$response_data = pw_get_userdata( $user_id,  $fields ); 
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_get_userdata", "pw_get_userdata_ajax");
 add_action("wp_ajax_pw_get_userdata", "pw_get_userdata_ajax");
 
@@ -202,11 +189,8 @@ function pw_get_userdatas_ajax(){
 	$response_data = pw_get_userdatas( $user_ids,  $fields );
 	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_get_userdatas", "pw_get_userdatas_ajax");
 add_action("wp_ajax_pw_get_userdatas", "pw_get_userdatas_ajax");
-
-
 
 
 //---------- PW SET POST IMAGE ----------//
@@ -225,13 +209,8 @@ function pw_set_post_image_ajax(){
 		$response_data = false;
 	}
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
-
 //add_action("wp_ajax_nopriv_pw_set_post_image_ajax", "set_post_image_ajax");
 add_action("wp_ajax_set_post_image", "pw_set_post_image_ajax");
 
@@ -243,17 +222,10 @@ function pw_query_ajax(){
 
 	$response_data = pw_query($params);
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
-
 add_action("wp_ajax_nopriv_pw_query", "pw_query_ajax");
 add_action("wp_ajax_pw_query", "pw_query_ajax");
-
-
 
 
 //---------- FLAG COMMENTS ----------//
@@ -272,17 +244,10 @@ function flag_comment_admin(){
 		$response_data = false;
 	}
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $response_data );
 }
-
 //add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
 add_action("wp_ajax_flag_comment", "flag_comment_admin");
-
-
 
 
 //---------- SHARE REPORT - USER - OUTGOING ----------//
@@ -292,16 +257,10 @@ function user_share_report_outgoing_anon(){
 
 	$user_share_report_outgoing = user_share_report_meta( user_share_report_outgoing( $params['displayed_user_id'] ) );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $user_share_report_outgoing;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $user_share_report_outgoing );
 }
-
 add_action("wp_ajax_nopriv_user_share_report_outgoing", "user_share_report_outgoing_anon");
 add_action("wp_ajax_user_share_report_outgoing", "user_share_report_outgoing_anon");
-
 
 
 //---------- SHARE REPORT - POST ----------//
@@ -311,13 +270,8 @@ function post_share_report_anon(){
 
 	$post_share_report = post_share_report_meta( post_share_report( $params['post_id'] ) );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $post_share_report;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $post_share_report );
 }
-
 add_action("wp_ajax_nopriv_post_share_report", "post_share_report_anon");
 add_action("wp_ajax_post_share_report", "post_share_report_anon");
 
@@ -329,11 +283,7 @@ function pw_trash_post_admin(){
 
 	$pw_trash_post = pw_trash_post( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $pw_trash_post;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $pw_trash_post );
 }
 add_action("wp_ajax_pw_trash_post", "pw_trash_post_admin");
 
@@ -346,11 +296,7 @@ function pw_reset_password_submit_ajax(){
 
 	$reset_password_submit = pw_reset_password_submit( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $reset_password_submit;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $reset_password_submit );
 }
 add_action("wp_ajax_nopriv_reset_password_submit", "pw_reset_password_submit_ajax");
 add_action("wp_ajax_reset_password_submit", "pw_reset_password_submit_ajax");
@@ -365,11 +311,7 @@ function pw_reset_password_email_ajax(){
 
 	$send_reset_password_link = pw_reset_password_email( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $send_reset_password_link;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $send_reset_password_link );
 }
 add_action("wp_ajax_nopriv_reset_password_email", "pw_reset_password_email_ajax");
 add_action("wp_ajax_reset_password_email", "pw_reset_password_email_ajax");
@@ -383,11 +325,7 @@ function pw_activate_user_anon(){
 
 	$pw_activate_user = pw_activate_user( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $pw_activate_user;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $pw_activate_user );
 }
 add_action("wp_ajax_nopriv_pw_activate_user", "pw_activate_user_anon");
 add_action("wp_ajax_pw_activate_user", "pw_activate_user_anon");
@@ -401,17 +339,10 @@ function send_activation_link_anon(){
 
 	$send_activation_link = send_activation_link( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $send_activation_link;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $send_activation_link );
 }
 add_action("wp_ajax_nopriv_send_activation_link", "send_activation_link_anon");
 add_action("wp_ajax_send_activation_link", "send_activation_link_anon");
-
-
-
 
 
 //---------- PW INSERT USER ----------//
@@ -421,15 +352,10 @@ function pw_insert_user_anon(){
 
 	$pw_insert_user = pw_insert_user( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $pw_insert_user;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $pw_insert_user );
 }
 add_action("wp_ajax_nopriv_pw_insert_user", "pw_insert_user_anon");
 add_action("wp_ajax_pw_insert_user", "pw_insert_user_anon");
-
 
 
 //---------- WP USER QUERY ----------//
@@ -439,11 +365,7 @@ function wp_user_query_anon(){
 
 	$user_query = new WP_User_Query( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $user_query->results;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $user_query->results );
 }
 add_action("wp_ajax_nopriv_wp_user_query", "wp_user_query_anon");
 add_action("wp_ajax_wp_user_query", "wp_user_query_anon");
@@ -476,12 +398,7 @@ function pw_get_avatar_anon(){
 	$params = $args['args'];
 	$pw_get_avatar = pw_get_avatar( $params );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $pw_get_avatar; //$pw_get_avatar;
-	echo json_encode( $response );
-	die;
-
+	pwAjaxRespond( $pw_get_avatar );
 }
 add_action("wp_ajax_nopriv_pw_get_avatar", "pw_get_avatar_anon");
 add_action("wp_ajax_pw_get_avatar", "pw_get_avatar_anon");
@@ -497,11 +414,7 @@ function set_comment_points_admin(){
 
 	$set_comment_points = set_comment_points( $comment_id, $points );
 
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $set_comment_points;
-	echo json_encode( $response );
-	die;
+	pwAjaxRespond( $set_comment_points );
 }
 
 //add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
@@ -514,7 +427,7 @@ function set_post_points_admin(){
 
 	$vars = $args['args'];
 	$response_data = set_post_points( $vars['post_id'], $vars['points'] );
-	
+
 	pwAjaxRespond( $response_data );
 }
 

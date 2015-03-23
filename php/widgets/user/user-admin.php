@@ -113,7 +113,7 @@
 
 		         	<div class="labeled">
 						<label class="inner">Select User</label>
-						<span class='container-fluid' ng-controller="userAutocomplete">
+						<span class='container-fluid'>
 							<?php echo pw_select_user_autocomplete(array(
 								'class'		=>	'labeled',
 								'on_select' => 	'widgetUserSelected($item)',
@@ -131,7 +131,7 @@
 							class="button"
 							ng-click="widgetClearUser()"
 							style="position:absolute; right:0;">
-							<i class="icon-close"></i>
+							<i class="pwi-close-thin"></i>
 						</button>
 						<label class="inner">Selected User</label>
 						<input

@@ -162,8 +162,6 @@ include 'php/postworld_variables.php';
 define( 'POSTWORLD_PATH', dirname(__FILE__) );
 define( 'POSTWORLD_URI', get_postworld_uri() );
 
-
-
 ////// H2O //////
 require_once 'lib/h2o/h2o.php';
 

@@ -13,9 +13,9 @@ function postworld_install(){
 			post_class char(16) NOT NULL,
 			link_format char(16) NOT NULL,
 			link_url varchar(512) DEFAULT '' NOT NULL,
-			post_points mediumint(8) DEFAULT '0' NOT NULL,
-			rank_score mediumint(4) DEFAULT '0' NOT NULL,
-			post_shares mediumint(9) DEFAULT '0' NOT NULL,
+			post_points mediumint(10) DEFAULT '0' NOT NULL,
+			rank_score mediumint(10) DEFAULT '0' NOT NULL,
+			post_shares mediumint(10) DEFAULT '0' NOT NULL,
 			geo_latitude DECIMAL(10, 8) NOT NULL,
 			geo_longitude DECIMAL(11, 8) NOT NULL,
 			event_start int(11) NOT NULL,
@@ -150,7 +150,6 @@ function postworld_install(){
 	add_option( PW_DB_VERSION, $pw['info']['db_version'] );
 	
 }
-
 
 function pw_db_version_is_old(){
 	// Return true if running an old version of the DB

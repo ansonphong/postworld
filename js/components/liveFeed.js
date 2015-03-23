@@ -19,17 +19,6 @@ postworld.directive('liveFeed', function($log) {
 	};
 });
 
-postworld.directive('loadFeed', function() {
-	return {
-		restrict: 'A',
-		replace: true,
-       	controller: 'pwFeedController',
-       	template: '<div ng-include="templateUrl" class="feed"></div>',
-		scope : {}
-	};
-});
-
-
 postworld.controller('pwFeedController',
 	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_', '$window',
 	function( $scope, $rootScope, $location, $log, $attrs, $timeout, $pwData, $route, $_, $window ) {
@@ -63,8 +52,16 @@ postworld.controller('pwFeedController',
 	//$log.debug( 'liveFeed : BOOT : feedId : ' + $scope.feedId, $scope.feed() );
 
    	$scope.updateTemplateUrl = function(){
-		// Generate template IDs
-		var templateId = 'feed-' + $pwData.getFeedView( $scope.feedId );
+
+   		// Check if there's an over-ride feed template
+   		var templateId = $_.get( $pwData.feeds[$scope.feedId], 'feed_template' );
+
+   		// If no fallback template
+   		if( templateId == false )
+   			// Generate template ID from the current feed view
+			var templateId = 'feed-' + $pwData.getFeedView( $scope.feedId );
+   		
+   		// Define fallback template ID
 		var templateIdFallback = 'feed-list';
 
 		// Get the template path
@@ -80,6 +77,8 @@ postworld.controller('pwFeedController',
 
    	}
    	// TODO : Run this on view change
+   	// Currently only the post templates are changing on view change
+   	// This must also change
    	$scope.updateTemplateUrl();
 
 	$scope.setDefault = function( exp, defaultVal ){
@@ -111,6 +110,7 @@ postworld.controller('pwFeedController',
 	
 	$scope.getNext = function() {
 		$scope.message = "";   			
+		
 		// If already getting results, do not run again.
 		if ($scope.busy) {
 			$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
