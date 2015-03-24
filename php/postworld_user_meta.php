@@ -56,62 +56,6 @@ function pw_can_edit_profile( $user_id ){
 		return false;
 }
 
-function pw_get_xprofile_fields(){
-	// Returns an array with all the names of the xProfile fields
-	global $wpdb;
-	$table_name =  $wpdb->prefix.'bp_xprofile_fields';
-
-	//If table is not created
-	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
-    	return array();
-	}
-
-	$column_name = 'name';
-	$xProfileFields = $wpdb->get_col( $wpdb->prepare( "SELECT $column_name FROM $table_name" ) );
-	//pw_log( json_encode($xProfileFields) );
-	return $xProfileFields;
-}
-
-function pw_get_xprofile( $user_id, $fields = array(), $vars = array() ){
-	// Get info from Bussypress extended profile
-	// 	$fields = [array/string] // IE. 'all' or array( 'First Field Name', 'Second Field Name' )
-
-	// If Buddypress isn't installed, return false
-	if( !function_exists('xprofile_get_field_data') )
-		return false;
-
-	///// DEFAULTS /////
-	$default_vars = array(
-		'sanitize_keys' => true,	// Sanitizes the keys before output to lowercase & space = _
-		);
-
-	$vars = array_replace_recursive( $default_vars, $vars );
-
-	///// ALL FIELDS /////
-	if( $fields == 'all' )
-		$fields = pw_get_xprofile_fields();
-
-	// Get each requested field
-	$xprofile = array();
-	foreach ( $fields as $field ){
-		// Get data from Buddypress API
-		$field_value = xprofile_get_field_data( $field, $user_id );
-		$field = str_replace(' ', '_', $field);
-
-		// Sanitize Keys if option is set
-		if( $vars['sanitize_keys'] )
-			$field = sanitize_key( $field );
-
-		// If a value is set
-		if( isset($field_value) )
-			$xprofile[ $field ] = $field_value;
-
-	}
-
-	return $xprofile;
-
-}
-
 
 function pw_get_userdatas( $user_ids, $fields = false ){
 	// DEPRECIATED as of Version 1.7.2
@@ -366,13 +310,9 @@ function pw_get_user( $user_id, $fields = false ) {
 
 	///// BUDDYPRESS XPROFILE FIELDS /////
 	$xProfile_fields = extract_linear_fields( $fields, 'xprofile', true );
-	if ( !empty($usermeta_fields) ){
-		if( in_array("all", $xProfile_fields) )
-			$xProfile_fields = pw_get_xprofile_fields();
-		// Get the xProfile Fields
+	if ( !empty( $xProfile_fields ) )
 		$user_data['xprofile'] = pw_get_xprofile( $user_id, $xProfile_fields );
-	}
-
+	
 
 	// AVATAR FIELDS
 	$avatar = pw_get_avatar_sizes($user_id, $fields);

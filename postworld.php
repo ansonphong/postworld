@@ -274,8 +274,9 @@ include 'postworld-modules/layouts/postworld-layouts.php';
 include 'postworld-modules/iconsets/postworld-iconsets.php';
 include 'postworld-modules/taxonomy-meta/postworld-taxonomy-meta.php';
 include 'postworld-modules/shortcodes/postworld-shortcodes.php';
+include 'postworld-modules/slider/postworld-slider.php';
 
-////// GET AJAX FUNCTIONS AND ACTION //////
+////// GET AJAX FUNCTIONS AND ACTION ////// 
 include 'php/postworld_ajax.php';
 include 'php/postworld_comments.php';
 include 'php/postworld_share.php';

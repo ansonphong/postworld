@@ -225,7 +225,6 @@ if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 	/////////////// ADVANCED SHORTCODES //////////
 	include 'menu/menu.php';
 	include 'fonts/fonts.php';
-	include 'slider/slider.php';
 	include 'gallery/gallery.php';
 	include 'pagelist/pagelist.php';
 	include 'columns/columns.php';

@@ -17,6 +17,62 @@ function pw_get_bp_xprofile_fields( $fields = array() ){
 	return $xProfile;
 }
 
+function pw_get_xprofile_fields(){
+	// Returns an array with all the names of the xProfile fields
+	global $wpdb;
+	$table_name =  $wpdb->prefix.'bp_xprofile_fields';
+
+	//If table is not created
+	if($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+    	return array();
+	}
+
+	$column_name = 'name';
+	$xProfileFields = $wpdb->get_col( $wpdb->prepare( "SELECT $column_name FROM $table_name" ) );
+	//pw_log( json_encode($xProfileFields) );
+	return $xProfileFields;
+}
+
+function pw_get_xprofile( $user_id, $fields = array(), $vars = array() ){
+	// Get info from Bussypress extended profile
+	// 	$fields = [array/string] // IE. 'all' or array( 'First Field Name', 'Second Field Name' )
+
+	// If Buddypress isn't installed, return false
+	if( !function_exists('xprofile_get_field_data') )
+		return false;
+
+	///// DEFAULTS /////
+	$default_vars = array(
+		'sanitize_keys' => true,	// Sanitizes the keys before output to lowercase & space = _
+		);
+
+	$vars = array_replace_recursive( $default_vars, $vars );
+
+	///// ALL FIELDS /////
+	if( $fields == 'all' || in_array( 'all', $fields ) )
+		$fields = pw_get_xprofile_fields();
+
+	// Get each requested field
+	$xprofile = array();
+	foreach ( $fields as $field ){
+		// Get data from Buddypress API
+		$field_value = xprofile_get_field_data( $field, $user_id );
+		$field = str_replace(' ', '_', $field);
+
+		// Sanitize Keys if option is set
+		if( $vars['sanitize_keys'] )
+			$field = sanitize_key( $field );
+
+		// If a value is set
+		if( isset($field_value) )
+			$xprofile[ $field ] = $field_value;
+
+	}
+
+	return $xprofile;
+
+}
+
 function pw_set_bp_nav( $obj = 'bp_nav', $subkey, $value ){
 	// Sets the value of a bp nav item
 	// $obj = 		[ string ] 	// Possible values : 'bp_nav' / 'bp_options_nav'
