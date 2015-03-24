@@ -200,17 +200,17 @@ function pw_empty_shortcode(){
 
 if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 
-	add_shortcode( 'pw-icon', 		'pw_icons_shortcode' );
+	add_shortcode( 'pw-icon', 	'pw_icons_shortcode' );
 
 	/////////////// BASIC SHORTCODES //////////
 	// BLOCKS
-	add_shortcode( 'block', 		'pw_shortcode' );
-	add_shortcode( 'block-sub', 	'pw_shortcode' );
-	add_shortcode( 'blockquote', 	'pw_shortcode' );
+	add_shortcode( 'block', 	'pw_shortcode' );
+	add_shortcode( 'block-sub', 'pw_shortcode' );
+	add_shortcode( 'blockquote','pw_shortcode' );
 
 	// CALLOUTS
 	add_shortcode( 'callout', 	'pw_shortcode' );
-	add_shortcode( 'callout-xl', 'pw_shortcode' );
+	add_shortcode( 'callout-xl','pw_shortcode' );
 
 	// HTML
 	add_shortcode( 'br', 'pw_shortcode' );
@@ -221,18 +221,14 @@ if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 	add_shortcode( 'h3', 'pw_shortcode' );
 	add_shortcode( 'h4', 'pw_shortcode' );
 
-
 	/////////////// ADVANCED SHORTCODES //////////
+		include 'feed/feed.php';
 	include 'menu/menu.php';
 	include 'fonts/fonts.php';
-	include 'gallery/gallery.php';
 	include 'pagelist/pagelist.php';
 	include 'columns/columns.php';
 	include 'alignments/alignments.php';
 	include 'help/shortcodes-help.php';
-	include 'feed/feed.php';
-	include 'term-feed/term-feed.php';
-	include 'user-feed/user-feed.php';
 
 }
 
