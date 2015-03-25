@@ -118,7 +118,7 @@ __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ### pw_cache_all_comment_points()
 - Cycles through all columns
-- Calculates and caches each comment's current points with cache_comment_points() method
+- Calculates and caches each comment's current points with pw_cache_comment_points() method
 
 __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 

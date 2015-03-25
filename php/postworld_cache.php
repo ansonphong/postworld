@@ -249,7 +249,7 @@ function pw_cache_all_post_points() {
 
 function pw_cache_all_comment_points(){
 	/*• Cycles through all columns
-	• Calculates and caches each comment's current points with cache_comment_points() method
+	• Calculates and caches each comment's current points with pw_cache_comment_points() method
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	
 	global $wpdb;
@@ -260,7 +260,7 @@ function pw_cache_all_comment_points(){
 	
 	$time_start = date("Y-m-d H:i:s");
 	for($i=0;$i<$blog_comments_count;$i++){
-		cache_comment_points($blog_comments[$i]->comment_ID);
+		pw_cache_comment_points($blog_comments[$i]->comment_ID);
 	}
 	$time_end =  date("Y-m-d H:i:s");
 	//$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, $blog_comments_count, 'comments', '');	

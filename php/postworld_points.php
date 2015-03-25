@@ -392,7 +392,7 @@ Process
 			}else{
 				//echo "commment";
 				pw_add_record_to_comment_points($id, $user_id, $set_points);
-				//$points_total = cache_comment_points($id);
+				//$points_total = pw_cache_comment_points($id);
 			}
 			$update_points= $set_points;
 		}
@@ -411,7 +411,7 @@ Process
 	}
 	else if ($point_type =='comment'){ 
 		// Cache Comment Points
-		$points_total = cache_comment_points($id);
+		$points_total = pw_cache_comment_points($id);
 		// Cache Points of the Author
 		$commentdata = get_comment ( $id );
 		pw_cache_user_comments_points( $commentdata->user_id );
@@ -505,9 +505,9 @@ function pw_does_post_points_row_exist($post_id,$user_id){
 function pw_add_record_to_comment_points( $comment_id, $user_id, $points ){
 		global $wpdb;
 		$wpdb -> show_errors();
-		$comment_author = get_comment_author_id($comment_id);
+		$comment_author = pw_get_comment_author_id($comment_id);
 
-	//	$query = "insert into ".$wpdb->pw_prefix.'comment_points'." values(" . $comment_id . ",".get_comment_post_id($comment_id)."," . $user_id . ",".$comment_author."," . $points . ",null)";
+	//	$query = "insert into ".$wpdb->pw_prefix.'comment_points'." values(" . $comment_id . ",".pw_get_comment_post_id($comment_id)."," . $user_id . ",".$comment_author."," . $points . ",null)";
 		
 		$query="INSERT INTO `$wpdb->pw_prefix"."comment_points`
 				(`comment_id`,
@@ -519,7 +519,7 @@ function pw_add_record_to_comment_points( $comment_id, $user_id, $points ){
 				VALUES
 				($comment_id,
 				$user_id,".
-				get_comment_post_id($comment_id).",
+				pw_get_comment_post_id($comment_id).",
 				$comment_author,
 				$points,
 				null)";

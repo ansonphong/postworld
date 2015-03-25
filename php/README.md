@@ -224,22 +224,22 @@ __COMMENT POINTS__
 
 ------
 
-### get_comment_points ( $comment_id )
+### pw_get_comment_points ( $comment_id )
 - Get the total number of points of the given comment from the __comment_points__ column in the __Comment Meta__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### calculate_comment_points ( $comment_id )
+### pw_calculate_comment_points ( $comment_id )
 - Adds up the points from the specified comment, stored in __Comment Points__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### cache_comment_points ( $comment_id )
-- Calculates given post's current points with `calculate_comment_points()`
+### pw_cache_comment_points ( $comment_id )
+- Calculates given post's current points with `pw_calculate_comment_points()`
 - Stores the result in the __comment_points__ column in __Comment Meta__ table
 
 __return__ : *integer* (number of points)

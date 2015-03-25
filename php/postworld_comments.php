@@ -1,6 +1,6 @@
 <?php
 
-function get_comment_points($comment_id){
+function pw_get_comment_points($comment_id){
 	
 	/*
 		Get the total number of points of the given comment from the points column in wp_postworld_comment_meta
@@ -18,7 +18,7 @@ function get_comment_points($comment_id){
 	return $comment_points;
 } 
 
-function calculate_comment_points($comment_id){
+function pw_calculate_comment_points($comment_id){
 	/* 
 		Adds up the points from the specified comment, stored in wp_postworld_comment_points
 		Stores the result in the points column in wp_postworld_comment_meta 
@@ -38,16 +38,16 @@ function calculate_comment_points($comment_id){
 
 
 
-function cache_comment_points($comment_id){
+function pw_cache_comment_points($comment_id){
 	
 	/*
-		Calculates given post's current points with calculate_comment_points()
+		Calculates given post's current points with pw_calculate_comment_points()
 		Stores points it in wp_postworld_post_meta table_ in the post_points column
 		return : integer (number of points)
 	*/
 	global $wpdb;
 	$wpdb -> show_errors();
-	$total_points = calculate_comment_points($comment_id);
+	$total_points = pw_calculate_comment_points($comment_id);
 	 //update wp_postworld_meta
 	$query = "update ".$wpdb->pw_prefix.'comment_meta'." set comment_points=" . $total_points . " where comment_id=" . $comment_id;
 	$result =$wpdb -> query($query);
@@ -56,7 +56,7 @@ function cache_comment_points($comment_id){
 	if ($result === FALSE || $result === 0){
 		//echo 'false <br>';
 		//insertt new row for this comment in comment_meta, no points was added
-		add_record_to_comment_meta($comment_id,$total_points);
+		pw_add_record_to_comment_meta($comment_id,$total_points);
 	}
 	return $total_points;
 	
@@ -64,7 +64,7 @@ function cache_comment_points($comment_id){
 }    
 
 
-function add_record_to_comment_meta($comment_id,$total_points=0){
+function pw_add_record_to_comment_meta($comment_id,$total_points=0){
 	/*
 	 This function gets comment data inserts a record in wp_postworld_comment_meta table
 	 * Parameters:
@@ -91,7 +91,7 @@ function add_record_to_comment_meta($comment_id,$total_points=0){
 		//echo json_encode($post_data);
 		$query = "insert into ".$wpdb->pw_prefix.'comment_meta'." values("
 				.$comment_id.","
-				.get_comment_post_id($comment_id).","
+				.pw_get_comment_post_id($comment_id).","
 				.$total_points
 				.")";
 				
@@ -184,7 +184,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 		}
 		// POSTWORLD COMMENT FIELDS 
 		else if( $field == 'comment_points' ){
-			$comment_data[$field] = get_comment_points( $comment_id );
+			$comment_data[$field] = pw_get_comment_points( $comment_id );
 		}
 		else if( $field == 'user_voted' ){
 			$comment_data[$field] = pw_has_voted_on_comment( $comment_id, get_current_user_id() );
@@ -339,7 +339,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 
 		///// POSTWORLD COMMENT FIELDS /////
 			if( in_array( 'comment_points', $fields ) )
-				$comment_data['comment_points'] = get_comment_points( $comment['comment_ID'] );
+				$comment_data['comment_points'] = pw_get_comment_points( $comment['comment_ID'] );
 			
 			if( in_array( 'viewer_points', $fields ) )
 				$comment_data['viewer_points'] = pw_has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
@@ -421,12 +421,12 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 }
 
 
-function get_comment_author_id($comment_id){
+function pw_get_comment_author_id($comment_id){
 	$comment_data = get_comment($comment_id,ARRAY_A);		
 	return $comment_data['user_id'];
 }
 
-function get_comment_post_id($comment_id){
+function pw_get_comment_post_id($comment_id){
 	$comment_data = get_comment($comment_id,ARRAY_A);
 	return $comment_data['comment_post_ID'];
 }
