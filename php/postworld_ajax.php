@@ -11,6 +11,21 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
+
+//---------- PW TRUNCATE CACHE ----------//
+function pw_cleanup_meta_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	
+	if( current_user_can('manage_options') )
+		$response_data = pw_cleanup_meta( $args['type'] );
+	else
+		return false;
+
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_cleanup_meta", "pw_cleanup_meta_ajax");
+
+
 //---------- PW TRUNCATE CACHE ----------//
 function pw_truncate_cache_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

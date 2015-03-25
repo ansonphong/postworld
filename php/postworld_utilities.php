@@ -246,20 +246,32 @@ function pw_plugin_file( $path, $type = "dir" ){
 		return WP_PLUGIN_URL . "/postworld/" . $path;
 }
 
-function pw_user_id_exists($user_id){
+
+function pw_post_id_exists( $post_id ){
+	global $wpdb;
+	$results = $wpdb->get_results( 'SELECT  ID  FROM ' . $wpdb->posts . ' WHERE ID = ' . $post_id );
+	return !empty( $results );
+}
+
+function pw_user_id_exists( $user_id ){
+	global $wpdb;
+	$results = $wpdb->get_results( 'SELECT  ID  FROM ' . $wpdb->users . ' WHERE ID = ' . $user_id );
+	return !empty( $results );
+}
+
+
+function pw_post_id_exists_alt( $post_id ){
+	$post = get_post( $post_id );
+	return ( $post != null ) ? true : false;
+}
+
+
+function pw_user_id_exists_alt($user_id){
     //global $wpdb;
     //$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));
     //if($count == 1){ return true; } else { return false; }
 	$user = get_user_by( "id", $user_id );
-	if( $user == false )
-		return false;
-	else
-		return true;
-}
-
-function pw_post_id_exists( $post_id ){
-	$post = get_post( $post_id );
-	return ( $post != null ) ? true : false;
+	return ( $user != false ) ? true : false;
 }
 
 function pw_check_user_id($user_id){

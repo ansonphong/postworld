@@ -140,13 +140,13 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_shortcodes',
 			);
 
-	$menu['submenu']['cache'] = array(
+	$menu['submenu']['database'] = array(
 		'parent_slug' => $submenu_slug,
-		'page_title' => 'Cache',
-		'menu_title' => 'Cache',
+		'page_title' => 'Database',
+		'menu_title' => 'Database',
 		'capability' => 'manage_options',
-		'menu_slug' => $submenu_slug.'-cache',
-		'function' => 'postworld_options_cache',
+		'menu_slug' => $submenu_slug.'-database',
+		'function' => 'postworld_options_database',
 		);
 
 	//echo json_encode($pw['modules']);

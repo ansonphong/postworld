@@ -441,7 +441,6 @@ postworld.controller('pwFeedController',
 
 	}
 
-
 	$scope.initBlocks = true;
 	$scope.injectBlocks = function() {
 		// Run at the initiation of a feed

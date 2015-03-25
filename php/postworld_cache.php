@@ -1,13 +1,13 @@
 <?php
 ///// CLEAR CACHES /////
 // When adding or updating posts
-add_action( 'wp_insert_post', 'pw_delete_post_caches_action' );
-add_action( 'update_postmeta', 'pw_delete_post_caches_action' );
+add_action( 'wp_insert_post', 'pw_delete_post_caches' );
+add_action( 'update_postmeta', 'pw_delete_post_caches' );
 // When adding or updating terms
-add_action( 'created_term', 'pw_delete_post_caches_action' );
-add_action( 'edited_term', 'pw_delete_post_caches_action' );
+add_action( 'created_term', 'pw_delete_post_caches' );
+add_action( 'edited_term', 'pw_delete_post_caches' );
 
-function pw_delete_post_caches_action(){
+function pw_delete_post_caches(){
 	pw_delete_cache_type( 'term-feed' );
 	pw_delete_cache_type( 'pw-query' );
 	pw_delete_cache_type( 'feed-outline' );
