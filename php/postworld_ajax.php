@@ -275,34 +275,33 @@ function flag_comment_admin(){
 
 	pwAjaxRespond( $response_data );
 }
-//add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
 add_action("wp_ajax_flag_comment", "flag_comment_admin");
 
 
 //---------- SHARE REPORT - USER - OUTGOING ----------//
-function user_share_report_outgoing_anon(){
+function pw_user_share_report_outgoing_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$user_share_report_outgoing = user_share_report_meta( user_share_report_outgoing( $params['displayed_user_id'] ) );
+	$user_share_report_outgoing = pw_user_share_report_meta( user_share_report_outgoing( $params['displayed_user_id'] ) );
 
 	pwAjaxRespond( $user_share_report_outgoing );
 }
-add_action("wp_ajax_nopriv_user_share_report_outgoing", "user_share_report_outgoing_anon");
-add_action("wp_ajax_user_share_report_outgoing", "user_share_report_outgoing_anon");
+add_action("wp_ajax_nopriv_pw_user_share_report_outgoing", "pw_user_share_report_outgoing_ajax");
+add_action("wp_ajax_pw_user_share_report_outgoing", "pw_user_share_report_outgoing_ajax");
 
 
 //---------- SHARE REPORT - POST ----------//
-function post_share_report_anon(){
+function pw_post_share_report_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$post_share_report = post_share_report_meta( post_share_report( $params['post_id'] ) );
+	$post_share_report = pw_post_share_report_meta( pw_post_share_report( $params['post_id'] ) );
 
 	pwAjaxRespond( $post_share_report );
 }
-add_action("wp_ajax_nopriv_post_share_report", "post_share_report_anon");
-add_action("wp_ajax_post_share_report", "post_share_report_anon");
+add_action("wp_ajax_nopriv_pw_post_share_report", "pw_post_share_report_ajax");
+add_action("wp_ajax_pw_post_share_report", "pw_post_share_report_ajax");
 
 
 //---------- TRASH POST ----------//

@@ -2050,7 +2050,7 @@ __php/postworld_share.php__
 
 ------
 
-### set_share ( *$user_id, $post_id* )
+### pw_set_share ( *$user_id, $post_id* )
 
 #### Description
 - Sets a record of a share in __Shares__ table
@@ -2085,7 +2085,7 @@ __SHARE REPORTS__
 
 ------
 
-### user_share_report_outgoing ( *$user_id* )
+### pw_user_share_report_outgoing ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by posts that the given user has shared__
@@ -2113,13 +2113,13 @@ array(
 ```
 ------
 
-### user_share_report_meta ( *$user_share_report* )
+### pw_user_share_report_meta ( *$user_share_report* )
 - Inserts the post object data for each user share
 
 
 #### Usage : Outgoing
 ``` php
-user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) );
+pw_user_share_report_meta( pw_user_share_report_outgoing( $displayed_user_id ) );
 ```
 
 #### Output : Outgoing
@@ -2137,7 +2137,7 @@ user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) );
 
 #### Usage : Incoming
 ``` php
-user_share_report_meta( user_share_report_incoming( $displayed_user_id ) );
+pw_user_share_report_meta( pw_user_share_report_incoming( $displayed_user_id ) );
 ```
 
 #### Output : Incoming
@@ -2164,7 +2164,7 @@ user_share_report_meta( user_share_report_incoming( $displayed_user_id ) );
 
 ------
 
-### user_share_report_outgoing ( *$user_id* )
+### pw_user_share_report_outgoing ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by shares to the given user's posts__
@@ -2215,7 +2215,7 @@ array(
 
 ------
 
-### post_share_report ( *$post_id* )
+### pw_post_share_report ( *$post_id* )
 
 - Generate a report of all the shares relating to the current post
 

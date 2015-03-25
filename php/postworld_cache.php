@@ -588,7 +588,7 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	global $wpdb;
 	$wpdb -> show_errors();
 	if($mode =='outgoing' || $mode=='both'){
-		$user_share_report_outgoing = user_share_report_outgoing($user_id);
+		$user_share_report_outgoing = pw_user_share_report_outgoing($user_id);
 		//print_r($user_share_report_outgoing);
 		$outgoing = 0;
 		for ( $i=0; $i < count($user_share_report_outgoing) ; $i++) { 
@@ -598,8 +598,8 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	}
 	
 	if($mode == 'incoming' || $mode =='both'){
-		$user_share_report_incoming = user_share_report_incoming($user_id);
-		//print_r($user_share_report_incoming);
+		$user_share_report_incoming = pw_user_share_report_incoming($user_id);
+		
 		$incoming = 0;
 		for ($i=0; $i <count($user_share_report_incoming) ; $i++) { 
 			$incoming=$incoming + $user_share_report_incoming[$i]['total_shares'];

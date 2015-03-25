@@ -4,8 +4,8 @@
 // This is a 'bug' which listens for the share fields
 // And if they exist and data checks out, add a share to the DB
 
-add_action( 'setup_theme', 'share_bug', 10 ); // init
-function share_bug(){
+add_action( 'setup_theme', 'pw_share_watch', 10 ); // init
+function pw_share_watch(){
 	if( isset( $_GET['u'] ) )
 		$user_id = $_GET['u'];
 	if( isset( $_GET['p'] ) )
@@ -15,16 +15,16 @@ function share_bug(){
 
 	if ( isset( $user_id ) && isset( $post_id ) ){
 		if ( username_exists_by_id($user_id) && post_exists_by_id($post_id) ){
-			set_share ( $user_id, $post_id );
+			pw_set_share ( $user_id, $post_id );
 			// Redirect browser
 			$permalink = get_permalink( $post_id );
 			//echo $permalink;
-			wp_redirect( "http://phong.com" );
+			wp_redirect( get_site_url() );
 		}
 	}
 }
 
-function set_share ( $user_id, $post_id ){
+function pw_set_share ( $user_id, $post_id ){
 	/*
 	 Description
 
@@ -56,11 +56,12 @@ function set_share ( $user_id, $post_id ){
 	 
 	 */
 	
-	if( does_user_exist($user_id) && ( $post_author = does_post_exist_return_post_author($post_id)) !== FALSE ){
+	if( pw_user_id_exists($user_id) &&
+		( $post_author = pw_does_post_exist_return_post_author($post_id) ) !== FALSE ){
 		$last_time = date('Y-m-d H:i:s');
 		//echo 'pos_auhor:'.$post_author;
 		$user_ip = get_client_ip();
-		$current_share = get_share($user_id,$post_id);
+		$current_share = pw_get_share($user_id,$post_id);
 
 		global $pwSiteGlobals;
 		$ip_history = (int) $pwSiteGlobals['shares']['tracker']['ip_history']; // Integer - number of IPs to store in post share history
@@ -78,14 +79,14 @@ function set_share ( $user_id, $post_id ){
 				}
 				$shares=1;
 			}
-			update_share($user_id, $post_id,$ips_list,$shares,$last_time);
+			pw_update_share($user_id, $post_id,$ips_list,$shares,$last_time);
 			
 			
 			
 		}
 		else{//share not found
 			$ips_list = array($user_ip);
-			add_share($user_id,$post_id,$post_author,$ips_list,$last_time);
+			pw_add_share($user_id,$post_id,$post_author,$ips_list,$last_time);
 			//return TRUE;
 		}
 		return TRUE;
@@ -94,7 +95,7 @@ function set_share ( $user_id, $post_id ){
 	}
 	
 }
-function update_share($user_id, $post_id, $ips_list,$added_shares,$last_time=null){
+function pw_update_share($user_id, $post_id, $ips_list,$added_shares,$last_time=null){
 	global $wpdb;
 	$wpdb->show_errors();
 	
@@ -103,7 +104,7 @@ function update_share($user_id, $post_id, $ips_list,$added_shares,$last_time=nul
 	$query.=" where user_id=".$user_id." and post_id=".$post_id;
 	$wpdb->query($query); 
 }
-function add_share($user_id,$post_id,$post_author,$ips_list,$last_time){
+function pw_add_share($user_id,$post_id,$post_author,$ips_list,$last_time){
 	global $wpdb;
 	$wpdb->show_errors();
 	
@@ -122,7 +123,7 @@ function pw_process_share_row( $row ){
 
 }
 
-function get_share($user_id,$post_id){
+function pw_get_share($user_id,$post_id){
 	global $wpdb;	
 	$wpdb ->show_errors();
 	$query = "select * from $wpdb->pw_prefix"."shares where post_id=$post_id and user_id=$user_id";
@@ -133,27 +134,16 @@ function get_share($user_id,$post_id){
 	return $row;
 }
 
-
-function does_user_exist($user_id){
-	
-    global $wpdb;
-	$wpdb->show_errors();
-    $count = $wpdb->get_var("SELECT COUNT(*) FROM $wpdb->users WHERE ID = $user_id");
-    if($count == 1){ return TRUE; }else{ return FALSE; }
-
-
-}
-function does_post_exist_return_post_author($post_id){
+function pw_does_post_exist_return_post_author($post_id){
 	global $wpdb;
 	$wpdb->show_errors();
 	$get_post = get_post($post_id, ARRAY_A);
-	if($get_post){
-	  return $get_post['post_author'];
-	} else {
-	  return FALSE;
-	}
+
+	return ( !empty( $get_post ) ) ? $get_post['post_author'] : false;
+
 }
-function user_share_report_outgoing ( $user_id ){
+
+function pw_user_share_report_outgoing( $user_id ){
 	/*
 	 Description
 
@@ -198,7 +188,7 @@ function user_share_report_outgoing ( $user_id ){
 }
 
 ////////// USER SHARE REPORT META //////////
-function user_share_report_meta ($user_share_report){
+function pw_user_share_report_meta ($user_share_report){
 	if (!empty($user_share_report)){
 		$user_share_meta_report = array();
 		foreach( $user_share_report as $shared_post ){
@@ -228,7 +218,7 @@ function user_share_report_meta ($user_share_report){
 
 ////////// POST SHARE REPORT META //////////
 // [{"user_id":"1","shares":"1","last_time":"2013-11-17 12:17:27"}]
-function post_share_report_meta ($post_share_report){
+function pw_post_share_report_meta ($post_share_report){
 
 	if (!empty($post_share_report)){
 		
@@ -255,7 +245,7 @@ function post_share_report_meta ($post_share_report){
 
 
 
-function user_share_report_incoming ( $user_id ){
+function pw_user_share_report_incoming( $user_id ){
 	/*
 	Description
 
@@ -332,7 +322,7 @@ function user_share_report_incoming ( $user_id ){
 	
 }
 
-function post_share_report ( $post_id ){
+function pw_post_share_report ( $post_id ){
 	/*
 	 
 	Generate a report of all the shares relating to the current post

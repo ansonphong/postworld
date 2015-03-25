@@ -423,15 +423,15 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('reset_password_submit',params);
 		},
-		post_share_report: function(args) {
-			$log.debug('pwData.post_share_report',args);
+		postShareReport: function(args) {
+			$log.debug('pwData.postShareReport',args);
 			var params = {args:args};
-			return this.wp_ajax('post_share_report',params);
+			return this.wp_ajax('pw_post_share_report',params);
 		},
-		user_share_report_outgoing: function(args) {
-			$log.debug('pwData.user_share_report_outgoing',args);
+		userShareReportOutgoing: function(args) {
+			$log.debug('pwData.userShareReportOutgoing',args);
 			var params = {args:args};
-			return this.wp_ajax('user_share_report_outgoing',params);
+			return this.wp_ajax('pw_user_share_report_outgoing',params);
 		},
 		set_post_image: function(args) {
 			$log.debug('pwData.set_post_image',args);

@@ -20,7 +20,7 @@ postworld.controller('postShareReport',
     if( typeof $window.pw.view.post != 'undefined' ){
         $scope.post = $window.pw.view.post;
         var args = { "post_id" : $scope.post.post_id };
-        $pwData.post_share_report( args ).then(
+        $pwData.postShareReport( args ).then(
             // Success
             function(response) {    
                 $scope.postShareReport = response.data;
@@ -49,7 +49,7 @@ postworld.controller('userShareReportOutgoing',
 
         var args = { "displayed_user_id" : $scope.displayed_user_id };
 
-        $pwData.user_share_report_outgoing( args ).then(
+        $pwData.userShareReportOutgoing( args ).then(
             // Success
             function(response) {    
                 $scope.shareReportMetaOutgoing = response.data;

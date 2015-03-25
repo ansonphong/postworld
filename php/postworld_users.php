@@ -642,18 +642,7 @@ function pw_user_login( $user_id, $redirect = '/' ) {
 
 
 // Automatically login a user with an auth key
-
 // http://localhost/login/?autologin=909238409283kj23hk324
-
-
-//// DELETE ////
-function login_user_test( $activation_key, $redirect ){
-    pw_user_login( 1, '/' );
-}
-//add_action( 'after_setup_theme', 'login_user_test', 10, 3 );
-
-
-
 
 
 ?>
