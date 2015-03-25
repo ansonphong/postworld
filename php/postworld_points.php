@@ -563,7 +563,7 @@
 	function set_post_points( $post_id, $set_points ) {
 		$post_points = set_points( 'post', $post_id, $set_points );
 		if ( isset( $post_points ) )
-			cache_rank_score ( $post_id );
+			pw_cache_rank_score ( $post_id );
 		return $post_points;
 	}
 	

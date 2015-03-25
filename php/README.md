@@ -196,7 +196,7 @@ __return__ : *integer* (number of points)
 
 #### Description
 - Wrapper for `set_points()` Method for setting post points
-- Run `cache_rank_score()` to update rank score of the post
+- Run `pw_cache_rank_score()` to update rank score of the post
 
 #### Parameters
 
@@ -487,15 +487,15 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 
 ------
 
-### get_rank_score ( *$post_id, [$method]* )
-- Gets the Rank Score of the given post, using `calculate_rank_score()`
+### pw_get_rank_score ( *$post_id, [$method]* )
+- Gets the Rank Score of the given post, using `pw_calculate_rank_score()`
 - Retrieves from the __rank_score__ column in __wp_postworld_meta__
 
 __return__ : *integer* (Rank Score)
 
 ------
 
-### calculate_rank_score ( *$post_id* )
+### pw_calculate_rank_score ( *$post_id* )
 - Calculates Rank Score based on rank equation
 - Returns the Rank Score 
 
@@ -503,8 +503,8 @@ __return__ : *integer* (Rank Score)
 
 ------
 
-### cache_rank_score ( *$post_id* )
-- Calculate rank_score with `calculate_rank_score()` method
+### pw_cache_rank_score ( *$post_id* )
+- Calculate rank_score with `pw_calculate_rank_score()` method
 - Cache the result in __wp_postworld_meta__ in the __rank_score__ column
 
 __return__ :  *integer* (Rank Score) 

@@ -185,7 +185,7 @@ function pw_cache_all_user_points(){
 	$time_end = date("Y-m-d H:i:s");
 //	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, $blog_users_count, 'user_points','');
 	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, null, 'pw_cache_all_user_points',null,null);
-	echo json_encode($current_cron_log_object);
+
 }
 
 function pw_cache_all_post_points() {
@@ -210,16 +210,16 @@ function pw_cache_all_post_points() {
 	//$post_types_string = implode(', ',$points_options['post_types']);
 	
 	$post_types = $points_options['post_types'];
-	//echo(json_encode($post_types).'<br>');
+
 	$number_of_post_types = count($post_types);
+
 	$cron_logs;
-	//echo json_encode($cron_logs);
+
 	$cron_logs['points']= array();
-	//echo json_encode($cron_logs);
-	//echo($number_of_post_types);
+
 	for($i=0;$i<$number_of_post_types;$i++){
 			$query = "select * from wp_posts where post_type ='".$post_types[$i]."'";
-		//	echo("<br>".$query."<br>");
+
 			$posts = $wpdb -> get_results($query);
 			$time_start = date("Y-m-d H:i:s");
 			foreach ($posts as $row) {
@@ -237,11 +237,10 @@ function pw_cache_all_post_points() {
 			$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, count($posts), 'pw_cache_all_post_points',$post_types[$i],null);
 			
 			$cron_logs['points'][] = $current_cron_log_object;
-			//echo json_encode($cron_logs);
+
 	}
 
 	return $cron_logs;
-	//echo json_encode(($cron_logs));
 	 
 }
 
@@ -264,14 +263,12 @@ function pw_cache_all_comment_points(){
 	$time_end =  date("Y-m-d H:i:s");
 	//$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, $blog_comments_count, 'comments', '');	
 	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, null, 'pw_cache_all_comment_points',null,null);
-	echo json_encode($current_cron_log_object);
-	
 	
 }
-//TODO
+
 function pw_cache_all_rank_scores (){
 	/*• Cycles through each post in each post_type scheduled for Rank Score caching
-	• Calculates and caches each post's current rank with cache_rank_score() method
+	• Calculates and caches each post's current rank with pw_cache_rank_score() method
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	//set_time_limit (300);
 	global $wpdb;
@@ -289,7 +286,7 @@ function pw_cache_all_rank_scores (){
 		$posts = $wpdb -> get_results($query);
 		$time_start = date("Y-m-d H:i:s");
 		foreach ($posts as $row) {
-			cache_rank_score($row->ID);
+			pw_cache_rank_score($row->ID);
 		}
 		$time_end= date("Y-m-d H:i:s");	
 		$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, count($posts), 'pw_cache_all_rank_scores', $post_types[$i],'');
@@ -297,8 +294,7 @@ function pw_cache_all_rank_scores (){
 		
 }
 
-echo json_encode(($cron_logs));
- 
+	return $cron_logs; 
 
 }
 
@@ -339,18 +335,18 @@ function pw_clear_cron_logs ( $timestamp ){
 	$wpdb -> show_errors();
 	
 	$query = "select COUNT(*) FROM $wpdb->pw_prefix"."cron_logs";
-	echo $query."<br>";
+
 	$total_logs = $wpdb-> get_var($query);
-	echo $total_logs."<br>";
+
 	if($total_logs == 0){
 		return array('rows_before'=> 0,'rows_removed'=> 0,'rows_after'=>0); 
 	}
 	else{
 	
 		$query ="DELETE FROM $wpdb->pw_prefix"."cron_logs WHERE time_end < '".$timestamp."'";
-		echo $query."<br>";
+
 		$deleted_rows = $wpdb->query($query);
-		echo print_r($deleted_rows);
+
 		if($deleted_rows === FALSE)
 			$deleted_rows=0;
 	
@@ -472,7 +468,6 @@ function pw_get_recent_shares_post_ids($last_time){
 	 global $wpdb;	
 	 $wpdb->show_errors();
 	 $query = "select DISTINCT  post_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
-	 //echo $query;
 	
 	 $post_ids = $wpdb->get_results($query);
 	  
@@ -674,14 +669,15 @@ function pw_add_new_cron_logs($cron_logs_array){
 }
 
 function pw_create_cron_log_object($time_start,$time_end,$number_of_posts=null,$function_type,$process_id=null,$query_args=null){
-		$current_cron_log_object = new cron_logs_Object();	
+		$current_cron_log_object = new pw_cron_logs_Object();	
 		$current_cron_log_object->function_type = $function_type;
 		$current_cron_log_object->time_start = $time_start;// {{timestamp}}
 		$current_cron_log_object->posts = $number_of_posts;// {{number of posts}}
 		$current_cron_log_object->process_id = $process_id;// {{feed id / post_type slug}}
 		$current_cron_log_object->query_args = $query_args;
 		$current_cron_log_object->time_end = $time_end;// {{timestamp}}
-		$current_cron_log_object->timer = (strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
+		$current_cron_log_object->timer = (strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start)) ;// {{milliseconds}}
+
 		//$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}	
 		pw_insert_cron_log($current_cron_log_object);
 		return $current_cron_log_object;
@@ -715,6 +711,4 @@ function pw_insert_cron_log($cron_log_object){
 }
 
 
-
-  
 ?>

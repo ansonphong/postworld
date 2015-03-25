@@ -1194,7 +1194,7 @@ function pw_save_post($post_data){
 	global $pwSiteGlobals;
 	$rank_post_types = pw_get_obj( $pwSiteGlobals, 'rank.post_types' );
 	if( in_array( $post_data['post_type'], $rank_post_types ) )
-		cache_rank_score ( $post_id );
+		pw_cache_rank_score ( $post_id );
 
 	if ( !empty($post_class) ){}
 
