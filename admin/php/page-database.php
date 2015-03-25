@@ -133,7 +133,7 @@
 
 				<h3>
 					<i class="pwi-lightning"></i>
-					Cleanup Database
+					Cleanup Metadata
 				</h3>
 
 				<!-- POSTMETA TABLE -->
@@ -162,8 +162,6 @@
 						{{ cleanupMetaReadout[cleanupTable.type].cleaned_items | json }}
 					</div>
 				</div>
-
-
 
 			</div>
 
