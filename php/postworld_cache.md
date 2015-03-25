@@ -94,21 +94,21 @@ __$operator__ : *string*
 
 ------
 
-### cache_all_points ()
+### pw_cache_all_points ()
 - Runs cache_user_points() and cache_post_points()
 
 __return__ : *cron_logs Object* (add to table wp_postworld_cron_logs)
 
 ------
 
-### cache_all_user_points()
+### pw_cache_all_user_points()
 - Cycles through all users with cache_user_points() method
 
 __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ------
 
-### cache_all_post_points()
+### pw_cache_all_post_points()
 - Cycles through each post in each post_type with points enabled
 - Calculates and caches each post's current points with cache_post_points() method
 
@@ -116,7 +116,7 @@ __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ------
 
-### cache_all_comment_points()
+### pw_cache_all_comment_points()
 - Cycles through all columns
 - Calculates and caches each comment's current points with cache_comment_points() method
 
@@ -124,7 +124,7 @@ __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ------
 
-### cache_all_rank_scores ()
+### pw_cache_all_rank_scores ()
 - Cycles through each post in each post_type scheduled for Rank Score caching
 - Calculates and caches each post's current rank with cache_rank_score() method
 __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
@@ -156,7 +156,7 @@ memory_limit = 512M;
 
 ------
 
-### cache_all_feeds ()
+### pw_cache_all_feeds ()
 - Run pw_cache_feed() method for each feed registered for feed caching in WP Options
 __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
@@ -166,7 +166,7 @@ SHARES
 
 ------
 
-### cache_shares ( *[$cache_all]* )
+### pw_cache_shares ( *[$cache_all]* )
 
 #### Description
 - Caches user and post share reports from the __Shares__ table
@@ -180,21 +180,21 @@ Default : *false*
     - Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
 
     - __POSTS :__  
-    Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
-    Run `cache_post_shares($post_id)` for all recently updated shares
+    Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `pw_cache_shares()` by checking the __last time__ column  
+    Run `pw_cache_post_shares($post_id)` for all recently updated shares
 
     - __AUTHORS :__  
     Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the last cache.  
-    Run `cache_user_shares($user_id,'incoming')` for all recently updated user's shares
+    Run `pw_cache_user_shares($user_id,'incoming')` for all recently updated user's shares
 
      - __USERS :__  
     Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the last cache.
-    Run `cache_user_shares($user_id,'outgoing')` for all recently updated user's shares
+    Run `pw_cache_user_shares($user_id,'outgoing')` for all recently updated user's shares
 
 - If `$cache_all = true`
-    - Cycle through every post and run `cache_post_shares($post_id)`
-    - Cycle through every author and run `cache_user_shares($user_id,'incoming')`
-    - Cycle through every user and run `cache_user_shares($user_id,'outgoing')`
+    - Cycle through every post and run `pw_cache_post_shares($post_id)`
+    - Cycle through every author and run `pw_cache_user_shares($user_id,'incoming')`
+    - Cycle through every user and run `pw_cache_user_shares($user_id,'outgoing')`
 
 __return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
 
@@ -204,7 +204,7 @@ POST SHARES
 
 ------
 
-### calculate_post_shares( *$post_id* )
+### pw_calculate_post_shares( *$post_id* )
 - Calculates the total number of shares to the given post
 
 #### Process
@@ -215,11 +215,11 @@ __return__ : *integer* (number of shares)
 
 ------
 
-### cache_post_shares( *$post_id* )
+### pw_cache_post_shares( *$post_id* )
 - Caches the total number of shares to the given post
 
 #### Process
-- Run `calculate_post_shares($post_id)`
+- Run `pw_calculate_post_shares($post_id)`
 - Write the result to the __post_shares__ column in the __Post Meta__ table
 
 __return__ : *integer* (number of shares)
@@ -260,7 +260,7 @@ array(
 
 ------
 
-### cache_user_shares( *$user_id, [$mode]* )
+### pw_cache_user_shares( *$user_id, [$mode]* )
 - Caches the total number of shares relating to a given user
 
 #### Process
@@ -275,7 +275,7 @@ CRON LOGS
 
 ------
 
-### clear_cron_logs ( *$timestamp* )
+### pw_clear_cron_logs ( *$timestamp* )
 - Count number of rows in wp_postworld_cron_logs (rows_before)
 - Deletes all rows which are before the specified timestamp (rows_removed)
 - Count number of rows after clearing (rows_after)

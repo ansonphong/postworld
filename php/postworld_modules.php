@@ -76,6 +76,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'',
 			),
 
+		array(
+			'name'	=>	'Rank Score',
+			'slug'	=>	'rank_score',
+			'icon'	=>	'pwi-bars',
+			'description'	=>	'',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules
@@ -195,20 +202,38 @@ function pw_modules_outline(){
 		);
 }
 
-function pw_module_is_enabled( $module ){
+function pw_module_enabled( $module ){
 	$enabled_modules = pw_enabled_modules();
 	return in_array( $module, $enabled_modules );
 }
 
-function pw_module_is_supported( $module ){
+function pw_module_supported( $module ){
 	$supported_modules = pw_supported_modules();
 	return in_array( $module, $supported_modules );
 }
 
-function pw_module_is_required( $module ){
+function pw_module_required( $module ){
 	$required_modules = pw_required_modules();
 	return in_array( $module, $required_modules );
 }
 
+
+
+///// DEPRECIATED /////
+
+function pw_module_is_enabled( $module ){
+	// DEPRECIATED
+	return pw_module_enabled( $module );
+}
+
+function pw_module_is_supported( $module ){
+	// DEPRECIATED
+	return pw_module_supported( $module );
+}
+
+function pw_module_is_required( $module ){
+	// DEPRECIATED
+	return pw_module_required( $module );
+}
 
 ?>

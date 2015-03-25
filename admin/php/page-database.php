@@ -125,6 +125,26 @@
 				</table>
 
 			</div>
+
+			<?php if( pw_module_enabled( 'rank_score' ) ):?>
+				<!-- POST RANK -->
+				<div class="well">
+					<h3>
+						<i class="pwi-bars"></i>
+						Rank Score
+					</h3>
+
+					Cache all User Points
+					Cache all Post Points
+					Cache all Comment Points
+
+					Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)
+
+
+
+				</div>
+			<?php endif; ?>
+
 		</div>
 
 		<div class="col-md-6 pad-col-md">
@@ -168,6 +188,7 @@
 		</div>
 
 	</div>
+
 
 	<?php if( pw_dev_mode() ) : ?>
 		<hr class="thick">

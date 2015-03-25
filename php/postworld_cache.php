@@ -156,17 +156,16 @@ function pw_get_cache_types_readout(){
 
 ////////////////////////////////////////////////////////////////////
 
-function cache_all_points (){
+function pw_cache_all_points (){
 	/*• Runs cache_user_points() and cache_post_points()
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
-	$post_points_cron_log = cache_all_post_points();
-	$user_points_cron_log = cache_all_user_points();
-	
+	$post_points_cron_log = pw_cache_all_post_points();
+	$user_points_cron_log = pw_cache_all_user_points();
 	
 	return array($post_points_cron_log,$user_points_cron_log);
 }
 //TODO
-function cache_all_user_points(){
+function pw_cache_all_user_points(){
 	/*• Cycles through all users with cache_user_points() method
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	global $wpdb;
@@ -174,23 +173,22 @@ function cache_all_user_points(){
 	
 	//get all user ids
 	
-	$query ="select ID from wp_users";
+	$query ="select ID from ".$wpdb->users;
 	$blogusers=$wpdb->get_results($query);
 	$blog_users_count = count($blogusers);
 	$time_start = date("Y-m-d H:i:s");
 	for($i=0;$i<$blog_users_count;$i++){
-		
 		cache_user_posts_points($blogusers[$i]->ID);
 	}
 	
 	//loop for all users: get calculate_user_points and user_post_points?
 	$time_end = date("Y-m-d H:i:s");
-//	$current_cron_log_object = create_cron_log_object($time_start, $time_end, $blog_users_count, 'user_points','');
-	$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_all_user_points',null,null);
+//	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, $blog_users_count, 'user_points','');
+	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, null, 'pw_cache_all_user_points',null,null);
 	echo json_encode($current_cron_log_object);
 }
 
-function cache_all_post_points() {
+function pw_cache_all_post_points() {
 	/*
 	 • Cycles through each post in each post_type with points enabled
 	 • Calculates each post's current points with calculate_points()
@@ -235,8 +233,8 @@ function cache_all_post_points() {
 			}
 			
 			$time_end = date("Y-m-d H:i:s");
-			//$current_cron_log_object = create_cron_log_object($time_start, $time_end, count($posts), 'points', $post_types[$i],'');
-			$current_cron_log_object = create_cron_log_object($time_start, $time_end, count($posts), 'cache_all_post_points',$post_types[$i],null);
+			//$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, count($posts), 'points', $post_types[$i],'');
+			$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, count($posts), 'pw_cache_all_post_points',$post_types[$i],null);
 			
 			$cron_logs['points'][] = $current_cron_log_object;
 			//echo json_encode($cron_logs);
@@ -248,14 +246,14 @@ function cache_all_post_points() {
 }
 
 
-function cache_all_comment_points(){
+function pw_cache_all_comment_points(){
 	/*• Cycles through all columns
 	• Calculates and caches each comment's current points with cache_comment_points() method
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	
 	global $wpdb;
 	$wpdb -> show_errors();
-	$query ="select comment_ID from wp_comments";
+	$query ="select comment_ID from ".$wpdb->comments;
 	$blog_comments=$wpdb->get_results($query);
 	$blog_comments_count = count($blog_comments);
 	
@@ -264,14 +262,14 @@ function cache_all_comment_points(){
 		cache_comment_points($blog_comments[$i]->comment_ID);
 	}
 	$time_end =  date("Y-m-d H:i:s");
-	//$current_cron_log_object = create_cron_log_object($time_start, $time_end, $blog_comments_count, 'comments', '');	
-	$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_all_comment_points',null,null);
+	//$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, $blog_comments_count, 'comments', '');	
+	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, null, 'pw_cache_all_comment_points',null,null);
 	echo json_encode($current_cron_log_object);
 	
 	
 }
 //TODO
-function cache_all_rank_scores (){
+function pw_cache_all_rank_scores (){
 	/*• Cycles through each post in each post_type scheduled for Rank Score caching
 	• Calculates and caches each post's current rank with cache_rank_score() method
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
@@ -294,7 +292,7 @@ function cache_all_rank_scores (){
 			cache_rank_score($row->ID);
 		}
 		$time_end= date("Y-m-d H:i:s");	
-		$current_cron_log_object = create_cron_log_object($time_start, $time_end, count($posts), 'cache_all_rank_scores', $post_types[$i],'');
+		$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, count($posts), 'pw_cache_all_rank_scores', $post_types[$i],'');
 		$cron_logs['rank'][] = $current_cron_log_object;
 		
 }
@@ -304,10 +302,10 @@ echo json_encode(($cron_logs));
 
 }
 
-/*later*///TODO
-function cache_all_feeds (){
-	/*• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
-	return : cron_logs Object (store in table wp_postworld_cron_logs)*/
+/*
+function pw_cache_all_feeds (){
+	//• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
+	//return : cron_logs Object (store in table wp_postworld_cron_logs)
 	global $pwSiteGlobals;
 	$feeds_options = $pwSiteGlobals['feeds']['cache_feeds'];
 	$cron_logs = array();
@@ -317,14 +315,14 @@ function cache_all_feeds (){
 		$time_start = date("Y-m-d H:i:s"); 
 		$cache_output = pw_cache_feed($feeds_options[$i]);
 		$time_end = date("Y-m-d H:i:s");
-		$current_cron_log_object = create_cron_log_object($time_start, $time_end,$cache_output['number_of_posts'] , 'cache_all_feeds', $feeds_options[$i],$cache_output['feed_query']);
+		$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end,$cache_output['number_of_posts'] , 'pw_cache_all_feeds', $feeds_options[$i],$cache_output['feed_query']);
 		$cron_logs[]=$current_cron_log_object;
 	}
 	return $cron_logs;	
-	
 }
+*/
 
-function clear_cron_logs ( $timestamp ){
+function pw_clear_cron_logs ( $timestamp ){
 	/*  • Count number of rows in wp_postworld_cron_logs (rows_before)
 		• Deletes all rows which are before the specified timestamp (rows_removed)
 		• Count number of rows after clearing (rows_after)
@@ -361,7 +359,7 @@ function clear_cron_logs ( $timestamp ){
 }
 
 
-function cache_shares ( $cache_all = FALSE){ 
+function pw_cache_shares ( $cache_all = FALSE){ 
 	/*
 	
 	 *  Description
@@ -375,20 +373,20 @@ function cache_shares ( $cache_all = FALSE){
 	 * Process
 	
 		-If $cache_all = false, just update the recently changed share reports
-			-Check Cron Logs table for the most recent start time of the last cache_shares() operation
+			-Check Cron Logs table for the most recent start time of the last pw_cache_shares() operation
 			-POSTS :
 				Get an array of all post_IDs from Shares table which have been updated since the most recent run of cache_shares() by checking the last time column
-				Run cache_post_shares($post_id) for all recently updated shares
+				Run pw_cache_post_shares($post_id) for all recently updated shares
 			-AUTHORS :
 				Get an array of all post_author_IDs from Shares table which have been updated since the last cache.
 				Run cache_user_post_shares($user_id) for all recently updated user's shares
 			-USERS :
-				Get an array of all user_IDs from Shares table which have been updated since the last cache. Run cache_user_shares($user_id) for all recently updated user's shares
+				Get an array of all user_IDs from Shares table which have been updated since the last cache. Run pw_cache_user_shares($user_id) for all recently updated user's shares
 	
 	 	-If $cache_all = true
-			-Cycle through every post and run cache_post_shares($post_id)
+			-Cycle through every post and run pw_cache_post_shares($post_id)
 			-Cycle through every author and run cache_user_post_shares($user_id)
-			-Cycle through every user and run cache_user_shares($user_id)
+			-Cycle through every user and run pw_cache_user_shares($user_id)
 	return : cron_logs Object (store in table wp_postworld_cron_logs)
 	 */	
 	
@@ -396,59 +394,59 @@ function cache_shares ( $cache_all = FALSE){
 	 $cron_logs=array();
 	 if($cache_all===FALSE){
 	 	
-		$recent_log = get_most_recent_cache_shares_log();
+		$recent_log = pw_get_most_recent_cache_shares_log();
 		// print_r($recent_log);
 		 
 		 if(!is_null($recent_log)){
 		 	$time_start = date("Y-m-d H:i:s");
 			 //print_r($recent_log->time_start);
-			$post_ids = get_recent_shares_post_ids($recent_log->time_start);
+			$post_ids = pw_get_recent_shares_post_ids($recent_log->time_start);
 		
 			foreach ($post_ids as $post_id) {
 		//		print_r($post_id);
 			
-				cache_post_shares($post_id->post_id);
+				pw_cache_post_shares($post_id->post_id);
 			}
 			
-			$user_ids = get_recent_shares_user_ids($recent_log->time_start);
+			$user_ids = pw_get_recent_shares_user_ids($recent_log->time_start);
 			print_r($user_ids);
 			foreach ($user_ids as $user_id) {
 				print_r($user_id);
-				cache_user_shares($user_id->user_id,'outgoing');
+				pw_cache_user_shares($user_id->user_id,'outgoing');
 			}
 			
-			$author_ids = get_recent_shares_author_ids($recent_log->time_start);
+			$author_ids = pw_get_recent_shares_author_ids($recent_log->time_start);
 			//print_r($author_ids);
 			foreach ($author_ids as $author_id) {
-				 cache_user_shares($author_id->author_id,'incoming');
+				 pw_cache_user_shares($author_id->author_id,'incoming');
 			}
 			
-			
 			$time_end = date("Y-m-d H:i:s");
-			$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_shares',null,null);
+			$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, null, 'cache_shares',null,null);
 			return $current_cron_log_object;
-		 }else{
+
+		 } else{
 		 	
 		 }
 		
 		
-	 }else{
+	 } else{
  		//-If $cache_all = true
  		$time_start = date("Y-m-d H:i:s");
- 		/*-Cycle through every post and run cache_post_shares($post_id) */
- 		$post_ids = get_all_post_ids_as_array();
+ 		/*-Cycle through every post and run pw_cache_post_shares($post_id) */
+ 		$post_ids = pw_get_all_post_ids_as_array();
 		foreach ($post_ids as $post_id) {
-			cache_post_shares($post_id->ID);
+			pw_cache_post_shares($post_id->ID);
 		}
 		/*-Cycle through every author and run cache_user_post_shares($user_id)*/
-		/*-Cycle through every user and run cache_user_shares($user_id)*/
-		$user_ids = get_all_user_ids_as_array();
+		/*-Cycle through every user and run pw_cache_user_shares($user_id)*/
+		$user_ids = pw_get_all_user_ids_as_array();
 		foreach ($user_ids as $user_id) {
-			cache_user_shares($user_id->ID,'both');
+			pw_cache_user_shares($user_id->ID,'both');
 		}
 			 
 		$time_end = date("Y-m-d H:i:s");
-		$current_cron_log_object = create_cron_log_object($time_start, $time_end, null, 'cache_shares',null,null);
+		$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, null, 'pw_cache_shares',null,null);
 		return $current_cron_log_object;
 			
 	 }
@@ -459,18 +457,18 @@ function cache_shares ( $cache_all = FALSE){
 /*	
 //TODO : to be specified
 function cache_user_post_shares($user_id){
-	cache_user_shares($user_id, 'incoming');
+	pw_cache_user_shares($user_id, 'incoming');
 }*/
 
-function get_most_recent_cache_shares_log(){
+function pw_get_most_recent_cache_shares_log(){
 	global $wpdb;
 	$wpdb->show_errors();
-	$query="SELECT * FROM $wpdb->pw_prefix"."cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'cache_shares')";
+	$query="SELECT * FROM $wpdb->pw_prefix"."cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'pw_cache_shares')";
 	$row = $wpdb->get_row($query);	
 	return $row;
 }
 
-function get_recent_shares_post_ids($last_time){
+function pw_get_recent_shares_post_ids($last_time){
 	 global $wpdb;	
 	 $wpdb->show_errors();
 	 $query = "select DISTINCT  post_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
@@ -481,7 +479,7 @@ function get_recent_shares_post_ids($last_time){
 	 return $post_ids;
 }	
 
-function get_recent_shares_author_ids($last_time){
+function pw_get_recent_shares_author_ids($last_time){
 	 global $wpdb;	
 	 $wpdb->show_errors();
 	 $query = "select DISTINCT  author_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
@@ -489,7 +487,7 @@ function get_recent_shares_author_ids($last_time){
 	 return $user_ids;
 }	
 
-function get_recent_shares_user_ids($last_time){
+function pw_get_recent_shares_user_ids($last_time){
 	 global $wpdb;	
 	 $wpdb->show_errors();
 	 $query = "select DISTINCT user_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
@@ -498,7 +496,7 @@ function get_recent_shares_user_ids($last_time){
 }	
 
 
-function get_all_post_ids_as_array(){
+function pw_get_all_post_ids_as_array(){
 	 global $wpdb;
 	 $wpdb->show_errors();
 	 
@@ -507,7 +505,7 @@ function get_all_post_ids_as_array(){
 	 
 	 return ($post_ids_array);
 }
-function get_all_user_ids_as_array(){
+function pw_get_all_user_ids_as_array(){
 	
 	global $wpdb;
 	$wpdb->show_errors();
@@ -520,7 +518,7 @@ function get_all_user_ids_as_array(){
 }
 
 //////////////// POST SHARES /////////////////////
-function calculate_post_shares($post_id){
+function pw_calculate_post_shares($post_id){
 	/*Calculates the total number of shares to the given post
 	Process
 	-Lookup the given post_id in the Shares table
@@ -538,21 +536,19 @@ function calculate_post_shares($post_id){
 	else return 0;
 }
 
-function cache_post_shares( $post_id ){
+function pw_cache_post_shares( $post_id ){
 
 	/*Caches the total number of shares to the given post
 	Process
-	-Run calculate_post_shares($post_id)
+	-Run pw_calculate_post_shares($post_id)
 	-Write the result to the post_shares column in the Post Meta table
 	-return : integer (number of shares)*/
-	$total_shares = calculate_post_shares($post_id);
+	$total_shares = pw_calculate_post_shares($post_id);
 	
 	add_record_to_post_meta($post_id);
 	
 	global $wpdb;
 	$wpdb -> show_errors();
-	
-	
 	
 	$query = "update $wpdb->pw_prefix"."post_meta set post_shares=".$total_shares." where post_id=".$post_id;
 	$wpdb->query($query);
@@ -561,11 +557,8 @@ function cache_post_shares( $post_id ){
 
 
 
-
-
-
 ////////////////// USER SHARES /////////////////////////
-function calculate_user_shares( $user_id, $mode='both' ){
+function pw_calculate_user_shares( $user_id, $mode='both' ){
 	/*
 	Calculates the total number of shares relating to a given user
 	
@@ -619,19 +612,17 @@ function calculate_user_shares( $user_id, $mode='both' ){
 	return $output;
 }
 
-function cache_user_shares( $user_id, $mode ){
+function pw_cache_user_shares( $user_id, $mode ){
 	/*
 	Caches the total number of shares relating to a given user
 	Process
 	
-	Run calculate_user_shares()
+	Run pw_calculate_user_shares()
 	Update the post_shares column in the user Meta table
 	return : integer (number of shares)
-	 */
+	*/
 	 
-	 
-	 
-	$user_shares = calculate_user_shares($user_id,$mode);
+	$user_shares = pw_calculate_user_shares($user_id,$mode);
 	//print_r($user_shares);
 	global $wpdb;
 	$wpdb -> show_errors();
@@ -641,7 +632,7 @@ function cache_user_shares( $user_id, $mode ){
 	if(isset($user_shares['outgoing'])) $total_user_shares = $user_shares['outgoing'];
 	
 	//check if cached before and replace json values
-	$old_shares = get_user_shares($user_id);
+	$old_shares = pw_get_user_shares($user_id);
 	//print_r($old_shares);
 	//print_r($user_shares);
 	
@@ -654,7 +645,7 @@ function cache_user_shares( $user_id, $mode ){
 		if($mode =='outgoing' || $mode='both')
 			if(isset($user_shares['outgoing'])) $old_shares['outgoing'] = $user_shares['outgoing'];
 		
-	}else{
+	} else{
 		add_record_to_user_meta($user_id);	
 		$old_shares = $user_shares;		
 	}
@@ -667,42 +658,36 @@ function cache_user_shares( $user_id, $mode ){
 	 
 }
 
-
-function get_user_shares($user_id){
-		
+function pw_get_user_shares($user_id){
 	global $wpdb;
 	$wpdb -> show_errors();
-		
 	$query = "select share_points_meta from $wpdb->pw_prefix"."user_meta where user_id=".$user_id;
 	return $wpdb->get_var($query);
-	
-}
-////////////////  HELPER FUNCTIONS  //////////////////////
-function add_new_cron_logs($cron_logs_array){
-	$cron_logs_count = count($cron_logs_array);
-	
-	for ($i=0; $i <$cron_logs_count ; $i++) {
-		$query = "insert into " ;
-		
-	}
-	
 }
 
-function create_cron_log_object($time_start,$time_end,$number_of_posts=null,$function_type,$process_id=null,$query_args=null){
+////////////////  HELPER FUNCTIONS  //////////////////////
+function pw_add_new_cron_logs($cron_logs_array){
+	$cron_logs_count = count($cron_logs_array);
+	for ($i=0; $i <$cron_logs_count ; $i++) {
+		$query = "insert into " ;
+	}
+}
+
+function pw_create_cron_log_object($time_start,$time_end,$number_of_posts=null,$function_type,$process_id=null,$query_args=null){
 		$current_cron_log_object = new cron_logs_Object();	
 		$current_cron_log_object->function_type = $function_type;
-		$current_cron_log_object->time_start =$time_start;// {{timestamp}}
-		$current_cron_log_object->posts=$number_of_posts;// {{number of posts}}
-		$current_cron_log_object->process_id=$process_id;// {{feed id / post_type slug}}
+		$current_cron_log_object->time_start = $time_start;// {{timestamp}}
+		$current_cron_log_object->posts = $number_of_posts;// {{number of posts}}
+		$current_cron_log_object->process_id = $process_id;// {{feed id / post_type slug}}
 		$current_cron_log_object->query_args = $query_args;
-		$current_cron_log_object->time_end=$time_end;// {{timestamp}}
-		$current_cron_log_object->timer=(strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
+		$current_cron_log_object->time_end = $time_end;// {{timestamp}}
+		$current_cron_log_object->timer = (strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start))*1000 ;// {{milliseconds}}
 		//$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}	
-		insert_cron_log_to_db($current_cron_log_object);
+		pw_insert_cron_log($current_cron_log_object);
 		return $current_cron_log_object;
 }
 
-function insert_cron_log_to_db($cron_log_object){
+function pw_insert_cron_log($cron_log_object){
 	global $wpdb;
 	$wpdb -> show_errors();
 	

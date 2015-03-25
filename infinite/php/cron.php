@@ -29,7 +29,7 @@ add_action( 'prefix_hourly_event', 'prefix_do_this_hourly' );
  * On the scheduled action hook, run a function.
  */
 function prefix_do_this_hourly() {
-	cache_all_rank_scores();
+	//pw_cache_all_rank_scores();
 }
 
 wp_cron();
