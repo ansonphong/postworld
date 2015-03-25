@@ -188,7 +188,7 @@ function pw_set_post_meta($post_id, $post_meta){
 	global $wpdb;
 	
 	// Add a new record if it doesn't exist
-	add_record_to_post_meta($post_id);
+	pw_add_record_to_post_meta($post_id);
 
 	$query = "update $wpdb->pw_prefix"."post_meta set ";
 	$insertComma = FALSE;

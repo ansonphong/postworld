@@ -1,5 +1,4 @@
 <?php
-
 function pw_add_schedules($schedules) {
 	// WordPress already comes with some schedules
 	// WP Schedules : hourly, twicedaily, daily
@@ -35,26 +34,41 @@ function pw_add_schedules($schedules) {
 		'display' => __('Every Week')
 	);
 
+	$schedules['monthly'] = array(
+		'interval' => 2419200,
+		'display' => __('Every Week')
+	);
+
 	return $schedules;
 }
 add_filter( 'cron_schedules', 'pw_add_schedules'); 
 
 
-class pw_cron_logs_Object {
-	public $function_type;// {{feed/post_type}}
-	public $process_id ;// {{feed id / post_type slug}}
-	public $time_start;// {{timestamp}}
-	public $time_end;// {{timestamp}}
-	public $timer;// {{milliseconds}}
-	public $posts;// {{number of posts}}
-	//public $timer_average;// {{milliseconds}}
-	public $query_args ;// {{ query_vars Object }}
-}
+function pw_insert_cron_log($cron_log){
+	// Inserts an entry into postworld_cron_logs tables
 
-class pw_query_vars_Object  {
-	public $post_type;
-	public $class;
-	public $format;
+	global $wpdb;
+	
+	$timer = (strtotime( $cron_log['time_end'] )-strtotime( $cron_log['time_start']));
+
+	$default_cron_log = array(
+		'function_type'	=>	null,
+		'process_id'	=>	null,
+		'time_start'	=>	null,
+		'time_end'		=>	null,
+		'timer'			=>	$timer,
+		'posts'			=>	null,
+		'query_args'	=>	null,
+		);
+
+	$cron_log = array_replace_recursive($default_cron_log, $cron_log);
+
+	///// INSERT /////
+	return $wpdb->insert(
+		$wpdb->pw_prefix . 'cache',
+		$cron_log
+		);
+
 }
 	
 ?>

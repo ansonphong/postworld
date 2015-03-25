@@ -12,7 +12,21 @@ function pwAjaxRespond( $response_data ){
 }
 
 
-//---------- PW TRUNCATE CACHE ----------//
+//---------- PW CACHE ALL RANK SCORES ----------//
+function pw_cache_all_rank_scores_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	
+	if( current_user_can('manage_options') )
+		$response_data = pw_cache_all_rank_scores();
+	else
+		return false;
+
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_cache_all_rank_scores", "pw_cache_all_rank_scores_ajax");
+
+
+//---------- PW CLEANUP META ----------//
 function pw_cleanup_meta_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	
@@ -420,34 +434,34 @@ add_action("wp_ajax_pw_get_avatar", "pw_get_avatar_anon");
 
 
 //---------- SET COMMENT POINTS ----------//
-function set_comment_points_admin(){
+function pw_set_comment_points_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 
 	$params = $args['args'];
 	$comment_id = $params['comment_id'];
 	$points = $params['points'];
 
-	$set_comment_points = set_comment_points( $comment_id, $points );
+	$response = pw_set_comment_points( $comment_id, $points );
 
-	pwAjaxRespond( $set_comment_points );
+	pwAjaxRespond( $response );
 }
 
-//add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
-add_action("wp_ajax_set_comment_points", "set_comment_points_admin");
+//add_action("wp_ajax_nopriv_pw_set_post_points", "pw_set_post_points_admin");
+add_action("wp_ajax_pw_set_comment_points", "pw_set_comment_points_ajax");
 
 
 //---------- SET POST POINTS ----------//
-function set_post_points_admin(){
+function pw_set_post_points_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 
 	$vars = $args['args'];
-	$response_data = set_post_points( $vars['post_id'], $vars['points'] );
+	$response_data = pw_set_post_points( $vars['post_id'], $vars['points'] );
 
 	pwAjaxRespond( $response_data );
 }
 
 //add_action("wp_ajax_nopriv_set_post_points", "set_post_points_admin");
-add_action("wp_ajax_set_post_points", "set_post_points_admin");
+add_action("wp_ajax_pw_set_post_points", "pw_set_post_points_ajax");
 
 
 

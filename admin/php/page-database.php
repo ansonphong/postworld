@@ -140,8 +140,6 @@
 
 					Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)
 
-
-
 				</div>
 			<?php endif; ?>
 

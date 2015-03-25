@@ -358,16 +358,16 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('set_post_relationship',params);
 		},
-		set_post_points: function(args) {
-			$log.debug('pwData.set_post_points',args);
+		setPostPoints: function(args) {
+			$log.debug('pwData.setPostPoints',args);
 			var params = {args:args};
-			return this.wp_ajax('set_post_points',params);
+			return this.wp_ajax('pw_set_post_points',params);
 		},
 		
-		set_comment_points: function(args) {
-			$log.debug('pwData.set_comment_points',args);
+		setCommentPoints: function(args) {
+			$log.debug('pwData.setCommentPoints',args);
 			var params = {args:args};
-			return this.wp_ajax('set_comment_points',params);
+			return this.wp_ajax('pw_set_comment_points',params);
 		},
 
 		pw_set_avatar: function( args ) {

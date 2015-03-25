@@ -102,7 +102,7 @@ __META POINTS FUNCTIONS__
 
 #### Description
 
-- A meta function for `set_post_points()` and `set_comment_points()`
+- A meta function for `pw_set_post_points()` and `pw_set_comment_points()`
 
 #### Parameters
 
@@ -121,7 +121,7 @@ __$set_points__ : *integer*
 #### Process
 
 - Get the User ID
-- Get the user's vote power : `get_user_vote_power()`
+- Get the user's vote power : `pw_get_user_vote_power()`
 	- If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
 
 - Define the table and column names to work with :
@@ -170,32 +170,32 @@ __POST POINTS__
 
 ------
 
-### get_post_points( *$post_id* )
+### pw_get_post_points( *$post_id* )
 - Get the total number of points of the given post from the __post_points__ column in the __Post Meta__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### calculate_post_points ( *$post_id* )
+### pw_calculate_post_points ( *$post_id* )
 - Adds up the points from the specified post, stored in __Post Points__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### cache_post_points ( *$post_id* ) 
-- Calculates given post's current points with `calculate_post_points()`
+### pw_cache_post_points ( *$post_id* ) 
+- Calculates given post's current points with `pw_calculate_post_points()`
 - Stores the result in the __post_points__ column in __Post Meta__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### set_post_points( *$post_id, $set_points* )
+### pw_set_post_points( *$post_id, $set_points* )
 
 #### Description
-- Wrapper for `set_points()` Method for setting post points
+- Wrapper for `pw_set_points()` Method for setting post points
 - Run `pw_cache_rank_score()` to update rank score of the post
 
 #### Parameters
@@ -206,13 +206,13 @@ __$set_points__ : *integer*
 
 #### Process
 
-- Run `set_points( 'post', $post_id, $set_points )`
+- Run `pw_set_points( 'post', $post_id, $set_points )`
 
-__return__ : *Array* (same as `set_points()` )
+__return__ : *Array* (same as `pw_set_points()` )
 
 ------
 
-### has_voted_on_post ( *$post_id, $user_id* ) 
+### pw_has_voted_on_post ( *$post_id, $user_id* ) 
 - Check __Post Points__ to see if the user has voted on the post
 - Return the number of points voted
 
@@ -249,7 +249,7 @@ __return__ : *integer* (number of points)
 ### set_comment_points( $comment_id, $set_points )
 
 #### Description
-- Wrapper for `set_points()` Method for setting comment points
+- Wrapper for `pw_set_points()` Method for setting comment points
 
 #### Parameters
 
@@ -259,13 +259,13 @@ __$set_points__ : *integer*
 
 #### Process
 
-- Run `set_points( 'comment', $post_id, $set_points )`
+- Run `pw_set_points( 'comment', $post_id, $set_points )`
 
-__return__ : *Array* (same as `set_points()` )
+__return__ : *Array* (same as `pw_set_points()` )
 
 ------
 
-### has_voted_on_comment ( $comment_id, $user_id )
+### pw_has_voted_on_comment ( $comment_id, $user_id )
 - Check __Comment Points__ table to see if the user has voted on the comment
 - Return the number of points voted
 
@@ -277,7 +277,7 @@ __USER POST POINTS__
 
 ------
 
-### get_user_post_points ( *$user_id* )
+### pw_get_user_post_points ( *$user_id* )
 - Get the number of points voted to posts authored by the given user
 - Get cached points of user from __wp_postworld_user_meta__ table __post_points__ column
 
@@ -285,7 +285,7 @@ __return__ : *integer* (number of points)
 
 ------
 
-### get_user_post_points_meta
+### pw_get_user_post_points_meta
 - Get the number of points voted to posts authored by the given user, broken down
 - Get cached points of user from __wp_postworld_user_meta__ table __post_points_meta__ column
 - Include total points
@@ -306,7 +306,7 @@ array(
 ------
 
 
-### calculate_user_posts_points ( *$user_id* )
+### pw_calculate_user_posts_points ( *$user_id* )
 - Add up the points voted to given user's posts, stored in __wp_postworld_post_points__
 - __NEW__ : For each post, get the __post_type,__ and also calculate value of points given to posts of each post type
 - Cache the total result in the __post_points__ column in the __User Meta__ table
@@ -328,8 +328,8 @@ array(
 
 ------
 
-### cache_user_posts_points ( *$user_id* )
-- Runs `calculate_user_posts_points()` Method
+### pw_cache_user_posts_points ( *$user_id* )
+- Runs `pw_calculate_user_posts_points()` Method
 - Caches value in __post_points_meta__ column in __wp_postworld_user_meta__ table
 
 __return__ : *integer* (number of points)
@@ -340,7 +340,7 @@ __USER COMMENT POINTS__
 
 ------
 
-### get_user_comments_points ( *$user_id* )
+### pw_get_user_comments_points ( *$user_id* )
 
 - Get the number of points voted to comments authored by the given user
 - Get cached points of user from __wp_postworld_user_meta__ table __comment_points__ column
@@ -349,7 +349,7 @@ __return__ : *integer* (number of points)
 
 ------
 
-### calculate_user_comments_points ( *$user_id* )
+### pw_calculate_user_comments_points ( *$user_id* )
 - Adds up the points voted to given user's comments, stored in __wp_postworld_comment_points__ table
 - Stores the result in the __post_points__ column in __wp_postworld_user_meta__ table
 
@@ -357,7 +357,7 @@ __return__ : *integer* (number of points)
 
 ------
 
-### cache_user_comments_points ( *$user_id* )
+### pw_cache_user_comments_points ( *$user_id* )
 - Runs `calculate_user_comment_points()` Method
 - Caches value in __comment_points__ column in __wp_postworld_user_meta__ table
 
@@ -369,7 +369,7 @@ __GENERAL POINTS__
 
 ------
 
-### has_voted_on_comment ( *$comment_id, $user_id* ) 
+### pw_has_voted_on_comment ( *$comment_id, $user_id* ) 
 - Check __wp_postworld_comment_points__ to see if the user has voted on the comment
 - Return the number of points voted
 
@@ -377,7 +377,7 @@ __return__ : *integer*
 
 ------
 
-### get_user_points_voted_to_posts ( *$user_id* ,*$break_down=FALSE*)
+### pw_get_user_points_voted_to_posts ( *$user_id* ,*$break_down=FALSE*)
 If **$break_down=False** then : 
 - Get total points voted to posts authored by the given user
 - Get points of each post from __wp_postworld_post_meta__
@@ -402,7 +402,7 @@ post_id,author_id,total_points,post_type
 ```
 ------
 
-### get_user_votes_on_posts ( *$user_id, [$fields], [$direction]* )
+### pw_get_user_votes_on_posts ( *$user_id, [$fields], [$direction]* )
 - Get all posts which user has voted on from __wp_postworld_post_points__ table 
 
 #### Parameters
@@ -429,7 +429,7 @@ __return__ : *Object / Array*
 Parameters:
 
 ``` php
-	get_user_votes_on_posts ( 1, 'post_id', 'up' )
+	pw_get_user_votes_on_posts ( 1, 'post_id', 'up' )
 ```
 Returns:
 
@@ -439,7 +439,7 @@ Returns:
 Parameters:
 
 ``` php
-	get_user_votes_on_posts ( 1, 'all', 'up' )
+	pw_get_user_votes_on_posts ( 1, 'all', 'up' )
 ```
 Returns:
 
@@ -452,7 +452,7 @@ Returns:
 
 ------
 
-### get_user_votes_report ( *$user_id* )
+### pw_get_user_votes_report ( *$user_id* )
 #### Description
 - Returns the 'recent/active' points activity of the user
 
@@ -470,7 +470,7 @@ __return__ : *Object*
 
 ------
 
-### get_user_vote_power ( *$user_id* )
+### pw_get_user_vote_power ( *$user_id* )
 - Checks to see user's WP roles `with get_user_role()`
 - Checks how many points the user's role can cast, from `$pwSiteGlobals['roles'][ $current_user_role ]['vote_points']`
 

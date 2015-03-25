@@ -627,7 +627,7 @@ function pw_current_user(){
 		unset($userdata->data->user_pass);
 		$userdata = (array) $userdata;
 		$userdata["postworld"] = array();
-		$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
+		$userdata["postworld"]["vote_power"] = pw_get_user_vote_power( $user_id );
 
 		// Force the roles as a flat array
 		if( isset( $userdata['roles'] ) &&

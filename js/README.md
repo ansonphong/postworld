@@ -1358,8 +1358,8 @@ __data-type__ : *string* (optional)
 - Sit ontop of *vote-panel*
 - Watch for change in __user_vote__ model
 - AJAX Methods :
-  - When __user_vote__ changes, update the database with `set_post_points()` / `set_comment_points()`
-  - Get the updated number of points with `get_post_points()`
+  - When __user_vote__ changes, update the database with `pw_set_post_points()` / `set_comment_points()`
+  - Get the updated number of points with `pw_get_post_points()`
 
 ------
 

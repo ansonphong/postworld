@@ -157,13 +157,11 @@ function pw_get_cache_types_readout(){
 ////////////////////////////////////////////////////////////////////
 
 function pw_cache_all_points (){
-	/*• Runs cache_user_points() and cache_post_points()
-	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	$post_points_cron_log = pw_cache_all_post_points();
 	$user_points_cron_log = pw_cache_all_user_points();
-	
 	return array($post_points_cron_log,$user_points_cron_log);
 }
+
 //TODO
 function pw_cache_all_user_points(){
 	/*• Cycles through all users with cache_user_points() method
@@ -178,13 +176,17 @@ function pw_cache_all_user_points(){
 	$blog_users_count = count($blogusers);
 	$time_start = date("Y-m-d H:i:s");
 	for($i=0;$i<$blog_users_count;$i++){
-		cache_user_posts_points($blogusers[$i]->ID);
+		pw_cache_user_posts_points($blogusers[$i]->ID);
 	}
 	
 	//loop for all users: get calculate_user_points and user_post_points?
 	$time_end = date("Y-m-d H:i:s");
-//	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, $blog_users_count, 'user_points','');
-	$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end, null, 'pw_cache_all_user_points',null,null);
+
+	pw_insert_cron_log( array(
+		'time_start'	=>	$time_start,
+		'time_end'		=>	$time_end,
+		'function_type'	=>	'pw_cache_all_user_points',
+		));
 
 }
 
@@ -226,7 +228,7 @@ function pw_cache_all_post_points() {
 				
 				//check if already there is a record for this post , yes then calculate points
 				//else create a row with zero points
-				cache_post_points($row->ID);
+				pw_cache_post_points($row->ID);
 				// {{feed/post_type}}
 				
 				//$current_cron_log_object->query_vars[] ="";// {{ query_vars Object: use pw_get_posts  }}
@@ -266,7 +268,7 @@ function pw_cache_all_comment_points(){
 	
 }
 
-function pw_cache_all_rank_scores (){
+function pw_cache_all_rank_scores(){
 	/*• Cycles through each post in each post_type scheduled for Rank Score caching
 	• Calculates and caches each post's current rank with pw_cache_rank_score() method
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
@@ -540,7 +542,7 @@ function pw_cache_post_shares( $post_id ){
 	-return : integer (number of shares)*/
 	$total_shares = pw_calculate_post_shares($post_id);
 	
-	add_record_to_post_meta($post_id);
+	pw_add_record_to_post_meta($post_id);
 	
 	global $wpdb;
 	$wpdb -> show_errors();
@@ -659,56 +661,5 @@ function pw_get_user_shares($user_id){
 	$query = "select share_points_meta from $wpdb->pw_prefix"."user_meta where user_id=".$user_id;
 	return $wpdb->get_var($query);
 }
-
-////////////////  HELPER FUNCTIONS  //////////////////////
-function pw_add_new_cron_logs($cron_logs_array){
-	$cron_logs_count = count($cron_logs_array);
-	for ($i=0; $i <$cron_logs_count ; $i++) {
-		$query = "insert into " ;
-	}
-}
-
-function pw_create_cron_log_object($time_start,$time_end,$number_of_posts=null,$function_type,$process_id=null,$query_args=null){
-		$current_cron_log_object = new pw_cron_logs_Object();	
-		$current_cron_log_object->function_type = $function_type;
-		$current_cron_log_object->time_start = $time_start;// {{timestamp}}
-		$current_cron_log_object->posts = $number_of_posts;// {{number of posts}}
-		$current_cron_log_object->process_id = $process_id;// {{feed id / post_type slug}}
-		$current_cron_log_object->query_args = $query_args;
-		$current_cron_log_object->time_end = $time_end;// {{timestamp}}
-		$current_cron_log_object->timer = (strtotime( $current_cron_log_object->time_end )-strtotime( $current_cron_log_object->time_start)) ;// {{milliseconds}}
-
-		//$current_cron_log_object->timer_average = $current_cron_log_object->timer / $current_cron_log_object->posts;// {{milliseconds}}	
-		pw_insert_cron_log($current_cron_log_object);
-		return $current_cron_log_object;
-}
-
-function pw_insert_cron_log($cron_log_object){
-	global $wpdb;
-	$wpdb -> show_errors();
-	
-	if(is_null($cron_log_object->posts) )$cron_log_object->posts = 'null';
-	$query = "INSERT INTO `$wpdb->pw_prefix"."cron_logs`
-				(
-				`function_type`,
-				`process_id`,
-				`time_start`,
-				`time_end`,
-				`timer`,
-				`posts`,
-				`query_args`)
-				VALUES
-				(
-				'".$cron_log_object->function_type."',
-				'".$cron_log_object->process_id."',
-				'".$cron_log_object->time_start."',
-				'".$cron_log_object->time_end."',
-				'".$cron_log_object->timer."',
-				".$cron_log_object->posts.",
-				'".$cron_log_object->query_args."')";
-				
-	$wpdb->query($query);
-}
-
 
 ?>

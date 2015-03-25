@@ -1212,9 +1212,24 @@ function pw_reset_less_php_cache(){
 }
 
 
-
 function pw_in_string( $haystack, $needle ){
 	return ( strpos( $haystack, $needle ) == false ) ? true : false;
 }
+
+
+/*
+function pw_get_post_types(){
+	$args = array(
+		 'public'   => true,
+		  '_builtin' => false
+	);
+
+	$output = 'names'; // names or objects, note names is the default
+	$operator = 'and'; // 'and' or 'or'
+
+	$post_types = get_post_types( $args, $output, $operator ); 
+	print_r($post_types);
+}
+*/
 
 ?>

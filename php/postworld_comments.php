@@ -187,7 +187,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 			$comment_data[$field] = get_comment_points( $comment_id );
 		}
 		else if( $field == 'user_voted' ){
-			$comment_data[$field] = has_voted_on_comment( $comment_id, get_current_user_id() );
+			$comment_data[$field] = pw_has_voted_on_comment( $comment_id, get_current_user_id() );
 		}
 		else if( $field == 'time_ago' ){
 			$timestamp = strtotime($wp_comment_data['comment_date_gmt']);
@@ -342,7 +342,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 				$comment_data['comment_points'] = get_comment_points( $comment['comment_ID'] );
 			
 			if( in_array( 'viewer_points', $fields ) )
-				$comment_data['viewer_points'] = has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
+				$comment_data['viewer_points'] = pw_has_voted_on_comment( $comment['comment_ID'], get_current_user_id() );
 			
 			if( in_array( 'time_ago', $fields ) )
 				$comment_data['time_ago'] = time_ago( strtotime ( $comment_data['comment_date_gmt'] ) );

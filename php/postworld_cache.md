@@ -95,14 +95,14 @@ __$operator__ : *string*
 ------
 
 ### pw_cache_all_points ()
-- Runs cache_user_points() and cache_post_points()
+- Runs pw_cache_user_points() and pw_cache_post_points()
 
 __return__ : *cron_logs Object* (add to table wp_postworld_cron_logs)
 
 ------
 
 ### pw_cache_all_user_points()
-- Cycles through all users with cache_user_points() method
+- Cycles through all users with pw_cache_user_points() method
 
 __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
@@ -110,7 +110,7 @@ __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 
 ### pw_cache_all_post_points()
 - Cycles through each post in each post_type with points enabled
-- Calculates and caches each post's current points with cache_post_points() method
+- Calculates and caches each post's current points with pw_cache_post_points() method
 
 __return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
 

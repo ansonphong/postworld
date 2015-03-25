@@ -237,7 +237,7 @@ postworld.controller('pwCommentsTreeController',
 			// Set Status
 			child.voteStatus = "busy";
 			// AJAX Call 
-			pwData.set_comment_points ( args ).then(
+			pwData.setCommentPoints ( args ).then(
 					// ON : SUCCESS
 					function(response) {    
 							//alert( JSON.stringify(response.data) );
