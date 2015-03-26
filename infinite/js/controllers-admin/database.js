@@ -22,16 +22,65 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 	
 	$scope.busy = {};
 
-	////////// CLEANUP META //////////
+	///// RANK SCORE /////
+	$scope.rankScoreReadout = {};
 
-	$scope.cleanupMetaReadout = {
-		postmeta: false,
-		postworld_postmeta: false,
-		usermeta: false,
-		commentmeta: false,
-		taxonomymeta: false,
-	};
+	$scope.rankScoreTypes = [
+		{
+			label:  		'Update Post Rank Scores Cache',
+			functionName: 	'pw_cache_all_rank_scores',
+		},
+		{
+			label:  		'Repair Post Points Cache',
+			functionName: 	'pw_cache_all_post_points',
+		},
+		{
+			label:  		'Repair User Points Cache',
+			functionName: 	'pw_cache_all_user_points',
+		},
+		{
+			label:  		'Repair Comment Points Cache',
+			functionName: 	'pw_cache_all_comment_points',
+		},
+	];
 
+	$scope.updateRankScoreType = function( functionName ){
+
+		var busyKey = 'rankscore_' + functionName;
+		$scope.busy[busyKey] = true;
+
+		$pwData.wp_ajax( functionName, {} ).then(
+			function( response ){
+				$scope.busy[busyKey] = false;
+				$log.debug( 'updateRankScoreType : RESPONSE : ', response );
+				$scope.rankScoreReadout[functionName] = response.data;
+			},
+			function( response ){
+				$scope.busy[busyKey] = false;
+				$log.debug( 'updateRankScoreType : RESPONSE : ERROR : ', response );
+			}
+		);
+
+	}
+
+	///// CLEANUP METADATA /////
+
+	$scope.cleanupMetaReadout = {};
+
+	$scope.cleanupTables = [
+		{
+			name: 'Postmeta',
+			type: 'postmeta',
+		},
+		{
+			name: 'Postworld Postmeta',
+			type: 'postworld_postmeta',
+		},
+		{
+			name: 'Usermeta',
+			type: 'usermeta',
+		},
+	];
 
 	$scope.cleanupMeta = function( type ){
 
@@ -44,9 +93,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 				$log.debug( 'cleanupMeta : RESPONSE : ', response );
 				$scope.cleanupMetaReadout[type] = response.data;
 			},
-
 			function( response ){}
-
 		);
 
 	}

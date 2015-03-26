@@ -107,7 +107,7 @@ function postworld_install(){
 			process_id char(16) NULL,
 			time_start TIMESTAMP NOT NULL,
 			time_end TIMESTAMP NOT NULL,
-			timer INT NOT NULL,
+			timer DECIMAL(8,4) NOT NULL,
 			posts INT NULL,
 			query_args MEDIUMTEXT  NULL,
 			UNIQUE KEY cron_run_id (cron_run_id)

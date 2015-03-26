@@ -6,6 +6,29 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+
+function pw_get_post_gmt_timestamp( $post_id = null ){
+
+	if( $post_id == null )
+		return 0;
+
+	global $wpdb;
+
+	$post = $wpdb->get_row( "SELECT post_date_gmt FROM $wpdb->posts WHERE ID = " . $post_id, ARRAY_A);
+	
+	if ( empty( $post ) )
+		return 0;
+
+	$time = $post['post_date_gmt'];
+
+	$time = mysql2date( 'U', $time, false );
+
+	return $time;
+
+}
+
+
+
 function pw_set_microtimer( $timer_id ){
 	// Sets the microtime of a timer ID
 	global $pw_microtimer;
@@ -231,8 +254,8 @@ function pw_is_associative( $arr ){
 }
 
 function pw_core_print_generation_time() {
-?>
-<!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
+	?>
+	<!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
 	<?php
 }
 if( !function_exists( 'bp_core_print_generation_time' ) )

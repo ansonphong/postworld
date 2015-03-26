@@ -17,25 +17,6 @@
 		function( $scope, $window, $_, $pwData ){
 		$scope.cacheTypeReadout = <?php echo json_encode(pw_get_cache_types_readout()); ?>;
 
-		$scope.cleanupTables = [
-			{
-				name: 'Postmeta',
-				type: 'postmeta',
-				tableName: '<?php echo $wpdb->postmeta ?>',
-			},
-			{
-				name: 'Postworld Postmeta',
-				type: 'postworld_postmeta',
-				tableName: '<?php echo $wpdb->pw_prefix . 'post_meta' ?>',
-			},
-			{
-				name: 'Usermeta',
-				type: 'usermeta',
-				tableName: '<?php echo $wpdb->usermeta ?>',
-			},
-		];
-
-
 	}]);
 </script>
 
@@ -134,11 +115,33 @@
 						Rank Score
 					</h3>
 
-					Cache all User Points
-					Cache all Post Points
-					Cache all Comment Points
+					If it keeps spinning even after the maximum PHP process time,
+					you may need to increase the maximum allowed process time in your PHP configuration.
 
-					Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)
+					<!-- POSTMETA TABLE -->
+					<div
+						class="well"
+						ng-repeat="rankScoreType in rankScoreTypes">
+						<button
+							type="button"
+							class="button"
+							ng-click="updateRankScoreType( rankScoreType.functionName )"
+							ng-disabled="uiBool(busy['rankscore_'+rankScoreType.functionName])">
+							<span class="icon-sm">
+								<i
+									class="icon pwi-refresh"
+									ng-class="uiBoolClass(busy['rankscore_'+rankScoreType.functionName],'icon-spin')">
+								</i>
+							</span>
+							{{rankScoreType.label}}
+						</button>
+						<div ng-show="uiBool( rankScoreReadout[rankScoreType.functionName] )">
+							<hr class="thin">
+							<b>{{ rankScoreReadout[rankScoreType.functionName] | json }}</b>
+						</div>
+					</div>
+
+					<!--Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)-->
 
 				</div>
 			<?php endif; ?>
@@ -172,7 +175,7 @@
 						Cleanup {{cleanupTable.name}}
 					</button>
 					<hr class="thin">
-					<small>Delete orphaned rows in <b>{{ cleanupTable.tableName }}</b> table</small>
+					<small>Delete orphaned rows in the <b>{{ cleanupTable.name }}</b> database table</small>
 					<div ng-show="uiBool( cleanupMetaReadout[cleanupTable.type] )">
 						<hr class="thin">
 						Time : <b>{{ cleanupMetaReadout[cleanupTable.type].timer }} seconds</b> //

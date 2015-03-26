@@ -43,7 +43,6 @@ function pw_add_schedules($schedules) {
 }
 add_filter( 'cron_schedules', 'pw_add_schedules'); 
 
-
 function pw_insert_cron_log($cron_log){
 	// Inserts an entry into postworld_cron_logs tables
 
@@ -64,10 +63,12 @@ function pw_insert_cron_log($cron_log){
 	$cron_log = array_replace_recursive($default_cron_log, $cron_log);
 
 	///// INSERT /////
-	return $wpdb->insert(
-		$wpdb->pw_prefix . 'cache',
+	$wpdb->insert(
+		$wpdb->pw_prefix . 'cron_logs',
 		$cron_log
 		);
+
+	return $cron_log;
 
 }
 	

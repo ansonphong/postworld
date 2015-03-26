@@ -110,36 +110,41 @@ function pw_calculate_user_posts_points( $user_id ){
 	/*	• Adds up the points voted to given user's posts, stored in wp_postworld_post_points
 		• Stores the result in the post_points column in wp_postworld_user_meta
 	return : integer (number of points)*/
-/*	$total_user_points = pw_get_user_points_voted_to_posts($user_id);
-	global $wpdb;
-	$wpdb -> show_errors();
 	
-	$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=".$total_user_points." where user_id=".$user_id;
-	$result = $wpdb->query($query);
-	if($result === FALSE){
-		//insert new Record
+	// Gets the number of posts voted to the user's authored posts by broken down by post type
+	$total_user_points_breakdown = pw_get_user_points_voted_to_posts( $user_id, TRUE );
+	/*
+		Returns an object like this:
+			[
+		     {"post_id":"13","author_id":"1","total_points":"10","post_type":"post"},
+		     {"post_id":"19","author_id":"1","total_points":"10","post_type":"link"}
+			]
+	*/
 
-					
-	}
-	return $total_user_points;*/
+	$total_user_points = 0;
+
+	$post_points_meta = array(
+		"post_type" => array()
+		);
 	
-	$total_user_points_breakdown = pw_get_user_points_voted_to_posts($user_id,TRUE);
-	$total_user_points =0;
-	$post_points_meta = array( "post_type"=> array("feature"=> 0,"link" =>0,"blog" =>0, "event" => 0));
-	
-	//print_r($total_user_points_breakdown);
-	foreach ($total_user_points_breakdown as $row) {
-		$total_user_points+= $row->total_points;
+	// Iterate through each item breakdown, and add-up totals by overall and by post type
+	foreach( $total_user_points_breakdown as $row ) {
+		$total_user_points += $row->total_points;
 		$post_points_meta['post_type'][$row->post_type] += $row->total_points;
 	}
 	
 	global $wpdb;
-	$wpdb -> show_errors();
-	add_record_to_user_meta($user_id);
-	$query = "update ".$wpdb->pw_prefix.'user_meta'." set post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."' where user_id=".$user_id;
-	$result = $wpdb->query($query);
+
+	add_record_to_user_meta( $user_id );
+
+	$query = "
+		UPDATE ".$wpdb->pw_prefix.'user_meta'."
+		SET post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."'
+		WHERE user_id=".$user_id;
 	
-	return array("total"=>$total_user_points,"post_type"=>$post_points_meta['post_type']);
+	$result = $wpdb->query( $wpdb->prepare( $query ) );
+	
+	return array( "total" => $total_user_points, "post_type" => $post_points_meta['post_type'] );
 	
 }
 
@@ -147,8 +152,7 @@ function pw_cache_user_posts_points ( $user_id ){
 /*  • Runs calculate_user_post_points() Method
 	• Caches value in post_points column in wp_postworld_user_meta table
 	return : integer (number of points)*/
-	
-	return pw_calculate_user_posts_points($user_id);
+	return pw_calculate_user_posts_points( $user_id );
 }
 
 ///////////// COMMNET POINTS ////////////////////
@@ -586,21 +590,20 @@ function pw_has_voted_on_comment ( $comment_id, $user_id ){
 }
 
 
-function pw_get_user_points_voted_to_posts($user_id, $break_down=FALSE) {
+function pw_get_user_points_voted_to_posts($user_id, $breakdown=FALSE) {
 	/*
 	 * 
 	 * Parameters: $user_id 
-	 * 			   $break_down =FALSE
-	 * If $break_down == false then
+	 * 			   $breakdown =FALSE
+	 * If $breakdown == false then
 	 • Get array of all posts by given user
 	 • Get points of each post from wp_postworld_post_meta
 	 • Add all the points up
 	 return : integer (number of points)
-	 * If $break_down == true 
+	 * If $breakdown == true 
 	 Get total points voted to posts authored by the given user grouped by post_type
 
-	output :
-
+	Output :
 	[
      {"post_id":"13","author_id":"1","total_points":"10","post_type":"post"},
      {"post_id":"19","author_id":"1","total_points":"10","post_type":"link"}
@@ -609,21 +612,33 @@ function pw_get_user_points_voted_to_posts($user_id, $break_down=FALSE) {
 	global $wpdb;
 	$wpdb -> show_errors();
 
-	if($break_down === FALSE){
+	if($breakdown === FALSE){
+
 		//SELECT * FROM wp_postworld_a1.get_user_points_view;
-		$query = "SELECT SUM(post_points) as total_points FROM ".$wpdb->pw_prefix.'post_meta'." Where author_id=" . $user_id;
+		$query = "
+			SELECT SUM(post_points)
+			AS total_points
+			FROM ".$wpdb->pw_prefix.'post_meta'."
+			WHERE author_id=" . $user_id;
+
 		$total_points = $wpdb -> get_var($query);
 		if ($total_points != null) {
 			//echo("total_points:" . $total_points);
 			return $total_points;
 		} else
 			return 0;
-	}else{
+	
+	} else{
 		
-		$query ="select post_id,author_id ,(post_points) as total_points, wp_posts.post_type from $wpdb->pw_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->pw_prefix"."post_meta.post_id AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id) where author_id=$user_id  ";	
-		//echo $query;
-		$user_votes_points_breakdown = $wpdb -> get_results($query);
-		//echo json_encode($user_votes_points_breakdown);
+		$query = "
+			SELECT post_id,author_id ,(post_points)
+			AS total_points, wp_posts.post_type
+			FROM $wpdb->pw_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->pw_prefix"."post_meta.post_id
+			AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id)
+			WHERE author_id=$user_id ";
+
+		$user_votes_points_breakdown = $wpdb->get_results( $wpdb->prepare( $query ) );
+
 		return $user_votes_points_breakdown;	
 	}
 }

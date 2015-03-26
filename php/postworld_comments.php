@@ -1,11 +1,11 @@
 <?php
 
 function pw_get_comment_points($comment_id){
-	
 	/*
 		Get the total number of points of the given comment from the points column in wp_postworld_comment_meta
 		return : integer (number of points) 
 	*/
+		
 	global $wpdb;
 	$wpdb -> show_errors();
 

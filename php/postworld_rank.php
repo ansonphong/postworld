@@ -26,11 +26,10 @@ function pw_calculate_rank_score ( $post_id ) {
 	if( defined( 'PW_CALCULATE_RANK_SCORE_FUNCTION' ) ){
 		$rank_score = call_user_func( PW_CALCULATE_RANK_SCORE_FUNCTION, $post_id );
 		$rank_score = (int) $rank_score;
-		//$rank_score = round($rank_score);
 		return $rank_score;
 	}
 	else
-		return false;
+		return 0;
 
 }
 
@@ -40,13 +39,23 @@ function pw_cache_rank_score ( $post_id ){
 	• Cache the result in wp_postworld_meta in the rank_score column
 	return :  integer (Rank Score)*/ 
 	global $wpdb;
-	$wpdb -> show_errors();
+
+	if( !pw_post_id_exists( $post_id ) )
+		return false;
+
 	$post_rank_score = pw_calculate_rank_score($post_id);
-	
-	pw_add_record_to_post_meta($post_id);
-	$query ="update $wpdb->pw_prefix"."post_meta set rank_score=".$post_rank_score." where post_id=".$post_id;
+
+	pw_add_record_to_post_meta( $post_id );
+
+	$query = "
+		UPDATE $wpdb->pw_prefix"."post_meta
+		SET rank_score=".$post_rank_score."
+		WHERE post_id=".$post_id;
 	$result = $wpdb->query( $wpdb->prepare( $query ) );
 
 	return $post_rank_score;
 }
+
+
+
 ?>

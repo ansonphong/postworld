@@ -12,14 +12,61 @@ function pwAjaxRespond( $response_data ){
 }
 
 
+//---------- PW CACHE ALL COMMENT POINTS ----------//
+function pw_cache_all_comment_points_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	
+	if( current_user_can('manage_options') )
+		$response_data = pw_cache_all_comment_points();
+	else
+		return false;
+
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_cache_all_comment_points", "pw_cache_all_comment_points_ajax");
+
+
+//---------- PW CACHE ALL USER POINTS ----------//
+function pw_cache_all_user_points_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	
+	if( current_user_can('manage_options') )
+		$response_data = pw_cache_all_user_points();
+	else
+		return false;
+
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_cache_all_user_points", "pw_cache_all_user_points_ajax");
+
+
+//---------- PW CACHE ALL POST POINTS ----------//
+function pw_cache_all_post_points_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	
+	if( current_user_can('manage_options') )
+		$response_data = pw_cache_all_post_points();
+	else
+		return false;
+
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_cache_all_post_points", "pw_cache_all_post_points_ajax");
+
+
+
 //---------- PW CACHE ALL RANK SCORES ----------//
 function pw_cache_all_rank_scores_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	
+	pw_log( 'pw_cache_all_rank_scores_ajax : INIT : ' );
+
 	if( current_user_can('manage_options') )
 		$response_data = pw_cache_all_rank_scores();
 	else
 		return false;
+
+	//pw_log( 'pw_cache_all_rank_scores_ajax : COMPLETE : ' . json_encode($response_data) );
 
 	pwAjaxRespond( $response_data );
 }
