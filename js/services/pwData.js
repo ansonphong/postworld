@@ -553,6 +553,12 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
     		return true;
     	},
 
+    	///// PROGRESS API /////
+    	getProgress: function( key ){
+			$log.debug('pwData.getProgress',key);
+			var params = { key:key };			
+			return this.wp_ajax('pw_get_progress',params);
+		},
 		
 
    }; // END OF pwData return value

@@ -12,6 +12,20 @@ function pwAjaxRespond( $response_data ){
 }
 
 
+//---------- PW GET PROGRESS ----------//
+function pw_get_progress_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	
+	if( current_user_can('manage_options') )
+		$response_data = pw_get_progress( $args['key'] );
+	else
+		return false;
+
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_get_progress", "pw_get_progress_ajax");
+
+
 //---------- PW CACHE ALL COMMENT POINTS ----------//
 function pw_cache_all_comment_points_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

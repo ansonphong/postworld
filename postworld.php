@@ -252,6 +252,9 @@ include 'php/postworld_wizard.php';
 ////// OPTIONS //////
 include 'php/postworld_options.php';
 
+////// PROGRESS //////
+include 'php/postworld_progress.php';
+
 ////// VIEW //////
 include 'php/postworld_view.php';
 

@@ -687,17 +687,30 @@ function pw_set_option( $vars ){
 
 	extract($vars);
 
+	///// EMPTY KEY /////
+	// If there's no or an empty key
+	if( !isset( $vars['key'] ) || empty($vars['key']) ){
+		if( is_array($option_value) || is_object($option_value) )
+			$option_value = json_encode($option_value);
+		return update_option( $option_name, $option_value );
+	}
+
 	///// GET STORED VALUE /////
 	$option_value = get_option( $option_name, array() );
+
 
 	// Decode from JSON, assuming it's a JSON string
 	if( !empty( $option_value ) )
 		$option_value = json_decode( $option_value, true );
 
+
 	///// SET VALUE /////
 	$option_value = _set( $option_value, $key, $value );
+
+
 	// Encode to JSON
 	$option_value = json_encode($option_value);
+
 	// Update DB
 	$update_option = update_option( $option_name, $option_value );
 

@@ -309,7 +309,33 @@ function pw_cache_all_rank_scores( $post_types = array() ){
 
 	$timers = array();
 
+	/// PROGRESS API ////
+	$item = 0; 
+	pw_update_progress(
+		'pw_cache_all_rank_scores',
+		$item,
+		count($post_types),
+		array());
+
+
+	// ITERATE - USING THE ACUTALY NUMBER OF POSTS, EVERY 100 or so, update
+
+
+	/// ITERATE THROUGH POST TYPES ///
 	foreach( $post_types as $post_type ){
+
+		/// PROGRESS API ////
+		$item ++;
+		pw_update_progress(
+			'pw_cache_all_rank_scores',
+			$item,
+			count($post_types),
+			array(
+				'post_type'		=>	$post_type,
+				'post_types' 	=> 	$post_types,
+				'current'		=>	0,
+				'total'			=>	0,
+				));
 
 		pw_log( 'pw_cache_all_rank_scores : INIT POST TYPE :' . $post_type );
 
@@ -323,12 +349,29 @@ function pw_cache_all_rank_scores( $post_types = array() ){
 
 		$posts = $wpdb->get_results( $wpdb->prepare( $query ) );
 
-
+		/// ITERATE THROUGH POSTS ///
+		$i = 0;
+		$ii = 0;
+		$ping = 100;
+		$posts_count = count($posts);
 		foreach ($posts as $post){
-
-			//pw_log( 'CACHE RANK SCORE : ' . $post->ID );
-
+			$i++;
+			$ii++;
 			pw_cache_rank_score( $post->ID );
+
+			if( $i >= $ping ){
+				$i = 0;
+				pw_update_progress(
+					'pw_cache_all_rank_scores',
+					$item,
+					count($post_types),
+					array(
+						'post_type'		=>	$post_type,
+						'post_types' 	=> 	$post_types,
+						'current'		=>	$ii,
+						'total'			=>	$posts_count,
+						));
+			}
 
 		}
 
@@ -340,6 +383,7 @@ function pw_cache_all_rank_scores( $post_types = array() ){
 
 		$timers[$post_type]	= $timer;
 
+		/// CRON LOG API ///
 		pw_insert_cron_log( array(
 			'time_start'	=>	$time_start,
 			'time_end'		=>	$time_end,
@@ -353,6 +397,10 @@ function pw_cache_all_rank_scores( $post_types = array() ){
 
 	}
 	
+
+	/// PROGRESS API ///
+	pw_end_progress('pw_cache_all_rank_scores');
+
 	return array(
 		'timers'	=>	$timers,
 		'timer'		=>	pw_get_microtimer( 'pw_cache_all_rank_scores' ),

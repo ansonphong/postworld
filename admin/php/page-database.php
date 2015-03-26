@@ -16,6 +16,9 @@
 		[ '$scope', '$window', '_', 'pwData',
 		function( $scope, $window, $_, $pwData ){
 		$scope.cacheTypeReadout = <?php echo json_encode(pw_get_cache_types_readout()); ?>;
+		$scope.progress = <?php echo json_encode( pw_get_progress() ) ?>;
+		if( _.isEmpty( $scope.progress ) )
+			$scope.progress = {};
 
 	}]);
 </script>
@@ -126,22 +129,42 @@
 							type="button"
 							class="button"
 							ng-click="updateRankScoreType( rankScoreType.functionName )"
-							ng-disabled="uiBool(busy['rankscore_'+rankScoreType.functionName])">
+							ng-disabled="uiBool(busy[ rankScoreType.functionName])">
 							<span class="icon-sm">
 								<i
 									class="icon pwi-refresh"
-									ng-class="uiBoolClass(busy['rankscore_'+rankScoreType.functionName],'icon-spin')">
+									ng-class="uiBoolClass(busy[rankScoreType.functionName],'icon-spin')">
 								</i>
 							</span>
 							{{rankScoreType.label}}
 						</button>
-						<div ng-show="uiBool( rankScoreReadout[rankScoreType.functionName] )">
+
+						<div ng-show="isBusy(rankScoreType.functionName)">
+							<div class="progress-bar-container">
+								<div
+									class="progress-bar"
+									ng-style="getPercentWidth( progress[rankScoreType.functionName].items.current, progress[rankScoreType.functionName].items.total  )">
+								</div>
+							</div>
+							<div
+								class="progress-bar-container"
+								 ng-show="uiBool( progress[rankScoreType.functionName].meta.current )">
+								<div
+									class="progress-bar"
+									ng-style="getPercentWidth( progress[rankScoreType.functionName].meta.current, progress[rankScoreType.functionName].meta.total  )">
+								</div>
+							</div>
+						</div>
+
+						<div ng-show="isBusy(rankScoreType.functionName)">
 							<hr class="thin">
-							<b>{{ rankScoreReadout[rankScoreType.functionName] | json }}</b>
+							<b>{{ progress[rankScoreType.functionName] | json }}</b>
 						</div>
 					</div>
 
 					<!--Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)-->
+
+					PROGRESS : <pre><code>{{ progress | json }}</code></pre>
 
 				</div>
 			<?php endif; ?>

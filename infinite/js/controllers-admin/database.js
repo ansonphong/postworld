@@ -17,10 +17,86 @@ postworldAdmin.directive( 'pwAdminDatabase', [ function(){
 }]);
 
 postworldAdmin.controller( 'pwAdminDatabaseCtrl',
-	[ '$scope', '$log', '$window', 'pwData', '_', 
-	function ( $scope, $log, $window, $pwData, $_ ) {
+	[ '$scope', '$log', '$window', 'pwData', '_', '$timeout', 
+	function ( $scope, $log, $window, $pwData, $_, $timeout ) {
 	
+	///// BUSY /////
 	$scope.busy = {};
+	$scope.isBusy = function( key ){
+		return $_.get( $scope.busy, key );
+	}
+	$scope.setBusy = function( key, bool ){
+		$scope.busy[ key ] = bool;
+	}
+
+	$scope.getPercent = function( current, total ){
+		var d = current / total;
+		var p = d * 100;
+		return parseInt( p );
+	}
+
+	$scope.getPercentWidth = function( current, total ){
+		var p = $scope.getPercent( current, total );
+		return {
+			width: p + "%"
+		};
+	}
+
+
+	// If the progresses are in-progress, active, make their status 'busy'
+	// Make a status kill function, which fnction cehcks for - if kill status, end progress, update
+
+	///// PROGRESS API /////
+	$scope.updateBusy = {};
+	$scope.updateProgress = function( functionName ){
+		
+		if( $scope.updateBusy[functionName] == true )
+			return false;
+
+		$scope.updateBusy[functionName] = true;
+
+		$pwData.getProgress( functionName ).then(
+			function( response ){
+				$scope.updateBusy[functionName] = false;
+				$scope.progress[ functionName ] = response.data;
+			},
+			function(response){}
+		);
+	}
+
+	$scope.progressLoop = function( functionName ){
+		$timeout(
+			function(){
+				$scope.updateProgress( functionName );
+				if( $scope.isBusy( functionName ) )
+					$scope.progressLoop( functionName );
+			}, 5000
+		);
+	}
+
+	///// WATCH : PROGRESS /////
+	$scope.$watch( 'progress', function( val ){
+
+
+		// On controller bootup, check the progress object
+		// And if there are any functions currently active
+		// Make the current busy state reflect that
+		angular.forEach( $scope.rankScoreTypes, function( rankScoreType ){
+			var status = $_.get( $scope.progress, rankScoreType.functionName + '.status' );
+			if( status == 'active' ){
+				$scope.setBusy( rankScoreType.functionName, true );
+				$scope.progressLoop( rankScoreType.functionName );
+			} else if( status == 'done' ){
+				$scope.setBusy( rankScoreType.functionName, false );
+			}
+		});
+
+
+	});
+
+	$timeout(function(){
+		
+	},0);
 
 	///// RANK SCORE /////
 	$scope.rankScoreReadout = {};
@@ -46,17 +122,18 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 
 	$scope.updateRankScoreType = function( functionName ){
 
-		var busyKey = 'rankscore_' + functionName;
-		$scope.busy[busyKey] = true;
+		$scope.setBusy( functionName, true );
+
+		$scope.progressLoop( functionName );
 
 		$pwData.wp_ajax( functionName, {} ).then(
 			function( response ){
-				$scope.busy[busyKey] = false;
+				$scope.setBusy( functionName, false );
 				$log.debug( 'updateRankScoreType : RESPONSE : ', response );
 				$scope.rankScoreReadout[functionName] = response.data;
 			},
 			function( response ){
-				$scope.busy[busyKey] = false;
+				$scope.setBusy( functionName, false );
 				$log.debug( 'updateRankScoreType : RESPONSE : ERROR : ', response );
 			}
 		);
@@ -85,11 +162,11 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 	$scope.cleanupMeta = function( type ){
 
 		var busyKey = 'cleanup_' + type;
-		$scope.busy[busyKey] = true;
+		$scope.setBusy( busyKey, true );
 
 		$pwData.wp_ajax('pw_cleanup_meta', { type: type } ).then(
 			function( response ){
-				$scope.busy[busyKey] = false;
+				$scope.setBusy( busyKey, false );
 				$log.debug( 'cleanupMeta : RESPONSE : ', response );
 				$scope.cleanupMetaReadout[type] = response.data;
 			},
@@ -102,10 +179,10 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 	////////// CACHE //////////
 
 	$scope.deleteCacheType = function( cacheType ){
-		$scope.busy.cacheTypeReadout = true;
+		$scope.setBusy( 'cacheTypeReadout', true );
 		$pwData.wp_ajax('pw_delete_cache_type', { cache_type: cacheType } ).then(
 			function( response ){
-				$scope.busy.cacheTypeReadout = false;
+				$scope.setBusy( 'cacheTypeReadout', false );
 				$scope.cacheTypeReadout = response.data;
 			},
 			function( response ){}
@@ -113,10 +190,10 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 	}
 
 	$scope.refreshCacheReadout = function(){
-		$scope.busy.cacheTypeReadout = true;
+		$scope.setBusy( 'cacheTypeReadout', true );
 		$pwData.wp_ajax('pw_get_cache_types_readout', {} ).then(
 			function( response ){
-				$scope.busy.cacheTypeReadout = false;
+				$scope.setBusy( 'cacheTypeReadout', false );
 				$log.debug( 'refreshCacheReadout : RESPONSE : ', response );
 				$scope.cacheTypeReadout = response.data;
 			},
@@ -125,10 +202,10 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 	}
 
 	$scope.truncateCache = function(){
-		$scope.busy.cacheTypeReadout = true;
+		$scope.setBusy( 'cacheTypeReadout', true );
 		$pwData.wp_ajax('pw_truncate_cache', {} ).then(
 			function( response ){
-				$scope.busy.cacheTypeReadout = false;
+				$scope.setBusy( 'cacheTypeReadout', false );
 				$scope.cacheTypeReadout = response.data;
 			},
 			function( response ){}
