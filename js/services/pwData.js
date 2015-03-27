@@ -559,6 +559,11 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = { key:key };			
 			return this.wp_ajax('pw_get_progress',params);
 		},
+		endProgress: function( key ){
+			$log.debug('pwData.endProgress',key);
+			var params = { key:key };			
+			return this.wp_ajax('pw_end_progress',params);
+		},
 		
 
    }; // END OF pwData return value

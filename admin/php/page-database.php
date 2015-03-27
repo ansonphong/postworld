@@ -122,43 +122,54 @@
 					you may need to increase the maximum allowed process time in your PHP configuration.
 
 					<!-- POSTMETA TABLE -->
+
+					What's happening now is that if the process gets cut-off mid-stream, the pgress reamins stuck
+					
 					<div
 						class="well"
-						ng-repeat="rankScoreType in rankScoreTypes">
+						ng-repeat="xCacheType in xCacheTypes">
 						<button
 							type="button"
 							class="button"
-							ng-click="updateRankScoreType( rankScoreType.functionName )"
-							ng-disabled="uiBool(busy[ rankScoreType.functionName])">
+							ng-click="updateRankScoreType( xCacheType.functionName )"
+							ng-disabled="uiBool(busy[ xCacheType.functionName])">
 							<span class="icon-sm">
 								<i
 									class="icon pwi-refresh"
-									ng-class="uiBoolClass(busy[rankScoreType.functionName],'icon-spin')">
+									ng-class="uiBoolClass(busy[xCacheType.functionName],'icon-spin')">
 								</i>
 							</span>
-							{{rankScoreType.label}}
+							{{xCacheType.label}}
 						</button>
 
-						<div ng-show="isBusy(rankScoreType.functionName)">
+						<button
+							class="button"
+							type="button"
+							ng-show="isBusy(xCacheType.functionName)"
+							ng-click="endProgress( xCacheType.functionName )">
+							<i class="icon pwi-close"></i> Stop
+						</button>
+
+						<div ng-show="isBusy(xCacheType.functionName)">
 							<div class="progress-bar-container">
 								<div
 									class="progress-bar"
-									ng-style="getPercentWidth( progress[rankScoreType.functionName].items.current, progress[rankScoreType.functionName].items.total  )">
+									ng-style="getPercentWidth( progress[xCacheType.functionName].items.current, progress[xCacheType.functionName].items.total  )">
 								</div>
 							</div>
 							<div
 								class="progress-bar-container"
-								 ng-show="uiBool( progress[rankScoreType.functionName].meta.current )">
+								 ng-show="uiBool( progress[xCacheType.functionName].meta.current )">
 								<div
 									class="progress-bar"
-									ng-style="getPercentWidth( progress[rankScoreType.functionName].meta.current, progress[rankScoreType.functionName].meta.total  )">
+									ng-style="getPercentWidth( progress[xCacheType.functionName].meta.current, progress[xCacheType.functionName].meta.total  )">
 								</div>
 							</div>
 						</div>
 
-						<div ng-show="isBusy(rankScoreType.functionName)">
+						<div ng-show="isBusy(xCacheType.functionName)">
 							<hr class="thin">
-							<b>{{ progress[rankScoreType.functionName] | json }}</b>
+							<b>{{ progress[xCacheType.functionName] | json }}</b>
 						</div>
 					</div>
 

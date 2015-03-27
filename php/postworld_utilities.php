@@ -7,6 +7,21 @@
 //////////////////////////////////*/
 
 
+function pw_get_all_post_ids_in_post_type( $post_type ){
+	// Returns a 1D array of all the post IDs in a post type
+	global $wpdb;
+	$query = "
+		SELECT ID
+		FROM ".$wpdb->posts."
+		WHERE post_type ='".$post_type."'";
+	$posts = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$ids = array();
+	foreach( $posts as $post ){
+		$ids[] = $post->ID;
+	}
+	return $ids;
+}
+
 function pw_get_post_gmt_timestamp( $post_id = null ){
 
 	if( $post_id == null )

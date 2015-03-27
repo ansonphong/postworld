@@ -611,12 +611,14 @@ function pw_get_option( $vars ){
 			'option_name'	=>	[string], // "i-options",
 			'key'			=> 	[string], // "images.logo",
 			'filter'		=>	[boolean] // Gives option to disable filtering
+			'cache'			=>	[boolean] // Gives option to disable caching
 	*/
 
 	$default_vars = array(
 		'option_name'	=>	PW_OPTIONS_SITE,
 		'key'			=>	false,
 		'filter'		=>	true,
+		'cache'			=>	true,
 		);
 	$vars = array_replace_recursive( $default_vars, $vars );
 
@@ -631,7 +633,7 @@ function pw_get_option( $vars ){
 	// Get the number of filtered on (possible) cached value
 	$cached_filter_count = _get( $pw_options_cache, $option_name .'.filter_count' );
 	// If there is the name number of filters (no new filters)
-	if( $filter_count === $cached_filter_count ){
+	if( $filter_count === $cached_filter_count && $cache == true ){
 		// Get the cached value
 		$value = _get( $pw_options_cache, $option_name .'.value' );
 	}
@@ -719,11 +721,12 @@ function pw_set_option( $vars ){
 }
 
 
-function pw_grab_option( $option_name, $key ){
+function pw_grab_option( $option_name, $key, $disable_cache = false ){
 	// Quick routine method to get option subkey
 	return pw_get_option( array(
 		'option_name' => $option_name,
-		'key' => $key
+		'key' => $key,
+		'cache' => !$disable_cache,
 		));
 }
 
