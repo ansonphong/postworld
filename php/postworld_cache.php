@@ -160,10 +160,11 @@ function pw_get_cache_types_readout(){
 
 function pw_cache_all_rank_scores( $post_types = array() ){
 	$fnName = 'pw_cache_all_rank_scores';
-
-	/*• Cycles through each post in each post_type scheduled for Rank Score caching
-	• Calculates and caches each post's current rank with pw_cache_rank_score() method
-	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
+	/*
+	 • Cycles through each post in each post_type scheduled for Rank Score caching
+	 • Calculates and caches each post's current rank with pw_cache_rank_score() method
+	 • Tracks progress with the Postworld Progress API
+	 */
 	//set_time_limit (300);
 
 	/// SETUP ///
@@ -270,13 +271,25 @@ function pw_cache_all_rank_scores( $post_types = array() ){
 
 }
 
+
+function pw_cache_all_points (){
+	pw_set_microtimer( 'pw_cache_all_points' );
+
+	$post_points_cron_log = pw_cache_all_post_points();
+	$user_points_cron_log = pw_cache_all_user_points();
+
+	return array(
+		'timer'	=>	pw_get_microtimer('pw_cache_all_points'),
+		);
+}
+
 function pw_cache_all_post_points() {
 	$fnName = 'pw_cache_all_post_points';
 	/*
-	 • Cycles through each post in each post_type with points enabled
-	 • Calculates each post's current points with calculate_points()
+	 • Cycles through each post in each post type with points enabled
+	 • Calculates each post's current points with pw_calculate_points()
 	 • Stores points it in wp_postworld_meta 'points' column
-	 • return : cron_logs Object (add to table wp_postworld_cron_logs)
+	 • Tracks progress with the Postworld Progress API
 	 */
 		 
 	global $wpdb;
@@ -289,7 +302,7 @@ function pw_cache_all_post_points() {
 
 	/// TIMER ///
 	$time_start = date("Y-m-d H:i:s");
-	pw_set_microtimer('pw_cache_all_post_points');
+	pw_set_microtimer($fnName);
 
 	/// PROGRESS API ////
 	$item = 0; 
@@ -347,7 +360,7 @@ function pw_cache_all_post_points() {
 
 	/// TIMER ///
 	$time_end = date("Y-m-d H:i:s");	
-	$timer = pw_get_microtimer('pw_cache_all_post_points');
+	$timer = pw_get_microtimer($fnName);
 
 	/// CRON LOG ///
 	pw_insert_cron_log( array(
@@ -355,7 +368,7 @@ function pw_cache_all_post_points() {
 		'time_end'		=>	$time_end,
 		'posts'			=>	count($posts),
 		'timer'			=>	$timer,
-		'function_type'	=>	'pw_cache_all_post_points',
+		'function_type'	=>	$fnName,
 		));
 
 	/// PROGRESS API ///
@@ -367,45 +380,57 @@ function pw_cache_all_post_points() {
 
 }
 
-
-function pw_cache_all_points (){
-	pw_set_microtimer( 'pw_cache_all_points' );
-
-	$post_points_cron_log = pw_cache_all_post_points();
-	$user_points_cron_log = pw_cache_all_user_points();
-
-	return array(
-		'timer'	=>	pw_get_microtimer('pw_cache_all_points'),
-		);
-}
-
 function pw_cache_all_user_points(){
-	/*• Cycles through all users with cache_user_points() method
-	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
+	$fnName = 'pw_cache_all_user_points';
+	/*
+	 • Cycles through all users with cache_user_points() method
+	 • Tracks progress with the Postworld Progress API
+	 */
+
 	global $wpdb;
-	$query ="SELECT ID FROM ".$wpdb->users;
-	$blogusers = $wpdb->get_results( $wpdb->prepare( $query ) );
 
-	$blog_users_count = count($blogusers);
-
+	/// TIMER ///
 	$time_start = date("Y-m-d H:i:s");
+	pw_set_microtimer($fnName);
 
-	pw_set_microtimer('pw_cache_all_user_points');
+	/// PROGRESS API ////
+	pw_update_progress( $fnName, 0, 0 );
 
-	for($i=0;$i<$blog_users_count;$i++){
-		pw_cache_user_posts_points( $blogusers[$i]->ID );
+	/// GET USER IDS ///
+	$user_ids = pw_get_all_user_ids();
+	$user_count = count($user_ids);
+
+	/// ITERATE THROUGH EACH USER ID ///
+	$i = 0; $ii = 0; 
+	foreach( $user_ids as $user_id ){
+		$i++; $ii++; 
+
+		/// CACHE USER POST POINTS ///
+		pw_cache_user_posts_points( $user_id );
+
+		/// UPDATE PROGRESS ///
+		if( $ii >= 100 ){
+			$ii = 0;
+			/// PROGRESS API ////
+			pw_progress_kill_if_inactive( $fnName );
+			pw_update_progress( $fnName, $i, $user_count );
+		}
+
 	}
-	
-	//loop for all users: get calculate_user_points and user_post_points?
+
+	/// TIMER ///
 	$time_end = date("Y-m-d H:i:s");
+	$timer = pw_get_microtimer($fnName);
 
-	$timer = pw_get_microtimer('pw_cache_all_user_points');
+	/// PROGRESS API ///
+	pw_end_progress($fnName);
 
+	/// CRON LOGS ///
 	pw_insert_cron_log( array(
 		'time_start'	=>	$time_start,
 		'time_end'		=>	$time_end,
 		'timer'			=>	$timer,
-		'function_type'	=>	'pw_cache_all_user_points',
+		'function_type'	=>	$fnName,
 		));
 
 	return array(
@@ -413,8 +438,6 @@ function pw_cache_all_user_points(){
 		);
 
 }
-
-
 
 
 function pw_cache_all_comment_points(){
@@ -434,32 +457,28 @@ function pw_cache_all_comment_points(){
 	pw_update_progress( $fnName, 0, 0 );
 
 	/// GET ALL APPROVED COMMENTS ///
-	$query = "
-		SELECT comment_ID
-		FROM ".$wpdb->comments . "
-		WHERE comment_approved = 1";
-	$comments = $wpdb->get_results( $wpdb->prepare( $query ) );
-	$comments_count = count( $comments );
-	
-	pw_log( 'comment count : ' . $comments_count );
+	$comment_ids = pw_get_all_comment_ids();
+	$comment_count = count( $comment_ids );
+
+	pw_log( 'comment count : ' . $comment_count );
 
 	/// PROGRESS API ////
-	pw_update_progress( $fnName, 0, $comments_count );
+	pw_update_progress( $fnName, 0, $comment_count );
 
 	/// ITERATE THROUGH EACH COMMENT ///	
 	$i = 0; $ii = 0; 
-	foreach( $comments as $comment ){
+	foreach( $comment_ids as $comment_id ){
 		$i++; $ii++;
 
 		/// CACHE COMMENT POINTS ///
-		pw_cache_comment_points( $comment->comment_ID );
+		pw_cache_comment_points( $comment_id );
 
 		/// UPDATE PROGRESS ///
 		if( $ii >= 100 ){
 			$ii = 0;
 			/// PROGRESS API ////
 			pw_progress_kill_if_inactive( $fnName );
-			pw_update_progress( $fnName, $i, $comments_count );
+			pw_update_progress( $fnName, $i, $comment_count );
 		}
 	}
 

@@ -142,18 +142,26 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 
 	$scope.xCacheTypes = [
 		{
+			title: 			'Rank Score',
+			icon: 			'pwi-bars',
 			label:  		'Update Post Rank Scores Cache',
 			functionName: 	'pw_cache_all_rank_scores',
 		},
 		{
+			title: 			'Post Points',
+			icon: 			'pwi-pushpin',
 			label:  		'Repair Post Points Cache',
 			functionName: 	'pw_cache_all_post_points',
 		},
 		{
+			title: 			'User Points',
+			icon: 			'pwi-user',
 			label:  		'Repair User Points Cache',
 			functionName: 	'pw_cache_all_user_points',
 		},
 		{
+			title: 			'Comment Points',
+			icon: 			'pwi-bubbles-2',
 			label:  		'Repair Comment Points Cache',
 			functionName: 	'pw_cache_all_comment_points',
 		},

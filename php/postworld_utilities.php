@@ -6,6 +6,30 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_get_all_comment_ids(){
+	global $wpdb;
+	$query = "
+		SELECT comment_ID
+		FROM ".$wpdb->comments . "
+		WHERE comment_approved = 1";
+	$comments = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$ids = array();
+	foreach( $comments as $comment ){
+		$ids[] = $comment->comment_ID;
+	}
+	return $ids;
+}
+
+function pw_get_all_user_ids(){
+	global $wpdb;
+	$query = "SELECT ID FROM ".$wpdb->users;
+	$users = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$ids = array();
+	foreach( $users as $user ){
+		$ids[] = $post->ID;
+	}
+	return $ids;
+}
 
 function pw_get_all_post_ids_in_post_type( $post_type, $post_status = '' ){
 	// Returns a 1D array of all the post IDs in a post type
@@ -20,7 +44,9 @@ function pw_get_all_post_ids_in_post_type( $post_type, $post_status = '' ){
 		FROM ".$wpdb->posts."
 		WHERE post_type ='".$post_type."'"
 		. $post_status_query;
+
 	$posts = $wpdb->get_results( $wpdb->prepare( $query ) );
+
 	$ids = array();
 	foreach( $posts as $post ){
 		$ids[] = $post->ID;

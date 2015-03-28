@@ -111,11 +111,14 @@
 			</div>
 
 			<?php if( pw_module_enabled( 'rank_score' ) ):?>
+				<!-- TODO : Using rank_score to toggle this is an over-simplification -->
+				<!-- TODO : Activate each section by -->
+
 				<!-- POST RANK -->
 				<div class="well">
 					<h3>
-						<i class="pwi-bars"></i>
-						Rank Score
+						<i class="icon pwi-circle-medium"></i>
+						Update Caches
 					</h3>
 
 					If it keeps spinning even after the maximum PHP process time,
@@ -128,6 +131,12 @@
 					<div
 						class="well"
 						ng-repeat="xCacheType in xCacheTypes">
+
+						<h3>
+							<i class="icon" ng-class="xCacheType.icon"></i>
+							{{xCacheType.title}}
+						</h3>
+
 						<button
 							type="button"
 							class="button"
@@ -151,18 +160,21 @@
 						</button>
 
 						<div ng-show="isBusy(xCacheType.functionName)">
+							<div class="space-2"></div>
 							<div class="progress-bar-container">
 								<div
 									class="progress-bar"
 									ng-style="getPercentWidth( progress[xCacheType.functionName].items.current, progress[xCacheType.functionName].items.total  )">
 								</div>
 							</div>
+							<!-- PRIMARY STATUS -->
 							<div ng-show="uiBool(progress[xCacheType.functionName].items.current)">
 								<b>{{ progress[xCacheType.functionName].items.current }}</b> / {{progress[xCacheType.functionName].items.total}}
 								<span ng-show="uiBool(progress[xCacheType.functionName].meta.current_label)">
 									( <b>{{ progress[xCacheType.functionName].meta.current_label }}</b> )
 								</span>
 							</div>
+							<!-- META -->
 							<div ng-show="uiBool( progress[xCacheType.functionName].meta.current )">
 								<div class="progress-bar-container">
 									<div
@@ -177,16 +189,20 @@
 
 						</div>
 
+						<!--
 						<div ng-show="isBusy(xCacheType.functionName)">
 							<hr class="thin">
 							<b>{{ progress[xCacheType.functionName] | json }}</b>
 						</div>
+						-->
 
 					</div>
 
-					<!--Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)-->
-
-					PROGRESS : <pre><code>{{ progress | json }}</code></pre>
+					<?php if( pw_dev_mode() ) : ?>
+						<hr class="thick">
+						<!--Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)-->
+						$scope.progress : <pre><code>{{ progress | json }}</code></pre>
+					<?php endif; ?>
 
 				</div>
 			<?php endif; ?>
