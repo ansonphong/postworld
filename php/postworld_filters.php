@@ -35,6 +35,7 @@ function pw_prepare_query_post_parent_from( $query ){
 	/// POST PARENT FROM FIELD ///
 	if( isset( $query['post_parent_from'] ) ){
 		switch( $query['post_parent_from'] ){
+			case 'this_post':
 			case 'this_post_id':
 				$query['post_parent'] = $post->ID;
 				break;
@@ -54,6 +55,7 @@ function pw_prepare_query_exclude_posts_from( $query ){
 	/// POST PARENT FROM FIELD ///
 	if( isset( $query['exclude_posts_from'] ) ){
 		switch( $query['exclude_posts_from'] ){
+			case 'this_post':
 			case 'this_post_id':
 				$query['post__not_in'] = array( $post->ID );
 				break;
@@ -70,6 +72,7 @@ function pw_prepare_query_include_posts_from( $query ){
 	/// POST PARENT FROM FIELD ///
 	if( isset( $query['include_posts_from'] ) ){
 		switch( $query['include_posts_from'] ){
+			case 'this_post':
 			case 'this_post_id':
 				$query['post__in'] = array( $post->ID );
 				break;
@@ -81,8 +84,6 @@ function pw_prepare_query_include_posts_from( $query ){
 		$post_type = pw_get_obj( $query, 'post_type' );
 		if( $post_type == null || !isset( $post_type ) )
 			$query['post_type'] = 'any';
-
-		//pw_log( '$query : ' . json_encode($query) );
 	}
 
 	return $query;
@@ -111,14 +112,50 @@ function pw_prepare_query_author_from( $query ){
 add_filter( 'pw_prepare_query', 'pw_prepare_query_author_from' );
 
 
-///// PREPARE QUERY FILTER : INCLUDE POST FROM /////
-function pw_prepare_query_default_post( $query ){
+///// PREPARE QUERY FILTER : RELATED /////
+function pw_prepare_query_related_query( $query ){
+	global $post;
+	/// CHECK FOR RELATED QUERY FIELD ///
+	if( isset( $query['related_query'] ) && !empty($query['related_query']) ){
+
+		// Move the related query out of the query, and into a variable
+		$related_query = $query['related_query'];
+		unset($query['related_query']);
+
+		// Add the query into the `related_query.query` variable
+		$related_query['query'] = $query;
+
+		// Set the default `related_query.number` from `posts_per_page`
+		if( !isset( $related_query['number'] ) && isset( $query['posts_per_page'] ) )
+			$related_query['number'] = $query['posts_per_page'];
+
+		// Get the related post IDs
+		$post_ids = pw_related_query( $related_query );
+
+		// Add post IDs to `post__in` array
+		if( is_array( $query['post__in'] ) )
+			$query['post__in'] = array_merge( $query['post__in'], $post_ids );
+		else
+			$query['post__in'] = $post_ids;
+		
+		// Remove duplicates
+		$query['post__in'] = array_unique($query['post__in']);
+	
+	}
+	return $query;
+}
+add_filter( 'pw_prepare_query', 'pw_prepare_query_related_query' );
+
+
+
+///// PREPARE QUERY FILTER : DEFAULT POST TYPE /////
+function pw_prepare_query_default_post_type( $query ){
 	// Set the post type to 'any' if not defined
 	$post_type = pw_get_obj( $query, 'post_type' );
 	if( $post_type == null || empty( $post_type ) || !isset( $post_type ) )
 		$query['post_type'] = 'any';
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_default_post' );
+add_filter( 'pw_prepare_query', 'pw_prepare_query_default_post_type' );
 
 ?>

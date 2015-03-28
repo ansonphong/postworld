@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.88,
+		'version'		=>	1.89,
 		'db_version'	=>	1.14,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -228,6 +228,9 @@ include 'php/postworld_taxonomies.php';
 
 ////// CACHE FUNCTIONS //////
 include 'php/postworld_cache.php';
+
+////// RELATED POST FUNCTIONS //////
+include 'php/postworld_related.php';
 
 ////// GET POST FUNCTIONS //////
 include 'php/postworld_fields.php';

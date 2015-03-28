@@ -125,9 +125,6 @@
 					you may need to increase the maximum allowed process time in your PHP configuration.
 
 					<!-- POSTMETA TABLE -->
-
-					What's happening now is that if the process gets cut-off mid-stream, the pgress reamins stuck
-
 					<div
 						class="well"
 						ng-repeat="xCacheType in xCacheTypes">
