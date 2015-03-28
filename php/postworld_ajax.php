@@ -15,11 +15,7 @@ function pwAjaxRespond( $response_data ){
 //---------- PW END PROGRESS ----------//
 function pw_end_progress_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
-	
-	//if( current_user_can('manage_options') )
-
 	$response_data = pw_end_progress( $args['key'] );
-
 	pwAjaxRespond( $response_data );
 }
 add_action("wp_ajax_pw_end_progress", "pw_end_progress_ajax");

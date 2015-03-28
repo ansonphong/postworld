@@ -124,14 +124,14 @@
 					<!-- POSTMETA TABLE -->
 
 					What's happening now is that if the process gets cut-off mid-stream, the pgress reamins stuck
-					
+
 					<div
 						class="well"
 						ng-repeat="xCacheType in xCacheTypes">
 						<button
 							type="button"
 							class="button"
-							ng-click="updateRankScoreType( xCacheType.functionName )"
+							ng-click="initProgressFunction( xCacheType.functionName )"
 							ng-disabled="uiBool(busy[ xCacheType.functionName])">
 							<span class="icon-sm">
 								<i
@@ -157,20 +157,31 @@
 									ng-style="getPercentWidth( progress[xCacheType.functionName].items.current, progress[xCacheType.functionName].items.total  )">
 								</div>
 							</div>
-							<div
-								class="progress-bar-container"
-								 ng-show="uiBool( progress[xCacheType.functionName].meta.current )">
-								<div
-									class="progress-bar"
-									ng-style="getPercentWidth( progress[xCacheType.functionName].meta.current, progress[xCacheType.functionName].meta.total  )">
+							<div ng-show="uiBool(progress[xCacheType.functionName].items.current)">
+								<b>{{ progress[xCacheType.functionName].items.current }}</b> / {{progress[xCacheType.functionName].items.total}}
+								<span ng-show="uiBool(progress[xCacheType.functionName].meta.current_label)">
+									( <b>{{ progress[xCacheType.functionName].meta.current_label }}</b> )
+								</span>
+							</div>
+							<div ng-show="uiBool( progress[xCacheType.functionName].meta.current )">
+								<div class="progress-bar-container">
+									<div
+										class="progress-bar"
+										ng-style="getPercentWidth( progress[xCacheType.functionName].meta.current, progress[xCacheType.functionName].meta.total  )">
+									</div>
+								</div>
+								<div ng-show="uiBool(progress[xCacheType.functionName].meta.current)">
+									<b>{{ progress[xCacheType.functionName].meta.current }}</b> / {{progress[xCacheType.functionName].meta.total}}
 								</div>
 							</div>
+
 						</div>
 
 						<div ng-show="isBusy(xCacheType.functionName)">
 							<hr class="thin">
 							<b>{{ progress[xCacheType.functionName] | json }}</b>
 						</div>
+
 					</div>
 
 					<!--Clear Cron Logs (Show Row Count) (pw_clear_cron_logs)-->

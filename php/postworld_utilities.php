@@ -7,13 +7,19 @@
 //////////////////////////////////*/
 
 
-function pw_get_all_post_ids_in_post_type( $post_type ){
+function pw_get_all_post_ids_in_post_type( $post_type, $post_status = '' ){
 	// Returns a 1D array of all the post IDs in a post type
 	global $wpdb;
+
+	$post_status_query = ( !empty($post_status) && is_string($post_status) ) ?
+		" AND post_status='" . $post_status . "'" :
+		"";
+
 	$query = "
 		SELECT ID
 		FROM ".$wpdb->posts."
-		WHERE post_type ='".$post_type."'";
+		WHERE post_type ='".$post_type."'"
+		. $post_status_query;
 	$posts = $wpdb->get_results( $wpdb->prepare( $query ) );
 	$ids = array();
 	foreach( $posts as $post ){

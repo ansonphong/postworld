@@ -46,22 +46,48 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 	}
 
 
+	///// WATCH : PROGRESS /////
+	$scope.$watch( 'progress', function( val ){
+		angular.forEach( $scope.xCacheTypes, function( xCacheType ){
+			var active = $_.get( $scope.progress, xCacheType.functionName + '.active' );
+			if( active ){
+				$scope.setBusy( xCacheType.functionName, true );
+				$scope.progressLoop( xCacheType.functionName );
+			} else{
+				$scope.setBusy( xCacheType.functionName, false );
+			}
+		});
+
+	}, 1 );
+
+
 	///// PROGRESS API /////
 	$scope.updateBusy = {};
 	$scope.updateProgress = function( functionName ){
-		
+		// If it's already updating, don't try again
 		if( $_.get( $scope.updateBusy, functionName ) == true )
 			return false;
-
+		// If it's already in the process of ending, stop here
 		if( $_.get( $scope.endingProgress, functionName ) == true )
 			return false;
 
+		// Update the busy status
 		$scope.updateBusy[functionName] = true;
 
+		// Get the current progress of the function name from the server
 		$pwData.getProgress( functionName ).then(
 			function( response ){
+				var data = response.data;
+				// Update the busy status
 				$scope.updateBusy[functionName] = false;
-				$scope.progress[ functionName ] = response.data;
+				// Check if already in the process ending the progress
+				if( $_.get( $scope.endingProgress, functionName ) == false ){
+					// On first time running
+					if( data == false )
+						data = { active:true };
+					// Set the progress
+					$scope.progress[ functionName ] = data;
+				}
 			},
 			function(response){}
 		);
@@ -84,40 +110,28 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 		);
 	}
 
-	///// WATCH : PROGRESS /////
-	$scope.$watch( 'progress', function( val ){
-
-		// On controller bootup, check the progress object
-		// And if there are any functions currently active
-		// Make the current busy state reflect that
-		angular.forEach( $scope.xCacheTypes, function( xCacheType ){
-			var active = $_.get( $scope.progress, xCacheType.functionName + '.active' );
-			if( active ){
-				$scope.setBusy( xCacheType.functionName, true );
-				$scope.progressLoop( xCacheType.functionName );
-			} else{
-				$scope.setBusy( xCacheType.functionName, false );
-			}
-		});
-
-	}, 1 );
 
 	$timeout(function(){},0);
 
 	$scope.endingProgress = {};
 	$scope.endProgress = function( functionName ){
 
+		// If already in the process of ending progress, stop here
 		if( $_.get( $scope.endingProgress, functionName ) == true )
 			return false;
 
+		// Update ending progress status
 		$scope.endingProgress[functionName] = true;
 
+		// End the process on the server via AJAX
 		$pwData.endProgress( functionName ).then(
 			function( response ){
+				// Update ending progress status
 				$scope.endingProgress[functionName] = false;
+				// Update busy status
 				$scope.updateBusy[functionName] = false;
+				// Update progress object
 				$scope.progress[functionName] = response.data;
-				$scope.updateProgress( functionName );
 			},
 			function(response){}
 		);
@@ -145,7 +159,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 		},
 	];
 
-	$scope.updateRankScoreType = function( functionName ){
+	$scope.initProgressFunction = function( functionName ){
 
 		$scope.setBusy( functionName, true );
 
@@ -154,15 +168,17 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 		$pwData.wp_ajax( functionName, {} ).then(
 			function( response ){
 				$scope.setBusy( functionName, false );
-				$log.debug( 'updateRankScoreType : RESPONSE : ', response );
+				/*
+				
+				$log.debug( 'runProgressFunction : RESPONSE : ', response );
 				$scope.rankScoreReadout[functionName] = response.data;
-
-				// TODO : Return here with the final progress data
-
+				*/
 			},
 			function( response ){
+				/*
 				$scope.setBusy( functionName, false );
-				$log.debug( 'updateRankScoreType : RESPONSE : ERROR : ', response );
+				$log.debug( 'runProgressFunction : RESPONSE : ERROR : ', response );
+				*/
 			}
 		);
 

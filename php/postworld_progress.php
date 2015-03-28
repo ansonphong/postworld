@@ -15,8 +15,8 @@ function pw_update_progress( $key, $current, $total, $meta = array() ){
 	if( isset( $meta ) && !empty( $meta ) )
 		$value['meta'] = $meta;
 
-	pw_log( 'pw_update_progress : ' . $key . " : " . json_encode($value) );
-
+	wp_cache_flush();
+	
 	return pw_set_option( array(
 		'option_name'	=>	PW_OPTIONS_PROGRESS,
 		'key'			=> 	$key,
@@ -26,7 +26,7 @@ function pw_update_progress( $key, $current, $total, $meta = array() ){
 }
 
 function pw_get_progress( $key, $flush = false ){
-	
+
 	if( $flush === true )
 		// Flushes the WordPress Object Cache
 		wp_cache_flush();
@@ -50,7 +50,11 @@ function pw_end_progress( $key ){
 	$value['active'] = false;
 	$value['ended'] = date("Y-m-d H:i:s");
 	$value['items']['current'] = 0;
-	$value['meta'] = array();
+	$value['meta'] = array(
+		'current_label' => '',
+		'current' => 0,
+		'total' => 0
+		);
 
 	pw_set_option( array(
 		'option_name'	=>	PW_OPTIONS_PROGRESS,
@@ -58,7 +62,7 @@ function pw_end_progress( $key ){
 		'value'			=>	$value,
 		));
 
-	return $value; //pw_get_progress( $key, true );
+	return $value;
 
 }
 
@@ -66,9 +70,7 @@ function pw_progress_is_active( $key ){
 	// Flush the options object cache so we don't get an old value
 	wp_cache_flush();
 	// Get the active progress key
-	$bool = pw_grab_option( PW_OPTIONS_PROGRESS, $key.'.active', true );
-	//pw_log( 'pw_progress_is_active : ' . json_encode($bool) );
-	return $bool;
+	return pw_grab_option( PW_OPTIONS_PROGRESS, $key.'.active', true );
 }
 
 function pw_progress_kill_if_inactive( $key ){

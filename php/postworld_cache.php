@@ -156,6 +156,218 @@ function pw_get_cache_types_readout(){
 
 ////////////////////////////////////////////////////////////////////
 
+
+
+function pw_cache_all_rank_scores( $post_types = array() ){
+	$fnName = 'pw_cache_all_rank_scores';
+
+	/*• Cycles through each post in each post_type scheduled for Rank Score caching
+	• Calculates and caches each post's current rank with pw_cache_rank_score() method
+	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
+	//set_time_limit (300);
+
+	/// SETUP ///
+	global $wpdb;
+	$wpdb->show_errors();
+	global $pwSiteGlobals;
+
+	if( empty( $post_types ) )
+		$post_types = _get( $pwSiteGlobals, 'rank.post_types' );
+
+	if( empty( $post_types ) )
+		return false;
+
+	/// TIMER ///
+	pw_set_microtimer( $fnName );
+	$timers = array();
+
+	/// PROGRESS API ////
+	$item = 0; 
+	pw_update_progress(
+		$fnName,
+		$item,
+		count($post_types));
+
+	$posts_count_total = 0;
+
+	/// ITERATE THROUGH POST TYPES ///
+	foreach( $post_types as $post_type ){
+		$item ++;
+
+		/// PROGRESS API ////
+		pw_progress_kill_if_inactive( $fnName );
+		pw_update_progress(
+			$fnName,
+			$item,
+			count($post_types),
+			array(
+				'current_label'	=>	$post_type,
+				'current'		=>	0,
+				'total'			=>	0,
+				));
+
+		/// TIMER ///
+		$time_start = date("Y-m-d H:i:s");
+		pw_set_microtimer( $fnName . '-' . $post_type );
+
+		/// GET POSTS IN POST TYPE ///
+		$post_ids = pw_get_all_post_ids_in_post_type( $post_type, 'publish' );
+
+		/// SETUP PROGRESS DATA ///
+		$ping = 100;
+		$posts_count = count($post_ids);
+		$posts_count_total += $posts_count;
+
+		/// ITERATE THROUGH POSTS ///
+		$i = 0; $ii = 0;
+		foreach ($post_ids as $post_id){
+			$i++; $ii++;
+
+			// Calculate and cache the rank score for each post
+			pw_cache_rank_score( $post_id );
+
+			// Update Progress
+			if( $ii >= $ping ){
+				$ii = 0;
+				pw_progress_kill_if_inactive( $fnName );
+				pw_update_progress(
+					$fnName,
+					$item,
+					count($post_types),
+					array(
+						'current_label'	=>	$post_type,
+						'current'		=>	$i,
+						'total'			=>	$posts_count,
+						));
+			}
+
+		}
+
+		/// TIMER ///
+		$time_end = date("Y-m-d H:i:s");	
+		$timer = pw_get_microtimer( $fnName . '-' . $post_type );
+		$timers[$post_type]	= $timer;
+
+		/// CRON LOG API ///
+		pw_insert_cron_log( array(
+			'time_start'	=>	$time_start,
+			'time_end'		=>	$time_end,
+			'timer'			=>	$timer,
+			'posts'			=>	$posts_count_total,
+			'function_type'	=>	$fnName,
+			'process_id'	=>	$post_type
+			));
+
+	}
+
+	/// PROGRESS API ///
+	pw_end_progress($fnName);
+
+	return array(
+		'timers'	=>	$timers,
+		'timer'		=>	pw_get_microtimer( $fnName ),
+		);
+
+}
+
+function pw_cache_all_post_points() {
+	$fnName = 'pw_cache_all_post_points';
+	/*
+	 • Cycles through each post in each post_type with points enabled
+	 • Calculates each post's current points with calculate_points()
+	 • Stores points it in wp_postworld_meta 'points' column
+	 • return : cron_logs Object (add to table wp_postworld_cron_logs)
+	 */
+		 
+	global $wpdb;
+	global $pwSiteGlobals;
+
+	$post_types = _get( $pwSiteGlobals, 'points.post_types' );
+
+	if( empty($post_types) )
+		return array( 'error' => 'No post types defined in Postworld Config.' );
+
+	/// TIMER ///
+	$time_start = date("Y-m-d H:i:s");
+	pw_set_microtimer('pw_cache_all_post_points');
+
+	/// PROGRESS API ////
+	$item = 0; 
+	pw_update_progress(
+		$fnName,
+		$item,
+		count($post_types));
+
+	///// ITERATE THROUGH EACH POST TYPE /////
+	foreach( $post_types as $post_type ){
+		$item ++;
+
+		// Get all the published post IDs in this post type
+		$post_ids = pw_get_all_post_ids_in_post_type( $post_type, 'publish' );
+
+		/// PROGRESS API ////
+		pw_progress_kill_if_inactive( $fnName );
+		pw_update_progress(
+			$fnName,
+			$item,
+			count($post_types),
+			array(
+				'current_label'	=>	$post_type,
+				'current'		=>	0,
+				'total'			=>	0,
+				));
+
+
+		///// ITERATE THROUGH EACH POST /////
+		$i = 0; $ii = 0;
+		foreach( $post_ids as $post_id ) {
+			$i++; $ii++;
+
+			pw_cache_post_points( $post_id );
+
+			// Update Progress
+			if( $ii >= 100 ){
+				$ii = 0;
+				/// PROGRESS API ////
+				pw_progress_kill_if_inactive( $fnName );
+				pw_update_progress(
+					$fnName,
+					$item,
+					count($post_types),
+					array(
+						'current_label'	=>	$post_type,
+						'current'		=>	$i,
+						'total'			=>	count($post_ids),
+						));
+			}
+
+		}
+
+	}
+
+	/// TIMER ///
+	$time_end = date("Y-m-d H:i:s");	
+	$timer = pw_get_microtimer('pw_cache_all_post_points');
+
+	/// CRON LOG ///
+	pw_insert_cron_log( array(
+		'time_start'	=>	$time_start,
+		'time_end'		=>	$time_end,
+		'posts'			=>	count($posts),
+		'timer'			=>	$timer,
+		'function_type'	=>	'pw_cache_all_post_points',
+		));
+
+	/// PROGRESS API ///
+	pw_end_progress($fnName);
+
+	return array(
+		'timer'	=>	$timer,
+		);
+
+}
+
+
 function pw_cache_all_points (){
 	pw_set_microtimer( 'pw_cache_all_points' );
 
@@ -202,82 +414,67 @@ function pw_cache_all_user_points(){
 
 }
 
-function pw_cache_all_post_points() {
-	/*
-	 • Cycles through each post in each post_type with points enabled
-	 • Calculates each post's current points with calculate_points()
-	 • Stores points it in wp_postworld_meta 'points' column
-	 • return : cron_logs Object (add to table wp_postworld_cron_logs)
-	 */
-		 
-	global $wpdb;
-	global $pwSiteGlobals;
-	$post_types = _get( $pwSiteGlobals, 'points.post_types' );
 
-	if( empty($post_types) )
-		return array( 'error' => 'No post types defined in Postworld Config.' );
-
-	$time_start = date("Y-m-d H:i:s");
-	pw_set_microtimer('pw_cache_all_post_points');
-
-	foreach( $post_types as $post_type ){
-		$query = "SELECT ID FROM " . $wpdb->posts . " WHERE post_type ='".$post_type."'";
-		$posts = $wpdb->get_results( $wpdb->prepare( $query ) );
-		
-		foreach( $posts as $post ) {
-			pw_cache_post_points( $post->ID );
-		}
-	}
-
-	$time_end = date("Y-m-d H:i:s");	
-
-	$timer = pw_get_microtimer('pw_cache_all_post_points');
-
-	pw_insert_cron_log( array(
-		'time_start'	=>	$time_start,
-		'time_end'		=>	$time_end,
-		'posts'			=>	count($posts),
-		'timer'			=>	$timer,
-		'function_type'	=>	'pw_cache_all_post_points',
-		));
-
-	return array(
-		'timer'	=>	$timer,
-		);
-
-}
 
 
 function pw_cache_all_comment_points(){
+	$fnName = 'pw_cache_all_comment_points';
+
 	/*• Cycles through all columns
 	• Calculates and caches each comment's current points with pw_cache_comment_points() method
 	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
 	
 	global $wpdb;
 
-	pw_set_microtimer('pw_cache_all_comment_points');
-
-	$query = "SELECT comment_ID FROM ".$wpdb->comments;
-
-	$blog_comments=$wpdb->get_results($query);
-
-	$blog_comments_count = count($blog_comments);
-	
+	/// TIMER ///
+	pw_set_microtimer( $fnName );
 	$time_start = date("Y-m-d H:i:s");
 
-	for($i=0;$i<$blog_comments_count;$i++){
-		pw_cache_comment_points($blog_comments[$i]->comment_ID);
+	/// PROGRESS API ////
+	pw_update_progress( $fnName, 0, 0 );
+
+	/// GET ALL APPROVED COMMENTS ///
+	$query = "
+		SELECT comment_ID
+		FROM ".$wpdb->comments . "
+		WHERE comment_approved = 1";
+	$comments = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$comments_count = count( $comments );
+	
+	pw_log( 'comment count : ' . $comments_count );
+
+	/// PROGRESS API ////
+	pw_update_progress( $fnName, 0, $comments_count );
+
+	/// ITERATE THROUGH EACH COMMENT ///	
+	$i = 0; $ii = 0; 
+	foreach( $comments as $comment ){
+		$i++; $ii++;
+
+		/// CACHE COMMENT POINTS ///
+		pw_cache_comment_points( $comment->comment_ID );
+
+		/// UPDATE PROGRESS ///
+		if( $ii >= 100 ){
+			$ii = 0;
+			/// PROGRESS API ////
+			pw_progress_kill_if_inactive( $fnName );
+			pw_update_progress( $fnName, $i, $comments_count );
+		}
 	}
 
-	$time_end =  date("Y-m-d H:i:s");
+	/// TIMER ///
+	$time_end = date("Y-m-d H:i:s");
+	$timer = pw_get_microtimer($fnName);
 
-	$timer = pw_get_microtimer('pw_cache_all_comment_points');
+	/// PROGRESS API ///
+	pw_end_progress($fnName);
 
 	pw_insert_cron_log( array(
 		'time_start'	=>	$time_start,
 		'time_end'		=>	$time_end,
 		'timer'			=>	$timer,
-		'function_type'	=>	'pw_cache_all_comment_points',
+		'function_type'	=>	$fnName,
 		));
 
 	return array(
@@ -286,121 +483,6 @@ function pw_cache_all_comment_points(){
 	
 }
 
-function pw_cache_all_rank_scores( $post_types = array() ){
-	$fnName = 'pw_cache_all_rank_scores';
-
-	/*• Cycles through each post in each post_type scheduled for Rank Score caching
-	• Calculates and caches each post's current rank with pw_cache_rank_score() method
-	return : cron_logs Object (add to table wp_postworld_cron_logs)*/
-	//set_time_limit (300);
-
-	/// SETUP ///
-	global $wpdb;
-	$wpdb->show_errors();
-
-	global $pwSiteGlobals;
-
-	if( empty( $post_types ) )
-		$post_types = _get( $pwSiteGlobals, 'rank.post_types' );
-
-	if( empty( $post_types ) )
-		return false;
-
-	/// TIMER ///
-	pw_set_microtimer( 'pw_cache_all_rank_scores' );
-	$timers = array();
-
-	/// PROGRESS API ////
-	$item = 0; 
-	pw_update_progress(
-		'pw_cache_all_rank_scores',
-		$item,
-		count($post_types));
-
-	$posts_count_total = 0;
-
-	/// ITERATE THROUGH POST TYPES ///
-	foreach( $post_types as $post_type ){
-		$item ++;
-
-		/// PROGRESS API ////
-		pw_progress_kill_if_inactive( $fnName );
-		pw_update_progress(
-			'pw_cache_all_rank_scores',
-			$item,
-			count($post_types),
-			array(
-				'post_type'		=>	$post_type,
-				'post_types' 	=> 	$post_types,
-				'current'		=>	0,
-				'total'			=>	0,
-				));
-
-		/// TIMER ///
-		$time_start = date("Y-m-d H:i:s");
-		pw_set_microtimer( $fnName . '-' . $post_type );
-
-		/// GET POSTS IN POST TYPE ///
-		$post_ids = pw_get_all_post_ids_in_post_type( $post_type );
-
-		/// SETUP PROGRESS DATA ///
-		$i = 0;
-		$ii = 0;
-		$ping = 100;
-		$posts_count = count($post_ids);
-		$posts_count_total += $posts_count;
-
-		/// ITERATE THROUGH POSTS ///
-		foreach ($post_ids as $post_id){
-			$i++; $ii++;
-
-			// Calculate and cache the rank score for each post
-			pw_cache_rank_score( $post_id );
-
-			// Update Progress
-			if( $i >= $ping ){
-				$i = 0;
-				pw_progress_kill_if_inactive( $fnName );
-				pw_update_progress(
-					'pw_cache_all_rank_scores',
-					$item,
-					count($post_types),
-					array(
-						'post_type'		=>	$post_type,
-						'post_types' 	=> 	$post_types,
-						'current'		=>	$ii,
-						'total'			=>	$posts_count,
-						));
-			}
-
-		}
-
-		/// TIMER ///
-		$time_end = date("Y-m-d H:i:s");	
-		$timer = pw_get_microtimer( 'pw_cache_all_rank_scores-'. $post_type );
-		$timers[$post_type]	= $timer;
-
-		/// CRON LOG API ///
-		pw_insert_cron_log( array(
-			'time_start'	=>	$time_start,
-			'time_end'		=>	$time_end,
-			'timer'			=>	$timer,
-			'posts'			=>	$posts_count_total,
-			'function_type'	=>	'pw_cache_all_rank_scores',
-			'process_id'	=>	$post_type
-			));
-
-	}
-
-	/// PROGRESS API ///
-	pw_end_progress('pw_cache_all_rank_scores');
-
-	return array(
-		'timers'	=>	$timers,
-		'timer'		=>	pw_get_microtimer( 'pw_cache_all_rank_scores' ),
-		);
-
-}
 
 /*
 function pw_cache_all_feeds (){
