@@ -18,14 +18,18 @@ function pw_related_query( $vars = array() ){
 		'number'		=>	10,
 		'depth'			=>	1000,
 		'order_by'		=>	'relevance',
+		'cache'			=>	true,
 		'related_by'	=>	array(),	// An array of objects representing Related By Clauses
 		);
-
 	$vars = array_replace_recursive( $defaultVars, $vars );
 
 	///// SMART VARIABLES /////
 	if( $vars['post_id'] == 'this_post' )
 		$vars['post_id'] = $post->ID;
+
+
+	///// CACHING LAYER /////
+
 
 	///// POSTS /////
 	// An array of objects, with the following structure
@@ -77,7 +81,9 @@ function pw_related_query( $vars = array() ){
 	// http://stackoverflow.com/questions/4282413/sort-array-of-objects-by-object-fields
 
 
-	///// CACHE /////
+	///// CACHING LAYER /////
+
+
 
 
 }
