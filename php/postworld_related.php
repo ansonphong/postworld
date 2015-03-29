@@ -1,6 +1,6 @@
 <?php
 /**
- * Retrieve related post IDs of related posts.
+ * Retrieve related post IDs of related posts, based a list of Related By Clauses.
  *
  * @since Postworld 1.89
  * @uses pw_query()
@@ -16,8 +16,9 @@ function pw_related_query( $vars = array() ){
 	$defaultVars = array(
 		'post_id' 		=>	'this_post',
 		'number'		=>	10,
+		'depth'			=>	1000,
 		'order_by'		=>	'relevance',
-		'related_by'	=>	array(),	// An array of objects, executed in order
+		'related_by'	=>	array(),	// An array of objects representing Related By Clauses
 		);
 
 	$vars = array_replace_recursive( $defaultVars, $vars );
@@ -26,18 +27,55 @@ function pw_related_query( $vars = array() ){
 	if( $vars['post_id'] == 'this_post' )
 		$vars['post_id'] = $post->ID;
 
-	///// POST IDS /////
-	$post_ids = array();
+	///// POSTS /////
+	// An array of objects, with the following structure
+	// [{ post_id:42, score:3 },{ post_id:82, score:2 }]
+	$posts = array();
 
-	///// TAXONOMY /////
-	if( !empty( $vars['taxonomy'] ) ){
-		$post_ids_taxonomy = pw_related_posts_taxonomy( $vars['post_id'], $vars['number'], $vars['taxonomy'] );
-		$post_ids = array_merge( $post_ids, $post_ids_taxonomy );
-	
-		// Run Taxonomy Query
-		// Merge scores with existing IDs
+	///// ITERATE THROUGH EACH CLAUSE /////
+	foreach( $vars['related_by'] as $clause ){
+
+		/// CONSTRUCT SUBFUNCTION VARIABLES ///
+		// Theres variables are fed into the respective clause type functions
+		$clauseVars = array(
+			'post_id'	=>	$vars['post_id'],
+			'depth'		=>	$vars['depth'],
+			'clause'	=>	$clause,
+			);
+
+		/// CLAUSE TYPE : SWITCH ///
+		switch( $clause['type'] ){
+			case 'taxonomy':
+				$get_posts = pw_related_posts_by_taxonomy( $vars );
+				break;
+			case 'fields':
+				$get_posts = pw_related_posts_by_field( $vars );
+				break;
+		}
+
+
+		/// CLAUSE WEIGHT : DEFAULT ///
+		if( !isset( $clause['weight'] ) )
+			$clause['weight'] = 1;
+		else
+			$clause['weight'] = (double) $clause['weight'];
+
+		/// CLAUSE WEIGHT : APPLY ///
+
+
+
+		/// CLAUSE POSTS : MERGE ///
+		// Merge the clause posts with the primary posts array
+		// Iteratively merge by post ids, adding their scores
+
 
 	}
+
+
+	///// ORDER POSTS /////
+	// Order the posts by the specified ordering method
+	// http://stackoverflow.com/questions/4282413/sort-array-of-objects-by-object-fields
+
 
 	///// CACHE /////
 
@@ -52,16 +90,20 @@ function pw_related_query( $vars = array() ){
  *
  * @param string $var       Ann array of variables
  * @return array 			Array of objects, scored post IDs
+ * 							Example. [{ post_id:42, score:3 },{ post_id:82, score:2 }]
  */
-function pw_related_posts_by_taxonomy( $post_id, $number, $vars ){
+function pw_related_posts_by_taxonomy( $vars ){
 
 	$defaultVars = array(
-		'type' => 'taxonomy',	
-		'taxonomies' => array( 'post_tag', 'category' ),
-		'fields' => array(
-			'terms',		// Searches in other terms
-			'post_title',	// Searches for the term titles in post titles
-			'post_excerpt', // Searches for the term titles in post excerpts
+		'taxonomies' => array(
+			array(
+				'taxonomy' => 'post_tag',
+				'weight' => 1.5,
+				),
+			array(
+				'taxonomy' => 'category',
+				'weight' => 1,
+				),
 			),
 		);
 
@@ -77,16 +119,27 @@ function pw_related_posts_by_taxonomy( $post_id, $number, $vars ){
  * @param string $var       Ann array of variables
  * @return array 			Array of objects, scored post IDs
  */
-function pw_related_posts_by_fields( $post_id, $number, $vars ){
+function pw_related_posts_by_field( $vars ){
 
 	$defaultVars = array(
-		'type' => 'fields',
 		'fields' => array(
-			'post_title',	// 	Searches for related posts by post title
-			'post_excerpt',	// 	Searches for related posts by post excerpt
-			'post_author',	//	Searches for related posts by post author
-			'post_parent', 	// 	Searches for related posts by post parent
-			),
+			array(
+				'field' 	=> 'post_title',
+				'weight' 	=> 2
+				),
+			array(
+				'field' 	=> 'post_excerpt',
+				'weight' 	=> 1.5
+				),
+			array(
+				'field' 	=> 'post_parent',
+				'weight' 	=> 1.25
+				),
+			array(
+				'field' 	=> 'post_author',
+				'weight' 	=> 1
+				),
+			)
 		);
 
 }
