@@ -41,22 +41,22 @@ function pw_related_query( $vars = array() ){
 
 		/// CONSTRUCT SUBFUNCTION VARIABLES ///
 		// Theres variables are fed into the respective clause type functions
-		$clauseVars = array(
+		$by_vars = array(
 			'post_id'	=>	$vars['post_id'],
 			'depth'		=>	$vars['depth'],
-			'clause'	=>	$clause,
 			);
 
 		/// CLAUSE TYPE : SWITCH ///
 		switch( $clause['type'] ){
 			case 'taxonomy':
-				$get_posts = pw_related_posts_by_taxonomy( $vars );
+				$by_vars['taxonomies'] = $clause['taxonomies'];
+				$get_posts = pw_related_posts_by_taxonomy( $by_vars );
 				break;
 			case 'fields':
-				$get_posts = pw_related_posts_by_field( $vars );
+				$by_vars['fields'] = $clause['fields'];
+				$get_posts = pw_related_posts_by_field( $by_vars );
 				break;
 		}
-
 
 		/// CLAUSE WEIGHT : DEFAULT ///
 		if( !isset( $clause['weight'] ) )
@@ -100,7 +100,11 @@ function pw_related_query( $vars = array() ){
  */
 function pw_related_posts_by_taxonomy( $vars ){
 
+	///// DEFAULTS /////
+	global $post;
 	$defaultVars = array(
+		'post_id' => $post->ID,
+		'depth' => 1000,
 		'taxonomies' => array(
 			array(
 				'taxonomy' => 'post_tag',
@@ -112,8 +116,65 @@ function pw_related_posts_by_taxonomy( $vars ){
 				),
 			),
 		);
+	$vars = array_replace_recursive( $defaultVars, $vars );
+
+
+
+	///// GET POST TERMS /////
+	// Generates an associative array with the post's terms
+	// $post_terms = { category:[34,37], post_tag:[94,21,9,84,23,12] }
+	$post_terms = array();
+	foreach( $vars['taxonomies'] as $tax ){
+
+		// If taxonomy doesn't exist, continue
+		if( !taxonomy_exists( $tax['taxonomy'] ) )
+			continue;
+
+		// Get an array of term IDs
+		$term_ids = wp_get_post_terms(
+			$vars['post_id'],
+			$tax['taxonomy'],
+			array(
+				'fields' => 'ids'
+				));
+
+		// If there's results, add them to the terms
+		if( !empty( $term_ids ) )
+			$post_terms[ $tax['taxonomy'] ] = $term_ids;
+
+	}
+
+	///// GET RELATED POSTS /////
+	// Generates an array of associative arrays, with possible duplicate IDs
+	// $tax_posts = { category:[53,23,74,475,74,378], post_tag:[234,264,264,856] }
+
+
+
+	/////
+
 
 }
+
+
+
+/**
+ * Boil down arrays of
+ *
+ * @since Postworld 1.89
+ * @uses pw_query()
+ *
+ * @param string $arr       A 1D array of values
+ * @param string $key       The key to label the values in the associative array
+ * @return array 			Associative array of scored values
+ * 							[{id:42,score:8},{id:87,score:2},{id:34,score:42}]
+ */
+function pw_score_duplicates( $arr, $value_key = 'id', $score_key = 'score' ){
+
+
+
+}
+
+
 
 
 /**
