@@ -40,7 +40,7 @@ function pw_related_query( $vars = array() ){
 	foreach( $vars['related_by'] as $clause ){
 
 		/// CONSTRUCT SUBFUNCTION VARIABLES ///
-		// Theres variables are fed into the respective clause type functions
+		// Theses variables are fed into the respective clause type functions
 		$by_vars = array(
 			'post_id'	=>	$vars['post_id'],
 			'depth'		=>	$vars['depth'],
@@ -78,7 +78,6 @@ function pw_related_query( $vars = array() ){
 
 	///// ORDER POSTS /////
 	// Order the posts by the specified ordering method
-	// http://stackoverflow.com/questions/4282413/sort-array-of-objects-by-object-fields
 
 
 	///// CACHING LAYER /////
@@ -94,7 +93,7 @@ function pw_related_query( $vars = array() ){
  * @since Postworld 1.89
  * @uses pw_query()
  *
- * @param string $var       Ann array of variables
+ * @param string $var       An array of variables
  * @return array 			Array of objects, scored post IDs
  * 							Example. [{ post_id:42, score:3 },{ post_id:82, score:2 }]
  */
@@ -117,7 +116,6 @@ function pw_related_posts_by_taxonomy( $vars ){
 			),
 		);
 	$vars = array_replace_recursive( $defaultVars, $vars );
-
 
 
 	///// GET POST TERMS /////
@@ -150,7 +148,25 @@ function pw_related_posts_by_taxonomy( $vars ){
 
 
 
-	/////
+
+}
+
+
+
+/**
+ * Boil down arrays of values into an array of scored values
+ *
+ * @since Postworld 1.89
+ * @uses pw_query()
+ *
+ * @param string $arr       	A 1D array of values
+ * @param string $value_key     The key to label the values in the associative array
+ * @param string $score_key     The key to label the score in the associative array
+ * @return array 				Associative array of scored values
+ * 								[{id:42,score:8},{id:87,score:2},{id:34,score:42}]
+ */
+function pw_score_values( $values, $value_key = 'id', $score_key = 'score' ){
+
 
 
 }
@@ -158,19 +174,29 @@ function pw_related_posts_by_taxonomy( $vars ){
 
 
 /**
- * Boil down arrays of
+ * Merge
  *
  * @since Postworld 1.89
  * @uses pw_query()
  *
- * @param string $arr       A 1D array of values
- * @param string $key       The key to label the values in the associative array
- * @return array 			Associative array of scored values
- * 							[{id:42,score:8},{id:87,score:2},{id:34,score:42}]
+ * @param string $arr       	A 1D array of values
+ * @param string $value_key 	The key to label the values in the associative array
+ * @param string $score_key     The key to label the score in the associative array
+ * @return array 				Associative array of scored values
+ * 								[{id:42,score:8},{id:87,score:2},{id:34,score:42}]
  */
-function pw_score_duplicates( $arr, $value_key = 'id', $score_key = 'score' ){
+function pw_merge_score_values( $arr, $value_key = 'id', $score_key = 'score' ){
+
+}
 
 
+function pw_multiply_score_values( $arr, $score_key = 'score' ){
+
+}
+
+
+function pw_order_score_values( $arr, $score_key = 'score' ){
+	// http://stackoverflow.com/questions/4282413/sort-array-of-objects-by-object-fields
 
 }
 
