@@ -47,6 +47,7 @@ function pw_related_query( $vars = array() ){
 			'post_id'	=>	$vars['post_id'],
 			'depth'		=>	$vars['depth'],
 			'query'		=>	$vars['query'],
+			'order_by'	=>	'none',
 			);
 
 		/// CLAUSE TYPE : SWITCH ///
@@ -55,10 +56,12 @@ function pw_related_query( $vars = array() ){
 				$by_vars['taxonomies'] = $clause['taxonomies'];
 				$get_posts = pw_related_posts_by_taxonomy( $by_vars );
 				break;
+			/*
 			case 'fields':
 				$by_vars['fields'] = $clause['fields'];
 				$get_posts = pw_related_posts_by_field( $by_vars );
 				break;
+			*/
 		}
 
 		/// CLAUSE WEIGHT : DEFAULT ///
@@ -86,35 +89,6 @@ function pw_related_query( $vars = array() ){
 
 }
 
-///// DEV TESTING /////
-function pw_test_related_posts(){
-	//$test1 = pw_related_query( array('post_id'=>250803) );
-	//pw_log( 'pw_related_query : ' . json_encode($test1, JSON_PRETTY_PRINT) );
-	$test2 = pw_related_posts_by_taxonomy( array(
-		'post_id' 	=> 	250803,
-		'depth' 	=> 	10000,
-		'number'	=>	10,
-		'output'	=>	'ids',
-		'order_by'	=>	'score',
-		'query' => array(
-			'post_type' => array('feature','blog')
-			),
-		'taxonomies' => array(
-			array(
-				'taxonomy' => 'post_tag',
-				'weight' => 1.5,
-				),
-			array(
-				'taxonomy' => 'topic',
-				'weight' => 1,
-				),
-			),
-		));
-	pw_log( 'pw_related_posts_by_taxonomy : ' . json_encode($test2, JSON_PRETTY_PRINT) );
-
-}
-add_action('wp_loaded', 'pw_test_related_posts');
-
 
 /**
  * Retrieve a scored array of related post IDs based on related taxonomy parameters.
@@ -127,8 +101,6 @@ add_action('wp_loaded', 'pw_test_related_posts');
  * 							Example. [{ post_id:42, score:3 },{ post_id:82, score:2 }]
  */
 function pw_related_posts_by_taxonomy( $vars ){
-
-	//pw_set_microtimer( 'pw_related_posts_by_taxonomy' );
 
 	///// DEFAULTS /////
 	global $post;
@@ -248,16 +220,23 @@ function pw_related_posts_by_taxonomy( $vars ){
 			'value_weight'	=>	$taxonomy_weight
 			));
 
-		//pw_log( "TAX POSTS SCORED : " . $tax . " : " . json_encode($posts_scored[$tax]) );
-
 	}
 
 	/// MERGE SCORES ///
+	// Merge the scores from results from various taxonomies
 	$scores_to_merge = array();
 	foreach($posts_scored as $tax => $scored_posts_array ){
 		$scores_to_merge[] = $scored_posts_array;
 	}
-	$posts = pw_merge_score_values( $scores_to_merge, 'post_id' );
+	// If there are multiple arrays, merge them
+	if( count($scores_to_merge) > 1 )
+		$posts = pw_merge_score_values( $scores_to_merge, 'post_id' );
+	// If there is only one, use it
+	elseif( count( $scores_to_merge ) == 1 )
+		$posts = $scores_to_merge[0];
+	// Otherwise return empty
+	else
+		return array();
 
 	/// ORDER BY : SCORE ///
 	if( $vars['order_by'] == 'score' )
@@ -279,9 +258,6 @@ function pw_related_posts_by_taxonomy( $vars ){
 		}
 		$posts = $post_ids;
 	}
-
-	//pw_log_microtimer( 'pw_related_posts_by_taxonomy' );
-	//pw_log( 'ORDERED POSTS : ' . json_encode( $posts, JSON_PRETTY_PRINT ) );
 
 	return $posts;
 

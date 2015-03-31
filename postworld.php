@@ -267,6 +267,9 @@ include 'php/postworld_embed.php';
 ////// BUDDYPRESS //////
 include 'php/postworld_buddypress.php';
 
+////// DEV //////
+include 'php/postworld_dev.php';
+
 ////// ADMIN //////
 include 'admin/postworld_admin.php';
 
