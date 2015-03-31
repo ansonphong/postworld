@@ -1272,6 +1272,26 @@ function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 }
 
 
+function pw_array_order_by(){
+	// Orders items in an array by key
+	// $ordered = pw_array_order_by( $items, $order_key, SORT_DESC / SORT_ASC )
+
+	$args = func_get_args();
+	$data = array_shift($args);
+	foreach ($args as $n => $field) {
+		if (is_string($field)) {
+			$tmp = array();
+			foreach ($data as $key => $row)
+				$tmp[$key] = $row[$field];
+			$args[$n] = $tmp;
+			}
+	}
+	$args[] = &$data;
+	call_user_func_array('array_multisort', $args);
+	return array_pop($args);
+}
+
+
 function pw_reset_less_php_cache(){
 	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
 	$file = fopen( $ghost_less_file ,"w" );
