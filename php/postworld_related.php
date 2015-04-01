@@ -3,7 +3,7 @@
  * Retrieve related post IDs of related posts, based a list of Related By Clauses.
  *
  * @since Postworld 1.89
- * @uses pw_query()
+ * @uses pw_query(), pw_related_posts_by_taxonomy()
  *
  * @param string $var       Ann array of variables
  * @return array 			Post IDs
@@ -15,12 +15,59 @@ function pw_related_query( $vars = array() ){
 	///// SET DEFAULTS /////
 	$defaultVars = array(
 		'post_id' 		=>	'this_post',
-		'number'		=>	10,
-		'depth'			=>	1000,
-		'order_by'		=>	'relevance',
-		'cache'			=>	true,
-		'query'			=>	array( 'post_type' => 'post' ),
-		'related_by'	=>	array(),	// An array of objects representing Related By Clauses
+		'number'		=>	10,				// The number of items to return
+		'depth'			=>	1000,			// The depth at which to query
+		'order_by'		=>	'score',		// By what to order items
+		'order'			=>	'DESC',			// How to order items
+		'output'		=>	'ids',			// Item contents, values: ids
+		'cache'			=>	true,			// Whether or not to use Postworld DB cache
+		'query'			=>	array(			// Query vars to filter posts by
+			'post_type' => 'any'
+			),
+		'related_by'	=>	array( 			// An array of arrays representing Related By Clauses
+
+			// TYPE : TAXONOMY
+			array(
+				'type' => 'taxonomy',
+				'weight' => 1,
+				'taxonomies'	=>	array(
+					array(
+						'taxonomy' 	=> 	'post_tag',
+						'weight'	=>	1.5
+						),
+					array(
+						'taxonomy' 	=> 	'category',
+						'weight'	=>	1
+						)
+					)
+				),
+
+			// TYPE : FIELD (IN DEVELOPMENT)
+			array(
+				'type'		=>	'field',
+				'weight'	=>	1,
+				'fields'	=>	array(
+					array(
+						'field' => 'post_title',
+						'weight' => 2
+						),
+					array(
+						'field' => 'post_excerpt',
+						'weight' => 1.5
+						),
+					array(
+						'field' => 'post_parent',
+						'weight' => 1.25
+						),
+					array(
+						'field' => 'post_author',
+						'weight' => 1
+						)
+					)
+				),
+
+
+			),
 		);
 	$vars = array_replace( $defaultVars, $vars );
 
@@ -32,11 +79,14 @@ function pw_related_query( $vars = array() ){
 
 	///// CACHING LAYER /////
 
-
 	///// POSTS /////
 	// An array of objects, with the following structure
 	// [{ post_id:42, score:3 },{ post_id:82, score:2 }]
 	$posts = array();
+	
+	// Posts from respective clauses will be stored in here as an array of arrays
+	// Before being merged together
+	$all_clause_posts = array();
 
 	///// ITERATE THROUGH EACH CLAUSE /////
 	foreach( $vars['related_by'] as $clause ){
@@ -47,45 +97,82 @@ function pw_related_query( $vars = array() ){
 			'post_id'	=>	$vars['post_id'],
 			'depth'		=>	$vars['depth'],
 			'query'		=>	$vars['query'],
+			'number'	=>	0,
 			'order_by'	=>	'none',
 			);
 
 		/// CLAUSE TYPE : SWITCH ///
 		switch( $clause['type'] ){
+
+			// TAXONOMY
 			case 'taxonomy':
 				$by_vars['taxonomies'] = $clause['taxonomies'];
-				$get_posts = pw_related_posts_by_taxonomy( $by_vars );
+				$clause_posts = pw_related_posts_by_taxonomy( $by_vars );
 				break;
-			/*
+
+			// FIELDS (IN DEVELOPMENT)
 			case 'fields':
-				$by_vars['fields'] = $clause['fields'];
-				$get_posts = pw_related_posts_by_field( $by_vars );
+				continue;
+				//$by_vars['fields'] = $clause['fields'];
+				//$clause_posts = pw_related_posts_by_field( $by_vars );
 				break;
-			*/
+			
 		}
 
 		/// CLAUSE WEIGHT : DEFAULT ///
-		if( !isset( $clause['weight'] ) )
+		if( !isset( $clause['weight'] ) || !is_numeric( $clause['weight'] ) )
 			$clause['weight'] = 1;
 		else
-			$clause['weight'] = (double) $clause['weight'];
+			$clause['weight'] = (float) $clause['weight'];
 
 		/// CLAUSE WEIGHT : APPLY ///
+		if( $clause['weight'] !== 1 )
+			$clause_posts = pw_multiply_scores( $clause_posts, $clause['weight'] );
 
-
-		/// CLAUSE POSTS : MERGE ///
-		// Merge the clause posts with the primary posts array
-		// Iteratively merge by post ids, adding their scores
-
+		/// ADD TO ALL ///
+		$all_clause_posts[] = $clause_posts;
 
 	}
 
+	/// CLAUSE POSTS : MERGE ///
+	// Merge all the clause posts arrays
+	if( count( $all_clause_posts ) > 1 )
+		$posts = pw_merge_score_values( $all_clause_posts, 'post_id' );
+	else if( count( $all_clause_posts ) == 1 )
+		$posts = $all_clause_posts[0];
+	else
+		return array();
 
-	///// ORDER POSTS /////
-	// Order the posts by the specified ordering method
+	/// ORDER BY : SCORE ///
+	if( $vars['order_by'] == 'score' )
+		$posts = pw_order_by_score( $posts );
+
+	/// ORDER : ASCENDING ///
+	if( $vars['order'] == 'ASC' )
+		$posts = array_reverse($posts);
+
+	/// NUMBER : MAX RETURN ITEMS ///
+	if( $vars['number'] != 0 && is_numeric($vars['number']) ){
+		$number = (int) $vars['number'];
+		// Get only the first number of items
+		$posts = array_slice( $posts, 0, $number );
+	}
+
+	/// OUTPUT : IDS /////
+	// Extract just the IDs
+	if( $vars['output'] === 'ids' ){
+		$post_ids = array();
+		foreach( $posts as $post ){
+			$post_ids[] = $post['post_id'];			
+		}
+		$posts = $post_ids;
+	}
+
 
 	///// CACHING LAYER /////
 
+
+	return $posts;
 
 }
 
@@ -241,6 +328,10 @@ function pw_related_posts_by_taxonomy( $vars ){
 	/// ORDER BY : SCORE ///
 	if( $vars['order_by'] == 'score' )
 		$posts = pw_order_by_score( $posts );
+
+	/// ORDER : ASCENDING ///
+	if( $vars['order'] == 'ASC' )
+		$posts = array_reverse($posts);
 
 	/// NUMBER : MAX RETURN ITEMS ///
 	if( $vars['number'] != 0 && is_numeric($vars['number']) ){
@@ -422,7 +513,38 @@ function pw_order_by_score( $items, $score_key = 'score' ){
 	return $sorted;
 }
 
-//function pw_multiply_score_values( $arr, $score_key = 'score' ){}
+
+
+/**
+ * Multiplies the score values of a scored list
+ *
+ * @since Postworld 1.89
+ *
+ * @param string $items       	Array of associative arrays
+ * @param float $multiplier		A number to muliply the scores by
+ * @param string $score_key     The score key identify the score by
+ * @return array 				Re-scorred array of associative arrays
+ * 								[{id:42,score:8},{id:87,score:3},{id:34,score:1}]
+ */
+function pw_multiply_scores( $items, $multiplier = 1, $score_key = 'score' ){
+
+	$multiplier = (float) $multiplier;
+
+	if( $multiplier === 1 )
+		return $items;
+
+	$item_count = count($items);
+
+	if( $item_count < 1 )
+		return array();
+
+	for( $i=0; $i < $item_count; $i++ ){
+		$item[$i][$score_key] = $item[$i][$score_key] * $multiplier;
+	}
+
+	return $items;
+
+}
 
 /**
  * Retrieve a scored array of related post IDs based on related field parameters.
