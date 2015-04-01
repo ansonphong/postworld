@@ -77,7 +77,14 @@ function pw_related_query( $vars = array() ){
 	if( $vars['post_id'] === null )
 		return false;
 
+
 	///// CACHING LAYER /////
+	$cache_hash = hash( 'sha256', json_encode( $vars ) );
+	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+	if( !empty( $get_cache ) ){
+		return json_decode($get_cache['cache_content'], true);
+	}
+
 
 	///// POSTS /////
 	// An array of objects, with the following structure
@@ -88,7 +95,7 @@ function pw_related_query( $vars = array() ){
 	// Before being merged together
 	$all_clause_posts = array();
 
-	///// ITERATE THROUGH EACH CLAUSE /////
+	////////// ITERATE THROUGH EACH CLAUSE //////////
 	foreach( $vars['related_by'] as $clause ){
 
 		/// CONSTRUCT SUBFUNCTION VARIABLES ///
@@ -134,7 +141,7 @@ function pw_related_query( $vars = array() ){
 
 	}
 
-	/// CLAUSE POSTS : MERGE ///
+	///// CLAUSE POSTS : MERGE /////
 	// Merge all the clause posts arrays
 	if( count( $all_clause_posts ) > 1 )
 		$posts = pw_merge_score_values( $all_clause_posts, 'post_id' );
@@ -142,6 +149,7 @@ function pw_related_query( $vars = array() ){
 		$posts = $all_clause_posts[0];
 	else
 		return array();
+
 
 	/// ORDER BY : SCORE ///
 	if( $vars['order_by'] == 'score' )
@@ -152,10 +160,10 @@ function pw_related_query( $vars = array() ){
 		$posts = array_reverse($posts);
 
 	/// NUMBER : MAX RETURN ITEMS ///
-	if( $vars['number'] != 0 && is_numeric($vars['number']) ){
+	if( $vars['number'] !== 0 ){
 		$number = (int) $vars['number'];
 		// Get only the first number of items
-		$posts = array_slice( $posts, 0, $number );
+		$posts = array_slice( $posts, 0, $vars['number'] );
 	}
 
 	/// OUTPUT : IDS /////
@@ -170,7 +178,11 @@ function pw_related_query( $vars = array() ){
 
 
 	///// CACHING LAYER /////
-
+	pw_set_cache( array(
+		'cache_type'	=>	'related-query',
+		'cache_hash' 	=> 	$cache_hash,
+		'cache_content'	=>	json_encode($posts),
+		));
 
 	return $posts;
 
@@ -213,6 +225,13 @@ function pw_related_posts_by_taxonomy( $vars ){
 			),
 		);
 	$vars = array_replace( $defaultVars, $vars );
+
+	///// CACHING LAYER /////
+	$cache_hash = hash( 'sha256', json_encode( $vars ) );
+	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+	if( !empty( $get_cache ) ){
+		return json_decode($get_cache['cache_content'], true);
+	}
 
 	///// GET POST TERMS /////
 	// Generates an associative array with the post's terms
@@ -349,6 +368,13 @@ function pw_related_posts_by_taxonomy( $vars ){
 		}
 		$posts = $post_ids;
 	}
+
+	///// CACHING LAYER /////
+	pw_set_cache( array(
+		'cache_type'	=>	'related-query-taxonomy',
+		'cache_hash' 	=> 	$cache_hash,
+		'cache_content'	=>	json_encode($posts),
+		));
 
 	return $posts;
 
