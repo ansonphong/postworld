@@ -34,10 +34,15 @@
 				switch( type ){
 					case 'taxonomy':
 						var newClause = {
-							id:$_.randomString(8,['numbers','lowercase']),
+							//id:$_.randomString(8,['numbers','lowercase']),
 							type:'taxonomy',
 							weight:1,
-							taxonomies:[]
+							taxonomies:[
+								{
+									taxonomy: 'post_tag',
+									weight:1
+								}
+							]
 						};
 						break;
 				}
@@ -50,7 +55,7 @@
 				$scope.settings.related_by = _.reject(
 					$scope.settings.related_by,
 					function( thisClause ){
-						return thisClause.id == clause.id
+						return thisClause == clause
 					}
 				);
 			}
@@ -76,6 +81,18 @@
 				clause[subClauseKey].push( defaultSubClause );
 			}
 
+			$scope.removeSubClause = function( clause, subClause ){
+				var subClauseKey = $scope.getSubClauseKey(clause);
+
+				clause[subClauseKey] = _.reject(
+					clause[subClauseKey],
+					function( thisSubclause ){
+						return thisSubclause == subClause
+					}
+				);
+
+			}
+
 			$scope.getSubClauseKey = function( clause ){
 				switch( clause.type ){
 					case 'taxonomy':
@@ -96,7 +113,8 @@
 
 <div
 	id="<?php echo $instance ?>"
-	class="postworld">
+	class="postworld"
+	pw-globals="pw">
 	<div
 		class="postworld-widget postworld-widget-related-posts"
 		pw-feed-options
@@ -168,50 +186,58 @@
 			class="button button-primary"
 			ng-click="addRelatedByClause('taxonomy')">
 			<i class="pwi-plus-thin"></i>
-			Taxonomy
+			Taxonomies
 		</button>
 
-		<hr class="thin">
-
 		<!--///// RELATED BY CLAUSES /////-->
-		<div ng-repeat="clause in settings.related_by">
+		<div ng-repeat="clause in settings.related_by" class="well">
 
-			<button
-				type="button"
-				class="button float-right"
-				ng-click="removeRelatedByClause(clause)">
-				<i class="pwi-close-thin"></i>
-			</button>
+			<div class="float-right relative" style="top:-5px; left:5px;">
+				<button
+					type="button"
+					class="button"
+					ng-click="addSubClause(clause)">
+					<i class="pwi-plus-thin"></i>
+					Sub Clause
+				</button>
+				<button
+					type="button"
+					class="button"
+					ng-click="removeRelatedByClause(clause)">
+					<i class="pwi-close-thin"></i>
+				</button>
+			</div>
 
-			<button
-				type="button"
-				class="button float-right"
-				ng-click="addSubClause(clause)">
-				<i class="pwi-plus-thin"></i>
-				Sub Clause
-			</button>
-
-			<label class="input">
-				<b>{{ clause.type }}</b>
-			</label>
+			<h3>
+				<i class="pwi-circle-thin"></i> <b>{{ clause.type }}</b>
+			</h3>
 
 			<div class="clearfix"></div>
 
 			<!--/// SUB CLAUSES ///-->
-			<div ng-repeat="subClause in clause[getSubClauseKey(clause)]">
-				<hr class="thin">
+			<div
+				ng-repeat="subClause in clause[getSubClauseKey(clause)]"
+				class="well relative">
 
 				<div class="row gutter-sm">
 					<div class="col-sm-6">
 						<label class="inner">Taxonomy</label>
 						<select
-							type="number"
+							id="query-post_type"
 							class="labeled"
+							ng-options="value.name as value.labels.singular_name for (key, value) in pw.taxonomies"
 							ng-model="subClause.taxonomy">
-							<option value="test">Test</option>
 						</select>
+
 					</div>
-					<div class="col-sm-6">
+					<div class="col-sm-6 relative">
+						<button
+							type="button"
+							class="button inner inner-right"
+							style="z-index:2;right:4px;"
+							ng-click="removeSubClause(clause,subClause)">
+							<i class="pwi-close-thin"></i>
+						</button>
 						<label class="inner">Weight</label>
 						<input
 							type="number"
@@ -223,15 +249,11 @@
 				
 			</div>
 
-			<hr class="thin">
-
 		</div>
 
 		<hr>
 
 		<pre><code>{{ settings | json }}</code></pre>
-
-		<hr>
 
 		<!-- HIDDEN INPUTS -->
 		<input

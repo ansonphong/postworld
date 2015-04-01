@@ -8,9 +8,13 @@
 ////////////////////// RELATED POSTS //////////////////////*/?>
 <?php
 	global $post;
-	if( _get( $OPTIONS, 'user_select' ) == 'current_author' )
-		$OPTIONS['user_id'] = $post->post_author;
-
-	$template = pw_get_user_widget_template( $OPTIONS['view'] );
-	echo pw_ob_include( $template, $OPTIONS );
+	$vars = $options['settings'];
+	$vars['post_id'] = $post->ID;
 ?>
+
+<pre>
+- Add view option
+- Feed into PW live feed variables `query.related_query`, to load asyncronously
+</pre>
+
+<pre><code><?php echo json_encode( $options, JSON_PRETTY_PRINT); ?></code></pre>

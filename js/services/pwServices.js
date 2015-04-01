@@ -46,13 +46,10 @@ postworld.factory( '$pw',
     	site: $window.pwSiteGlobals.site,
     	controls: $window.pwSiteGlobals.controls,
     	fields: $window.pwSiteGlobals.fields,
-
     	modules: $window.pw.modules,
-
     	iconsets: $window.pw.iconsets,
-
     	postTypes: $window.pwSiteGlobals.post_types,
-
+    	taxonomies: $window.pwSiteGlobals.taxonomies,
     	options: $window.pw.options,
 
     	// Get the admin data, will only be present if is_admin()
@@ -988,17 +985,17 @@ postworld.service('pwPostOptions',
 		function( $window, $log, $pwData, $_ ) {
 
 	return{
-		taxTerms: function( $scope, tax_obj ){ // , tax_obj
+		taxTerms: function( $scope, taxObj ){
 
-			if ( typeof tax_obj === 'undefined' )
-				var tax_obj = "tax_terms";
+			if ( typeof taxObj === 'undefined' )
+				taxObj = "tax_terms";
 
 			var args = $window.pwSiteGlobals.post_options.taxonomy_outline;
 			$pwData.taxonomies_outline_mixed( args ).then(
 				// Success
 				function(response) {
-					$log.debug('pwData.taxonomies_outline_mixed : RESPONSE : ', response); 
-					$scope[tax_obj] = response.data;
+					$log.debug('pwPostOptions.taxTerms : RESPONSE : ', response); 
+					$scope[taxObj] = response.data;
 				},
 				// Failure
 				function(response) {

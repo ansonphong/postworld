@@ -565,6 +565,10 @@ function pwSiteGlobals_include(){
 	///// POST TYPES /////
 	$pwSiteGlobals["post_types"] = pw_get_post_types();
 
+	///// TAXONOMIES /////
+	$pwSiteGlobals["taxonomies"] = pw_get_taxonomies( array(  ),'objects');
+
+	///// FIELD MODEL /////
 	$pwSiteGlobals["fields"] = pw_field_model();
 
 	///// PRINT JAVASCRIPT /////

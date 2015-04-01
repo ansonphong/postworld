@@ -3,7 +3,7 @@
 function pw_get_taxonomies( $args = array(), $output = 'names', $operator = 'and'  ){
 
 	$default_args = array(
-		'_builtin'	=>	true,
+		//'_builtin'	=>	false,
 		'public'	=>	true,
 		);
 
@@ -12,18 +12,27 @@ function pw_get_taxonomies( $args = array(), $output = 'names', $operator = 'and
 	// Gives a proper output of get_taxonomies names
 	$taxonomies = get_taxonomies( $args, $output, $operator );
 
-	
-	if( $output == 'names' ){
-		// Process the names into a proper array
-		// Because for unknown reasons, the WP native function
-		// Outputs an associative array with the same values and keys
-		// Which doesn't make any sense, so this will fix that
-		$new_taxonomies = array();
-		foreach( $taxonomies as $key => $value ){
-			$new_taxonomies[] = $key;
-		}
-		$taxonomies = $new_taxonomies;
+	///// OUTPUT /////
+	switch( $output ){
+
+		case 'names':
+			// Process the names into a proper array
+			// Because for unknown reasons, the WP native function
+			// Outputs an associative array with the same values and keys
+			// Which doesn't make any sense, so this will fix that
+			$new_taxonomies = array();
+			foreach( $taxonomies as $key => $value ){
+				$new_taxonomies[] = $key;
+			}
+			$taxonomies = $new_taxonomies;
+			break;
+
+		case 'objects':
+			break;
+
 	}
+
+	pw_log( $taxonomies );
 
 	return $taxonomies;
 

@@ -3,7 +3,7 @@
 
 function pw_test_related_posts(){
 	
-	
+	/*
 	$test1 = pw_related_query(
 		array(
 			'post_id'	=>	250803,
@@ -30,7 +30,7 @@ function pw_test_related_posts(){
 
 
 	pw_log( 'pw_related_query : ' . json_encode( $test1, JSON_PRETTY_PRINT) );
-	
+	*/
 
 	/*
 	$test2 = pw_related_posts_by_taxonomy( array(

@@ -28,16 +28,16 @@ class pw_related_posts_widget extends WP_Widget {
 	 * @param array $args     Widget arguments.
 	 * @param array $OPTIONS Saved values from database.
 	 */
-	public function widget( $args, $OPTIONS ) {
+	public function widget( $args, $options ) {
 		extract( $args );
 		
-		$OPTIONS = apply_filters( 'pw_related_posts_widget', $OPTIONS );
+		$options = apply_filters( 'pw_related_posts_widget', $options );
 
 		////////// DRAW PAGES WIDGET //////////
 		// SHOW TITLE (?)
 			echo $before_widget;
-			if ( !empty( $OPTIONS['title'] ) && $OPTIONS['show_title'] == 1 )
-				echo $before_title . $OPTIONS['title'] . $after_title;
+			if ( !empty( $options['title'] ) && $options['show_title'] == 1 )
+				echo $before_title . $options['title'] . $after_title;
 
 			////////// POST SHARE REPORT VIEW //////////
 			///// RENDER PAGE WIDGET /////
@@ -51,21 +51,21 @@ class pw_related_posts_widget extends WP_Widget {
 	/**
 	 * Sanitize widget form values as they are saved.
 	 * @see WP_Widget::update()
-	 * @param array $NEW_OPTIONS Values just sent to be saved.
-	 * @param array $OLD_OPTIONS Previously saved values from database.
+	 * @param array $options Values just sent to be saved.
+	 * @param array $old_options Previously saved values from database.
 	 * @return array Updated safe values to be saved.
 	 */
-	public function update( $OPTIONS, $OLD_OPTIONS ) {
-		$OPTIONS = apply_filters( 'pw_user_widget', $OPTIONS );
+	public function update( $options, $old_options ) {
+		$options = apply_filters( 'pw_user_widget', $options );
 
 		// SANITIZE FIELDS
-		$OPTIONS['title'] = strip_tags( $OPTIONS['title'] );
-		$OPTIONS['show_title'] = strip_tags( $OPTIONS['show_title'] );
+		$options['title'] = strip_tags( $options['title'] );
+		$options['show_title'] = strip_tags( $options['show_title'] );
 
 		// DECODE SETTINGS FROM JSON TO ARRAY
-		$OPTIONS['settings'] = json_decode( $OPTIONS['settings'], true); 
+		$options['settings'] = json_decode( $options['settings'], true); 
 
-		return $OPTIONS;
+		return $options;
 	}
 
 	/**
@@ -75,14 +75,12 @@ class pw_related_posts_widget extends WP_Widget {
 	 */
 	public function form( $options ) {
 		$options = apply_filters( 'pw_related_posts_widget', $options );
-
 		include 'related-posts-admin.php';
-
 	}
 
 } 
-
 add_action( 'widgets_init', create_function( '', 'register_widget( "pw_related_posts_widget" );' ) );
+
 
 function pw_related_posts_widget_filter( $options ){
 	///// SET DEFAULT VALUES /////
