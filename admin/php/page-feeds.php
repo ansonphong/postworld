@@ -76,6 +76,7 @@
 	<div
 		pw-admin
 		pw-admin-feeds
+		pw-feed-options
 		ng-controller="pwFeedsDataCtrl"
 		ng-cloak>
 

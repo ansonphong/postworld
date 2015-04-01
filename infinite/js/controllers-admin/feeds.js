@@ -6,6 +6,90 @@
                           
 /////////////////////////*/
 
+postworldAdmin.directive( 'pwFeedOptions',
+	[ 'pwData', '_', 'pwPostOptions',
+	function( $pwData, $_, $pwPostOptions ){
+    return { 
+        link:function( $scope, element, attrs ){
+        	// Add Module Class
+        	element.addClass('pw-feed-options');
+
+
+        	///// FEED OPTIONS /////
+			$scope.feedOptions = {
+				view: $pwPostOptions.postView(),
+				views:{
+					grid:{
+						columns:[1,2,3,4,5,6],
+					}
+				},
+				query:{
+					post_type: $pwPostOptions.postType(),
+					post_status: $pwPostOptions.postStatus(),
+					orderby: $pwPostOptions.orderBy(),
+					order: $pwPostOptions.order(),
+					event_filter: $pwPostOptions.eventFilter(),
+					post_parent_from:[
+						{
+							value: 'top_level',
+							name: 'Top Level',
+							description: 'Show top level posts, with post_parent : 0.'
+						},
+						{
+							value: 'this_post_id',
+							name: 'This Post (Show Children)',
+							description: 'Show children of the current post, derived from : $post->ID global.'
+						},
+						{
+							value: 'this_post_parent',
+							name: 'This Post Parent (Show Siblings)',
+							description: 'Show siblings of the current post, derived from : $post->post_parent global.'
+						},
+						{
+							value: 'post_id',
+							name: 'Specific Post',
+							description: 'Select a specific post.'
+						},
+					],
+					exclude_posts_from:[
+						{
+							value: 'this_post_id',
+							name: 'This Post',
+							description: 'Exclude the current post',
+						},
+					],
+					include_posts_from:[
+						{
+							value: 'this_post_id',
+							name: 'This Post',
+							description: 'Include the current post',
+						},
+						{
+							value: 'this_post_parent',
+							name: 'This Post Parent',
+							description: 'Include the current posts parent',
+						},
+					],
+					author_from:[
+						{
+							value:'this_author',
+							name: 'This Author',
+							description: 'Include posts by the current post\'s author.',
+						},
+						{
+							value:'author_id',
+							name: 'Specific Author',
+							description: 'Select a specific author.',
+						},
+					],
+				},
+			};
+
+
+        }
+    };
+}]);
+
 postworldAdmin.directive( 'pwAdminFeeds', [ function(){
     return { 
         controller: 'pwAdminFeedsCtrl',
@@ -21,76 +105,6 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.view = 'settings';
-
-	///// FEED OPTIONS /////
-	$scope.feedOptions = {
-		view: $pwPostOptions.postView(),
-		views:{
-			grid:{
-				columns:[1,2,3,4,5,6],
-			}
-		},
-		query:{
-			post_type: $pwPostOptions.postType(),
-			post_status: $pwPostOptions.postStatus(),
-			orderby: $pwPostOptions.orderBy(),
-			order: $pwPostOptions.order(),
-			event_filter: $pwPostOptions.eventFilter(),
-			post_parent_from:[
-				{
-					value: 'top_level',
-					name: 'Top Level',
-					description: 'Show top level posts, with post_parent : 0.'
-				},
-				{
-					value: 'this_post_id',
-					name: 'This Post (Show Children)',
-					description: 'Show children of the current post, derived from : $post->ID global.'
-				},
-				{
-					value: 'this_post_parent',
-					name: 'This Post Parent (Show Siblings)',
-					description: 'Show siblings of the current post, derived from : $post->post_parent global.'
-				},
-				{
-					value: 'post_id',
-					name: 'Specific Post',
-					description: 'Select a specific post.'
-				},
-			],
-			exclude_posts_from:[
-				{
-					value: 'this_post_id',
-					name: 'This Post',
-					description: 'Exclude the current post',
-				},
-			],
-			include_posts_from:[
-				{
-					value: 'this_post_id',
-					name: 'This Post',
-					description: 'Include the current post',
-				},
-				{
-					value: 'this_post_parent',
-					name: 'This Post Parent',
-					description: 'Include the current posts parent',
-				},
-			],
-			author_from:[
-				{
-					value:'this_author',
-					name: 'This Author',
-					description: 'Include posts by the current post\'s author.',
-				},
-				{
-					value:'author_id',
-					name: 'Specific Author',
-					description: 'Select a specific author.',
-				},
-			],
-		},
-	};
 
 	////////// FUNCTIONS //////////
 	$scope.newFeed = function(){
