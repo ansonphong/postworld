@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.89,
+		'version'		=>	1.9,
 		'db_version'	=>	1.14,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',

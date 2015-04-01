@@ -2,7 +2,7 @@
 /**
  * Retrieve related post IDs of related posts, based a list of Related By Clauses.
  *
- * @since Postworld 1.89
+ * @since Postworld 1.9
  * @uses pw_query(), pw_related_posts_by_taxonomy()
  *
  * @param string $var       Ann array of variables
@@ -192,7 +192,7 @@ function pw_related_query( $vars = array() ){
 /**
  * Retrieve a scored array of related post IDs based on related taxonomy parameters.
  *
- * @since Postworld 1.89
+ * @since Postworld 1.9
  * @uses pw_query()
  *
  * @param string $var       An array of variables
@@ -384,7 +384,7 @@ function pw_related_posts_by_taxonomy( $vars ){
 /**
  * Boil down arrays of values into an array of scored values
  *
- * @since Postworld 1.89
+ * @since Postworld 1.9
  *
  * @param string $arr       	A 1D array of values
  * @param string $value_key     The key to label the values in the associative array
@@ -471,7 +471,7 @@ function pw_score_values( $vars = array() ){
 /**
  * Merges an array of scored value arrays on the value key, into a single array
  *
- * @since Postworld 1.89
+ * @since Postworld 1.9
  *
  * @param string $arrays       	An array of scored item arrays
  * @param string $value_key 	The key to label the values in the associative array
@@ -527,7 +527,7 @@ function pw_merge_score_values( $arrays, $value_key = 'id', $score_key = 'score'
 /**
  * Orders an array of scored items by score
  *
- * @since Postworld 1.89
+ * @since Postworld 1.9
  *
  * @param string $items       	Array of associative arrays
  * @param string $score_key     The score key to order the associative arrays by
@@ -544,7 +544,7 @@ function pw_order_by_score( $items, $score_key = 'score' ){
 /**
  * Multiplies the score values of a scored list
  *
- * @since Postworld 1.89
+ * @since Postworld 1.9
  *
  * @param string $items       	Array of associative arrays
  * @param float $multiplier		A number to muliply the scores by
@@ -575,7 +575,7 @@ function pw_multiply_scores( $items, $multiplier = 1, $score_key = 'score' ){
 /**
  * Retrieve a scored array of related post IDs based on related field parameters.
  *
- * @since Postworld 1.89
+ * @since Postworld 1.9
  * @uses pw_query()
  *
  * @param string $var       Ann array of variables
