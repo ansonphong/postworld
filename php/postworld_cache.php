@@ -773,24 +773,16 @@ function pw_cache_post_shares( $post_id ){
 	return $total_shares;
 }
 
-
-
-////////////////// USER SHARES /////////////////////////
+/**
+ * Calculates the total number of shares relating to a given user
+ * @param $post_id integer
+ * @param $mode string (optional) Options:
+ * 			-'both' (default) : Return both incoming and outgoing
+ *			-'incoming' : Return shares attributed to the user's posts
+ *			-'outgoing' : Return shares that the user has initiated
+ */
 function pw_calculate_user_shares( $user_id, $mode='both' ){
-	/*
-	Calculates the total number of shares relating to a given user
-	
-	
-	 * Parameters
-	-$post_id : integer
-	-$mode : string (optional)
-	
-	
-	 * Options :
-	-both (default) : Return both incoming and outgoing
-	-incoming : Return shares attributed to the user's posts
-	-outgoing : Return shares that the user has initiated
-	
+	/*	
 	 * Process
 	-Lookup the given user_id in the Shares table
 	-Modes :
@@ -799,7 +791,6 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	-Add up (SUM) the total number of the shares column attributed to the user, according to $mode
 	
 	 * return : Array (number of shares)
-	
 	array(
 	    'incoming' => {{integer}},
 	    'outgoing' => {{integer}}
