@@ -155,10 +155,10 @@ function pw_cache_user_posts_points ( $user_id ){
 	return pw_calculate_user_posts_points( $user_id );
 }
 
-///////////// COMMNET POINTS ////////////////////
+///////////// COMMENT POINTS ////////////////////
 
-/*Later*/
 function pw_get_user_comments_points ( $user_id ){
+ 	// IN DEV
 	/*• Get the number of points voted to comments authored by the given user
 	  • Get cached points of user from wp_postworld_user_meta table comment_points column
 	return : integer (number of points)*/
@@ -166,7 +166,7 @@ function pw_get_user_comments_points ( $user_id ){
 	global $wpdb;
 	$wpdb -> show_errors();
 	
-	$query ="select comment_points from ".$wpdb->pw_prefix.'user_meta'." where user_id=".$user_id;
+	$query ="SELECT comment_points from ".$wpdb->pw_prefix.'user_meta'." WHERE user_id=".$user_id;
 	$total_points = $wpdb -> get_var($query);
 	
 	if($total_points==null)

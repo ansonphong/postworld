@@ -789,7 +789,7 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	 -For incoming : Match to author_id column in Shares table
 	 -For outgoing : Match to user_id column in Shares table
 	-Add up (SUM) the total number of the shares column attributed to the user, according to $mode
-	
+
 	 * return : Array (number of shares)
 	array(
 	    'incoming' => {{integer}},
@@ -802,7 +802,6 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	$wpdb -> show_errors();
 	if($mode =='outgoing' || $mode=='both'){
 		$user_share_report_outgoing = pw_user_share_report_outgoing($user_id);
-		//print_r($user_share_report_outgoing);
 		$outgoing = 0;
 		for ( $i=0; $i < count($user_share_report_outgoing) ; $i++) { 
 			$outgoing = $outgoing + $user_share_report_outgoing[$i]['shares'];
@@ -812,7 +811,6 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	
 	if($mode == 'incoming' || $mode =='both'){
 		$user_share_report_incoming = pw_user_share_report_incoming($user_id);
-		
 		$incoming = 0;
 		for ($i=0; $i <count($user_share_report_incoming) ; $i++) { 
 			$incoming=$incoming + $user_share_report_incoming[$i]['total_shares'];
@@ -841,14 +839,10 @@ function pw_cache_user_shares( $user_id, $mode ){
 	if(isset($user_shares['incoming'])) $total_user_shares = $user_shares['incoming'];
 	if(isset($user_shares['outgoing'])) $total_user_shares = $user_shares['outgoing'];
 	
-	//check if cached before and replace json values
+	// Check if cached before and replace json values
 	$old_shares = pw_get_user_shares($user_id);
-	//print_r($old_shares);
-	//print_r($user_shares);
-	
-	if(!is_null($old_shares))
-	{
-		
+
+	if(!is_null($old_shares)){
 		$old_shares = (array)json_decode($old_shares);
 		if($mode =='incoming' || $mode='both')
 			if(isset($user_shares['incoming'])) $old_shares['incoming'] = $user_shares['incoming'];
@@ -861,11 +855,9 @@ function pw_cache_user_shares( $user_id, $mode ){
 	}
 	//$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);
 	$query = "update $wpdb->pw_prefix"."user_meta set share_points=".$total_user_shares.",share_points_meta='".json_encode($old_shares)."' where user_id=".$user_id;
-	//print_r($query);
-	$wpdb->query($query);
-	
-	return $total_user_shares;
-	 
+	$wpdb->query( $wpdb->prepare($query) );
+
+	return $total_user_shares;	 
 }
 
 function pw_get_user_shares($user_id){
