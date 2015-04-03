@@ -27,25 +27,29 @@ postworld.directive('pwPostShareReport',
 		link: function( $scope, element, attrs ){
 
 			$scope.postShareReport = {};
-			$scope.shareReportLoading = true;
 			
-			var postId = ( $scope.shareReportPostId == null ) ?
-				$_.get( $pw, 'view.post.ID' ) :
-				$scope.shareReportPostId;
+			$scope.$watch( 'shareReportPostId', function( postId ){
 
-			if( !postId )
-				return false;
+				if( postId == null )
+					postId = $_.get( $pw, 'view.post.ID' );
 
-			$pwData.postShareReport( {post_id:postId} ).then(
-				function(response) {    
-					$scope.postShareReport = response.data;
-					$scope.shareReportLoading = false;
-				},
-				function(response) {
-					$scope.shareReportLoading = false;
-				}
-			);
-			
+				if( !postId )
+					return false;
+
+				$scope.shareReportLoading = true;
+
+				$pwData.postShareReport( {post_id:postId} ).then(
+					function(response) {    
+						$scope.postShareReport = response.data;
+						$scope.shareReportLoading = false;
+					},
+					function(response) {
+						$scope.shareReportLoading = false;
+					}
+				);
+
+			});
+
 		}
 
 	}
@@ -58,7 +62,7 @@ postworld.controller('userShareReportOutgoing',
 	['$scope','$window','$timeout','pwData', '_', '$pw',
 	function($scope, $window, $timeout, $pwData, $_, $pw ) {
 
-	$scope.postShareReport = {};
+	$scope.shareReportMetaOutgoing = {};
 
 	var userId = $_.get( $pw, 'view.displayed_user.user_id');
 
