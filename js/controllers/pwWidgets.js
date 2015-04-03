@@ -57,31 +57,59 @@ postworld.directive('pwPostShareReport',
 }]);
 
 
-///// POST SHARE REPORT /////
-postworld.controller('userShareReportOutgoing',
-	['$scope','$window','$timeout','pwData', '_', '$pw',
-	function($scope, $window, $timeout, $pwData, $_, $pw ) {
+/**
+* ///// USER SHARE REPORT : OUTGOING / INCOMING /////
+* Populates the scope with an outgoing user share report
+* showing posts which the given user has shared.
+*
+* @method pwPostShareReport
+* @return {object} Populates $scope.postShareReport
+*/
+postworld.directive('pwUserShareReport',
+	['$window','$timeout','pwData', '_', '$pw', '$log',
+	function($window, $timeout, $pwData, $_, $pw, $log ) {
+		return {
+			scope:{
+				pwUserShareReport:"=", // Array of strings deliniating which reports to get ['outgoing','incoming']
+				shareReportUserId:"=",
+				shareReportOutgoing:"=",
+				shareReportOutgoingLoading:"="
+			},
+			link: function( $scope, element, attrs ){
 
-	$scope.shareReportMetaOutgoing = {};
+				$scope.shareReportOutgoing = {};
 
-	var userId = $_.get( $pw, 'view.displayed_user.user_id');
+				$scope.$watch( 'shareReportUserId', function( userId ){
 
-	if( !userId )
-		return false;
+					if( userId === null || _.isUndefined( userId ) )
+						userId = $_.get( $pw, 'view.displayed_user.user_id');
 
-	var args = { "user_id" : userId };
+					if( !userId )
+						return false;
 
-	$pwData.userShareReportOutgoing( args ).then(
-		// Success
-		function(response) {    
-			$scope.shareReportMetaOutgoing = response.data;
-			$scope.status = "done";
-		},
-		// Failure
-		function(response) {
-			//alert('Error loading report.');
+					var args = { "user_id" : userId };
+
+					if( $_.inArray( 'outgoing', $scope.pwUserShareReport ) ){
+						$scope.shareReportOutgoingLoading = true;
+						$pwData.userShareReportOutgoing( args ).then(
+							// Success
+							function(response) {    
+								$scope.shareReportOutgoing = response.data;
+								$scope.shareReportOutgoingLoading = false;
+							},
+							// Failure
+							function(response) {
+								$scope.shareReportOutgoingLoading = false;
+							}
+						);
+					}
+
+
+				});
+
+			}
+
 		}
-	);
 
 
 }]);
