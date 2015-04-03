@@ -175,7 +175,8 @@ function pw_user_share_report_outgoing( $user_id ){
 	$wpdb->show_errors();
 	
 	$query = "select * from $wpdb->pw_prefix"."shares where user_id=".$user_id;
-	$results = $wpdb->get_results($query);
+	$results = $wpdb->get_results( $wpdb->prepare( $query ) );
+	
 	$output = array();
 	if($results){
 		foreach ($results as $row ) {
@@ -183,6 +184,10 @@ function pw_user_share_report_outgoing( $user_id ){
 			$output[]= $share_data;
 		}
 	}
+
+	// LOG
+	pw_log($output);
+
 	return $output;
 	
 }
@@ -202,7 +207,7 @@ function pw_user_share_report_meta ($user_share_report){
 				foreach( $shared_post["user_shares"] as $user ){ 
 					$user_share_single = $user;
 					$user_fields = array("display_name", "user_nicename", "user_profile_url");
-					$user_share_single["user"] = pw_get_userdata( $user["user_id"], $user_fields );
+					$user_share_single["user"] = pw_get_user( $user["user_id"], $user_fields );
 					array_push( $user_shares, $user_share_single );
 				}
 				// Over-write original user_shares object
@@ -221,26 +226,18 @@ function pw_user_share_report_meta ($user_share_report){
 function pw_post_share_report_meta ($post_share_report){
 
 	if (!empty($post_share_report)){
-		
 		// SETUP OBJECT
 		$post_share_report_meta = array();
-
 		// CYCLE THROUGH SHARES
 		foreach( $post_share_report as $share_user ){
-
 			// RETURN USER DATA
 			$user_fields = array("display_name", "user_nicename", "user_profile_url");
-			$share_user["user"] = pw_get_userdata( $share_user["user_id"], $user_fields );
-
+			$share_user["user"] = pw_get_user( $share_user["user_id"], $user_fields );
 			// PUSH TO NEW OBJECT
 			array_push( $post_share_report_meta, $share_user );
-
 		}
-
 	}
-
 	return $post_share_report_meta;
-
 }
 
 
@@ -322,15 +319,35 @@ function pw_user_share_report_incoming( $user_id ){
 	
 }
 
+
+/**
+ * Generate a report of all the shares relating to the specified post.
+ *
+ * @param string   $title    Optional. WordPress login Page title to display in the `<title>` element.
+ *                           Default 'Log In'.
+ * @param string   $message  Optional. Message to display in header. Default empty.
+ * @param WP_Error $wp_error Optional. The error to pass. Default empty.
+ * @return Array 
+ */
 function pw_post_share_report ( $post_id ){
+	
+	global $wpdb;
+	$wpdb->show_errors();
+	
+	// Collect data from Shares table on the given post
+	$query = "select * from $wpdb->pw_prefix"."shares where post_id=".$post_id;
+	$results = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$output = array();
+	if($results){
+		foreach ($results as $row ) {
+			$share_data = array('user_id'=>$row->user_id, 'shares'=>$row->shares, 'last_time'=>$row->last_time);
+			$output[]= $share_data;
+		}
+	}
+	return $output;
+
 	/*
-	 
-	Generate a report of all the shares relating to the current post
-	Process
-	
-	Collect data from Shares table on the given post
-	return : Array
-	
+	RETURN FORMAT :
 	array(
 	    array(
 	        'user_id' => '12',
@@ -345,20 +362,6 @@ function pw_post_share_report ( $post_id ){
 	    ...
 	    )
 	 */
-	
-	global $wpdb;
-	$wpdb->show_errors();
-	
-	$query = "select * from $wpdb->pw_prefix"."shares where post_id=".$post_id;
-	$results = $wpdb->get_results($query);
-	$output = array();
-	if($results){
-		foreach ($results as $row ) {
-			$share_data = array('user_id'=>$row->user_id, 'shares'=>$row->shares, 'last_time'=>$row->last_time);
-			$output[]= $share_data;
-		}
-	}
-	return $output;
 	
 }
 

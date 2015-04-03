@@ -181,6 +181,22 @@
 
 		<hr class="thin">
 
+
+		<label
+			for="select-view"
+			class="inner">
+			<?php ___('general.view'); ?>
+		</label>
+		<select
+			id="select-view"
+			class="labeled"
+			ng-options="value for value in pw.postViews"
+			ng-model="settings.view">
+		</select>
+
+
+		<hr class="thin">
+
 		<button
 			type="button"
 			class="button button-primary"

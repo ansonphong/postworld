@@ -1,6 +1,15 @@
 # Postworld // Related
 A series of functions for retreiving and caching posts related to the current post.
 
+## pw_construct_related_posts_from_query( *$vars* )
+- Contructs `pw_related_posts` format from `pw_query` format
+- Inheret `related_posts.number` from `query.posts_per_page`
+
+
+## pw_construct_query_from_related_posts
+- Contructs query vars from `pw_related_posts` format to `pw_query` format
+
+
 ## pw_related_posts( *$vars* )
 - Retreives posts related to a specified post
 

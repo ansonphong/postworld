@@ -10,11 +10,28 @@
 	global $post;
 	$vars = $options['settings'];
 	$vars['post_id'] = $post->ID;
+	$instance_id = 'pwRelatedPosts_' . pw_random_string(8);
+
+	//pw_log( $options );
+
+	if( empty( $vars['number'] ) )
+		$vars['number'] = 10;
+
+	$related_feed = array(
+		'preload' 			=> 	$vars['number'],
+		'load_increment'	=>	$vars['number'],
+		'view'	=>	array(
+			'current'	=>	$vars['view'],
+			),
+		'related_posts' => $vars
+		);
+
 ?>
+<script>
+pw.feeds['<?php echo $instance_id ?>'] = <?php echo json_encode( $related_feed, JSON_PRETTY_PRINT ) ?>;  
+</script>
+<div live-feed='<?php echo $instance_id ?>'></div>
 
-<pre>
-- Add view option
-- Feed into PW live feed variables `query.related_query`, to load asyncronously
-</pre>
-
-<pre><code><?php echo json_encode( $options, JSON_PRETTY_PRINT); ?></code></pre>
+<?php /*
+<pre><code><?php //echo json_encode( $options, JSON_PRETTY_PRINT); ?></code></pre>
+*/ ?>

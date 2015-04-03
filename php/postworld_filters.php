@@ -113,24 +113,18 @@ add_filter( 'pw_prepare_query', 'pw_prepare_query_author_from' );
 
 
 ///// PREPARE QUERY FILTER : RELATED /////
-function pw_prepare_query_related_query( $query ){
+function pw_prepare_query_related_posts( $query ){
 	global $post;
 	/// CHECK FOR RELATED QUERY FIELD ///
 	if( isset( $query['related_query'] ) && !empty($query['related_query']) ){
 
-		// Move the related query out of the query, and into a variable
-		$related_query = $query['related_query'];
-		unset($query['related_query']);
-
-		// Add the query into the `related_query.query` variable
-		$related_query['query'] = $query;
-
-		// Set the default `related_query.number` from `posts_per_page`
-		if( !isset( $related_query['number'] ) && isset( $query['posts_per_page'] ) )
-			$related_query['number'] = $query['posts_per_page'];
+		// Construct related posts vars from query
+		$related_vars = pw_construct_related_posts_from_query( $query );
+		if( $related_vars === false )
+			return $query;
 
 		// Get the related post IDs
-		$post_ids = pw_related_query( $related_query );
+		$post_ids = pw_related_posts( $related_vars );
 
 		// Add post IDs to `post__in` array
 		if( is_array( $query['post__in'] ) )
@@ -144,8 +138,7 @@ function pw_prepare_query_related_query( $query ){
 	}
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_related_query' );
-
+add_filter( 'pw_prepare_query', 'pw_prepare_query_related_posts' );
 
 
 ///// PREPARE QUERY FILTER : DEFAULT POST TYPE /////

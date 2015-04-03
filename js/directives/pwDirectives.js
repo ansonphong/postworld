@@ -235,7 +235,25 @@ postworld.directive('pwHref', function() {
 });
 
 
-///// POSTWORLD HREF DIRECTIVE /////
+///// POSTWORLD BACKGROUND IMAGE /////
+// Add a background image style to an element
+postworld.directive('pwBackgroundImage', function( $log ) {
+	return {
+		scope:{
+		  pwBackgroundImage:"="
+		},
+		link: function( $scope, element, attrs ) {
+			$scope.$watch( 'pwBackgroundImage', function(val){
+				element.css( 'background-image', 'url('+val+')' );
+			});
+		},
+	}
+});
+
+
+///// POSTWORLD EVAL DIRECTIVE /////
+// Evaluates a string as javascript at the time of loading
+// Works well for initializing third-party libraries
 postworld.directive('pwEval', function($timeout, $log) {
 	return {
 		scope:{

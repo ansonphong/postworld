@@ -123,6 +123,33 @@ function pw_current_context(){
 	return $context;
 }
 
+function pw_displayed_user(){
+	///// DISPLAYED USER /////
+	// Support for Buddypress Globals
+	if ( function_exists('bp_displayed_user_id') ){
+		$displayed_user_id = bp_displayed_user_id();
+		//$bp->displayed_user
+	} else{
+		global $post;
+		if( gettype( $post ) == 'object' )
+			$displayed_user_id = $post->post_author;
+	}
+
+	if ( isset($displayed_user_id) && !empty($displayed_user_id) ){
+		$displayed_userdata = get_userdata( $displayed_user_id );
+
+		return array(
+			"user_id" => $displayed_user_id,
+			"display_name" => $displayed_userdata->display_name,
+			"first_name" => $displayed_userdata->first_name,	
+			);
+
+	} else
+		return false;
+
+}
+
+
 function pw_current_view(){
 	// TODO : Refactor for efficientcy
 	global $wp_query;
@@ -134,6 +161,7 @@ function pw_current_view(){
 	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
 	$viewdata['protocol'] = $protocol;
 	$viewdata["context"] = pw_current_context();
+	$viewdata["displayed_user"] = pw_displayed_user();
 	$viewmeta = pw_get_view_meta( $viewdata["context"] );
 
 	$viewdata = array_replace_recursive( $viewdata, $viewmeta );

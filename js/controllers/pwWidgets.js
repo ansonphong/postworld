@@ -1,65 +1,83 @@
 'use strict';
-
-/*
- __        ___     _            _       
+/*_        ___     _            _       
  \ \      / (_) __| | __ _  ___| |_ ___ 
   \ \ /\ / /| |/ _` |/ _` |/ _ \ __/ __|
    \ V  V / | | (_| | (_| |  __/ |_\__ \
-    \_/\_/  |_|\__,_|\__, |\___|\__|___/
-                     |___/              
+	\_/\_/  |_|\__,_|\__, |\___|\__|___/
+					 |___/              
 //////////////// WIDGETS ////////////////*/
 
+/**
+* ///// POST SHARE REPORT /////
+* Populates the scope with a post share report
+* for the current contextual post.
+*
+* @method pwPostShareReport
+* @return {object} Populates $scope.postShareReport
+*/
+postworld.directive('pwPostShareReport',
+	['$window','$timeout','pwData', '$pw', '$log', '_',
+	function( $window, $timeout, $pwData, $pw, $log, $_ ) {
+	return {
+		scope:{
+			postShareReport:"=pwPostShareReport",
+			shareReportLoading:"=",
+			shareReportPostId:"="
+		},
+		link: function( $scope, element, attrs ){
 
-///// POST SHARE REPORT /////
-postworld.controller('postShareReport',
-    ['$scope','$window','$timeout','pwData',
-    function($scope, $window, $timeout, $pwData) {
+			$scope.postShareReport = {};
+			$scope.shareReportLoading = true;
+			
+			var postId = ( $scope.shareReportPostId == null ) ?
+				$_.get( $pw, 'view.post.ID' ) :
+				$scope.shareReportPostId;
 
-    $scope.postShareReport = {};
+			if( !postId )
+				return false;
 
-    if( typeof $window.pw.view.post != 'undefined' ){
-        $scope.post = $window.pw.view.post;
-        var args = { "post_id" : $scope.post.post_id };
-        $pwData.postShareReport( args ).then(
-            // Success
-            function(response) {    
-                $scope.postShareReport = response.data;
-                $scope.status = "done";
-            },
-            // Failure
-            function(response) {
-                //alert('Error loading report.');
-            }
-        );
+			$pwData.postShareReport( {post_id:postId} ).then(
+				function(response) {    
+					$scope.postShareReport = response.data;
+					$scope.shareReportLoading = false;
+				},
+				function(response) {
+					$scope.shareReportLoading = false;
+				}
+			);
+			
+		}
 
-    }
+	}
+
 }]);
 
 
 ///// POST SHARE REPORT /////
 postworld.controller('userShareReportOutgoing',
-    ['$scope','$window','$timeout','pwData',
-    function($scope, $window, $timeout, $pwData) {
+	['$scope','$window','$timeout','pwData', '_', '$pw',
+	function($scope, $window, $timeout, $pwData, $_, $pw ) {
 
-    $scope.postShareReport = {};
+	$scope.postShareReport = {};
 
-    if( typeof $window.pw.globals.displayed_user.user_id != 'undefined' ){
+	var userId = $_.get( $pw, 'view.displayed_user.user_id');
 
-        $scope.displayed_user_id = $window.pw.globals.displayed_user.user_id;
+	if( !userId )
+		return false;
 
-        var args = { "displayed_user_id" : $scope.displayed_user_id };
+	var args = { "user_id" : userId };
 
-        $pwData.userShareReportOutgoing( args ).then(
-            // Success
-            function(response) {    
-                $scope.shareReportMetaOutgoing = response.data;
-                $scope.status = "done";
-            },
-            // Failure
-            function(response) {
-                //alert('Error loading report.');
-            }
-        );
+	$pwData.userShareReportOutgoing( args ).then(
+		// Success
+		function(response) {    
+			$scope.shareReportMetaOutgoing = response.data;
+			$scope.status = "done";
+		},
+		// Failure
+		function(response) {
+			//alert('Error loading report.');
+		}
+	);
 
-    }
+
 }]);

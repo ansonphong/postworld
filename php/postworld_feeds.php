@@ -171,7 +171,7 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 			'post_status'		=>	'publish',
 			'post_type'			=>	'post',
 			'fields'			=>	'preview',
-			'posts_per_page'	=>	200,
+			'posts_per_page'	=>	200
 			);
 		$feed['query'] = array_replace_recursive( $default_query, $pw['query'] );
 	}
@@ -250,6 +250,8 @@ function pw_get_live_feed ( $vars ){
 
 	// TODO : Cleanup logic pattern in this function
 
+	//pw_log($vars);
+
 	extract($vars);
 
 	// Defaults
@@ -261,13 +263,16 @@ function pw_get_live_feed ( $vars ){
 	// Sanitize
 	$preload = (int) $preload;
 
-	// If no feed outline is defined
-	// And Query is defined
-	// And there are no posts defined
+	/// GET FEED OUTLINE FROM QUERY ///
 	if( empty( $feed_outline ) && !empty( $query ) && empty( $posts ) ){
 		// Get the Feed Outline from the query
 		$query = $vars["query"];
 		$feed_outline = pw_feed_outline( $query );
+	}
+
+	/// GET FEED OUTLINE FROM RELATED POSTS ///
+	if( isset( $related_posts ) && !empty( $related_posts ) && empty( $posts ) ){
+		$feed_outline = pw_related_posts( $related_posts );
 	}
 	
 	// If the posts have contents
@@ -284,6 +289,7 @@ function pw_get_live_feed ( $vars ){
 		$preload_posts = $feed_outline;
 	
 	}
+
 	// If the feed outline has contents
 	else if( !empty( $feed_outline ) ){
 		// Select which posts to preload
@@ -291,6 +297,7 @@ function pw_get_live_feed ( $vars ){
 		// Preload selected posts
 		$posts = pw_get_posts( $preload_posts, $query["fields"], $options );
 	}
+
 	else{
 		$posts = array();
 		$preload_posts = array();

@@ -32,7 +32,7 @@ function pw_get_taxonomies( $args = array(), $output = 'names', $operator = 'and
 
 	}
 
-	pw_log( $taxonomies );
+	//pw_log( $taxonomies );
 
 	return $taxonomies;
 

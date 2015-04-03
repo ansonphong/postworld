@@ -49,6 +49,7 @@ postworld.factory( '$pw',
     	modules: $window.pw.modules,
     	iconsets: $window.pw.iconsets,
     	postTypes: $window.pwSiteGlobals.post_types,
+    	postViews: $window.pwSiteGlobals.post_views,
     	taxonomies: $window.pwSiteGlobals.taxonomies,
     	options: $window.pw.options,
 

@@ -182,7 +182,7 @@ postworld.controller('pwFeedController',
 		var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
 
 		// Initiate the AJAX Call
-		$pwData.pw_get_live_feed( feed, qsArgsValue ).then(
+		$pwData.getLiveFeed( feed, qsArgsValue ).then(
 			// Success
 			function(response) {
 
@@ -206,7 +206,7 @@ postworld.controller('pwFeedController',
 						$scope.injectBlocks();
 						$scope.addFeedMeta();
 					} else {
-						$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
+						$log.debug('pwFeedController.getLiveFeed No Data Received');						
 					}
 					return response.data;
 				} else {
@@ -219,7 +219,7 @@ postworld.controller('pwFeedController',
 			// Failure
 			function(response) {
 				$scope.busy = false;
-				$log.error('pwFeedController.pw_get_live_feed Failure',response);
+				$log.error('pwFeedController.getLiveFeed Failure',response);
 				// TODO Show User Friendly Message
 			}
 		);
@@ -683,9 +683,7 @@ postworld.controller('pwLoadPostController',
 					}
 				},
 				// Failure
-				function(response) {
-					$log.error('pwFeedController.pw_get_live_feed Failure',response);
-				}
+				function(response){}
 			);
 		  };
 		  $scope.pwLoadPost();

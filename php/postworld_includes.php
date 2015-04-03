@@ -681,28 +681,8 @@ function pwGlobals_parse(){
 		'stylesheet_directory_uri' 	=> get_stylesheet_directory_uri(),
 		);
 
-
 	///// GLOBAL OPTIONS /////
 	$pw["options"] = apply_filters( PW_GLOBAL_OPTIONS, array() );
-
-	///// DISPLAYED USER /////
-	// Support for Buddypress Globals
-	if ( function_exists('bp_displayed_user_id') ){
-		$displayed_user_id = bp_displayed_user_id();
-	} else{
-		global $post;
-		if( gettype( $post ) == 'object' )
-			$displayed_user_id = $post->post_author;
-	}
-
-	if ( isset($displayed_user_id) )
-		$displayed_userdata = get_userdata( $displayed_user_id );
-
-	$pw['displayed_user'] = array(
-		"user_id" => $displayed_user_id,
-		"display_name" => $displayed_userdata->display_name,
-		"first_name" => $displayed_userdata->first_name,	
-		);
 
 	///// SECURITY /////
 	$pw["security"] = array();
@@ -780,7 +760,7 @@ function pwAdminGlobals_parse(){
 	$pwAdminGlobals['templates']['html'] = pw_get_templates( array( 'ext' => 'html', 'path_type' => 'url', 'output' => 'ids' ) );
 
 	/// SIDEBARS ///
-	$pwAdminGlobals['sidebars'] = i_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+	$pwAdminGlobals['sidebars'] = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
 
 	/// MENUS ///
 	$pwAdminGlobals['menus'] = pw_get_menus();

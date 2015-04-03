@@ -10,6 +10,8 @@ $i_language = array(
 		'none'		=>	'None',
 
 		'views'		=>	'Views',
+		'view'		=>	'View',
+
 		'grid'		=>	'Grid',
 		'columns'	=> 	'Columns',
 		

@@ -81,7 +81,6 @@ class pw_related_posts_widget extends WP_Widget {
 } 
 add_action( 'widgets_init', create_function( '', 'register_widget( "pw_related_posts_widget" );' ) );
 
-
 function pw_related_posts_widget_filter( $options ){
 	///// SET DEFAULT VALUES /////
 	$defaultOptions = array(
@@ -90,15 +89,18 @@ function pw_related_posts_widget_filter( $options ){
 			'settings'	=>	array(
 				'number' 	=>	10,
 				'depth'		=>	1000,
+				'view'		=>	'list',
 				'query'		=>	array(
-					'post_type' => array('post'),
+					'post_type' 	=> 	array('post'),
+					'post_status'	=>	'publish',
 					),
 				'related_by' =>	array(
 					)
 				),
 			);
-
 	$options = array_replace_recursive( $defaultOptions, $options);
+	
+	$options = apply_filters( 'pw_related_posts_widget_options', $options );
 
 	return $options;
 

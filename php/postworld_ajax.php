@@ -11,7 +11,6 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
-
 //---------- PW END PROGRESS ----------//
 function pw_end_progress_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
@@ -353,7 +352,9 @@ function pw_user_share_report_outgoing_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$user_share_report_outgoing = pw_user_share_report_meta( user_share_report_outgoing( $params['displayed_user_id'] ) );
+	pw_log("TESTING AJAX RESPONSE");
+
+	$user_share_report_outgoing = user_share_report_outgoing( $params['user_id'] );// pw_user_share_report_meta(  );
 
 	pwAjaxRespond( $user_share_report_outgoing );
 }
@@ -739,26 +740,14 @@ function initAjaxResponse() {
  * 
  ************************** */
 
-/* Actions for pw_get_live_feed() */
-
-function pw_get_live_feed_anon() {
+function pw_get_live_feed_ajax() {
 	list($response, $args, $nonce) = initAjaxResponse();
-	// $args has all function arguments. in this case it has only one argument
-	// $pw_args = $args['args']['feed_query'];
-	$pw_args = $args['args'];
-	// Get the results in array format, so that it is converted once to json along with the rest of the response
-	$results = pw_get_live_feed ( $pw_args );
-	// TODO check results are ok
-	// TODO return success code or failure code , as well as version number with the results.
-	/* set the response type as JSON */
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $results;
-	echo json_encode($response);
-	// documentation says that die() should be the end...
-	die();
+	$vars = $args['args'];
+	$results = pw_get_live_feed ( $vars );
+	pwAjaxRespond( $results );
 }
-
+add_action("wp_ajax_pw_get_live_feed", "pw_get_live_feed_ajax");
+add_action("wp_ajax_nopriv_pw_get_live_feed", "pw_get_live_feed_ajax");
 
 
 /* Actions for pw_register_feed () */
@@ -797,12 +786,6 @@ function pw_load_feed_anon() {
 	// documentation says that die() should be the end...
 	die();
 }
-
-/* Action Hook for pw_get_live_feed() - Logged in users */
-add_action("wp_ajax_pw_get_live_feed", "pw_get_live_feed_anon");
-
-/* Action Hook for pw_get_live_feed() - Anonymous users */
-add_action("wp_ajax_nopriv_pw_get_live_feed", "pw_get_live_feed_anon");
 
 /* Action Hook for pw_load_feed() - Logged in users */
 add_action("wp_ajax_pw_load_feed", "pw_load_feed_anon");

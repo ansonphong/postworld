@@ -1,4 +1,52 @@
-<?php
+<?/*
+  ____      _       _           _   ____           _       
+ |  _ \ ___| | __ _| |_ ___  __| | |  _ \ ___  ___| |_ ___ 
+ | |_) / _ \ |/ _` | __/ _ \/ _` | | |_) / _ \/ __| __/ __|
+ |  _ <  __/ | (_| | ||  __/ (_| | |  __/ (_) \__ \ |_\__ \
+ |_| \_\___|_|\__,_|\__\___|\__,_| |_|   \___/|___/\__|___/
+                                                           
+////////////////////// RELATED POSTS //////////////////////*/
+
+/**
+ * Constructs pw_related_posts() variables from query variables
+ *
+ * @since Postworld 1.91
+ *
+ * @param string $query An array of standard query variables
+ * @return array An array suitable for input into pw_related_posts()
+ */
+function pw_construct_related_posts_from_query( $query = array() ){
+
+	// If related by clauses not defined, return false
+	if( !isset( $query['related_by'] ) || !is_array( $query['related_by'] ) )
+		return false;
+
+	// The variables for pw_related_posts()
+	$vars = array();
+
+	// Move the `related_by` field out of the query
+	$vars['related_by'] = $query['related_by'];
+	unset($query['related_by']);
+
+	// Set the `vars.number` from `query.posts_per_page`
+	if( isset( $query['posts_per_page'] ) ){
+		$vars['number'] = $query['posts_per_page'];
+		unset($query['posts_per_page']);
+	}
+
+	// Get Related Depth from `query.related_depth`
+	if( isset( $query['related_depth'] ) ){
+		$vars['depth'] = (int) $query['related_depth'];
+		unset($query['related_depth']);
+	}
+
+	// Add the query into the `vars.query` variable
+	$vars['query'] = $query;
+
+	return $vars;
+
+}
+
 /**
  * Retrieve related post IDs of related posts, based a list of Related By Clauses.
  *
@@ -8,7 +56,7 @@
  * @param string $var       Ann array of variables
  * @return array 			Post IDs
  */
-function pw_related_query( $vars = array() ){
+function pw_related_posts( $vars = array() ){
 
 	global $post;
 
@@ -22,7 +70,8 @@ function pw_related_query( $vars = array() ){
 		'output'		=>	'ids',			// Item contents, values: ids
 		'cache'			=>	true,			// Whether or not to use Postworld DB cache
 		'query'			=>	array(			// Query vars to filter posts by
-			'post_type' => 'any'
+			'post_type' 	=> 	'any',
+			'post_status'	=>	'publish',
 			),
 		'related_by'	=>	array( 			// An array of arrays representing Related By Clauses
 
@@ -77,14 +126,12 @@ function pw_related_query( $vars = array() ){
 	if( $vars['post_id'] === null )
 		return false;
 
-
 	///// CACHING LAYER /////
 	$cache_hash = hash( 'sha256', json_encode( $vars ) );
 	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
 	if( !empty( $get_cache ) ){
 		return json_decode($get_cache['cache_content'], true);
 	}
-
 
 	///// POSTS /////
 	// An array of objects, with the following structure
@@ -150,7 +197,6 @@ function pw_related_query( $vars = array() ){
 	else
 		return array();
 
-
 	/// ORDER BY : SCORE ///
 	if( $vars['order_by'] == 'score' )
 		$posts = pw_order_by_score( $posts );
@@ -211,7 +257,8 @@ function pw_related_posts_by_taxonomy( $vars ){
 		'order'		=>	'DESC',		// Optional values : DESC / ASC
 		'output'	=>	'scored',	// Optional values : scored / ids
 		'query'	=>	array(			// Query vars for returned posts
-			'post_type' => 'post'
+			'post_type' 	=> 	'any',
+			'post_status'	=>	'publish',
 			),
 		'taxonomies' => array(		// Taxonommies to return and their weight
 			array(
@@ -343,6 +390,10 @@ function pw_related_posts_by_taxonomy( $vars ){
 	// Otherwise return empty
 	else
 		return array();
+
+	/// REMOVE THIS POST ///
+	// Removes the post which is the root related to post
+	$post = pw_reject( $posts, array( 'post_id' => $vars['post_id'] ) );
 
 	/// ORDER BY : SCORE ///
 	if( $vars['order_by'] == 'score' )

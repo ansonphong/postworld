@@ -162,9 +162,6 @@ function pw_file_hash( $src, $type = 'sha256' ){
 }
 
 
-
-
-
 // Recursively count array
 function pw_count_r($array, $i = 0){
     foreach($array as $k){
@@ -173,7 +170,6 @@ function pw_count_r($array, $i = 0){
     }
     return $i;
 }
-
 
 function pw_filter_count( $filter_hook ){
 	global $wp_filter;
@@ -1252,7 +1248,8 @@ function pw_sanitize_numeric_array_of_a_arrays( $vals ){
 
 function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 	// Looks through the list and returns the first value
-	// that matches the key value pair listed in properties.
+	// That matches the key value pair listed in properties
+	// TODO : Refactor to accept multipe key->value pairs
 
 	// Get the first Key and Value
 	foreach( $key_value_pair as $get_key => $get_value ){
@@ -1271,6 +1268,36 @@ function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 
 }
 
+function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
+	// Returns a list with items continaing the key->value pair removed
+	// TODO : Refactor to accept multipe key->value pairs
+	// TODO : Add Operator parameter, "AND" / "OR" for multiple key->value pairs
+
+
+	pw_log('LIST : ' .count($list));
+
+	// Get the first Key and Value
+	foreach( $key_value_pair as $get_key => $get_value ){
+		$key = $get_key;
+		$value = $get_value;
+		break;
+	}
+
+	$new_list = array();
+
+	foreach( $list as $item ){
+		if(	isset( $item[$key] ) &&
+			$item[$key] == $value )
+			continue;
+		else
+			$new_list[] = $item;
+	}
+
+	pw_log('NEW LIST : ' .count($new_list));
+
+	return $new_list;
+
+}
 
 function pw_array_order_by(){
 	// Orders items in an array by key
