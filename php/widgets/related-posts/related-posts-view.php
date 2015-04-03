@@ -12,8 +12,6 @@
 	$vars['post_id'] = $post->ID;
 	$instance_id = 'pwRelatedPosts_' . pw_random_string(8);
 
-	//pw_log( $options );
-
 	if( empty( $vars['number'] ) )
 		$vars['number'] = 10;
 

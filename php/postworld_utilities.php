@@ -146,11 +146,15 @@ function pw_is_base( $mixed ){
 	return in_array( $screen->base, $screen_bases );
 }
 
-function pw_log( $message ){
+function pw_log( $message, $data ){
 	if( is_array( $message ) || is_object( $message ) )
 		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
 
+	if( $data !== null )
+		$message .= json_encode($data, JSON_PRETTY_PRINT);
+
 	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-log.txt");
+
 }
 
 

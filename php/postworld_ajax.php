@@ -351,10 +351,7 @@ add_action("wp_ajax_flag_comment", "flag_comment_admin");
 function pw_user_share_report_outgoing_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
-
-	pw_log("TESTING AJAX RESPONSE");
-
-	$user_share_report_outgoing = user_share_report_outgoing( $params['user_id'] );// pw_user_share_report_meta(  );
+	$user_share_report_outgoing = pw_user_share_report_meta( pw_user_share_report_outgoing( $params['user_id'] ) );
 
 	pwAjaxRespond( $user_share_report_outgoing );
 }
