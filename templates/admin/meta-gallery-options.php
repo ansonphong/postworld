@@ -46,37 +46,42 @@
 
 					{{ getSelectedOption(<?php echo $vars['ng_model']; ?>.template).description }}
 					
-					<!-- X SCROLL OPTIONS -->
-					<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'horizontal'">
-						<hr class="thin">
-						<span class="icon-md"><i class="pwi-arrows-h"></i></span>
-						<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.x_scroll_distance" id="horizontal-scroll-distance">
-						<label for="horizontal-scroll-distance"><b>horizontal scroll distance</b></label>
-						<small> - Number of pixels on the right before load more images <i>(default: 1500)</i></small>
-						<hr class="thin">
-						<span class="icon-md"><i class="pwi-arrows-v"></i></span>
-						<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.height" id="gallery-height">
-						<label for="gallery-height"><b>% height</b></label>
-						<small> - Percentage height of the window to size the horizontal scroll gallery</small>
-						<!--
-						- Include the Featured Image as the first image in the gallery (default : false)
-						-->
-					</div>
+					<?php if( _get( $vars, 'gallery_meta' ) !== false ) : ?>
+						<!-- X SCROLL OPTIONS -->
+						<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'horizontal'">
+							<hr class="thin">
+							<span class="icon-md"><i class="pwi-arrows-h"></i></span>
+							<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.x_scroll_distance" id="horizontal-scroll-distance">
+							<label for="horizontal-scroll-distance"><b>horizontal scroll distance</b></label>
+							<small> - Number of pixels on the right before load more images <i>(default: 1500)</i></small>
+							<hr class="thin">
+							<span class="icon-md"><i class="pwi-arrows-v"></i></span>
+							<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.height" id="gallery-height">
+							<label for="gallery-height"><b>% height</b></label>
+							<small> - Percentage height of the window to size the horizontal scroll gallery</small>
+							<!--
+							- Include the Featured Image as the first image in the gallery (default : false)
+							-->
+						</div>
+					<?php endif; ?>
 
-					<!-- Y SCROLL OPTIONS -->
-					<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'vertical'">
-						<hr class="thin">
-						<span class="icon-md"><i class="pwi-arrows-v"></i></span>
-						<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.y_scroll_distance" id="vertical-scroll-distance">
-						<label for="vertical-scroll-distance"><b>vertical scroll distance</b></label>
-						<small> - Number of pixels on the bottom before load more images <i>(default: 1000)</i></small>
-						<hr class="thin">
-						<span class="icon-md"><i class="pwi-arrows-h"></i></span>
-						<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.width" id="gallery-width">
-						<label for="gallery-width"><b>% width</b></label>
-						<small> - Percentage width of the window to size the vertical scroll gallery</small>
-					</div>
+					<?php if( _get( $vars, 'gallery_meta' ) !== false ) : ?>
+						<!-- Y SCROLL OPTIONS -->
+						<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'vertical'">
+							<hr class="thin">
+							<span class="icon-md"><i class="pwi-arrows-v"></i></span>
+							<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.y_scroll_distance" id="vertical-scroll-distance">
+							<label for="vertical-scroll-distance"><b>vertical scroll distance</b></label>
+							<small> - Number of pixels on the bottom before load more images <i>(default: 1000)</i></small>
+							<hr class="thin">
+							<span class="icon-md"><i class="pwi-arrows-h"></i></span>
+							<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.width" id="gallery-width">
+							<label for="gallery-width"><b>% width</b></label>
+							<small> - Percentage width of the window to size the vertical scroll gallery</small>
+						</div>
+					<?php endif; ?>
 
+					
 				</td>
 			</tr>	
 		</table>

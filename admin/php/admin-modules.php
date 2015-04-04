@@ -208,7 +208,7 @@ function i_gallery_options( $vars ){
 	// DEPRECIATED
 	return pw_gallery_options( $vars );
 }
-function pw_gallery_options( $vars = array( "context" => "quickEdit", 'gallery_options'=>array() ) ){
+function pw_gallery_options( $vars = array( "context" => "quickEdit", 'gallery_options'=>array(), 'gallery_meta' => true ) ){
 
 	//$vars['options_model'] = "options.post_content.columns";
 
