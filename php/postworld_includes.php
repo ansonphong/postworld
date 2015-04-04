@@ -820,6 +820,4 @@ function pw_add_base(){
 	<?php
 }
 
-
-
 ?>

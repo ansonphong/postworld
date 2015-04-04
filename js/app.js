@@ -98,18 +98,24 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
  |  _ <| |_| | | | |
  |_| \_\\__,_|_| |_|        
 */
-postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {    
+postworld.run( 
+	function( $rootScope, $window, $templateCache, $log, $location, $rootElement, pwData){    
 
-	// TODO remove in production
-	/*
-	$rootScope.$on('$viewContentLoaded', function() {
-	  $templateCache.removeAll();
-	});
-	*/
+		///// ALLOW LINK CLICKING /////
+		// Critical so that when $locationProvider is in HTML5 mode
+		// Normal links can be clicked
+		$rootElement.off('click');
 
-   //$rootScope.current_user = $window.pwGlobals.user;
-   //$log.debug('Current user: ', $rootScope.current_user );
 
+		/////// DEV SNIPPETS /////
+		// TODO remove in production
+		/*
+		$rootScope.$on('$viewContentLoaded', function() {
+		$templateCache.removeAll();
+		});
+		*/
+		//$rootScope.current_user = $window.pwGlobals.user;
+		//$log.debug('Current user: ', $rootScope.current_user );
 
 });
 
