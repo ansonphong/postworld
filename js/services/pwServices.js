@@ -1955,30 +1955,6 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 				]
 			},
-			'gallery':{
-				'template':[
-					{
-						slug: 'inline',
-						name: 'Inline',
-						description: 'Galleries appear inline with the post content as a grid of images.',
-					},
-					{
-						slug: 'frame',
-						name: 'Frame',
-						description: 'All galleries in the post are merged into a single frame gallery.',
-					},
-					{
-						slug: 'horizontal',
-						name: 'Horizontal',
-						description: 'All galleries in the post are merged into a single horizontal infinite scrolling gallery.',
-					},
-					{
-						slug: 'vertical',
-						name: 'Vertical',
-						description: 'All galleries in the post are merged into a single vertical infinite scrolling gallery.',
-					},
-				],
-			},
 			'post_content':{
 				columns:[
 					{

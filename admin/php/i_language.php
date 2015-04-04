@@ -1,5 +1,4 @@
 <?php
-
 ///// LANGUAGE ARRAY /////
 global $i_language;
 $i_language = array(
@@ -182,11 +181,32 @@ $i_language = array(
 
 		),
 
+	'gallery' => array(
+		'template'	=>	array(
+			'inline' =>	array(
+				'name' => 'Inline',
+				'description' => 'Galleries appear inline with the post content as a grid of images.',
+				),
+			'frame' => array(
+				'name' => 'Frame',
+				'description' => 'All galleries in the post are merged into a single frame gallery.',
+				),
+			'horizontal' => array(
+				'name' => 'Horizontal',
+				'description' => 'All galleries in the post are merged into a single horizontal infinite scrolling gallery.',
+				),
+			'vertical' => array(
+				'name' => 'Vertical',
+				'description' => 'All galleries in the post are merged into a single vertical infinite scrolling gallery.',
+				),
+			),
+		),
+
 	);
 
 function ___( $item, $return = false ){
 	global $i_language;
-	$message = pw_get_obj( $i_language, $item );
+	$message = _get( $i_language, $item );
 	if( !$return )
 		echo $message;
 	else
