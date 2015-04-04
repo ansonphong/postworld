@@ -113,7 +113,7 @@
 
 <div
 	id="<?php echo $instance ?>"
-	class="postworld"
+	class="postworld admin-widget"
 	pw-globals="pw">
 	<div
 		class="postworld-widget postworld-widget-related-posts"
@@ -121,7 +121,7 @@
 		ng-controller="<?php echo $instance ?>Ctrl">
 
 		<!-- TITLE -->
-		<label class="inner" for="<?php echo $this->get_field_id( 'title' ); ?>">
+		<label class="inner" for="<?php echo $this->get_field_id( 'show_title' ); ?>">
 			<input
 				type="checkbox"
 				value="1"
@@ -136,8 +136,8 @@
 			id="<?php echo $this->get_field_id( 'title' ); ?>"
 			name="<?php echo $this->get_field_name( 'title' ); ?>"
 			type="text" value="<?php echo esc_attr( $title ); ?>" />
-
 		<hr class="thin">
+
 
 		<div class="row gutter-sm">
 			<div class="col-sm-6">

@@ -56,7 +56,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 					$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
 				else
 					$scope.includeUrl = '';
-				$log.debug('pwInclude : ' + attrs.pwInclude, $scope.includeUrl );
+				//$log.debug('pwInclude : ' + attrs.pwInclude, $scope.includeUrl );
 			}
 
 			attrs.$observe( 'pwInclude', function( pwInclude ){

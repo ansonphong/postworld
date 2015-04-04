@@ -812,4 +812,14 @@ function pw_include_bootstrap_styles(){
     
 }
 
+add_action( 'wp_head', 'pw_add_base' );
+function pw_add_base(){
+	global $pw;
+	?>
+	<base href="<?php echo $pw['view']['base_url'] ?>">
+	<?php
+}
+
+
+
 ?>

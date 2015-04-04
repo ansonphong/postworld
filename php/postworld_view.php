@@ -149,26 +149,53 @@ function pw_displayed_user(){
 
 }
 
-
 function pw_current_view(){
 	// TODO : Refactor for efficientcy
 	global $wp_query;
-	$viewdata = array();
+	$view = array();
 
 	// URL
 	$protocol = (!empty($_SERVER['HTTPS'])) ?
 		"https" : "http";
-	$viewdata['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
-	$viewdata['protocol'] = $protocol;
-	$viewdata["context"] = pw_current_context();
-	$viewdata["displayed_user"] = pw_displayed_user();
-	$viewmeta = pw_get_view_meta( $viewdata["context"] );
+	$view['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
+	$view['base_url'] = str_replace( '?' . $_SERVER[QUERY_STRING], '', $view['url'] );
+	//pw_log($_SERVER);
 
-	$viewdata = array_replace_recursive( $viewdata, $viewmeta );
-	
-	$viewdata = pw_to_array( $viewdata );
-	return $viewdata;
+	$view['protocol'] = $protocol;
+	$view["context"] = pw_current_context();
+	$view["displayed_user"] = pw_displayed_user();
+	$viewmeta = pw_get_view_meta( $view["context"] );
+	$view = array_replace_recursive( $view, $viewmeta );
+
+	$view = pw_to_array( $view );
+
+	// Location Provider
+	$view['location_provider'] = array();
+	$view['location_provider']['html_5_mode'] = pw_location_provider_html_5_mode($view);
+
+	return $view;
 }
+
+function pw_location_provider_html_5_mode( $view ){
+
+	// Enable HTML 5 mode on the following contexts
+	$contexts = array( 'search' );
+
+	// Get additional contexts
+	$contexts = apply_filters( 'pw_location_provider_html_5_mode_contexts', $contexts );
+
+	// If any of the contexts match the current context, return true
+	foreach( $contexts as $context ){
+		if( in_array( $context, $view['context'] ) )
+			return true;
+	}
+
+	return false;
+
+}
+
+
+
 
 function pw_view_query( $view ){
 	// Generate the current query vars
@@ -205,12 +232,14 @@ function pw_view_query( $view ){
 
 	///// DEFAULT QUERY VARS /////
 	$default_query = array(
-		'post_status' 		=> 'publish',
+		'post_status' 		=> 	'publish',
 		'post_type'			=>	'any',
 		'fields'			=>	'preview',
-		'posts_per_page'	=>	100,
+		'posts_per_page'	=>	1000,
 		);
 	
+	$default_query = apply_filters( 'pw_default_view_query', $default_query );
+
 	$query = array_replace_recursive( $default_query, $query );
 
 	return $query;

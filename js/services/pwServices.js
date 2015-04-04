@@ -9,8 +9,8 @@
 //////////////////*/
 
 postworld.factory( '$pw',
-	['$resource','$q','$log','$window', '_',
-	function ($resource, $q, $log, $window, $_ ) {   
+	['$resource','$q','$log','$window', '_', '$location',
+	function ($resource, $q, $log, $window, $_, $location ) {   
 
 	// TEMPLATES
 	var pwTemplates = ( $_.objExists( $window, 'pw.templates' ) ) ?
@@ -115,10 +115,65 @@ postworld.factory( '$pw',
 
         revertKeybindings: function(){
         	// Reverses keybindings to their previous state
+        	// TODO : retain history of keybindgs, when unset keybinding, reverse to previous
         	
         },
 
-        // TODO : retain history of keybindgs, when unset keybinding, reverse to previous
+        setQuery: function(query){
+        	this.query = query;
+        },
+
+        locationToQuery: function(){
+			// Get Query String Parameters
+			var query = $location.search();
+			if ( !_.isEmpty( $_.get( query, 'tax_query' ) ) ) {    			
+				query.tax_query = JSON.parse(query.tax_query); 
+			}
+			return query;
+		},
+
+        queryToLocation: function(query){
+			// Change the location to reflect input query
+			$log.debug('pw.queryToLocation',query);	
+
+			// Loop on all query variables
+			var queryString = "";
+			for(var key in query){
+				// Remove Null Values
+				if ( query[key] === null ){  					
+					continue;
+				}
+				if( key=="tax_query" && !_.isEmpty( query[key] ) ) {
+					var taxInput = escape(angular.toJson(query[key]));
+					queryString += key + "=" + taxInput + "&";
+					continue;
+				};
+
+				// Do not allow 's' to be empty, breaks WordPress routing
+				if( key === 's' && query[key] === '' )
+					query[key] = ' ';
+
+				// Remove empty values, except 0 and false
+				if ( (query[key]!==0) && (query[key]!==false) ) {
+					if( query[key] == "" || _.isUndefined(query[key]) ) {
+						continue;
+					}
+				}  
+				// Add to query string
+				queryString += key + "=" + escape(query[key]) + "&"; 
+			}
+
+			// Clip the last character off the query string
+			queryString = queryString.substring(0, queryString.length - 1);
+
+			// Set the location
+			$log.debug('pw.queryToLocation : path is ',$location.path());
+			var path = $location.path();
+			$location.path(path).search(queryString);
+
+			//$log.debug('pw.queryToLocation : absolute path ',$location.absUrl(),queryString);	
+		
+		},
         
 	};
 

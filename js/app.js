@@ -87,7 +87,7 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 	var debugEnabled = ( window.pw.info.mode == 'dev' ) ? true : false;
 	$logProvider.debugEnabled( debugEnabled );
 
-	$locationProvider.html5Mode(false);
+	$locationProvider.html5Mode( window.pw.view.location_provider.html_5_mode );
 
 });
 

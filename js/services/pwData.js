@@ -161,6 +161,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
 			var params = {'args':feedArgs};
 			return this.wp_ajax('pw_get_live_feed',params);
+
 		},
 		pw_scroll_feed: function(args) {
 			$log.debug('pwData.pw_scroll_feed',args);
