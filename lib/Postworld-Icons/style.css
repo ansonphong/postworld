@@ -1,11 +1,11 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?xuli3x');
-	src:url('fonts/Postworld-Icons.eot?#iefixxuli3x') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff2?xuli3x') format('woff2'),
-		url('fonts/Postworld-Icons.woff?xuli3x') format('woff'),
-		url('fonts/Postworld-Icons.ttf?xuli3x') format('truetype'),
-		url('fonts/Postworld-Icons.svg?xuli3x#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?-ks4sll');
+	src:url('fonts/Postworld-Icons.eot?#iefix-ks4sll') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff2?-ks4sll') format('woff2'),
+		url('fonts/Postworld-Icons.woff?-ks4sll') format('woff'),
+		url('fonts/Postworld-Icons.ttf?-ks4sll') format('truetype'),
+		url('fonts/Postworld-Icons.svg?-ks4sll#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
