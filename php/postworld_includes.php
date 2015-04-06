@@ -8,7 +8,6 @@ function postworld_includes( $args ){
 	add_action('admin_print_scripts', 'pwGlobals_print', 8 );
 	add_action('admin_print_scripts', 'pwBootstrapPostworldAdmin_print', 20 );
 	
-
 	// Add hook for front-end <head></head>
 	add_action('wp_head', 'pwGlobals_print', 8 );
 

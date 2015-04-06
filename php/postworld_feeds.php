@@ -77,6 +77,10 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 		$feed_id = 'pwFeed_' . pw_random_string();
 	}
 
+
+	pw_set_microtimer($feed_id);
+
+
 	// Run filters on the feed vars
 	$vars = apply_filters( 'pw_feed', $vars );
 
@@ -236,6 +240,8 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 	}
 
 	//pw_log_microtimer('pw_live_feed-'.$feed_id);
+
+	pw_log_microtimer($feed_id);
 
 	///// OUTPUT /////
 	if( $echo )

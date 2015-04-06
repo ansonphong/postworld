@@ -52,7 +52,7 @@ function pw_get_cache( $fields, $operator = 'AND' ){
 		FROM '.$table_name.'
 		WHERE '.$where;
 
-	return $wpdb->get_row( $wpdb->prepare( $query ) , 'ARRAY_A');
+	return $wpdb->get_row( $query, 'ARRAY_A');
 
 }
 
@@ -145,11 +145,11 @@ function pw_get_cache_types_readout(){
 	// ie. [{"cache_type":"feed","type_count":"4"},{"cache_type":"term-feed","type_count":"2"}]
 	global $wpdb;
 	$table_name = $wpdb->pw_prefix . 'cache';
-	$query = $wpdb->prepare('
+	$query = '
 		SELECT cache_type, count(distinct cache_hash) as type_count
 		FROM '.$table_name.'
 		GROUP BY cache_type
-	');
+	';
 	return $wpdb->get_results($query);
 }
 
@@ -855,7 +855,7 @@ function pw_cache_user_shares( $user_id, $mode ){
 	}
 	//$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);
 	$query = "update $wpdb->pw_prefix"."user_meta set share_points=".$total_user_shares.",share_points_meta='".json_encode($old_shares)."' where user_id=".$user_id;
-	$wpdb->query( $wpdb->prepare($query) );
+	$wpdb->query( $query );
 
 	return $total_user_shares;	 
 }

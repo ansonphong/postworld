@@ -99,7 +99,8 @@ function pw_print_term_feed( $vars ){
 			'path_type' => 'dir',
 			'ext'=>'php',
 			)
-		)[ $template_subdir ];
+		);
+	$templates = $templates[ $template_subdir ];
 	
 	// Confirm that the specified template actually exists
 	$vars['template'] = ( isset( $templates[ $vars['template'] ] ) ) ?

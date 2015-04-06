@@ -419,7 +419,8 @@ function pw_get_menu_templates(){
 			'ext' => 'php',
 			'path_type' =>  'dir',
 			)
-		)['menus'];
+		);
+	$templates = $templates['menus'];
 
 	return $templates;
 

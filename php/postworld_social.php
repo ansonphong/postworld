@@ -127,12 +127,17 @@ function pw_get_social_share_meta( $vars ){
 	///// IMAGE URL /////
 	// Get the image url from the passed post object
 	$image_url_from_post = _get( $post, 'image.sizes.full.url' );
-	// If the image URL is set
-	$image_url = ( $image_url_from_post != false ) ?
-		// Use the image URL from the post
-		$image_url_from_post :
-		// Otherwise, get it manually
-		pw_get_featured_image_obj( $post['ID'] )['url'];
+
+	// If the image URL is not set
+	if( $image_url_from_post === false ){
+		// Gget it manually
+		$featured_image_obj = pw_get_featured_image_obj( $post['ID'] );
+		$image_url_from_post = $featured_image_obj['url'];
+	}
+		
+		
+
+
 	if( $image_url == null )
 		$image_url = '';
 	else

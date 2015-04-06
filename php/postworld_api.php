@@ -12,6 +12,14 @@ function pw_get_obj( $obj, $key ){
 	// DEPRECIATED
 	return _get( $obj, $key );
 }
+
+/**
+ * Gets the sub-key value from an associative array
+ * @param $obj [array] An associative array
+ * @param $key [string] A string denoting which subkey to retreive
+ *			- ie. "key.subkey.subsubkey"
+ * @return [mixed] The object at the specified subkey, false if it doesn't exist
+ */
 function _get( $obj, $key ){
 	// Checks to see if a key exists in an object,
 	// and returns it if it does exist. Otherwise return false.
@@ -51,13 +59,23 @@ function pw_set_obj( $obj, $key, $value ){
 	// DEPRECIATED
 	return _set( $obj, $key, $value );
 }
+
+/**
+ * Sets the sub-key value of an associative array
+ * Creating any neccessary keys along the way if they don't yet exist
+ * @param $obj [array] An associative array
+ * @param $key [string] A period deliniated string denoting which subkey to set
+ *			- ie. "key.subkey.subsubkey"
+ * @param $value [mixed] The value which to set
+ * @return [mixed] The object with the new value set
+ */
 function _set( $obj, $key, $value ){
 	// Sets the value of an object,
 	// even if it or it's parent(s) doesn't exist.
 	
 	/*	PARAMETERS:
 		$obj 	= 	[array]
-		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
+		$key 	= 	[string] 
 		$value 	= 	[string/array/object]
 	*/
 

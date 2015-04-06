@@ -75,7 +75,10 @@ function pw_get_post_gmt_timestamp( $post_id = null ){
 }
 
 
-
+/**
+ * Starts a microtimer under the specified ID
+ * @param $timer_id [string] The unique ID of the timer
+ */
 function pw_set_microtimer( $timer_id ){
 	// Sets the microtime of a timer ID
 	global $pw_microtimer;
@@ -85,6 +88,11 @@ function pw_set_microtimer( $timer_id ){
 	$pw_microtimer[ $timer_id ] = microtime();
 }
 
+/**
+ * Gets the current microtimer from the specified timer ID
+ * @param $timer_id [string] The unique ID of the timer
+ * @return [float] The period of the timer (in seconds)
+ */
 function pw_get_microtimer( $timer_id ){
 	// Gets the microtime of a timer ID, in seconds
 	global $pw_microtimer;
@@ -95,6 +103,11 @@ function pw_get_microtimer( $timer_id ){
 		return false;
 }
 
+/**
+ * Logs the current microtimer from the specified timer ID
+ * @param $timer_id [string] The unique ID of the timer
+ * @param $log [string] (Optional) An additional note to log
+ */
 function pw_log_microtimer( $timer_id, $note = '' ){
 	// Logs the difference of time in seconds
 	$time = pw_get_microtimer( $timer_id );
@@ -103,7 +116,13 @@ function pw_log_microtimer( $timer_id, $note = '' ){
 	pw_log( 'MICROTIMER : '.$timer_id.' : ' . $note . $time );
 }
 
-
+/**
+ * Calculates difference between two microtimes
+ * @param $start [float] The value of the initial microtimer
+ * @param $end [float] (optional) The value of the end microtimer
+ *			- If no end time is provided, the current microtime is used
+ * @return [float] The the difference between timers (in seconds)
+ */
 function pw_microtime_diff( $start, $end=NULL ) { 
 	if( !$end ) { 
 		$end= microtime(); 
@@ -116,7 +135,9 @@ function pw_microtime_diff( $start, $end=NULL ) {
 } 
 
 function pw_get_filename(){
-	return pathinfo( parse_url( $_SERVER['REQUEST_URI'] )['path'] )['filename'];
+	$parsed_url = parse_url( $_SERVER['REQUEST_URI'] );
+	$path_info = pathinfo( $parsed_url['path'] );
+	return $path_info['filename'];
 }
 
 function pw_is_filename( $filename ){
@@ -158,6 +179,12 @@ function pw_log( $message, $data ){
 }
 
 
+/**
+ * Generates a hash string from the contents of a file
+ * @param $src [string] The absolute system path of the file
+ * @param $type [string] The type of hash to generate, see PHP hash()
+ * @return [string] The hash
+ */
 function pw_file_hash( $src, $type = 'sha256' ){
 	// Get file contents
 	$file_contents = file_get_contents( $src );

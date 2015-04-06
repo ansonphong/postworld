@@ -28,7 +28,6 @@ function pw_add_gallery_field( $fields = array() ){
 	return pw_add_gallery_field_filter( $fields );
 }
 
-
 ///// PREPARE QUERY FILTER : POST PARENT FROM /////
 function pw_prepare_query_post_parent_from( $query ){
 	global $post;

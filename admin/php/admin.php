@@ -264,7 +264,6 @@ function postworld_admin_icon_styles(){
 			font-family: "Postworld-Icons"
 		}
 	</style>
-	<?
+	<?php
 }
-
 ?>
