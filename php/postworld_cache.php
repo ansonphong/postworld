@@ -850,7 +850,7 @@ function pw_cache_user_shares( $user_id, $mode ){
 			if(isset($user_shares['outgoing'])) $old_shares['outgoing'] = $user_shares['outgoing'];
 		
 	} else{
-		add_record_to_user_meta($user_id);	
+		pw_add_record_to_user_meta($user_id);	
 		$old_shares = $user_shares;		
 	}
 	//$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);

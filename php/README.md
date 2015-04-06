@@ -471,7 +471,7 @@ __return__ : *Object*
 ------
 
 ### pw_get_user_vote_power ( *$user_id* )
-- Checks to see user's WP roles `with get_user_role()`
+- Checks to see user's WP roles `with pw_get_user_role()`
 - Checks how many points the user's role can cast, from `$pwSiteGlobals['roles'][ $current_user_role ]['vote_points']`
 
 __return__ : *integer* (the number of points the user can cast)
@@ -1001,7 +1001,7 @@ __USER / POST RELATIONSHIPS__
 
 ------
 
-### set_post_relationship( *$relationship, $switch, $post_id, $user_id* )
+### pw_set_post_relationship( *$relationship, $switch, $post_id, $user_id* )
 - Used to set a given user's relationship to a given post 
 
 ### Parameters
@@ -1028,7 +1028,7 @@ __$switch__ : *boolean*
 
 #### Usage
 ``` php
-	set_post_relationship( 'favorites', true, '24', '101' )
+	pw_set_post_relationship( 'favorites', true, '24', '101' )
 ```
 
 #### Anatomy
@@ -1049,7 +1049,7 @@ __return__ : *boolean*
 
 ------
 
-### get_post_relationship( *$relationship, $post_id, $user_id* )
+### pw_get_post_relationship( *$relationship, $post_id, $user_id* )
 - Used to get a given user's relationship to a given post 
 
 ### Parameters
@@ -1076,7 +1076,7 @@ __return__ : *boolean*
 ```
 ------
 
-### get_post_relationships( *$user_id, [$relationship]* )
+### pw_get_post_relationships( *$user_id, [$relationship]* )
 - Used to get a list of all post relationships of a specified user
 
 #### Paramaters
@@ -1096,7 +1096,7 @@ __$relationship__ : *integer* (optional)
 Specified post relationship :
 
 ``` php
-	get_post_relationships( '1', 'favorites' )
+	pw_get_post_relationships( '1', 'favorites' )
 ```
 __returns__ : *Array* of post IDs
 
@@ -1107,7 +1107,7 @@ __returns__ : *Array* of post IDs
 Un-specified post relationship :
 
 ``` php
-	get_post_relationships( '1' )
+	pw_get_post_relationships( '1' )
 ```
 __returns__ : Contents of __post_relationships__
 
@@ -1136,33 +1136,33 @@ __$user_id__ : *integer* (optional)
 
 ------
 
-### set_favorite( *$switch, [$post_id], [$user_id]* )
-- Use `set_post_relationship()` to set the post relationship for __favorites__
+### pw_set_favorite( *$switch, [$post_id], [$user_id]* )
+- Use `pw_set_post_relationship()` to set the post relationship for __favorites__
 - If __$post_id__ is undefined
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'favorites', $switch, $post_id, $user_id )
+	pw_set_post_relationship( 'favorites', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
-### set_viewed( *$switch, [$post_id], [$user_id]* )
-- Use `set_post_relationship()` to set the post relationship for __viewed__
+### pw_set_viewed( *$switch, [$post_id], [$user_id]* )
+- Use `pw_set_post_relationship()` to set the post relationship for __viewed__
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'viewed', $switch, $post_id, $user_id )
+	pw_set_post_relationship( 'viewed', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
-### set_view_later( *$switch, [$post_id], [$user_id]* )
-- Use `set_post_relationship()` to set the post relationship for __view_later__
+### pw_set_view_later( *$switch, [$post_id], [$user_id]* )
+- Use `pw_set_post_relationship()` to set the post relationship for __view_later__
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'view_later', $switch, $post_id, $user_id )
+	pw_set_post_relationship( 'view_later', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
@@ -1176,11 +1176,11 @@ __$user_id__ : *integer* (optional)
 
 ------
 
-### get_favorites ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __favorite__ posts
+### pw_get_favorites ( *[$user_id]* )
+- Use `pw_get_post_relationships()` method to return just the __favorite__ posts
 
 ```php
-	get_post_relationships($user_id, 'favorites')
+	pw_get_post_relationships($user_id, 'favorites')
 ```
 
 __return__ : *Array* (of post ids)
@@ -1188,10 +1188,10 @@ __return__ : *Array* (of post ids)
 ------
 
 ### get_viewed ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __viewed__ posts
+- Use `pw_get_post_relationships()` method to return just the __viewed__ posts
 
 ```php
-	get_post_relationships($user_id, 'viewed')
+	pw_get_post_relationships($user_id, 'viewed')
 ```
 
 __return__ : *Array* (of post ids)
@@ -1199,10 +1199,10 @@ __return__ : *Array* (of post ids)
 ------
 
 ### get_view_later ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __view later__ posts
+- Use `pw_get_post_relationships()` method to return just the __view later__ posts
 
 ```php
-	get_post_relationships($user_id, 'view_later')
+	pw_get_post_relationships($user_id, 'view_later')
 ```
 
 __return__ : *Array* (of post ids)
@@ -1224,44 +1224,44 @@ __$user_id__ : *integer* (optional)
 
 ------
 
-### is_favorite( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for __favorites__
+### pw_is_favorite( *[$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for __favorites__
 
 ``` php
-get_post_relationship( 'favorites', $post_id, $user_id )
+pw_get_post_relationship( 'favorites', $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
 ------
 
-### is_viewed( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for __viewed__
+### pw_is_viewed( *[$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for __viewed__
 
 ``` php
-get_post_relationship( 'viewed', $post_id, $user_id )
+pw_get_post_relationship( 'viewed', $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
 ------
 
-### is_view_later( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for __view_later__
+### pw_is_view_later( *[$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for __view_later__
 
 ``` php
-get_post_relationship( 'view_later', $post_id, $user_id )
+pw_get_post_relationship( 'view_later', $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
 ------
 
-### is_post_relationship( *$post_relationship, [$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for the specified post relationship
+### pw_is_post_relationship( *$post_relationship, [$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for the specified post relationship
 
 ``` php
-	get_post_relationship( $post_relationship, $post_id, $user_id )
+	pw_get_post_relationship( $post_relationship, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
@@ -1291,7 +1291,7 @@ __return__ : *string* (IP address of the client)
 
 ------
 
-### get_user_role ( *$user_id, [$return_array]* )
+### pw_get_user_role ( *$user_id, [$return_array]* )
 - Returns user role(s) for the specified user
 
 ####Parameters:
@@ -2065,7 +2065,7 @@ __php/postworld_share.php__
 	- Check if user ID exists
 	- Check if post ID exists
 	- Get the ID of the post author from __Posts__ table 
-	- Get the user's IP address with `get_client_ip()`
+	- Get the user's IP address with `pw_get_client_ip()`
 2. Process IP
 	- Check IP address against list of IPs stored in `recent_ips` column in __Shares__ table
 	- If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares

@@ -15,6 +15,7 @@
 	postworldAdmin.controller('pwDatabaseDataCtrl',
 		[ '$scope', '$window', '_', 'pwData',
 		function( $scope, $window, $_, $pwData ){
+			
 		$scope.cacheTypeReadout = <?php echo json_encode(pw_get_cache_types_readout()); ?>;
 		$scope.progress = <?php echo json_encode( pw_get_progress() ) ?>;
 		if( _.isEmpty( $scope.progress ) )

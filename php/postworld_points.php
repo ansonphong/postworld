@@ -135,7 +135,7 @@ function pw_calculate_user_posts_points( $user_id ){
 	
 	global $wpdb;
 
-	add_record_to_user_meta( $user_id );
+	pw_add_record_to_user_meta( $user_id );
 
 	$query = "
 		UPDATE ".$wpdb->pw_prefix.'user_meta'."
@@ -735,13 +735,13 @@ function pw_get_user_votes_report($user_id) {
 
 function pw_get_user_vote_power ( $user_id ){
 	/*
-	 	• Checks to see user's WP roles with get_user_role()
+	 	• Checks to see user's WP roles with pw_get_user_role()
 		• Checks how many points the user's role can cast, from $pwSiteGlobals object
 		return : integer (the number of points the user can cast)
 	 */
 
 	global $wpdb;
-	$current_user_role_output = get_user_role($user_id);
+	$current_user_role_output = pw_get_user_role($user_id);
 	//echo(json_encode($current_user_role_output));
 
 	if(gettype($current_user_role_output) == "array") {

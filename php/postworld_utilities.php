@@ -167,11 +167,11 @@ function pw_is_base( $mixed ){
 	return in_array( $screen->base, $screen_bases );
 }
 
-function pw_log( $message, $data ){
+function pw_log( $message, $data = array() ){
 	if( is_array( $message ) || is_object( $message ) )
 		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
 
-	if( $data !== null )
+	if( !empty($data) )
 		$message .= json_encode($data, JSON_PRETTY_PRINT);
 
 	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-log.txt");
@@ -449,9 +449,8 @@ function object_to_array($data){
 
 
 ////////// EDIT POST HELP FUNCTIONS //////////
-
 function pw_get_post_types( $args = array() ){
-	//$user_role = get_user_role();
+	//$user_role = pw_get_user_role();
 
 	if( empty( $args ) )
 		$args = array(
@@ -623,7 +622,6 @@ function extract_bracket_values ( $input, $force_array = true ){
 	else
 		return $value_array;
 }
-
 
 
 function extract_fields( $fields_array, $query_string ){

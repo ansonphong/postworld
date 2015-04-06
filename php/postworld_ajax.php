@@ -534,26 +534,18 @@ add_action("wp_ajax_pw_set_post_points", "pw_set_post_points_ajax");
 
 
 //---------- SET POST RELATIONSHIP ----------//
-function set_post_relationship_admin(){
+function pw_set_post_relationship_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
+	$vars = $args['args'];
 
-	$params = $args['args'];
-	$relationship = $params['relationship'];
-	$switch = $params['switch'];
-	$post_id = $params['post_id'];
+	$set_post_relationship = pw_set_post_relationship(
+		$vars['relationship'],
+		$vars['switch'],
+		$vars['post_id'] );
 
-	$set_post_relationship = set_post_relationship( $relationship, $switch, $post_id );
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $set_post_relationship;
-	echo json_encode( $response );
-	die;
-
+	pwAjaxRespond( $set_post_relationship );
 }
-
-add_action("wp_ajax_nopriv_set_post_relationship", "set_post_relationship_admin");
-add_action("wp_ajax_set_post_relationship", "set_post_relationship_admin");
+add_action("wp_ajax_pw_set_post_relationship", "pw_set_post_relationship_ajax");
 
 
 

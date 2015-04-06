@@ -265,7 +265,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 		
 			// Is Favorite
 			if( in_array('is_favorite', $viewer_fields) ){
-				$is_favorite = is_favorite( $post_id );
+				$is_favorite = pw_is_favorite( $post_id );
 				if ( !isset($is_favorite) )
 					$is_favorite = "0";
 				$post['viewer']['is_favorite'] = $is_favorite;
@@ -273,7 +273,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 			// Is View Later
 			if( in_array('is_view_later', $viewer_fields) )
-				$post['viewer']['is_view_later'] = is_view_later( $post_id );
+				$post['viewer']['is_view_later'] = pw_is_view_later( $post_id );
 
 		}
 
@@ -285,7 +285,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			if( !isset($post['viewer']) )
 				$post['viewer'] = array();
 			foreach ($relationships as $relationship ) {
-				$post['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
+				$post['viewer'][$relationship] = pw_is_post_relationship( $relationship, $post_id, $user_id);
 			}
 		}
 

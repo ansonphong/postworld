@@ -47,7 +47,7 @@ function pw_set_share ( $user_id, $post_id ){
 		Check if user ID exists
 		Check if post ID exists
 		Get the ID of the post author from Posts table
-		Get the user's IP address with get_client_ip()
+		Get the user's IP address with pw_get_client_ip()
 	2-Process IP
 		Check IP address against list of IPs stored in recent_ips column in Shares table
 		If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
@@ -68,7 +68,7 @@ function pw_set_share ( $user_id, $post_id ){
 		( $post_author = pw_does_post_exist_return_post_author($post_id) ) !== FALSE ){
 		$last_time = date('Y-m-d H:i:s');
 		//echo 'pos_auhor:'.$post_author;
-		$user_ip = get_client_ip();
+		$user_ip = pw_get_client_ip();
 		$current_share = pw_get_share($user_id,$post_id);
 
 		global $pwSiteGlobals;
@@ -108,7 +108,7 @@ function pw_update_share($user_id, $post_id, $ips_list,$added_shares,$last_time=
 	$query = "UPDATE $wpdb->pw_prefix"."shares SET recent_ips='".json_encode($ips_list)."',shares=shares+".$added_shares;
 	if($last_time){$query.=" ,last_time='".$last_time."'";}
 	$query.=" where user_id=".$user_id." and post_id=".$post_id;
-	$wpdb->query( $wpdb->prepare( $query ) );
+	$wpdb->query( $query );
 }
 
 function pw_add_share($user_id,$post_id,$post_author,$ips_list,$last_time){
@@ -117,7 +117,7 @@ function pw_add_share($user_id,$post_id,$post_author,$ips_list,$last_time){
 	global $wpdb;
 	$wpdb->show_errors();
 	$query = "INSERT INTO $wpdb->pw_prefix"."shares VALUES(".$user_id.",".$post_id.",".$post_author.",'".json_encode($ips_list)."',1,'".$last_time."')";
-	$wpdb->query( $wpdb->prepare( $query ) );
+	$wpdb->query( $query );
 	return;
 }
 
@@ -132,7 +132,7 @@ function pw_get_share($user_id,$post_id){
 	global $wpdb;	
 	$wpdb ->show_errors();
 	$query = "SELECT * FROM $wpdb->pw_prefix"."shares WHERE post_id=$post_id AND user_id=$user_id";
-	$row = $wpdb->get_row( $wpdb->prepare( $query ) );
+	$row = $wpdb->get_row( $query );
 	$row = pw_process_share_row( $row );
 	return $row;
 }
@@ -160,7 +160,7 @@ function pw_user_share_report_outgoing( $user_id){
 	
 	// Lookup all posts shared by user ID in User Shares table, column user_id
 	$query = "SELECT * FROM $wpdb->pw_prefix"."shares WHERE user_id=".$user_id;
-	$results = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$results = $wpdb->get_results( $query );
 	
 	$output = array();
 	if($results){
@@ -199,7 +199,7 @@ function pw_user_share_report_outgoing( $user_id){
  * @param Array $meta Metadata about how to process the report
  * @return Array The user share report with the meta data added
  */
-function pw_user_share_report_meta( $user_share_report, $meta ){
+function pw_user_share_report_meta( $user_share_report, $meta = array() ){
 
 	$defaultMeta = array(
 		'user_fields' 	=> array( "display_name", "user_nicename", "user_profile_url" ),
@@ -280,7 +280,7 @@ function pw_user_share_report_incoming( $user_id ){
 
 	// Lookup all shared posts owned by the user ID from User Shares table, column author_id
 	$query = "SELECT post_id, sum(shares) AS total_shares FROM $wpdb->pw_prefix"."shares WHERE author_id=".$user_id." GROUP BY post_id";
-	$results = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$results = $wpdb->get_results( $query );
 	
 	$output = array();
 	if($results){
@@ -357,7 +357,7 @@ function pw_post_share_report ( $post_id ){
 	
 	// Collect data from Shares table on the given post
 	$query = "select * from $wpdb->pw_prefix"."shares where post_id=".$post_id;
-	$results = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$results = $wpdb->get_results( $query );
 	$output = array();
 	if($results){
 		foreach ($results as $row ) {

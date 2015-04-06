@@ -25,7 +25,7 @@ function pw_update_progress( $key, $current, $total, $meta = array() ){
 
 }
 
-function pw_get_progress( $key, $flush = false ){
+function pw_get_progress( $key = '', $flush = false ){
 
 	if( $flush === true )
 		// Flushes the WordPress Object Cache
@@ -36,8 +36,11 @@ function pw_get_progress( $key, $flush = false ){
 		'cache'		 	=> false,
 		));
 
-	return _get( $value, $key );
-
+	if( empty($key) )
+		return $value;
+	else
+		return _get( $value, $key );
+	
 }
 
 function pw_end_progress( $key ){

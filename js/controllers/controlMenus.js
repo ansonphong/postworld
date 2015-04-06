@@ -81,7 +81,7 @@ postworld.controller('postActions',
             "post_id" : $scope.post.ID,
         };
         // AJAX Call 
-        pwData.set_post_relationship( args ).then(
+        pwData.setPostRelationship( args ).then(
             // ON : SUCCESS
             function(response) {    
                 //SET FAVORITE

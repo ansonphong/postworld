@@ -372,10 +372,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('tags_autocomplete',params);
 		},
-		set_post_relationship: function(args) {
-			$log.debug('pwData.set_post_relationship',args);
+		setPostRelationship: function(args) {
+			$log.debug('pwData.setPostRelationship',args);
 			var params = {args:args};
-			return this.wp_ajax('set_post_relationship',params);
+			return this.wp_ajax('pw_set_post_relationship',params);
 		},
 		setPostPoints: function(args) {
 			$log.debug('pwData.setPostPoints',args);
