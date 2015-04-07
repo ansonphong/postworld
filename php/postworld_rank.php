@@ -45,7 +45,7 @@ function pw_cache_rank_score ( $post_id ){
 
 	$post_rank_score = pw_calculate_rank_score($post_id);
 
-	pw_add_record_to_post_meta( $post_id );
+	pw_insert_post_meta( $post_id );
 
 	$query = "
 		UPDATE $wpdb->pw_prefix"."post_meta

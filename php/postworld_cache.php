@@ -763,7 +763,7 @@ function pw_cache_post_shares( $post_id ){
 	-return : integer (number of shares)*/
 	$total_shares = pw_calculate_post_shares($post_id);
 	
-	pw_add_record_to_post_meta($post_id);
+	pw_insert_post_meta($post_id);
 	
 	global $wpdb;
 	$wpdb -> show_errors();
@@ -850,7 +850,7 @@ function pw_cache_user_shares( $user_id, $mode ){
 			if(isset($user_shares['outgoing'])) $old_shares['outgoing'] = $user_shares['outgoing'];
 		
 	} else{
-		pw_add_record_to_user_meta($user_id);	
+		pw_insert_user_meta($user_id);	
 		$old_shares = $user_shares;		
 	}
 	//$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);

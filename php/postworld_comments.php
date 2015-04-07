@@ -56,7 +56,7 @@ function pw_cache_comment_points($comment_id){
 	if ($result === FALSE || $result === 0){
 		//echo 'false <br>';
 		//insertt new row for this comment in comment_meta, no points was added
-		pw_add_record_to_comment_meta($comment_id,$total_points);
+		pw_insert_comment_meta($comment_id,$total_points);
 	}
 	return $total_points;
 	
@@ -64,7 +64,7 @@ function pw_cache_comment_points($comment_id){
 }    
 
 
-function pw_add_record_to_comment_meta($comment_id,$total_points=0){
+function pw_insert_comment_meta($comment_id,$total_points=0){
 	/*
 	 This function gets comment data inserts a record in wp_postworld_comment_meta table
 	 * Parameters:

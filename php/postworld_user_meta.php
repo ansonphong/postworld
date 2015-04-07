@@ -406,7 +406,7 @@ function pw_update_user($userdata) {
 	global $wpdb;
 	$wpdb -> show_errors();
 	if (gettype($user_id) == 'integer') {// successful
-		pw_add_record_to_user_meta($user_id);
+		pw_insert_user_meta($user_id);
 		/*if ($userdata[user_fields_names::$FAVORITES]) {
 			$set .= " " . user_fields_names::$FAVORITES . "='" . $userdata[user_fields_names::$FAVORITES] . "'";
 			$insertComma = TRUE;
@@ -905,7 +905,7 @@ function pw_set_post_relationship( $relationship, $switch, $post_id = null, $use
 	} else {
 		//add record to user meta or add relationship
 		
-		pw_add_record_to_user_meta($user_id);
+		pw_insert_user_meta($user_id);
 		if ($switch) {
 			$relationship_db_array = array('viewed' => array(), "favorites" => array(), 'view_later' => array());
 			$relationship_db_array[$relationship][] = $post_id;
@@ -930,7 +930,7 @@ function pw_update_post_relationship($user_id, $relationship = null) {
 	$wpdb -> query($query);
 }
 
-function pw_add_record_to_user_meta($user_id) {
+function pw_insert_user_meta($user_id) {
 	global $wpdb;
 	$wpdb -> show_errors();
 

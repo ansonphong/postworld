@@ -10,8 +10,6 @@
  */
 function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 	
-	pw_log( "pw_set_points( " . $point_type . ", " . $id . ", " . $set_points . " )" );
-
 	$user_id = get_current_user_id();
 	if( $user_id === 0)
 		return array('error'=>'Must be logged in to add points.');
@@ -23,15 +21,6 @@ function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 	// If $set_points is greater than the user's role vote_points , reduce to vote_points
 	if ( abs($user_vote_power) < abs($set_points) )
 		$set_points = $user_vote_power * (abs($set_points)/$set_points); 
- 	
- 	pw_log( 'set_points : ' , $set_points );
-
- 	/*
- 	$update_points = $set_points - $old_user_points; // calculate the difference in points
-	$old_post_points = pw_get_post_points($post_id); // get previous points of the post
-	$new_post_points = $old_post_points + $update_points; // add the updated points	
-	$output -> points_added = $update_points;
-	*/
 
 	global $wpdb;	
 	if( pw_dev_mode() )
@@ -90,7 +79,7 @@ function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 				}
 				else{
 					// Add
-					pw_add_record_to_post_points( $id, $user_id, $set_points );
+					pw_insert_post_points( $id, $user_id, $set_points );
 				}
 				break;
 			case 'comment':
@@ -99,7 +88,7 @@ function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 					pw_update_comment_points( $id, $user_id, $set_points );
 				else
 					// Add
-					pw_add_record_to_comment_points( $id, $user_id, $set_points );
+					pw_insert_comment_points( $id, $user_id, $set_points );
 				break;
 		}
 
@@ -139,58 +128,77 @@ function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 }
 
 
-/////////////// POST POINTS  ///////////////////
+/**
+ * Get the total number of points of the given post from the points column in Postworld Post Meta table
+ * @param $post_id [integer] The post ID to get the post points of
+ * @return [integer] Number of points
+ */
 function pw_get_post_points($post_id) {
-	/*
-	• Get the total number of points of the given post from the points column in 'wp_postworld_meta' table
-	return : integer
-	*/
-	
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if(pw_dev_mode())
+		$wpdb->show_errors();
 
-	$query = "SELECT * FROM " . $wpdb->pw_prefix.'post_meta' . " Where post_id=" . $post_id;
-	//echo ($query);
-	$postPoints = $wpdb -> get_row($query);
-	if ($postPoints != null)
-		return $postPoints -> post_points;
+	$query = "
+		SELECT *
+		FROM " . $wpdb->pw_prefix.'post_meta' . "
+		WHERE post_id=" . $post_id;
+
+	$row = $wpdb->get_row($query);
+
+	if ($row != null)
+		return $row->post_points;
 	else
 		return 0;
 }
 
-
-function pw_calculate_post_points($post_id) {
-	/*
-	• Adds up the points from the specified post, stored in ".$wpdb->pw_prefix.'post_points'."
-	• Stores the result in the points column in wp_postworld_meta
-	return : integer (number of points)
-	*/
-	
+/**
+ * Adds up the points from the specified post, stored in Postworld Post Points table"
+ * @param $post_id [integer] The post ID to calculate the post points of
+ * @return [integer] Number of points
+ */
+function pw_calculate_post_points( $post_id ) {
 	global $wpdb;
-	$wpdb -> show_errors();
 
-	//first sum points
-	$query = "select SUM(post_points) from ".$wpdb->pw_prefix.'post_points'." where post_id=" . $post_id;
-	$points_total = $wpdb -> get_var($query);
-	//echo("\npoints cal" . $points_total);
-	if($points_total==null || $points_total =='') $points_total=0;
-	
+	if(pw_dev_mode())
+		$wpdb->show_errors();
+
+	$query = "
+		SELECT SUM(post_points)
+		FROM ".$wpdb->pw_prefix.'post_points'."
+		WHERE post_id=" . $post_id;
+
+	$points_total = $wpdb->get_var( $query );
+
+	if( $points_total == null || $points_total == '' )
+		$points_total = 0;
+
 	return $points_total;
 
 }
 
-
+/**
+ * Calculates and then caches the number of points for a post
+ * @see pw_calculate_post_points()
+ * @param $post_id [integer] The post ID to calculate the post points of
+ * @return [integer] Number of points
+ */
 function pw_cache_post_points ( $post_id ){
 	/*• Calculates given post's current points with pw_calculate_post_points()	
 	• Stores points it in wp_postworld_post_meta table in the post_points column
 	return : integer (number of points)*/
 	$total_points = pw_calculate_post_points($post_id);
-	//update wp_postworld_meta
-	global $wpdb;
-	$wpdb -> show_errors();
 
-	$query = "update ".$wpdb->pw_prefix.'post_meta'." set post_points=" . $total_points . " where post_id=" . $post_id;
-	$result =$wpdb -> query($query);
+
+	global $wpdb;
+	$wpdb->show_errors();
+
+	$query = "
+		UPDATE ".$wpdb->pw_prefix.'post_meta'."
+		SET post_points=" . $total_points . "
+		WHERE post_id=" . $post_id;
+
+	$result =$wpdb->query($query);
 	
 	if ($result === FALSE || $result === 0){
 		//insertt new row for this post in post_meta, no points was added
@@ -198,11 +206,55 @@ function pw_cache_post_points ( $post_id ){
 		/*1- get post data
 		 2-  Insert new record into post_meta
 		 */
-		pw_add_record_to_post_meta($post_id,$total_points);
+		pw_insert_post_meta($post_id,$total_points);
 		
 	}
 	return $total_points;
 }
+
+
+
+/**
+ * Gets all post data and inserts a record in Postworld Post Meta table
+ * @todo Refactor to accept an array
+ */
+function pw_insert_post_meta( $post_id, $points=0, $rank_score=0, $favorites=0, $post_shares=0 ){
+
+	global $wpdb;	
+	
+	if(!pw_post_meta_exists($post_id)){
+		$format = get_post_format(); // TODO : Phong - Why this function used?
+		if ( false === $format )
+		$format = 'standard';
+		
+		$post_data= get_post( $post_id, ARRAY_A );
+		//echo json_encode($post_data);
+		$query = "insert into ".$wpdb->pw_prefix.'post_meta'." 
+				(`post_id`,
+				`author_id`,
+				`post_class`,
+				`link_format`,
+				`link_url`,
+				`post_points`,
+				`rank_score`,
+				`post_shares`
+				) values("
+				.$post_id.","
+				.$post_data['post_author'].","
+				."'post_class'"."," //TODO
+				."'".$format."',"
+				."'"."',"
+				.$points.","
+				.$rank_score.","
+				//.$favorites.","
+				.$post_shares
+				.")";
+				
+		//echo $query."<br>";
+		$wpdb -> query($query);
+	}
+}
+
 
 /////////////// USER POINTS  ///////////////////
 function pw_get_user_post_points ( $user_id ){
@@ -274,7 +326,7 @@ function pw_calculate_user_posts_points( $user_id ){
 	
 	global $wpdb;
 
-	pw_add_record_to_user_meta( $user_id );
+	pw_insert_user_meta( $user_id );
 
 	$query = "
 		UPDATE ".$wpdb->pw_prefix.'user_meta'."
@@ -402,7 +454,7 @@ function pw_update_post_points_meta($user_id,$post_id, $update_points){
 } 
 
 
-function pw_add_record_to_post_points( $post_id, $user_id, $points ){
+function pw_insert_post_points( $post_id, $user_id, $points ){
 
 		global $wpdb;
 		if( pw_dev_mode() )
@@ -462,33 +514,37 @@ function pw_update_post_points( $post_id, $user_id, $points ){
 function pw_update_comment_points($comment_id, $user_id, $points){
 		global $wpdb;
 		$wpdb -> show_errors();
-		$query="UPDATE $wpdb->pw_prefix"."comment_points SET points=".$points." WHERE comment_id=".$comment_id." AND user_id=".$user_id;
+		$query = "
+			UPDATE $wpdb->pw_prefix"."comment_points
+			SET points=".$points."
+			WHERE comment_id=".$comment_id."
+			AND user_id=".$user_id;
 		$wpdb->query($query);
 }
 
-function pw_add_record_to_comment_points( $comment_id, $user_id, $points ){
+function pw_insert_comment_points( $comment_id, $user_id, $points ){
 		global $wpdb;
-		$wpdb -> show_errors();
-		$comment_author = pw_get_comment_author_id($comment_id);
-
-	//	$query = "insert into ".$wpdb->pw_prefix.'comment_points'." values(" . $comment_id . ",".pw_get_comment_post_id($comment_id)."," . $user_id . ",".$comment_author."," . $points . ",null)";
 		
-		$query="INSERT INTO `$wpdb->pw_prefix"."comment_points`
-				(`comment_id`,
-				`user_id`,
-				`comment_post_id`,
-				`comment_author_id`,
-				`points`,
-				`time`)
-				VALUES
-				($comment_id,
-				$user_id,".
-				pw_get_comment_post_id($comment_id).",
-				$comment_author,
-				$points,
-				null)";
-							
-		$wpdb->query($query);
+		if(pw_dev_mode())
+			$wpdb -> show_errors();
+		
+		$comment_post_id = pw_get_comment_post_id( $comment_id );
+		$comment_author_id = pw_get_comment_author_id( $comment_id );
+
+		$wpdb->insert(
+			$wpdb->pw_prefix."comment_points",
+			array(
+				'comment_id'		=>	$comment_id,
+				'user_id'			=>	$user_id,
+				'comment_post_id'	=>	$comment_post_id,
+				'comment_author_id' =>	$comment_author_id,
+				'points'			=>	$points,
+				),
+			array(
+				'%d', '%d', '%d', '%d', '%d'
+				)
+			);
+
 }
 
 
@@ -760,55 +816,6 @@ function pw_post_meta_exists($post_id){
 
 }
 
-
-function pw_add_record_to_post_meta($post_id, $points=0,$rank_score=0,$favorites=0,$post_shares=0){
-	/*
-	 This function gets all post data and inserts a record in wp_postworld_post_meta table
-	 * Parameters:
-	 * -post_id
-	 * -optional : points (default value=0)
-	 *			   rankd_score(default value=0)
-	 * 				favorites(default value=0)
-	 * optional parameters are not sent if the function adds a new row
-	 */
-	
-		
-
-	global $wpdb;	
-	//$wpdb-> show_errors();
-	
-	if(!pw_post_meta_exists($post_id)){
-		$format = get_post_format(); // TODO : Phong - Why this function used?
-		if ( false === $format )
-		$format = 'standard';
-		
-		$post_data= get_post( $post_id, ARRAY_A );
-		//echo json_encode($post_data);
-		$query = "insert into ".$wpdb->pw_prefix.'post_meta'." 
-				(`post_id`,
-				`author_id`,
-				`post_class`,
-				`link_format`,
-				`link_url`,
-				`post_points`,
-				`rank_score`,
-				`post_shares`
-				) values("
-				.$post_id.","
-				.$post_data['post_author'].","
-				."'post_class'"."," //TODO
-				."'".$format."',"
-				."'"."',"
-				.$points.","
-				.$rank_score.","
-				//.$favorites.","
-				.$post_shares
-				.")";
-				
-		//echo $query."<br>";
-		$wpdb -> query($query);
-	}
-}
 
 
 
