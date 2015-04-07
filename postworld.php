@@ -301,7 +301,6 @@ include 'php/postworld_includes.php';
 ////// UPDATE / MIGRATE //////
 include 'php/postworld_update.php';
 
-
 ///// ADD HEADER CODE /////
 add_action('wp_head','pw_add_header_code');
 function pw_add_header_code() {
@@ -309,8 +308,13 @@ function pw_add_header_code() {
 	echo $output;
 }
 
-//To get user id from wordpress
+///// ENABLE WPDB ERRORS IF IN DEV MODE /////
+global $wpdb;
+if( pw_dev_mode() )
+	$wpdb->show_errors();
 
+
+//To get user id from wordpress
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 
 ?>
