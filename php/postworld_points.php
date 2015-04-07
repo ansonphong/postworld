@@ -142,7 +142,7 @@ function pw_calculate_user_posts_points( $user_id ){
 		SET post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."'
 		WHERE user_id=".$user_id;
 	
-	$result = $wpdb->query( $wpdb->prepare( $query ) );
+	$result = $wpdb->query( $query );
 	
 	return array( "total" => $total_user_points, "post_type" => $post_points_meta['post_type'] );
 	
@@ -175,6 +175,7 @@ function pw_get_user_comments_points ( $user_id ){
 	return $total_points;
 
 }
+
 /*Later*/
 function pw_calculate_user_comments_points ( $user_id ){
 	/*• Adds up the points voted to given user's comments, stored in wp_postworld_comment_points
@@ -203,7 +204,7 @@ function pw_cache_user_comments_points ( $user_id ){
 	/*• Runs calculate_user_comment_points() Method
 	  • Caches value in comment_points column in wp_postworld_user_meta table
 	return : integer (number of points)*/
-	return calculate_user_comments_points($user_id);
+	return pw_calculate_user_comments_points($user_id);
 }
 function pw_set_comment_points($comment_id,$set_poinst){
 	/*Description
@@ -280,14 +281,11 @@ function pw_set_points ( $point_type, $id, $set_points ){
 	--------------
 	 * The post_id or comment_id
 	 
-	
 	$set_points : integer
 	----------------
 	 * How many points to set for the user
 	
- 
-Process
-	
+Process:
 	-Get the User ID
 	-Get the user's vote power : pw_get_user_vote_power()
 			If $set_points is greater than the user's role vote_points , reduce to vote_points
@@ -360,12 +358,12 @@ Process
 		//echo("update_points:".$update_points);	
 	}
 	
+	// Check if it is required to delete the row and update cached points (triggers)
+	// Refactor now that the triggers are gone
 
-
-	//check if it is required to delete the row and update cashed points (triggers)
 	if ($set_points == 0) { 
 		if($points_row){
-			$query = "delete from ".$table_name." where $column_id=" . $id . " and user_id=" . $user_id;
+			$query = "DELETE from ".$table_name." WHERE $column_id=" . $id . " AND user_id=" . $user_id;
 			$wpdb -> query($query);
 		}else{
 			$update_points = 0;
@@ -373,7 +371,6 @@ Process
 		
 	} else { //set points not 0 
 		
-
 		if($points_row){
 
 			if($point_type =='post') {
@@ -388,22 +385,17 @@ Process
 		}
 		else{
 
-		//	echo "row not founddd";
 			if($point_type =='post') {
-			//	echo "postt";
 				pw_add_record_to_post_points($id, $user_id, $set_points);
 				//$points_total = pw_cache_post_points($id);
 			}else{
-				//echo "commment";
 				pw_add_record_to_comment_points($id, $user_id, $set_points);
 				//$points_total = pw_cache_comment_points($id);
 			}
 			$update_points= $set_points;
 		}
 
-		
 	}
-
 
 
 	if ($point_type =='post') {
@@ -413,6 +405,7 @@ Process
 		$postdata = get_post ( $id );
 		pw_cache_user_posts_points( $postdata->post_author );
 	}
+
 	else if ($point_type =='comment'){ 
 		// Cache Comment Points
 		$points_total = pw_cache_comment_points($id);
@@ -453,14 +446,13 @@ Process
 		-Use post_points_meta to store points activity << PHONG
 	 * 
 	 */
-	 
 	 	
 	$output = array(
-	     'point_type' =>$point_type,// (post/comment) << NEW
-	     'user_id' => $user_id, // (user ID) << NEW
-	     'id' => $id, // (post/comment ID) << NEW
-	     'points_added' => $update_points, // (points which were successfully added)
-	     'points_total' => $points_total // (from wp_postworld_meta)
+	     'point_type' 	=>	$point_type,	// (post/comment) << NEW
+	     'user_id' 		=> 	$user_id, 		// (user ID) << NEW
+	     'id' 			=> 	$id, 			// (post/comment ID) << NEW
+	     'points_added' => 	$update_points, // (points which were successfully added)
+	     'points_total' => 	$points_total 	// (from wp_postworld_meta)
 	);
 	 
 	return $output;
@@ -492,7 +484,7 @@ function pw_update_post_points($post_id, $user_id, $points){
 function pw_update_comment_points($comment_id, $user_id, $points){
 		global $wpdb;
 		$wpdb -> show_errors();
-		$query="update $wpdb->pw_prefix"."comment_points set points=".$points." where comment_id=".$comment_id." and user_id=".$user_id;
+		$query="UPDATE $wpdb->pw_prefix"."comment_points SET points=".$points." WHERE comment_id=".$comment_id." AND user_id=".$user_id;
 		$wpdb->query($query);
 }
 
@@ -637,7 +629,7 @@ function pw_get_user_points_voted_to_posts($user_id, $breakdown=FALSE) {
 			AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id)
 			WHERE author_id=$user_id ";
 
-		$user_votes_points_breakdown = $wpdb->get_results( $wpdb->prepare( $query ) );
+		$user_votes_points_breakdown = $wpdb->get_results( $query );
 
 		return $user_votes_points_breakdown;	
 	}
