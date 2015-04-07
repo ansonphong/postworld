@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Sets post or comment points and updates caches
  * @internal A meta function for pw_set_post_points() and pw_set_comment_points() 
