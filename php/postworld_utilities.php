@@ -167,7 +167,7 @@ function pw_is_base( $mixed ){
 	return in_array( $screen->base, $screen_bases );
 }
 
-function pw_log( $message, $data = array() ){
+function pw_log( $message, $data = null ){
 	if( is_array( $message ) || is_object( $message ) )
 		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
 

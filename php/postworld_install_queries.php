@@ -22,7 +22,14 @@ $pw_queries = array(
 		0 => array( 
 			"description"=>"wp_postworld_post_points_AfterInsert",
 			"drop" =>"DROP TRIGGER IF EXISTS wp_postworld_post_points_AfterInsert;",
-			"create" =>"CREATE TRIGGER `wp_postworld_post_points_AfterInsert` AFTER INSERT ON `".$wpdb->pw_prefix.'post_points'."` FOR EACH ROW update ".$wpdb->pw_prefix.'post_meta'." set post_points = (select COALESCE(SUM(post_points),0) from ".$wpdb->pw_prefix.'post_points'." where post_id = NEW.post_id) where post_id = NEW.post_id;"
+			"create" =>"
+				CREATE TRIGGER `wp_postworld_post_points_AfterInsert`
+				AFTER INSERT ON `".$wpdb->pw_prefix.'post_points'."`
+				FOR EACH ROW UPDATE ".$wpdb->pw_prefix.'post_meta'."
+				SET post_points = (select COALESCE(SUM(post_points),0)
+				FROM ".$wpdb->pw_prefix.'post_points'."
+				WHERE post_id = NEW.post_id)
+				WHERE post_id = NEW.post_id;"
 		),
 		1 => array(
 			"description"=>"wp_postworld_post_points_AfterDelete",
