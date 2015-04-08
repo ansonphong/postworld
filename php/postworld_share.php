@@ -4,28 +4,27 @@
  * Watch for incoming shares
  * This is a watch which listens for the share fields
  * And if they exist and data checks out, add a share to the DB
- *
+ * @see pw_set_share()
  */
-add_action( 'setup_theme', 'pw_share_watch', 10 ); // init
+add_action( 'init', 'pw_share_watch', 10 ); // init
 function pw_share_watch(){
 	if( isset( $_GET['u'] ) )
 		$user_id = $_GET['u'];
 	if( isset( $_GET['p'] ) )
 		$post_id = $_GET['p'];
-	// If both user and post are supplied ie.
-	// http://localhost:8888/?u=1&p=169953  /  175474 / 178530
 
+	// If both user and post are supplied ie. /?u=1&p=220220
 	if ( isset( $user_id ) && isset( $post_id ) ){
 		if ( username_exists_by_id($user_id) && post_exists_by_id($post_id) ){
-			pw_set_share ( $user_id, $post_id );
-			// Redirect browser
+			// Set the share record in Postworld Shares table
+			pw_set_share( $user_id, $post_id );
+			// Redirect browser to the post's permalink
 			$permalink = get_permalink( $post_id );
-			//echo $permalink;
-			wp_redirect( get_site_url() );
+			pw_log($permalink);
+			wp_redirect( $permalink ); //get_site_url()
 		}
 	}
 }
-
 
 /**
  * Sets a record of a share in Shares table

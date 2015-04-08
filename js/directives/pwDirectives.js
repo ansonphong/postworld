@@ -660,3 +660,44 @@ postworld.directive( 'pwSidebars',
 	}
 }]);
 
+
+////////// SHARE LINK //////////
+postworld.directive( 'pwShareLink',
+	[ '$pw', '_', '$log',
+	function( $pw, $_, $log ){
+	return{
+		scope:{
+			pwShareLink:'=',		// The expression to map the share link to
+			shareLinkPostId:'=',	// The ID of the post which to generate the share link for
+			shareLinkDynamic:'@'	// If 'true', sets up a watch on the value of shareLinkPostId
+		},
+		link : function( $scope, element, attrs ){
+
+			// Generates the share link URL
+			var generateShareLink = function(postId){
+				if( _.isUndefined(postId) )
+					return '';
+
+				var userId = $_.get( $pw, 'user.ID' );
+				var shareLink = $pw.paths.home_url + "/?u=" + userId + "&p=" + postId;
+				$log.debug('SHARE LINK : ', shareLink);
+				return shareLink;
+			}
+
+			// If share link is dynamic, such as value = 'true'
+			if( $_.stringToBool( $scope.shareLinkDynamic ) ){
+				$scope.$watch( 'shareLinkPostId', function(postId){
+					$scope.pwShareLink = generateShareLink(postId);
+				});
+			}
+
+			// Set the share link value
+			$scope.pwShareLink = generateShareLink($scope.shareLinkPostId);
+			
+		}
+	}
+}]);
+
+
+
+
