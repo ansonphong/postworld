@@ -257,29 +257,48 @@ postworld.directive('pwBackgroundImage', function( $log ) {
 postworld.directive('pwEval', function($timeout, $log) {
 	return {
 		scope:{
-		  pwEval:"@",
-		  evalTimeout:"@",
-		  evalContext:"@",
+		  pwEval:"@",		// A string to evaluate as Javascript
+		  evalTimeout:"@",	// (optional) Numerical period to timeout before evaluating, in milliseonds
+		  evalContext:"@",	// (optional) Context in which to evaluate. Options : scope / window
+		  evalWatch:"=",	// (optional) An expression to watch for changes, on change re-evalute
 		},
 		link: function($scope, element, attrs) {
+
 			if( _.isUndefined( $scope.evalTimeout ) )
 				$scope.evalTimeout = 0;
 			if( _.isUndefined( $scope.evalContext ) )
 				$scope.evalContext = 'window';
-			$timeout(
-				function(){
-					$log.debug( 'pw-eval : ', $scope.pwEval );
-					try{
-						if( $scope.evalContext == 'scope' )
-							$scope.$eval($scope.pwEval);
-						else
-							eval($scope.pwEval);
-					}
-					catch(err){
-						$log.debug('pw-eval : ERROR : ' + $scope.pwEval, err);
-					}
-				}, $scope.evalTimeout
-			);
+
+			///// EVAL TIMEOUT /////
+			var evaluate = function(){
+				$timeout(
+					function(){
+						$log.debug( 'pw-eval : ', $scope.pwEval );
+						try{
+							if( $scope.evalContext == 'scope' )
+								$scope.$eval($scope.pwEval);
+							else
+								eval($scope.pwEval);
+						}
+						catch(err){
+							$log.debug('pw-eval : ERROR : ' + $scope.pwEval, err);
+						}
+					}, $scope.evalTimeout
+				);
+			}
+			evaluate();
+
+			///// EVAL WATCH /////
+			var firstWatch = true;
+			$scope.$watch( 'evalWatch', function(val){
+				if( firstWatch ){
+					firstWatch = false;
+					return;
+				}
+				evaluate();
+			});
+
+
 		},
 	}
 });
