@@ -83,6 +83,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'',
 			),
 
+		array(
+			'name'	=>	'Post Cache',
+			'slug'	=>	'post_cache',
+			'icon'	=>	'pwi-cube',
+			'description'	=>	'',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules

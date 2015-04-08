@@ -34,17 +34,18 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 
 
 	///// CACHING LAYER /////
-	$cache_hash = hash( 'sha256',
-		json_encode( $post_ids ) .
-		json_encode( $fields ) .
-		json_encode( $options )
-		);
-	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
-	if( !empty( $get_cache ) ){
-		return json_decode( $get_cache['cache_content'], true);
+	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+		$cache_hash = hash( 'sha256',
+			json_encode( $post_ids ) .
+			json_encode( $fields ) .
+			json_encode( $options )
+			);
+		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+		if( !empty( $get_cache ) ){
+			return json_decode( $get_cache['cache_content'], true);
+		}
 	}
-
-
+	
 	///// OPTIONS : GALLERIES /////
 	// Condition field Model
 	$include_galleries = _get( $options, 'galleries.include_galleries' );
@@ -77,13 +78,13 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 		$posts = pw_merge_galleries( $posts, $options['galleries'] );
 	}
 
-
 	///// CACHING LAYER /////
-	pw_set_cache( array(
-		'cache_type'	=>	'feed-posts',
-		'cache_hash' 	=> 	$cache_hash,
-		'cache_content'	=>	json_encode($posts),
-		));
+	if( in_array( 'post_cache', pw_enabled_modules() ) )
+		pw_set_cache( array(
+			'cache_type'	=>	'feed-posts',
+			'cache_hash' 	=> 	$cache_hash,
+			'cache_content'	=>	json_encode($posts),
+			));
 
 
 	// Return Array of post data
@@ -1197,6 +1198,8 @@ function pw_save_post($post_data){
 		pw_cache_rank_score ( $post_id );
 
 	if ( !empty($post_class) ){}
+
+	do_action( 'pw_save_post' );
 
 	return $post_id;
 
