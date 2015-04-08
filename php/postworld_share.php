@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Watch for incoming shares
  * This is a watch which listens for the share fields
