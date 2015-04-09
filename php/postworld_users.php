@@ -31,6 +31,10 @@ function pw_current_user_has_role( $check_roles = array() ){
 
 
 function pw_require_login( $login_url = 'wp-login.php' ){
+
+	if( DEFINED('DOING_CRON') && DOING_CRON === true )
+		return false;
+
 	// Require login for site
 	$user_id = get_current_user_id();
 	$current_file = basename($_SERVER['REQUEST_URI']);
