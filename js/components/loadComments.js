@@ -87,19 +87,23 @@ postworld.directive('loadComments', function() {
 		template: '<div ng-include="templateUrl" class="comments"></div>',
 		scope: {
 			postId : '=',
+			commentsDynamic:'@'
 		}
 	};
 });
 
 postworld.controller('pwCommentsTreeController',
-	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw',
-	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw) {
+	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '_',
+	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw, $_ ) {
 		$scope.json = '';
 
 		if ( $pw.user  )
 			$scope.user_id = $pw.user['data'].ID;
 		else
 			$scope.user_id = 0;
+
+		if( _.isUndefined( $scope.commentsDynamic ) || _.isNull( $scope.commentsDynamic )  )
+			$scope.commentsDynamic = false;
 
 		$scope.startTime = 0;
 		$scope.endTime = 0;
@@ -140,17 +144,34 @@ postworld.controller('pwCommentsTreeController',
 			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		}
 
-		$scope.$watch( 'postId', function( val ){
+		///// WATCH POST ID /////
+		// If the comments are dynamic, for instance a changing post ID
+		if( $_.stringToBool( $scope.commentsDynamic ) ){
+			var firstLoad = true;
+			$scope.$watch( 'postId', function( val, oldVal ){
+				if( firstLoad ){
+					firstLoad = false;
+					return;
+				}
+				// Reload comments on each change
+				$scope.loadComments();
+			});
+
+		}
+		else {
+			// Load in comments
 			$scope.loadComments();
-		});
+		}
 			
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;
 			settings.query.post_id = $scope.postId;
 
+			$log.debug('loadComments : REQUEST : ', $scope.loadCommentsInstance );
+
 			pwCommentsService.pw_get_comments($scope.loadCommentsInstance).then(function(value) {
-				$log.debug('Got Comments: ', value.data );
+				$log.debug('loadComments : RESPONSE : ', value.data );
 				$scope.treedata = {children: value.data};
 				$scope.commentsLoaded = true;
 				$scope.treeUpdated = !$scope.treeUpdated;			      

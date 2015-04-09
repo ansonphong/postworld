@@ -236,10 +236,17 @@ function pw_social_widgets( $meta = array() ){
 	*/
 
 	global $pw;
+	global $post;
 	$settings = array();
 
 	// Get Title and URL from post_id
 	$post_id = _get( $meta, 'post_id' );
+
+	if( empty( $post_id )  ){
+		$post_id = $post->ID;
+		$meta['post_id'] = $post_id;
+	}
+
 	if( !empty( $post_id ) ){
 		$meta['title'] = get_post( $post_id )->post_title;
 		$meta['url'] = get_permalink( $post_id );
@@ -256,9 +263,12 @@ function pw_social_widgets( $meta = array() ){
 	// Set meta into settings
 	$settings['meta'] = $meta;
 
+
 	// Apply filters
 	$settings = apply_filters( 'pw_social_widgets', $settings );
 	//pw_log( "pw_social_widgets : " . json_encode( $settings ) );
+
+	pw_log( $settings );
 
 	$output = "";
 	if( is_array( $settings['networks'] ) )
@@ -279,6 +289,60 @@ function pw_social_widgets( $meta = array() ){
 	return $output;
 
 }
+
+
+
+////////// SOCIAL MEDIA WIDGETS //////////
+function pw_default_social_widget_settings( $settings = array() ){
+	global $post;
+	global $pw;
+
+	$global_settings = array(
+		"meta"  =>  array(
+			//"title"				=>  "",
+			//"url"		      	=>  $pw['view']['url'],
+			"before_network"  	=>  "<span class=\"social-widget %network%\">",
+			"after_network"   	=>  "</span>"
+			),
+		"networks"  =>  array(
+			array(
+				"network"     =>  "facebook",
+				"widget"      =>  "like-button",
+				"appId"       =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.facebook_app_id' ) ),
+				"include_sdk" =>  true,
+				"settings"  =>  array(
+					"layout"    	=>  "button_count",
+					"action"    	=>  "like",
+					"show_faces"  	=>  "false",
+					"share"     	=>  "true",
+					"width"     	=>  "133",
+					"height"    	=>  "24",
+					"colorscheme" 	=> 	"light",
+					),
+				),
+			array(
+				"network"     =>  "twitter",
+				"widget"      =>  "share",
+				"include_script"=>  true,
+				"settings"    =>  array(
+					"via"       =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter' ) ), //"twitter_user",
+					"related"   =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter' ) ),
+					"hashtags"  =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter_hashtags' ) ), //"twitter_user",
+					"size"      =>  "small",
+					"lang"      =>  "en",
+					"dnt"       =>  "true",
+					),
+				),
+
+			),
+
+		);
+
+	$settings = array_replace_recursive( $global_settings, $settings);
+	return $settings;
+}
+add_filter( 'pw_social_widgets', 'pw_default_social_widget_settings' );
+
 
 
 

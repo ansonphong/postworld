@@ -355,6 +355,8 @@ postworld.factory('_',
 			return this.stringToBoolean(string);
 		},
 		stringToBoolean : function(string){
+			if( _.isBoolean( string ) )
+				return string;
 			if( !_.isString(string) )
 				return false;
 			switch(string.toLowerCase()){
@@ -395,7 +397,13 @@ postworld.factory('_',
 			return ( JSON.stringify(obj1) === JSON.stringify(obj2) );
 		},
 
-		clobber: function( id, t, f, w ){ // id = unique string, t = timeout in ms, f = function to run, w = boolean, whether to wait until it stops firing before clobbering
+		clobber: function( id, t, f, w ){
+			// id = unique string
+			// t = timeout in ms
+			// f = function to run
+			// w = boolean, whether to wait until it stops firing before clobbering
+			//		- If true, the first action will fire instantly, and further requests will be delayed
+
 			/*	Times out for the given time before running a function.
 			 *	Any sequential functions that are clobbered with the same ID before the function runs
 			 *	Will over-write the previous action and again timeout.
@@ -426,6 +434,7 @@ postworld.factory('_',
 					f();
 
 			}, t );
+
 		},
 		urlParam: function( name ) {
 		    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
