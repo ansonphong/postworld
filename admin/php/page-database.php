@@ -122,8 +122,10 @@
 						Update Caches
 					</h3>
 
+					<!--
 					If it keeps spinning even after the maximum PHP process time,
 					you may need to increase the maximum allowed process time in your PHP configuration.
+					-->
 
 					<!-- POSTMETA TABLE -->
 					<div

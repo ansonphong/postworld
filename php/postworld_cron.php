@@ -4,6 +4,10 @@ function pw_add_schedules($schedules) {
 	// WP Schedules : hourly, twicedaily, daily
 	// Add a few more schedules into the mix
 
+	$schedules['one_second'] = array(
+		'interval' => 1,
+		'display' => __('Every Second')
+	);
 	$schedules['one_minute'] = array(
 		'interval' => 60,
 		'display' => __('Every Minute')

@@ -268,8 +268,6 @@ function pw_social_widgets( $meta = array() ){
 	$settings = apply_filters( 'pw_social_widgets', $settings );
 	//pw_log( "pw_social_widgets : " . json_encode( $settings ) );
 
-	pw_log( $settings );
-
 	$output = "";
 	if( is_array( $settings['networks'] ) )
 		foreach( $settings['networks'] as $network ){

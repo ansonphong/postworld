@@ -241,7 +241,7 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 
 	//pw_log_microtimer('pw_live_feed-'.$feed_id);
 
-	pw_log_microtimer($feed_id);
+	//pw_log_microtimer($feed_id);
 
 	///// OUTPUT /////
 	if( $echo )
