@@ -41,6 +41,10 @@ function pw_require_login( $login_url = 'wp-login.php' ){
 }
 
 function pw_runtime_require_login(){
+	
+	if( DEFINED('DOING_CRON') && DOING_CRON === true )
+		return false;
+
 	if( !defined( 'PW_REQUIRE_LOGIN' ) )
 		return false;
 	if( PW_REQUIRE_LOGIN == true )
