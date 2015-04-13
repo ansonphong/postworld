@@ -93,8 +93,6 @@ function pw_file_hash( $src, $type = 'sha256' ){
 
 
 
-
-
 // Recursively count array
 function pw_count_r($array, $i = 0){
     foreach($array as $k){
