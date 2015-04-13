@@ -62,42 +62,8 @@ function pw_save_option(){
 	die;
 }
 
-//add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
 add_action("wp_ajax_pw_save_option", "pw_save_option");
 
-/*
-//---------- LOAD LAYOUT OPTIONS ----------//
-function i_load_layout_options(){
-	list($response, $args, $nonce) = i_initAjaxResponse();
-	$params = $args['args'];
-
-	global $iAdmin;
-
-	// Get Sidebars
-	$I_Sidebars = new I_Sidebars();
-	$i_sidebars = (array) $I_Sidebars->get_sidebars();
-
-	// Load Infinite Layouts Class
-	//$I_Layouts = new I_Layouts();
-	// Run Update Function
-	//$response_data = $I_Layouts->save_options($params);
-
-	$response_data = array(
-		"iAdmin"			=> $iAdmin,
-		"i_layout_options" 	=> i_layout_options(),
-		"i_sidebars" 		=> $i_sidebars,
-		);	
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
-}
-
-//add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
-add_action("wp_ajax_i_load_layout_options", "i_load_layout_options");
-*/
 
 ////////// GENERAL AJAX FUNCTIONS //////////
 

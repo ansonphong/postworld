@@ -81,7 +81,7 @@ postworld.controller('postActions',
             "post_id" : $scope.post.ID,
         };
         // AJAX Call 
-        pwData.set_post_relationship( args ).then(
+        pwData.setPostRelationship( args ).then(
             // ON : SUCCESS
             function(response) {    
                 //SET FAVORITE
@@ -185,7 +185,7 @@ postworld.controller('postVote',
 
         // AJAX Call 
         $log.debug('pwPostVote : VOTE SUBMIT : ', vars );
-        pwData.set_post_points ( vars ).then(
+        pwData.setPostPoints ( vars ).then(
             // ON : SUCCESS
             function(response) {
                 // RESPONSE.DATA FORMAT : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}

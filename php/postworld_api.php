@@ -12,6 +12,14 @@ function pw_get_obj( $obj, $key ){
 	// DEPRECIATED
 	return _get( $obj, $key );
 }
+
+/**
+ * Gets the sub-key value from an associative array
+ * @param $obj [array] An associative array
+ * @param $key [string] A string denoting which subkey to retreive
+ *			- ie. "key.subkey.subsubkey"
+ * @return [mixed] The object at the specified subkey, false if it doesn't exist
+ */
 function _get( $obj, $key ){
 	// Checks to see if a key exists in an object,
 	// and returns it if it does exist. Otherwise return false.
@@ -51,13 +59,23 @@ function pw_set_obj( $obj, $key, $value ){
 	// DEPRECIATED
 	return _set( $obj, $key, $value );
 }
+
+/**
+ * Sets the sub-key value of an associative array
+ * Creating any neccessary keys along the way if they don't yet exist
+ * @param $obj [array] An associative array
+ * @param $key [string] A period deliniated string denoting which subkey to set
+ *			- ie. "key.subkey.subsubkey"
+ * @param $value [mixed] The value which to set
+ * @return [mixed] The object with the new value set
+ */
 function _set( $obj, $key, $value ){
 	// Sets the value of an object,
 	// even if it or it's parent(s) doesn't exist.
 	
 	/*	PARAMETERS:
 		$obj 	= 	[array]
-		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
+		$key 	= 	[string] 
 		$value 	= 	[string/array/object]
 	*/
 
@@ -611,12 +629,14 @@ function pw_get_option( $vars ){
 			'option_name'	=>	[string], // "i-options",
 			'key'			=> 	[string], // "images.logo",
 			'filter'		=>	[boolean] // Gives option to disable filtering
+			'cache'			=>	[boolean] // Gives option to disable caching
 	*/
 
 	$default_vars = array(
 		'option_name'	=>	PW_OPTIONS_SITE,
 		'key'			=>	false,
 		'filter'		=>	true,
+		'cache'			=>	true,
 		);
 	$vars = array_replace_recursive( $default_vars, $vars );
 
@@ -631,7 +651,7 @@ function pw_get_option( $vars ){
 	// Get the number of filtered on (possible) cached value
 	$cached_filter_count = _get( $pw_options_cache, $option_name .'.filter_count' );
 	// If there is the name number of filters (no new filters)
-	if( $filter_count === $cached_filter_count ){
+	if( $filter_count === $cached_filter_count && $cache == true ){
 		// Get the cached value
 		$value = _get( $pw_options_cache, $option_name .'.value' );
 	}
@@ -687,17 +707,30 @@ function pw_set_option( $vars ){
 
 	extract($vars);
 
+	///// EMPTY KEY /////
+	// If there's no or an empty key
+	if( !isset( $vars['key'] ) || empty($vars['key']) ){
+		if( is_array($option_value) || is_object($option_value) )
+			$option_value = json_encode($option_value);
+		return update_option( $option_name, $option_value );
+	}
+
 	///// GET STORED VALUE /////
 	$option_value = get_option( $option_name, array() );
+
 
 	// Decode from JSON, assuming it's a JSON string
 	if( !empty( $option_value ) )
 		$option_value = json_decode( $option_value, true );
 
+
 	///// SET VALUE /////
 	$option_value = _set( $option_value, $key, $value );
+
+
 	// Encode to JSON
 	$option_value = json_encode($option_value);
+
 	// Update DB
 	$update_option = update_option( $option_name, $option_value );
 
@@ -706,11 +739,12 @@ function pw_set_option( $vars ){
 }
 
 
-function pw_grab_option( $option_name, $key ){
+function pw_grab_option( $option_name, $key, $disable_cache = false ){
 	// Quick routine method to get option subkey
 	return pw_get_option( array(
 		'option_name' => $option_name,
-		'key' => $key
+		'key' => $key,
+		'cache' => !$disable_cache,
 		));
 }
 

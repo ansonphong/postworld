@@ -8,7 +8,6 @@ function postworld_includes( $args ){
 	add_action('admin_print_scripts', 'pwGlobals_print', 8 );
 	add_action('admin_print_scripts', 'pwBootstrapPostworldAdmin_print', 20 );
 	
-
 	// Add hook for front-end <head></head>
 	add_action('wp_head', 'pwGlobals_print', 8 );
 
@@ -565,6 +564,10 @@ function pwSiteGlobals_include(){
 	///// POST TYPES /////
 	$pwSiteGlobals["post_types"] = pw_get_post_types();
 
+	///// TAXONOMIES /////
+	$pwSiteGlobals["taxonomies"] = pw_get_taxonomies( array(  ),'objects');
+
+	///// FIELD MODEL /////
 	$pwSiteGlobals["fields"] = pw_field_model();
 
 	///// PRINT JAVASCRIPT /////
@@ -627,7 +630,7 @@ function pw_current_user(){
 		unset($userdata->data->user_pass);
 		$userdata = (array) $userdata;
 		$userdata["postworld"] = array();
-		$userdata["postworld"]["vote_power"] = get_user_vote_power( $user_id );
+		$userdata["postworld"]["vote_power"] = pw_get_user_vote_power( $user_id );
 
 		// Force the roles as a flat array
 		if( isset( $userdata['roles'] ) &&
@@ -677,28 +680,8 @@ function pwGlobals_parse(){
 		'stylesheet_directory_uri' 	=> get_stylesheet_directory_uri(),
 		);
 
-
 	///// GLOBAL OPTIONS /////
 	$pw["options"] = apply_filters( PW_GLOBAL_OPTIONS, array() );
-
-	///// DISPLAYED USER /////
-	// Support for Buddypress Globals
-	if ( function_exists('bp_displayed_user_id') ){
-		$displayed_user_id = bp_displayed_user_id();
-	} else{
-		global $post;
-		if( gettype( $post ) == 'object' )
-			$displayed_user_id = $post->post_author;
-	}
-
-	if ( isset($displayed_user_id) )
-		$displayed_userdata = get_userdata( $displayed_user_id );
-
-	$pw['displayed_user'] = array(
-		"user_id" => $displayed_user_id,
-		"display_name" => $displayed_userdata->display_name,
-		"first_name" => $displayed_userdata->first_name,	
-		);
 
 	///// SECURITY /////
 	$pw["security"] = array();
@@ -776,7 +759,7 @@ function pwAdminGlobals_parse(){
 	$pwAdminGlobals['templates']['html'] = pw_get_templates( array( 'ext' => 'html', 'path_type' => 'url', 'output' => 'ids' ) );
 
 	/// SIDEBARS ///
-	$pwAdminGlobals['sidebars'] = i_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+	$pwAdminGlobals['sidebars'] = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
 
 	/// MENUS ///
 	$pwAdminGlobals['menus'] = pw_get_menus();
@@ -826,6 +809,14 @@ function pw_include_bootstrap_styles(){
     // If LESS not included
     wp_enqueue_style( 'bootstrap-cdn', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
     
+}
+
+add_action( 'wp_head', 'pw_add_base' );
+function pw_add_base(){
+	global $pw;
+	?>
+	<base href="<?php echo $pw['view']['base_url'] ?>">
+	<?php
 }
 
 ?>

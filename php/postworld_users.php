@@ -31,6 +31,10 @@ function pw_current_user_has_role( $check_roles = array() ){
 
 
 function pw_require_login( $login_url = 'wp-login.php' ){
+
+	if( DEFINED('DOING_CRON') && DOING_CRON === true )
+		return false;
+
 	// Require login for site
 	$user_id = get_current_user_id();
 	$current_file = basename($_SERVER['REQUEST_URI']);
@@ -41,6 +45,10 @@ function pw_require_login( $login_url = 'wp-login.php' ){
 }
 
 function pw_runtime_require_login(){
+	
+	if( DEFINED('DOING_CRON') && DOING_CRON === true )
+		return false;
+
 	if( !defined( 'PW_REQUIRE_LOGIN' ) )
 		return false;
 	if( PW_REQUIRE_LOGIN == true )
@@ -642,18 +650,7 @@ function pw_user_login( $user_id, $redirect = '/' ) {
 
 
 // Automatically login a user with an auth key
-
 // http://localhost/login/?autologin=909238409283kj23hk324
-
-
-//// DELETE ////
-function login_user_test( $activation_key, $redirect ){
-    pw_user_login( 1, '/' );
-}
-//add_action( 'after_setup_theme', 'login_user_test', 10, 3 );
-
-
-
 
 
 ?>

@@ -143,7 +143,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {'args':args};
 			return this.wp_ajax('pw_query',params);
 		},
-		pw_get_live_feed: function(args,qsArgs) {
+		getLiveFeed: function(args,qsArgs) {
+
+			$log.debug('pwData.pw_get_live_feed : INIT',args);
+
 			// args: arguments received from Panel. fArgs: is the final args sent along the ajax call.
 			// feedArgs will be filled initially with data from feed settings, 
 			// feedArgs will be filled next from data in the query string			
@@ -151,10 +154,14 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			feedArgs = this.mergeQueryString(feedArgs,qsArgs); // will read args and override feedArgs
 			feedArgs = this.removeEmptyArgs(feedArgs);
 			// Get Query Arguments and save them in feed settings
-			var feedSettings = feeds[args.feed_id];
+			var feedSettings = this.feeds[args.feed_id];
 			feedSettings.finalFeedQuery = feedArgs.query;
+
+			$log.debug('pwData.pw_get_live_feed',feedArgs);
+
 			var params = {'args':feedArgs};
 			return this.wp_ajax('pw_get_live_feed',params);
+
 		},
 		pw_scroll_feed: function(args) {
 			$log.debug('pwData.pw_scroll_feed',args);
@@ -253,7 +260,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 
 
 		}, // END OF pw_get_template
-		convertFeedSettings: function (feedID,args1) {
+		convertFeedSettings: function ( feedID, args1 ) {
 			var feedArgs = {};
 			feedArgs.query = {};
 
@@ -261,9 +268,21 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var feed = this.feeds[feedID];
   			$log.info('Feed Query Override by Feed Settings',feedID, feed.query);
 			// Query Args will fill in the query first, then any other parameter in the feed will override it, then any user parameter will override all
-			if (feed.query != null) feedArgs.query = feed.query;  
-			if (feed.preload != null) feedArgs.preload = feed.preload; else feedArgs.preload = 10;  
-			if (feed.offset	!= null) feedArgs.offset = feed.offset; else feedArgs.offset = 0;  
+			if (feed.query != null)
+				feedArgs.query = feed.query;  
+
+			if (feed.preload != null)
+				feedArgs.preload = feed.preload;
+			else
+				feedArgs.preload = 10;  
+
+			if (feed.offset	!= null)
+				feedArgs.offset = feed.offset;
+			else
+				feedArgs.offset = 0;  
+
+			if (feed.related_posts	!= null)
+				feedArgs.related_posts = feed.related_posts;  
 
 			if (feed.order_by != null) {
 				// if + sort Ascending
@@ -353,21 +372,21 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('tags_autocomplete',params);
 		},
-		set_post_relationship: function(args) {
-			$log.debug('pwData.set_post_relationship',args);
+		setPostRelationship: function(args) {
+			$log.debug('pwData.setPostRelationship',args);
 			var params = {args:args};
-			return this.wp_ajax('set_post_relationship',params);
+			return this.wp_ajax('pw_set_post_relationship',params);
 		},
-		set_post_points: function(args) {
-			$log.debug('pwData.set_post_points',args);
+		setPostPoints: function(args) {
+			$log.debug('pwData.setPostPoints',args);
 			var params = {args:args};
-			return this.wp_ajax('set_post_points',params);
+			return this.wp_ajax('pw_set_post_points',params);
 		},
 		
-		set_comment_points: function(args) {
-			$log.debug('pwData.set_comment_points',args);
+		setCommentPoints: function(args) {
+			$log.debug('pwData.setCommentPoints',args);
 			var params = {args:args};
-			return this.wp_ajax('set_comment_points',params);
+			return this.wp_ajax('pw_set_comment_points',params);
 		},
 
 		pw_set_avatar: function( args ) {
@@ -423,15 +442,15 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('reset_password_submit',params);
 		},
-		post_share_report: function(args) {
-			$log.debug('pwData.post_share_report',args);
+		postShareReport: function(args) {
+			$log.debug('pwData.postShareReport',args);
 			var params = {args:args};
-			return this.wp_ajax('post_share_report',params);
+			return this.wp_ajax('pw_post_share_report',params);
 		},
-		user_share_report_outgoing: function(args) {
-			$log.debug('pwData.user_share_report_outgoing',args);
+		userShareReportOutgoing: function(args) {
+			$log.debug('pwData.userShareReportOutgoing',args);
 			var params = {args:args};
-			return this.wp_ajax('user_share_report_outgoing',params);
+			return this.wp_ajax('pw_user_share_report_outgoing',params);
 		},
 		set_post_image: function(args) {
 			$log.debug('pwData.set_post_image',args);
@@ -553,6 +572,17 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
     		return true;
     	},
 
+    	///// PROGRESS API /////
+    	getProgress: function( key ){
+			$log.debug('pwData.getProgress',key);
+			var params = { key:key };			
+			return this.wp_ajax('pw_get_progress',params);
+		},
+		endProgress: function( key ){
+			$log.debug('pwData.endProgress',key);
+			var params = { key:key };			
+			return this.wp_ajax('pw_end_progress',params);
+		},
 		
 
    }; // END OF pwData return value

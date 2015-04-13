@@ -225,6 +225,8 @@
 <hr class="thin">
 
 <button
+	type="button"
+	class="button"
 	ng-click="addTaxQuery(<?php echo $vars['ng_model'] ?>.query)">
 	<i class="pwi-plus"></i> Taxonomy Query
 </button>
@@ -291,6 +293,8 @@
 
 		<div class="pw-col-3">
 			<button
+				type="button"
+				class="button"
 				ng-click="removeTaxQuery(<?php echo $vars['ng_model'] ?>.query, taxQuery )">
 				<i class="pwi-close-thin"></i>
 			</button>

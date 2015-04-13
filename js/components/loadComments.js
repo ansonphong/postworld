@@ -87,19 +87,23 @@ postworld.directive('loadComments', function() {
 		template: '<div ng-include="templateUrl" class="comments"></div>',
 		scope: {
 			postId : '=',
+			commentsDynamic:'@'
 		}
 	};
 });
 
 postworld.controller('pwCommentsTreeController',
-	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw',
-	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw) {
+	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '_',
+	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw, $_ ) {
 		$scope.json = '';
 
 		if ( $pw.user  )
 			$scope.user_id = $pw.user['data'].ID;
 		else
 			$scope.user_id = 0;
+
+		if( _.isUndefined( $scope.commentsDynamic ) || _.isNull( $scope.commentsDynamic )  )
+			$scope.commentsDynamic = false;
 
 		$scope.startTime = 0;
 		$scope.endTime = 0;
@@ -140,17 +144,34 @@ postworld.controller('pwCommentsTreeController',
 			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
 		}
 
-		$scope.$watch( 'postId', function( val ){
+		///// WATCH POST ID /////
+		// If the comments are dynamic, for instance a changing post ID
+		if( $_.stringToBool( $scope.commentsDynamic ) ){
+			var firstLoad = true;
+			$scope.$watch( 'postId', function( val, oldVal ){
+				if( firstLoad ){
+					firstLoad = false;
+					return;
+				}
+				// Reload comments on each change
+				$scope.loadComments();
+			});
+
+		}
+		else {
+			// Load in comments
 			$scope.loadComments();
-		});
+		}
 			
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;
 			settings.query.post_id = $scope.postId;
 
+			$log.debug('loadComments : REQUEST : ', $scope.loadCommentsInstance );
+
 			pwCommentsService.pw_get_comments($scope.loadCommentsInstance).then(function(value) {
-				$log.debug('Got Comments: ', value.data );
+				$log.debug('loadComments : RESPONSE : ', value.data );
 				$scope.treedata = {children: value.data};
 				$scope.commentsLoaded = true;
 				$scope.treeUpdated = !$scope.treeUpdated;			      
@@ -207,57 +228,67 @@ postworld.controller('pwCommentsTreeController',
 	// CAST VOTE ON THE POST
 	$scope.voteComment = function( points, child ){
 
-			// Get the voting power of the current user
-			if( typeof $window.pw.user.postworld !== 'undefined' )
-					var vote_power = parseInt($window.pw.user.postworld.vote_power);
-			// If they're not logged in, return false
-			if( typeof vote_power === 'undefined' ){
-					alert("Must be logged in to vote.");
-					return false;
+		// Get the voting power of the current user
+		if( typeof $window.pw.user.postworld !== 'undefined' )
+				var vote_power = parseInt($window.pw.user.postworld.vote_power);
+		// If they're not logged in, return false
+		if( typeof vote_power === 'undefined' ){
+				alert("Must be logged in to vote.");
+				return false;
+		}
+		
+		// Define how many points have they already given to this post
+		var hasVoted = parseInt(child.viewer_points);
+
+		if( _.isNaN(hasVoted) )
+			hasVoted = 0;
+
+		// Define how many points will be set
+		var setPoints = ( hasVoted + points );
+
+		$log.debug( 'points', points );
+		$log.debug( 'hasVoted', hasVoted );
+		$log.debug( 'setPoints', setPoints );
+
+
+		// If set points exceeds vote power
+		if( Math.abs(setPoints) > vote_power ){
+				setPoints = (vote_power * points);
+				//alert( "Normalizing : " + setPoints );
+		}
+
+		// Setup parameters
+		var args = {
+				comment_id: child.comment_ID,
+				points: setPoints,
+		};
+
+		// Set Status
+		child.voteStatus = "busy";
+
+		// AJAX Call 
+		pwData.setCommentPoints ( args ).then(
+			// ON : SUCCESS
+			function(response) {    
+				//alert( JSON.stringify(response.data) );
+				// RESPONSE.DATA FORMAT : {"point_type":"comment","user_id":1,"id":51407,"points_added":0,"points_total":"5"}
+				$log.debug('VOTE RETURN : ' + JSON.stringify(response) );
+				if ( response.data.id == child.comment_ID ){
+					// UPDATE POST POINTS
+					child.comment_points = response.data.points_total;
+					// UPDATE VIEWER HAS VOTED
+					child.viewer_points = ( hasVoted + parseInt(response.data.points_added) ) ;
+				} //else
+					//alert('Server error voting.');
+				child.voteStatus = "done";
+			},
+			// ON : FAILURE
+			function(response) {
+					child.voteStatus = "done";
+					//alert('Client error voting.');
 			}
-			
-			// Define how many points have they already given to this post
-			var has_voted = parseInt(child.viewer_points);
-
-			// Define how many points will be set
-			var setPoints = ( has_voted + points );
-
-			// If set points exceeds vote power
-			if( Math.abs(setPoints) > vote_power ){
-					setPoints = (vote_power * points);
-					//alert( "Normalizing : " + setPoints );
-			}
-
-			// Setup parameters
-			var args = {
-					comment_id: child.comment_ID,
-					points: setPoints,
-			};
-
-			// Set Status
-			child.voteStatus = "busy";
-			// AJAX Call 
-			pwData.set_comment_points ( args ).then(
-					// ON : SUCCESS
-					function(response) {    
-							//alert( JSON.stringify(response.data) );
-							// RESPONSE.DATA FORMAT : {"point_type":"comment","user_id":1,"id":51407,"points_added":0,"points_total":"5"}
-							$log.debug('VOTE RETURN : ' + JSON.stringify(response) );
-							if ( response.data.id == child.comment_ID ){
-									// UPDATE POST POINTS
-									child.comment_points = response.data.points_total;
-									// UPDATE VIEWER HAS VOTED
-									child.viewer_points = ( parseInt(child.viewer_points) + parseInt(response.data.points_added) ) ;
-							} //else
-									//alert('Server error voting.');
-							child.voteStatus = "done";
-					},
-					// ON : FAILURE
-					function(response) {
-							child.voteStatus = "done";
-							//alert('Client error voting.');
-					}
-			);
+		);
+		
 	}
 
 	$scope.addChild = function (child, data) {

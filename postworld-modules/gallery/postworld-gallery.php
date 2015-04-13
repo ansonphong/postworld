@@ -32,7 +32,8 @@ function pw_print_gallery( $gallery ){
 			'path_type' => 'dir',
 			'ext'=>'php',
 			)
-		)['galleries'];
+		);
+	$templates = $templates['galleries'];
 
 	// Set the Template ID
 	$template_id = $gallery['template'];

@@ -75,10 +75,10 @@ function postworld_options_iconsets(){
 }
 
 ///// CACHE SCREEN /////
-function postworld_options_cache(){
+function postworld_options_database(){
 	global $theme_admin;
 	//i_include_scripts();
-	include 'page-cache.php';
+	include 'page-database.php';
 }
 
 ///// SHORTCODES SCREEN /////

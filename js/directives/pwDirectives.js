@@ -56,7 +56,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 					$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
 				else
 					$scope.includeUrl = '';
-				$log.debug('pwInclude : ' + attrs.pwInclude, $scope.includeUrl );
+				//$log.debug('pwInclude : ' + attrs.pwInclude, $scope.includeUrl );
 			}
 
 			attrs.$observe( 'pwInclude', function( pwInclude ){
@@ -235,33 +235,70 @@ postworld.directive('pwHref', function() {
 });
 
 
-///// POSTWORLD HREF DIRECTIVE /////
+///// POSTWORLD BACKGROUND IMAGE /////
+// Add a background image style to an element
+postworld.directive('pwBackgroundImage', function( $log ) {
+	return {
+		scope:{
+		  pwBackgroundImage:"="
+		},
+		link: function( $scope, element, attrs ) {
+			$scope.$watch( 'pwBackgroundImage', function(val){
+				element.css( 'background-image', 'url('+val+')' );
+			});
+		},
+	}
+});
+
+
+///// POSTWORLD EVAL DIRECTIVE /////
+// Evaluates a string as javascript at the time of loading
+// Works well for initializing third-party libraries
 postworld.directive('pwEval', function($timeout, $log) {
 	return {
 		scope:{
-		  pwEval:"@",
-		  evalTimeout:"@",
-		  evalContext:"@",
+		  pwEval:"@",		// A string to evaluate as Javascript
+		  evalTimeout:"@",	// (optional) Numerical period to timeout before evaluating, in milliseonds
+		  evalContext:"@",	// (optional) Context in which to evaluate. Options : scope / window
+		  evalWatch:"=",	// (optional) An expression to watch for changes, on change re-evalute
 		},
 		link: function($scope, element, attrs) {
+
 			if( _.isUndefined( $scope.evalTimeout ) )
 				$scope.evalTimeout = 0;
 			if( _.isUndefined( $scope.evalContext ) )
 				$scope.evalContext = 'window';
-			$timeout(
-				function(){
-					$log.debug( 'pw-eval : ', $scope.pwEval );
-					try{
-						if( $scope.evalContext == 'scope' )
-							$scope.$eval($scope.pwEval);
-						else
-							eval($scope.pwEval);
-					}
-					catch(err){
-						$log.debug('pw-eval : ERROR : ' + $scope.pwEval, err);
-					}
-				}, $scope.evalTimeout
-			);
+
+			///// EVAL TIMEOUT /////
+			var evaluate = function(){
+				$timeout(
+					function(){
+						$log.debug( 'pw-eval : ', $scope.pwEval );
+						try{
+							if( $scope.evalContext == 'scope' )
+								$scope.$eval($scope.pwEval);
+							else
+								eval($scope.pwEval);
+						}
+						catch(err){
+							$log.debug('pw-eval : ERROR : ' + $scope.pwEval, err);
+						}
+					}, $scope.evalTimeout
+				);
+			}
+			evaluate();
+
+			///// EVAL WATCH /////
+			var firstWatch = true;
+			$scope.$watch( 'evalWatch', function(val){
+				if( firstWatch ){
+					firstWatch = false;
+					return;
+				}
+				evaluate();
+			});
+
+
 		},
 	}
 });
@@ -641,4 +678,45 @@ postworld.directive( 'pwSidebars',
 		}
 	}
 }]);
+
+
+////////// SHARE LINK //////////
+postworld.directive( 'pwShareLink',
+	[ '$pw', '_', '$log',
+	function( $pw, $_, $log ){
+	return{
+		scope:{
+			pwShareLink:'=',		// The expression to map the share link to
+			shareLinkPostId:'=',	// The ID of the post which to generate the share link for
+			shareLinkDynamic:'@'	// If 'true', sets up a watch on the value of shareLinkPostId
+		},
+		link : function( $scope, element, attrs ){
+
+			// Generates the share link URL
+			var generateShareLink = function(postId){
+				if( _.isUndefined(postId) )
+					return '';
+
+				var userId = $_.get( $pw, 'user.ID' );
+				var shareLink = $pw.paths.home_url + "/?u=" + userId + "&p=" + postId;
+				$log.debug('SHARE LINK : ', shareLink);
+				return shareLink;
+			}
+
+			// If share link is dynamic, such as value = 'true'
+			if( $_.stringToBool( $scope.shareLinkDynamic ) ){
+				$scope.$watch( 'shareLinkPostId', function(postId){
+					$scope.pwShareLink = generateShareLink(postId);
+				});
+			}
+
+			// Set the share link value
+			$scope.pwShareLink = generateShareLink($scope.shareLinkPostId);
+			
+		}
+	}
+}]);
+
+
+
 

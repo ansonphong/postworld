@@ -77,6 +77,10 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 		$feed_id = 'pwFeed_' . pw_random_string();
 	}
 
+
+	pw_set_microtimer($feed_id);
+
+
 	// Run filters on the feed vars
 	$vars = apply_filters( 'pw_feed', $vars );
 
@@ -171,7 +175,7 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 			'post_status'		=>	'publish',
 			'post_type'			=>	'post',
 			'fields'			=>	'preview',
-			'posts_per_page'	=>	200,
+			'posts_per_page'	=>	200
 			);
 		$feed['query'] = array_replace_recursive( $default_query, $pw['query'] );
 	}
@@ -237,6 +241,8 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 
 	//pw_log_microtimer('pw_live_feed-'.$feed_id);
 
+	//pw_log_microtimer($feed_id);
+
 	///// OUTPUT /////
 	if( $echo )
 		echo $output;
@@ -250,6 +256,8 @@ function pw_get_live_feed ( $vars ){
 
 	// TODO : Cleanup logic pattern in this function
 
+	//pw_log($vars);
+
 	extract($vars);
 
 	// Defaults
@@ -261,13 +269,16 @@ function pw_get_live_feed ( $vars ){
 	// Sanitize
 	$preload = (int) $preload;
 
-	// If no feed outline is defined
-	// And Query is defined
-	// And there are no posts defined
+	/// GET FEED OUTLINE FROM QUERY ///
 	if( empty( $feed_outline ) && !empty( $query ) && empty( $posts ) ){
 		// Get the Feed Outline from the query
 		$query = $vars["query"];
 		$feed_outline = pw_feed_outline( $query );
+	}
+
+	/// GET FEED OUTLINE FROM RELATED POSTS ///
+	if( isset( $related_posts ) && !empty( $related_posts ) && empty( $posts ) ){
+		$feed_outline = pw_related_posts( $related_posts );
 	}
 	
 	// If the posts have contents
@@ -284,6 +295,7 @@ function pw_get_live_feed ( $vars ){
 		$preload_posts = $feed_outline;
 	
 	}
+
 	// If the feed outline has contents
 	else if( !empty( $feed_outline ) ){
 		// Select which posts to preload
@@ -291,6 +303,7 @@ function pw_get_live_feed ( $vars ){
 		// Preload selected posts
 		$posts = pw_get_posts( $preload_posts, $query["fields"], $options );
 	}
+
 	else{
 		$posts = array();
 		$preload_posts = array();
@@ -314,12 +327,14 @@ function pw_feed_outline ( $query ){
 	// Generates an array of post_ids based on the $query
 
 	///// CACHING LAYER /////
-	$cache_hash = hash( 'sha256', json_encode( $query ) );
-	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
-	if( !empty( $get_cache ) ){
-		return json_decode($get_cache['cache_content'], true);
+	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+		$cache_hash = hash( 'sha256', json_encode( $query ) );
+		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+		if( !empty( $get_cache ) ){
+			return json_decode($get_cache['cache_content'], true);
+		}
 	}
-
+		
 	///// GET FEED OUTLINE /////
 	$query["fields"] = "ids";
 	$query_results = pw_query( $query );
@@ -327,11 +342,12 @@ function pw_feed_outline ( $query ){
 	$post_ids = pw_sanitize_numeric_array( $post_ids );
 
 	///// CACHING LAYER /////
-	pw_set_cache( array(
-		'cache_type'	=>	'feed-outline',
-		'cache_hash' 	=> 	$cache_hash,
-		'cache_content'	=>	json_encode($post_ids),
-		));
+	if( in_array( 'post_cache', pw_enabled_modules() ) )
+		pw_set_cache( array(
+			'cache_type'	=>	'feed-outline',
+			'cache_hash' 	=> 	$cache_hash,
+			'cache_content'	=>	json_encode($post_ids),
+			));
 
 	return $post_ids;
 }

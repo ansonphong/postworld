@@ -11,7 +11,7 @@ postworld.directive('liveFeed', function($log) {
 		controller: 'pwFeedController',
        	template: '<div ng-include="templateUrl" class="feed"></div>',
 		scope : {
-			//feedVars: '=',
+			feedId: '@liveFeed',
 		},
 		link : function( $scope, element, attrs ){
 			$log.debug( 'INIT LIVE FEED', $scope.templateUrl );
@@ -20,19 +20,18 @@ postworld.directive('liveFeed', function($log) {
 });
 
 postworld.controller('pwFeedController',
-	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_', '$window',
-	function( $scope, $rootScope, $location, $log, $attrs, $timeout, $pwData, $route, $_, $window ) {
+	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_', '$window', '$pw',
+	function( $scope, $rootScope, $location, $log, $attrs, $timeout, $pwData, $route, $_, $window, $pw ) {
 		
 	// Initialize
 	$scope.busy = false; 		// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
 	var firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 	$scope.scrollMessage = "";
-	$scope.feedId = $attrs.liveFeed;
 
 	// IF NO FEED ID
-	if( !$scope.feedId ){
-		$log.debug( 'liveFeed : ERROR : No valid Feed ID provided' );
-		return;
+	if( _.isUndefined( $scope.feedId ) || _.isEmpty($scope.feedId) ){
+		$log.debug( 'liveFeed : ERROR : No Feed ID provided' );
+		return false;
 	}
 
 	// INSERT FEED
@@ -131,24 +130,32 @@ postworld.controller('pwFeedController',
 		}
 	};
 	
-	// Searching from Filter Feed Directives will trigger this function, which in turn restarts the Feed Loading Process
+	// Searching from Filter Feed Directives will trigger this function
+	// Which in turn restarts the Feed Loading Process
 	$scope.reloadFeed = function() {
-		// TODO Can we break an existing Ajax Call? We cannot do that, but we can use an identifier for the request and ignore previous requests to the current id.
-		// This scenario might not happen since we're not allowing more than one feed request at a time, this might be a limitation, but it makes the data consistent.
-		// Set feeds equal to new 'query'
-		// $pwData.feeds[$scope.feedId].query = 
-		$log.debug( "$scope.reloadFeed" );
-		$scope.convertFeedQuery2QueryString( $scope.feed().query );						
+
+		// TODO : Can we break an existing Ajax Call?
+		// We cannot do that, but we can use an identifier for the request
+		// and ignore previous requests to the current id.
+		// This scenario might not happen since we're not allowing more than
+		// one feed request at a time, this might be a limitation,
+		// but it makes the data consistent.
+
+		$log.debug( "liveFeed : reloadFeed()", $scope.feedId );
+
+		$pw.queryToLocation( $scope.feed().query );						
+		
 		$pwData.feeds[$scope.feedId].posts = false;
 		firstRun = true;			
 		this.getNext();
 	};
 
+	//$timeout( function(){}, 0 );
 	$scope.$on( 'feed.reload', function( e, feedId ){
-		$log.debug( "lifeFeed.$on : feed.reload : ", feedId );
-		$scope.reloadFeed();
+		$log.debug( "liveFeed.$on : feed.reload : ", feedId );
+		if( feedId == $scope.feedId )
+			$scope.reloadFeed();
 	});
-
 
 	$scope.pwLiveFeed = function() {
 		// TODO : Set Nonce Authentically
@@ -178,11 +185,13 @@ postworld.controller('pwFeedController',
 		var feed = JSON.parse( JSON.stringify( $pwData.feeds[$scope.feedId] ) );
 
 		// Get Query String Parameters, if any are provided
-		var qsArgs = $scope.getQueryStringArgs();			
+		var qsArgs = $pw.locationToQuery();
 		var qsArgsValue = JSON.parse( JSON.stringify( qsArgs ) );
 
+		$log.debug( 'pwLiveFeed : LOCATION.SEARCH()', qsArgs );
+
 		// Initiate the AJAX Call
-		$pwData.pw_get_live_feed( feed, qsArgsValue ).then(
+		$pwData.getLiveFeed( feed, qsArgsValue ).then(
 			// Success
 			function(response) {
 
@@ -206,7 +215,7 @@ postworld.controller('pwFeedController',
 						$scope.injectBlocks();
 						$scope.addFeedMeta();
 					} else {
-						$log.debug('pwFeedController.pw_get_live_feed No Data Received');						
+						$log.debug('pwFeedController.getLiveFeed No Data Received');						
 					}
 					return response.data;
 				} else {
@@ -219,12 +228,12 @@ postworld.controller('pwFeedController',
 			// Failure
 			function(response) {
 				$scope.busy = false;
-				$log.error('pwFeedController.pw_get_live_feed Failure',response);
+				$log.error('pwFeedController.getLiveFeed Failure',response);
 				// TODO Show User Friendly Message
 			}
 		);
 		// change url params after getting finalFeedQuery						
-		// $scope.convertFeedQuery2QueryString($pwData.feeds[$scope.feedId].finalFeedQuery);						
+		// $scope.queryToLocation($pwData.feeds[$scope.feedId].finalFeedQuery);						
 	  };
 
 	$scope.addFeedMeta = function( vars ){
@@ -441,7 +450,6 @@ postworld.controller('pwFeedController',
 
 	}
 
-
 	$scope.initBlocks = true;
 	$scope.injectBlocks = function() {
 		// Run at the initiation of a feed
@@ -573,57 +581,7 @@ postworld.controller('pwFeedController',
 		}
 	}
 
-
-	$scope.convertFeedQuery2QueryString= function (params) {
-		// $log.info('pwFeedController convertFeedQuery2QueryString', params);
-		$log.info('Feed Query Override by Feed Query',params);			  			
-		// Loop on all query variables
-		var queryString = "";
-		for(var key in params){
-			// Remove Null Values
-			if (params[key]==null){  					
-				continue;
-			}
-			if (key=="tax_query") {
-				var taxInput = escape(JSON.stringify(params[key]));
-				queryString += key + "=" + taxInput + "&";
-				continue;
-			};
-			// The value is obj[key]
-			//$scope.feed.query[key] = params[key];
-			// TODO objects like taxonomy?
-			// TODO arrays?
-			if ((params[key]!==0) && (params[key]!==false)) {
-				if (params[key] == "") {
-					continue;
-				}
-			}  
-			queryString += key + "=" + escape(params[key]) + "&"; 
-		}
-		queryString = queryString.substring(0, queryString.length - 1);
-		$log.debug('path is ',$location.path());
-		// $location.search('page', pageNumber);
-		var path = $location.path();
-		$location.path(path).search(queryString);
-		//$location.path().search(queryString);
-		$log.info('abslute path = ',$location.absUrl(),queryString);			
-		//$log.info('pwFeedController convertFeedQuery2QueryString', queryString);  			
-	};
-
-	$scope.getQueryStringArgs= function () {
-		// TODO Should query string work with live feed only?
-		if ($attrs.loadFeed) {
-			return;
-		}
-		// Get Query String Parameters
-		// TODO Check if location.search work on all browsers.
-		var params = $location.search();
-		if ((params) && (params.tax_query)) {    			
-			params.tax_query = JSON.parse(params.tax_query); 
-		}
-		return params;
-		//$scope.convertQueryString2FeedQuery(params);  			
-	};
+	$log.debug( "LOCATION.SEARCH() >>> ", $location.search() );
 
 }]);
 
@@ -684,9 +642,7 @@ postworld.controller('pwLoadPostController',
 					}
 				},
 				// Failure
-				function(response) {
-					$log.error('pwFeedController.pw_get_live_feed Failure',response);
-				}
+				function(response){}
 			);
 		  };
 		  $scope.pwLoadPost();

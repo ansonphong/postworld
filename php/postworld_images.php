@@ -285,7 +285,8 @@ function pw_featured_image_post( $post_id = null, $fields = 'preview' ){
 
 
 function pw_featured_image_url( $size = 'full', $echo = true ){
-	$url = pw_featured_image_post()['image']['sizes'][$size]['url'];
+	$featured_image_post = pw_featured_image_post();
+	$url = $featured_image_post['image']['sizes'][$size]['url'];
 	if( $echo )
 		echo $url;
 	else

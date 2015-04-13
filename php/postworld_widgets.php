@@ -12,6 +12,7 @@ include 'widgets/menu-kit/widget-menu-kit.php';
 include 'widgets/feed/widget-feed.php';
 include 'widgets/term-feed/widget-term-feed.php';
 include 'widgets/user/widget-user.php';
+include 'widgets/related-posts/widget-related-posts.php';
 
 
 ///// PRINT WIDGETS /////

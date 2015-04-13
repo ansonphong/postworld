@@ -1,12 +1,18 @@
-label.inner, .labeled label{
-	position:absolute;
-	z-index: 5;
-	padding:4px 10px;
-	margin:1px;
+
+label.input{
 	color:#999;
 	font-size: 13px;
 	letter-spacing:1px;
 	text-transform: uppercase;
+	padding:4px 10px;
+}
+
+label.inner, .labeled label{
+	label.input;
+	position:absolute;
+	z-index: 5;
+	
+	margin:1px;
 	//width:100%; // Usablity issues in multiple dropdown select
 	background:#fff;
 	white-space: nowrap;

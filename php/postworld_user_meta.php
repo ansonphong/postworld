@@ -406,7 +406,7 @@ function pw_update_user($userdata) {
 	global $wpdb;
 	$wpdb -> show_errors();
 	if (gettype($user_id) == 'integer') {// successful
-		add_record_to_user_meta($user_id);
+		pw_insert_user_meta($user_id);
 		/*if ($userdata[user_fields_names::$FAVORITES]) {
 			$set .= " " . user_fields_names::$FAVORITES . "='" . $userdata[user_fields_names::$FAVORITES] . "'";
 			$insertComma = TRUE;
@@ -491,74 +491,60 @@ function pw_update_user($userdata) {
 
 	}
 	return $user_id;
-
 }
 
-function add_favorite($post_id, $user_id) {
-	// add favorite to wp_postworld_favorites
+/**
+ * Adds a row to the favorites database table
+ * @uses $wpdb Class
+ * @param $post_id [integer] The post ID of the post to favorite
+ * @param $user_id [integer] The user ID of user favoriting
+ */
+function pw_add_favorite($post_id, $user_id) {
+	
+	if( empty($post_id) || empty($user_id) )
+		return false;
+
 	global $wpdb;
 	$wpdb -> show_errors();
-	$query = "select * from  $wpdb->pw_prefix". "favorites where post_id=$post_id  and  user_id=$user_id";
-
+	$query = "SELECT * FROM  $wpdb->pw_prefix"."favorites WHERE post_id=$post_id AND user_id=$user_id";
 	$results = $wpdb->get_results($query);
-
-	if(is_null($results) || count($results)===0){
-		$query = "insert into " . $wpdb -> pw_prefix . 'favorites' . " values (" . $user_id . "," . $post_id . ",null)";
-		$wpdb -> query($query);
+	
+	// If an entry with the same values doesn't already exist
+	if( is_null($results) || count($results) === 0 ){
+		$wpdb->insert(
+			$wpdb -> pw_prefix . 'favorites',
+			array(
+				'user_id' 	=> $user_id,
+				'post_id' 	=> $post_id,
+				),
+			array(
+				'%d', 	// Insert as Integer
+				'%d'	// Insert as Integer
+				)
+			);
 	}
-
 }
 
-function delete_favorite($post_id, $user_id) {
+/**
+ * Deletes a row from the favorites database table
+ * @uses $wpdb Class
+ * @param $post_id [integer] The post ID
+ * @param $user_id [integer] The user ID
+ */
+function pw_delete_favorite($post_id, $user_id) {
 	global $wpdb;
-
-	$wpdb -> show_errors();
-	$query = "delete from " . $wpdb -> pw_prefix . 'favorites' . " where post_id=" . $post_id . " and user_id=" . $user_id;
-	$wpdb -> query($query);
-
+	$wpdb->show_errors();
+	$query = "DELETE from " . $wpdb->pw_prefix."favorites" . " WHERE post_id=" . $post_id . " AND user_id=" . $user_id;
+	$wpdb->query($query);
 }
 
-function set_favorite($switch=TRUE, $post_id = null, $user_id = null) {
+
+function pw_set_favorite( $switch = true, $post_id = null, $user_id = null ) {
 	/*
-	 Use set_post_relationship() to set the post relationship for favorites
+	 Use pw_set_post_relationship() to set the post relationship for favorites
 	 If $post_id is undefined
 	 $switch is a boolean
-	 set_post_relationship( 'favorites', $post_id, $user_id, $switch )
-	 return : boolean
-	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-
-	}
-
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-
-	return set_post_relationship('favorites', $switch, $post_id, $user_id);
-
-}
-
-function get_favorites($user_id = null) {
-	/*
-	 Use get_post_relationships() method to return just the favorite posts
-	 get_post_relationships($user_id, 'favorites')
-	 return : Array (of post ids)
-
-	 * */
-	if (is_null($user_id)) {
-		$user_id = get_current_user_id();
-	}
-	return get_post_relationships($user_id, 'favorites');
-
-}
-
-function is_favorite($post_id = null, $user_id = null) {
-	/*
-	 Use get_post_relationship() method to return the post relationship status for favorites
-	 get_post_relationship( 'favorites', $post_id, $user_id )
+	 pw_set_post_relationship( 'favorites', $post_id, $user_id, $switch )
 	 return : boolean
 	 */
 
@@ -571,34 +557,26 @@ function is_favorite($post_id = null, $user_id = null) {
 		$user_id = get_current_user_id();
 	}
 
-	return get_post_relationship('favorites', $post_id, $user_id);
-
+	return pw_set_post_relationship('favorites', $switch, $post_id, $user_id);
 }
 
-function is_viewed($post_id = null, $user_id = null) {
+function pw_get_favorites($user_id = null) {
 	/*
-	 Use get_post_relationship() method to return the post relationship status for viewed
-	 get_post_relationship( 'viewed', $post_id, $user_id )
-	 return : boolean
+	Use pw_get_post_relationships() method to return just the favorite posts
+	pw_get_post_relationships( $user_id, 'favorites' )
+	return : Array (of post ids)
 	 */
-
-	if (is_null($post_id)) {
-		global $post;
-		$post_id = $post -> ID;
-
-	}
-
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
-	return get_post_relationship('viewed', $post_id, $user_id);
+	return pw_get_post_relationships($user_id, 'favorites');
 
 }
 
-function is_view_later($post_id = null, $user_id = null) {
+function pw_is_favorite($post_id = null, $user_id = null) {
 	/*
-	 Use get_post_relationship() method to return the post relationship status for view_later
-	 get_post_relationship( 'viewed', $post_id, $user_id )
+	 Use pw_get_post_relationship() method to return the post relationship status for favorites
+	 pw_get_post_relationship( 'favorites', $post_id, $user_id )
 	 return : boolean
 	 */
 
@@ -611,13 +589,34 @@ function is_view_later($post_id = null, $user_id = null) {
 		$user_id = get_current_user_id();
 	}
 
-	return get_post_relationship('view_later', $post_id, $user_id);
+	return pw_get_post_relationship('favorites', $post_id, $user_id);
 
 }
 
-function is_post_relationship( $post_relationship, $post_id = null, $user_id = null) {
+function pw_is_viewed($post_id = null, $user_id = null) {
 	/*
-	 Use get_post_relationship() method to return the post relationship status for $post_relationship
+	 Use pw_get_post_relationship() method to return the post relationship status for viewed
+	 pw_get_post_relationship( 'viewed', $post_id, $user_id )
+	 return : boolean
+	 */
+
+	if (is_null($post_id)) {
+		global $post;
+		$post_id = $post -> ID;
+
+	}
+
+	if (is_null($user_id)) {
+		$user_id = get_current_user_id();
+	}
+	return pw_get_post_relationship('viewed', $post_id, $user_id);
+
+}
+
+function pw_is_view_later($post_id = null, $user_id = null) {
+	/*
+	 Use pw_get_post_relationship() method to return the post relationship status for view_later
+	 pw_get_post_relationship( 'viewed', $post_id, $user_id )
 	 return : boolean
 	 */
 
@@ -630,36 +629,53 @@ function is_post_relationship( $post_relationship, $post_id = null, $user_id = n
 		$user_id = get_current_user_id();
 	}
 
-	return get_post_relationship( $post_relationship, $post_id, $user_id);
+	return pw_get_post_relationship('view_later', $post_id, $user_id);
+
 }
 
-function set_viewed($switch=TRUE, $post_id = null, $user_id = null) {
+function pw_is_post_relationship( $post_relationship, $post_id = null, $user_id = null) {
 	/*
-	 Use set_post_relationship() to set the post relationship for viewed
+	 Use pw_get_post_relationship() method to return the post relationship status for $post_relationship
+	 return : boolean
+	 */
+
+	if (is_null($post_id)) {
+		global $post;
+		$post_id = $post -> ID;
+	}
+
+	if (is_null($user_id)) {
+		$user_id = get_current_user_id();
+	}
+
+	return pw_get_post_relationship( $post_relationship, $post_id, $user_id);
+}
+
+function pw_set_viewed( $switch = true, $post_id = null, $user_id = null ) {
+	/*
+	 Use pw_set_post_relationship() to set the post relationship for viewed
 	 $switch is a boolean
-	 set_post_relationship( 'viewed', $switch, $post_id, $user_id )
+	 pw_set_post_relationship( 'viewed', $switch, $post_id, $user_id )
 	 return : boolean
 	 */
 
 	if (is_null($post_id)) {
 		global $post;
 		$post_id = $post -> ID;
-
 	}
 
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
 
-	return set_post_relationship('viewed', $switch, $post_id, $user_id);
-
+	return pw_set_post_relationship('viewed', $switch, $post_id, $user_id);
 }
 
-function set_view_later($switch=TRUE, $post_id = null, $user_id = null) {
+function pw_set_view_later($switch=TRUE, $post_id = null, $user_id = null) {
 
-	/*Use set_post_relationship() to set the post relationship for view_later
+	/*Use pw_set_post_relationship() to set the post relationship for view_later
 	 $switch is a boolean
-	 set_post_relationship( 'view_later', $switch, $post_id, $user_id )
+	 pw_set_post_relationship( 'view_later', $switch, $post_id, $user_id )
 	 return : boolean
 	 */
 	 
@@ -673,45 +689,45 @@ function set_view_later($switch=TRUE, $post_id = null, $user_id = null) {
 		$user_id = get_current_user_id();
 	}
 	 
-	return set_post_relationship('view_later', $switch, $post_id, $user_id );
+	return pw_set_post_relationship('view_later', $switch, $post_id, $user_id );
 
 }
 
-function get_viewed($user_id = null) {
+function pw_get_viewed($user_id = null) {
 	/*
-	 Use get_post_relationships() method to return just the viewed posts
-	 get_post_relationships($user_id, 'viewed')
+	 Use pw_get_post_relationships() method to return just the viewed posts
+	 pw_get_post_relationships($user_id, 'viewed')
 	 return : Array (of post ids)
 	 */
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
 
-	return get_post_relationships($user_id, 'viewed');
+	return pw_get_post_relationships($user_id, 'viewed');
 
 }
 
-function get_view_later($user_id = null) {
+function pw_get_view_later($user_id = null) {
 	/*
-	 Use get_post_relationships() method to return just the view later posts
-	 get_post_relationships($user_id, 'view_later')
+	 Use pw_get_post_relationships() method to return just the view later posts
+	 pw_get_post_relationships($user_id, 'view_later')
 	 return : Array (of post ids)
 	 */
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
 
-	return get_post_relationships($user_id, 'view_later');
+	return pw_get_post_relationships($user_id, 'view_later');
 
 }
 
-function has_viewed($user_id, $post_id) {
+function pw_has_viewed($user_id, $post_id) {
 	/*
 	 • Checks to see if user has viewed a given post
-	 • Values stored in array in has_viewed in wp_postworld_user_meta
+	 • Values stored in array in pw_has_viewed in wp_postworld_user_meta
 	 return : boolean */
 
-	$post_ids = get_viewed($user_id);
+	$post_ids = pw_get_viewed($user_id);
 
 	//echo (json_encode($post_ids));
 
@@ -724,7 +740,7 @@ function has_viewed($user_id, $post_id) {
 		return false;
 }
 
-function get_user_location($user_id) {
+function pw_get_user_location($user_id) {
 	/*
 	 • From 'location_' columns in wp_postworld_user_meta
 	 return : Object
@@ -753,7 +769,7 @@ function get_user_location($user_id) {
 
 }
 
-function get_client_ip() {
+function pw_get_client_ip() {
 	/*
 	 * return : IP address of the client
 	 * */
@@ -763,7 +779,7 @@ function get_client_ip() {
 	//http://stackoverflow.com/questions/3003145/how-to-get-client-ip-address-in-php
 }
 
-function get_user_role($user_id, $return_array = FALSE) {
+function pw_get_user_role($user_id, $return_array = FALSE) {
 	/*
 	 • Returns user role(s) for the specified user
 
@@ -799,12 +815,15 @@ function get_user_role($user_id, $return_array = FALSE) {
 }
 
 /* Later*/
-function has_shared($user_id, $post_id) {
+function pw_has_shared($user_id, $post_id) {
 }
 
-function set_post_relationship( $relationship, $switch, $post_id = null, $user_id = null ) {
+/**
+ * Used to set a given user's relationship to a given post
+ */
+function pw_set_post_relationship( $relationship, $switch, $post_id = null, $user_id = null ) {
 
-	/*Used to set a given user's relationship to a given post
+	/*
 	 Parameters
 	 ------------
 	 * $relationship : string
@@ -831,7 +850,7 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 	 Usage
 
 	 *
-	 set_post_relationship( 'favorites', true, '24', '101' )
+	 pw_set_post_relationship( 'favorites', true, '24', '101' )
 	 Anatomy
 
 	 JSON in post_relationships column in User Meta table
@@ -849,57 +868,54 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 
 	 $switch = pw_switch_value($switch);
 
-	if (is_null($post_id)) {
+	if(is_null($post_id)) {
 		global $post;
-		$post_id = $post -> ID;
+		$post_id = $post->ID;
 	}
 
 	if (is_null($user_id)) {
 		$user_id = get_current_user_id();
 	}
 
-	$relashionship_db = get_relationship_from_user_meta($user_id);
-	$relashionship_db_array = (array)json_decode($relashionship_db);
+	$relationship_db = pw_get_relationship_from_user_meta($user_id);
+	$relationship_db_array = (array)json_decode($relationship_db);
 	
-	//print_r($relashionship_db_array);
-	if ($relashionship_db) {
+	if ($relationship_db) {
 		if ($switch == 'on') {
-			if (!in_array($post_id, $relashionship_db_array[$relationship])) {
-				$relashionship_db_array[$relationship][] = $post_id;
-				update_post_relationship($user_id, $relashionship_db_array);
+			if (!in_array($post_id, $relationship_db_array[$relationship])) {
+				$relationship_db_array[$relationship][] = $post_id;
+				pw_update_post_relationship($user_id, $relationship_db_array);
 				//echo ($relationship);
 				if ($relationship == 'favorites'){
-					add_favorite($post_id, $user_id);
+					pw_add_favorite($post_id, $user_id);
 				}
 			}
 			return TRUE;
 		} else {
-			if (in_array($post_id, $relashionship_db_array[$relationship])) {
+			if (in_array($post_id, $relationship_db_array[$relationship])) {
 
-				$relashionship_db_array[$relationship] = array_diff($relashionship_db_array[$relationship], array($post_id));
-				$relashionship_db_array[$relationship]= array_values($relashionship_db_array[$relationship]);
-				//print_r($relashionship_db_array[$relationship]);
-				//unset($post_id,$relashionship_db_array[$relationship][$post_id]);
-				update_post_relationship($user_id, $relashionship_db_array);
+				$relationship_db_array[$relationship] = array_diff($relationship_db_array[$relationship], array($post_id));
+				$relationship_db_array[$relationship]= array_values($relationship_db_array[$relationship]);
+				pw_update_post_relationship($user_id, $relationship_db_array);
 				if ($relationship == 'favorites')
-					delete_favorite($post_id, $user_id);
+					pw_delete_favorite($post_id, $user_id);
 			}
 			return FALSE;
 		}
 	} else {
 		//add record to user meta or add relationship
 		
-		add_record_to_user_meta($user_id);
+		pw_insert_user_meta($user_id);
 		if ($switch) {
-			$relashionship_db_array = array('viewed' => array(), "favorites" => array(), 'view_later' => array());
-			$relashionship_db_array[$relationship][] = $post_id;
-			update_post_relationship($user_id, $relashionship_db_array);
+			$relationship_db_array = array('viewed' => array(), "favorites" => array(), 'view_later' => array());
+			$relationship_db_array[$relationship][] = $post_id;
+			pw_update_post_relationship($user_id, $relationship_db_array);
 			if ($relationship == 'favorites')
-				add_favorite($post_id, $user_id);
+				pw_add_favorite($post_id, $user_id);
 			return TRUE;
 		} else {
 			if ($relationship == 'favorites')
-				delete_favorite($post_id, $user_id);
+				pw_delete_favorite($post_id, $user_id);
 			return FALSE;
 		}
 	}
@@ -907,14 +923,14 @@ function set_post_relationship( $relationship, $switch, $post_id = null, $user_i
 
 }
 
-function update_post_relationship($user_id, $relationship = null) {
+function pw_update_post_relationship($user_id, $relationship = null) {
 	global $wpdb;
 	$wpdb -> show_errors();
 	$query = "update $wpdb->pw_prefix" . "user_meta set post_relationships='" . json_encode($relationship) . "' where user_id=" . $user_id;
 	$wpdb -> query($query);
 }
 
-function add_record_to_user_meta($user_id) {
+function pw_insert_user_meta($user_id) {
 	global $wpdb;
 	$wpdb -> show_errors();
 
@@ -923,7 +939,7 @@ function add_record_to_user_meta($user_id) {
 
 	if ($row == null) {
 
-		//$user_role = get_user_role($user_id);
+		//$user_role = pw_get_user_role($user_id);
 		//if($relationship === null) $relationship='null';
 
 		$query = "INSERT INTO `$wpdb->pw_prefix"."user_meta`
@@ -963,7 +979,7 @@ function add_record_to_user_meta($user_id) {
 	}
 }
 
-function get_post_relationship( $relationship, $post_id, $user_id) {
+function pw_get_post_relationship( $relationship, $post_id, $user_id) {
 
 	/*
 	 Used to get a given user's relationship to a given post
@@ -989,7 +1005,7 @@ function get_post_relationship( $relationship, $post_id, $user_id) {
 	 If $relationship = all : return an Array containing all the relationships it's in
 	 array('viewed','favorites')
 	 * */
-	$relationship_array = get_relationship_from_user_meta($user_id);
+	$relationship_array = pw_get_relationship_from_user_meta($user_id);
 	//print_r($relationship_array);
 	if (!is_null($relationship_array)) {
 		/*array(
@@ -1035,7 +1051,7 @@ function get_post_relationship( $relationship, $post_id, $user_id) {
 
 }
 
-function get_post_relationships($user_id = null, $relationship = null) {
+function pw_get_post_relationships($user_id = null, $relationship = null) {
 	/*
 	 Used to get a list of all post relationships of a specified user
 	 Paramaters
@@ -1053,13 +1069,13 @@ function get_post_relationships($user_id = null, $relationship = null) {
 
 	 Specified post relationship :
 
-	 get_post_relationships( '1', 'favorites' )
+	 pw_get_post_relationships( '1', 'favorites' )
 	 returns : Array of post IDs
 
 	 array(24,48,128,256,512)
 	 Un-specified post relationship :
 
-	 get_post_relationships( '1' )
+	 pw_get_post_relationships( '1' )
 	 returns : Contents of post_relationships
 
 	 array(
@@ -1077,7 +1093,7 @@ function get_post_relationships($user_id = null, $relationship = null) {
 		$user_id = get_current_user_id();
 	}
 
-	$relationships_db = get_relationship_from_user_meta($user_id);
+	$relationships_db = pw_get_relationship_from_user_meta($user_id);
 	$relationships_db_array = (array) json_decode($relationships_db);
 	if (!is_null($relationships_db)) {
 		if (!is_null($relationship)) {
@@ -1090,7 +1106,7 @@ function get_post_relationships($user_id = null, $relationship = null) {
 	return array();
 }
 
-function get_relationship_from_user_meta($user_id) {
+function pw_get_relationship_from_user_meta($user_id) {
 	global $wpdb;
 	$wpdb -> show_errors();
 	$query = "select " . user_fields_names::$POST_RELATIONSHIPS . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;

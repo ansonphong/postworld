@@ -19,7 +19,7 @@ function i_include_admin_scripts(){
 	wp_enqueue_script('Postworld-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
 	wp_enqueue_script('Postworld-Admin-Iconsets', get_infinite_directory_uri().'/js/controllers-admin/iconsets.js', $angularDep );
 	wp_enqueue_script('Postworld-Admin-Shortcodes', get_infinite_directory_uri().'/js/controllers-admin/shortcodes.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Cache', get_infinite_directory_uri().'/js/controllers-admin/cache.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Database', get_infinite_directory_uri().'/js/controllers-admin/database.js', $angularDep );
 	
 	// DIRECTIVES : ADMIN
 	wp_enqueue_script('Postworld-Admin', get_infinite_directory_uri().'/js/directives-admin/pwAdmin.js', $angularDep );

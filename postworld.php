@@ -3,7 +3,7 @@
 Plugin Name: Postworld
 Plugin URI: htp://phong.com/
 Description: Wordpress API extension, with AngularJS client-side framework, LESS support, and standard libraries for developers to display posts in creative ways
-Version: 2.2
+Version: 1.9
 Author: phong
 Author URI: http://phong.com
 License: GPL2
@@ -23,8 +23,8 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.88,
-		'db_version'	=>	1.1,
+		'version'		=>	1.91,
+		'db_version'	=>	1.14,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -229,6 +229,9 @@ include 'php/postworld_taxonomies.php';
 ////// CACHE FUNCTIONS //////
 include 'php/postworld_cache.php';
 
+////// RELATED POST FUNCTIONS //////
+include 'php/postworld_related.php';
+
 ////// GET POST FUNCTIONS //////
 include 'php/postworld_fields.php';
 include 'php/postworld_images.php';
@@ -252,6 +255,9 @@ include 'php/postworld_wizard.php';
 ////// OPTIONS //////
 include 'php/postworld_options.php';
 
+////// PROGRESS //////
+include 'php/postworld_progress.php';
+
 ////// VIEW //////
 include 'php/postworld_view.php';
 
@@ -260,6 +266,12 @@ include 'php/postworld_embed.php';
 
 ////// BUDDYPRESS //////
 include 'php/postworld_buddypress.php';
+
+////// EVENTS //////
+include 'php/postworld_events.php';
+
+////// DEV //////
+include 'php/postworld_dev.php';
 
 ////// ADMIN //////
 include 'admin/postworld_admin.php';
@@ -292,7 +304,6 @@ include 'php/postworld_includes.php';
 ////// UPDATE / MIGRATE //////
 include 'php/postworld_update.php';
 
-
 ///// ADD HEADER CODE /////
 add_action('wp_head','pw_add_header_code');
 function pw_add_header_code() {
@@ -300,8 +311,13 @@ function pw_add_header_code() {
 	echo $output;
 }
 
-//To get user id from wordpress
+///// ENABLE WPDB ERRORS IF IN DEV MODE /////
+global $wpdb;
+if( pw_dev_mode() )
+	$wpdb->show_errors();
 
+
+//To get user id from wordpress
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 
 ?>

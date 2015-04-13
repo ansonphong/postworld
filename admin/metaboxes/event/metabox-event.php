@@ -44,7 +44,7 @@ function pw_event_meta_init(){
     global $pwSiteGlobals;
 
     // Get the Postworld event postmeta key
-    $event_postmeta_key = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.event.postmeta_key' );
+    $event_postmeta_key = _get( $pwSiteGlobals, 'db.wp_postmeta.meta_keys.event' );
     if( !$event_postmeta_key )
     	$event_postmeta_key = 'pw_event';
 

@@ -6,6 +6,79 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+function pw_get_all_comment_ids(){
+	global $wpdb;
+	$query = "
+		SELECT comment_ID
+		FROM ".$wpdb->comments . "
+		WHERE comment_approved = 1";
+	$comments = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$ids = array();
+	foreach( $comments as $comment ){
+		$ids[] = $comment->comment_ID;
+	}
+	return $ids;
+}
+
+function pw_get_all_user_ids(){
+	global $wpdb;
+	$query = "SELECT ID FROM ".$wpdb->users;
+	$users = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$ids = array();
+	foreach( $users as $user ){
+		$ids[] = $post->ID;
+	}
+	return $ids;
+}
+
+function pw_get_all_post_ids_in_post_type( $post_type, $post_status = '' ){
+	// Returns a 1D array of all the post IDs in a post type
+	global $wpdb;
+
+	$post_status_query = ( !empty($post_status) && is_string($post_status) ) ?
+		" AND post_status='" . $post_status . "'" :
+		"";
+
+	$query = "
+		SELECT ID
+		FROM ".$wpdb->posts."
+		WHERE post_type ='".$post_type."'"
+		. $post_status_query;
+
+	$posts = $wpdb->get_results( $wpdb->prepare( $query ) );
+
+	$ids = array();
+	foreach( $posts as $post ){
+		$ids[] = $post->ID;
+	}
+	return $ids;
+}
+
+function pw_get_post_gmt_timestamp( $post_id = null ){
+
+	if( $post_id == null )
+		return 0;
+
+	global $wpdb;
+
+	$post = $wpdb->get_row( "SELECT post_date_gmt FROM $wpdb->posts WHERE ID = " . $post_id, ARRAY_A);
+	
+	if ( empty( $post ) )
+		return 0;
+
+	$time = $post['post_date_gmt'];
+
+	$time = mysql2date( 'U', $time, false );
+
+	return $time;
+
+}
+
+
+/**
+ * Starts a microtimer under the specified ID
+ * @param $timer_id [string] The unique ID of the timer
+ */
 function pw_set_microtimer( $timer_id ){
 	// Sets the microtime of a timer ID
 	global $pw_microtimer;
@@ -15,6 +88,11 @@ function pw_set_microtimer( $timer_id ){
 	$pw_microtimer[ $timer_id ] = microtime();
 }
 
+/**
+ * Gets the current microtimer from the specified timer ID
+ * @param $timer_id [string] The unique ID of the timer
+ * @return [float] The period of the timer (in seconds)
+ */
 function pw_get_microtimer( $timer_id ){
 	// Gets the microtime of a timer ID, in seconds
 	global $pw_microtimer;
@@ -25,6 +103,11 @@ function pw_get_microtimer( $timer_id ){
 		return false;
 }
 
+/**
+ * Logs the current microtimer from the specified timer ID
+ * @param $timer_id [string] The unique ID of the timer
+ * @param $log [string] (Optional) An additional note to log
+ */
 function pw_log_microtimer( $timer_id, $note = '' ){
 	// Logs the difference of time in seconds
 	$time = pw_get_microtimer( $timer_id );
@@ -33,7 +116,13 @@ function pw_log_microtimer( $timer_id, $note = '' ){
 	pw_log( 'MICROTIMER : '.$timer_id.' : ' . $note . $time );
 }
 
-
+/**
+ * Calculates difference between two microtimes
+ * @param $start [float] The value of the initial microtimer
+ * @param $end [float] (optional) The value of the end microtimer
+ *			- If no end time is provided, the current microtime is used
+ * @return [float] The the difference between timers (in seconds)
+ */
 function pw_microtime_diff( $start, $end=NULL ) { 
 	if( !$end ) { 
 		$end= microtime(); 
@@ -46,7 +135,9 @@ function pw_microtime_diff( $start, $end=NULL ) {
 } 
 
 function pw_get_filename(){
-	return pathinfo( parse_url( $_SERVER['REQUEST_URI'] )['path'] )['filename'];
+	$parsed_url = parse_url( $_SERVER['REQUEST_URI'] );
+	$path_info = pathinfo( $parsed_url['path'] );
+	return $path_info['filename'];
 }
 
 function pw_is_filename( $filename ){
@@ -76,22 +167,30 @@ function pw_is_base( $mixed ){
 	return in_array( $screen->base, $screen_bases );
 }
 
-function pw_log( $message ){
+function pw_log( $message, $data = null ){
 	if( is_array( $message ) || is_object( $message ) )
 		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
 
+	if( !empty($data) )
+		$message .= json_encode($data, JSON_PRETTY_PRINT);
+
 	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-log.txt");
+
 }
 
 
+/**
+ * Generates a hash string from the contents of a file
+ * @param $src [string] The absolute system path of the file
+ * @param $type [string] The type of hash to generate, see PHP hash()
+ * @return [string] The hash
+ */
 function pw_file_hash( $src, $type = 'sha256' ){
 	// Get file contents
 	$file_contents = file_get_contents( $src );
 	// Make a hash for the file contents
 	return hash( $type, $file_contents );
 }
-
-
 
 // Recursively count array
 function pw_count_r($array, $i = 0){
@@ -101,7 +200,6 @@ function pw_count_r($array, $i = 0){
     }
     return $i;
 }
-
 
 function pw_filter_count( $filter_hook ){
 	global $wp_filter;
@@ -229,8 +327,8 @@ function pw_is_associative( $arr ){
 }
 
 function pw_core_print_generation_time() {
-?>
-<!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
+	?>
+	<!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
 	<?php
 }
 if( !function_exists( 'bp_core_print_generation_time' ) )
@@ -244,20 +342,32 @@ function pw_plugin_file( $path, $type = "dir" ){
 		return WP_PLUGIN_URL . "/postworld/" . $path;
 }
 
-function pw_user_id_exists($user_id){
+
+function pw_post_id_exists( $post_id ){
+	global $wpdb;
+	$results = $wpdb->get_results( 'SELECT  ID  FROM ' . $wpdb->posts . ' WHERE ID = ' . $post_id );
+	return !empty( $results );
+}
+
+function pw_user_id_exists( $user_id ){
+	global $wpdb;
+	$results = $wpdb->get_results( 'SELECT  ID  FROM ' . $wpdb->users . ' WHERE ID = ' . $user_id );
+	return !empty( $results );
+}
+
+
+function pw_post_id_exists_alt( $post_id ){
+	$post = get_post( $post_id );
+	return ( $post != null ) ? true : false;
+}
+
+
+function pw_user_id_exists_alt($user_id){
     //global $wpdb;
     //$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));
     //if($count == 1){ return true; } else { return false; }
 	$user = get_user_by( "id", $user_id );
-	if( $user == false )
-		return false;
-	else
-		return true;
-}
-
-function pw_post_id_exists( $post_id ){
-	$post = get_post( $post_id );
-	return ( $post != null ) ? true : false;
+	return ( $user != false ) ? true : false;
 }
 
 function pw_check_user_id($user_id){
@@ -338,9 +448,8 @@ function object_to_array($data){
 
 
 ////////// EDIT POST HELP FUNCTIONS //////////
-
 function pw_get_post_types( $args = array() ){
-	//$user_role = get_user_role();
+	//$user_role = pw_get_user_role();
 
 	if( empty( $args ) )
 		$args = array(
@@ -512,7 +621,6 @@ function extract_bracket_values ( $input, $force_array = true ){
 	else
 		return $value_array;
 }
-
 
 
 function extract_fields( $fields_array, $query_string ){
@@ -1168,7 +1276,8 @@ function pw_sanitize_numeric_array_of_a_arrays( $vals ){
 
 function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 	// Looks through the list and returns the first value
-	// that matches the key value pair listed in properties.
+	// That matches the key value pair listed in properties
+	// TODO : Refactor to accept multipe key->value pairs
 
 	// Get the first Key and Value
 	foreach( $key_value_pair as $get_key => $get_value ){
@@ -1187,6 +1296,56 @@ function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 
 }
 
+function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
+	// Returns a list with items continaing the key->value pair removed
+	// TODO : Refactor to accept multipe key->value pairs
+	// TODO : Add Operator parameter, "AND" / "OR" for multiple key->value pairs
+
+
+	pw_log('LIST : ' .count($list));
+
+	// Get the first Key and Value
+	foreach( $key_value_pair as $get_key => $get_value ){
+		$key = $get_key;
+		$value = $get_value;
+		break;
+	}
+
+	$new_list = array();
+
+	foreach( $list as $item ){
+		if(	isset( $item[$key] ) &&
+			$item[$key] == $value )
+			continue;
+		else
+			$new_list[] = $item;
+	}
+
+	pw_log('NEW LIST : ' .count($new_list));
+
+	return $new_list;
+
+}
+
+function pw_array_order_by(){
+	// Orders items in an array by key
+	// $ordered = pw_array_order_by( $items, $order_key, SORT_DESC / SORT_ASC )
+
+	$args = func_get_args();
+	$data = array_shift($args);
+	foreach ($args as $n => $field) {
+		if (is_string($field)) {
+			$tmp = array();
+			foreach ($data as $key => $row)
+				$tmp[$key] = $row[$field];
+			$args[$n] = $tmp;
+			}
+	}
+	$args[] = &$data;
+	call_user_func_array('array_multisort', $args);
+	return array_pop($args);
+}
+
 
 function pw_reset_less_php_cache(){
 	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
@@ -1198,9 +1357,24 @@ function pw_reset_less_php_cache(){
 }
 
 
-
 function pw_in_string( $haystack, $needle ){
 	return ( strpos( $haystack, $needle ) == false ) ? true : false;
 }
+
+
+/*
+function pw_get_post_types(){
+	$args = array(
+		 'public'   => true,
+		  '_builtin' => false
+	);
+
+	$output = 'names'; // names or objects, note names is the default
+	$operator = 'and'; // 'and' or 'or'
+
+	$post_types = get_post_types( $args, $output, $operator ); 
+	print_r($post_types);
+}
+*/
 
 ?>

@@ -1,8 +1,14 @@
 <?php
+function pw_add_schedules($schedules) {
+	// WordPress already comes with some schedules
+	// WP Schedules : hourly, twicedaily, daily
+	// Add a few more schedules into the mix
 
-function pw_add_intervals($schedules) {
-	// add a 'per minute' interval
-	$schedules['minute'] = array(
+	$schedules['one_second'] = array(
+		'interval' => 1,
+		'display' => __('Every Second')
+	);
+	$schedules['one_minute'] = array(
 		'interval' => 60,
 		'display' => __('Every Minute')
 	);
@@ -18,27 +24,55 @@ function pw_add_intervals($schedules) {
 		'interval' => 900,
 		'display' => __('Every 15 Minutes')
 	);
+	$schedules['thirty_minutes'] = array(
+		'interval' => 1800,
+		'display' => __('Every 30 Minutes')
+	);
+	$schedules['fourtyfive_minutes'] = array(
+		'interval' => 2700,
+		'display' => __('Every 45 Minutes')
+	);
+
+	$schedules['weekly'] = array(
+		'interval' => 604800,
+		'display' => __('Every Week')
+	);
+
+	$schedules['monthly'] = array(
+		'interval' => 2419200,
+		'display' => __('Every Week')
+	);
+
 	return $schedules;
 }
-add_filter( 'cron_schedules', 'pw_add_intervals'); 
+add_filter( 'cron_schedules', 'pw_add_schedules'); 
+
+function pw_insert_cron_log($cron_log){
+	// Inserts an entry into postworld_cron_logs tables
+
+	global $wpdb;
 	
+	$timer = (strtotime( $cron_log['time_end'] )-strtotime( $cron_log['time_start']));
 
+	$default_cron_log = array(
+		'function_type'	=>	null,
+		'process_id'	=>	null,
+		'time_start'	=>	null,
+		'time_end'		=>	null,
+		'timer'			=>	$timer,
+		'posts'			=>	null,
+		'query_args'	=>	null,
+		);
 
-class cron_logs_Object {
-	public $function_type;// {{feed/post_type}}
-	public $process_id ;// {{feed id / post_type slug}}
-	public $time_start;// {{timestamp}}
-	public $time_end;// {{timestamp}}
-	public $timer;// {{milliseconds}}
-	public $posts;// {{number of posts}}
-	//public $timer_average;// {{milliseconds}}
-	public $query_args ;// {{ query_vars Object }}
-}
+	$cron_log = array_replace_recursive($default_cron_log, $cron_log);
 
-class query_vars_Object  {
-	public $post_type;
-	public $class;
-	public $format;
+	///// INSERT /////
+	$wpdb->insert(
+		$wpdb->pw_prefix . 'cron_logs',
+		$cron_log
+		);
+
+	return $cron_log;
 
 }
 	

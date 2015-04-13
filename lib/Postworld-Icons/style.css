@@ -1,10 +1,11 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?syuotx');
-	src:url('fonts/Postworld-Icons.eot?#iefixsyuotx') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff?syuotx') format('woff'),
-		url('fonts/Postworld-Icons.ttf?syuotx') format('truetype'),
-		url('fonts/Postworld-Icons.svg?syuotx#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?-ks4sll');
+	src:url('fonts/Postworld-Icons.eot?#iefix-ks4sll') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff2?-ks4sll') format('woff2'),
+		url('fonts/Postworld-Icons.woff?-ks4sll') format('woff'),
+		url('fonts/Postworld-Icons.ttf?-ks4sll') format('truetype'),
+		url('fonts/Postworld-Icons.svg?-ks4sll#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -339,6 +340,10 @@
 	content: "\e104";
 }
 
+.pwi-plus-thin:before {
+	content: "\e114";
+}
+
 .pwi-close-thin:before {
 	content: "\e117";
 }
@@ -397,6 +402,10 @@
 
 .pwi-pin:before {
 	content: "\f041";
+}
+
+.pwi-plus:before {
+	content: "\f05d";
 }
 
 .pwi-office:before {
@@ -811,10 +820,6 @@
 	content: "\e696";
 }
 
-.pwi-plus:before {
-	content: "\e697";
-}
-
 .pwi-play-o:before {
 	content: "\e6d2";
 }
@@ -1097,10 +1102,6 @@
 
 .pwi-nav:before {
 	content: "\f0c9";
-}
-
-.pwi-magic:before {
-	content: "\f0d0";
 }
 
 .pwi-caret-down:before {

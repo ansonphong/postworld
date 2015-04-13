@@ -87,7 +87,8 @@ class pw_user_widget extends WP_Widget {
 				'ext'				=>	'php',
 				'output'			=>	'ids',
 				)
-			)['user-widget'];
+			);
+		$viewOptions = $viewOptions['user-widget'];
 
 		if( _get( $options, 'user_id' ) )
 			$user = get_user_by( 'id', _get( $options, 'user_id' ) )->data;

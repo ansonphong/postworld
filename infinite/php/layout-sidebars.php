@@ -233,7 +233,8 @@ function pw_print_layout( $vars ){
 			'path_type' => 'dir',
 			'ext'=>'php',
 			)
-		)[$subdir];
+		);
+	$layout_templates = $layout_templates[$subdir];
 
 	///// INCLUDE TEMPLATE /////
 	$template_path = $layout_templates[ $vars['template'] ];

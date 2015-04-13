@@ -107,7 +107,7 @@ function postworld_install(){
 			process_id char(16) NULL,
 			time_start TIMESTAMP NOT NULL,
 			time_end TIMESTAMP NOT NULL,
-			timer INT NOT NULL,
+			timer DECIMAL(8,4) NOT NULL,
 			posts INT NULL,
 			query_args MEDIUMTEXT  NULL,
 			UNIQUE KEY cron_run_id (cron_run_id)
@@ -147,7 +147,8 @@ function postworld_install(){
 	dbDelta( $sql_postworld_shares );
 	dbDelta( $sql_postworld_cache );
 	
-	add_option( PW_DB_VERSION, $pw['info']['db_version'] );
+	// Update the DB with the new postworld DB version
+	update_option( PW_DB_VERSION, $pw['info']['db_version'] );
 	
 }
 
@@ -156,8 +157,11 @@ function pw_db_version_is_old(){
 	global $pw;
 	// Get the current version
 	$current_version = floatval( get_option( PW_DB_VERSION, 0 ) );
+	// Get the new version
+	$new_version = floatval($pw['info']['db_version']);
 	// If the version of Postworld is old
-	return ( $pw['info']['db_version'] > $current_version );
+	$version_is_old = (bool) ( $new_version > $current_version );
+	return $version_is_old;
 }
 
 ///// IF OLD DB /////

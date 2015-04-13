@@ -34,17 +34,18 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 
 
 	///// CACHING LAYER /////
-	$cache_hash = hash( 'sha256',
-		json_encode( $post_ids ) .
-		json_encode( $fields ) .
-		json_encode( $options )
-		);
-	$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
-	if( !empty( $get_cache ) ){
-		return json_decode( $get_cache['cache_content'], true);
+	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+		$cache_hash = hash( 'sha256',
+			json_encode( $post_ids ) .
+			json_encode( $fields ) .
+			json_encode( $options )
+			);
+		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+		if( !empty( $get_cache ) ){
+			return json_decode( $get_cache['cache_content'], true);
+		}
 	}
-
-
+	
 	///// OPTIONS : GALLERIES /////
 	// Condition field Model
 	$include_galleries = _get( $options, 'galleries.include_galleries' );
@@ -77,13 +78,13 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 		$posts = pw_merge_galleries( $posts, $options['galleries'] );
 	}
 
-
 	///// CACHING LAYER /////
-	pw_set_cache( array(
-		'cache_type'	=>	'feed-posts',
-		'cache_hash' 	=> 	$cache_hash,
-		'cache_content'	=>	json_encode($posts),
-		));
+	if( in_array( 'post_cache', pw_enabled_modules() ) )
+		pw_set_cache( array(
+			'cache_type'	=>	'feed-posts',
+			'cache_hash' 	=> 	$cache_hash,
+			'cache_content'	=>	json_encode($posts),
+			));
 
 
 	// Return Array of post data
@@ -244,7 +245,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 		// Points
 		if( in_array('post_points', $fields) ){
-			$post['post_points'] = get_post_points( $post_id );
+			$post['post_points'] = pw_get_post_points( $post_id );
 		}
 
 
@@ -257,15 +258,15 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			///// GET VIEWER DATA /////
 			// Has Viewer Voted?
 			if( in_array('has_voted', $viewer_fields) )
-				$post['viewer']['has_voted'] = has_voted_on_post( $post_id, $viewer_user_id );
+				$post['viewer']['has_voted'] = pw_has_voted_on_post( $post_id, $viewer_user_id );
 
 			// View Vote Power
 			if( in_array('vote_power', $viewer_fields) )
-				$post['viewer']['vote_power'] = get_user_vote_power( $viewer_user_id );
+				$post['viewer']['vote_power'] = pw_get_user_vote_power( $viewer_user_id );
 		
 			// Is Favorite
 			if( in_array('is_favorite', $viewer_fields) ){
-				$is_favorite = is_favorite( $post_id );
+				$is_favorite = pw_is_favorite( $post_id );
 				if ( !isset($is_favorite) )
 					$is_favorite = "0";
 				$post['viewer']['is_favorite'] = $is_favorite;
@@ -273,7 +274,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 			// Is View Later
 			if( in_array('is_view_later', $viewer_fields) )
-				$post['viewer']['is_view_later'] = is_view_later( $post_id );
+				$post['viewer']['is_view_later'] = pw_is_view_later( $post_id );
 
 		}
 
@@ -285,7 +286,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			if( !isset($post['viewer']) )
 				$post['viewer'] = array();
 			foreach ($relationships as $relationship ) {
-				$post['viewer'][$relationship] = is_post_relationship( $relationship, $post_id, $user_id);
+				$post['viewer'][$relationship] = pw_is_post_relationship( $relationship, $post_id, $user_id);
 			}
 		}
 
@@ -434,9 +435,9 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			///// POSTWORLD AUTHOR FIELDS /////
 			/*
 			if( in_array('posts_points', $author_fields) )
-				$post['author']['posts_points'] = get_user_post_points( $post_id );
+				$post['author']['posts_points'] = pw_get_user_post_points( $post_id );
 			if( in_array('comments_points', $author_fields) )
-				$post['author']['comments_points'] = get_user_comments_points( $post_id );
+				$post['author']['comments_points'] = pw_get_user_comments_points( $post_id );
 			*/
 
 		} // END if
@@ -1194,9 +1195,11 @@ function pw_save_post($post_data){
 	global $pwSiteGlobals;
 	$rank_post_types = pw_get_obj( $pwSiteGlobals, 'rank.post_types' );
 	if( in_array( $post_data['post_type'], $rank_post_types ) )
-		cache_rank_score ( $post_id );
+		pw_cache_rank_score ( $post_id );
 
 	if ( !empty($post_class) ){}
+
+	do_action( 'pw_save_post' );
 
 	return $post_id;
 
