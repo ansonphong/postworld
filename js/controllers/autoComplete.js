@@ -139,6 +139,10 @@ postworld.directive('pwInputTags', [ '$filter', 'pwData', '$log', '_', '$timeout
 			// Watch on the object with input tags
 			$scope.$watch( "tagsInput",
 				function (){
+					var postId = $_.get( $scope, 'post.ID' );
+					if( !postId )
+						return false;
+					
 					// When it changes, modify the tagsInput object
 					var tagSlugs = [];
 					angular.forEach( $scope.tagsInput, function( tag ){
@@ -146,7 +150,7 @@ postworld.directive('pwInputTags', [ '$filter', 'pwData', '$log', '_', '$timeout
 					});
 					// Emit it's value to the parent controller
 					$scope.$emit('updateTagsInput', {
-						postId:$scope.post.ID,
+						postId:postId,
 						taxonomy:'post_tag',
 						terms:tagSlugs,
 					});
