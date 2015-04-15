@@ -6,6 +6,108 @@
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
 
+/**
+ * Returns the date in the requested format, a period of time ago
+ * @param $period_ago [integer] Number of seconds ago to return the date of
+ * @param $format [string] PHP date() format to return
+ * @return [string] The date the period ago in the requested format
+ */
+function pw_date_seconds_ago( $seconds_ago, $format ){
+	$seconds_ago = (int) $seconds_ago;
+
+	if( !is_integer( $seconds_ago ) || !is_string( $format ) )
+		return false;
+
+	$now = time();
+	$date_ago = $now - $seconds_ago;
+
+	return date( $format, $date_ago );
+}
+
+/**
+ * Calculates the number of seconds in the reuested period
+ * @param $multiplier [float] Number to multiply period by
+ * @param $period [string] The type period length
+ * @return [integer] Number of seconds
+ */
+function pw_seconds_in( $multiplier = 0, $period = 'day' ){
+
+	// Return early if no multiplier
+	if( !is_float( $multiplier ) )
+		$multiplier = (float) $multiplier;
+	if( $multiplier === 0 || is_NaN( $multiplier ) )
+		return 0;
+
+	// Localize Time Units Variables
+	$t = pw_time_units();
+	extract($t);
+
+	// Switch period
+	switch( $period ){
+		case 'minute':
+		case 'minutes':
+			$base = $ONE_MINUTE;
+			break;
+		case 'hour':
+		case 'hours':
+			$base = $ONE_HOUR;
+			break;
+		case 'day':
+		case 'days':
+			$base = $ONE_DAY;
+			break;
+		case 'week':
+		case 'weeks':
+			$base = $ONE_WEEK;
+			break;
+		case 'month':
+		case 'months':
+			$base = $ONE_MONTH;
+			break;
+		case 'year':
+		case 'years':
+			$base = $ONE_YEAR;
+			break;
+	}
+
+	if( !isset( $base ) )
+		return 0;
+
+	else
+		return $base * $multiplier;
+}
+
+/**
+ * Gets a particular pre-formatted date unit from a period ago
+ * @see pw_seconds_in()
+ * @param $unit [string] Type of date unit, day/month/year
+ * @param $period [string] The type period length
+ * @return [integer] Number of seconds
+ */
+function pw_date_unit_at_ago( $unit, $multiplier, $period ){
+
+	$seconds_ago = pw_seconds_in( $multiplier, $period );
+	switch( $unit ){
+		case 'day':
+		case 'days':
+			$format = 'j';
+			break;
+		case 'month':
+		case 'months':
+			$format = 'n';
+			break;
+		case 'year':
+		case 'years':
+			$format = 'Y';
+			break;
+	}
+	if( !isset($format) )
+		return false;
+	
+	return pw_date_seconds_ago( $seconds_ago, $format );
+}
+
+
 function pw_get_all_comment_ids(){
 	global $wpdb;
 	$query = "
@@ -174,7 +276,7 @@ function pw_log( $message, $data = null ){
 	if( !empty($data) )
 		$message .= json_encode($data, JSON_PRETTY_PRINT);
 
-	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/php-log.txt");
+	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/pw-log-php.txt");
 
 }
 
@@ -1301,8 +1403,7 @@ function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
 	// TODO : Refactor to accept multipe key->value pairs
 	// TODO : Add Operator parameter, "AND" / "OR" for multiple key->value pairs
 
-
-	pw_log('LIST : ' .count($list));
+	//pw_log('pw_reject : LIST : ' .count($list));
 
 	// Get the first Key and Value
 	foreach( $key_value_pair as $get_key => $get_value ){
@@ -1321,7 +1422,7 @@ function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
 			$new_list[] = $item;
 	}
 
-	pw_log('NEW LIST : ' .count($new_list));
+	//pw_log('pw_reject : NEW LIST : ' .count($new_list));
 
 	return $new_list;
 

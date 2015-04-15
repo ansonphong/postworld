@@ -64,7 +64,7 @@ function pw_related_posts( $vars = array() ){
 	$defaultVars = array(
 		'post_id' 		=>	'this_post',
 		'number'		=>	10,				// The number of items to return
-		'depth'			=>	1000,			// The depth at which to query
+		'depth'			=>	0,				// The depth at which to query (0 is max depth)
 		'order_by'		=>	'score',		// By what to order items
 		'order'			=>	'DESC',			// How to order items
 		'output'		=>	'ids',			// Item contents, values: ids
@@ -252,7 +252,7 @@ function pw_related_posts_by_taxonomy( $vars ){
 	$defaultVars = array(
 		'post_id' 	=> 	$post->ID,	// The post ID by which to find posts in relation to
 		'number'	=>	0,			// Numer of posts to return (0 returns all)
-		'depth' 	=> 	1000,		// Depth of posts to query
+		'depth' 	=> 	0,			// Depth of posts to query (0 is max depth)
 		'order_by'	=>	'score', 	// Optional values : none / score
 		'order'		=>	'DESC',		// Optional values : DESC / ASC
 		'output'	=>	'scored',	// Optional values : scored / ids
@@ -314,6 +314,16 @@ function pw_related_posts_by_taxonomy( $vars ){
 	$query_vars = $vars['query'];
 	$query_vars['fields'] = 'ids';
 	$query_vars['posts_per_page'] = $vars['depth'];
+	// Exclude current post
+	$query_vars['post__not_in'] = array( $vars['post_id'] );
+
+	//pw_log( 'pw_related_posts_by_taxonomy : PRE-FILTER QUERY : ', $query_vars);
+
+	// Filter for smart query var processing
+	$query_vars = apply_filters( 'pw_prepare_query', $query_vars );
+
+	//pw_log( 'pw_related_posts_by_taxonomy : POST-FILTER QUERY : ', $query_vars);
+
 
 	// VAR : POSTS
 	// The final result, all posts scored
@@ -347,7 +357,9 @@ function pw_related_posts_by_taxonomy( $vars ){
 				);
 
 			// Recursively query
-			$query = new PW_Query( $query_vars );
+			$query = new WP_Query( $query_vars );
+			// Date query is not working with PW_Query - refactor PW_Query
+			//$query = new PW_Query( $query_vars );
 
 			// Get the post IDs
 			$term_posts = $query->get_posts();

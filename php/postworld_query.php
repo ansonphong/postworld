@@ -1251,7 +1251,7 @@ function pw_query($args,$return_Type = 'PW_QUERY') {
 			return json_encode($the_query);
 		}
 		else
-		return $the_query;
+			return $the_query;
 	
 }
 

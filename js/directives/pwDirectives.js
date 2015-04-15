@@ -244,7 +244,7 @@ postworld.directive('pwBackgroundImage', function( $log ) {
 		},
 		link: function( $scope, element, attrs ) {
 			$scope.$watch( 'pwBackgroundImage', function(val){
-				element.css( 'background-image', 'url('+val+')' );
+				element.css( 'background-image', 'url("'+val+'")' );
 			});
 		},
 	}

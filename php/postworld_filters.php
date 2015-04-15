@@ -1,7 +1,6 @@
 <?php
 
 function pw_default_modules( $modules ){
-	
 }
 add_filter( PW_OPTIONS_MODULES, 'pw_default_modules' );
 
@@ -28,6 +27,70 @@ function pw_add_gallery_field( $fields = array() ){
 	return pw_add_gallery_field_filter( $fields );
 }
 
+
+
+/**
+ * Prepares the custom 'date_from' field
+ * And converts values into a standard WP_Query 'date_query'
+ * Allows date queries to be defined relative to the current time
+ * @param $query [array] An array of query vars
+ * @return [array] An array of updated query vars
+ *
+ *		$query = array(
+ *			'date_from' => array(
+ *				'after' => array(
+ *					'period' => 'months',
+ *					'multiplier' => 3
+ *					),
+ *				),
+ *			);
+ *
+ */
+function pw_prepare_date_from( $query ){
+
+	// Check if 'date_from' is set
+	if( !isset( $query['date_from'] ) )
+		return $query;
+	// Check if 'date_from' is empty
+	$date_from = _get( $query, 'date_from' );
+	if( empty( $date_from ) )
+		return $query;
+	
+	// Check for an already existing date query
+	$date_query = _get( $query, 'date_query' );
+	if( $date_query === false )
+		$date_query = array();
+
+	// Create the new date query element
+	$new = array();
+
+	// Get 'after' vars
+	$after_period = _get( $date_from, 'after_ago.period' );
+	$after_multiplier = _get( $date_from, 'after_ago.multiplier' );
+
+	///// AFTER /////
+	if( is_string($after_period) && is_integer($after_multiplier) ){
+		$new['after'] = array(
+			'year' => (int) pw_date_unit_at_ago('year', $after_multiplier, $after_period),
+			'month' => (int) pw_date_unit_at_ago('month', $after_multiplier, $after_period),
+			'day' => (int) pw_date_unit_at_ago('day', $after_multiplier, $after_period)
+			);
+	}
+
+	// Add to query
+	if( !empty( $new ) )
+		$date_query[] = $new;
+	if( !empty( $date_query ) )
+		$query['date_query'] = $date_query;
+
+	return $query;
+
+}
+add_filter( 'pw_prepare_query', 'pw_prepare_date_from' );
+
+
+
+
 ///// PREPARE QUERY FILTER : POST PARENT FROM /////
 function pw_prepare_query_post_parent_from( $query ){
 	global $post;
@@ -46,6 +109,7 @@ function pw_prepare_query_post_parent_from( $query ){
 	return $query;
 }
 add_filter( 'pw_prepare_query', 'pw_prepare_query_post_parent_from' );
+
 
 
 ///// PREPARE QUERY FILTER : EXCLUDE POST FROM /////
