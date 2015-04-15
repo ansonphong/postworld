@@ -24,7 +24,7 @@ global $pw;
 $pw = array(
 	'info'	=>	array(
 		'version'		=>	1.91,
-		'db_version'	=>	1.14,
+		'db_version'	=>	1.196,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),

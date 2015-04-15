@@ -52,9 +52,20 @@ function postworld_install(){
 			comment_author_id BIGINT(20) UNSIGNED NOT NULL,
 			points mediumint(8) DEFAULT '0' NOT NULL,
 			time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-			UNIQUE KEY comment_id_user_id (comment_id,user_id)
+			DROP UNIQUE KEY comment_id,
+			DROP INDEX user_id
 		);";
-		
+		// UNIQUE KEY `point_index` ( `comment_id`, `user_id`)
+
+	/*
+	$sql_postworld_comment_points_alter = "ALTER TABLE $comment_points_table_name
+		DROP INDEX `comment_id`,
+		DROP INDEX `comment_id_user_id`,
+		DROP INDEX `unique_index`
+		);";
+	//dbDelta( $sql_postworld_comment_points_alter );
+	*/
+
 	$user_meta_table_name = $wpdb->pw_prefix.'user_meta';
 	$sql_postworld_user_meta = "CREATE TABLE $user_meta_table_name (
 			user_id BIGINT(20) UNSIGNED NOT NULL,
