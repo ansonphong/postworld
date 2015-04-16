@@ -457,11 +457,18 @@ add_action("wp_ajax_pw_insert_user", "pw_insert_user_anon");
 //---------- WP USER QUERY ----------//
 function wp_user_query_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
+
 	$params = $args['args'];
+
+	pw_log("wp_user_query_anon : PARAMS : ",$params);
 
 	$user_query = new WP_User_Query( $params );
 
-	pwAjaxRespond( $user_query->results );
+	$results = $user_query->get_results();
+
+	pw_log("wp_user_query_anon : RESULTS : ",$results);
+
+	pwAjaxRespond( $results );
 }
 add_action("wp_ajax_nopriv_wp_user_query", "wp_user_query_anon");
 add_action("wp_ajax_wp_user_query", "wp_user_query_anon");

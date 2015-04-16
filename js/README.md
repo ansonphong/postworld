@@ -1372,12 +1372,10 @@ __data-type__ : *string* (optional)
 __Status__ : In Concepting (phongmedia)
 
 #### Description
-
 - Displays a list of users from a user query
 - Similar to **live-feed** directive - instead of showing posts, show users
 
 #### Process
-
 - Access `pw_user_query()` method via AJAX
 - Return an outline of USER IDs
 - Display users according to template and feed settings

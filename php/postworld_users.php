@@ -13,7 +13,9 @@ function pw_roles_allowed_admin_access(){
 	$allowed_roles = apply_filters( 'pw_roles_allowed_admin_access', array('administrator', 'editor') );
 	// Redirect users without allowed roles to the home page
     $redirect = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : home_url( '/' );
-    if( !pw_user_has_roles( $allowed_roles ) )
+    
+    // Allow anonymous AJAX Requests
+    if( !pw_user_has_roles( $allowed_roles ) && !defined('DOING_AJAX') && DOING_AJAX !== true )
         exit( wp_redirect( $redirect ) );
 }
 
