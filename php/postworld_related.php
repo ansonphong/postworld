@@ -217,11 +217,13 @@ function pw_related_posts( $vars = array() ){
 	if( $vars['output'] === 'ids' ){
 		$post_ids = array();
 		foreach( $posts as $post ){
-			$post_ids[] = $post['post_id'];			
+			// Check for integer, as a deeper bug where
+			// Post ID isn't being defined was causing null values
+			if( is_integer($post['post_id']) )
+				$post_ids[] = $post['post_id'];			
 		}
 		$posts = $post_ids;
 	}
-
 
 	///// CACHING LAYER /////
 	pw_set_cache( array(
