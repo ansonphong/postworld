@@ -1,6 +1,8 @@
 <?php
 ///// DEV TESTING /////
 
+
+
 function pw_test_related_posts(){
 
 	//pw_log( time() );
