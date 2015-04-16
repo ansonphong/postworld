@@ -1,4 +1,21 @@
 <?php
+/**
+ * Allow Admin-UI access only for certain roles
+ * For use with the 'admin_init' action hook
+ * 
+ * @param [array] $allowed_roles Roles which are allowed to access wp-admin
+ *
+ *		add_action( 'admin_init', 'pw_roles_allowed_admin_access', 100 );
+ *
+ */
+function pw_roles_allowed_admin_access(){
+	// Allow themes to customize the allowed roles
+	$allowed_roles = apply_filters( 'pw_roles_allowed_admin_access', array('administrator', 'editor') );
+	// Redirect users without allowed roles to the home page
+    $redirect = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : home_url( '/' );
+    if( !pw_user_has_roles( $allowed_roles ) )
+        exit( wp_redirect( $redirect ) );
+}
 
 /**
  * Checks if a particular user has a role. 
