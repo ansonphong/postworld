@@ -51,7 +51,7 @@ postworld.controller('pwGetPostCtrl',
 			fields: $scope.postFields,
 		};
 
-		$pwData.get_post( vars ).then(
+		$pwData.getPost( vars ).then(
 			// Success
 			function(response) {
 				$scope.postModel = response.data;

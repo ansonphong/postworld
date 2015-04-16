@@ -119,21 +119,18 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	if( $get_post == null )
 		return false;
 
-	///// GET THE FIELD MODEL /////
-	$field_model = pw_post_field_model();
-
 	// Preserve the $fields value
 	$fields_value = $fields;
 
 	///// PRESET FIELD MODELS /////
 	if( is_string( $fields) ){
-		// Get the preset fields model
-		$fields = _get( $field_model, $fields );
+		$fields = pw_get_field_model('post',$fields);
 		// If the specified field model does not exist
-		if( $fields == false )
+		if( empty( $fields ) )
 			// Set the default field model
-			$fields = $field_model['preview'];
+			$fields = pw_get_field_model('post','preview');
 	}
+	//pw_log( 'pw_get_post : FIELDS : ', $fields );
 
 	///// ADD ACTION HOOK : PW GET POST INIT /////
 	do_action( 'pw_get_post_init',

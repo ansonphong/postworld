@@ -568,7 +568,7 @@ function pwSiteGlobals_include(){
 	$pwSiteGlobals["taxonomies"] = pw_get_taxonomies( array(  ),'objects');
 
 	///// FIELD MODEL /////
-	$pwSiteGlobals["fields"] = pw_field_model();
+	$pwSiteGlobals["fields"] = pw_field_models();
 
 	///// PRINT JAVASCRIPT /////
 	// SITE GLOBALS

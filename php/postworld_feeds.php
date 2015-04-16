@@ -819,10 +819,10 @@ function pw_gallery_feed( $vars = array() ){
 	$vars = array_replace_recursive( $default_vars, $vars );
 
 	///// GET POSTS /////
-	// Add a filter to add gallery fields to preview field model
-	add_filter( 'pw_get_post_preview_fields', 'pw_add_gallery_field' );
+	// Add gallery field to field models
+	pw_add_gallery_field_filters();
 
-	$post_ids = pw_get_obj( $vars, 'get_posts.post_ids' );
+	$post_ids = _get( $vars, 'get_posts.post_ids' );
 
 	/// USE PW GET POSTS ///
 	// If post IDs are provided
@@ -839,6 +839,9 @@ function pw_gallery_feed( $vars = array() ){
 	}
 
 	$posts = pw_merge_galleries( $posts, $vars['options'] );
+
+	// Remove the gallery field from field models
+	pw_remove_gallery_field_filters();
 
 	return $posts;
 

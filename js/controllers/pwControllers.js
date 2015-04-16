@@ -136,7 +136,7 @@ postworld.controller('postController',
 				post_id: postId,
 				fields: 'all'
 			};
-			$pwData.get_post(args).then(
+			$pwData.getPost(args).then(
 				// Success
 				function(response) {
 					if (response.status==200) {

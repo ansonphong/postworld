@@ -719,4 +719,122 @@ postworld.directive( 'pwShareLink',
 
 
 
+/**
+ * Loads a post template and injects it with data
+ *
+ * @module Angular
+ * @submodule Directive
+ * @main loadPost
+ */
+postworld.directive('loadPost',
+	[ '$log', '$timeout', 'pwData', '_',
+	function( $log, $timeout, $pwData, $_ ) {
+	return {
+		restrict: 'A',
+		replace: true,
+		template: '<div ng-include="templateUrl" ng-class="postClass"></div>',
+		scope : {
+			postId:'=',			// Post ID
+			postView:'@',		// Which registered view template to use
+			postQuery:'=',		// (optional) Query vars to derive post from
+			postClass:'@',		// (optional) Classes to add to the template element
+			postLoading:'=' 	// (optional) An expression to assign a loading boolean
+		},
+		link: function( $scope, element, attrs ){
+			var init = function(){
+				///// DETECT MODE /////
+				if( $scope.postId != null )
+					$scope.mode = 'id';
+				else
+					$scope.mode = 'query';
+
+				$log.debug( 'loadPost : MODE : ', $scope.mode );
+
+				///// SWITCH : MODE /////
+				switch( $scope.mode ){
+					///// POST FROM ID
+					case 'id':
+						loadPostFromId();
+						break;
+					///// POST FROM QUERY /////
+					case 'query':
+						loadPostFromQuery();
+						break;
+				}
+			}
+			
+			/**
+			 * Loads a post via post ID
+			 */
+			var loadPostFromId = function(){
+				$scope.postLoading = true;
+				$pwData.getPost( {post_id:$scope.postId} ).then(
+					function(response) {
+						$scope.postLoading = false;
+						var post = response.data;
+						if( !_.isEmpty(post) ){
+							$scope.post = post;
+							setTemplateUrl();
+						}
+					},
+					function(response){}
+				);
+			}
+
+			/**
+			 * Loads a post via query
+			 */
+			var loadPostFromQuery = function(){
+
+				if( !_.isObject($scope.postQuery) ){
+					throw { message:"Postworld [directive] loadPost : Wrong query format provided in post-query attribute." }
+					return false;
+				}
+
+				// Setup query
+				var query = $scope.postQuery;
+				query.posts_per_page = 1;
+
+				$scope.postLoading = true;
+				$pwData.pwQuery( query ).then(
+					function(response) {
+						$scope.postLoading = false;
+						if( _.isArray( response.data.posts ) ){
+							if( !_.isEmpty( response.data.posts ) ){
+								$scope.post = response.data.posts[0];
+								setTemplateUrl();
+							}
+						}
+
+					},
+					function(response){}
+				);
+			}
+
+			/**
+			 * Sets the template URL
+			 */
+			var setTemplateUrl = function(){
+
+				var postType = $_.get( $scope, 'post.post_type' ); 
+				if( !postType )
+					postType = 'post';
+
+				var view = $scope.postView;
+				if( view == null )
+					view = 'list';
+
+				$scope.templateUrl = $pwData.pw_get_template({
+					subdir: 'posts',
+					post_type: postType,
+					view: view
+					});
+	
+			}
+
+			init();
+
+		}
+	};
+}]);
 

@@ -1,30 +1,83 @@
 <?php
-//////////////////// FIELD MODEL ////////////////////
+/*_____ _      _     _     
+ |  ___(_) ___| | __| |___ 
+ | |_  | |/ _ \ |/ _` / __|
+ |  _| | |  __/ | (_| \__ \
+ |_|   |_|\___|_|\__,_|___/*/
 
-function pw_field_model(){
-	// Returns both the post and user field models
+/**
+ * Register a field model preset
+ *
+ * @param string $type The type of field model [post/user]
+ * @param string $name The name of the field model
+ * @param array $fields An array of fields
+ */
+function pw_register_field_model( $type, $name, $fields ){
+	global $pw;
 
-	$field_models = array(
-		'post'	=>	pw_post_field_model(),
-		'user'	=>	pw_user_field_model(),
-		);
+	//pw_log( 'pw_register_field_model : ' . $type . ' : ' . $name );
 
-	return apply_filters( PW_MODEL_FIELDS, $field_models );
+	if( !is_string($name) || !is_array($fields) )
+		return false;
+
+	$pw['fields'][$type][$name] = $fields;
+
+	return true;
 }
 
+/**
+ * Register a post field model preset
+ *
+ * @see pw_register_field_model()
+ * @param string $name The name of the field model
+ * @param array $fields An array of fields
+ */
+function pw_register_post_field_model( $name, $fields ){
+	return pw_register_field_model( 'post', $name, $fields );
+}
 
-function pw_post_field_model(){
-	// Returns the post field model
+/**
+ * Returns both the post and user field models
+ */
+function pw_field_models(){
+	global $pw;
+	return apply_filters( PW_FIELD_MODELS, $pw['fields'] );
+}
 
-	///// CACHING LAYER /////
-	global $pw_field_model_cache;
-	if( !empty( $pw_field_model_cache ) && $pw_field_model_cache != null )
-		return $pw_field_model_cache;
+/**
+ * Returns array of all post field models
+ */
+function pw_post_field_models(){
+	global $pw;
+	return apply_filters( PW_POST_FIELD_MODELS, $pw['fields']['post'] );
+}
 
-	////////// SETS //////////
+/**
+ * Returns a specific field model and filters it
+ * @see pw_register_field_model()
+ * @param string $type The type of field model [post/user]
+ * @param string $name The name of the specific field model
+ */
+function pw_get_field_model( $type, $name ){
+	global $pw;
+	$field_model = $pw['fields'][$type][$name];// _get( $pw['fields'], $type.'.'.$name );
+	
+	/**
+	 * Filters the field model according to type and name
+	 * Example of filter name: 'pw_post_field_model_preview'
+	 */
+	$field_model = apply_filters( 'pw_'.$type.'_field_model_'.$name, $field_model );
 
-	///// POST : POST META /////
-	$field_model['pw_post_meta'] = array(
+	return $field_model;
+}
+
+/**
+ * Registers core Postworld field models
+ */
+function pw_register_core_post_field_models(){
+
+	///// POSTWORLD POST META /////
+	$fields_pw_post_meta = array(
 		'post_class',
 		'link_format',
 		'link_url',
@@ -35,11 +88,10 @@ function pw_post_field_model(){
 		'geo_latitude',
 		'related_post'
 		);
+	pw_register_post_field_model( 'pw_post_meta', $fields_pw_post_meta );
 
-	////////// POSTS //////////
-
-	///// POST : EDIT //////
-	$field_model['edit'] = array(
+	///// EDIT /////
+	$fields_edit = array(
 		'ID',
 		'post_id',
 		'post_type',
@@ -72,9 +124,10 @@ function pw_post_field_model(){
 		'related_post',
 		'fields',
 		);
+	pw_register_post_field_model( 'edit', $fields_edit );
 
-	///// POST : MICRO /////
-	$field_model['micro'] =	array(
+	///// MICRO /////
+	$fields_micro = array(
 		'ID',
 		'post_title',
 		'post_excerpt',
@@ -86,14 +139,12 @@ function pw_post_field_model(){
 		'post_status',
 		'fields',
 		);
+	pw_register_post_field_model( 'micro', $fields_micro );
 
-	// TODO : Refactor instances of this, then remove
-	$field_model['micro'] = apply_filters( 'pw_get_post_micro_fields', $field_model['micro'] );
-
-	///// POST : PREVIEW /////
-	$field_model['preview'] = array_merge(
-		$field_model['micro'],
-		$field_model['pw_post_meta'],
+	///// PREVIEW /////
+	$fields_preview = array_merge(
+		$fields_micro,
+		$fields_pw_post_meta,
 		array(
 			'post_timestamp',
 			'comment_count',
@@ -112,14 +163,11 @@ function pw_post_field_model(){
 			'viewer(has_voted,is_favorite,is_view_later)',
 			)
 		);
+	pw_register_post_field_model( 'preview', $fields_preview );
 
-
-	// TODO : Refactor instances of this, then remove
-	$field_model['preview'] = apply_filters( 'pw_get_post_preview_fields', $field_model['preview'] );
-
-	///// POST : DETAIL /////
-	$field_model['detail'] = array_merge(
-		$field_model['preview'],
+	///// DETAIL /////
+	$fields_detail = array_merge(
+		$fields_preview,
 		array(
 			'post_path',
 			'image(full)',
@@ -130,10 +178,11 @@ function pw_post_field_model(){
 			'post_tags_list',
 			)
 		);
+	pw_register_post_field_model( 'detail', $fields_detail );
 
-	///// POST : ALL /////
-	$field_model['all'] = array_merge(
-		$field_model['detail'],
+	///// ALL /////
+	$fields_all = array_merge(
+		$fields_detail,
 		array(
 			'image(post,micro)',	// (post, [ preset field handle ]) Gets the image post data as post.image.post
 			'parent_post(micro)',				// Gets the parent post as post_parent : parent_post( [field model] )
@@ -144,10 +193,10 @@ function pw_post_field_model(){
 			//'post_excerpt(256,post_content)',
 			)
 		);
-	
+	pw_register_post_field_model( 'all', $fields_all );
 
-	///// POST : GALLERY /////
-	$field_model['gallery'] =	array(
+	///// GALLERY /////
+	$fields_gallery = array(
 		'ID',
 		'post_title',
 		'post_excerpt',
@@ -168,21 +217,17 @@ function pw_post_field_model(){
 		'post_author',
 		'fields',
 		);
-
-	///// FILTER /////
-	$field_model = apply_filters( PW_MODEL_POST_FIELDS, $field_model );
-
-	///// CACHING LAYER /////
-	$pw_field_model_cache = $field_model;
-
-	return $field_model;
+	pw_register_post_field_model( 'gallery', $fields_gallery );
 
 }
+add_action( 'init', 'pw_register_core_post_field_models' );
 
-
-function pw_user_field_model(){
-
-
+/**
+ * In Development
+ */
+function pw_user_field_models(){
+	return array();
 }
+
 
 ?>

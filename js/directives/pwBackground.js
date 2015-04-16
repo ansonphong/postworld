@@ -114,11 +114,11 @@
 			}
 
 			$scope.populateImagePost = function( imageId ){
-				var get_post_vars = {
+				var vars = {
 					post_id: imageId,
 					fields: [ 'ID', 'post_type', 'image(full)', 'fields' ],
 				};
-				$pwData.get_post( get_post_vars ).then(
+				$pwData.getPost( vars ).then(
 					function(response){
 						$pwData.posts[imageId] = response.data;
 						$log.debug( "backgroundObj › populateImagePost › $pwData.posts ", $pwData.posts );

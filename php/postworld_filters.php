@@ -21,12 +21,26 @@ function pw_add_gallery_field_filter( $fields ){
 
 function pw_add_gallery_field( $fields = array() ){
 	// Add the filters which add the gallery field to to other field models
-	add_filter( 'pw_get_post_preview_fields', 'pw_add_gallery_field_filter' );
-	add_filter( 'pw_get_post_micro_fields', 'pw_add_gallery_field_filter' );
+	pw_add_gallery_field_filters();
 	// Run the filter on any value sent to function
 	return pw_add_gallery_field_filter( $fields );
 }
 
+/**
+ * Adds the gallery field to core field models
+ */
+function pw_add_gallery_field_filters(){
+	add_filter( 'pw_post_field_model_preview', 'pw_add_gallery_field_filter' );
+	add_filter( 'pw_post_field_model_micro', 'pw_add_gallery_field_filter' );
+}
+
+/**
+ * Removes the gallery field from core field models
+ */
+function pw_remove_gallery_field_filters(){
+	remove_filter( 'pw_post_field_model_preview', 'pw_add_gallery_field_filter' );
+	remove_filter( 'pw_post_field_model_micro', 'pw_add_gallery_field_filter' );
+}
 
 
 /**

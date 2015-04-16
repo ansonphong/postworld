@@ -316,7 +316,7 @@ __TODO__ : Add image() fields-like request specific imge sizes, including custom
 #### Attributes
 
 __pw-query__ : *object/model path*
-- An object to pass to `pw_query`, which contains the query variables
+- An object to pass to PHP method `pw_query`, which contains the query variables
 
 __query-results-model__ : *object/model path*
 - The array where to deposit the results of the query
@@ -584,7 +584,7 @@ __panel__ : *string* (optional)
 __view__ : *object*
 
 __feed_query__ : *string / object*
-  - object - an object of query args which is passed to `pw_query()`
+  - object - an object of query args which is passed to PHP `pw_query()`
 
 
 ####Usage:

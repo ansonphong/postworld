@@ -138,14 +138,14 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
             );
             return deferred.promise;		
 		},
-		pw_query: function( args ){
+		pwQuery: function( args ){
 			$log.debug('pwData.pw_query',args);
 			var params = {'args':args};
 			return this.wp_ajax('pw_query',params);
 		},
 		getLiveFeed: function(args,qsArgs) {
 
-			$log.debug('pwData.pw_get_live_feed : INIT',args);
+			$log.debug('pwData.getLiveFeed : INIT :',args);
 
 			// args: arguments received from Panel. fArgs: is the final args sent along the ajax call.
 			// feedArgs will be filled initially with data from feed settings, 
@@ -157,7 +157,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var feedSettings = this.feeds[args.feed_id];
 			feedSettings.finalFeedQuery = feedArgs.query;
 
-			$log.debug('pwData.pw_get_live_feed',feedArgs);
+			$log.debug('pwData.getLiveFeed : FINAL :',feedArgs);
 
 			var params = {'args':feedArgs};
 			return this.wp_ajax('pw_get_live_feed',params);
@@ -205,17 +205,17 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_load_feed',params);
 		},
-		get_post: function( vars ){
+		getPost: function( vars ){
 			// DEPRECIATED
 			return this.getPost( vars );
 		},
 		getPost: function( vars ) {
 			// If no ID is set
 			if( _.isUndefined( vars.post_id ) ){
-				$log.debug( 'pwData.pw_get_post : No post ID specified.' );
+				$log.debug( 'pwData.getPost : No post ID specified.' );
 				return false;
 			}
-			$log.debug('pwData.pw_get_post',vars);
+			$log.debug('pwData.getPost',vars);
 			//var params = {args:vars};
 			return this.wp_ajax('pw_get_post',vars);
 		},
@@ -352,8 +352,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wp_ajax('pw_trash_post', params);
 		},
-		pw_get_post_edit: function(args) {
-			$log.debug('pwData.pw_get_post_edit',args);
+		getPostEdit: function(args) {
+			$log.debug('pwData.getPostEdit',args);
 			var params = {args:args};
 			return this.wp_ajax('pw_get_post_edit',params);
 		},
