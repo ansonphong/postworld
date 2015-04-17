@@ -5,7 +5,21 @@
  | .__/ \_/\_/ |____/ \__,_|\___|_|\_\__, |_|  \___/ \__,_|_| |_|\__,_|
  |_|                                 |___/                             
  ///////////////////////// LOAD BACKGROUND DIRECTIVE ////////////////////////*/
- postworld.directive( 'pwBackground',
+
+/**
+ * @module Postworld
+ * @submodule Directives
+ */
+
+
+/*
+ * Easily sets and modifies the background of the page 
+ *
+ * @class pwBackground
+ * @param {String} pwBackground A Postworld background object ID
+ */
+
+postworld.directive( 'pwBackground',
  	[ '$window', '$timeout', 'pwData', 'pwPosts', '$log', '_',
  	function( $window, $timeout, $pwData, $pwPosts, $log, $_ ){
 	return {

@@ -47,7 +47,6 @@ postworld.controller('pwFeedController',
 	}
 
 	$scope.posts = function(){
-		$log.debug('READ POSTS : ', $scope.feedId);
 		return $pwData.feeds[$scope.feedId].posts;
 	}
 

@@ -15,9 +15,14 @@ GitHub Repo  : https://github.com/phongmedia/postworld/
 ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 */
 
+// Documention by JSDOC
+// http://usejsdoc.org/
+/**
+ * @module Postworld
+ */
+
 'use strict';
 
-///// POSTWORLD MODULE /////
 pw.partials = {};
 pw.templates = {};
 pw.feeds = {};

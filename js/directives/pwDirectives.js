@@ -7,6 +7,11 @@
 											 
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
+/**
+ * @module Postworld
+ * @submodule Directives
+ */
+
 ////////// PW GLOBALS //////////
 // This directive sets the $pw service object into the local scope
 // Just specifiy which scope object to map it to
@@ -718,13 +723,17 @@ postworld.directive( 'pwShareLink',
 }]);
 
 
-
 /**
- * Loads a post template and injects it with data
+ * Loads a post template and injects it with data.
  *
- * @module Angular
- * @submodule Directive
- * @main loadPost
+ * @class loadPost
+ * @constructor
+ * @param {String} postId Optional. Post ID
+ * @param {String} postView Which registered view template to use.
+ * @param {Object} postQuery Query vars to derive post from.
+ * @param {string} postClass Optional. Classes to add to the template element.
+ * @param {string} postLoading Optional. An expression to assign a loading boolean.
+ * 
  */
 postworld.directive('loadPost',
 	[ '$log', '$timeout', 'pwData', '_',
@@ -734,11 +743,11 @@ postworld.directive('loadPost',
 		replace: true,
 		template: '<div ng-include="templateUrl" ng-class="postClass"></div>',
 		scope : {
-			postId:'=',			// Post ID
-			postView:'@',		// Which registered view template to use
-			postQuery:'=',		// (optional) Query vars to derive post from
-			postClass:'@',		// (optional) Classes to add to the template element
-			postLoading:'=' 	// (optional) An expression to assign a loading boolean
+			postId:'=',
+			postView:'@',
+			postQuery:'=',
+			postClass:'@',
+			postLoading:'='
 		},
 		link: function( $scope, element, attrs ){
 			var init = function(){
@@ -765,6 +774,7 @@ postworld.directive('loadPost',
 			
 			/**
 			 * Loads a post via post ID
+			 * @method loadPostFromId
 			 */
 			var loadPostFromId = function(){
 				$scope.postLoading = true;
@@ -838,3 +848,16 @@ postworld.directive('loadPost',
 	};
 }]);
 
+
+postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
+	return{
+		scope:{
+			pwDataGet:"@",
+		},
+		link: function( $scope, element, attrs ){
+			$log.debug("ACTIVATE : pwDataGet", element);
+			element.html( JSON.stringify( $_.get( $pwData, $scope.pwDataGet ) ) );
+		}
+
+	}
+}]);

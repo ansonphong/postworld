@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>js/controllers/pwWidgets.js - Postworld</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="Postworld" src="../assets/css/logo.png" style="max-height: 65%;" title="Postworld">
+            Postworld
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.9</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/loadPost", "classes/pwPostShareReport", "modules/Directives", "modules/Postworld", "modules/Services"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <h3>APIs</h3>
+	        <div id="sidebar">
+	            <ul id="main-nav" class="nav nav-tabs" style="margin-bottom:0;">
+	                <li class="active"><a href="#classes" data-toggle="tab">Classes</a></li>
+	                <li><a href="#modules" data-toggle="tab">Modules</a></li>
+	            </ul>
+	    
+	            <div id="api-tabview-filter">
+	                <input type="search" placeholder="Type to filter APIs">
+	            </div>
+	    
+	            <div class="tab-content" style="border: 1px solid #DDD; border-top:0;">
+	                <div class="tab-pane active" id="classes">
+	                    <ul id="api-classes" class="nav nav-list">
+	                            <li><a href="../classes/loadPost.html">loadPost</a></li>
+	                            <li><a href="../classes/pwPostShareReport.html">pwPostShareReport</a></li>
+	                    </ul>
+	                </div>
+	    
+	                <div class="tab-pane" id="modules">
+	                    <ul id="api-modules" class="nav nav-list">
+	                            <li><a href="../modules/Directives.html">Directives</a></li>
+	                            <li><a href="../modules/Postworld.html">Postworld</a></li>
+	                            <li><a href="../modules/Services.html">Services</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <div class="page-header">
+                            <h1>js/controllers/pwWidgets.js <small>File</small></h1>
+                        </div>
+                        
+                        <div class="file">
+                            <pre class="prettyprint linenums">
+                        &#x27;use strict&#x27;;
+                        /*_        ___     _            _       
+                         \ \      / (_) __| | __ _  ___| |_ ___ 
+                          \ \ /\ / /| |/ _&#x60; |/ _&#x60; |/ _ \ __/ __|
+                           \ V  V / | | (_| | (_| |  __/ |_\__ \
+                        	\_/\_/  |_|\__,_|\__, |\___|\__|___/
+                        					 |___/              
+                        //////////////// WIDGETS ////////////////*/
+                        
+                        /**
+                         * Post Share Report
+                         * Populates the scope with a post share report
+                         * for the current contextual post.
+                         * @class pwPostShareReport
+                         * @return {object} Populates $scope.postShareReport
+                         */
+                        postworld.directive(&#x27;pwPostShareReport&#x27;,
+                        	[&#x27;$window&#x27;,&#x27;$timeout&#x27;,&#x27;pwData&#x27;, &#x27;$pw&#x27;, &#x27;$log&#x27;, &#x27;_&#x27;,
+                        	function( $window, $timeout, $pwData, $pw, $log, $_ ) {
+                        	return {
+                        		scope:{
+                        			postShareReport:&quot;=pwPostShareReport&quot;,
+                        			shareReportLoading:&quot;=&quot;,
+                        			shareReportPostId:&quot;=&quot;
+                        		},
+                        		link: function( $scope, element, attrs ){
+                        
+                        			$scope.postShareReport = {};
+                        			
+                        			$scope.$watch( &#x27;shareReportPostId&#x27;, function( postId ){
+                        
+                        				if( postId == null )
+                        					postId = $_.get( $pw, &#x27;view.post.ID&#x27; );
+                        
+                        				if( !postId )
+                        					return false;
+                        
+                        				$scope.shareReportLoading = true;
+                        
+                        				$pwData.postShareReport( {post_id:postId} ).then(
+                        					function(response) {    
+                        						$scope.postShareReport = response.data;
+                        						$scope.shareReportLoading = false;
+                        					},
+                        					function(response) {
+                        						$scope.shareReportLoading = false;
+                        					}
+                        				);
+                        
+                        			});
+                        
+                        		}
+                        
+                        	}
+                        
+                        }]);
+                        
+                        
+                        /**
+                         * User Share Report : Outgoing / Incoming
+                         * Populates the scope with an outgoing user share report
+                         * showing posts which the given user has shared.
+                         *
+                         * @method pwPostShareReport
+                         * @return {object} Populates $scope.postShareReport
+                         */
+                        postworld.directive(&#x27;pwUserShareReport&#x27;,
+                        	[&#x27;$window&#x27;,&#x27;$timeout&#x27;,&#x27;pwData&#x27;, &#x27;_&#x27;, &#x27;$pw&#x27;, &#x27;$log&#x27;,
+                        	function($window, $timeout, $pwData, $_, $pw, $log ) {
+                        		return {
+                        			scope:{
+                        				pwUserShareReport:&quot;=&quot;, // Array of strings deliniating which reports to get [&#x27;outgoing&#x27;,&#x27;incoming&#x27;]
+                        				shareReportUserId:&quot;=&quot;,
+                        				shareReportOutgoing:&quot;=&quot;,
+                        				shareReportOutgoingLoading:&quot;=&quot;
+                        			},
+                        			link: function( $scope, element, attrs ){
+                        
+                        				$scope.shareReportOutgoing = {};
+                        
+                        				$scope.$watch( &#x27;shareReportUserId&#x27;, function( userId ){
+                        
+                        					if( userId === null || _.isUndefined( userId ) )
+                        						userId = $_.get( $pw, &#x27;view.displayed_user.user_id&#x27;);
+                        
+                        					if( !userId )
+                        						return false;
+                        
+                        					var args = { &quot;user_id&quot; : userId };
+                        
+                        					if( $_.inArray( &#x27;outgoing&#x27;, $scope.pwUserShareReport ) ){
+                        						$scope.shareReportOutgoingLoading = true;
+                        						$pwData.userShareReportOutgoing( args ).then(
+                        							// Success
+                        							function(response) {    
+                        								$scope.shareReportOutgoing = response.data;
+                        								$scope.shareReportOutgoingLoading = false;
+                        							},
+                        							// Failure
+                        							function(response) {
+                        								$scope.shareReportOutgoingLoading = false;
+                        							}
+                        						);
+                        					}
+                        
+                        
+                        				});
+                        
+                        			}
+                        
+                        		}
+                        
+                        
+                        }]);
+                        
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

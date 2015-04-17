@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>js/directives/pwBackground.js - Postworld</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="Postworld" src="../assets/css/logo.png" style="max-height: 65%;" title="Postworld">
+            Postworld
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.9</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/loadPost", "classes/pwPostShareReport", "modules/Directives", "modules/Postworld", "modules/Services"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <h3>APIs</h3>
+	        <div id="sidebar">
+	            <ul id="main-nav" class="nav nav-tabs" style="margin-bottom:0;">
+	                <li class="active"><a href="#classes" data-toggle="tab">Classes</a></li>
+	                <li><a href="#modules" data-toggle="tab">Modules</a></li>
+	            </ul>
+	    
+	            <div id="api-tabview-filter">
+	                <input type="search" placeholder="Type to filter APIs">
+	            </div>
+	    
+	            <div class="tab-content" style="border: 1px solid #DDD; border-top:0;">
+	                <div class="tab-pane active" id="classes">
+	                    <ul id="api-classes" class="nav nav-list">
+	                            <li><a href="../classes/loadPost.html">loadPost</a></li>
+	                            <li><a href="../classes/pwPostShareReport.html">pwPostShareReport</a></li>
+	                    </ul>
+	                </div>
+	    
+	                <div class="tab-pane" id="modules">
+	                    <ul id="api-modules" class="nav nav-list">
+	                            <li><a href="../modules/Directives.html">Directives</a></li>
+	                            <li><a href="../modules/Postworld.html">Postworld</a></li>
+	                            <li><a href="../modules/Services.html">Services</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <div class="page-header">
+                            <h1>js/directives/pwBackground.js <small>File</small></h1>
+                        </div>
+                        
+                        <div class="file">
+                            <pre class="prettyprint linenums">
+                        /*              ____             _                                   _ 
+                          _ ____      _| __ )  __ _  ___| | ____ _ _ __ ___  _   _ _ __   __| |
+                         | &#x27;_ \ \ /\ / /  _ \ / _&#x60; |/ __| |/ / _&#x60; | &#x27;__/ _ \| | | | &#x27;_ \ / _&#x60; |
+                         | |_) \ V  V /| |_) | (_| | (__|   &lt; (_| | | | (_) | |_| | | | | (_| |
+                         | .__/ \_/\_/ |____/ \__,_|\___|_|\_\__, |_|  \___/ \__,_|_| |_|\__,_|
+                         |_|                                 |___/                             
+                         ///////////////////////// LOAD BACKGROUND DIRECTIVE ////////////////////////*/
+                        
+                        /**
+                         * @module Postworld
+                         * @submodule Directives
+                         */
+                        
+                        
+                        /*
+                         * Easily sets and modifies the background of the page 
+                         *
+                         * @class pwBackground
+                         * @param {String} pwBackground A Postworld background object ID
+                         */
+                        
+                        postworld.directive( &#x27;pwBackground&#x27;,
+                         	[ &#x27;$window&#x27;, &#x27;$timeout&#x27;, &#x27;pwData&#x27;, &#x27;pwPosts&#x27;, &#x27;$log&#x27;, &#x27;_&#x27;,
+                         	function( $window, $timeout, $pwData, $pwPosts, $log, $_ ){
+                        	return {
+                        		restrict: &#x27;AE&#x27;,
+                        		//controller: &#x27;pwBackgroundCtrl&#x27;,
+                        		scope: {
+                        			pwBackground:&#x27;@&#x27;,
+                        		},
+                        		link: function( $scope, element, attrs ){
+                        
+                        			//////////// WATCH ////////////
+                        			$scope.$watch(&#x27;pwBackground&#x27;, function( val ){
+                        				$scope.updateBackground( val );
+                        			}, 1 );
+                        
+                        			$scope.getBackgroundObj = function(){
+                        				if( $scope.pwBackground == &#x27;primary&#x27; ){
+                        					//$log.debug( &quot;&gt;&gt;&gt; PRIMARY BG &lt;&lt;&lt; &quot;, $pwData.background.primary );
+                        					return $pwData.background.primary;
+                        				}
+                        				else if( $scope.pwBackground == &#x27;secondary&#x27; )
+                        					return $pwData.background.secondary;
+                        				else
+                        					return $scope.$eval( $scope.pwBackground );
+                        			}
+                        
+                        			//////////// UPDATE ////////////
+                        			$scope.updateBackground = function(){
+                        
+                        				// Get the background Object
+                        				$scope.backgroundObj = $scope.getBackgroundObj();
+                        			
+                        				// Apply the background styles
+                        				$scope.applyBackgroundStyles();
+                        				// Check if there is an image ID
+                        				var imageId = $scope.getImageId();
+                        				if( imageId ){
+                        					// And there is no image post
+                        					if( !$scope.getImagePost() ){
+                        						// Populate it
+                        						$scope.populateImagePost( imageId );
+                        						return;
+                        					}
+                        				}
+                        
+                        				// Bind / Unbind parallax
+                        				$scope.bindParallax();
+                        
+                        			}
+                        
+                        			$scope.bindParallax = function(){
+                        
+                        				// Check for Parallax values
+                        				var parallax = $_.get( $scope.backgroundObj, &#x27;image.parallax&#x27; );
+                        				var position = $_.get( $scope.backgroundObj, &#x27;style.background-position&#x27; );
+                        				// If parallax is present
+                        				if( is_numeric( parallax ) &amp;&amp; parallax != 0 &amp;&amp; position == &#x27;parallax&#x27; ){
+                        					// Bind window scrolling to update the position
+                        					angular.element($window).on(&quot;scroll&quot;, setPosition);
+                        					// Init Parallax
+                        					setPosition();
+                        				}
+                        				else{
+                        					// Unbind window scrolling
+                        					angular.element($window).off(&quot;scroll&quot;, setPosition);
+                        					// Clear Parallax
+                        					//element.css(&#x27;background-position&#x27;, &#x27;initial&#x27;);
+                        				}
+                        			}
+                        
+                        			$scope.applyBackgroundStyles = function(){
+                        				var styles = $scope.parseBackgroundStyles();
+                        				element.css( styles );
+                        				$log.debug( &quot;backgroundObj › applyBackgroundStyles&quot;, styles );
+                        			}
+                        
+                        			$scope.getImageId = function(){
+                        				return $_.get( $scope.backgroundObj, &#x27;image.id&#x27; );;
+                        			}
+                        
+                        			$scope.getImagePost = function(){
+                        				// Get the image ID
+                        				var imageId = $scope.getImageId();
+                        				// If no image ID, return here
+                        				if( !imageId )
+                        					return false;
+                        				// Setup imagePost variable
+                        				var imagePost = false;
+                        				// If there is an image ID, check if that post exists in the $pwData.posts[id]
+                        				if( imageId ){
+                        					// Check if the post exists
+                        					imagePost = $_.get( $pwData, &#x27;posts.&#x27;+imageId );
+                        				}
+                        				$log.debug( &#x27;$scope.getImagePost&#x27;, imagePost );
+                        				return imagePost;
+                        			}
+                        
+                        			$scope.getImageUrl = function(){
+                        				// TODO : Select the approriate size depending on screen size
+                        				// Check if there is an image post
+                        				var imagePost = $scope.getImagePost();
+                        				if( !imagePost )
+                        					return false;
+                        				// Get the image url
+                        				return $_.get( imagePost, &#x27;image.sizes.full.url&#x27; );
+                        			}
+                        
+                        			$scope.populateImagePost = function( imageId ){
+                        				var vars = {
+                        					post_id: imageId,
+                        					fields: [ &#x27;ID&#x27;, &#x27;post_type&#x27;, &#x27;image(full)&#x27;, &#x27;fields&#x27; ],
+                        				};
+                        				$pwData.getPost( vars ).then(
+                        					function(response){
+                        						$pwData.posts[imageId] = response.data;
+                        						$log.debug( &quot;backgroundObj › populateImagePost › $pwData.posts &quot;, $pwData.posts );
+                        						$scope.updateBackground();
+                        					},
+                        					function(response){}
+                        				);
+                        			}
+                        
+                        			$scope.parseBackgroundStyles = function(){
+                        				// Define styles
+                        				var styles = angular.fromJson( angular.toJson( $_.get( $scope.backgroundObj, &#x27;style&#x27; ) ) ); 
+                        				if( !styles )
+                        					styles = {};
+                        
+                        				// Delete empty values
+                        				angular.forEach( styles, function( value, key ){
+                        					// Opacity 
+                        					if( key == &#x27;opacity&#x27; )
+                        						styles[key] = value/100; 
+                        					// Size
+                        					if( key == &#x27;background-size&#x27; )
+                        						if( is_numeric( value ) )
+                        							styles[key] = value + &#x27;%&#x27;;
+                        					// Position
+                        					//if( key == &#x27;background-position&#x27; )
+                        					//	if( value == &#x27;parallax&#x27; )
+                        					//		delete styles[key]; 
+                        				});
+                        				
+                        				// Get image URL
+                        				var backgroundImageUrl = $scope.getImageUrl(); 
+                        				if( backgroundImageUrl )
+                        					styles[&#x27;background-image&#x27;] = &#x27;url(&quot;&#x27;+ backgroundImageUrl +&#x27;&quot;)&#x27;;
+                        				else
+                        					styles[&#x27;background-image&#x27;] = &#x27;none&#x27;;
+                        
+                        				return styles;
+                        			}
+                        
+                        			
+                        			//////////// PARALLAX ////////////
+                        			// Cache the page Y offset
+                        			$scope.pageYOffset = 0;
+                        			var setPosition = function () {
+                        
+                        				// Disable Parallax if it&#x27;s not enabled
+                        				if( $_.get( $scope.backgroundObj, &#x27;style.background-position&#x27; ) != &#x27;parallax&#x27; )
+                        					return false;
+                        
+                        				// Get the current Page Y Offset
+                        				var pageYOffset = $window.pageYOffset;
+                        
+                        				// If Offset is the same as the cached value, stop here
+                        				if( pageYOffset == $scope.pageYOffset )
+                        					return false;
+                        
+                        				// Cache the Page Y Offset
+                        				$scope.pageYOffset = pageYOffset;
+                        
+                        				// Get parallax ratio
+                        				var parallaxRatio = $_.get( $scope.backgroundObj, &#x27;image.parallax&#x27; );
+                        				if( !parallaxRatio || !is_numeric( parallaxRatio ) )
+                        					return false;
+                        				parallaxRatio = Number(parallaxRatio);
+                        
+                        				var calcValY = ( element.prop(&#x27;offsetTop&#x27;) - pageYOffset ) * parallaxRatio;
+                        				calcValY = parseInt(calcValY);
+                        				// horizontal positioning
+                        				element.css(&#x27;background-position&#x27;, &quot;50% &quot; + calcValY + &quot;px&quot;);
+                        
+                        			};
+                        
+                        			// Set initial position - fixes webkit background render bug
+                        			angular.element($window).bind(&#x27;load&#x27;, function(e) {
+                        				setPosition();
+                        				$scope.$apply();
+                        			});
+                        
+                        		}
+                        	};
+                        }]);
+                        /*
+                        postworld.controller( &#x27;pwBackgroundCtrl&#x27;,
+                        	[ &#x27;$scope&#x27;, &#x27;$window&#x27;, &#x27;$timeout&#x27;, &#x27;pwData&#x27;, &#x27;$log&#x27;, &#x27;_&#x27;,
+                        	function( $scope, $window, $timeout, $pwData, $log, $_ ) {
+                        }]);*/
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

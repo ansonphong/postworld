@@ -1,28 +1,9 @@
 /**
- * Created by Michel on 9/22/13.
- * 	Development Note:-
- *	To make Ajax request work as a form post, we need to do 3 things:
- *	1- Use AngularJS version 1.2
- * 	2- change content type in the header:-  headers: {'Content-Type': 'application/x-www-form-urlencoded', 'charset':'UTF-8'}
- * 	3- Transform data to url encoded format using the following function http://victorblog.com/2012/12/20/make-angularjs-http-service-behave-like-jquery-ajax/
- *	http://stackoverflow.com/questions/11442632/how-can-i-make-angular-js-post-data-as-form-data-instead-of-a-request-payload
- *  Otherwise, if you don't want to go through the above hassle, you can just do the following on the server:- 
- * 	$args_text = file_get_contents("php://input");
- *	$args = json_decode($args_text);
- * */
+ * @module Postworld
+ * @submodule Services
+ */
 
-postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
-	return{
-		scope:{
-			pwDataGet:"@",
-		},
-		link: function( $scope, element, attrs ){
-			$log.debug("ACTIVATE : pwDataGet", element);
-			element.html( JSON.stringify( $_.get( $pwData, $scope.pwDataGet ) ) );
-		}
 
-	}
-}]);
 
 postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	function ( $resource, $q, $log, $window, $pw, $_ ) {	  
