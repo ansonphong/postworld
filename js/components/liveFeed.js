@@ -4,6 +4,36 @@ postworld.config(function($locationProvider){
 	// $locationProvider.html5Mode(true).hashPrefix('!');
 });
 
+/**
+ * Generates a feed from predefined feed paramters within the specified element.
+ *
+ * @class liveFeed
+ * @classdesc Generates a sequences of posts.
+ * @param {string} feedId A predefined feed ID
+ *
+ * @todo Rename to pwFeed. (Test in various implimentations.)
+ * @todo Have ability for non-scrolling feed.
+ *
+ * @example
+<script>
+pw.feeds['newsFeed'] = {
+	preload: 10,
+	load_increment: 10,
+	offset: 0,
+	order_by: '-post_date',
+	view: {
+		current: 'list'
+	},
+	query:{
+		post_type:['post'],
+		post_status:'publish',
+		posts_per_page: 100
+	}
+};
+</script>
+<div live-feed="newsFeed"></div> 
+ *
+ */
 postworld.directive('liveFeed', function($log) {
 	return {
 		restrict: 'A',
@@ -12,7 +42,6 @@ postworld.directive('liveFeed', function($log) {
        	template: '<div ng-include="templateUrl" class="feed"></div>',
 		scope : {
 			feedId: '@liveFeed',
-			feedMultiple:'='
 		},
 		link : function( $scope, element, attrs ){
 			$log.debug( 'liveFeed [directive] : INIT : ', $scope.feedId ); //$scope.templateUrl

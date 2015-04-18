@@ -61,7 +61,7 @@ postworld.directive('pwPostShareReport',
  * Populates the scope with an outgoing user share report
  * showing posts which the given user has shared.
  *
- * @method pwPostShareReport
+ * @class pwUserShareReport
  * @return {object} Populates $scope.postShareReport
  */
 postworld.directive('pwUserShareReport',

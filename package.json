@@ -1,6 +1,5 @@
 {
   "name": "Postworld",
-  "version": "1.9",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-jshint": "~0.6.3",
@@ -13,5 +12,8 @@
   },
   "bugs": {
     "url": "https://github.com/phongmedia/postworld/issues"
+  },
+  "dependencies": {
+    "dgeni": "^0.4.1"
   }
 }

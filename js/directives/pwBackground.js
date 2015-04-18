@@ -6,12 +6,6 @@
  |_|                                 |___/                             
  ///////////////////////// LOAD BACKGROUND DIRECTIVE ////////////////////////*/
 
-/**
- * @module Postworld
- * @submodule Directives
- */
-
-
 /*
  * Easily sets and modifies the background of the page 
  *

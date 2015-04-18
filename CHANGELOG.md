@@ -1,5 +1,9 @@
 # Postworld // Changelog
 
+### Version 1.93
+- __Breaking Change__ - Replaced `load-panel` with `pw-include`
+    + Change `load-panel="widget"` to `pw-include="panels/widget"` 
+
 ### Version 1.87
 - __Breaking Change__ - Changed `post.image` model structure
     + Now instead of nesting the image's post (`post_title`, `post_excerpt`) under `post.image.post`, it's not located directly under `post.image`

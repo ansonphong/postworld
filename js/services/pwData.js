@@ -1,10 +1,3 @@
-/**
- * @module Postworld
- * @submodule Services
- */
-
-
-
 postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 	function ( $resource, $q, $log, $window, $pw, $_ ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
