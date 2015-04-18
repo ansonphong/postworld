@@ -5,14 +5,17 @@ postworld.config(function($locationProvider){
 });
 
 /**
- * Generates a feed from predefined feed paramters within the specified element.
  *
- * @class liveFeed
- * @classdesc Generates a sequences of posts.
+ * @ngdoc directive
+ * @name postworld.directive:liveFeed
+
  * @param {string} feedId A predefined feed ID
  *
  * @todo Rename to pwFeed. (Test in various implimentations.)
  * @todo Have ability for non-scrolling feed.
+ *
+ * @description
+ * Generates a feed from predefined feed paramters within the specified element.
  *
  * @example
 <script>

@@ -189,9 +189,14 @@ postworld.factory( '$pw',
  
  //////////////////////////////////////////////////////////*/
 
+/**
+ * @ngdoc service
+ * @name postworld.$_
+ * @todo Rename to $_
+ */
 postworld.factory('_',
-	[ '$rootScope', '$resource','$q','$log','$window', '$timeout',
-	function ( $rootScope, $resource, $q, $log, $window, $timeout ) {   
+	[ '$rootScope', '$log','$window', '$timeout',
+	function ( $rootScope, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
 	function get( obj, key ){
@@ -218,7 +223,7 @@ postworld.factory('_',
 	}
 
 	///// SET OBJECT VALUES /////
-	function setObj( obj, key, value  ){
+	function set( obj, key, value  ){
 			/* 	Sets the value of an object,
 			 * 	even if it or it's parent(s) doesn't exist.
 			 *
@@ -354,6 +359,14 @@ postworld.factory('_',
 		stringToBool : function(string){
 			return this.stringToBoolean(string);
 		},
+		/**
+		* @ngdoc method
+		* @name postworld.service#stringToBoolean
+		* @methodOf postworld.$_
+		* @description Converts strings, such as `'true'` or `'false'`, to a boolean.
+		* @param {string} string The string.
+		* @returns {boolean} The boolean representation of the string.
+		*/
 		stringToBoolean : function(string){
 			if( _.isBoolean( string ) )
 				return string;
@@ -379,20 +392,20 @@ postworld.factory('_',
 			return true;
 			
 		},
-		getObj: function( obj, key ){
-			// DEPRECIATED
-            return get( obj, key );
-        },
         get : function( obj, key ){
 			return get( obj, key  );
 		},
-		setObj : function( obj, key, value  ){
-			return setObj( obj, key, value  );
-		},
+		///// DEPRECIATED /////
+		getObj: function( obj, key ){
+            return get( obj, key );
+        },
 		set : function( obj, key, value  ){
-			return setObj( obj, key, value  );
+			return set( obj, key, value  );
 		},
-
+		///// DEPRECIATED /////
+		setObj : function( obj, key, value  ){
+			return set( obj, key, value  );
+		},
 		objEquality : function( obj1, obj2 ){
 			return ( JSON.stringify(obj1) === JSON.stringify(obj2) );
 		},
@@ -454,7 +467,6 @@ postworld.factory('_',
 			});
 
 		},
-
 		sanitizeKey: function( input ){
 			if( !_.isString(input) )
 				return false;
@@ -472,7 +484,6 @@ postworld.factory('_',
 			input = input.replaceAll( '=', '-' );
 			return input;
 		},
-
 		makeHash: function( hashLength ){
 			if( _.isEmpty(hashLength) )
 				hashLength = 8;
@@ -485,7 +496,6 @@ postworld.factory('_',
 
 		    return hash;
 		},
-
 		randomString: function( randomLength, charTypes ){
 			// Generates a random string based on length
 			// and specified character types
@@ -517,7 +527,6 @@ postworld.factory('_',
 
 		    return randomString;
 		},
-
 
 		arrayFromObjectWatch: function( $scope, $array, $object ){
 			/*

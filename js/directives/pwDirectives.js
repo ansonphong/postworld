@@ -8,19 +8,22 @@
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
 /**
- * Sets the $pw service object into the local scope
+ * @ngdoc directive
+ * @name postworld.directive:pwGlobals
  *
- * @class pwGlobals
+ * @restrict A
+ * @description Sets the $pw service object into the local scope.
  * @param {Expression} pwGlobals The expression to bind the Postworld globals to 
  *
  * @example
- * <div pw-globals="pw"><pre>{{ pw | json }}</pre></div> 
+ * ```<pre><div pw-globals="pw">{{ pw | json }}</div></pre>```
  *
  */
 postworld.directive( 'pwGlobals',
 	[ '$pw', '_', '$log',
 	function( $pw, $_, $log ){
 	return{
+		restrict:"A",
 		scope:{
 			pwGlobals:"=",
 		},
@@ -31,24 +34,24 @@ postworld.directive( 'pwGlobals',
 }]);
 
 /**
+ * @ngdoc directive
+ * @name postworld.directive:pwInclude
+ *
+ * @description
  * Used to include a Postworld template partial within an isolated scope.
  * Post and meta data can be easily make available in the template.
- * Uses ng-include to include the file at `{pwTemplatesPath}/galleries/gallery-frame.html`
  *
- * @class pwInclude
- * @param {String} pwInclude Psuedo-path to the template.
+ * @param {string} pwInclude Psuedo-path to the template.
  * Use `panels/widget` to include `templates/panels/widget.html`
- * @param {object} includeVars Vars to assign within the include as $scope.vars
- * @param {object} includeMeta Object to be assigned as $scope.meta within the included template
- * @param {object} includePost Object to be assigned as $scope.post within the included template
+ * @param {expression} includeVars Vars to assign within the include as $scope.vars
+ * @param {expression} includeMeta Object to be assigned as $scope.meta within the included template
+ * @param {expression} includePost Object to be assigned as $scope.post within the included template
  * @param {boolean} includeEnable Dynamic. Whether or not to actually enable the load the include
  * Can be used to prevent the template from loading in certain instances.
  * @param {string} includeClass Class(es) to be added to the include element
  *
  * @example
- * // Includes templates/galleries/gallery-frame.html
- * // With the passed post object in the local scope
- * <div pw-include="galleries/gallery-frame" include-post="post"></div>
+	<pre><div pw-include="galleries/gallery-frame" include-post="post"></div></pre>
  *
  */
 postworld.directive('pwInclude', function($log, $timeout, pwData) {
@@ -117,12 +120,16 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 
 
 /**
+ * @ngdoc directive
+ * @name postworld.directive:loadPost
+ * @restrict A
+ *
+ * @description
  * Loads a post template and injects it with data.
  *
- * @class loadPost
- * @param {String} postId Optional. Post ID
- * @param {String} postView Which registered view template to use.
- * @param {Object} postQuery Query vars to derive post from.
+ * @param {string} postId Optional. Post ID
+ * @param {string} postView Which registered view template to use.
+ * @param {object} postQuery Query vars to derive post from.
  * @param {string} postClass Optional. Classes to add to the template element.
  * @param {string} postLoading Optional. An expression to assign a loading boolean.
  *
@@ -334,9 +341,15 @@ postworld.directive('pwHref', function() {
 });
 
 /**
- * @class pwBackgroundImage
- * @classdesc Adds a background image style property to an element
+ * @ngdoc directive
+ * @name postworld.directive:pwBackgroundImage
+ * @description
+ * Adds a background image style property to an element
+ *
  * @param {expression} pwBackgroundImage Binding to the URL of the background image.
+ *
+ * @example
+	<pre><div pw-background-image="post.image.sizes.large.url"></div></pre>
  */
 postworld.directive('pwBackgroundImage', function( $log ) {
 	return {
@@ -352,11 +365,13 @@ postworld.directive('pwBackgroundImage', function( $log ) {
 });
 
 /**
+ * @ngdoc directive
+ * @name postworld.directive:pwEval
+ *
+ * @description
  * Evaluates a string as javascript at the time of loading.
  * Works well for initializing third-party libraries.
  *
- * @class pwEval
- * @implements Directive
  * @param {string} pwEval A string to evaluate as Javascript
  * @param {number} evalTimeout Optional. Milliseonds to timeout before evaluating
  * @param {string} evalContext Optional. Context in which to evaluate. Options : 'scope' / 'window'. Default : 'scope'
@@ -468,38 +483,66 @@ postworld.directive('ngEnter', function() {
 
 
 /**
- * @class preventDefaultClick
- * @classdesc Prevents the default click action on the element.
- * @impliments Directive
+ * @ngdoc directive
+ * @name postworld.directive:pwClickPreventDefault
+ * @description Prevents the default click action on the element.
+ * @restrict A
  */
+postworld.directive('pwClickPreventDefault', function() {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				//event.stopPropagation();
+				event.preventDefault();
+			});
+		}
+	};
+});
+
+///// DEPRECIATED /////
 postworld.directive('preventDefaultClick', function() {
-		return {
-			restrict: 'A',
-			link: function (scope, element) {
-				element.bind('click', function (event) {
-					//event.stopPropagation();
-					event.preventDefault();
-				});
-			}
-		};
-	});
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				//event.stopPropagation();
+				event.preventDefault();
+			});
+		}
+	};
+});
 
 
 /**
- * @class stopPropagationClick
- * @classdesc Stops the click event from propagating beyond the given element.
- * @impliments Directive
+ * @ngdoc directive
+ * @name postworld.directive:pwClickStopPropagation
+ * @description Stops the click event from propagating beyond the given element.
+ * @restrict A
+ * @depreciated
  */
+postworld.directive('pwClickStopPropagation', function() {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				event.stopPropagation();
+			});
+		}
+	};
+});
+
+///// DEPRECIATED /////
 postworld.directive('stopPropagationClick', function() {
-		return {
-			restrict: 'A',
-			link: function (scope, element) {
-				element.bind('click', function (event) {
-					event.stopPropagation();
-				});
-			}
-		};
-	});
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				event.stopPropagation();
+			});
+		}
+	};
+});
 
 
 ///// SELECT ON CLICK /////
@@ -515,9 +558,10 @@ postworld.directive('selectOnClick', function () {
 });
 
 /**
- * @class pwAutofocus
- * @classdesc Automatically focuses the input element it's applied to.
- * @impliments Directive
+ * @ngdoc directive
+ * @name postworld.directive:pwAutofocus
+ * @description Automatically focuses the input element it's applied to.
+ * @element input
  */
 postworld.directive('pwAutofocus', function($timeout) {
 	return {
@@ -537,15 +581,15 @@ postworld.directive('pwAutofocus', function($timeout) {
  |_| |_|\___/ \_/ \___|_|     \____|_|\__,_|___/___/*/
 
 /**
- * @class pwHoverClass
- * @classdesc Adds specified class(es) to an element on mouseover,
+ * @ngdoc directive
+ * @name postworld.directive:pwHoverClass
+ * @restrict A
+ * @description Adds specified class(es) to an element on mouseover,
  * and removes the classes on mouseleave.
  *
  * @param {string} pwHoverClass Class(es) to add when hovered.
  * @param {number} hoverOnDelay Optional. Milliseconds after mouseover before classes are added.
  * @param {number} hoverOffDelay Optional. Milliseconds after mouseleave before classes are removed. 
- *
- *
  */
  //  * @property {boolean} mouseIsOver Variable to track if mouse is currently over.
 postworld.directive('pwHoverClass', function ( $timeout ) {
@@ -569,10 +613,6 @@ postworld.directive('pwHoverClass', function ( $timeout ) {
 			 */
         	var mouseIsOver = false;
 
-        	/**
-        	 * @memberof pwHoverClass
-			 * @listens mouseenter
-        	 */
             element.on('mouseenter', function() {
             	mouseIsOver = true;
             	if( _.isUndefined($scope.hoverOnDelay) )
@@ -819,13 +859,19 @@ postworld.directive( 'pwSidebars',
 
 
 /**
- * Generates a share link for a particular post ID
+ * @ngdoc directive
+ * @name postworld.directive:pwShareLink
  *
- * @class pwShareLink
- * @param {Expression} pwShareLink The expression to map the share link to
- * @param {String} shareLinkPostId Required. The ID of the post which to generate the share link for
- * @param {Boolean} shareLinkDynamic If 'true', sets up a watch on the value of shareLinkPostId
+ * @description Generates a share link for a particular post ID.
+ *
+ * @param {expression} pwShareLink The expression to map the share link to
+ * @param {string} shareLinkPostId Required. The ID of the post which to generate the share link for
+ * @param {boolean} shareLinkDynamic If `true`, sets up a watch on the value of shareLinkPostId
  * 
+ * @example
+	 <pre>
+		<div pw-share-link="shareLink" share-link-post-id="post.ID">{{shareLink}}</div>
+	 </pre>
  */
 postworld.directive( 'pwShareLink',
 	[ '$pw', '_', '$log',

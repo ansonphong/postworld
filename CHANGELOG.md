@@ -1,5 +1,13 @@
 # Postworld // Changelog
 
+### Version 1.95
+- Added documentation with `@ngdoc`
+- __Depreciated__ : Directives depreciated:
+    + `stopPropagationClick` ›› becomes ›› `pwClickStopPropagation`
+    + `preventDefaultClick` ›› becomes ›› `pwClickPreventDefault`
+- __Depreciated__ : Service Methods depreciated:
+    + `pwData.wp_ajax` ›› becomes ›› `pwData.wpAjax`
+
 ### Version 1.93
 - __Breaking Change__ - Replaced `load-panel` with `pw-include`
     + Change `load-panel="widget"` to `pw-include="panels/widget"` 

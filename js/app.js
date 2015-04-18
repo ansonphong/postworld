@@ -18,9 +18,15 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 // Documention by JSDOC
 // http://usejsdoc.org/
 
-/**
- * Postworld AngularJS Module
- * @module Postworld
+
+ /**
+ * @ngdoc overview
+ * @name postworld
+ * @module postworld
+ * @description
+ *
+ * The core module for working with Postworld on the front-end.
+ *
  */
 
 'use strict';

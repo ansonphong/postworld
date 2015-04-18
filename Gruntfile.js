@@ -3,6 +3,7 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
+
     pkg: grunt.file.readJSON('package.json'),
 
     uglify: {
@@ -58,6 +59,48 @@ module.exports = function(grunt) {
 	      },
       },
     },
+
+
+    ngdocs: {
+      //all: ['js/**/*.js'],
+      api: {
+        src: ['js/**/*.js'], //, '!app/**/*-spec.js'
+        //src: ['js-testdocs/**/*.js'],
+        title: 'AngularJS Documentation'
+      },
+      options:{
+        dest: 'docs/ngdocs',
+        //scripts: ['deploy/postworld.min.js'],
+        html5Mode: false,
+        startPage: '#/api',
+        titleLink: "#/api",
+        title: "Postworld",
+        //image: "path/to/my/image.png",
+        //imageLink: "http://my-domain.com",
+        //bestMatch: true,
+        /*
+        analytics: {
+          account: 'UA-08150815-0',
+          domainName: 'my-domain.com'
+        },
+        discussions: {
+          shortName: 'my',
+          url: 'http://my-domain.com',
+          dev: false
+        }
+        */
+      },
+      /*
+      tutorial: {
+        src: ['content/tutorial/*.ngdoc'],
+        title: 'Tutorial'
+      },
+      */
+
+    }
+
+
+
   });
 
   // Load the plugin that provides the "uglify" task.
@@ -65,6 +108,9 @@ module.exports = function(grunt) {
 
   // Default task(s).
   grunt.registerTask('default', ['uglify']);
+
+  // AngularJS Docs
+  grunt.loadNpmTasks('grunt-ngdocs');
 
 };
 
