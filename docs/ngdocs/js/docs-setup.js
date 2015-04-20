@@ -30,15 +30,6 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "postworld.directive:liveFeed",
-      "shortName": "liveFeed",
-      "type": "directive",
-      "moduleName": "postworld",
-      "shortDescription": "Generates a feed from predefined feed paramters within the specified element.",
-      "keywords": "ability api current directive element feed feedid feeds generates implimentations list live-feed load_increment newsfeed non-scrolling offset order_by paramters post post_status post_type posts_per_page postworld predefined preload publish pw pwfeed query rename view"
-    },
-    {
-      "section": "api",
       "id": "postworld.directive:loadPost",
       "shortName": "loadPost",
       "type": "directive",
@@ -90,6 +81,15 @@ NG_DOCS={
       "moduleName": "postworld",
       "shortDescription": "Evaluates a string as javascript at the time of loading.",
       "keywords": "api change changes context default directive evalcontext evaltimeout evaluate evaluates evaluating evalwatch expression initializing javascript libraries loading milliseonds optional options postworld pweval re-evalute scope string third-party time timeout watch window works"
+    },
+    {
+      "section": "api",
+      "id": "postworld.directive:pwFeed",
+      "shortName": "pwFeed",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Generates a feed from predefined feed paramters within the specified element.",
+      "keywords": "ability api current directive element feed feedid feeds generates implimentations list live-feed load_increment newsfeed non-scrolling offset order_by paramters post post_status post_type posts_per_page postworld predefined preload publish pw pwfeed query rename view"
     },
     {
       "section": "api",
