@@ -359,6 +359,7 @@ postworld.factory('_',
 		stringToBool : function(string){
 			return this.stringToBoolean(string);
 		},
+		
 		/**
 		* @ngdoc method
 		* @name postworld.service#stringToBoolean
