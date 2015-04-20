@@ -166,7 +166,7 @@ function pw_feed( $vars = array() ){
 
 	///// FEED SETTINGS /////
 
-	// FILTER SETTINGS
+	// FILTER : DEFAULT FEED
 	// Allow themes to set default feed settings
 	$default_feed = apply_filters( PW_FEED_DEFAULT, $default_feed );
 
@@ -181,6 +181,10 @@ function pw_feed( $vars = array() ){
 	// MERGE WITH INPUT FEED SETTINGS
 	// Over-ride default settings with provided settings
 	$feed = array_replace_recursive( $default_feed, $feed );
+
+	// FILTER : OVERRIDE FEED
+	// Allow themes to override feed settings
+	$feed = apply_filters( PW_FEED_OVERRIDE, $feed );
 
 	///// DEFAULT : QUERY /////
 	// If the feed is empty

@@ -508,7 +508,7 @@ postworld.controller('mediaModalInstanceCtrl',
     var args = { "link_url": link_url };
 
     // MEDIA GET
-    pwData.wp_ajax('ajax_oembed_get', args ).then(
+    pwData.wpAjax('ajax_oembed_get', args ).then(
         // Success
         function(response) {    
             $scope.oEmbed = $sce.trustAsHtml( response.data );

@@ -512,7 +512,7 @@ __run__ : *boolean*
 
 ------
 
-### load-post *[ directive ]*
+### pw-load-post *[ directive ]*
 
 #### Description : 
 - Loads a single post into the DOM
@@ -551,7 +551,7 @@ load_post['single_post'] = {
 HTML :
 
 ``` html
-<div load-post="single_post"></div>
+<div pw-load-post="single_post"></div>
 ```
 
 ------

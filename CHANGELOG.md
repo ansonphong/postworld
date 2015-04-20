@@ -1,5 +1,8 @@
 # Postworld // Changelog
 
+### Version 1.97
+- __Breaking Change__ - Replaced `load-post` directive with `pw-load-post`
+
 ### Version 1.96
 - __Depreciated__ : PHP Functions Depreciated
     + `pw_live_feed` ›› becomes ›› `pw_feed`

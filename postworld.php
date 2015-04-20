@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.96,
+		'version'		=>	1.97,
 		'db_version'	=>	1.196,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -111,7 +111,7 @@ define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
 
 define( 'PW_TERM_FEED', 		$pw['filters']['term_feed'] );
 define( 'PW_FEED_DEFAULT', 		$pw['filters']['feed_default'] );
-define( 'PW_FEED_OVERRIDE', 	$pw['filters']['term_feed'] );
+define( 'PW_FEED_OVERRIDE', 	$pw['filters']['feed_override'] );
 
 ///// DEFINE META FILTER NAMES /////
 define( 'PW_POSTS', 	'pw_posts' );

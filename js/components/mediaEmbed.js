@@ -13,7 +13,7 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 	$scope.oEmbedGet = function (link_url) {
 		var args = { "link_url":link_url };
 		var oEmbed = "";
-		pwData.wp_ajax('ajax_oembed_get', args ).then(
+		pwData.wpAjax('ajax_oembed_get', args ).then(
 			// Success
 			function(response) {    
 				$scope.oEmbed = $sce.trustAsHtml(response.data);
@@ -172,13 +172,13 @@ postworld.factory( 'oEmbedServe',
 		var embedId = $_.sanitizeKey( vars.url );
 
 		// AJAX Call
-		$pwData.wp_ajax('ajax_oembed_get', vars ).then(
+		$pwData.wpAjax('ajax_oembed_get', vars ).then(
 			// Success
 			function( response ){
 
 				var embedCode = response.data;
 
-				$log.debug( 'oEmbedServe.getOEmbed.$pwData.wp_ajax : RESPONSE : ' + embedId + " : ", embedCode );
+				$log.debug( 'oEmbedServe.getOEmbed.$pwData.wpAjax : RESPONSE : ' + embedId + " : ", embedCode );
 
 				// If not data, return false
 				if ( embedCode == false )
@@ -191,7 +191,7 @@ postworld.factory( 'oEmbedServe',
 			// Failure
 			function(response) {
 				$scope.status = "error";
-				$log.error( 'oEmbedServe.getOEmbed.$pwData.wp_ajax : RESPONSE : ', response );
+				$log.error( 'oEmbedServe.getOEmbed.$pwData.wpAjax : RESPONSE : ', response );
 			}
 		);
 	}

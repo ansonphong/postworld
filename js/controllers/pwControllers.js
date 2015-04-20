@@ -7,6 +7,14 @@
 /*////////// ------------ POST CONTROLLER ------------ //////////*/                
 
 'use strict';
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwPost
+ *
+ * @description
+ * Provides service functions to post templates.
+ */
 postworld.directive( 'pwPost', [ function( $scope ){
 	return {
 		restrict: 'AE',
@@ -66,7 +74,9 @@ postworld.controller('postController',
 		return new Date( timestamp );
 	}
 
+	
 	///// IMAGE FUNCTIONS /////
+	// DEPRECIATED (use pw-background-image directive)
 	$scope.backgroundImage = function( imageUrl, properties ){
 
 		// Set the Image URL
@@ -81,8 +91,12 @@ postworld.controller('postController',
 		}
 		return style;
 	}
+	
 
-
+	/**
+	 * @description
+	 * Selects an image tag based on the image dimensions.
+	 */
 	$scope.selectImageTag = function(){
 		if( $_.objExists( $scope, "post.image.tags" ) == false )
 			return false;
@@ -167,7 +181,6 @@ postworld.controller('postController',
 	///// ACTION : FEED POST UPDATED /////
 	// This is run when the central feed post is updated with new data
 	$scope.$on( 'feedPostUpdated', function( e, vars ){
-		$log.debug( "pwPost : $ON : feedPostUpdated : ", vars );
 		// If the post does not know it's own feed
 		if( !$_.objExists( $scope, 'post.feed.id' ) )
 			return false;
@@ -180,6 +193,7 @@ postworld.controller('postController',
 			angular.forEach( updatedPost, function( value, key ){
 				$scope.post[key] = value;
 			});
+			$log.debug( "pwPost : $ON : feedPostUpdated : ", vars );
 		}
 	});
 	

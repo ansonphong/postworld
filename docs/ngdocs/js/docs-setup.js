@@ -111,12 +111,21 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "postworld.directive:pwLoadPost",
+      "shortName": "pwLoadPost",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Loads a post template and injects it with data.",
+      "keywords": "add api assign boolean classes data derive directive element expression injects loading loads optional post postclass postid postloading postquery postview postworld query registered template vars view"
+    },
+    {
+      "section": "api",
       "id": "postworld.directive:pwPost",
       "shortName": "pwPost",
       "type": "directive",
       "moduleName": "postworld",
-      "shortDescription": "Loads a post template and injects it with data.",
-      "keywords": "add api assign boolean classes data derive directive element expression injects loading loads optional post postclass postid postloading postquery postview postworld pwpost query registered rename template vars view"
+      "shortDescription": "Provides service functions to post templates.",
+      "keywords": "api directive functions post postworld service templates"
     },
     {
       "section": "api",
