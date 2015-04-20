@@ -1,5 +1,10 @@
 # Postworld // Changelog
 
+### Version 1.96
+- __Depreciated__ : PHP Functions Depreciated
+    + `pw_live_feed` ›› becomes ›› `pw_feed`
+- Added (but not yet integrated) `WP Prism` Library for code syntax highlighting
+
 ### Version 1.95
 - Added documentation with `@ngdoc`
 - __Depreciated__ : Directives depreciated:

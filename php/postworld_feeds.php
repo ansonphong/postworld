@@ -57,8 +57,23 @@ function pw_get_feed_by_context( $context = array() ){
 
 }
 
+/**
+ * @depreciated Use pw_feed() instead.
+ * @see pw_feed()
+ */
+function pw_live_feed( $vars = array()){
+	$vars['return_empty'] = $return_empty;
+	return pw_feed( $vars );
+}
 
-function pw_live_feed( $vars = array(), $return_empty = true ){
+/**
+ * Used to insert a feed into the DOM.
+ * Prints the `script` and `html` tags for a defined feed.
+ *
+ * @param array $vars An array of variables.
+ * @return string The feed elements.
+ */
+function pw_feed( $vars = array() ){
 	global $post;
 	global $pw;
 
@@ -77,9 +92,7 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 		$feed_id = 'pwFeed_' . pw_random_string();
 	}
 
-
 	pw_set_microtimer($feed_id);
-
 
 	// Run filters on the feed vars
 	$vars = apply_filters( 'pw_feed', $vars );
@@ -87,13 +100,14 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 	///// DEFAULT VARS /////
 	$default_vars = array(
 		'element'		=>	'div',
-		'directive'		=>	'live-feed',
+		'directive'		=>	'pw-feed',
 		'feed_id'		=>	$feed_id,
 		'classes'		=>	'feed',
 		'attributes'	=>	'',
 		'echo'			=>	true,
 		'feed'			=>	$feed,
 		'aux_template'	=>	null,
+		'return_empty'	=> true
 		);
 
 	if( is_array( $vars ) )
@@ -183,21 +197,14 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 	// Run query filters
 	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );
 
-	///// GET FEED DATA /////
-	if( $directive == 'live-feed' )
-		// Get the live feed data
-		$feed_data = pw_get_live_feed( $feed );
-
-	// TODO : Add load-feed support
-	// Or else banish load-feed, and simply use a cache feed subobject
-	else if( $directive == 'load-feed' )
-		$feed_data = array( 'error' => 'Load Feed Not Supported Yet.' );
+	// Get the live feed data
+	$feed_data = pw_get_live_feed( $feed );
 
 	// Merge feed data with feed settings
 	$feed = array_replace_recursive( $feed, $feed_data );
 
 	// If no posts, and not set to return empty, return false
-	if( empty($feed['feed_outline']) && $return_empty == false )
+	if( empty($feed['feed_outline']) && $vars['return_empty'] == false )
 		return false;
 
 	///// BLOCKS : GET WIDGET DATA /////
@@ -206,7 +213,6 @@ function pw_live_feed( $vars = array(), $return_empty = true ){
 	if( is_string( $sidebar_id ) )
 		$widgets = pw_get_sidebar( $sidebar_id );
 	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
-
 
 	//pw_log( "widgets : " . json_encode($widgets) );
 
@@ -760,8 +766,7 @@ function pw_get_menu_posts( $menu, $fields ){
 
 
 
-
-function pw_feed( $vars ){
+function pw_get_feed_posts( $vars ){
 	// PW Feed offers PW Query combined with PW Get Posts
 	// By first returning a feed outline, and then
 	// This allows the additonal pw_get_posts() options to be passed in

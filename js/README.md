@@ -171,7 +171,7 @@ See `pw_get_templates()` PHP method.
 
 ####Description:
 - Javascript node for `pw_get_templates()` PHP method
-- Used by `pw_load_feed()` and `pw_live_feed()` JS methods
+- Used by `pw_feed()` JS method
 
 ####Process:
 - Run `pw_get_templates()` PHP method via AJAX
@@ -205,14 +205,14 @@ __return__ : *true*
 
 ------
 
-###__pw_live_feed__ ( args )
+###__pw_feed__ ( args )
 
 ####Process:
-1. Access `pw_live_feed()` PHP Method via AJAX 
+1. Access `pw_feed()` PHP Method via AJAX 
 2. Use returned data to populate `feeds[feed_id]` JS Object with __feed_outline__, loaded and post data
 
 ####Parameters:
-  - Same as `pw_live_feed()` PHP Method
+  - Same as `pw_feed()` PHP Method
 
 __return__ : *Object*
 ``` javascript
@@ -565,7 +565,7 @@ Displays a live unregistered feed based on `feed_query pw_query()` args
 
 1. Populate `feeds[feed_id]` JS Object with `pw.feeds[feed_id]`
 2. Setup DOM structure with ng-controller and ng-repeat for displaying the feed
-3. Run JS method : `pw_live_feed()`
+3. Run JS method : `pw_feed()`
 
 
 #### Parameters:
