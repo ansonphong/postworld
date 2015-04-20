@@ -121,7 +121,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 
 /**
  * @ngdoc directive
- * @name postworld.directive:loadPost
+ * @name postworld.directive:pwPost
  * @restrict A
  *
  * @description
@@ -136,7 +136,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
  * @todo Rename to pwPost. (Sooner than later.)
  * 
  */
-postworld.directive('loadPost',
+postworld.directive('pwPost',
 	[ '$log', '$timeout', 'pwData', '_',
 	function( $log, $timeout, $pwData, $_ ) {
 	return {
@@ -156,7 +156,7 @@ postworld.directive('loadPost',
 			 * Initializes the directive.
 			 * Invokes either post from 'id' or 'query' methods.
 			 *
-			 * @memberof loadPost
+			 * @memberof pwPost
 			 * @function init
 			 */
 			var init = function(){
@@ -166,7 +166,7 @@ postworld.directive('loadPost',
 				else
 					$scope.mode = 'query';
 
-				$log.debug( 'loadPost : MODE : ', $scope.mode );
+				$log.debug( 'pwPost : MODE : ', $scope.mode );
 
 				///// SWITCH : MODE /////
 				switch( $scope.mode ){
@@ -184,7 +184,7 @@ postworld.directive('loadPost',
 			/**
 			 * Loads a post via post ID.
 			 *
-			 * @memberof loadPost
+			 * @memberof pwPost
 			 * @function loadPostFromId
 			 */
 			var loadPostFromId = function(){
@@ -205,7 +205,7 @@ postworld.directive('loadPost',
 			/**
 			 * Loads a post via query.
 			 *
-			 * @memberof loadPost
+			 * @memberof pwPost
 			 * @function loadPostFromQuery
 			 */
 			var loadPostFromQuery = function(){
@@ -238,7 +238,7 @@ postworld.directive('loadPost',
 			/**
 			 * Sets the template URL.
 			 *
-			 * @memberof loadPost
+			 * @memberof pwPost
 			 * @function setTemplateUrl
 			 */
 			var setTemplateUrl = function(){

@@ -30,15 +30,6 @@ NG_DOCS={
     },
     {
       "section": "api",
-      "id": "postworld.directive:loadPost",
-      "shortName": "loadPost",
-      "type": "directive",
-      "moduleName": "postworld",
-      "shortDescription": "Loads a post template and injects it with data.",
-      "keywords": "add api assign boolean classes data derive directive element expression injects loading loads optional post postclass postid postloading postquery postview postworld pwpost query registered rename template vars view"
-    },
-    {
-      "section": "api",
       "id": "postworld.directive:pwAutofocus",
       "shortName": "pwAutofocus",
       "type": "directive",
@@ -117,6 +108,15 @@ NG_DOCS={
       "moduleName": "postworld",
       "shortDescription": "Used to include a Postworld template partial within an isolated scope.",
       "keywords": "$scope api assign assigned class data directive dynamic easily element enable galleries html include include-post includeclass included includeenable includemeta includepost includevars instances isolated load loading meta object panels partial post postworld prevent psuedo-path pw-include pwinclude scope template templates vars"
+    },
+    {
+      "section": "api",
+      "id": "postworld.directive:pwPost",
+      "shortName": "pwPost",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Loads a post template and injects it with data.",
+      "keywords": "add api assign boolean classes data derive directive element expression injects loading loads optional post postclass postid postloading postquery postview postworld pwpost query registered rename template vars view"
     },
     {
       "section": "api",
