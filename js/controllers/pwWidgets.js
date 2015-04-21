@@ -8,13 +8,12 @@
 //////////////// WIDGETS ////////////////*/
 
 /**
-* ///// POST SHARE REPORT /////
-* Populates the scope with a post share report
-* for the current contextual post.
-*
-* @method pwPostShareReport
-* @return {object} Populates $scope.postShareReport
-*/
+ * Post Share Report
+ * Populates the scope with a post share report
+ * for the current contextual post.
+ * @class pwPostShareReport
+ * @return {object} Populates $scope.postShareReport
+ */
 postworld.directive('pwPostShareReport',
 	['$window','$timeout','pwData', '$pw', '$log', '_',
 	function( $window, $timeout, $pwData, $pw, $log, $_ ) {
@@ -58,13 +57,13 @@ postworld.directive('pwPostShareReport',
 
 
 /**
-* ///// USER SHARE REPORT : OUTGOING / INCOMING /////
-* Populates the scope with an outgoing user share report
-* showing posts which the given user has shared.
-*
-* @method pwPostShareReport
-* @return {object} Populates $scope.postShareReport
-*/
+ * User Share Report : Outgoing / Incoming
+ * Populates the scope with an outgoing user share report
+ * showing posts which the given user has shared.
+ *
+ * @class pwUserShareReport
+ * @return {object} Populates $scope.postShareReport
+ */
 postworld.directive('pwUserShareReport',
 	['$window','$timeout','pwData', '_', '$pw', '$log',
 	function($window, $timeout, $pwData, $_, $pw, $log ) {

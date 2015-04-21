@@ -171,7 +171,7 @@ See `pw_get_templates()` PHP method.
 
 ####Description:
 - Javascript node for `pw_get_templates()` PHP method
-- Used by `pw_load_feed()` and `pw_live_feed()` JS methods
+- Used by `pw_feed()` JS method
 
 ####Process:
 - Run `pw_get_templates()` PHP method via AJAX
@@ -205,14 +205,14 @@ __return__ : *true*
 
 ------
 
-###__pw_live_feed__ ( args )
+###__pw_feed__ ( args )
 
 ####Process:
-1. Access `pw_live_feed()` PHP Method via AJAX 
+1. Access `pw_feed()` PHP Method via AJAX 
 2. Use returned data to populate `feeds[feed_id]` JS Object with __feed_outline__, loaded and post data
 
 ####Parameters:
-  - Same as `pw_live_feed()` PHP Method
+  - Same as `pw_feed()` PHP Method
 
 __return__ : *Object*
 ``` javascript
@@ -316,7 +316,7 @@ __TODO__ : Add image() fields-like request specific imge sizes, including custom
 #### Attributes
 
 __pw-query__ : *object/model path*
-- An object to pass to `pw_query`, which contains the query variables
+- An object to pass to PHP method `pw_query`, which contains the query variables
 
 __query-results-model__ : *object/model path*
 - The array where to deposit the results of the query
@@ -512,7 +512,7 @@ __run__ : *boolean*
 
 ------
 
-### load-post *[ directive ]*
+### pw-load-post *[ directive ]*
 
 #### Description : 
 - Loads a single post into the DOM
@@ -551,7 +551,7 @@ load_post['single_post'] = {
 HTML :
 
 ``` html
-<div load-post="single_post"></div>
+<div pw-load-post="single_post"></div>
 ```
 
 ------
@@ -565,7 +565,7 @@ Displays a live unregistered feed based on `feed_query pw_query()` args
 
 1. Populate `feeds[feed_id]` JS Object with `pw.feeds[feed_id]`
 2. Setup DOM structure with ng-controller and ng-repeat for displaying the feed
-3. Run JS method : `pw_live_feed()`
+3. Run JS method : `pw_feed()`
 
 
 #### Parameters:
@@ -584,7 +584,7 @@ __panel__ : *string* (optional)
 __view__ : *object*
 
 __feed_query__ : *string / object*
-  - object - an object of query args which is passed to `pw_query()`
+  - object - an object of query args which is passed to PHP `pw_query()`
 
 
 ####Usage:
@@ -1372,12 +1372,10 @@ __data-type__ : *string* (optional)
 __Status__ : In Concepting (phongmedia)
 
 #### Description
-
 - Displays a list of users from a user query
 - Similar to **live-feed** directive - instead of showing posts, show users
 
 #### Process
-
 - Access `pw_user_query()` method via AJAX
 - Return an outline of USER IDs
 - Display users according to template and feed settings

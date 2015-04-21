@@ -1,8 +1,29 @@
 <?php
 ///// DEV TESTING /////
 
+
+
 function pw_test_related_posts(){
-	
+
+	//pw_log( time() );
+	//pw_log( pw_time_units() );
+
+	// 'date_after_ago_period' and 'date_after_ago_multiplier'
+
+	/*
+	$query = array(
+		'date_from' => array(
+			'after_ago' => array(
+				'period' => 'months',
+				'multiplier' => 3
+				),
+			),
+		);
+
+	//$query = pw_prepare_date_from($query);
+	//pw_log('pw_test_related_posts: ',$query);
+	*/
+
 	/*
 	$test1 = pw_related_posts(
 		array(

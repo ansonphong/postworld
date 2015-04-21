@@ -351,10 +351,29 @@ function  pw_get_post_template ( $post_id, $post_view, $path_type='url' ){
 
 }
 
-function pw_get_panel_template( $panel_id, $ext = 'html', $type = 'url' ){
+/**
+ * Gets the URL of an HTML panel template.
+ */
+function pw_panel_template( $panel_id, $ext = 'html', $type = 'url' ){
 	// Returns a single string for panel template from ID
-	return pw_get_template( 'panels', $panel_id, $ext, $url );
+	return pw_get_template( 'panels', $panel_id, $ext, $type );
 }
+function pw_get_panel_template( $panel_id, $ext = 'html', $type = 'url' ){
+	///// DEPRECIATED /////
+	// Returns a single string for panel template from ID
+	return pw_panel_template( $panel_id, $ext, $type );
+}
+
+
+/**
+ * Gets the system path of a PHP module template.
+ */
+function pw_module_template( $panel_id, $ext = 'php', $type = 'dir' ){
+	// Returns a single string for panel template from ID
+	return pw_get_template( 'modules', $panel_id, $ext, $type );
+}
+
+
 
 function pw_get_shortcode_template( $template_id, $ext = 'php', $type = 'dir' ){
 	// Returns a single string for panel template from ID
@@ -397,6 +416,8 @@ function pw_ob_social_template( $template_id, $vars ){
 	$template = pw_get_social_template( $template_id );
 	return pw_ob_include( $template, $vars );
 }
+
+
 
 
 // Include a Postworld Feed Template from templates/feeds

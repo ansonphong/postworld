@@ -5,7 +5,15 @@
  | .__/ \_/\_/ |____/ \__,_|\___|_|\_\__, |_|  \___/ \__,_|_| |_|\__,_|
  |_|                                 |___/                             
  ///////////////////////// LOAD BACKGROUND DIRECTIVE ////////////////////////*/
- postworld.directive( 'pwBackground',
+
+/*
+ * Easily sets and modifies the background of the page 
+ *
+ * @class pwBackground
+ * @param {String} pwBackground A Postworld background object ID
+ */
+
+postworld.directive( 'pwBackground',
  	[ '$window', '$timeout', 'pwData', 'pwPosts', '$log', '_',
  	function( $window, $timeout, $pwData, $pwPosts, $log, $_ ){
 	return {
@@ -114,11 +122,11 @@
 			}
 
 			$scope.populateImagePost = function( imageId ){
-				var get_post_vars = {
+				var vars = {
 					post_id: imageId,
 					fields: [ 'ID', 'post_type', 'image(full)', 'fields' ],
 				};
-				$pwData.get_post( get_post_vars ).then(
+				$pwData.getPost( vars ).then(
 					function(response){
 						$pwData.posts[imageId] = response.data;
 						$log.debug( "backgroundObj › populateImagePost › $pwData.posts ", $pwData.posts );

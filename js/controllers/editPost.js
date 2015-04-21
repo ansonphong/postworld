@@ -432,10 +432,10 @@ postworld.controller('editPost',
 		}
 		
 		// GET THE POST DATA
-		$pwData.pw_get_post_edit( post_id ).then(
+		$pwData.getPostEdit( post_id ).then(
 			// Success
 			function(response) {
-				$log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
+				$log.debug('pwData.getPostEdit : RESPONSE : ', response.data);
 			
 				// FILTER FOR INPUT
 				var get_post = response.data;

@@ -13,7 +13,24 @@ $i_language = array(
 
 		'grid'		=>	'Grid',
 		'columns'	=> 	'Columns',
+
+		'number'	=>	'Number',
+		'depth'		=>	'Depth',
+
+		'within'	=>	'Within',
+		'period'	=>	'Period',
 		
+		),
+
+	'taxonomy'	=>	array(
+		'singular' => 'Taxonomy',
+		'plural' => 'Taxonomies',
+		),
+
+	'related_posts' => array(
+		'number_info' => 'The number of related posts to show',
+		'depth_info' => 'Higher number for slower, more accurate results. 0 searches all posts.',
+		'sub_clause' => 'Sub Clause',
 		),
 
 	'backgrounds'	=>	array(

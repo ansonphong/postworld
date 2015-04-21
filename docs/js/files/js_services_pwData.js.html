@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>js/services/pwData.js - Postworld</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="Postworld" src="../assets/css/logo.png" style="max-height: 65%;" title="Postworld">
+            Postworld
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.9</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/loadPost", "classes/pwPostShareReport", "modules/Directives", "modules/Postworld", "modules/Services"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <h3>APIs</h3>
+	        <div id="sidebar">
+	            <ul id="main-nav" class="nav nav-tabs" style="margin-bottom:0;">
+	                <li class="active"><a href="#classes" data-toggle="tab">Classes</a></li>
+	                <li><a href="#modules" data-toggle="tab">Modules</a></li>
+	            </ul>
+	    
+	            <div id="api-tabview-filter">
+	                <input type="search" placeholder="Type to filter APIs">
+	            </div>
+	    
+	            <div class="tab-content" style="border: 1px solid #DDD; border-top:0;">
+	                <div class="tab-pane active" id="classes">
+	                    <ul id="api-classes" class="nav nav-list">
+	                            <li><a href="../classes/loadPost.html">loadPost</a></li>
+	                            <li><a href="../classes/pwPostShareReport.html">pwPostShareReport</a></li>
+	                    </ul>
+	                </div>
+	    
+	                <div class="tab-pane" id="modules">
+	                    <ul id="api-modules" class="nav nav-list">
+	                            <li><a href="../modules/Directives.html">Directives</a></li>
+	                            <li><a href="../modules/Postworld.html">Postworld</a></li>
+	                            <li><a href="../modules/Services.html">Services</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <div class="page-header">
+                            <h1>js/services/pwData.js <small>File</small></h1>
+                        </div>
+                        
+                        <div class="file">
+                            <pre class="prettyprint linenums">
+                        /**
+                         * @module Postworld
+                         * @submodule Services
+                         */
+                        
+                        
+                        
+                        postworld.factory(&#x27;pwData&#x27;, [ &#x27;$resource&#x27;, &#x27;$q&#x27;, &#x27;$log&#x27;, &#x27;$window&#x27;, &#x27;$pw&#x27;, &#x27;_&#x27;,
+                        	function ( $resource, $q, $log, $window, $pw, $_ ) {	  
+                        	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
+                        	var nonce = 0;
+                        	// Check feed_settigns to confirm we have valid settings
+                        	var validSettings = true;
+                        	
+                        	/*
+                        	// Set feeds and feed_data in pwData Singleton
+                        	//var feed_settings = $window[&#x27;feed_settings&#x27;];
+                        	// TODO check mandatory fields
+                        	if (feed_settings == null) {
+                        		validSettings = false;
+                        		$log.error(&#x27;Service: pwData Method:Constructor  no valid feed_settings defined&#x27;);
+                        	}
+                        	*/
+                        	
+                        	/*
+                        	var feeds = function(){
+                        		var feeds = $window[&#x27;pw&#x27;][&#x27;feeds&#x27;];
+                        
+                        		// Deposit the feed_id into each feed
+                        		angular.forEach( feeds, function( value, key ){
+                        			if( _.isUndefined( value.feed_id ) ){
+                        			}
+                        		});
+                        		return ;
+                        	};
+                        	*/
+                        	
+                        	// $log.debug(&#x27;pwData() Registering feed_settings&#x27;, feed_settings);
+                        	
+                        	var	getTemplate = function( pwData, meta ) { // (pwData,subdir,post_type,view)
+                        		// (this,subdir,post_type,view) -&gt; ( this, meta )
+                        		var template;
+                        
+                        		// Localize Meta
+                        		var subdir = meta.subdir;
+                        		var post_type = meta.post_type;
+                        		var view = meta.view;
+                        
+                        		//$log.debug( &#x27;getTemplate : META : &#x27;,meta);
+                        		//$log.debug( &#x27;$pw.templates[ subdir ]&#x27;, $pw.templates[ subdir ] );
+                        
+                        		switch( subdir ) {
+                        			// Get a post template; includes the post_type and view
+                        			case &#x27;posts&#x27;:
+                        				if( post_type )
+                        					template = $_.get( $pw.templates.posts, post_type + &#x27;.&#x27; + view ); // $pw.templates.posts[post_type][view];						
+                        				else 
+                        					template = $_.get( $pw.templates.posts, &#x27;post.&#x27; + view ); // $pw.templates.posts[&#x27;post&#x27;][view];
+                        				break;
+                        			// Get a standard template
+                        			default:
+                        				template = $_.get( $pw.templates[ subdir ], view  ); // $pw.templates[subdir][view];
+                        				break;
+                        		}
+                        		// $log.debug(&#x27;Service: pwData Method:getTemplate template=&#x27;,template);
+                        		return template;			
+                        	};
+                        	
+                        	// for Ajax Calls
+                        	var resource = $resource( $pw.paths.ajax_url, {action:&#x27;wp_action&#x27;}, 
+                        				{ wp_ajax: { method: &#x27;POST&#x27;, isArray: false, },	}
+                        			);
+                        	
+                        	return {
+                        
+                        		posts: $window.pw.posts,
+                        
+                            	feeds: {},
+                        
+                            	widgets: $window.pw.widgets,
+                            	
+                            	templates: $pw.templates, 
+                        
+                            	partials: $window.pw.partials,		// Used to store partials
+                        
+                            	embeds: $window.pw.embeds,			// Used to store embed codes
+                        
+                            	background: $window.pw.background,	// Used to represent the current background object
+                        
+                            	users: $window.pw.users,			
+                        
+                            	// Set Nonce Value for Wordpress Security
+                            	setNonce: function(val) {
+                            		nonce = val;
+                            	},
+                            	// Get Nonce Value
+                            	getNonce: function() {
+                            		return nonce;
+                            	},
+                            	// A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions
+                        		wp_ajax: function(fname, args) {
+                        			// $log.debug(&#x27;pwData.wp_ajax&#x27;, fname, &#x27;args: &#x27;,args);
+                                    var deferred = $q.defer();
+                                    // works only for non array returns
+                                    resource.wp_ajax(
+                                    	{
+                                    		action: fname
+                                    	},
+                                    	{
+                                    		args: args,
+                                    		nonce:this.getNonce()
+                                    	},
+                        				function (data) {
+                                            deferred.resolve(data);
+                                        },
+                                        function (response) {
+                                            deferred.reject(response);
+                                        }
+                                    );
+                                    return deferred.promise;		
+                        		},
+                        		pwQuery: function( args ){
+                        			$log.debug(&#x27;pwData.pw_query&#x27;,args);
+                        			var params = {&#x27;args&#x27;:args};
+                        			return this.wp_ajax(&#x27;pw_query&#x27;,params);
+                        		},
+                        		getLiveFeed: function(args,qsArgs) {
+                        
+                        			$log.debug(&#x27;pwData.getLiveFeed : INIT :&#x27;,args);
+                        
+                        			// args: arguments received from Panel. fArgs: is the final args sent along the ajax call.
+                        			// feedArgs will be filled initially with data from feed settings, 
+                        			// feedArgs will be filled next from data in the query string			
+                        			var feedArgs = this.convertFeedSettings(args.feed_id,args); // will read settings and put them in feedArgs
+                        			feedArgs = this.mergeQueryString(feedArgs,qsArgs); // will read args and override feedArgs
+                        			feedArgs = this.removeEmptyArgs(feedArgs);
+                        			// Get Query Arguments and save them in feed settings
+                        			var feedSettings = this.feeds[args.feed_id];
+                        			feedSettings.finalFeedQuery = feedArgs.query;
+                        
+                        			$log.debug(&#x27;pwData.getLiveFeed : FINAL :&#x27;,feedArgs);
+                        
+                        			var params = {&#x27;args&#x27;:feedArgs};
+                        			return this.wp_ajax(&#x27;pw_get_live_feed&#x27;,params);
+                        
+                        		},
+                        		pw_scroll_feed: function(args) {
+                        			$log.debug(&#x27;pwData.pw_scroll_feed&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_scroll_feed&#x27;,params);
+                        		},
+                        		o_embed: function(url,args) {
+                        			$log.debug(&#x27;pwData.o_embed&#x27;,args);
+                        			var params = { url:url, args:args};
+                        			return this.wp_ajax(&#x27;o_embed&#x27;,params);
+                        		},
+                        		pw_get_posts: function( params ) {
+                        			/*
+                        			 params = {
+                        				post_ids : 	[ array ],
+                        				fields: 	&#x27;string&#x27; / [ array ],
+                        				options: 	{ object }
+                        			 } 
+                        			*/
+                        			
+                        			// $log.debug(&#x27;pwData.pw_get_posts range:&#x27;,idBegin, idEnd);
+                        			// Set Fields
+                        			//var params = { post_ids:postIDs, fields:fields };
+                        
+                        			$log.debug(&#x27;pwData.pw_get_posts&#x27;,params);
+                        			return this.wp_ajax(&#x27;pw_get_posts&#x27;,params);
+                        		},
+                        		pw_get_templates: function(templates_object) {
+                        			// TODO Optimize by running it once and caching it
+                        			$log.debug(&#x27;pwData.pw_get_templates&#x27;,templates_object);
+                        			var params = { templates_object:templates_object};			
+                        			return this.wp_ajax(&#x27;pw_get_templates&#x27;,params);
+                        		},
+                        		pw_register_feed: function(args) {
+                        			$log.debug(&#x27;pwData.pw_register_feed&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_register_feed&#x27;,params);
+                        		},
+                        		pw_load_feed: function(args) {
+                        			$log.debug(&#x27;pwData.pw_load_feed&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_load_feed&#x27;,params);
+                        		},
+                        		getPost: function( vars ){
+                        			// DEPRECIATED
+                        			return this.getPost( vars );
+                        		},
+                        		getPost: function( vars ) {
+                        			// If no ID is set
+                        			if( _.isUndefined( vars.post_id ) ){
+                        				$log.debug( &#x27;pwData.getPost : No post ID specified.&#x27; );
+                        				return false;
+                        			}
+                        			$log.debug(&#x27;pwData.getPost&#x27;,vars);
+                        			//var params = {args:vars};
+                        			return this.wp_ajax(&#x27;pw_get_post&#x27;,vars);
+                        		},
+                        		pw_get_template: function ( meta ) { // ( subdir, post_type, view)
+                        			// if templates object already exists, then get value, if not, then retrieve it first
+                        
+                        			// Setup Meta (lineage)
+                        			/*
+                        			var meta = {
+                        				subdir: subdir,
+                        				post_type: post_type,
+                        				view: view,
+                        			};
+                        			*/
+                        
+                        			///// Set Defaults /////
+                        			// Subdirectory
+                        			if( _.isUndefined(meta.subdir) )
+                        				return false;
+                        			// Post Type
+                        			if( _.isUndefined(meta.post_type) )
+                        				meta.post_type = &#x27;&#x27;;
+                        			// View
+                        			if( _.isUndefined(meta.view) )
+                        				return false;
+                        
+                        			// Get the template
+                        			var template = getTemplate( this, meta );
+                        			
+                        			// If it exists, add the version number to the URL
+                        			if( template )
+                        				template = template + &quot;?ver=&quot; + $pw[&#x27;info&#x27;][&#x27;version&#x27;] ; // ( this, subdir, post_type, name )
+                        		    // Otherwire return false
+                        		    else
+                        		    	return false;
+                        
+                        		    // If on HTTPS / SSL, get on the same protocol
+                        		    if( $pw.view[&#x27;protocol&#x27;] == &#x27;https&#x27; )
+                        		    	template = template.replace(&#x27;http://&#x27;, &#x27;https://&#x27;);
+                        
+                        		    return template;
+                        
+                        
+                        		}, // END OF pw_get_template
+                        		convertFeedSettings: function ( feedID, args1 ) {
+                        			var feedArgs = {};
+                        			feedArgs.query = {};
+                        
+                        			// Get feeds Parameters
+                        			var feed = this.feeds[feedID];
+                          			$log.info(&#x27;Feed Query Override by Feed Settings&#x27;,feedID, feed.query);
+                        			// Query Args will fill in the query first, then any other parameter in the feed will override it, then any user parameter will override all
+                        			if (feed.query != null)
+                        				feedArgs.query = feed.query;  
+                        
+                        			if (feed.preload != null)
+                        				feedArgs.preload = feed.preload;
+                        			else
+                        				feedArgs.preload = 10;  
+                        
+                        			if (feed.offset	!= null)
+                        				feedArgs.offset = feed.offset;
+                        			else
+                        				feedArgs.offset = 0;  
+                        
+                        			if (feed.related_posts	!= null)
+                        				feedArgs.related_posts = feed.related_posts;  
+                        
+                        			if (feed.order_by != null) {
+                        				// if + sort Ascending
+                        				if (feed.order_by.charAt(0)==&#x27;+&#x27;) feedArgs.query.order = &#x27;ASC&#x27;;
+                        				// if - sort Descending				
+                        				else  if (feed.order_by.charAt(0)==&#x27;-&#x27;) feedArgs.query.order = &#x27;DESC&#x27;;
+                        				else feedArgs.query.order = &#x27;ASC&#x27;;
+                        				// If + or - then remove the first character
+                        				if ((feed.order_by.charAt(0)==&#x27;+&#x27;) || (feed.order_by.charAt(0)==&#x27;-&#x27;)) {
+                        					feedArgs.query.order_by = feed.order_by.slice(1);
+                        				}
+                        			}	// else the default whatever it is, is used
+                        			if (feed.offset != null) feedArgs.query.offset = feed.offset; // else the default is zero 
+                        			feedArgs.feed_id = feedID;
+                        			return feedArgs;			
+                        		},
+                        		
+                          		mergeQueryString: function (feedArgs,args) {
+                          			$log.info(&#x27;Feed Query Override by Query String&#x27;,args);
+                          			for(var key in args){
+                        			    feedArgs.query[key] = args[key];
+                        			}			
+                        			return feedArgs;
+                          		},		
+                        		mergeFeedQuery: function (feedArgs,args) {
+                        			if (args.query) {
+                        	  			$log.info(&#x27;Feed Query Override by Search feedQuery&#x27;,args.query);
+                        				for (var prop in args.query) {
+                        				    feedArgs.query[prop] = args.query[prop];
+                        				    //$log.debug(&quot;args.query&quot;,prop,args.query[prop],feedArgs.query[prop]);
+                        				}
+                        			}
+                        			return feedArgs;
+                        		},
+                          		removeEmptyArgs: function (args) {
+                          			$log.info(&#x27;Feed Query Remove Empty Args&#x27;,args);
+                          			for(var key in args.query){
+                          				if ((args.query[key]==&quot;null&quot;) &amp;&amp; (key!= &quot;s&quot;)){
+                          					delete args.query[key];
+                          					continue;
+                          				}  				
+                        			    if ((args.query[key]!==0) &amp;&amp; (args.query[key]!==false)) {
+                        			    	if (args.query[key] == &quot;&quot;) {
+                        			    		delete args.query[key];
+                        			    	}
+                        			    }  			    			    
+                        			}			
+                        			return args;
+                          		},
+                        		pw_get_post_types: function(args) {
+                        			//$log.debug(&#x27;pwData.pw_load_feed&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_post_types&#x27;, params);
+                        		},
+                        		ajax_oembed_get: function(args) {
+                        			$log.debug(&#x27;pwData.ajax_oembed_get&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;ajax_oembed_get&#x27;, params);
+                        		},
+                        		pw_save_post: function(args) {
+                        			$log.debug(&#x27;pwData.pw_save_post&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_save_post&#x27;, params);
+                        		},
+                        		pw_trash_post: function(args) {
+                        			$log.debug(&#x27;pwData.pw_trash_post&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_trash_post&#x27;, params);
+                        		},
+                        		getPostEdit: function(args) {
+                        			$log.debug(&#x27;pwData.getPostEdit&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_post_edit&#x27;,params);
+                        		},
+                        		taxonomies_outline_mixed: function(args) {
+                        			$log.debug(&#x27;pwData.taxonomies_outline_mixed&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;taxonomies_outline_mixed&#x27;,params);
+                        		},
+                        		userQueryAutocomplete: function(args) {
+                        			$log.debug(&#x27;pwData.userQueryAutocomplete&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;user_query_autocomplete&#x27;,params);
+                        		},
+                        		tags_autocomplete: function(args) {
+                        			$log.debug(&#x27;pwData.tags_autocomplete&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;tags_autocomplete&#x27;,params);
+                        		},
+                        		setPostRelationship: function(args) {
+                        			$log.debug(&#x27;pwData.setPostRelationship&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_set_post_relationship&#x27;,params);
+                        		},
+                        		setPostPoints: function(args) {
+                        			$log.debug(&#x27;pwData.setPostPoints&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_set_post_points&#x27;,params);
+                        		},
+                        		
+                        		setCommentPoints: function(args) {
+                        			$log.debug(&#x27;pwData.setCommentPoints&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_set_comment_points&#x27;,params);
+                        		},
+                        
+                        		pw_set_avatar: function( args ) {
+                        			// DEPRECIATED
+                        			return this.setAvatar( args );
+                        		},
+                        
+                        		setAvatar: function( args ){
+                        			$log.debug( &#x27;pwData.setAvatar&#x27;, args );
+                        			var params = { args:args };
+                        			return this.wp_ajax( &#x27;pw_set_avatar&#x27;, params );
+                        		},
+                        
+                        		pw_get_avatar: function(args) {
+                        			$log.debug(&#x27;pwData.pw_get_avatar&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_avatar&#x27;,params);
+                        		},
+                        
+                        		getAvatars: function(args) {
+                        			$log.debug(&#x27;pwData.getAvatars&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_avatars&#x27;,params);
+                        		},
+                        		
+                        		wp_user_query: function(args) {
+                        			$log.debug(&#x27;pwData.wp_user_query&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;wp_user_query&#x27;,params);
+                        		},
+                        		pw_insert_user: function(args) {
+                        			$log.debug(&#x27;pwData.pw_insert_user&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_insert_user&#x27;,params);
+                        		},
+                        		send_activation_link: function(args) {
+                        			$log.debug(&#x27;pwData.send_activation_link&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;send_activation_link&#x27;,params);
+                        		},
+                        		pw_activate_user: function(args) {
+                        			$log.debug(&#x27;pwData.pw_activate_user&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_activate_user&#x27;,params);
+                        		},
+                        		reset_password_email: function(args) {
+                        			$log.debug(&#x27;pwData.reset_password_email&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;reset_password_email&#x27;,params);
+                        		},
+                        		reset_password_submit: function(args) {
+                        			$log.debug(&#x27;pwData.reset_password_submit&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;reset_password_submit&#x27;,params);
+                        		},
+                        		postShareReport: function(args) {
+                        			$log.debug(&#x27;pwData.postShareReport&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_post_share_report&#x27;,params);
+                        		},
+                        		userShareReportOutgoing: function(args) {
+                        			$log.debug(&#x27;pwData.userShareReportOutgoing&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_user_share_report_outgoing&#x27;,params);
+                        		},
+                        		set_post_image: function(args) {
+                        			$log.debug(&#x27;pwData.set_post_image&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;set_post_image&#x27;,params);
+                        		},
+                        		get_userdatas: function(args) {
+                        			$log.debug(&#x27;pwData.get_userdatas&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_userdatas&#x27;,params);
+                        		},
+                        		get_userdata: function(args) {
+                        			$log.debug(&#x27;pwData.get_userdata&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_userdata&#x27;,params);
+                        		},
+                        		get_wizard_status: function(args) {
+                        			$log.debug(&#x27;pwData.get_wizard_status&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_wizard_status&#x27;,params);
+                        		},
+                        		set_wizard_status: function(args) {
+                        			$log.debug(&#x27;pwData.set_wizard_status&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_set_wizard_status&#x27;,params);
+                        		},
+                        		get_image: function(args) {
+                        			$log.debug(&#x27;pwData.get_image&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_image&#x27;,params);
+                        		},
+                        		update_option: function(args) {
+                        			$log.debug(&#x27;pwData.set_option&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_update_option&#x27;,params);
+                        		},
+                        		set_option_obj: function(args) {
+                        			$log.debug(&#x27;pwData.set_option_obj&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_set_option_obj&#x27;,params);
+                        		},
+                        		get_option_obj: function(args) {
+                        			$log.debug(&#x27;pwData.get_option_obj&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_option_obj&#x27;,params);
+                        		},
+                        		get_menus: function(args) {
+                        			$log.debug(&#x27;pwData.get_menus&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_menus&#x27;,params);
+                        		},
+                        		get_template_partial: function(args) {
+                        			$log.debug(&#x27;pwData.get_template_partial&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_template_partial&#x27;,params);
+                        		},
+                        		get_term_feed: function(args) {
+                        			$log.debug(&#x27;pwData.get_term_feed&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_get_term_feed&#x27;,params);
+                        		},
+                        
+                        		///// FEEDS /////
+                        		getFeedView: function( feedId ){
+                        			// Get Current View
+                        			var currentView = $_.get( this.feeds, feedId + &#x27;.view.current&#x27; );
+                        			var defaultView = &#x27;list&#x27;;
+                        			var view =  ( currentView ) ? currentView : defaultView;
+                        			return view;
+                        		},
+                        		
+                        		setFeedView: function( feedId, view ){
+                        
+                        		},
+                        
+                        		///// USER META /////
+                        		setWpUsermeta: function(args) {
+                        			/*
+                        				args = {
+                        					user_id		:	[integer], 	// optional
+                        					sub_key		:	[string],	// optional
+                        					value 		:	[mixed],	// required
+                        					meta_key 	:	[string]	// optional
+                        				}
+                        			*/
+                        			$log.debug(&#x27;pwData.setWpUsermeta&#x27;,args);
+                        			var params = {args:args};
+                        			return this.wp_ajax(&#x27;pw_set_wp_usermeta&#x27;,params);
+                        		},
+                        
+                        		insertFeed: function( feedId, feed ){
+                            		/* Inserts a feed into the $pwData.feeds service
+                            		 * feedId = [ string ]
+                        			 * feed = { posts:[], ... }
+                            		 */
+                            		 
+                            		// Add/replace the feed_id key with the feedId
+                            		feed.feed_id = feedId;
+                        
+                           			///// ADD FEED OBJECT TO POSTS /////
+                            		// If the feed has posts
+                            		if( $_.objExists( feed, &#x27;posts&#x27; ) ){
+                            			// Create a new feed container
+                            			var newPosts = [];
+                            			// Interate through each post in the feed
+                        	    		angular.forEach( feed.posts, function( post ){
+                        	    			// And add the &#x27;feed.id&#x27; value if it doesn&#x27;t exist
+                        	    			if( !$_.objExists( post, &#x27;feed.id&#x27; ) )
+                        	    				post = $_.setObj( post, &#x27;feed.id&#x27;, feedId );
+                        	    			newPosts.push( post );
+                        	    		});
+                        	    		feed.posts = newPosts;
+                            		}
+                        
+                            		$log.debug( &quot;pwData.insertFeed : ID : &quot; + feedId, feed );
+                        
+                            		// Add it to the central pwData service
+                            		this.feeds[feedId] = feed;
+                            		return true;
+                            	},
+                        
+                            	///// PROGRESS API /////
+                            	getProgress: function( key ){
+                        			$log.debug(&#x27;pwData.getProgress&#x27;,key);
+                        			var params = { key:key };			
+                        			return this.wp_ajax(&#x27;pw_get_progress&#x27;,params);
+                        		},
+                        		endProgress: function( key ){
+                        			$log.debug(&#x27;pwData.endProgress&#x27;,key);
+                        			var params = { key:key };			
+                        			return this.wp_ajax(&#x27;pw_end_progress&#x27;,params);
+                        		},
+                        		
+                        
+                           }; // END OF pwData return value
+                        }]);
+                        
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

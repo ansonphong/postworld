@@ -21,7 +21,7 @@ function pw_feed_shortcode( $atts, $content = null, $tag ) {
 		'echo'		=>	false,
 		);
 
-	$shortcode = pw_live_feed( $feed );	
+	$shortcode = pw_feed( $feed );	
 	return $shortcode;
 
 }

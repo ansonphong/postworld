@@ -88,11 +88,17 @@ function pw_related_posts_widget_filter( $options ){
 			'show_title'	=>	false,
 			'settings'	=>	array(
 				'number' 	=>	10,
-				'depth'		=>	1000,
+				'depth'		=>	0,
 				'view'		=>	'list',
 				'query'		=>	array(
 					'post_type' 	=> 	array('post'),
 					'post_status'	=>	'publish',
+					'date_from' => array(
+						'after_ago' => array(
+							'multiplier' => 1,
+							'period' => 'year'
+							),
+						),
 					),
 				'related_by' =>	array(
 					)

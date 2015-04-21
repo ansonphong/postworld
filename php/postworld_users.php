@@ -1,6 +1,60 @@
 <?php
+/**
+ * Allow Admin-UI access only for certain roles
+ * For use with the 'admin_init' action hook
+ * 
+ * @param [array] $allowed_roles Roles which are allowed to access wp-admin
+ *
+ *		add_action( 'admin_init', 'pw_roles_allowed_admin_access', 100 );
+ *
+ */
+function pw_roles_allowed_admin_access(){
+	// Allow themes to customize the allowed roles
+	$allowed_roles = apply_filters( 'pw_roles_allowed_admin_access', array('administrator', 'editor') );
+	// Redirect users without allowed roles to the home page
+    $redirect = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : home_url( '/' );
+    
+    // Allow anonymous AJAX Requests
+    if( !pw_user_has_roles( $allowed_roles ) && !defined('DOING_AJAX') && DOING_AJAX !== true )
+        exit( wp_redirect( $redirect ) );
+}
 
+/**
+ * Checks if a particular user has a role. 
+ * Returns true if a match was found.
+ *
+ * @param [string] $roles Role name.
+ * @param [int] $user_id (Optional) The ID of a user. Defaults to the current user.
+ * @return [bool]
+ */
+function pw_user_has_roles( $roles, $user_id = null ) {
+    if ( is_numeric( $user_id ) )
+		$user = get_userdata( $user_id );
+    else
+        $user = wp_get_current_user();
+ 
+    if ( empty( $user ) )
+		return false;
+ 
+ 	if( is_string( $roles ) )
+ 		$roles = array($roles);
 
+ 	foreach( $roles as $role ){
+ 		if( in_array( $role, (array) $user->roles ) )
+ 			return true;
+ 	}
+
+    return false;
+}
+
+/**
+ * Checks if current user has particular role(s). 
+ * Returns true if a match was found.
+ *
+ * @see global $pw['user']['roles']
+ * @param [array] $check_roles Array of role names to check for.
+ * @return [bool]
+ */
 function pw_current_user_has_role( $check_roles = array() ){
 	// Returns boolean matching if the current logged in used has any of the specified roles
 

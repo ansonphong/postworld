@@ -1,0 +1,3 @@
+[submodule "lib/wp-prism"]
+	path = lib/wp-prism
+	url = git@github.com:phongmedia/wp-prism.git

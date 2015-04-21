@@ -22,15 +22,16 @@ function pw_get_contact_methods_meta(){
 	// Setup the meta array to return
 	$contact_methods_meta = array();
 
-	// Iterate through each method in the config
-	foreach( $contact_methods_config as $contact_method ){
-		// Get the meta data from the options
-		$contact_method_meta = _get( $contact_methods_options, $contact_method );
-		// If it exists
-		if( !empty( $contact_method_meta ) )
-			// Add it to the methods meta to return
-			$contact_methods_meta[$contact_method]	= $contact_method_meta;			
-	}
+	if( is_array($contact_methods_config) )
+		// Iterate through each method in the config
+		foreach( $contact_methods_config as $contact_method ){
+			// Get the meta data from the options
+			$contact_method_meta = _get( $contact_methods_options, $contact_method );
+			// If it exists
+			if( !empty( $contact_method_meta ) )
+				// Add it to the methods meta to return
+				$contact_methods_meta[$contact_method]	= $contact_method_meta;			
+		}
 
 	return $contact_methods_meta;
 

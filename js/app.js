@@ -15,9 +15,22 @@ GitHub Repo  : https://github.com/phongmedia/postworld/
 ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 */
 
+// Documention by JSDOC
+// http://usejsdoc.org/
+
+
+ /**
+ * @ngdoc overview
+ * @name postworld
+ * @module postworld
+ * @description
+ *
+ * The core module for working with Postworld on the front-end.
+ *
+ */
+
 'use strict';
 
-///// POSTWORLD MODULE /////
 pw.partials = {};
 pw.templates = {};
 pw.feeds = {};
@@ -120,7 +133,13 @@ postworld.run(
 });
 
 
-///// FUNCTION : REGISTER CONTROLLER AFTER BOOTSTRAP /////
+/**
+ * Registers a controller in AngularJS after Bootstrapping an app/module.
+ *
+ * @function pwRegisterController
+ * @param {string} controllerName The name of the controller to register
+ * @param {string} moduleName The name of the module the controller is part of. Default: 'postworld'
+ */
 function pwRegisterController( controllerName, moduleName ) {
     // Here I cannot get the controller function directly so I
     // need to loop through the module's _invokeQueue to get it
@@ -137,9 +156,7 @@ function pwRegisterController( controllerName, moduleName ) {
             	controllerProvider.register(controllerName, call[2][1]);
         }
     }
-
     //console.log( 'pwRegisterController : ' + controllerName + ', ' + moduleName );
-
 }
 
 ///// FUNCTION : COMPILE AND ELEMENT AFTER BOOTSTRAP /////

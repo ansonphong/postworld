@@ -1,0 +1,24 @@
+<h1><code ng:non-bindable="">pwShareLink</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">postworld</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="postworld-directive-page postworld-directive-pwsharelink-page"><p>Generates a share link for a particular post ID.</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pw-share-link="{expression}"
+     share-link-post-id="{string}"
+     share-link-dynamic="{boolean}"&gt;
+   ...
+&lt;/ANY&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>pwShareLink</td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="postworld-directive-page postworld-directive-pwsharelink-page"><p>The expression to map the share link to</p>
+</div></td></tr><tr><td>shareLinkPostId</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="postworld-directive-page postworld-directive-pwsharelink-page"><p>Required. The ID of the post which to generate the share link for</p>
+</div></td></tr><tr><td>shareLinkDynamic</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="postworld-directive-page postworld-directive-pwsharelink-page"><p>If <code>true</code>, sets up a watch on the value of shareLinkPostId</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="postworld-directive-page postworld-directive-pwsharelink-page"><pre class="prettyprint linenums">
+&lt;div pw-share-link="shareLink" share-link-post-id="post.ID"&gt;{{shareLink}}&lt;/div&gt;
+</pre>
+</div></div>
+</div>

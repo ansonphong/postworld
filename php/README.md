@@ -1475,8 +1475,8 @@ __php/postworld_feeds.php__
 ------
 
 
-### pw_live_feed ( *$vars* )
-- Used to insert a `live-feed` or `load-feed` feed
+### pw_feed ( *$vars* )
+- Used to insert a feed
 - Prints the `<script>` and `html` tags for a feed
 
 #### Parameters : *$vars*
@@ -1536,7 +1536,7 @@ $feed_vars = array(
 			),
 		),
 	);
-pw_live_feed( $feed_vars );
+pw_feed( $feed_vars );
 ```
 
 #### Full Example
@@ -1567,7 +1567,7 @@ $feed_vars = array(
 		'feed_template'	=>	null,	// The ID of a feed in /views/feeds/
 		),
 	);
-pw_live_feed( $feed_vars );
+pw_feed( $feed_vars );
 ```
 
 

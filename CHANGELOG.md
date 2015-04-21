@@ -1,5 +1,25 @@
 # Postworld // Changelog
 
+### Version 1.97
+- __Breaking Change__ - Replaced `load-post` directive with `pw-load-post`
+
+### Version 1.96
+- __Depreciated__ : PHP Functions Depreciated
+    + `pw_live_feed` ›› becomes ›› `pw_feed`
+- Added (but not yet integrated) `WP Prism` Library for code syntax highlighting
+
+### Version 1.95
+- Added documentation with `@ngdoc`
+- __Depreciated__ : Directives depreciated:
+    + `stopPropagationClick` ›› becomes ›› `pwClickStopPropagation`
+    + `preventDefaultClick` ›› becomes ›› `pwClickPreventDefault`
+- __Depreciated__ : Service Methods depreciated:
+    + `pwData.wp_ajax` ›› becomes ›› `pwData.wpAjax`
+
+### Version 1.93
+- __Breaking Change__ - Replaced `load-panel` with `pw-include`
+    + Change `load-panel="widget"` to `pw-include="panels/widget"` 
+
 ### Version 1.87
 - __Breaking Change__ - Changed `post.image` model structure
     + Now instead of nesting the image's post (`post_title`, `post_excerpt`) under `post.image.post`, it's not located directly under `post.image`

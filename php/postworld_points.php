@@ -43,6 +43,8 @@ function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 	// Get the existing points row
 	$points_row = pw_get_points_row( $point_type, $id, $user_id );
 
+	//pw_log('points_row ',$point_type . $id . $user_id);
+
 	if( !empty($points_row) ){
 		$old_points = $points_row[ $points_column ];
 		$update_points = intval($set_points) - intval($old_points);	
@@ -98,7 +100,7 @@ function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 		case 'post':
 			// Cache Post Points
 			$points_total = pw_cache_post_points( $id );
-			pw_log( 'points_total : ', $points_total );
+			//pw_log( 'points_total : ', $points_total );
 			// Cache Points of the Author
 			$postdata = get_post( $id );
 			pw_cache_user_posts_points( $postdata->post_author );
@@ -394,7 +396,7 @@ function pw_cache_user_comments_points ( $user_id ){
 	return : integer (number of points)*/
 	return pw_calculate_user_comments_points($user_id);
 }
-function pw_set_comment_points($comment_id,$set_poinst){
+function pw_set_comment_points( $comment_id, $set_points ){
 	/*Description
 
 	Wrapper for pw_set_points() Method for setting comment points
@@ -409,7 +411,7 @@ function pw_set_comment_points($comment_id,$set_poinst){
 	Run pw_set_points( 'comment', $post_id, $set_points )
 	return : Array (same as pw_set_points() )
 	 * */	
-	return pw_set_points( 'comment', $comment_id, $set_poinst );
+	return pw_set_points( 'comment', $comment_id, $set_points );
 	
 }
 
@@ -503,6 +505,7 @@ function pw_update_post_points( $post_id, $user_id, $points ){
 }
 
 function pw_update_comment_points($comment_id, $user_id, $points){
+	//pw_log('pw_update_comment_points ',$comment_id);
 	global $wpdb;
 	$query = "
 		UPDATE $wpdb->pw_prefix"."comment_points
@@ -514,6 +517,11 @@ function pw_update_comment_points($comment_id, $user_id, $points){
 
 function pw_insert_comment_points( $comment_id, $user_id, $points ){
 	global $wpdb;
+
+	pw_log('pw_insert_comment_points');
+	pw_log('pw_insert_comment_points : comment_id :', $comment_id);
+	pw_log('pw_insert_comment_points : user_id :', $user_id);
+	pw_log('pw_insert_comment_points : points :', $points);
 
 	$comment_post_id = pw_get_comment_post_id( $comment_id );
 	$comment_author_id = pw_get_comment_author_id( $comment_id );
@@ -535,6 +543,11 @@ function pw_insert_comment_points( $comment_id, $user_id, $points ){
 
 
 function pw_get_points_row( $point_type, $id, $user_id ){
+
+	//pw_log('pw_get_points_row : ', $point_type);
+	//pw_log('pw_get_points_row : id : ', $id);
+	//pw_log('pw_get_points_row : user_id : ', $user_id);
+
 	global $wpdb;
 
 	switch( $point_type ){
@@ -556,6 +569,8 @@ function pw_get_points_row( $point_type, $id, $user_id ){
 
 	$points_row = $wpdb->get_row( $query, 'ARRAY_A' );
 	
+	//pw_log('pw_get_points_row : points_row : ', $points_row);
+
 	if( $points_row )
 		return $points_row;
 	else

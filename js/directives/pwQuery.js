@@ -42,7 +42,7 @@ postworld.controller('pwQueryCtrl',
 	//$scope.movementStatus = "loading";
 
 	$scope.pwQuery = function( queryVars ){
-		$pwData.pw_query( queryVars ).then(
+		$pwData.pwQuery( queryVars ).then(
 			// Success
 			function(response) {
 				$scope.queryResultsModel = response.data.posts;

@@ -6,76 +6,77 @@
  |_|                                              
 //////// ---- PW GET POST DIRECTIVE ------ //////*/
 
-postworld.directive( 'pwGetPost', [ function($scope){
+/**
+ * @class pwGetPost
+ * @classdesc Loads the contents of a requested post into scope.
+ * @implements Directive
+ * @param {number} pwGetPost The ID of the post.
+ * @param {expression} postFields An array or string representing the post field model.
+ * @param {expression} postModel Where to bind the post content to in the local scope.
+ * @param {expression} postLoading Binds a boolean to the current status of the post data loading.
+ */
+postworld.directive( 'pwGetPost',
+	[ '$window', '$timeout', '_', 'pwData',
+	function( $window, $timeout, $_, $pwData ){
 	return {
 		restrict: 'AE',
 		controller: 'pwGetPostCtrl',
 		scope:{
 			postId:"=pwGetPost",
-			postFields:"=postFields",
-			postModel:"=postModel",
-			postStatusModel:"=postStatusModel",
+			postFields:"=",
+			postModel:"=",
+			postLoading:"=",
 		},
 		link: function( $scope, element, attrs ){
-			// OBSERVE Attribute
-			//attrs.$observe('postsModel', function(value) {
-			//	alert(value);
-			//});
+
+			// Create model if it doesn't exist
+			if( _.isUndefined( $scope.postModel ) )
+				$scope.postModel = [];
+
+			// Create query model if it doesn't exist
+			//if( _.isUndefined( $scope.queryStatusModel ) )
+			$scope.postLoading = true;
+
+			$scope.pwGetPost = function(){
+				if( _.isUndefined( $scope.postId ) ){
+					return false;
+				}
+
+				if( _.isUndefined( $scope.postFields ) ){
+					$scope.postFields = "preview";
+				}
+
+				var vars = {
+					post_id: $scope.postId,
+					fields: $scope.postFields,
+				};
+
+				$pwData.getPost( vars ).then(
+					// Success
+					function(response) {
+						$scope.postModel = response.data;
+						$scope.postLoading = false;
+					},
+					// Failure
+					function(response) {
+						$scope.postModel = [{post_title:"Posts not loaded.", ID:"0"}];
+						$scope.postLoading = false;
+					}
+				);
+			}
+
+			// Action to Update Posts
+			$scope.$on('postUpdated', function(post) { 
+		        $scope.pwGetPost();
+		    });
+
+			// Watch values and re-get post if they change
+			$scope.$watch('[postId, postFields]', function(value) {
+				if( !_.isUndefined($scope.postId) )
+					$scope.pwGetPost();
+			},1);
+
+
 		}
 	};
-}]);
-
-postworld.controller('pwGetPostCtrl',
-	['$scope', '$window', '$timeout', '_', 'pwData',
-	function($scope, $window, $timeout, $_, $pwData) {
-
-	// Create model if it doesn't exist
-	if( _.isUndefined( $scope.postModel ) )
-		$scope.postModel = [];
-
-	// Create query model if it doesn't exist
-	//if( _.isUndefined( $scope.queryStatusModel ) )
-	$scope.postStatusModel = 'loading';
-
-	$scope.pwGetPost = function(){
-		if( _.isUndefined( $scope.postId ) ){
-			return false;
-		}
-
-		if( _.isUndefined( $scope.postFields ) ){
-			$scope.postFields = "preview";
-		}
-
-		var vars = {
-			post_id: $scope.postId,
-			fields: $scope.postFields,
-		};
-
-		$pwData.get_post( vars ).then(
-			// Success
-			function(response) {
-				$scope.postModel = response.data;
-				$scope.postStatusModel = "done";
-			},
-			// Failure
-			function(response) {
-				$scope.postModel = [{post_title:"Posts not loaded.", ID:"0"}];
-				$scope.postStatusModel = "done";
-			}
-		);
-	}
-
-	// Action to Update Posts
-	$scope.$on('postUpdated', function(post) { 
-        $scope.pwGetPost();
-    });
-
-	// Watch values and re-get post if they change
-	$scope.$watch('[postId, postFields]', function(value) {
-		if( !_.isUndefined($scope.postId) )
-			$scope.pwGetPost();
-
-		//alert( $scope.postId );
-	},1);
-	
 }]);

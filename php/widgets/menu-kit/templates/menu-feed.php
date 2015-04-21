@@ -14,5 +14,5 @@ $live_feed_vars = array(
 			),
 		),
 	);
-echo pw_live_feed( $live_feed_vars );
+echo pw_feed( $live_feed_vars );
 ?>

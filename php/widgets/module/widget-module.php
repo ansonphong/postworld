@@ -46,7 +46,13 @@ class pw_module_widget extends WP_Widget {
 			///// RENDER PAGE WIDGET /////
 			extract ($OPTIONS);
 			echo '<div class="pw-module '.$module_id.'">';
-			include pw_get_template( 'modules', $module_id, 'php', 'dir' );
+			$module_template = pw_get_template( 'modules', $module_id, 'php', 'dir' );
+			if( !empty( $module_template ) )
+				include $module_template;
+			else {
+				if( pw_dev_mode() )
+					echo "<b>Module not found</b><br> File may have moved or been deleted.";
+			}
 			echo "</div>";
 		// CLOSE
 		echo $after_widget;

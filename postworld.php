@@ -23,14 +23,15 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.91,
-		'db_version'	=>	1.14,
+		'version'		=>	1.97,
+		'db_version'	=>	1.196,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
 	'angularModules'	=>	array(),
 	'vars'	=>	array(
 		),
+
 	'db' =>	array(
 		'wp_options'	=>	array(
 			'option_name'	=>	array(
@@ -70,7 +71,13 @@ $pw = array(
 		'feed_override'		=>	'postworld-feed-override',
 		'term_feed'			=>	'postworld-term-feed-',
 		),
+
 	'iconsets'	=>	array(),
+	'fields' => array(
+		'post'	=> array(),
+		'user'	=>	array(),
+		),
+
 	);
 
 
@@ -95,16 +102,16 @@ define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['heade
 define( 'PW_CACHE_ICONSET', 	$pw['db']['wp_options']['option_name']['cache_iconset'] );
 
 ///// DEFINE MODEL FILTER NAMES /////
-define( 'PW_MODEL_FIELDS', 		$pw['models']['fields'] );
-define( 'PW_MODEL_POST_FIELDS', $pw['models']['post_fields'] );
-define( 'PW_MODEL_USER_FIELDS', $pw['models']['user_fields'] );
+define( 'PW_FIELD_MODELS', 		$pw['models']['fields'] );
+define( 'PW_POST_FIELD_MODELS', $pw['models']['post_fields'] );
+define( 'PW_USER_FIELD_MODELS', $pw['models']['user_fields'] );
 
 define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
 define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
 
 define( 'PW_TERM_FEED', 		$pw['filters']['term_feed'] );
 define( 'PW_FEED_DEFAULT', 		$pw['filters']['feed_default'] );
-define( 'PW_FEED_OVERRIDE', 	$pw['filters']['term_feed'] );
+define( 'PW_FEED_OVERRIDE', 	$pw['filters']['feed_override'] );
 
 ///// DEFINE META FILTER NAMES /////
 define( 'PW_POSTS', 	'pw_posts' );

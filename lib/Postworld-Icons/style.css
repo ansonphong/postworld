@@ -1,11 +1,11 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?-ks4sll');
-	src:url('fonts/Postworld-Icons.eot?#iefix-ks4sll') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff2?-ks4sll') format('woff2'),
-		url('fonts/Postworld-Icons.woff?-ks4sll') format('woff'),
-		url('fonts/Postworld-Icons.ttf?-ks4sll') format('truetype'),
-		url('fonts/Postworld-Icons.svg?-ks4sll#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?-yfhdx3');
+	src:url('fonts/Postworld-Icons.eot?#iefix-yfhdx3') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff2?-yfhdx3') format('woff2'),
+		url('fonts/Postworld-Icons.woff?-yfhdx3') format('woff'),
+		url('fonts/Postworld-Icons.ttf?-yfhdx3') format('truetype'),
+		url('fonts/Postworld-Icons.svg?-yfhdx3#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -24,40 +24,24 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.pwi-angle-left:before {
-	content: "\e61a";
+.pwi-triadic-1:before {
+	content: "\e60f";
 }
 
-.pwi-angle-down:before {
-	content: "\e650";
+.pwi-triadic-2:before {
+	content: "\e631";
 }
 
-.pwi-angle-up:before {
-	content: "\e651";
+.pwi-triadic-3:before {
+	content: "\e634";
 }
 
-.pwi-angle-right:before {
-	content: "\e670";
+.pwi-triadic-4:before {
+	content: "\e639";
 }
 
-.pwi-angle-left-thin:before {
-	content: "\e692";
-}
-
-.pwi-angle-down-thin:before {
-	content: "\e6d4";
-}
-
-.pwi-angle-up-thin:before {
-	content: "\e6d7";
-}
-
-.pwi-angle-right-thin:before {
-	content: "\e6d8";
-}
-
-.pwi-share:before {
-	content: "\e6c4";
+.pwi-triadic-5:before {
+	content: "\e62c";
 }
 
 .pwi-postworld:before {
@@ -126,26 +110,6 @@
 
 .pwi-seal-1:before {
 	content: "\e600";
-}
-
-.pwi-triadic-1:before {
-	content: "\e60f";
-}
-
-.pwi-triadic-2:before {
-	content: "\e645";
-}
-
-.pwi-triadic-3:before {
-	content: "\e646";
-}
-
-.pwi-triadic-4:before {
-	content: "\e666";
-}
-
-.pwi-triadic-5:before {
-	content: "\e675";
 }
 
 .pwi-triangle-down-fill:before {
@@ -276,6 +240,10 @@
 	content: "\e702";
 }
 
+.pwi-play2:before {
+	content: "\e624";
+}
+
 .pwi-th-small:before {
 	content: "\e61f";
 }
@@ -362,6 +330,42 @@
 
 .pwi-atom:before {
 	content: "\e6e0";
+}
+
+.pwi-angle-left:before {
+	content: "\e61a";
+}
+
+.pwi-angle-down:before {
+	content: "\e650";
+}
+
+.pwi-angle-up:before {
+	content: "\e651";
+}
+
+.pwi-angle-right:before {
+	content: "\e670";
+}
+
+.pwi-angle-left-thin:before {
+	content: "\e692";
+}
+
+.pwi-angle-down-thin:before {
+	content: "\e6d4";
+}
+
+.pwi-angle-up-thin:before {
+	content: "\e6d7";
+}
+
+.pwi-angle-right-thin:before {
+	content: "\e6d8";
+}
+
+.pwi-share:before {
+	content: "\e6c4";
 }
 
 .pwi-play-fill:before {

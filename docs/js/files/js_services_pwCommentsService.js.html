@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>js/services/pwCommentsService.js - Postworld</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="Postworld" src="../assets/css/logo.png" style="max-height: 65%;" title="Postworld">
+            Postworld
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.9</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/loadPost", "classes/pwPostShareReport", "modules/Directives", "modules/Postworld", "modules/Services"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <h3>APIs</h3>
+	        <div id="sidebar">
+	            <ul id="main-nav" class="nav nav-tabs" style="margin-bottom:0;">
+	                <li class="active"><a href="#classes" data-toggle="tab">Classes</a></li>
+	                <li><a href="#modules" data-toggle="tab">Modules</a></li>
+	            </ul>
+	    
+	            <div id="api-tabview-filter">
+	                <input type="search" placeholder="Type to filter APIs">
+	            </div>
+	    
+	            <div class="tab-content" style="border: 1px solid #DDD; border-top:0;">
+	                <div class="tab-pane active" id="classes">
+	                    <ul id="api-classes" class="nav nav-list">
+	                            <li><a href="../classes/loadPost.html">loadPost</a></li>
+	                            <li><a href="../classes/pwPostShareReport.html">pwPostShareReport</a></li>
+	                    </ul>
+	                </div>
+	    
+	                <div class="tab-pane" id="modules">
+	                    <ul id="api-modules" class="nav nav-list">
+	                            <li><a href="../modules/Directives.html">Directives</a></li>
+	                            <li><a href="../modules/Postworld.html">Postworld</a></li>
+	                            <li><a href="../modules/Services.html">Services</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <div class="page-header">
+                            <h1>js/services/pwCommentsService.js <small>File</small></h1>
+                        </div>
+                        
+                        <div class="file">
+                            <pre class="prettyprint linenums">
+                        /**
+                         *
+                         * load_comments[&#x27;post_single&#x27;] = {
+                            query : {
+                                post_id : 24,
+                                status : &#x27;approve&#x27;
+                                },
+                            fields : &#x27;all&#x27;,
+                            tree : true,
+                            order_by : &#x27;comment_points&#x27;,
+                            order_options : {
+                                &#x27;comment_points&#x27; : &#x27;Points&#x27;,
+                                &#x27;comment_date&#x27; : &#x27;Date&#x27;
+                                },
+                            min_points : 0,
+                        };
+                        
+                        
+                        Get posts with most comments 
+                        
+                        SELECT comment_post_ID, COUNT( * ) 
+                        FROM  &#x60;wp_comments&#x60; 
+                        GROUP BY comment_post_ID
+                        ORDER BY COUNT( * ) DESC 
+                        LIMIT 0 , 30
+                        
+                         *   
+                         */
+                        
+                        postworld.factory(&#x27;pwCommentsService&#x27;, function ($resource, $q, $log,pwData) {	  
+                        	// Check feed_settigns to confirm we have valid settings
+                        	var validSettings = true;
+                        	// Set feed_settings and feed_data in pwData Singleton
+                        	var comments_settings = window[&#x27;load_comments&#x27;];
+                        	// TODO check mandatory fields
+                        	if (comments_settings == null) {
+                        		validSettings = false;
+                        		$log.error(&#x27;pwCommentsService() no valid comments_settings defined&#x27;);
+                        	}
+                        	
+                        	var comments_data = {};
+                        	
+                        	$log.debug(&#x27;pwCommentsService() Registering comments_settings&#x27;, comments_settings);
+                        		
+                            return {
+                            	comments_settings: comments_settings,
+                            	comments_data: comments_data,
+                        		pw_get_comment: function(args) {
+                        			if (!args.comment_id) throw {message:&#x27;pw_get_comment - no id defined&#x27;};
+                        			return pwData.wp_ajax(&#x27;pw_get_comment&#x27;,args);
+                        		},
+                        		pw_get_comments: function(feed) {
+                        			var settings = this.comments_settings[feed];
+                        			if (!settings) throw {message:&#x27;comments settings not initialized properly&#x27;};
+                        			if (!settings.query) throw {message:&#x27;query for comments settings is not initialized properly&#x27;};
+                        			$log.debug(&#x27;pwCommentsService.pw_get_comments&#x27;,settings);
+                        			// will pass settings as is, which will include few more parameters that will not be used in php
+                        			return pwData.wp_ajax(&#x27;pw_get_comments&#x27;,settings);
+                        		},
+                        		pw_save_comment: function(args) {
+                        			if (!args.comment_data) throw {message:&#x27;pw_save_comment - argument comment_data not initialized properly&#x27;};
+                        			$log.debug(&#x27;pwCommentsService.pw_save_comment&#x27;,args);
+                        			return pwData.wp_ajax(&#x27;pw_save_comment&#x27;,args);
+                        		},
+                        		pw_delete_comment: function(args) {
+                        			if (!args.comment_id) throw {message:&#x27;pw_delete_comment - argument comment_id not initialized properly&#x27;};
+                        			$log.debug(&#x27;pwCommentsService.pw_delete_comment&#x27;,args);
+                        			return pwData.wp_ajax(&#x27;pw_delete_comment&#x27;,args);
+                        		},
+                        		flag_comment: function(args) {
+                        			$log.debug(&#x27;pwCommentsService.flag_comment&#x27;,args);
+                        			var params = {args:args};
+                        			return pwData.wp_ajax(&#x27;flag_comment&#x27;,params);
+                        		},
+                           };
+                        });
+                        
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

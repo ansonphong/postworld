@@ -142,26 +142,24 @@
 		<div class="row gutter-sm">
 			<div class="col-sm-6">
 				<label class="inner">
-					Number
+					<?php ___('general.number'); ?>
 				</label>
 				<input
 					type="number"
 					class="labeled"
 					ng-model="settings.number">
-				<small>The number of related posts to show</small>
+				<small><?php ___('related_posts.number_info'); ?></small>
 			</div>
-
 			<div class="col-sm-6">
 				<label class="inner">
-					Depth
+					<?php ___('general.depth'); ?>
 				</label>
 				<input
 					type="number"
 					class="labeled"
 					ng-model="settings.depth">
-				<small>Higher number for slower, more accurate results</small>
+				<small><?php ___('related_posts.depth_info'); ?></small>
 			</div>
-			
 		</div>
 
 		<hr class="thin">
@@ -181,6 +179,31 @@
 
 		<hr class="thin">
 
+		<div class="row gutter-sm">
+			<div class="col-sm-3">
+				<label class="inner">
+					<?php ___('general.within'); ?>
+				</label>
+				<input
+					type="number"
+					class="labeled"
+					ng-model="settings.query.date_from.after_ago.multiplier">
+			</div>
+			<div class="col-sm-9">
+				<label class="inner">
+					<?php ___('general.period'); ?>
+				</label>
+				<select
+					class="labeled"
+					ng-model="settings.query.date_from.after_ago.period">
+					<option value="year">Year(s)</option>
+					<option value="month">Month(s)</option>
+					<option value="day">Day(s)</option>
+				</select>
+			</div>
+		</div>
+
+		<hr class="thin">
 
 		<label
 			for="select-view"
@@ -202,7 +225,7 @@
 			class="button button-primary"
 			ng-click="addRelatedByClause('taxonomy')">
 			<i class="pwi-plus-thin"></i>
-			Taxonomies
+			<?php ___('taxonomy.plural'); ?>
 		</button>
 
 		<!--///// RELATED BY CLAUSES /////-->
@@ -214,7 +237,7 @@
 					class="button"
 					ng-click="addSubClause(clause)">
 					<i class="pwi-plus-thin"></i>
-					Sub Clause
+					<?php ___('related_posts.sub_clause'); ?>
 				</button>
 				<button
 					type="button"
@@ -237,7 +260,7 @@
 
 				<div class="row gutter-sm">
 					<div class="col-sm-6">
-						<label class="inner">Taxonomy</label>
+						<label class="inner"><?php ___('taxonomy.singular'); ?></label>
 						<select
 							id="query-post_type"
 							class="labeled"
@@ -262,14 +285,14 @@
 					</div>
 				</div>
 
-				
 			</div>
 
 		</div>
 
-		<hr>
-
-		<pre><code>{{ settings | json }}</code></pre>
+		<?php if( pw_dev_mode() ): ?>
+			<hr>
+			<pre><code>{{ settings | json }}</code></pre>
+		<?php endif; ?>
 
 		<!-- HIDDEN INPUTS -->
 		<input
