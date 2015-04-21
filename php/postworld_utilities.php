@@ -274,7 +274,7 @@ function pw_log( $message, $data = null ){
 		$message = 'JSON:' . json_encode($message, JSON_PRETTY_PRINT);
 
 	if( !empty($data) )
-		$message .= json_encode($data, JSON_PRETTY_PRINT);
+		$message .= " : " . json_encode($data, JSON_PRETTY_PRINT);
 
 	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/pw-log-php.txt");
 

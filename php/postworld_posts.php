@@ -3,7 +3,11 @@
 function pw_post_exists ( $post_id ){
 	// Check if a post exists
 	global $wpdb;
-	$post_exists = $wpdb->get_row("SELECT * FROM $wpdb->posts WHERE id = '" . $post_id . "'", 'ARRAY_A');
+	$post_exists = $wpdb->get_row("
+		SELECT *
+		FROM $wpdb->posts
+		WHERE id = '" . $post_id . "'",
+		'ARRAY_A');
 	if ( !empty($post_exists) )
 	    return true;
 	else
@@ -95,6 +99,8 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 ////////// GET POST DATA //////////
 function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	
+	//pw_log( "pw_get_post : " . $post_id, $fields );
+
 	// Switch Modes (view/edit)
 	// 'Edit' mode toggles content display filtering (oEmbed, shortcodes, etc)
 	$mode = ( $fields == 'edit' ) ? 'edit' : 'view';
@@ -185,7 +191,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	$author_id = $get_post['post_author']; 
 
 	////////// WORDPRESS //////////
-
 		// Permalink
 		if( in_array('post_permalink', $fields) ){
 			if( $post['post_type'] == 'attachment' )
@@ -227,7 +232,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 		}
 		
 	////////// POSTWORLD //////////
-
 		// Get post row from Postworld Meta table, as an Array
 		$pw_post_meta = pw_get_post_meta($post_id);
 		if ( !empty($pw_post_meta) ){
@@ -247,7 +251,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 
 	////////// VIEWER FIELDS //////////
-
 		// Extract viewer() fields
 		$viewer_fields = extract_linear_fields( $fields, 'viewer', true );
 
@@ -378,7 +381,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 
 	////////// AUTHOR DATA //////////
-
 		// Extract author() fields
 		$author_fields = extract_linear_fields( $fields, 'author', true );
 
@@ -458,18 +460,19 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 				$post['gallery']['ids'] = $gallery_post_ids;
 			}
 			
+			// Get the gallery field model
+			$gallery_field_model = pw_get_field_model('post','gallery');
+
 			// Gallery Attachment Posts
-			if( in_array( 'posts', $gallery_fields ) && is_array($field_model['gallery']) ){
-				
+			if( in_array( 'posts', $gallery_fields ) && is_array( $gallery_field_model ) ){
 				// For performance, prevent from recusive checking every image for a gallery
-				$new_fields = array_diff( $field_model['gallery'], array( 'gallery(ids,posts)', 'gallery(ids)', 'gallery(posts)' ) );
+				$new_fields = array_diff( $gallery_field_model, array( 'gallery(ids,posts)', 'gallery(ids)', 'gallery(posts)' ) );
 				$post['gallery']['posts'] = pw_get_posts( $gallery_post_ids, $new_fields );
 			}
 
 		}
 
 	////////// TAXONOMIES //////////
-
 	// Extract taxonomy() fields
 	$taxonomy_fields = extract_hierarchical_fields( $fields, 'taxonomy' );
 
@@ -832,26 +835,25 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 			pw_set_wp_postmeta_array( $post_id, $postarr['post_meta'] );
 		}
 
-		///// ADD POSTWORLD META FIELDS //////
+		///// POSTWORLD META FIELDS //////
+		// Set the Post Author to Current User ID if not found
+		if( !isset($postarr['post_author']) )
+			$postarr['post_author'] = get_current_user_id();
 
-			// Set the Post Author to Current User ID if not found
-			if( !isset($postarr['post_author']) )
-				$postarr['post_author'] = get_current_user_id();
-
-			// Define which fields are Postworld Post Meta
-			$field_model = pw_post_field_model();
-			// Check to see if the post array has any Postworld Post Meta Field Values
-			$has_pw_post_meta_fields = false;
-			foreach( $postarr as $key => $value ){
-				if( in_array( $key, $field_model['pw_post_meta']) && !empty($value) ){
-					$has_pw_post_meta_fields = true;
-					break;
-				}
+		// Define which fields are Postworld Post Meta
+		$pw_post_meta_field_model = pw_get_field_model( 'post', 'pw_post_meta' );
+		// Check to see if the post array has any Postworld Post Meta Field Values
+		$has_pw_post_meta_fields = false;
+		foreach( $postarr as $key => $value ){
+			if( in_array( $key, $pw_post_meta_field_model ) && !empty( $value ) ){
+				$has_pw_post_meta_fields = true;
+				break;
 			}
-			// If it has Postworld Post Meta, Set it
-			if( $has_pw_post_meta_fields ){
-				pw_set_post_meta( $post_id, $postarr );
-			} 
+		}
+		// If it has Postworld Post Meta, Set it
+		if( $has_pw_post_meta_fields ){
+			pw_set_post_meta( $post_id, $postarr );
+		} 
 
 		///// AUTHOR NAME/SLUG FIELD /////
 		// Adds support for an `author_name` parameter
