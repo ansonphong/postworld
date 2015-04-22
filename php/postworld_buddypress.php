@@ -28,8 +28,8 @@ function pw_get_xprofile_fields(){
 	}
 
 	$column_name = 'name';
-	$xProfileFields = $wpdb->get_col( $wpdb->prepare( "SELECT $column_name FROM $table_name" ) );
-	//pw_log( json_encode($xProfileFields) );
+	$xProfileFields = $wpdb->get_col( "SELECT $column_name FROM $table_name" );
+
 	return $xProfileFields;
 }
 
