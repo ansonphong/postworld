@@ -198,7 +198,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_load_feed',params);
 		},
-		getPost: function( vars ){
+		pw_get_post: function( vars ){
 			// DEPRECIATED
 			return this.getPost( vars );
 		},
