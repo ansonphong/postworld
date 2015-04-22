@@ -41,7 +41,7 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 					///// SET DEFAULT TEMPLATE NAME /////
 
 					// Define the template name with post type
-					meta.templateName = 'modal-edit modal-edit-' + $_.get( meta, 'post.post_type' );
+					meta.templateName = 'modal-edit-' + $_.get( meta, 'post.post_type' );
 					
 					// Check if custom modal template exists
 					// Will return false if not

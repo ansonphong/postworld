@@ -519,8 +519,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_get_template_partial',params);
 		},
-		get_term_feed: function(args) {
-			$log.debug('pwData.get_term_feed',args);
+		getTermFeed: function(args) {
+			$log.debug('pwData.getTermFeed',args);
 			var params = {args:args};
 			return this.wpAjax('pw_get_term_feed',params);
 		},

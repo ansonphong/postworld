@@ -1,5 +1,8 @@
 # Postworld // Changelog
 
+### Version 1.99
+- __Breaking Change__ - Renamed `pw-terms-feed` directive to `pw-term-feed`.
+
 ### Version 1.98
 - __Breaking Change__ - Refactored `pw-user` and `pw-users` directives.
 - __Breaking Change__ - Renamed `pw-user` directive to `pw-current-user`.

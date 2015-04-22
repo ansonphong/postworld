@@ -271,6 +271,9 @@ function pw_get_term_feed( $vars ){
 
 			$new_output = array();
 			
+			// Recursively makes an object into an Associative Array
+			$output = pw_to_array($output);
+
 			// Iterate through each object in output
 			foreach( $output as $object ){
 

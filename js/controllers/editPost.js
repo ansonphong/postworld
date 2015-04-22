@@ -11,6 +11,9 @@
 /**
  * @ngdoc directive
  * @name postworld.directive: pwEditPost
+ * @description
+ * Provides local scope with functionality for easily
+ * loading, editing and saving posts.
  */
 postworld.directive( 'pwEditPost', [ function($scope){
 	return {
