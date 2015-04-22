@@ -66,6 +66,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "postworld.directive:pwCurrentUser",
+      "shortName": "pwCurrentUser",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Provides methods to access the currently logged in user.",
+      "keywords": "access api bind currently directive expression logged methods postworld pwcurrentuser user"
+    },
+    {
+      "section": "api",
       "id": "postworld.directive:pwEval",
       "shortName": "pwEval",
       "type": "directive",
@@ -135,6 +144,15 @@ NG_DOCS={
       "moduleName": "postworld",
       "shortDescription": "Generates a share link for a particular post ID.",
       "keywords": "api directive expression generate generates link map post postworld pw-share-link pwsharelink required sets share share-link-post-id sharelink sharelinkdynamic sharelinkpostid true watch"
+    },
+    {
+      "section": "api",
+      "id": "postworld.directive:pwUsers",
+      "shortName": "pwUsers",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Provides methods to access user data.",
+      "keywords": "access api bind change data directive expected methods postworld provided retreive user userdynamic userid usermodel users"
     },
     {
       "section": "api",

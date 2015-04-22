@@ -1,5 +1,9 @@
 # Postworld // Changelog
 
+### Version 1.98
+- __Breaking Change__ - Refactored `pw-user` and `pw-users` directives.
+- __Breaking Change__ - Renamed `pw-user` directive to `pw-current-user`.
+
 ### Version 1.97
 - __Breaking Change__ - Replaced `load-post` directive with `pw-load-post`
 

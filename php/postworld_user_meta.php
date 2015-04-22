@@ -208,28 +208,43 @@ function pw_get_user( $user_id, $fields = false ) {
 		$usermeta_fields = extract_linear_fields( $fields, 'usermeta', true );
 		if ( !empty($usermeta_fields) ){
 
+			/**
+			 * When handling the 'all' value
+			 * Go ahead and get the pre-set all fields.
+			 * For security reasons, the fields are pre-defined
+			 * as actually returning all the usermeta fields
+			 * would cause security issues.
+			 */
+			if( in_array("all", $usermeta_fields) ){
+
+				$usermeta_all_fields = array(
+					PW_USERMETA_KEY,
+					PW_AVATAR_KEY,
+					'first_name',
+					'nickname',
+					'last_name',
+					'description',
+					);
+
+				$usermeta_all_fields = apply_filters(
+					'pw_get_usermeta_all_fields',
+					$usermeta_all_fields );
+
+				if( count( $usermeta_fields ) > 1 )
+					$usermeta_fields = array_unique(array_merge($usermeta_fields, $usermeta_all_fields));
+				else
+					$usermeta_fields = $usermeta_all_fields;
+
+			}
+
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
-			foreach ($usermeta_fields as $usermeta_field ) {
-				// GET 'ALL' FIELDS
-				if ( in_array("all", $usermeta_fields) ||
-						$usermeta_field == "all" ){
-					// Return all meta data
-					$user_data['usermeta'] = get_metadata('user', $user_id, '', true);
-					// Convert to strings
-					if ( !empty( $user_data['usermeta'] ) ){
-						foreach( $user_data['usermeta'] as $meta_key => $meta_value ){
-							$user_data['usermeta'][$meta_key] = $user_data['usermeta'][$meta_key][0];
-						}
-					}
-					// Break from the foreach
-					break;
-				}
-				// GET SPECIFIC FIELDS
-				else {
-					$usermeta_data = get_user_meta( $user_id, $usermeta_field, true );
-					if( !empty($usermeta_data) )
-						$user_data['usermeta'][$usermeta_field] = $usermeta_data;
-				}
+			foreach( $usermeta_fields as $usermeta_field ) {
+				
+				$usermeta_data = get_user_meta( $user_id, $usermeta_field, true );
+
+				if( !empty($usermeta_data) )
+					$user_data['usermeta'][$usermeta_field] = $usermeta_data;
+			
 			}
 
 

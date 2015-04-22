@@ -85,7 +85,7 @@ function pw_set_bp_nav( $obj = 'bp_nav', $subkey, $value ){
 	return $bp->$obj;
 }
 
-function pw_set_bp_nav_name( $subkey, $name, $icon_class, $icon_side ){
+function pw_set_bp_nav_name( $subkey, $name, $icon_class, $icon_side = 'left' ){
 	// Sets the name of a BuddyPress nav item
 	// $subkey = 		[ string ]	// Which subkey to set, ie. 'profile' / 'settings'
 	// $name = 			[ string ]	// What name to set it to, such as an updated name
@@ -95,7 +95,7 @@ function pw_set_bp_nav_name( $subkey, $name, $icon_class, $icon_side ){
 	return pw_set_bp_nav( 'bp_nav', $subkey . '.name', $name );
 }
 
-function pw_set_bp_subnav_name( $subkey, $name, $icon_class, $icon_side ){
+function pw_set_bp_subnav_name( $subkey, $name, $icon_class, $icon_side = 'left' ){
 	// Sets the name of a BuddyPress subnav item
 	// $subkey = 		[ string ]	// Which subkey to set, ie. 'profile.public' / 'settings.notifications'
 	// $name = 			[ string ]	// What name to set it to, such as an updated name
