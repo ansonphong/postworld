@@ -40,16 +40,16 @@ function pw_oembed_get( $vars = array() ){
 	if (strpos($oEmbed, 'youtube') !== false) {
 		// AUTOPLAY
 		if( $vars['autoplay'] == true )
-			$oEmbed = pwDomElAttrAppend( $oEmbed, 'iframe', 'src', '&autoplay=1' );
+			$oEmbed = pw_dom_el_attr_append( $oEmbed, 'iframe', 'src', '&autoplay=1' );
 		
 		// THEME
-		$oEmbed = pwDomElAttrAppend( $oEmbed, 'iframe', 'src', '&theme=' . _get($vars,'youtube.theme') );
+		$oEmbed = pw_dom_el_attr_append( $oEmbed, 'iframe', 'src', '&theme=' . _get($vars,'youtube.theme') );
 
 		// COLOR
-		$oEmbed = pwDomElAttrAppend( $oEmbed, 'iframe', 'src', '&color=' . _get($vars,'youtube.color') );
+		$oEmbed = pw_dom_el_attr_append( $oEmbed, 'iframe', 'src', '&color=' . _get($vars,'youtube.color') );
 	
 		// CONTROLS
-		$oEmbed = pwDomElAttrAppend( $oEmbed, 'iframe', 'src', '&controls=' . _get($vars,'youtube.controls') );
+		$oEmbed = pw_dom_el_attr_append( $oEmbed, 'iframe', 'src', '&controls=' . _get($vars,'youtube.controls') );
 
 	}
 
@@ -57,7 +57,7 @@ function pw_oembed_get( $vars = array() ){
 	if (strpos($oEmbed, 'vimeo') !== false) {
 		// AUTOPLAY
 	  	if( $vars['autoplay'] == true ){
-	   		$oEmbed = pwDomElAttrAppend( $oEmbed, 'iframe', 'src', '?autoplay=1' );
+	   		$oEmbed = pw_dom_el_attr_append( $oEmbed, 'iframe', 'src', '?autoplay=1' );
 		}
 	}
 
@@ -66,7 +66,7 @@ function pw_oembed_get( $vars = array() ){
 		// AUTOPLAY
 	  	if( $vars['autoplay'] == true ){
 	   		//$oEmbed = str_replace( 'auto_play=false', 'auto_play=true', $oEmbed );
-			$oEmbed = pwDomElAttrAppend( $oEmbed, 'iframe', 'src', '&auto_play=true' );
+			$oEmbed = pw_dom_el_attr_append( $oEmbed, 'iframe', 'src', '&auto_play=true' );
 		}
 	}
 
@@ -74,12 +74,18 @@ function pw_oembed_get( $vars = array() ){
 
 }
 
-
-
-function pwDomElAttrAppend( $element, $tag, $attribute, $append ){
+function pw_dom_el_attr_append( $element, $tag, $attribute, $append ){
 	// Postworld DOM Element Attribute Append
 	// Takes a single element HTML DOM string
 	// And appends a string to the specified attribute value
+
+	/** 
+	 * Supress XML interpolation errors
+	 * as we're not in control of the incoming string,
+	 * and throwing even a warning will cause ajax calls
+	 * to return early with warning headers, and break the response.
+	 */
+	libxml_use_internal_errors(true);
 
 	// Init new DOM Class
 	$dom = new DOMDocument();
