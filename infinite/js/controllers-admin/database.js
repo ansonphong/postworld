@@ -173,7 +173,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 
 		$scope.progressLoop( functionName );
 
-		$pwData.wp_ajax( functionName, {} ).then(
+		$pwData.wpAjax( functionName, {} ).then(
 			function( response ){
 				$scope.setBusy( functionName, false );
 				/*
@@ -216,7 +216,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 		var busyKey = 'cleanup_' + type;
 		$scope.setBusy( busyKey, true );
 
-		$pwData.wp_ajax('pw_cleanup_meta', { type: type } ).then(
+		$pwData.wpAjax('pw_cleanup_meta', { type: type } ).then(
 			function( response ){
 				$scope.setBusy( busyKey, false );
 				$log.debug( 'cleanupMeta : RESPONSE : ', response );
@@ -232,7 +232,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 
 	$scope.deleteCacheType = function( cacheType ){
 		$scope.setBusy( 'cacheTypeReadout', true );
-		$pwData.wp_ajax('pw_delete_cache_type', { cache_type: cacheType } ).then(
+		$pwData.wpAjax('pw_delete_cache_type', { cache_type: cacheType } ).then(
 			function( response ){
 				$scope.setBusy( 'cacheTypeReadout', false );
 				$scope.cacheTypeReadout = response.data;
@@ -243,7 +243,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 
 	$scope.refreshCacheReadout = function(){
 		$scope.setBusy( 'cacheTypeReadout', true );
-		$pwData.wp_ajax('pw_get_cache_types_readout', {} ).then(
+		$pwData.wpAjax('pw_get_cache_types_readout', {} ).then(
 			function( response ){
 				$scope.setBusy( 'cacheTypeReadout', false );
 				$log.debug( 'refreshCacheReadout : RESPONSE : ', response );
@@ -255,7 +255,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 
 	$scope.truncateCache = function(){
 		$scope.setBusy( 'cacheTypeReadout', true );
-		$pwData.wp_ajax('pw_truncate_cache', {} ).then(
+		$pwData.wpAjax('pw_truncate_cache', {} ).then(
 			function( response ){
 				$scope.setBusy( 'cacheTypeReadout', false );
 				$scope.cacheTypeReadout = response.data;
