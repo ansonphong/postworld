@@ -514,8 +514,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_get_menus',params);
 		},
-		get_template_partial: function(args) {
-			$log.debug('pwData.get_template_partial',args);
+		getTemplatePartial: function(args) {
+			$log.debug('pwData.getTemplatePartial',args);
 			var params = {args:args};
 			return this.wpAjax('pw_get_template_partial',params);
 		},
