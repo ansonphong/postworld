@@ -1,6 +1,14 @@
 <?php
 
-// Define Angular Dependancies
+/**
+ * Defines and injects Postworld dependencies
+ * into the HTML / Browser.
+ *
+ * To be run on the Action Hooks: 
+ * wp_enqueue_scripts / admin_enqueue_scripts
+ *
+ * @since 0.1
+ */
 function postworld_includes( $args ){
 	extract( $args );
 

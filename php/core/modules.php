@@ -90,6 +90,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'',
 			),
 
+		array(
+			'name'	=>	'Mobile Detect',
+			'slug'	=>	'mobile_detect',
+			'icon'	=>	'pwi-mobile',
+			'description'	=>	'',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules
