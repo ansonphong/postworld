@@ -140,18 +140,18 @@ define( 'PW_DB_VERSION', 'postworld-db-version' );
 /////////////// HIGH PRIORITY ////////////////
 
 ////// UTILITIES //////
-include 'php/postworld_utilities.php';
+include 'php/core/utilities.php';
 
 
 ////// API //////
 // Load API functions
-include 'php/postworld_api.php';
+include 'php/core/api.php';
 
 ////// FILTER FUNCTIONS //////
-include 'php/postworld_filters.php';
+include 'php/core/filters.php';
 
 ////// MODULE FUNCTIONS //////
-include 'php/postworld_modules.php';
+include 'php/core/modules.php';
 
 ////// PW GLOBALS //////
 // This must come after the API functions
@@ -163,7 +163,7 @@ $pw['info']['modules'] = pw_enabled_modules();	// pw_get_option( array( 'option_
 include "infinite/functions.php";
 
 ////// VARIABLES //////
-include 'php/postworld_variables.php';
+include 'php/core/variables.php';
 
 ////// PATHS //////
 define( 'POSTWORLD_PATH', dirname(__FILE__) );
@@ -187,11 +187,11 @@ $wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
 
 // INSTALL QUERIES
-include 'php/postworld_install_queries.php';
+include 'php/core/install_queries.php';
 
 
 ////////// INSTALL POSTWORLD ///////////
-include 'php/postworld_install.php';
+include 'php/core/install.php';
 
 /*
 register_activation_hook( __FILE__, 'postworld_install' );
@@ -200,85 +200,85 @@ register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
 register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 */
 
-//include 'php/postworld_debugger.php';
+//include 'php/core/debugger.php';
 
 
 /////////////// MEDIUM PRIORITY ////////////////
 
 ////// META FUNCTIONS //////
-//include 'php/postworld_meta.php';
+//include 'php/core/meta.php';
 
 ////// SOCIAL //////
-include 'php/postworld_language.php';
+include 'php/core/language.php';
 
 ////// POINTS FUNCTIONS //////
-include 'php/postworld_points.php';
+include 'php/core/points.php';
 
 ////// RANK FUNCTIONS //////
-include 'php/postworld_rank.php';
+include 'php/core/rank.php';
 
 ////// TEMPLATE FUNCTIONS //////
-include 'php/postworld_templates.php';
+include 'php/core/templates.php';
 
 ////// FEED FUNCTIONS //////
-include 'php/postworld_feeds.php';
+include 'php/core/feeds.php';
 
 ////// CRON / SCHEDULED TASKS //////
-include 'php/postworld_cron.php';
+include 'php/core/cron.php';
 
 ////// USER FUNCTIONS //////
-include 'php/postworld_user_meta.php';
-include 'php/postworld_users.php';
+include 'php/core/user_meta.php';
+include 'php/core/users.php';
 
 ////// TAXONOMY FUNCTIONS //////
-include 'php/postworld_taxonomies.php';
+include 'php/core/taxonomies.php';
 
 ////// CACHE FUNCTIONS //////
-include 'php/postworld_cache.php';
+include 'php/core/cache.php';
 
 ////// RELATED POST FUNCTIONS //////
-include 'php/postworld_related.php';
+include 'php/core/related.php';
 
 ////// GET POST FUNCTIONS //////
-include 'php/postworld_fields.php';
-include 'php/postworld_images.php';
-include 'php/postworld_posts.php';
+include 'php/core/fields.php';
+include 'php/core/images.php';
+include 'php/core/posts.php';
 
 ////// QUERY FUNCTIONS //////
-include 'php/postworld_query.php';
+include 'php/core/query.php';
 
 ////// WIDGETS //////
-include 'php/postworld_widgets.php';
+include 'php/core/widgets.php';
 
 ////// ARCHIVES //////
-include 'php/postworld_archives.php';
+include 'php/core/archives.php';
 
 ////// SOCIAL //////
-include 'php/postworld_social.php';
+include 'php/core/social.php';
 
 ////// WIZARD //////
-include 'php/postworld_wizard.php';
+include 'php/core/wizard.php';
 
 ////// OPTIONS //////
-include 'php/postworld_options.php';
+include 'php/core/options.php';
 
 ////// PROGRESS //////
-include 'php/postworld_progress.php';
+include 'php/core/progress.php';
 
 ////// VIEW //////
-include 'php/postworld_view.php';
+include 'php/core/view.php';
 
 ////// EMBED //////
-include 'php/postworld_embed.php';
+include 'php/core/embed.php';
 
 ////// BUDDYPRESS //////
-include 'php/postworld_buddypress.php';
+include 'php/core/buddypress.php';
 
 ////// EVENTS //////
-include 'php/postworld_events.php';
+include 'php/core/events.php';
 
 ////// DEV //////
-include 'php/postworld_dev.php';
+include 'php/core/dev.php';
 
 ////// ADMIN //////
 include 'admin/postworld_admin.php';
@@ -287,29 +287,30 @@ include 'admin/postworld_admin.php';
 include 'admin/php/admin.php';
 
 ////// MODULES //////
-include 'postworld-modules/backgrounds/postworld-backgrounds.php';
-include 'postworld-modules/sidebars/postworld-sidebars.php';
-include 'postworld-modules/layouts/postworld-layouts.php';
-include 'postworld-modules/iconsets/postworld-iconsets.php';
-include 'postworld-modules/taxonomy-meta/postworld-taxonomy-meta.php';
-include 'postworld-modules/shortcodes/postworld-shortcodes.php';
-include 'postworld-modules/slider/postworld-slider.php';
-include 'postworld-modules/term-feed/postworld-term-feed.php';
-include 'postworld-modules/user-feed/postworld-user-feed.php';
-include 'postworld-modules/gallery/postworld-gallery.php';
+include 'php/modules/backgrounds/postworld-backgrounds.php';
+include 'php/modules/sidebars/postworld-sidebars.php';
+include 'php/modules/layouts/postworld-layouts.php';
+include 'php/modules/iconsets/postworld-iconsets.php';
+include 'php/modules/taxonomy-meta/postworld-taxonomy-meta.php';
+include 'php/modules/shortcodes/postworld-shortcodes.php';
+include 'php/modules/slider/postworld-slider.php';
+include 'php/modules/term-feed/postworld-term-feed.php';
+include 'php/modules/user-feed/postworld-user-feed.php';
+include 'php/modules/gallery/postworld-gallery.php';
+include 'php/modules/mobile-detect/postworld-mobile-detect.php';
 
 ////// GET AJAX FUNCTIONS AND ACTION ////// 
-include 'php/postworld_ajax.php';
-include 'php/postworld_comments.php';
-include 'php/postworld_share.php';
+include 'php/core/ajax.php';
+include 'php/core/comments.php';
+include 'php/core/share.php';
 
-include 'php/postworld_meta.php';
+include 'php/core/meta.php';
 
 ////// INCLUDES //////
-include 'php/postworld_includes.php';
+include 'php/core/includes.php';
 
 ////// UPDATE / MIGRATE //////
-include 'php/postworld_update.php';
+include 'php/core/update.php';
 
 ///// ADD HEADER CODE /////
 add_action('wp_head','pw_add_header_code');

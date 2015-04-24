@@ -1,19 +1,19 @@
 <?php
-/*____  _     _      _                    
- / ___|(_) __| | ___| |__   __ _ _ __ ___ 
- \___ \| |/ _` |/ _ \ '_ \ / _` | '__/ __|
-  ___) | | (_| |  __/ |_) | (_| | |  \__ \
- |____/|_|\__,_|\___|_.__/ \__,_|_|  |___/
-                                          
-//////////////// SIDEBARS ////////////////*/
+ /*
+ __        ___     _            _       
+ \ \      / (_) __| | __ _  ___| |_ ___ 
+  \ \ /\ / /| |/ _` |/ _` |/ _ \ __/ __|
+   \ V  V / | | (_| | (_| |  __/ |_\__ \
+    \_/\_/  |_|\__,_|\__, |\___|\__|___/
+                     |___/              
 
-include 'widgets/module/widget-module.php';
-include 'widgets/menu-kit/widget-menu-kit.php';
-include 'widgets/feed/widget-feed.php';
-include 'widgets/term-feed/widget-term-feed.php';
-include 'widgets/user/widget-user.php';
-include 'widgets/related-posts/widget-related-posts.php';
-
+//////////////// WIDGETS ////////////////*/
+include POSTWORLD_PATH.'/php/widgets/module/widget-module.php';
+include POSTWORLD_PATH.'/php/widgets/menu-kit/widget-menu-kit.php';
+include POSTWORLD_PATH.'/php/widgets/feed/widget-feed.php';
+include POSTWORLD_PATH.'/php/widgets/term-feed/widget-term-feed.php';
+include POSTWORLD_PATH.'/php/widgets/user/widget-user.php';
+include POSTWORLD_PATH.'/php/widgets/related-posts/widget-related-posts.php';
 
 ///// PRINT WIDGETS /////
 function pw_print_widgets( $vars = array() ){
