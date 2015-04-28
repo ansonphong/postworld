@@ -25,7 +25,7 @@ function pw_date_seconds_ago( $seconds_ago, $format ){
 }
 
 /**
- * Calculates the number of seconds in the reuested period
+ * Calculates the number of seconds in the reqested period
  * @param $multiplier [float] Number to multiply period by
  * @param $period [string] The type period length
  * @return [integer] Number of seconds

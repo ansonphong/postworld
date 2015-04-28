@@ -135,13 +135,10 @@ define( 'PW_DB_VERSION', 'postworld-db-version' );
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
 
-
-
 /////////////// HIGH PRIORITY ////////////////
 
 ////// UTILITIES //////
 include 'php/core/utilities.php';
-
 
 ////// API //////
 // Load API functions

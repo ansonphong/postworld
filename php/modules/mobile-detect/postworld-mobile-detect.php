@@ -26,8 +26,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	$useragent = isset( $_SERVER['HTTP_USER_AGENT'] ) ? $_SERVER['HTTP_USER_AGENT'] : "";
 
-	$mobble_detect = new Mobile_Detect();
-	$mobble_detect->setDetectionType( 'extended' );
+	$pw_mobile_detect = new Mobile_Detect();
+	$pw_mobile_detect->setDetectionType( 'extended' );
 
 	/***************************************************************
 	* Function is_iphone
@@ -36,8 +36,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_iphone' ) ){
 		function is_iphone() {
-			global $mobble_detect;
-			return $mobble_detect->isIphone();
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->isIphone();
 		}
 	}
 
@@ -48,8 +48,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_ipad' ) ){
 		function is_ipad() {
-			global $mobble_detect;
-			return $mobble_detect->isIpad();
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->isIpad();
 		}
 	}
 
@@ -60,8 +60,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_ipod' ) ){
 		function is_ipod() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'iPod' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'iPod' );
 		}
 	}
 
@@ -72,8 +72,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_android' ) ){
 		function is_android() {
-			global $mobble_detect;
-			return $mobble_detect->isAndroidOS();
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->isAndroidOS();
 		}
 	}
 
@@ -84,8 +84,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_blackberry' ) ){
 		function is_blackberry() {
-			global $mobble_detect;
-			return $mobble_detect->isBlackBerry();
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->isBlackBerry();
 		}
 	}
 
@@ -96,8 +96,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_opera_mobile' ) ){
 		function is_opera_mobile() {
-			global $mobble_detect;
-			return $mobble_detect->isOpera();
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->isOpera();
 		}
 	}
 
@@ -109,8 +109,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 	if( !function_exists( 'is_palm' ) ){
 		function is_palm() {
 			_deprecated_function( 'is_palm', '1.2', 'is_webos' );
-			global $mobble_detect;
-			return $mobble_detect->is( 'webOS' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'webOS' );
 		}
 	}
 
@@ -121,8 +121,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_webos' ) ){
 		function is_webos() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'webOS' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'webOS' );
 		}
 	}
 
@@ -133,8 +133,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_symbian' ) ){
 		function is_symbian() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'Symbian' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'Symbian' );
 		}
 	}
 
@@ -145,8 +145,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_windows_mobile' ) ){
 		function is_windows_mobile() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'WindowsMobileOS' ) || $mobble_detect->is( 'WindowsPhoneOS' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'WindowsMobileOS' ) || $pw_mobile_detect->is( 'WindowsPhoneOS' );
 		}
 	}
 
@@ -170,8 +170,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_motorola' ) ){
 		function is_motorola() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'Motorola' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'Motorola' );
 		}
 	}
 
@@ -195,8 +195,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_samsung' ) ){
 		function is_samsung() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'Samsung' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'Samsung' );
 		}
 	}
 
@@ -219,8 +219,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_samsung_tablet' ) ){
 		function is_samsung_tablet() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'SamsungTablet' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'SamsungTablet' );
 		}
 	}
 
@@ -231,8 +231,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_kindle' ) ){
 		function is_kindle() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'Kindle' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'Kindle' );
 		}
 	}
 
@@ -243,8 +243,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_sony_ericsson' ) ){
 		function is_sony_ericsson() {
-			global $mobble_detect;
-			return $mobble_detect->is( 'Sony' );
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->is( 'Sony' );
 		}
 	}
 
@@ -268,8 +268,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_smartphone' ) ){
 		function is_smartphone() {
-			global $mobble_detect;
-			$grade = $mobble_detect->mobileGrade();
+			global $pw_mobile_detect;
+			$grade = $pw_mobile_detect->mobileGrade();
 			if ( $grade == 'A' || $grade == 'B' ) {
 				return true;
 			} else {
@@ -296,9 +296,14 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_mobile' ) ){
 		function is_mobile() {
-			global $mobble_detect;
+
+			// Allow global override for mobile development
+			if( defined( 'POSTWORLD_MOBILE' ) && POSTWORLD_MOBILE === true )
+				return true;
+
+			global $pw_mobile_detect;
 			if ( is_tablet() ) return false;
-			return $mobble_detect->isMobile();
+			return $pw_mobile_detect->isMobile();
 		}
 	}
 
@@ -309,8 +314,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_ios' ) ){
 		function is_ios() {
-			global $mobble_detect;
-			return $mobble_detect->isiOS();
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->isiOS();
 		}
 	}
 
@@ -321,8 +326,8 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 
 	if( !function_exists( 'is_tablet' ) ){
 		function is_tablet() {
-			global $mobble_detect;
-			return $mobble_detect->isTablet();
+			global $pw_mobile_detect;
+			return $pw_mobile_detect->isTablet();
 		}
 	}
 
