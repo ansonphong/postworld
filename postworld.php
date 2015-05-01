@@ -142,7 +142,6 @@ define( 'PW_DB_VERSION', 'postworld-db-version' );
 ////// UTILITIES //////
 include 'php/postworld_utilities.php';
 
-
 ////// API //////
 // Load API functions
 include 'php/postworld_api.php';
