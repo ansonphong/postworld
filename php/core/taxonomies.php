@@ -352,6 +352,8 @@ function pw_get_child_terms_meta( $term_query, $taxonomy ){
 	$sub_terms_meta = array();
 	foreach( $sub_terms as $sub_term ){
 		$sub_term = (array) $sub_term;
+		// Santize numeric strings into numbers
+		$sub_term = pw_sanitize_numeric_a_array($sub_term);
 		// Add URL
 		$sub_term['url'] = get_term_link( intval($sub_term['term_id']) , $taxonomy );
 		array_push( $sub_terms_meta, $sub_term );

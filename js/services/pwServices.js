@@ -52,6 +52,7 @@ postworld.factory( '$pw',
     	postViews: $window.pwSiteGlobals.post_views,
     	taxonomies: $window.pwSiteGlobals.taxonomies,
     	options: $window.pw.options,
+    	device: $window.pw.device,
 
     	// Get the admin data, will only be present if is_admin()
     	admin: $_.get( $window, 'pw.admin' ),
@@ -897,10 +898,24 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
 		///// CALLBACK /////
 		// Evaluate given callback
 		if( _.isString( vars.callback ) ){
+
+			if( _.isUndefined( vars.callbackTimeout ) )
+				vars.callbackTimeout = 0;
+			else
+				vars.callbackTimeout = parseInt( vars.callbackTimeout );
+
 			$timeout( function(){
 				$log.debug( 'pwTemplatePartials : callback : ' + vars.callback );
-				eval( vars.callback );
-			}, 0 );
+				
+				try{
+					eval( vars.callback );
+				}
+				catch(error){
+					$log.debug(error);
+				}
+
+			}, vars.callbackTimeout );
+		
 		}
 
 		///// CALLBACK EVENT /////
@@ -940,7 +955,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
 			if( !$_.objExists( $pwData.partials, cachePath ) ){
 				$pwData.partials = $_.setObj( $pwData.partials, cachePath, '' ); // TODO : Add loading partial option
 
-				$pwData.get_template_partial( vars ).then(
+				$pwData.getTemplatePartial( vars ).then(
 					function( response ){
 
 						// Debug Log
@@ -966,8 +981,8 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
 			var partialData = $_.getObj( $pwData.partials, cachePath );
 
 			// Evaluate Callbacks
-			vars.firstRun = false;
-			evalCallbacks( vars );
+			//vars.firstRun = false;
+			//evalCallbacks( vars );
 
 			return partialData;
 

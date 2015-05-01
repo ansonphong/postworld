@@ -198,7 +198,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_load_feed',params);
 		},
-		getPost: function( vars ){
+		pw_get_post: function( vars ){
 			// DEPRECIATED
 			return this.getPost( vars );
 		},
@@ -514,13 +514,13 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_get_menus',params);
 		},
-		get_template_partial: function(args) {
-			$log.debug('pwData.get_template_partial',args);
+		getTemplatePartial: function(args) {
+			$log.debug('pwData.getTemplatePartial',args);
 			var params = {args:args};
 			return this.wpAjax('pw_get_template_partial',params);
 		},
-		get_term_feed: function(args) {
-			$log.debug('pwData.get_term_feed',args);
+		getTermFeed: function(args) {
+			$log.debug('pwData.getTermFeed',args);
 			var params = {args:args};
 			return this.wpAjax('pw_get_term_feed',params);
 		},

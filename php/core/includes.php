@@ -1,6 +1,14 @@
 <?php
 
-// Define Angular Dependancies
+/**
+ * Defines and injects Postworld dependencies
+ * into the HTML / Browser.
+ *
+ * To be run on the Action Hooks: 
+ * wp_enqueue_scripts / admin_enqueue_scripts
+ *
+ * @since 0.1
+ */
 function postworld_includes( $args ){
 	extract( $args );
 
@@ -393,6 +401,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Directives-pwWindow',
 			POSTWORLD_URI.'/js/directives/pwWindow.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Directives-pwDevices',
+			POSTWORLD_URI.'/js/directives/pwDevices.js', $angularDep );
+
 		// MODULES
 		wp_enqueue_script( 'pw-Modules-Compile',
 			POSTWORLD_URI.'/js/modules/pwCompile.js', $angularDep );
@@ -481,6 +492,7 @@ function pwGlobals_print() {
 		pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
 		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
+		pw.device = <?php echo json_encode( pw_device_meta() ); ?>;
 	/* ]]> */</script><?php
 }
 

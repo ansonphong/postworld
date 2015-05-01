@@ -25,7 +25,7 @@ function pw_date_seconds_ago( $seconds_ago, $format ){
 }
 
 /**
- * Calculates the number of seconds in the reuested period
+ * Calculates the number of seconds in the reqested period
  * @param $multiplier [float] Number to multiply period by
  * @param $period [string] The type period length
  * @return [integer] Number of seconds
@@ -1332,8 +1332,10 @@ function pw_sanitize_numeric( $val, $require_numeric = false ){
 
 }
 
+/**
+ * Numerically santize a flat array of values
+ */
 function pw_sanitize_numeric_array( $vals = array(), $require_numeric = false, $remove_non_numeric = true, $reindex = true ){
-	// Numerically santize a flat array of values
 	$new_vals = array();
 
 	// Iterate through each value
@@ -1356,8 +1358,10 @@ function pw_sanitize_numeric_array( $vals = array(), $require_numeric = false, $
 	return $new_vals;
 }
 
+/**
+ * Numerically sanitize an associative array of values
+ */
 function pw_sanitize_numeric_a_array( $vals = array() ){
-	// Numerically sanitize an associative array of values
 
 	$sanitized = array();
 	foreach( $vals as $key => $val ){

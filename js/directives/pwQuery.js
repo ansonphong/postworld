@@ -97,12 +97,12 @@ postworld.controller('pwQueryCtrl',
  |_|                                                            
 ///////////// ----- PW TERMS FEED DIRECTIVE ------- //////////*/
 
-postworld.directive( 'pwTermsFeed', [ function($scope){
+postworld.directive( 'pwTermFeed', [ function($scope){
 	return {
 		restrict: 'A',
-		controller: 'pwTermsFeedCtrl',
+		controller: 'pwTermFeedCtrl',
 		scope:{
-			pwTermsFeed:"=pwTermsFeed",
+			pwTermFeed:"=pwTermFeed",
 			queryResultsModel:"=queryResultsModel",
 			queryStatusModel:"=queryStatusModel",
 			queryId:"=queryId"
@@ -117,7 +117,7 @@ postworld.directive( 'pwTermsFeed', [ function($scope){
 	};
 }]);
 
-postworld.controller('pwTermsFeedCtrl',
+postworld.controller('pwTermFeedCtrl',
 	['$scope', '$log', '$window', '$timeout', '_', 'pwData',
 	function($scope, $log, $window, $timeout, $_, $pwData) {
 
@@ -130,9 +130,10 @@ postworld.controller('pwTermsFeedCtrl',
 	$scope.queryStatusModel = 'loading';
 
 	$scope.getTermFeed = function( queryVars ){
-		$pwData.get_term_feed( queryVars ).then(
+		$pwData.getTermFeed( queryVars ).then(
 			// Success
 			function(response) {
+				$log.debug( 'pwTermFeed : getTermFeed : RESPONSE :', response );
 				$scope.queryResultsModel = response.data;
 				$scope.queryStatusModel = "done";
 			},
@@ -145,10 +146,10 @@ postworld.controller('pwTermsFeedCtrl',
 	}
 
 	$scope.$watch('pwTermFeed', function(value) {
-		if( !_.isUndefined($scope.pwTermsFeed) )
-			$scope.getTermFeed( $scope.pwTermsFeed );
+		if( !_.isUndefined($scope.pwTermFeed) )
+			$scope.getTermFeed( $scope.pwTermFeed );
 
-		$log.debug( '$scope.pwTermsFeed', $scope.pwTermsFeed );
+		$log.debug( '$scope.pwTermFeed', $scope.pwTermFeed );
 
 	});
 

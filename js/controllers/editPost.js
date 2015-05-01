@@ -8,8 +8,13 @@
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 
-
-
+/**
+ * @ngdoc directive
+ * @name postworld.directive: pwEditPost
+ * @description
+ * Provides local scope with functionality for easily
+ * loading, editing and saving posts.
+ */
 postworld.directive( 'pwEditPost', [ function($scope){
 	return {
 		restrict: 'AE',
@@ -115,11 +120,8 @@ postworld.controller('editPost',
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
 
-	
-
 	// Define Global Edit Post Defaults
 	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
-
 
 	// Localize Edit Post Object
 	if( $_.objExists( $window, 'pwSiteGlobals.edit_post' ) )
@@ -486,12 +488,14 @@ postworld.controller('editPost',
 
 				///// POST META /////
 				if ( !_.isUndefined( get_post['post_meta'] ) ){
-					
-					 // Emit Geocode
-					 // If geocode data exists, emit it's value
+					// If post_meta is empty, ensure it is an object, not array
+					if( _.isEmpty( get_post.post_meta ) )
+						get_post.post_meta = {};
+
+					// Emit Geocode
+					// If geocode data exists, emit it's value
 					if( !_.isUndefined( get_post.post_meta['geocode'] ) )
 						$scope.$emit('pwAddGeocode', get_post.post_meta['geocode']);
-
 				}
 
 				// Parse known JSON Fields from strings into JSON
