@@ -401,6 +401,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Directives-pwWindow',
 			POSTWORLD_URI.'/js/directives/pwWindow.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Directives-pwDevices',
+			POSTWORLD_URI.'/js/directives/pwDevices.js', $angularDep );
+
 		// MODULES
 		wp_enqueue_script( 'pw-Modules-Compile',
 			POSTWORLD_URI.'/js/modules/pwCompile.js', $angularDep );
@@ -489,6 +492,7 @@ function pwGlobals_print() {
 		pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
 		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
+		pw.device = <?php echo json_encode( pw_device_meta() ); ?>;
 	/* ]]> */</script><?php
 }
 

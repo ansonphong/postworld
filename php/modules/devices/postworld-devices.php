@@ -16,7 +16,7 @@
  * @link https://github.com/scottsweb/mobble/blob/master/mobble.php
  */
 
-if( pw_module_enabled( 'mobile_detect' ) ){
+if( pw_module_enabled( 'devices' ) ){
 
 	/**
 	 * Includes the Mobile Detect Class
@@ -330,6 +330,35 @@ if( pw_module_enabled( 'mobile_detect' ) ){
 			return $pw_mobile_detect->isTablet();
 		}
 	}
+
+}
+
+
+/**
+ * Returns an array of information about
+ * the current user's device.
+ *
+ * @return A_Array An associative array of device info.
+ */
+function pw_device_meta(){
+	
+	if( !pw_module_enabled( 'devices' ) )
+		return false;
+
+	$device = array();
+	$device['is_desktop'] = !is_mobile();
+	$device['is_mobile'] = is_mobile();
+	$device['is_tablet'] = is_tablet();
+	$device['is_smartphone'] = is_smartphone();
+	$device['is_handheld'] = is_handheld();
+	$device['is_iphone'] = is_iphone();
+	$device['is_ipad'] = is_ipad();
+	$device['is_ipod'] = is_ipod();
+	$device['is_android'] = is_android();
+	$device['is_blackberry'] = is_blackberry();
+	$device['is_ios'] = is_ios();
+
+	return $device;
 
 }
 

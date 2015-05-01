@@ -52,6 +52,7 @@ postworld.factory( '$pw',
     	postViews: $window.pwSiteGlobals.post_views,
     	taxonomies: $window.pwSiteGlobals.taxonomies,
     	options: $window.pw.options,
+    	device: $window.pw.device,
 
     	// Get the admin data, will only be present if is_admin()
     	admin: $_.get( $window, 'pw.admin' ),

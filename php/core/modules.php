@@ -96,10 +96,10 @@ function pw_registered_modules( $format = 'arrays' ){
 			),
 
 		array(
-			'name'	=>	'Mobile Detect',
-			'slug'	=>	'mobile_detect',
+			'name'	=>	'Devices',
+			'slug'	=>	'devices',
 			'icon'	=>	'pwi-mobile',
-			'description'	=>	'',
+			'description'	=>	'Adds support for device detection.',
 			),
 
 		);

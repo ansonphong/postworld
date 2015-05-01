@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.100,
+		'version'		=>	1.101,
 		'db_version'	=>	1.196,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -294,7 +294,7 @@ include 'php/modules/slider/postworld-slider.php';
 include 'php/modules/term-feed/postworld-term-feed.php';
 include 'php/modules/user-feed/postworld-user-feed.php';
 include 'php/modules/gallery/postworld-gallery.php';
-include 'php/modules/mobile-detect/postworld-mobile-detect.php';
+include 'php/modules/devices/postworld-devices.php';
 
 ////// GET AJAX FUNCTIONS AND ACTION ////// 
 include 'php/core/ajax.php';
