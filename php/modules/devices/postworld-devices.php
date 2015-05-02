@@ -298,7 +298,7 @@ if( pw_module_enabled( 'devices' ) ){
 		function is_mobile() {
 
 			// Allow global override for mobile development
-			if( defined( 'POSTWORLD_MOBILE' ) && POSTWORLD_MOBILE === true )
+			if( defined( 'IS_MOBILE' ) && IS_MOBILE === true )
 				return true;
 
 			global $pw_mobile_detect;
@@ -326,6 +326,11 @@ if( pw_module_enabled( 'devices' ) ){
 
 	if( !function_exists( 'is_tablet' ) ){
 		function is_tablet() {
+			
+			// Allow global override for tablet development
+			if( defined( 'IS_TABLET' ) && IS_TABLET === true )
+				return true;
+
 			global $pw_mobile_detect;
 			return $pw_mobile_detect->isTablet();
 		}
