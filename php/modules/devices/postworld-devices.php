@@ -351,7 +351,7 @@ function pw_device_meta(){
 		return false;
 
 	$device = array();
-	$device['is_desktop'] = !is_mobile();
+	$device['is_desktop'] = ( !is_mobile() && !is_tablet() );
 	$device['is_mobile'] = is_mobile();
 	$device['is_tablet'] = is_tablet();
 	$device['is_smartphone'] = is_smartphone();
