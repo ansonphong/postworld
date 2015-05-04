@@ -26,6 +26,7 @@ postworld.controller( 'pwUiCtrl',
 			element.css('display', 'none');
 	}
 
+	// For use with ng-click
 	$scope.uiToggleView = function( viewId ){
 		// If the view is registered
 		if( $_.objExists( $scope, 'uiViews.'+viewId ) )
@@ -36,6 +37,7 @@ postworld.controller( 'pwUiCtrl',
 			$scope.uiViews[viewId] = true;
 	}
 
+	// For use with ng-show / ng-hide
 	$scope.uiShowView = function( viewId ){
 		// If the view is registered
 		return $_.getObj( $scope, 'uiViews.'+viewId );
@@ -49,6 +51,7 @@ postworld.controller( 'pwUiCtrl',
 		}, 0 );
 	}
 
+	// For use with ng-class
 	$scope.uiSetClass = function( viewId, className ){
 		// Set default class name
 		if( _.isUndefined(className) )
