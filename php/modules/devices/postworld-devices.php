@@ -336,6 +336,23 @@ if( pw_module_enabled( 'devices' ) ){
 		}
 	}
 
+	/***************************************************************
+	* Function is_desktop
+	* For detecting desktop devices
+	***************************************************************/
+
+	if( !function_exists( 'is_desktop' ) ){
+		function is_desktop() {
+			
+			// Allow global override for tablet development
+			if( defined( 'IS_DESKTOP' ) && IS_DESKTOP === true )
+				return true;
+
+			return ( !is_tablet() && !is_mobile() );
+			
+		}
+	}
+
 }
 
 
