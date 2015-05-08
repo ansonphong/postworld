@@ -52,9 +52,10 @@ function pw_print_widgets( $vars = array() ){
 	$widgets_html = $vars['before'];
 
 	// Add widgets to output
-	foreach( $sidebar_widgets as $widget ){
-		$widgets_html .= $widget;
-	}
+	if( !empty( $sidebar_widgets ) )
+		foreach( $sidebar_widgets as $widget ){
+			$widgets_html .= $widget;
+		}
 
 	// Finish output
 	$widgets_html .= $vars['after'];

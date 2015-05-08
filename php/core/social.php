@@ -110,7 +110,7 @@ function pw_get_social_media_meta(){
 
 
 ////////// SOCIAL SHARE //////////
-function pw_social_share( $post ){
+function pw_social_share( $post = array() ){
 	$template = pw_get_template ( 'social', 'share', 'php', 'dir' );
 	return pw_ob_include( $template, $post);
 }
@@ -159,7 +159,7 @@ function pw_get_social_share_meta( $vars ){
 	$site_name = urlencode( get_bloginfo( 'name' ) );
 
 	// If Post Type Archive
-	if( is_post_type_archive() ){
+	if( !is_singular() ){
 		$title = urlencode( wp_title( " | ", false, "right" ) );
 		$title_and_site_name = $title;
 	}

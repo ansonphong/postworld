@@ -384,7 +384,6 @@ function pw_get_wp_postmeta($vars){
 }
 
 
-//i_get_postmeta
 function pw_get_postmeta( $vars = array() ){
 	global $post;
 	
@@ -570,7 +569,7 @@ function pw_get_wp_taxonomymeta($vars){
 	///// IF NO META KEY /////
 	if( !isset( $meta_key ) ){
 		// Get all the meta values for that term
-		$meta_values = get_term_meta( $term_id );
+		$meta_values = get_term_meta( $term_id, '' );
 
 		// If no values
 		if( empty( $meta_values ) )

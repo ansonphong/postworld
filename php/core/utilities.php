@@ -1453,11 +1453,13 @@ function pw_array_order_by(){
 
 
 function pw_reset_less_php_cache(){
+	//global $pwGlobalsJsFile;
 	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
 	$file = fopen( $ghost_less_file ,"w" );
 	fwrite($file,"// Reset PHP LESS Cache");
 	fclose($file);
-	chmod($pwGlobalsJsFile, 0755);
+	//if( file_exists( $pwGlobalsJsFile ) )
+	//	chmod($pwGlobalsJsFile, 0755);
 	return true;
 }
 
