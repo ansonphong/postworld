@@ -129,8 +129,9 @@ define( 'PW_AVATAR_KEY',	'pw_avatar', 	true ); // Case in-sensitive
 ///// DEFINE PRINT FILTERS /////
 define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
 
-///// DB VERSION /////
+///// VERSIONS /////
 define( 'PW_DB_VERSION', 'postworld-db-version' );
+define( 'PW_THEME_VERSION', 'postworld-theme-version' );
 
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );

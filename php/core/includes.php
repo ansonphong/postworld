@@ -630,10 +630,9 @@ function pwSiteGlobals_include(){
 
 	// ENQUEUE SCRIPT
 	wp_enqueue_script( 'pw-SiteGlobals-JS',
-		POSTWORLD_URI . $globals_path, array(), hash( 'md5', 4 ) );
+		POSTWORLD_URI . $globals_path, array(), hash( 'sha256', $pwJs ) );
 	
 }
-
 
 function pw_current_user(){
 	$user_id = get_current_user_id();
@@ -713,6 +712,9 @@ function pwGlobals_parse(){
 	$modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
 	$pw['info']['modules'] = $modules;
 	
+	//// THEME VERSION /////
+	$pw['info']['theme_version'] = apply_filters( PW_THEME_VERSION, $pw['info']['version'] );
+
 	///// INFINITE /////
 	// Merge the Infinite Globals into $pw
 	// This is a temporary solution, as Infinite is being digested & refactored into Postworld

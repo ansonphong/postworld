@@ -251,8 +251,11 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var template = getTemplate( this, meta );
 			
 			// If it exists, add the version number to the URL
+
+			// TODO - Filter the version here, or get a filtered verion, alternate value
+
 			if( template )
-				template = template + "?ver=" + $pw['info']['version'] ; // ( this, subdir, post_type, name )
+				template = template + "?ver=" + $pw['info']['theme_version'] ; // ( this, subdir, post_type, name )
 			// Otherwire return false
 			else
 				return false;
