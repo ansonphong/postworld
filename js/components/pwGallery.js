@@ -72,7 +72,10 @@ postworld.directive( 'pwGalleryViewer',
 				$log.debug( 'gallery.posts : CHANGE : ', posts );
 				
 				// When the post changes, re-set keybindings
-				setGalleryKeybindings();
+				$timeout( function(){
+					setGalleryKeybindings();
+				}, 10 );
+				
 
 			}, 1);
 
@@ -234,6 +237,7 @@ postworld.directive( 'pwGalleryViewer',
 							var vars = { feedId: $scope.post.feed.id };
 							$log.debug( 'pwGallery : keyDown : $emit : modalNextPost', vars );
 							$scope.$emit( 'modalNextPost', vars );
+
 						}
 						else
 							$scope.nextImage();
@@ -252,6 +256,7 @@ postworld.directive( 'pwGalleryViewer',
 							var vars = { feedId: $scope.post.feed.id };
 							$log.debug( 'pwGallery : keyDown : $emit : modalPreviousPost', vars );
 							$scope.$emit( 'modalPreviousPost', vars );
+
 						}
 						else
 							$scope.previousImage();
@@ -285,11 +290,14 @@ postworld.directive( 'pwGalleryViewer',
 				// Check galleryKeybinding attribute
 				if( attrs.galleryKeybinding === null )
 					return false;
+				
+				$log.debug( 'setKeybindings : GALLERY : attrs.galleryKeybinding', attrs.galleryKeybinding );
+				
 				// Sanitize value
 				var bool = $_.stringToBool( attrs.galleryKeybinding );
 				// Get the posts length
 				var postsLength = $_.get( $scope, 'gallery.posts.length' );
-				// If no posts or no length, return falre
+				// If no posts or no length, return false
 				if( postsLength == 0 || postsLength == false )
 					bool = false;
 				// If passes tests
@@ -299,8 +307,8 @@ postworld.directive( 'pwGalleryViewer',
 					// Timeout in order to avoid double binding
 					$timeout( function(){
 						var keybindingsObj = getKeyBindingsObj();
-						$pw.setKeybindings( keybindingsObj );
 						$log.debug( 'pwGallery : setGalleryKeybindings()', keybindingsObj );
+						$pw.setKeybindings( keybindingsObj );
 					}, 0 );
 					
 					// Bind only once

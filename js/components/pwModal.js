@@ -362,8 +362,9 @@ postworld.controller('pwModalInstanceCtrl',
 	var setFeedKeybindings = function(){
 		// Enable keybindings
 		//$pw.state.modals.enableKeyBindings = true;
-		if( $_.objExists( $scope, 'modalFeed.id' ) )
+		if( $_.objExists( $scope, 'modalFeed.id' ) ){
 			$pw.setKeybindings( getKeyBindingsObj() );
+		}
 	}
 
 	// Enable key bindings

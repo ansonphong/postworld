@@ -1,0 +1,23 @@
+<article class="post list-h2o {% if post.image.sizes.thumbnail.url %}has-image{% endif %}">
+    <a href="{{ post.post_permalink }}">
+    	{% if post.image.sizes.medium.url %}
+	    	<div class="thumbnail-image">
+	    		<img src="{{ post.image.sizes.large.url }}" alt="{{ post.post_title }}">
+	    	</div>
+	    {% endif %}
+	    <div class="details">
+			<h2>
+				{{ post.post_title }}
+			</h2>
+			<time datetime="{{ post.post_date_gmt }}">
+				{{ post.time_ago }}
+			</time>
+			{% if post.post_excerpt %}
+				<div class="post-excerpt">
+					{{ post.post_excerpt | safe }}
+				</div>
+			{% endif %}
+	    </div>
+	    <div class="clearfix"></div>
+    </a>
+</article>
