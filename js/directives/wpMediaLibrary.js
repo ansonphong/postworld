@@ -75,7 +75,7 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 			mediaBroadcast:'@',
 
 			// Indicates the current status of loading / saving media
-			//mediaStatus:'=',
+			mediaLoading:'=',
 
 			// The ID of the media object (? is this still in use ?)
 			mediaId:'@',
@@ -107,6 +107,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 	[ '$scope', '$rootScope', '$window', '$timeout', '$log', 'pwData', '_',
 	function( $scope, $rootScope, $window, $timeout, $log, $pwData, $_ ) {
 
+	$scope.mediaLoading = false;
 
 	///// SANDBOX /////
 	//alert("mediaMultiple : " + $scope.mediaMultiple);
@@ -469,6 +470,12 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 	}
 
+	var setMediaLoading = function( bool ){
+		$log.debug( '$scope.mediaLoading', $scope.mediaLoading );
+		if( !_.isUndefined( $scope.mediaLoading ) )
+			$scope.mediaLoading = bool;
+	}
+
 	$scope.setSelectedMediaIdAsUsermeta = function( vars ){
 		// Saves the selected image's ID as a usermeta value
 		if( _.isEmpty( vars ) )
@@ -489,14 +496,17 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 		$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : REQUEST : ', vars );
 
-		//$scope.mediaStatus = 'busy';
+		// Set the loading status
+		setMediaLoading(true);
 
 		// Do AJAX call
 		$pwData.setWpUsermeta( vars ).then(
 			function( response ){
 				$log.debug('wpMediaLibrary.setSelectedMediaIdAsUsermeta() : RESPONSE : ', response );
 			
-				if( $scope.mediaBroadcast ){
+				setMediaLoading(false);
+				
+				if( !_.isUndefined( $scope.mediaBroadcast ) ){
 					//$log.debug( 'mediaBroadcast : ', $scope.mediaBroadcast );
 
 					// Standardize a local function for this which

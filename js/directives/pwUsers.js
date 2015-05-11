@@ -17,8 +17,8 @@
  * @param {string|boolean} userDynamic If the user ID is expected to change.
  */
 postworld.directive( 'pwUsers',
-	[ '_', 'pwData', '$log', 
-	function( $_, $pwData, $log ){
+	[ '_', 'pwData', '$log', '$timeout',
+	function( $_, $pwData, $log, $timeout ){
 	return {
 		scope:{
 			userId:'@',
