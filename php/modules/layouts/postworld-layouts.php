@@ -1,5 +1,23 @@
 <?php
 
+function pw_default_layouts_filter( $layouts ){
+	if( !empty( $layouts ) )
+		return $layouts;
+
+	return array(
+		'default' => array(
+			'template' 	=> 'full-width',
+			'header'	=> array(
+				'id' => 'theme-header'
+				),
+			'footer'	=> array(
+				'id' => 'theme-footer'
+				),
+			)
+		);
+}
+add_filter( 'pw_default_layouts', 'pw_default_layouts_filter' );
+
 function pw_get_current_layout(){
 
 	global $pw;
@@ -17,6 +35,12 @@ function pw_get_current_layout(){
 	// Get layouts
 	$pwLayouts = pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) );
 
+	// If no layouts have been saved yet
+	if( empty( $pwLayouts ) ){
+		// Apply filter to get default layouts configuration
+		$pwLayouts = apply_filters( 'pw_default_layouts', array() );
+	}
+
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
 	// Check for layout override in : post_meta.pw_meta.layout
 	$override_layout = pw_get_wp_postmeta( array( 'sub_key' => 'layout' ) );
@@ -28,11 +52,11 @@ function pw_get_current_layout(){
 	}
 
 	/// GET LAYOUT : FROM CONTEXT ///
-	if( !$layout || pw_get_obj( $layout, 'template' ) == 'default' ){
+	if( !$layout || _get( $layout, 'template' ) == 'default' ){
 		// Iterate through all the current contexts
 		// And find a match for it
 		foreach( $contexts as $context ){
-			$test_layout = pw_get_obj( $pwLayouts, $context );
+			$test_layout = _get( $pwLayouts, $context );
 			// If there is a match
 			if( (bool) $test_layout ){
 				$layout = $test_layout;
@@ -46,7 +70,7 @@ function pw_get_current_layout(){
 
 		// Get from 'default' option setting
 		if( !empty( $pwLayouts ) )
-			$layout = pw_get_obj( $pwLayouts, 'default' );
+			$layout = _get( $pwLayouts, 'default' );
 		// Get from theme filter
 		else
 			$layout = apply_filters( 'pw_default_layout', array() );
@@ -57,9 +81,10 @@ function pw_get_current_layout(){
 
 	// FILL IN DEFAULT VALUES
 	// In case of incomplete layout values
-	if( pw_get_obj( $layout, 'source' ) != 'default' ){
+	if( _get( $layout, 'source' ) != 'default' ){
 		// Get the default layout
-		$default_layout = pw_get_obj( $pwLayouts, 'default' );
+		$default_layout = _get( $pwLayouts, 'default' );
+
 		// Merge it with the default layout, in case values are missing
 		$layout = array_replace_recursive( $default_layout, $layout );
 

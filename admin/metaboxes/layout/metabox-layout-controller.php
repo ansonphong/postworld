@@ -24,9 +24,9 @@ global $post;
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="pw_layout_post" ng-value="pw_layout_post | json" style="width:100%;">
 		
-		<!-- DEV : Test Output 
-		<hr><pre>POST : {{ pw_layout_post.post_meta.pw_meta.layout | json }}</pre>
-		-->
+		<?php if( pw_dev_mode() ): ?>
+			<hr><pre>pw_layout_post.post_meta.pw_meta.layout : {{ pw_layout_post.post_meta.pw_meta.layout | json }}</pre>
+		<?php endif; ?>
 		
 	</div>	
 </div>
