@@ -1,13 +1,21 @@
 <?php
-///// CLEAR CACHES /////
-// When adding or updating posts
+/**
+ * When saving a post, clear the affected caches.
+ */
 add_action( 'wp_insert_post', 'pw_delete_post_caches' );
 add_action( 'update_postmeta', 'pw_delete_post_caches' );
 add_action( 'pw_save_post', 'pw_delete_post_caches' );
-// When adding or updating terms
+
+/**
+ * When saving a terms, clear the affected caches.
+ */
 add_action( 'created_term', 'pw_delete_post_caches' );
 add_action( 'edited_term', 'pw_delete_post_caches' );
 
+/**
+ * Clear all the caches which could change when
+ * a post is updated.
+ */
 function pw_delete_post_caches(){
 	
 	if( in_array( 'post_cache', pw_enabled_modules() ) ){
@@ -21,10 +29,28 @@ function pw_delete_post_caches(){
 
 }
 
-function pw_get_cache( $fields, $operator = 'AND' ){
-	// Gets the first matching row from the cache table
-	// Available sub-params are 'cache_name' and 'cache_hash'
 
+/**
+ * When saving a menu, clear the affected caches.
+ */
+add_action( 'wp_update_nav_menu', 'pw_clear_menu_caches' );
+
+/**
+ * Clear all the caches which could change when
+ * a menu is updated.
+ */
+function pw_clear_menu_caches(){
+	pw_delete_cache_type( 'slider' );
+}
+
+
+/**
+ * Gets the first matching row from the cache table.
+ *
+ * @param array $field Available keys are 'cache_name' and 'cache_hash'.
+ * @param string $operator (Optional) Operator on which to query.
+ */
+function pw_get_cache( $fields, $operator = 'AND' ){
 	global $wpdb;
 	$table_name = $wpdb->pw_prefix . 'cache';
 	$supported_fields = array( 'cache_name', 'cache_hash' );
@@ -62,6 +88,12 @@ function pw_get_cache( $fields, $operator = 'AND' ){
 
 }
 
+/**
+ * Sets a record in the cache table.
+ *
+ * @param array $data 	Required keys are 'cache_content' and 'cache_hash'.
+ *						Addional keys are 'cache_type' and 'cache_name'
+ */
 function pw_set_cache( $data ){
 
 	global $pw;
