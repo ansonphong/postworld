@@ -546,7 +546,25 @@ function pwBootstrapPostworldAdmin_print() {
 		<script>
 			///// BOOTSTRAP APP /////
 			angular.element(document).ready(function() {
+				
+				/**
+				 * AngularJS prevents the submission of forms
+				 * without an action attribute. In the Admin
+				 * this is bad because some forms don't have one.
+				 * Here we have to force an action attribute for every
+				 * form element which doesn't have one.
+				 *
+				 * @link https://docs.angularjs.org/api/ng/directive/form
+				 */
+				jQuery('form').attr('action', function(){
+					if( typeof jQuery(this).attr('action') === 'undefined' )
+						jQuery(this).attr('action', '<?php echo $_SERVER["PHP_SELF"]; ?>');
+				});
+
+				// Bootstrap the app
+				// Must come after adding action attributes
 				angular.bootstrap(document, ['postworldAdmin']);
+
 			});
 		</script>
 	<?php endif;
