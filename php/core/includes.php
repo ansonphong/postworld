@@ -101,14 +101,14 @@ function postworld_includes( $args ){
 
 	pw_load_iconsets();
 
-	/*
+	
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
 						'pluginurl' 	=> WP_PLUGIN_URL,
 						'user_id'		=> get_current_user_id(),
 						'is_admin'		=> is_admin(),
 					);
-	*/
+	
 
 	//////////---------- LIBRARY INCLUDES ----------//////////
 
@@ -134,7 +134,7 @@ function postworld_includes( $args ){
 
 		// POSTWORLD
 		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
-		//wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
+		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
 
 	}
