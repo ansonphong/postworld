@@ -19,11 +19,13 @@ if( in_array( 'layouts', $pw['info']['modules'] ) )
 if( in_array( 'backgrounds', $pw['info']['modules'] ) )
 	include 'metaboxes/background/metabox-background.php';	
 
+/*
 ///// ENQUEUE STYLES & SCRIPTS /////
 add_action( 'admin_enqueue_scripts', 'pw_admin_enqueue' );
 function pw_admin_enqueue() {
 	wp_enqueue_style( 'pw-admin-styles', POSTWORLD_URI.'/admin/less/style.less' );
 	pwAdminGlobals_include();
 }
+*/
 
 ?>

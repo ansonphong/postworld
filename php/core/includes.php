@@ -436,8 +436,14 @@ function postworld_includes( $args ){
 	}
 
 	// Include Admin Scripts if in Admin
-	if( is_admin() )
+	if( is_admin() ){
+		// Include JS files
 		pw_include_admin_scripts();
+		// Include Styles
+		wp_enqueue_style( 'pw-admin-styles', POSTWORLD_URI.'/admin/less/style.less' );
+		// Localize Global Vars 
+		pwAdminGlobals_include();
+	}
 
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
 	// Dynamically generate javascript file
@@ -750,6 +756,9 @@ function pw_injections(){
 
 //////////// ADMIN GLOBALS ////////////
 function pwAdminGlobals_include(){
+
+	if( !is_admin() )
+		return false;
 
 	///// GENERATE JAVASCRIPT /////
 	$pwAdminGlobals = pwAdminGlobals_parse();
