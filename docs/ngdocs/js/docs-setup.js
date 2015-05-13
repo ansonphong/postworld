@@ -30,6 +30,15 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "postworld.directive: pwEditPost",
+      "shortName": "pwEditPost",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Provides local scope with functionality for easily",
+      "keywords": "api directive easily editing functionality loading local posts postworld pweditpost saving scope"
+    },
+    {
+      "section": "api",
       "id": "postworld.directive:pwAutofocus",
       "shortName": "pwAutofocus",
       "type": "directive",
@@ -66,12 +75,30 @@ NG_DOCS={
     },
     {
       "section": "api",
+      "id": "postworld.directive:pwCompileCode",
+      "shortName": "pwCompileCode",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Compiles any code into the given context.",
+      "keywords": "api code codeenable compile compiles context directive false postworld pwcompilecode"
+    },
+    {
+      "section": "api",
       "id": "postworld.directive:pwCurrentUser",
       "shortName": "pwCurrentUser",
       "type": "directive",
       "moduleName": "postworld",
       "shortDescription": "Provides methods to access the currently logged in user.",
       "keywords": "access api bind currently directive expression logged methods postworld pwcurrentuser user"
+    },
+    {
+      "section": "api",
+      "id": "postworld.directive:pwDeviceClass",
+      "shortName": "pwDeviceClass",
+      "type": "directive",
+      "moduleName": "postworld",
+      "shortDescription": "Adds classes to the element relating to the current detected device.",
+      "keywords": "adds api classes current detected device devices directive element enabled module postworld relating work"
     },
     {
       "section": "api",

@@ -235,10 +235,17 @@ $i_layouts_model = array(
 	);
 
 
+
+
+
+/**
+ * @todo REMOVE : THIS 'i_admin_scripts' BLOCK
+ * Only inserts:
+ * var iGlobals = {"paths":{"ajax_url":"http:\/\/podcollective\/wp-admin\/admin-ajax.php"}};
+ */
 ///// ADMIN SCRIPTS /////
 // Scripts which are inserted into the header in the admin
 // These contain globals accessible by the JS window object
-
 function i_admin_scripts(){
   $iGlobals = array(
   	"paths"	=>	array(
@@ -253,6 +260,17 @@ function i_admin_scripts(){
 	</script>
   <?php
 }
+
+// INSERT GLOBAL WINDOW SCRIPTS
+function insert_i_admin_scripts() {
+	i_admin_scripts();
+}
+add_action('admin_head', 'insert_i_admin_scripts');
+
+
+
+
+
 
 ///// ADMIN STYLES /////
 add_action('admin_print_styles', 'postworld_admin_icon_styles');

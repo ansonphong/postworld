@@ -114,7 +114,7 @@ postworld.controller('pwCommentsTreeController',
 		$scope.key = 0;
 		$scope.commentsCount = 0;
 		$scope.loadCommentsInstance = $attrs.loadComments;
-		$scope.pluginUrl = jsVars.pluginurl;
+		//$scope.pluginUrl = jsVars.pluginurl;
 		$scope.templateLoaded = false;
 		$log.debug('Comments post ID is:', $scope.postId);
 		var settings = pwCommentsService.comments_settings[$scope.loadCommentsInstance];

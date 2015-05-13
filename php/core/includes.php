@@ -102,12 +102,14 @@ function postworld_includes( $args ){
 
 	pw_load_iconsets();
 
+	/*
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
 						'pluginurl' 	=> WP_PLUGIN_URL,
 						'user_id'		=> get_current_user_id(),
 						'is_admin'		=> is_admin(),
 					);
+	*/
 
 	//////////---------- LIBRARY INCLUDES ----------//////////
 
@@ -133,7 +135,7 @@ function postworld_includes( $args ){
 
 		// POSTWORLD
 		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
-		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
+		//wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 		wp_enqueue_script(  'Postworld-Deploy' );
 
 	}
@@ -209,42 +211,10 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS-Animate',
 		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular-animate.min.js');
 
-
 		///// ANGULAR THIRD PARTY MODULES /////
-		
-		// ANGULAR UI UTILITIES
-		// Development only
-		//wp_enqueue_script( 'AngularJS-UI-Utils',
-		//	POSTWORLD_URI.'/lib/angular-ui-utils/angular-ui-utils.min.js');
-		
-		//BOOTSTRAP JS
-		wp_enqueue_script( "bootstrap-JS",
-			POSTWORLD_URI.'/lib/bootstrap/bootstrap.min.js' );
-
 		// ANGULAR UI : BOOTSTRAP
-		//wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-		//	plugins_url().'/postworld/lib/angular/ui-bootstrap-tpls-0.6.0.min.js' );
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
 			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js' );
-
-		/*
-		// ANGULAR STRAP : BOOTSTRAP
-		wp_enqueue_script( 'AngularJS-Strap-Dimensions',
-			POSTWORLD_URI.'/lib/angular-strap-2.1.6/angular-strap-dimensions.js', $angularDep );
-
-		wp_enqueue_script( 'AngularJS-Strap-Tooltip',
-			POSTWORLD_URI.'/lib/angular-strap-2.1.6/angular-strap-tooltip.js', $angularDep );
-
-		wp_enqueue_script( 'AngularJS-Strap-Popover',
-			POSTWORLD_URI.'/lib/angular-strap-2.1.6/angular-strap-popover.js', $angularDep );
-		*/
-
-		//wp_enqueue_script( 'AngularJS-Strap',
-		//	plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.js', $angularDep );
-
-		//wp_enqueue_script( 'AngularJS-Strap-Templates',
-		//	plugins_url().'/postworld/lib/angular-strap-2.0.0-rc.2/angular-strap.tpl.js', $angularDep );
-
 
 		// ANGULAR : INFINITE SCROLL
 		//wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/lib/ng-infinite-scroll/ng-infinite-scroll.js', $angularDep );
@@ -252,8 +222,6 @@ function postworld_includes( $args ){
 		// ANGULAR : TIMER
 		wp_enqueue_script( 'AngularJS-Timer',
 			POSTWORLD_URI.'/lib/angular-timer/angular-timer.js', $angularDep );
-
-		
 
 		// ANGULAR : PARALLAX
 		wp_enqueue_script( 'angularJS-Parallax',
@@ -271,22 +239,17 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'angularJS-ChecklistModel',
 			POSTWORLD_URI.'/lib/checklist-model/checklist-model.js', $angularDep );
 		
-
 		/////// POSTWORLD APP /////	
 		// TODO : blob through the dirs and get all the js files, auto-include in foreach
 		wp_enqueue_script( 	'pw-app-JS',
 			POSTWORLD_URI.'/js/app.js', $angularDep );
 
-
 		///// CREATE.JS /////
 		//if( in_array('create.js', $pw['inject']) ){	
 		// LOCAL COMPONENT
-		wp_enqueue_script( 'Postworld-FlashCanvas',
-			POSTWORLD_URI.'/js/components/flashCanvas.js', $angularDep);
+		//wp_enqueue_script( 'Postworld-FlashCanvas',
+		//	POSTWORLD_URI.'/js/components/flashCanvas.js', $angularDep);
 		//}
-
-
-
 
 		// COMPONENTS
 		wp_enqueue_script( 'pw-FeedItem-JS',
@@ -336,7 +299,7 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'pw-filterFeed-JS',
 			POSTWORLD_URI.'/js/components/editFeed.js', $angularDep );
-
+		
 
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',
@@ -354,10 +317,12 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Widgets-JS',
 			POSTWORLD_URI.'/js/controllers/pwWidgets.js', $angularDep );
 
+
 		// FILTERS
 		wp_enqueue_script( 	'pw-Filters-JS',
 			POSTWORLD_URI.'/js/filters/pwFilters.js', $angularDep );
-
+		
+		
 		// SERVICES
 		wp_enqueue_script( 'pw-pwData-JS',
 			POSTWORLD_URI.'/js/services/pwData.js', $angularDep );
@@ -370,8 +335,7 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'pw-pwCommentsService-JS',
 			POSTWORLD_URI.'/js/services/pwCommentsService.js', $angularDep );
-
-		wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
+		
 
 		// DIRECTIVES
 		wp_enqueue_script( 'pw-Directives-JS',
@@ -382,7 +346,7 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'pw-Directives-pwQuery',
 			POSTWORLD_URI.'/js/directives/pwQuery.js', $angularDep );
-
+			
 		wp_enqueue_script( 'pw-Directives-pwGetPost',
 			POSTWORLD_URI.'/js/directives/pwGetPost.js', $angularDep );
 
@@ -391,23 +355,23 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'pw-Directives-pwImage',
 			POSTWORLD_URI.'/js/directives/pwImage.js', $angularDep );
-
+	
 		wp_enqueue_script( 'pw-Directives-Background',
 			POSTWORLD_URI.'/js/directives/pwBackground.js', $angularDep );
 
 		wp_enqueue_script( 'pw-Directives-pwMenu',
 			POSTWORLD_URI.'/js/directives/pwMenu.js', $angularDep );
-
+		
 		wp_enqueue_script( 'pw-Directives-pwWindow',
 			POSTWORLD_URI.'/js/directives/pwWindow.js', $angularDep );
-
+		
 		wp_enqueue_script( 'pw-Directives-pwDevices',
 			POSTWORLD_URI.'/js/directives/pwDevices.js', $angularDep );
-
+		
 		// MODULES
 		wp_enqueue_script( 'pw-Modules-Compile',
 			POSTWORLD_URI.'/js/modules/pwCompile.js', $angularDep );
-
+		
 		// WIZARD
 		wp_enqueue_script( 'pw-Wizard',
 			POSTWORLD_URI.'/js/components/pwWizard.js', $angularDep );
@@ -415,6 +379,10 @@ function postworld_includes( $args ){
 		// WORDPRESS DIRECTIVES
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
 			POSTWORLD_URI.'/js/directives/wpMediaLibrary.js', $angularDep );
+		
+
+		// This is causing issues
+		//wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
 
 	}
 
@@ -467,6 +435,9 @@ function postworld_includes( $args ){
 
 	}
 
+	// Include Admin Scripts if in Admin
+	if( is_admin() )
+		pw_include_admin_scripts();
 
 	///// INCLUDE SITE WIDE JAVASCRIPT GLOBALS /////
 	// Dynamically generate javascript file
@@ -474,8 +445,45 @@ function postworld_includes( $args ){
 	//add_action( 'init', 'pwSiteGlobals_include');
 	pwSiteGlobals_include();
 
-	
+}
 
+function pw_include_admin_scripts(){
+	global $angularDep;
+
+	// APP
+	//wp_enqueue_script('Infinite-App', get_infinite_directory_uri().'/js/app.js', $angularDep );
+
+	// CONTROLLERS : ADMIN
+	wp_enqueue_script('Postworld-Admin-Options', get_infinite_directory_uri().'/js/controllers-admin/options.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Layouts', get_infinite_directory_uri().'/js/controllers-admin/layouts.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Styles', get_infinite_directory_uri().'/js/controllers-admin/styles.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Sidebars', get_infinite_directory_uri().'/js/controllers-admin/sidebars.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Feeds', get_infinite_directory_uri().'/js/controllers-admin/feeds.js', $angularDep );
+	//wp_enqueue_script('Postworld-Admin-Term-Feeds', get_infinite_directory_uri().'/js/controllers-admin/term-feeds.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Iconsets', get_infinite_directory_uri().'/js/controllers-admin/iconsets.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Shortcodes', get_infinite_directory_uri().'/js/controllers-admin/shortcodes.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Database', get_infinite_directory_uri().'/js/controllers-admin/database.js', $angularDep );
+	
+	// DIRECTIVES : ADMIN
+	wp_enqueue_script('Postworld-Admin', get_infinite_directory_uri().'/js/directives-admin/pwAdmin.js', $angularDep );
+	wp_enqueue_script('Infinite-Save-Options', get_infinite_directory_uri().'/js/directives-admin/iSaveOption.js', $angularDep );
+	wp_enqueue_script('Infinite-iData', get_infinite_directory_uri().'/js/services/iData.js', $angularDep );
+
+	// DIRECTIVES
+	wp_enqueue_script('Infinite-Directives', get_infinite_directory_uri().'/js/directives/iDirectives.js', $angularDep );
+	
+	/////// ANGULAR : JQUERY SLIDER /////
+	wp_enqueue_script( 'angularJS-jQuery-Slider', POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );
+	///// JQUERY /////
+	// Required for Slider
+	wp_enqueue_script( 'jquery' );
+	wp_enqueue_script( 'jquery-ui-core' );
+	wp_enqueue_script( 'jquery-ui-slider' );
+	wp_enqueue_script( 'jquery-ui-widget' );
+	wp_enqueue_script( 'jquery-ui-mouse' );
+
+	
 }
 
 ///// WINDOW JAVASCRIPT DATA INJECTION /////
@@ -529,6 +537,7 @@ function pwBootstrapPostworldAdmin_print() {
 		return false;
 
 	if( is_admin() ): ?>
+
 		<script>
 			///// BOOTSTRAP APP /////
 			angular.element(document).ready(function() {
@@ -760,7 +769,7 @@ function pwAdminGlobals_include(){
 	///// INCLUDE JAVASCRIPT FILE /////
 	global $angularDep;
 	wp_enqueue_script( 'pw-AdminGlobals-JS',
-		POSTWORLD_URI.$file_path, array(), hash( 'md5', 4 ), true );
+		POSTWORLD_URI.$file_path, array(), hash( 'md5', $js ), true );
 
 }
 

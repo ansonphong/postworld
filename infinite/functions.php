@@ -44,21 +44,14 @@ include_once 'php/postmeta.php';
 // IMPORT ALL CSS/LESS STYLESHEETS
 include_once 'php/styles.php';
 
-// IMPORT ALL CSS/LESS STYLESHEETS
-include_once 'php/scripts.php';
-
-
 // LAYOUT & SIDEBAR FUNCTIONS
 include_once 'php/layout-sidebars.php';
 
 // TEMPLATES
 include_once 'php/templates.php';
 
-
-
 // FEEDS
 include_once 'php/feeds.php';
-
 
 // USER META
 include_once 'php/user_meta.php';
@@ -130,14 +123,8 @@ function hide_admin_nags() {
 add_action('admin_head', 'hide_admin_nags');
 */
 
-// INSERT GLOBAL WINDOW SCRIPTS
-function insert_i_admin_scripts() {
-	i_admin_scripts();
-}
-add_action('admin_head', 'insert_i_admin_scripts');
 
 //////////////////// BOOTSTRAPPED FUNCTIONS ////////////////////
-
 /**
  * WordPress' missing is_blog_page() function.  Determines if the currently viewed page is
  * one of the blog pages, including the blog home page, archive, category/tag, author, or single

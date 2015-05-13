@@ -50,7 +50,7 @@ pw.angularModules = pw.angularModules.concat([
 	'timer',
 	'angular-parallax',
 	'wu.masonry',
-	'pw.compile',
+	//'pw.compile',
 	'checklist-model',
 ]);
 
@@ -70,8 +70,6 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 
 	// Pass $controllerProvider so that vanilla JS can init new controllers
 	controllerProvider = $controllerProvider;
-
-	var plugin_url = jsVars.pluginurl;
 
 	$routeProvider.when('/new/:post_type',
 		{
@@ -101,6 +99,7 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 	$logProvider.debugEnabled( debugEnabled );
 
 	$locationProvider.html5Mode( window.pw.view.location_provider.html_5_mode );
+	//$locationProvider.html5Mode( false );
 
 });
 
@@ -112,7 +111,7 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
  |_| \_\\__,_|_| |_|        
 */
 postworld.run( 
-	function( $rootScope, $window, $templateCache, $log, $location, $rootElement, pwData){    
+	function( $rootScope, $window, $templateCache, $log, $location, $rootElement ){    
 
 		///// ALLOW LINK CLICKING /////
 		// Critical so that when $locationProvider is in HTML5 mode
