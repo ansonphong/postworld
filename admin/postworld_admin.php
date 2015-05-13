@@ -12,11 +12,11 @@ include 'usermeta/contact_methods/contact_methods.php';
 include 'usermeta/fields/usermeta_fields.php';
 
 ///// MODULE : LAYOUTS /////
-if( in_array( 'layouts', $pw['info']['modules'] ) )
+if( pw_module_enabled('layouts') )
 	include 'metaboxes/layout/metabox-layout.php';	
 
 ///// MODULE : BACKGROUNDS /////
-if( in_array( 'backgrounds', $pw['info']['modules'] ) )
+if( pw_module_enabled('backgrounds') )
 	include 'metaboxes/background/metabox-background.php';	
 
 ?>

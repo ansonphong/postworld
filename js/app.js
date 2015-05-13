@@ -30,7 +30,6 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
  */
 
 'use strict';
-
 pw.partials = {};
 pw.templates = {};
 pw.feeds = {};
@@ -50,7 +49,6 @@ pw.angularModules = pw.angularModules.concat([
 	'timer',
 	'angular-parallax',
 	'wu.masonry',
-	//'pw.compile',
 	'checklist-model',
 ]);
 

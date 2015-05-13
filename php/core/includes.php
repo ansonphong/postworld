@@ -54,7 +54,6 @@ function postworld_includes( $args ){
 	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
 	wp_enqueue_script('jquery','');
 
-
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
 		// MASONRY
