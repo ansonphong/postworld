@@ -13,7 +13,8 @@
 	media-set-id="<?php echo $vars['ng_model']; ?>"
 	media-parent-callback="refreshOptions()"
 	media-model="images.<?php echo $vars['slug']; ?>"
-	media-model-array="false">
+	media-model-array="false"
+	media-loading="mediaLoading">
 	<i class="pwi-image"></i>
 	Select <?php echo $vars['label']; ?>
 </button>
