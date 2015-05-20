@@ -115,6 +115,30 @@ function pw_social_share( $post = array() ){
 	return pw_ob_include( $template, $post);
 }
 
+/**
+ * Gets the site contact info input in the Postworld Admin.
+ * @return Array Associative array of the input contact info. 
+ */
+function pw_get_social_contact(){
+	$contact_info = pw_get_option( array(
+		'option_name' => PW_OPTIONS_SOCIAL,
+		'key' => 'contact'
+		));
+	return ( !empty( $contact_info ) ) ? $contact_info : array();
+}
+
+/**
+ * Gets the site social media info input in the Postworld Admin.
+ * @return Array Associative array of the input social media info. 
+ */
+function pw_get_social_networks(){
+	$networks = pw_get_option( array(
+		'option_name' => PW_OPTIONS_SOCIAL,
+		'key' => 'networks'
+		));
+	return ( !empty( $networks ) ) ? $networks : array();
+}
+
 function pw_get_social_share_meta( $vars ){
 	global $pw;
 
@@ -135,9 +159,6 @@ function pw_get_social_share_meta( $vars ){
 		$image_url_from_post = $featured_image_obj['url'];
 	}
 		
-		
-
-
 	if( $image_url == null )
 		$image_url = '';
 	else
@@ -612,13 +633,6 @@ function pw_social_widget_facebook( $meta, $widget_settings ){
 	return $before_network . $output . $after_network;
 
 }
-
-
-
-
-
-
-
 
 
 

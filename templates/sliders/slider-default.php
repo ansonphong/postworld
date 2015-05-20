@@ -9,7 +9,7 @@
 <div
 	id="<?php echo $slider['id']; ?>"
 	class="<?php echo $slider['class']; ?>"
-	style="height: 480px"
+	style="height: 50vh;"
 	ng-controller="<?php echo $slider['instance']; ?>">
 
 	<carousel interval="sliderInterval">
