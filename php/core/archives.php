@@ -115,6 +115,17 @@ function pw_get_archives( $args = '' ) {
 		}
 		if ( $results ) {
 			$after = $r['after'];
+			//pw_log( 'archive : ', $results );
+			
+			/**
+			 * 	@todo
+			 *	Cleanup data modal, pass to template
+			 * 	Make default template which makes the predicatble result
+			 * 	Pass in different archive template based on mobile
+			 * 	Detect if 'device' module enabled, and mobile
+			 * 	Then give mobile menu (dropdown)
+			 * 	templates/menus/archive-yearly.php
+			*/
 			foreach ( (array) $results as $result) {
 				$url = pw_get_year_link( $result->year, $post_type );
 				$text = sprintf( '%d', $result->year );
