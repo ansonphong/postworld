@@ -9,6 +9,53 @@ module.exports = function(grunt) {
     uglify: {
     	multiple_sourcemaps: {
         files: {
+
+          /**
+           * TOUCH
+           * Adds support packages specialized for touch devices
+           */
+          'deploy/package-touch.min.js':[
+            'lib/fastclick.js/fastclick.js',
+          ],
+
+          /**
+           * MASONRY.JS
+           * Includes dependencies for Masonry.js
+           */
+          'deploy/package-masonry.min.js':[
+            'lib/masonry/masonry.pkgd.min.js',
+            'lib/masonry/imagesloaded.pkgd.min.js',
+          ],
+
+           /**
+           * ANGULAR MOMENT
+           * Includes all the dependencies for Angular Moment.js
+           */
+          'deploy/package-angular-moment.min.js':[
+            'lib/moment.js/moment.min.js',
+            'lib/angular-moment/angular-moment.min.js',
+            'lib/moment.js/moment-timezone.min.js',
+            'lib/moment.js/moment-timezone-data.js'
+          ],
+
+           /**
+           * ANGULAR FULL CALENDAR
+           * Includes all the dependencies for Angular Moment.js
+           * Requires jQuery also included seperately.
+           */
+          'deploy/package-angular-fullcalendar.min.js':[
+            'lib/fullcalendar-2.2.5/lib/moment.min.js',
+            'lib/fullcalendar-2.2.5/fullcalendar.min.js',
+            'lib/fullcalendar-2.2.5/lib/jquery-ui.custom.min.js',
+            'lib/ui-calendar-master/src/calendar.js'
+          ],
+          
+          /**
+           * POSTWORLD
+           * The primary core Postworld Javascript set.
+           * Includes Angular.js, and all core dependencies.
+           */
+
           //'deploy/postworld.min.js': ['js/*.js', 'js/**/*.js'],
           'deploy/postworld.min.js':[
         	  

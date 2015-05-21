@@ -1,8 +1,5 @@
 <?php
 
-////////// STRUCTURE STYLES MODEL //////////
-// This is to access a single style set
-
 function pw_social_model( $model ){
 
 	$default_model = array(
@@ -17,7 +14,8 @@ function pw_social_model( $model ){
 			"postal_code"	=>	"",
 			"city"			=>	"",
 			"region"		=>	"",
-			"country"		=>	""
+			"country"		=>	"",
+			"note"			=>	""
 			),
 		"networks"	=>	array(
 			"facebook"		=>	"",
@@ -172,6 +170,11 @@ function pw_social_meta( $social_meta = array() ){
 					"id"	=>	"country",
 					"name"	=>	"Country",
 					"icon"	=>	"pwi-globe",
+					),
+				array(
+					"id"	=>	"note",
+					"name"	=>	"Note",
+					"icon"	=>	"pwi-pencil",
 					),
 				),
 			),

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Defines and injects Postworld dependencies
  * into the HTML / Browser.
@@ -56,11 +55,17 @@ function postworld_includes( $args ){
 
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
-		// MASONRY
-		wp_enqueue_script( 'Masonry-JS',
-			POSTWORLD_URI.'/lib/masonry/masonry.pkgd.min.js');		
-		wp_enqueue_script( 'ImagesLoaded-JS',
-			POSTWORLD_URI.'/lib/masonry/imagesloaded.pkgd.min.js');
+		if( pw_mode() === 'deploy' ){
+			wp_enqueue_script( 'Masonry-JS',
+				POSTWORLD_URI.'/deploy/package-masonry.min.js');	
+		}
+		else{
+			wp_enqueue_script( 'Masonry-JS',
+				POSTWORLD_URI.'/lib/masonry/masonry.pkgd.min.js');		
+			wp_enqueue_script( 'ImagesLoaded-JS',
+				POSTWORLD_URI.'/lib/masonry/imagesloaded.pkgd.min.js');
+		}
+		
 	}
 
 	// + Google Maps to include before AngularJS app
@@ -73,6 +78,10 @@ function postworld_includes( $args ){
 		require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
 	}
 	
+
+	/*
+	///// DEPRECIATED /////
+
 	// + Font Awesome 3
 	if( in_array( 'font-awesome-3', $pw['inject'] ) ){
 		wp_enqueue_style( 'font-awesome-3',
@@ -98,10 +107,11 @@ function postworld_includes( $args ){
 		wp_enqueue_style( 'glyphicons-halflings',
 			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
 	}
+	*/
 
+	// Queues up all the selected iconsets
 	pw_load_iconsets();
 
-	
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
 						'pluginurl' 	=> WP_PLUGIN_URL,
@@ -397,40 +407,70 @@ function postworld_includes( $args ){
 
 	// + CALENDAR
 	if( in_array( 'ui.calendar', $pw['inject'] ) ){
-		// Full Calendar
-		wp_enqueue_script( 'Full-Calendar-Moment-JS',
-			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/moment.min.js' );
 
-		wp_enqueue_script( 'Full-Calendar-JS',
-			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.js' );
+		if( pw_mode() === 'deploy' ){
+			wp_enqueue_script( 'Postworld-Package-Angular-FullCalendar',
+				POSTWORLD_URI.'/deploy/package-angular-fullcalendar.min.js' );
+		}
+		else{
+			// Full Calendar
+			wp_enqueue_script( 'Full-Calendar-Moment-JS',
+				POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/moment.min.js' );
 
-		//wp_enqueue_style( 'Full-Calendar-CSS',
-		//	POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.css' );		
+			wp_enqueue_script( 'Full-Calendar-JS',
+				POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.js' );
 
-		wp_enqueue_script( 'Full-Calendar-jQuery-UI-JS',
-			POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/jquery-ui.custom.min.js' );
+			//wp_enqueue_style( 'Full-Calendar-CSS',
+			//	POSTWORLD_URI.'/lib/fullcalendar-2.2.5/fullcalendar.min.css' );		
 
-		// Angular UI Calendar
-		wp_enqueue_script( 'Angular-UI-Calendar-JS',
-			POSTWORLD_URI.'/lib/ui-calendar-master/src/calendar.js' );
+			wp_enqueue_script( 'Full-Calendar-jQuery-UI-JS',
+				POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/jquery-ui.custom.min.js' );
+
+			// Angular UI Calendar
+			wp_enqueue_script( 'Angular-UI-Calendar-JS',
+				POSTWORLD_URI.'/lib/ui-calendar-master/src/calendar.js' );
+		}
+
 	}
 
 	// + ANGULAR MOMENT
 	if( in_array( 'angularMoment', $pw['inject'] ) ){
 
-		///// ANGULAR : MOMENT /////
-		// MOMENT.JS
-		wp_enqueue_script( 'Moment-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment.min.js', $angularDep);
-		// ANGULAR - MOMENT
-		wp_enqueue_script( 'AngularJS-Moment',
-			POSTWORLD_URI.'/lib/angular-moment/angular-moment.min.js', $angularDep );
-		// MOMENT-TIMEZONE.JS
-		wp_enqueue_script( 'Moment-Timezone-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js', $angularDep);
-		// MOMENT-TIMEZONE DATA.JS
-		wp_enqueue_script( 'Moment-Timezone-Data-JS',
-			POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js', $angularDep);
+		if( pw_mode() === 'deploy' ){
+			wp_enqueue_script( 'Postworld-Package-Angular-Moment',
+				POSTWORLD_URI.'/deploy/package-angular-moment.min.js' );
+		}
+		else{
+			// MOMENT.JS
+			wp_enqueue_script( 'Moment-JS',
+				POSTWORLD_URI.'/lib/moment.js/moment.min.js', $angularDep);
+			// ANGULAR - MOMENT
+			wp_enqueue_script( 'AngularJS-Moment',
+				POSTWORLD_URI.'/lib/angular-moment/angular-moment.min.js', $angularDep );
+			// MOMENT-TIMEZONE.JS
+			wp_enqueue_script( 'Moment-Timezone-JS',
+				POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js', $angularDep);
+			// MOMENT-TIMEZONE DATA.JS
+			wp_enqueue_script( 'Moment-Timezone-Data-JS',
+				POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js', $angularDep);
+		}
+	}
+
+	// + TOUCH PACKAGE
+	if( in_array( 'package-touch', $pw['inject'] ) ){
+		if( pw_mode() === 'deploy' ){
+			wp_enqueue_script( 'Postworld-Package-Touch',
+				POSTWORLD_URI.'/deploy/package-touch.min.js' );
+		}
+		else{
+			// FAST CLICK
+			wp_enqueue_script( 'Flastclick.JS',
+				POSTWORLD_URI.'/lib/fastclick.js/fastclick.js');	
+		}
+
+		add_action( 'wp_footer', 'pw_print_scripts_package_touch' );
+
+		
 
 	}
 
@@ -866,6 +906,15 @@ function pw_add_base(){
 	?>
 	<base href="<?php echo $pw['view']['base_url'] ?>">
 	<?php
+}
+
+function pw_print_scripts_package_touch(){
+	?><script>
+		// Init FastClick :: Postworld : Package-Touch
+		window.addEventListener('load', function () {
+		  FastClick.attach(document.body);
+		}, false);
+	</script><?php
 }
 
 ?>

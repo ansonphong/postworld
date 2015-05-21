@@ -1469,6 +1469,37 @@ function pw_in_string( $haystack, $needle ){
 }
 
 
+/**
+ * Sanitizes numbers for use with tel links.
+ *
+ * @param string $tel The telephone number to santize.
+ * @param string $area_code The area code to enforce 
+ * @example
+ * <a href="tel:<?php echo pw_theme_sanitize_tel($phone)"></a>
+ */
+function pw_theme_sanitize_tel( $tel, $area_code = '1' ){
+	if( !is_string( $tel ) && !is_numeric( $tel ) )
+		return '';
+
+	$tel = (string) $tel;
+
+	// Replace common spacers
+	$tel = str_replace('.', '', $tel);
+	$tel = str_replace('-', '', $tel);
+	$tel = str_replace(' ', '', $tel);
+
+	// If it doesn't already start with the area code
+	// Or + area code, add the area code to the number
+	if( is_string($area_code) &&
+		substr( $string, 0, strlen($area_code) ) !== $area_code &&
+		substr( $string, 0, strlen('+'.$area_code) + 1 ) !== '+'.$area_code )
+		$tel = $area_code . $tel;
+
+	return $tel;
+
+}
+
+
 /*
 function pw_get_post_types(){
 	$args = array(
