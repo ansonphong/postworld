@@ -439,49 +439,49 @@ function pw_get_contexts( $types = array() ){
 		$contexts[] = array(
 			"label"	=>	"Default",
 			"name"	=>	"default",
-			"icon"	=>	"icon-circle-medium",
+			"icon"	=>	"pwi-circle-medium",
 			);
 
 	if( in_array( 'standard', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Home",
 			"name"	=>	"home",
-			"icon"	=>	"icon-home",
+			"icon"	=>	"pwi-home",
 			);
 
 	if( in_array( 'standard', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Blog",
 			"name"	=>	"blog",
-			"icon"	=>	"icon-pushpin",
+			"icon"	=>	"pwi-pushpin",
 			);
 
 	if( in_array( 'single', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Page",
 			"name"	=>	"page",
-			"icon"	=>	"icon-file",
+			"icon"	=>	"pwi-file",
 			);
 
 	if( in_array( 'single', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Post",
 			"name"	=>	"single",
-			"icon"	=>	"icon-pushpin",
+			"icon"	=>	"pwi-pushpin",
 			);
 
 	if( in_array( 'archive', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Archive",
 			"name"	=>	"archive",
-			"icon"	=>	"icon-th-list",
+			"icon"	=>	"pwi-th-list",
 			);
 
 	if( in_array( 'search', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Search",
 			"name"	=>	"search",
-			"icon"	=>	"icon-search",
+			"icon"	=>	"pwi-search",
 			);
 
 
@@ -501,7 +501,7 @@ function pw_get_contexts( $types = array() ){
 					array(
 						"label"	=>	$post_type->labels->singular_name . " : Single",
 						"name"	=>	"single-" . $post_type->name,
-						"icon"	=>	"icon-cube",
+						"icon"	=>	"pwi-cube",
 						)
 				 );
 
@@ -512,7 +512,7 @@ function pw_get_contexts( $types = array() ){
 						array(
 							"label"	=>	$post_type->labels->singular_name . " : Archive",
 							"name"	=>	"archive-post-type-" . $post_type->name,
-							"icon"	=>	"icon-cubes",
+							"icon"	=>	"pwi-cubes",
 							)
 					 );
 
@@ -530,7 +530,7 @@ function pw_get_contexts( $types = array() ){
 				array(
 					"label"	=>	"Category : Archive",
 					"name"	=>	"category",
-					"icon"	=>	"icon-folder",
+					"icon"	=>	"pwi-folder",
 					)
 			 );
 		/// TAGS ///
@@ -539,7 +539,7 @@ function pw_get_contexts( $types = array() ){
 				array(
 					"label"	=>	"Tag : Archive",
 					"name"	=>	"tag",
-					"icon"	=>	"icon-tags",
+					"icon"	=>	"pwi-tags",
 					)
 			 );
 		
@@ -556,7 +556,7 @@ function pw_get_contexts( $types = array() ){
 					array(
 						"label"	=>	$taxonomy->labels->singular_name . " : Archive",
 						"name"	=>	"archive-taxonomy-" . $taxonomy->name,
-						"icon"	=>	"icon-cube-o",
+						"icon"	=>	"pwi-cube-o",
 						)
 				 );
 		}
@@ -570,13 +570,13 @@ function pw_get_contexts( $types = array() ){
 		$contexts[] = array(
 			"label"	=>	"BuddyPress",
 			"name"	=>	"buddypress",
-			"icon"	=>	"icon-plugin",
+			"icon"	=>	"pwi-plugin",
 			);
 
 		$contexts[] = array(
 			"label"	=>	"BuddyPress User",
 			"name"	=>	"buddypress-user",
-			"icon"	=>	"icon-user",
+			"icon"	=>	"pwi-user",
 			);
 	}
 
