@@ -115,7 +115,6 @@ function pw_get_archives( $args = '' ) {
 		}
 		if ( $results ) {
 			$after = $r['after'];
-			//pw_log( 'archive : ', $results );
 			
 			/**
 			 * 	@todo
@@ -126,6 +125,8 @@ function pw_get_archives( $args = '' ) {
 			 * 	Then give mobile menu (dropdown)
 			 * 	templates/menus/archive-yearly.php
 			*/
+			//pw_log( 'archive : ', $results );
+
 			foreach ( (array) $results as $result) {
 				$url = pw_get_year_link( $result->year, $post_type );
 				$text = sprintf( '%d', $result->year );
