@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Defines and injects Postworld dependencies
  * into the HTML / Browser.
@@ -455,6 +454,22 @@ function postworld_includes( $args ){
 			wp_enqueue_script( 'Moment-Timezone-Data-JS',
 				POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js', $angularDep);
 		}
+	}
+
+	// + TOUCH PACKAGE
+	if( in_array( 'package-touch', $pw['inject'] ) ){
+		if( pw_mode() === 'deploy' ){
+			wp_enqueue_script( 'Postworld-Package-Touch',
+				POSTWORLD_URI.'/deploy/package-touch.min.js' );
+		}
+		else{
+			// FAST CLICK
+			wp_enqueue_script( 'Flastclick.JS',
+				POSTWORLD_URI.'/lib/fastclick.js/fastclick.js');	
+		}
+
+		add_action( 'wp_footer', 'pw_print_scripts_package_touch' );
+
 		
 
 	}
@@ -891,6 +906,15 @@ function pw_add_base(){
 	?>
 	<base href="<?php echo $pw['view']['base_url'] ?>">
 	<?php
+}
+
+function pw_print_scripts_package_touch(){
+	?><script>
+		// Init FastClick :: Postworld : Package-Touch
+		window.addEventListener('load', function () {
+		  FastClick.attach(document.body);
+		}, false);
+	</script><?php
 }
 
 ?>

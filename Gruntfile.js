@@ -11,6 +11,14 @@ module.exports = function(grunt) {
         files: {
 
           /**
+           * TOUCH
+           * Adds support packages specialized for touch devices
+           */
+          'deploy/package-touch.min.js':[
+            'lib/fastclick.js/fastclick.js',
+          ],
+
+          /**
            * MASONRY.JS
            * Includes dependencies for Masonry.js
            */
