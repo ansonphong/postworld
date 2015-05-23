@@ -679,6 +679,12 @@ postworld.factory('pwPosts',
     		if( post == false )
     			return false;
 
+    		// Combine Fields Value
+    		var oldFields = $_.get( post, 'fields' );
+    		if( oldFields !== false ){
+    			mergePost.fields = mergePost.fields.concat( oldFields );
+    		}
+
     		// Deep merge the new data with the post
     		post = pw_array_replace_recursive( post, mergePost );
 
@@ -704,6 +710,8 @@ postworld.factory('pwPosts',
 				missingFields.push( requiredField );
 		});
 
+		$log.debug( "pwPosts.getMissingFields", missingFields );
+		
 		return missingFields;
 
     }
