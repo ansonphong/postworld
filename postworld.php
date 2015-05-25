@@ -23,7 +23,7 @@ function pw_config(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.101,
+		'version'		=>	1.102,
 		'db_version'	=>	1.196,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -268,6 +268,9 @@ include 'php/core/view.php';
 
 ////// EMBED //////
 include 'php/core/embed.php';
+
+////// EMBED //////
+include 'php/core/html.php';
 
 ////// BUDDYPRESS //////
 include 'php/core/buddypress.php';

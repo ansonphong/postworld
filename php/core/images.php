@@ -254,9 +254,26 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 				$hard_crop = 1;
 
 			// Process custom image size, return url
-			$post['image']['sizes'][$image_handle]['url'] = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+			$custom_image_url = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+			
+			// If the requested image size is bigger than what is available
+			// It will return null
+			if( empty($custom_image_url) ){
+				$custom_image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
+				$custom_image_url = $custom_image_obj['url'];
+				$thumb_width = (int)$image_obj['width'];
+				$thumb_height = (int)$image_obj['height'];
+			}
+
+			// Set the value into the post object
+			$post['image']['sizes'][$image_handle]['url'] = $custom_image_url;
+			
+			/**
+			 * @todo Get the actual image dimension if not a hard crop.
+			 */
 			$post['image']['sizes'][$image_handle]['width'] = (int)$thumb_width;
 			$post['image']['sizes'][$image_handle]['height'] = (int)$thumb_height;
+
 		}
 
 	} // END foreeach
