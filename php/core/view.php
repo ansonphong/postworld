@@ -338,6 +338,9 @@ function pw_get_view_meta( $context = array() ){
 				$meta['term']['parent']['url'] = get_term_link( intval($term_parent['term_id']) , $taxonomy );
 			}
 
+			// Filter so theme can add additional meta data 
+			$meta['term'] = apply_filters( 'pw_view_term_meta', $meta['term'] );
+
 		}
 
 		/// AUTHOR ///
