@@ -150,13 +150,13 @@ function pw_get_social_share_meta( $vars ){
 
 	///// IMAGE URL /////
 	// Get the image url from the passed post object
-	$image_url_from_post = _get( $post, 'image.sizes.full.url' );
+	$image_url = _get( $post, 'image.sizes.full.url' );
 
 	// If the image URL is not set
-	if( $image_url_from_post === false ){
-		// Gget it manually
+	if( $image_url === false ){
+		// Get it manually
 		$featured_image_obj = pw_get_featured_image_obj( $post['ID'] );
-		$image_url_from_post = $featured_image_obj['url'];
+		$image_url = $featured_image_obj['url'];
 	}
 		
 	if( $image_url == null )
