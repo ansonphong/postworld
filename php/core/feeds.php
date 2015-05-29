@@ -228,6 +228,7 @@ function pw_feed( $vars = array() ){
 	if($vars['preload_templates'] === true){
 		$current_view = $feed['view']['current'];
 
+		///// FEEDS /////
 		// Preload Feed template
 		$feed_ng_template = pw_get_ng_template(array(
 			'subdir' => 'feeds',
@@ -235,6 +236,7 @@ function pw_feed( $vars = array() ){
 			));
 		$output .= $feed_ng_template . "\n";
 
+		///// POSTS /////
 		// Preload Post template(s)
 		$post_ng_template = pw_get_ng_template(array(
 			'subdir' => 'posts',
@@ -243,6 +245,18 @@ function pw_feed( $vars = array() ){
 			));
 		$output .= $post_ng_template . "\n";
 
+		///// BLOCKS /////
+		$blocks_template_id = _get( $feed, 'blocks.template' );
+		if( $blocks_template_id !== false ){
+			// Preload Blocks template(s)
+			$block_ng_template = pw_get_ng_template(array(
+				'subdir' => 'blocks',
+				'id' => $blocks_template_id,
+				));
+			$output .= $block_ng_template . "\n";
+		}
+
+
 	}
 
 	// PRELOAD BLOCKS
@@ -250,7 +264,7 @@ function pw_feed( $vars = array() ){
 	
 	//pw_log($feed_ng_template);
 	//pw_log( $feed['view']['current'] . ' - ' . $feed_template );
-
+	//pw_log( 'feed', $feed );
 	
 
 	// Print front-loaded data
