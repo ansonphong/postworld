@@ -308,6 +308,22 @@ function pw_feed( $vars = array() ){
 	return;
 }
 
+
+/**
+ * Adds fallback exception handling to template preloading fallback
+ */
+add_filter( 'pw_get_ng_template_fallback', 'pw_get_ng_template_fallback_filter' );
+function pw_get_ng_template_fallback_filter( $vars ){
+
+	// Set default feed template
+	if( $vars['subdir'] === 'feeds' )
+		$vars['id'] = "feed-list";
+	
+	return $vars;
+
+}
+
+
 function pw_get_live_feed ( $vars ){
 
 	// TODO : Cleanup logic pattern in this function

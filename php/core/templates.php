@@ -4,7 +4,6 @@
  * text/ng-template script type.
  *
  * @todo use same fallback mechanism as in JS liveFeed Controller, method: updateTemplateUrl
- * @todo use same versioning mechanism as in pwData Service, method: getTemplate
  *
  * @param array $vars An array of variables.
  * @return string The template wrapper in text/ng-template script tags
@@ -79,6 +78,13 @@ function pw_get_ng_template( $vars = array() ){
 
 		$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'] );
 		$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'] );
+
+		// Get Fallback Vars
+		if( $template_path === false ){
+			$vars = apply_filters( 'pw_get_ng_template_fallback', $vars );
+			$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'] );
+			$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'] );
+		}
 	
 		if( $template_path !== false )
 			$output .= pw_get_ng_template_contents(
@@ -86,12 +92,14 @@ function pw_get_ng_template( $vars = array() ){
 				$template_url,
 				$append_url
 				);
-		
+
 	}
 
 	return $output;
 
 }
+
+
 
 /**
  * Gets the contents of a template partial
