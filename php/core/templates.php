@@ -12,11 +12,19 @@
 function pw_get_ng_template( $vars = array() ){
 	/*
 		$vars = array(
-			"subdir"	=>	[string],	// subdirectory inside templates dir
-			"id"		=>	[string]	// file basename, assumed .html
+			"subdir"	=>	[string],		// subdirectory inside templates dir
+			"id"		=>	[string]		// file basename, assumed .html
+			"post_type" => [string/array]	// post types (for subdir 'posts')
 		)
 	*/
+
 	global $pw;
+
+	$default_vars = array(
+		'subdir' 	=> 'posts',
+		'id'		=> 'list',
+		'post_type' => array('post'),
+		);
 
 	$templates_dir = pw_get_templates(array(
 		'path_type' => 'dir',
@@ -28,25 +36,57 @@ function pw_get_ng_template( $vars = array() ){
 		'ext'		=> 'html'
 		));
 
+	//pw_log( 'pw_get_ng_template, post_type', $vars['post_type'] );
+
+	$append_url = '?ver='.$pw['info']['theme_version'];
+
 	if( $vars['subdir'] === 'posts' ){
+
 		$template_path = _get( $templates_dir, $vars['subdir'].'.post.'.$vars['id'] );
 		$template_url = _get( $templates_url, $vars['subdir'].'.post.'.$vars['id'] );
+	
+		$output = pw_get_ng_template_contents(
+			$template_path,
+			$template_url,
+			$append_url
+			);
+
+
 	} else{
 		$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'] );
 		$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'] );
+	
+		$output = pw_get_ng_template_contents(
+			$template_path,
+			$template_url,
+			$append_url
+			);
+
 	}
 
-	// Append the theme version to the URL
-	$template_url = $template_url.'?ver='.$pw['info']['theme_version'];
-
-	// Generate Output
-	$output = '<script type="text/ng-template" id="'.$template_url.'">';
-	//$output .= "PRELOADED"; // Just for test purposes
-	$output .= file_get_contents( $template_path );
-	$output .= '</script>';
-
+	
 	return $output;
 
+}
+
+/**
+ * Gets the contents of a template partial
+ * And wraps it in text/ng-template script tag
+ */
+function pw_get_ng_template_contents( $template_path, $template_id, $append_id = '' ){
+	
+	$file_contents = file_get_contents( $template_path );
+
+	if( empty( $file_contents ) )
+		return '';
+
+	// Generate Output
+	$output = '<script type="text/ng-template" id="'.$template_id.$append_id.'">'."\n";
+	//$output .= "PRELOADED"; // Just for test purposes
+	$output .= $file_contents;
+	$output .= "\n</script>\n";
+
+	return $output;
 }
 
 /**

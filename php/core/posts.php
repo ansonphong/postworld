@@ -326,7 +326,17 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 					// Convert to strings
 					if ( !empty( $post['post_meta'] ) ){
 						foreach( $post['post_meta'] as $meta_key => $meta_value ){
+
+							// Delete metadata keys starting with '_'
+							// Which are reserved for system keys
+							// When in viewing mode
+							if( $mode == 'view' &&
+								substr( $meta_key, 0, 1 ) === '_' )
+								unset( $post['post_meta'][$meta_key] );
+
+							// Convert values from arrays
 							$post['post_meta'][$meta_key] = $post['post_meta'][$meta_key][0];
+						
 						}
 					}
 					// Break from the foreach
