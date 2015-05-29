@@ -26,11 +26,15 @@ function pw_get_ng_template( $vars = array() ){
 		'post_type' => array('post'),
 		);
 
+	$vars = array_replace($default_vars, $vars);
+
+	// Get templates paths
 	$templates_dir = pw_get_templates(array(
 		'path_type' => 'dir',
 		'ext'		=> 'html'
 		));
 
+	// Get templates urls
 	$templates_url = pw_get_templates(array(
 		'path_type' => 'url',
 		'ext'		=> 'html'
@@ -40,31 +44,51 @@ function pw_get_ng_template( $vars = array() ){
 
 	$append_url = '?ver='.$pw['info']['theme_version'];
 
+	$output = '';
+
+	///// POSTS /////
 	if( $vars['subdir'] === 'posts' ){
 
-		$template_path = _get( $templates_dir, $vars['subdir'].'.post.'.$vars['id'] );
-		$template_url = _get( $templates_url, $vars['subdir'].'.post.'.$vars['id'] );
-	
-		$output = pw_get_ng_template_contents(
-			$template_path,
-			$template_url,
-			$append_url
-			);
+		// Get all post types, if value is 'any'
+		if( $vars['post_type'] === 'any' )
+			$vars['post_type'] = pw_get_post_types( array( 'fields' => 'slug' ) );
+		
+		// If value is a string, convert to array
+		if( is_string( $vars['post_type'] ) )
+			$vars['post_type'] = array( $vars['post_type'] );
+		
+		// Iterate through post types
+		// And preload all post type templates
+		// For the specified view
+		foreach( $vars['post_type'] as $post_type ){
 
+			$template_path = _get( $templates_dir, $vars['subdir'].'.'.$post_type.'.'.$vars['id'] );
+			$template_url = _get( $templates_url, $vars['subdir'].'.'.$post_type.'.'.$vars['id'] );
+		
+			if( $template_path !== false )
+				$output .= pw_get_ng_template_contents(
+					$template_path,
+					$template_url,
+					$append_url
+					);
 
+		}
+
+	///// ALL OTHER TEMPLATES /////
 	} else{
+
 		$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'] );
 		$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'] );
 	
-		$output = pw_get_ng_template_contents(
-			$template_path,
-			$template_url,
-			$append_url
-			);
-
+		if( $template_path !== false )
+			$output .= pw_get_ng_template_contents(
+				$template_path,
+				$template_url,
+				$append_url
+				);
+		
 	}
 
-	
 	return $output;
 
 }

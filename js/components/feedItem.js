@@ -61,8 +61,7 @@ postworld.controller('pwFeedItemCtrl',
 		if ( $scope.post.post_type == '_pw_block' )
 			return false;
 		var type = $scope.post.post_type;
-		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );					
-	 	
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );
 	});		  		      	
 
 }]);

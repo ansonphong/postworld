@@ -556,6 +556,7 @@ function pw_get_post_types( $args = array() ){
 	if( empty( $args ) )
 		$args = array(
 		   'public'   => true,
+		   'fields'	  => 'default', // 'default' / 'slug'
 		   //'_builtin' => true,
 		   //'capability_type' => 'post',
 		);
@@ -563,11 +564,19 @@ function pw_get_post_types( $args = array() ){
 	$post_types_obj = get_post_types( $args, 'objects');
 
 	$post_types = array();
+
 	foreach ( $post_types_obj as $key => $value) {
-		$slug = $key;
-		$name = $value->labels->name;
-		$post_types[$slug] = $name;
+		if( $args['fields'] === 'default' ){
+			$slug = $key;
+			$name = $value->labels->name;
+			$post_types[$slug] = $name;
+		}
+		if( $args['fields'] === 'slugs' ){
+			$post_types[] = $key;
+		}
 	}
+
+
 	return $post_types;
 }
 
