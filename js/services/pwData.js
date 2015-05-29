@@ -255,7 +255,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			// TODO - Filter the version here, or get a filtered verion, alternate value
 
 			if( template )
-				template = template + "?ver=" + $pw['info']['theme_version'] ; // ( this, subdir, post_type, name )
+				template = template + "?ver=" + $pw['info']['theme_version']; // ( this, subdir, post_type, name )
 			// Otherwire return false
 			else
 				return false;

@@ -1,8 +1,59 @@
 <?php
+/**
+ * Gets an actual template contents wrapped in
+ * text/ng-template script type.
+ *
+ * @todo use same fallback mechanism as in JS liveFeed Controller, method: updateTemplateUrl
+ * @todo use same versioning mechanism as in pwData Service, method: getTemplate
+ *
+ * @param array $vars An array of variables.
+ * @return string The template wrapper in text/ng-template script tags
+ */
+function pw_get_ng_template( $vars = array() ){
+	/*
+		$vars = array(
+			"subdir"	=>	[string],	// subdirectory inside templates dir
+			"id"		=>	[string]	// file basename, assumed .html
+		)
+	*/
+	global $pw;
 
+	$templates_dir = pw_get_templates(array(
+		'path_type' => 'dir',
+		'ext'		=> 'html'
+		));
+
+	$templates_url = pw_get_templates(array(
+		'path_type' => 'url',
+		'ext'		=> 'html'
+		));
+
+	if( $vars['subdir'] === 'posts' ){
+		$template_path = _get( $templates_dir, $vars['subdir'].'.post.'.$vars['id'] );
+		$template_url = _get( $templates_url, $vars['subdir'].'.post.'.$vars['id'] );
+	} else{
+		$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'] );
+		$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'] );
+	}
+
+	// Append the theme version to the URL
+	$template_url = $template_url.'?ver='.$pw['info']['theme_version'];
+
+	// Generate Output
+	$output = '<script type="text/ng-template" id="'.$template_url.'">';
+	//$output .= "PRELOADED"; // Just for test purposes
+	$output .= file_get_contents( $template_path );
+	$output .= '</script>';
+
+	return $output;
+
+}
+
+/**
+ * Gets the result of a template partial function
+ */
 function pw_get_template_partial( $vars ){
 	/*
-		// Gets the result of a template partial function
 		$vars = array(
 			"partial"	=>	[string],	// virtual path to partial
 			"vars"		=>	[mixed]		// optional

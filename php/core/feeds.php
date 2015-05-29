@@ -107,7 +107,8 @@ function pw_feed( $vars = array() ){
 		'echo'			=>	true,
 		'feed'			=>	$feed,
 		'aux_template'	=>	null,
-		'return_empty'	=> true
+		'return_empty'	=> true,
+		'preload_templates' => true,
 		);
 
 	if( is_array( $vars ) )
@@ -221,8 +222,39 @@ function pw_feed( $vars = array() ){
 	//pw_log( "widgets : " . json_encode($widgets) );
 
 	///// GENERATE OUTPUT /////
+	$output = '';
+
+	///// PRELOAD TEMPLATES /////
+	if($vars['preload_templates'] === true){
+		$current_view = $feed['view']['current'];
+
+		// Preload Feed template
+		$feed_ng_template = pw_get_ng_template(array(
+			'subdir' => 'feeds',
+			'id' => 'feed-'.$current_view,
+			));
+		$output .= $feed_ng_template . "\n";
+
+		// Preload Post template(s)
+		$post_ng_template = pw_get_ng_template(array(
+			'subdir' => 'posts',
+			'id' => $current_view,
+			'post_type' => $feed['query']['post_type']
+			));
+		$output .= $post_ng_template . "\n";
+
+	}
+
+	// PRELOAD BLOCKS
+	// templates/blocks/widget-grid.html
+	
+	//pw_log($feed_ng_template);
+	//pw_log( $feed['view']['current'] . ' - ' . $feed_template );
+
+	
+
 	// Print front-loaded data
-	$output  = '<script>';
+	$output  .= '<script>';
 
 	// FEED
 	$output .= 'pw.feeds["'.$feed_id.'"] = '. json_encode($feed) .';';
