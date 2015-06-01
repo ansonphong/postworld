@@ -650,9 +650,14 @@ postworld.directive('infiniteXScroll', [
 				// When container scrollwidth changes
 				scope.$watch(
 					function(){
-						return container[0].scrollWidth;
+						// Trigger when scroll width or child element count changes
+						return container[0].scrollWidth + container[0].childElementCount;
 					},
 					function( val, oldVal ){
+						$log.debug(
+							'CONTAINER SCROLLWIDTH : ' + container[0].scrollWidth + ' // ' +
+							'CHILD COUNT : ' + container[0].childElementCount,
+							container );
 						// Timeout for DOM to update before re-computing
 						$timeout( function(){
 							elemClasses();
