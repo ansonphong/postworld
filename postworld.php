@@ -278,6 +278,9 @@ include 'php/core/buddypress.php';
 ////// EVENTS //////
 include 'php/core/events.php';
 
+////// STYLES //////
+include 'php/core/styles.php';
+
 ////// DEV //////
 include 'php/core/dev.php';
 

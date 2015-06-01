@@ -37,12 +37,8 @@ include_once 'php/options.php';
 // POST META
 include_once 'php/postmeta.php';
 
-
 // ADMIN
 //include_once 'admin/php/admin.php';
-
-// IMPORT ALL CSS/LESS STYLESHEETS
-include_once 'php/styles.php';
 
 // LAYOUT & SIDEBAR FUNCTIONS
 include_once 'php/layout-sidebars.php';
