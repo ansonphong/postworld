@@ -1,5 +1,8 @@
 # Postworld // Changelog
 
+### Version 1.105
+- __Breaking Change__ - Moved `postworld/infinite/packages/bootstrap` to `postworld/lib/bootstrap` - All referrences to previous location in themes must be updated.
+
 ### Version 1.104
 - __Performance Enhancement__ - Added template preloading to `pw_feed` PHP method. Now post and feed templates are automatically preloaded via `text/ng-template` script tag.
 
