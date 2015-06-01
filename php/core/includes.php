@@ -520,15 +520,16 @@ function pw_include_admin_scripts(){
 	
 	/////// ANGULAR : JQUERY SLIDER /////
 	wp_enqueue_script( 'angularJS-jQuery-Slider', POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );
+	
 	///// JQUERY /////
-	// Required for Slider
+	// Required for Slider on Backgrounds
+	// @todo : Load only when on Backgrounds admin page
 	wp_enqueue_script( 'jquery' );
 	wp_enqueue_script( 'jquery-ui-core' );
 	wp_enqueue_script( 'jquery-ui-slider' );
 	wp_enqueue_script( 'jquery-ui-widget' );
 	wp_enqueue_script( 'jquery-ui-mouse' );
 
-	
 }
 
 ///// WINDOW JAVASCRIPT DATA INJECTION /////
