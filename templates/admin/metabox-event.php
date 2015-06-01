@@ -216,7 +216,7 @@
 			class="well"
 			ng-show="uiBool( post.post_meta[ eventKey ].location.formatted_address )">
 			<label for="formatted_address" class="input-icon">
-				<i class="icon icon-location"></i>
+				<i class="icon pwi-location"></i>
 			</label>
 			<input
 				id="formatted_address"
