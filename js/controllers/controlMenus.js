@@ -396,7 +396,8 @@ postworld.controller('adminPostDropdown',
 
         // Build menu for user based on role
         angular.forEach( $scope.menuOptions, function( option ){
-            if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
+            var postPossession = $_.get( actionsByRole, $scope.currentRole + '.' + $scope.postPossession );
+            if( $_.inString( option.action, postPossession ) )
                 $scope.userOptions.push( option );
         });
 
