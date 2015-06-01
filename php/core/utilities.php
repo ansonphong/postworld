@@ -1463,9 +1463,9 @@ function pw_array_order_by(){
 
 function pw_reset_less_php_cache(){
 	//global $pwGlobalsJsFile;
-	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
+	$ghost_less_file = POSTWORLD_PATH .'/less/ghost.less';
 	$file = fopen( $ghost_less_file ,"w" );
-	fwrite($file,"// Reset PHP LESS Cache");
+	fwrite($file,"// Reset PHP LESS Cache : " . date("Y-m-d H:i:s"));
 	fclose($file);
 	//if( file_exists( $pwGlobalsJsFile ) )
 	//	chmod($pwGlobalsJsFile, 0755);
