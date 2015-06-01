@@ -473,8 +473,20 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 
 
 ///// INFINITE HORIZONTAL SCROLL /////
-/* BASED ON : ng-infinite-scroll - v1.0.0 - 2013-05-13 */
+/**
+ * @ngdoc directive
+ * @name postworld.directive:infiniteXScroll
 
+ * @param {expression|string} scrollAction An expression to evaluate when time to get next items.
+ * @param {number|string} scrollDistance Number of pixels from the edge when to call the scrollAction.
+ * @param {expression|boolean} scrollDisabled Whether to disable infinite scrolling.
+ * @param {none} scrollParent If this is present, uses the element's parent as scroll container.
+ * @param {none} scrollThis If this is present, uses the current element as scroll container.
+ *
+ * @description
+ * Evaluates an expression when near the end of horizontal scrolling.
+ * Forked from ng-infinite-scroll - v1.0.0 - 2013-05-13
+ */
 postworld.directive('infiniteXScroll', [
 	'$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log) {
 		return {
@@ -498,8 +510,28 @@ postworld.directive('infiniteXScroll', [
 						}
 					});
 				}
+
+				// Set the default container
 				container = $window;
+				
+				// Set container to element parent if scrollParent present
+				if (attrs.scrollParent != null) {
+					container = elem.parent();
+					scope.$watch(attrs.scrollParent, function() {
+						return container = elem.parent();
+					});
+				}
+
+				// Set container to current element if scrollThis present
+				if(attrs.scrollThis != null) {
+					container = elem;
+					scope.$watch(attrs.scrollThis, function() {
+						return container = elem;
+					});
+				}
+
 				/*
+				// Define a custom scroll container
 				if (attrs.infiniteScrollContainer != null) {
 					scope.$watch(attrs.infiniteScrollContainer, function(value) {
 						value = angular.element(value);
@@ -511,14 +543,11 @@ postworld.directive('infiniteXScroll', [
 					});
 				}
 				*/
-				if (attrs.scrollParent != null) {
-					container = elem.parent();
-					scope.$watch(attrs.scrollParent, function() {
-						return container = elem.parent();
-					});
-				}
+
+				// Handle scrolling
 				handler = function() {
 					var containerBottom, elementBottom, remaining, shouldScroll;
+	
 					/*
 					///// REMNANTS FROM Y-SCROLL /////
 					if (container[0] === $window[0]) {
@@ -547,8 +576,8 @@ postworld.directive('infiniteXScroll', [
 					remaining = container[0].scrollWidth - (container.scrollLeft() + container.innerWidth() + scrollDistance);
 					shouldScroll =  0 >= remaining;
 
-					/*
-						////////// DEV //////////
+						/*
+						////////// DEVELOPMENT : DEBUG LOGGERS //////////
 						$log.debug(
 							'container.scrollTop(): ' + container.scrollTop() + ' / ' +
 							'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
@@ -559,12 +588,10 @@ postworld.directive('infiniteXScroll', [
 							'remaining: ' + remaining
 							//, container
 						);
-
 						$log.debug(
 							'elementBottom: ' + elementBottom + ' / ' +
 							'containerBottom: ' + containerBottom
 						);
-
 						$log.debug(
 							'shouldScroll: ' + shouldScroll + ' / ' +
 							'remaining: ' + remaining + ' / ' +
@@ -573,8 +600,9 @@ postworld.directive('infiniteXScroll', [
 						);
 					*/
 
+					elemClasses();
+
 					if (shouldScroll && scrollEnabled) {
-						//$log.debug("X-SCROLL : CALL SCROLL ACTION");
 						if ($rootScope.$$phase) {
 							return scope.$eval(attrs.scrollAction);
 						} else {
@@ -583,12 +611,67 @@ postworld.directive('infiniteXScroll', [
 					} else if (shouldScroll) {
 						return checkWhenEnabled = true;
 					}
-
+					
 				};
+
+
+				// Add classes to the element
+				elemClasses = function(){
+					if( !scrollEnabled )
+						return false;
+					/*
+					$log.debug(
+						'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
+						'container.innerWidth(): ' + container.innerWidth() + ' / ' +
+						'container[0].scrollWidth: ' + container[0].scrollWidth + ' / '
+					);
+					*/
+
+					// If the contents of the container is wider
+					// Than the viewable area
+					var scrollableClass = 'pw-x-scrollable';
+					var scrollable = ( container[0].scrollWidth > container.innerWidth() );
+					if( scrollable )
+						elem.addClass(scrollableClass);
+					else if( elem.hasClass(scrollableClass) )
+						elem.removeClass(scrollableClass);
+
+					// If the container has been scrolled
+					var scrolledClass = 'pw-x-scrolled';
+					var scrolled = ( container.scrollLeft() > 0 );
+					if( scrolled )
+						elem.addClass(scrolledClass);
+					else if( elem.hasClass(scrolledClass) )
+						elem.removeClass(scrolledClass);
+
+				}
+
+				// Re-compute element classes
+				// When container scrollwidth changes
+				scope.$watch(
+					function(){
+						return container[0].scrollWidth;
+					},
+					function( val, oldVal ){
+						// Timeout for DOM to update before re-computing
+						$timeout( function(){
+							elemClasses();
+						}, 100 );
+					}
+				);
+				// Re-compute element classes on window resize
+				angular.element($window).bind("resize", elemClasses);
+
+
+				// Run handler on scroll
 				container.on('scroll', handler);
+				// Stop watching for scroll on destroy
 				scope.$on('$destroy', function() {
 					return container.off('scroll', handler);
 				});
+
+
+				// Run first time depending on Immeadiate Check option
 				return $timeout((function() {
 					if (attrs.infiniteScrollImmediateCheck) {
 						if (scope.$eval(attrs.infiniteScrollImmediateCheck)) {

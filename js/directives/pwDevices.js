@@ -3,6 +3,7 @@
  * @name postworld.directive:pwDeviceClass
  * @description
  * Adds classes to the element relating to the current detected device.
+ * Type of device is prefixed with 'device-', devices are 'desktop', 'tablet', 'mobile'
  * The Postworld 'Devices' module must be enabled for this to work.
  */
 postworld.directive('pwDeviceClass', function( $pw, $log ) {
@@ -22,12 +23,18 @@ postworld.directive('pwDeviceClass', function( $pw, $log ) {
 			}
 
 			// Add supported classes
-			if( device.is_desktop )
+			if( device.is_desktop ){
 				addClass( 'desktop' );
-			if( device.is_mobile )
+				addClass( 'input-pointer' );
+			}
+			if( device.is_mobile ){
 				addClass( 'mobile' );
-			if( device.is_tablet )
+				addClass( 'input-touch' );
+			}
+			if( device.is_tablet ){
 				addClass( 'tablet' );
+				addClass( 'input-touch' );
+			}
 
 			// Convert classes array into a string
 			var classesString = '';
