@@ -491,7 +491,7 @@ postworld.directive('infiniteXScroll', [
 	'$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log) {
 		return {
 			link: function(scope, elem, attrs) {
-				var checkWhenEnabled, container, handler, scrollDistance, scrollEnabled;
+				var checkWhenEnabled, container, scrollDistance, scrollEnabled;
 				$window = angular.element($window);
 				scrollDistance = 0;
 				if (attrs.scrollDistance != null) {
@@ -545,7 +545,7 @@ postworld.directive('infiniteXScroll', [
 				*/
 
 				// Handle scrolling
-				handler = function() {
+				var handler = function() {
 					var containerBottom, elementBottom, remaining, shouldScroll;
 	
 					/*
@@ -616,7 +616,7 @@ postworld.directive('infiniteXScroll', [
 
 
 				// Add classes to the element
-				elemClasses = function(){
+				var elemClasses = function(){
 					if( !scrollEnabled )
 						return false;
 					/*
