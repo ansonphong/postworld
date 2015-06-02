@@ -858,7 +858,7 @@ function pwAdminGlobals_parse(){
 }
 
 
-add_action( 'wp_footer', 'pw_include_google_fonts' );
+add_action( 'wp_head', 'pw_include_google_fonts' );
 add_action( 'admin_head', 'pw_include_google_fonts' );
 function pw_include_google_fonts( $fonts = array() ){
 	// Includes the filtered fonts
