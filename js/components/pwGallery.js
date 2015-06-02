@@ -667,6 +667,14 @@ postworld.directive('infiniteXScroll', [
 				// Re-compute element classes on window resize
 				angular.element($window).bind("resize", elemClasses);
 
+				// Brute force re-compute every second
+				var loopElemClasses = function(){
+					elemClasses();
+					$timeout( function(){
+						loopElemClasses();
+					}, 1000 );
+				}
+
 
 				// Run handler on scroll
 				container.on('scroll', handler);
