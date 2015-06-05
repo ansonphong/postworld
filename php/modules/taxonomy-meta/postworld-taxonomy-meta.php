@@ -28,8 +28,10 @@ if( pw_module_is_enabled('taxonomy-meta') &&
 add_action("after_switch_theme", 'postworld_activate_taxonomy_meta');
 // Create the database tables 
 function postworld_activate_taxonomy_meta(){
-	$taxonomy_metadata = new Taxonomy_Metadata;
-	$taxonomy_metadata->activate();
+	if( class_exists('Taxonomy_Metadata') ){
+		$taxonomy_metadata = new Taxonomy_Metadata;
+		$taxonomy_metadata->activate();
+	}
 }
 
 // Add Core supported input types
