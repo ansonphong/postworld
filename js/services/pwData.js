@@ -34,7 +34,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 		return ;
 	};
 	*/
-	
+
+
 	// $log.debug('pwData() Registering feed_settings', feed_settings);
 	
 	var	getTemplate = function( pwData, meta ) { // (pwData,subdir,post_type,view)
@@ -580,6 +581,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_set_wp_usermeta',params);
 		},
+
+		getFeed: function( feedId ){
+			return $_.get( this, 'feeds.' + feedId );
+    	},
 
 		insertFeed: function( feedId, feed ){
 			/* Inserts a feed into the $pwData.feeds service
