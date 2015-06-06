@@ -14,11 +14,6 @@ include 'social-model.php';
 global $theme_admin;
 global $pw;
 
-function theme_pw_admin_submenu_slug( $slug ){
-	return 'blogosphere';
-}
-add_filter('pw_admin_submenu_slug','theme_pw_admin_submenu_slug');
-
 function postworld_admin_menu(){
 	// TODO : Make the $pw_slug filterable
 	// So that themes can re-map the postworld options under the theme main menu
