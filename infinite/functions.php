@@ -53,7 +53,7 @@ include_once 'php/feeds.php';
 include_once 'php/user_meta.php';
 
 // SHORTCODES
-include "php/shortcodes.php";
+//include "php/shortcodes.php";
 
 // NETWORKS
 include "php/networks.php";

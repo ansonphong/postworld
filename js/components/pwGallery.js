@@ -667,13 +667,18 @@ postworld.directive('infiniteXScroll', [
 				// Re-compute element classes on window resize
 				angular.element($window).bind("resize", elemClasses);
 
-				// Brute force re-compute every second
+
+				// Brute force re-compute every second.
+				// This is not ideal, although pushes out
+				// Some initialization bugs when scrolling
+				// Triggers before the gallery loads new items.
 				var loopElemClasses = function(){
 					elemClasses();
 					$timeout( function(){
 						loopElemClasses();
 					}, 1000 );
 				}
+				loopElemClasses();
 
 
 				// Run handler on scroll

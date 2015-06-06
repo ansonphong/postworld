@@ -1,5 +1,4 @@
 <?php
-
 /*____  _                _                _           
  / ___|| |__   ___  _ __| |_ ___ ___   __| | ___  ___ 
  \___ \| '_ \ / _ \| '__| __/ __/ _ \ / _` |/ _ \/ __|
@@ -130,21 +129,6 @@ function pw_icons_shortcode( $atts, $content = null, $tag ) {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function pw_general_shortcode( $atts, $content=null, $tag ) {
 	return pw_shortcode( $atts, $content, $tag );
 }
@@ -198,6 +182,7 @@ function pw_empty_shortcode(){
 	return "";
 }
 
+
 if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 
 	add_shortcode( 'pw-icon', 	'pw_icons_shortcode' );
@@ -216,21 +201,27 @@ if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 	add_shortcode( 'br', 'pw_shortcode' );
 	add_shortcode( 'hr', 'pw_shortcode' );
 
+	/*
 	add_shortcode( 'h1', 'pw_shortcode' );
 	add_shortcode( 'h2', 'pw_shortcode' );
 	add_shortcode( 'h3', 'pw_shortcode' );
 	add_shortcode( 'h4', 'pw_shortcode' );
+	*/
+
+	/* // Currently not practical, so decomissioned
+	add_shortcode( 'pw-slider', 'pw_slider_shortcode' );
+	*/
 
 	/////////////// ADVANCED SHORTCODES //////////
-		include 'feed/feed.php';
+	include 'feed/feed.php';
 	include 'menu/menu.php';
 	include 'fonts/fonts.php';
 	include 'pagelist/pagelist.php';
 	include 'columns/columns.php';
 	include 'alignments/alignments.php';
 	include 'help/shortcodes-help.php';
+	include 'colors/colors.php';
 
 }
-
 
 ?>

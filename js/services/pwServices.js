@@ -605,9 +605,6 @@ postworld.factory('pwPosts',
 
 	///// FACTORY DECLARATIONS /////
 	
-	var getFeed = function( feedId ){
-		return $_.getObj( $pwData, 'feeds.' + feedId );
-	};
 
 	var getFeedPost = function( feedId, postId ){
 		///// Gets a post from a Feed by ID /////
@@ -875,8 +872,9 @@ postworld.factory('pwPosts',
     	mergeFeedPost: function( feedId, mergePost ){
     		return mergeFeedPost( feedId, mergePost );
     	},
+    	// DEPRECIATED
     	getFeed: function( feedId ){
-    		return getFeed( feedId );
+    		return $pwData.getFeed( feedId );
     	},
     	setFeedView: function( feedId, view ){
     		$log.debug( 'pwPosts : setFeedView : ' + feedId + ' ', view );
