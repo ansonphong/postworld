@@ -471,6 +471,87 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 }]);
 
 
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwXScrollStatus
+
+ * @description
+ * Adds classes to the element based on it's scroll status
+ *
+ * 'pw-x-scrollable' is added if it can scroll horizontally.
+ * 'pw-x-scrolled' is added if it has been scrolled horizontally.
+ */
+
+
+ postworld.directive('pwXScrollStatus', [
+ 	'$window', '$log', '$timeout', '_',
+ 	function( $window, $log, $timeout, $_ ) {
+ 	return {
+ 		restrict: 'A',
+ 		link: function ($scope, element, attrs) {
+ 		
+ 		// Add classes to the element
+		var elemClasses = function(){
+			/*
+			$log.debug(
+				'element.scrollLeft(): ' + element.scrollLeft() + ' / ' +
+				'element.innerWidth(): ' + element.innerWidth() + ' / ' +
+				'element[0].scrollWidth: ' + element[0].scrollWidth + ' / '
+			);
+			*/
+			$_.addXScrollClasses( element, {
+				scrollable: 'pw-x-scrollable',
+				scrolled: 'pw-x-scrolled'
+			} );
+
+		}
+
+		// Re-compute element classes
+		// When element scrollwidth changes
+		$scope.$watch(
+			function(){
+				// Trigger when scroll width or child element count changes
+				return element[0].scrollWidth + element[0].childElementCount;
+			},
+			function( val, oldVal ){
+				$log.debug(
+					'CONTAINER SCROLLWIDTH : ' + element[0].scrollWidth + ' // ' +
+					'CHILD COUNT : ' + element[0].childElementCount,
+					element );
+				// Timeout for DOM to update before re-computing
+				$timeout( function(){
+					elemClasses();
+				}, 100 );
+			}
+		);
+		// Re-compute element classes on window resize
+		angular.element($window).bind("resize", elemClasses);
+
+
+		// Brute force re-compute every second.
+		// This is not ideal, although pushes out
+		// Some initialization bugs when scrolling
+		// Triggers before the gallery loads new items.
+		var loopElemClasses = function(){
+			elemClasses();
+			$timeout( function(){
+				loopElemClasses();
+			}, 1000 );
+		}
+		loopElemClasses();	
+
+		// Run handler on scroll
+		element.on('scroll', elemClasses);
+		// Stop watching for scroll on destroy
+		$scope.$on('$destroy', function() {
+			return element.off('scroll', elemClasses);
+		});
+
+
+ 		}
+ 	};
+ }])
+
 
 ///// INFINITE HORIZONTAL SCROLL /////
 /**
@@ -488,7 +569,8 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
  * Forked from ng-infinite-scroll - v1.0.0 - 2013-05-13
  */
 postworld.directive('infiniteXScroll', [
-	'$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log) {
+	'$rootScope', '$window', '$timeout', '$log', '_',
+	function($rootScope, $window, $timeout, $log, $_ ) {
 		return {
 			link: function(scope, elem, attrs) {
 				var checkWhenEnabled, container, scrollDistance, scrollEnabled;
@@ -627,22 +709,10 @@ postworld.directive('infiniteXScroll', [
 					);
 					*/
 
-					// If the contents of the container is wider
-					// Than the viewable area
-					var scrollableClass = 'pw-x-scrollable';
-					var scrollable = ( container[0].scrollWidth > container.innerWidth() );
-					if( scrollable )
-						elem.addClass(scrollableClass);
-					else if( elem.hasClass(scrollableClass) )
-						elem.removeClass(scrollableClass);
-
-					// If the container has been scrolled
-					var scrolledClass = 'pw-x-scrolled';
-					var scrolled = ( container.scrollLeft() > 0 );
-					if( scrolled )
-						elem.addClass(scrolledClass);
-					else if( elem.hasClass(scrolledClass) )
-						elem.removeClass(scrolledClass);
+					$_.addXScrollClasses( container, {
+						scrollable: 'pw-x-scrollable',
+						scrolled: 'pw-x-scrolled'
+					} );
 
 				}
 

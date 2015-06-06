@@ -587,6 +587,45 @@ postworld.factory('_',
 			}
 		},
 
+		xScrollable: function( element ){
+			// Returns true if the contents of the container
+			// is wider than the viewable area
+			return ( element[0].scrollWidth > element.innerWidth() );
+		},
+
+		xScrolled: function( element ){
+			// If the container has been scrolled
+			return ( element.scrollLeft() > 0 );
+		},
+
+		yScrollable: function( element ){
+			/** @todo : Impliment */
+		},
+
+		yScrolled: function( element ){
+			/** @todo : Impliment */
+		},
+
+		addXScrollClasses: function( element, vars ){
+			// Adds classes to the element based on
+			// If it's horizontally scrollable or scrolled
+
+			var scrollableClass = vars.scrollable;
+			var scrollable = this.xScrollable( element );
+			if( scrollable )
+				element.addClass(scrollableClass);
+			else if( element.hasClass(scrollableClass) )
+				element.removeClass(scrollableClass);
+
+			var scrolledClass = vars.scrolled;
+			var scrolled = this.xScrolled( element );
+			if( scrolled )
+				element.addClass(scrolledClass);
+			else if( element.hasClass(scrolledClass) )
+				element.removeClass(scrolledClass);
+
+		}
+
 	};
 
 }]);
