@@ -16,7 +16,7 @@ function pw_default_layouts_filter( $layouts ){
 			)
 		);
 }
-add_filter( 'pw_default_layouts', 'pw_default_layouts_filter' );
+add_filter( 'pw_default_layouts', 'pw_default_layouts_filter', 9 );
 
 function pw_get_current_layout(){
 

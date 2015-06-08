@@ -5,6 +5,7 @@ function pw_header_footer( $template = 'header' ){
 	global $pw;
 	// Get the set template ID
 	$template_id = _get( $pw, 'layout.'.$template.'.id' );
+
 	// If the template ID is empty, or not set, or default
 	if( empty( $template_id ) )
 		// Set it to the default template ID
@@ -23,12 +24,12 @@ function pw_header_footer( $template = 'header' ){
 		));
 	// Get the template path
 	$template_path = _get( $templates, $template.'.'.$template_id );
+
 	// If a template path exists
 	if( !empty( $template_path ) )
 		// Include the template
 		include $template_path;
 }
-
 
 
 // Insert the Header
