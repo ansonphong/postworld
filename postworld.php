@@ -245,6 +245,9 @@ include 'php/core/posts.php';
 ////// QUERY FUNCTIONS //////
 include 'php/core/query.php';
 
+////// LAYOUTS //////
+include 'php/core/layouts.php';
+
 ////// WIDGETS //////
 include 'php/core/widgets.php';
 
@@ -259,6 +262,9 @@ include 'php/core/wizard.php';
 
 ////// OPTIONS //////
 include 'php/core/options.php';
+
+////// OPTIONS HELPERS //////
+include 'php/core/options-helpers.php';
 
 ////// PROGRESS //////
 include 'php/core/progress.php';

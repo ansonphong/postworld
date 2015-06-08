@@ -41,7 +41,7 @@ include_once 'php/postmeta.php';
 //include_once 'admin/php/admin.php';
 
 // LAYOUT & SIDEBAR FUNCTIONS
-include_once 'php/layout-sidebars.php';
+//include_once 'php/layout-sidebars.php';
 
 // TEMPLATES
 include_once 'php/templates.php';
@@ -119,29 +119,6 @@ function hide_admin_nags() {
 add_action('admin_head', 'hide_admin_nags');
 */
 
-
-//////////////////// BOOTSTRAPPED FUNCTIONS ////////////////////
-/**
- * WordPress' missing is_blog_page() function.  Determines if the currently viewed page is
- * one of the blog pages, including the blog home page, archive, category/tag, author, or single
- * post pages.
- *
- * @return bool
- */
-function is_blog_page() {
-    global $post;
-
-    //Post type must be 'post'.
-    $post_type = get_post_type($post);
-
-    //Check all blog-related conditional tags, as well as the current post type, 
-    //to determine if we're viewing a blog page.
-    return (
-        ( is_home() || is_archive() || is_single() )
-        && ($post_type == 'post')
-    ) ? true : false ;
-
-}
 
 
 

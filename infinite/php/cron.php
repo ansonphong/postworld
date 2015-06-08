@@ -1,8 +1,8 @@
 <?php
 //////////////////// CRON TASKS ////////////////////
 ///// SETUP HOURLY HOOK /////
-add_filter( 'cron_schedules', 'cron_add_hourly' ); 
-function cron_add_hourly( $schedules ) {
+add_filter( 'cron_schedules', 'i_cron_add_hourly' ); 
+function i_cron_add_hourly( $schedules ) {
 	// Adds once weekly to the existing schedules.
 	$schedules['weekly'] = array(
 		'interval' => 3600,

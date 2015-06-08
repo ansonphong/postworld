@@ -1,6 +1,4 @@
 <?php
-
-
 ///// SAVE BUTTON /////
 function pw_save_option_button( $option_name, $option_model ){
 	$vars = array(
