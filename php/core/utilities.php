@@ -276,7 +276,17 @@ function pw_log( $message, $data = null ){
 	if( !empty($data) )
 		$message .= " : " . json_encode($data, JSON_PRETTY_PRINT);
 
-	error_log( $message . "\n", 3, POSTWORLD_PATH . "/log/pw-log-php.txt");
+	$log_path = POSTWORLD_PATH . "/log";
+
+	// If the log directory doesn't exist, create it
+	if (!file_exists($log_path)){
+		$mkdir = mkdir($log_path, 0777, true);
+		// If the directory can't be created, end here 
+		if( !$mkdir )
+			return false;
+	}
+
+	error_log( $message . "\n", 3, $log_path . "/pw-log-php.txt" );
 
 }
 
