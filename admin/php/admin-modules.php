@@ -122,7 +122,7 @@ function i_content_columns_option( $vars ){
 function pw_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 	$vars['options_model'] = "options.post_content.columns";
 
-	if( is_string( $vars['ng_model'] ) )
+	if( is_string( _get( $vars, 'ng_model' ) ) )
 		$vars['context'] = 'custom';
 
 	switch($vars['context']){

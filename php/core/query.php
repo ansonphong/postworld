@@ -1364,6 +1364,7 @@ class PW_User_Query extends WP_User_Query {
 			//$this->request.=$orderBy;
 		
 	}
+	/*
 	function prepare_query() {
 		global $wpdb;
 
@@ -1508,6 +1509,7 @@ class PW_User_Query extends WP_User_Query {
 
 		do_action_ref_array( 'pre_user_query', array( &$this ) );
 	}
+	*/
 	
 
 	function query() {

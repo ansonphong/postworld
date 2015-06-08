@@ -61,7 +61,7 @@ function pw_get_feed_by_context( $context = array() ){
  * @depreciated Use pw_feed() instead.
  * @see pw_feed()
  */
-function pw_live_feed( $vars = array()){
+function pw_live_feed( $vars = array(), $return_empty = true ){
 	$vars['return_empty'] = $return_empty;
 	return pw_feed( $vars );
 }
@@ -382,7 +382,7 @@ function pw_get_live_feed ( $vars ){
 	}
 
 	$vars = array(
-		"feed_id" 		=> 	$vars["feed_id"],
+		"feed_id" 		=> 	_get($vars,'feed_id'),
 		"query" 		=> 	$vars["query"],
 		"feed_outline" 	=> 	$feed_outline,
 		"loaded"		=>	$preload_posts,

@@ -46,6 +46,7 @@ function pw_less_vars( $vars, $handle ) {
 
     ///// Directory Paths /////
     global $i_paths;
+    global $pwSiteGlobals;
     $vars['infinite-theme'] = pw_less_prepare_url( $i_paths['infinite']['url'] );
     $vars['child-theme'] = pw_less_prepare_url( $i_paths['child_theme']['url'] ); 
 

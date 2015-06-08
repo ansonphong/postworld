@@ -5,7 +5,7 @@ class PW_Menu_With_Description extends Walker_Nav_Menu {
         return $this->template_path; 
     }
 
-    function start_el(&$output, $item, $depth, $args) {
+    function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
 
         global $wp_query;
 

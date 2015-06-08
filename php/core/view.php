@@ -157,8 +157,8 @@ function pw_current_view(){
 	// URL
 	$protocol = (!empty($_SERVER['HTTPS'])) ?
 		"https" : "http";
-	$view['url'] = $protocol."://".$_SERVER[HTTP_HOST].$_SERVER[REQUEST_URI];
-	$view['base_url'] = str_replace( '?' . $_SERVER[QUERY_STRING], '', $view['url'] );
+	$view['url'] = $protocol."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+	$view['base_url'] = str_replace( '?' . $_SERVER['QUERY_STRING'], '', $view['url'] );
 	//pw_log($_SERVER);
 
 	$view['protocol'] = $protocol;

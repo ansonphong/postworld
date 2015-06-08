@@ -541,7 +541,7 @@ function pwGlobals_print() {
 		pw.angularModules = <?php echo json_encode( $pw['angularModules'] ) ?>;
 		pw.info = <?php echo json_encode( $pw['info'] ); ?>;
 		pw.view = <?php echo json_encode( pw_current_view() ); ?>;
-		pw.query = <?php echo json_encode( $pw['query'] ); ?>;
+		pw.query = <?php echo json_encode( _get( $pw, 'query' ) ); ?>;
 		pw.background = <?php echo json_encode( pw_current_background() ); ?>;
 		pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
 		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
@@ -621,13 +621,15 @@ function pwSiteGlobals_include(){
 	// ENCODE SITE GLOBALS
 	global $pwSiteGlobals;
 
+	$text_direction = (is_rtl()) ? 'rtl' : 'ltr' ;
+
 	$pwSiteGlobals['site'] = array( 
 		'name' => get_bloginfo('name'),
 		'description' => get_bloginfo('description'),
 		'wpurl' => get_bloginfo('wpurl'),
 		'url' => get_bloginfo('url'),
 		'version' => get_bloginfo('version'),
-		'text_direction' => get_bloginfo('text_direction'),
+		'text_direction' => $text_direction,
 		'language' => get_bloginfo('language'),
 		'description' => get_bloginfo('description'),
 	);
@@ -773,7 +775,8 @@ function pwGlobals_parse(){
 	$pw["security"]["mode"] = "user";
 
 	///// LANGUAGE /////
-	$pw['language'] = $pw_settings['language'];
+	if( isset($pw_settings) )
+		$pw['language'] = _get($pw_settings, 'language');
 
 	///// INJECTIONS /////
 	//$pw['inject'] = $pw['inject'];
