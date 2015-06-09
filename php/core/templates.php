@@ -50,7 +50,7 @@ function pw_get_ng_template( $vars = array() ){
 
 		// Get all post types, if value is 'any'
 		if( $vars['post_type'] === 'any' )
-			$vars['post_type'] = pw_get_post_types( array( 'fields' => 'slug' ) );
+			$vars['post_type'] = pw_get_post_types( array(), 'slugs' );
 		
 		// If value is a string, convert to array
 		if( is_string( $vars['post_type'] ) )
