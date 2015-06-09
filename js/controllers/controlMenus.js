@@ -1,6 +1,3 @@
-
-
-
 /*____           _        _        _   _                 
  |  _ \ ___  ___| |_     / \   ___| |_(_) ___  _ __  ___ 
  | |_) / _ \/ __| __|   / _ \ / __| __| |/ _ \| '_ \/ __|
@@ -16,8 +13,6 @@ postworld.directive( 'pwPostActions',
         restrict: 'AE',
         controller: 'postActions',
         link: function( $scope, element, attrs ){
-
-            
 
             var userId = $_.get( $pw, 'user.ID' );
             $log.debug( 'pwPostActions : userId', userId );
@@ -237,17 +232,17 @@ postworld.controller('adminPostDropdown',
     $scope.menuOptions = [
         {
             name: "Quick Edit",
-            icon:"icon-pencil",
+            icon:"pwi-pencil",
             action:"quick-edit"
         },
         {
             name: "Edit",
-            icon:"icon-edit",
+            icon:"pwi-edit",
             action:"pw-edit",
         },
         {
             name: "WP Edit",
-            icon:"icon-edit-square",
+            icon:"pwi-edit-square",
             action:"wp-edit",
         },
         /*
@@ -259,7 +254,7 @@ postworld.controller('adminPostDropdown',
         */
         {
             name: "Trash",
-            icon:"icon-trash",
+            icon:"pwi-trash",
             action:"trash",
         }
     ];
@@ -312,8 +307,7 @@ postworld.controller('adminPostDropdown',
     
     }
 
-    var overrideMenuOptions = controlsObject.menu_options; // $scope.getOverrideMenuOptions( $scope.post );
-    
+    var overrideMenuOptions = $_.get( controlsObject, 'menu_options' );
     // If custom menu options are provided
     if( overrideMenuOptions != false ){
         // Custom menu items to over-ride defaults
@@ -339,12 +333,7 @@ postworld.controller('adminPostDropdown',
 
     ///// ROLES /////
     // Define actions which each role has access to
-    var actionsByRole = controlsObject.role_access; //$window.pwSiteGlobals.controls.post.role_access;
-
-    /*
-    $scope.$watch('post', function(value) {        
-    },1);
-    */
+    var actionsByRole = controlsObject.role_access;
 
     var initAttempts = 0;
     $scope.initMenu = function(){
@@ -392,20 +381,19 @@ postworld.controller('adminPostDropdown',
         // Setup empty menu options array
         $scope.userOptions = [];
 
-        // TODO : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
-
+        // @todo : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
         // Build menu for user based on role
         angular.forEach( $scope.menuOptions, function( option ){
-            var postPossession = $_.get( actionsByRole, $scope.currentRole + '.' + $scope.postPossession );
-            if( $_.inString( option.action, postPossession ) )
+            // Get the allowed actions
+            var allowedActions = $_.get( actionsByRole, $scope.currentRole + '.' + $scope.postPossession );
+            // Add only the allowed actions
+            if( $_.inArray( option.action, allowedActions ) )
                 $scope.userOptions.push( option );
         });
 
         // If no options added, set empty
         if ( $scope.userOptions == [] )
-            $scope.userOptions = "0";
-
-        
+            $scope.userOptions = "0";        
 
     }
     // Run the function
