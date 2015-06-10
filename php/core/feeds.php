@@ -372,6 +372,9 @@ function pw_get_live_feed ( $vars ){
 	else if( !empty( $feed_outline ) ){
 		// Select which posts to preload
 		$preload_posts = array_slice( $feed_outline, 0, $preload );
+		// Default Fields
+		if( !isset( $query["fields"] ) || empty( $query["fields"] ) )
+			$query["fields"] = 'preview';
 		// Preload selected posts
 		$posts = pw_get_posts( $preload_posts, $query["fields"], $options );
 	}

@@ -148,6 +148,9 @@ function pw_get_social_share_meta( $vars ){
 	// Share Networks
 	$share_networks = pw_get_option( array( "option_name" => PW_OPTIONS_SOCIAL, "key" => "share.networks" ) );
 
+	if( !$share_networks )
+		$share_networks = apply_filters( 'pw_default_share_networks', $share_networks );
+
 	///// IMAGE URL /////
 	// Get the image url from the passed post object
 	$image_url = _get( $post, 'image.sizes.full.url' );
