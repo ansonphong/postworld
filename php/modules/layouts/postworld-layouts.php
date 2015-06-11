@@ -18,7 +18,7 @@ function pw_default_layouts_filter( $layouts ){
 }
 add_filter( 'pw_default_layouts', 'pw_default_layouts_filter', 9 );
 
-function pw_get_current_layout(){
+function pw_get_current_layout( $vars = array() ){
 
 	global $pw;
 
@@ -41,9 +41,19 @@ function pw_get_current_layout(){
 		$pwLayouts = apply_filters( 'pw_default_layouts', array() );
 	}
 
+	/// DEFINE POST ID ///
+	global $post;
+	// Get use provided vars.post_id to override current post
+	$get_post_id = _get( $vars, 'post_id' );
+	$post_id = ( empty( $get_post_id ) ) ?
+		$post->ID : $vars['post_id'];
+
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
 	// Check for layout override in : post_meta.pw_meta.layout
-	$override_layout = pw_get_wp_postmeta( array( 'sub_key' => 'layout' ) );
+	$override_layout = pw_get_wp_postmeta( array(
+		'post_id' => $post_id,
+		'sub_key' => 'layout'
+		));
 	
 	// If override layout exists
 	if( $override_layout != false && !empty( $override_layout ) ){
@@ -68,8 +78,15 @@ function pw_get_current_layout(){
 	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
 	if( !$layout || $layout['template'] == 'default' ){ //  || $layout['layout'] == 'default'
 
+		// Get default layout from post parent's layout
+		$get_post = get_post( $post_id );
+		if( $get_post->post_parent !== 0 )
+			$layout = pw_get_current_layout( array(
+				'post_id' => $get_post->post_parent
+				));
+
 		// Get from 'default' option setting
-		if( !empty( $pwLayouts ) )
+		else if( !empty( $pwLayouts ) )
 			$layout = _get( $pwLayouts, 'default' );
 		// Get from theme filter
 		else
