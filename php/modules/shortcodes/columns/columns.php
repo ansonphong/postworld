@@ -61,7 +61,7 @@ function pw_columns_row_shortcode( $atts, $content = null, $tag ) {
 	// Start Output Buffering
 	ob_start();
 	// Get the template
-	include i_locate_template("/views/shortcodes/columns-row.php");
+	include pw_get_shortcode_template( 'columns-row' );
 	// Set included file into a string/variable
 	$shortcode = ob_get_contents();
 	// End Output Buffering
@@ -86,7 +86,7 @@ function pw_columns_column_shortcode( $atts, $content = null, $tag ) {
 	// Start Output Buffering
 	ob_start();
 	// Get the template
-	include i_locate_template("/views/shortcodes/columns-column.php");
+	include pw_get_shortcode_template( 'columns-column' ); 
 	// Set included file into a string/variable
 	$shortcode = ob_get_contents();
 	// End Output Buffering

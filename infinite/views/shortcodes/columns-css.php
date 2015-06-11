@@ -1,1 +1,0 @@
-<div class="pw-css-columns-shortcode-row <?php echo $column_class;?> <?php echo $class;?>"><?php echo $content; ?></div>

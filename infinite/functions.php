@@ -52,9 +52,6 @@ include_once 'php/feeds.php';
 // USER META
 include_once 'php/user_meta.php';
 
-// SHORTCODES
-//include "php/shortcodes.php";
-
 // NETWORKS
 include "php/networks.php";
 
