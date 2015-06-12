@@ -651,7 +651,7 @@ function pw_get_avatar( $obj ){
 
 	// If still nothing is found, or the value is not a number
 	if( empty( $attachment_id ) || !is_numeric( $attachment_id ) )
-		return false;
+		return apply_filters( 'pw_default_avatar_fallback', '' );
 
 	// Now that we have the attachment ID of the avatar image
 	// Get the attachment metadata
