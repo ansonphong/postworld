@@ -1291,17 +1291,6 @@ function pw_is_buddypress_active(){
 	return ( !empty( $bp ) && function_exists('bp_is_active') ) ? true : false;
 }
 
-function pw_autocorrect_layout( $layout ){
-	// In the case of an old data model, auto-correct layout settings
-	if( isset( $layout['layout'] ) && !isset( $layout['template'] ) )
-		$layout['template'] = $layout['layout'];
-
-	if( !isset($layout['template']) )
-		$layout['template'] = 'full-width';
-
-	return $layout;
-}
-
 
 
 function pw_clean_input($input) {
