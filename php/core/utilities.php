@@ -1295,6 +1295,10 @@ function pw_autocorrect_layout( $layout ){
 	// In the case of an old data model, auto-correct layout settings
 	if( isset( $layout['layout'] ) && !isset( $layout['template'] ) )
 		$layout['template'] = $layout['layout'];
+
+	if( !isset($layout['template']) )
+		$layout['template'] = 'full-width';
+
 	return $layout;
 }
 
