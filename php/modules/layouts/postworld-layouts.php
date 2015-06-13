@@ -41,24 +41,27 @@ function pw_get_current_layout( $vars = array() ){
 		$pwLayouts = apply_filters( 'pw_default_layouts', array() );
 	}
 
-	/// DEFINE POST ID ///
-	global $post;
-	// Get use provided vars.post_id to override current post
-	$get_post_id = _get( $vars, 'post_id' );
-	$post_id = ( empty( $get_post_id ) ) ?
-		$post->ID : $vars['post_id'];
-
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
-	// Check for layout override in : post_meta.pw_meta.layout
-	$override_layout = pw_get_wp_postmeta( array(
-		'post_id' => $post_id,
-		'sub_key' => 'layout'
-		));
-	
-	// If override layout exists
-	if( $override_layout != false && !empty( $override_layout ) ){
-		$layout = $override_layout;
-		$layout['source'] = 'post_meta';
+	if( in_array( 'single', $contexts ) ){
+		/// DEFINE POST ID ///
+		global $post;
+		// Get use provided vars.post_id to override current post
+		$get_post_id = _get( $vars, 'post_id' );
+		$post_id = ( empty( $get_post_id ) ) ?
+			$post->ID : $vars['post_id'];
+
+		// Check for layout override in : post_meta.pw_meta.layout
+		$override_layout = pw_get_wp_postmeta( array(
+			'post_id' => $post_id,
+			'sub_key' => 'layout'
+			));
+		
+		// If override layout exists
+		if( $override_layout != false && !empty( $override_layout ) ){
+			$layout = $override_layout;
+			$layout['source'] = 'post_meta';
+		}
+
 	}
 
 	/// GET LAYOUT : FROM CONTEXT ///
