@@ -42,7 +42,7 @@ function pw_get_current_layout( $vars = array() ){
 	}
 
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
-	if( in_array( 'single', $contexts ) ){
+	if( in_array( 'single', $contexts ) || isset($vars['post_id']) ){
 		/// DEFINE POST ID ///
 		global $post;
 		// Get use provided vars.post_id to override current post
@@ -73,7 +73,7 @@ function pw_get_current_layout( $vars = array() ){
 			// If there is a match
 			if( (bool) $test_layout ){
 				$layout = $test_layout;
-				$layout['source'] = $context;
+				$layout['source'] = 'context:'.$context;
 			}
 		}
 	}
@@ -81,21 +81,26 @@ function pw_get_current_layout( $vars = array() ){
 	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
 	if( !$layout || $layout['template'] == 'default' ){ //  || $layout['layout'] == 'default'
 
-		// Get default layout from post parent's layout
-		$get_post = get_post( $post_id );
-		if( $get_post->post_parent !== 0 )
-			$layout = pw_get_current_layout( array(
-				'post_id' => $get_post->post_parent
-				));
-
+		if( in_array( 'single', $contexts ) || isset($vars['post_id']) ){
+			// Get default layout from post parent's layout
+			$get_post = get_post( $post_id );
+			if( $get_post->post_parent !== 0 ){
+				$layout = pw_get_current_layout( array(
+					'post_id' => $get_post->post_parent
+					));
+				$layout['source'] = 'post_parent';
+			}
+		}
 		// Get from 'default' option setting
-		else if( !empty( $pwLayouts ) )
+		else if( empty( $layout ) && !empty( $pwLayouts ) ){
 			$layout = _get( $pwLayouts, 'default' );
+			$layout['source'] = 'default';
+		}
 		// Get from theme filter
-		else
-			$layout = apply_filters( 'pw_default_layout', array() );
-
-		$layout['source'] = 'default';
+		else{
+			$layout = apply_filters( 'pw_default_layout', $layout );
+			$layout['source'] = 'default_layout_filter';
+		}
 
 	}
 
