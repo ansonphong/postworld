@@ -1,1 +1,1 @@
-<div class="<?php echo $tag;?> <?php echo $class;?>"><?php echo $content; ?></div>
+<div class="pw-column <?php echo $tag;?> <?php echo $class;?>"><?php echo $content; ?></div>

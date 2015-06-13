@@ -560,32 +560,36 @@ function object_to_array($data){
 
 
 ////////// EDIT POST HELP FUNCTIONS //////////
-function pw_get_post_types( $args = array() ){
+/**
+ * Extends WordPress native method for retreiving post types.
+ * 
+ * @param $args Array Passed to WordPress' get_post_types() method
+ * @param $fields string (optional) What data to be returned Options, 'default' (default) / 'slugs'
+ */
+function pw_get_post_types( $args = array(), $fields = 'default' ){
 	//$user_role = pw_get_user_role();
 
 	if( empty( $args ) )
 		$args = array(
-		   'public'   => true,
-		   'fields'	  => 'default', // 'default' / 'slug'
-		   //'_builtin' => true,
-		   //'capability_type' => 'post',
+			'public'	=> true,
+			//'_builtin' => true,
+			//'capability_type' => 'post',
 		);
 
-	$post_types_obj = get_post_types( $args, 'objects');
+	$post_types_obj = get_post_types( $args, 'objects' );
 
 	$post_types = array();
 
-	foreach ( $post_types_obj as $key => $value) {
-		if( $args['fields'] === 'default' ){
+	foreach( $post_types_obj as $key => $value) {
+		if( $fields === 'default' ){
 			$slug = $key;
 			$name = $value->labels->name;
 			$post_types[$slug] = $name;
 		}
-		if( $args['fields'] === 'slugs' ){
+		if( $fields === 'slugs' ){
 			$post_types[] = $key;
 		}
 	}
-
 
 	return $post_types;
 }
@@ -1551,9 +1555,10 @@ function pw_get_post_types(){
 	$operator = 'and'; // 'and' or 'or'
 
 	$post_types = get_post_types( $args, $output, $operator ); 
-	print_r($post_types);
+	//print_r($post_types);
 }
 */
+
 
 
 ?>

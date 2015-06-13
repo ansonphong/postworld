@@ -623,13 +623,32 @@ function pw_set_avatar( $obj ){
 
 
 /////----- GET POSTWORLD AVATAR -----/////
-function pw_get_avatar( $obj ){
-	// Get the Avatar Image URL
-	/*
-		$args = { user_id:"1", [ size: 256 ], [ width:256, height:256 ] }
+function pw_get_avatar( $vars ){
+	/**
+	 * Get the Avatar Image URL.
+	 *
+	 * @param Array $vars, example:
+	 *
+	 *	$vars = array(
+	 *		'user_id' 	=> 	1,
+	 *		'size'		=>	64,
+ 	 *
+	 *		'width' 	=> 	64, 	// Optional
+	 *		'height' 	=> 	64		// Optional
+	 *		);
+	 *
+	 * @return string|object|boolean
+	 *			string : The URL string of the requested avatar,
+	 *			object : Avatar image object if no size set,
+	 *			boolean : False if nothing.
+	 *
 	*/
 
-	///// TODO : Add Caching Mechanism, based on user ID /////
+	/**
+	 * @todo 	Add Runtime Caching Mechanism, based on user ID
+	 *			Store the request $vars json encoded as a hash
+	 *			Use the hash as the runtime cache key
+	 */
 	/*
 	///// SETUP CACHE /////
 	global $pw_avatar_cache;
@@ -637,12 +656,12 @@ function pw_get_avatar( $obj ){
 		$pw_avatar_cache = array();
 	*/
 
-	extract($obj);
+	extract($vars);
 
 	// If a user ID is provided
-	if( isset($user_id) )
+	if( isset($vars['user_id']) )
 		// Get the attachment ID of the avatar image
-		$attachment_id = get_user_meta( $user_id, PW_AVATAR_KEY, true );
+		$attachment_id = get_user_meta( $vars['user_id'], PW_AVATAR_KEY, true );
 
 	// If no value is found, or the value is empty
 	if( !isset( $attachment_id ) || empty( $attachment_id ) )
@@ -650,8 +669,13 @@ function pw_get_avatar( $obj ){
 		$attachment_id = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE, 'key' => 'images.avatar' ) );
 
 	// If still nothing is found, or the value is not a number
-	if( empty( $attachment_id ) || !is_numeric( $attachment_id ) )
-		return false;
+	if( empty( $attachment_id ) || !is_numeric( $attachment_id ) ){
+		// Allow the theme to define a fallback default avatar URL
+		// Return the value in $avatar_fallback['url']
+		$avatar_fallback = apply_filters( 'pw_default_avatar_fallback', $vars );
+		// Will return false if no url provided
+		return _get( $avatar_fallback, 'url' );
+	}
 
 	// Now that we have the attachment ID of the avatar image
 	// Get the attachment metadata
@@ -664,29 +688,29 @@ function pw_get_avatar( $obj ){
 	$attachment_meta["id"] = $attachment_id;
 
 	// Boolean if the width and height are both set
-	$width_height_set = !( !isset($width) || !isset($height) );
+	$width_height_set = !( !isset($vars['width']) || !isset($vars['height']) );
 
 	// If no size, or height and width is set, return with image meta object
-	if ( !isset($size) && !$width_height_set )
+	if ( !isset($vars['size']) && !$width_height_set )
 		return $attachment_meta;
 	
 	// Now that we have the size, and the avatar image meta
-	$size = (int) $size;
+	$vars['size'] = (int) $vars['size'];
 
 	// If requested avatar is larger than the original image
-	if( $size > $attachment_meta["width"] || $size > $attachment_meta["height"] )
+	if( $vars['size'] > $attachment_meta["width"] || $vars['size'] > $attachment_meta["height"] )
 		// Reduce the size to the size of the image
-		$size = min( $attachment_meta["width"], $attachment_meta["height"] );
+		$vars['size'] = min( $attachment_meta["width"], $attachment_meta["height"] );
 	
 	// If no width and height set
 	if( !$width_height_set ){
 		// Define width and height from the size
-		$width = $size;
-		$height = $size;
+		$vars['width'] = $vars['size'];
+		$vars['height'] = $vars['size'];
 	}
 
 	// Get the image URL with the AQ library
-	$image_url = aq_resize( $attachment_image_src[0], $width, $height, true );
+	$image_url = aq_resize( $attachment_image_src[0], $vars['width'], $vars['height'], true );
 
 	return $image_url;
 

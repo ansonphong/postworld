@@ -1149,24 +1149,25 @@ postworld.service('pwPostOptions',
 			if( _.isUndefined(mode) )
 				mode = 'read';
 
-			var post_types = $window.pwSiteGlobals.post_types;
+			var postTypes = $window.pwSiteGlobals.post_types;
 
 			if( mode == 'read' ){
-				return post_types;
+				return postTypes;
 			}
 
 			// IF EDIT/OTHER MODE : Compare post types against their capabilities
-			// Cycle through provided post_types
-			// Which post_types does the user have access to 'mode' operation?
+			// Cycle through provided postTypes
+			// Which postTypes does the user have access to 'mode' operation?
 			var userPostTypeOptions = {};
 			if( $window.pw.user != 0 ){
-				angular.forEach( post_types , function( name, slug ){
+				angular.forEach( postTypes , function( name, slug ){
 					var cap_type = mode + "_"+ slug + "s";
-					if( $window.pw.user.allcaps[cap_type] == true ){
+					if( $_.get( $window, 'pw.user.allcaps.'+cap_type ) !== false ){
 						userPostTypeOptions[slug] = name;
 					}
 				});
 			}
+			
 			return userPostTypeOptions;
 		},
 
