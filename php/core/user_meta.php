@@ -182,7 +182,8 @@ function pw_get_user( $user_id, $fields = false ) {
 		// If a requested field is custom Postworld, get the user's row in *user_meta* table
 		if ( in_array($value, $postworld_user_fields )) {
 			global $wpdb;
-			$wpdb -> show_errors();
+			if( pw_dev_mode() )
+				$wpdb -> show_errors();
 			$query = "select * from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
 			// Result will be output as an numerically indexed array of associative arrays, using column names as keys
 			$postworld_user_data = $wpdb -> get_results($query, ARRAY_A);
@@ -419,7 +420,8 @@ function pw_update_user($userdata) {
 	$insertComma = FALSE;
 	$user_id = wp_update_user($userdata);
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	if (gettype($user_id) == 'integer') {// successful
 		pw_insert_user_meta($user_id);
 		/*if ($userdata[user_fields_names::$FAVORITES]) {
@@ -520,7 +522,8 @@ function pw_add_favorite($post_id, $user_id) {
 		return false;
 
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	$query = "SELECT * FROM  $wpdb->pw_prefix"."favorites WHERE post_id=$post_id AND user_id=$user_id";
 	$results = $wpdb->get_results($query);
 	
@@ -548,7 +551,8 @@ function pw_add_favorite($post_id, $user_id) {
  */
 function pw_delete_favorite($post_id, $user_id) {
 	global $wpdb;
-	$wpdb->show_errors();
+	if( pw_dev_mode() )
+		$wpdb->show_errors();
 	$query = "DELETE from " . $wpdb->pw_prefix."favorites" . " WHERE post_id=" . $post_id . " AND user_id=" . $user_id;
 	$wpdb->query($query);
 }
@@ -766,7 +770,8 @@ function pw_get_user_location($user_id) {
 
 	global $wpdb;
 
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb->show_errors();
 
 	$query = "select " . user_fields_names::$LOCATION_CITY . ", " . user_fields_names::$LOCATION_COUNTRY . ", " . user_fields_names::$LOCATION_REGION . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
 	//echo($query);
@@ -940,14 +945,16 @@ function pw_set_post_relationship( $relationship, $switch, $post_id = null, $use
 
 function pw_update_post_relationship($user_id, $relationship = null) {
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	$query = "update $wpdb->pw_prefix" . "user_meta set post_relationships='" . json_encode($relationship) . "' where user_id=" . $user_id;
 	$wpdb -> query($query);
 }
 
 function pw_insert_user_meta($user_id) {
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb->show_errors();
 
 	$query = "select * from " . $wpdb -> pw_prefix . "user_meta where user_id=" . $user_id;
 	$row = $wpdb -> get_row($query);
@@ -1123,7 +1130,8 @@ function pw_get_post_relationships($user_id = null, $relationship = null) {
 
 function pw_get_relationship_from_user_meta($user_id) {
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb->show_errors();
 	$query = "select " . user_fields_names::$POST_RELATIONSHIPS . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
 	//echo($query);
 	$relationshp = $wpdb -> get_var($query);
