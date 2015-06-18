@@ -1469,7 +1469,7 @@ function pw_reset_less_php_cache(){
 	//global $pwGlobalsJsFile;
 	$ghost_less_file = POSTWORLD_PATH .'/less/ghost.less';
 	$file = fopen( $ghost_less_file ,"w" );
-	fwrite($file,"// Reset PHP LESS Cache : " . date("Y-m-d H:i:s"));
+	fwrite($file,"// Reset PHP LESS Cache"); // . date("Y-m-d H:i:s"));
 	fclose($file);
 	//if( file_exists( $pwGlobalsJsFile ) )
 	//	chmod($pwGlobalsJsFile, 0755);
