@@ -245,9 +245,6 @@ include 'php/core/posts.php';
 ////// QUERY FUNCTIONS //////
 include 'php/core/query.php';
 
-////// LAYOUTS //////
-include 'php/core/layouts.php';
-
 ////// WIDGETS //////
 include 'php/core/widgets.php';
 
