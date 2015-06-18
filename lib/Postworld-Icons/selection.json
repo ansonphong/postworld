@@ -2006,7 +2006,7 @@
 				"order": 177,
 				"prevSize": 32,
 				"code": 61447,
-				"name": "book",
+				"name": "book-open",
 				"ligatures": ""
 			},
 			"setIdx": 2,
@@ -2501,7 +2501,7 @@
 				"order": 6,
 				"prevSize": 32,
 				"code": 58899,
-				"name": "book-2",
+				"name": "book",
 				"ligatures": ""
 			},
 			"setIdx": 2,
