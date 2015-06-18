@@ -61,11 +61,11 @@ function pw_custom_shortcode_snippet( $atts, $content=null, $tag ){
 
 	// Self enclosing snippets
 	if( $type == 'self-enclosing' )
-		return _get( $snippet, 'content' );
+		return do_shortcode( _get( $snippet, 'content' ) );
 
 	// Enclosing snippets
 	elseif( $type == 'enclosing' )
-		return _get( $snippet, 'before_content' ) . do_shortcode( $content ) . _get( $snippet, 'after_content' );
+		return do_shortcode( _get( $snippet, 'before_content' ) . do_shortcode( $content ) . _get( $snippet, 'after_content' ) );
 
 	return false;
 
