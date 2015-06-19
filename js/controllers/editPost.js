@@ -101,10 +101,10 @@ postworld.directive( 'pwEditPost', [ function($scope){
 postworld.controller('editPost',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
 	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window',
-	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', 'iOptionsData',
+	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', 'iOptionsData', '$pw',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window,
-		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $iOptionsData ) {
+		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $iOptionsData, $pw ) {
 
 	$scope['options'] = $iOptionsData['options'];
 
@@ -121,15 +121,15 @@ postworld.controller('editPost',
 	$scope.status = 'done';
 
 	// Define Global Edit Post Defaults
-	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
+	var postDefaults = $pw.config.edit_post.post['new']['default'];
 
 	// Localize Edit Post Object
-	if( $_.objExists( $window, 'pwSiteGlobals.edit_post' ) )
-		$scope.editPostGlobals = $window.pwSiteGlobals.edit_post;
+	if( $_.objExists( $pw, 'config.edit_post' ) )
+		$scope.editPostGlobals = $pw.config.edit_post;
 	
 	// Localize Post Options Object
-	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
-		$scope.postOptions = $window.pwSiteGlobals.post_options;
+	if( $_.objExists( $pw, 'config.post_options' ) )
+		$scope.postOptions = $pw.config.post_options;
 
 
 	///// INITIALIZE /////
@@ -352,7 +352,7 @@ postworld.controller('editPost',
 			var post_format = 'default';
 
 		// Localize Edit Post Config
-		var edit_post = $window.pwSiteGlobals.edit_post;
+		var edit_post = $pw.config.edit_post;
 
 		// Check if the requested post type is defined
 

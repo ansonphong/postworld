@@ -669,7 +669,7 @@ function pwSiteGlobals_include(){
 	///// PRINT JAVASCRIPT /////
 	// SITE GLOBALS
 	$pwJs  = "";
-	$pwJs .= "var pwSiteGlobals = ";
+	$pwJs .= "pw.config = ";
 	$pwJs .= json_encode( $pwSiteGlobals );
 	$pwJs .= ";";
 

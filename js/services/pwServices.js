@@ -38,19 +38,19 @@ postworld.factory( '$pw',
 		user: pwUser(), //$window.pw.user, // (or something) - refactor to go directly to pwUser
     	// view: $window.pw.view
     	// language: $window.pwSiteLanguage,
-    	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
-    	
+
+    	config: $window.pw.config,
     	view: $window.pw.view,
     	query: $window.pw.query,
-    	paths: $window.pwSiteGlobals.paths,
-    	site: $window.pwSiteGlobals.site,
-    	controls: $window.pwSiteGlobals.controls,
-    	fields: $window.pwSiteGlobals.fields,
+    	paths: $window.pw.config.paths,
+    	site: $window.pw.config.site,
+    	controls: $window.pw.config.controls,
+    	fields: $window.pw.config.fields,
     	modules: $window.pw.modules,
     	iconsets: $window.pw.iconsets,
-    	postTypes: $window.pwSiteGlobals.post_types,
-    	postViews: $window.pwSiteGlobals.post_views,
-    	taxonomies: $window.pwSiteGlobals.taxonomies,
+    	postTypes: $window.pw.config.post_types,
+    	postViews: $window.pw.config.post_views,
+    	taxonomies: $window.pw.config.taxonomies,
     	options: $window.pw.options,
     	device: $window.pw.device,
 
@@ -63,7 +63,7 @@ postworld.factory( '$pw',
 			else
 				value = "/postworld/";
 
-			return $window.pwSiteGlobals.wordpress.plugins_url + value;
+			return $window.pw.config.wordpress.plugins_url + value;
 		},
 		loadScript: function( url, callback ){
             // Adding the script tag to the head as suggested before
@@ -1044,8 +1044,8 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
   |_|      |_|                                |___/           */
 
 postworld.factory('pwImages',
-	[ '$log','$window',
-	function ( $log, $window ) {  
+	[ '$log','$window', '_', '$pw',
+	function ( $log, $window, $_, $pw ) {  
 
 	///// UNIVERSALS /////
 	// TODO : Get Tag mapping from pwConfig
@@ -1077,6 +1077,14 @@ postworld.factory('pwImages',
     	},
     ];
 
+    /**
+     * Override the default tag mappings
+     * With those provided in Postworld Config
+     */
+    var overrideTagMappings = $_.get( $pw, 'config.images.tag_mapping' );
+    if( !_.isEmpty( overrideTagMappings ) )
+    	tagMappings = overrideTagMappings;
+
     ///// FACTORY VALUES /////
 	return {
 		selectImageTag: function( tags, mappings ){
@@ -1095,7 +1103,7 @@ postworld.factory('pwImages',
 		    	});
 	    	});
 	    	
-	    	//$log.debug( "selectImageTag : " // tags : " + tags + " // selectedTag : " + JSON.stringify(selectedTag) + " // mappings : ", mappings );
+	    	//$log.debug( "selectImageTag : " + tags + " // selectedTag : " + JSON.stringify(selectedTag) + " // mappings : ", mappings );
 
 	    	// If none selected
 	    	if( selectedTag == {} )
@@ -1118,8 +1126,8 @@ postworld.factory('pwImages',
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
 postworld.service('pwPostOptions',
-		[ '$window','$log', 'pwData', '_',
-		function( $window, $log, $pwData, $_ ) {
+		[ '$window','$log', 'pwData', '_', '$pw',
+		function( $window, $log, $pwData, $_, $pw ) {
 
 	return{
 		taxTerms: function( $scope, taxObj ){
@@ -1127,7 +1135,7 @@ postworld.service('pwPostOptions',
 			if ( typeof taxObj === 'undefined' )
 				taxObj = "tax_terms";
 
-			var args = $window.pwSiteGlobals.post_options.taxonomy_outline;
+			var args = $pw.config.post_options.taxonomy_outline;
 			$pwData.taxonomies_outline_mixed( args ).then(
 				// Success
 				function(response) {
@@ -1149,7 +1157,7 @@ postworld.service('pwPostOptions',
 			if( _.isUndefined(mode) )
 				mode = 'read';
 
-			var postTypes = $window.pwSiteGlobals.post_types;
+			var postTypes = $pw.config.post_types;
 
 			if( mode == 'read' ){
 				return postTypes;
@@ -1211,9 +1219,9 @@ postworld.service('pwPostOptions',
 			// GET ROLE
 			var currentUserRole = $window.pw.user.roles[0];
 			// DEFINE : POST STATUS OPTIONS
-			var postStatusOptions = $window.pwSiteGlobals.post_options.post_status;
+			var postStatusOptions = $pw.config.post_options.post_status;
 			// DEFINE : POST STATUS OPTIONS PER ROLE BY POST TYPE
-			var rolePostTypeStatusAccess = $window.pwSiteGlobals.post_options.role_post_type_status_access;
+			var rolePostTypeStatusAccess = $pw.config.post_options.role_post_type_status_access;
 			// BUILD OPTIONS MENU OBJECT
 			var postStatusSelect = {};
 			var userRoleOptions = rolePostTypeStatusAccess[currentUserRole][postType];
@@ -1233,7 +1241,7 @@ postworld.service('pwPostOptions',
 			if( _.isArray( postType ) )
 				postType = postType[0];
 			// Get the options from site globals
-			var postClassOptions = $_.getObj( $window.pwSiteGlobals, 'post_options.post_class' );
+			var postClassOptions = $_.getObj( $pw.config, 'post_options.post_class' );
 			// If none found, return false
 			if( !postClassOptions )
 				return {
@@ -1253,24 +1261,24 @@ postworld.service('pwPostOptions',
 		},
 
 		postView: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_views' );
+			return $_.getObj( $pw.config, 'post_views' );
 		},
 
 		linkFormat: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_options.link_format' );
+			return $_.getObj( $pw.config, 'post_options.link_format' );
 		},
 
 		linkFormatMeta: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_options.link_format_meta' );
+			return $_.getObj( $pw.config, 'post_options.link_format_meta' );
 		},
 
 		postYear: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_options.year' );
+			return $_.getObj( $pw.config, 'post_options.year' );
 		},
 
 		postMonth: function(){
 			/*
-			var monthsObj = $window.pwSiteGlobals.post_options.month;
+			var monthsObj = $pw.config.post_options.month;
 			var monthsArray = [];
 			// Convert from "1:January" Associative Object format to { number:1, name:"January" } 
 			angular.forEach( monthsObj, function( value, key ){
@@ -1396,7 +1404,7 @@ postworld.service('pwPostOptions',
 		taxInputModel: function(){
 			// TAXONOMY OBJECT MODEL
 			// Makes empty array in the taxInput object for each taxonomy inputs
-			var taxonomies = $_.getObj( $window.pwSiteGlobals, 'post_options.taxonomies' );
+			var taxonomies = $_.getObj( $pw.config, 'post_options.taxonomies' );
 			if( !taxonomies )
 				return false;
 
@@ -1429,7 +1437,7 @@ postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $wind
 				$scope.current_user_role = 'guest' ;
 
 			$scope.roles = {};
-			$scope.role_map = $window.pwSiteGlobals.role.map;
+			$scope.role_map = $pw.config.role.map;
 
 			// ESTABLISH ROLE ACCESS
 			// Is the user an editor?
@@ -1544,8 +1552,8 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 
   |_|                                                                          
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
 postworld.service('pwEditPostFilters',
-	['$log', '_', '$window', 'pwPostOptions',
-	function ($log, $_, $window, $pwPostOptions ) {
+	['$log', '_', '$window', 'pwPostOptions', '$pw',
+	function ($log, $_, $window, $pwPostOptions, $pw ) {
 
 	return {
 		parseKnownJsonFields: function( post ){
@@ -1617,7 +1625,7 @@ postworld.service('pwEditPostFilters',
 				link_format_meta = $pwPostOptions.linkFormatMeta();
 
 			// Set the default format
-			var default_format = $window.pwSiteGlobals.post_options.link_format_defaults.none;
+			var default_format = $pw.config.post_options.link_format_defaults.none;
 			var set = "";
 
 			// If link_url has a value
@@ -1634,7 +1642,7 @@ postworld.service('pwEditPostFilters',
 				});
 				// If no matches, set default
 				if ( set == "" )
-					return $window.pwSiteGlobals.post_options.link_format_defaults.link;
+					return $pw.config.post_options.link_format_defaults.link;
 				else
 					return set;
 			}

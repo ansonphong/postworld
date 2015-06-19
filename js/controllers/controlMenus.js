@@ -297,8 +297,8 @@ postworld.controller('adminPostDropdown',
             getPostType : 'post';
 
         // Check if there's over ride menu options for this post type
-        var postTypeOverrideMenuOptions = $_.getObj( $window, 'pwSiteGlobals.controls.' + postType + '.menu_options' );
-        var defaultOverrideMenuOptions =  $_.getObj( $window, 'pwSiteGlobals.controls.post.menu_options' );
+        var postTypeOverrideMenuOptions = $_.getObj( $pw, 'config.controls.' + postType + '.menu_options' );
+        var defaultOverrideMenuOptions =  $_.getObj( $pw, 'config.controls.post.menu_options' );
 
         var output = ( postTypeOverrideMenuOptions ) ?
             postTypeOverrideMenuOptions : defaultOverrideMenuOptions;
@@ -406,7 +406,7 @@ postworld.controller('adminPostDropdown',
             $scope.post.post_type : 'post';
 
         // Localize Options
-        var edit_post = $window.pwSiteGlobals.edit_post;
+        var edit_post = $pw.config.edit_post;
 
         // Check if that post type page name is defined
         var url = ( $_.objExists( edit_post, post_type + '.url' ) ) ?
@@ -479,7 +479,7 @@ postworld.controller( 'adminCommentDropdown',
     ];
 
     // Actions which each role has access to
-    var actionsByRole = $window.pwSiteGlobals.controls.comment.role_access;
+    var actionsByRole = $pw.config.controls.comment.role_access;
 
     
     // Detect if the user owns the comment
