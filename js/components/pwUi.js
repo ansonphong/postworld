@@ -13,8 +13,12 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 }]);
 
 postworld.controller( 'pwUiCtrl',
-	[ '$scope', '$timeout', '_', '$log',
-	function( $scope, $timeout, $_, $log ){
+	[ '$scope', '$timeout', '_', '$log', '$pw',
+	function( $scope, $timeout, $_, $log, $pw ){
+
+	$scope.uiLoggedIn = function(){
+		return !_.isEmpty( $pw['user'] );
+	}
 
 	////////// UI ELEMENT : DISPLAY //////////
 

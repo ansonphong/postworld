@@ -1195,12 +1195,11 @@ function pw_save_post($post_data){
 	elseif ( !empty($thumbnail_url) && !empty($post_id) )
 		pw_set_post_thumbnail( $post_id, $thumbnail_url );
 	
-
 	///// RANK SCORE /////
 	// Cache the post's rank score
 	global $pwSiteGlobals;
 	$rank_post_types = pw_get_obj( $pwSiteGlobals, 'rank.post_types' );
-	if( in_array( $post_data['post_type'], $rank_post_types ) )
+	if( is_array( $rank_post_types ) && in_array( $post_data['post_type'], $rank_post_types ) )
 		pw_cache_rank_score ( $post_id );
 
 	if ( !empty($post_class) ){}
