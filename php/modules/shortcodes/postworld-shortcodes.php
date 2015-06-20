@@ -137,6 +137,7 @@ function pw_shortcode( $atts, $content=null, $tag ) {
 	extract( shortcode_atts( array(
 		'class' => '',
 		'color' => '',
+		'id'	=>	'',
 	), $atts ) );
 	// Start Output Buffering
 	ob_start();
@@ -221,6 +222,7 @@ if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 	include 'alignments/alignments.php';
 	include 'help/shortcodes-help.php';
 	include 'colors/colors.php';
+	include 'module/module.php';
 
 }
 

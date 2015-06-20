@@ -46,7 +46,7 @@ class pw_module_widget extends WP_Widget {
 			///// RENDER PAGE WIDGET /////
 			extract ($OPTIONS);
 			echo '<div class="pw-module '.$module_id.'">';
-			$module_template = pw_get_template( 'modules', $module_id, 'php', 'dir' );
+			$module_template = pw_get_module_template( $module_id );
 			if( !empty( $module_template ) )
 				include $module_template;
 			else {
