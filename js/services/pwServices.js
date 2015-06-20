@@ -1380,6 +1380,14 @@ postworld.service('pwPostOptions',
 				{
 					slug: 'comment_count',
 					name: 'Comment Count',
+				},
+				{
+					slug: 'event_start',
+					name: 'Event Start',
+				},
+				{
+					slug: 'event_end',
+					name: 'Event End',
 				}
 			];
 		},
