@@ -196,7 +196,7 @@ postworld.factory( '$pw',
  * @todo Rename to $_
  */
 postworld.factory('_',
-	[ '$rootScope', '$log','$window', '$timeout',
+	[ '$rootScope', '$log','$window', '$timeout', 
 	function ( $rootScope, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
@@ -604,6 +604,10 @@ postworld.factory('_',
 
 		yScrolled: function( element ){
 			/** @todo : Impliment */
+		},
+
+		windowScrollY: function(){
+			return angular.element($window)[0].scrollY;
 		},
 
 		addXScrollClasses: function( element, vars ){
