@@ -1427,7 +1427,9 @@ postworld.service('pwPostOptions',
   |_|                                                      
 
 /*///////// ------- SERVICE : PW USERS ------- /////////*/  
-postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $window, $_) {
+postworld.service('pwRoleAccess',
+	['$log', '$window', '_', '$pw',
+	function ($log, $window, $_, $pw) {
 	return{
 		setRoleAccess : function($scope){
 			$scope.current_user = $window.pw.user;
