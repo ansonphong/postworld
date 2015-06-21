@@ -135,9 +135,13 @@ function pw_general_shortcode( $atts, $content=null, $tag ) {
 
 function pw_shortcode( $atts, $content=null, $tag ) {
 	extract( shortcode_atts( array(
-		'class' => '',
-		'color' => '',
-		'id'	=>	'',
+		'class' 	=> 	'',
+		'color' 	=> 	'',
+		'id'		=> 	'',
+		'target' 	=> 	'',
+		'size'		=>	'',
+		'href'		=>	'',
+		'icon'		=>	'',
 	), $atts ) );
 	// Start Output Buffering
 	ob_start();
