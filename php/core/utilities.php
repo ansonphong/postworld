@@ -1196,6 +1196,20 @@ function pw_body_classes(){
 	return $body_classes;
 }
 
+function pw_html_classes(){
+	// Returns a string with the Wordpress body classes
+	$classes = array();
+	$output = '';
+
+	if( pw_module_enabled('devices') )
+		$classes = array_merge( $classes, pw_device_classes() );
+	
+	foreach( $classes as $class ){
+		$output .= " " . $class;
+	}
+	return $output;
+}
+
 
 function pw_get_menus(){
 	$menus = get_terms( 'nav_menu' );
