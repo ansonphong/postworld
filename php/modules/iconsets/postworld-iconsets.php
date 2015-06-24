@@ -168,12 +168,24 @@ function pw_load_iconsets( $iconsets = array(), $register_classes = true ){
 	// Apply filters
 	$load_iconsets = apply_filters( 'pw_load_iconsets', $load_iconsets );
 
+	/**
+	 * Silently load the following iconsets.
+	 * Silently loaded iconsets are basically like required iconsets
+	 * Which load un-impeding the options. This is used for loading
+	 * Registered system icon fonts in the admin, for instance.
+	 * 
+	 * @param Array An array of iconset slugs to silently load.
+	 */
+	$silent_load = apply_filters( 'pw_silent_load_iconsets', array() );
+
 	///// LOAD ICONSETS ///// 
 	// Iterate through iconsets
 	foreach( $load_iconsets as $slug => $iconset ){
 		// Only load those iconsets which are selected in pw-config
 		// Or saved in iconsets PW_OPTIONS_ICONSETS
-		if( !pw_iconset_is_enabled( $slug ) )
+		// Or ones which are filtered as silently loaded
+		if( !pw_iconset_is_enabled( $slug ) &&
+			!in_array( $slug, $silent_load ) )
 			continue;
 		// Enqueue styles
 		wp_enqueue_style( $slug, $iconset['url'] );
@@ -181,6 +193,20 @@ function pw_load_iconsets( $iconsets = array(), $register_classes = true ){
 		$pw['iconsets'][$slug]['classes'] = pw_get_iconset_classes( $slug );
 	}
 	
+}
+
+/**
+ * Silently load Postworld Icons in the admin screens.
+ */
+add_filter( 'pw_silent_load_iconsets', 'pw_admin_silent_load_iconsets' );
+function pw_admin_silent_load_iconsets($silent_load){
+	if( !is_admin() )
+		return 	$silent_load;
+	
+	if( !in_array( 'postworld-icons', $silent_load ) )
+		$silent_load[] = 'postworld-icons';
+
+	return $silent_load;
 }
 
 function pw_get_required_iconsets(){
@@ -193,18 +219,21 @@ function pw_get_required_iconsets(){
 	if( $required_iconsets === false )
 		$required_iconsets = array();
 
+	$required_iconsets = apply_filters( 'pw_required_iconsets', $required_iconsets );
+
 	return $required_iconsets;
 }
 
+/**
+ * Returns whether or not the iconset is currently enabled.
+ *
+ * @param String $iconset_slug The slug of the iconset to check.
+ * @return Boolean
+ */
 function pw_iconset_is_enabled( $iconset_slug ){
-	// Returns which iconsets are enabled
-
 	$iconsetOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_ICONSETS ) );
-
 	$enabled_iconsets = $iconsetOptions['enabled'];
-
 	return in_array( $iconset_slug, $enabled_iconsets );
-
 }
 
 

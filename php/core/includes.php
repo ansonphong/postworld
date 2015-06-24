@@ -48,10 +48,15 @@ function postworld_includes( $args ){
 
 	//////////////////////// INJECTIONS //////////////////////
 
-	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
+	/* JQuery is added for ngInfiniteScroll Directive, if directive is not used, then remove it */
 	//wp_deregister_script('jquery');
 	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
-	wp_enqueue_script('jquery','');
+	
+	if( in_array( 'jquery', $pw['inject'] ) || is_admin() ){
+		wp_enqueue_script('jquery','');
+	} else{
+		wp_deregister_script('jquery');
+	}
 
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
@@ -142,10 +147,16 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS',
 		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
 
-		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
-		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
-		wp_enqueue_script(  'Postworld-Deploy' );
+		if( isset( $args['js_deploy'] ) && !is_admin() ){
+			// CUSTOM DEPLOY JS
+			wp_enqueue_script( "Deploy-JS", $args['js_deploy'], array(), $pw['info']['version'] );
+		}
+		else{
+			// POSTWORLD
+			wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
+			wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
+			wp_enqueue_script(  'Postworld-Deploy' );
+		}
 
 	}
 	///// DEVELOPMENT FILE INCLUDES /////
