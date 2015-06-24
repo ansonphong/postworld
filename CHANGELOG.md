@@ -1,5 +1,13 @@
 # Postworld // Changelog
 
+### Version 1.109
+- __Breaking Change__ - JAVASCRIPT - `postworld_includes.inject` requires jQuery to be specified if it's to be used, otherwise jQuery is omitted.
+
+To update, add `jquery` string to the inject array when calling `postworld_includes`:
+```php
+    postworld_includes( array( 'inject' => array( 'jquery' ) ) )
+```
+
 ### Version 1.107
 - __Breaking Change__ - JAVASCRIPT - Changed all instances of `window.pwSiteglobals` to `pw.config`, and imported into Angular service as `$pw.config` 
   + All instances of `$window.pwSiteglobals` in theme Javascript must be changed to `$pw.config`
