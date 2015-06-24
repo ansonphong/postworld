@@ -175,6 +175,40 @@ postworld.factory( '$pw',
 			//$log.debug('pw.queryToLocation : absolute path ',$location.absUrl(),queryString);	
 		
 		},
+
+		/**
+		* @ngdoc method
+		* @name postworld.service#injectVariables
+		* @methodOf postworld.$pw
+		* @description Injects known variables into strings based on their identifiers.
+		* @param {string} string The string to inject.
+		* @returns {boolean} The resulting string after variable injections.
+		*/
+		injectVariables: function( string ){
+			/**
+			 * Known system variables
+			 * with the variable as the key and
+			 * the replacement string as the value.
+			 *
+			 * @todo Customize via filters / config
+			 *
+			 */
+			var knownVars = {
+				'themeUrl': this.paths.template_url
+			};
+
+			/*
+			 * Iterate through each known variables
+			 * and replace it's instance in the value.
+			 */
+			$log.debug( 'injectVariables : STRING', string );
+			angular.forEach( knownVars, function( value, key ){
+				var searchString = "@{"+ key + "}";
+				string = string.replace( searchString, value );
+			});
+			return string;
+
+		},
         
 	};
 
@@ -628,7 +662,7 @@ postworld.factory('_',
 			else if( element.hasClass(scrolledClass) )
 				element.removeClass(scrolledClass);
 
-		}
+		},
 
 	};
 
