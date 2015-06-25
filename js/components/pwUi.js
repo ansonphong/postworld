@@ -139,4 +139,8 @@ postworld.controller( 'pwUiCtrl',
 		$scope.$eval( key + ' = ' + JSON.stringify( newValue ) );
 	}
 
+	$scope.uiImageSrc = function( srcs ){
+		
+	}
+
 }]);

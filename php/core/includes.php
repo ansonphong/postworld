@@ -883,16 +883,22 @@ function pwAdminGlobals_parse(){
 
 add_action( 'wp_head', 'pw_include_google_fonts' );
 add_action( 'admin_head', 'pw_include_google_fonts' );
+/**
+ * Echos the link elements for fonts passed in
+ * Or added via the 'pw_include_google_fonts' filter
+ *
+ * @param Array $fonts An array of arrays of fonts.
+ */
 function pw_include_google_fonts( $fonts = array() ){
-	// Includes the filtered fonts
-	/*
-		$fonts = array(
-			array(
-				'name'	=>	'Roboto',
-				'code'	=>	'Roboto:100,300,700,100italic,300italic,400',
-			)
-		);
-	*/
+	/**
+	 * @example
+	 *		$fonts = array(
+	 *			array(
+	 *				'name'	=>	'Roboto', // Optional
+	 *				'code'	=>	'Roboto:100,300,700,100italic,300italic,400',
+	 *			)
+	 *		);
+	 */
 	// Get the fonts to include from a filter
 	$fonts = apply_filters( 'pw_include_google_fonts', $fonts );
 	// Iterate through each font and echo the include script
@@ -900,7 +906,6 @@ function pw_include_google_fonts( $fonts = array() ){
 		foreach( $fonts as $font ){
 			echo "\n<link href='http://fonts.googleapis.com/css?family=".$font['code']."' rel='stylesheet' type='text/css'>";
 		}
-	// Return the fonts, incase a function wants to see them
 	return $fonts;
 }
 
