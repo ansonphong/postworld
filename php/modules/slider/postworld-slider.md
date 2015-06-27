@@ -4,7 +4,7 @@
 ## Usage
 
 ``` html
-    [i-slider
+    [pw-slider
         query="{ 'post_type':'page' }"
         template="default"
         ]

@@ -780,15 +780,27 @@ function pw_print_menu_feed( $vars ){
 
 }
 
-
+/**
+ * Gets the post data associated with a menu.
+ * Also supports term items in menus
+ *
+ * @param string|integer $menu Menu name, slug, or term ID.
+ * @param string|array $fields Postworld post fields model.
+ */
 function pw_get_menu_posts( $menu, $fields ){
-	// $menu can be menu name, slug, or term ID
 
 	$menu_slug = wp_get_nav_menu_object( $menu )->slug;
-
+	
 	$query = array(
 		"post_type"			=>	"nav_menu_item",
-		"fields"			=>	array("ID", "post_title", "post_meta(_menu_item_object_id)"),
+		"fields"			=>	array(
+			"ID",
+			"post_title",
+			"post_type",
+			"post_content",
+			"post_excerpt",
+			"post_meta(_all)"
+			),
 		"posts_per_page"	=>	200,
 		'order'             => 'ASC',
 		'orderby' 			=> 'menu_order',
@@ -803,6 +815,8 @@ function pw_get_menu_posts( $menu, $fields ){
 		);
 
 	$menu_items = pw_query( $query )->posts;
+
+	//pw_log( 'MENU ITEMS : ',  $menu_items  );
 
 	// If only the IDs are requested
 	if( $fields == 'ids' ){
@@ -819,20 +833,83 @@ function pw_get_menu_posts( $menu, $fields ){
 	// Get the posts
 	$posts = array();
 	foreach( $menu_items as $item ){
-		$post_id = $item['post_meta']['_menu_item_object_id'];
-		$post = pw_get_post( $post_id, $fields );
-		// Over-ride post title with menu title
-		if( !empty( $item['post_title'] ) )
-			$post['post_title'] = $item['post_title'];
 
-		// TODO : include menu description?
+		/**
+		 * MENU ITEM TYPES
+		 * Switch based on the type of item it is
+		 */
+		switch( _get( $item, 'post_meta._menu_item_type' ) ){
 
-		$posts[] = $post;
+			// POST / PAGE / CPT
+			case 'post_type':
+
+				// Get the post
+				$post_id = $item['post_meta']['_menu_item_object_id'];
+				$post = pw_get_post( $post_id, $fields );
+
+				// Over-ride post title with menu title
+				if( !empty( $item['post_title'] ) )
+					$post['post_title'] = $item['post_title'];
+
+				// Include the menu item data in the post
+				$post['menu_item'] = $item;
+
+				// Filter here so theme can add additional meta-data
+				$post = apply_filters( 'pw_get_menu_item_post', $post );
+
+				$posts[] = $post;
+
+				break;
+
+			// TAXONOMY
+			case 'taxonomy':
+
+				$post = array();
+
+				$term = get_term(
+					$item['post_meta']['_menu_item_object_id'],
+					$item['post_meta']['_menu_item_object'],
+					'ARRAY_A' );
+
+				// Use the menu item title to override the term title
+				if( !empty( $item['post_title'] ) )
+					$post['post_title'] = $item['post_title'];
+				else
+					$post['post_title'] = $term['name'];
+
+				/**
+				 * WordPress stores the nav item 'description'
+				 * As a 'post_content' field, though the description
+				 * Is generally impliment similar to excerpts
+				 * So use the menu item description as the excerpt
+				 */
+				$post['post_excerpt'] = $item['post_content'];
+
+				// Get the post link
+				$post['post_permalink'] = get_term_link(
+					(int) $item['post_meta']['_menu_item_object_id'],
+					$item['post_meta']['_menu_item_object'] );
+
+				// Include the menu item data in the post
+				$post['term'] = $term;
+				$post['menu_item'] = $item;
+
+				// Filter here so theme can add additional meta-data
+				$post = apply_filters( 'pw_get_menu_item_taxonomy', $post );
+
+				$posts[] = $post;
+
+				break;
+
+		}
+		
 	}
+
+	//pw_log( 'MENU : ',  $posts  );
+
 	return $posts;
 
 }
-
 
 
 function pw_get_feed_posts( $vars ){
