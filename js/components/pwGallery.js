@@ -963,8 +963,6 @@ postworld.directive('infiniteScroll', [
 					//console.log('elementBottom,containerBottom',elementBottom,containerBottom);
 					//console.log('scrolling shouldScroll,remaining, container.height(),scrollDistance',shouldScroll,remaining, container.height(),scrollDistance);
 					
-
-
 					if (shouldScroll && scrollEnabled) {
 						if ($rootScope.$$phase) {
 							return scope.$eval(attrs.infiniteScroll);

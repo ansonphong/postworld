@@ -166,10 +166,10 @@ postworld.controller( 'pwEmbedlyExtractCtrl',
 
 ////////// ------- Embedly SERVICE ------- //////////*/
 
-postworld.factory('embedly', function ($resource, $q, $log, $window) {     
+postworld.factory('embedly', function ($resource, $q, $log, $window, $pw) {     
         // TODO Replace this with your Production Key
         // http://api.embed.ly/1/extract?key=:key&url=:url&maxwidth=:maxwidth&maxheight=:maxheight&format=:format&callback=:callback
-        var embedlyKey = $window.pwSiteGlobals.embedly.key;
+        var embedlyKey = $pw.config.embedly.key;
         var embedlyUrl = "http://api.embed.ly/1/:action";
         var resource = $resource(embedlyUrl, {key:embedlyKey, url:''}, 
                                     {   embedly_call: { method: 'GET', isArray: false, params: {action:'extract'} },    }

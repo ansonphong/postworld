@@ -13,8 +13,12 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 }]);
 
 postworld.controller( 'pwUiCtrl',
-	[ '$scope', '$timeout', '_', '$log',
-	function( $scope, $timeout, $_, $log ){
+	[ '$scope', '$timeout', '_', '$log', '$pw',
+	function( $scope, $timeout, $_, $log, $pw ){
+
+	$scope.uiLoggedIn = function(){
+		return !_.isEmpty( $pw['user'] );
+	}
 
 	////////// UI ELEMENT : DISPLAY //////////
 
@@ -133,6 +137,10 @@ postworld.controller( 'pwUiCtrl',
 		var newValue = ( currentValue == values[0] ) ? values[1] : values[0];
 		// Set the new value as a string
 		$scope.$eval( key + ' = ' + JSON.stringify( newValue ) );
+	}
+
+	$scope.uiImageSrc = function( srcs ){
+		
 	}
 
 }]);

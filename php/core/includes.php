@@ -23,7 +23,7 @@ function postworld_includes( $args ){
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.3.0-beta.13';
+		$angular_version = 'angular-1.3.13';
 
 	// Add injectors from Site Globals
 	$pw['inject'] = ( isset( $pwSiteGlobals['inject'] ) ) ?
@@ -48,10 +48,15 @@ function postworld_includes( $args ){
 
 	//////////////////////// INJECTIONS //////////////////////
 
-	/* JQuery is added for nInfiniteScroll Directive, if directive is not used, then remove it */
+	/* JQuery is added for ngInfiniteScroll Directive, if directive is not used, then remove it */
 	//wp_deregister_script('jquery');
 	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
-	wp_enqueue_script('jquery','');
+	
+	if( in_array( 'jquery', $pw['inject'] ) || is_admin() ){
+		wp_enqueue_script('jquery','');
+	} else{
+		wp_deregister_script('jquery');
+	}
 
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
@@ -142,10 +147,16 @@ function postworld_includes( $args ){
 		//wp_enqueue_script( 'AngularJS',
 		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
 
-		// POSTWORLD
-		wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
-		wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
-		wp_enqueue_script(  'Postworld-Deploy' );
+		if( isset( $args['js_deploy'] ) && !is_admin() ){
+			// CUSTOM DEPLOY JS
+			wp_enqueue_script( "Deploy-JS", $args['js_deploy'], array(), $pw['info']['version'] );
+		}
+		else{
+			// POSTWORLD
+			wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
+			wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
+			wp_enqueue_script(  'Postworld-Deploy' );
+		}
 
 	}
 	///// DEVELOPMENT FILE INCLUDES /////
@@ -669,7 +680,7 @@ function pwSiteGlobals_include(){
 	///// PRINT JAVASCRIPT /////
 	// SITE GLOBALS
 	$pwJs  = "";
-	$pwJs .= "var pwSiteGlobals = ";
+	$pwJs .= "pw.config = ";
 	$pwJs .= json_encode( $pwSiteGlobals );
 	$pwJs .= ";";
 
@@ -872,16 +883,22 @@ function pwAdminGlobals_parse(){
 
 add_action( 'wp_head', 'pw_include_google_fonts' );
 add_action( 'admin_head', 'pw_include_google_fonts' );
+/**
+ * Echos the link elements for fonts passed in
+ * Or added via the 'pw_include_google_fonts' filter
+ *
+ * @param Array $fonts An array of arrays of fonts.
+ */
 function pw_include_google_fonts( $fonts = array() ){
-	// Includes the filtered fonts
-	/*
-		$fonts = array(
-			array(
-				'name'	=>	'Roboto',
-				'code'	=>	'Roboto:100,300,700,100italic,300italic,400',
-			)
-		);
-	*/
+	/**
+	 * @example
+	 *		$fonts = array(
+	 *			array(
+	 *				'name'	=>	'Roboto', // Optional
+	 *				'code'	=>	'Roboto:100,300,700,100italic,300italic,400',
+	 *			)
+	 *		);
+	 */
 	// Get the fonts to include from a filter
 	$fonts = apply_filters( 'pw_include_google_fonts', $fonts );
 	// Iterate through each font and echo the include script
@@ -889,7 +906,6 @@ function pw_include_google_fonts( $fonts = array() ){
 		foreach( $fonts as $font ){
 			echo "\n<link href='http://fonts.googleapis.com/css?family=".$font['code']."' rel='stylesheet' type='text/css'>";
 		}
-	// Return the fonts, incase a function wants to see them
 	return $fonts;
 }
 

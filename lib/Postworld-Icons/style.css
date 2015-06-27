@@ -1,11 +1,11 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?d6cpbo');
-	src:url('fonts/Postworld-Icons.eot?#iefixd6cpbo') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff2?d6cpbo') format('woff2'),
-		url('fonts/Postworld-Icons.ttf?d6cpbo') format('truetype'),
-		url('fonts/Postworld-Icons.woff?d6cpbo') format('woff'),
-		url('fonts/Postworld-Icons.svg?d6cpbo#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?shpb52');
+	src:url('fonts/Postworld-Icons.eot?#iefixshpb52') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff2?shpb52') format('woff2'),
+		url('fonts/Postworld-Icons.ttf?shpb52') format('truetype'),
+		url('fonts/Postworld-Icons.woff?shpb52') format('woff'),
+		url('fonts/Postworld-Icons.svg?shpb52#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -246,7 +246,7 @@
 .pwi-alert:before {
 	content: "\f02d";
 }
-.pwi-book:before {
+.pwi-book-open:before {
 	content: "\f007";
 }
 .pwi-globe:before {
@@ -300,7 +300,7 @@
 .pwi-podcast:before {
 	content: "\e623";
 }
-.pwi-book-2:before {
+.pwi-book:before {
 	content: "\e613";
 }
 .pwi-books:before {

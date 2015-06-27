@@ -357,7 +357,7 @@ if( pw_module_enabled( 'devices' ) ){
 
 
 /**
- * Returns an array of information about
+ * Returns an array of booleans about
  * the current user's device.
  *
  * @return A_Array An associative array of device info.
@@ -382,6 +382,23 @@ function pw_device_meta(){
 
 	return $device;
 
+}
+
+/**
+ * Returns an array of strings about
+ * the current user's device.
+ *
+ * @return Array An array of device classes.
+ */
+function pw_device_classes( $prefix = 'device-' ){
+	$classes = array();
+	if( is_mobile() )
+		$classes[] = $prefix.'mobile';
+	if( is_tablet() )
+		$classes[] = $prefix.'tablet'; 
+	if( is_desktop() )
+		$classes[] = $prefix.'desktop'; 
+	return $classes;
 }
 
 

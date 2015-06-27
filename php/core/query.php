@@ -2,23 +2,25 @@
 
 class PW_Query extends WP_Query {
 	 
-	    /*function __construct( $args = array() ) {
-	 
-	        $args = wp_parse_args( $args, array(
-	            'post_type' => 'book',
-	            'orderby' => 'title',
-	            'order' => 'ASC',
-	            // Turn off paging
-	            'posts_per_page' => -1,            
-	            // Since, we won't be paging,
-	            // no need to count rows
-            'no_found_rows' => true
-	        ) );
-	 
-	        parent::__construct( $args );
-	 
-	    }*/
-	
+	/*
+	function __construct( $args = array() ) {
+		
+		$args = wp_parse_args( $args, array(
+		    'post_type' => 'book',
+		    'orderby' => 'title',
+		    'order' => 'ASC',
+		    // Turn off paging
+		    'posts_per_page' => -1,            
+		    // Since, we won't be paging,
+		    // no need to count rows
+		'no_found_rows' => true
+		) );
+		parent::__construct( $args );
+		
+		//pw_log( 'args', $args );
+	}
+	*/
+
 	function prepare_fields(){
 		$fields = $this->query_vars['fields'];
 		if($fields == null || $fields=='' ) 
@@ -27,36 +29,33 @@ class PW_Query extends WP_Query {
 	}
 	
 	function prepare_order_by(){
-		if(array_key_exists('orderby',  $this->query_vars)){
+		global $wpdb;
+		
+		if( array_key_exists( 'orderby',  $this->query_vars) )
 			$orderby = $this->query_vars['orderby'];
-		}else{
+		else
 			$orderby=null;
-		}
+
 		if($orderby!=null && $orderby!=''){
-		$orderby = str_replace("date", "wp_posts.post_date", $orderby);	
-		$orderby = str_replace("rank_score", "wp_postworld_post_meta.rank_score", $orderby);	
-		$orderby = str_replace("post_points", "wp_postworld_post_meta.post_points", $orderby);	
-		$orderby = str_replace("modified", "wp_posts.post_modified", $orderby);	
-		$orderby = str_replace("rand", "RAND()", $orderby);	
-		$orderby = str_replace("comment_count", "wp_posts.comment_count", $orderby);	
-		$orderby = str_replace("event_start", "wp_postworld_post_meta.event_start", $orderby);
-		$orderby = str_replace("event_end", "wp_postworld_post_meta.event_end", $orderby);
-		$orderby = "order by ".str_replace(' ', ',', $orderby);//." ".$args->order;
-		
-		$orderby.=" ".$this->query_vars['order'];
-	
-		
-		}else{
-			$orderby = 'order by wp_posts.post_date '.$this->query_vars['order'];
-			
+			$orderby = str_replace("date", 			$wpdb->prefix."posts.post_date", $orderby);	
+			$orderby = str_replace("rank_score", 	$wpdb->pw_prefix."post_meta.rank_score", $orderby);	
+			$orderby = str_replace("post_points", 	$wpdb->pw_prefix."post_meta.post_points", $orderby);	
+			$orderby = str_replace("modified", 		$wpdb->prefix."posts.post_modified", $orderby);	
+			$orderby = str_replace("rand", 			"RAND()", $orderby);	
+			$orderby = str_replace("comment_count", $wpdb->prefix."posts.comment_count", $orderby);	
+			$orderby = str_replace("event_start", 	$wpdb->pw_prefix."post_meta.event_start", $orderby);
+			$orderby = str_replace("event_end", 	$wpdb->pw_prefix."post_meta.event_end", $orderby);
+			$orderby = "order by ".str_replace(' ', ',', $orderby);//." ".$args->order;
+			$orderby.=" ".$this->query_vars['order'];
 		}
-			
+		else
+			$orderby = 'order by wp_posts.post_date '.$this->query_vars['order'];
+		
 		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
 			if(array_key_exists('offset',  $this->query_vars))
 				$orderby.=" Limit ".$this->query_vars["offset"].", ".$this->query_vars['posts_per_page'];	
 			else $orderby.=" LIMIT 0,".$this->query_vars['posts_per_page'];
 		}
-		
 		return $orderby;
 				
 	}
@@ -303,11 +302,6 @@ class PW_Query extends WP_Query {
 	
 	function get_posts() {
 		
-		//echo($this->prepare_order_by()."<br>");
-		//echo($this->prepare_where_query());
-		
-		
-		//echo "inside get_posts"
 		global $wpdb, $user_ID, $_wp_using_ext_object_cache;
 		$wpdb -> show_errors();
 		$this->parse_query();
@@ -1272,10 +1266,8 @@ class PW_User_Query extends WP_User_Query {
 	
 	function prepare_order_by($orderBy_Query){
 		
-		 
 		$orderby = $this->query_vars['orderby'];
 		 
-		//print_r($this->query_vars['order']);
 		global $wpdb;
 		if($orderby!=null && $orderby!=''){
 			
@@ -1345,23 +1337,18 @@ class PW_User_Query extends WP_User_Query {
 	
 	function prepare_new_request($remove_tbl=false){
 		
-		//echo($this->query_vars['fields']);
-		
 		$this->query_orderby = $this->prepare_order_by($this->query_orderby);
-		//echo "<br><br>".$this->query_orderby."<br><br>";
 		$this->query_where = str_replace('WHERE', $this->prepare_where_query(), $this->query_where);
 		$this->query_from = str_replace('FROM wp_users','FROM wp_users left join  wp_postworld_user_meta on wp_users.ID = wp_postworld_user_meta.user_id ', $this->query_from);
-		
-		
 		
 		if($remove_tbl===false )
 		$this->query_fields = str_replace('SELECT', 'SELECT wp_postworld_user_meta.* , ', $this->query_fields);
 			
-			//$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
-			//$this->request = str_replace('WHERE', $where, $this->request);
-			//$strposOfOrderBy = strpos($this->request, "ORDER BY");
-			//$this->request =  substr($this->request ,0,$strposOfOrderBy);
-			//$this->request.=$orderBy;
+		//$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
+		//$this->request = str_replace('WHERE', $where, $this->request);
+		//$strposOfOrderBy = strpos($this->request, "ORDER BY");
+		//$this->request =  substr($this->request ,0,$strposOfOrderBy);
+		//$this->request.=$orderBy;
 		
 	}
 	/*

@@ -53,7 +53,7 @@ global $post;
 				var query = $scope.query;
 				query.s = val;
 
-				return $pwData.pw_query( query ).then(
+				return $pwData.pwQuery( query ).then(
 					function( response ){
 						$log.debug( "QUERY RESPONSE : ", response.data.posts );
 						return response.data.posts;

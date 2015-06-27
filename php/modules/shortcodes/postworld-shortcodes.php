@@ -61,11 +61,11 @@ function pw_custom_shortcode_snippet( $atts, $content=null, $tag ){
 
 	// Self enclosing snippets
 	if( $type == 'self-enclosing' )
-		return _get( $snippet, 'content' );
+		return do_shortcode( _get( $snippet, 'content' ) );
 
 	// Enclosing snippets
 	elseif( $type == 'enclosing' )
-		return _get( $snippet, 'before_content' ) . do_shortcode( $content ) . _get( $snippet, 'after_content' );
+		return do_shortcode( _get( $snippet, 'before_content' ) . do_shortcode( $content ) . _get( $snippet, 'after_content' ) );
 
 	return false;
 
@@ -135,8 +135,13 @@ function pw_general_shortcode( $atts, $content=null, $tag ) {
 
 function pw_shortcode( $atts, $content=null, $tag ) {
 	extract( shortcode_atts( array(
-		'class' => '',
-		'color' => '',
+		'class' 	=> 	'',
+		'color' 	=> 	'',
+		'id'		=> 	'',
+		'target' 	=> 	'',
+		'size'		=>	'',
+		'href'		=>	'',
+		'icon'		=>	'',
 	), $atts ) );
 	// Start Output Buffering
 	ob_start();
@@ -221,6 +226,7 @@ if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 	include 'alignments/alignments.php';
 	include 'help/shortcodes-help.php';
 	include 'colors/colors.php';
+	include 'module/module.php';
 
 }
 

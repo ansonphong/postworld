@@ -355,19 +355,23 @@ function pw_require_image( $posts = array() ){
 
 function pw_image_tag_filters( $vars ){
 
+	/**
+	 * Allow the theme to define custom image tags.
+	 * If the $vars['tags'] value was populated by a filter
+	 * Then that value will be used as the tags.
+	 * If no filter is used, the default tags will be populated.
+	 */
+	$vars = apply_filters( 'pw_image_tag_filters', $vars );
+
+	if( isset( $vars['tags'] ) && !empty( $vars['tags'] ) )
+		return $vars['tags'];
+
+	/**
+	 * Here go through and process the default tags.
+	 */
 	extract( $vars );
 
-	///// FILTERS /////
-	// Tag filters to process
-	// Available variables are : $width, $height, $ratio
-	$tag_filters = array();
-
-	global $pwSiteGlobals;
-	$custom_tags = ( isset( $pwSiteGlobals['images']['tags'] ) ) ?
-		$pwSiteGlobals['images']['tags'] :
-		array();
-
-	$default_tags = array(
+	$tags = array(
 		// SQUARE
 		array(
 			"tag"		=>	"square",
@@ -402,7 +406,7 @@ function pw_image_tag_filters( $vars ){
 			"condition" => "$ratio >= 3",
 			),
 
-		// DEFINITION
+		// HIGH DEFINITION
 		array(
 			"tag"		=>	"HD",
 			"condition" => "$width >= 1024 && $height >= 1024",
@@ -413,11 +417,13 @@ function pw_image_tag_filters( $vars ){
 			),
 		);
 
+	/*
 	// Merge Filters
 	// TODO : Iterate through each custom tag, and over-ride defaults with conditions
 	$tag_filters = array_merge( $default_tags, $custom_tags );
+	*/
 
-	return $default_tags;
+	return $tags;
 
 }
 

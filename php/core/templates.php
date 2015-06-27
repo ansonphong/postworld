@@ -528,6 +528,11 @@ function pw_get_admin_template( $template_id, $ext = 'php', $type = 'dir' ){
 	return pw_get_template( 'admin', $template_id, $ext, $type );
 }
 
+function pw_get_module_template( $template_id, $ext = 'php', $type = 'dir' ){
+	// Returns a single string for module template from ID
+	return pw_get_template( 'modules', $template_id, $ext, $type );
+}
+
 function pw_ob_admin_template( $template_id, $vars ){
 	// Use output buffering to include an admin template
 	// And return the contents as a string
