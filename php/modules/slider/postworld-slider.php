@@ -96,8 +96,8 @@ function pw_print_slider( $slider ){
 
 
 	///// CACHING LAYER /////
+	$slider_hash = hash( 'sha256', json_encode( $slider ) );
 	if( in_array( 'post_cache', pw_enabled_modules() ) ){
-		$slider_hash = hash( 'sha256', json_encode( $slider ) );
 		$get_cache = pw_get_cache( array( 'cache_hash' => $slider_hash ) );
 		if( !empty( $get_cache ) ){
 			$slider = json_decode($get_cache['cache_content'], true);
@@ -283,7 +283,7 @@ function pw_print_slider( $slider ){
 			$fields = "preview";
 
 			// Get the Menu ID
-			$menu_id = pw_get_obj( $slider, 'menu_vars.menu_id' );
+			$menu_id = _get( $slider, 'menu_vars.menu_id' );
 
 			// Define the posts
 			$slider['posts'] = ( !$menu_id ) ?
