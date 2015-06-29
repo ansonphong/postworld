@@ -296,7 +296,14 @@ function pw_print_slider( $slider ){
 
 	///// TRANSITION CLASS /////
 	if( $slider['transition'] == 'fade' || !isset($slider['transition']) )
-		$slider['class'] .= " carousel-fade ";
+		$slider['class'] .= " carousel-fade";
+
+	///// PROPORTION CLASS /////
+	$proportion = _get( $slider, 'proportion' );
+	if( $proportion === false )
+		$slider['class'] .= " proportion-flex";
+	else
+		$slider['class'] .= " proportion-" . str_replace('.','_',$proportion);
 
 	///// INSTANCE /////
 	// Generate slider Instance string
