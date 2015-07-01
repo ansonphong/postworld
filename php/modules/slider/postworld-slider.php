@@ -96,12 +96,13 @@ function pw_print_slider( $slider ){
 
 
 	///// CACHING LAYER /////
-	// Generate unique hash from un-pre-processed slider variables
 	$slider_hash = hash( 'sha256', json_encode( $slider ) );
-	$get_cache = pw_get_cache( array( 'cache_hash' => $slider_hash ) );
-	if( !empty( $get_cache ) ){
-		$slider = json_decode($get_cache['cache_content'], true);
-		return pw_ob_include( $slider_template, $slider );
+	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+		$get_cache = pw_get_cache( array( 'cache_hash' => $slider_hash ) );
+		if( !empty( $get_cache ) ){
+			$slider = json_decode($get_cache['cache_content'], true);
+			return pw_ob_include( $slider_template, $slider );
+		}
 	}
 
 
@@ -109,7 +110,6 @@ function pw_print_slider( $slider ){
 	if( !empty( $slider['posts'] ) && is_array( $slider['posts'] ) ){
 		$slider['mode'] = 'override';
 	}
-
 
 	////////// MODE //////////
 	switch( $slider['mode'] ){
@@ -283,7 +283,7 @@ function pw_print_slider( $slider ){
 			$fields = "preview";
 
 			// Get the Menu ID
-			$menu_id = pw_get_obj( $slider, 'menu_vars.menu_id' );
+			$menu_id = _get( $slider, 'menu_vars.menu_id' );
 
 			// Define the posts
 			$slider['posts'] = ( !$menu_id ) ?
@@ -291,27 +291,32 @@ function pw_print_slider( $slider ){
 				pw_get_menu_posts( $menu_id, $fields );
 
 			break;
+			
 	}
-
 
 	///// TRANSITION CLASS /////
 	if( $slider['transition'] == 'fade' || !isset($slider['transition']) )
-		$slider['class'] .= " carousel-fade ";
+		$slider['class'] .= " carousel-fade";
 
+	///// PROPORTION CLASS /////
+	$proportion = _get( $slider, 'proportion' );
+	if( $proportion === false )
+		$slider['class'] .= " proportion-flex";
+	else
+		$slider['class'] .= " proportion-" . str_replace('.','_',$proportion);
 
 	///// INSTANCE /////
 	// Generate slider Instance string
 	$slider['instance'] = "slider_".$slider_hash;
 
-
 	///// CACHING LAYER /////
-	pw_set_cache( array(
-		'cache_type'	=>	'slider',
-		'cache_hash' 	=> 	$slider_hash,
-		'cache_content'	=>	json_encode($slider),
-		));
-
-
+	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+		pw_set_cache( array(
+			'cache_type'	=>	'slider',
+			'cache_hash' 	=> 	$slider_hash,
+			'cache_content'	=>	json_encode($slider),
+			));
+	}
 
 	///// INCLUDE TEMPLATE /////
 	// Include the template
@@ -319,6 +324,5 @@ function pw_print_slider( $slider ){
 	return pw_ob_include( $slider_template, $slider );
 	
 }
-
 
 ?>

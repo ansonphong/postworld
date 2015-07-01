@@ -318,33 +318,48 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 		if ( !empty($post_meta_fields) ){
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
-				// GET 'ALL' FIELDS
-				if ( in_array("all", $post_meta_fields) ||
-						$post_meta_field == "all" ){
+
+				/**
+				 * GET ALL META FIELDS
+				 */
+				if( in_array("all", $post_meta_fields) ||
+					in_array("_all", $post_meta_fields) ||
+					$post_meta_field == "all" ){
 					// Return all meta data
 					$post['post_meta'] = get_metadata('post', $post_id, '', true);
 					// Convert to strings
 					if ( !empty( $post['post_meta'] ) ){
 						foreach( $post['post_meta'] as $meta_key => $meta_value ){
-							// Delete metadata keys starting with '_'
-							// Which are reserved for system keys
-							// When in viewing mode
+							
+							/**
+							 * Delete metadata keys starting with '_'
+							 * Which are reserved for system keys
+							 * When in viewing mode
+							 * Unless the '_all' sub-field is present
+							 */
 							if( $mode == 'view' &&
-								substr( $meta_key, 0, 1 ) === '_' )
+								substr( $meta_key, 0, 1 ) === '_' &&
+								!in_array( '_all', $post_meta_fields ) ){
 								unset( $post['post_meta'][$meta_key] );
+								continue;
+							}
+							
 							// Convert values from arrays
 							$post['post_meta'][$meta_key] = $post['post_meta'][$meta_key][0];
+						
 						}
 					}
 					// Break from the foreach
 					break;
 				}
+
 				// GET SPECIFIC FIELDS
 				else {
 					$post_meta_data = get_post_meta( $post_id, $post_meta_field, true );
 					if( !empty($post_meta_data) )
 						$post['post_meta'][$post_meta_field] = $post_meta_data;
 				}
+
 			}
 
 			///// JSON META KEYS /////
@@ -382,10 +397,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 					}
 				}
 			}
-			
-
 		}
-
 
 	////////// AUTHOR DATA //////////
 		// Extract author() fields
@@ -447,6 +459,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			*/
 
 		} // END if
+
 
 	////////// IMAGE FIELDS //////////
 		$post_image = pw_get_post_image( $post, $fields );
@@ -655,11 +668,15 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 	///// POST CONTENT /////
 	// Condition Post Content
-		if ( in_array( 'post_content', $fields ) && $mode == 'view' ){
+		if( in_array( 'post_content', $fields ) &&
+			$mode == 'view' &&
+			$post['post_type'] !== 'nav_menu_item' ){
+			
 			///// CONTENT FILTERING /////
 
 			// oEmbed URLs
 			$post['post_content'] = pw_embed_content($post['post_content']);
+			
 			// Apply Shortcodes
 			//$post[$key] = do_shortcode($post[$key]);
 

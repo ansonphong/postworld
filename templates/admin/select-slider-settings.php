@@ -1,17 +1,82 @@
 <?php
-	if( !is_array($show) )
-		$show = array(
-			'height',
-			'interval',
-			'max_slides',
-			'transition',
-			'no_pause',
-			'hyperlink',
-			'show_title',
-			'show_excerpt',
-			);
+/**
+ * SET UNIQUE INSTANCE
+ * This is used to identify the slider's MVC 
+ */
+$instance = 'sliderSettings_'.pw_random_string();
+
+/**
+ * SET DEFAULT OPTIONS
+ * These options can be overriden
+ * by passing in an array of options.
+ */
+$default_options = array(
+	'transition' => array(
+		array(
+			'value' => false,
+			'name' => 'None',
+			),
+		array(
+			'value' => 'slide',
+			'name' => 'Slide',
+			),
+		array(
+			'value' => 'fade',
+			'name' => 'Fade',
+			),
+		),
+	'proportion' => array(
+		array(
+			'value' => false,
+			'name' => 'Flexible',
+			),
+		array(
+			'value' => 2,
+			'name' => '2 : 1',
+			),
+		array(
+			'value' => 2.5,
+			'name' => '2.5 : 1',
+			),
+		array(
+			'value' => 3,
+			'name' => '3 : 1',
+			),
+		),
+	);
+
+if( !is_array($options) )
+	$options = $default_options;
+else
+	$options = array_replace_recursive( $default_options, $options );
+
+/**
+ * SET DEFAULT OPTIONS TO SHOW
+ * These options can be overriden
+ * by passing in an array of options.
+ */
+if( !is_array($show) )
+	$show = array(
+		'height',
+		'interval',
+		'max_slides',
+		'transition',
+		'no_pause',
+		'hyperlink',
+		'show_title',
+		'show_excerpt',
+		//'proportion'
+		);
 ?>
-<div class="columns-2">
+
+<script>
+	postworld.controller( '<?php echo $instance ?>', function($scope){
+		$scope.options = <?php echo json_encode( $options ) ?>;
+	});
+</script>
+
+<div ng-controller="<?php echo $instance ?>">
+
 <?php
 	///// HEIGHT /////
 	if( in_array( 'height', $show ) ){
@@ -54,22 +119,6 @@
 		size="3"
 		ng-model="<?php echo $ng_model; ?>.query_vars.max_posts">
 	<label for="input-maxposts">maximum slides</label>
-	<hr class="thin">
-	<?php
-	}
-?>
-<?php
-	///// TRANSITION /////
-	if( in_array( 'transition', $show ) ){
-	?>
-	<label class="inner" for="select-transition"><i class="pwi-magic"></i> Transition</label>
-	<select
-		class="labeled"
-		id="select-transition"
-		ng-model="<?php echo $ng_model; ?>.transition"
-		ng-options="option.slug as option.name for option in sliderOptions.slider.transition">
-	</select>
-	
 	<hr class="thin">
 	<?php
 	}
@@ -126,4 +175,41 @@
 	<?php
 	}
 ?>
+<?php
+	///// TRANSITION /////
+	if( in_array( 'transition', $show ) ){
+	?>
+	<label class="inner" for="select-transition">
+		<i class="pwi-wand"></i>
+		Transition
+	</label>
+	<select
+		class="labeled"
+		id="select-transition"
+		ng-model="<?php echo $ng_model; ?>.transition"
+		ng-options="option.value as option.name for option in options.transition">
+	</select>
+	<hr class="thin">
+	<?php
+	}
+?>
+<?php
+	///// PROPORTION /////
+	if( in_array( 'proportion', $show ) ){
+	?>
+	<label class="inner" for="select-proportion">
+		<i class="pwi-square-thin"></i>
+		Proportion
+	</label>
+	<select
+		class="labeled"
+		id="select-proportion"
+		ng-model="<?php echo $ng_model; ?>.proportion"
+		ng-options="option.value as option.name for option in options.proportion">
+	</select>
+	<hr class="thin">
+	<?php
+	}
+?>
+
 </div>
