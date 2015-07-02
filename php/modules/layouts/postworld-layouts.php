@@ -201,7 +201,7 @@ function i_insert_content($vars){
 function pw_insert_content($vars){
 	extract($vars);
 
-	if( !empty($function) )
+	if( !empty($function) && function_exists( $function ) )
 		call_user_func( $function );
 	
 	if( !empty($content) || !empty($before_content) ){
