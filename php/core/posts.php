@@ -1326,8 +1326,6 @@ function pw_print_post( $vars ){
 	global $pw;
 
 	$pw_post = array();
-
-	//$pw_post['post'] = pw_get_post( $post_id );
 	$pw_post['post'] = pw_get_post( $post_id, $fields );
 
 	// Add custom input variables

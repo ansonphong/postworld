@@ -743,7 +743,7 @@ function pw_print_feed( $vars ){
 			$template_path = $vars['template'];
 
 		// Initialize h2o template engine
-		$h2o = new h2o($template_path);
+		$h2o = new h2o( $template_path );
 
 		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
 		$pw_post['post'] = $post;
