@@ -1293,8 +1293,8 @@ function pw_embed_url($input){
 	if( $o_embed == true )
 		$embed = wp_oembed_get($url);
 	// HOTLINK : if not, hotlink it
-	else
-		$embed = '<a target="_blank" href="' . $url . '" target="_blank">' . $url . '</a>';
+	//else
+		$embed = $url ;//'<a target="_blank" href="' . $url . '" target="_blank">' . $url . '</a>';
 
 	return $embed;
 }
