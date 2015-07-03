@@ -1,5 +1,19 @@
 <?php
 
+function pw_register_style_set( $vars = array() ){
+
+    $defaultVars = array(
+        'name' => 'Demo A',
+        'id' => 'demo-a',
+        'styles' => array(
+
+            ),        
+        );
+
+}
+
+
+
 // Prepare URL for Less Variable
 function pw_less_prepare_url( $url ){
     if( function_exists( 'pw_wrap_quotes' ) )  
