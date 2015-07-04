@@ -53,7 +53,7 @@ postworld.directive('pwDeviceClass', function( $pw, $log ) {
 
 /**
  * @ngdoc directive
- * @name postworld.directive:pwImage
+ * @name postworld.directive:pwImageSrc
  * @description
  * Shows the correct image based on the current device pixel ratio.
  *
@@ -160,7 +160,48 @@ postworld.directive('pwImageSrc',
 				setImageSrc();
 			*/
 				
-
 		}
 	}
 }]);
+
+
+
+
+
+
+
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwSmartSrc
+ * @description
+ * Intelligently selects the right image from the image object
+ * Based on the height and width of the element.
+ *
+ * @param Object pwImageSrc A Postworld post image object
+ *
+ * @example
+ * 		<img pw-smart-src="post.image">
+ *
+ */
+postworld.directive('pwSmartSrc',
+	[ '$pw', '$log', '_', '$window', '$filter',
+	function( $pw, $log, $_, $window, $filter ) {
+	return {
+		restrict:'A',
+		scope:{
+			pwSmartSrc:'='
+		},
+		link: function( $scope, element, attrs ) {
+			
+
+				
+		}
+	}
+}]);
+
+
+
+
+
+

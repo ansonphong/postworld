@@ -98,7 +98,6 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 
 ////////// GET POST DATA //////////
 function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
-	
 	//pw_log( "pw_get_post : " . $post_id, $fields );
 
 	// Switch Modes (view/edit)

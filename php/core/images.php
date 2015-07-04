@@ -163,7 +163,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 				$post_image['meta'] = wp_get_attachment_metadata($thumbnail_id);
 
 				// Get the actual file URLS and inject into the object
-				if( isset($post_image['meta']) && is_array($post['image']['meta']) ){
+				if( isset($post_image['meta']) && is_array($post_image['meta']) ){
 					foreach( $post_image['meta']['sizes'] as $key => $value ){
 						$image_size_meta = wp_get_attachment_image_src( $thumbnail_id, $key );
 						$post_image['meta']['sizes'][$key]['url'] = $image_size_meta[0];
@@ -231,7 +231,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 
 			// Get Image ID
 			elseif( $image_handle == 'id' ){
-				$post['thumbnail_id']= $thumbnail_id;
+				$post_image['thumbnail_id'] = $thumbnail_id;
 			}
 
 		}

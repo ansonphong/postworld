@@ -781,7 +781,7 @@ function pw_print_menu_feed( $vars ){
 }
 
 /**
- * Gets the post data associated with a menu.
+ * Gets the post data associated with a menu
  * Also supports term items in menus
  *
  * @param string|integer $menu Menu name, slug, or term ID.
