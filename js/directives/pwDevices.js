@@ -185,16 +185,49 @@ postworld.directive('pwImageSrc',
  *
  */
 postworld.directive('pwSmartSrc',
-	[ '$pw', '$log', '_', '$window', '$filter',
-	function( $pw, $log, $_, $window, $filter ) {
+	[ '$pw', '$log', '_', '$window', '$filter', 'pwImages', '$timeout',
+	function( $pw, $log, $_, $window, $filter, $pwImages, $timeout ) {
 	return {
 		restrict:'A',
 		scope:{
 			pwSmartSrc:'='
 		},
 		link: function( $scope, element, attrs ) {
-			
 
+			// If an 'IMG' element, adjust the SRC
+			// If other, adjust the 'background-image' style
+			var init = function(){
+
+				// Detect what type of element
+				var elementTag = element[0].tagName; // 'IMG' / other
+				var devicePixelRatio = $window.devicePixelRatio;
+				var elementWidth = element[0].width;
+				var elementHeight = element[0].height;
+				
+
+				// Here 
+				var image = $pwImages.selectImageSize({
+					width:0,
+					minWidth: 0,
+					maxWidth:0,
+					height:0,
+					minHeight:0,
+					maxHeight:0
+				});
+
+
+				$log.debug( 'elementTag', elementTag );
+				$log.debug( 'elementWidth', elementWidth );
+				$log.debug( 'elementHeight', elementHeight );
+
+
+			}
+
+			// Timeout for DOM to initialize
+			$timeout( function(){
+				init();					
+			}, 0 );
+			
 				
 		}
 	}

@@ -1150,21 +1150,35 @@ postworld.factory('pwImages',
 	    	return selectedTag;
     	},
 
-
     	/**
     	 * Selects the correctly sized image from a series of variables
+  		 * @param {object} image A Postworld image object
     	 */
-    	selectImageSize: function( vars ){
+    	selectImageSize: function( image, vars ){
+
+    		if( _.isEmpty( image ) || image === null )
+    			return false;
 
     		var defaultVars = {
-    			image:{}, // Postworld Image Object
-    			minWidth: 0,
-    			maxWidth:0,
-    			minHeight:0,
-    			maxHeight:0
+				width:0,
+				minWidth: 0,
+				maxWidth:0,
+				height:0,
+				minHeight:0,
+				maxHeight:0
     		};
 
+    		// Make a new array, without the keys, so it can be sorted
+    		var imageArray = [];
+    		angular.forEach( image, function( value, key ){
+    			value['key'] = key;
+    			imageArray.push( value );
+    		});
+
+
     		// Re-order the image object, largest to smallest
+    		// _.sortBy
+
 
     	},
 
