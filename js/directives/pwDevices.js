@@ -165,12 +165,6 @@ postworld.directive('pwImageSrc',
 }]);
 
 
-
-
-
-
-
-
 /**
  * @ngdoc directive
  * @name postworld.directive:pwSmartSrc
@@ -189,52 +183,80 @@ postworld.directive('pwSmartSrc',
 	function( $pw, $log, $_, $window, $filter, $pwImages, $timeout ) {
 	return {
 		restrict:'A',
-		scope:{
-			pwSmartSrc:'='
-		},
-		link: function( $scope, element, attrs ) {
+		link: function( $scope, element, attrs ) { 
 
-			// If an 'IMG' element, adjust the SRC
-			// If other, adjust the 'background-image' style
-			var init = function(){
+			var getImgUrl = function(){
 
-				// Detect what type of element
-				var elementTag = element[0].tagName; // 'IMG' / other
 				var devicePixelRatio = $window.devicePixelRatio;
-				var elementWidth = element[0].width;
-				var elementHeight = element[0].height;
+				var elementWidth = element[0].offsetWidth * devicePixelRatio;
+				var elementHeight = element[0].offsetHeight * devicePixelRatio;
 				
-
-				// Here 
-				var image = $pwImages.selectImageSize({
-					width:0,
-					minWidth: 0,
-					maxWidth:0,
-					height:0,
-					minHeight:0,
-					maxHeight:0
-				});
-
-
-				$log.debug( 'elementTag', elementTag );
+				$log.debug( 'element', element );
 				$log.debug( 'elementWidth', elementWidth );
 				$log.debug( 'elementHeight', elementHeight );
+				
+				// Get the image object from provided expression
+				var imageObj = $scope.$eval( attrs.pwSmartSrc );
 
+				// If an override is provided
+				if( !_.isUndefined( attrs.smartSrcOverride ) ){
+					overrideImageObj = $scope.$eval( attrs.smartSrcOverride );
+					if( !_.isUndefined( overrideImageObj ) ){
+						imageObj = overrideImageObj;
+					}
+				}
+		
+				// Get the correctly sized image
+				var image = $pwImages.selectImageSize(
+					imageObj.sizes,
+					{
+						width: elementWidth,
+						height: elementHeight,
+					}
+				);
 
+				return image.url;
+
+			}
+
+			function setImgUrl(){
+				// Detect what type of element
+				var elementTag = element[0].tagName;
+
+				var imgUrl = getImgUrl();
+				if( _.isEmpty( imgUrl ) )
+					return false;
+
+				if( elementTag === 'IMG' )
+					element.attr( 'src', getImgUrl() );
+				else
+					element.css( 'background-image', 'url('+getImgUrl()+')' );
 			}
 
 			// Timeout for DOM to initialize
 			$timeout( function(){
-				init();					
+				setImgUrl();		
 			}, 0 );
+
+			/**
+			 * If the width or height of the element changes
+			 * Re-evaluate which image is being used.
+			 */
+			$scope.$watch(
+				function(){
+					var elementWidth = element[0].offsetWidth;
+					var elementHeight = element[0].offsetHeight;
+					return elementWidth + elementHeight;
+				},
+				function(val){
+					setImgUrl();
+				}
+			);
 			
-				
 		}
+
 	}
+
 }]);
-
-
-
-
 
 
