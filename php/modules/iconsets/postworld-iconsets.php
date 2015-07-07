@@ -206,6 +206,9 @@ function pw_admin_silent_load_iconsets($silent_load){
 	if( !in_array( 'postworld-icons', $silent_load ) )
 		$silent_load[] = 'postworld-icons';
 
+	if( !in_array( 'glyphicons-halflings', $silent_load ) )
+		$silent_load[] = 'glyphicons-halflings';
+
 	return $silent_load;
 }
 
