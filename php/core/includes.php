@@ -904,8 +904,9 @@ function pw_include_google_fonts( $fonts = array() ){
 	// Iterate through each font and echo the include script
 	if( is_array( $fonts ) )
 		foreach( $fonts as $font ){
-			echo "\n<link href='http://fonts.googleapis.com/css?family=".$font['code']."' rel='stylesheet' type='text/css'>";
+			echo "\n<link href='//fonts.googleapis.com/css?family=".$font['code']."' rel='stylesheet' type='text/css'>";
 		}
+
 	return $fonts;
 }
 

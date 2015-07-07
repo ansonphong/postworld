@@ -1149,6 +1149,26 @@ postworld.factory('pwImages',
 	    	// Return the selected tag
 	    	return selectedTag;
     	},
+
+
+    	/**
+    	 * Selects the correctly sized image from a series of variables
+    	 */
+    	selectImageSize: function( vars ){
+
+    		var defaultVars = {
+    			image:{}, // Postworld Image Object
+    			minWidth: 0,
+    			maxWidth:0,
+    			minHeight:0,
+    			maxHeight:0
+    		};
+
+    		// Re-order the image object, largest to smallest
+
+    	},
+
+
 	};
 
 }]);

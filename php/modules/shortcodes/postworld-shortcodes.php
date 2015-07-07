@@ -134,15 +134,20 @@ function pw_general_shortcode( $atts, $content=null, $tag ) {
 }
 
 function pw_shortcode( $atts, $content=null, $tag ) {
-	extract( shortcode_atts( array(
-		'class' 	=> 	'',
-		'color' 	=> 	'',
-		'id'		=> 	'',
-		'target' 	=> 	'',
-		'size'		=>	'',
-		'href'		=>	'',
-		'icon'		=>	'',
-	), $atts ) );
+
+	if( empty( $atts ) )
+		$atts = array();
+	else
+		extract( shortcode_atts( array(
+			'class' 	=> 	'',
+			'color' 	=> 	'',
+			'id'		=> 	'',
+			'target' 	=> 	'',
+			'size'		=>	'',
+			'href'		=>	'',
+			'icon'		=>	'',
+		), $atts ) );
+
 	// Start Output Buffering
 	ob_start();
 	// Get the template
@@ -187,6 +192,18 @@ function pw_empty_shortcode(){
 	return "";
 }
 
+/**
+ * Counts the numer of instances of a shortcode
+ * In a string of content.
+ *
+ * @param string $tag The shortcode tag to search for
+ * @param string $content The content to search within
+ * @return integer The number of instances of the shortcode in the content
+ */
+function pw_shortcode_count( $content, $tag ){
+	return substr_count( $content, '['.$tag );
+}
+
 
 if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 
@@ -194,6 +211,7 @@ if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 
 	/////////////// BASIC SHORTCODES //////////
 	// BLOCKS
+	add_shortcode( 'blocks', 	'pw_shortcode' );
 	add_shortcode( 'block', 	'pw_shortcode' );
 	add_shortcode( 'block-sub', 'pw_shortcode' );
 	add_shortcode( 'blockquote','pw_shortcode' );

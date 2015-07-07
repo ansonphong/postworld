@@ -78,15 +78,21 @@ function pw_get_current_layout( $vars = array() ){
 	}
 
 	/// GET LAYOUT : FROM POST PARENT ///
-	if( !$layout && ( in_array( 'single', $contexts ) || isset($vars['post_id']) ) ){
-
+	// Check if it's a single context request
+	$is_single = (
+		in_array( 'single', $contexts ) ||
+		isset($vars['post_id'])
+		);
+	// Check if the template value is default
+	$is_default = ( _get( $layout, 'template' ) === 'default' );
+	// If it's eligible for a post parent layout
+	if( ( !$layout && $is_single ) || $is_default ){
 		// Get default layout from post parent's layout
 		$get_post = get_post( $post_id );
 		if( $get_post->post_parent !== 0 )
 			$layout = pw_get_current_layout( array(
 				'post_id' => $get_post->post_parent
 				));
-
 	}
 
 	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
@@ -201,7 +207,7 @@ function i_insert_content($vars){
 function pw_insert_content($vars){
 	extract($vars);
 
-	if( !empty($function) )
+	if( !empty($function) && function_exists( $function ) )
 		call_user_func( $function );
 	
 	if( !empty($content) || !empty($before_content) ){
