@@ -596,6 +596,10 @@ function pwBootstrapPostworldAdmin_print() {
 	if( is_admin() ):
 		// Add missing action attributes to form elements
 		pw_add_forms_action_attribute();
+
+		// Make all buttons type="button" if type not defined
+		pw_add_buttons_default_type();
+
 		// Bootstrap the app
 		// Must come after adding action attributes
 		?>
@@ -625,6 +629,24 @@ function pw_add_forms_action_attribute(){
 			jQuery('form').attr('action', function(){
 				if( typeof jQuery(this).attr('action') === 'undefined' )
 					jQuery(this).attr('action', '<?php echo $_SERVER["PHP_SELF"]; ?>');
+			});
+		});
+	</script>
+	<?php
+}
+
+/**
+ * Buttons by default submit the form they're in
+ * Unless they have the type="button"
+ */
+function pw_add_buttons_default_type(){
+	?>
+	<script>
+		// Force an action attribute for every form element which doesn't have one.
+		angular.element(document).ready(function() {
+			jQuery('button').attr('type', function(){
+				if( typeof jQuery(this).attr('type') === 'undefined' )
+					jQuery(this).attr('type', 'button');
 			});
 		});
 	</script>

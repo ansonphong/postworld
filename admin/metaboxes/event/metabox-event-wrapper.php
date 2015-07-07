@@ -11,7 +11,10 @@ global $pw_event_post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div id="pwEventMetabox" class="postworld pw-metabox">
+<div
+	id="pwEventMetabox"
+	class="postworld pw-metabox"
+	ng-cloak>
 	<div ng-controller="pwEventMetaboxCtrl">
 		<?php
 			// Include the UI template
@@ -40,6 +43,11 @@ global $pw_event_post;
 			function( $scope ) {
 			$scope.post = <?php echo json_encode($pw_event_post); ?>;
 			$scope.eventKey = <?php echo json_encode( $event_postmeta_key ); ?>;
+	
+			$scope.removeTimeZone = function(){
+				delete $scope.post.post_meta[ $scope.eventKey ].timezone;
+			}
+
 	}]);
 </script>
 

@@ -10,7 +10,10 @@ global $post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div id="pwBackgroundMetabox" class="postworld">
+<div
+	id="pwBackgroundMetabox"
+	class="postworld"
+	ng-cloak>
 	<div
 		pw-admin-background
 		ng-controller="pwBackgroundMetaboxCtrl"
