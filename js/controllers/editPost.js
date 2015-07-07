@@ -941,6 +941,12 @@ postworld.directive( 'pwEventInput',
 				*start_date_obj*
 					- this is potentially temp data
 					- re-evaluate it on inititialization IF there is a timezone
+					- if there is a timezone
+						- 	calculate the difference between
+							the current client's timezone,
+							and the timezone it's in and make an
+							offset to trick the UTC time to being
+							synonymous with the timezone of the location
 
 				*timezone*
 					- store the timezone object
