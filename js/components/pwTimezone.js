@@ -68,6 +68,10 @@ postworld.controller('pwTimezoneCtrl',
 		// Convert into UNIX timestamp
 		vars.timestamp = date.getTime()/1000;
 
+		// If there is no lat or long, return early
+		if( vars.latitude == 0 || vars.longitude == 0 )
+			return false;
+
 		$log.debug( 'TIMEZONE REQUEST', vars );
 
 		return $http.get('https://maps.googleapis.com/maps/api/timezone/json', {

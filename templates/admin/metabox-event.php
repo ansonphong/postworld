@@ -3,7 +3,8 @@
 	start-date-obj="post.post_meta[ eventKey ].date.start_date_obj"
 	end-date-obj="post.post_meta[ eventKey ].date.end_date_obj"
 	start-date="post.post_meta[ eventKey ].date.start_date"
-	end-date="post.post_meta[ eventKey ].date.end_date">
+	end-date="post.post_meta[ eventKey ].date.end_date"
+	timezone="post.post_meta[ eventKey ].timezone">
 
 	<div class="pw-row">
 		<div class="pw-col-6">
