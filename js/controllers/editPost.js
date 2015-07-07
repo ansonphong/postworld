@@ -921,23 +921,27 @@ postworld.directive( 'pwEventInput',
 		restrict: 'AE',
 		controller: 'eventInput',
 		scope:{
-			'startDateObj':"=",
+			'e':"=eventObj",
+			/*
+			'startDateObj':"=eventObj",
 			'endDateObj':"=",
 			'startDate':"=",
 			'endDate':"=",
 			'timezone':"="
+			*/
 		},
 		link: function( $scope, element, attrs ){
 
 			/*
 				@todo - Refactor how the timezones work
 
-				*start_date* - store literal time at location
+				X *start_date* - store literal time at location
+				X *end_date* - store literal time at location
 
 				*start_date_obj*
 					- this is potentially temp data
 					- re-evaluate it on inititialization IF there is a timezone
-					
+
 				*timezone*
 					- store the timezone object
 
@@ -951,7 +955,6 @@ postworld.directive( 'pwEventInput',
 
 			*/
 
-
 			$scope.getUnixTimestamp = function( dateObject ){
 				if( !_.isUndefined( dateObject ) ){
 					var localDateObj = new Date(dateObject);
@@ -962,30 +965,31 @@ postworld.directive( 'pwEventInput',
 			$scope.setUnixTimestamps = function(){
 			
 				// Add the UNIX Timestamp : event_start
-				if( !_.isUndefined( $scope.startDateObj ) && !_.isUndefined( $scope.$parent.post ) )
-					$scope.$parent.post.event_start = $scope.getUnixTimestamp( $scope.startDateObj );
+				if( !_.isUndefined( $scope.e.date.start_date_obj ) && !_.isUndefined( $scope.$parent.post ) )
+					$scope.$parent.post.event_start = $scope.getUnixTimestamp( $scope.e.date.start_date_obj );
 				
 				// Add the UNIX Timestamp : event_end
-				if( !_.isUndefined( $scope.endDateObj ) && !_.isUndefined( $scope.$parent.post )  )
-					$scope.$parent.post.event_end = $scope.getUnixTimestamp( $scope.endDateObj );
+				if( !_.isUndefined( $scope.e.date.end_date_obj ) && !_.isUndefined( $scope.$parent.post )  )
+					$scope.$parent.post.event_end = $scope.getUnixTimestamp( $scope.e.date.end_date_obj );
 			
 			};
 
 			// WATCH : EVENT START TIME
-			$scope.$watch( 'startDateObj',
+			$scope.$watch( 'e.date.start_date_obj',
 				function (){
+					$log.debug( 'CHANGED : e.date.start_date_obj' );
+
 					// End function if variable doesn't exist
-					if( _.isUndefined( $scope.startDateObj ) )
-						return false;
+					//if( _.isUndefined( $scope.e.date.start_date_obj ) )
+					//	return false;
 
 					// Set the alternate date format
-					if( !_.isUndefined( $scope.startDate ) )
-						$scope.startDate = $filter('date')(
-							$scope.startDateObj, 'yyyy-MM-dd HH:mm' );
+					$scope.e.date.start_date = $filter('date')(
+						$scope.e.date.start_date_obj, 'yyyy-MM-dd HH:mm' );
 
 					// If start time is set after the end time - make them equal
-					if( $scope.endDateObj < $scope.startDateObj )
-						$scope.endDateObj = $scope.startDateObj;
+					if( $scope.e.date.end_date_obj < $scope.e.date.start_date_obj )
+						$scope.e.date.end_date_obj = $scope.e.date.start_date_obj;
 
 					// Set UNIX Timestamps
 					$scope.setUnixTimestamps();
@@ -993,20 +997,21 @@ postworld.directive( 'pwEventInput',
 				}, 1 );
 
 			// WATCH : EVENT END TIME
-			$scope.$watch( 'endDateObj',
+			$scope.$watch( 'e.date.end_date_obj',
 				function (){
+					$log.debug( 'CHANGED : e.date.end_date_obj' );
+
 					// End function if variable doesn't exist
-					if( _.isUndefined( $scope.endDateObj ) )
-						return false;
+					//if( _.isUndefined( $scope.e.date.end_date_obj ) )
+					//	return false;
 
 					// Set the alternate date format
-					if( !_.isUndefined( $scope.endDate ) )
-						$scope.endDate = $filter('date')(
-							$scope.endDateObj, 'yyyy-MM-dd HH:mm' );
+					$scope.e.date.end_date = $filter('date')(
+						$scope.e.date.end_date_obj, 'yyyy-MM-dd HH:mm' );
 
 					// If end time is set before the start time - make them equal
-					if( $scope.startDateObj > $scope.endDateObj )
-						$scope.startDateObj = $scope.endDateObj;
+					if( $scope.e.date.start_date_obj > $scope.e.date.end_date_obj )
+						$scope.e.date.start_date_obj = $scope.e.date.end_date_obj;
 
 					// Set UNIX Timestamps
 					$scope.setUnixTimestamps();
