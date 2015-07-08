@@ -193,10 +193,12 @@ postworld.directive('pwSmartImage',
 				var elementWidth = element[0].offsetWidth * devicePixelRatio;
 				var elementHeight = element[0].offsetHeight * devicePixelRatio;
 				
+				/*
 				$log.debug( 'element', element );
 				$log.debug( 'elementWidth', elementWidth );
 				$log.debug( 'elementHeight', elementHeight );
-				
+				*/
+
 				// Get the image object from provided expression
 				var imageObj = $scope.$eval( attrs.pwSmartImage );
 
@@ -209,15 +211,22 @@ postworld.directive('pwSmartImage',
 				}
 		
 				// Get the correctly sized image
-				var image = $pwImages.selectImageSize(
-					imageObj.sizes,
-					{
-						width: elementWidth,
-						height: elementHeight,
-					}
-				);
+				var imageSizes = $_.get( imageObj, 'sizes' );
+				if( _.isObject( imageSizes ) ){
+					var image = $pwImages.selectImageSize(
+						imageSizes,
+						{
+							width: elementWidth,
+							height: elementHeight,
+						}
+					);
 
-				return image.url;
+					return image.url;
+				}
+				else{
+					return '';
+				}
+				
 
 			}
 

@@ -827,7 +827,9 @@ postworld.directive('infiniteYScroll', [
 
 				container = $window;
 
-				if ( attrs.scrollContainer != null && typeof attrs.scrollContainer !== 'undefined' ) {
+				if( attrs.scrollContainer != null &&
+					typeof attrs.scrollContainer !== 'undefined' &&
+					attrs.scrollContainer !== 'window' ){
 					var value = String( attrs.scrollContainer );
 					container = angular.element( attrs.scrollContainer );
 					//$log.debug( "<<<<< attrs.scrollContainer : element >>>>> ", container );
@@ -868,8 +870,9 @@ postworld.directive('infiniteYScroll', [
 					
 					/*
 					////////// DEV //////////
+					$log.debug("infiniteYScroll : SCROLLING");
 					$log.debug(
-						'container.scrollTop(): ' + container.scrollTop() + ' / ' +
+						'infiniteYScroll : container.scrollTop(): ' + container.scrollTop() + ' / ' +
 						'container.scrollLeft(): ' + container.scrollLeft() + ' / ' +
 						'container.innerHeight(): ' + container.innerHeight() + ' / ' +
 						'container.innerWidth(): ' + container.innerWidth() + ' / ' +
@@ -878,19 +881,20 @@ postworld.directive('infiniteYScroll', [
 						'remaining: ' + remaining
 						, container
 					);
-					$log.debug("SCROLLING");
+
 					$log.debug(
-						'elementBottom: ' + elementBottom + ' / ' +
+						'infiniteYScroll : elementBottom: ' + elementBottom + ' / ' +
 						'containerBottom: ' + containerBottom + ' / ' + 
 						'remaining : ' + remaining
 					);
 					
 					$log.debug(
-						'shouldScroll: ' + shouldScroll + ' / ' +
+						'infiniteYScroll : shouldScroll: ' + shouldScroll + ' / ' +
 						'remaining: ' + remaining + ' / ' +
 						'container.height(): ' + container.height() + ' / ' +
 						'scrollDistance: ' + scrollDistance
 					);
+
 					*/
 					
 					if (shouldScroll && scrollEnabled) {
