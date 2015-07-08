@@ -61,12 +61,22 @@ function pw_post_field_models(){
 function pw_get_field_model( $type, $name ){
 	global $pw;
 	$field_model = $pw['fields'][$type][$name];// _get( $pw['fields'], $type.'.'.$name );
-	
+
+	// Setup a caching key
+	$cache_key = 'field_model_'.$type.'_'.$name;
+
+	// If it's cached a value already
+	if( pw_has_runtime_cache( $cache_key ) )
+		return pw_get_runtime_cache( $cache_key );
+
 	/**
 	 * Filters the field model according to type and name
 	 * Example of filter name: 'pw_post_field_model_preview'
 	 */
 	$field_model = apply_filters( 'pw_'.$type.'_field_model_'.$name, $field_model );
+
+	// Set a runtime cache
+	pw_set_runtime_cache( $cache_key, $field_model );
 
 	return $field_model;
 }

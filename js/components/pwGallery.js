@@ -363,14 +363,34 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 		displayed:[],	// All the posts which are actually displayed
 	};
 
-	///// WATCH : WHEN THE POST CHANGES /////
-	$scope.$watch( 'post', function(){
+	/**
+	 * This watch checks for a chance in both
+	 * The post ID, as well as the number of posts
+	 * In a gallery, which covers when post changes
+	 * As well as when new images are fetched.
+	 */
+	$scope.$watch(
+		function(){
+			var vars, count, postsArray;
+			// Get the gallery posts count
+			postsArray = $_.get( $scope, 'post.gallery.posts' );
+			if( _.isArray( postsArray ) )
+				count = postsArray.length;
+			else
+				count = 0;
+			// Compile the variables to watch
+			vars = [];
+			vars.push(count);
+			vars.push( $_.get( $scope, 'post.ID' ) );
+			return vars;
+		},
+		function( vars ){
 		// PREVIOUSLY a watch collection on post.id and post.gallery
 
-		$log.debug( "pwInfiniteGallery : $watch : post" );
+		$log.debug( "pwInfiniteGallery : $watch : vars", vars );
 
 		// IF POST HAS GALLERY
-		if( !_.isEmpty( $_.getObj( $scope, 'post.gallery.posts' ) ) ){
+		if( !_.isEmpty( $_.get( $scope, 'post.gallery.posts' ) ) ){
 
 			// Establish the local posts object as the gallery
 			$scope.infiniteGallery.posts = $scope.post.gallery.posts;

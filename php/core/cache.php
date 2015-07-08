@@ -194,6 +194,35 @@ function pw_get_cache_types_readout(){
 
 ////////////////////////////////////////////////////////////////////
 
+/**
+ * The runtime cache is used to quickly store calculations
+ * Which may be done many times through a single runtime cycle.
+ *
+ * @param string $key The ID/key of the cache.
+ * @param mixed $value The value to store in the cache.
+ *
+ *  
+ */
+global $pw_runtime_cache;
+function pw_set_runtime_cache( $key, $value ){
+	global $pw_runtime_cache;
+	$pw_runtime_cache[$key] = $value;
+	return true;
+}
+
+function pw_get_runtime_cache( $key ){
+	global $pw_runtime_cache;
+	return _get( $pw_runtime_cache, $key );
+}
+
+function pw_has_runtime_cache( $key ){
+	global $pw_runtime_cache;
+	return isset( $pw_runtime_cache[$key] );
+}
+
+
+////////////////////////////////////////////////////////////////////
+
 
 
 function pw_cache_all_rank_scores( $post_types = array() ){

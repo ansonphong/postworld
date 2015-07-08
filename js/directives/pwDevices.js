@@ -167,18 +167,20 @@ postworld.directive('pwImageSrc',
 
 /**
  * @ngdoc directive
- * @name postworld.directive:pwSmartSrc
+ * @name postworld.directive:pwSmartImage
  * @description
  * Intelligently selects the right image from the image object
  * Based on the height and width of the element.
  *
- * @param Object pwImageSrc A Postworld post image object
+ * @param Object pwSmartImage A Postworld post image object
+ * @param Object smartImageOverride An override to use instead if it's found
+ * @param none smartImageDynamic If this attribute is present, update the image when the source or screen change. May cause performance issues if many images use this
  *
  * @example
- * 		<img pw-smart-src="post.image">
+ * 		<img pw-smart-image="post.image" smart-image-override="post.image.alt">
  *
  */
-postworld.directive('pwSmartSrc',
+postworld.directive('pwSmartImage',
 	[ '$pw', '$log', '_', '$window', '$filter', 'pwImages', '$timeout',
 	function( $pw, $log, $_, $window, $filter, $pwImages, $timeout ) {
 	return {
@@ -196,11 +198,11 @@ postworld.directive('pwSmartSrc',
 				$log.debug( 'elementHeight', elementHeight );
 				
 				// Get the image object from provided expression
-				var imageObj = $scope.$eval( attrs.pwSmartSrc );
+				var imageObj = $scope.$eval( attrs.pwSmartImage );
 
 				// If an override is provided
-				if( !_.isUndefined( attrs.smartSrcOverride ) ){
-					overrideImageObj = $scope.$eval( attrs.smartSrcOverride );
+				if( !_.isUndefined( attrs.smartImageOverride ) ){
+					overrideImageObj = $scope.$eval( attrs.smartImageOverride );
 					if( !_.isUndefined( overrideImageObj ) ){
 						imageObj = overrideImageObj;
 					}
@@ -238,20 +240,47 @@ postworld.directive('pwSmartSrc',
 				setImgUrl();		
 			}, 0 );
 
+
 			/**
-			 * If the width or height of the element changes
-			 * Re-evaluate which image is being used.
+			 * If the smartImageDynamic attribute is present
+			 * Watch the element dimensions as well as the
+			 * Image object itself for changes.
 			 */
-			$scope.$watch(
-				function(){
-					var elementWidth = element[0].offsetWidth;
-					var elementHeight = element[0].offsetHeight;
-					return elementWidth + elementHeight;
-				},
-				function(val){
-					setImgUrl();
-				}
-			);
+			if( !_.isUndefined( attrs.smartImageDynamic ) ){
+
+				/**
+				 * If the width or height of the element changes
+				 * Re-evaluate which image is being used.
+				 */
+				$scope.$watch(
+					function(){
+						var elementWidth = element[0].offsetWidth;
+						var elementHeight = element[0].offsetHeight;
+						return elementWidth + elementHeight;
+					},
+					function(val){
+						setImgUrl();
+					}
+				);
+
+				/**
+				 * Watch for image object changes
+				 * Then re-set the image URL.
+				 */
+				$scope.$watch(
+					function(){
+						return $scope.$eval( attrs.pwSmartImage )
+					},
+					function(val){
+						setImgUrl();
+					}
+				);
+
+
+			}
+
+			
+
 			
 		}
 
