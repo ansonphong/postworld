@@ -302,6 +302,17 @@
 			</div>
 		</div>
 		
+
+		<hr>
+
+		PW EVENT : 
+		<div pw-event="post.post_meta.pw_event" event-obj="myEvent">
+			<pre>{{ myEvent | json }}</pre>
+
+			<!-- MAKE COUNTDOWN OBJECT -->
+		
+		</div>
+
 		<div
 			ng-show="uiBool(post.post_meta[ eventKey ].timezone.time_zone_name)"
 			pw-timezone
@@ -309,18 +320,28 @@
 			timezone-longitude="post.geo_longitude"
 			timezone-obj="post.post_meta[ eventKey ].timezone">
 			<hr class="thin">
+
+			<h3>Timezone</h3>
+			
+			Client timezone
+
+			{{ clientTimezoneOffset | json }}
+
 			<button
 				type="button"
 				class="button"
 				disabled>
 				<i class="pwi-clock"></i>
-				Timezone : {{ post.post_meta[ eventKey ].timezone.time_zone_name }}
+				Timezone :
+				{{ post.post_meta[ eventKey ].timezone.time_zone_name }},
+				{{ post.post_meta[ eventKey ].timezone.time_zone_id }},
+				UTC {{ post.post_meta[ eventKey ].timezone.raw_offset / 60 / 60 }}h
 			</button>
 			<button
 				type="button"
 				class="button"
 				ng-click="removeTimeZone()">
-				<i class="icon pwi-close"></i>
+				<i class="icon pwi-close"></i> Remove Timezone
 			</button>
 		</div>
 

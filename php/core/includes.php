@@ -387,6 +387,9 @@ function postworld_includes( $args ){
 		
 		wp_enqueue_script( 'pw-Directives-pwDevices',
 			POSTWORLD_URI.'/js/directives/pwDevices.js', $angularDep );
+
+		wp_enqueue_script( 'pw-Directives-pwEvents',
+			POSTWORLD_URI.'/js/directives/pwEvents.js', $angularDep );
 		
 		// MODULES
 		wp_enqueue_script( 'pw-Modules-Compile',
@@ -445,6 +448,7 @@ function postworld_includes( $args ){
 	}
 
 	// + ANGULAR MOMENT
+	// @todo : Make function to register PW packages
 	if( in_array( 'angularMoment', $pw['inject'] ) ){
 
 		if( pw_mode() === 'deploy' ){
@@ -461,10 +465,17 @@ function postworld_includes( $args ){
 			// MOMENT-TIMEZONE.JS
 			wp_enqueue_script( 'Moment-Timezone-JS',
 				POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js', $angularDep);
+
+			// jsTimeZoneDetect : Used to detect the client's current timezone
+			// Since at the time of adding this wasn't supported by Moment.js
+			// CHECK UPDATES : https://github.com/moment/moment-timezone/pull/220
+
 			// MOMENT-TIMEZONE DATA.JS
-			wp_enqueue_script( 'Moment-Timezone-Data-JS',
-				POSTWORLD_URI.'/lib/moment.js/moment-timezone-data.js', $angularDep);
+			wp_enqueue_script( 'jsTimeZoneDetect-JS',
+				POSTWORLD_URI.'/lib/jsTimeZoneDetect/jstz.min.js', $angularDep);
+
 		}
+
 	}
 
 	// + TOUCH PACKAGE

@@ -883,8 +883,6 @@ postworld.controller('editPost',
 
 }]);
 
-// Make directive
-// Make attributes for event-start-model, event-end-model
 
 /*
   _____                 _     ___                   _   
@@ -919,7 +917,7 @@ postworld.directive( 'pwEventInput',
 		){
 	return {
 		restrict: 'AE',
-		controller: 'eventInput',
+		//controller: 'eventInput',
 		scope:{
 			'e':"=eventObj",
 			/*
@@ -931,6 +929,46 @@ postworld.directive( 'pwEventInput',
 			*/
 		},
 		link: function( $scope, element, attrs ){
+			/**
+			 * Watch the timezone object for changes
+			 * Set the boolean $scope.hasTimezone
+			 *
+			 * If it has timezone, offset the date/timepicker
+			 * To the event time
+			 */
+			/*
+			$scope.$watch( function(){
+					return $_.get( $scope.e, 'timezone' );
+				},
+				function( timezone, oldTimezone ){
+					if( !_.isEmpty( timezone ) &&
+						timezone !== false )
+						$scope.hasTimezone = true;
+					else
+						$scope.hasTimezone = false;
+
+					if( $scope.hasTimezone ){
+						var clientTimezone = $pwDate.getTimezone();
+						var eventTimezone = $pwDate.getTimezone( timezone.time_zone_id );
+					
+						var eventStart = moment.tz($scope.e.date.start_date, timezone.time_zone_id );
+
+						$log.debug( 'eventStart : AT EVENT LOCATION', eventStart.format() );
+
+						var clientTimezone = jstz.determine().name();
+						var eventStartClient = eventStart.clone().tz( clientTimezone );
+
+						$log.debug( 'eventStart : AT client LOCATION', eventStartClient.format() );
+
+
+						//$scope.e.date.local_start_date_obj = 'test';
+
+					}
+
+				}, 1 );
+
+			*/
+
 
 			/*
 				@todo - Refactor how the timezones work
@@ -1046,36 +1084,9 @@ postworld.directive( 'pwEventInput',
 
 			};
 
-			/**
-			 * Watch for a timezone object if it's defined.
-			 */
-			if( !_.isUndefined( attrs.timezone ) ){
-				$scope.$watch( 'timezone', function( timezone, oldTimezone ){
-					if( !_.isUndefined( timezone ) ){
-						$scope.hasTimeZone = true;
-					} else{
-						$scope.hasTimeZone = false;
-					}
-				});
-			} else{
-				$scope.hasTimeZone = false;
-			}
-
 		}
 
 	};
-}]);
-
-postworld.controller('eventInput',
-	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-		'pwData', '$log', '_', 'pwDate',
-	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
-		$pwData, $log, $_, $pwDate ) {
-
-	
-
-
-
 }]);
 
 
