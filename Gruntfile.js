@@ -35,7 +35,7 @@ module.exports = function(grunt) {
             'lib/moment.js/moment.min.js',
             'lib/angular-moment/angular-moment.min.js',
             'lib/moment.js/moment-timezone.min.js',
-            'lib/moment.js/moment-timezone-data.js'
+            'lib/jsTimezoneDetect/jstz.min.js',
           ],
 
            /**
