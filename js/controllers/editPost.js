@@ -917,9 +917,8 @@ postworld.directive( 'pwEventInput',
 		){
 	return {
 		restrict: 'AE',
-		//controller: 'eventInput',
 		scope:{
-			'e':"=eventObj",
+			'e':"=pwEventInput",
 			/*
 			'startDateObj':"=eventObj",
 			'endDateObj':"=",
@@ -929,12 +928,13 @@ postworld.directive( 'pwEventInput',
 			*/
 		},
 		link: function( $scope, element, attrs ){
+
 			/**
 			 * Watch the timezone object for changes
 			 * Set the boolean $scope.hasTimezone
 			 *
 			 * If it has timezone, offset the date/timepicker
-			 * To the event time
+			 * To the event time on initialization.
 			 */
 			/*
 			$scope.$watch( function(){
@@ -968,8 +968,6 @@ postworld.directive( 'pwEventInput',
 				}, 1 );
 
 			*/
-
-
 			/*
 				@todo - Refactor how the timezones work
 

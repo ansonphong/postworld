@@ -1,4 +1,18 @@
-
+'use strict';
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwEvent
+ *
+ * @restrict A
+ * @description Interprets a Postworld Event object into data for display to the client.
+ *
+ * @param {Expression} pwEvent A Postworld event object.
+ * @param {Expression} eventObj An object to map the interpreted data to.
+ *
+ * @example
+ * ```<pre><div pw-event="post.post_meta.pw_event" event-obj="myEvent">{{ myEvent | json }}</div></pre>```
+ *
+ */
 postworld.directive('pwEvent',
 	[
 		'_',
@@ -15,13 +29,6 @@ postworld.directive('pwEvent',
 		},
 		link: function( $scope, element, attrs ) {
 			
-			/**
-			 * Watch the timezone object for changes
-			 * Set the boolean $scope.hasTimezone
-			 *
-			 * If it has timezone, offset the date/timepicker
-			 * To the event time
-			 */
 			var hasTimezone = false;
 
 			$scope.$watch( 'e',
@@ -45,15 +52,15 @@ postworld.directive('pwEvent',
 						var eventStart = moment.tz($scope.e.date.start_date, e.timezone.time_zone_id );
 						var eventEnd = moment.tz($scope.e.date.end_date, e.timezone.time_zone_id );
 
-						$log.debug( 'eventStart : AT EVENT LOCATION', eventStart.format() );
-						$log.debug( 'eventEnd : AT EVENT LOCATION', eventEnd.format() );
+						$log.debug( 'pwEvent : eventStart : AT EVENT LOCATION', eventStart.format() );
+						$log.debug( 'pwEvent : eventEnd : AT EVENT LOCATION', eventEnd.format() );
 
 						var clientTimezone = $pwDate.getTimezone();
 						var eventStartClient = eventStart.clone().tz( clientTimezone.name );
 						var eventEndClient = eventEnd.clone().tz( clientTimezone.name );
 
-						$log.debug( 'eventStartClient : AT CLIENT LOCATION', eventStartClient.format() );
-						$log.debug( 'eventEndClient : AT CLIENT LOCATION', eventEndClient.format() );
+						$log.debug( 'pwEvent : eventStartClient : AT CLIENT LOCATION', eventStartClient.format() );
+						$log.debug( 'pwEvent : eventEndClient : AT CLIENT LOCATION', eventEndClient.format() );
 
 						$scope.eventObj = {
 
