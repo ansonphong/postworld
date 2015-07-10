@@ -1,3 +1,4 @@
+'use strict';
 /**
  * @ngdoc directive
  * @name postworld.directive:pwDeviceClass
@@ -204,7 +205,7 @@ postworld.directive('pwSmartImage',
 
 				// If an override is provided
 				if( !_.isUndefined( attrs.smartImageOverride ) ){
-					overrideImageObj = $scope.$eval( attrs.smartImageOverride );
+					var overrideImageObj = $scope.$eval( attrs.smartImageOverride );
 					if( !_.isUndefined( overrideImageObj ) ){
 						imageObj = overrideImageObj;
 					}
