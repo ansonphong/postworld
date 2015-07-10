@@ -30,12 +30,16 @@ module.exports = function(grunt) {
            /**
            * ANGULAR MOMENT
            * Includes all the dependencies for Angular Moment.js
+           * As well as some additional packages for
+           * Time keeping
            */
           'deploy/package-angular-moment.min.js':[
             'lib/moment.js/moment.min.js',
             'lib/angular-moment/angular-moment.min.js',
             'lib/moment.js/moment-timezone.min.js',
             'lib/jsTimezoneDetect/jstz.min.js',
+            'lib/angular-timer/angular-timer.js',
+            'lib/HumanizeDuration.js/humanize-duration.js',
           ],
 
            /**

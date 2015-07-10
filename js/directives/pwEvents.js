@@ -46,15 +46,18 @@ postworld.directive('pwEvent',
 
 					if( hasTimezone ){
 
+						// Get the client and event timezone IDs
 						var clientTimezone = $pwDate.getTimezone();
 						var eventTimezone = $pwDate.getTimezone( e.timezone.time_zone_id );
 					
+						// Get the respective Javascript date objects
 						var eventStart = moment.tz($scope.e.date.start_date, e.timezone.time_zone_id );
 						var eventEnd = moment.tz($scope.e.date.end_date, e.timezone.time_zone_id );
 
 						$log.debug( 'pwEvent : eventStart : AT EVENT LOCATION', eventStart.format() );
 						$log.debug( 'pwEvent : eventEnd : AT EVENT LOCATION', eventEnd.format() );
 
+						// Get the respective Javascript date objects
 						var clientTimezone = $pwDate.getTimezone();
 						var eventStartClient = eventStart.clone().tz( clientTimezone.name );
 						var eventEndClient = eventEnd.clone().tz( clientTimezone.name );
@@ -62,6 +65,7 @@ postworld.directive('pwEvent',
 						$log.debug( 'pwEvent : eventStartClient : AT CLIENT LOCATION', eventStartClient.format() );
 						$log.debug( 'pwEvent : eventEndClient : AT CLIENT LOCATION', eventEndClient.format() );
 
+						// Package it into a scope object
 						$scope.eventObj = {
 
 							eventTimezone: eventTimezone,
@@ -71,6 +75,12 @@ postworld.directive('pwEvent',
 							clientTimezone: clientTimezone,
 							eventStartClient: eventStartClient.format(),
 							eventEndClient: eventEndClient.format(),
+
+							eventStartClientCountdownMs: ( eventStartClient - new Date() ),
+							eventEndClientCountdownMs:  ( eventEndClient - new Date() ),
+
+							eventStartClientCountdownS: parseInt(( eventStartClient - new Date() )/1000, 10),
+							eventEndClientCountdownS:  parseInt(( eventEndClient - new Date() )/1000, 10),
 
 							hasTimezone: hasTimezone,
 

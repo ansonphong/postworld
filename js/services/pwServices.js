@@ -1938,6 +1938,7 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 			var timezone = {
 				offset: momentTimezone._offset,
 				name: timezoneId,
+				code: momentTimezone.format('z'),
 			};
 
 			//$log.debug( 'pwDate.getTimezone : momentTimezone : ' + timezoneId, momentTimezone );

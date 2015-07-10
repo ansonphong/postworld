@@ -31,7 +31,6 @@ global $pw_event_post;
 			<div class="well">
 				<h3>$scope.post</h3>
 			
-			
 				<!-- DEV : Test Output -->
 				<pre><code>{{ post | json }}</code></pre>
 			

@@ -474,6 +474,14 @@ function postworld_includes( $args ){
 			wp_enqueue_script( 'jsTimeZoneDetect-JS',
 				POSTWORLD_URI.'/lib/jsTimeZoneDetect/jstz.min.js', $angularDep);
 
+			// ANGULAR-TIMER
+			// Used for doing countdowns
+			// https://github.com/siddii/angular-timer
+			wp_enqueue_script( 'humanize-duration-JS',
+				POSTWORLD_URI.'/lib/HumanizeDuration.js/humanize-duration.js', $angularDep);
+			wp_enqueue_script( 'angularTimer-JS',
+				POSTWORLD_URI.'/lib/angular-timer/angular-timer.js', $angularDep);
+
 		}
 
 	}
