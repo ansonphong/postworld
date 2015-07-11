@@ -98,7 +98,6 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 
 ////////// GET POST DATA //////////
 function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
-	
 	//pw_log( "pw_get_post : " . $post_id, $fields );
 
 	// Switch Modes (view/edit)
@@ -1293,8 +1292,8 @@ function pw_embed_url($input){
 	if( $o_embed == true )
 		$embed = wp_oembed_get($url);
 	// HOTLINK : if not, hotlink it
-	else
-		$embed = '<a target="_blank" href="' . $url . '" target="_blank">' . $url . '</a>';
+	//else
+		$embed = $url ;//'<a target="_blank" href="' . $url . '" target="_blank">' . $url . '</a>';
 
 	return $embed;
 }
@@ -1326,8 +1325,6 @@ function pw_print_post( $vars ){
 	global $pw;
 
 	$pw_post = array();
-
-	//$pw_post['post'] = pw_get_post( $post_id );
 	$pw_post['post'] = pw_get_post( $post_id, $fields );
 
 	// Add custom input variables

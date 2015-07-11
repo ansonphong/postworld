@@ -1,3 +1,4 @@
+'use strict';
 /**
  * @ngdoc directive
  * @name postworld.directive:pwDeviceClass
@@ -53,7 +54,7 @@ postworld.directive('pwDeviceClass', function( $pw, $log ) {
 
 /**
  * @ngdoc directive
- * @name postworld.directive:pwImage
+ * @name postworld.directive:pwImageSrc
  * @description
  * Shows the correct image based on the current device pixel ratio.
  *
@@ -160,7 +161,141 @@ postworld.directive('pwImageSrc',
 				setImageSrc();
 			*/
 				
-
 		}
 	}
 }]);
+
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwSmartImage
+ * @description
+ * Intelligently selects the right image from the image object
+ * Based on the height and width of the element.
+ *
+ * @param Object pwSmartImage A Postworld post image object
+ * @param Object smartImageOverride An override to use instead if it's found
+ * @param none smartImageDynamic If this attribute is present, update the image when the source or screen change. May cause performance issues if many images use this
+ *
+ * @example
+ * 		<img pw-smart-image="post.image" smart-image-override="post.image.alt">
+ *
+ */
+postworld.directive('pwSmartImage',
+	[ '$pw', '$log', '_', '$window', '$filter', 'pwImages', '$timeout',
+	function( $pw, $log, $_, $window, $filter, $pwImages, $timeout ) {
+	return {
+		restrict:'A',
+		link: function( $scope, element, attrs ) { 
+
+			var getImgUrl = function(){
+
+				var devicePixelRatio = $window.devicePixelRatio;
+				var elementWidth = element[0].offsetWidth * devicePixelRatio;
+				var elementHeight = element[0].offsetHeight * devicePixelRatio;
+				
+				/*
+				$log.debug( 'element', element );
+				$log.debug( 'elementWidth', elementWidth );
+				$log.debug( 'elementHeight', elementHeight );
+				*/
+
+				// Get the image object from provided expression
+				var imageObj = $scope.$eval( attrs.pwSmartImage );
+
+				// If an override is provided
+				if( !_.isUndefined( attrs.smartImageOverride ) ){
+					var overrideImageObj = $scope.$eval( attrs.smartImageOverride );
+					if( !_.isUndefined( overrideImageObj ) ){
+						imageObj = overrideImageObj;
+					}
+				}
+		
+				// Get the correctly sized image
+				var imageSizes = $_.get( imageObj, 'sizes' );
+				if( _.isObject( imageSizes ) ){
+					var image = $pwImages.selectImageSize(
+						imageSizes,
+						{
+							width: elementWidth,
+							height: elementHeight,
+						}
+					);
+
+					return image.url;
+				}
+				else{
+					return '';
+				}
+				
+
+			}
+
+			function setImgUrl(){
+				// Detect what type of element
+				var elementTag = element[0].tagName;
+
+				var imgUrl = getImgUrl();
+				if( _.isEmpty( imgUrl ) )
+					return false;
+
+				if( elementTag === 'IMG' )
+					element.attr( 'src', getImgUrl() );
+				else
+					element.css( 'background-image', 'url('+getImgUrl()+')' );
+			}
+
+			// Timeout for DOM to initialize
+			$timeout( function(){
+				setImgUrl();		
+			}, 0 );
+
+
+			/**
+			 * If the smartImageDynamic attribute is present
+			 * Watch the element dimensions as well as the
+			 * Image object itself for changes.
+			 */
+			if( !_.isUndefined( attrs.smartImageDynamic ) ){
+
+				/**
+				 * If the width or height of the element changes
+				 * Re-evaluate which image is being used.
+				 */
+				$scope.$watch(
+					function(){
+						var elementWidth = element[0].offsetWidth;
+						var elementHeight = element[0].offsetHeight;
+						return elementWidth + elementHeight;
+					},
+					function(val){
+						setImgUrl();
+					}
+				);
+
+				/**
+				 * Watch for image object changes
+				 * Then re-set the image URL.
+				 */
+				$scope.$watch(
+					function(){
+						return $scope.$eval( attrs.pwSmartImage )
+					},
+					function(val){
+						setImgUrl();
+					}
+				);
+
+
+			}
+
+			
+
+			
+		}
+
+	}
+
+}]);
+
+

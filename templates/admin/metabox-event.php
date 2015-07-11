@@ -304,10 +304,17 @@
 			timezone-obj="post.post_meta[ eventKey ].timezone">
 			<hr class="thin">
 			<button
-				type='button'
+				type="button"
+				class="button"
 				disabled>
 				<i class="pwi-clock"></i>
 				Timezone : {{ post.post_meta[ eventKey ].timezone.time_zone_name }}
+			</button>
+			<button
+				type="button"
+				class="button"
+				ng-click="removeTimeZone()">
+				<i class="icon pwi-close"></i>
 			</button>
 		</div>
 

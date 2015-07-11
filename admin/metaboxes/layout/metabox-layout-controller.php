@@ -15,7 +15,8 @@ global $post;
 		pw-admin-layout
 		ng-controller="pwLayoutMetaboxCtrl"
 		id="poststuff"
-		class="pw-metabox metabox-side metabox-layout">
+		class="pw-metabox metabox-side metabox-layout"
+		ng-cloak>
 		<?php
 			echo i_layout_single_options( array( 'context'	=>	'postAdmin' ) );
 			// Action Hook

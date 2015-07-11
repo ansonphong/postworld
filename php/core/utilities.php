@@ -1548,6 +1548,31 @@ function is_blog_page() {
 
 }
 
+
+/**
+ * Gets only the fields which contain a certain substring
+ *
+ * @param string $substring The substring to match in each field
+ * @param array $fields A Postworld field model array
+ * @return array The items from the array containing the substring
+ */
+function pw_fields_where( $substring, $fields ){
+	
+	if( !is_array( $fields ) )
+		return array();
+
+	$matches = array();
+	foreach( $fields as $field ){
+		if( strpos( $field, $substring ) !== false  )
+			$matches[] = $field;
+	}
+	return $matches;
+}
+
+
+////////////////////////////////////////////////////////////////
+
+
 /*
 function pw_get_post_types(){
 	$args = array(
@@ -1562,7 +1587,6 @@ function pw_get_post_types(){
 	//print_r($post_types);
 }
 */
-
 
 
 ?>

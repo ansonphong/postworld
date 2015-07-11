@@ -151,6 +151,9 @@ function pw_get_social_share_meta( $vars ){
 	if( !$share_networks )
 		$share_networks = apply_filters( 'pw_default_share_networks', $share_networks );
 
+	if( empty( $share_networks ) || !is_array( $share_networks ) )
+		return false;
+
 	///// IMAGE URL /////
 	// Get the image url from the passed post object
 	$image_url = _get( $post, 'image.sizes.full.url' );

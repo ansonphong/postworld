@@ -30,32 +30,32 @@ postworld.factory( '$pw',
 
 		state:{
 			modals:{
-    			open:0,
-    		},
-    		keybindings:{},
+				open:0,
+			},
+			keybindings:{},
 		},
 
 		user: pwUser(), //$window.pw.user, // (or something) - refactor to go directly to pwUser
-    	// view: $window.pw.view
-    	// language: $window.pwSiteLanguage,
+		// view: $window.pw.view
+		// language: $window.pwSiteLanguage,
 
-    	config: $window.pw.config,
-    	view: $window.pw.view,
-    	query: $window.pw.query,
-    	paths: $window.pw.config.paths,
-    	site: $window.pw.config.site,
-    	controls: $window.pw.config.controls,
-    	fields: $window.pw.config.fields,
-    	modules: $window.pw.modules,
-    	iconsets: $window.pw.iconsets,
-    	postTypes: $window.pw.config.post_types,
-    	postViews: $window.pw.config.post_views,
-    	taxonomies: $window.pw.config.taxonomies,
-    	options: $window.pw.options,
-    	device: $window.pw.device,
+		config: $window.pw.config,
+		view: $window.pw.view,
+		query: $window.pw.query,
+		paths: $window.pw.config.paths,
+		site: $window.pw.config.site,
+		controls: $window.pw.config.controls,
+		fields: $window.pw.config.fields,
+		modules: $window.pw.modules,
+		iconsets: $window.pw.iconsets,
+		postTypes: $window.pw.config.post_types,
+		postViews: $window.pw.config.post_views,
+		taxonomies: $window.pw.config.taxonomies,
+		options: $window.pw.options,
+		device: $window.pw.device,
 
-    	// Get the admin data, will only be present if is_admin()
-    	admin: $_.get( $window, 'pw.admin' ),
+		// Get the admin data, will only be present if is_admin()
+		admin: $_.get( $window, 'pw.admin' ),
 
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )
@@ -66,23 +66,23 @@ postworld.factory( '$pw',
 			return $window.pw.config.wordpress.plugins_url + value;
 		},
 		loadScript: function( url, callback ){
-            // Adding the script tag to the head as suggested before
-            var head = document.getElementsByTagName('head')[0];
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
+			// Adding the script tag to the head as suggested before
+			var head = document.getElementsByTagName('head')[0];
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = url;
 
-            // Then bind the event to the callback function.
-            // There are several events for cross browser compatibility.
-            script.onreadystatechange = callback;
-            script.onload = callback;
+			// Then bind the event to the callback function.
+			// There are several events for cross browser compatibility.
+			script.onreadystatechange = callback;
+			script.onload = callback;
 
-            // Fire the loading
-            head.appendChild(script);
-        },
+			// Fire the loading
+			head.appendChild(script);
+		},
 
-        setKeybindings: function( contextObj ){
-        	// Sets a context to enable keybindings for
+		setKeybindings: function( contextObj ){
+			// Sets a context to enable keybindings for
 			/*
 				contextObj = {
 					feedId: 	// optional
@@ -91,40 +91,40 @@ postworld.factory( '$pw',
 				}
 			*/
 			this.state.keybindings = contextObj;
-        	$log.debug( '$pw.setkeybindings() : ', this.state.keybindings );
-        },
+			$log.debug( '$pw.setkeybindings() : ', this.state.keybindings );
+		},
 
-        hasKeybindings: function( contextObj ){
-        	// Returns true/false if the key/value matches the keybindings state
-        	if( _.isEmpty(contextObj) )
-        		return false;
-        	if( _.size(contextObj) != _.size(this.state.keybindings) )
-        		return false;
+		hasKeybindings: function( contextObj ){
+			// Returns true/false if the key/value matches the keybindings state
+			if( _.isEmpty(contextObj) )
+				return false;
+			if( _.size(contextObj) != _.size(this.state.keybindings) )
+				return false;
 
-        	var has = true;
-        	// Localize this state
-        	var thisState = this.state;
-        	// Iterate through provided context checks
-        	angular.forEach( contextObj, function( value, key ){
-        		// If any checks fail, return false
-        		if( $_.get( thisState, 'keybindings.' + key ) != value )
-        			has = false; 
-        	});
-        	$log.debug( '$pw.hasKeybindings() : ' + JSON.stringify(has), contextObj );
-        	return has;
-        },
+			var has = true;
+			// Localize this state
+			var thisState = this.state;
+			// Iterate through provided context checks
+			angular.forEach( contextObj, function( value, key ){
+				// If any checks fail, return false
+				if( $_.get( thisState, 'keybindings.' + key ) != value )
+					has = false; 
+			});
+			$log.debug( '$pw.hasKeybindings() : ' + JSON.stringify(has), contextObj );
+			return has;
+		},
 
-        revertKeybindings: function(){
-        	// Reverses keybindings to their previous state
-        	// TODO : retain history of keybindgs, when unset keybinding, reverse to previous
-        	
-        },
+		revertKeybindings: function(){
+			// Reverses keybindings to their previous state
+			// TODO : retain history of keybindgs, when unset keybinding, reverse to previous
+			
+		},
 
-        setQuery: function(query){
-        	this.query = query;
-        },
+		setQuery: function(query){
+			this.query = query;
+		},
 
-        locationToQuery: function(){
+		locationToQuery: function(){
 			// Get Query String Parameters
 			var query = $location.search();
 			if ( !_.isEmpty( $_.get( query, 'tax_query' ) ) ) {    			
@@ -133,7 +133,7 @@ postworld.factory( '$pw',
 			return query;
 		},
 
-        queryToLocation: function(query){
+		queryToLocation: function(query){
 			// Change the location to reflect input query
 			$log.debug('pw.queryToLocation',query);	
 
@@ -209,7 +209,7 @@ postworld.factory( '$pw',
 			return string;
 
 		},
-        
+		
 	};
 
 }]);
@@ -236,25 +236,25 @@ postworld.factory('_',
 
 	function get( obj, key ){
 		// Returns a sub-object
-        // SYNTAX : key = 'object.subkey.subsubkey'
+		// SYNTAX : key = 'object.subkey.subsubkey'
 
-        if( _.isUndefined( obj ) )
-            return false;
-        
-        ///// MINE OBJECT /////
-        var parts = key.split('.');
-        for(var i = 0, l = parts.length; i < l; i++) {
-            var part = parts[i];
-            if(obj !== null && typeof obj === "object" && part in obj) {
-                obj = obj[part];
-            }
-            else {
-                return false;
-            }
-        }
+		if( _.isUndefined( obj ) )
+			return false;
+		
+		///// MINE OBJECT /////
+		var parts = key.split('.');
+		for(var i = 0, l = parts.length; i < l; i++) {
+			var part = parts[i];
+			if(obj !== null && typeof obj === "object" && part in obj) {
+				obj = obj[part];
+			}
+			else {
+				return false;
+			}
+		}
 
-        // Return findWhere
-        return obj;
+		// Return findWhere
+		return obj;
 	}
 
 	///// SET OBJECT VALUES /////
@@ -428,13 +428,13 @@ postworld.factory('_',
 			return true;
 			
 		},
-        get : function( obj, key ){
+		get : function( obj, key ){
 			return get( obj, key  );
 		},
 		///// DEPRECIATED /////
 		getObj: function( obj, key ){
-            return get( obj, key );
-        },
+			return get( obj, key );
+		},
 		set : function( obj, key, value  ){
 			return set( obj, key, value  );
 		},
@@ -486,10 +486,10 @@ postworld.factory('_',
 
 		},
 		urlParam: function( name ) {
-		    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-		        results = regex.exec(location.search);
-		    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+			return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 		},
 		setScopeValues: function( $scope, values ){
 			// values is an associative array, where the key is the expression and the value is the value
@@ -525,12 +525,12 @@ postworld.factory('_',
 				hashLength = 8;
 
 			var hash = "";
-		    var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-		    for( var i=0; i < hashLength; i++ )
-		        hash += alpha.charAt(Math.floor(Math.random() * alpha.length));
+			for( var i=0; i < hashLength; i++ )
+				hash += alpha.charAt(Math.floor(Math.random() * alpha.length));
 
-		    return hash;
+			return hash;
 		},
 		randomString: function( randomLength, charTypes ){
 			// Generates a random string based on length
@@ -544,24 +544,24 @@ postworld.factory('_',
 
 			var randomString = "";
 
-		    var alpha = "";
+			var alpha = "";
 
-		    if( this.inArray( 'uppercase', charTypes ) )
-		    	alpha += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			if( this.inArray( 'uppercase', charTypes ) )
+				alpha += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-		    if( this.inArray( 'lowercase', charTypes ) )
-		    	alpha += "abcdefghijklmnopqrstuvwxyz";
+			if( this.inArray( 'lowercase', charTypes ) )
+				alpha += "abcdefghijklmnopqrstuvwxyz";
 
-		    if( this.inArray( 'numbers', charTypes ) )
-		    	alpha += "0123456789";
+			if( this.inArray( 'numbers', charTypes ) )
+				alpha += "0123456789";
 
-		    if( this.inArray( 'special', charTypes ) )
-		    	alpha += "!@#$%^&*()_-+";
+			if( this.inArray( 'special', charTypes ) )
+				alpha += "!@#$%^&*()_-+";
 
-		    for( var i=0; i < randomLength; i++ )
-		        randomString += alpha.charAt(Math.floor(Math.random() * alpha.length));
+			for( var i=0; i < randomLength; i++ )
+				randomString += alpha.charAt(Math.floor(Math.random() * alpha.length));
 
-		    return randomString;
+			return randomString;
 		},
 
 		arrayFromObjectWatch: function( $scope, $array, $object ){
@@ -745,29 +745,29 @@ postworld.factory('pwPosts',
 	}
 
 	var mergeFeedPost = function( feedId, mergePost ){
-    		// Get the original Post
-    		var post = getFeedPost( feedId, mergePost.ID );
-    		
-    		$log.debug( "mergeFeedPost : mergePost : ", mergePost );
+			// Get the original Post
+			var post = getFeedPost( feedId, mergePost.ID );
+			
+			$log.debug( "mergeFeedPost : mergePost : ", mergePost );
 
-    		if( post == false )
-    			return false;
+			if( post == false )
+				return false;
 
-    		// Combine Fields Value
-    		var oldFields = $_.get( post, 'fields' );
-    		if( oldFields !== false ){
-    			mergePost.fields = mergePost.fields.concat( oldFields );
-    		}
+			// Combine Fields Value
+			var oldFields = $_.get( post, 'fields' );
+			if( oldFields !== false ){
+				mergePost.fields = mergePost.fields.concat( oldFields );
+			}
 
-    		// Deep merge the new data with the post
-    		post = pw_array_replace_recursive( post, mergePost );
+			// Deep merge the new data with the post
+			post = pw_array_replace_recursive( post, mergePost );
 
-    		// Update the post
-    		return updateFeedPost( feedId, post );
-    };
+			// Update the post
+			return updateFeedPost( feedId, post );
+	};
 
-    var getMissingFields = function( post, requiredFields ){
-    	// Detect if the post has the required fields
+	var getMissingFields = function( post, requiredFields ){
+		// Detect if the post has the required fields
 		var missingFields = [];
 
 		// If no fields field, return empty handed
@@ -788,9 +788,9 @@ postworld.factory('pwPosts',
 		
 		return missingFields;
 
-    }
+	}
 
-    ///// FACTORY FUNCTIONS /////
+	///// FACTORY FUNCTIONS /////
 	return {
 
 		get: function( vars ){
@@ -808,33 +808,33 @@ postworld.factory('pwPosts',
 			 /*
 			 // Default Vars
 			 if( !_.isObject( vars ) )
-			 	vars = {};
+				vars = {};
 
 			 // If no post ID
 			 if( _.isUndefined( vars.post_id ) )
-			 	return false;
+				return false;
 
 			 // If no fields
 			 if( _.isUndefined( vars.fields ) )
-			 	vars.fields = 'preview';
+				vars.fields = 'preview';
 
 			 // If fields is a string
 			 if( _.isString( vars.fields ) )
-			 	vars.fields = $_.get( $pw.fields.post, vars.fields );
+				vars.fields = $_.get( $pw.fields.post, vars.fields );
 
 			 // If the requested field string doesn't exist
 			 if( vars.fields == false )
-			 	return false;
+				return false;
 
 			 // Get the post
 			 var post = $_.get( $pwData, 'posts.' + vars.post_id );
 
 			 // If the post exists
 			 if( post ){
-			 	// Check if it has any missing fields
-			 	var missingFields = getMissingFields( post, vars.fields );
-			 	if( missingFields.length > 0 ){
-			 	}
+				// Check if it has any missing fields
+				var missingFields = getMissingFields( post, vars.fields );
+				if( missingFields.length > 0 ){
+				}
 			 }
 
 			 // If the post doesn't exist, return the promise of getting it $pwData.get_post
@@ -857,15 +857,15 @@ postworld.factory('pwPosts',
 			$log.debug( "REQUIRED FIELDS : ", vars );
 
 			// Get the original Post
-    		var post = getFeedPost( vars.feedId, vars.postId );
-    		if( post == false )
-    			return false;
+			var post = getFeedPost( vars.feedId, vars.postId );
+			if( post == false )
+				return false;
 
-    		// Detect if the post has a 'fields' field, which tells which fields are loaded
-    		if( _.isUndefined( post.fields ) )
-    			return false;
+			// Detect if the post has a 'fields' field, which tells which fields are loaded
+			if( _.isUndefined( post.fields ) )
+				return false;
 
-    		var missingFields = getMissingFields( post, vars.fields );
+			var missingFields = getMissingFields( post, vars.fields );
 
 			// If there are no missing fields
 			if( missingFields.length == 0 )
@@ -873,95 +873,95 @@ postworld.factory('pwPosts',
 
 			// If there are missing fields, get them from the server
 			var args = {
-                post_id: vars.postId,
-                fields: missingFields,
-            };
+				post_id: vars.postId,
+				fields: missingFields,
+			};
 			$pwData.getPost(args).then(
-                // Success
-                function(response) {
-                    // Catch the new post data
-                    var newPostData = response.data;
-                    // Add the previously missing fields to the 'fields' field
+				// Success
+				function(response) {
+					// Catch the new post data
+					var newPostData = response.data;
+					// Add the previously missing fields to the 'fields' field
 					newPostData.fields = missingFields;
-                    // Merge it into the feed post
-                    var merged = mergeFeedPost( vars.feedId, newPostData );
-                    $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
-                    // Broadcast event for child listeners to pick up the new data
-                    $rootScope.$broadcast( 'feedPostUpdated', {
-                    		feedId: vars.feedId,
-                    		postId: vars.postId
-                    	});
-                    
-                },
-                // Failure
-                function(response) {}
-            );
-    	},
-    	reloadFeedPost: function( feedId, postId ){
-    		/* Reloads the post data from the server and plants it in the feed
+					// Merge it into the feed post
+					var merged = mergeFeedPost( vars.feedId, newPostData );
+					$log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
+					// Broadcast event for child listeners to pick up the new data
+					$rootScope.$broadcast( 'feedPostUpdated', {
+							feedId: vars.feedId,
+							postId: vars.postId
+						});
+					
+				},
+				// Failure
+				function(response) {}
+			);
+		},
+		reloadFeedPost: function( feedId, postId ){
+			/* Reloads the post data from the server and plants it in the feed
 			 */
 
-    		// Get the specified post from the feed
-    		var post = getFeedPost( feedId, postId );
-    		if( post == false )
-    			return false;
+			// Get the specified post from the feed
+			var post = getFeedPost( feedId, postId );
+			if( post == false )
+				return false;
 
-    		// Get the 'fields' value of the post
-    		var fields = $_.getObj( post, 'fields' );
-    		if( fields == false )
-    			fields = 'all';
+			// Get the 'fields' value of the post
+			var fields = $_.getObj( post, 'fields' );
+			if( fields == false )
+				fields = 'all';
 
-    		// Get the post from the server
+			// Get the post from the server
 			var args = {
-                post_id: postId,
-                fields: fields,
-            };
+				post_id: postId,
+				fields: fields,
+			};
 			$pwData.get_post(args).then(
-                // Success
-                function(response) {
-                    // Catch the new post data
-                    var postData = response.data;
-                    // Merge it into the feed post
-                    var merged = mergeFeedPost( feedId, postData );
-                    $log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : MERGE WITH FEED/POST : ", postData );
-                    // Broadcast event for child listeners to pick up the new data
-                    $rootScope.$broadcast( 'feedPostUpdated', {
-                    		feedId: feedId,
-                    		postId: postId
-                    	});
-                },
-                // Failure
-                function(response) {
-                	$log.error( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : UNKOWN ERROR" );
-                }
-            );
+				// Success
+				function(response) {
+					// Catch the new post data
+					var postData = response.data;
+					// Merge it into the feed post
+					var merged = mergeFeedPost( feedId, postData );
+					$log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : MERGE WITH FEED/POST : ", postData );
+					// Broadcast event for child listeners to pick up the new data
+					$rootScope.$broadcast( 'feedPostUpdated', {
+							feedId: feedId,
+							postId: postId
+						});
+				},
+				// Failure
+				function(response) {
+					$log.error( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : UNKOWN ERROR" );
+				}
+			);
 
-    	},
-    	getFeedPost: function( feedId, postId ){
-    		return getFeedPost( feedId, postId );
-    	},
-    	updateFeedPost: function( feedId, post ){
-    		return updateFeedPost( feedId, post );
-    	},
-    	setFeedPostKeyValue: function( feedId, postId, key, value ){
-    		return setFeedPostKeyValue( feedId, postId, key, value );
-    	},
-    	mergeFeedPost: function( feedId, mergePost ){
-    		return mergeFeedPost( feedId, mergePost );
-    	},
-    	// DEPRECIATED
-    	getFeed: function( feedId ){
-    		return $pwData.getFeed( feedId );
-    	},
-    	setFeedView: function( feedId, view ){
-    		$log.debug( 'pwPosts : setFeedView : ' + feedId + ' ', view );
+		},
+		getFeedPost: function( feedId, postId ){
+			return getFeedPost( feedId, postId );
+		},
+		updateFeedPost: function( feedId, post ){
+			return updateFeedPost( feedId, post );
+		},
+		setFeedPostKeyValue: function( feedId, postId, key, value ){
+			return setFeedPostKeyValue( feedId, postId, key, value );
+		},
+		mergeFeedPost: function( feedId, mergePost ){
+			return mergeFeedPost( feedId, mergePost );
+		},
+		// DEPRECIATED
+		getFeed: function( feedId ){
+			return $pwData.getFeed( feedId );
+		},
+		setFeedView: function( feedId, view ){
+			$log.debug( 'pwPosts : setFeedView : ' + feedId + ' ', view );
 			var vars = {
 				'feedId' 	: feedId,
 				'view'		: view,
 			};
 			$rootScope.$broadcast( "feed.changeTemplate", vars );
-    	},
-    	
+		},
+		
 	};
 
 }]);
@@ -1020,7 +1020,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
 		},
 		get : function( vars ){
 			/*
-			 	vars = {
+				vars = {
 					partial: [string] 	// required, the object path to the registered partial function
 					vars: [mixed] 		// optional, variables to pass to the partial function
 					id: [string] 		// optional, additional identifier
@@ -1088,67 +1088,159 @@ postworld.factory('pwImages',
 	///// UNIVERSALS /////
 	// TODO : Get Tag mapping from pwConfig
 	var tagMappings = [
-    	{
-    		name: 'square',
-    		width: 1,
-    		height: 1,
-    	},
-    	{
-    		name: 'wide',
-    		width: 1,
-    		height: 1,
-    	},
-    	{
-    		name: 'x-wide',
-    		width: 2,
-    		height: 1,
-    	},
-    	{
-    		name: 'tall',
-    		width: 1,
-    		height: 1.5,
-    	},
-    	{
-    		name: 'x-tall',
-    		width: 1,
-    		height: 2,
-    	},
-    ];
+		{
+			name: 'square',
+			width: 1,
+			height: 1,
+		},
+		{
+			name: 'wide',
+			width: 1,
+			height: 1,
+		},
+		{
+			name: 'x-wide',
+			width: 2,
+			height: 1,
+		},
+		{
+			name: 'tall',
+			width: 1,
+			height: 1.5,
+		},
+		{
+			name: 'x-tall',
+			width: 1,
+			height: 2,
+		},
+	];
 
-    /**
-     * Override the default tag mappings
-     * With those provided in Postworld Config
-     */
-    var overrideTagMappings = $_.get( $pw, 'config.images.tag_mapping' );
-    if( !_.isEmpty( overrideTagMappings ) )
-    	tagMappings = overrideTagMappings;
+	/**
+	 * Override the default tag mappings
+	 * With those provided in Postworld Config
+	 */
+	var overrideTagMappings = $_.get( $pw, 'config.images.tag_mapping' );
+	if( !_.isEmpty( overrideTagMappings ) )
+		tagMappings = overrideTagMappings;
 
-    ///// FACTORY VALUES /////
+	///// FACTORY VALUES /////
 	return {
 		selectImageTag: function( tags, mappings ){
 			// Set Default Mapping
-	    	if( _.isUndefined( mappings ) )
-	    		mappings = tagMappings;
+			if( _.isUndefined( mappings ) )
+				mappings = tagMappings;
 
-	    	var selectedTag = {};
-	    	// Iterate through each image tag in the selected image
-	    	angular.forEach( tags, function( imageTag ){
-	    		// Iterate through each mapping option
-	    		angular.forEach( mappings, function( tagMapping ){
-	    			// Select the last match
-	    			if( tagMapping['name'] == imageTag )
-	    				selectedTag = tagMapping;
-		    	});
-	    	});
-	    	
-	    	//$log.debug( "selectImageTag : " + tags + " // selectedTag : " + JSON.stringify(selectedTag) + " // mappings : ", mappings );
+			var selectedTag = {};
+			// Iterate through each image tag in the selected image
+			angular.forEach( tags, function( imageTag ){
+				// Iterate through each mapping option
+				angular.forEach( mappings, function( tagMapping ){
+					// Select the last match
+					if( tagMapping['name'] == imageTag )
+						selectedTag = tagMapping;
+				});
+			});
+			
+			//$log.debug( "selectImageTag : " + tags + " // selectedTag : " + JSON.stringify(selectedTag) + " // mappings : ", mappings );
 
-	    	// If none selected
-	    	if( selectedTag == {} )
-	    		return false;
-	    	// Return the selected tag
-	    	return selectedTag;
-    	},
+			// If none selected
+			if( selectedTag == {} )
+				return false;
+			// Return the selected tag
+			return selectedTag;
+		},
+
+		/**
+		 * Selects the correctly sized image from a series of variables.
+		 * In general, the smallest image which equals or exceeds
+		 * The input variables will be selected.
+		 *
+		 * @param {object} image A Postworld image object
+		 */
+		selectImageSize: function( imageSizes, vars ){
+
+			if( _.isEmpty( imageSizes ) || imageSizes === null )
+				return false;
+
+			if( _.isEmpty( vars ) || vars === null )
+				return false;
+
+			/**
+			 * Set the default variables
+			 */
+			var defaultVars = {
+				width:0,
+				height:0,
+			};
+			vars = array_replace_recursive( defaultVars, vars );
+
+			/**
+			 * Make a new array, without the keys
+			 * So that it can be properly sorted as an Array
+			 */
+			
+			var imageArray = [];
+			angular.forEach( imageSizes, function( img, key ){
+				// Calculate the image area
+				img['area'] = parseInt( img['width'] ) * parseInt( img['height'] );
+				// Add the object key
+				img['key'] = key;
+				imageArray.push( img );
+			});
+
+			// Sort the image objects by area
+			imageArray = _.sortBy( imageArray, 'area' ).reverse();
+
+			// Precalculate if width and height are present
+			var hasWidth = ( vars['width'] !== 0 );
+			var hasHeight = ( vars['height'] !== 0 );
+
+			/** 
+			 * Get the image with the smallest area
+			 * that is equal to or above the
+			 * Specified width and height.
+			 *
+			 * @note This is where the magic happens.
+			 */
+			var selectImg = {};
+			angular.forEach( imageArray, function( img ){
+
+				// Check Width
+				var passWidth = false;
+				if( hasWidth ){
+					if( img['width'] >= vars['width'] ){
+						passWidth = true;
+					}
+				} else
+					passWidth = true;
+				
+				// Check Height
+				var passHeight = false;
+				if( hasHeight ){
+					if( img['height'] >= vars['height'] ){
+						passHeight = true;
+					}
+				} else
+					passHeight = true;
+				
+				// If it's a valid width and height, select it
+				if( passWidth && passHeight )
+					selectImg = img;
+				
+			});
+
+			/**
+			 * If no image was selected it is
+			 * Because none of the images were high res enough,
+			 * So select the image with the largest area.
+			 */
+			if( _.isEmpty( selectImg ) )
+				selectImg = imageArray[0];
+
+			return selectImg;
+
+		},
+
 	};
 
 }]);

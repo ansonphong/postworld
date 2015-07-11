@@ -84,16 +84,15 @@ function pw_print_slider( $slider ){
 	///// TEMPLATES ////
 	$slider_templates = pw_get_templates(
 		array(
-			'subdirs' => array('sliders'),
-			'path_type' => 'dir',
-			'ext'=>'php',
+			'subdirs' 	=> 	array('sliders'),
+			'path_type' => 	'dir',
+			'ext'		=>	'php',
 			)
 		);
 	$template_id = $slider['template'];
 	$slider_template = ( isset( $slider_templates['sliders'][$template_id] ) ) ?
 		$slider_templates['sliders'][$template_id] :
 		$slider_templates['sliders'][$default_template];
-
 
 	///// CACHING LAYER /////
 	$slider_hash = hash( 'sha256', json_encode( $slider ) );
@@ -105,11 +104,17 @@ function pw_print_slider( $slider ){
 		}
 	}
 
+	$slider = apply_filters( 'pw_slider_preprocess', $slider );
+	//pw_log( 'slider', $slider );
 
 	///// SET OVERRIDE MODE /////
-	if( !empty( $slider['posts'] ) && is_array( $slider['posts'] ) ){
+	if( !empty( $slider['posts'] ) && is_array( $slider['posts'] ) )
 		$slider['mode'] = 'override';
-	}
+
+	///// GET DEFAULT FIELDS /////
+	$fields = _get( $slider, 'query.fields' );
+	if( empty($fields) )
+		$fields = "preview";
 
 	////////// MODE //////////
 	switch( $slider['mode'] ){
@@ -152,17 +157,7 @@ function pw_print_slider( $slider ){
 
 			// FIELDS
 			if( !isset( $query['fields'] ) )
-				$query['fields'] = 'preview';
-				/*array(
-					'ID',
-					'post_title',
-					'post_excerpt',
-					'post_type',
-					'post_parent',
-					'post_permalink',
-					'post_excerpt',
-					'image(all)',
-					)*/
+				$query['fields'] = $fields;
 
 			// CATEGORY
 			// Add Category
@@ -200,7 +195,7 @@ function pw_print_slider( $slider ){
 			// Prepend the current post
 			if( $slider['query_vars']['this_post'] == true ){
 				// Get current post
-				$this_post = array( pw_get_post( $post->ID, $query['fields'] ) );
+				$this_post = array( pw_get_post( $post->ID, $fields ) );
 				// Prepend to the posts array
 				$slider['posts'] = array_merge( $this_post, $slider['posts'] );
 			}
@@ -217,12 +212,11 @@ function pw_print_slider( $slider ){
 					$post_ids = array_unique( $post_ids );
 				}
 
-
 				// Get Attachments from Galleries from all posts
 				$gallery_attachment_ids = pw_get_posts_galleries_attachment_ids( $post_ids );
 
 				// Get Post Data for Attachments
-				$gallery_posts = pw_get_posts( $gallery_attachment_ids, $query['fields'] );
+				$gallery_posts = pw_get_posts( $gallery_attachment_ids, $fields );
 
 				// Append Galleries 
 				$slider['posts'] = array_merge( $slider['posts'], $gallery_posts );
@@ -280,8 +274,6 @@ function pw_print_slider( $slider ){
 		case 'menu':
 			///// MENU MODE /////
 			// Get the posts from a menu by menu_id
-			$fields = "preview";
-
 			// Get the Menu ID
 			$menu_id = _get( $slider, 'menu_vars.menu_id' );
 
