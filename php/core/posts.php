@@ -674,7 +674,8 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			///// CONTENT FILTERING /////
 
 			// oEmbed URLs
-			$post['post_content'] = pw_embed_content($post['post_content']);
+			// Disable this due to caching issues
+			//$post['post_content'] = pw_embed_content( $post['post_content'] );
 			
 			// Apply Shortcodes
 			//$post[$key] = do_shortcode($post[$key]);
