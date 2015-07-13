@@ -168,7 +168,48 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 	}
 	//$fields = array_merge($fields, $viewer_fields);
+
+
+	////////// VIEWER FIELDS //////////
+	// Extract viewer() fields
+	$viewer_fields = extract_linear_fields( $fields, 'viewer', true );
+
+	if ( !empty($viewer_fields) ){
+		///// GET VIEWER DATA /////
+		// Has Viewer Voted?
+		if( in_array('has_voted', $viewer_fields) )
+			$post['viewer']['has_voted'] = pw_has_voted_on_post( $post_id, $viewer_user_id );
+
+		// View Vote Power
+		if( in_array('vote_power', $viewer_fields) )
+			$post['viewer']['vote_power'] = pw_get_user_vote_power( $viewer_user_id );
 	
+		// Is Favorite
+		if( in_array('is_favorite', $viewer_fields) ){
+			$is_favorite = pw_is_favorite( $post_id );
+			if ( !isset($is_favorite) )
+				$is_favorite = "0";
+			$post['viewer']['is_favorite'] = $is_favorite;
+		}
+
+		// Is View Later
+		if( in_array('is_view_later', $viewer_fields) )
+			$post['viewer']['is_view_later'] = pw_is_view_later( $post_id );
+
+	}
+
+
+	///// CACHING LAYER /////
+	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+		$cache_hash = hash( 'sha256', json_encode( array( $post_id, $fields, $mode ) ) );
+		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+		if( !empty( $get_cache ) ){
+			$cached_post = json_decode($get_cache['cache_content'], true);
+			return array_replace( $cached_post, $post );
+		}
+	}
+
+
 	////////// WP GET_POST METHOD //////////
 	// Get post data from Wordpress standard function
 	foreach ($get_post as $key => $value) {
@@ -247,36 +288,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 		if( in_array('post_points', $fields) ){
 			$post['post_points'] = pw_get_post_points( $post_id );
 		}
-
-
-	////////// VIEWER FIELDS //////////
-		// Extract viewer() fields
-		$viewer_fields = extract_linear_fields( $fields, 'viewer', true );
-
-		if ( !empty($viewer_fields) ){
-			///// GET VIEWER DATA /////
-			// Has Viewer Voted?
-			if( in_array('has_voted', $viewer_fields) )
-				$post['viewer']['has_voted'] = pw_has_voted_on_post( $post_id, $viewer_user_id );
-
-			// View Vote Power
-			if( in_array('vote_power', $viewer_fields) )
-				$post['viewer']['vote_power'] = pw_get_user_vote_power( $viewer_user_id );
-		
-			// Is Favorite
-			if( in_array('is_favorite', $viewer_fields) ){
-				$is_favorite = pw_is_favorite( $post_id );
-				if ( !isset($is_favorite) )
-					$is_favorite = "0";
-				$post['viewer']['is_favorite'] = $is_favorite;
-			}
-
-			// Is View Later
-			if( in_array('is_view_later', $viewer_fields) )
-				$post['viewer']['is_view_later'] = pw_is_view_later( $post_id );
-
-		}
-
 	
 	////////// AUTHOR DATA //////////
 		// Extract author() fields
@@ -763,6 +774,16 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 	///// FILTERS /////
 	$post = apply_filters( 'pw_get_post_complete_filter', $post );
+
+
+	///// CACHING LAYER /////
+	if( in_array( 'post_cache', pw_enabled_modules() ) )
+		pw_set_cache( array(
+			'cache_type'	=>	'post',
+			'cache_hash' 	=> 	$cache_hash,
+			'cache_content'	=>	json_encode($post),
+			));
+
 
 	return $post;
 
