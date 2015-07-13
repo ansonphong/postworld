@@ -291,48 +291,72 @@
 					placeholder="0.000">
 			</div>
 		</div>
-		
 
-		<hr>
+		<?php if( pw_dev_mode() ): ?>
 
-		PW EVENT : 
-		<div pw-event="post.post_meta.pw_event" event-obj="myEvent">
-			<pre>{{ myEvent | json }}</pre>
+			<div class="well">
+				<h3>pw-event</h3>
+				<div pw-event="post.post_meta.pw_event" event-obj="myEvent">
+					<pre><code>{{ myEvent | json }}</code></pre>
 
-			<!-- MAKE COUNTDOWN OBJECT -->
-		
-		</div>
+					<!-- MAKE COUNTDOWN OBJECT -->
+				
+				</div>
+			</div>
+
+		<?php endif; ?>
 
 		<div
-			ng-show="uiBool(post.post_meta[ eventKey ].timezone.time_zone_name)"
 			pw-timezone
 			timezone-latitude="post.geo_latitude"
 			timezone-longitude="post.geo_longitude"
-			timezone-obj="post.post_meta[ eventKey ].timezone">
+			timezone-obj="post.post_meta[ eventKey ].timezone"
+			>
+
 			<hr class="thin">
 
-			<h3>Timezone</h3>
+			<div
+				pw-event="post.post_meta.pw_event"
+				event-obj="eventData">
 			
-			Client timezone
+				<div ng-show="uiBool(post.post_meta[ eventKey ].timezone.time_zone_name)">		
 
-			{{ clientTimezoneOffset | json }}
+					<h3>Event Timezone</h3>
+					<button
+						type="button"
+						class="button"
+						disabled>
+						<i class="pwi-clock"></i>
+						{{ eventData.eventTimezone.name }}
+						//
+						{{ eventData.eventTimezone.code }}
+						( UTC {{ eventData.eventTimezone.offset / 60 }}h )
+					</button>
+					<button
+						type="button"
+						class="button"
+						ng-click="removeTimeZone()">
+						<i class="icon pwi-close"></i> Remove Timezone
+					</button>
 
-			<button
-				type="button"
-				class="button"
-				disabled>
-				<i class="pwi-clock"></i>
-				Timezone :
-				{{ post.post_meta[ eventKey ].timezone.time_zone_name }},
-				{{ post.post_meta[ eventKey ].timezone.time_zone_id }},
-				UTC {{ post.post_meta[ eventKey ].timezone.raw_offset / 60 / 60 }}h
-			</button>
-			<button
-				type="button"
-				class="button"
-				ng-click="removeTimeZone()">
-				<i class="icon pwi-close"></i> Remove Timezone
-			</button>
+					<hr class="thin">
+
+				</div>
+				
+				<h3>Client Timezone</h3>
+				<button
+					type="button"
+					class="button"
+					disabled>
+					<i class="pwi-clock"></i>
+					{{ eventData.clientTimezone.name }}
+					//
+					{{ eventData.clientTimezone.code }}
+					( UTC {{ eventData.clientTimezone.offset / 60 }}h )
+				</button>
+
+			</div>
+			
 		</div>
 
 	</div>
