@@ -775,15 +775,14 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	///// FILTERS /////
 	$post = apply_filters( 'pw_get_post_complete_filter', $post );
 
-
 	///// CACHING LAYER /////
 	if( in_array( 'post_cache', pw_enabled_modules() ) )
 		pw_set_cache( array(
 			'cache_type'	=>	'post',
+			'cache_name'	=>	'post-'.$post_id,
 			'cache_hash' 	=> 	$cache_hash,
 			'cache_content'	=>	json_encode($post),
 			));
-
 
 	return $post;
 
