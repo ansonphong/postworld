@@ -292,20 +292,6 @@
 			</div>
 		</div>
 
-		<?php if( pw_dev_mode() ): ?>
-
-			<div class="well">
-				<h3>pw-event</h3>
-				<div pw-event="post.post_meta.pw_event" event-obj="myEvent">
-					<pre><code>{{ myEvent | json }}</code></pre>
-
-					<!-- MAKE COUNTDOWN OBJECT -->
-				
-				</div>
-			</div>
-
-		<?php endif; ?>
-
 		<div
 			pw-timezone
 			timezone-latitude="post.geo_latitude"
@@ -442,3 +428,15 @@
 
 	</div>
 </div>
+
+<?php if( pw_dev_mode() ): ?>
+	<div class="well">
+		<h3>pw-event</h3>
+		<div pw-event="post.post_meta.pw_event" event-obj="myEvent">
+			<pre><code>{{ myEvent | json }}</code></pre>
+
+			<!-- MAKE COUNTDOWN OBJECT -->
+		
+		</div>
+	</div>
+<?php endif; ?>

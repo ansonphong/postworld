@@ -29,39 +29,35 @@ postworld.directive('pwEvent',
 		},
 		link: function( $scope, element, attrs ) {
 			
-			var hasTimezone = false;
-
 			$scope.$watch( 'e',
 				function( e ){
-					$log.debug( 'pwEvent : EVENT CHANGED', $scope.e );
+					$log.debug( 'pwEvent : $WATCH', $scope.e );
+					$scope.eventObj = {};
 
 					/**
 					 * Check if the event object has a timezone
 					 * And set a boolean.
 					 */
-					if( _.isObject( e.timezone ) )
-						hasTimezone = true;
-					else
-						hasTimezone = false;
+					var hasTimezone = _.isObject( e.timezone );
 
+					///// CLIENT /////
+					// Get the client and event timezone IDs
+					var clientTimezone = $pwDate.getTimezone();
+					
 					if( hasTimezone ){
 
-						// Get the client and event timezone IDs
-						var clientTimezone = $pwDate.getTimezone();
+						///// EVENT /////
 						var eventTimezone = $pwDate.getTimezone( e.timezone.time_zone_id );
-					
 						// Get the respective Javascript date objects
 						var eventStart = moment.tz($scope.e.date.start_date, e.timezone.time_zone_id );
 						var eventEnd = moment.tz($scope.e.date.end_date, e.timezone.time_zone_id );
-
 						$log.debug( 'pwEvent : eventStart : AT EVENT LOCATION', eventStart.format() );
 						$log.debug( 'pwEvent : eventEnd : AT EVENT LOCATION', eventEnd.format() );
 
+						///// CLIENT /////
 						// Get the respective Javascript date objects
-						var clientTimezone = $pwDate.getTimezone();
 						var eventStartClient = eventStart.clone().tz( clientTimezone.name );
 						var eventEndClient = eventEnd.clone().tz( clientTimezone.name );
-
 						$log.debug( 'pwEvent : eventStartClient : AT CLIENT LOCATION', eventStartClient.format() );
 						$log.debug( 'pwEvent : eventEndClient : AT CLIENT LOCATION', eventEndClient.format() );
 
@@ -72,7 +68,6 @@ postworld.directive('pwEvent',
 							eventStart: eventStart.format(),
 							eventEnd: eventEnd.format(),
 
-							clientTimezone: clientTimezone,
 							eventStartClient: eventStartClient.format(),
 							eventEndClient: eventEndClient.format(),
 
@@ -82,11 +77,12 @@ postworld.directive('pwEvent',
 							eventStartClientCountdownS: parseInt(( eventStartClient - new Date() )/1000, 10),
 							eventEndClientCountdownS:  parseInt(( eventEndClient - new Date() )/1000, 10),
 
-							hasTimezone: hasTimezone,
-
 						};
 
 					}
+
+					$scope.eventObj.clientTimezone = clientTimezone;
+					$scope.hasTimezone = hasTimezone;
 
 
 				}, 1);
