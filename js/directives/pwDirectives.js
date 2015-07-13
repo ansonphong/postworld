@@ -74,11 +74,15 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 					$log.debug( 'pwInclude : ERROR : Include must contain 2 parts, dir/basename.' )
 					return false;
 				}
-				if($scope.includeEnable !== false )
-					$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
-				else
-					$scope.includeUrl = '';
-				//$log.debug('pwInclude : ' + attrs.pwInclude, $scope.includeUrl );
+				
+				// Timeout to allow other controllers to init
+				$timeout( function(){
+					if($scope.includeEnable !== false )
+						$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
+					else
+						$scope.includeUrl = '';
+				}, 0 );
+				
 			}
 
 			attrs.$observe( 'pwInclude', function( pwInclude ){

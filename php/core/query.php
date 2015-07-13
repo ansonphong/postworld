@@ -125,50 +125,70 @@ class PW_Query extends WP_Query {
 			}
 		}
 
-		///// FILTER EVENTS  /////
+		/**
+		 * FILTER EVENTS
+		 * Adds a complex of clauses based on predefined
+		 * filter options. Clauses are grouped with OR operator,
+		 * and so are internally additive.
+		 */
 		if( array_key_exists('event_filter',  $this->query_vars) ){
-
 			$current_timestamp = time();
+			$event_filters = $this->query_vars['event_filter'];
 
+			// Force string value as an array
+			if( is_string( $event_filters ) )
+				$event_filters = array( $event_filters );	
 
-			switch( $this->query_vars['event_filter'] ){
+			// If 'event_filter' is not the first clause, add 'AND'
+			if( $add_and )
+				$time_query .= " AND ";
+			$add_and = true;
 
-				case 'past':
-					if( $add_and )
-						$time_query .= " AND ";
+			/**
+			 * @todo :  Here make sure all the event filters
+			 *			are from a list of pre-registered options
+			 *			Otherwise it could mess up the rest of the query.
+			*/
 
-					$time_query .= "event_end < ".$current_timestamp;
+			$filter_count = count( $event_filters );
 
-					if( !$add_and )
-						$add_and = true;
+			// Wrap in brackets if multiple filters
+			if( $filter_count > 1 )
+				$time_query .= " ( ";
 
-					break;
+			// Iterate through each of the event filters
+			$i = 0;
+			foreach( $event_filters as $filter ){
+				$i++;
+				$last_iteration = ( $i === $filter_count ) ? true : false;
 
-				case 'now':
-					
-					if( $add_and )
-						$time_query .= " AND ";
-					
-					$time_query .= "event_end > ".$current_timestamp." AND event_start < ".$current_timestamp;
-					
-					if( !$add_and )
-						$add_and = true;
+				// Switch queries added based on filter
+				switch( $filter ){
+					case 'past':
+						$time_query .= "event_end < ".$current_timestamp;
+						break;
 
-					break;
+					case 'now':
+					case 'current':
+						$time_query .= "( event_end > ".$current_timestamp." AND event_start < ".$current_timestamp ." ) ";
+						break;
 
-				case 'future':
+					case 'future':
+					case 'upcoming':
+						$time_query .= "event_start > ".$current_timestamp;
+						break;
+				}
 
-					if( $add_and )
-						$time_query .= " AND ";
-
-					$time_query .= "event_start > ".$current_timestamp;
-					
-					if( !$add_and )
-						$add_and = true;
-
-					break;
+				// If there is a following clause, add 'OR'
+				if( !$last_iteration )
+					$time_query .= " OR ";
 
 			}
+
+			// Wrap in brackets if multiple filters
+			if( $filter_count > 1 )
+				$time_query .= " ) ";
+
 		}
 
 		// Return Query

@@ -2,9 +2,10 @@
 /**
  * When saving a post, clear the affected caches.
  */
-add_action( 'wp_insert_post', 'pw_delete_post_caches' );
 add_action( 'update_postmeta', 'pw_delete_post_caches' );
-add_action( 'pw_save_post', 'pw_delete_post_caches' );
+add_action( 'save_post', 'pw_delete_post_caches' );
+add_action( 'save_post', 'pw_delete_post_single_cache' );
+
 
 /**
  * When saving a terms, clear the affected caches.
@@ -26,6 +27,17 @@ function pw_delete_post_caches(){
 
 	pw_delete_cache_type( 'term-feed' );
 	pw_delete_cache_type( 'pw-query' );
+
+}
+
+/**
+ * Clear all the caches associated with a particular post
+ */
+function pw_delete_post_single_cache( $post_id ){
+
+	pw_delete_cache( array(
+		'cache_name' => 'post-'.$post_id
+		));
 
 }
 
@@ -189,6 +201,35 @@ function pw_get_cache_types_readout(){
 		GROUP BY cache_type
 	';
 	return $wpdb->get_results($query);
+}
+
+
+////////////////////////////////////////////////////////////////////
+
+/**
+ * The runtime cache is used to quickly store calculations
+ * Which may be done many times through a single runtime cycle.
+ *
+ * @param string $key The ID/key of the cache.
+ * @param mixed $value The value to store in the cache.
+ *
+ *  
+ */
+global $pw_runtime_cache;
+function pw_set_runtime_cache( $key, $value ){
+	global $pw_runtime_cache;
+	$pw_runtime_cache[$key] = $value;
+	return true;
+}
+
+function pw_get_runtime_cache( $key ){
+	global $pw_runtime_cache;
+	return _get( $pw_runtime_cache, $key );
+}
+
+function pw_has_runtime_cache( $key ){
+	global $pw_runtime_cache;
+	return isset( $pw_runtime_cache[$key] );
 }
 
 
