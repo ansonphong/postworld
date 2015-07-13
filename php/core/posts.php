@@ -683,14 +683,11 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			$post['post_type'] !== 'nav_menu_item' ){
 			
 			///// CONTENT FILTERING /////
-
 			// oEmbed URLs
 			// Disable this due to caching issues
 			//$post['post_content'] = pw_embed_content( $post['post_content'] );
-			
 			// Apply Shortcodes
 			//$post[$key] = do_shortcode($post[$key]);
-
 			// Apply AutoP
 			//$post[$key] = wpautop($post[$key]);
 
