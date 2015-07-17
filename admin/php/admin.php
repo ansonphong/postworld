@@ -2,6 +2,7 @@
 ////////// INFINITE INCLUDES //////////
 include 'i_language.php';
 include 'admin-modules.php';
+include 'admin-filters.php';
 include 'admin-panel.php';
 include 'functions-sidebars.php';
 include 'functions-styles.php';

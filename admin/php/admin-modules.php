@@ -316,6 +316,7 @@ function pw_select_featured_image_options( $vars ){
 	/*
 	 *	$vars = array(
 	 * 		'ng_model'	=> 	[string]	// Angular expression ie. 'pwOptions.home.slider',
+	 *		'show' 		=> 	[array] 	// Which fields to show options for
 	 *	)
 	 */
 	return pw_ob_admin_template( 'select-header-image-options', $vars );

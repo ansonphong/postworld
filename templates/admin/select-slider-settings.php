@@ -5,50 +5,9 @@
  */
 $instance = 'sliderSettings_'.pw_random_string();
 
-/**
- * SET DEFAULT OPTIONS
- * These options can be overriden
- * by passing in an array of options.
- */
-$default_options = array(
-	'transition' => array(
-		array(
-			'value' => false,
-			'name' => 'None',
-			),
-		array(
-			'value' => 'slide',
-			'name' => 'Slide',
-			),
-		array(
-			'value' => 'fade',
-			'name' => 'Fade',
-			),
-		),
-	'proportion' => array(
-		array(
-			'value' => false,
-			'name' => 'Flexible',
-			),
-		array(
-			'value' => 2,
-			'name' => '2 : 1',
-			),
-		array(
-			'value' => 2.5,
-			'name' => '2.5 : 1',
-			),
-		array(
-			'value' => 3,
-			'name' => '3 : 1',
-			),
-		),
-	);
-
-if( !is_array($options) )
-	$options = $default_options;
-else
-	$options = array_replace_recursive( $default_options, $options );
+if( !isset( $options ) )
+	$options = array();
+$options = pw_admin_options( 'slider', $options );
 
 /**
  * SET DEFAULT OPTIONS TO SHOW
