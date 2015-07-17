@@ -263,10 +263,23 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 			// If the requested image size is bigger than what is available
 			// It will return null
 			if( empty($custom_image_url) ){
+
 				$custom_image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
 				$custom_image_url = $custom_image_obj['url'];
-				$thumb_width = (int)$image_obj['width'];
-				$thumb_height = (int)$image_obj['height'];
+				
+				$thumb_width = ( !empty( $image_obj['width'] ) ) ?
+					(int)$image_obj['width'] :
+					_get( $post_image, 'stats.width' );
+
+				$thumb_height = ( !empty( $image_obj['height'] ) ) ?
+					(int)$image_obj['height'] :
+					_get( $post_image, 'stats.height' );
+
+
+				//$thumb_width = (int)$image_obj['width'];
+				//$thumb_height = (int)$image_obj['height'];
+
+				//pw_log( 'image_obj', $custom_image_obj );
 			}
 
 			// Set the value into the post object
