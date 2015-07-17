@@ -35,7 +35,11 @@ $options = pw_admin_options( 'header-image', $options );
 			ng-model="<?php echo $ng_model; ?>.proportion"
 			ng-options="option.value as option.name for option in options.proportion">
 		</select>
-		<hr class="thin">
+
+		<hr
+			class="thin"
+			ng-show="!uiBool( <?php echo $ng_model; ?>.proportion )">
+
 	<?php endif; ?>
 	<?php if( in_array('height', $show ) ): ?>
 		<!-- Show if there is no set proportion or if it's set to false/flex -->
