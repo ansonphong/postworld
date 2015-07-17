@@ -265,12 +265,21 @@ postworld.directive('pwSmartImage',
 				$scope.$watch(
 					function(){
 						var elementWidth = element[0].offsetWidth;
+						//$log.debug( 'elementWidth', elementWidth );
 						var elementHeight = element[0].offsetHeight;
-						return elementWidth + elementHeight;
+						//$log.debug( 'elementHeight', elementHeight );
+						return {
+							width: elementWidth,
+							height: elementHeight
+						};
 					},
-					function(val){
-						setImgUrl();
-					}
+					function(val,oldVal){
+						// Don't re-evaluate if the height/width is 0
+						if( val.width !== 0 && val.height !== 0 ){
+							//$log.debug( 'val', val );
+							setImgUrl();
+						}
+					}, 1
 				);
 
 				/**
