@@ -118,16 +118,16 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 		// Extract image attributes from parenthesis
 		$image_attributes = extract_parenthesis_values($image, true);
 
-		// Set $image_handle to name of requested image
-		$image_handle = $image_attributes[0];
+		// Set $image_key to name of requested image
+		$image_key = $image_attributes[0];
 
 		///// REGISTERED IMAGE SIZES /////
 		// If image attributes contains only a handle
 		if ( count($image_attributes) == 1 ){
 
 			// FULL : Get 'full' image
-			if ( $image_handle == 'full' || $image_handle == 'all' ) {
-				$image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
+			if ( $image_key == 'full' || $image_key == 'all' ) {
+				$image_obj = pw_get_image_obj($thumbnail_id, $image_key);
 				$post_image['sizes']['full']['url']	= $thumbnail_url;
 				$post_image['sizes']['full']['width'] = (int)$image_obj['width'];
 				$post_image['sizes']['full']['height'] = (int)$image_obj['height'];
@@ -135,31 +135,31 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 			}
 
 			// ALL : Get all registered images
-			if( $image_handle == 'all' ) {
+			if( $image_key == 'all' ) {
 				$registered_images = registered_images_obj();
 
-				foreach( $registered_images as $image_handle => $image_attributes ){
-					//$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_handle );
-					$image_src = wp_get_attachment_image_src( $thumbnail_id, $image_handle );
-					$registered_images[$image_handle]["url"] = $image_src[0];
-					$registered_images[$image_handle]["width"] = $image_src[1];
-					$registered_images[$image_handle]["height"] = $image_src[2];
-					$registered_images[$image_handle]["hard_crop"] = $image_src[3];
+				foreach( $registered_images as $image_key => $image_attributes ){
+					//$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_key );
+					$image_src = wp_get_attachment_image_src( $thumbnail_id, $image_key );
+					$registered_images[$image_key]["url"] = $image_src[0];
+					$registered_images[$image_key]["width"] = $image_src[1];
+					$registered_images[$image_key]["height"] = $image_src[2];
+					$registered_images[$image_key]["hard_crop"] = $image_src[3];
 					$post_image['sizes'] = array_merge( $post_image['sizes'], $registered_images );
 				}
 			}
 
 			// HANDLE : Get registered image
 			// If it is a registered image format
-			elseif( array_key_exists($image_handle, $registered_images_obj) ) {
-				$image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
-				$post_image['sizes'][$image_handle]['url']	= $image_obj['url'];
-				$post_image['sizes'][$image_handle]['width'] = (int)$image_obj['width'];
-				$post_image['sizes'][$image_handle]['height'] = (int)$image_obj['height'];
+			elseif( array_key_exists($image_key, $registered_images_obj) ) {
+				$image_obj = pw_get_image_obj($thumbnail_id, $image_key);
+				$post_image['sizes'][$image_key]['url']	= $image_obj['url'];
+				$post_image['sizes'][$image_key]['width'] = (int)$image_obj['width'];
+				$post_image['sizes'][$image_key]['height'] = (int)$image_obj['height'];
 			}
 
 			// META : Get Image Meta Data
-			elseif( $image_handle == 'meta' && is_numeric($thumbnail_id) ){
+			elseif( $image_key == 'meta' && is_numeric($thumbnail_id) ){
 				$post_image['meta'] = wp_get_attachment_metadata($thumbnail_id);
 
 				// Get the actual file URLS and inject into the object
@@ -172,7 +172,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 
 			}
 
-			elseif( $image_handle == 'tags' && is_numeric($thumbnail_id) ){
+			elseif( $image_key == 'tags' && is_numeric($thumbnail_id) ){
 
 				// Get Image Meta Data
 				if( isset( $post_image['meta'] ) ){
@@ -200,7 +200,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 			}
 
 			// STATS : Get Image Stats
-			elseif( $image_handle == 'stats' && is_numeric($thumbnail_id) ){
+			elseif( $image_key == 'stats' && is_numeric($thumbnail_id) ){
 				
 				// Get Image Meta Data
 				if( isset( $post_image['meta'] ) ){
@@ -230,7 +230,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 			}
 
 			// Get Image ID
-			elseif( $image_handle == 'id' ){
+			elseif( $image_key == 'id' ){
 				$post_image['thumbnail_id'] = $thumbnail_id;
 			}
 
@@ -239,32 +239,75 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 			count($image_attributes) == 2 &&
 			$image_attributes[0] == 'post' &&
 			is_numeric($thumbnail_id) ){
-
 			// Get the post and deposit into post.image.post
 			// With the second image attribute representing the field model handle (micro,preview,full,etc)
 			$image_post = pw_get_post( $thumbnail_id, $image_attributes[1] );
 			// Merge the image post (post_title,post_excerpt) into the post.image object
 			$post_image = array_replace_recursive( $post_image, $image_post );
-
 		}
-		///// CUSTOM IMAGE SIZES /////
-		// If image attributes contains custom height and width parameters
+		/**
+		 * CUSTOM IMAGE SIZES
+		 * If image attributes contains custom height and width parameters
+		 * @example "image(md,512,512,1)"
+		 *
+		 * @param string $image_key Key to name the image.
+		 * @param string $thumb_width Width of the image.
+		 * @param string $thumb_height Height of the image.
+		 * @param string $thumb_crop How the image is cropped 0/1/2
+		 *					0: Soft Crop - Normal WP Cropping
+		 *					1: Hard Crop - WP Hard Cropping, force dimensions
+		 *					2: Dynamic Crop - Use values as shortest dimension, resize proportionally, without cropping
+		 *
+		 * @todo Force-require 'stats' key.
+		 */
 		else {
 			// Set image attributes
-			$thumb_width = $image_attributes[1];
-			$thumb_height = $image_attributes[2];
-			$hard_crop = $image_attributes[3];
-			if ( !$hard_crop )
-				$hard_crop = 1;
+			$thumb_width = (int) $image_attributes[1];
+			$thumb_height = (int) $image_attributes[2];
+			$thumb_crop = (int) $image_attributes[3];
+			if ( !$thumb_crop )
+				$thumb_crop = 1;
+
+			/**
+			 * Generate Dynamic Image Dimensions
+			 */
+			if( $thumb_crop == 2 ){
+				$image_stats = _get( $post_image, 'stats' );
+
+				// If the stats and the dimensions are set
+				if( !empty( $image_stats ) &&
+					!empty( $image_stats['width'] ) &&
+					!empty( $image_stats['ratio'] ) ){
+
+					$request_ratio = $thumb_width / $thumb_height;
+
+					/**
+					 * If the request ratio is greater than the actual image
+					 * Then that means the actual image is taller proportionally
+					 * So use the request width as a minumum
+					 */
+					if( $image_stats['ratio'] < $request_ratio )
+						$thumb_height = intval( $thumb_width / $image_stats['ratio'] );
+
+					// Otherwise use the request height as a minumum
+					else
+						$thumb_width = intval( $thumb_height * $image_stats['ratio'] );
+
+				}
+
+				// Set to soft cropping
+				$thumb_crop = 0;
+
+			}
 
 			// Process custom image size, return url
-			$custom_image_url = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $hard_crop );
+			$custom_image_url = aq_resize( $thumbnail_url, $thumb_width, $thumb_height, $thumb_crop );
 			
 			// If the requested image size is bigger than what is available
 			// It will return null
 			if( empty($custom_image_url) ){
 
-				$custom_image_obj = pw_get_image_obj($thumbnail_id, $image_handle);
+				$custom_image_obj = pw_get_image_obj($thumbnail_id, $image_key);
 				$custom_image_url = $custom_image_obj['url'];
 				
 				$thumb_width = ( !empty( $image_obj['width'] ) ) ?
@@ -274,22 +317,17 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 				$thumb_height = ( !empty( $image_obj['height'] ) ) ?
 					(int)$image_obj['height'] :
 					_get( $post_image, 'stats.height' );
-
-
-				//$thumb_width = (int)$image_obj['width'];
-				//$thumb_height = (int)$image_obj['height'];
-
-				//pw_log( 'image_obj', $custom_image_obj );
+					
 			}
 
 			// Set the value into the post object
-			$post_image['sizes'][$image_handle]['url'] = $custom_image_url;
+			$post_image['sizes'][$image_key]['url'] = $custom_image_url;
 			
 			/**
 			 * @todo Get the actual image dimension if not a hard crop.
 			 */
-			$post_image['sizes'][$image_handle]['width'] = (int)$thumb_width;
-			$post_image['sizes'][$image_handle]['height'] = (int)$thumb_height;
+			$post_image['sizes'][$image_key]['width'] = (int)$thumb_width;
+			$post_image['sizes'][$image_key]['height'] = (int)$thumb_height;
 
 		}
 
