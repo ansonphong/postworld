@@ -94,6 +94,22 @@ function pw_social_meta( $social_meta = array() ){
 					"_public"		=>	true,
 					),
 				array(
+					"id"			=>	"vimeo",
+					"name"			=>	"Vimeo",
+					"icon"			=>	"pwi-circle-medium",
+					"description"	=>	"Your Vimeo username, not URL",
+					"prepend_url"	=>	"https://vimeo.com/",
+					"_public"		=>	true,
+					),
+				array(
+					"id"			=>	"soundcloud",
+					"name"			=>	"SoundCloud",
+					"icon"			=>	"pwi-circle-medium",
+					"description"	=>	"Your SoundCloud username, not URL",
+					"prepend_url"	=>	"https://soundcloud.com/",
+					"_public"		=>	true,
+					),
+				array(
 					"id"			=>	"linkedin",
 					"name"			=>	"LinkedIn",
 					"icon"			=>	"pwi-circle-medium",

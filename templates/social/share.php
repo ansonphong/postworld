@@ -1,7 +1,9 @@
 <?php
 	$s = pw_get_social_share_meta( $vars );
 	$meta = pw_get_social_media_meta();
+	//echo json_encode($s);
 ?>
+
 <?php
 if( is_array( $s ) )
 	foreach( $s as $key => $value ): ?>

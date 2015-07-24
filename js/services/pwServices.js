@@ -2124,6 +2124,12 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 						selected: true,
 					},
 					{
+						name: 'Tumblr',
+						id: 'tumblr',
+						icon: 'pwi-tumblr-square',
+						selected: false,
+					},
+					{
 						name: 'Google Plus',
 						id: 'google_plus',
 						icon: 'pwi-google-plus-square',

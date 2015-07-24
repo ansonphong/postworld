@@ -54,6 +54,14 @@ function pw_get_social_media_meta(){
 			'description' 	=> 	'Pinterest URL',
 			'prepend_url'	=>	''
 			),
+		'tumblr'	=>	array(
+			'icon'			=>	'pwi-tumblr-square',
+			'name'			=>	'Tumblr',
+			'label'			=>	'On Tumblr',
+			'share_label'	=>	'Share On Tumblr',
+			'description' 	=> 	'Tumblr URL',
+			'prepend_url'	=>	''
+			),
 		'reddit'	=>	array(
 			'icon'			=>	'pwi-reddit-square',
 			'name'			=>	'Reddit',
@@ -240,6 +248,12 @@ function pw_get_social_share_meta( $vars ){
 	if( in_array( 'google_plus', $share_networks ) ){
 		$google_plus_link = 'https://plus.google.com/share?url=' . $permalink;
 		$s = _set( $s, 'google_plus.link', $google_plus_link );
+	}
+
+	///// TUMBLR /////
+	if( in_array( 'tumblr', $share_networks ) ){
+		$tumblr_link = 'http://www.tumblr.com/share/link?url=' . $permalink;
+		$s = _set( $s, 'tumblr.link', $tumblr_link );
 	}
 
 	///// PINTEREST LINK /////
