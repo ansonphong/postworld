@@ -895,17 +895,12 @@ function pw_get_menu_posts( $menu, $fields ){
 
 				// Filter here so theme can add additional meta-data
 				$post = apply_filters( 'pw_get_menu_item_taxonomy', $post );
-
 				$posts[] = $post;
-
 				break;
-
 		}
-		
 	}
 
 	//pw_log( 'MENU : ',  $posts  );
-
 	return $posts;
 
 }
