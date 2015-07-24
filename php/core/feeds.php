@@ -662,12 +662,9 @@ function finalize_feed_query($feed_query_stringified){
 function pw_get_feed ( $feed_id ){
 	global $wpdb;
 	$wpdb->show_errors();
-
 	$query = "select * from $wpdb->pw_prefix"."feeds where feed_id='".$feed_id."'";
 	$feed_row = $wpdb->get_row($query);
-
 	return $feed_row;
-
 }
 
 function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
@@ -749,7 +746,7 @@ function pw_print_feed( $vars ){
 		$pw_post['post'] = $post;
 		//$pw_post['post_json'] = json_encode($post);
 
-		pw_log( 'post', $post );
+		//pw_log( 'post', $post );
 
 		// Add rendered HTML to the return data
 		$post_html .= $h2o->render($pw_post);
