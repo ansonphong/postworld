@@ -747,7 +747,9 @@ function pw_print_feed( $vars ){
 
 		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
 		$pw_post['post'] = $post;
-		$pw_post['post_json'] = json_encode($post);
+		//$pw_post['post_json'] = json_encode($post);
+
+		pw_log( 'post', $post );
 
 		// Add rendered HTML to the return data
 		$post_html .= $h2o->render($pw_post);

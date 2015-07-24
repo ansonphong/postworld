@@ -60,7 +60,12 @@ function pw_post_field_models(){
  */
 function pw_get_field_model( $type, $name ){
 	global $pw;
-	$field_model = $pw['fields'][$type][$name];// _get( $pw['fields'], $type.'.'.$name );
+
+	$field_model = _get( $pw['fields'], $type.'.'.$name );
+
+	// If the field model doesn't exist
+	if( $field_model === false )
+		return false;
 
 	// Setup a caching key
 	$cache_key = 'field_model_'.$type.'_'.$name;
