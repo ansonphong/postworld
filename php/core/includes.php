@@ -237,7 +237,7 @@ function postworld_includes( $args ){
 			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js' );
 
 		// ANGULAR : INFINITE SCROLL
-		//wp_enqueue_script( 'angularJS-nInfiniteScroll', plugins_url().'/postworld/lib/ng-infinite-scroll/ng-infinite-scroll.js', $angularDep );
+		wp_enqueue_script( 'angularJS-nInfiniteScroll', POSTWORLD_URI.'/lib/ng-infinite-scroll/ng-infinite-scroll-1.2.js', $angularDep );
 		
 		// ANGULAR : TIMER
 		wp_enqueue_script( 'AngularJS-Timer',

@@ -86,6 +86,8 @@ module.exports = function(grunt) {
             'lib/angular-masonry/angular-masonry.js',
             // Angular Checklist Model
             'lib/checklist-model/checklist-model.js',
+            // Angular Infinite Scroll
+            'lib/ng-infinite-scroll/ng-infinite-scroll-1.2.js',
 
             ///// ANGULAR NATIVE EXTENSIONS /////
             // Angular Extensions

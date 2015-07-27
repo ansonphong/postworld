@@ -930,7 +930,7 @@ postworld.directive('infiniteYScroll', [
 ]);
 
 
-
+/*
 postworld.directive('infiniteScroll', [
 	'$rootScope', '$window', '$timeout', '$log', '_', function($rootScope, $window, $timeout, $log, $_) {
 		return {
@@ -1015,7 +1015,7 @@ postworld.directive('infiniteScroll', [
 		};
 	}
 ]);
-
+*/
 
 
 

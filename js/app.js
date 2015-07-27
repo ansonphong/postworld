@@ -50,6 +50,7 @@ pw.angularModules = pw.angularModules.concat([
 	'angular-parallax',
 	'wu.masonry',
 	'checklist-model',
+	'infinite-scroll',
 ]);
 
 var postworld = angular.module('postworld', pw.angularModules );
