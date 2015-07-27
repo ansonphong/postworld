@@ -823,6 +823,30 @@ function extract_hierarchical_fields( $fields_array, $query_string ){
 		return false;
 }
 
+/**
+ * Takes a string of comma delimited values
+ * And converts it into an array
+ *
+ * @param string $string A string of delimited values.
+ * @param string $delimiter
+ * @return array The delimited values.
+ */
+function pw_delimited_to_array( $string, $delimiter = ',' ){
+	if( !is_string( $string ) )
+		return false;
+
+	$array = explode( $delimiter, $string );
+
+	// Change numeric to float values
+	for ($i=0; $i < count( $array ); $i++) { 
+		if( is_numeric( $array[$i] ) )
+			$array[$i] = (float) $array[$i];
+	}
+
+	return $array;
+
+}
+
 
 // Previously get_avatar_url()
 function pw_get_avatar_url( $user_id, $avatar_size ){

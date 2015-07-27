@@ -9,6 +9,7 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 		'template'		=> 'default',
 		'query' 		=> '{}',
 		'taxonomy'		=> 'post_tag',
+		'terms'			=>	'',
 		'id' 			=> pw_random_hash(),
 		'class' 		=> '',
 		'max_terms' 	=> 50,
@@ -20,6 +21,11 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 		), $atts);
 
 	//pw_log( "INIT SHORTCODE : " . $tag . " : ATTS : " . json_encode( $atts ) );
+	//pw_log( 'term-feed shortcode : terms', $atts['terms'] );
+
+	// Convert comma delimited term slugs into an array
+	if( !empty( $atts['terms'] ) )
+		$atts['terms'] = pw_delimited_to_array( $atts['terms'] );
 
 	// Setup Feed Query
 	$vars = array(
@@ -29,6 +35,7 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 				'number'	=>	$atts['max_terms'],
 				'orderby'	=>	$atts['order_terms_by'],
 				'order'		=>	$atts['order_terms'],
+				'slug'		=>	$atts['terms']
 				),
 			),
 		'query'  =>  array(
@@ -175,6 +182,7 @@ function pw_get_term_feed( $vars ){
 			'args'	=>	array(
 				'number'		=>	50,
 				'pad_counts'	=>	true,
+				'slug'			=>	'',
 				),
 			),
 		'query'	=>	array(
