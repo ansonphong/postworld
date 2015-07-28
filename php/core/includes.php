@@ -625,11 +625,15 @@ function pw_add_forms_action_attribute(){
 	?>
 	<script>
 		// Force an action attribute for every form element which doesn't have one.
-		angular.element(document).ready(function() {
+		function pw_add_forms_action_attr(){
 			jQuery('form').attr('action', function(){
 				if( typeof jQuery(this).attr('action') === 'undefined' )
 					jQuery(this).attr('action', '<?php echo $_SERVER["PHP_SELF"]; ?>');
 			});
+		}
+		// Initialize
+		angular.element(document).ready(function() {
+			pw_add_forms_action_attr();
 		});
 	</script>
 	<?php

@@ -85,8 +85,14 @@ postworld.controller('pwFeedController',
 
 	// INSERT FEED
 	// Inserts feed into the Postworld Data service
-	if( $_.objExists( $window.pw, 'feeds.' + $scope.feedId ) )
+	if( $_.objExists( $window.pw, 'feeds.' + $scope.feedId ) ){
 		$pwData.insertFeed( $scope.feedId, $window.pw.feeds[$scope.feedId] );
+		$timeout( function(){
+			$scope.injectBlocks();
+			$scope.addFeedMeta();
+		}, 0 );
+		
+	}
 	else
 		$log.debug( 'pwFeed : ERROR : No valid feed provided in $window.pw.feeds.' + $scope.feedId );
 
@@ -307,15 +313,15 @@ postworld.controller('pwFeedController',
 		// Iterate through each post
 		angular.forEach( posts, function( post ){
 			// Add the Feed ID
-			post = $_.setObj( post, 'feed.id', $scope.feedId );
+			post = $_.set( post, 'feed.id', $scope.feedId );
 
 			// Add new variables to post object
 			if( vars.mode == "newFeed" ){
-				post = $_.setObj( post, 'feed.index', index );
-				post = $_.setObj( post, 'feed.loadOrder', index );
+				post = $_.set( post, 'feed.index', index );
+				post = $_.set( post, 'feed.loadOrder', index );
 			}
 			else if( vars.mode == "scrollFeed" && index >= vars.postsLoaded ){
-				post = $_.setObj( post, 'feed.index', index );
+				post = $_.set( post, 'feed.index', index );
 			}
 
 			newPosts.push( post );
