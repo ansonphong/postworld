@@ -163,7 +163,7 @@ postworld.controller( 'pwUiCtrl',
 		// Subtract element padding from width
 		var styles = window.getComputedStyle( container[0] );
 		var padding = 	parseFloat(styles.paddingLeft) +
-		        		parseFloat(styles.paddingRight);
+						parseFloat(styles.paddingRight);
 		containerWidth = containerWidth - padding;
 
 		// Get the item elements
