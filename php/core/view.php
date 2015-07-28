@@ -48,7 +48,7 @@ function pw_current_context(){
 	if( is_page() )
 		$context[] = 'page';
 
-	if( is_single() || is_page() )
+	if( is_single() )
 		$context[] = 'single';
 
 	if( is_attachment() )
