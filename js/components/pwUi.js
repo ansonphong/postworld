@@ -143,4 +143,46 @@ postworld.controller( 'pwUiCtrl',
 		
 	}
 
+	/**
+	 * Checks to see if floated content in a container is wrapping,
+	 * and if so, adds a class to the current element.
+	 * For use with ng-class.
+	 * 
+	 * @param string containerSelector Selector for the container element.
+	 * @param string itemsSelector Selector for elements within the container
+	 * @param string className The class name to apply if it's wrapping.
+	 */
+	$scope.uiWrappingClass = function( containerSelector, itemsSelector, className ){
+		if( className == null )
+			className = 'is-wrapping';
+
+		// Get the container client width
+		var container = angular.element( containerSelector );
+		var containerWidth = container[0].clientWidth;
+
+		// Subtract element padding from width
+		var styles = window.getComputedStyle( container[0] );
+		var padding = 	parseFloat(styles.paddingLeft) +
+		        		parseFloat(styles.paddingRight);
+		containerWidth = containerWidth - padding;
+
+		// Get the item elements
+		var items = angular.element( containerSelector + " " + itemsSelector );
+		// Add up the width of all the items
+		var itemsWidth = 0;
+		for( var i = 0; i<items.length; i++ ){
+			itemsWidth += items[i].clientWidth;
+		}
+
+		//$log.debug( 'uiWrappingClass :: containerWidth : ', containerWidth );
+		//$log.debug( 'uiWrappingClass :: itemsWidth : ', itemsWidth );
+
+		if( containerWidth < itemsWidth )
+			return className;
+		else
+			return '';
+
+	}
+
+
 }]);
