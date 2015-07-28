@@ -536,12 +536,11 @@ postworld.controller('pwFeedController',
 				// Establish where the next block will be added
 				blocks._nextIndex = blocks.offset;
 
-				// Initiate widgets
+				// Initialize widgets
 				blocks = $scope.initBlocksWidgets( blocks );
 
 				// Set the object into the scope
 				$scope.blocks = blocks;
-
 
 			}
 			// If no blocks object is defined, return here
@@ -554,7 +553,6 @@ postworld.controller('pwFeedController',
 		else if( !_.isObject( $scope.blocks ) )
 			// Return here
 			return;
-
 
 		// Get the number of posts loaded
 		//var postCount = $pwData.feeds[$scope.feedId].loaded.length;
@@ -584,11 +582,12 @@ postworld.controller('pwFeedController',
 			// And the maximum number of blocks has not been reached
 			$scope.blocks._count < $scope.blocks.max ){
 
-			// Increase number of blocks
+			// Increase block count
 			$scope.blocks._count ++;
 
 			// Define the block item as a post to inject into the feed 
 			var post = {
+				ID: 0,
 				post_type	: '_pw_block',
 				template	: $scope.blocks.template,
 				block: {
