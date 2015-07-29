@@ -87,9 +87,11 @@ postworld.controller('pwFeedController',
 	// Inserts feed into the Postworld Data service
 	if( $_.objExists( $window.pw, 'feeds.' + $scope.feedId ) ){
 		$pwData.insertFeed( $scope.feedId, $window.pw.feeds[$scope.feedId] );
+		
+		// Wait for all the controller functions to register
 		$timeout( function(){
-			$scope.injectBlocks();
-			$scope.addFeedMeta();
+			// Initialize the feed
+			$scope.pwLiveFeed();
 		}, 0 );
 		
 	}
@@ -164,10 +166,13 @@ postworld.controller('pwFeedController',
 	};
 	
 	$scope.getNext = function() {
-		$scope.message = "";   			
+		$scope.message = "";   
+
+		$log.debug( 'pwFeed : getNext()', $scope.feedId );		
 		
 		// If already getting results, do not run again.
 		if ($scope.busy) {
+			$log.debug( 'pwFeed : getNext() : BUSY', $scope.feedId );	
 			$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
 			return;
 		}
@@ -213,7 +218,7 @@ postworld.controller('pwFeedController',
 	$scope.pwLiveFeed = function() {
 		// TODO : Set Nonce Authentically
 		$pwData.setNonce(78);
-		//$log.debug( "pwFeed : INIT : ID : " + $scope.feedId, $pwData.feeds[$scope.feedId] );
+		$log.debug( "pwFeed : pwLiveFeed() : INIT : ID : " + $scope.feedId, $pwData.feeds[$scope.feedId] );
 
 		///// GET FEED FROM PRELOADED DATA /////
 		// If posts have already been pre-loaded
@@ -336,7 +341,7 @@ postworld.controller('pwFeedController',
 		
 		// Check if all Loaded, then return and do nothing
 		if ($pwData.feeds[$scope.feedId].status == 'all_loaded') {
-			$log.debug('pwFeedController.scrollFeed : ALL LOADED' + $scope.feedId);				
+			$log.debug('pwFeedController.scrollFeed : ALL LOADED', $scope.feedId);				
 			$scope.busy = false;
 			return;
 		};
