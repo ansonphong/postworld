@@ -171,17 +171,14 @@ postworld.controller('pwFeedController',
 			$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
 			return;
 		}
-		
-		//$log.debug( "pwFeed : getNext : firstRun = " + JSON.stringify(firstRun), $scope.feed() );
 
 		// if running for the first time
-		if ( firstRun ) {
+		if( firstRun ) {
 			firstRun = false;
 			$scope.pwLiveFeed();
-
 		}
 		else {
-			// Run Search
+			// Get next batch of posts
 			$scope.scrollFeed();				
 		}
 	};
@@ -220,7 +217,8 @@ postworld.controller('pwFeedController',
 
 		///// GET FEED FROM PRELOADED DATA /////
 		// If posts have already been pre-loaded
-		if( _.isArray( $pwData.feeds[$scope.feedId].posts ) ){
+		if( _.isArray( $pwData.feeds[$scope.feedId].posts ) &&
+			!_.isEmpty( $pwData.feeds[$scope.feedId].posts ) ){
 			$log.debug( "pwFeed : INIT : PRELOADED : " + $scope.feedId, $scope.feed().posts );
 			// Inject blocks into the feed
 			$scope.injectBlocks();
@@ -338,7 +336,7 @@ postworld.controller('pwFeedController',
 		
 		// Check if all Loaded, then return and do nothing
 		if ($pwData.feeds[$scope.feedId].status == 'all_loaded') {
-			//$log.debug('pwFeedController.scrollFeed : ALL LOADED');				
+			$log.debug('pwFeedController.scrollFeed : ALL LOADED' + $scope.feedId);				
 			$scope.busy = false;
 			return;
 		};
@@ -356,12 +354,6 @@ postworld.controller('pwFeedController',
 		///// PREPARE GET POSTS /////
 
 		var feed = $pwData.feeds[$scope.feedId];
-
-		// If already all loaded, then return
-		if (feed.status == 'all_loaded')  {
-			//$log.debug('pwData.pw_get_posts : ALL LOADED : ' + $scope.feedId );			
-			return;
-		};
 
 		// Slice Outline Array
 		var idBegin = feed.loaded.length;
@@ -625,14 +617,18 @@ postworld.controller('pwFeedController',
 	}
 
 	$scope.updateStatus = function(){
-		// Count Length of loaded, update scroll message
-		if ($pwData.feeds[$scope.feedId].loaded.length >= $pwData.feeds[$scope.feedId].feed_outline.length ) {
-			$pwData.feeds[$scope.feedId].status = 'all_loaded';	
-			$scope.scrollMessage = "No more posts to load!";																									
-		} else {
-			$pwData.feeds[$scope.feedId].status = 'loaded';						
-			$scope.scrollMessage = "Scroll down to load more";						
+
+		if( !_.isArray( $pwData.feeds[$scope.feedId].feed_outline ) ){
+			$pwData.feeds[$scope.feedId].status = 'loaded';	
+			return;
 		}
+
+		// Count Length of loaded, update scroll message
+		if( $pwData.feeds[$scope.feedId].loaded.length >= $pwData.feeds[$scope.feedId].feed_outline.length )
+			$pwData.feeds[$scope.feedId].status = 'all_loaded';																									
+		else
+			$pwData.feeds[$scope.feedId].status = 'loaded';											
+		
 	}
 
 	//$log.debug( "LOCATION.SEARCH() >>> ", $location.search() );

@@ -598,6 +598,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			///// ADD FEED OBJECT TO POSTS /////
 			// If the feed has posts
 			if( $_.objExists( feed, 'posts' ) ){
+				// Init Loaded Posts
+				feed.feed_outline = [];
+				feed.loaded = [];
+
 				// Create a new feed container
 				var newPosts = [];
 				// Interate through each post in the feed
@@ -606,8 +610,16 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 					if( !$_.objExists( post, 'feed.id' ) )
 						post = $_.setObj( post, 'feed.id', feedId );
 					newPosts.push( post );
+					
+					// Add post ID to the loaded array 
+					feed.feed_outline.push( post.ID );
+					
 				});
 				feed.posts = newPosts;
+
+				// Clone feed outline as loaded
+				feed.loaded = feed.feed_outline;
+
 			}
 
 			$log.debug( "pwData.insertFeed : ID : " + feedId, feed );

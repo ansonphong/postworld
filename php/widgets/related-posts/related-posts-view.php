@@ -26,7 +26,7 @@
 
 ?>
 <script>
-pw.feeds['<?php echo $instance_id ?>'] = <?php echo json_encode( $related_feed, JSON_PRETTY_PRINT ) ?>;  
+pw.feeds['<?php echo $instance_id ?>'] = <?php echo json_encode( $related_feed ) ?>;  
 </script>
 <div live-feed='<?php echo $instance_id ?>'></div>
 
