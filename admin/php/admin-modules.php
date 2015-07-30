@@ -210,22 +210,26 @@ function pw_gallery_options( $vars = array( "context" => "quickEdit", 'gallery_o
 
 	//$vars['options_model'] = "options.post_content.columns";
 
-	switch( $vars['context'] ){
-		///// SITE-WIDE SETTINGS /////
-		case 'siteAdmin': 
-				//$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
-			break;
-		///// PER-POST ADMIN SETTINGS /////
-		case 'postAdmin':
-		default:
-				$vars['ng_model'] = "pwMeta.gallery";
-			break;
-		///// QUICK EDIT SETTINGS /////
-		case 'quickEdit':
-		default:
-				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".gallery";
-			break;
-	}
+	/**
+	 * Set ng-model based on the context variable
+	 */
+	if( !isset( $vars['ng_model'] ) )
+		switch( $vars['context'] ){
+			///// SITE-WIDE SETTINGS /////
+			case 'siteAdmin': 
+					//$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
+				break;
+			///// PER-POST ADMIN SETTINGS /////
+			case 'postAdmin':
+			default:
+					$vars['ng_model'] = "pwMeta.gallery";
+				break;
+			///// QUICK EDIT SETTINGS /////
+			case 'quickEdit':
+			default:
+					$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".gallery";
+				break;
+		}
 
 	return pw_ob_admin_template( 'meta-gallery-options', $vars );
 }

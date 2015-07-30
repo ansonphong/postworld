@@ -1,11 +1,20 @@
 <?php
 	if( empty( $vars['gallery_options'] ) )
 		$vars['gallery_options'] = array('inline','frame','horizontal','vertical'); 
-?>
 
+	if( empty( $vars['show'] ) )
+		$vars['show'] = array(
+			'vertical' => array(
+				'show_title',
+				'show_caption',
+				'width'
+				),
+			); 
+
+?>
 <script>
 	postworld.controller('galleryOptionsData',[ '$scope', '_', function($scope,$_){
-
+		
 		var galleryOptionsMeta = <?php echo json_encode( ___('gallery.template', true) ) ?>;
 		var galleryOptionsKeys = <?php echo json_encode( $vars['gallery_options'] ) ?>;
 
@@ -65,23 +74,35 @@
 						</div>
 					<?php endif; ?>
 
-					<?php if( _get( $vars, 'gallery_meta' ) !== false ) : ?>
+					<?php if( in_array( 'vertical', $vars['gallery_options'] ) ) : ?>
 						<!-- Y SCROLL OPTIONS -->
 						<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'vertical'">
-							<hr class="thin">
-							<span class="icon-md"><i class="pwi-arrows-v"></i></span>
-							<input type="text" size="4" ng-model="<?php echo $vars['ng_model']; ?>.y_scroll_distance" id="vertical-scroll-distance">
-							<label for="vertical-scroll-distance"><b>vertical scroll distance</b></label>
-							<small> - Number of pixels on the bottom before load more images <i>(default: 1000)</i></small>
-							<hr class="thin">
-							<span class="icon-md"><i class="pwi-arrows-h"></i></span>
-							<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.width" id="gallery-width">
-							<label for="gallery-width"><b>% width</b></label>
-							<small> - Percentage width of the window to size the vertical scroll gallery</small>
+							<?php if( in_array( 'width', $vars['show']['vertical'] ) ): ?>
+								<hr class="thin">
+								<span class="icon-md"><i class="pwi-arrows-h"></i></span>
+								<input type="text" size="3" ng-model="<?php echo $vars['ng_model']; ?>.width" id="gallery-width">
+								<label for="gallery-width"><b>% width</b></label>
+								<small> - Percentage width of the window to size the vertical scroll gallery</small>
+							<?php endif ?>
+
+							<?php if( in_array( 'show_title', $vars['show']['vertical'] ) ): ?>
+								<hr class="thin">
+								<span class="icon-md"><i class="pwi-eye"></i></span>
+								<input type="checkbox" ng-model="<?php echo $vars['ng_model']; ?>.vertical.show_title" id="v-show-title">
+								<label for="v-show-title"><b> Show Title</b></label>
+							<?php endif ?>
+
+							<?php if( in_array( 'show_caption', $vars['show']['vertical'] ) ): ?>
+								<hr class="thin">
+								<span class="icon-md"><i class="pwi-eye"></i></span>
+								<input type="checkbox" ng-model="<?php echo $vars['ng_model']; ?>.vertical.show_caption" id="v-show-caption">
+								<label for="v-show-caption"><b> Show Caption</b></label>
+							<?php endif ?>
+
+
 						</div>
 					<?php endif; ?>
 
-					
 				</td>
 			</tr>	
 		</table>
