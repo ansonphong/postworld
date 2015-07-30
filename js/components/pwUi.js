@@ -105,7 +105,7 @@ postworld.controller( 'pwUiCtrl',
 
 	////////// UI ELEMENT : STYLING //////////
 
-	$scope.backgroundImage = function( imageUrl, properties ){
+	$scope.uiBackgroundImage = function( imageUrl, properties ){
 		// Set the Image URL
 		//var imageUrl = $scope.post.image[imageHandle].url;
 		var style = { 'background-image': "url(" + imageUrl + ")" };
