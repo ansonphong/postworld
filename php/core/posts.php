@@ -1321,16 +1321,8 @@ function pw_embed_url($input){
 		}
 	}
 
-
-	
-
-
-	
-
-	
 	// If it's an o-embed provider, return embed code
 	if( $o_embed == true ){
-		
 
 		///// CACHING LAYER /////
 		//if( in_array( 'post_cache', pw_enabled_modules() ) ){
