@@ -47,7 +47,7 @@ module.exports = function(grunt) {
             'lib/fullcalendar-2.2.5/lib/moment.min.js',
             'lib/fullcalendar-2.2.5/fullcalendar.min.js',
             'lib/fullcalendar-2.2.5/lib/jquery-ui.custom.min.js',
-            'lib/ui-calendar-master/src/calendar.js'
+            'lib/ui-calendar/src/calendar.js'
           ],
           
           /**
