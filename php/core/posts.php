@@ -680,22 +680,33 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	// Condition Post Content
 		if( in_array( 'post_content', $fields ) &&
 			$mode == 'view' &&
-			$post['post_type'] !== 'nav_menu_item' ){
+			$post['post_type'] !== 'nav_menu_item'
+			){
 			
+			//if( $post_id == 1742 )
+			//	pw_log( 'PRE', $post['post_content'] );
+
 			///// CONTENT FILTERING /////
 			// oEmbed URLs
 			// Disable this due to caching issues
-			//$post['post_content'] = pw_embed_content( $post['post_content'] );
+			$post['post_content'] = pw_embed_content( $post['post_content'] );
+			
 			// Apply Shortcodes
 			//$post[$key] = do_shortcode($post[$key]);
 			// Apply AutoP
 			//$post[$key] = wpautop($post[$key]);
 
+			// Trim off whitespace at beginning and end of post content
+			$post['post_content'] = trim( $post['post_content'] );
+
 			// Apply all content filters
 			$post['post_content'] = apply_filters('the_content', $post['post_content']);
 
-			// Trim off whitespace at beginning and end of post content
-			$post['post_content'] = trim( $post['post_content'] );
+			if( $post_id == 1742 ){
+			//	pw_log( 'POST', $post['post_content'] );
+			//	global $wp_filter;
+			//	pw_log( 'wp_filter', $wp_filter );
+			}
 
 		}
 
@@ -1249,6 +1260,9 @@ function pw_save_post($post_data){
 // Takes an HTML / text string and replaces all oEmbed provider URLs with embed code
 
 function pw_embed_url($input){
+
+	pw_log( 'pw_embed_url', $input );
+
 	$url = $input[0];
 	$o_embed_providers = array(
 		// GENERAL
@@ -1293,6 +1307,7 @@ function pw_embed_url($input){
 		"slideshare.net/",
 		"instagram.com/p/",
 		"instagr.am/p/",
+		"instagram.com",
 
 		// MOBILE
 		"polleverywhere.com/",
@@ -1306,18 +1321,42 @@ function pw_embed_url($input){
 		}
 	}
 
-	// OEMBED : check if it's an o-embed provider
-	if( $o_embed == true )
+	// If it's an o-embed provider, return embed code
+	if( $o_embed == true ){
+
+		///// CACHING LAYER /////
+		//if( in_array( 'post_cache', pw_enabled_modules() ) ){
+			$cache_hash = hash( 'sha256', 'oEmbed-'.$url );
+			$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+			if( !empty( $get_cache ) ){
+				return $get_cache['cache_content'];
+			}
+		//}
+
+		/**
+		 * Get the Embed Code
+		 */
 		$embed = wp_oembed_get($url);
-	// HOTLINK : if not, hotlink it
-	//else
-		$embed = $url ;//'<a target="_blank" href="' . $url . '" target="_blank">' . $url . '</a>';
+
+		///// CACHING LAYER /////
+		//if( in_array( 'post_cache', pw_enabled_modules() ) )
+			pw_set_cache( array(
+				'cache_type'	=>	'o-embed',
+				'cache_name'	=>	$url,
+				'cache_hash' 	=> 	$cache_hash,
+				'cache_content'	=>	$embed,
+				));
+
+	}
+	else
+		$embed = $url;
 
 	return $embed;
 }
 
 
 function pw_embed_content($content){
+	pw_log( 'pw_embed_content' );
 	return preg_replace_callback('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', 'pw_embed_url', $content." ");
 }
 

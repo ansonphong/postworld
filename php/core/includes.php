@@ -439,7 +439,7 @@ function postworld_includes( $args ){
 
 			// Angular UI Calendar
 			wp_enqueue_script( 'Angular-UI-Calendar-JS',
-				POSTWORLD_URI.'/lib/ui-calendar-master/src/calendar.js' );
+				POSTWORLD_URI.'/lib/ui-calendar/src/calendar.js' );
 		}
 
 	}
