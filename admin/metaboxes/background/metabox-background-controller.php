@@ -17,7 +17,6 @@ global $post;
 	<div
 		pw-admin-background
 		ng-controller="pwBackgroundMetaboxCtrl"
-		id="poststuff"
 		class="pw-metabox metabox-side metabox-background">
 		<?php
 			echo pw_ob_include( pw_get_admin_template( 'metabox-background' ) );
