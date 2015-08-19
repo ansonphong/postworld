@@ -54,9 +54,7 @@
 							<br><small><?php echo $field['description']; ?></small>
 						<?php endif; ?>
 					</td>
-					<td
-						width="75%">
-						
+					<td width="75%">
 						<select
 							name="pw_wp_postmeta[<?php echo $field['meta_key'] ?>]"
 							ng-model="fields.<?php echo $meta_key ?>.meta_value">
@@ -64,7 +62,6 @@
 								<option value="<?php echo $option['value'] ?>"><?php echo $option['label'] ?></option>
 							<?php endforeach ?>
 						</select>
-
 					</td>
 				</tr>
 			<?php break; ?>
