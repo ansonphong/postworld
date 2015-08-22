@@ -12,9 +12,6 @@ function pw_current_context(){
 	// List them in the order they will appear
 	// Later listings take higher priority
 
-	if( is_front_page() )
-		$context[] = 'home';
-
 	if( is_archive() )
 		$context[] = 'archive';
 
@@ -62,6 +59,10 @@ function pw_current_context(){
 
 	if( is_404() )
 		$context[] = '404';
+
+	// Home must come after page
+	if( is_front_page() )
+		$context[] = 'home';
 
 	// TAXONOMIES
 	if( in_array( 'archive-taxonomy', $context ) ){

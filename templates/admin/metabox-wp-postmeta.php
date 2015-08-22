@@ -44,6 +44,29 @@
 			<?php break; ?>
 
 			<?php
+			///// SELECT INPUT /////
+			case 'select-input': ?>
+				<tr>
+					<td valign="top">
+						<i class="<?php echo $field['icon']; ?>"></i>
+						<b><?php echo $field['label']; ?></b>
+						<?php if( !empty( $field['description'] ) ): ?>
+							<br><small><?php echo $field['description']; ?></small>
+						<?php endif; ?>
+					</td>
+					<td width="75%">
+						<select
+							name="pw_wp_postmeta[<?php echo $field['meta_key'] ?>]"
+							ng-model="fields.<?php echo $meta_key ?>.meta_value">
+							<?php foreach( $field['options'] as $option ): ?>
+								<option value="<?php echo $option['value'] ?>"><?php echo $option['label'] ?></option>
+							<?php endforeach ?>
+						</select>
+					</td>
+				</tr>
+			<?php break; ?>
+
+			<?php
 			///// TEXT INPUT /////
 			case 'image-id': ?>
 				<tr>
