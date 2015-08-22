@@ -595,12 +595,14 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			// Add/replace the feed_id key with the feedId
 			feed.feed_id = feedId;
 
-			if( !_.isArray( feed.loaded ) )
-				feed.loaded = [];
+			
+			//	feed.loaded = [];
 
 			var hasFeedOutline = _.isArray( feed.feed_outline );
-			if( !hasFeedOutline )
+			if( !hasFeedOutline ){
 				feed.feed_outline = [];
+				feed.loaded = [];
+			}
 
 			///// ADD FEED OBJECT TO POSTS /////
 			// If the feed has posts
@@ -615,10 +617,12 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 					newPosts.push( post );
 					
 					// Add post ID to tracking feed outline
-					if( !hasFeedOutline )
+					if( !hasFeedOutline ){
 						feed.feed_outline.push( post.ID );
-					// Add post ID to tracking loaded array
-					feed.loaded.push( post.ID );
+						// Add post ID to tracking loaded array
+						feed.loaded.push( post.ID );
+					}
+					
 
 				});
 				feed.posts = newPosts;

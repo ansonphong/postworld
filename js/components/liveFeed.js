@@ -168,7 +168,7 @@ postworld.controller('pwFeedController',
 	$scope.getNext = function() {
 		$scope.message = "";   
 
-		$log.debug( 'pwFeed : getNext()', $scope.feedId );		
+		$log.debug( 'pwFeed : getNext() : ' + $scope.feedId, $pwData['feeds'][$scope.feedId] );		
 		
 		// If already getting results, do not run again.
 		if ($scope.busy) {
@@ -317,7 +317,6 @@ postworld.controller('pwFeedController',
 		angular.forEach( posts, function( post ){
 			// Add the Feed ID
 			post = $_.set( post, 'feed.id', $scope.feedId );
-
 			// Add new variables to post object
 			if( vars.mode == "newFeed" ){
 				post = $_.set( post, 'feed.index', index );
@@ -326,12 +325,9 @@ postworld.controller('pwFeedController',
 			else if( vars.mode == "scrollFeed" && index >= vars.postsLoaded ){
 				post = $_.set( post, 'feed.index', index );
 			}
-
 			newPosts.push( post );
 			index ++;
-			
 		});
-
 		// Re-set the centralized posts object
 		$pwData.feeds[$scope.feedId].posts = newPosts;
 
