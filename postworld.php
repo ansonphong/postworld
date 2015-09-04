@@ -230,6 +230,7 @@ include 'php/core/users.php';
 
 ////// TAXONOMY FUNCTIONS //////
 include 'php/core/taxonomies.php';
+include 'php/core/taxonomy_operations.php';
 
 ////// CACHE FUNCTIONS //////
 include 'php/core/cache.php';

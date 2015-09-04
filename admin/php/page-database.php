@@ -247,6 +247,44 @@
 
 			</div>
 
+
+			<div class="well">
+
+				<h3>
+					<i class="pwi-circle-medium"></i>
+					Taxonomy Operations
+				</h3>
+
+				<!-- POSTMETA TABLE -->
+				<div
+					class="well"
+					ng-repeat="taxOp in taxOps">
+					<button
+						type="button"
+						class="button"
+						ng-click="doTaxOp( taxOp.type )"
+						ng-disabled="uiBool(busy['taxOp_'+taxOp.type])">
+						<span class="icon-sm">
+							<i
+								class="icon pwi-refresh"
+								ng-class="uiBoolClass(busy['taxOp_'+taxOp.type],'icon-spin')">
+							</i>
+						</span>
+						{{ taxOp.title }}
+					</button>
+					<hr class="thin">
+					<small> {{ taxOp.description }} </small>
+					<div ng-show="uiBool( taxOpReadout[taxOp.type] )">
+						<hr class="thin">
+						Time : <b>{{ taxOpReadout[taxOp.type].timer }} seconds</b> //
+						Total Terms: <b>{{ taxOpReadout[taxOp.type].total_terms }}</b> // 
+						Repaired Items: <b>{{ taxOpReadout[taxOp.type].count }}</b> // 
+						{{ taxOpReadout[taxOp.type].items | json }}
+					</div>
+				</div>
+
+			</div>
+
 		</div>
 
 	</div>

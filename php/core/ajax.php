@@ -11,6 +11,18 @@ function pwAjaxRespond( $response_data ){
 	die;
 }
 
+
+
+//---------- TAXONOMY OPERATIONS ----------//
+function pw_taxonomy_operation_ajax(){
+	list($response, $args, $nonce) = initAjaxResponse();
+	//pw_log( 'args', $args );
+	$response_data = pw_taxonomy_operation( $args['type'], $args['vars'] );
+	pwAjaxRespond( $response_data );
+}
+add_action("wp_ajax_pw_taxonomy_operation", "pw_taxonomy_operation_ajax");
+
+
 //---------- PW END PROGRESS ----------//
 function pw_end_progress_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();

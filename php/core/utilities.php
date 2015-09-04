@@ -1372,7 +1372,7 @@ function pw_sanitize_key( $key ){
 function pw_sanitize_numeric( $val, $require_numeric = false ){
 	// Casts all numeric calues as floats/numbers
 	if( is_numeric( $val ) ){
-		return (float) $val ;
+		return (float) $val;
 	}
 	else{
 		if( $require_numeric )

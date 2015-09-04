@@ -209,6 +209,10 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 			name: 'Usermeta',
 			type: 'usermeta',
 		},
+		{
+			name: 'Term Counts',
+			type: 'term_counts',
+		},
 	];
 
 	$scope.cleanupMeta = function( type ){
@@ -221,6 +225,43 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 				$scope.setBusy( busyKey, false );
 				$log.debug( 'cleanupMeta : RESPONSE : ', response );
 				$scope.cleanupMetaReadout[type] = response.data;
+			},
+			function( response ){}
+		);
+
+	}
+
+
+	///// TAXONOMY OPERATIONS /////
+	$scope.taxOpReadout = {};
+	$scope.taxOps = [
+		{
+			title: 'Update Taxonomy Term Post Counts',
+			description: 'Update the post counts for all registered taxonomy\'s terms.',
+			type: 'update_term_count',
+		},
+		{
+			title: 'Delete Empty Terms',
+			description:'Delete all terms with a post count of 0. Update term post counts before running this.',
+			type:'delete_empty_terms'
+		},
+		{
+			title: 'Remove Deleted Terms from Relationships',
+			description:'Deletes all term relationships with terms which no longer exist',
+			type:'delete_old_term_relationships'
+		}
+	];
+
+	$scope.doTaxOp = function( type ){
+
+		var busyKey = 'taxOp_' + type;
+		$scope.setBusy( busyKey, true );
+
+		$pwData.wpAjax('pw_taxonomy_operation', { type: type, vars:{} } ).then(
+			function( response ){
+				$scope.setBusy( busyKey, false );
+				$log.debug( 'doTaxOp : RESPONSE : ', response );
+				$scope.taxOpReadout[type] = response.data;
 			},
 			function( response ){}
 		);
