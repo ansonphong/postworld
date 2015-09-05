@@ -42,7 +42,7 @@ function pw_get_current_layout( $vars = array() ){
 	}
 
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
-	if( in_array( 'single', $contexts ) || isset($vars['post_id']) ){
+	if( in_array( 'single', $contexts ) || in_array( 'page', $contexts ) || isset($vars['post_id']) ){
 		/// DEFINE POST ID ///
 		global $post;
 		// Get use provided vars.post_id to override current post

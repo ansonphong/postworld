@@ -1356,7 +1356,6 @@ function pw_embed_url($input){
 
 
 function pw_embed_content($content){
-	pw_log( 'pw_embed_content' );
 	return preg_replace_callback('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', 'pw_embed_url', $content." ");
 }
 
