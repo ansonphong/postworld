@@ -114,7 +114,7 @@ function pw_get_all_comment_ids(){
 		SELECT comment_ID
 		FROM ".$wpdb->comments . "
 		WHERE comment_approved = 1";
-	$comments = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$comments = $wpdb->get_results( $query );
 	$ids = array();
 	foreach( $comments as $comment ){
 		$ids[] = $comment->comment_ID;
@@ -125,7 +125,7 @@ function pw_get_all_comment_ids(){
 function pw_get_all_user_ids(){
 	global $wpdb;
 	$query = "SELECT ID FROM ".$wpdb->users;
-	$users = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$users = $wpdb->get_results( $query );
 	$ids = array();
 	foreach( $users as $user ){
 		$ids[] = $post->ID;
@@ -147,7 +147,7 @@ function pw_get_all_post_ids_in_post_type( $post_type, $post_status = '' ){
 		WHERE post_type ='".$post_type."'"
 		. $post_status_query;
 
-	$posts = $wpdb->get_results( $wpdb->prepare( $query ) );
+	$posts = $wpdb->get_results( $query );
 
 	$ids = array();
 	foreach( $posts as $post ){
