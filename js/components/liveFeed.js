@@ -455,14 +455,14 @@ postworld.controller('pwFeedController',
 									
 				} else {
 					$log.debug('pwFeed : ERROR : ',response.status,response.message);
-					$scope.busy = false;
+					$scope.busy = true;
 
 				}
 			},
 			// Failure
 			function(response) {
 				$log.error('pwFeed : pwFeedController.pwScrollFeed Failure',response);
-				$scope.busy = false;
+				$scope.busy = true;
 				// TODO Show User Friendly Error Message
 			}
 		);
