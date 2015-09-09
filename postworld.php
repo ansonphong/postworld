@@ -8,6 +8,12 @@ Author: phong
 Author URI: http://phong.com
 License: GPL2
 ******************************************/
+//if( !defined( 'POSTWORLD_DIR' ) )
+define( 'POSTWORLD_DIR', dirname(__FILE__) );
+define( 'POSTWORLD_PATH', POSTWORLD_DIR );
+
+global $wpdb;
+$wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
 function pw_mode(){
 	return ( defined('POSTWORLD_MODE') ) ?
@@ -24,7 +30,7 @@ global $pw;
 $pw = array(
 	'info'	=>	array(
 		'version'		=>	1.109,
-		'db_version'	=>	1.196,
+		'db_version'	=>	1.26,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -145,11 +151,18 @@ include 'php/core/utilities.php';
 // Load API functions
 include 'php/core/api.php';
 
+////// AJAX AUTHORIZATION //////
+if( defined('DOING_AJAX') ){
+	pw_log( 'DOING AJAX' );
+	include 'php/core/ajax-auth.php';
+}
+
 ////// FILTER FUNCTIONS //////
 include 'php/core/filters.php';
 
 ////// MODULE FUNCTIONS //////
 include 'php/core/modules.php';
+
 
 ////// PW GLOBALS //////
 // This must come after the API functions
@@ -164,7 +177,6 @@ include "infinite/functions.php";
 include 'php/core/variables.php';
 
 ////// PATHS //////
-define( 'POSTWORLD_PATH', dirname(__FILE__) );
 define( 'POSTWORLD_URI', get_postworld_uri() );
 
 ////// H2O //////
@@ -175,13 +187,6 @@ global $pw_settings;
 global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
-
-
-//global $pw_prefix;
-//$pw_prefix = "postworld_";
-
-global $wpdb;
-$wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
 
 // INSTALL QUERIES
@@ -199,6 +204,9 @@ register_activation_hook( __FILE__, 'postworld_install_Triggers' );
 */
 
 //include 'php/core/debugger.php';
+
+/////////////// HIGH PRIORITY MODULES ////////////////
+//include 'php/modules/security-ip/security-ip.php';
 
 
 /////////////// MEDIUM PRIORITY ////////////////
@@ -331,6 +339,8 @@ function pw_add_header_code() {
 global $wpdb;
 if( pw_dev_mode() )
 	$wpdb->show_errors();
+
+
 
 
 //To get user id from wordpress

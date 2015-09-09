@@ -443,7 +443,8 @@ function pw_core_print_generation_time() {
 	<!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
 	<?php
 }
-if( !function_exists( 'bp_core_print_generation_time' ) )
+if( !function_exists( 'bp_core_print_generation_time' ) &&
+	function_exists( 'add_action' ) )
 	add_action( 'wp_footer', 'pw_core_print_generation_time' );
 
 

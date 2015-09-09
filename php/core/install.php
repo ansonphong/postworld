@@ -144,6 +144,14 @@ function postworld_install(){
 			UNIQUE KEY cache_id (cache_id)
 		);";
 
+	$ips_table_name = $wpdb->pw_prefix.'ips';
+	$sql_postworld_ips = "CREATE TABLE $ips_table_name (
+			ipv4 INT UNSIGNED,
+			PTR CHAR(15),
+			reason CHAR(32),
+			time TIMESTAMP NULL
+		);";
+
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
 	dbDelta( $sql_postworld_post_meta );
@@ -157,6 +165,7 @@ function postworld_install(){
 	dbDelta( $sql_postworld_cron_logs );
 	dbDelta( $sql_postworld_shares );
 	dbDelta( $sql_postworld_cache );
+	dbDelta( $sql_postworld_ips );
 	
 	// Update the DB with the new postworld DB version
 	update_option( PW_DB_VERSION, $pw['info']['db_version'] );

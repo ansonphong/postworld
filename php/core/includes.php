@@ -553,6 +553,7 @@ function pwGlobals_print() {
 		pw.info = <?php echo json_encode( $pw['info'] ); ?>;
 		pw.view = <?php echo json_encode( pw_current_view() ); ?>;
 		pw.query = <?php echo json_encode( _get( $pw, 'query' ) ); ?>;
+		pw.nonce = <?php echo json_encode( $pw['nonce'] ); ?>;
 		pw.background = <?php echo json_encode( pw_current_background() ); ?>;
 		pw.posts = <?php echo json_encode( apply_filters( PW_POSTS, array() ) ); ?>;
 		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
@@ -802,6 +803,9 @@ function pwGlobals_parse(){
 
 	// LAYOUT
 	$pw['layout'] = pw_get_current_layout();
+
+	// NONCE
+	$pw['nonce'] = wp_create_nonce( 'postworld_ajax' );
 
 	///// CURRENT USER /////
 	$pw["user"] = pw_current_user();

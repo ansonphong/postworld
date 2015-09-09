@@ -96,7 +96,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 		},
 		// Get Nonce Value
 		getNonce: function() {
-			return nonce;
+			return 'n0nc3';// $pw.nonce;
 		},
 
 		/**
@@ -118,7 +118,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 				},
 				{
 					args: args,
-					nonce:this.getNonce()
+					nonce: window.pw.nonce //this.getNonce(),
 				},
 				function (data) {
 					deferred.resolve(data);

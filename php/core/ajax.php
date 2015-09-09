@@ -736,11 +736,13 @@ function initAjaxResponse() {
 	}
 	if (!isset($params['nonce'])) ErrorReturn($response, 400, 'Error in parameters');
 	$nonce = $params['nonce'];
-	// TODO check Nonce value
+
 	if (!isset($params['args'])) ErrorReturn($response, 400, 'Error in parameters');
 	$args = $params['args'];	
 	return array($response, $args, $nonce);
 }
+
+
 
 
 /* *************************
