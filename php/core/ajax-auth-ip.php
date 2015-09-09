@@ -24,11 +24,6 @@ function pw_auth_ip(){
 	$results = $mysqli->query("SELECT * FROM ".PW_IP_TABLE . " WHERE ipv4 = $ipv4 AND reason = 'no_nonce' ");
 	$rows = $results->num_rows;
 
-	//echo "IP TABLE : " . PW_IP_TABLE . " // ";
-	//echo "WORKING : RESULTS :: ";
-	//echo json_encode($rows);
-
-
 	// Frees the memory associated with a result
 	$results->free();
 
