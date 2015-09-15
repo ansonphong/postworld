@@ -153,7 +153,6 @@ include 'php/core/api.php';
 
 ////// AJAX AUTHORIZATION //////
 if( defined('DOING_AJAX') ){
-	pw_log( 'DOING AJAX' );
 	include 'php/core/ajax-auth.php';
 }
 

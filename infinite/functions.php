@@ -1,8 +1,7 @@
 <?php
-
 //////////////////// SETTINGS ////////////////////
 global $infinite_version;
-$infinite_version = "0.2";
+$infinite_version = "0.3";
 
 define( 'INFINITEPATH', dirname(__FILE__) );
 
@@ -13,10 +12,6 @@ add_theme_support( 'post-thumbnails' );
 // ADD LESS SUPPORT
 require_once( 'packages/wp-less/wp-less.php' );
 
-// UNIVERSAL PHP VARIABLES
-//$theme_url = "";
-
-
 //////////////////// INCLUDES ////////////////////
 // IMPORT ALL UNIVERSAL PHP VARIABLES
 include_once 'php/variables.php';
@@ -24,24 +19,14 @@ include_once 'php/variables.php';
 // UTILITIES
 include_once 'php/utilities.php';
 
-
 // DEFINE PATHS
 include_once 'php/paths.php';
-
-// GLOBALS
-include_once 'php/globals.php';
 
 // OPTIONS
 include_once 'php/options.php';
 
 // POST META
 include_once 'php/postmeta.php';
-
-// ADMIN
-//include_once 'admin/php/admin.php';
-
-// LAYOUT & SIDEBAR FUNCTIONS
-//include_once 'php/layout-sidebars.php';
 
 // TEMPLATES
 include_once 'php/templates.php';
@@ -59,31 +44,14 @@ include "php/networks.php";
 include "php/template_partials.php";
 
 
-////////// POSTWORLD //////////
-//include_once locate_template('postworld/pw-config.php');
-//include_once locate_template('postworld/pw-language.php');
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////
-
-
-//////////////////// IMAGE SIZES ////////////////////
-
-//add_image_size( 'banner', 550, 275, true );
-//add_image_size( 'grid', 550, 275, true );
-
-//////////////////// FORCE ON RICH TEXT EDITING ////////////////////
-//add_filter( 'user_can_richedit', '__return_true' );
 
 //////////////////// DISABLE HTML ON COMMENTS ////////////////////
 add_filter( 'comment_text', 'wp_filter_nohtml_kses' );
 add_filter( 'comment_text_rss', 'wp_filter_nohtml_kses' );
 add_filter( 'comment_excerpt', 'wp_filter_nohtml_kses' );
-
-//remove_filter( 'the_content', 'wpautop' );
-//remove_filter( 'the_content', 'wptexturize' );
 
 //////////////////// REDIRECT WRONG PASSWORD LOGIN ////////////////////
 /*

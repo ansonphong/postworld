@@ -783,28 +783,15 @@ function pw_current_user(){
 	return $userdata;
 }
 
-///// PARSE pwGlobals /////
+/**
+ * ADD GLOBALS
+ * Hook into the 'init' action, which runs on both frontend and backend.
+ */
+add_action( 'init', 'pwGlobals_parse', 10, 2 );
 function pwGlobals_parse(){
-	/////////// USER / PAGE SPECIFIC GLOBALS //////////
 	global $pw;
-	global $wp_query;
 
-	///// CURRENT VIEW /////
-	$viewdata = array();
-
-	// TYPE
-	$viewdata["type"] = pw_get_view_type();
-
-	// VIEW
-	$pw["view"] = pw_current_view();
-
-	// QUERY
-	$pw['query'] = pw_view_query( $pw["view"] );
-
-	// LAYOUT
-	$pw['layout'] = pw_get_current_layout();
-
-	// NONCE
+	///// NONCE /////
 	$pw['nonce'] = wp_create_nonce( 'postworld_ajax' );
 
 	///// CURRENT USER /////
@@ -824,16 +811,6 @@ function pwGlobals_parse(){
 	// Set the default security mode
 	$pw["security"]["mode"] = "user";
 
-	///// LANGUAGE /////
-	if( isset($pw_settings) )
-		$pw['language'] = _get($pw_settings, 'language');
-
-	///// INJECTIONS /////
-	//$pw['inject'] = $pw['inject'];
-
-	///// URL QUERY VARS /////
-	$pw['url_vars'] = $_GET;
-
 	///// PW MODULES /////
 	$modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
 	$pw['info']['modules'] = $modules;
@@ -841,22 +818,46 @@ function pwGlobals_parse(){
 	//// THEME VERSION /////
 	$pw['info']['theme_version'] = apply_filters( PW_THEME_VERSION, $pw['info']['version'] );
 
-	///// INFINITE /////
-	// Merge the Infinite Globals into $pw
-	// This is a temporary solution, as Infinite is being digested & refactored into Postworld
-	$pw = array_replace_recursive( $pw, iGlobals() );
+	return;
 
-	///// RETURN /////
-	return $pw;
 }
 
-// Parse Globals After all Plugins Loaded
-function parse_postworld_globals(){
- 	// Init Globals
+
+
+/**
+ * ADD FRONTEND GLOBALS
+ * These are added only for requests that are on typical front-end
+ * requests, such as posts, archives and pages.
+ * Hook into the 'wp' action, which only runs on frontend requests.
+ */
+add_action( 'wp', 'pwGlobals_frontend_parse', 10, 2 );
+function pwGlobals_frontend_parse(){
+	/////////// USER / PAGE SPECIFIC GLOBALS //////////
 	global $pw;
-	$pw = array_replace_recursive( $pw, pwGlobals_parse() );	// pwGlobals_parse();
+	global $wp_query;
+
+	///// CURRENT VIEW /////
+	// VIEW
+	$pw["view"] = pw_current_view();
+
+	// QUERY
+	$pw['query'] = pw_view_query( $pw["view"] );
+
+	// LAYOUT
+	$pw['layout'] = pw_get_current_layout();
+
+	///// SAVED SETTINGS /////
+	// SIDEBARS
+	$pw['sidebars'] = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+
+	// SOCIAL
+	$pw['social'] = pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) );
+
+	// LAYOUTS
+	$pw['layouts'] = pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) );
+
+	return;
 }
-add_action( 'wp', 'parse_postworld_globals', 10, 2 );
 
 
 function pw_injections(){
