@@ -184,12 +184,13 @@ function pw_taxonomy_operation_cleanup_term_taxonomy_table(){
  * In the term_taxonomy table.
  */
 function pw_taxonomy_operation_cleanup_term_relationships_table(){
-	
-	ini_set('memory_limit','2G');
 
 	pw_set_microtimer( 'cleanup_term_relationships_table' );
-
+	
 	global $wpdb;
+
+	// Increase memory limit, in case of large tables
+	ini_set('memory_limit','2G');
 
 	/**
 	 * Get all the rows in the wp_term_relationships table
@@ -197,11 +198,7 @@ function pw_taxonomy_operation_cleanup_term_relationships_table(){
 	$results = pw_get_all_table_rows( 'term_relationships', 'term_taxonomy_id, object_id' );
 
 	$items = array();
-	$i = 0;
 	foreach( $results as $row ){
-		$i++;
-		//if( $i > 1000 )
-		//	break;
 
 		/// CHECK IN WP_TERM_TAXONOMY ///
 		// Check the count of how many rows exist with that term_taxonomy_id in the term_taxonomy table
@@ -254,7 +251,6 @@ function pw_taxonomy_operation_cleanup_term_relationships_table(){
 }
 
 // Remove term relationships from terms that no longer exist
-
 
 /*
 	////////// FIX COMMENT COUNTS //////////
