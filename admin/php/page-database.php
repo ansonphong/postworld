@@ -277,8 +277,8 @@
 					<div ng-show="uiBool( taxOpReadout[taxOp.type] )">
 						<hr class="thin">
 						Time : <b>{{ taxOpReadout[taxOp.type].timer }} seconds</b> //
-						Total Terms: <b>{{ taxOpReadout[taxOp.type].total_terms }}</b> // 
-						Repaired Items: <b>{{ taxOpReadout[taxOp.type].count }}</b> // 
+						Total Rows: <b>{{ taxOpReadout[taxOp.type].total_terms }}</b> // 
+						Repaired Rows: <b>{{ taxOpReadout[taxOp.type].count }}</b> // 
 						{{ taxOpReadout[taxOp.type].items | json }}
 					</div>
 				</div>

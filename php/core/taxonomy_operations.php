@@ -89,7 +89,7 @@ function pw_taxonomy_operation_delete_empty_terms( $vars = array() ){
 	/**
 	 * Get all the terms in the whole terms table.
 	 */
-	$results = pw_get_all_table_rows( 'term_taxonomy', 'term_taxonomy_id, taxonomy, count' );
+	$results = pw_get_all_table_rows( 'term_taxonomy', 'term_taxonomy_id, term_id, taxonomy, count' );
 
 	/**
 	 * Iterate through the terms, and delete empty terms
@@ -102,10 +102,9 @@ function pw_taxonomy_operation_delete_empty_terms( $vars = array() ){
 			// Formally delete the term via WordPress method
 			wp_delete_term( $row['term_id'], $row['taxonomy'] );
 
-			$items[] = array( 'term_id' => $row['term_taxonomy_id'], 'taxonomy' => $row['taxonomy'] );
+			$items[] = array( 'term_id' => $row['term_id'], 'taxonomy' => $row['taxonomy'] );
 		
-			// Delete all entries with that term ID in term_taxonomy table
-			// As a final measure
+			// Delete all entries with that term ID in term_taxonomy table, as a final measure
 			$wpdb->delete(
 				$wpdb->prefix."term_taxonomy",
 				array( 'term_id' => $term_id ),
