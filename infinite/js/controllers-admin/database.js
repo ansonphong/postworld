@@ -246,12 +246,12 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 			type:'delete_empty_terms'
 		},
 		{
-			title: 'Cleanup Term Taxonomy Relations',
-			description:'Delete all terms from the term_taxonomy table which have no existant terms.',
+			title: 'Cleanup Term Taxonomy Table',
+			description:'Delete all terms\' rows from the wp_term_taxonomy table which have no existant coorolations in the wp_terms table.',
 			type:'cleanup_term_taxonomy_table'
 		},
 		{
-			title: 'Remove Deleted Terms from Relationships',
+			title: 'Cleanup Orphaned Term Relationships',
 			description:'Deletes all term relationships from term_relationship tables whose term_taxonomy_id no longer exists, or where the post no longer exists.',
 			type:'cleanup_term_relationships_table'
 		}
