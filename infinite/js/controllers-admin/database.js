@@ -252,7 +252,7 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 		},
 		{
 			title: 'Remove Deleted Terms from Relationships',
-			description:'Deletes all term relationships from term_relationship tables whose term_taxonomy_id no longer exists.',
+			description:'Deletes all term relationships from term_relationship tables whose term_taxonomy_id no longer exists, or where the post no longer exists.',
 			type:'cleanup_term_relationships_table'
 		}
 	];

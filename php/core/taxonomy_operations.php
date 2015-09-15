@@ -184,6 +184,8 @@ function pw_taxonomy_operation_cleanup_term_taxonomy_table(){
  * In the term_taxonomy table.
  */
 function pw_taxonomy_operation_cleanup_term_relationships_table(){
+	
+	ini_set('memory_limit','2G');
 
 	pw_set_microtimer( 'cleanup_term_relationships_table' );
 
@@ -192,30 +194,50 @@ function pw_taxonomy_operation_cleanup_term_relationships_table(){
 	/**
 	 * Get all the rows in the wp_term_relationships table
 	 */
-	$results = pw_get_all_table_rows( 'term_relationships', 'term_taxonomy_id' );
+	$results = pw_get_all_table_rows( 'term_relationships', 'term_taxonomy_id, object_id' );
 
 	$items = array();
+	$i = 0;
 	foreach( $results as $row ){
+		$i++;
+		//if( $i > 1000 )
+		//	break;
 
+		/// CHECK IN WP_TERM_TAXONOMY ///
 		// Check the count of how many rows exist with that term_taxonomy_id in the term_taxonomy table
 		$term_taxonomy_id = $row['term_taxonomy_id'];
-		$count = $wpdb->get_var( "SELECT count(*) FROM ".$wpdb->prefix."term_taxonomy WHERE term_taxonomy_id = ".$term_taxonomy_id );
-		$count = pw_sanitize_numeric($count);
+		$term_count = $wpdb->get_var( "SELECT count(*) FROM ".$wpdb->prefix."term_taxonomy WHERE term_taxonomy_id = ".$term_taxonomy_id );
+		$term_count = pw_sanitize_numeric($term_count);
 
 		// If it exist, count will be 1, if not 0
-		$relationship_exists = ( $count > 0 );
+		$relationship_exists = ( $term_count > 0 );
 
-		// If the term relationship doesn't exist
-		if( !$relationship_exists ){
-			$items[] = array( 'term_taxonomy_id' => $row['term_taxonomy_id'] );
+		/// CHECK IN WP_POSTS ///
+		// Check the count of how many rows exist with that term_taxonomy_id in the term_taxonomy table
+		$post_id = $row['object_id'];
+		$post_count = $wpdb->get_var( "SELECT count(*) FROM ".$wpdb->prefix."posts WHERE ID = ".$post_id );
+		$post_count = pw_sanitize_numeric($post_count);
+
+		// If it exist, count will be 1, if not 0
+		$post_exists = ( $post_count > 0 );
+
+		// If the term relationship or coorosponding post doesn't exist
+		if( !$relationship_exists || !$post_exists ){
+			$items[] = array(
+				'term_taxonomy_id' => $row['term_taxonomy_id'],
+				'object_id' => $row['object_id']
+				);
 
 			// Delete all entries with that term ID in term_taxonomy table
 			$wpdb->delete(
 				$wpdb->prefix."term_relationships",
-				array( 'term_taxonomy_id' => $term_taxonomy_id ),
+				array(
+					'term_taxonomy_id' => $row['term_taxonomy_id'],
+					'object_id' => $row['object_id']
+					),
 				array( '%d' )
 				);
-
+			
 		}
 
 	}
@@ -231,9 +253,7 @@ function pw_taxonomy_operation_cleanup_term_relationships_table(){
 
 }
 
-
 // Remove term relationships from terms that no longer exist
-
 
 
 /*
