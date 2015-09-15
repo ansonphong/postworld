@@ -247,13 +247,13 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 		},
 		{
 			title: 'Cleanup Term Taxonomy Relations',
-			description:'Delete all terms from the term_taxonomy table which have no terms.',
-			type:'cleanup_term_taxonomy_relations'
+			description:'Delete all terms from the term_taxonomy table which have no existant terms.',
+			type:'cleanup_term_taxonomy_table'
 		},
 		{
 			title: 'Remove Deleted Terms from Relationships',
-			description:'Deletes all term relationships from term_relationship tables whose terms no longer exist',
-			type:'delete_old_term_relationships'
+			description:'Deletes all term relationships from term_relationship tables whose term_taxonomy_id no longer exists.',
+			type:'cleanup_term_relationships_table'
 		}
 	];
 

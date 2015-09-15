@@ -15,9 +15,9 @@ function pw_taxonomy_operation( $type, $vars ){
 
 }
 
-function pw_get_all_terms( $columns = "term_taxonomy_id, count" ){
+function pw_get_all_table_rows( $table = 'term_taxonomy', $columns = "term_taxonomy_id, term_id, count" ){
 	global $wpdb;
-	$results = $wpdb->get_results( "SELECT ".$columns." FROM ".$wpdb->prefix."term_taxonomy", ARRAY_A );
+	$results = $wpdb->get_results( "SELECT ".$columns." FROM ".$wpdb->prefix.$table, ARRAY_A );
 	$results = pw_sanitize_numeric_array_of_a_arrays( $results );
 	return $results;
 }
@@ -34,7 +34,7 @@ function pw_taxonomy_operation_update_term_count( $vars = array() ){
 	/**
 	 * Get all the terms in the whole terms table.
 	 */
-	$results = pw_get_all_terms( 'term_taxonomy_id, count' );
+	$results = pw_get_all_table_rows( 'term_taxonomy', 'term_taxonomy_id, count' );
 
 	/**
 	 * Iterate through the terms, and fix the count column.
@@ -89,7 +89,7 @@ function pw_taxonomy_operation_delete_empty_terms( $vars = array() ){
 	/**
 	 * Get all the terms in the whole terms table.
 	 */
-	$results = pw_get_all_terms( 'term_taxonomy_id, taxonomy, count' );
+	$results = pw_get_all_table_rows( 'term_taxonomy', 'term_taxonomy_id, taxonomy, count' );
 
 	/**
 	 * Iterate through the terms, and delete empty terms
@@ -113,6 +113,111 @@ function pw_taxonomy_operation_delete_empty_terms( $vars = array() ){
 		'items' => $items,
 		);
 	
+}
+
+/**
+ * Deletes all rows in the term_taxonomy table which don't have term entries in wp_terms,
+ * in the case that their terms were deleted from the wp_terms table manually.
+ */
+function pw_taxonomy_operation_cleanup_term_taxonomy_table(){
+
+	pw_set_microtimer( 'cleanup_term_taxonomy_table' );
+
+	global $wpdb;
+
+	/**
+	 * Get all the rows in the whole terms table.
+	 */
+	$results = pw_get_all_table_rows( 'term_taxonomy', 'term_taxonomy_id, term_id, taxonomy, count' );
+
+	$items = array();
+	foreach( $results as $row ){
+
+		// Check the count of how many terms exist with that ID in the terms table
+		$term_id = $row['term_id'];
+		$count = $wpdb->get_var( "SELECT count(*) FROM ".$wpdb->prefix."terms WHERE term_id = ".$term_id );
+		$count = pw_sanitize_numeric($count);
+
+		// If it exist, count will be 1, if not 0
+		$term_exists = ( $count > 0 );
+
+		// If the term doesn't exist
+		if( !$term_exists ){
+			$items[] = array( 'term_id' => $row['term_taxonomy_id'], 'taxonomy' => $row['taxonomy'] );
+
+			// Delete all entries with that term ID in term_taxonomy table
+			$wpdb->delete(
+				$wpdb->prefix."term_taxonomy",
+				array( 'term_id' => $term_id ),
+				array( '%d' )
+				);
+
+		}
+
+	}
+
+	$timer = pw_get_microtimer('cleanup_term_taxonomy_table');
+
+	return array(
+		'timer' => $timer,
+		'total_terms' => count($results),
+		'count' => count($items),
+		'items' => $items,
+		);
+
+}
+
+
+/**
+ * Deletes all rows in the term_relationships table which don't have entries
+ * In the term_taxonomy table.
+ */
+function pw_taxonomy_operation_cleanup_term_relationships_table(){
+
+	pw_set_microtimer( 'cleanup_term_relationships_table' );
+
+	global $wpdb;
+
+	/**
+	 * Get all the rows in the wp_term_relationships table
+	 */
+	$results = pw_get_all_table_rows( 'term_relationships', 'term_taxonomy_id' );
+
+	$items = array();
+	foreach( $results as $row ){
+
+		// Check the count of how many rows exist with that term_taxonomy_id in the term_taxonomy table
+		$term_taxonomy_id = $row['term_taxonomy_id'];
+		$count = $wpdb->get_var( "SELECT count(*) FROM ".$wpdb->prefix."term_taxonomy WHERE term_taxonomy_id = ".$term_taxonomy_id );
+		$count = pw_sanitize_numeric($count);
+
+		// If it exist, count will be 1, if not 0
+		$relationship_exists = ( $count > 0 );
+
+		// If the term relationship doesn't exist
+		if( !$relationship_exists ){
+			$items[] = array( 'term_taxonomy_id' => $row['term_taxonomy_id'] );
+
+			// Delete all entries with that term ID in term_taxonomy table
+			$wpdb->delete(
+				$wpdb->prefix."term_relationships",
+				array( 'term_taxonomy_id' => $term_taxonomy_id ),
+				array( '%d' )
+				);
+
+		}
+
+	}
+
+	$timer = pw_get_microtimer('cleanup_term_relationships_table');
+
+	return array(
+		'timer' => $timer,
+		'total_terms' => count($results),
+		'count' => count($items),
+		'items' => $items,
+		);
+
 }
 
 
