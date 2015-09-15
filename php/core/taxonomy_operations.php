@@ -107,7 +107,7 @@ function pw_taxonomy_operation_delete_empty_terms( $vars = array() ){
 			// Delete all entries with that term ID in term_taxonomy table, as a final measure
 			$wpdb->delete(
 				$wpdb->prefix."term_taxonomy",
-				array( 'term_id' => $term_id ),
+				array( 'term_id' => $row['term_id'] ),
 				array( '%d' )
 				);
 
