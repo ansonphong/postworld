@@ -182,7 +182,7 @@ function pw_taxonomy_operation_cleanup_term_taxonomy_table(){
 
 /**
  * Deletes all rows in the term_relationships table which don't have entries
- * In the term_taxonomy table.
+ * In the term_taxonomy table, or whose posts don't exist.
  */
 function pw_taxonomy_operation_cleanup_term_relationships_table(){
 
