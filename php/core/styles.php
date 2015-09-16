@@ -59,12 +59,7 @@ function pw_less_vars( $vars, $handle ) {
     }
 
     ///// Directory Paths /////
-    global $i_paths;
     global $pwSiteGlobals;
-    
-    // DEPRECIATED
-    $vars['infinite-theme'] = pw_less_prepare_url( $i_paths['infinite']['url'] );
-    $vars['child-theme'] = pw_less_prepare_url( $i_paths['child_theme']['url'] ); 
 
     $vars['template-url'] = pw_less_prepare_url( get_template_directory_uri() ); 
     $vars['theme-url'] = $vars['template-url'];

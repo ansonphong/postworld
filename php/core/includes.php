@@ -78,12 +78,6 @@ function postworld_includes( $args ){
 		//array_push( $angularDep, 'google-maps' );
 	}
 
-	// + LESS Support
-	if( in_array( 'wp-less', $pw['inject'] ) ){
-		require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
-	}
-	
-
 	/*
 	///// DEPRECIATED /////
 

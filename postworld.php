@@ -162,7 +162,6 @@ include 'php/core/filters.php';
 ////// MODULE FUNCTIONS //////
 include 'php/core/modules.php';
 
-
 ////// PW GLOBALS //////
 // This must come after the API functions
 // And before the rest of the Postworld includes
@@ -224,6 +223,7 @@ include 'php/core/rank.php';
 
 ////// TEMPLATE FUNCTIONS //////
 include 'php/core/templates.php';
+include 'php/core/template_partials.php';
 
 ////// FEED FUNCTIONS //////
 include 'php/core/feeds.php';
@@ -326,6 +326,9 @@ include 'php/core/includes.php';
 
 ////// UPDATE / MIGRATE //////
 include 'php/core/update.php';
+
+////// ADD LESS SUPPORT //////
+require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
 
 ///// ADD HEADER CODE /////
 add_action('wp_head','pw_add_header_code');
