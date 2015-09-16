@@ -1982,10 +1982,41 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 				return false;
 				
 			}
-			
 
-			//if(   _.isObject($scope.post.post_meta.related_post) )
-			//  alert('object');
+		},
+
+
+		getTimezone: function( timezoneId ){
+			/**
+			 * If there's no timezoneId defined, use client time
+			 */
+			if( timezoneId === null ||
+				_.isEmpty( timezoneId ) ||
+				_.isUndefined( timezoneId ) ){
+				/**
+				 * Use jstz to get the name of the current timezone
+				 * In the future this will soon be supported by Moment.js
+				 */
+				timezoneId = jstz.determine().name();
+			}
+
+			/**
+			 * Use Moment.js to get the timezone object
+			 */
+			var momentTimezone = ( typeof(moment) == "function" ) ?
+				moment().tz( timezoneId ) : false;
+
+			// Compile some values for a simple object
+			var timezone = {
+				offset: momentTimezone._offset,
+				name: timezoneId,
+				code: momentTimezone.format('z'),
+			};
+
+			//$log.debug( 'pwDate.getTimezone : momentTimezone : ' + timezoneId, momentTimezone );
+			$log.debug( 'pwDate.getTimezone : ' + timezoneId, timezone );
+
+			return timezone;
 
 		},
 

@@ -883,8 +883,6 @@ postworld.controller('editPost',
 
 }]);
 
-// Make directive
-// Make attributes for event-start-model, event-end-model
 
 /*
   _____                 _     ___                   _   
@@ -895,109 +893,198 @@ postworld.controller('editPost',
                                        |_|              
 //////// ----- EVENT DATA/TIME CONTROLLER ----- ////////*/
 
-postworld.directive( 'pwEventInput', [ function($scope){
+postworld.directive( 'pwEventInput',
+	[
+	'$rootScope',
+	'pwPostOptions',
+	'pwEditPostFilters',
+	'$timeout',
+	'$filter',
+	'pwData',
+	'$log',
+	'_',
+	'pwDate',
+	function(
+		$rootScope,
+		$pwPostOptions,
+		$pwEditPostFilters,
+		$timeout,
+		$filter, 
+		$pwData,
+		$log,
+		$_,
+		$pwDate
+		){
 	return {
 		restrict: 'AE',
-		controller: 'eventInput',
 		scope:{
-			'startDateObj':"=",
+			'e':"=pwEventInput",
+			/*
+			'startDateObj':"=eventObj",
 			'endDateObj':"=",
 			'startDate':"=",
 			'endDate':"=",
+			'timezone':"="
+			*/
 		},
 		link: function( $scope, element, attrs ){
+
+			/**
+			 * Watch the timezone object for changes
+			 * Set the boolean $scope.hasTimezone
+			 *
+			 * If it has timezone, offset the date/timepicker
+			 * To the event time on initialization.
+			 */
+			/*
+			$scope.$watch( function(){
+					return $_.get( $scope.e, 'timezone' );
+				},
+				function( timezone, oldTimezone ){
+					if( !_.isEmpty( timezone ) &&
+						timezone !== false )
+						$scope.hasTimezone = true;
+					else
+						$scope.hasTimezone = false;
+
+					if( $scope.hasTimezone ){
+						var clientTimezone = $pwDate.getTimezone();
+						var eventTimezone = $pwDate.getTimezone( timezone.time_zone_id );
+					
+						var eventStart = moment.tz($scope.e.date.start_date, timezone.time_zone_id );
+
+						$log.debug( 'eventStart : AT EVENT LOCATION', eventStart.format() );
+
+						var clientTimezone = jstz.determine().name();
+						var eventStartClient = eventStart.clone().tz( clientTimezone );
+
+						$log.debug( 'eventStart : AT client LOCATION', eventStartClient.format() );
+
+
+						//$scope.e.date.local_start_date_obj = 'test';
+
+					}
+
+				}, 1 );
+
+			*/
+			/*
+				@todo - Refactor how the timezones work
+
+				X *start_date* - store literal time at location
+				X *end_date* - store literal time at location
+
+				*start_date_obj*
+					- this is potentially temp data
+					- re-evaluate it on inititialization IF there is a timezone
+					- if there is a timezone
+						- 	calculate the difference between
+							the current client's timezone,
+							and the timezone it's in and make an
+							offset to trick the UTC time to being
+							synonymous with the timezone of the location
+
+				*timezone*
+					- store the timezone object
+
+				*start_date* (unix)
+					- process based on timezone
+					- if no timezone, use literal
+
+				*end_date* (unix)
+					- process based on timezone
+					- if no timezone, use literal
+
+			*/
+
+			$scope.getUnixTimestamp = function( dateObject ){
+				if( !_.isUndefined( dateObject ) ){
+					var localDateObj = new Date(dateObject);
+					return Math.round( localDateObj.getTime() / 1000);
+				}
+			};
+
+			$scope.setUnixTimestamps = function(){
+			
+				// Add the UNIX Timestamp : event_start
+				if( !_.isUndefined( $scope.e.date.start_date_obj ) && !_.isUndefined( $scope.$parent.post ) )
+					$scope.$parent.post.event_start = $scope.getUnixTimestamp( $scope.e.date.start_date_obj );
+				
+				// Add the UNIX Timestamp : event_end
+				if( !_.isUndefined( $scope.e.date.end_date_obj ) && !_.isUndefined( $scope.$parent.post )  )
+					$scope.$parent.post.event_end = $scope.getUnixTimestamp( $scope.e.date.end_date_obj );
+			
+			};
+
+			// WATCH : EVENT START TIME
+			$scope.$watch( 'e.date.start_date_obj',
+				function (){
+					$log.debug( 'CHANGED : e.date.start_date_obj' );
+
+					// End function if variable doesn't exist
+					//if( _.isUndefined( $scope.e.date.start_date_obj ) )
+					//	return false;
+
+					// Set the alternate date format
+					$scope.e.date.start_date = $filter('date')(
+						$scope.e.date.start_date_obj, 'yyyy-MM-dd HH:mm' );
+
+					// If start time is set after the end time - make them equal
+					if( $scope.e.date.end_date_obj < $scope.e.date.start_date_obj )
+						$scope.e.date.end_date_obj = $scope.e.date.start_date_obj;
+
+					// Set UNIX Timestamps
+					$scope.setUnixTimestamps();
+
+				}, 1 );
+
+			// WATCH : EVENT END TIME
+			$scope.$watch( 'e.date.end_date_obj',
+				function (){
+					$log.debug( 'CHANGED : e.date.end_date_obj' );
+
+					// End function if variable doesn't exist
+					//if( _.isUndefined( $scope.e.date.end_date_obj ) )
+					//	return false;
+
+					// Set the alternate date format
+					$scope.e.date.end_date = $filter('date')(
+						$scope.e.date.end_date_obj, 'yyyy-MM-dd HH:mm' );
+
+					// If end time is set before the start time - make them equal
+					if( $scope.e.date.start_date_obj > $scope.e.date.end_date_obj )
+						$scope.e.date.start_date_obj = $scope.e.date.end_date_obj;
+
+					// Set UNIX Timestamps
+					$scope.setUnixTimestamps();
+
+				}, 1 );
+
+			////////// TIME PICKER : CONFIG //////////
+			$scope.$parent.eventOptions = {
+				// Time Picker
+				hstep: 1,
+				mstep: 1,
+				meridian: true,
+				
+				// Date Picker
+				//'year-format': "'yy'",
+				//'starting-day': 1
+			};
+
+			// Toggle AM/PM // 24H
+			$scope.$parent.toggleMeridian = function() {
+				$scope.$parent.eventOptions.meridian = ! $scope.$parent.eventOptions.meridian;
+			};
+
+			// Example (bind to ng-change)
+			$scope.$parent.dateChanged = function () {
+
+			};
+
 		}
-	};
-}]);
-
-postworld.controller('eventInput',
-	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-		'pwData', '$log', '_', 'pwDate',
-	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
-		$pwData, $log, $_, $pwDate ) {
-
-	$scope.getUnixTimestamp = function( dateObject ){
-		if( !_.isUndefined( dateObject ) ){
-			var localDateObj = new Date(dateObject);
-			return Math.round( localDateObj.getTime() / 1000);
-		}
-	};
-
-	$scope.setUnixTimestamps = function(){
-		// Add the UNIX Timestamp : event_start
-		if( !_.isUndefined( $scope.startDateObj ) && !_.isUndefined( $scope.$parent.post ) )
-			$scope.$parent.post.event_start = $scope.getUnixTimestamp( $scope.startDateObj );
-		// Add the UNIX Timestamp : event_end
-		if( !_.isUndefined( $scope.endDateObj ) && !_.isUndefined( $scope.$parent.post )  )
-			$scope.$parent.post.event_end = $scope.getUnixTimestamp( $scope.endDateObj );
-	};
-
-	// WATCH : EVENT START TIME
-	$scope.$watch( 'startDateObj',
-		function (){
-			// End function if variable doesn't exist
-			if( _.isUndefined( $scope.startDateObj ) )
-				return false;
-
-			// Set the alternate date format
-			if( !_.isUndefined( $scope.startDate ) )
-				$scope.startDate = $filter('date')(
-					$scope.startDateObj, 'yyyy-MM-dd HH:mm' );
-
-			// If start time is set after the end time - make them equal
-			if( $scope.endDateObj < $scope.startDateObj )
-				$scope.endDateObj = $scope.startDateObj;
-
-			// Set UNIX Timestamps
-			$scope.setUnixTimestamps();
-
-		}, 1 );
-
-	// WATCH : EVENT END TIME
-	$scope.$watch( 'endDateObj',
-		function (){
-			// End function if variable doesn't exist
-			if( _.isUndefined( $scope.endDateObj ) )
-				return false;
-
-			// Set the alternate date format
-			if( !_.isUndefined( $scope.endDate ) )
-				$scope.endDate = $filter('date')(
-					$scope.endDateObj, 'yyyy-MM-dd HH:mm' );
-
-			// If end time is set before the start time - make them equal
-			if( $scope.startDateObj > $scope.endDateObj )
-				$scope.startDateObj = $scope.endDateObj;
-
-			// Set UNIX Timestamps
-			$scope.setUnixTimestamps();
-
-		}, 1 );
-
-
-	////////// TIME PICKER : CONFIG //////////
-	$scope.$parent.eventOptions = {
-		// Time Picker
-		hstep: 1,
-		mstep: 1,
-		meridian: true,
-		
-		// Date Picker
-		//'year-format': "'yy'",
-		//'starting-day': 1
-	};
-
-	// Toggle AM/PM // 24H
-	$scope.$parent.toggleMeridian = function() {
-		$scope.$parent.eventOptions.meridian = ! $scope.$parent.eventOptions.meridian;
-	};
-
-	// Example (bind to ng-change)
-	$scope.$parent.dateChanged = function () {
 
 	};
-
-
 }]);
 
 

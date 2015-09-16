@@ -28,8 +28,13 @@ global $pw_event_post;
 		<input type="hidden" name="pw_event_post" ng-value="post | json" style="width:100%;">
 		
 		<?php if( pw_dev_mode() ): ?>
-			<!-- DEV : Test Output -->
-			<hr><pre>{{ post | json }}</pre>
+			<div class="well">
+				<h3>$scope.post</h3>
+			
+				<!-- DEV : Test Output -->
+				<pre><code>{{ post | json }}</code></pre>
+			
+			</div>
 		<?php endif; ?>
 
 	</div>	
