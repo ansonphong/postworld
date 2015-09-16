@@ -19,7 +19,8 @@ add_action( 'edited_term', 'pw_delete_post_caches' );
  */
 function pw_delete_post_caches(){
 	
-	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+	if( in_array( 'post_cache', pw_enabled_modules() ) ||
+		in_array( 'layout_cache', pw_enabled_modules() ) ){
 		pw_delete_cache_type( 'feed-outline' );
 		pw_delete_cache_type( 'feed-posts' );
 		pw_delete_cache_type( 'post' );

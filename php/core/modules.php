@@ -96,6 +96,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			),
 
 		array(
+			'name'	=>	'Layout Cache',
+			'slug'	=>	'layout_cache',
+			'icon'	=>	'pwi-cubes',
+			'description'	=>	'',
+			),
+
+		array(
 			'name'	=>	'Devices',
 			'slug'	=>	'devices',
 			'icon'	=>	'pwi-mobile',

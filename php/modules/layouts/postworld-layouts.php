@@ -149,6 +149,7 @@ function pw_autocorrect_layout( $layout ){
 
 /////////////// LAYOUT & SIDEBAR FUNCTIONS ///////////////
 function pw_header_footer( $template = 'header' ){
+
 	// TODO : See why this is being instantiated 3 times, by index.php, home.php and single.php
 	global $pw;
 	// Get the set template ID
@@ -173,10 +174,37 @@ function pw_header_footer( $template = 'header' ){
 	// Get the template path
 	$template_path = _get( $templates, $template.'.'.$template_id );
 
-	// If a template path exists
-	if( !empty( $template_path ) )
-		// Include the template
-		include $template_path;
+	// If there is no value, return false
+	if( empty( $template_path ) )
+		return false;
+
+
+	///// CACHING LAYER /////
+	if( in_array( 'layout_cache', pw_enabled_modules() ) ){
+		$hash_array = array(
+			'template_path' => $template_path,
+			'device' => pw_device_meta(),
+			);
+		$cache_hash = hash( 'sha256', json_encode( $hash_array ) );
+		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+		if( !empty( $get_cache ) )
+			$template_content = $get_cache['cache_content'];
+	}
+
+	// If no cached template content, include here
+	if( !isset( $template_content ) )
+		$template_content = pw_ob_include( $template_path );
+
+	///// CACHING LAYER /////
+	if( in_array( 'layout_cache', pw_enabled_modules() ) )
+		pw_set_cache( array(
+			'cache_type'	=>	'layout-' . $template,
+			'cache_hash' 	=> 	$cache_hash,
+			'cache_content'	=>	$template_content,
+			));
+
+	echo $template_content;
+
 }
 
 
