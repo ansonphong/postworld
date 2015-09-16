@@ -6,6 +6,13 @@ add_action( 'update_postmeta', 'pw_delete_post_caches' );
 add_action( 'save_post', 'pw_delete_post_caches' );
 add_action( 'save_post', 'pw_delete_post_single_cache' );
 
+/**
+ * When editing a menu, clear the affected caches.
+ */
+add_action( 'wp_update_nav_menu', 'pw_delete_post_single_cache' );
+add_action( 'wp_update_nav_menu_item', 'pw_delete_post_single_cache' );
+add_action( 'wp_create_nav_menu', 'pw_delete_post_single_cache' );
+add_action( 'wp_delete_nav_menu', 'pw_delete_post_single_cache' );
 
 /**
  * When saving a terms, clear the affected caches.
