@@ -19,7 +19,8 @@ global $post;
 		ng-controller="pwBackgroundMetaboxCtrl"
 		class="pw-metabox metabox-side metabox-background">
 		<?php
-			echo pw_ob_include( pw_get_admin_template( 'metabox-background' ) );
+			//echo pw_ob_include( pw_get_admin_template( 'metabox-background' ) );
+			echo pw_background_select( array( 'context' => 'postAdmin' ) );
 			//echo i_background_single_options( array( 'context'	=>	'postAdmin' ) );
 			// Action Hook
 			do_action('pw_background_metabox_templates');
@@ -42,7 +43,7 @@ global $post;
 			function( $scope, $pwData, $_, $log ) {
 
 			/// LOAD IN DATA SOURCES ///
-			$scope.pwBackgrounds = <?php echo json_encode( i_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) ) ); ?>;
+			$scope.pwBackgrounds = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) ) ); ?>;
 			$scope.pw_background_post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') ) ); ?>;
 
 			// Create background object

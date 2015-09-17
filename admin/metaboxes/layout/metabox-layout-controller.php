@@ -18,7 +18,7 @@ global $post;
 		class="pw-metabox metabox-side metabox-layout"
 		ng-cloak>
 		<?php
-			echo i_layout_single_options( array( 'context'	=>	'postAdmin' ) );
+			echo pw_layout_single_options( array( 'context'	=>	'postAdmin' ) );
 			// Action Hook
 			do_action('pw_layout_metabox_templates');
 		?>
@@ -40,10 +40,10 @@ global $post;
 			function( $scope, $pwData, $_, $log ) {
 
 			/// LOAD IN DATA SOURCES ///
-			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
+			$scope.iLayoutOptions = <?php echo json_encode( pw_layout_options() ); ?>;
 			$scope.iSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
 			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
-			$scope.iLayouts = <?php echo json_encode( i_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
+			$scope.iLayouts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
 			$scope.pw_layout_post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') ) ); ?>;
 
 			// Create layout object

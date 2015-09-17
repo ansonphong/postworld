@@ -339,7 +339,7 @@ function pw_admin_slider_options( $vars = array() ){
 }
 
 ///// SINGLE LAYOUT OPTIONS /////
-function i_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
+function pw_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
 	//$vars['options_model'] = "options.post_content.columns";
 	switch($vars['context']){
 		///// SITE-WIDE SETTINGS /////

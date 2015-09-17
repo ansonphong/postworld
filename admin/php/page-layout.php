@@ -38,7 +38,7 @@
 					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_LAYOUTS, 'iLayouts'); ?></div>
 
 					<?php
-						echo i_layout_single_options( array( 'context'	=>	'siteAdmin' ) );
+						echo pw_layout_single_options( array( 'context'	=>	'siteAdmin' ) );
 						//echo i_ob_include_template( 'admin/modules/layout-single.php', $vars );
 					?>
 
