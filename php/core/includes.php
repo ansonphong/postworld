@@ -233,10 +233,6 @@ function postworld_includes( $args ){
 		// ANGULAR : INFINITE SCROLL
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', POSTWORLD_URI.'/lib/ng-infinite-scroll/ng-infinite-scroll-1.2.js', $angularDep );
 		
-		// ANGULAR : TIMER
-		wp_enqueue_script( 'AngularJS-Timer',
-			POSTWORLD_URI.'/lib/angular-timer/angular-timer.js', $angularDep );
-
 		// ANGULAR : PARALLAX
 		wp_enqueue_script( 'angularJS-Parallax',
 			POSTWORLD_URI.'/lib/angular-parallax/angular-parallax.js', $angularDep );
@@ -443,7 +439,8 @@ function postworld_includes( $args ){
 
 	// + ANGULAR MOMENT
 	// @todo : Make function to register PW packages
-	if( in_array( 'angularMoment', $pw['inject'] ) ){
+	if( in_array( 'angularMoment', $pw['inject'] ) ||
+		in_array( 'timer', $pw['inject'] ) ){
 
 		if( pw_mode() === 'deploy' ){
 			wp_enqueue_script( 'Postworld-Package-Angular-Moment',

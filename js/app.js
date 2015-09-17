@@ -46,7 +46,6 @@ pw.angularModules = pw.angularModules.concat([
 	'ngAria',
 	'ui.bootstrap',
 	'monospaced.elastic',
-	'timer',
 	'angular-parallax',
 	'wu.masonry',
 	'checklist-model',

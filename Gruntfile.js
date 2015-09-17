@@ -81,7 +81,7 @@ module.exports = function(grunt) {
             // Angular Infinite Scroll
             'lib/ng-infinite-scroll/ng-infinite-scroll.js',
             // Angular Timer
-            'lib/angular-timer/timer.js',
+            //'lib/angular-timer/timer.js',
             // Angular Parallax
             'lib/angular-parallax/angular-parallax.js',
             // Angular Elastic
