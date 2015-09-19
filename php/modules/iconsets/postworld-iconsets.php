@@ -263,7 +263,7 @@ add_filter( PW_OPTIONS_ICONSETS, 'pw_filter_options_iconsets' );
 
 function pw_get_iconset_classes( $iconset_slug ){
 	// An all the classes within an iconset
-	
+
 	//pw_set_microtimer('pw_get_iconset_classes-'.$iconset_slug);
 
 	if( !pw_module_is_enabled('iconsets') )
@@ -284,6 +284,7 @@ function pw_get_iconset_classes( $iconset_slug ){
 	$iconset_hash = pw_file_hash( $iconset['src'], 'sha256' );
 	$get_cache = pw_get_cache( array( 'cache_hash' => $iconset_hash ) );
 	if( !empty( $get_cache ) ){
+		//pw_log_microtimer( 'pw_get_iconset_classes-'.$iconset_slug, 'CACHED' );
 		return json_decode( $get_cache['cache_content'], true);
 	}
 
