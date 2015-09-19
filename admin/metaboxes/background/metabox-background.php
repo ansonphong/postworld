@@ -39,7 +39,7 @@ function pw_metabox_init_background(){
                 'Background',
                 'pw_background_meta_init',
                 $post_type,
-                'normal',
+                'side',
                 'core',
                 $args //  Pass callback variables
                 );
