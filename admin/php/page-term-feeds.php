@@ -3,7 +3,7 @@
 	// Feeds
 	$pwTermFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_TERM_FEEDS ) );
 	// Feed Settings
-	//$pwFeedSettings = i_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
+	//$pwFeedSettings = pw_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
 
 	// Term Feed Templates
 	$termFeedTemplates = pw_get_templates(
