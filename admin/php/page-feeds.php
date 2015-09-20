@@ -3,7 +3,7 @@
 	// Feeds
 	$pwFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_FEEDS ) );
 	// Feed Settings
-	$pwFeedSettings = i_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
+	$pwFeedSettings = pw_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
 	// Feed Templates
 	$htmlFeedTemplates = pw_get_templates(
 		array(
