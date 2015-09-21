@@ -1,5 +1,14 @@
 <?php
 /**
+ * @todo Add an expire column in the cache table
+ * Check when retreiving if the expire is past.
+ * If it's expired, delete it and return false.
+ *
+ * @todo Find more things to cache.
+ */
+
+
+/**
  * When saving a post, clear the affected caches.
  */
 add_action( 'update_postmeta', 'pw_delete_post_caches' );
