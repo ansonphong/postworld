@@ -86,7 +86,7 @@ function pw_get_current_layout( $vars = array() ){
 	// Check if the template value is default
 	$is_default = ( _get( $layout, 'template' ) === 'default' );
 	// If it's eligible for a post parent layout
-	if( ( !$layout && $is_single ) || $is_default ){
+	if( ( !$layout && $is_single ) || ( $is_default && $is_single ) ){
 		// Get default layout from post parent's layout
 		$get_post = get_post( $post_id );
 		if( $get_post->post_parent !== 0 )
