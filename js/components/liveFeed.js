@@ -74,8 +74,22 @@ postworld.controller('pwFeedController',
 	
 	// Initialize
 	$scope.busy = false; 		// Avoids running simultaneous service calls to get posts. True: Service is Running to get Posts, False: Service is Idle    	
+	$scope.scrollDisabled = false;
 	var firstRun = true; 		// True until pwLiveFeed runs once. False for al subsequent pwScrollFeed
 	$scope.scrollMessage = "";
+
+	$scope.setBusy = function( bool ){
+		if( bool == true ){
+			$scope.busy = true;
+			$scope.scrollDisabled = true;
+		}
+		else if( bool == false ){
+			$scope.busy = false;
+			$timeout( function(){
+				$scope.scrollDisabled = false;
+			}, 1000 );
+		}
+	}
 
 	// IF NO FEED ID
 	if( _.isUndefined( $scope.feedId ) || _.isEmpty($scope.feedId) ){
@@ -171,7 +185,7 @@ postworld.controller('pwFeedController',
 		$log.debug( 'pwFeed : getNext() : ' + $scope.feedId, $pwData['feeds'][$scope.feedId] );		
 		
 		// If already getting results, do not run again.
-		if ($scope.busy) {
+		if( $scope.busy ) {
 			$log.debug( 'pwFeed : getNext() : BUSY', $scope.feedId );	
 			$log.debug('pwFeedController.getNext: We\'re Busy, wait!');
 			return;
@@ -232,14 +246,14 @@ postworld.controller('pwFeedController',
 			// Update the status
 			$scope.updateStatus();
 			// Toggle off busy
-			$scope.busy = false;
+			$scope.setBusy(false);
 			// Return here to avoid AJAX call
 			return;
 		}
 
 		///// GET FEED BY AJAX /////
 		// Toggle on busy
-		$scope.busy = true;
+		$scope.setBusy(true);
 		// Clone Args Value as 'feed'
 		var feed = JSON.parse( JSON.stringify( $pwData.feeds[$scope.feedId] ) );
 
@@ -257,7 +271,7 @@ postworld.controller('pwFeedController',
 
 				// Prevent Flicker when Template Loading
 				$timeout( function(){
-					$scope.busy = false;
+					$scope.setBusy(false);
 				}, 100 );
 
 				// Handle Error					
@@ -285,7 +299,7 @@ postworld.controller('pwFeedController',
 			},
 			// Failure
 			function(response) {
-				$scope.busy = false;
+				$scope.setBusy(false);
 				$log.error('pwFeedController.getLiveFeed Failure',response);
 				// TODO Show User Friendly Message
 			}
@@ -338,7 +352,7 @@ postworld.controller('pwFeedController',
 		// Check if all Loaded, then return and do nothing
 		if ($pwData.feeds[$scope.feedId].status == 'all_loaded') {
 			$log.debug('pwFeedController.scrollFeed : ALL LOADED', $scope.feedId);				
-			$scope.busy = false;
+			$scope.setBusy(false);
 			return;
 		};
 
@@ -390,7 +404,7 @@ postworld.controller('pwFeedController',
 		////////////////////////////
 		$log.debug( "pw_get_posts : " , params );
 
-		$scope.busy = true;
+		$scope.setBusy(true);
 		$pwData.pw_get_posts( params ).then(
 			// Success
 			function(response) {
@@ -451,18 +465,25 @@ postworld.controller('pwFeedController',
 
 					// Update feed status
 					$scope.updateStatus();
-					$scope.busy = false;
+					$scope.setBusy(false);
+
+					$timeout( function(){
+						$rootScope.$broadcast('masonry.reload');
+						}, 100
+					);
+
+
 									
 				} else {
 					$log.debug('pwFeed : ERROR : ',response.status,response.message);
-					$scope.busy = true;
+					$scope.setBusy(true);
 
 				}
 			},
 			// Failure
 			function(response) {
 				$log.error('pwFeed : pwFeedController.pwScrollFeed Failure',response);
-				$scope.busy = true;
+				$scope.setBusy(true);
 				// TODO Show User Friendly Error Message
 			}
 		);

@@ -7,7 +7,7 @@
 function pwAjaxAuth() {
 
 	// Get the current action var
-	$action = $_GET['action'];
+	$action = _get( $_GET, 'action' );
 
 	/**
 	 * The Postworld actions to verify authorization on.
@@ -20,7 +20,7 @@ function pwAjaxAuth() {
 		'pw_get_comments'		
 		);
 
-	if( !in_array( $_GET['action'], $postworld_actions ) )
+	if( !in_array( $action, $postworld_actions ) )
 		return false;
 
 	$params_json = file_get_contents("php://input");
