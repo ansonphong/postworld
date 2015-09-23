@@ -467,11 +467,11 @@ postworld.controller('pwFeedController',
 					$scope.updateStatus();
 					$scope.setBusy(false);
 
+					// Reload Masonry
 					$timeout( function(){
 						$rootScope.$broadcast('masonry.reload');
 						}, 100
 					);
-
 
 									
 				} else {
