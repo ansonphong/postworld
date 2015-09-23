@@ -1262,7 +1262,7 @@ function pw_save_post($post_data){
 
 function pw_embed_url($input){
 
-	pw_log( 'pw_embed_url', $input );
+	//pw_log( 'pw_embed_url', $input );
 
 	$url = $input[0];
 	$o_embed_providers = array(
