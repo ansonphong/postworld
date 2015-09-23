@@ -42,7 +42,10 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 	elseif( !empty( $thumbnail_id ) ){
 		$thumbnail_id = (int) $thumbnail_id;
 	}
-	elseif( $post['post_type'] == 'attachment' ){
+	elseif(
+		isset( $post['post_type'] ) &&
+		$post['post_type'] == 'attachment'
+		){
 		// Handle Attachment Post Types
 		$thumbnail_id = $post_id;
 	} else{
@@ -61,6 +64,9 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 		// If there is an image in the post
 		if ($first_image_obj){
 			$thumbnail_url = $first_image_obj['url'];
+		}
+		else{
+			$thumbnail_url = null;
 		}
 		/*
 		// If there is no image in the post, set fallbacks

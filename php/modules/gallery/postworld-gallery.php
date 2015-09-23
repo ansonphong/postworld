@@ -1,6 +1,6 @@
 <?php
 
-///// POSTORLD SLIDER /////
+///// POSTWORLD SLIDER /////
 
 function pw_gallery_shortcode( $atts, $content = null, $tag ) {
 
@@ -68,7 +68,7 @@ function pw_print_gallery( $gallery ){
 
 	///// INSTANCE /////
 	// Generate random ID for the Instance
-	$random_hash = hash('md5', json_encode( $query . rand ( 1, 99*99 ) ));
+	$random_hash = hash('md5', json_encode( $query ) . rand( 1, 99*99 ) );
 	$gallery['instance'] = substr( $random_hash, 1, 8 );
 
 	///// INCLUDE TEMPLATE /////

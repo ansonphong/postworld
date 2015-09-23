@@ -363,6 +363,8 @@ function pw_get_avatars( $vars ){
 	// $fields = array( 'avatar(small,48)', 'avatar(medium, 150)', ... );
 	// Produces an object like : array( 'small'=>array( "width"=>48, "height"=>48, "url"=>"http://...jpg" ) )
 
+	$user_id = get_current_user_id();
+
 	$default_vars = array(
 		'user_id' 	=> 	$user_id,
 		'fields'	=>	array(), // 'avatar(small,64)', 'avatar(medium,256)' 

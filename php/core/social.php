@@ -179,7 +179,8 @@ function pw_get_social_share_meta( $vars ){
 		$image_url = urlencode($image_url);
 
 	///// PERMALINK /////
-	if( is_array( $pw['view']['context'] ) &&
+	$view_context = _get( $pw, 'view.context' );
+	if( is_array( $view_context ) &&
 		in_array( 'archive', $pw['view']['context'] ) )
 		$permalink = _get( $pw, 'view.url' );
 	else
@@ -402,9 +403,11 @@ function pw_social_widget_twitter( $meta, $network ){
 	global $pw;
 
 	// META VALUES
+	$title = _get( $pw, 'view.title' );
+	$url = _get( $pw, 'view.url' );
 	$defaultMeta = array(
-		'title'				=>	$pw['view']['title'],
-		'url'				=>	$pw['view']['url'],
+		'title'				=>	$title,
+		'url'				=>	$url,
 		'before_network'	=>	'',
 		'after_network'		=>	'',
 		);

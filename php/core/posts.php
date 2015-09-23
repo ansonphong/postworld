@@ -678,9 +678,10 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 	///// POST CONTENT /////
 	// Condition Post Content
+		$post_type = _get( $post, 'post_type' );
 		if( in_array( 'post_content', $fields ) &&
 			$mode == 'view' &&
-			$post['post_type'] !== 'nav_menu_item'
+			$post_type !== 'nav_menu_item'
 			){
 			
 			//if( $post_id == 1742 )
