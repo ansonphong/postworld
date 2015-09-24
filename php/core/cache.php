@@ -114,8 +114,26 @@ function pw_get_cache( $fields, $operator = 'AND' ){
 		FROM '.$table_name.'
 		WHERE '.$where;
 
-	return $wpdb->get_row( $query, 'ARRAY_A');
+	// Get the cached row from the database
+	$data = $wpdb->get_row( $query, 'ARRAY_A');
 
+	return $data;
+
+	// If there's no result, return false
+	if( empty( $data ) )
+		return false;
+
+	/** 
+	 * If the cache is expired, delete the row and return false.
+	 */ 
+	if( is_numeric( $data['cache_expire'] ) &&
+		$data['cache_expire'] <= time() ){
+		pw_delete_cache( array( 'cache_id' => $data['cache_id'] ) );
+		return false;
+	}
+
+	return $data;
+	
 }
 
 /**
@@ -142,9 +160,11 @@ function pw_set_cache( $data ){
 		return false;
 
 	///// SETUP DATA /////
+	$cache_expire = time() + 60*60*24; // One day
 	$defaultData = array(
 		'cache_type'	=>	'undefined',
 		'cache_name'	=>	pw_random_string(),
+		'cache_expire'  => 	$cache_expire
 		);
 	$data = array_replace_recursive($defaultData, $data);
 

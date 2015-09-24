@@ -183,7 +183,7 @@ function pw_header_footer( $template = 'header' ){
 	if( in_array( 'layout_cache', pw_enabled_modules() ) ){
 		$hash_array = array(
 			'template_path' => $template_path,
-			'device' => pw_device_meta(),
+			//'device' => pw_device_meta(),
 			);
 		$cache_hash = hash( 'sha256', json_encode( $hash_array ) );
 		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );

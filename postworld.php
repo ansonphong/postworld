@@ -30,7 +30,7 @@ global $pw;
 $pw = array(
 	'info'	=>	array(
 		'version'		=>	1.114,
-		'db_version'	=>	1.26,
+		'db_version'	=>	1.28,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -153,7 +153,7 @@ include 'php/core/api.php';
 
 ////// AJAX AUTHORIZATION //////
 if( defined('DOING_AJAX') ){
-	include 'php/core/ajax-auth.php';
+	//include 'php/core/ajax-auth.php';
 }
 
 ////// FILTER FUNCTIONS //////

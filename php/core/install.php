@@ -141,6 +141,7 @@ function postworld_install(){
 			cache_name TEXT NULL,
 			cache_hash TEXT NULL,
 			cache_content LONGBLOB NULL,
+			cache_expire BIGINT(10),
 			UNIQUE KEY cache_id (cache_id)
 		);";
 
