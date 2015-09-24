@@ -438,10 +438,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_insert_user',params);
 		},
-		send_activation_link: function(args) {
-			$log.debug('pwData.send_activation_link',args);
+		activationEmail: function(args) {
+			$log.debug('pwData.pw_activation_email',args);
 			var params = {args:args};
-			return this.wpAjax('send_activation_link',params);
+			return this.wpAjax('pw_activation_email',params);
 		},
 		pw_activate_user: function(args) {
 			$log.debug('pwData.pw_activate_user',args);

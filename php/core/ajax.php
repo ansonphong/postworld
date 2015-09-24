@@ -93,7 +93,7 @@ add_action("wp_ajax_pw_cache_all_post_points", "pw_cache_all_post_points_ajax");
 function pw_cache_all_rank_scores_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	
-	pw_log( 'pw_cache_all_rank_scores_ajax : INIT : ' );
+	//pw_log( 'pw_cache_all_rank_scores_ajax : INIT : ' );
 
 	if( current_user_can('manage_options') )
 		$response_data = pw_cache_all_rank_scores();
@@ -441,16 +441,16 @@ add_action("wp_ajax_pw_activate_user", "pw_activate_user_anon");
 
 
 //---------- SEND ACTIVATION LINK ----------//
-function send_activation_link_anon(){
+function pw_activation_email_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$send_activation_link = send_activation_link( $params );
+	$send_activation_link = pw_activation_email( $params );
 
 	pwAjaxRespond( $send_activation_link );
 }
-add_action("wp_ajax_nopriv_send_activation_link", "send_activation_link_anon");
-add_action("wp_ajax_send_activation_link", "send_activation_link_anon");
+add_action("wp_ajax_nopriv_pw_activation_email", "pw_activation_email_ajax");
+add_action("wp_ajax_pw_activation_email", "pw_activation_email_ajax");
 
 
 //---------- PW INSERT USER ----------//
@@ -472,13 +472,13 @@ function wp_user_query_anon(){
 
 	$params = $args['args'];
 
-	pw_log("wp_user_query_anon : PARAMS : ",$params);
+	//pw_log("wp_user_query_anon : PARAMS : ",$params);
 
 	$user_query = new WP_User_Query( $params );
 
 	$results = $user_query->get_results();
 
-	pw_log("wp_user_query_anon : RESULTS : ",$results);
+	//pw_log("wp_user_query_anon : RESULTS : ",$results);
 
 	pwAjaxRespond( $results );
 }

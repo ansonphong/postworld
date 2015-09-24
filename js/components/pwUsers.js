@@ -866,7 +866,7 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
 				email: user_email,
 			};
 			$log.debug('SENDING ACTIVATION LINK : ' , userdata);
-			$pwData.send_activation_link( userdata ).then(
+			$pwData.activationEmail( userdata ).then(
 				// Success
 				function(response) {
 					$log.debug('ACTIVATION LINK RETURN : ' , response.data);
