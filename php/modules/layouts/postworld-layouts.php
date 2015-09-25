@@ -178,22 +178,28 @@ function pw_header_footer( $template = 'header' ){
 	if( empty( $template_path ) )
 		return false;
 
-
 	///// CACHING LAYER /////
 	if( in_array( 'layout_cache', pw_enabled_modules() ) ){
 		$hash_array = array(
 			'template_path' => $template_path,
-			//'device' => pw_device_meta(),
+			'device' => pw_device_meta(),
+			'view' => $pw['view']
 			);
+		//pw_log( 'hash_array', $hash_array );
 		$cache_hash = hash( 'sha256', json_encode( $hash_array ) );
+		//pw_log( 'cache_hash', $cache_hash );
 		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
-		if( !empty( $get_cache ) )
-			$template_content = $get_cache['cache_content'];
+
+		// If cached content, echo it here and return
+		if( !empty( $get_cache ) ){
+			$cache_content = $get_cache['cache_content'];
+			echo $cache_content;
+			return;
+		}
 	}
 
-	// If no cached template content, include here
-	if( !isset( $template_content ) )
-		$template_content = pw_ob_include( $template_path );
+	// If no cached content, include here
+	$template_content = pw_ob_include( $template_path );
 
 	///// CACHING LAYER /////
 	if( in_array( 'layout_cache', pw_enabled_modules() ) )

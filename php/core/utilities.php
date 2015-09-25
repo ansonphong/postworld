@@ -1105,6 +1105,32 @@ function pw_set_defaults( $obj, $defaults ){
 }
 
 function pw_ob_include( $file, $vars = array() ){
+
+
+	///// CACHING LAYER /////
+	if( in_array( 'layout_cache', pw_enabled_modules() ) ){
+		$hash_array = array(
+			'file' => $file,
+			'vars' => $vars,
+			'device' => pw_device_meta(),
+			'view' => $pw['view']
+			);
+		pw_log( 'hash_array', $hash_array );
+		$cache_hash = hash( 'sha256', json_encode( $hash_array ) );
+		pw_log( 'cache_hash', $cache_hash );
+		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
+
+		// If cached content, echo it here and return
+		if( !empty( $get_cache ) ){
+			$cache_content = $get_cache['cache_content'];
+			echo $cache_content;
+			return;
+		}
+	}
+
+
+	// If no cached content, do regular processing
+
 	if( !empty( $vars ) && is_array( $vars ) )
 		extract($vars);
 
@@ -1115,7 +1141,19 @@ function pw_ob_include( $file, $vars = array() ){
 	include $file;
 	$content = ob_get_contents();
 	ob_end_clean();
+
+
+	///// CACHING LAYER /////
+	if( in_array( 'layout_cache', pw_enabled_modules() ) )
+		pw_set_cache( array(
+			'cache_type'	=>	'layout-include:' . basename($file),
+			'cache_hash' 	=> 	$cache_hash,
+			'cache_content'	=>	$content,
+			));
+
+
 	return $content;
+
 }
 
 function pw_ob_include_template( $template_path, $vars = array() ){
