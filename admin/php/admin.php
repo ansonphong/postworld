@@ -144,6 +144,8 @@ function theme_admin_menu(){
     	$admin['menu']['menu_icon']
     	);
 
+    //pw_log( "ADMIN SUBMENU" . json_encode($admin) );
+
     ///// SUB MENUS /////
     // http://codex.wordpress.org/Function_Reference/add_submenu_page
     foreach( $admin['submenu'] as $key => $value ){
