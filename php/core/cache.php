@@ -7,7 +7,6 @@
  * @todo Find more things to cache.
  */
 
-
 /**
  * When saving a post, clear the affected caches.
  */
@@ -53,11 +52,9 @@ function pw_delete_post_caches(){
  * Clear all the caches associated with a particular post
  */
 function pw_delete_post_single_cache( $post_id ){
-
 	pw_delete_cache( array(
 		'cache_name' => 'post-'.$post_id
 		));
-
 }
 
 
