@@ -316,12 +316,12 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 				$custom_image_obj = pw_get_image_obj($thumbnail_id, $image_key);
 				$custom_image_url = $custom_image_obj['url'];
 				
-				$thumb_width = ( !empty( $image_obj['width'] ) ) ?
-					(int)$image_obj['width'] :
+				$thumb_width = ( !empty( $custom_image_obj['width'] ) ) ?
+					(int)$custom_image_obj['width'] :
 					_get( $post_image, 'stats.width' );
 
-				$thumb_height = ( !empty( $image_obj['height'] ) ) ?
-					(int)$image_obj['height'] :
+				$thumb_height = ( !empty( $custom_image_obj['height'] ) ) ?
+					(int)$custom_image_obj['height'] :
 					_get( $post_image, 'stats.height' );
 					
 			}

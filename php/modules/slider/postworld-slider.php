@@ -116,6 +116,8 @@ function pw_print_slider( $slider ){
 	if( empty($fields) )
 		$fields = "preview";
 
+	global $post;
+
 	////////// MODE //////////
 	switch( $slider['mode'] ){
 
@@ -128,7 +130,6 @@ function pw_print_slider( $slider ){
 			// If no 'posts' object provided, and mode set to query, query for the slides
 
 			///// SETUP QUERY /////
-			global $post;
 
 			// Localize Query
 			$query = $slider['query'];
@@ -196,6 +197,9 @@ function pw_print_slider( $slider ){
 			if( $slider['query_vars']['this_post'] == true ){
 				// Get current post
 				$this_post = array( pw_get_post( $post->ID, $fields ) );
+				if( !is_array( $slider['posts'] ) ){
+					$slider['posts'] = array();
+				}
 				// Prepend to the posts array
 				$slider['posts'] = array_merge( $this_post, $slider['posts'] );
 			}
@@ -203,6 +207,7 @@ function pw_print_slider( $slider ){
 			///// GET GALLERIES /////
 			// Get attachments from all galleries in found posts
 			if( $slider['query_vars']['include_galleries'] == true ){
+				
 				// Get all the IDs of the queried posts
 				$post_ids = pw_get_post_ids( $slider['posts'] );
 
@@ -239,6 +244,8 @@ function pw_print_slider( $slider ){
 				add_shortcode('gallery', 'shortcode_gallery_empty');
 			}
 
+
+
 			///// FILTERING /////
 			// HAS IMAGES
 			// Only show posts which have featured images
@@ -248,7 +255,8 @@ function pw_print_slider( $slider ){
 				$filtered_posts = array();
 				foreach( $slider['posts'] as $this_post ){
 					// If the image width is present
-					if( !empty($this_post['image']['sizes']['full']['width']) )
+					$image_sizes = _get( $this_post, 'image.sizes' );
+					if( !empty( $image_sizes ) )
 						$filtered_posts[] = $this_post;
 				}
 				$slider['posts'] = $filtered_posts;
