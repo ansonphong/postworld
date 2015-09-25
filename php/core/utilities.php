@@ -1140,8 +1140,8 @@ function pw_ob_include( $file, $vars = array() ){
 	///// CACHING LAYER /////
 	if( in_array( 'layout_cache', pw_enabled_modules() ) )
 		pw_set_cache( array(
-			'cache_type'	=>	'layout-include:',
-			'cache_name'	=> 	$file,
+			'cache_type'	=>	'layout',
+			'cache_name'	=> 	'include:'.$file,
 			'cache_hash' 	=> 	$cache_hash,
 			'cache_content'	=>	$content,
 			));

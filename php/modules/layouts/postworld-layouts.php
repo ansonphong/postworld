@@ -204,7 +204,8 @@ function pw_header_footer( $template = 'header' ){
 	///// CACHING LAYER /////
 	if( in_array( 'layout_cache', pw_enabled_modules() ) )
 		pw_set_cache( array(
-			'cache_type'	=>	'layout-' . $template,
+			'cache_type'	=>	'layout',
+			'cache_name'	=>  $template . ':' . $template_path,
 			'cache_hash' 	=> 	$cache_hash,
 			'cache_content'	=>	$template_content,
 			));
