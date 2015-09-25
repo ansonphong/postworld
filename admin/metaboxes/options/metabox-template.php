@@ -10,7 +10,10 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 ?>
 
 <!--///// METABOX TEMPLATES /////-->
-<div id="postworldMetabox" class="infinite postworld">
+<div
+	id="postworldMetabox"
+	class="infinite postworld"
+	ng-cloak>
 	<div ng-controller="pwMetaboxCtrl">
 		<?php
 			// Print the Templates
@@ -18,17 +21,23 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 		?>
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="<?php echo PW_POSTMETA_KEY; ?>" ng-value="pwMeta | json" style="width:100%;">
-		<!-- DEV : Test Output
-		<hr><pre>{{ pwMeta | json }}</pre> -->
+		
+		<?php if( pw_dev_mode() ): ?>
+			<div class="well">
+				<h3>$scope.pwMeta</h3>
+				<!-- DEV -->
+				<div class="well">
+					<pre><code>{{ pwMeta | json }}</code></pre>
+				</div>
+			</div>
+		<?php endif; ?>
 	</div>	
 </div>
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var postworldMetabox = angular.module( 'postworldMetabox', ['infinite','postworld'] );
 	///// CONTROLLER /////
-	postworldMetabox.controller('pwMetaboxCtrl',
+	postworldAdmin.controller('pwMetaboxCtrl',
 		['$scope',
 			function( $scope ) {
 			$scope.pwMeta = <?php echo json_encode($pwMeta); ?>;
@@ -38,7 +47,3 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 	// Print the Javascript(s)
 	do_action('pw_admin_options_metabox_scripts');
 ?>
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("postworldMetabox"),['postworldMetabox']);
-</script>

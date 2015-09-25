@@ -1,55 +1,70 @@
 'use strict';
-
-postworld.directive('feedItem', [ '_', function( $_ ) {
+postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $log, $_ ) {
 	return {
 		restrict: 'A',
 		replace: true,
 		controller: 'pwFeedItemCtrl',
 		template: '<div ng-include="itemTemplateUrl"></div>',
-
 		link : function( $scope, element, attrs ){
 			// Add classes to the parent feed item set by the block
 			var blockClasses = $_.get( $scope, 'post.block.classes' );
 			if( blockClasses != false && _.isString( blockClasses ) ){
 				element.parent().addClass( blockClasses );
 			}
-
 		},
-
 	};
 }]);
 
 postworld.controller('pwFeedItemCtrl',
-	function($scope, $location, $log, pwData, $attrs) {
+	[ '$scope', '$location', '$log', 'pwData', '$attrs', '_',
+	function( $scope, $location, $log, $pwData, $attrs, $_ ) {
 		
-		var type = 'post';
-		if ( $scope.post.post_type ) type = $scope.post.post_type;
+	///// INIT /////
+	var type = ( $_.get( $scope.post, 'post_type' ) ) ? $scope.post.post_type : 'post';
 
-		if (type == '_pw_block') {
-			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );				
-		}
-		else 
-			$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: $scope.$parent.currentView() } );
+	//$log.debug( 'INIT : feedItem : TYPE : ', type );
 
-		//$log.debug('template:', $scope.itemTemplateUrl);
-
-		// Decodes Special characters in URIs
-		$scope.decodeURI = function(URI) {
-			URI = URI.replace("&amp;","&");
-			return decodeURIComponent( URI );
-		};
-
-		// TODO set templateURL?		  
-		// Template Update Event
-		$scope.$on("FEED_TEMPLATE_UPDATE", function(event, currentView ){
-			
-			if ( $scope.post.post_type != '_pw_block' ) {
-				var type = $scope.post.post_type;
-				$scope.itemTemplateUrl = pwData.pw_get_template( { subdir:'posts', post_type: type, view: currentView } );					
-			} 
-		   });		  		      	
+	var feedId, view;
+	///// IN FEED POSTS /////
+	if( typeof $scope.feed == 'function' ){
+		feedId = $_.get( $scope.feed(), 'feed_id' );
+		view = $pwData.getFeedView( feedId );
+		//$log.debug( 'feedItem : BOOT : ', $scope.feed() );
 	}
-);
+
+	///// MODAL WINDOW /////
+	if( typeof $scope.modalFeed == 'object' ){
+		feedId = $_.get( $scope.modalFeed, 'id' );
+		view = 'modal';
+	}
+
+	//$log.debug( "feedItem : INIT : Feed ID : ", feedId );
+
+	if (type == '_pw_block') 
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'blocks', view: $scope.post.template } );
+	else
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: view } );
+	
+	if( view == 'modal' )
+		$log.debug( 'feedItem : itemTemplateUrl : ', $scope.itemTemplateUrl );
+
+	// Decodes Special characters in URIs
+	$scope.decodeURI = function(URI) {
+		URI = URI.replace("&amp;","&");
+		return decodeURIComponent( URI );
+	};
+
+	$scope.$on( "feed.changeTemplate", function( event, vars ){
+		$log.debug( 'RECEIVED : feed.changeTemplate', vars );
+		if( vars.feedId != feedId )
+			return false;
+		if ( $scope.post.post_type == '_pw_block' )
+			return false;
+		var type = $scope.post.post_type;
+		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );
+	});		  		      	
+
+}]);
 
 
 
@@ -60,7 +75,6 @@ postworld.controller('pwFeedItemCtrl',
   \____|_|  |_|\__,_|  \_/  |_|\___| \_/\_/  
 
 ////////// GRID FEED CONTROLLER //////////*/
-
 
 postworld.directive( 'pwGrid', [ function($scope){
 	return {
@@ -91,6 +105,7 @@ postworld.controller('pwGridCtrl',
 	}
 
 	$scope.setGridClass = function( imageTags ){
+		//$log.debug('SET GRID CLASS', imageTags);
 		if( !_.isEmpty( imageTags ) ){
 			var selectedTag = $scope.selectImageTag( imageTags );
 			var gridClass = selectedTag.name;
@@ -170,6 +185,8 @@ postworld.controller('pwGridItemCtrl',
 	$scope.getImageSize = function( prefix, imageTags ){
 		if ( parentFunctionExists( "getImageSize" ) ) 
 			return $scope.$parent.getImageSize( prefix, imageTags );
+		else
+			return false;
 	}
 
 	$scope.selectImageTag = function( imageTags, tagMapping ){
@@ -194,7 +211,9 @@ postworld.controller('pwGridItemCtrl',
 		if( _.isEmpty( tags ) || _.isUndefined( tags ) )
 			return false;
 
-		var imageUrl = $scope.post.image.sizes[ $scope.getImageSize(prefix, tags) ].url;
+		var imageSize = $scope.getImageSize( prefix, tags );
+		var imageUrl = $scope.post.image.sizes[ imageSize ].url;
+		
 		return { "background-image":"url( " + imageUrl + " )" };
 	}
 

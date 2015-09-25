@@ -8,27 +8,13 @@
 
 ////////// ------------ EDIT POST CONTROLLER ------------ //////////*/
 
-///// TODO : DIGEST INFINITE INTO POSTWORLD /////
-postworld.directive( 'iEditPost', [ function($scope){
-    return {
-        restrict: 'AE',
-        controller: 'iEditPostCtrl',
-        link: function( $scope, element, attrs ){}
-    };
-}]);
-postworld.controller('iEditPostCtrl',
-    ['$scope', '$rootScope', '$timeout', '$filter',
-        'pwData', '$log', '$route', '$routeParams', '$window',  '_', 'pwTemplatePartials', 'iOptionsData',
-    function($scope, $rootScope, $timeout, $filter, 
-        $pwData, $log, $route, $routeParams,  $window, $_, $pwTemplatePartials, $iOptionsData ) {
-
-        $scope['options'] = $iOptionsData['options'];
-
-}]);
-
-
-
-
+/**
+ * @ngdoc directive
+ * @name postworld.directive: pwEditPost
+ * @description
+ * Provides local scope with functionality for easily
+ * loading, editing and saving posts.
+ */
 postworld.directive( 'pwEditPost', [ function($scope){
 	return {
 		restrict: 'AE',
@@ -114,9 +100,13 @@ postworld.directive( 'pwEditPost', [ function($scope){
 
 postworld.controller('editPost',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window', 'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials',
+	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window',
+	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', 'iOptionsData', '$pw',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
-		$pwData, $log, $route, $routeParams, $location, $http, $window, $pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials ) {
+		$pwData, $log, $route, $routeParams, $location, $http, $window,
+		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $iOptionsData, $pw ) {
+
+	$scope['options'] = $iOptionsData['options'];
 
 	$log.debug( "$scope.mode @ init", $scope.mode );
 
@@ -130,19 +120,16 @@ postworld.controller('editPost',
 	//////////////////// INITIALIZE ////////////////////
 	$scope.status = 'done';
 
-	
-
 	// Define Global Edit Post Defaults
-	var postDefaults = $window.pwSiteGlobals.edit_post.post['new']['default'];
-
+	var postDefaults = $pw.config.edit_post.post['new']['default'];
 
 	// Localize Edit Post Object
-	if( $_.objExists( $window, 'pwSiteGlobals.edit_post' ) )
-		$scope.editPostGlobals = $window.pwSiteGlobals.edit_post;
+	if( $_.objExists( $pw, 'config.edit_post' ) )
+		$scope.editPostGlobals = $pw.config.edit_post;
 	
 	// Localize Post Options Object
-	if( $_.objExists( $window, 'pwSiteGlobals.post_options' ) )
-		$scope.postOptions = $window.pwSiteGlobals.post_options;
+	if( $_.objExists( $pw, 'config.post_options' ) )
+		$scope.postOptions = $pw.config.post_options;
 
 
 	///// INITIALIZE /////
@@ -313,7 +300,9 @@ postworld.controller('editPost',
 		});
 
 		// CHECK TERMS CATEGORY / SUBCATEGORY ORDER
+		// RSV2 SPECIFIC
 		post = $pwEditPostFilters.sortTaxTermsInput( post, $scope.tax_terms, 'tax_input' );
+
 
 		$scope.default_post = post;
 		$scope.post = post;
@@ -363,7 +352,7 @@ postworld.controller('editPost',
 			var post_format = 'default';
 
 		// Localize Edit Post Config
-		var edit_post = $window.pwSiteGlobals.edit_post;
+		var edit_post = $pw.config.edit_post;
 
 		// Check if the requested post type is defined
 
@@ -406,17 +395,21 @@ postworld.controller('editPost',
 
 		// Clear TinyMCE
 		$timeout(function() {
+
 			if( typeof tinyMCE !== 'undefined' ){
-				if( typeof tinyMCE.get('post_content') !== 'undefined' ){
-					//$log.debug('RESET tinyMCE : ', tinyMCE);
+				if( !_.isUndefined( tinyMCE.get('post_content') ) &&
+					!_.isNull( tinyMCE.get('post_content') ) ){
+					$log.debug('Clear tinyMCE : ', tinyMCE);
 					tinyMCE.get('post_content').setContent( "" );
 				}
 			}
+
+
 		}, 2);
 
 		// Set the Route
 		if( $_.objExists( $scope, 'post.post_type' ) &&
-			$scope.editPostConfig.routing == true )
+			$_.get( $scope.editPostConfig, 'routing' ) == true )
 			$location.path('/new/' + $scope.post.post_type);
 
 	}
@@ -441,15 +434,18 @@ postworld.controller('editPost',
 		}
 		
 		// GET THE POST DATA
-		$pwData.pw_get_post_edit( post_id ).then(
+		$pwData.getPostEdit( post_id ).then(
 			// Success
 			function(response) {
-				$log.debug('pwData.pw_get_post_edit : RESPONSE : ', response.data);
+				$log.debug('pwData.getPostEdit : RESPONSE : ', response.data);
 			
 				// FILTER FOR INPUT
 				var get_post = response.data;
 
 				///// LOAD TAXONOMIES /////
+				// This takes the post.taxonomy key, which contains all the tag meta-data
+				// And re-configures it into a tax_input model
+				// Then deletes the original taxonomy object
 				// RENAME THE KEY : TAXONOMY > TAX_INPUT
 				var tax_input = {};
 				if( !_.isUndefined( get_post['taxonomy'] ) ){
@@ -461,8 +457,16 @@ postworld.controller('editPost',
 							tax_input[taxonomy].push(term.slug);
 						});
 						// BROADCAST TAX OBJECT TO AUTOCOMPLETE CONTROLLER
-						if( taxonomy == "post_tag")
-							$scope.$broadcast('postTagsObject', terms);
+						if( taxonomy == "post_tag"){
+
+							$log.debug( 'postTagsObject : $broadcast : Post ID : ' + get_post.ID, terms );
+							$rootScope.$broadcast('postTagsObject', {
+								postId: get_post.ID,
+								taxonomy:'post_tag',
+								terms: terms,
+							});
+
+						}
 					});
 					delete get_post['taxonomy'];
 
@@ -484,12 +488,14 @@ postworld.controller('editPost',
 
 				///// POST META /////
 				if ( !_.isUndefined( get_post['post_meta'] ) ){
-					
-					 // Emit Geocode
-					 // If geocode data exists, emit it's value
+					// If post_meta is empty, ensure it is an object, not array
+					if( _.isEmpty( get_post.post_meta ) )
+						get_post.post_meta = {};
+
+					// Emit Geocode
+					// If geocode data exists, emit it's value
 					if( !_.isUndefined( get_post.post_meta['geocode'] ) )
 						$scope.$emit('pwAddGeocode', get_post.post_meta['geocode']);
-
 				}
 
 				// Parse known JSON Fields from strings into JSON
@@ -501,14 +507,14 @@ postworld.controller('editPost',
 				$scope.$emit('postLoaded', get_post);
 
 				// Set the Route
-				if( $scope.editPostConfig.routing == true )
+				if( $_.get( $scope.editPostConfig, 'routing' ) == true )
 					$location.path('/edit/' + get_post.ID);
 
 				// SET DATA INTO THE SCOPE
 				$scope.post = get_post;
 
 				// EVALUATE CALLBACK
-				if( !_.isUndefined( $scope.initEditPost['loadSuccessCallback'] ) )
+				if( $_.get( $scope.initEditPost, 'loadSuccessCallback' ) )
 					$scope.$eval( $scope.initEditPost['loadSuccessCallback'] );
 
 				// UPDATE MODE
@@ -646,7 +652,7 @@ postworld.controller('editPost',
 			$scope.routeAction = $route.current.action;
 
 			// Stop here if routing is disabled
-			if( $scope.editPostConfig.routing == false ){
+			if( $_.get( $scope.editPostConfig, 'routing' ) == false ){
 				return false;
 			}
 
@@ -778,15 +784,26 @@ postworld.controller('editPost',
 		if( !_.isUndefined( $scope.post ) )
 			$scope.post.post_author_name = data;
 	});
-
+ 
 	// ACTION : POST TAGS FROM AUTOCOMPLETE MODULE
-	// • Interacts with tagsAutocomplete() controller
+	// • Interacts with tagsAutocomplete() controller / pw-autocomplete-tags directive
 	// • Catches the recent value of the tags_input and inject into tax_input
 	$scope.$on('updateTagsInput', function( event, data ) { 
-		if( $_.objExists( $scope, 'post.tax_input' ) )
-			$scope.post.tax_input.post_tag = data;
-	});
+		// TODO : Support all non-heirarchical taxonomies
 
+		// TAGS PASS-BACK AND FORTH MECHANISM IS BROKEN - DO TESTING PASSING BOTH WAYS
+
+		$log.debug( 'pwEditPost : $on.updateTagsInput : ', data );
+
+		if( data.taxonomy == 'post_tag' && data.postId == $_.get( $scope, 'post.ID' ) ){
+			if( _.isUndefined( $scope.post.tax_input ) )
+				$scope.post.tax_input = {};
+			$scope.post.tax_input.post_tag = data.terms;
+		}
+
+		//$scope.post = $_.set( $scope.post, 'tax_input.post_tag', tagSlugs );
+
+	});
 
 	/*
 	// ACTION : CREATE NEW POST OBJECT
@@ -801,20 +818,7 @@ postworld.controller('editPost',
 	// • Gets live set of terms from the DB as $scope.tax_terms
 	$pwPostOptions.taxTerms( $scope, 'tax_terms' );
 
-	// WATCH : TAXONOMY TERMS
-	// • Watch for any changes to the post.tax_input
-	// • Make a new object which contains only the selected sub-objects
-	$scope.selected_tax_terms = {};
-	$scope.$watch('[ post.tax_input, tax_terms ]',
-		function ( newValue, oldValue ){
-			if ( !_.isUndefined($scope.tax_terms) &&
-				$_.objExists( $scope, 'post.tax_input' ) ){
-				// Create selected terms object
-				$scope.selected_tax_terms = $pwEditPostFilters.selected_tax_terms($scope.tax_terms, $scope.post.tax_input);
-				// Clear irrelivent sub-terms
-				$scope.post.tax_input = $pwEditPostFilters.clear_sub_terms( $scope.tax_terms, $scope.post.tax_input, $scope.selected_tax_terms );
-			}
-		}, 1);
+
 
 	///// WATCH : LINK URL /////
 	// • Watch for changes in Link URL field
@@ -834,7 +838,7 @@ postworld.controller('editPost',
 				return false;
 
 			// ROUTE CHANGE
-			if( $scope.mode == "new" && $scope.editPostConfig.routing == true ){
+			if( $scope.mode == "new" && $_.get( $scope.editPostConfig, 'routing' ) == true ){
 				//alert( "MODE:" + $scope.mode );
 				$location.path('/new/' + $scope.post.post_type);
 			}
@@ -879,8 +883,6 @@ postworld.controller('editPost',
 
 }]);
 
-// Make directive
-// Make attributes for event-start-model, event-end-model
 
 /*
   _____                 _     ___                   _   
@@ -891,109 +893,198 @@ postworld.controller('editPost',
                                        |_|              
 //////// ----- EVENT DATA/TIME CONTROLLER ----- ////////*/
 
-postworld.directive( 'pwEventInput', [ function($scope){
+postworld.directive( 'pwEventInput',
+	[
+	'$rootScope',
+	'pwPostOptions',
+	'pwEditPostFilters',
+	'$timeout',
+	'$filter',
+	'pwData',
+	'$log',
+	'_',
+	'pwDate',
+	function(
+		$rootScope,
+		$pwPostOptions,
+		$pwEditPostFilters,
+		$timeout,
+		$filter, 
+		$pwData,
+		$log,
+		$_,
+		$pwDate
+		){
 	return {
 		restrict: 'AE',
-		controller: 'eventInput',
 		scope:{
-			'startDateObj':"=",
+			'e':"=pwEventInput",
+			/*
+			'startDateObj':"=eventObj",
 			'endDateObj':"=",
 			'startDate':"=",
 			'endDate':"=",
+			'timezone':"="
+			*/
 		},
 		link: function( $scope, element, attrs ){
+
+			/**
+			 * Watch the timezone object for changes
+			 * Set the boolean $scope.hasTimezone
+			 *
+			 * If it has timezone, offset the date/timepicker
+			 * To the event time on initialization.
+			 */
+			/*
+			$scope.$watch( function(){
+					return $_.get( $scope.e, 'timezone' );
+				},
+				function( timezone, oldTimezone ){
+					if( !_.isEmpty( timezone ) &&
+						timezone !== false )
+						$scope.hasTimezone = true;
+					else
+						$scope.hasTimezone = false;
+
+					if( $scope.hasTimezone ){
+						var clientTimezone = $pwDate.getTimezone();
+						var eventTimezone = $pwDate.getTimezone( timezone.time_zone_id );
+					
+						var eventStart = moment.tz($scope.e.date.start_date, timezone.time_zone_id );
+
+						$log.debug( 'eventStart : AT EVENT LOCATION', eventStart.format() );
+
+						var clientTimezone = jstz.determine().name();
+						var eventStartClient = eventStart.clone().tz( clientTimezone );
+
+						$log.debug( 'eventStart : AT client LOCATION', eventStartClient.format() );
+
+
+						//$scope.e.date.local_start_date_obj = 'test';
+
+					}
+
+				}, 1 );
+
+			*/
+			/*
+				@todo - Refactor how the timezones work
+
+				X *start_date* - store literal time at location
+				X *end_date* - store literal time at location
+
+				*start_date_obj*
+					- this is potentially temp data
+					- re-evaluate it on inititialization IF there is a timezone
+					- if there is a timezone
+						- 	calculate the difference between
+							the current client's timezone,
+							and the timezone it's in and make an
+							offset to trick the UTC time to being
+							synonymous with the timezone of the location
+
+				*timezone*
+					- store the timezone object
+
+				*start_date* (unix)
+					- process based on timezone
+					- if no timezone, use literal
+
+				*end_date* (unix)
+					- process based on timezone
+					- if no timezone, use literal
+
+			*/
+
+			$scope.getUnixTimestamp = function( dateObject ){
+				if( !_.isUndefined( dateObject ) ){
+					var localDateObj = new Date(dateObject);
+					return Math.round( localDateObj.getTime() / 1000);
+				}
+			};
+
+			$scope.setUnixTimestamps = function(){
+			
+				// Add the UNIX Timestamp : event_start
+				if( !_.isUndefined( $scope.e.date.start_date_obj ) && !_.isUndefined( $scope.$parent.post ) )
+					$scope.$parent.post.event_start = $scope.getUnixTimestamp( $scope.e.date.start_date_obj );
+				
+				// Add the UNIX Timestamp : event_end
+				if( !_.isUndefined( $scope.e.date.end_date_obj ) && !_.isUndefined( $scope.$parent.post )  )
+					$scope.$parent.post.event_end = $scope.getUnixTimestamp( $scope.e.date.end_date_obj );
+			
+			};
+
+			// WATCH : EVENT START TIME
+			$scope.$watch( 'e.date.start_date_obj',
+				function (){
+					$log.debug( 'CHANGED : e.date.start_date_obj' );
+
+					// End function if variable doesn't exist
+					//if( _.isUndefined( $scope.e.date.start_date_obj ) )
+					//	return false;
+
+					// Set the alternate date format
+					$scope.e.date.start_date = $filter('date')(
+						$scope.e.date.start_date_obj, 'yyyy-MM-dd HH:mm' );
+
+					// If start time is set after the end time - make them equal
+					if( $scope.e.date.end_date_obj < $scope.e.date.start_date_obj )
+						$scope.e.date.end_date_obj = $scope.e.date.start_date_obj;
+
+					// Set UNIX Timestamps
+					$scope.setUnixTimestamps();
+
+				}, 1 );
+
+			// WATCH : EVENT END TIME
+			$scope.$watch( 'e.date.end_date_obj',
+				function (){
+					$log.debug( 'CHANGED : e.date.end_date_obj' );
+
+					// End function if variable doesn't exist
+					//if( _.isUndefined( $scope.e.date.end_date_obj ) )
+					//	return false;
+
+					// Set the alternate date format
+					$scope.e.date.end_date = $filter('date')(
+						$scope.e.date.end_date_obj, 'yyyy-MM-dd HH:mm' );
+
+					// If end time is set before the start time - make them equal
+					if( $scope.e.date.start_date_obj > $scope.e.date.end_date_obj )
+						$scope.e.date.start_date_obj = $scope.e.date.end_date_obj;
+
+					// Set UNIX Timestamps
+					$scope.setUnixTimestamps();
+
+				}, 1 );
+
+			////////// TIME PICKER : CONFIG //////////
+			$scope.$parent.eventOptions = {
+				// Time Picker
+				hstep: 1,
+				mstep: 1,
+				meridian: true,
+				
+				// Date Picker
+				//'year-format': "'yy'",
+				//'starting-day': 1
+			};
+
+			// Toggle AM/PM // 24H
+			$scope.$parent.toggleMeridian = function() {
+				$scope.$parent.eventOptions.meridian = ! $scope.$parent.eventOptions.meridian;
+			};
+
+			// Example (bind to ng-change)
+			$scope.$parent.dateChanged = function () {
+
+			};
+
 		}
-	};
-}]);
-
-postworld.controller('eventInput',
-	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-		'pwData', '$log', '_', 'pwDate',
-	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, 
-		$pwData, $log, $_, $pwDate ) {
-
-	$scope.getUnixTimestamp = function( dateObject ){
-		if( !_.isUndefined( dateObject ) ){
-			var localDateObj = new Date(dateObject);
-			return Math.round( localDateObj.getTime() / 1000);
-		}
-	};
-
-	$scope.setUnixTimestamps = function(){
-		// Add the UNIX Timestamp : event_start
-		if( !_.isUndefined( $scope.startDateObj ) && !_.isUndefined( $scope.$parent.post ) )
-			$scope.$parent.post.event_start = $scope.getUnixTimestamp( $scope.startDateObj );
-		// Add the UNIX Timestamp : event_end
-		if( !_.isUndefined( $scope.endDateObj ) && !_.isUndefined( $scope.$parent.post )  )
-			$scope.$parent.post.event_end = $scope.getUnixTimestamp( $scope.endDateObj );
-	};
-
-	// WATCH : EVENT START TIME
-	$scope.$watch( 'startDateObj',
-		function (){
-			// End function if variable doesn't exist
-			if( _.isUndefined( $scope.startDateObj ) )
-				return false;
-
-			// Set the alternate date format
-			if( !_.isUndefined( $scope.startDate ) )
-				$scope.startDate = $filter('date')(
-					$scope.startDateObj, 'yyyy-MM-dd HH:mm' );
-
-			// If start time is set after the end time - make them equal
-			if( $scope.endDateObj < $scope.startDateObj )
-				$scope.endDateObj = $scope.startDateObj;
-
-			// Set UNIX Timestamps
-			$scope.setUnixTimestamps();
-
-		}, 1 );
-
-	// WATCH : EVENT END TIME
-	$scope.$watch( 'endDateObj',
-		function (){
-			// End function if variable doesn't exist
-			if( _.isUndefined( $scope.endDateObj ) )
-				return false;
-
-			// Set the alternate date format
-			if( !_.isUndefined( $scope.endDate ) )
-				$scope.endDate = $filter('date')(
-					$scope.endDateObj, 'yyyy-MM-dd HH:mm' );
-
-			// If end time is set before the start time - make them equal
-			if( $scope.startDateObj > $scope.endDateObj )
-				$scope.startDateObj = $scope.endDateObj;
-
-			// Set UNIX Timestamps
-			$scope.setUnixTimestamps();
-
-		}, 1 );
-
-
-	////////// TIME PICKER : CONFIG //////////
-	$scope.$parent.eventOptions = {
-		// Time Picker
-		hstep: 1,
-		mstep: 1,
-		meridian: true,
-		
-		// Date Picker
-		//'year-format': "'yy'",
-		//'starting-day': 1
-	};
-
-	// Toggle AM/PM // 24H
-	$scope.$parent.toggleMeridian = function() {
-		$scope.$parent.eventOptions.meridian = ! $scope.$parent.eventOptions.meridian;
-	};
-
-	// Example (bind to ng-change)
-	$scope.$parent.dateChanged = function () {
 
 	};
-
-
 }]);
 
 

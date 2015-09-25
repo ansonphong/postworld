@@ -15,41 +15,45 @@ global $post;
 		pw-admin-layout
 		ng-controller="pwLayoutMetaboxCtrl"
 		id="poststuff"
-		class="pw-metabox metabox-side metabox-layout">
+		class="pw-metabox metabox-side metabox-layout"
+		ng-cloak>
 		<?php
-			echo i_layout_single_options( array( 'context'	=>	'postAdmin' ) );
+			echo pw_layout_single_options( array( 'context'	=>	'postAdmin' ) );
 			// Action Hook
 			do_action('pw_layout_metabox_templates');
 		?>
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="pw_layout_post" ng-value="pw_layout_post | json" style="width:100%;">
 		
-		<!-- DEV : Test Output 
-		<hr><pre>POST : {{ pw_layout_post | json }}</pre>--> 
+		<?php if( pw_dev_mode() ): ?>
+			<hr><pre>pw_layout_post.post_meta.pw_meta.layout : {{ pw_layout_post.post_meta.pw_meta.layout | json }}</pre>
+		<?php endif; ?>
 		
 	</div>	
 </div>
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwLayoutMetabox = angular.module( 'pwLayoutMetabox', ['postworldAdmin'] );
-	
 	///// CONTROLLER /////
-	pwLayoutMetabox.controller('pwLayoutMetaboxCtrl',
+	postworldAdmin.controller('pwLayoutMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
 			/// LOAD IN DATA SOURCES ///
-			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
+			$scope.iLayoutOptions = <?php echo json_encode( pw_layout_options() ); ?>;
 			$scope.iSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
 			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
-			$scope.iLayouts = <?php echo json_encode( i_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
+			$scope.iLayouts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
 			$scope.pw_layout_post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') ) ); ?>;
 
 			// Create layout object
 			if( !$_.objExists( $scope.pw_layout_post, 'post_meta.<?php echo pw_postmeta_key; ?>.layout' ) )
 				$scope.pw_layout_post = $_.setObj( $scope.pw_layout_post, 'post_meta.<?php echo pw_postmeta_key; ?>.layout', {} );
+
+			// If the Layout object is empty
+			if( _.isEmpty( $_.get( $scope.pw_layout_post, 'post_meta.pw_meta.layout' ) ) )
+				// Make it an object
+				$scope.pw_layout_post = $_.set( $scope.pw_layout_post, 'post_meta.pw_meta.layout', { template : 'default' } );
 
 			// TODO : Add a PW global for pw_postmeta_key and pw_usermeta_key, use that global here
 
@@ -60,7 +64,7 @@ global $post;
 			$scope.context = {
 				name: 'single',
 				label: 'Single',
-				icon: 'icon-circle-medium',
+				icon: 'pwi-circle-medium',
 			};
 
 	}]);
@@ -71,8 +75,3 @@ global $post;
 	// Action hook to print the Javascript(s)
 	do_action('pw_layout_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwLayoutMetabox"),['pwLayoutMetabox']);
-</script>

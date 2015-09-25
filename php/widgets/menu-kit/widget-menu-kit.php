@@ -14,4 +14,13 @@ include 'menu-kit-authors.php';
 include 'menu-kit-custom-menu.php';
 include 'menu-kit-widget.php';
 
+///// ADD CLASSES TO SELECTED MENU ITEMS /////
+add_filter('nav_menu_css_class' , 'special_nav_class' , 10 , 2);
+function special_nav_class($classes, $item){
+     if( in_array('current-menu-item', $classes) ){
+             $classes[] = 'selected ';
+     }
+     return $classes;
+}
+
 ?>

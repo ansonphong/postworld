@@ -1,6 +1,8 @@
 <?php
 ////////////// ADD METABOX //////////////
-add_action('admin_init','pw_metabox_init_link_url');
+if( !pw_is_admin_ajax() )
+	add_action('admin_init','pw_metabox_init_link_url');
+
 function pw_metabox_init_link_url(){    
 	global $pwSiteGlobals;
 
@@ -24,6 +26,8 @@ function pw_metabox_init_link_url(){
     }
     // Add Callback Function on Save
     add_action('save_post','pw_link_url_meta_save');
+    add_action('edit_attachment','pw_link_url_meta_save');
+    
 }
 
 ////////////// CREATE UI //////////////
@@ -48,13 +52,23 @@ function pw_link_url_meta_save($post_id){
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
         return $post_id;
 
-	// SAVE URL
-	pw_set_post_meta($post_id,
-		array(
-			'link_url' 		=> $_POST['link_url'],
-			'link_format' 	=> $_POST['link_format'],
-			)
-		);
+    // Security Layer 
+    if ( !current_user_can( 'edit_post', $post_id ) )
+        return $post_id;
+
+    // Get Vars
+    $link_url = _get( $_POST, 'link_url' );
+    $link_format = _get( $_POST, 'link_format' );
+
+    // SAVE URL
+    if( !empty( $link_url ) || !empty( $link_format ) )
+		pw_set_post_meta($post_id,
+			array(
+				'link_url' 		=> $link_url,
+				'link_format' 	=> $link_format,
+				)
+			);
+
     return $post_id;
 }
  

@@ -1,12 +1,20 @@
-label.inner, .labeled label{
-	position:absolute;
-	z-index: 5;
-	padding:5px 10px;
+
+label.input{
 	color:#999;
 	font-size: 13px;
 	letter-spacing:1px;
 	text-transform: uppercase;
-	width:100%;
+	padding:4px 10px;
+}
+
+label.inner, .labeled label{
+	label.input;
+	position:absolute;
+	z-index: 5;
+	
+	margin:1px;
+	//width:100%; // Usablity issues in multiple dropdown select
+	background:#fff;
 	white-space: nowrap;
 	.description{
 		text-transform: none;
@@ -20,6 +28,9 @@ label.inner, .labeled label{
 		right:27px;
 		top:2px;
 	}
+	&.transparent{
+		background:transparent;
+	}
 }
 
 input.labeled, textarea.labeled, div.labeled, select.labeled,
@@ -31,17 +42,28 @@ input.labeled, textarea.labeled, div.labeled, select.labeled,
 	//border:2px solid @gray2;
 	margin:0 4px 2px 0;
 	line-height: normal;
+	box-shadow:none;
 }
 
 input.labeled, select.labeled{
 	height:64px !important; // Override WP Admin height of 36px
 }
 
-input.labeled, textarea.labeled, select.labeled, .labeled input{
+input.labeled, textarea.labeled, select.labeled, .labeled input, .labeled-area{
 	padding:25px 15px 8px 10px;
 	&.icon_right{
 		padding-right:50px;
 	};
+}
+
+.labeled-area{
+	label.inner{
+		top:0;
+		left:0;
+		background:transparent;
+	}
+	position:relative;
+	display: block;
 }
 
 select.labeled{
@@ -56,4 +78,8 @@ select[multiple].labeled {
 
 input.short{
 	width:60px;
+}
+
+.time.dropdown input.form-control{
+	width:33px;
 }

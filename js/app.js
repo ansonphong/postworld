@@ -6,56 +6,61 @@
 
 ////////////////////////////////////////////////
 
-A Wordpress plugin for
+A Javascript and PHP Wordpress framework for
 • Extending the Wordpress functions API
 • Displaying posts in creative ways.
 
-Framework by : AngularJS
+JS Framework : AngularJS
 GitHub Repo  : https://github.com/phongmedia/postworld/
 ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 */
 
+// Documention by JSDOC
+// http://usejsdoc.org/
+
+
+ /**
+ * @ngdoc overview
+ * @name postworld
+ * @module postworld
+ * @description
+ *
+ * The core module for working with Postworld on the front-end.
+ *
+ */
+
 'use strict';
+pw.partials = {};
+pw.templates = {};
+pw.feeds = {};
+pw.widgets = {};
+pw.admin = {};
+pw.embeds = {};
 
-///// POSTWORLD MODULE /////
-var pw = {
-	posts:{},
-	partials:{},
-	templates:{},
-	feeds:{},
-	widgets:{},
-	admin:{},
-	embeds:{},
-};
-
-var depInject = [
+// Add Standard Modules
+pw.angularModules = pw.angularModules.concat([
 	'ngResource',
 	'ngRoute',
 	'ngSanitize',
 	'ngTouch',
-	// 'ngAnimate', (animate removed for bootstrap carousel)
-	//'infinite-scroll', 
+	'ngAria',
 	'ui.bootstrap',
 	'monospaced.elastic',
-	//'TruncateFilter',
-	//'pwFilters',
-	'timer',
 	'angular-parallax',
-	//'angularMoment',
 	'wu.masonry',
-	'mgcrea.ngStrap.popover',
-	'pw.compile',
-	//'ya.treeview',
-	];
-var postworld = angular.module('postworld', depInject );
+	'checklist-model',
+	'infinite-scroll',
+]);
+
+var postworld = angular.module('postworld', pw.angularModules );
 
 ///// POSTWORLD ADMIN MODULE /////
 var depInjectAdmin = [
 	'postworld',
 	'ui.slider',
 	];
-var postworldAdmin = angular.module('postworldAdmin', depInjectAdmin );
 
+var postworldAdmin = angular.module('postworldAdmin', depInjectAdmin );
 
 var controllerProvider;
 
@@ -63,102 +68,6 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 
 	// Pass $controllerProvider so that vanilla JS can init new controllers
 	controllerProvider = $controllerProvider;
-
-	var plugin_url = jsVars.pluginurl;
-
-	////////// ROUTE PROVIDERS //////////
-	$routeProvider.when('/live-feed-1/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed1Widget.html',                           
-		});
-	$routeProvider.when('/live-feed-2/',    
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed2Widget.html',
-			// reloadOnSearch: false,                
-		});
-	$routeProvider.when('/live-feed-2-feeds/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed3Widget.html',                
-		});
-	$routeProvider.when('/live-feed-with-ads/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed6Widget.html',                
-		});
-	$routeProvider.when('/live-feed-2-feeds-auto/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed4Widget.html',                
-		});
-	$routeProvider.when('/live-feed-params/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLiveFeed5Widget.html',                
-		});
-	$routeProvider.when('/load-feed-1/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed1Widget.html',                
-		});
-	$routeProvider.when('/load-feed-2/',
-		{
-			template: '<h2>Coming Soon</h2>',               
-		});
-	$routeProvider.when('/load-feed-2-feeds/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed3Widget.html',                
-		});
-	$routeProvider.when('/load-feed-cached-outline/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed4Widget.html',                
-		});
-	$routeProvider.when('/load-feed-ads/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadFeed5Widget.html',                
-		});
-	$routeProvider.when('/load-panel/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadPanelWidget.html',                
-		});
-	$routeProvider.when('/register-feed/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwRegisterFeedWidget.html',             
-		});
-	$routeProvider.when('/home/',
-		{
-				template: '<h2>Coming Soon</h2>',               
-		});
-	$routeProvider.when('/edit-post/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/editPost.html',                
-		});
-
-	$routeProvider.when('/load-comments/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadCommentsWidget.html',             
-		});            
-	$routeProvider.when('/embedly/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwEmbedlyWidget.html',             
-		});            
-	$routeProvider.when('/load-post/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwLoadPostWidget.html',             
-		});            
-	$routeProvider.when('/o-embed/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwEmbedWidget.html',             
-		});       
-	$routeProvider.when('/media-modal/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/mediaModal.html',             
-		});  
-	$routeProvider.when('/post-link/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/postLink.html',             
-		});  
-	$routeProvider.when('/test-post/',
-		{
-			templateUrl: plugin_url+'/postworld/templates/samples/pwTestWidget.html',             
-		});  
-
-
 
 	$routeProvider.when('/new/:post_type',
 		{
@@ -184,13 +93,11 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 	// $routeProvider.otherwise({redirectTo: '/home/'});
 
 	// SHOW / HIDE DEBUG LOGS IN CONSOLE
-	// Comment out for development
-
 	var debugEnabled = ( window.pw.info.mode == 'dev' ) ? true : false;
 	$logProvider.debugEnabled( debugEnabled );
 
-	$locationProvider.html5Mode(false);
-
+	$locationProvider.html5Mode( window.pw.view.location_provider.html_5_mode );
+	//$locationProvider.html5Mode( false );
 
 });
 
@@ -201,25 +108,35 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
  |  _ <| |_| | | | |
  |_| \_\\__,_|_| |_|        
 */
-postworld.run(function($rootScope, $window, $templateCache, $log, pwData) {    
+postworld.run( 
+	function( $rootScope, $window, $templateCache, $log, $location, $rootElement ){    
 
-	// TODO remove in production
-	/*
-	$rootScope.$on('$viewContentLoaded', function() {
-	  $templateCache.removeAll();
-	});
-	*/
-
-   //$rootScope.current_user = $window.pwGlobals.user;
-   //$log.debug('Current user: ', $rootScope.current_user );
+		///// ALLOW LINK CLICKING /////
+		// Critical so that when $locationProvider is in HTML5 mode
+		// Normal links can be clicked
+		$rootElement.off('click');
 
 
-   
+		/////// DEV SNIPPETS /////
+		// TODO remove in production
+		/*
+		$rootScope.$on('$viewContentLoaded', function() {
+		$templateCache.removeAll();
+		});
+		*/
+		//$rootScope.current_user = $window.pwGlobals.user;
+		//$log.debug('Current user: ', $rootScope.current_user );
 
 });
 
 
-///// FUNCTION : REGISTER CONTROLLER AFTER BOOTSTRAP /////
+/**
+ * Registers a controller in AngularJS after Bootstrapping an app/module.
+ *
+ * @function pwRegisterController
+ * @param {string} controllerName The name of the controller to register
+ * @param {string} moduleName The name of the module the controller is part of. Default: 'postworld'
+ */
 function pwRegisterController( controllerName, moduleName ) {
     // Here I cannot get the controller function directly so I
     // need to loop through the module's _invokeQueue to get it
@@ -236,7 +153,31 @@ function pwRegisterController( controllerName, moduleName ) {
             	controllerProvider.register(controllerName, call[2][1]);
         }
     }
+    //console.log( 'pwRegisterController : ' + controllerName + ', ' + moduleName );
 }
+
+///// FUNCTION : COMPILE AND ELEMENT AFTER BOOTSTRAP /////
+function pwCompileElement( context, id ){
+	// Compile a new element, after the controller is registered
+	
+	var contextInjector = angular.element(context).injector();
+
+	if( _.isUndefined( contextInjector ) )
+		return false;
+
+	contextInjector.invoke(function($compile, $rootScope) {
+	    $compile( angular.element('#'+id))($rootScope);
+	    $rootScope.$apply();
+	});
+
+	/*// USING JQUERY
+	jQuery(context).injector().invoke(function($compile, $rootScope) {
+	    $compile(jQuery('#'+id))($rootScope);
+	    $rootScope.$apply();
+	});
+	*/
+}
+
 
 ////////// REPLACE ALL STRING PROTOTYPE //////////
 String.prototype.replaceAll = function(search, replace)
@@ -259,12 +200,12 @@ String.prototype.replaceAll = function(search, replace)
 /////////////////////////////////////////////////////////////////*/
 
 
-/*
+
 postworld.constant('angularMomentConfig', {
-	preprocess: 'unix', 				// optional
+	//preprocess: 'unix', 				// optional
 	//timezone: 'America/Los_Angeles' 	// optional
 });
-*/
+
 
 /*
 postworld.run(function($rootScope, $templateCache) {

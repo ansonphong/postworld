@@ -7,15 +7,23 @@
 											 
 ////////// ------------ DIRECTIVES ------------ //////////*/
 
-
-////////// PW GLOBALS //////////
-// This directive sets the $pw service object into the local scope
-// Just specifiy which scope object to map it to
-// EXAMPLE : <div pw-globals="pw"><pre>{{ pw | json }}</pre></div> 
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwGlobals
+ *
+ * @restrict A
+ * @description Sets the $pw service object into the local scope.
+ * @param {Expression} pwGlobals The expression to bind the Postworld globals to 
+ *
+ * @example
+ * ```<pre><div pw-globals="pw">{{ pw | json }}</div></pre>```
+ *
+ */
 postworld.directive( 'pwGlobals',
 	[ '$pw', '_', '$log',
 	function( $pw, $_, $log ){
 	return{
+		restrict:"A",
 		scope:{
 			pwGlobals:"=",
 		},
@@ -23,6 +31,236 @@ postworld.directive( 'pwGlobals',
 			$scope.pwGlobals = $pw;
 		}
 	}
+}]);
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwInclude
+ *
+ * @description
+ * Used to include a Postworld template partial within an isolated scope.
+ * Post and meta data can be easily make available in the template.
+ *
+ * @param {string} pwInclude Psuedo-path to the template.
+ * Use `panels/widget` to include `templates/panels/widget.html`
+ * @param {expression} includeVars Vars to assign within the include as $scope.vars
+ * @param {expression} includeMeta Object to be assigned as $scope.meta within the included template
+ * @param {expression} includePost Object to be assigned as $scope.post within the included template
+ * @param {boolean} includeEnable Dynamic. Whether or not to actually enable the load the include
+ * Can be used to prevent the template from loading in certain instances.
+ * @param {string} includeClass Class(es) to be added to the include element
+ *
+ * @example
+	<pre><div pw-include="galleries/gallery-frame" include-post="post"></div></pre>
+ *
+ */
+postworld.directive('pwInclude', function($log, $timeout, pwData) {
+	return {
+		restrict: 'EA',
+		template: '<div ng-include="includeUrl" class="pw-include" ng-class="includeClass"></div>',
+		scope:{
+			vars:"=includeVars",
+			includeMeta:"=",	
+			includePost:"=",	
+			includeEnable:"=",
+			includeClass:"@",
+		},
+		link: function($scope, element, attrs){
+
+			var setTemplateUrl = function(){
+				var pwInclude = attrs.pwInclude;
+				var parts = pwInclude.split('/');
+				if( parts.length < 2 ){
+					$log.debug( 'pwInclude : ERROR : Include must contain 2 parts, dir/basename.' )
+					return false;
+				}
+				
+				// Timeout to allow other controllers to init
+				$timeout( function(){
+					if($scope.includeEnable !== false )
+						$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
+					else
+						$scope.includeUrl = '';
+				}, 0 );
+				
+			}
+
+			attrs.$observe( 'pwInclude', function( pwInclude ){
+				setTemplateUrl();
+			});
+
+			$scope.$watch('includeEnable', function(val){
+				setTemplateUrl();
+			});
+
+			// Pipe post data into the isolated include scope as 'post' object
+			$scope.$watch('includePost', function( val ){
+				//$log.debug( 'pwInclude : includePost', val );
+				if( !_.isUndefined( val ) )
+					$scope.post = $scope.includePost;
+			}, 1 );
+
+			// Pipe post data into the isolated include scope as 'meta' object
+			$scope.$watch('includeMeta', function( val ){
+				//$log.debug( 'includePanel : includeMeta', val );
+				if( !_.isUndefined( val ) )
+					$scope.meta = $scope.includeMeta;
+			}, 1 );
+
+			// Watch Include Enable and hide element if it's not enabled
+			$scope.$watch('includeEnable', function( val ){
+				//$log.debug( 'pwInclude : includeEnable', val );
+				if( !_.isUndefined( val ) && !_.isNull( val ) ){
+					if( val === false )
+						element.addClass( 'ng-hide' );
+					else
+						element.removeClass( 'ng-hide' );
+				}
+			}, 1 );
+
+		}
+	};
+});
+
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwLoadPost
+ * @restrict A
+ *
+ * @description
+ * Loads a post template and injects it with data.
+ *
+ * @param {string} postId Optional. Post ID
+ * @param {string} postView Which registered view template to use.
+ * @param {object} postQuery Query vars to derive post from.
+ * @param {string} postClass Optional. Classes to add to the template element.
+ * @param {string} postLoading Optional. An expression to assign a loading boolean.
+ * 
+ */
+postworld.directive('pwLoadPost',
+	[ '$log', '$timeout', 'pwData', '_',
+	function( $log, $timeout, $pwData, $_ ) {
+	return {
+		restrict: 'A',
+		replace: true,
+		template: '<div ng-include="templateUrl" ng-class="postClass"></div>',
+		scope : {
+			postId:'=',
+			postView:'@',
+			postQuery:'=',
+			postClass:'@',
+			postLoading:'='
+		},
+		link: function( $scope, element, attrs ){
+
+			/**
+			 * @description
+			 * Initializes the directive.
+			 * Invokes either post from 'id' or 'query' methods.
+			 */
+			var init = function(){
+				///// DETECT MODE /////
+				if( $scope.postId != null )
+					$scope.mode = 'id';
+				else
+					$scope.mode = 'query';
+
+				$log.debug( 'pwLoadPost : MODE : ', $scope.mode );
+
+				///// SWITCH : MODE /////
+				switch( $scope.mode ){
+					///// POST FROM ID
+					case 'id':
+						loadPostFromId();
+						break;
+					///// POST FROM QUERY /////
+					case 'query':
+						loadPostFromQuery();
+						break;
+				}
+			}
+			
+			/**
+			 * Loads a post via post ID.
+			 *
+			 * @memberof pwLoadPost
+			 * @function loadPostFromId
+			 */
+			var loadPostFromId = function(){
+				$scope.postLoading = true;
+				$pwData.getPost( {post_id:$scope.postId} ).then(
+					function(response) {
+						$scope.postLoading = false;
+						var post = response.data;
+						if( !_.isEmpty(post) ){
+							$scope.post = post;
+							setTemplateUrl();
+						}
+					},
+					function(response){}
+				);
+			}
+
+			/**
+			 * Loads a post via query.
+			 *
+			 * @memberof pwLoadPost
+			 * @function loadPostFromQuery
+			 */
+			var loadPostFromQuery = function(){
+
+				if( !_.isObject($scope.postQuery) ){
+					throw { message:"Postworld [directive] loadPost : Wrong query format provided in post-query attribute." }
+					return false;
+				}
+
+				// Setup query
+				var query = $scope.postQuery;
+				query.posts_per_page = 1;
+
+				$scope.postLoading = true;
+				$pwData.pwQuery( query ).then(
+					function(response) {
+						$scope.postLoading = false;
+						if( _.isArray( response.data.posts ) ){
+							if( !_.isEmpty( response.data.posts ) ){
+								$scope.post = response.data.posts[0];
+								setTemplateUrl();
+							}
+						}
+
+					},
+					function(response){}
+				);
+			}
+
+			/**
+			 * Sets the template URL.
+			 *
+			 * @memberof pwLoadPost
+			 * @function setTemplateUrl
+			 */
+			var setTemplateUrl = function(){
+				var postType = $_.get( $scope, 'post.post_type' ); 
+				if( !postType )
+					postType = 'post';
+
+				var view = $scope.postView;
+				if( view == null )
+					view = 'list';
+
+				$scope.templateUrl = $pwData.pw_get_template({
+					subdir: 'posts',
+					post_type: postType,
+					view: view
+					});
+			}
+
+			init();
+
+		}
+	};
 }]);
 
 
@@ -77,6 +315,7 @@ postworld.directive('pwSrc', function( $log ) {
 	}
 });
 
+
 ///// POSTWORLD HREF DIRECTIVE /////
 postworld.directive('pwHref', function() {
 	return {
@@ -96,6 +335,96 @@ postworld.directive('pwHref', function() {
 			} else {
 				attrs.$set('src',fullPathUrl + attrs.fullPath);
 			}*/
+
+		},
+	}
+});
+
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwBackgroundImage
+ * @description
+ * Adds a background image style property to an element
+ *
+ * @param {expression} pwBackgroundImage Binding to the URL of the background image.
+ *
+ * @example
+	<pre><div pw-background-image="post.image.sizes.large.url"></div></pre>
+ */
+postworld.directive('pwBackgroundImage', function( $log ) {
+	return {
+		scope:{
+		  pwBackgroundImage:"="
+		},
+		link: function( $scope, element, attrs ) {
+			$scope.$watch( 'pwBackgroundImage', function(val){
+				element.css( 'background-image', 'url("'+val+'")' );
+			});
+		},
+	}
+});
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwEval
+ *
+ * @description
+ * Evaluates a string as javascript at the time of loading.
+ * Works well for initializing third-party libraries.
+ *
+ * @param {string} pwEval A string to evaluate as Javascript
+ * @param {number} evalTimeout Optional. Milliseonds to timeout before evaluating
+ * @param {string} evalContext Optional. Context in which to evaluate. Options : 'scope' / 'window'. Default : 'scope'
+ * @param {expression} evalWatch Optional. An expression to watch for changes, on change re-evalute.
+ */
+postworld.directive('pwEval', function($timeout, $log) {
+	return {
+		scope:{
+		  pwEval:"@",
+		  evalTimeout:"@",
+		  evalContext:"@",
+		  evalWatch:"=",
+		},
+		link: function($scope, element, attrs) {
+
+			if( _.isUndefined( $scope.evalTimeout ) )
+				$scope.evalTimeout = 0;
+			if( _.isUndefined( $scope.evalContext ) )
+				$scope.evalContext = 'window';
+
+			/**
+			 * @memberof pwEval
+			 * @function evaluate
+			 */
+			var evaluate = function(){
+				$timeout(
+					function(){
+						$log.debug( 'pw-eval : ', $scope.pwEval );
+						try{
+							if( $scope.evalContext == 'scope' )
+								$scope.$eval($scope.pwEval);
+							else
+								eval($scope.pwEval);
+						}
+						catch(err){
+							$log.debug('pw-eval : ERROR : ' + $scope.pwEval, err);
+						}
+					}, $scope.evalTimeout
+				);
+			}
+			evaluate();
+
+			///// EVAL WATCH /////
+			var firstWatch = true;
+			$scope.$watch( 'evalWatch', function(val){
+				if( firstWatch ){
+					firstWatch = false;
+					return;
+				}
+				evaluate();
+			});
+
 
 		},
 	}
@@ -134,94 +463,107 @@ postworld.directive('pwTarget', function( $log ) {
 ///// SUBMIT ON ENTER /////
 // Submit on Enter, without a real form
 postworld.directive('ngEnter', function() {
-	  return function(scope, element, attrs) {
-		  element.bind("keydown keypress", function(event) {
-			  if(event.which === 13) {
-				  scope.$apply(function(){
+
+  	return function(scope, element, attrs) {
+			
+		element.bind("keydown keypress", function(event) {
+		  	if(event.which === 13) {
+				scope.$apply(function(){
 					if( attrs.ngEnter )
-					  scope.$eval(attrs.ngEnter);
+						scope.$eval(attrs.ngEnter);
 					else
-					  scope.$eval("submit()");
-				  });
-				  event.preventDefault();
-			  }
-		  });
-	  };
-  });
-
-
-///// TOGGLE AN ELEMENT'S DISPLAY ON CLICK /////
-postworld.directive('pwClickToggleDisplay', function( $log ) {
-		return {
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				element.bind('click', function (event) {
-					if( !_.isNull( attrs.pwClickToggleDisplay ) ){
-						var aElement = angular.element( attrs.pwClickToggleDisplay );
-						var display = aElement.css('display');
-						if( display == 'block' )
-							aElement.css('display', 'none');
-						else if( display == 'none' )
-							aElement.css('display', 'block');
-					}
-					$log.debug( "display:" + display );
+						scope.$eval("submit()");
 				});
+				event.preventDefault();
 			}
-		};
-	});
+		});
+		
+	};
 
-///// TOGGLE AN ELEMENT'S CLASS ON CLICK /////
-postworld.directive('pwClickToggleClass', function() {
-		return {
-			restrict: 'A',
-			link: function (scope, element, attrs) {
-				element.bind('click', function (event) {
-					if( !_.isNull( attrs.pwClickToggleClass ) ){
-						var aElement = angular.element( attrs.pwClickToggleClass );
-						aElement.toggleClass( attrs.toggleClass );
-					}
-				});
-			}
-		};
-	});
+});
 
-///// PREVENT DEFAULT ON CLICK /////
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwClickPreventDefault
+ * @description Prevents the default click action on the element.
+ * @restrict A
+ */
+postworld.directive('pwClickPreventDefault', function() {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				//event.stopPropagation();
+				event.preventDefault();
+			});
+		}
+	};
+});
+
+///// DEPRECIATED /////
 postworld.directive('preventDefaultClick', function() {
-		return {
-			restrict: 'A',
-			link: function (scope, element) {
-				element.bind('click', function (event) {
-					//event.stopPropagation();
-					event.preventDefault();
-				});
-			}
-		};
-	});
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				//event.stopPropagation();
+				event.preventDefault();
+			});
+		}
+	};
+});
 
-///// PREVENT DEFAULT ON CLICK /////
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwClickStopPropagation
+ * @description Stops the click event from propagating beyond the given element.
+ * @restrict A
+ * @depreciated
+ */
+postworld.directive('pwClickStopPropagation', function() {
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				event.stopPropagation();
+			});
+		}
+	};
+});
+
+///// DEPRECIATED /////
 postworld.directive('stopPropagationClick', function() {
-		return {
-			restrict: 'A',
-			link: function (scope, element) {
-				element.bind('click', function (event) {
-					event.stopPropagation();
-				});
-			}
-		};
-	});
+	return {
+		restrict: 'A',
+		link: function (scope, element) {
+			element.bind('click', function (event) {
+				event.stopPropagation();
+			});
+		}
+	};
+});
+
 
 ///// SELECT ON CLICK /////
-postworld.directive('selectOnClick', function() {
-		return function (scope, element, attrs) {
-			element.bind('click', function () {
-				this.select();
-			});
-		};
-	});
+postworld.directive('selectOnClick', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element, attrs) {
+            element.on('click', function () {
+                this.select();
+            });
+        }
+    };
+});
 
-
-///// AUTO FOCUS /////
-// Automatically focuses the input field it's applied to
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwAutofocus
+ * @description Automatically focuses the input element it's applied to.
+ * @element input
+ */
 postworld.directive('pwAutofocus', function($timeout) {
 	return {
 		link: function ( scope, element, attrs ) {
@@ -237,27 +579,39 @@ postworld.directive('pwAutofocus', function($timeout) {
  | | | | _____   _____ _ __   / ___| | __ _ ___ ___ 
  | |_| |/ _ \ \ / / _ \ '__| | |   | |/ _` / __/ __|
  |  _  | (_) \ V /  __/ |    | |___| | (_| \__ \__ \
- |_| |_|\___/ \_/ \___|_|     \____|_|\__,_|___/___/
-////////////// POSTWORLD HOVER CLASS //////////////*/
-// Adds specified class(es) to an element on mouseover
-// And removes the classes on mouseleave
-// Optional attributes include hover-on-delay and hover-off-delay
-// Which are specified in the number of milliseconds
-// Before the class is added / removed 
+ |_| |_|\___/ \_/ \___|_|     \____|_|\__,_|___/___/*/
 
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwHoverClass
+ * @restrict A
+ * @description Adds specified class(es) to an element on mouseover,
+ * and removes the classes on mouseleave.
+ *
+ * @param {string} pwHoverClass Class(es) to add when hovered.
+ * @param {number} hoverOnDelay Optional. Milliseconds after mouseover before classes are added.
+ * @param {number} hoverOffDelay Optional. Milliseconds after mouseleave before classes are removed. 
+ */
+ //  * @property {boolean} mouseIsOver Variable to track if mouse is currently over.
 postworld.directive('pwHoverClass', function ( $timeout ) {
     return {
         restrict: 'A',
         scope: {
-            pwHoverClass: '@',	// classes to add when hovered
-            hoverOnDelay: '@',	// milliseconds
-            hoverOffDelay: '@',	// milliseconds
+            pwHoverClass: '@',
+            hoverOnDelay: '@',
+            hoverOffDelay: '@',
         },
         link: function ( $scope, element, attrs ) {
-        	// mouseIsOver // Variable to track if mouse is currently over
-        	// Prevents the hover class from getting locked on
-        	// In the case that the ON delay is greater than the OFF delay
-        	// And the mouse passes on and off the element in less time than their difference
+        	
+        	/**
+			 * Prevents the hover class from getting locked on,
+			 * in the case that the ON delay is greater than the OFF delay
+			 * and the mouse passes on and off the element
+			 * in less time than their difference.
+			 *
+			 * @memberof pwHoverClass
+			 * @var mouseIsOver
+			 */
         	var mouseIsOver = false;
 
             element.on('mouseenter', function() {
@@ -269,6 +623,7 @@ postworld.directive('pwHoverClass', function ( $timeout ) {
 	            		element.addClass($scope.pwHoverClass);
             	}, parseInt($scope.hoverOnDelay) );
             });
+
             element.on('mouseleave', function() {
             	mouseIsOver = false;
                 if( _.isUndefined($scope.hoverOffDelay) )
@@ -319,7 +674,6 @@ postworld.controller('pwLanguageCtrl',
 
 
 
-
 /*_____ _                            _   
  |_   _(_)_ __ ___   ___  ___  _   _| |_ 
    | | | | '_ ` _ \ / _ \/ _ \| | | | __|
@@ -354,10 +708,6 @@ postworld.directive('pwTimeout', function( $timeout ) {
 		},
 	}
 });
-
-
-
-
 
 
 
@@ -471,14 +821,12 @@ postworld.directive('pwScrollfix', function( $window, $log, $timeout ) {
 				// Run onYScroll function when window is scrolled 
 				angular.element($window).bind("scroll", onYScroll);
 
-
 		},
 	}
 });
 
 
 //////////////////// ADMIN ////////////////////
-
 ////////// TEMPLATES //////////
 postworld.directive( 'pwAdminTemplates',
 	[ '$pw', '_', '$log',
@@ -493,6 +841,7 @@ postworld.directive( 'pwAdminTemplates',
 		}
 	}
 }]);
+
 
 ////////// SIDEBARS //////////
 postworld.directive( 'pwSidebars',
@@ -510,4 +859,69 @@ postworld.directive( 'pwSidebars',
 }]);
 
 
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwShareLink
+ *
+ * @description Generates a share link for a particular post ID.
+ *
+ * @param {expression} pwShareLink The expression to map the share link to
+ * @param {string} shareLinkPostId Required. The ID of the post which to generate the share link for
+ * @param {boolean} shareLinkDynamic If `true`, sets up a watch on the value of shareLinkPostId
+ * 
+ * @example
+	 <pre>
+		<div pw-share-link="shareLink" share-link-post-id="post.ID">{{shareLink}}</div>
+	 </pre>
+ */
+postworld.directive( 'pwShareLink',
+	[ '$pw', '_', '$log',
+	function( $pw, $_, $log ){
+	return{
+		scope:{
+			pwShareLink:'=',
+			shareLinkPostId:'=',
+			shareLinkDynamic:'@'
+		},
+		link : function( $scope, element, attrs ){
 
+			// Generates the share link URL
+			var generateShareLink = function(postId){
+				if( _.isUndefined(postId) )
+					return '';
+
+				var userId = $_.get( $pw, 'user.ID' );
+				var shareLink = $pw.paths.home_url + "/?u=" + userId + "&p=" + postId;
+				$log.debug('SHARE LINK : ', shareLink);
+				return shareLink;
+			}
+
+			// If share link is dynamic, such as value = 'true'
+			if( $_.stringToBool( $scope.shareLinkDynamic ) ){
+				$scope.$watch( 'shareLinkPostId', function(postId){
+					$scope.pwShareLink = generateShareLink(postId);
+				});
+			}
+
+			// Set the share link value
+			$scope.pwShareLink = generateShareLink($scope.shareLinkPostId);
+			
+		}
+	}
+}]);
+
+
+
+
+postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
+	return{
+		scope:{
+			pwDataGet:"@",
+		},
+		link: function( $scope, element, attrs ){
+			$log.debug("ACTIVATE : pwDataGet", element);
+			element.html( JSON.stringify( $_.get( $pwData, $scope.pwDataGet ) ) );
+		}
+
+	}
+}]);

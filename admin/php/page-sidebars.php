@@ -7,14 +7,14 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld sidebars wrap" ng-cloak>
+<div class="postworld sidebars wrap" ng-cloak>
 	<div
 		pw-admin
 		pw-admin-sidebars
 		ng-controller="pwSidebarsDataCtrl">
 
 		<h1>
-			<i class="icon-map"></i>
+			<i class="pwi-map"></i>
 			Sidebars
 			<button class="add-new-h2" ng-click="newSidebar()"><?php ___('sidebars.add_new'); ?></button>
 		</h1>
@@ -36,12 +36,11 @@
 				<div class="space-6"></div>
 			</div>
 
-
 			<!-- ///// EDIT SETTINGS ///// -->
 			<div class="pw-col-9">
 				<div ng-show="showView('editItem')">
 
-					<h3><i class="icon-gear"></i> <?php ___('sidebars.item_title'); ?></h3>
+					<h3><i class="pwi-gear"></i> <?php ___('sidebars.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
@@ -51,7 +50,7 @@
 								tooltip="<?php ___('sidebars.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('sidebars.name'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-name"
@@ -66,7 +65,7 @@
 								tooltip="<?php ___('sidebars.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('sidebars.id'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
@@ -74,7 +73,7 @@
 								tooltip="<?php ___('sidebars.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
-								<i class="icon-edit"></i>
+								<i class="pwi-edit"></i>
 							</button>
 							<input
 								id="item-id"
@@ -97,7 +96,7 @@
 								tooltip="<?php ___('sidebars.description_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('sidebars.description'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-description"
@@ -112,7 +111,7 @@
 								tooltip="<?php ___('sidebars.class_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('sidebars.class'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								class="labeled"
@@ -190,13 +189,13 @@
 
 	
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_SIDEBARS,'iSidebars'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SIDEBARS,'iSidebars'); ?></div>
 		
 					<!-- DELETE BUTTON -->
 					<button
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'iSidebars')">
-						<i class="icon-close"></i>
+						<i class="pwi-close"></i>
 						<?php ___('sidebars.delete'); ?>
 					</button>
 
@@ -204,7 +203,7 @@
 					<button
 						class="button"
 						ng-click="duplicateItem(selectedItem,'iSidebars')">
-						<i class="icon-copy-2"></i>
+						<i class="pwi-copy-2"></i>
 						<?php ___('sidebars.duplicate'); ?>
 					</button>
 
@@ -217,7 +216,13 @@
 
 		<hr class="thick">
 
-		<!--<pre>{{ iSidebars | json }}</pre>-->
+		<?php if( pw_dev_mode() ): ?>
+			<hr class="thick">
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>iSidebars : {{ iSidebars | json }}</code></pre>
+			</div>
+		<?php endif; ?>
 
 	</div>
 

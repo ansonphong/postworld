@@ -3,7 +3,7 @@
 	// Feeds
 	$pwTermFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_TERM_FEEDS ) );
 	// Feed Settings
-	//$pwFeedSettings = i_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
+	//$pwFeedSettings = pw_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
 
 	// Term Feed Templates
 	$termFeedTemplates = pw_get_templates(
@@ -22,7 +22,7 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld feeds wrap" ng-cloak>
+<div class="postworld feeds wrap" ng-cloak>
 	<div
 		pw-admin
 		pw-admin-term-feeds
@@ -30,7 +30,7 @@
 		ng-cloak>
 		
 		<h1>
-			<i class="icon-tag"></i>
+			<i class="pwi-tag"></i>
 			Term Feeds
 			<button class="add-new-h2" ng-click="newTermFeed()">Add New Term Feed</button>
 		</h1>
@@ -45,7 +45,7 @@
 					<li
 						ng-click="selectItem('settings');"
 						ng-class="menuClass('settings')">
-						<i class="icon-gear"></i> Settings
+						<i class="pwi-gear"></i> Settings
 					</li>
 					<li
 						ng-repeat="item in pwFeeds"
@@ -70,7 +70,7 @@
 						<span
 							dropdown-toggle
 							class="area-select area-select-icon">
-							<i class="{{ pwFeedSettings.loading_icon }} icon-spin"></i>
+							<i class="{{ pwFeedSettings.loading_icon }} pwi-spin"></i>
 						</span>
 						<!-- MENU -->
 						<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
@@ -87,7 +87,7 @@
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
 		
 				</div>
 
@@ -95,7 +95,7 @@
 				<!-- ///// EDIT SETTINGS ///// -->
 				<div ng-show="showView('editItem')">
 
-					<h3><i class="icon-gear"></i> <?php ___('feeds.item_title'); ?></h3>
+					<h3><i class="pwi-gear"></i> <?php ___('feeds.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
@@ -105,7 +105,7 @@
 								tooltip="<?php ___('feeds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.name') ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-name"
@@ -120,7 +120,7 @@
 								tooltip="<?php ___('feeds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.id') ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
@@ -128,7 +128,7 @@
 								tooltip="<?php ___('feeds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
-								<i class="icon-edit"></i>
+								<i class="pwi-edit"></i>
 							</button>
 							<input
 								id="item-id"
@@ -149,7 +149,7 @@
 								tooltip="<?php ___('feeds.preload_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.preload'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-preload"
@@ -164,7 +164,7 @@
 								tooltip="<?php ___('feeds.increment_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.increment'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-load_increment"
@@ -179,7 +179,7 @@
 								tooltip="<?php ___('feeds.offset_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.offset'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-offset"
@@ -195,7 +195,7 @@
 					<h3
 						tooltip="{{ selectedItem.query | json }}"
 						tooltip-popup-delay="333">
-						<i class="icon-search"></i> Query
+						<i class="pwi-search"></i> Query
 					</h3>
 
 					<div class="pw-row">
@@ -247,7 +247,7 @@
 								tooltip="<?php ___('query.offset_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('query.offset'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="query-offset"
@@ -289,7 +289,7 @@
 								tooltip="<?php ___('query.posts_per_page_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('query.posts_per_page'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="query-posts_per_page"
@@ -302,7 +302,7 @@
 							<label
 								for="query-event_filter"
 								class="inner">
-								<i class="icon-calendar"></i>
+								<i class="pwi-calendar"></i>
 								<?php ___('query.event_filter'); ?>
 							</label>
 							<select
@@ -321,7 +321,7 @@
 							<label
 								for="query-post_parent_from"
 								class="inner">
-								<i class="icon-flow-children"></i>
+								<i class="pwi-flow-children"></i>
 								<?php ___('query.post_parent'); ?>
 							</label>
 							<select
@@ -391,7 +391,7 @@
 					
 					<hr class="thin">
 					
-					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
+					<h3><i class="pwi-cube"></i> <?php ___('feeds.view.title'); ?></h3>
 					<div class="pw-row">
 
 						<div class="pw-col-3">
@@ -413,13 +413,13 @@
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
 		
 					<!-- DELETE BUTTON -->
 					<button
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'pwFeeds')">
-						<i class="icon-close"></i>
+						<i class="pwi-close"></i>
 						<?php ___('feeds.delete'); ?>
 					</button>
 
@@ -427,7 +427,7 @@
 					<button
 						class="button deletion"
 						ng-click="duplicateItem(selectedItem,'pwFeeds')">
-						<i class="icon-copy-2"></i>
+						<i class="pwi-copy-2"></i>
 						<?php ___('feeds.duplicate'); ?>
 					</button>
 
@@ -446,7 +446,7 @@
 
 		<!--
 		RADIO BUTTONS
-		<b><i class="icon-calendar"></i> Events Filter</b>
+		<b><i class="pwi-calendar"></i> Events Filter</b>
 		<br>
 		<div class="btn-group">
 			<label

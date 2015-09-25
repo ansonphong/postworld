@@ -10,7 +10,7 @@
 	</div>
 	<!-- Show Loading Icon While Loading  -->
 	<div ng-hide="commentsLoaded" class="text-center">
-		<i class="icon-spinner icon-spin icon-large" style="font-size:48px; padding:20px"></i>
+		<i class="pwi-spinner icon-spin icon-large" style="font-size:48px; padding:20px"></i>
 	</div>			
 	<!-- Show Comments Tree After Loading -->
 	<!-- This UL is wholly replicated every time there is a child Comment  -->
@@ -19,8 +19,8 @@
 		  <div>			      	
 			<!-- Maximize/Minimize Icon based on Karma Points -->
 		  	<span ng-switch on="child.minimized">			      	
-				<i ng-switch-when="true" class="icon-plus-sign-alt" data-ng-click="toggleMinimized(child)"></i>
-				<i ng-switch-when="false" class="icon-minus-sign-alt" data-ng-click="toggleMinimized(child)"></i>
+				<i ng-switch-when="true" class="pwi-plus-sign-alt" data-ng-click="toggleMinimized(child)"></i>
+				<i ng-switch-when="false" class="pwi-minus-sign-alt" data-ng-click="toggleMinimized(child)"></i>
 			</span>
 			<!-- Add/Remove Points  -->
 			<span>

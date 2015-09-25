@@ -1,6 +1,3 @@
-
-
-
 /*____           _        _        _   _                 
  |  _ \ ___  ___| |_     / \   ___| |_(_) ___  _ __  ___ 
  | |_) / _ \/ __| __|   / _ \ / __| __| |/ _ \| '_ \/ __|
@@ -9,10 +6,21 @@
                                                          
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
-postworld.directive( 'pwPostActions', [ function($scope){
+postworld.directive( 'pwPostActions',
+    [ '$pw', '$log', '_',
+    function( $pw, $log, $_ ){
     return {
         restrict: 'AE',
         controller: 'postActions',
+        link: function( $scope, element, attrs ){
+
+            var userId = $_.get( $pw, 'user.ID' );
+            $log.debug( 'pwPostActions : userId', userId );
+
+            if( !$_.isNumeric( userId ) )
+                element.addClass('ng-hide');
+
+        },
     };
 }]);
 
@@ -68,7 +76,7 @@ postworld.controller('postActions',
             "post_id" : $scope.post.ID,
         };
         // AJAX Call 
-        pwData.set_post_relationship( args ).then(
+        pwData.setPostRelationship( args ).then(
             // ON : SUCCESS
             function(response) {    
                 //SET FAVORITE
@@ -128,6 +136,8 @@ postworld.controller('postVote',
 
 
     // SWITCH CSS CLASSES BASED ON VOTE
+    // TODO : REFACTOR THIS WITHOUT WATCH - ??
+    
     $scope.$watch( "post.viewer.has_voted",
         function (){
             ( $scope.post.viewer.has_voted > 0 ) ? $scope.hasVotedUp = "selected" : $scope.hasVotedUp = "" ;
@@ -137,6 +147,7 @@ postworld.controller('postVote',
                 $scope.hasVotedDown = "";
             }
         }, 1 );
+    
 
     // CAST VOTE ON THE POST
     $scope.spinnerClass = "";
@@ -146,7 +157,7 @@ postworld.controller('postVote',
             var vote_power = parseInt($window.pw.user.postworld.vote_power);
         // If they're not logged in, return false
         if( typeof vote_power === 'undefined' ){
-            alert("Must be logged in to vote.");
+            alert( "Must be logged in to vote." );
             return false;
         }
         // Define how many points have they already given to this post
@@ -159,20 +170,21 @@ postworld.controller('postVote',
             //alert( "Normalizing : " + setPoints );
         }
         // Setup parameters
-        var args = {
+        var vars = {
             post_id: $scope.post.ID,
             points: setPoints,
         };
         // Set Status
         $scope.voteStatus = "busy";
         $scope.spinnerClass = "icon-spin";
+
         // AJAX Call 
-        pwData.set_post_points ( args ).then(
+        $log.debug('pwPostVote : VOTE SUBMIT : ', vars );
+        pwData.setPostPoints ( vars ).then(
             // ON : SUCCESS
-            function(response) {    
-                //alert( JSON.stringify(response.data) );
+            function(response) {
                 // RESPONSE.DATA FORMAT : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
-                $log.debug('VOTE RETURN : ' + JSON.stringify(response) );
+                $log.debug('pwPostVote : VOTE RETURN : ' + JSON.stringify(response) );
                 if ( response.data.id == $scope.post.ID ){
                     // UPDATE POST POINTS
                     $scope.post.post_points = response.data.points_total;
@@ -220,17 +232,17 @@ postworld.controller('adminPostDropdown',
     $scope.menuOptions = [
         {
             name: "Quick Edit",
-            icon:"icon-pencil",
+            icon:"pwi-pencil",
             action:"quick-edit"
         },
         {
             name: "Edit",
-            icon:"icon-edit",
+            icon:"pwi-edit",
             action:"pw-edit",
         },
         {
             name: "WP Edit",
-            icon:"icon-edit-square",
+            icon:"pwi-edit-square",
             action:"wp-edit",
         },
         /*
@@ -242,7 +254,7 @@ postworld.controller('adminPostDropdown',
         */
         {
             name: "Trash",
-            icon:"icon-trash",
+            icon:"pwi-trash",
             action:"trash",
         }
     ];
@@ -285,8 +297,8 @@ postworld.controller('adminPostDropdown',
             getPostType : 'post';
 
         // Check if there's over ride menu options for this post type
-        var postTypeOverrideMenuOptions = $_.getObj( $window, 'pwSiteGlobals.controls.' + postType + '.menu_options' );
-        var defaultOverrideMenuOptions =  $_.getObj( $window, 'pwSiteGlobals.controls.post.menu_options' );
+        var postTypeOverrideMenuOptions = $_.getObj( $pw, 'config.controls.' + postType + '.menu_options' );
+        var defaultOverrideMenuOptions =  $_.getObj( $pw, 'config.controls.post.menu_options' );
 
         var output = ( postTypeOverrideMenuOptions ) ?
             postTypeOverrideMenuOptions : defaultOverrideMenuOptions;
@@ -295,8 +307,7 @@ postworld.controller('adminPostDropdown',
     
     }
 
-    var overrideMenuOptions = controlsObject.menu_options; // $scope.getOverrideMenuOptions( $scope.post );
-    
+    var overrideMenuOptions = $_.get( controlsObject, 'menu_options' );
     // If custom menu options are provided
     if( overrideMenuOptions != false ){
         // Custom menu items to over-ride defaults
@@ -322,12 +333,7 @@ postworld.controller('adminPostDropdown',
 
     ///// ROLES /////
     // Define actions which each role has access to
-    var actionsByRole = controlsObject.role_access; //$window.pwSiteGlobals.controls.post.role_access;
-
-    /*
-    $scope.$watch('post', function(value) {        
-    },1);
-    */
+    var actionsByRole = controlsObject.role_access;
 
     var initAttempts = 0;
     $scope.initMenu = function(){
@@ -375,19 +381,19 @@ postworld.controller('adminPostDropdown',
         // Setup empty menu options array
         $scope.userOptions = [];
 
-        // TODO : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
-
+        // @todo : CHECK POST OBJECT, IF USER ID = SAME AS POST AUTHOR
         // Build menu for user based on role
         angular.forEach( $scope.menuOptions, function( option ){
-            if( actionsByRole[ $scope.currentRole ][ $scope.postPossession ].indexOf( option.action ) != "-1" )
+            // Get the allowed actions
+            var allowedActions = $_.get( actionsByRole, $scope.currentRole + '.' + $scope.postPossession );
+            // Add only the allowed actions
+            if( $_.inArray( option.action, allowedActions ) )
                 $scope.userOptions.push( option );
         });
 
         // If no options added, set empty
         if ( $scope.userOptions == [] )
-            $scope.userOptions = "0";
-
-        
+            $scope.userOptions = "0";        
 
     }
     // Run the function
@@ -400,7 +406,7 @@ postworld.controller('adminPostDropdown',
             $scope.post.post_type : 'post';
 
         // Localize Options
-        var edit_post = $window.pwSiteGlobals.edit_post;
+        var edit_post = $pw.config.edit_post;
 
         // Check if that post type page name is defined
         var url = ( $_.objExists( edit_post, post_type + '.url' ) ) ?
@@ -447,30 +453,33 @@ postworld.controller('adminPostDropdown',
  /_/   \_\__,_|_| |_| |_|_|_| |_| |____/|_|  \___/| .__/ \__,_|\___/ \_/\_/ |_| |_|
                                                   |_|                              
 ////////// ------------ ADMIN COMMENTS DROPDOWN ------------ //////////*/   
-var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $log, pwCommentsService, $pw) {
+
+postworld.controller( 'adminCommentDropdown',
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwCommentsService', '$pw',
+    function($scope, $rootScope, $location, $window, $log, pwCommentsService, $pw){
 
     var comment = $scope.child;
 
     $scope.menuOptions = [
         {
             name: "Edit",
-            icon:"icon-edit",
+            icon:"pwi-edit",
             action:"edit",
         },
         {
             name: "Flag",
-            icon:"icon-flag",
+            icon:"pwi-flag",
             action:"flag",
         },
         {
             name: "Trash",
-            icon:"icon-trash",
+            icon:"pwi-trash",
             action:"trash",
         }
     ];
 
     // Actions which each role has access to
-    var actionsByRole = $window.pwSiteGlobals.controls.comment.role_access;
+    var actionsByRole = $pw.config.controls.comment.role_access;
 
     
     // Detect if the user owns the comment
@@ -525,4 +534,6 @@ var adminCommentDropdown = function ($scope, $rootScope, $location, $window, $lo
         }
     };
 
-};
+
+
+}]);

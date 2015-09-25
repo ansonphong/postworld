@@ -9,7 +9,16 @@
 				ng-src="{{ parent_post.image.sizes.thumbnail.url }}"
 				style="width:150px; height:150px;">
 		</div>
-		<h3>{{ parent_post.post_title }}</h3>
+		<h3>
+			{{ parent_post.post_title }}
+			<br>
+			<small>
+				TYPE : {{ parent_post.post_type }} /
+				ID : {{ parent_post.ID }}
+				<br>
+				{{ parent_post.post_timestamp * 1000 | date:"longDate" }}
+			</small> 
+		</h3>
 		<hr class="thin">
 		<button
 			type="button"
@@ -31,16 +40,16 @@
 
 	<!-- SELECT PARENT POST -->
 	<div ng-hide="parent_post">
-		<div ng-show="!showView('searchInput')">
+		<div ng-show="!uiShowView('searchInput')">
 			<button
 				type="button"
 				class="button"
-				ng-click="toggleView('searchInput'); focusElement('#pwSearchPostParent')">
+				ng-click="uiToggleView('searchInput'); uiFocusElement('#pwSearchPostParent')">
 				<i class="{{ labels.search_icon }}"></i>
 				{{ labels.search }}
 			</button>
 		</div>
-		<div ng-show="showView('searchInput')" style="position:relative;">
+		<div ng-show="uiShowView('searchInput')" style="position:relative;">
 			<div ng-show="loadingQuery" class="inner inner-right unit">
 				<i class="{{labels.loading_icon}}"></i>
 			</div>
@@ -55,7 +64,7 @@
 				typeahead="qPost.post_title as qPost.post_title for qPost in getPosts($viewValue) | filter:$viewValue"
 				typeahead-loading="loadingQuery"
 				typeahead-on-select="addPostParent($item);"
-				ng-blur="toggleView('searchInput');"
+				ng-blur="uiToggleView('searchInput');"
 				class="input-icon-left">
 		</div>
 	</div>

@@ -35,12 +35,14 @@ function pw_postmeta_metabox_init(){
 }
 
 ///// ENQUEUE STYLES & SCRIPTS /////
+/*
 add_action( 'admin_enqueue_scripts', 'pw_metabox_options_enqueue' );
 function pw_metabox_options_enqueue() {
 	$path = "/less/admin/";
 	wp_enqueue_style( 'i-child-admin', get_stylesheet_directory_uri().$path.'admin-styles.less' );
 	//wp_enqueue_script( 'script-name', get_template_directory_uri() . '/js/example.js', array(), '1.0.0', true );
 }
+*/
 
 ///// SETUP META DATA /////
 function pw_metabox_options_setup(){
@@ -61,9 +63,13 @@ function pw_metabox_options_save( $post_id ){
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
         return $post_id;
 
+    // Security Layer 
+    if ( !current_user_can( 'edit_post', $post_id ) )
+        return $post_id;
+
 	$meta_key = PW_POSTMETA_KEY;
 
-    $pwMeta = $_POST[ PW_POSTMETA_KEY ];
+    $pwMeta = _get( $_POST, $meta_key );
 
 	// SAVE I META
 	if( !empty( $pwMeta ) && is_string( $pwMeta ) ){

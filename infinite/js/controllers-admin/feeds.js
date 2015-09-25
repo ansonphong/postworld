@@ -1,10 +1,94 @@
-/*_    _       _           _       _____             _     
- (_)  / \   __| |_ __ ___ (_)_ __ |  ___|__  ___  __| |___ 
- | | / _ \ / _` | '_ ` _ \| | '_ \| |_ / _ \/ _ \/ _` / __|
- | |/ ___ \ (_| | | | | | | | | | |  _|  __/  __/ (_| \__ \
- |_/_/   \_\__,_|_| |_| |_|_|_| |_|_|  \___|\___|\__,_|___/
-                                                           
-////////////////////////////////////////////////////////////*/
+/*_____             _     
+ |  ___|__  ___  __| |___ 
+ | |_ / _ \/ _ \/ _` / __|
+ |  _|  __/  __/ (_| \__ \
+ |_|  \___|\___|\__,_|___/
+                          
+/////////////////////////*/
+
+postworldAdmin.directive( 'pwFeedOptions',
+	[ 'pwData', '_', 'pwPostOptions',
+	function( $pwData, $_, $pwPostOptions ){
+    return { 
+        link:function( $scope, element, attrs ){
+        	// Add Module Class
+        	element.addClass('pw-feed-options');
+
+
+        	///// FEED OPTIONS /////
+			$scope.feedOptions = {
+				view: $pwPostOptions.postView(),
+				views:{
+					grid:{
+						columns:[1,2,3,4,5,6],
+					}
+				},
+				query:{
+					post_type: $pwPostOptions.postType(),
+					post_status: $pwPostOptions.postStatus(),
+					orderby: $pwPostOptions.orderBy(),
+					order: $pwPostOptions.order(),
+					event_filter: $pwPostOptions.eventFilter(),
+					post_parent_from:[
+						{
+							value: 'top_level',
+							name: 'Top Level',
+							description: 'Show top level posts, with post_parent : 0.'
+						},
+						{
+							value: 'this_post_id',
+							name: 'This Post (Show Children)',
+							description: 'Show children of the current post, derived from : $post->ID global.'
+						},
+						{
+							value: 'this_post_parent',
+							name: 'This Post Parent (Show Siblings)',
+							description: 'Show siblings of the current post, derived from : $post->post_parent global.'
+						},
+						{
+							value: 'post_id',
+							name: 'Specific Post',
+							description: 'Select a specific post.'
+						},
+					],
+					exclude_posts_from:[
+						{
+							value: 'this_post_id',
+							name: 'This Post',
+							description: 'Exclude the current post',
+						},
+					],
+					include_posts_from:[
+						{
+							value: 'this_post_id',
+							name: 'This Post',
+							description: 'Include the current post',
+						},
+						{
+							value: 'this_post_parent',
+							name: 'This Post Parent',
+							description: 'Include the current posts parent',
+						},
+					],
+					author_from:[
+						{
+							value:'this_author',
+							name: 'This Author',
+							description: 'Include posts by the current post\'s author.',
+						},
+						{
+							value:'author_id',
+							name: 'Specific Author',
+							description: 'Select a specific author.',
+						},
+					],
+				},
+			};
+
+
+        }
+    };
+}]);
 
 postworldAdmin.directive( 'pwAdminFeeds', [ function(){
     return { 
@@ -21,59 +105,6 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.view = 'settings';
-
-	///// FEED OPTIONS /////
-	$scope.feedOptions = {
-		view: $pwPostOptions.postView(),
-		query:{
-			post_type: $pwPostOptions.postType(),
-			post_status: $pwPostOptions.postStatus(),
-			orderby: $pwPostOptions.orderBy(),
-			order: $pwPostOptions.order(),
-			event_filter: $pwPostOptions.eventFilter(),
-			post_parent_from:[
-				{
-					value: 'top_level',
-					name: 'Top Level',
-					description: 'Show top level posts, with post_parent : 0.'
-				},
-				{
-					value: 'this_post_id',
-					name: 'This Post (Show Children)',
-					description: 'Show children of the current post, derived from : $post->ID global.'
-				},
-				{
-					value: 'this_post_parent',
-					name: 'This Post Parent (Show Siblings)',
-					description: 'Show siblings of the current post, derived from : $post->post_parent global.'
-				},
-				{
-					value: 'post_id',
-					name: 'Specific Post',
-					description: 'Select a specific post.'
-				},
-			],
-			exclude_posts_from:[
-				{
-					value: 'this_post_id',
-					name: 'This Post',
-					description: 'Exclude the current post',
-				},
-			],
-			include_posts_from:[
-				{
-					value: 'this_post_id',
-					name: 'This Post',
-					description: 'Include the current post',
-				},
-				{
-					value: 'this_post_parent',
-					name: 'This Post Parent',
-					description: 'Include the current posts parent',
-				},
-			],
-		},
-	};
 
 	////////// FUNCTIONS //////////
 	$scope.newFeed = function(){
@@ -119,34 +150,6 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 		return $pwPostOptions.postClass( post_type );	
 	} 
 
-	///// FEED SETTINGS OPTIONS /////
-	$scope.feedSettingsOptions = {
-		'loadingIcon': [
-			'icon-spinner-1',
-			'icon-spinner-2',
-			'icon-spinner-3',
-			'icon-spinner-4',
-			'icon-spinner-5',
-			'icon-spinner-6',
-			'icon-seal-1',
-			'icon-triadic-1',
-			'icon-triadic-2',
-			'icon-triadic-3',
-			'icon-triadic-4',
-			'icon-triadic-5',
-			'icon-seed-of-life',
-			'icon-seed-of-life-fill',
-			'icon-merkaba',
-			'icon-target',
-			'icon-sun',
-			'icon-contrast',
-			'icon-loop',
-			'icon-hexagon-thick',
-			'icon-hexagon-medium',
-			'icon-hexagon-thin',
-			'icon-arrow-down-circle',
-		],
-	};
 
 	////////// POST PARENT //////////
 	$scope.selectOptionObj = function( optionValue ){
@@ -168,6 +171,19 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 		// If 'post id' and post_parent obect doesn't exist
 		else if( isPostId && !objExists )
 			$scope.selectedItem.query.post_parent = 0;
+	});
+
+	/// WATCH : QUERY › AUTHOR FROM ///
+	$scope.$watch('selectedItem.query.author_from', function(value){
+		var objExists = $_.objExists( $scope.selectedItem, 'query.author' );
+		var isAuthorId = ( value == 'author_id');
+		// If not 'post id' and post_parent object exists
+		if( !isAuthorId && objExists )
+			delete $scope.selectedItem.query.author;
+		// If 'author id' and post_parent obect doesn't exist
+		else if( isAuthorId && !objExists )
+			$scope.selectedItem.query.author = 0;
+	
 	});
 
 	////////// REMOVE NULL VALUES //////////

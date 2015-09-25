@@ -1,22 +1,46 @@
 <?php
-	if( !is_array($show) )
-		$show = array(
-			'height',
-			'interval',
-			'max_slides',
-			'transition',
-			'no_pause',
-			'hyperlink',
-			'show_title',
-			'show_excerpt',
-			);
+/**
+ * SET UNIQUE INSTANCE
+ * This is used to identify the slider's MVC 
+ */
+$instance = 'sliderSettings_'.pw_random_string();
+
+if( !isset( $options ) )
+	$options = array();
+$options = pw_admin_options( 'slider', $options );
+
+/**
+ * SET DEFAULT OPTIONS TO SHOW
+ * These options can be overriden
+ * by passing in an array of options.
+ */
+if( !is_array($show) )
+	$show = array(
+		'height',
+		'interval',
+		'max_slides',
+		'transition',
+		'no_pause',
+		'hyperlink',
+		'show_title',
+		'show_excerpt',
+		//'proportion'
+		);
 ?>
-<div class="columns-2">
+
+<script>
+	postworld.controller( '<?php echo $instance ?>', function($scope){
+		$scope.options = <?php echo json_encode( $options ) ?>;
+	});
+</script>
+
+<div ng-controller="<?php echo $instance ?>">
+
 <?php
 	///// HEIGHT /////
 	if( in_array( 'height', $show ) ){
 	?>
-	<span class="icon-md"><i class="icon-arrows-v"></i></span>
+	<span class="icon-md"><i class="pwi-arrows-v"></i></span>
 	<input
 		id="input-height"
 		class="short"
@@ -32,7 +56,7 @@
 	///// INTERVAL /////
 	if( in_array( 'interval', $show ) ){
 	?>
-	<span class="icon-md"><i class="icon-clock"></i></span>
+	<span class="icon-md"><i class="pwi-clock"></i></span>
 	<input
 		id="input-interval"
 		class="short"
@@ -48,7 +72,7 @@
 	///// MAXIMUM SLIDES /////
 	if( in_array( 'max_slides', $show ) ){
 	?>
-	<span class="icon-md"><i class="icon-plus"></i></span>
+	<span class="icon-md"><i class="pwi-plus"></i></span>
 	<input type="text"
 		id="input-maxposts"
 		size="3"
@@ -59,26 +83,10 @@
 	}
 ?>
 <?php
-	///// TRANSITION /////
-	if( in_array( 'transition', $show ) ){
-	?>
-	<label class="inner" for="select-transition"><i class="icon-magic"></i> Transition</label>
-	<select
-		class="labeled"
-		id="select-transition"
-		ng-model="<?php echo $ng_model; ?>.transition"
-		ng-options="option.slug as option.name for option in sliderOptions.slider.transition">
-	</select>
-	
-	<hr class="thin">
-	<?php
-	}
-?>
-<?php
 	///// HYPERLINK /////
 	if( in_array( 'hyperlink', $show ) ){
 	?>
-	<span class="icon-md"><i class="icon-link"></i></span>
+	<span class="icon-md"><i class="pwi-link"></i></span>
 	<input type="checkbox"
 		id="input-hyperlink"
 		ng-model="<?php echo $ng_model; ?>.hyperlink">
@@ -91,7 +99,7 @@
 	///// NO PAUSE /////
 	if( in_array( 'no_pause', $show ) ){
 	?>
-	<span class="icon-md"><i class="icon-pause"></i></span>
+	<span class="icon-md"><i class="pwi-pause"></i></span>
 	<input type="checkbox"
 		id="input-no_pause"
 		ng-model="<?php echo $ng_model; ?>.no_pause">
@@ -104,7 +112,7 @@
 	///// SHOW TITLE /////
 	if( in_array( 'show_title', $show ) ){
 	?>
-	<span class="icon-md"><i class="icon-eye"></i></span>
+	<span class="icon-md"><i class="pwi-eye"></i></span>
 	<input type="checkbox"
 		id="input-show_title"
 		ng-model="<?php echo $ng_model; ?>.show_title">
@@ -117,7 +125,7 @@
 	///// SHOW EXCERPT /////
 	if( in_array( 'show_excerpt', $show ) ){
 	?>
-	<span class="icon-md"><i class="icon-eye"></i></span>
+	<span class="icon-md"><i class="pwi-eye"></i></span>
 	<input type="checkbox"
 		id="input-show_excerpt"
 		ng-model="<?php echo $ng_model; ?>.show_excerpt">
@@ -126,4 +134,41 @@
 	<?php
 	}
 ?>
+<?php
+	///// TRANSITION /////
+	if( in_array( 'transition', $show ) ){
+	?>
+	<label class="inner" for="select-transition">
+		<i class="pwi-wand"></i>
+		Transition
+	</label>
+	<select
+		class="labeled"
+		id="select-transition"
+		ng-model="<?php echo $ng_model; ?>.transition"
+		ng-options="option.value as option.name for option in options.transition">
+	</select>
+	<hr class="thin">
+	<?php
+	}
+?>
+<?php
+	///// PROPORTION /////
+	if( in_array( 'proportion', $show ) ){
+	?>
+	<label class="inner" for="select-proportion">
+		<i class="pwi-square-thin"></i>
+		Proportion
+	</label>
+	<select
+		class="labeled"
+		id="select-proportion"
+		ng-model="<?php echo $ng_model; ?>.proportion"
+		ng-options="option.value as option.name for option in options.proportion">
+	</select>
+	<hr class="thin">
+	<?php
+	}
+?>
+
 </div>

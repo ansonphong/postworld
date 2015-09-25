@@ -3,7 +3,7 @@
 	// Feeds
 	$pwFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_FEEDS ) );
 	// Feed Settings
-	$pwFeedSettings = i_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
+	$pwFeedSettings = pw_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
 	// Feed Templates
 	$htmlFeedTemplates = pw_get_templates(
 		array(
@@ -22,24 +22,69 @@
 		)['feeds'];
 ?>
 <script>
-	postworldAdmin.controller( 'pwFeedsDataCtrl', [ '$scope', function( $scope ){
+	postworldAdmin.controller( 'pwFeedsDataCtrl',
+		[ '$scope', '_', '$timeout', 'pwPostOptions',
+		function( $scope, $_, $timeout, $pwPostOptions ){
 		$scope.pwFeeds = <?php echo json_encode( $pwFeeds ); ?>;
 		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;
+		if( _.isEmpty($scope.pwFeedSettings) )
+			$scope.pwFeedSettings = {};
+
 		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
 		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
 		$scope.contexts = <?php echo json_encode( pw_get_contexts( array( 'default', 'standard', 'archive', 'search', 'taxonomy', 'post-type' ) ) ); ?>;
+	
+		// Watch Feed Settings
+		$scope.$watch( 'pwFeedSettings', function(val){
+			// Delete empty values
+			$_.removeEmpty( $scope.pwFeedSettings );
+		}, 1);
+
+		// Watch Feed Settings
+		$scope.$watch( 'pwFeeds', function(val){
+			// Delete empty values
+			$_.removeEmpty( $scope.pwFeeds );
+		}, 1);
+
+		// Get Taxonomy Terms
+		$pwPostOptions.taxTerms( $scope, 'taxTerms' );
+
+
+		///// TRANSFORM QUERIES /////
+		$scope.addTaxQuery = function( query ){
+			if( !$_.objExists( query, 'tax_query' ) )
+				query.tax_query = [];
+			var addTaxQuery = {
+				query_id: $_.randomString(8),
+				include_children: true,
+				operator: 'IN',
+				field: 'term_id'
+			};
+			query.tax_query.push(addTaxQuery);
+		}
+		$scope.removeTaxQuery = function( query, taxQuery ){
+			query.tax_query = _.reject(
+				query.tax_query,
+				function( thisQuery ){ return ( thisQuery.query_id == taxQuery.query_id ); }
+				);
+		}
+
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld feeds wrap" ng-cloak>
+<div class="postworld feeds wrap" ng-cloak>
 	<div
 		pw-admin
 		pw-admin-feeds
+		pw-feed-options
 		ng-controller="pwFeedsDataCtrl"
 		ng-cloak>
+
+		<!--{{taxTerms}}-->
+
 		
 		<h1>
-			<i class="icon-th-small"></i>
+			<i class="pwi-th-small"></i>
 			Feeds
 			<button class="add-new-h2" ng-click="newFeed()">Add New Feed</button>
 		</h1>
@@ -54,10 +99,10 @@
 					<li
 						ng-click="selectItem('settings');"
 						ng-class="menuClass('settings')">
-						<i class="icon-gear"></i> Settings
+						<i class="pwi-gear"></i> Settings
 					</li>
 				</ul>
-					<hr class="thin">
+				<hr class="thin">
 				<ul class="list-menu">
 					<li
 						ng-repeat="item in pwFeeds"
@@ -74,44 +119,18 @@
 				<div ng-show="showView('settings')">
 					
 					<div class="well">
-
 						<!-- SAVE BUTTON -->
-						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
-		
-						<h3><?php ___('feeds.settings.loading_icon') ?></h3>
-
-						<!-- DROPDOWN -->
-						<span
-							class="dropdown">
-							<!-- SELECTED ITEM -->
-							<span
-								dropdown-toggle
-								class="area-select area-select-icon">
-								<i class="{{ pwFeedSettings.loading_icon }} icon-spin"></i>
-							</span>
-							<!-- MENU -->
-							<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
-								<li
-									class="select-icon"
-									ng-repeat="icon in feedSettingsOptions.loadingIcon"
-									ng-click="pwFeedSettings.loading_icon = icon">
-									<i
-										class="{{ icon }}"></i>
-								</li>
-							</ul>
-						</span>
-					</div>
-
-					<div class="well">
-						<!-- SAVE BUTTON -->
-						<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
+						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
 		
 						<h3>Contexts</h3>
 
-						<table>
+						<table
+							width="100%"
+							pw-ui
+							ui-views="{}">
 							<tr ng-repeat="context in contexts"
 								valign="top">
-								<th scope="row" align="left">
+								<th scope="row" align="left" width="25%">
 									<span
 										tooltip="{{context.name}}"
 										tooltip-popup-delay="333">
@@ -120,36 +139,53 @@
 										</th>
 									</span>
 								<td>
-									<label class="inner">View</label>
-									<select
-										id="feed_view"
-										class="labeled"
-										ng-model="pwFeedSettings.context[context.name].view.current"
-										ng-options="value for value in feedOptions.view">
-										<option value="">Default</option>
-									</select>
 
-									<!--
-									FEED TEMPLATE :
-									BLOCKS : 
-									-->
-								
+									<button
+										type="button"
+										class="button"
+										ng-class="uiSetClass('template_'+context.name)"
+										ng-click="uiToggleView('template_'+context.name)">
+										<i class="pwi-th-large"></i>
+										Template
+									</button>
+
+									<button
+										type="button"
+										class="button"
+										ng-class="uiSetClass('options_'+context.name)"
+										ng-click="uiToggleView('options_'+context.name)">
+										<i class="pwi-gear"></i>
+										Options
+									</button>
+
+									<div
+										ng-show="uiShowView('template_'+context.name)">
+										<?php echo pw_feed_template_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+										<hr class="thin">
+										<?php echo pw_feed_variable_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+										<hr class="thin">
+									</div>
+
+									<div
+										ng-show="uiShowView('options_'+context.name)">
+										OPTIONS
+									</div>
+
 								</td>
 							</tr>
 						</table>
 
 					</div>
-
 					
-					{{ pwFeedSettings }}
-
 				</div>
 
 
-				<!-- ///// EDIT SETTINGS ///// -->
+				<!-- ///// EDIT ITEMS ///// -->
 				<div ng-show="showView('editItem')">
 
-					<h3><i class="icon-gear"></i> <?php ___('feeds.item_title'); ?></h3>
+
+
+					<h3><i class="pwi-gear"></i> <?php ___('feeds.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
@@ -159,7 +195,7 @@
 								tooltip="<?php ___('feeds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.name') ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-name"
@@ -174,7 +210,7 @@
 								tooltip="<?php ___('feeds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.id') ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
@@ -182,7 +218,7 @@
 								tooltip="<?php ___('feeds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
-								<i class="icon-edit"></i>
+								<i class="pwi-edit"></i>
 							</button>
 							<input
 								id="item-id"
@@ -203,7 +239,7 @@
 								tooltip="<?php ___('feeds.preload_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.preload'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-preload"
@@ -218,7 +254,7 @@
 								tooltip="<?php ___('feeds.increment_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.increment'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-load_increment"
@@ -233,7 +269,7 @@
 								tooltip="<?php ___('feeds.offset_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.offset'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-offset"
@@ -249,274 +285,42 @@
 					<h3
 						tooltip="{{ selectedItem.query | json }}"
 						tooltip-popup-delay="333">
-						<i class="icon-search"></i> Query
+						<i class="pwi-search"></i> Query
 					</h3>
 
-					<div class="pw-row">
-						<div class="pw-col-3">
-							<label
-								for="query-post_type"
-								class="inner">
-								<?php ___('query.post_type'); ?>
-							</label>
-							<select
-								id="query-post_type"
-								class="labeled"
-								ng-options="key as value for (key, value) in feedOptions.query.post_type"
-								ng-model="selectedItem.query.post_type"
-								multiple>
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="query-post_status"
-								class="inner">
-								<?php ___('query.post_status'); ?>
-							</label>
-							<select
-								id="query-post_status"
-								class="labeled"
-								ng-options="item.slug as item.name for item in feedOptions.query.post_status"
-								ng-model="selectedItem.query.post_status">
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="query-post_class"
-								class="inner">
-								<?php ___('query.post_class'); ?>
-							</label>
-							<select
-								id="query-post_class"
-								class="labeled"
-								ng-options="key as value for (key, value) in postClassOptions()"
-								ng-model="selectedItem.query.post_class">
-								<option value="">Any</option>
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="query-offset"
-								class="inner"
-								tooltip="<?php ___('query.offset_info'); ?>"
-								tooltip-popup-delay="333">
-								<?php ___('query.offset'); ?>
-								<i class="icon-info-circle"></i>
-							</label>
-							<input
-								id="query-offset"
-								class="labeled"
-								type="number"
-								ng-model="selectedItem.query.offset">
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="query-orderby"
-								class="inner">
-								<?php ___('query.orderby'); ?>
-							</label>
-							<select
-								id="query-orderby"
-								class="labeled"
-								ng-options="item.slug as item.name for item in feedOptions.query.orderby"
-								ng-model="selectedItem.query.orderby">
-								
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="query-order"
-								class="inner">
-								<?php ___('query.order'); ?>
-							</label>
-							<select
-								id="query-order"
-								class="labeled"
-								ng-options="item.slug as item.name for item in feedOptions.query.order"
-								ng-model="selectedItem.query.order">
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="query-posts_per_page"
-								class="inner"
-								tooltip="<?php ___('query.posts_per_page_info'); ?>"
-								tooltip-popup-delay="333">
-								<?php ___('query.posts_per_page'); ?>
-								<i class="icon-info-circle"></i>
-							</label>
-							<input
-								id="query-posts_per_page"
-								class="labeled"
-								type="number"
-								ng-model="selectedItem.query.posts_per_page">
-						</div>
-
-						<div class="pw-col-3">
-							<label
-								for="query-event_filter"
-								class="inner">
-								<i class="icon-calendar"></i>
-								<?php ___('query.event_filter'); ?>
-							</label>
-							<select
-								id="query-event_filter"
-								class="labeled"
-								ng-options="item.value as item.name for item in feedOptions.query.event_filter"
-								ng-model="selectedItem.query.event_filter">
-								<option value=""><?php ___('general.none'); ?></option>
-							</select>
-						</div>
-
-					</div>
-
-					<div class="pw-row">
-						<div class="pw-col-3">
-							<label
-								for="query-post_parent_from"
-								class="inner">
-								<i class="icon-flow-children"></i>
-								<?php ___('query.post_parent'); ?>
-							</label>
-							<select
-								id="query-post_parent_from"
-								class="labeled"
-								ng-options="item.value as item.name for item in feedOptions.query.post_parent_from"
-								ng-model="selectedItem.query.post_parent_from"
-								tooltip="{{ selectOptionObj( 'query.post_parent_from' ).description }}"
-								tooltip-placement="bottom">
-								<option value=""><?php ___('general.none'); ?></option>
-							</select>
-						</div>
-
-						<div class="pw-col-3" ng-show="selectedItem.query.post_parent_from == 'post_id'">
-							<label
-								for="query-post_parent_id"
-								class="inner"
-								tooltip="<?php ___('query.post_parent_id_info'); ?>"
-								tooltip-popup-delay="333">
-								<?php ___('query.post_parent_id'); ?>
-							</label>
-							<input
-								id="query-post_parent_id"
-								class="labeled"
-								type="number"
-								ng-model="selectedItem.query.post_parent">
-
-						</div>
-
-						<div class="pw-col-3">
-							<label
-								for="query-exclude_posts_from"
-								class="inner">
-								<?php ___('query.exclude_posts'); ?>
-							</label>
-							<select
-								id="query-exclude_posts_from"
-								class="labeled"
-								ng-options="item.value as item.name for item in feedOptions.query.exclude_posts_from"
-								ng-model="selectedItem.query.exclude_posts_from"
-								tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
-								tooltip-placement="bottom">
-								<option value=""><?php ___('general.none'); ?></option>
-							</select>
-						</div>
-
-						<div class="pw-col-3">
-							<label
-								for="query-include_posts_from"
-								class="inner">
-								<?php ___('query.include_posts'); ?>
-							</label>
-							<select
-								id="query-include_posts_from"
-								class="labeled"
-								ng-options="item.value as item.name for item in feedOptions.query.include_posts_from"
-								ng-model="selectedItem.query.include_posts_from"
-								tooltip="{{ selectOptionObj( 'query.include_posts_from' ).description }}"
-								tooltip-placement="bottom">
-								<option value=""><?php ___('general.none'); ?></option>
-							</select>
-						</div>
-
-					</div>
+					<?php echo pw_feed_query_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 
 					<div class="space-2"></div>
-					
+
 					<hr class="thin">
 					
-					<h3><i class="icon-cube"></i> <?php ___('feeds.view.title'); ?></h3>
-					<div class="pw-row">
-						<div class="pw-col-3">
-							<label
-								for="feed_view"
-								class="inner">
-								<?php ___('feeds.view.current'); ?>
-							</label>
-							<select
-								id="feed_view"
-								class="labeled"
-								ng-model="selectedItem.view.current"
-								ng-options="value for value in feedOptions.view">
-								
-							</select>
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="feed_view_options"
-								class="inner">
-								<?php ___('feeds.view.options'); ?>
-							</label>
-							<select
-								id="feed_view_options"
-								class="labeled"
-								ng-model="selectedItem.view.options"
-								ng-options="value for value in feedOptions.view"
-								multiple>
-							</select>
-						</div>
+					<h3><i class="pwi-cube"></i> <?php ___('feeds.view.title'); ?></h3>
+					<?php echo pw_feed_template_options( array( 'ng_model' => 'selectedItem' ) ); ?>
+					<hr class="thin">
+					<?php echo pw_feed_variable_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 
-						<div class="pw-col-3">
-							<label
-								for="item-feed_template"
-								class="inner">
-								<?php ___('feeds.feed_template'); ?>
-							</label>
-							<select
-								id="item-feed_template"
-								class="labeled"
-								ng-model="selectedItem.feed_template"
-								ng-options="key as key for (key, value) in htmlFeedTemplates">
-							</select>
-						</div>
+					<h3>
+						<i class="pwi-code"></i>
+						Shortcode
+					</h3>
+					<input
+						type="text"
+						class="un-disabled"
+						style="width:100%;"
+						value='[pw-feed id="{{ selectedItem.id }}"]'
+						
+						select-on-click>
 
-						<div class="pw-col-3">
-							<label
-								for="item-aux_template"
-								class="inner">
-								<?php ___('feeds.aux_template'); ?>
-							</label>
-							<select
-								id="item-aux_template"
-								class="labeled"
-								ng-model="selectedItem.aux_template"
-								ng-options="key as key for (key, value) in phpFeedTemplates">
-								<option value=""><?php ___('general.none'); ?></option>
-							</select>
-						</div>
-
-					</div>
-					
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
 		
 					<!-- DELETE BUTTON -->
 					<button
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'pwFeeds')">
-						<i class="icon-close"></i>
+						<i class="pwi-close"></i>
 						<?php ___('feeds.delete'); ?>
 					</button>
 
@@ -524,7 +328,7 @@
 					<button
 						class="button deletion"
 						ng-click="duplicateItem(selectedItem,'pwFeeds')">
-						<i class="icon-copy-2"></i>
+						<i class="pwi-copy-2"></i>
 						<?php ___('feeds.duplicate'); ?>
 					</button>
 
@@ -532,29 +336,37 @@
 			</div>
 		</div>
 
-		<hr>
+		<?php if( pw_dev_mode() ) : ?>
+			<hr class="thick">
+			<div class="pw-dev well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<div class="well">
+					<h3>$scope.pwFeedSettings</h3>
+					<pre><code>{{ pwFeedSettings | json }}</code></pre>
+				</div>
 
-		<hr class="thick">
+				<div class="well">
+					<h3>$scope.pwFeeds</h3>
+					<pre><code>{{ pwFeeds | json }}</code></pre>
+				</div>
+			</div>
 
-		<!--
-		<pre>pwFeedSettings : {{ pwFeedSettings | json }}</pre>
-		<pre>pwFeeds : {{ pwFeeds | json }}</pre>
-		-->
-
-		<!--
-		RADIO BUTTONS
-		<b><i class="icon-calendar"></i> Events Filter</b>
-		<br>
-		<div class="btn-group">
-			<label
-				ng-repeat="option in eventOptions.timeFilter"
-				class="btn"
-				ng-model="eventInput.timeFilter"
-				btn-radio="option.value">
-				{{ option.name }}
-			</label>
-		</div>
-		-->
+			<!--
+			RADIO BUTTONS
+			<b><i class="pwi-calendar"></i> Events Filter</b>
+			<br>
+			<div class="btn-group">
+				<label
+					ng-repeat="option in eventOptions.timeFilter"
+					class="btn"
+					ng-model="eventInput.timeFilter"
+					btn-radio="option.value">
+					{{ option.name }}
+				</label>
+			</div>
+			-->
+				
+		<?php endif; ?>
 
 
 

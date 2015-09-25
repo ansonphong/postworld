@@ -27,6 +27,13 @@ postworld.controller('inputSearch',
  |____/ \___|\__,_|_|  \___|_| |_| |_|   |_|\___|_|\__,_|___/
                                                              
 ////////// ------------ SEARCH FIELDS CONTROLLER ------------ //////////*/
+
+postworld.directive( 'pwSearchFields', [function(){
+        return { 
+            controller: 'searchFields'
+        };
+}]);
+
 postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
@@ -62,10 +69,44 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
         
         }, 1 );
 
-    /*
-    $scope.$on('updateUsername', function(username) { 
-        $scope.feedQuery.author_name = username;
-    });
-    */
     
 }]);
+
+
+
+
+postworld.directive('pwSelectUser',
+    [ '$log', '_', '$pw', 'pwData', function( $log, $_, $pw, $pwData ){
+
+        return{
+            link: function( $scope, element, attrs ){
+                
+                ///// USER INIT ////
+                // This object is used to initialize the select user data via AJAX
+                // And is currently in development
+                attrs.$observe('userInit', function(val) {
+                    $log.debug( "selectUser.userInit", $scope.$eval(val) );
+                });
+
+                $scope.selectedUser = {};
+
+                $scope.selectUser = function( user ){
+                    $scope.selectedUser = user;
+                }
+
+                 $scope.unselectUser = function( user ){
+                    $scope.selectedUser = {};
+                }
+
+                $scope.userIsSelected = function(){
+                    return !_.isEmpty( $scope.selectedUser );
+                }
+
+            },
+        }
+
+    
+
+}]);
+
+

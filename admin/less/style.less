@@ -1,5 +1,3 @@
-// Lineage Infinite Styles
-
 .postworld {
 
 	///// BOOTSTRAP MODULES /////
@@ -13,6 +11,7 @@
 	@import 'bootstrap/tooltip.less';
 	@import 'bootstrap/utilities.less';
 	@import 'bootstrap/grid.less';
+	@import 'bootstrap/navs.less';
 	@import 'bootstrap/tooltip.less';
 
 	///// POSTWORLD ADMIN LESS /////
@@ -40,12 +39,25 @@
 
 	///// POSTWORLD MODULES /////
 	@import 'modules/backgrounds.less';
+	@import 'modules/select-icon.less';
 
+
+	///// WIDGETS /////
+	@import 'widgets.less';
 
 	button.add-new-h2{
 		line-height:1.4em;
 		cursor: pointer;
 		outline:none;
+	}
+
+	.pw-invisible{
+		width:0;
+		height:0;
+		overflow:hidden;
+		position:absolute;
+		right:0;
+		opacity:0
 	}
 
 	hr.thin{
@@ -61,13 +73,34 @@
 		}
 	}
 
+	.progress-bar-container{
+		margin-top:2px;
+		background: fade( #000, 10 );
+	}
+
+	.progress-bar{
+		height:10px;
+		background: #2ea2cc;
+		transition: width 1s linear;
+	}
+
+	input.un-disabled{
+		color: #000;
+	}
+
+
+	small.micro{
+		font-size: .66em;
+		padding: 2px;
+		opacity: .5;
+	}
 
 
 	/// HEADINGS ///
 
 	&.pw-metabox{
 		h3{
-			padding:10px 3px 5px;
+			padding:10px 3px 5px !important;
 			opacity:.75;
 		}
 		h4{
@@ -86,6 +119,7 @@
 
 		h2{
 			margin:5px 10px;
+			padding: 0px 15px 0px 0;
 		}
 		h3{
 			cursor:auto;
@@ -113,12 +147,13 @@
 	/// BUTTONS ///
 	.btn-group{
 		label{
+			color: #000;
 			background:#f2f2f2;
 			border:1px solid #ccc;
-
 			&.active{
 				background:#444;
 				color:#fff;
+				border:1px solid #444;
 			}
 		}
 	}
@@ -128,8 +163,9 @@
 	}
 
 	table{
-		td.label{
+		td.label, th.label{
 			text-align: right;
+			padding-right:10px;
 		}
 		td.control{
 			
@@ -140,16 +176,19 @@
 	/// INPUTS ///
 
 	.input-icon{
+		display:block;
+		text-align: center;
 		position:absolute;
-		padding:5px 11px;
-
+		padding:6px;
+		font-size:15px;
+		width:30px;
+		opacity:.66;
 	}
 	
 	.input-icon-left{
-		padding-left:25px;
+		padding-left:30px;
 	}
 	
-
 	.align-center{
 		text-align: center;
 	}
@@ -338,11 +377,20 @@
 .icon-md{
 	display:inline-block;
 	min-width:24px;
+	text-align:center;
+}
+
+.icon-sm{
+	width:20px;
+	display:inline-block;
+	text-align:center;
 }
 
 
+
+
 /* Animated rotating icon */
-.icon-spin {
+.icon-spin, .pwi-spin {
   display: inline-block;
   -moz-animation: spin 2s infinite linear;
   -o-animation: spin 2s infinite linear;

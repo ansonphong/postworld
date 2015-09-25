@@ -69,6 +69,10 @@
 	}
 }
 
+.relative{
+	position: relative;
+}
+
 .inner{
 	position:absolute;
 	&.inner-right{
@@ -111,6 +115,30 @@
 
 .pad-col-lg{
 	padding: 0 20px 0 0;
+}
+
+
+
+
+.row.gutter-sm{
+	margin: 0 -4px;
+	[class^='col-']{
+		padding: 0 4px;
+	}
+}
+
+.row.gutter-md{
+	margin: 0 -10px;
+	[class^='col-']{
+		padding: 0 10px;
+	}
+}
+
+.row.gutter-lg{
+	margin: 0 -20px;
+	[class^='col-']{
+		padding: 0 20px;
+	}
 }
 
 

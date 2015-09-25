@@ -37,10 +37,10 @@ postworldAdmin.factory('iData', function ($resource, $q, $log, $window) {
 			return deferred.promise;		
 		},
 		
-		i_save_option: function( args ) {
-			$log.debug('wp_ajax.i_save_option',args);
+		pw_save_option: function( args ) {
+			$log.debug('wp_ajax.pw_save_option',args);
 			var params = { args: args };
-			return this.wp_ajax('i_save_option',params);
+			return this.wp_ajax('pw_save_option',params);
 		},
 
 

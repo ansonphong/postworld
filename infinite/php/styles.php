@@ -1,14 +1,4 @@
 <?php
-add_action( 'wp_enqueue_scripts', 'i_include_styles' );
-function i_include_styles(){
-	// BOOSTRAP LESS
-	wp_enqueue_style( 'bootstrap-less', get_infinite_directory_uri() . '/packages/bootstrap/less/bootstrap.less' );
-    //wp_enqueue_style( 'bootstrap-cdn', '//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css' );
-
-	// INFINITE LESS
-	wp_enqueue_style( 'infinite-style-less', get_infinite_directory_uri() . '/less/style.less' );
-}
-
 
 // Prepare URL for Less Variable
 function i_less_prepare_url( $url ){
@@ -19,17 +9,40 @@ function i_less_prepare_url( $url ){
 }
 
 // pass variables into all .less files
-add_filter( 'less_vars', 'my_less_vars', 10, 2 );
-function my_less_vars( $vars, $handle ) {
+add_filter( 'less_vars', 'pw_less_vars', 10, 2 );
+function pw_less_vars( $vars, $handle ) {
+
+    ///// CACHE /////
+    global $phpLessVarsCache;
+    if( is_array( $phpLessVarsCache ) )
+        return $phpLessVarsCache;
 
 	////////// IMPORT STYLES //////////
-    $i_styles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
-
-    //echo "<pre>". json_encode( $i_styles, JSON_PRETTY_PRINT ) ."</pre>" ;
+    $pwStyles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
 
 	///// Bootstrap Vars /////
-    //$vars['body-bg'] = $i_styles['element']['body']['background-color'];
-    $vars['grid-gutter-width'] = $i_styles['var']['bootstrap']['grid-gutter-width'];
+    //$vars['body-bg'] = $pwStyles['element']['body']['background-color'];
+
+    // RECENTLY HIDDEN    
+    //$vars['grid-gutter-width'] = $pwStyles['var']['bootstrap']['grid-gutter-width'];
+
+
+    ///// Infinite Style Vars /////
+    // Systematically define all variables
+    // Value of : "elements -> h1 -> color" >> becomes LESS variable >> '@h1-color'
+
+    ///// TYPES /////
+    foreach( $pwStyles as $typeSlug => $typeObject ){
+
+        foreach( $typeObject as $elementSlug => $elementObject ){
+            ///// PROPERTIES /////
+            foreach( $elementObject as $propertySlug => $propertyValue ){
+                // Use the variable name
+                $vars[$propertySlug] = $pwStyles[$typeSlug][$elementSlug][$propertySlug];
+            }
+        }
+
+    }
 
     ///// Directory Paths /////
     global $i_paths;
@@ -39,37 +52,10 @@ function my_less_vars( $vars, $handle ) {
     $vars['i-templates-override'] = i_less_prepare_url( $i_paths['templates']['url']['override'] );
     $vars['i-templates-default'] = i_less_prepare_url( $i_paths['templates']['url']['default'] );
 
-    ///// Infinite Style Vars /////
-    // Systematically define all variables
-    // Value of : "elements -> h1 -> color" >> becomes LESS variable >> '@h1-color'
+    ///// CACHE /////
+    $phpLessVarsCache = $vars;
 
-    ///// TYPES /////
-    foreach( $i_styles as $typeSlug => $typeObject ){
-        ///// ELEMENTS & CLASSES /////
-        if( $typeSlug == 'element' || $typeSlug == 'class' ){
-            foreach( $typeObject as $elementSlug => $elementObject ){
-                ///// PROPERTIES /////
-                foreach( $elementObject as $propertySlug => $propertyValue ){
-                    // Define the variable name
-                    $property_var = $elementSlug . '-' . $propertySlug;
-                    $property_var = strtolower( str_replace( ':', '-', $property_var ) );
-                    $vars[$property_var] = $i_styles[$typeSlug][$elementSlug][$propertySlug];
-                }
-            }
-        }
-        ///// VARIABLES /////
-        else{
-            foreach( $typeObject as $elementSlug => $elementObject ){
-                ///// PROPERTIES /////
-                foreach( $elementObject as $propertySlug => $propertyValue ){
-                    // Use the variable name
-                    $vars[$propertySlug] = $i_styles[$typeSlug][$elementSlug][$propertySlug];
-                }
-            }
-        }
-    }
-    
-    //echo json_encode($vars);
+   // pw_log( $vars );
 
     return $vars;
 }

@@ -39,7 +39,7 @@ function pw_metabox_init_background(){
                 'Background',
                 'pw_background_meta_init',
                 $post_type,
-                'normal',
+                'side',
                 'core',
                 $args //  Pass callback variables
                 );
@@ -76,6 +76,10 @@ function pw_background_meta_save( $post_id ){
 
 	// Stop autosave to preserve meta data
     if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
+        return $post_id;
+
+    // Security Layer 
+    if ( !current_user_can( 'edit_post', $post_id ) )
         return $post_id;
 
     // Get the posted JSON string    

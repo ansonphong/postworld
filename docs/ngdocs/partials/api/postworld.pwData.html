@@ -1,0 +1,53 @@
+<h1><code ng:non-bindable="">pwData</code>
+<div><span class="hint">service in module <code ng:non-bindable="">postworld</code>
+</span>
+</div>
+</h1>
+<div><h2 id="dependencies">Dependencies</h2>
+<ul class="dependencies"><li><code ng:non-bindable=""><a href="#/api/ng.$resource">$resource</a></code>
+</li>
+<li><code ng:non-bindable=""><a href="#/api/ng.$q">$q</a></code>
+</li>
+</ul>
+<div class="member method"><h2 id="methods">Methods</h2>
+<ul class="methods"><li><h3 id="methods_gettemplate">getTemplate(meta)</h3>
+<div class="gettemplate"><div class="postworld-service-gettemplate-page"><p>Retreives the URL of a requested template.</p>
+</div><h5 id="methods_gettemplate_parameters">Parameters</h5><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>meta</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="postworld-service-gettemplate-page"><p>Post type key is optional. 
+<code>{ subdir:&#39;panels&#39;, post_type: &#39;post&#39;, view:&#39;list&#39; }</code></p>
+</div></td></tr></tbody></table><h5 id="methods_gettemplate_returns">Returns</h5><table class="variables-matrix"><tr><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="postworld-service-gettemplate-page"><p>The URL of the requested template, or <code>false</code> if it doesn&#39;t exist.</p>
+</div></td></tr></table></div>
+</li>
+<li><h3 id="methods_setwpusermeta">setWpUsermeta(args)</h3>
+<div class="setwpusermeta"><div class="postworld-service-setwpusermeta-page"><p>Sets user meta values in the WordPress database.</p>
+</div><h5 id="methods_setwpusermeta_parameters">Parameters</h5><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>args</td><td><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="postworld-service-setwpusermeta-page"><p>See example.</p>
+</div></td></tr></tbody></table><h5 id="methods_setwpusermeta_returns">Returns</h5><table class="variables-matrix"><tr><td><a href="" class="label type-hint type-hint-promise">promise</a></td><td><div class="postworld-service-setwpusermeta-page"><p>Returns data from the server function called.</p>
+</div></td></tr></table><h4 id="methods_setwpusermeta_example">Example</h4>
+<div class="example"><div class="postworld-service-setwpusermeta-page"><pre class="prettyprint linenums">
+args = {
+	user_id:1,
+	meta_key:'userData',
+	sub_key: 'key.subkey',
+	value:'Hello'
+};
+pwData.setWpUsermeta(args).then({
+	function(response){
+		// Success
+	},
+	function(response){
+		// Failure
+	}
+});
+</pre>
+</div></div>
+</div>
+</li>
+<li><h3 id="methods_wpajax">wpAjax(fname, args)</h3>
+<div class="wpajax"><div class="postworld-service-wpajax-page"><p>A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions.</p>
+</div><h5 id="methods_wpajax_parameters">Parameters</h5><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>fname</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="postworld-service-wpajax-page"><p>The name of the server function.</p>
+</div></td></tr><tr><td>args</td><td><a href="" class="label type-hint type-hint-string">string</a><a href="" class="label type-hint type-hint-array">array</a><a href="" class="label type-hint type-hint-object">object</a></td><td><div class="postworld-service-wpajax-page"><p>Arguments for the function.</p>
+</div></td></tr></tbody></table><h5 id="methods_wpajax_returns">Returns</h5><table class="variables-matrix"><tr><td><a href="" class="label type-hint type-hint-promise">promise</a></td><td><div class="postworld-service-wpajax-page"><p>Returns data from the server function called.</p>
+</div></td></tr></table></div>
+</li>
+</ul>
+</div>
+</div>

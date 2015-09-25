@@ -1,9 +1,7 @@
 <?php
-
 /*
 ////////// MENU KIT : PAGES //////////
 The main function for rendering Menu Kit Pages.
-
 These are the input settings for options :
 
 $OPTIONS = array(
@@ -11,9 +9,7 @@ $OPTIONS = array(
 	'show_sibling_pages'	=> 1/0,
 	'show_child_pages'  	=> 1/0,
 	)
-
 */
-
 
 function menu_kit_pages($OPTIONS){
 	
@@ -144,6 +140,5 @@ function menu_kit_pages($OPTIONS){
 	echo render_page_menu($OPTIONS, $grandparent_page->ID, $parent_page->ID, $current_page->ID);
 
 }
-
 
 ?>

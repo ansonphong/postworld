@@ -1,3 +1,4 @@
+'use strict';
 /*              ____             _                                   _ 
   _ ____      _| __ )  __ _  ___| | ____ _ _ __ ___  _   _ _ __   __| |
  | '_ \ \ /\ / /  _ \ / _` |/ __| |/ / _` | '__/ _ \| | | | '_ \ / _` |
@@ -5,7 +6,15 @@
  | .__/ \_/\_/ |____/ \__,_|\___|_|\_\__, |_|  \___/ \__,_|_| |_|\__,_|
  |_|                                 |___/                             
  ///////////////////////// LOAD BACKGROUND DIRECTIVE ////////////////////////*/
- postworld.directive( 'pwBackground',
+
+/*
+ * Easily sets and modifies the background of the page 
+ *
+ * @class pwBackground
+ * @param {String} pwBackground A Postworld background object ID
+ */
+
+postworld.directive( 'pwBackground',
  	[ '$window', '$timeout', 'pwData', 'pwPosts', '$log', '_',
  	function( $window, $timeout, $pwData, $pwPosts, $log, $_ ){
 	return {
@@ -22,16 +31,14 @@
 			}, 1 );
 
 			$scope.getBackgroundObj = function(){
-
-				if( $scope.pwBackground == 'primary' )
+				if( $scope.pwBackground == 'primary' ){
+					//$log.debug( ">>> PRIMARY BG <<< ", $pwData.background.primary );
 					return $pwData.background.primary;
-				
+				}
 				else if( $scope.pwBackground == 'secondary' )
 					return $pwData.background.secondary;
-
 				else
 					return $scope.$eval( $scope.pwBackground );
-
 			}
 
 			//////////// UPDATE ////////////
@@ -59,6 +66,7 @@
 			}
 
 			$scope.bindParallax = function(){
+
 				// Check for Parallax values
 				var parallax = $_.get( $scope.backgroundObj, 'image.parallax' );
 				var position = $_.get( $scope.backgroundObj, 'style.background-position' );
@@ -100,6 +108,7 @@
 					// Check if the post exists
 					imagePost = $_.get( $pwData, 'posts.'+imageId );
 				}
+				$log.debug( '$scope.getImagePost', imagePost );
 				return imagePost;
 			}
 
@@ -114,11 +123,11 @@
 			}
 
 			$scope.populateImagePost = function( imageId ){
-				var get_post_vars = {
+				var vars = {
 					post_id: imageId,
-					fields: [ 'ID', 'image(full)', 'fields' ],
+					fields: [ 'ID', 'post_type', 'image(full)', 'fields' ],
 				};
-				$pwData.get_post( get_post_vars ).then(
+				$pwData.getPost( vars ).then(
 					function(response){
 						$pwData.posts[imageId] = response.data;
 						$log.debug( "backgroundObj › populateImagePost › $pwData.posts ", $pwData.posts );
@@ -134,7 +143,6 @@
 				if( !styles )
 					styles = {};
 
-				
 				// Delete empty values
 				angular.forEach( styles, function( value, key ){
 					// Opacity 
@@ -165,6 +173,10 @@
 			// Cache the page Y offset
 			$scope.pageYOffset = 0;
 			var setPosition = function () {
+
+				// Disable Parallax if it's not enabled
+				if( $_.get( $scope.backgroundObj, 'style.background-position' ) != 'parallax' )
+					return false;
 
 				// Get the current Page Y Offset
 				var pageYOffset = $window.pageYOffset;

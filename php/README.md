@@ -102,7 +102,7 @@ __META POINTS FUNCTIONS__
 
 #### Description
 
-- A meta function for `set_post_points()` and `set_comment_points()`
+- A meta function for `pw_set_post_points()` and `pw_set_comment_points()`
 
 #### Parameters
 
@@ -121,7 +121,7 @@ __$set_points__ : *integer*
 #### Process
 
 - Get the User ID
-- Get the user's vote power : `get_user_vote_power()`
+- Get the user's vote power : `pw_get_user_vote_power()`
 	- If __$set_points__ is greater than the user's role __vote_points__ , reduce to __vote_points__
 
 - Define the table and column names to work with :
@@ -170,33 +170,33 @@ __POST POINTS__
 
 ------
 
-### get_post_points( *$post_id* )
+### pw_get_post_points( *$post_id* )
 - Get the total number of points of the given post from the __post_points__ column in the __Post Meta__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### calculate_post_points ( *$post_id* )
+### pw_calculate_post_points ( *$post_id* )
 - Adds up the points from the specified post, stored in __Post Points__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### cache_post_points ( *$post_id* ) 
-- Calculates given post's current points with `calculate_post_points()`
+### pw_cache_post_points ( *$post_id* ) 
+- Calculates given post's current points with `pw_calculate_post_points()`
 - Stores the result in the __post_points__ column in __Post Meta__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### set_post_points( *$post_id, $set_points* )
+### pw_set_post_points( *$post_id, $set_points* )
 
 #### Description
-- Wrapper for `set_points()` Method for setting post points
-- Run `cache_rank_score()` to update rank score of the post
+- Wrapper for `pw_set_points()` Method for setting post points
+- Run `pw_cache_rank_score()` to update rank score of the post
 
 #### Parameters
 
@@ -206,13 +206,13 @@ __$set_points__ : *integer*
 
 #### Process
 
-- Run `set_points( 'post', $post_id, $set_points )`
+- Run `pw_set_points( 'post', $post_id, $set_points )`
 
-__return__ : *Array* (same as `set_points()` )
+__return__ : *Array* (same as `pw_set_points()` )
 
 ------
 
-### has_voted_on_post ( *$post_id, $user_id* ) 
+### pw_has_voted_on_post ( *$post_id, $user_id* ) 
 - Check __Post Points__ to see if the user has voted on the post
 - Return the number of points voted
 
@@ -224,22 +224,22 @@ __COMMENT POINTS__
 
 ------
 
-### get_comment_points ( $comment_id )
+### pw_get_comment_points ( $comment_id )
 - Get the total number of points of the given comment from the __comment_points__ column in the __Comment Meta__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### calculate_comment_points ( $comment_id )
+### pw_calculate_comment_points ( $comment_id )
 - Adds up the points from the specified comment, stored in __Comment Points__ table
 
 __return__ : *integer* (number of points)
 
 ------
 
-### cache_comment_points ( $comment_id )
-- Calculates given post's current points with `calculate_comment_points()`
+### pw_cache_comment_points ( $comment_id )
+- Calculates given post's current points with `pw_calculate_comment_points()`
 - Stores the result in the __comment_points__ column in __Comment Meta__ table
 
 __return__ : *integer* (number of points)
@@ -249,7 +249,7 @@ __return__ : *integer* (number of points)
 ### set_comment_points( $comment_id, $set_points )
 
 #### Description
-- Wrapper for `set_points()` Method for setting comment points
+- Wrapper for `pw_set_points()` Method for setting comment points
 
 #### Parameters
 
@@ -259,13 +259,13 @@ __$set_points__ : *integer*
 
 #### Process
 
-- Run `set_points( 'comment', $post_id, $set_points )`
+- Run `pw_set_points( 'comment', $post_id, $set_points )`
 
-__return__ : *Array* (same as `set_points()` )
+__return__ : *Array* (same as `pw_set_points()` )
 
 ------
 
-### has_voted_on_comment ( $comment_id, $user_id )
+### pw_has_voted_on_comment ( $comment_id, $user_id )
 - Check __Comment Points__ table to see if the user has voted on the comment
 - Return the number of points voted
 
@@ -277,7 +277,7 @@ __USER POST POINTS__
 
 ------
 
-### get_user_post_points ( *$user_id* )
+### pw_get_user_post_points ( *$user_id* )
 - Get the number of points voted to posts authored by the given user
 - Get cached points of user from __wp_postworld_user_meta__ table __post_points__ column
 
@@ -285,7 +285,7 @@ __return__ : *integer* (number of points)
 
 ------
 
-### get_user_post_points_meta
+### pw_get_user_post_points_meta
 - Get the number of points voted to posts authored by the given user, broken down
 - Get cached points of user from __wp_postworld_user_meta__ table __post_points_meta__ column
 - Include total points
@@ -306,7 +306,7 @@ array(
 ------
 
 
-### calculate_user_posts_points ( *$user_id* )
+### pw_calculate_user_posts_points ( *$user_id* )
 - Add up the points voted to given user's posts, stored in __wp_postworld_post_points__
 - __NEW__ : For each post, get the __post_type,__ and also calculate value of points given to posts of each post type
 - Cache the total result in the __post_points__ column in the __User Meta__ table
@@ -328,8 +328,8 @@ array(
 
 ------
 
-### cache_user_posts_points ( *$user_id* )
-- Runs `calculate_user_posts_points()` Method
+### pw_cache_user_posts_points ( *$user_id* )
+- Runs `pw_calculate_user_posts_points()` Method
 - Caches value in __post_points_meta__ column in __wp_postworld_user_meta__ table
 
 __return__ : *integer* (number of points)
@@ -340,7 +340,7 @@ __USER COMMENT POINTS__
 
 ------
 
-### get_user_comments_points ( *$user_id* )
+### pw_get_user_comments_points ( *$user_id* )
 
 - Get the number of points voted to comments authored by the given user
 - Get cached points of user from __wp_postworld_user_meta__ table __comment_points__ column
@@ -349,7 +349,7 @@ __return__ : *integer* (number of points)
 
 ------
 
-### calculate_user_comments_points ( *$user_id* )
+### pw_calculate_user_comments_points ( *$user_id* )
 - Adds up the points voted to given user's comments, stored in __wp_postworld_comment_points__ table
 - Stores the result in the __post_points__ column in __wp_postworld_user_meta__ table
 
@@ -357,7 +357,7 @@ __return__ : *integer* (number of points)
 
 ------
 
-### cache_user_comments_points ( *$user_id* )
+### pw_cache_user_comments_points ( *$user_id* )
 - Runs `calculate_user_comment_points()` Method
 - Caches value in __comment_points__ column in __wp_postworld_user_meta__ table
 
@@ -369,7 +369,7 @@ __GENERAL POINTS__
 
 ------
 
-### has_voted_on_comment ( *$comment_id, $user_id* ) 
+### pw_has_voted_on_comment ( *$comment_id, $user_id* ) 
 - Check __wp_postworld_comment_points__ to see if the user has voted on the comment
 - Return the number of points voted
 
@@ -377,7 +377,7 @@ __return__ : *integer*
 
 ------
 
-### get_user_points_voted_to_posts ( *$user_id* ,*$break_down=FALSE*)
+### pw_get_user_points_voted_to_posts ( *$user_id* ,*$break_down=FALSE*)
 If **$break_down=False** then : 
 - Get total points voted to posts authored by the given user
 - Get points of each post from __wp_postworld_post_meta__
@@ -402,7 +402,7 @@ post_id,author_id,total_points,post_type
 ```
 ------
 
-### get_user_votes_on_posts ( *$user_id, [$fields], [$direction]* )
+### pw_get_user_votes_on_posts ( *$user_id, [$fields], [$direction]* )
 - Get all posts which user has voted on from __wp_postworld_post_points__ table 
 
 #### Parameters
@@ -429,7 +429,7 @@ __return__ : *Object / Array*
 Parameters:
 
 ``` php
-	get_user_votes_on_posts ( 1, 'post_id', 'up' )
+	pw_get_user_votes_on_posts ( 1, 'post_id', 'up' )
 ```
 Returns:
 
@@ -439,7 +439,7 @@ Returns:
 Parameters:
 
 ``` php
-	get_user_votes_on_posts ( 1, 'all', 'up' )
+	pw_get_user_votes_on_posts ( 1, 'all', 'up' )
 ```
 Returns:
 
@@ -452,7 +452,7 @@ Returns:
 
 ------
 
-### get_user_votes_report ( *$user_id* )
+### pw_get_user_votes_report ( *$user_id* )
 #### Description
 - Returns the 'recent/active' points activity of the user
 
@@ -470,8 +470,8 @@ __return__ : *Object*
 
 ------
 
-### get_user_vote_power ( *$user_id* )
-- Checks to see user's WP roles `with get_user_role()`
+### pw_get_user_vote_power ( *$user_id* )
+- Checks to see user's WP roles `with pw_get_user_role()`
 - Checks how many points the user's role can cast, from `$pwSiteGlobals['roles'][ $current_user_role ]['vote_points']`
 
 __return__ : *integer* (the number of points the user can cast)
@@ -487,15 +487,15 @@ The Rank Score equation also involves several other curves and 'Currents' which 
 
 ------
 
-### get_rank_score ( *$post_id, [$method]* )
-- Gets the Rank Score of the given post, using `calculate_rank_score()`
+### pw_get_rank_score ( *$post_id, [$method]* )
+- Gets the Rank Score of the given post, using `pw_calculate_rank_score()`
 - Retrieves from the __rank_score__ column in __wp_postworld_meta__
 
 __return__ : *integer* (Rank Score)
 
 ------
 
-### calculate_rank_score ( *$post_id* )
+### pw_calculate_rank_score ( *$post_id* )
 - Calculates Rank Score based on rank equation
 - Returns the Rank Score 
 
@@ -503,8 +503,8 @@ __return__ : *integer* (Rank Score)
 
 ------
 
-### cache_rank_score ( *$post_id* )
-- Calculate rank_score with `calculate_rank_score()` method
+### pw_cache_rank_score ( *$post_id* )
+- Calculate rank_score with `pw_calculate_rank_score()` method
 - Cache the result in __wp_postworld_meta__ in the __rank_score__ column
 
 __return__ :  *integer* (Rank Score) 
@@ -519,229 +519,6 @@ __php/postworld_cron.php__
 ### pw_add_intervals($schedules)
 - Add intervals by which to perform cron tasks
 
-------
-
-## Caching
-__php/postworld_cache.php__
-
-------
-
-### cache_all_points ()
-- Runs cache_user_points() and cache_post_points()
-
-__return__ : *cron_logs Object* (add to table wp_postworld_cron_logs)
-
-------
-
-### cache_all_user_points()
-- Cycles through all users with cache_user_points() method
-
-__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
-
-------
-
-### cache_all_post_points()
-- Cycles through each post in each post_type with points enabled
-- Calculates and caches each post's current points with cache_post_points() method
-
-__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
-
-------
-
-### cache_all_comment_points()
-- Cycles through all columns
-- Calculates and caches each comment's current points with cache_comment_points() method
-
-__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
-
-------
-
-### cache_all_rank_scores ()
-- Cycles through each post in each post_type scheduled for Rank Score caching
-- Calculates and caches each post's current rank with cache_rank_score() method
-__return__ : *cron_logs* Object (add to table wp_postworld_cron_logs)
-
-#### Solutions to Known Issues with PHP Timelimit
-
-- Adapting the wp-config.php:
-
-``` php
-set_time_limit(600);
-define( 'WP_MAX_MEMORY_LIMIT', '512M' );
-define( 'WP_MEMORY_LIMIT', '512M' );
-```
-
-- Adapting the /.htaccess file of your WordPress installation
-	- (only works if PHP is running as a PHP module)
-
-```
-php_value max_execution_time 600
-php_value memory_limit 512M
-```
-
-- Adapting the php.ini file
-
-```
-max_execution_time = 600;
-memory_limit = 512M;
-```
-
-------
-
-### cache_all_feeds ()
-- Run pw_cache_feed() method for each feed registered for feed caching in WP Options
-__return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
-
-------
-
-SHARES
-
-------
-
-### cache_shares ( *[$cache_all]* )
-
-#### Description
-- Caches user and post share reports from the __Shares__ table
-
-#### Paramaters
-__$cache_all__ : *boolean*  
-Default : *false*
-
-#### Process
-- If `$cache_all = false`, just update the recently changed share reports
-	- Check __Cron Logs__ table for the most recent start time of the last `cache_shares()` operation
-
-	- __POSTS :__  
-	Get an array of all __post_IDs__ from __Shares__ table which have been updated since the most recent run of `cache_shares()` by checking the __last time__ column  
-	Run `cache_post_shares($post_id)` for all recently updated shares
-
-	- __AUTHORS :__  
-	Get an array of all __post_author_IDs__ from __Shares__ table  which have been updated since the last cache.  
-	Run `cache_user_shares($user_id,'incoming')` for all recently updated user's shares
-
-	 - __USERS :__  
-	Get an array of all __user_IDs__ from __Shares__ table  which have been updated since the last cache.
-	Run `cache_user_shares($user_id,'outgoing')` for all recently updated user's shares
-
-- If `$cache_all = true`
-	- Cycle through every post and run `cache_post_shares($post_id)`
-	- Cycle through every author and run `cache_user_shares($user_id,'incoming')`
-	- Cycle through every user and run `cache_user_shares($user_id,'outgoing')`
-
-__return__ : *cron_logs* Object (store in table wp_postworld_cron_logs)
-
-------
-
-POST SHARES
-
-------
-
-### calculate_post_shares( *$post_id* )
-- Calculates the total number of shares to the given post
-
-#### Process
-- Lookup the given __post_id__ in the __Shares__ table
-- Add up ( *SUM* ) the total number in __shares__ column attributed to the post
-
-__return__ : *integer* (number of shares)
-
-------
-
-### cache_post_shares( *$post_id* )
-- Caches the total number of shares to the given post
-
-#### Process
-- Run `calculate_post_shares($post_id)`
-- Write the result to the __post_shares__ column in the __Post Meta__ table
-
-__return__ : *integer* (number of shares)
-
-------
-
-USER SHARES
-
-------
-
-### calculate_user_shares( *$user_id, [$mode]* )
-- Calculates the total number of shares relating to a given user
-
-#### Parameters
-__$user_id__ : *integer*
-
-__$mode__ : *string* (optional)
-- Options :
-	- __both__ (default) : Return both __incoming__ and __outgoing__ 
-	- __incoming__ : Return shares attributed to the user's posts  
-	- __outgoing__ : Return shares that the user has initiated
-
-#### Process
-- Lookup the given __user_id__ in the __Shares__ table
-- Modes :
-	- For __incoming__ : Match to __author_id__ column in __Shares__ table 
-	- For __outgoing__ : Match to __user_id__ column in __Shares__ table
-- Add up *(SUM)* the total number of the __shares__ column attributed to the user, according to `$mode`
-
-__return__ : *Array* (number of shares)
-
-```php
-array(
-	'incoming' => {{integer}},
-	'outgoing' => {{integer}}
-	)
-```
-
-------
-
-### cache_user_shares( *$user_id, [$mode]* )
-- Caches the total number of shares relating to a given user
-
-#### Process
-- Run `calculate_user_shares()`
-- Update the __user_shares__ column in the __User Meta__ table
-
-__return__ : *integer* (number of shares)
-
-------
-
-CRON LOGS
-
-------
-
-### clear_cron_logs ( *$timestamp* )
-- Count number of rows in wp_postworld_cron_logs (rows_before)
-- Deletes all rows which are before the specified timestamp (rows_removed)
-- Count number of rows after clearing (rows_after)
-
-__return__ : *Object*
-``` php
-	'rows_before' => {{integer}}
-	'rows_removed' => {{integer}}
-	'rows_after' => {{integer}}
-```
-
-------
-
-### Objects Anatomy : 
-
-#### cron_logs *Object*
-``` php
-	'type' => {{feed/post_type}}
-	'query_id' => {{feed id / post_type slug}}
-	'time_start' => {{timestamp}}
-	'time_end' => {{timestamp}}
-	'timer' => {{milliseconds}}
-	'posts' => {{number of posts}}
-	'timer_average' => {{milliseconds}}
-	'query_vars' => {{ query_vars Object }}
-```
-
-#### query_vars *Object*
-``` php
-	'post_type' => {{string}}
-	'class' => {{string}}
-	'format' => {{string}}
-	etc...
-```
 
 ------
 
@@ -1099,7 +876,7 @@ var avatar_object = {
 
 ------
 
-### get_avatar_sizes( $user_id, $fields )
+### pw_get_avatar_sizes( $user_id, $fields )
 
 - Takes input $fields in the following format
 	- `avatar(handle,size)`
@@ -1108,7 +885,7 @@ __return__ : *Array* (of image objects)
 
 ```
 $fields = array( 'avatar(small,48)', 'avatar(medium, 150)' );
-$avatars_object = get_avatar_sizes( $user_id, $fields );
+$avatars_object = pw_get_avatar_sizes( $user_id, $fields );
 
 //RESULT
 $avatars_object = array(
@@ -1224,7 +1001,7 @@ __USER / POST RELATIONSHIPS__
 
 ------
 
-### set_post_relationship( *$relationship, $switch, $post_id, $user_id* )
+### pw_set_post_relationship( *$relationship, $switch, $post_id, $user_id* )
 - Used to set a given user's relationship to a given post 
 
 ### Parameters
@@ -1251,7 +1028,7 @@ __$switch__ : *boolean*
 
 #### Usage
 ``` php
-	set_post_relationship( 'favorites', true, '24', '101' )
+	pw_set_post_relationship( 'favorites', true, '24', '101' )
 ```
 
 #### Anatomy
@@ -1272,7 +1049,7 @@ __return__ : *boolean*
 
 ------
 
-### get_post_relationship( *$relationship, $post_id, $user_id* )
+### pw_get_post_relationship( *$relationship, $post_id, $user_id* )
 - Used to get a given user's relationship to a given post 
 
 ### Parameters
@@ -1299,7 +1076,7 @@ __return__ : *boolean*
 ```
 ------
 
-### get_post_relationships( *$user_id, [$relationship]* )
+### pw_get_post_relationships( *$user_id, [$relationship]* )
 - Used to get a list of all post relationships of a specified user
 
 #### Paramaters
@@ -1319,7 +1096,7 @@ __$relationship__ : *integer* (optional)
 Specified post relationship :
 
 ``` php
-	get_post_relationships( '1', 'favorites' )
+	pw_get_post_relationships( '1', 'favorites' )
 ```
 __returns__ : *Array* of post IDs
 
@@ -1330,7 +1107,7 @@ __returns__ : *Array* of post IDs
 Un-specified post relationship :
 
 ``` php
-	get_post_relationships( '1' )
+	pw_get_post_relationships( '1' )
 ```
 __returns__ : Contents of __post_relationships__
 
@@ -1359,33 +1136,33 @@ __$user_id__ : *integer* (optional)
 
 ------
 
-### set_favorite( *$switch, [$post_id], [$user_id]* )
-- Use `set_post_relationship()` to set the post relationship for __favorites__
+### pw_set_favorite( *$switch, [$post_id], [$user_id]* )
+- Use `pw_set_post_relationship()` to set the post relationship for __favorites__
 - If __$post_id__ is undefined
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'favorites', $switch, $post_id, $user_id )
+	pw_set_post_relationship( 'favorites', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
-### set_viewed( *$switch, [$post_id], [$user_id]* )
-- Use `set_post_relationship()` to set the post relationship for __viewed__
+### pw_set_viewed( *$switch, [$post_id], [$user_id]* )
+- Use `pw_set_post_relationship()` to set the post relationship for __viewed__
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'viewed', $switch, $post_id, $user_id )
+	pw_set_post_relationship( 'viewed', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
-### set_view_later( *$switch, [$post_id], [$user_id]* )
-- Use `set_post_relationship()` to set the post relationship for __view_later__
+### pw_set_view_later( *$switch, [$post_id], [$user_id]* )
+- Use `pw_set_post_relationship()` to set the post relationship for __view_later__
 - __$switch__ is a *boolean*
 
 ``` php
-	set_post_relationship( 'view_later', $switch, $post_id, $user_id )
+	pw_set_post_relationship( 'view_later', $switch, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
@@ -1399,11 +1176,11 @@ __$user_id__ : *integer* (optional)
 
 ------
 
-### get_favorites ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __favorite__ posts
+### pw_get_favorites ( *[$user_id]* )
+- Use `pw_get_post_relationships()` method to return just the __favorite__ posts
 
 ```php
-	get_post_relationships($user_id, 'favorites')
+	pw_get_post_relationships($user_id, 'favorites')
 ```
 
 __return__ : *Array* (of post ids)
@@ -1411,10 +1188,10 @@ __return__ : *Array* (of post ids)
 ------
 
 ### get_viewed ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __viewed__ posts
+- Use `pw_get_post_relationships()` method to return just the __viewed__ posts
 
 ```php
-	get_post_relationships($user_id, 'viewed')
+	pw_get_post_relationships($user_id, 'viewed')
 ```
 
 __return__ : *Array* (of post ids)
@@ -1422,10 +1199,10 @@ __return__ : *Array* (of post ids)
 ------
 
 ### get_view_later ( *[$user_id]* )
-- Use `get_post_relationships()` method to return just the __view later__ posts
+- Use `pw_get_post_relationships()` method to return just the __view later__ posts
 
 ```php
-	get_post_relationships($user_id, 'view_later')
+	pw_get_post_relationships($user_id, 'view_later')
 ```
 
 __return__ : *Array* (of post ids)
@@ -1447,44 +1224,44 @@ __$user_id__ : *integer* (optional)
 
 ------
 
-### is_favorite( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for __favorites__
+### pw_is_favorite( *[$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for __favorites__
 
 ``` php
-get_post_relationship( 'favorites', $post_id, $user_id )
+pw_get_post_relationship( 'favorites', $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
 ------
 
-### is_viewed( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for __viewed__
+### pw_is_viewed( *[$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for __viewed__
 
 ``` php
-get_post_relationship( 'viewed', $post_id, $user_id )
+pw_get_post_relationship( 'viewed', $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
 ------
 
-### is_view_later( *[$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for __view_later__
+### pw_is_view_later( *[$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for __view_later__
 
 ``` php
-get_post_relationship( 'view_later', $post_id, $user_id )
+pw_get_post_relationship( 'view_later', $post_id, $user_id )
 ```
 
 __return__ : *boolean*
 
 ------
 
-### is_post_relationship( *$post_relationship, [$post_id], [$user_id]* )
-- Use `get_post_relationship()` method to return the post relationship status for the specified post relationship
+### pw_is_post_relationship( *$post_relationship, [$post_id], [$user_id]* )
+- Use `pw_get_post_relationship()` method to return the post relationship status for the specified post relationship
 
 ``` php
-	get_post_relationship( $post_relationship, $post_id, $user_id )
+	pw_get_post_relationship( $post_relationship, $post_id, $user_id )
 ```
 
 __return__ : *boolean*
@@ -1514,7 +1291,7 @@ __return__ : *string* (IP address of the client)
 
 ------
 
-### get_user_role ( *$user_id, [$return_array]* )
+### pw_get_user_role ( *$user_id, [$return_array]* )
 - Returns user role(s) for the specified user
 
 ####Parameters:
@@ -1698,8 +1475,8 @@ __php/postworld_feeds.php__
 ------
 
 
-### pw_live_feed ( *$vars* )
-- Used to insert a `live-feed` or `load-feed` feed
+### pw_feed ( *$vars* )
+- Used to insert a feed
 - Prints the `<script>` and `html` tags for a feed
 
 #### Parameters : *$vars*
@@ -1759,7 +1536,7 @@ $feed_vars = array(
 			),
 		),
 	);
-pw_live_feed( $feed_vars );
+pw_feed( $feed_vars );
 ```
 
 #### Full Example
@@ -1790,7 +1567,7 @@ $feed_vars = array(
 		'feed_template'	=>	null,	// The ID of a feed in /views/feeds/
 		),
 	);
-pw_live_feed( $feed_vars );
+pw_feed( $feed_vars );
 ```
 
 
@@ -2273,7 +2050,7 @@ __php/postworld_share.php__
 
 ------
 
-### set_share ( *$user_id, $post_id* )
+### pw_set_share ( *$user_id, $post_id* )
 
 #### Description
 - Sets a record of a share in __Shares__ table
@@ -2288,7 +2065,7 @@ __php/postworld_share.php__
 	- Check if user ID exists
 	- Check if post ID exists
 	- Get the ID of the post author from __Posts__ table 
-	- Get the user's IP address with `get_client_ip()`
+	- Get the user's IP address with `pw_get_client_ip()`
 2. Process IP
 	- Check IP address against list of IPs stored in `recent_ips` column in __Shares__ table
 	- If the IP is not in the list, add to the list and add 1+ to total_views in wp_postworld_user_shares
@@ -2308,7 +2085,7 @@ __SHARE REPORTS__
 
 ------
 
-### user_share_report_outgoing ( *$user_id* )
+### pw_user_share_report_outgoing ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by posts that the given user has shared__
@@ -2336,13 +2113,13 @@ array(
 ```
 ------
 
-### user_share_report_meta ( *$user_share_report* )
+### pw_user_share_report_meta ( *$user_share_report* )
 - Inserts the post object data for each user share
 
 
 #### Usage : Outgoing
 ``` php
-user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) );
+pw_user_share_report_meta( pw_user_share_report_outgoing( $displayed_user_id ) );
 ```
 
 #### Output : Outgoing
@@ -2360,7 +2137,7 @@ user_share_report_meta( user_share_report_outgoing( $displayed_user_id ) );
 
 #### Usage : Incoming
 ``` php
-user_share_report_meta( user_share_report_incoming( $displayed_user_id ) );
+pw_user_share_report_meta( pw_user_share_report_incoming( $displayed_user_id ) );
 ```
 
 #### Output : Incoming
@@ -2387,7 +2164,7 @@ user_share_report_meta( user_share_report_incoming( $displayed_user_id ) );
 
 ------
 
-### user_share_report_outgoing ( *$user_id* )
+### pw_user_share_report_outgoing ( *$user_id* )
 
 #### Description
 - Generate a report of all the shares relating to the current user __by shares to the given user's posts__
@@ -2438,7 +2215,7 @@ array(
 
 ------
 
-### post_share_report ( *$post_id* )
+### pw_post_share_report ( *$post_id* )
 
 - Generate a report of all the shares relating to the current post
 
@@ -2473,7 +2250,7 @@ Contains functions for getting registered images, resizing images and post attac
 
 ------
 
-### url_to_media_library( *$image_url* )
+### pw_url_to_media_library( *$image_url* )
 - Uploads a remote image URL to the local Media Library
 
 __return__ : *integer* (Attachment ID)

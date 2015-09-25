@@ -8,18 +8,17 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld styles wrap" ng-cloak>
+<div class="postworld styles wrap" ng-cloak>
 	<div
 		pw-admin-style
 		ng-controller="pwStylesDataCtrl">
 
 		<h1>
-			<i class="icon-brush"></i>
+			<i class="pwi-brush"></i>
 			Styles
 		</h1>
 
 		<hr class="thick">
-
 
 		<!--<pre>{{ pwStyleStructure | json }}</pre>-->
 
@@ -28,7 +27,7 @@
 		<div ng-repeat="type in pwStyleStructure">
 
 			<!-- SAVE BUTTON -->
-			<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES,'pwStyles'); ?></div>
+			<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_STYLES,'pwStyles'); ?></div>
 
 			<h2>
 				<i class="{{ type.icon }}"></i>
@@ -136,16 +135,18 @@
 		<!-- ////////// END VARIABLES ////////// -->
 
 		<!-- SAVE BUTTON -->
-		<div class="save-right"><?php i_save_option_button( PW_OPTIONS_STYLES, 'pwStyles'); ?></div>
+		<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_STYLES, 'pwStyles'); ?></div>
 
 
 		<button ng-click="resetStyleDefaults()" class="button">Reset to Defaults</button>
 		
-		<hr class="thick">
-		
-		<!--
-		<pre>pwStyles : {{ pwStyles | json }}</pre>
-		-->
+		<?php if( pw_dev_mode() ): ?>
+			<hr class="thick">
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>pwStyles : {{ pwStyles | json }}</code></pre>
+			</div>
+		<?php endif; ?>
 
 	</div>
 

@@ -1,0 +1,56 @@
+/* ///// VARIABLES ///// */
+// Extends Bootstrap 3 `variables.less`
+@screen-xs-min:              (@screen-xs + 1);
+@screen-sm-min:              (@screen-sm + 1);
+@screen-md-min:              (@screen-md + 1);
+@screen-lg-min:              (@screen-lg + 1);
+
+
+/* ///// BREAKPOINTS ///// */
+@xl:		~"only screen and (min-width: @{screen-lg-min})";
+
+@lg-up:		~"only screen and (min-width: @{screen-md-min})";
+@lg:		~"only screen and (min-width: @{screen-md-min}) and (max-width: @{screen-lg})";
+@lg-down:	~"only screen and (max-width: @{screen-lg})";
+
+@md-up:		~"only screen and (min-width: @{screen-sm-min})";
+@md:		~"only screen and (min-width: @{screen-sm-min}) and (max-width: @{screen-md})";
+@md-down:	~"only screen and (max-width: @{screen-md})";
+
+@sm-up:		~"only screen and (min-width: @{screen-xs-min})";
+@sm:		~"only screen and (min-width: @{screen-xs-min}) and (max-width: @{screen-sm})";
+@sm-down:	~"only screen and (max-width: @{screen-sm})";
+
+@xs:		~"only screen and (max-width: @{screen-xs})";
+
+
+///// WORDPRESS ADMIN BAR SMALL SCREENS /////
+@wp-sm: ~"screen and (max-width: 600px)";
+@wp-sm-admin-height: 46px;
+
+///// WORDPRESS ADMIN BAR MEDIUM SCREENS /////
+@wp-md: ~"screen and (min-width: 601px) and (max-width: 768px)";
+@wp-md-up: ~"screen and (min-width: 601px)";
+@wp-md-admin-height: 46px;
+
+///// WORDPRESS ADMIN BAR LARGE SCREENS /////
+@wp-lg: ~"screen and (min-width: 768px)";
+@wp-lg-admin-height: 32px;
+
+
+/* ///// LINEAGE : DEPRECIATED ///// */
+@full:   				~"only screen and (min-width: @{screen-lg})";
+
+@desktop-and-above:   	~"only screen and (min-width: @{screen-sm})";
+@desktop:   			~"only screen and (min-width: @{screen-sm}) and (max-width: @{screen-md})";
+@desktop-and-below:   	~"only screen and (max-width: @{screen-md})";
+
+@tablet-and-above:   	~"only screen and (min-width: @{screen-xs})";
+@tablet:    			~"only screen and (min-width: @{screen-xs}) and (max-width: @{screen-sm})";
+@tablet-and-below:    	~"only screen and (max-width: @{screen-sm})";
+
+@mobile:    			~"only screen and (max-width: @{screen-xs})";
+
+
+
+

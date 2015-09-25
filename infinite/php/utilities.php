@@ -187,27 +187,6 @@ function i_set_obj( $obj, $key, $value ){
 }
 
 
-function i_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
-	// Looks through the list and returns the first value
-	// that matches the key value pair listed in properties.
-
-	// Get the first Key and Value
-	foreach( $key_value_pair as $get_key => $get_value ){
-		$key = $get_key;
-		$value = $get_value;
-		break;
-	}
-
-	// Search for the key/value in the given array
-	foreach( $array as $sub_array ){
-		if(	isset( $sub_array[$key] ) &&
-			$sub_array[$key] == $value )
-			return $sub_array;
-	}
-	return false;
-
-}
-
 
 function i_add_terms( $terms, $taxonomy ){
 	// Adds a series of terms up to two levels of depth

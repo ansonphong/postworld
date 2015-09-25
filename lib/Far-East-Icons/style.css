@@ -1,0 +1,77 @@
+@font-face {
+	font-family: 'Far-East-Icons';
+	src:url('fonts/Far-East-Icons.eot?hjgot7');
+	src:url('fonts/Far-East-Icons.eot?#iefixhjgot7') format('embedded-opentype'),
+		url('fonts/Far-East-Icons.woff?hjgot7') format('woff'),
+		url('fonts/Far-East-Icons.ttf?hjgot7') format('truetype'),
+		url('fonts/Far-East-Icons.svg?hjgot7#Far-East-Icons') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+[class^="fe-"], [class*=" fe-"] {
+	font-family: 'Far-East-Icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.fe-conch:before {
+	content: "\e608";
+}
+
+.fe-shiva-sanskrit:before {
+	content: "\e609";
+}
+
+.fe-dharma-wheel:before {
+	content: "\e600";
+}
+
+.fe-hindu-swastika:before {
+	content: "\e604";
+}
+
+.fe-om:before {
+	content: "\e605";
+}
+
+.fe-buddha-mandarin:before {
+	content: "\e60a";
+}
+
+.fe-yin-yang:before {
+	content: "\e606";
+}
+
+.fe-lu-symbol:before {
+	content: "\e601";
+}
+
+.fe-three-realms-o:before {
+	content: "\e60b";
+}
+
+.fe-three-realms:before {
+	content: "\e60c";
+}
+
+.fe-tibetan-ah:before {
+	content: "\e607";
+}
+
+.fe-endless-knot:before {
+	content: "\e603";
+}
+
+.fe-endless-knot-2:before {
+	content: "\e602";
+}
+

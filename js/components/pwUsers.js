@@ -12,6 +12,10 @@ postworld.directive('pwEditAvatar', function() {
 	return {
 		restrict: 'A',
 		controller: 'editAvatarCtrl',
+		scope:{
+			'avatarModel':'=',
+			//'avatarStatus':'=',
+		},
 	};
 });
 
@@ -19,38 +23,99 @@ postworld.controller( 'editAvatarCtrl',
 	[ '$scope', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
 	function( $scope, $rootScope, $pwData, $timeout, $log, $pwUsers, $_ ) {
 
-
 	$scope.status = "empty";
 
-	$scope.updateAvatarImage = function( selected_image_obj ){
-		// Set the image object into the model
-		$scope.status = "saving";
-		var args = {
-			user_id: $scope.user_id,
-			image_object: selected_image_obj,
+	$scope.setAvatarStatus = function( status ){
+		//if( $scope.avatarStatus )
+			//$scope.avatarStatus = status;
+	}
+
+	///// NEW MODEL /////
+
+	$scope.updateAvatar = function( vars ){
+		
+		$log.debug( 'EDIT AVATAR', vars );
+		return false;
+
+		$scope.setAvatarStatus('busy');
+
+		var defaultVars = {
+			user_id: $_.get( $scope, 'user.ID' ),
+			attachment_id: null,
+			image_url: null,
 		};
-		$pwData.pw_set_avatar( args ).then(
-				// Success
+	
+		vars = array_replace_recursive( defaultVars, vars );
+
+		$pwData.setAvatar( vars ).then(
 				function(response) {    
-					$scope.avatar_image = response.data;
-					$scope.status = "done";
-					// Load object into scope
-					//$scope.loadAvatarObj( $scope.user_id );
+					$scope.setAvatarStatus('done');
+
+					///// BROADCAST : UPDATE AVATAR /////
+					$rootScope.$broadcast( 'updatedAvatar', {
+						userId: vars.user_id,
+					});
+
 				},
-				// Failure
-				function(response) {
-					//alert('Error loading terms.');
-				}
+				function(response){}
 			);
-		//$scope.avatar_image = selected_image;
 		$scope.status = "setting";
 	};
 
 
+	$scope.$on( 'updateAvatar', function( event, args ){
+		$log.debug( 'editAvatarCtrl.updateAvatar : RECEIVED : ', args );
+
+		// If the updated avatar user ID is the same as the current parent scope user ID
+		if( $_.get( args, 'userId' ) == $_.get( $scope.$parent, 'user.ID' ) )
+			// Update the avatar
+			$scope.getAvatars();
+
+	});
+
+
+	$scope.getAvatars = function( vars ){
+		$scope.setAvatarStatus('busy');
+
+		if( _.isEmpty(vars) )
+			vars = {};
+
+		var defaultVars = {
+			model:'user.avatar',
+			user_id: $_.get( $scope.$parent, 'user.ID' ),
+			fields:[
+				'avatar(small,64)',
+				'avatar(medium,256)'
+			],
+		};
+
+		$log.debug( 'editAvatarCtrl.getAvatars : REQUEST : ', vars );
+
+		vars = array_replace_recursive( defaultVars, vars );
+
+		$pwData.getAvatars( vars ).then(
+			function( response ){
+				$log.debug( 'editAvatarCtrl.getAvatars : RESPONSE : ', response );
+				if( response.status == 200 && $scope.avatarModel )
+					$scope.avatarModel = response.data;
+
+				$scope.setAvatarStatus('done');
+			},
+			function( response ){}
+		);
+
+	};
+
+
+
+
+
+	///// OLD MODEL /////
+
 	$scope.loadAvatarObj = function( user_id ){
 		$scope.status = "loading";
 		
-		// Hit pwData.pw_get_avatar with args
+		// Hit pwData.setAvatar with args
 		var args = {
 			user_id: user_id
 		};
@@ -76,6 +141,8 @@ postworld.controller( 'editAvatarCtrl',
 				$scope.loadAvatarObj( $scope.user_id );
 		});    
 
+
+
 	$scope.deleteAvatarImage = function(){
 		// Set the image object into the model
 		$scope.status = "deleting";
@@ -90,7 +157,7 @@ postworld.controller( 'editAvatarCtrl',
 			image_object: selected_image_obj,
 		};
 
-		$pwData.pw_set_avatar( args ).then(
+		$pwData.setAvatar( args ).then(
 				// Success
 				function(response) {    
 					//alert(response.data);
@@ -110,11 +177,7 @@ postworld.controller( 'editAvatarCtrl',
 		$scope.status = "setting";
 	};
 
-	$scope.loadAvatarImg = function( user_id, size ){
-		$scope.status = "loading";
-		// Hit $pwData.pw_get_avatar with args
-
-	};
+	
 
 }]);
 
@@ -803,7 +866,7 @@ postworld.service('pwUsers', ['$log', '$timeout', 'pwData', function ($log, $tim
 				email: user_email,
 			};
 			$log.debug('SENDING ACTIVATION LINK : ' , userdata);
-			$pwData.send_activation_link( userdata ).then(
+			$pwData.activationEmail( userdata ).then(
 				// Success
 				function(response) {
 					$log.debug('ACTIVATION LINK RETURN : ' , response.data);

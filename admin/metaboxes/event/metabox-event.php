@@ -8,7 +8,9 @@
 //////////////////////////////////////////////////*/
 
 ////////////// ADD METABOX //////////////
-add_action('admin_init','pw_metabox_init_event');
+if( !pw_is_admin_ajax() )
+	add_action('admin_init','pw_metabox_init_event');
+
 function pw_metabox_init_event(){    
 
 	global $pwSiteGlobals;
@@ -42,7 +44,7 @@ function pw_event_meta_init(){
     global $pwSiteGlobals;
 
     // Get the Postworld event postmeta key
-    $event_postmeta_key = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.event.postmeta_key' );
+    $event_postmeta_key = _get( $pwSiteGlobals, 'db.wp_postmeta.meta_keys.event' );
     if( !$event_postmeta_key )
     	$event_postmeta_key = 'pw_event';
 
@@ -60,8 +62,16 @@ function pw_event_meta_init(){
 			"start_date_obj"	=>	'',
 			"end_date_obj"		=>	'',
 			"start_date"		=>	'',
-			"end_date"			=>	''
+			"end_date"			=>	'',
+			"all_day"			=>	false,
 			),
+		/*
+		'timezone'				=>	array(
+			'raw_offset'		=>	0,
+			'time_zone_id'		=>	'',
+			'time_zone_name'	=>	'',
+			),
+		*/
 		'organizer'				=>	array(
 			'name'				=>	'',
 			'phone'				=>	'',
@@ -129,6 +139,10 @@ function pw_event_meta_save( $post_id ){
 
 	// Stop autosave to preserve meta data
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
+        return $post_id;
+
+    // Security Layer 
+    if ( !current_user_can( 'edit_post', $post_id ) )
         return $post_id;
 
 	// Get the JSON string which represents the post to be saved 

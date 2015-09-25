@@ -5,10 +5,12 @@
 	$pwBackgrounds = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) );
 	$pw_backgrounds_structure = apply_filters( PW_MODEL_BACKGROUNDS, array() );
 ?>
-<div ng-app="postworldAdmin" class="postworld styles wrap">
+<div class="postworld styles wrap">
 	<script type="text/javascript">
 		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
-		postworldAdmin.controller('pwBackgroundsDataCtrl', [ '$scope', '$window', function( $scope, $window ){
+		postworldAdmin.controller('pwBackgroundsDataCtrl',
+			[ '$scope', '$window', '_',
+			function( $scope, $window, $_ ){
 			$scope.lang = "en";
 			// Print Data
 			$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
@@ -22,11 +24,8 @@
 			
 			// Watch Background Contexts
 			$scope.$watch( 'pwBackgroundContexts', function(val){
-				// Delete empty keys
-				angular.forEach( $scope.pwBackgroundContexts, function( value, key ){
-					if( _.isEmpty( value ) )
-						delete $scope.pwBackgroundContexts[ key ];
-				});
+				// Delete empty values
+				$_.removeEmpty( $scope.pwBackgroundContexts );
 			}, 1);
 
 		}]);
@@ -38,7 +37,7 @@
 		ng-cloak>
 
 		<h1>
-			<i class="icon-paint-format"></i>
+			<i class="pwi-paint-format"></i>
 			Backgrounds
 			<button class="add-new-h2" ng-click="newBackground()"><?php ___('backgrounds.add_new'); ?></button>
 		</h1>
@@ -53,7 +52,7 @@
 					<li
 						ng-click="selectItem('contexts');"
 						ng-class="menuClass('contexts')">
-						<i class="icon-target"></i> Contexts
+						<i class="pwi-target"></i> Contexts
 					</li>
 				</ul>
 				
@@ -76,7 +75,7 @@
 				<div ng-show="showView('contexts')" class="well flush-top">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUND_CONTEXTS, 'pwBackgroundContexts'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_BACKGROUND_CONTEXTS, 'pwBackgroundContexts'); ?></div>
 
 					<h3>Contexts</h3>
 
@@ -97,7 +96,13 @@
 						</tr>
 					</table>
 
-					<pre>{{ pwBackgroundContexts | json }}</pre>
+					<?php if( pw_dev_mode() ) : ?>
+						<hr class="thick">
+						<div class="pw-dev well">
+							<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+							<pre><code>{{ pwBackgroundContexts | json }}</code></pre>
+						</div>
+					<?php endif; ?>
 
 				</div>
 
@@ -112,10 +117,10 @@
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
 		
 
-					<h3><i class="icon-gear"></i> <?php ___('backgrounds.item_title'); ?></h3>
+					<h3><i class="pwi-gear"></i> <?php ___('backgrounds.item_title'); ?></h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
@@ -125,7 +130,7 @@
 								tooltip="<?php ___('backgrounds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('backgrounds.name'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<input
 								id="item-name"
@@ -140,7 +145,7 @@
 								tooltip="<?php ___('backgrounds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('backgrounds.id'); ?>
-								<i class="icon-info-circle"></i>
+								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
@@ -148,7 +153,7 @@
 								tooltip="<?php ___('backgrounds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
-								<i class="icon-edit"></i>
+								<i class="pwi-edit"></i>
 							</button>
 							<input
 								id="item-id"
@@ -169,7 +174,7 @@
 						tooltip="<?php ___('backgrounds.description_info'); ?>"
 						tooltip-popup-delay="333">
 						<?php ___('backgrounds.description'); ?>
-						<i class="icon-info-circle"></i>
+						<i class="pwi-info-circle"></i>
 					</label>
 					<input
 						id="item-description"
@@ -185,7 +190,7 @@
 					<button
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'pwBackgrounds')">
-						<i class="icon-close"></i>
+						<i class="pwi-close"></i>
 						<?php ___('backgrounds.delete'); ?>
 					</button>
 
@@ -193,7 +198,7 @@
 					<button
 						class="button"
 						ng-click="duplicateItem(selectedItem,'pwBackgrounds')">
-						<i class="icon-copy-2"></i>
+						<i class="pwi-copy-2"></i>
 						<?php ___('backgrounds.duplicate'); ?>
 					</button>
 
@@ -202,24 +207,24 @@
 
 			</div>
 
-
 		</div>
 
-		<hr class="thick">
+		<?php if( pw_dev_mode() ) : ?>
+			<hr class="thick">
+			<div class="pw-dev well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<div class="well">
+					<h3>$scope.pwBackgrounds</h3>
+					<pre><code>{{ pwBackgrounds | json }}</code></pre>
+				</div>
 
-		<!--
-		<hr class="thick">
-		<button ng-click="resetDefaults()" class="button">Reset to Defaults</button>
+				<div class="well">
+					<h3>$scope.images</h3>
+					<pre><code>{{ images | json }}</code></pre>
+				</div>
+			</div>
+		<?php endif; ?>
 
-		<hr class="thick">
-		<pre>images : {{ images | json }}</pre>
-
-		<hr class="thick">
-
-		<pre>pwBackgrounds : {{ pwBackgrounds | json }}</pre>
-		-->
-
-		
 
 	</div>
 

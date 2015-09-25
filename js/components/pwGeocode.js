@@ -56,8 +56,8 @@ postworld.directive( 'pwGeoInput', [ '$log', '_', function( $log, $_ ){
     return { 
         controller: 'pwGeoInputCtrl',
         scope:{
-        	'geoPost':'=geoPost',
-        	'geoLocationObj':'=geoLocationObj',
+        	'geoPost':'=',
+        	'geoLocationObj':'=',
         },
         link : function( $scope ){
 
@@ -135,9 +135,6 @@ postworld.controller('pwGeoInputCtrl',
 				$_.inArray( 'establishment', address_component.types) ){
 				location.name = address_component.long_name;
 			}
-
-			
-
 
 		});
 

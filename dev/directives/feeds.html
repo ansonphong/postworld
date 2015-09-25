@@ -60,7 +60,7 @@
 		<div ng-include src="templates.panels.feed_top"></div>
 		<!-- REPEAT TEMPLATE -->
 		<div class="post"
-			ng-repeat="post in posts | orderBy:feed_data.order_by">
+			ng-repeat="post in posts() | orderBy:feed_data.order_by">
 			<div ng-include src="get_template(post.post_type)"></div>
 		</div>
 	</div>

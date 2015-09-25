@@ -6,127 +6,144 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 		openModal : function( meta ){
 			
-			$log.debug( "OPEN MODAL : ", meta );
+			// Log
+			$log.debug( "$pwModal.openModal : INIT : meta : ", meta );
 
-			///// DEFAULTS /////
+			// The modal object which will be opened with $modal service
+			var modalObj = {};
+
+			// The metadata which will be passed into the modal
 			if( _.isUndefined(meta) )
-				var meta = {};
-			if( _.isUndefined( meta.post ) )
-				meta.post = {};
+				meta = {};
 
-			// Default Template ID
-			var mode = ( _.isUndefined( meta.mode ) ) ?
-				'default' : meta.mode;
+			///// SET DEFAULTS /////
+			var defaultMeta = {
+				mode: 'view',
+				modalIndex: $pw.state.modals.open,
+				templateName: null,	// Used to override template
+				post:{
+					post_type: 'post'
+				},
+				keybindings: true,
+			};
+			meta = array_replace_recursive( defaultMeta, meta );
 
-			// Default Template ID
-			var templateName = ( _.isUndefined( meta.templateName ) ) ?
-				'modal-default' : meta.templateName;
-
-			// Default Controller
-			var controller = ( _.isUndefined( meta.controller ) ) ?
-				'pwModalInstanceCtrl' : meta.controller;
-
-			// Default Window Class
-			var windowClass = ( _.isUndefined( meta.windowClass ) ) ?
-				'pw-modal-default' : meta.windowClass;
-
-			// Track how many modals are open
-			meta.modalIndex = $pw.state.modals.open;
 			// Increase the number by 1
 			$pw.state.modals.open ++;
 
-			///// DETECT POST TYPE /////
-			// Check for a post type in the post
-			var postType = $_.getObj( meta, 'post.post_type' );
-			// If no post type
-			if( !postType ){
-				// Set the default post type
-				postType = 'post';
-			}
-
 			////////// SWITCH MODE //////////
-			// mode : Can be used to pass the preset mode
-			// or if string not found, this substitutes as the panel id
+			// Used to pass the preset mode
 			switch( meta.mode ){
 				///// NEW /////
 				case "new":
 				///// EDIT /////
 				case "edit":
 					///// SET DEFAULT TEMPLATE NAME /////
-					if ( _.isUndefined( meta.templateName ) ){
-						// Define the template name with post type
-						templateName = 'modal-edit-' + postType;
-						// Check if modal template exists with this name, will return false if not
-						var postTypeEditTemplate = $pwData.pw_get_template( { subdir: 'modals', view: templateName, } );
-						// If no template is found
-						if( !postTypeEditTemplate )
-							// Set the default template name
-							templateName = 'modal-edit-post';
-					}
-					///// SET DEFAULTS /////
-					controller = ( _.isUndefined( meta.controller ) ) ?
+
+					// Define the template name with post type
+					meta.templateName = 'modal-edit-' + $_.get( meta, 'post.post_type' );
+					
+					// Check if custom modal template exists
+					// Will return false if not
+					modalObj.templateUrl = $pwData.pw_get_template({
+							subdir: 'modals',
+							view: meta.templateName
+						});
+					
+					// If no template is found
+					if( modalObj.templateUrl == false )
+						// Use the fallback template
+						modalObj.templateUrl = $pwData.pw_get_template({
+							subdir: 'modals',
+							view: 	'modal-edit-post'
+						});
+					
+					// Get default controller value from meta
+					modalObj.controller = ( _.isUndefined( meta.controller ) ) ?
 						'pwModalInstanceCtrl' : meta.controller;
-					windowClass = ( _.isUndefined( meta.windowClass ) ) ?
-						templateName : meta.windowClass;
+
+					// Get default window value from meta
+					modalObj.windowClass = ( _.isUndefined( meta.windowClass ) ) ?
+						meta.templateName : meta.windowClass;
+
+					// Disable Key Bindings
+					meta.keybindings = false;
+
 				break;
+
+				///// MEDIA /////
+				case "media":
+					modalObj = {
+						controller: 	"mediaModalInstanceCtrl",
+						windowClass: 	"modal-media",
+					};
+					modalObj.templateUrl = $pwData.pw_get_template({
+						subdir: 'modals',
+						view: 	'modal-media'
+					});
+				break;
+
 				///// VIEW /////
 				case "view":
 				///// FEED /////
 				case "feed":
-					// TODO : Add support to detect post types / format and check for availability of the modal template					
-					templateName = "modal-view-post";
-					controller = "pwModalInstanceCtrl";
-					windowClass = "modal-view-post"; 
+					modalObj = {
+						template: 		"<div feed-item></div>",
+						controller: 	"pwModalInstanceCtrl",
+						windowClass: 	"modal-view-post",
+					};
 				break;
-				///// MEDIA /////
-				case "media":
-					// TODO : Add support to detect post types / format and check for availability of the modal template					
-					templateName = "modal-media";
-					controller = "mediaModalInstanceCtrl";
-					windowClass = "modal-media"; 
+
+				///// TEMPLATE /////
+				case "template":
+					modalObj = {
+						controller: 	"pwModalInstanceCtrl",
+						windowClass: 	"modal-template",
+						keybindings: 	false,
+					};
+					if( $_.get( meta, 'windowClass' ) )
+						modalObj.windowClass = $_.get( meta, 'windowClass' );
 				break;
-				///// DEFAULT /////
-				/* Defaults already set above
-				default:
-					templateName = meta.templateName;
-					controller = meta.controller;
-					windowClass = meta.windowClass;
-				*/
+
 			}
 
-			///// GET TEMPLATE URL /////
-			// If there's a slash in the template, it's from another subdir
-			if( $_.isInArray( "/", templateName ) ){
-				var templateNameParts = templateName.split("/");
-				// Use the first part as the subdir
-				var templateSubdir = templateNameParts[0];
-				// Use the second part as the view
-				templateName = templateNameParts[1];
-			}
-			// Otherwise assume it's in /modals
-			else {
-				var templateSubdir = 'modals';
+			///// GET CUSTOM OVERRIDE TEMPLATE URL /////
+			// Here the `meta.templateName` can be used to override the template
+			// If no inline template is defined
+			if( _.isString( meta.templateName ) && _.isEmpty( modalObj.templateUrl )  ){
+
+				// If there's a slash in the template, it's from another subdir
+				if( $_.inArray( "/", meta.templateName ) ){
+					var templateNameParts = meta.templateName.split("/");
+					// Use the first part as the subdir
+					var templateSubdir = templateNameParts[0];
+					// Use the second part as the view
+					var templateName = templateNameParts[1];
+				}
+				// Otherwise assume it's in /modals
+				else {
+					var templateSubdir = 'modals';
+					var templateName = meta.templateName;
+				}
+
+				// Add template URL from template name 
+				modalObj.templateUrl = $pwData.pw_get_template( { subdir: templateSubdir, view: templateName } );
+
 			}
 			
-			var templateUrl = $pwData.pw_get_template( { subdir: templateSubdir, view: templateName } );
-
-			///// LAUNCH THE MODAL /////
-			$log.debug(
-				"Launch Modal // templateName : " + templateName + 
-				" // templateSubdir : " + templateSubdir + 
-				" // templateUrl : " + templateUrl + 
-				" // meta : ", meta );
-
-			var modalInstance = $modal.open({
-				templateUrl: templateUrl,
-				controller: controller,
-				windowClass: windowClass,
-				resolve: {
+			///// PRIME MODAL OBJECT /////
+			// Add resolve
+			modalObj.resolve = {
 					meta: function(){
 						return meta;
 					}
-				}
-			});
+				};
+
+			///// LAUNCH THE MODAL /////
+			//$log.debug( 'MODAL META : ', meta );
+			$log.debug( '$modal.open : modalObj : ', modalObj );
+
+			var modalInstance = $modal.open( modalObj );
 
 			modalInstance.result.then(function (selectedItem) {
 				//$scope.post_title = post_title;
@@ -149,8 +166,11 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 ////////// MODAL INSTANCE CONTROL //////////
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', '$browser', '$modalStack', '$pw', // 'pwQuickEdit',
+	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', '$browser', '$modalStack', '$pw',  // 'pwQuickEdit',
 	function( $scope, $rootScope, $document, $window, $location, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts, $browser, $modalStack, $pw ) { // , $pwQuickEdit
+
+	// $modalInstance - switch modal template
+	//$log.debug( '>>> $modalInstance <<<', $modalInstance );
 
 	///// SET META /////
 	$scope.meta = meta;
@@ -169,28 +189,31 @@ postworld.controller('pwModalInstanceCtrl',
 	/// FROM POST FEED
 	// Check the post for a feed ID
 	if( $_.getObj( meta, 'post.feed.id' ) ){
-		$scope.feed = {};
-		$scope.feed['id'] = meta.post.feed['id'];
-		$log.debug( "FEED ID FROM : POST : ", $scope.feed['id'] );
+		$scope.modalFeed = {};
+		$scope.modalFeed['id'] = meta.post.feed['id'];
+		$log.debug( "FEED ID FROM : POST : ", $scope.modalFeed['id'] );
 	}
 	// FROM MODAL META
 	// Check the modal meta for the feed ID
 	else if( $_.getObj( meta, 'feed.id' )  ){
-		$scope.feed = {};
-		$scope.feed['id'] = meta.feed['id'];
-		$log.debug( "FEED ID FROM : MODAL META : ", $scope.feed['id'] );
+		$scope.modalFeed = {};
+		$scope.modalFeed['id'] = meta.feed['id'];
+		$log.debug( "FEED ID FROM : MODAL META : ", $scope.modalFeed['id'] );
 	}
 
 	///// FEED HANDLING /////
-	if( $_.objExists( $scope.feed, 'id' ) ){
+	if( $_.objExists( $scope.modalFeed, 'id' ) ){
 		// Get the original full post object from the feed
 		// In the case that only a partial post object was passed
-		$scope.post = $pwPosts.getFeedPost( $scope.feed['id'], $scope.post.ID );
-
+		$scope.post = $pwPosts.getFeedPost( $scope.modalFeed['id'], $scope.post.ID );
 		// Get the current position of the feed
-		$scope.feed['currentIndex'] = _.indexOf( $pwPosts.getFeed( $scope.feed.id )['posts'], $scope.post );
-	}
+		$scope.modalFeed['currentIndex'] = _.indexOf( $pwPosts.getFeed( $scope.modalFeed.id )['posts'], $scope.post );
+		// Set the view to modal
+		$scope.modalFeed = $_.set( $scope.modalFeed, 'view.current', 'modal' );
 
+		$log.debug( 'FEED :', $scope.modalFeed );
+
+	}
 
 	///// LOAD POST DATA /////
 	// Allow editPost Controller to Initialize
@@ -224,14 +247,14 @@ postworld.controller('pwModalInstanceCtrl',
 	$scope.offsetFeedIndex = function( offset ){		
 		// Set the current $scope.post object to reflect the current index
 		// var offset = [ number ] // how many to switch, ie. 1 (next), -1 (previous)
-		if( _.isUndefined( $scope.feed ) ){
+		if( _.isUndefined( $scope.modalFeed ) ){
 			$log.debug('nextPost() : No feed.');
 			return false;
 		}
 
 		// Setup Vars
-		var feedLength = $pwPosts.getFeed( $scope.feed.id )['posts'].length;
-		var currentIndex = $scope.feed.currentIndex;
+		var feedLength = $pwPosts.getFeed( $scope.modalFeed.id )['posts'].length;
+		var currentIndex = $scope.modalFeed.currentIndex;
 		var newIndex = currentIndex + offset;
 
 		// If the feed is at the end and offset positive, loop back to the beginning
@@ -246,7 +269,7 @@ postworld.controller('pwModalInstanceCtrl',
 		var skipPostTypes = [ '_pw_block' ];
 
 		// Get the possible new post for testing
-		var newPost = $pwPosts.getFeed( $scope.feed.id )['posts'][ newIndex ];
+		var newPost = $pwPosts.getFeed( $scope.modalFeed.id )['posts'][ newIndex ];
 
 		// If the new possible post doesn't pass the test
 		if( $_.inArray( $_.get( newPost, 'post_type' ), skipPostTypes ) ){
@@ -257,9 +280,18 @@ postworld.controller('pwModalInstanceCtrl',
 		// If the new possible post passes
 		else{
 			// Set the new currentIndex
-			$scope.feed.currentIndex = newIndex;
+			$scope.modalFeed.currentIndex = newIndex;
 			// Set the new scope post
-			$scope.post = $pwPosts.getFeed( $scope.feed.id )['posts'][ newIndex ];
+			$scope.post = $pwPosts.getFeed( $scope.modalFeed.id )['posts'][ newIndex ];
+		
+			$scope.$broadcast( 'modalChangePost', {
+				offset: offset,
+				postId: $_.get( $scope.post, 'ID' ),
+			});
+
+			// Set the feed keybindings to this post
+			setFeedKeybindings();
+
 		}
 
 	}
@@ -273,22 +305,36 @@ postworld.controller('pwModalInstanceCtrl',
 	};
 
 
+	///// ON : MODAL NEXT/PREVIOUS POST /////
+	// Event listeners for switching post
+	$scope.$on( 'modalNextPost', function( e, vars ){
+		if( $_.get(vars,'feedId') == $scope.modalFeed.id )
+			$scope.nextPost();
+	});
+	$scope.$on( 'modalPreviousPost', function( e, vars ){
+		if( $_.get(vars,'feedId') == $scope.modalFeed.id )
+			$scope.previousPost();
+	});
+
+
 	///// KEY PRESS /////
 	// Capture Keydown
 	
 	$scope.keyDown = function( e ){
-		//$log.debug( "key press : " + e.keyCode + " : ", e );
-		var keyCode = parseInt( e.keyCode );
 	
 		//$log.debug( "$pw.state.modals.open:", $pw.state.modals.open );
 		//$log.debug( "meta.modalIndex-1:", meta.modalIndex-1 );
+
+		if( !$pw.hasKeybindings({ feedId: $scope.modalFeed.id }) )
+			return false;
 
 		// Check if the current modal is on top
 		if( $pw.state.modals.open != meta.modalIndex+1 )
 			return false;
 
-		///// FEED /////
-		if( !_.isUndefined( $scope.feed ) ){
+		//// BIND KEYCODE TO ACTIONS ///
+		var keyCode = parseInt( e.keyCode );
+		if( !_.isUndefined( $scope.modalFeed ) ){
 			switch( keyCode ){
 				// Right Key
 				case 39:
@@ -307,9 +353,30 @@ postworld.controller('pwModalInstanceCtrl',
 		
 	}
 
-	$document.keydown( function( e ){
-		$scope.keyDown( e );
-	})
+	var getKeyBindingsObj = function(){
+		var obj = {};
+		obj.feedId = $_.get($scope,'modalFeed.id');
+		return obj;
+	}
+
+	var setFeedKeybindings = function(){
+		// Enable keybindings
+		//$pw.state.modals.enableKeyBindings = true;
+		if( $_.objExists( $scope, 'modalFeed.id' ) ){
+			$pw.setKeybindings( getKeyBindingsObj() );
+		}
+	}
+
+	// Enable key bindings
+	if( $_.get( meta, 'keybindings' ) ){
+		
+		setFeedKeybindings();
+
+		// Bind keys to keyDown function
+		$document.keydown( function( e ){
+			$scope.keyDown( e );
+		});
+	}
 
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
@@ -442,7 +509,7 @@ postworld.controller('mediaModalInstanceCtrl',
     var args = { "link_url": link_url };
 
     // MEDIA GET
-    pwData.wp_ajax('ajax_oembed_get', args ).then(
+    pwData.wpAjax('ajax_oembed_get', args ).then(
         // Success
         function(response) {    
             $scope.oEmbed = $sce.trustAsHtml( response.data );
@@ -460,87 +527,6 @@ postworld.controller('mediaModalInstanceCtrl',
     };
 
 
-}]);
-
-
-
-/* ___        _      _      _____    _ _ _   
-  / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
- | | | | | | | |/ __| |/ / |  _| / _` | | __|
- | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
-  \__\_\\__,_|_|\___|_|\_\ |_____\__,_|_|\__|
-											 
-////////// ------------ QUICK EDIT ------------ //////////*/  
-
-/*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '$pw',
-	function ( $rootScope, $log, $location, $modal, pwData, $pw ) {
-	return{
-		openQuickEdit : function( meta ){
-			
-			// Default Defaults
-			if( _.isUndefined( meta.mode ) )
-				meta.mode = 'quick-edit';
-
-			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
-
-			var modalInstance = $modal.open({
-			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
-			  controller: 'quickEditInstanceCtrl',
-			  windowClass: 'quick_edit',
-			  resolve: {
-				meta: function(){
-					return meta;
-				}
-			  }
-			});
-			modalInstance.result.then(function (selectedItem) {
-				//$scope.post_title = post_title;
-			}, function () {
-				// WHEN CLOSE MODAL
-				$log.debug('Modal dismissed at: ' + new Date());
-				// Clear the URL params
-				//$location.url('/');
-				$location.path('/');
-				//$rootScope.$apply();
-
-			});
-		},
-
-		trashPost : function ( post_id, scope ){
-			if ( window.confirm("Are you sure you want to trash : \n" + scope.post.post_title) ) {
-				pwData.pw_trash_post( post_id ).then(
-					// Success
-					function(response) {
-						if (response.status==200) {
-							$log.debug('Post Trashed RETURN : ',response.data);                  
-							if ( _.isNumber(response.data) ){
-								var trashed_post_id = response.data;
-								if( typeof scope != undefined ){
-									// SUCESSFULLY TRASHED
-									//var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
-									scope.post.post_status = 'trash';
-									// Emit Trash Event : post_id
-									scope.$emit('trashPost', trashed_post_id );
-									// Broadcast Trash Event : post_id
-									scope.$broadcast('trashPost', trashed_post_id );
-								}
-							}
-							else{
-								alert( "Error trashing post : " + response.data );
-							}
-						} else {
-							// handle error
-						}
-					},
-					// Failure
-					function(response) {
-						// Failed Delete
-					}
-				);
-			}
-		},
-	}
 }]);
 
 

@@ -11,7 +11,10 @@ global $post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div id="pwPostParentMetabox" class="postworld pw-metabox metabox-post-parent">
+<div
+	id="pwPostParentMetabox"
+	class="postworld pw-metabox metabox-post-parent"
+	ng-cloak>
 	<div ng-controller="pwPostParentMetaboxCtrl">
 		<?php
 			// Include the UI template
@@ -35,11 +38,8 @@ global $post;
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwPostParentMetabox = angular.module( 'pwPostParentMetabox', ['postworld'] );
-	
 	///// CONTROLLER /////
-	pwPostParentMetabox.controller('pwPostParentMetaboxCtrl',
+	postworldAdmin.controller('pwPostParentMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
@@ -56,7 +56,7 @@ global $post;
 				var query = $scope.query;
 				query.s = val;
 
-				return $pwData.pw_query( query ).then(
+				return $pwData.pwQuery( query ).then(
 					function( response ){
 						$log.debug( "QUERY RESPONSE : ", response.data.posts );
 						return response.data.posts;
@@ -89,8 +89,3 @@ global $post;
 	// Action hook to print the Javascript(s)
 	do_action('pw_post_parent_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwPostParentMetabox"),['pwPostParentMetabox']);
-</script>

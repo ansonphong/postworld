@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>js/app.js - Postworld</title>
+    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="stylesheet" href="../assets/css/custom.css">
+    <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.css">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body class="yui3-skin-sam">
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <h1 class="brand" style="padding: 10px 16px 10px; height: 20px; line-height: 20px; margin-left: 0;">
+	    <img alt="Postworld" src="../assets/css/logo.png" style="max-height: 65%;" title="Postworld">
+            Postworld
+        </h1>
+	<div class="nav">
+            <li class="divider-vertical"></li>
+            <li>
+                <p class="navbar-text">
+                    API Docs for Version: <b>1.9</b>
+                </p>
+            </li>
+        </div>
+        <form class="navbar-form pull-right" style="line-height: 40px; height: 40px;">
+            <input style="margin-top: 0;" type="text" class="search-query" placeholder="Search for classes/modules..." data-obj='["classes/loadPost", "classes/pwPostShareReport", "modules/Directives", "modules/Postworld", "modules/Services"]'>
+        </form>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="span3">
+	    <div>
+	        <h3>APIs</h3>
+	        <div id="sidebar">
+	            <ul id="main-nav" class="nav nav-tabs" style="margin-bottom:0;">
+	                <li class="active"><a href="#classes" data-toggle="tab">Classes</a></li>
+	                <li><a href="#modules" data-toggle="tab">Modules</a></li>
+	            </ul>
+	    
+	            <div id="api-tabview-filter">
+	                <input type="search" placeholder="Type to filter APIs">
+	            </div>
+	    
+	            <div class="tab-content" style="border: 1px solid #DDD; border-top:0;">
+	                <div class="tab-pane active" id="classes">
+	                    <ul id="api-classes" class="nav nav-list">
+	                            <li><a href="../classes/loadPost.html">loadPost</a></li>
+	                            <li><a href="../classes/pwPostShareReport.html">pwPostShareReport</a></li>
+	                    </ul>
+	                </div>
+	    
+	                <div class="tab-pane" id="modules">
+	                    <ul id="api-modules" class="nav nav-list">
+	                            <li><a href="../modules/Directives.html">Directives</a></li>
+	                            <li><a href="../modules/Postworld.html">Postworld</a></li>
+	                            <li><a href="../modules/Services.html">Services</a></li>
+	                    </ul>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+        </div>
+        <div class="span9">
+                <form id="options-form" class="form-inline pull-right">
+                    Show:
+                    <label for="api-show-inherited" class="checkbox">
+                        <input type="checkbox" id="api-show-inherited" checked>
+                        Inherited
+                    </label>
+            
+                    <label for="api-show-protected" class="checkbox">
+                        <input type="checkbox" id="api-show-protected">
+                        Protected
+                    </label>
+            
+                    <label for="api-show-private" class="checkbox">
+                        <input type="checkbox" id="api-show-private">
+                        Private
+                    </label>
+                    <label for="api-show-deprecated" class="checkbox">
+                        <input type="checkbox" id="api-show-deprecated">
+                        Deprecated
+                    </label>
+            
+                </form>
+            
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <div class="page-header">
+                            <h1>js/app.js <small>File</small></h1>
+                        </div>
+                        
+                        <div class="file">
+                            <pre class="prettyprint linenums">
+                        /*____           _                      _     _ 
+                         |  _ \ ___  ___| |___      _____  _ __| | __| |
+                         | |_) / _ \/ __| __\ \ /\ / / _ \| &#x27;__| |/ _&#x60; |
+                         |  __/ (_) \__ \ |_ \ V  V / (_) | |  | | (_| |
+                         |_|   \___/|___/\__| \_/\_/ \___/|_|  |_|\__,_|
+                        
+                        ////////////////////////////////////////////////
+                        
+                        A Javascript and PHP Wordpress framework for
+                        • Extending the Wordpress functions API
+                        • Displaying posts in creative ways.
+                        
+                        JS Framework : AngularJS
+                        GitHub Repo  : https://github.com/phongmedia/postworld/
+                        ASCII Art by : http://patorjk.com/software/taag/#p=display&amp;f=Standard
+                        */
+                        
+                        // Documention by yuiDocs
+                        // http://yui.github.io/yuidoc/
+                        /**
+                         * @module Postworld
+                         */
+                        
+                        &#x27;use strict&#x27;;
+                        
+                        pw.partials = {};
+                        pw.templates = {};
+                        pw.feeds = {};
+                        pw.widgets = {};
+                        pw.admin = {};
+                        pw.embeds = {};
+                        
+                        // Add Standard Modules
+                        pw.angularModules = pw.angularModules.concat([
+                        	&#x27;ngResource&#x27;,
+                        	&#x27;ngRoute&#x27;,
+                        	&#x27;ngSanitize&#x27;,
+                        	&#x27;ngTouch&#x27;,
+                        	&#x27;ngAria&#x27;,
+                        	&#x27;ui.bootstrap&#x27;,
+                        	&#x27;monospaced.elastic&#x27;,
+                        	&#x27;timer&#x27;,
+                        	&#x27;angular-parallax&#x27;,
+                        	&#x27;wu.masonry&#x27;,
+                        	&#x27;pw.compile&#x27;,
+                        	&#x27;checklist-model&#x27;,
+                        ]);
+                        
+                        var postworld = angular.module(&#x27;postworld&#x27;, pw.angularModules );
+                        
+                        ///// POSTWORLD ADMIN MODULE /////
+                        var depInjectAdmin = [
+                        	&#x27;postworld&#x27;,
+                        	&#x27;ui.slider&#x27;,
+                        	];
+                        
+                        var postworldAdmin = angular.module(&#x27;postworldAdmin&#x27;, depInjectAdmin );
+                        
+                        var controllerProvider;
+                        
+                        postworld.config(function ($routeProvider, $locationProvider, $provide, $logProvider, $controllerProvider ) {   
+                        
+                        	// Pass $controllerProvider so that vanilla JS can init new controllers
+                        	controllerProvider = $controllerProvider;
+                        
+                        	var plugin_url = jsVars.pluginurl;
+                        
+                        	$routeProvider.when(&#x27;/new/:post_type&#x27;,
+                        		{
+                        			action: &quot;new_post&quot;,
+                        		});
+                        
+                        	$routeProvider.when(&#x27;/new/&#x27;,
+                        		{
+                        			action: &quot;new_post&quot;,
+                        		});
+                        
+                        	$routeProvider.when(&#x27;/edit/:post_id&#x27;,
+                        		{
+                        			action: &quot;edit_post&quot;,
+                        		});
+                        
+                        	$routeProvider.when(&#x27;/home/&#x27;,
+                        		{
+                        			action: &quot;default&quot;,
+                        		});
+                        
+                        	// this will be also the default route, or when no route is selected
+                        	// $routeProvider.otherwise({redirectTo: &#x27;/home/&#x27;});
+                        
+                        	// SHOW / HIDE DEBUG LOGS IN CONSOLE
+                        	var debugEnabled = ( window.pw.info.mode == &#x27;dev&#x27; ) ? true : false;
+                        	$logProvider.debugEnabled( debugEnabled );
+                        
+                        	$locationProvider.html5Mode( window.pw.view.location_provider.html_5_mode );
+                        
+                        });
+                        
+                        
+                        /*____              
+                         |  _ \ _   _ _ __  
+                         | |_) | | | | &#x27;_ \ 
+                         |  _ &lt;| |_| | | | |
+                         |_| \_\\__,_|_| |_|        
+                        */
+                        postworld.run( 
+                        	function( $rootScope, $window, $templateCache, $log, $location, $rootElement, pwData){    
+                        
+                        		///// ALLOW LINK CLICKING /////
+                        		// Critical so that when $locationProvider is in HTML5 mode
+                        		// Normal links can be clicked
+                        		$rootElement.off(&#x27;click&#x27;);
+                        
+                        
+                        		/////// DEV SNIPPETS /////
+                        		// TODO remove in production
+                        		/*
+                        		$rootScope.$on(&#x27;$viewContentLoaded&#x27;, function() {
+                        		$templateCache.removeAll();
+                        		});
+                        		*/
+                        		//$rootScope.current_user = $window.pwGlobals.user;
+                        		//$log.debug(&#x27;Current user: &#x27;, $rootScope.current_user );
+                        
+                        });
+                        
+                        
+                        ///// FUNCTION : REGISTER CONTROLLER AFTER BOOTSTRAP /////
+                        function pwRegisterController( controllerName, moduleName ) {
+                            // Here I cannot get the controller function directly so I
+                            // need to loop through the module&#x27;s _invokeQueue to get it
+                            if( moduleName == null )
+                            	moduleName = &quot;postworld&quot;;
+                            
+                            var queue = angular.module(moduleName)._invokeQueue;
+                            for(var i=0;i&lt;queue.length;i++) {
+                                var call = queue[i];
+                                if(call[0] == &quot;$controllerProvider&quot; &amp;&amp;
+                                   call[1] == &quot;register&quot; &amp;&amp;
+                                   call[2][0] == controllerName) {
+                                   	if( !_.isUndefined( controllerProvider ) )
+                                    	controllerProvider.register(controllerName, call[2][1]);
+                                }
+                            }
+                        
+                            //console.log( &#x27;pwRegisterController : &#x27; + controllerName + &#x27;, &#x27; + moduleName );
+                        
+                        }
+                        
+                        ///// FUNCTION : COMPILE AND ELEMENT AFTER BOOTSTRAP /////
+                        function pwCompileElement( context, id ){
+                        	// Compile a new element, after the controller is registered
+                        	
+                        	var contextInjector = angular.element(context).injector();
+                        
+                        	if( _.isUndefined( contextInjector ) )
+                        		return false;
+                        
+                        	contextInjector.invoke(function($compile, $rootScope) {
+                        	    $compile( angular.element(&#x27;#&#x27;+id))($rootScope);
+                        	    $rootScope.$apply();
+                        	});
+                        
+                        	/*// USING JQUERY
+                        	jQuery(context).injector().invoke(function($compile, $rootScope) {
+                        	    $compile(jQuery(&#x27;#&#x27;+id))($rootScope);
+                        	    $rootScope.$apply();
+                        	});
+                        	*/
+                        }
+                        
+                        
+                        ////////// REPLACE ALL STRING PROTOTYPE //////////
+                        String.prototype.replaceAll = function(search, replace)
+                        {
+                            //if replace is null, return original string otherwise it will
+                            //replace search string with &#x27;undefined&#x27;.
+                            if(!replace) 
+                                return this;
+                        
+                            return this.replace(new RegExp(&#x27;[&#x27; + search + &#x27;]&#x27;, &#x27;g&#x27;), replace);
+                        };
+                        
+                        
+                        /*
+                        	 __     __  ____    _    _   _ ____  ____   _____  __     __     __
+                        	/ /    / / / ___|  / \  | \ | |  _ \| __ ) / _ \ \/ /    / /    / /
+                           / /    / /  \___ \ / _ \ |  \| | | | |  _ \| | | \  /    / /    / / 
+                          / /    / /    ___) / ___ \| |\  | |_| | |_) | |_| /  \   / /    / /  
+                         /_/    /_/    |____/_/   \_\_| \_|____/|____/ \___/_/\_\ /_/    /_/    
+                        /////////////////////////////////////////////////////////////////*/
+                        
+                        
+                        
+                        postworld.constant(&#x27;angularMomentConfig&#x27;, {
+                        	//preprocess: &#x27;unix&#x27;, 				// optional
+                        	//timezone: &#x27;America/Los_Angeles&#x27; 	// optional
+                        });
+                        
+                        
+                        /*
+                        postworld.run(function($rootScope, $templateCache) {
+                           $rootScope.$on(&#x27;$viewContentLoaded&#x27;, function() {
+                        	  $templateCache.removeAll();
+                           });
+                        });
+                        */
+                            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/jquery/jquery-1.8.2.min.js"></script>
+<script src="../assets/vendor/bootstrap/js/bootstrap.js"></script>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script src="../assets/js/yuidoc-bootstrap.js"></script>
+<script>prettyPrint();</script>
+</body>
+</html>

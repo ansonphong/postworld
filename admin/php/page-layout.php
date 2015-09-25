@@ -10,9 +10,9 @@
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="layout wrap postworld" ng-cloak>
+<div class="layout wrap postworld" ng-cloak>
 	<h1>
-		<i class="icon-th-large"></i>
+		<i class="pwi-th-large"></i>
 		Layouts
 	</h1>
 	<hr class="thick">
@@ -35,10 +35,10 @@
 					</span>
 				<td>
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php i_save_option_button( PW_OPTIONS_LAYOUTS, 'iLayouts'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_LAYOUTS, 'iLayouts'); ?></div>
 
 					<?php
-						echo i_layout_single_options( array( 'context'	=>	'siteAdmin' ) );
+						echo pw_layout_single_options( array( 'context'	=>	'siteAdmin' ) );
 						//echo i_ob_include_template( 'admin/modules/layout-single.php', $vars );
 					?>
 
@@ -46,13 +46,21 @@
 			</tr>
 		</table>
 
-		<hr class="thick">
+		<?php if( pw_dev_mode() ) : ?>
+			<hr class="thick">
+			<div class="pw-dev well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<div class="well">
+					<h3>$scope.iLayouts</h3>
+					<pre><code>{{ iLayouts | json }}</code></pre>
+				</div>
 
-		<!--
-		iLayouts : <pre>{{ iLayouts | json }}</pre>
-		iLayoutOptions : <pre>{{ iLayoutOptions | json }}</pre>
-		iGlobals : <pre><?php echo htmlentities( json_encode( iGlobals(), JSON_PRETTY_PRINT ) ); ?></pre>
-		-->
+				<div class="well">
+					<h3>$scope.iLayoutOptions</h3>
+					<pre><code>{{ iLayoutOptions | json }}</code></pre>
+				</div>
+			</div>
+		<?php endif; ?>
 
 	</div>
 </div>

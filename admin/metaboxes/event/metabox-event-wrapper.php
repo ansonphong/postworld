@@ -11,7 +11,10 @@ global $pw_event_post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div id="pwEventMetabox" class="postworld pw-metabox">
+<div
+	id="pwEventMetabox"
+	class="postworld pw-metabox"
+	ng-cloak>
 	<div ng-controller="pwEventMetaboxCtrl">
 		<?php
 			// Include the UI template
@@ -24,23 +27,32 @@ global $pw_event_post;
 		<!-- HIDDEN FIELD -->
 		<input type="hidden" name="pw_event_post" ng-value="post | json" style="width:100%;">
 		
-		<!-- DEV : Test Output -->
-		
-		<hr><pre>{{ post | json }}</pre>
-		
+		<?php if( pw_dev_mode() ): ?>
+			<div class="well">
+				<h3>$scope.post</h3>
+			
+				<!-- DEV : Test Output -->
+				<pre><code>{{ post | json }}</code></pre>
+			
+			</div>
+		<?php endif; ?>
+
 	</div>	
 </div>
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwEventMetabox = angular.module( 'pwEventMetabox', ['postworld'] );
 	///// CONTROLLER /////
-	pwEventMetabox.controller('pwEventMetaboxCtrl',
+	postworldAdmin.controller('pwEventMetaboxCtrl',
 		['$scope',
 			function( $scope ) {
 			$scope.post = <?php echo json_encode($pw_event_post); ?>;
 			$scope.eventKey = <?php echo json_encode( $event_postmeta_key ); ?>;
+	
+			$scope.removeTimeZone = function(){
+				delete $scope.post.post_meta[ $scope.eventKey ].timezone;
+			}
+
 	}]);
 </script>
 
@@ -48,12 +60,5 @@ global $pw_event_post;
 	// Action hook to print the Javascript(s)
 	do_action('pw_event_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwEventMetabox"),['pwEventMetabox']);
-</script>
-
-
 
 

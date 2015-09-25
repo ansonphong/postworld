@@ -5,6 +5,7 @@
 	$pwSiteOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
 	$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
 ?>
+
 <script>
 	postworldAdmin.controller( 'pwOptionsDataCtrl',
 		[ '$scope', 'iOptionsData',
@@ -19,15 +20,15 @@
 		$scope.pwHeaderCode = <?php echo $pw_header_code; ?>;
 		$scope['images'] = {};
 		$scope['options'] = $iOptionsData['options'];
+
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="main wrap postworld" ng-cloak>
+<div class="main wrap postworld" ng-cloak>
 	<h1>
-		<i class="icon-gears"></i>
+		<i class="pwi-gears"></i>
 		Site Options
 	</h1>
-	
 	
 	<div
 		pw-admin-options
@@ -43,37 +44,62 @@
 				<!-- FAVICON -->
 				<div class="well">
 					<div class="save-right">
-						<?php i_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
 					</div>
 					<h2>
-						<span class="icon-md"><i class="icon-image"></i></span>
+						<span class="icon-md"><i class="pwi-image"></i></span>
 						Favicon
 					</h2>
-					<?php
-						echo pw_select_image_id( array(
-							'ng_model'		=>	'pwSiteOptions.images.favicon',
-							'slug'			=>	'favicon',
-							'label'			=>	'Favicon',
-							'display'		=>	true,
-							'width'			=> 	'64px',
-						 	));?>
+					<div class="well">
+						Select the favicon, which appears as the tab icon in the browser.
+						<hr class="thin">
+						<?php
+							echo pw_select_image_id( array(
+								'ng_model'		=>	'pwSiteOptions.images.favicon',
+								'slug'			=>	'favicon',
+								'label'			=>	'Favicon',
+								'display'		=>	true,
+								'width'			=> 	'64px',
+							 	));?>
+					</div>
+					
 				</div>
 
 			</div>
 			<div class="col-sm-6 pad-col-md">
 				
-				
+				<!-- AVATAR IMAGE -->
+				<div class="well">
+					<div class="save-right">
+						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+					</div>
+					<h2>
+						<span class="icon-md"><i class="pwi-image"></i></span>
+						Default Avatar
+					</h2>
+					<div class="well">
+						Select the default avatar image.
+						<hr class="thin">
+						<?php
+							echo pw_select_image_id( array(
+								'ng_model'		=>	'pwSiteOptions.images.avatar',
+								'slug'			=>	'avatar',
+								'label'			=>	'Default Avatar',
+								'display'		=>	true,
+								'width'			=> 	'256px',
+							 	));?>
+					</div>
+				</div>
 
 			</div>
 		</div>
 
-
 		<div class="well">
 			<div class="save-right">
-				<?php i_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
+				<?php pw_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
 			</div>
 			<h2>
-				<i class="icon-code"></i>
+				<i class="pwi-code"></i>
 				Header Code
 			</h2>
 			<small>
@@ -89,13 +115,13 @@
 			</div>
 		</div>
 
-
-		<hr class="thick">
-		<h3>Google Fonts</h3>
-		
-		<hr class="thick">
-
-		<pre>pwSiteOptions: {{ pwSiteOptions | json }}</pre>
+		<?php if( pw_dev_mode() ): ?>
+			<hr class="thick">
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>pwSiteOptions: {{ pwSiteOptions | json }}</code></pre>
+			</div>
+		<?php endif; ?>
 
 	</div>
 </div>

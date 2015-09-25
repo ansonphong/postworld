@@ -5,7 +5,7 @@ class PW_Menu_With_Description extends Walker_Nav_Menu {
         return $this->template_path; 
     }
 
-    function start_el(&$output, $item, $depth, $args) {
+    function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
 
         global $wp_query;
 
@@ -54,7 +54,7 @@ class PW_Menu_With_Description extends Walker_Nav_Menu {
         $output .= $indent;
         $output .= '<li id="menu-item-'.$item->ID.'" '.$class_names.' >';
         $output .= $args->before;
-
+        
         // Print the template body
         ob_start();
         include $args->walker_vars['item_template_path'];
@@ -66,6 +66,8 @@ class PW_Menu_With_Description extends Walker_Nav_Menu {
     
     }
 }
+
+
 
 /*
 function pw_menu_kit_get_templates(

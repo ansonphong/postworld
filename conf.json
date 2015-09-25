@@ -1,0 +1,41 @@
+// JS Docs Configuration
+// INSTALL GLOBALLY : sudo npm install -g jsdoc@"<=3.3.0"
+// RUN ON COMMAND LINE : jsdoc -c conf.json
+// TODO : Get Theme : https://github.com/davidshimjs/jaguarjs-jsdoc
+{
+	"source":{
+		"include":[ "js/" ],
+		"exclude":[ "lib/" ]
+	},
+	"opts": {
+		"verbose": true,
+		//"template": "templates/jaguarjs",
+		"template": "templates/default",	// same as -t templates/default
+		"encoding": "utf8",               	// same as -e utf8
+		"destination": "./docs/jsdocs",  	// same as -d ./out/
+		"recurse": true                  	// same as -r
+		//"tutorials": "path/to/tutorials", // same as -u path/to/tutorials
+	},
+	"templates": {
+		"applicationName": "Postworld",
+		/*
+		"disqus": "",
+		"googleAnalytics": "",
+		"openGraph": {
+			"title": "",
+			"type": "website",
+			"image": "",
+			"site_name": "",
+			"url": ""
+		},
+		*/
+		"meta": {
+			"title": "",
+			"description": "",
+			"keyword": ""
+		},
+		"linenums": true,
+		"cleverLinks": true,
+		"monospaceLinks": true
+	}
+}

@@ -1,0 +1,32 @@
+<!-- TAXONOMY : TAGS -->
+<div
+	pw-input-tags
+	class="tags">
+		<div ng-repeat="tag in tagsInput" class="tag">
+			<span class="tag-name" ng-bind-html="tag.name"></span>
+			<button ng-click="removeTag(tag)" class="close">
+				<i class="pwi-close-thin"></i>
+			</button>
+		</div>
+		<div class="input-group">
+			<input
+				type="text"
+				typeahead-min-length="2"
+				typeahead-wait-ms="250"
+				typeahead-editable="1"
+				typeahead-loading="loadingTagsAutocomplete"
+				ng-model="tagInputTemp"
+				typeahead="tag.slug as tag.name for tag in queryTags($viewValue) | filter:$viewValue | limitTo:20"
+				typeahead-on-select="addTag($item);tagInputTemp=''"
+				class="form-control blue">
+			<span class="input-group-btn">
+				<button
+					class="btn btn-default blue"
+					ng-click="newTag(tagInputTemp);tagInputTemp=''">
+					<i ng-show="!loadingTagsAutocomplete" class="pwi-plus"></i>
+					<i ng-show="loadingTagsAutocomplete" class="pwi-spinner-2 pwi-spin"></i>
+					New Tag
+				</button>
+			</span>
+		</div>
+</div>

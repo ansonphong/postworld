@@ -8,9 +8,7 @@
 ///////////////////////////////////////////////*/
 
 
-
-
-infinite.directive('staticInclude', function($http, $templateCache, $compile) {
+postworld.directive('pwStaticInclude', function($http, $templateCache, $compile) {
 	return function(scope, element, attrs) {
 		var templatePath = attrs.staticInclude;
 
@@ -23,12 +21,11 @@ infinite.directive('staticInclude', function($http, $templateCache, $compile) {
 });
 
 
-
-postworld.directive('iPointerActivate', function( $timeout ) {
+postworld.directive('pwPointerActivate', function( $timeout ) {
     return {
         scope:{
-            iPointerActivate:"@",
-            inactiveDelay:"@",
+            pwPointerActivate:"@",
+            activateDelay:"@",
         },
         link: function( $scope, element, attrs ) {
         	/*

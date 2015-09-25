@@ -16,6 +16,13 @@ postworld.filter('htmlToPlaintext', function() {
 });
 
 
+postworld.filter('reverse', function() {
+  return function(items) {
+    return items.slice().reverse();
+  };
+});
+
+
 /*
   _____                           _         _____ _ _ _            
  |_   _| __ _   _ _ __   ___ __ _| |_ ___  |  ___(_) | |_ ___ _ __ 

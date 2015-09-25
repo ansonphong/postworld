@@ -1,0 +1,420 @@
+{
+    "project": {
+        "name": "Postworld",
+        "description": "WordPress framework for displaying posts in creative ways.",
+        "version": "1.9",
+        "url": "http://phong.com/"
+    },
+    "files": {
+        "docs/js/assets/vendor/bootstrap/js/bootstrap.min.js": {
+            "name": "docs/js/assets/vendor/bootstrap/js/bootstrap.min.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "infinite/packages/bootstrap/js/tests/vendor/qunit.js": {
+            "name": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "js/controllers/pwWidgets.js": {
+            "name": "js/controllers/pwWidgets.js",
+            "modules": {},
+            "classes": {
+                "pwPostShareReport": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "js/directives/pwBackground.js": {
+            "name": "js/directives/pwBackground.js",
+            "modules": {
+                "Directives": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "js/directives/pwDirectives.js": {
+            "name": "js/directives/pwDirectives.js",
+            "modules": {},
+            "classes": {
+                "loadPost": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "js/filters/pwFilters.js": {
+            "name": "js/filters/pwFilters.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "js/services/pwCommentsService.js": {
+            "name": "js/services/pwCommentsService.js",
+            "modules": {},
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "js/services/pwData.js": {
+            "name": "js/services/pwData.js",
+            "modules": {
+                "Services": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        },
+        "js/app.js": {
+            "name": "js/app.js",
+            "modules": {
+                "Postworld": 1
+            },
+            "classes": {},
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "Postworld": {
+            "name": "Postworld",
+            "submodules": {
+                "Directives": 1,
+                "Services": 1
+            },
+            "classes": {
+                "pwPostShareReport": 1,
+                "loadPost": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "js/directives/pwDirectives.js",
+            "line": 729
+        },
+        "Directives": {
+            "name": "Directives",
+            "submodules": {},
+            "classes": {
+                "loadPost": 1
+            },
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "Postworld",
+            "namespace": "",
+            "file": "js/directives/pwDirectives.js",
+            "line": 729,
+            "description": "Loads a post template and injects it with data."
+        },
+        "Services": {
+            "name": "Services",
+            "submodules": {},
+            "classes": {},
+            "fors": {},
+            "is_submodule": 1,
+            "namespaces": {},
+            "module": "Postworld",
+            "namespace": "",
+            "file": "js/services/pwData.js",
+            "line": 1
+        }
+    },
+    "classes": {
+        "pwPostShareReport": {
+            "name": "pwPostShareReport",
+            "shortname": "pwPostShareReport",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Postworld",
+            "file": "js/controllers/pwWidgets.js",
+            "line": 10,
+            "description": "Post Share Report\nPopulates the scope with a post share report\nfor the current contextual post.",
+            "return": {
+                "description": "Populates $scope.postShareReport",
+                "type": "Object"
+            }
+        },
+        "loadPost": {
+            "name": "loadPost",
+            "shortname": "loadPost",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "Postworld",
+            "submodule": "Directives",
+            "namespace": "",
+            "file": "js/directives/pwDirectives.js",
+            "line": 729,
+            "description": "Loads a post template and injects it with data.",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "postId",
+                    "description": "Optional. Post ID",
+                    "type": "String"
+                },
+                {
+                    "name": "postView",
+                    "description": "Which registered view template to use.",
+                    "type": "String"
+                },
+                {
+                    "name": "postQuery",
+                    "description": "Query vars to derive post from.",
+                    "type": "Object"
+                },
+                {
+                    "name": "postClass",
+                    "description": "Optional. Classes to add to the template element.",
+                    "type": "String"
+                },
+                {
+                    "name": "postLoading",
+                    "description": "Optional. An expression to assign a loading boolean.",
+                    "type": "String"
+                }
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "docs/js/assets/vendor/bootstrap/js/bootstrap.min.js",
+            "line": 1,
+            "description": "Bootstrap.js by @fat & @mdo\nplugins: bootstrap-transition.js, bootstrap-modal.js, bootstrap-dropdown.js, bootstrap-scrollspy.js, bootstrap-tab.js, bootstrap-tooltip.js, bootstrap-popover.js, bootstrap-affix.js, bootstrap-alert.js, bootstrap-button.js, bootstrap-collapse.js, bootstrap-carousel.js, bootstrap-typeahead.js\nCopyright 2012 Twitter, Inc.\nhttp://www.apache.org/licenses/LICENSE-2.0.txt",
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "line": 1,
+            "description": "QUnit - A JavaScript Unit Testing Framework\n\nhttp://docs.jquery.com/QUnit\n\nCopyright (c) 2012 John Resig, Jörn Zaefferer\nDual licensed under the MIT (MIT-LICENSE.txt)\nor GPL (GPL-LICENSE.txt) licenses.",
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "line": 296,
+            "description": "Specify the number of expected assertions to gurantee that failed test (no assertions are run at all) don't slip through.",
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "line": 303,
+            "description": "Asserts true.",
+            "example": [
+                " ok( \"asdfasdf\".length > 5, \"There must be at least 5 chars\" );"
+            ],
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "line": 321,
+            "description": "Checks that the first two arguments are equal, with an optional message.\nPrints out both actual and expected values.\n\nPrefered to ok( actual == expected, message )",
+            "example": [
+                " equal( format(\"Received {0} bytes.\", 2), \"Received 2 bytes.\" );"
+            ],
+            "params": [
+                {
+                    "name": "Object",
+                    "description": "actual"
+                },
+                {
+                    "name": "Object",
+                    "description": "expected"
+                },
+                {
+                    "name": "String",
+                    "description": "message (optional)"
+                }
+            ],
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "line": 538,
+            "description": "Resets the test setup. Useful for tests that modify the DOM.\n\nIf jQuery is available, uses jQuery's html(), otherwise just innerHTML.",
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "line": 554,
+            "description": "Trigger an event on an element.",
+            "example": [
+                " triggerEvent( document.body, \"click\" );"
+            ],
+            "params": [
+                {
+                    "name": "DOMElement",
+                    "description": "elem"
+                },
+                {
+                    "name": "String",
+                    "description": "type"
+                }
+            ],
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "infinite/packages/bootstrap/js/tests/vendor/qunit.js",
+            "line": 1154,
+            "description": "jsDump Copyright (c) 2008 Ariel Flesler - aflesler(at)gmail(dot)com |\nhttp://flesler.blogspot.com Licensed under BSD\n(http://www.opensource.org/licenses/bsd-license.php) Date: 5/15/2008",
+            "projectdescription": "Advanced and extensible data dumping for Javascript.",
+            "version": "1.0.0",
+            "author": "Ariel Flesler",
+            "link": "{http://flesler.blogspot.com/2008/05/jsdump-pretty-dump-of-any-javascript.html}",
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "js/controllers/pwWidgets.js",
+            "line": 59,
+            "description": "User Share Report : Outgoing / Incoming\nPopulates the scope with an outgoing user share report\nshowing posts which the given user has shared.",
+            "itemtype": "method",
+            "name": "pwPostShareReport",
+            "return": {
+                "description": "Populates $scope.postShareReport",
+                "type": "Object"
+            },
+            "class": "pwPostShareReport"
+        },
+        {
+            "file": "js/directives/pwDirectives.js",
+            "line": 540,
+            "description": "____                 _ _  __ _      \n / ___|  ___ _ __ ___ | | |/ _(_)_  __\n \\___ \\ / __| '__/ _ \\| | | |_| \\ \\/ /\n___) | (__| | | (_) | | |  _| |>  < \n |____/ \\___|_|  \\___/|_|_|_| |_/_/\\_\\\n\n * Adds a 'ui-scrollfix' class to the element when the page scrolls past it's position.\n * @param [offset] {int} optional Y-offset to override the detected offset.\n *   Takes 300 (absolute) or -300 or +300 (relative to detected)",
+            "class": "loadPost",
+            "module": "Postworld",
+            "submodule": "Directives"
+        },
+        {
+            "file": "js/directives/pwDirectives.js",
+            "line": 778,
+            "description": "Loads a post via post ID",
+            "itemtype": "method",
+            "name": "loadPostFromId",
+            "class": "loadPost",
+            "module": "Postworld",
+            "submodule": "Directives"
+        },
+        {
+            "file": "js/directives/pwDirectives.js",
+            "line": 797,
+            "description": "Loads a post via query",
+            "class": "loadPost",
+            "module": "Postworld",
+            "submodule": "Directives"
+        },
+        {
+            "file": "js/directives/pwDirectives.js",
+            "line": 827,
+            "description": "Sets the template URL",
+            "class": "loadPost",
+            "module": "Postworld",
+            "submodule": "Directives"
+        },
+        {
+            "file": "js/filters/pwFilters.js",
+            "line": 34,
+            "description": "Truncate Filter",
+            "params": [
+                {
+                    "name": "text",
+                    "description": ""
+                },
+                {
+                    "name": "length,",
+                    "description": "default is 10"
+                },
+                {
+                    "name": "end,",
+                    "description": "default is \"...\""
+                }
+            ],
+            "return": {
+                "description": "string"
+            },
+            "class": "",
+            "module": "Postworld"
+        },
+        {
+            "file": "js/services/pwCommentsService.js",
+            "line": 1,
+            "description": "load_comments['post_single'] = {\n    query : {\n        post_id : 24,\n        status : 'approve'\n        },\n    fields : 'all',\n    tree : true,\n    order_by : 'comment_points',\n    order_options : {\n        'comment_points' : 'Points',\n        'comment_date' : 'Date'\n        },\n    min_points : 0,\n};\n\n\nGet posts with most comments \n\nSELECT comment_post_ID, COUNT( * ) \nFROM  `wp_comments` \nGROUP BY comment_post_ID\nORDER BY COUNT( * ) DESC \nLIMIT 0 , 30",
+            "class": "",
+            "module": "Postworld"
+        }
+    ],
+    "warnings": [
+        {
+            "message": "unknown tag: projectdescription",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:1154"
+        },
+        {
+            "message": "unknown tag: version",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:1154"
+        },
+        {
+            "message": "unknown tag: link",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:1154"
+        },
+        {
+            "message": "Missing item type\nBootstrap.js by @fat & @mdo\nplugins: bootstrap-transition.js, bootstrap-modal.js, bootstrap-dropdown.js, bootstrap-scrollspy.js, bootstrap-tab.js, bootstrap-tooltip.js, bootstrap-popover.js, bootstrap-affix.js, bootstrap-alert.js, bootstrap-button.js, bootstrap-collapse.js, bootstrap-carousel.js, bootstrap-typeahead.js\nCopyright 2012 Twitter, Inc.\nhttp://www.apache.org/licenses/LICENSE-2.0.txt",
+            "line": " docs/js/assets/vendor/bootstrap/js/bootstrap.min.js:1"
+        },
+        {
+            "message": "Missing item type\nQUnit - A JavaScript Unit Testing Framework\n\nhttp://docs.jquery.com/QUnit\n\nCopyright (c) 2012 John Resig, Jörn Zaefferer\nDual licensed under the MIT (MIT-LICENSE.txt)\nor GPL (GPL-LICENSE.txt) licenses.",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:1"
+        },
+        {
+            "message": "Missing item type\nSpecify the number of expected assertions to gurantee that failed test (no assertions are run at all) don't slip through.",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:296"
+        },
+        {
+            "message": "Missing item type\nAsserts true.",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:303"
+        },
+        {
+            "message": "Missing item type\nChecks that the first two arguments are equal, with an optional message.\nPrints out both actual and expected values.\n\nPrefered to ok( actual == expected, message )",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:321"
+        },
+        {
+            "message": "Missing item type\nResets the test setup. Useful for tests that modify the DOM.\n\nIf jQuery is available, uses jQuery's html(), otherwise just innerHTML.",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:538"
+        },
+        {
+            "message": "Missing item type\nTrigger an event on an element.",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:554"
+        },
+        {
+            "message": "Missing item type\njsDump Copyright (c) 2008 Ariel Flesler - aflesler(at)gmail(dot)com |\nhttp://flesler.blogspot.com Licensed under BSD\n(http://www.opensource.org/licenses/bsd-license.php) Date: 5/15/2008",
+            "line": " infinite/packages/bootstrap/js/tests/vendor/qunit.js:1154"
+        },
+        {
+            "message": "Missing item type\n____                 _ _  __ _      \n / ___|  ___ _ __ ___ | | |/ _(_)_  __\n \\___ \\ / __| '__/ _ \\| | | |_| \\ \\/ /\n___) | (__| | | (_) | | |  _| |>  < \n |____/ \\___|_|  \\___/|_|_|_| |_/_/\\_\\\n\n * Adds a 'ui-scrollfix' class to the element when the page scrolls past it's position.\n * @param [offset] {int} optional Y-offset to override the detected offset.\n *   Takes 300 (absolute) or -300 or +300 (relative to detected)",
+            "line": " js/directives/pwDirectives.js:540"
+        },
+        {
+            "message": "Missing item type\nLoads a post via query",
+            "line": " js/directives/pwDirectives.js:797"
+        },
+        {
+            "message": "Missing item type\nSets the template URL",
+            "line": " js/directives/pwDirectives.js:827"
+        },
+        {
+            "message": "Missing item type\nTruncate Filter",
+            "line": " js/filters/pwFilters.js:34"
+        },
+        {
+            "message": "Missing item type\nload_comments['post_single'] = {\n    query : {\n        post_id : 24,\n        status : 'approve'\n        },\n    fields : 'all',\n    tree : true,\n    order_by : 'comment_points',\n    order_options : {\n        'comment_points' : 'Points',\n        'comment_date' : 'Date'\n        },\n    min_points : 0,\n};\n\n\nGet posts with most comments \n\nSELECT comment_post_ID, COUNT( * ) \nFROM  `wp_comments` \nGROUP BY comment_post_ID\nORDER BY COUNT( * ) DESC \nLIMIT 0 , 30",
+            "line": " js/services/pwCommentsService.js:1"
+        }
+    ]
+}

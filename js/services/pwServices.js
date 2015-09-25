@@ -9,8 +9,8 @@
 //////////////////*/
 
 postworld.factory( '$pw',
-	['$resource','$q','$log','$window', '_',
-	function ($resource, $q, $log, $window, $_ ) {   
+	['$resource','$q','$log','$window', '_', '$location',
+	function ($resource, $q, $log, $window, $_, $location ) {   
 
 	// TEMPLATES
 	var pwTemplates = ( $_.objExists( $window, 'pw.templates' ) ) ?
@@ -22,35 +22,40 @@ postworld.factory( '$pw',
 		return $window.pw.user;
 	}
 
-	var state = function(){
-		return {
-    		modals:{
-    			open:0,
-    		}
-    	};
-	}
-
 	// DECLARATIONS
 	return {
 		//version: $window.pw.info.version,		// Todo, front load from PHP var
 		info: $window.pw.info,
 		templates: pwTemplates,
 
-		state: state(),
+		state:{
+			modals:{
+				open:0,
+			},
+			keybindings:{},
+		},
 
 		user: pwUser(), //$window.pw.user, // (or something) - refactor to go directly to pwUser
-    	// view: $window.pw.view
-    	// language: $window.pwSiteLanguage,
-    	// config: $window.pwSiteGlobals, // (currently selected site globals for client-side use (pwSiteGlobals))
-    	
-    	view: $window.pw.view,
-    	paths: $window.pwSiteGlobals.paths,
-    	site: $window.pwSiteGlobals.site,
-    	controls: $window.pwSiteGlobals.controls,
-    	fields: $window.pwSiteGlobals.fields,
+		// view: $window.pw.view
+		// language: $window.pwSiteLanguage,
 
-    	// Get the admin data, will only be present if is_admin()
-    	admin: $_.get( $window, 'pw.admin' ),
+		config: $window.pw.config,
+		view: $window.pw.view,
+		query: $window.pw.query,
+		paths: $window.pw.config.paths,
+		site: $window.pw.config.site,
+		controls: $window.pw.config.controls,
+		fields: $window.pw.config.fields,
+		modules: $window.pw.modules,
+		iconsets: $window.pw.iconsets,
+		postTypes: $window.pw.config.post_types,
+		postViews: $window.pw.config.post_views,
+		taxonomies: $window.pw.config.taxonomies,
+		options: $window.pw.options,
+		device: $window.pw.device,
+
+		// Get the admin data, will only be present if is_admin()
+		admin: $_.get( $window, 'pw.admin' ),
 
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )
@@ -58,25 +63,153 @@ postworld.factory( '$pw',
 			else
 				value = "/postworld/";
 
-			return $window.pwSiteGlobals.wordpress.plugins_url + value;
+			return $window.pw.config.wordpress.plugins_url + value;
 		},
 		loadScript: function( url, callback ){
-            // Adding the script tag to the head as suggested before
-            var head = document.getElementsByTagName('head')[0];
-            var script = document.createElement('script');
-            script.type = 'text/javascript';
-            script.src = url;
+			// Adding the script tag to the head as suggested before
+			var head = document.getElementsByTagName('head')[0];
+			var script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = url;
 
-            // Then bind the event to the callback function.
-            // There are several events for cross browser compatibility.
-            script.onreadystatechange = callback;
-            script.onload = callback;
+			// Then bind the event to the callback function.
+			// There are several events for cross browser compatibility.
+			script.onreadystatechange = callback;
+			script.onload = callback;
 
-            // Fire the loading
-            head.appendChild(script);
-        },
+			// Fire the loading
+			head.appendChild(script);
+		},
 
-        
+		setKeybindings: function( contextObj ){
+			// Sets a context to enable keybindings for
+			/*
+				contextObj = {
+					feedId: 	// optional
+					postId: 	// optional
+					context: 	// optional, could be 'gallery' etc
+				}
+			*/
+			this.state.keybindings = contextObj;
+			$log.debug( '$pw.setkeybindings() : ', this.state.keybindings );
+		},
+
+		hasKeybindings: function( contextObj ){
+			// Returns true/false if the key/value matches the keybindings state
+			if( _.isEmpty(contextObj) )
+				return false;
+			if( _.size(contextObj) != _.size(this.state.keybindings) )
+				return false;
+
+			var has = true;
+			// Localize this state
+			var thisState = this.state;
+			// Iterate through provided context checks
+			angular.forEach( contextObj, function( value, key ){
+				// If any checks fail, return false
+				if( $_.get( thisState, 'keybindings.' + key ) != value )
+					has = false; 
+			});
+			$log.debug( '$pw.hasKeybindings() : ' + JSON.stringify(has), contextObj );
+			return has;
+		},
+
+		revertKeybindings: function(){
+			// Reverses keybindings to their previous state
+			// TODO : retain history of keybindgs, when unset keybinding, reverse to previous
+			
+		},
+
+		setQuery: function(query){
+			this.query = query;
+		},
+
+		locationToQuery: function(){
+			// Get Query String Parameters
+			var query = $location.search();
+			if ( !_.isEmpty( $_.get( query, 'tax_query' ) ) ) {    			
+				query.tax_query = JSON.parse(query.tax_query); 
+			}
+			return query;
+		},
+
+		queryToLocation: function(query){
+			// Change the location to reflect input query
+			$log.debug('pw.queryToLocation',query);	
+
+			// Loop on all query variables
+			var queryString = "";
+			for(var key in query){
+				// Remove Null Values
+				if ( query[key] === null ){  					
+					continue;
+				}
+				if( key=="tax_query" && !_.isEmpty( query[key] ) ) {
+					var taxInput = escape(angular.toJson(query[key]));
+					queryString += key + "=" + taxInput + "&";
+					continue;
+				};
+
+				// Do not allow 's' to be empty, breaks WordPress routing
+				if( key === 's' && query[key] === '' )
+					query[key] = ' ';
+
+				// Remove empty values, except 0 and false
+				if ( (query[key]!==0) && (query[key]!==false) ) {
+					if( query[key] == "" || _.isUndefined(query[key]) ) {
+						continue;
+					}
+				}  
+				// Add to query string
+				queryString += key + "=" + escape(query[key]) + "&"; 
+			}
+
+			// Clip the last character off the query string
+			queryString = queryString.substring(0, queryString.length - 1);
+
+			// Set the location
+			$log.debug('pw.queryToLocation : path is ',$location.path());
+			var path = $location.path();
+			$location.path(path).search(queryString);
+
+			//$log.debug('pw.queryToLocation : absolute path ',$location.absUrl(),queryString);	
+		
+		},
+
+		/**
+		* @ngdoc method
+		* @name postworld.service#injectVariables
+		* @methodOf postworld.$pw
+		* @description Injects known variables into strings based on their identifiers.
+		* @param {string} string The string to inject.
+		* @returns {boolean} The resulting string after variable injections.
+		*/
+		injectVariables: function( string ){
+			/**
+			 * Known system variables
+			 * with the variable as the key and
+			 * the replacement string as the value.
+			 *
+			 * @todo Customize via filters / config
+			 *
+			 */
+			var knownVars = {
+				'themeUrl': this.paths.template_url
+			};
+
+			/*
+			 * Iterate through each known variables
+			 * and replace it's instance in the value.
+			 */
+			$log.debug( 'injectVariables : STRING', string );
+			angular.forEach( knownVars, function( value, key ){
+				var searchString = "@{"+ key + "}";
+				string = string.replace( searchString, value );
+			});
+			return string;
+
+		},
+		
 	};
 
 }]);
@@ -91,36 +224,41 @@ postworld.factory( '$pw',
  
  //////////////////////////////////////////////////////////*/
 
+/**
+ * @ngdoc service
+ * @name postworld.$_
+ * @todo Rename to $_
+ */
 postworld.factory('_',
-	[ '$rootScope', '$resource','$q','$log','$window', '$timeout',
-	function ( $rootScope, $resource, $q, $log, $window, $timeout ) {   
+	[ '$rootScope', '$log','$window', '$timeout', 
+	function ( $rootScope, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
 	function get( obj, key ){
 		// Returns a sub-object
-        // SYNTAX : key = 'object.subkey.subsubkey'
+		// SYNTAX : key = 'object.subkey.subsubkey'
 
-        if( _.isUndefined( obj ) )
-            return false;
-        
-        ///// MINE OBJECT /////
-        var parts = key.split('.');
-        for(var i = 0, l = parts.length; i < l; i++) {
-            var part = parts[i];
-            if(obj !== null && typeof obj === "object" && part in obj) {
-                obj = obj[part];
-            }
-            else {
-                return false;
-            }
-        }
+		if( _.isUndefined( obj ) )
+			return false;
+		
+		///// MINE OBJECT /////
+		var parts = key.split('.');
+		for(var i = 0, l = parts.length; i < l; i++) {
+			var part = parts[i];
+			if(obj !== null && typeof obj === "object" && part in obj) {
+				obj = obj[part];
+			}
+			else {
+				return false;
+			}
+		}
 
-        // Return findWhere
-        return obj;
+		// Return findWhere
+		return obj;
 	}
 
 	///// SET OBJECT VALUES /////
-	function setObj( obj, key, value  ){
+	function set( obj, key, value  ){
 			/* 	Sets the value of an object,
 			 * 	even if it or it's parent(s) doesn't exist.
 			 *
@@ -185,7 +323,7 @@ postworld.factory('_',
 			}
 			return matches;
 		},
-		isNumber: function(n) {
+		isNumeric: function(n) {
 			return !isNaN(parseFloat(n)) && isFinite(n);
 		},
 		isInArray: function(value, array) {
@@ -196,10 +334,28 @@ postworld.factory('_',
 				return false;
 		},
 		inArray: function(value, array) {
-			if (array)
+			if( _.isArray( array ) )
 				return array.indexOf(value) > -1 ? true : false;
 			else
 				return false;
+		},
+		isArray: function( data ){
+			return (Object.prototype.toString.call(data) == '[object Array]');
+		},
+		inString: function(value, string) {
+			if( _.isString( string ) )
+				return string.indexOf(value) > -1 ? true : false;
+			else
+				return false;
+		},
+		stringInArray: function( value, array ){
+			if( !_.isArray( array ) )
+				return false;
+			for( var i = 0; i < array.length; i++ ){
+				if( this.inString( value, array[i] ) )
+					return true;
+			}
+			return false;
 		},
 		isEmpty: function(value){
 			if ( typeof value === 'undefined' ||
@@ -235,7 +391,23 @@ postworld.factory('_',
 		  }
 		  return obj1;
 		},
+		stringToBool : function(string){
+			return this.stringToBoolean(string);
+		},
+		
+		/**
+		* @ngdoc method
+		* @name postworld.service#stringToBoolean
+		* @methodOf postworld.$_
+		* @description Converts strings, such as `'true'` or `'false'`, to a boolean.
+		* @param {string} string The string.
+		* @returns {boolean} The boolean representation of the string.
+		*/
 		stringToBoolean : function(string){
+			if( _.isBoolean( string ) )
+				return string;
+			if( !_.isString(string) )
+				return false;
 			switch(string.toLowerCase()){
 				case "true": case "yes": case "1": return true;
 				case "false": case "no": case "0": case null: return false;
@@ -256,21 +428,31 @@ postworld.factory('_',
 			return true;
 			
 		},
-		getObj: function( obj, key ){
-			// DEPRECIATED
-            return get( obj, key );
-        },
-        get : function( obj, key ){
+		get : function( obj, key ){
 			return get( obj, key  );
 		},
-		setObj : function( obj, key, value  ){
-			return setObj( obj, key, value  );
+		///// DEPRECIATED /////
+		getObj: function( obj, key ){
+			return get( obj, key );
 		},
 		set : function( obj, key, value  ){
-			return setObj( obj, key, value  );
+			return set( obj, key, value  );
+		},
+		///// DEPRECIATED /////
+		setObj : function( obj, key, value  ){
+			return set( obj, key, value  );
+		},
+		objEquality : function( obj1, obj2 ){
+			return ( JSON.stringify(obj1) === JSON.stringify(obj2) );
 		},
 
-		clobber: function( id, t, f, w ){ // id = unique string, t = timeout in ms, f = function to run, w = boolean, whether to wait until it stops firing before clobbering
+		clobber: function( id, t, f, w ){
+			// id = unique string
+			// t = timeout in ms
+			// f = function to run
+			// w = boolean, whether to wait until it stops firing before clobbering
+			//		- If true, the first action will fire instantly, and further requests will be delayed
+
 			/*	Times out for the given time before running a function.
 			 *	Any sequential functions that are clobbered with the same ID before the function runs
 			 *	Will over-write the previous action and again timeout.
@@ -301,12 +483,13 @@ postworld.factory('_',
 					f();
 
 			}, t );
+
 		},
 		urlParam: function( name ) {
-		    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-		    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-		        results = regex.exec(location.search);
-		    return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+				results = regex.exec(location.search);
+			return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 		},
 		setScopeValues: function( $scope, values ){
 			// values is an associative array, where the key is the expression and the value is the value
@@ -320,7 +503,6 @@ postworld.factory('_',
 			});
 
 		},
-
 		sanitizeKey: function( input ){
 			if( !_.isString(input) )
 				return false;
@@ -338,52 +520,49 @@ postworld.factory('_',
 			input = input.replaceAll( '=', '-' );
 			return input;
 		},
-
 		makeHash: function( hashLength ){
 			if( _.isEmpty(hashLength) )
 				hashLength = 8;
 
 			var hash = "";
-		    var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			var alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-		    for( var i=0; i < hashLength; i++ )
-		        hash += alpha.charAt(Math.floor(Math.random() * alpha.length));
+			for( var i=0; i < hashLength; i++ )
+				hash += alpha.charAt(Math.floor(Math.random() * alpha.length));
 
-		    return hash;
+			return hash;
 		},
-
 		randomString: function( randomLength, charTypes ){
 			// Generates a random string based on length
 			// and specified character types
 
-			if( _.isEmpty(randomLength) )
-				randomLength = 8;
+			//if( _.isEmpty(randomLength) )
+			//	randomLength = 8;
 
 			if( _.isEmpty( charTypes ) )
 				charTypes = ['numbers','uppercase','lowercase','special'];
 
 			var randomString = "";
 
-		    var alpha = "";
+			var alpha = "";
 
-		    if( this.inArray( 'uppercase', charTypes ) )
-		    	alpha += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			if( this.inArray( 'uppercase', charTypes ) )
+				alpha += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-		    if( this.inArray( 'lowercase', charTypes ) )
-		    	alpha += "abcdefghijklmnopqrstuvwxyz";
+			if( this.inArray( 'lowercase', charTypes ) )
+				alpha += "abcdefghijklmnopqrstuvwxyz";
 
-		    if( this.inArray( 'numbers', charTypes ) )
-		    	alpha += "0123456789";
+			if( this.inArray( 'numbers', charTypes ) )
+				alpha += "0123456789";
 
-		    if( this.inArray( 'special', charTypes ) )
-		    	alpha += "!@#$%^&*()_-+";
+			if( this.inArray( 'special', charTypes ) )
+				alpha += "!@#$%^&*()_-+";
 
-		    for( var i=0; i < randomLength; i++ )
-		        randomString += alpha.charAt(Math.floor(Math.random() * alpha.length));
+			for( var i=0; i < randomLength; i++ )
+				randomString += alpha.charAt(Math.floor(Math.random() * alpha.length));
 
-		    return randomString;
+			return randomString;
 		},
-
 
 		arrayFromObjectWatch: function( $scope, $array, $object ){
 			/*
@@ -423,13 +602,67 @@ postworld.factory('_',
 			var newList = [];
 			angular.forEach( list, function( item ){
 				var mineVal = get( item, key );
-				$log.debug( "item : ", item );
+				//$log.debug( "item : ", item );
 				if( mineVal == val )
 					newList.push( item );
 			});
 			return newList;
-		}
+		},
 
+		// Compact arrays with empty entries; delete keys from objects with empty value
+		removeEmpty: function( obj ){
+			for ( var k in obj ){
+				if ( _.isEmpty( obj[k] ) && !_.isNumber( obj[k] ) && !_.isBoolean( obj[k] ) )
+					_.isArray( obj ) ?
+						obj.splice(k,1) :
+						delete obj[k];
+				else if ( _.isObject( obj[k] ) )
+					this.removeEmpty( obj[k] );
+			}
+		},
+
+		xScrollable: function( element ){
+			// Returns true if the contents of the container
+			// is wider than the viewable area
+			return ( element[0].scrollWidth > element.innerWidth() );
+		},
+
+		xScrolled: function( element ){
+			// If the container has been scrolled
+			return ( element.scrollLeft() > 0 );
+		},
+
+		yScrollable: function( element ){
+			/** @todo : Impliment */
+		},
+
+		yScrolled: function( element ){
+			/** @todo : Impliment */
+		},
+
+		windowScrollY: function(){
+			return angular.element($window)[0].scrollY;
+		},
+
+		addXScrollClasses: function( element, vars ){
+			// Adds classes to the element based on
+			// If it's horizontally scrollable or scrolled
+
+			var scrollableClass = vars.scrollable;
+			var scrollable = this.xScrollable( element );
+			if( scrollable )
+				element.addClass(scrollableClass);
+			else if( element.hasClass(scrollableClass) )
+				element.removeClass(scrollableClass);
+
+			var scrolledClass = vars.scrolled;
+			var scrolled = this.xScrolled( element );
+			if( scrolled )
+				element.addClass(scrolledClass);
+			else if( element.hasClass(scrolledClass) )
+				element.removeClass(scrolledClass);
+
+		},
 
 	};
 
@@ -449,9 +682,6 @@ postworld.factory('pwPosts',
 
 	///// FACTORY DECLARATIONS /////
 	
-	var getFeed = function( feedId ){
-		return $_.getObj( $pwData, 'feeds.' + feedId );
-	};
 
 	var getFeedPost = function( feedId, postId ){
 		///// Gets a post from a Feed by ID /////
@@ -467,13 +697,14 @@ postworld.factory('pwPosts',
 		return post;
 	}
 
-	var updateFeedPost = function( feedId, postId, newPost ){
+	var updateFeedPost = function( feedId, newPost ){
 		///// Updates a post in a Feed by ID /////
 
 		// Check if feed exists
 		if( !$_.objExists( $pwData, 'feeds.'+feedId+'.posts' ) )
 			return false;
 
+		
 		// Get the posts array
 		var posts = $pwData.feeds[feedId].posts;
 
@@ -481,7 +712,7 @@ postworld.factory('pwPosts',
 		var newPosts = [];
 		angular.forEach( posts, function( post ){
 			// If we're on the new post, update it
-			if( post.ID == postId )
+			if( post.ID == newPost.ID )
 				// Deep merge the old post with the new one
 				post = newPost;
 			// Push posts to array
@@ -490,24 +721,53 @@ postworld.factory('pwPosts',
 
 		// Set the new posts into the feed
 		$pwData.feeds[feedId].posts = newPosts;
-
+		
 		return true;
 		
 	};
 
-	var mergeFeedPost = function( feedId, postId, mergePost ){
-    		// Get the original Post
-    		var post = getFeedPost( feedId, postId );
-    		if( post == false )
-    			return false;
-    		// Deep merge the new data with the post
-    		post = deepmerge( post, mergePost );
-    		// Update the post
-    		return updateFeedPost( feedId, postId, post );
-    };
+	var setFeedPostKeyValue = function( feedId, postId, key, value ){
+		if( $_.get( $pwData, 'feeds.' + feedId ) == false )
+			return false;
+		// Iterate through feed posts
+		for( var i; i < $pwData.feeds[feedId].posts.length; i++ ){
+			// Check for post ID
+			if( $pwData.feeds[feedId].posts[i].ID == postId ){
+				// Get the post
+				var post = $pwData.feeds[feedId].posts[i];
+				// Set the value into the post
+				post = $_.set( post, key, value );
+				// Replace the post in the feed
+				$pwData.feeds[feedId].posts[i] = post;
+			}
+		}
+		return true;
+	}
 
-    var getMissingFields = function( post, requiredFields ){
-    	// Detect if the post has the required fields
+	var mergeFeedPost = function( feedId, mergePost ){
+			// Get the original Post
+			var post = getFeedPost( feedId, mergePost.ID );
+			
+			$log.debug( "mergeFeedPost : mergePost : ", mergePost );
+
+			if( post == false )
+				return false;
+
+			// Combine Fields Value
+			var oldFields = $_.get( post, 'fields' );
+			if( oldFields !== false ){
+				mergePost.fields = mergePost.fields.concat( oldFields );
+			}
+
+			// Deep merge the new data with the post
+			post = pw_array_replace_recursive( post, mergePost );
+
+			// Update the post
+			return updateFeedPost( feedId, post );
+	};
+
+	var getMissingFields = function( post, requiredFields ){
+		// Detect if the post has the required fields
 		var missingFields = [];
 
 		// If no fields field, return empty handed
@@ -519,16 +779,18 @@ postworld.factory('pwPosts',
 		// Iterate through each required field
 		angular.forEach( requiredFields, function( requiredField ){
 			// If it's not in the fields
-			if( !$_.isInArray( requiredField, post.fields ) )
+			if( !$_.inArray( requiredField, post.fields ) )
 				// Add it to the missing fields array
 				missingFields.push( requiredField );
 		});
 
+		$log.debug( "pwPosts.getMissingFields", missingFields );
+		
 		return missingFields;
 
-    }
+	}
 
-    ///// FACTORY FUNCTIONS /////
+	///// FACTORY FUNCTIONS /////
 	return {
 
 		get: function( vars ){
@@ -546,33 +808,33 @@ postworld.factory('pwPosts',
 			 /*
 			 // Default Vars
 			 if( !_.isObject( vars ) )
-			 	vars = {};
+				vars = {};
 
 			 // If no post ID
 			 if( _.isUndefined( vars.post_id ) )
-			 	return false;
+				return false;
 
 			 // If no fields
 			 if( _.isUndefined( vars.fields ) )
-			 	vars.fields = 'preview';
+				vars.fields = 'preview';
 
 			 // If fields is a string
 			 if( _.isString( vars.fields ) )
-			 	vars.fields = $_.get( $pw.fields.post, vars.fields );
+				vars.fields = $_.get( $pw.fields.post, vars.fields );
 
 			 // If the requested field string doesn't exist
 			 if( vars.fields == false )
-			 	return false;
+				return false;
 
 			 // Get the post
 			 var post = $_.get( $pwData, 'posts.' + vars.post_id );
 
 			 // If the post exists
 			 if( post ){
-			 	// Check if it has any missing fields
-			 	var missingFields = getMissingFields( post, vars.fields );
-			 	if( missingFields.length > 0 ){
-			 	}
+				// Check if it has any missing fields
+				var missingFields = getMissingFields( post, vars.fields );
+				if( missingFields.length > 0 ){
+				}
 			 }
 
 			 // If the post doesn't exist, return the promise of getting it $pwData.get_post
@@ -595,15 +857,15 @@ postworld.factory('pwPosts',
 			$log.debug( "REQUIRED FIELDS : ", vars );
 
 			// Get the original Post
-    		var post = getFeedPost( vars.feedId, vars.postId );
-    		if( post == false )
-    			return false;
+			var post = getFeedPost( vars.feedId, vars.postId );
+			if( post == false )
+				return false;
 
-    		// Detect if the post has a 'fields' field, which tells which fields are loaded
-    		if( _.isUndefined( post.fields ) )
-    			return false;
+			// Detect if the post has a 'fields' field, which tells which fields are loaded
+			if( _.isUndefined( post.fields ) )
+				return false;
 
-    		var missingFields = getMissingFields( post, vars.fields );
+			var missingFields = getMissingFields( post, vars.fields );
 
 			// If there are no missing fields
 			if( missingFields.length == 0 )
@@ -611,106 +873,95 @@ postworld.factory('pwPosts',
 
 			// If there are missing fields, get them from the server
 			var args = {
-                post_id: vars.postId,
-                fields: missingFields,
-            };
-			$pwData.get_post(args).then(
-                // Success
-                function(response) {
-                    // Catch the new post data
-                    var newPostData = response.data;
-                    // Add the previously missing fields to the 'fields' field
+				post_id: vars.postId,
+				fields: missingFields,
+			};
+			$pwData.getPost(args).then(
+				// Success
+				function(response) {
+					// Catch the new post data
+					var newPostData = response.data;
+					// Add the previously missing fields to the 'fields' field
 					newPostData.fields = missingFields;
-                    // Merge it into the feed post
-                    var merged = mergeFeedPost( vars.feedId, vars.postId, newPostData );
-                    $log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
-                    // Broadcast event for child listeners to pick up the new data
-                    $rootScope.$broadcast( 'feedPostUpdated', {
-                    		feedId: vars.feedId,
-                    		postId: vars.postId
-                    	});
-                    
-                },
-                // Failure
-                function(response) {}
-            );
-    	},
-    	reloadFeedPost: function( feedId, postId ){
-    		/* Reloads the post data from the server and plants it in the feed
+					// Merge it into the feed post
+					var merged = mergeFeedPost( vars.feedId, newPostData );
+					$log.debug( "REQUIRED FIELDS : MERGE WITH FEED/POST : " + vars.feedId + " / " + vars.postId, newPostData );
+					// Broadcast event for child listeners to pick up the new data
+					$rootScope.$broadcast( 'feedPostUpdated', {
+							feedId: vars.feedId,
+							postId: vars.postId
+						});
+					
+				},
+				// Failure
+				function(response) {}
+			);
+		},
+		reloadFeedPost: function( feedId, postId ){
+			/* Reloads the post data from the server and plants it in the feed
 			 */
 
-    		// Get the specified post from the feed
-    		var post = getFeedPost( feedId, postId );
-    		if( post == false )
-    			return false;
+			// Get the specified post from the feed
+			var post = getFeedPost( feedId, postId );
+			if( post == false )
+				return false;
 
-    		// Get the 'fields' value of the post
-    		var fields = $_.getObj( post, 'fields' );
-    		if( fields == false )
-    			fields = 'all';
+			// Get the 'fields' value of the post
+			var fields = $_.getObj( post, 'fields' );
+			if( fields == false )
+				fields = 'all';
 
-    		// Get the post from the server
+			// Get the post from the server
 			var args = {
-                post_id: postId,
-                fields: fields,
-            };
+				post_id: postId,
+				fields: fields,
+			};
 			$pwData.get_post(args).then(
-                // Success
-                function(response) {
-                    // Catch the new post data
-                    var postData = response.data;
-                    // Merge it into the feed post
-                    var merged = mergeFeedPost( feedId, postId, postData );
-                    $log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : MERGE WITH FEED/POST : ", postData );
-                    // Broadcast event for child listeners to pick up the new data
-                    $rootScope.$broadcast( 'feedPostUpdated', {
-                    		feedId: feedId,
-                    		postId: postId
-                    	});
-                },
-                // Failure
-                function(response) {
-                	$log.error( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : UNKOWN ERROR" );
-                }
-            );
+				// Success
+				function(response) {
+					// Catch the new post data
+					var postData = response.data;
+					// Merge it into the feed post
+					var merged = mergeFeedPost( feedId, postData );
+					$log.debug( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : MERGE WITH FEED/POST : ", postData );
+					// Broadcast event for child listeners to pick up the new data
+					$rootScope.$broadcast( 'feedPostUpdated', {
+							feedId: feedId,
+							postId: postId
+						});
+				},
+				// Failure
+				function(response) {
+					$log.error( "$pwPosts.reloadFeedPost( "+feedId+", "+postId+" ).$pwData.get_post() : UNKOWN ERROR" );
+				}
+			);
 
-    	},
-    	getFeedPost: function( feedId, postId ){
-    		return getFeedPost( feedId, postId );
-    	},
-    	updateFeedPost: function( feedId, postId, post ){
-    		return updateFeedPost( feedId, postId, post );
-    	},
-    	mergeFeedPost: function( feedId, postId, mergePost ){
-    		return mergeFeedPost( feedId, postId, mergePost );
-    	},
-    	getFeed: function( feedId ){
-    		return getFeed( feedId );
-    	},
-    	insertFeed: function( feedId, feed ){
-    		/* Inserts a feed into the $pwData.feeds service
-    		 * feedId = [ string ]
-			 * feed = { posts:[], ... }
-    		 */
-    		feedId = new String( feedId );
-   			///// ADD FEED OBJECT TO POSTS /////
-    		// If the feed has posts
-    		if( $_.objExists( feed, 'posts' ) ){
-    			// Create a new feed container
-    			var newPosts = [];
-    			// Interate through each post in the feed
-	    		angular.forEach( feed.posts, function( post ){
-	    			// And add the 'feed.id' value if it doesn't exist
-	    			if( !$_.objExists( post, 'feed.id' ) )
-	    				post = $_.setObj( post, 'feed.id', feedId );
-	    			newPosts.push( post );
-	    		});
-	    		feed.posts = newPosts;
-    		}
-    		// Add it to the central pwData service
-    		$pwData.feeds[feedId] = feed;
-    		return true;
-    	},
+		},
+		getFeedPost: function( feedId, postId ){
+			return getFeedPost( feedId, postId );
+		},
+		updateFeedPost: function( feedId, post ){
+			return updateFeedPost( feedId, post );
+		},
+		setFeedPostKeyValue: function( feedId, postId, key, value ){
+			return setFeedPostKeyValue( feedId, postId, key, value );
+		},
+		mergeFeedPost: function( feedId, mergePost ){
+			return mergeFeedPost( feedId, mergePost );
+		},
+		// DEPRECIATED
+		getFeed: function( feedId ){
+			return $pwData.getFeed( feedId );
+		},
+		setFeedView: function( feedId, view ){
+			$log.debug( 'pwPosts : setFeedView : ' + feedId + ' ', view );
+			var vars = {
+				'feedId' 	: feedId,
+				'view'		: view,
+			};
+			$rootScope.$broadcast( "feed.changeTemplate", vars );
+		},
+		
 	};
 
 }]);
@@ -722,11 +973,54 @@ postworld.factory('pwPosts',
    | |  __/ | | | | | |_) | | (_| | ||  __/ |  __/ (_| | |  | |_| | (_| | \__ \
    |_|\___|_| |_| |_| .__/|_|\__,_|\__\___| |_|   \__,_|_|   \__|_|\__,_|_|___/ */
 
-postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', function( $pw, $pwData, $log, $_ ){
+postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeout', '$rootScope',
+	function( $pw, $pwData, $log, $_, $timeout, $rootScope ){
+
+	var evalCallbacks = function( vars ){
+
+		///// CALLBACK /////
+		// Evaluate given callback
+		if( _.isString( vars.callback ) ){
+
+			if( _.isUndefined( vars.callbackTimeout ) )
+				vars.callbackTimeout = 0;
+			else
+				vars.callbackTimeout = parseInt( vars.callbackTimeout );
+
+			$timeout( function(){
+				$log.debug( 'pwTemplatePartials : callback : ' + vars.callback );
+				
+				try{
+					eval( vars.callback );
+				}
+				catch(error){
+					$log.debug(error);
+				}
+
+			}, vars.callbackTimeout );
+		
+		}
+
+		///// CALLBACK EVENT /////
+		// Broadcast event callback event from the rootScope
+		if( _.isString( vars.callbackEvent ) ){
+			$log.debug( 'pwTemplatePartials : callbackEvent : ' + vars.callbackEvent );
+			$rootScope.$broadcast( vars.callbackEvent, vars );
+		}
+
+	}
+
+
 	return{
+		data : function(){
+			return $pwData.partials;
+		},
+		getId : function( id ){
+			return $_.get( $pwData.partials, id );
+		},
 		get : function( vars ){
 			/*
-			 	vars = {
+				vars = {
 					partial: [string] 	// required, the object path to the registered partial function
 					vars: [mixed] 		// optional, variables to pass to the partial function
 					id: [string] 		// optional, additional identifier
@@ -744,18 +1038,35 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', functio
 			if( !$_.objExists( $pwData.partials, cachePath ) ){
 				$pwData.partials = $_.setObj( $pwData.partials, cachePath, '' ); // TODO : Add loading partial option
 
-				$pwData.get_template_partial( vars ).then(
+				$pwData.getTemplatePartial( vars ).then(
 					function( response ){
+
+						// Debug Log
 						$log.debug( "PW TEMPLATE PARTIAL : RESPONSE :", response );
+
+						// Get the response data
 						var partialHtml = response.data;
+
+						// Cache the data in the pwData partials cache path
 						$pwData.partials = $_.setObj( $pwData.partials, cachePath, partialHtml );
+
+						// Evaluate Callbacks
+						vars.firstRun = true;
+						evalCallbacks( vars );
+
 					},
 					function( response ){
 					}
 				);
 
 			}
+
 			var partialData = $_.getObj( $pwData.partials, cachePath );
+
+			// Evaluate Callbacks
+			//vars.firstRun = false;
+			//evalCallbacks( vars );
+
 			return partialData;
 
 		},
@@ -771,64 +1082,165 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', functio
   |_|      |_|                                |___/           */
 
 postworld.factory('pwImages',
-	[ '$log','$window',
-	function ( $log, $window ) {  
+	[ '$log','$window', '_', '$pw',
+	function ( $log, $window, $_, $pw ) {  
 
 	///// UNIVERSALS /////
+	// TODO : Get Tag mapping from pwConfig
 	var tagMappings = [
-    	{
-    		name: 'square',
-    		width: 1,
-    		height: 1,
-    	},
-    	{
-    		name: 'wide',
-    		width: 1,
-    		height: 1,
-    	},
-    	{
-    		name: 'x-wide',
-    		width: 2,
-    		height: 1,
-    	},
-    	{
-    		name: 'tall',
-    		width: 1,
-    		height: 1.5,
-    	},
-    	{
-    		name: 'x-tall',
-    		width: 1,
-    		height: 2,
-    	},
-    ];
+		{
+			name: 'square',
+			width: 1,
+			height: 1,
+		},
+		{
+			name: 'wide',
+			width: 1,
+			height: 1,
+		},
+		{
+			name: 'x-wide',
+			width: 2,
+			height: 1,
+		},
+		{
+			name: 'tall',
+			width: 1,
+			height: 1.5,
+		},
+		{
+			name: 'x-tall',
+			width: 1,
+			height: 2,
+		},
+	];
 
-    ///// FACTORY VALUES /////
+	/**
+	 * Override the default tag mappings
+	 * With those provided in Postworld Config
+	 */
+	var overrideTagMappings = $_.get( $pw, 'config.images.tag_mapping' );
+	if( !_.isEmpty( overrideTagMappings ) )
+		tagMappings = overrideTagMappings;
+
+	///// FACTORY VALUES /////
 	return {
 		selectImageTag: function( tags, mappings ){
 			// Set Default Mapping
-	    	if( _.isUndefined( mappings ) )
-	    		mappings = tagMappings;
+			if( _.isUndefined( mappings ) )
+				mappings = tagMappings;
 
-	    	var selectedTag = {};
-	    	// Iterate through each image tag in the selected image
-	    	angular.forEach( tags, function( imageTag ){
-	    		// Iterate through each mapping option
-	    		angular.forEach( mappings, function( tagMapping ){
-	    			// Select the last match
-	    			if( tagMapping['name'] == imageTag )
-	    				selectedTag = tagMapping;
-		    	});
-	    	});
-	    	
-	    	//$log.debug( "selectImageTag : " // tags : " + tags + " // selectedTag : " + JSON.stringify(selectedTag) + " // mappings : ", mappings );
+			var selectedTag = {};
+			// Iterate through each image tag in the selected image
+			angular.forEach( tags, function( imageTag ){
+				// Iterate through each mapping option
+				angular.forEach( mappings, function( tagMapping ){
+					// Select the last match
+					if( tagMapping['name'] == imageTag )
+						selectedTag = tagMapping;
+				});
+			});
+			
+			//$log.debug( "selectImageTag : " + tags + " // selectedTag : " + JSON.stringify(selectedTag) + " // mappings : ", mappings );
 
-	    	// If none selected
-	    	if( selectedTag == {} )
-	    		return false;
-	    	// Return the selected tag
-	    	return selectedTag;
-    	},
+			// If none selected
+			if( selectedTag == {} )
+				return false;
+			// Return the selected tag
+			return selectedTag;
+		},
+
+		/**
+		 * Selects the correctly sized image from a series of variables.
+		 * In general, the smallest image which equals or exceeds
+		 * The input variables will be selected.
+		 *
+		 * @param {object} image A Postworld image object
+		 */
+		selectImageSize: function( imageSizes, vars ){
+
+			if( _.isEmpty( imageSizes ) || imageSizes === null )
+				return false;
+
+			if( _.isEmpty( vars ) || vars === null )
+				return false;
+
+			/**
+			 * Set the default variables
+			 */
+			var defaultVars = {
+				width:0,
+				height:0,
+			};
+			vars = array_replace_recursive( defaultVars, vars );
+
+			/**
+			 * Make a new array, without the keys
+			 * So that it can be properly sorted as an Array
+			 */
+			
+			var imageArray = [];
+			angular.forEach( imageSizes, function( img, key ){
+				// Calculate the image area
+				img['area'] = parseInt( img['width'] ) * parseInt( img['height'] );
+				// Add the object key
+				img['key'] = key;
+				imageArray.push( img );
+			});
+
+			// Sort the image objects by area
+			imageArray = _.sortBy( imageArray, 'area' ).reverse();
+
+			// Precalculate if width and height are present
+			var hasWidth = ( vars['width'] !== 0 );
+			var hasHeight = ( vars['height'] !== 0 );
+
+			/** 
+			 * Get the image with the smallest area
+			 * that is equal to or above the
+			 * Specified width and height.
+			 *
+			 * @note This is where the magic happens.
+			 */
+			var selectImg = {};
+			angular.forEach( imageArray, function( img ){
+
+				// Check Width
+				var passWidth = false;
+				if( hasWidth ){
+					if( img['width'] >= vars['width'] ){
+						passWidth = true;
+					}
+				} else
+					passWidth = true;
+				
+				// Check Height
+				var passHeight = false;
+				if( hasHeight ){
+					if( img['height'] >= vars['height'] ){
+						passHeight = true;
+					}
+				} else
+					passHeight = true;
+				
+				// If it's a valid width and height, select it
+				if( passWidth && passHeight )
+					selectImg = img;
+				
+			});
+
+			/**
+			 * If no image was selected it is
+			 * Because none of the images were high res enough,
+			 * So select the image with the largest area.
+			 */
+			if( _.isEmpty( selectImg ) )
+				selectImg = imageArray[0];
+
+			return selectImg;
+
+		},
+
 	};
 
 }]);
@@ -844,21 +1256,21 @@ postworld.factory('pwImages',
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
 postworld.service('pwPostOptions',
-		[ '$window','$log', 'pwData', '_',
-		function( $window, $log, $pwData, $_ ) {
+		[ '$window','$log', 'pwData', '_', '$pw',
+		function( $window, $log, $pwData, $_, $pw ) {
 
 	return{
-		taxTerms: function( $scope, tax_obj ){ // , tax_obj
+		taxTerms: function( $scope, taxObj ){
 
-			if ( typeof tax_obj === 'undefined' )
-				var tax_obj = "tax_terms";
+			if ( typeof taxObj === 'undefined' )
+				taxObj = "tax_terms";
 
-			var args = $window.pwSiteGlobals.post_options.taxonomy_outline;
+			var args = $pw.config.post_options.taxonomy_outline;
 			$pwData.taxonomies_outline_mixed( args ).then(
 				// Success
 				function(response) {
-					$log.debug('pwData.taxonomies_outline_mixed : RESPONSE : ', response); 
-					$scope[tax_obj] = response.data;
+					$log.debug('pwPostOptions.taxTerms : RESPONSE : ', response); 
+					$scope[taxObj] = response.data;
 				},
 				// Failure
 				function(response) {
@@ -875,24 +1287,25 @@ postworld.service('pwPostOptions',
 			if( _.isUndefined(mode) )
 				mode = 'read';
 
-			var post_types = $window.pwSiteGlobals.post_types;
+			var postTypes = $pw.config.post_types;
 
 			if( mode == 'read' ){
-				return post_types;
+				return postTypes;
 			}
 
 			// IF EDIT/OTHER MODE : Compare post types against their capabilities
-			// Cycle through provided post_types
-			// Which post_types does the user have access to 'mode' operation?
+			// Cycle through provided postTypes
+			// Which postTypes does the user have access to 'mode' operation?
 			var userPostTypeOptions = {};
 			if( $window.pw.user != 0 ){
-				angular.forEach( post_types , function( name, slug ){
+				angular.forEach( postTypes , function( name, slug ){
 					var cap_type = mode + "_"+ slug + "s";
-					if( $window.pw.user.allcaps[cap_type] == true ){
+					if( $_.get( $window, 'pw.user.allcaps.'+cap_type ) !== false ){
 						userPostTypeOptions[slug] = name;
 					}
 				});
 			}
+			
 			return userPostTypeOptions;
 		},
 
@@ -936,9 +1349,9 @@ postworld.service('pwPostOptions',
 			// GET ROLE
 			var currentUserRole = $window.pw.user.roles[0];
 			// DEFINE : POST STATUS OPTIONS
-			var postStatusOptions = $window.pwSiteGlobals.post_options.post_status;
+			var postStatusOptions = $pw.config.post_options.post_status;
 			// DEFINE : POST STATUS OPTIONS PER ROLE BY POST TYPE
-			var rolePostTypeStatusAccess = $window.pwSiteGlobals.post_options.role_post_type_status_access;
+			var rolePostTypeStatusAccess = $pw.config.post_options.role_post_type_status_access;
 			// BUILD OPTIONS MENU OBJECT
 			var postStatusSelect = {};
 			var userRoleOptions = rolePostTypeStatusAccess[currentUserRole][postType];
@@ -958,7 +1371,7 @@ postworld.service('pwPostOptions',
 			if( _.isArray( postType ) )
 				postType = postType[0];
 			// Get the options from site globals
-			var postClassOptions = $_.getObj( $window.pwSiteGlobals, 'post_options.post_class' );
+			var postClassOptions = $_.getObj( $pw.config, 'post_options.post_class' );
 			// If none found, return false
 			if( !postClassOptions )
 				return {
@@ -978,23 +1391,24 @@ postworld.service('pwPostOptions',
 		},
 
 		postView: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_views' );
+			return $_.getObj( $pw.config, 'post_views' );
 		},
 
 		linkFormat: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_options.link_format' );
+			return $_.getObj( $pw.config, 'post_options.link_format' );
 		},
 
 		linkFormatMeta: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_options.link_format_meta' );
+			return $_.getObj( $pw.config, 'post_options.link_format_meta' );
 		},
 
 		postYear: function(){
-			return $_.getObj( $window.pwSiteGlobals, 'post_options.year' );
+			return $_.getObj( $pw.config, 'post_options.year' );
 		},
 
 		postMonth: function(){
-			var monthsObj = $window.pwSiteGlobals.post_options.month;
+			/*
+			var monthsObj = $pw.config.post_options.month;
 			var monthsArray = [];
 			// Convert from "1:January" Associative Object format to { number:1, name:"January" } 
 			angular.forEach( monthsObj, function( value, key ){
@@ -1004,6 +1418,57 @@ postworld.service('pwPostOptions',
 				};
 				monthsArray.push( month );
 			});
+			*/
+			var monthsArray = [
+				{
+					number:1,
+					name:'January'
+				},
+				{
+					number:2,
+					name:'February'
+				},
+				{
+					number:3,
+					name:'March'
+				},
+				{
+					number:4,
+					name:'April'
+				},
+				{
+					number:5,
+					name:'May'
+				},
+				{
+					number:6,
+					name:'June'
+				},
+				{
+					number:7,
+					name:'July'
+				},
+				{
+					number:8,
+					name:'August'
+				},
+				{
+					number:9,
+					name:'September'
+				},
+				{
+					number:10,
+					name:'October'
+				},
+				{
+					number:11,
+					name:'November'
+				},
+				{
+					number:12,
+					name:'December'
+				},
+			];
 			return monthsArray;
 		},
 
@@ -1045,6 +1510,14 @@ postworld.service('pwPostOptions',
 				{
 					slug: 'comment_count',
 					name: 'Comment Count',
+				},
+				{
+					slug: 'event_start',
+					name: 'Event Start',
+				},
+				{
+					slug: 'event_end',
+					name: 'Event End',
 				}
 			];
 		},
@@ -1069,7 +1542,7 @@ postworld.service('pwPostOptions',
 		taxInputModel: function(){
 			// TAXONOMY OBJECT MODEL
 			// Makes empty array in the taxInput object for each taxonomy inputs
-			var taxonomies = $_.getObj( $window.pwSiteGlobals, 'post_options.taxonomies' );
+			var taxonomies = $_.getObj( $pw.config, 'post_options.taxonomies' );
 			if( !taxonomies )
 				return false;
 
@@ -1092,7 +1565,9 @@ postworld.service('pwPostOptions',
   |_|                                                      
 
 /*///////// ------- SERVICE : PW USERS ------- /////////*/  
-postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $window, $_) {
+postworld.service('pwRoleAccess',
+	['$log', '$window', '_', '$pw',
+	function ($log, $window, $_, $pw) {
 	return{
 		setRoleAccess : function($scope){
 			$scope.current_user = $window.pw.user;
@@ -1102,7 +1577,7 @@ postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $wind
 				$scope.current_user_role = 'guest' ;
 
 			$scope.roles = {};
-			$scope.role_map = $window.pwSiteGlobals.role.map;
+			$scope.role_map = $pw.config.role.map;
 
 			// ESTABLISH ROLE ACCESS
 			// Is the user an editor?
@@ -1125,6 +1600,89 @@ postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $wind
 
 
 
+/* ___        _      _      _____    _ _ _   
+  / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
+ | | | | | | | |/ __| |/ / |  _| / _` | | __|
+ | |_| | |_| | | (__|   <  | |__| (_| | | |_ 
+  \__\_\\__,_|_|\___|_|\_\ |_____\__,_|_|\__|
+											 
+////////// ------------ QUICK EDIT ------------ //////////*/  
+
+/*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
+postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '$pw', '_',
+	function ( $rootScope, $log, $location, $modal, pwData, $pw, $_ ) {
+	return{
+		openQuickEdit : function( meta ){
+			
+			// Default Defaults
+			if( _.isUndefined( meta.mode ) )
+				meta.mode = 'quick-edit';
+
+			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
+
+			var modalInstance = $modal.open({
+			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
+			  controller: 'quickEditInstanceCtrl',
+			  windowClass: 'quick_edit',
+			  resolve: {
+				meta: function(){
+					return meta;
+				}
+			  }
+			});
+			modalInstance.result.then(function (selectedItem) {
+				//$scope.post_title = post_title;
+			}, function () {
+				// WHEN CLOSE MODAL
+				$log.debug('Modal dismissed at: ' + new Date());
+				// Clear the URL params
+				//$location.url('/');
+				$location.path('/');
+				//$rootScope.$apply();
+
+			});
+		},
+
+		trashPost : function ( post_id, $scope ){
+			if ( window.confirm("Are you sure you want to trash : \n" + $scope.post.post_title) ) {
+				pwData.pw_trash_post( post_id ).then(
+					// Success
+					function(response) {
+						if (response.status==200) {
+							$log.debug('Post Trashed RETURN : ',response.data);                  
+							if ( _.isNumber(response.data) ){
+								var trashedPostId = response.data;
+								if( typeof $scope != undefined ){
+									// SUCESSFULLY TRASHED
+									//var retreive_url = "/wp-admin/edit.php?post_status=trash&post_type="+scope.post.post_type;
+									$scope.post.post_status = 'trash';
+									// Emit Trash Event : post_id
+									$scope.$emit('trashPost', trashedPostId );
+									// Broadcast Trash Event : post_id
+									$scope.$broadcast('trashPost', trashedPostId );
+								}
+							}
+							else{
+								alert( "Error trashing post : " + response.data );
+							}
+						} else {
+							// handle error
+						}
+					},
+					// Failure
+					function(response) {
+						// Failed Delete
+					}
+				);
+			}
+		},
+	}
+}]);
+
+
+
+
+
 /*
    _        _____    _ _ _     ____           _     _____ _ _ _                
   | |   _  | ____|__| (_) |_  |  _ \ ___  ___| |_  |  ___(_) | |_ ___ _ __ ___ 
@@ -1134,8 +1692,8 @@ postworld.service('pwRoleAccess', ['$log', '$window', '_', function ($log, $wind
   |_|                                                                          
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
 postworld.service('pwEditPostFilters',
-	['$log', '_', '$window', 'pwPostOptions',
-	function ($log, $_, $window, $pwPostOptions ) {
+	['$log', '_', '$window', 'pwPostOptions', '$pw',
+	function ($log, $_, $window, $pwPostOptions, $pw ) {
 
 	return {
 		parseKnownJsonFields: function( post ){
@@ -1207,7 +1765,7 @@ postworld.service('pwEditPostFilters',
 				link_format_meta = $pwPostOptions.linkFormatMeta();
 
 			// Set the default format
-			var default_format = $window.pwSiteGlobals.post_options.link_format_defaults.none;
+			var default_format = $pw.config.post_options.link_format_defaults.none;
 			var set = "";
 
 			// If link_url has a value
@@ -1224,7 +1782,7 @@ postworld.service('pwEditPostFilters',
 				});
 				// If no matches, set default
 				if ( set == "" )
-					return $window.pwSiteGlobals.post_options.link_format_defaults.link;
+					return $pw.config.post_options.link_format_defaults.link;
 				else
 					return set;
 			}
@@ -1424,10 +1982,41 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 				return false;
 				
 			}
-			
 
-			//if(   _.isObject($scope.post.post_meta.related_post) )
-			//  alert('object');
+		},
+
+
+		getTimezone: function( timezoneId ){
+			/**
+			 * If there's no timezoneId defined, use client time
+			 */
+			if( timezoneId === null ||
+				_.isEmpty( timezoneId ) ||
+				_.isUndefined( timezoneId ) ){
+				/**
+				 * Use jstz to get the name of the current timezone
+				 * In the future this will soon be supported by Moment.js
+				 */
+				timezoneId = jstz.determine().name();
+			}
+
+			/**
+			 * Use Moment.js to get the timezone object
+			 */
+			var momentTimezone = ( typeof(moment) == "function" ) ?
+				moment().tz( timezoneId ) : false;
+
+			// Compile some values for a simple object
+			var timezone = {
+				offset: momentTimezone._offset,
+				name: timezoneId,
+				code: momentTimezone.format('z'),
+			};
+
+			//$log.debug( 'pwDate.getTimezone : momentTimezone : ' + timezoneId, momentTimezone );
+			$log.debug( 'pwDate.getTimezone : ' + timezoneId, timezone );
+
+			return timezone;
 
 		},
 
@@ -1509,7 +2098,6 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 				],
 			},
 
-
 			'style':{
 				'backgroundPosition':[
 					'parallax',
@@ -1551,31 +2139,37 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					{
 						name: 'Facebook',
 						id: 'facebook',
-						icon: 'icon-facebook-square',
+						icon: 'pwi-facebook-square',
 						selected: true,
 					},
 					{
 						name: 'Twitter',
 						id: 'twitter',
-						icon: 'icon-twitter-square',
+						icon: 'pwi-twitter-square',
 						selected: true,
 					},
 					{
 						name: 'Reddit',
 						id: 'reddit',
-						icon: 'icon-reddit-square',
+						icon: 'pwi-reddit-square',
 						selected: true,
+					},
+					{
+						name: 'Tumblr',
+						id: 'tumblr',
+						icon: 'pwi-tumblr-square',
+						selected: false,
 					},
 					{
 						name: 'Google Plus',
 						id: 'google_plus',
-						icon: 'icon-google-plus-square',
+						icon: 'pwi-google-plus-square',
 						selected: true,
 					},
 					{
 						name: 'Pinterest',
 						id: 'pinterest',
-						icon: 'icon-pinterest-square',
+						icon: 'pwi-pinterest-square',
 						selected: false,
 					},
 				],
@@ -1596,6 +2190,22 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 					},
 				],
 			},
+			'featured_image':{
+				'placement':[
+					{
+						slug: 'none',
+						name: 'None',
+					},
+					{
+						slug: 'header',
+						name: 'In Header',
+					},
+					{
+						slug: 'content',
+						name: 'In Content',
+					},
+				],
+			},
 			'slider':{
 				'transition':[
 					{
@@ -1611,25 +2221,6 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 						name: 'Slide',
 					},
 				]
-			},
-			'gallery':{
-				'template':[
-					{
-						slug: 'inline',
-						name: 'Inline',
-						description: 'Galleries appear inline with the post content as a grid of images.',
-					},
-					{
-						slug: 'horizontal',
-						name: 'Horizontal',
-						description: 'All galleries in the post are merged into a single horizontal infinite scrolling gallery.',
-					},
-					{
-						slug: 'vertical',
-						name: 'Vertical',
-						description: 'All galleries in the post are merged into a single vertical infinite scrolling gallery.',
-					},
-				],
 			},
 			'post_content':{
 				columns:[
@@ -1668,477 +2259,42 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 				],
 			},
 
-			// TODO : Auto-generate this by PHP
-			'icon':{
-				'icomoon':[
-					{
-						class: "icon-merkaba",
-					},
-					{
-						class: "icon-cloud",
-					},
-					{
-						class: "icon-home",
-					},
-					{
-						class: "icon-globe",
-					},
-					{
-						class: "icon-globe-o",
-					},
-					{
-						class: "icon-globe-wire",
-					},
-					{
-						class: "icon-plugin",
-					},
-					{
-						class: "icon-seal-1",
-					},
-					{
-						class: "icon-triadic-1",
-					},
-					{
-						class: "icon-triadic-2",
-					},
-					{
-						class: "icon-triadic-3",
-					},
-					{
-						class: "icon-triadic-4",
-					},
-					{
-						class: "icon-triadic-5",
-					},
-					{
-						class: "icon-atom",
-					},
-					{
-						class: "icon-seed-of-life",
-					},
-					{
-						class: "icon-seed-of-life-fill",
-					},
-					{
-						class: "icon-light-bulb",
-					},
-					{
-						class: "icon-moon",
-					},
-					{
-						class: "icon-info",
-					},
-					{
-						class: "icon-target",
-					},
-					{
-						class: "icon-target-2",
-					},
-					{
-						class: "icon-magnet",
-					},
-					{
-						class: "icon-alert",
-					},
-					{
-						class: "icon-office",
-					},
-					{
-						class: "icon-newspaper",
-					},
-					{
-						class: "icon-pin",
-					},
-					{
-						class: "icon-pencil",
-					},
-					{
-						class: "icon-quill",
-					},
-					{
-						class: "icon-image",
-					},
-					{
-						class: "icon-images",
-					},
-					{
-						class: "icon-ticket",
-					},
-					{
-						class: "icon-dice",
-					},
-					{
-						class: "icon-book",
-					},
-					{
-						class: "icon-book-2",
-					},
-					{
-						class: "icon-books",
-					},
-					{
-						class: "icon-info",
-					},
-					{
-						class: "icon-cart",
-					},
-					{
-						class: "icon-user",
-					},
-					{
-						class: "icon-bell",
-					},
-					{
-						class: "icon-notebook",
-					},
-					{
-						class: "icon-keyboard",
-					},
-					{
-						class: "icon-bubble",
-					},
-					{
-						class: "icon-bubbles",
-					},
-					{
-						class: "icon-key",
-					},
-					{
-						class: "icon-lock",
-					},
-					{
-						class: "icon-unlock",
-					},
-					{
-						class: "icon-settings",
-					},
-					{
-						class: "icon-eq",
-					},
-					{
-						class: "icon-aid",
-					},
-					{
-						class: "icon-wand",
-					},
-					{
-						class: "icon-pie",
-					},
-					{
-						class: "icon-stats",
-					},
-					{
-						class: "icon-bars",
-					},
-					{
-						class: "icon-bars-2",
-					},
-					{
-						class: "icon-dashboard",
-					},
-					{
-						class: "icon-lab",
-					},
-					{
-						class: "icon-fire",
-					},
-					{
-						class: "icon-magnet",
-					},
-					{
-						class: "icon-lightning",
-					},
-					{
-						class: "icon-bookmark",
-					},
-					{
-						class: "icon-bookmarks",
-					},
-					{
-						class: "icon-heart",
-					},
-					{
-						class: "icon-heart-o",
-					},
-					{
-						class: "icon-heart-broken",
-					},
-					{
-						class: "icon-share",
-					},
-					{
-						class: "icon-atlas",
-					},
-					{
-						class: "icon-atlas-o",
-					},
-					{
-						class: "icon-wrench",
-					},
-					{
-						class: "icon-gear",
-					},
-					{
-						class: "icon-gears",
-					},
-					{
-						class: "icon-gamepad",
-					},
-					{
-						class: "icon-cube",
-					},
-					{
-						class: "icon-cubes",
-					},
-					{
-						class: "icon-mail",
-					},
-					{
-						class: "icon-circle-thick",
-					},
-					{
-						class: "icon-circle-medium",
-					},
-					{
-						class: "icon-circle-thin",
-					},
-					{
-						class: "icon-triangle-up-thick",
-					},
-					{
-						class: "icon-triangle-up-medium",
-					},
-					{
-						class: "icon-triangle-up-thin",
-					},
-					{
-						class: "icon-triangle-down-thick",
-					},
-					{
-						class: "icon-triangle-down-medium",
-					},
-					{
-						class: "icon-triangle-down-thin",
-					},
-					{
-						class: "icon-square-thick",
-					},
-					{
-						class: "icon-square-medium",
-					},
-					{
-						class: "icon-square-thin",
-					},
-					{
-						class: "icon-hexagon-thick",
-					},
-					{
-						class: "icon-hexagon-medium",
-					},
-					{
-						class: "icon-hexagon-thin",
-					},
-					{
-						class: "icon-wordpress",
-					},
-					{
-						class: "icon-github",
-					},
-					{
-						class: "icon-github-circle",
-					},
-					{
-						class: "icon-console",
-					},
-					{
-						class: "icon-code",
-					},
-					{
-						class: "icon-embed",
-					},
-					{
-						class: "icon-pilcrow",
-					},
-					{
-						class: "icon-table",
-					},
-					{
-						class: "icon-eye",
-					},
-					{
-						class: "icon-flag",
-					},
-					{
-						class: "icon-arrow-up-left-circle",
-					},
-					{
-						class: "icon-arrow-up-circle",
-					},
-					{
-						class: "icon-arrow-up-right-circle",
-					},
-					{
-						class: "icon-arrow-right-circle",
-					},
-					{
-						class: "icon-arrow-down-right-circle",
-					},
-					{
-						class: "icon-arrow-down-circle",
-					},
-					{
-						class: "icon-arrow-down-left-circle",
-					},
-					{
-						class: "icon-arrow-left-circle",
-					},
-					{
-						class: "icon-tv",
-					},
-					{
-						class: "icon-screen",
-					},
-					{
-						class: "icon-laptop",
-					},
-					{
-						class: "icon-tablet",
-					},
-					{
-						class: "icon-mobile",
-					},
-					{
-						class: "icon-mobile-wide",
-					},
-					{
-						class: "icon-print",
-					},
-					{
-						class: "icon-phone",
-					},
-					{
-						class: "icon-phone-hang-up",
-					},
-					{
-						class: "icon-coin",
-					},
-					{
-						class: "icon-qrcode",
-					},
-					{
-						class: "icon-paint-format",
-					},
-				],
-				'glyphicons':[
-					{
-						class: "glyphicon glyphicon-star",
-					},
-					{
-						class: "glyphicon glyphicon-film",
-					},
-					{
-						class: "glyphicon glyphicon-cog",
-					},
-					{
-						class: "glyphicon glyphicon-home",
-					},
-					{
-						class: "glyphicon glyphicon-file",
-					},
-					{
-						class: "glyphicon glyphicon-time",
-					},
-					{
-						class: "glyphicon glyphicon-flag",
-					},
-					{
-						class: "glyphicon glyphicon-tag",
-					},
-					{
-						class: "glyphicon glyphicon-tags",
-					},
-					{
-						class: "glyphicon glyphicon-book",
-					},
-					{
-						class: "glyphicon glyphicon-bookmark",
-					},
-					{
-						class: "glyphicon glyphicon-camera",
-					},
-					{
-						class: "glyphicon glyphicon-font",
-					},
-					{
-						class: "glyphicon glyphicon-picture",
-					},
-					{
-						class: "glyphicon glyphicon-facetime-video",
-					},
-					{
-						class: "glyphicon glyphicon-tint",
-					},
-					{
-						class: "glyphicon glyphicon-screenshot",
-					},
-					{
-						class: "glyphicon glyphicon-gift",
-					},
-					{
-						class: "glyphicon glyphicon-calendar",
-					},
-					{
-						class: "glyphicon glyphicon-eye-open",
-					},
-					{
-						class: "glyphicon glyphicon-fire",
-					},
-					{
-						class: "glyphicon glyphicon-leaf",
-					},
-					{
-						class: "glyphicon glyphicon-globe",
-					},
-					{
-						class: "glyphicon glyphicon-bell",
-					},
-					{
-						class: "glyphicon glyphicon-bullhorn",
-					},
-					{
-						class: "glyphicon glyphicon-link",
-					},
-					{
-						class: "glyphicon glyphicon-pushpin",
-					},
-					{
-						class: "glyphicon glyphicon-phone",
-					},
-					{
-						class: "glyphicon glyphicon-usd",
-					},
-					{
-						class: "glyphicon glyphicon-gbp",
-					},
-					{
-						class: "glyphicon glyphicon-flash",
-					},
-					{
-						class: "glyphicon glyphicon-stats",
-					},
-					{
-						class: "glyphicon glyphicon-tree-conifer",
-					},
-					{
-						class: "glyphicon glyphicon-tree-deciduous",
-					},
-					{
-						class: "glyphicon glyphicon-warning-sign",
-					},
-				],
-			},
 		},
 
 	}
 
 }]);
+
+
+
+function pw_is_array( data ){
+	return (Object.prototype.toString.call(data) == '[object Array]');
+}
+
+function pw_array_replace_recursive(arr) {
+	var retObj = {},
+		i = 0,
+		p = '',
+		argl = arguments.length;
+
+	if (argl < 2) {
+		throw new Error('There should be at least 2 arguments passed to pw_array_replace_recursive()');
+	}
+
+	// Although docs state that the arguments are passed in by reference, it seems they are not altered, but rather the copy that is returned (just guessing), so we make a copy here, instead of acting on arr itself
+	for (p in arr) {
+		retObj[p] = arr[p];
+	}
+
+	for (i = 1; i < argl; i++) {
+		for (p in arguments[i]) {
+			if ( retObj[p] && typeof retObj[p] === 'object' && !pw_is_array( retObj[p] ) ) {
+				retObj[p] = pw_array_replace_recursive(retObj[p], arguments[i][p]);
+			} else {
+				retObj[p] = arguments[i][p];
+			}
+		}
+	}
+	return retObj;
+}
+

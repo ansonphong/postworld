@@ -2,22 +2,18 @@
 	postworldAdmin.controller( 'pwSocialDataCtrl',
 		[ '$scope', 'iOptionsData', function( $scope, $iOptionsData ){
 		// Social Option Values
-		$scope.iSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
+		$scope.pwSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
 		$scope['options'] = $iOptionsData['options'];
 
 		// Social Meta Data
-		$scope.socialMeta = <?php
-			global $i_social_meta;
-			$i_social_meta = json_encode($i_social_meta);
-			echo $i_social_meta;
-			?>;
+		$scope.socialMeta = <?php echo json_encode( pw_social_meta() ); ?>;
 	}]);
 </script>
 
-<div ng-app="postworldAdmin" class="postworld wrap social" ng-cloak>
+<div class="postworld wrap social" ng-cloak>
 
 	<h1>
-		<i class="icon-profile"></i>
+		<i class="pwi-profile"></i>
 		Social
 	</h1>
 	
@@ -28,19 +24,18 @@
 		ng-controller="pwSocialDataCtrl"
 		ng-cloak>
 
-
 		<!-- SHARE SOCIAL -->
 		<div class="well">
 			<div class="save-right">
-				<?php i_save_option_button( PW_OPTIONS_SOCIAL, 'iSocial'); ?>
+				<?php pw_save_option_button( PW_OPTIONS_SOCIAL, 'pwSocial'); ?>
 			</div>
 			<h2>
-				<i class="icon-share"></i>
+				<i class="pwi-share"></i>
 				Sharing
 			</h2>
 			<small>Include share links on each post for the following networks:</small>
 			<hr class="thin">
-			<?php echo i_share_social_options(); ?>
+			<?php echo pw_share_social_options(); ?>
 			<div style="clear:both"></div>
 		</div>
 
@@ -50,7 +45,7 @@
 			ng-repeat="sectionMeta in socialMeta">
 			<hr class="thick">
 			<!-- SAVE BUTTON -->
-			<div class="save-right"><?php i_save_option_button( PW_OPTIONS_SOCIAL,'iSocial'); ?></div>
+			<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SOCIAL,'pwSocial'); ?></div>
 			<h2><i class="{{ sectionMeta.icon }}"></i> {{ sectionMeta.name }}</h2>
 			<table class="form-table pad">
 				<tr ng-repeat="inputMeta in sectionMeta.fields"
@@ -68,7 +63,7 @@
 						<div>
 							<input
 								type="text"
-								ng-model="iSocial[sectionMeta.id][inputMeta.id]">
+								ng-model="pwSocial[sectionMeta.id][inputMeta.id]">
 								<small>{{ inputMeta.description }}</small>
 						</div>
 					</td>
@@ -78,9 +73,14 @@
 
 		</div>
 
-		<hr class="thick">
-		<!--<pre>iSocial : {{ iSocial | json }}</pre>-->
-		<!--<pre>socialMeta : {{ socialMeta | json }}</pre>-->
+		<?php if( pw_dev_mode() ): ?>
+			<hr class="thick">
+			<div class="well">
+				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<pre><code>pwSocial : {{ pwSocial | json }}</code></pre>
+				<pre><code>socialMeta : {{ socialMeta | json }}</code></pre>
+			</div>
+		<?php endif; ?>
 
 	</div>
 

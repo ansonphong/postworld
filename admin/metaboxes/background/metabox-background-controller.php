@@ -10,14 +10,17 @@ global $post;
 ?>
 
 <!--///// METABOX WRAPPER /////-->
-<div id="pwBackgroundMetabox" class="postworld">
+<div
+	id="pwBackgroundMetabox"
+	class="postworld"
+	ng-cloak>
 	<div
 		pw-admin-background
 		ng-controller="pwBackgroundMetaboxCtrl"
-		id="poststuff"
 		class="pw-metabox metabox-side metabox-background">
 		<?php
-			echo pw_ob_include( pw_get_admin_template( 'metabox-background' ) );
+			//echo pw_ob_include( pw_get_admin_template( 'metabox-background' ) );
+			echo pw_background_select( array( 'context' => 'postAdmin' ) );
 			//echo i_background_single_options( array( 'context'	=>	'postAdmin' ) );
 			// Action Hook
 			do_action('pw_background_metabox_templates');
@@ -33,16 +36,14 @@ global $post;
 
 <!--///// METABOX SCRIPTS /////-->
 <script>
-	///// APP /////
-	var pwBackgroundMetabox = angular.module( 'pwBackgroundMetabox', ['postworldAdmin'] );
-	
+
 	///// CONTROLLER /////
-	pwBackgroundMetabox.controller('pwBackgroundMetaboxCtrl',
+	postworldAdmin.controller('pwBackgroundMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
 			/// LOAD IN DATA SOURCES ///
-			$scope.pwBackgrounds = <?php echo json_encode( i_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) ) ); ?>;
+			$scope.pwBackgrounds = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) ) ); ?>;
 			$scope.pw_background_post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') ) ); ?>;
 
 			// Create background object
@@ -58,7 +59,7 @@ global $post;
 			$scope.context = {
 				name: 'single',
 				label: 'Single',
-				icon: 'icon-circle-medium',
+				icon: 'pwi-circle-medium',
 			};
 
 	}]);
@@ -69,8 +70,3 @@ global $post;
 	// Action hook to print the Javascript(s)
 	do_action('pw_background_metabox_scripts');
 ?>
-
-<script>
-	///// BOOTSTRAP APP /////
-	angular.bootstrap(document.getElementById("pwBackgroundMetabox"),['pwBackgroundMetabox']);
-</script>

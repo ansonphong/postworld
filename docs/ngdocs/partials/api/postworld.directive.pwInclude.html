@@ -1,0 +1,31 @@
+<h1><code ng:non-bindable="">pwInclude</code>
+<div><span class="hint">directive in module <code ng:non-bindable="">postworld</code>
+</span>
+</div>
+</h1>
+<div><h2 id="description">Description</h2>
+<div class="description"><div class="postworld-directive-page postworld-directive-pwinclude-page"><p>Used to include a Postworld template partial within an isolated scope.
+Post and meta data can be easily make available in the template.</p>
+</div></div>
+<h2 id="usage">Usage</h2>
+<div class="usage">as attribute<pre class="prettyprint linenums">&lt;ANY pw-include="{string}"
+     include-vars="{expression}"
+     include-meta="{expression}"
+     include-post="{expression}"
+     include-enable="{boolean}"
+     include-class="{string}"&gt;
+   ...
+&lt;/ANY&gt;</pre>
+<h4 id="usage_parameters">Parameters</h4><table class="variables-matrix table table-bordered table-striped"><thead><tr><th>Param</th><th>Type</th><th>Details</th></tr></thead><tbody><tr><td>pwInclude</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="postworld-directive-page postworld-directive-pwinclude-page"><p>Psuedo-path to the template.
+Use <code>panels/widget</code> to include <code>templates/panels/widget.html</code></p>
+</div></td></tr><tr><td>includeVars</td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="postworld-directive-page postworld-directive-pwinclude-page"><p>Vars to assign within the include as $scope.vars</p>
+</div></td></tr><tr><td>includeMeta</td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="postworld-directive-page postworld-directive-pwinclude-page"><p>Object to be assigned as $scope.meta within the included template</p>
+</div></td></tr><tr><td>includePost</td><td><a href="" class="label type-hint type-hint-expression">expression</a></td><td><div class="postworld-directive-page postworld-directive-pwinclude-page"><p>Object to be assigned as $scope.post within the included template</p>
+</div></td></tr><tr><td>includeEnable</td><td><a href="" class="label type-hint type-hint-boolean">boolean</a></td><td><div class="postworld-directive-page postworld-directive-pwinclude-page"><p>Dynamic. Whether or not to actually enable the load the include
+Can be used to prevent the template from loading in certain instances.</p>
+</div></td></tr><tr><td>includeClass</td><td><a href="" class="label type-hint type-hint-string">string</a></td><td><div class="postworld-directive-page postworld-directive-pwinclude-page"><p>Class(es) to be added to the include element</p>
+</div></td></tr></tbody></table></div>
+<h2 id="example">Example</h2>
+<div class="example"><div class="postworld-directive-page postworld-directive-pwinclude-page"><pre class="prettyprint linenums">&lt;div pw-include="galleries/gallery-frame" include-post="post"&gt;&lt;/div&gt;</pre>
+</div></div>
+</div>

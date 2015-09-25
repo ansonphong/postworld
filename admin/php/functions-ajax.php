@@ -11,19 +11,8 @@
 */
 
 
-function i_reset_less_php_cache(){
-	$ghost_less_file = get_infinite_directory() .'/less/ghost.less';
-	$file = fopen( $ghost_less_file ,"w" );
-	fwrite($file,"// Reset PHP LESS Cache");
-	fclose($file);
-	chmod($pwGlobalsJsFile, 0755);
-
-	return true;
-
-}	
-
 //---------- SAVE OPTIONS ----------//
-function i_save_option(){
+function pw_save_option(){
 	list($response, $args, $nonce) = i_initAjaxResponse();
 	$params = $args['args'];
 	extract($params);
@@ -48,10 +37,15 @@ function i_save_option(){
 
 	// If saving the styles
 	if( defined( 'PW_OPTIONS_STYLES' ) &&
-		$option_name == PW_OPTIONS_STYLES ){
+		$option_name == PW_OPTIONS_STYLES )
 		// Reset PHP LESS Cache
-		i_reset_less_php_cache();
-	}
+		pw_reset_less_php_cache();
+
+	// If saving the theme settings
+	if( defined( 'PW_OPTIONS_THEME' ) &&
+		$option_name == PW_OPTIONS_THEME )
+		// Reset PHP LESS Cache
+		pw_reset_less_php_cache();
 
 	if( $update_option == true ){
 		// Return with the Option Value
@@ -68,42 +62,8 @@ function i_save_option(){
 	die;
 }
 
-//add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
-add_action("wp_ajax_i_save_option", "i_save_option");
+add_action("wp_ajax_pw_save_option", "pw_save_option");
 
-/*
-//---------- LOAD LAYOUT OPTIONS ----------//
-function i_load_layout_options(){
-	list($response, $args, $nonce) = i_initAjaxResponse();
-	$params = $args['args'];
-
-	global $iAdmin;
-
-	// Get Sidebars
-	$I_Sidebars = new I_Sidebars();
-	$i_sidebars = (array) $I_Sidebars->get_sidebars();
-
-	// Load Infinite Layouts Class
-	//$I_Layouts = new I_Layouts();
-	// Run Update Function
-	//$response_data = $I_Layouts->save_options($params);
-
-	$response_data = array(
-		"iAdmin"			=> $iAdmin,
-		"i_layout_options" 	=> i_layout_options(),
-		"i_sidebars" 		=> $i_sidebars,
-		);	
-
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $response_data;
-	echo json_encode( $response );
-	die;
-}
-
-//add_action("wp_ajax_nopriv_user_share_report_outgoing", "flag_comment_admin");
-add_action("wp_ajax_i_load_layout_options", "i_load_layout_options");
-*/
 
 ////////// GENERAL AJAX FUNCTIONS //////////
 

@@ -42,16 +42,16 @@ function pw_metabox_init_post_parent(){
     	$default_labels = array(
     		'title'			=>	'Post Parent',
     		'search'		=>	'Search Posts...',
-    		'search_icon'	=>	'icon-search',
-    		'loading_icon'	=>	'icon-spinner-2 icon-spin',
+    		'search_icon'	=>	'pwi-search',
+    		'loading_icon'	=>	'pwi-spinner-2 icon-spin',
             'edit'          =>  'Edit',
-            'edit_icon'     =>  'icon-edit',
+            'edit_icon'     =>  'pwi-edit',
             'view'          =>  'View',
-            'view_icon'     =>  'icon-arrow-up-right-thin',
+            'view_icon'     =>  'pwi-arrow-up-right-thin',
             'remove'        =>  'Remove',
-            'remove_icon'   =>  'icon-close',
+            'remove_icon'   =>  'pwi-close',
             'change'        =>  'Change',
-            'change_icon'   =>  'icon-edit',
+            'change_icon'   =>  'pwi-edit',
     		);
 
     	// Get labels from the site config
@@ -116,6 +116,8 @@ function pw_post_parent_meta_init( $post, $metabox ){
     		'post_parent',
     		'post_permalink',
     		'edit_post_link',
+            'post_type',
+            'post_timestamp'
     		);
 
     // Apply filter for themes to over-ride default settings
@@ -159,6 +161,10 @@ function pw_post_parent_meta_save( $post_id ){
 
 	// Stop autosave to preserve meta data
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
+        return $post_id;
+
+    // Security Layer 
+    if ( !current_user_can( 'edit_post', $post_id ) )
         return $post_id;
 
     //pw_log( 'pw_post_parent_meta_save : ' . $post_id );

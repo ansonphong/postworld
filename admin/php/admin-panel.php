@@ -4,35 +4,35 @@
 ///// MAIN SCREEN /////
 function postworld_postworld_modules(){
 	global $theme_admin;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-modules.php';
 }
 
 ///// THEME OPTIONS SCREEN /////
 function postworld_options_site(){
 	global $theme_admin;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-site.php';
 } 
 
 ///// LAYOUT SCREEN /////
 function postworld_options_layout(){
 	global $theme_admin;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-layout.php';
 }
 
 ///// STYLES SCREEN /////
 function postworld_options_styles(){
 	global $theme_admin;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-styles.php';
 }
 
 ///// SOCIAL SCREEN /////
 function postworld_options_social(){
 	global $theme_admin;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-social.php';
 }
 
@@ -40,14 +40,14 @@ function postworld_options_social(){
 function postworld_options_sidebars(){
 	global $theme_admin;
 	global $i_language;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-sidebars.php'; 
 } 
 
 ///// FEEDS SCREEN /////
 function postworld_options_feeds(){
 	global $theme_admin;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-feeds.php';
 }
 
@@ -60,12 +60,34 @@ function postworld_options_term_feeds(){
 }
 */
 
-///// FEEDS SCREEN /////
+///// BACKGROUNDS SCREEN /////
 function postworld_options_backgrounds(){
 	global $theme_admin;
-	i_include_scripts();
+	//i_include_scripts();
 	include 'page-backgrounds.php';
 }
+
+///// ICONSETS SCREEN /////
+function postworld_options_iconsets(){
+	global $theme_admin;
+	//i_include_scripts();
+	include 'page-iconsets.php';
+}
+
+///// CACHE SCREEN /////
+function postworld_options_database(){
+	global $theme_admin;
+	//i_include_scripts();
+	include 'page-database.php';
+}
+
+///// SHORTCODES SCREEN /////
+function postworld_options_shortcodes(){
+	global $theme_admin;
+	//i_include_scripts();
+	include 'page-shortcodes.php';
+}
+
 
 
 
