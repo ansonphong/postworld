@@ -1106,7 +1106,6 @@ function pw_set_defaults( $obj, $defaults ){
 
 function pw_ob_include( $file, $vars = array() ){
 
-
 	///// CACHING LAYER /////
 	if( in_array( 'layout_cache', pw_enabled_modules() ) ){
 		$hash_array = array(
@@ -1128,29 +1127,24 @@ function pw_ob_include( $file, $vars = array() ){
 		}
 	}
 
-
-	// If no cached content, do regular processing
-
+	// If no cached content, do regular ob_include
 	if( !empty( $vars ) && is_array( $vars ) )
 		extract($vars);
-
 	if( empty( $file ) )
 		return "pw_ob_include : No file path provided.";
-
 	ob_start();
 	include $file;
 	$content = ob_get_contents();
 	ob_end_clean();
 
-
 	///// CACHING LAYER /////
 	if( in_array( 'layout_cache', pw_enabled_modules() ) )
 		pw_set_cache( array(
-			'cache_type'	=>	'layout-include:' . basename($file),
+			'cache_type'	=>	'layout-include:',
+			'cache_name'	=> 	$file,
 			'cache_hash' 	=> 	$cache_hash,
 			'cache_content'	=>	$content,
 			));
-
 
 	return $content;
 
