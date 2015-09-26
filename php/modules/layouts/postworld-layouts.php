@@ -182,8 +182,10 @@ function pw_header_footer( $template = 'header' ){
 	if( in_array( 'layout_cache', pw_enabled_modules() ) ){
 		$hash_array = array(
 			'template_path' => $template_path,
-			'device' => pw_device_meta(),
-			'view' => $pw['view']
+			'device' 		=> pw_device_meta(),
+			'view' 			=> $pw['view'],
+			'_get' 			=> $_GET,
+			//'user_id'		=> get_current_user_id()
 			);
 		//pw_log( 'hash_array', $hash_array );
 		$cache_hash = hash( 'sha256', json_encode( $hash_array ) );

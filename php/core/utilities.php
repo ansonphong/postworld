@@ -1105,18 +1105,21 @@ function pw_set_defaults( $obj, $defaults ){
 }
 
 function pw_ob_include( $file, $vars = array() ){
+	global $pw;
 
 	///// CACHING LAYER /////
 	if( in_array( 'layout_cache', pw_enabled_modules() ) ){
 		$hash_array = array(
-			'file' => $file,
-			'vars' => $vars,
-			'device' => pw_device_meta(),
-			'view' => $pw['view']
+			'file' 		=> $file,
+			'vars' 		=> $vars,
+			'device' 	=> pw_device_meta(),
+			'view' 		=> $pw['view'],
+			'_get'		=> $_GET,
+			//'user_id'		=> get_current_user_id()
 			);
-		pw_log( 'hash_array', $hash_array );
+		//pw_log( 'hash_array', $hash_array );
 		$cache_hash = hash( 'sha256', json_encode( $hash_array ) );
-		pw_log( 'cache_hash', $cache_hash );
+		//pw_log( 'cache_hash', $cache_hash );
 		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
 
 		// If cached content, echo it here and return
