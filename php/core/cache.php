@@ -575,8 +575,6 @@ function pw_cache_all_comment_points(){
 	$comment_ids = pw_get_all_comment_ids();
 	$comment_count = count( $comment_ids );
 
-	//pw_log( 'comment count : ' . $comment_count );
-
 	/// PROGRESS API ////
 	pw_update_progress( $fnName, 0, $comment_count );
 
