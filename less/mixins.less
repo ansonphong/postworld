@@ -197,3 +197,14 @@
 	-ms-transform-origin:     @x @y;
 	-o-transform-origin:      @x @y;
 }
+
+.user-select( @value: none ){
+	// Values: none | text | toggle | element | elements | all | inherit
+	-webkit-touch-callout: @value;
+	-webkit-user-select: @value;
+	-khtml-user-select: @value;
+	-moz-user-select: @value;
+	-ms-user-select: @value;
+	user-select: @value;
+}
+
