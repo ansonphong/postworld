@@ -211,8 +211,14 @@ postworld.directive('pwSmartImage',
 					}
 				}
 		
-				// Get the correctly sized image
+				// Get image sizes from the 'sizes' subobject
 				var imageSizes = $_.get( imageObj, 'sizes' );
+
+				// If it doesn't exist, assume we already have a sizes array
+				if( !_.isObject(imageSizes) && _.isObject(imageObj) )
+					imageSizes = imageObj;
+
+				// Get the correctly sized image
 				if( _.isObject( imageSizes ) ){
 					var image = $pwImages.selectImageSize(
 						imageSizes,

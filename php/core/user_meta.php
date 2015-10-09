@@ -297,7 +297,7 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 	
 
 	// AVATAR FIELDS
-	$avatar = pw_get_avatar_sizes($user_id, $fields);
+	$avatar = pw_get_avatars( array( 'user_id' => $user_id, 'fields' => $fields ) );
 	if ( !empty($avatar) )
 		$user_data["avatar"] = $avatar;
 
@@ -352,8 +352,8 @@ function pw_get_avatars( $vars ){
    			$avatar_handle = $avatar_attributes[0];
    			$avatar_size = $avatar_attributes[1];
    			// Set Avatar Size
-   			$avatars_object[$avatar_handle]['width'] = $avatar_size;
-   			$avatars_object[$avatar_handle]['height'] = $avatar_size;
+   			$avatars_object[$avatar_handle]['width'] = (int) $avatar_size;
+   			$avatars_object[$avatar_handle]['height'] = (int) $avatar_size;
 			$avatars_object[$avatar_handle]['url'] = pw_get_avatar( array( "user_id"=> $user_id, "size" => $avatar_size ) ); //get_avatar_url( $author_id, $avatar_size );
    		}
 

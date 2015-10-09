@@ -271,7 +271,6 @@ function pw_register_core_user_field_models(){
 	$preview_fields = array_merge(
 		$micro_fields,
 		array(
-			'xprofile(all)',
 			'avatar(medium,128)',
 			)
 		);
