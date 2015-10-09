@@ -37,6 +37,17 @@ function pw_register_post_field_model( $name, $fields ){
 }
 
 /**
+ * Register a user field model preset
+ *
+ * @see pw_register_field_model()
+ * @param string $name The name of the field model
+ * @param array $fields An array of fields
+ */
+function pw_register_user_field_model( $name, $fields ){
+	return pw_register_field_model( 'user', $name, $fields );
+}
+
+/**
  * Returns both the post and user field models
  */
 function pw_field_models(){
@@ -89,6 +100,7 @@ function pw_get_field_model( $type, $name ){
 /**
  * Registers core Postworld field models
  */
+add_action( 'init', 'pw_register_core_post_field_models' );
 function pw_register_core_post_field_models(){
 
 	///// POSTWORLD POST META /////
@@ -234,14 +246,110 @@ function pw_register_core_post_field_models(){
 		);
 	pw_register_post_field_model( 'gallery', $fields_gallery );
 
+	return;
+
 }
-add_action( 'init', 'pw_register_core_post_field_models' );
+
 
 /**
  * In Development
  */
-function pw_user_field_models(){
-	return array();
+add_action( 'init', 'pw_register_core_user_field_models' );
+function pw_register_core_user_field_models(){
+
+	///// MICRO /////
+	$micro_fields = array(
+		'ID',
+		'user_nicename',
+		'display_name',
+		'posts_url',
+		'user_profile_url',
+		);
+	pw_register_user_field_model( 'micro', $micro_fields );
+
+	///// PREVIEW /////
+	$preview_fields = array_merge(
+		$micro_fields,
+		array(
+			'xprofile(all)',
+			'avatar(medium,128)',
+			)
+		);
+	pw_register_user_field_model( 'preview', $preview_fields );
+
+	///// WORDPRESS /////
+	$wordpress_fields = array(
+		'ID',
+		'user_login',
+		'user_nicename',
+		'user_email',
+		'user_url',
+		'user_registered',
+		'display_name',
+		'user_firstname',
+		'user_lastname',
+		'nickname',
+		'user_description',
+		'wp_capabilities',
+		'admin_color',
+		'closedpostboxes_page',
+		'primary_blog',
+		'rich_editing',
+		'source_domain',
+		'roles',
+		'capabilities',
+		'posts_url',
+		);
+	pw_register_user_field_model( 'wordpress', $wordpress_fields );
+
+	///// POSTWORLD /////
+	$postworld_fields = array(
+		'viewed',
+		'favorites',
+		'location_city',
+		'location_region',
+		'location_country',
+		'post_points',
+		'comment_points',
+		'post_points_meta',
+		);
+	pw_register_user_field_model( 'postworld', $postworld_fields );
+
+	///// BUDDYPRESS /////
+	$buddypress_fields = array(
+		'user_profile_url',
+		'xprofile(all)',
+		);
+	pw_register_user_field_model( 'buddypress', $buddypress_fields );
+
+	///// USERMETA /////
+	$usermeta_fields = array(
+		'usermeta(all)',
+		);
+	pw_register_user_field_model( 'usermeta', $usermeta_fields );
+
+	///// POSTWORLD AVATAR /////
+	$postworld_avatar_fields = array(
+		'avatar(small,64)',
+		'avatar(medium,256)',
+		'avatar(large,1024)',
+		);
+	pw_register_user_field_model( 'postworld_avatar', $postworld_avatar_fields );
+	
+	///// ALL /////
+	$all_fields = array_merge(
+		$preview_fields,
+		$wordpress_fields,
+		$postworld_fields,
+		$buddypress_fields,
+		$usermeta_fields,
+		$postworld_avatar_fields
+		);
+	$all_fields = array_unique($all_fields);
+	pw_register_user_field_model( 'all', $all_fields );
+
+	return;
+
 }
 
 

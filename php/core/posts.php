@@ -135,7 +135,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			// Set the default field model
 			$fields = pw_get_field_model('post','preview');
 	}
-	//pw_log( 'pw_get_post : FIELDS : ', $fields );
 
 	///// ADD ACTION HOOK : PW GET POST INIT /////
 	do_action( 'pw_get_post_init',
