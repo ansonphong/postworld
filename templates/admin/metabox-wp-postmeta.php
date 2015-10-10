@@ -67,7 +67,7 @@
 			<?php break; ?>
 
 			<?php
-			///// TEXT INPUT /////
+			///// IMAGE ID /////
 			case 'image-id': ?>
 				<tr>
 					<td valign="top">
@@ -86,6 +86,29 @@
 								'label'			=>	'Image',
 								'width'			=>	'250px',
 							 	));?>
+					</td>
+				</tr>
+			<?php break; ?>
+
+			<?php
+			///// ICON /////
+			case 'icon': ?>
+				<tr>
+					<td valign="top">
+						<i class="<?php echo $field['icon']; ?>"></i>
+						<b><?php echo $field['label']; ?></b>
+						<?php if( !empty( $field['description'] ) ): ?>
+							<br><small><?php echo $field['description']; ?></small>
+						<?php endif; ?>
+					</td>
+					<td
+						width="75%">
+
+						<?php
+							echo pw_select_icon_options( array(
+								'ng_model' => 'fields.'.$meta_key.'.meta_value'
+								));?>
+
 					</td>
 				</tr>
 			<?php break; ?>
