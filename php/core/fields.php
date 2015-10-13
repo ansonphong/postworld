@@ -238,9 +238,9 @@ function pw_register_core_post_field_models(){
 		'post_date',
 		'post_date_gmt',
 		'time_ago',
-		'image(all)',
 		'image(stats)',
 		'image(tags)',
+		'image(all)',
 		'post_author',
 		'fields',
 		);
