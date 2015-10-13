@@ -62,6 +62,9 @@ function pw_background_meta_init( $post, $metabox ){
 
     //$pw_post = pw_get_post( $post->ID, array( 'ID', 'post_meta(all)' ) );
 
+    if( !isset( $query ) ) 
+        $query = array();
+
     // Apply filters for themes to over-ride
     $query = apply_filters( 'pw_background_metabox_vars', $query );
 

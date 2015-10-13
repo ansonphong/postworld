@@ -11,10 +11,11 @@ include_once $aq_resizer_include;
  *
  * @param array $post Post Array
  * @param array $fields Postworld fields array, checks for 'image()' fields
- * @param number|boolean $thumbnail_id 	(Optional) Thumbnail ID Override, or if boolean 'true' then use provided $post as thumbnail_id
+ * @param boolean|number $thumbnail_id 	(Optional) Thumbnail ID Override, or if boolean 'true' then use provided $post as thumbnail_id
+ * @param boolean|array $metadata (Optional) False if normal image reuqest, provide array of image metadata if true
  * @return array Post image array $post['image']
  */
-function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
+function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false ){
 
 	// Extract image() fields
 	$images = extract_fields( $fields, 'image' );
@@ -119,7 +120,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 	$post_image['sizes'] = array();
 
 	// Process each $image one at a time >> image(name,300,200,1) 
-	foreach ($images as $image) {
+	foreach ($images as $image) :
 
 		// Extract image attributes from parenthesis
 		$image_attributes = extract_parenthesis_values($image, true);
@@ -137,7 +138,6 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 				$post_image['sizes']['full']['url']	= $thumbnail_url;
 				$post_image['sizes']['full']['width'] = (int)$image_obj['width'];
 				$post_image['sizes']['full']['height'] = (int)$image_obj['height'];
-
 			}
 
 			// ALL : Get all registered images
@@ -208,9 +208,14 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 			// STATS : Get Image Stats
 			elseif( $image_key == 'stats' && is_numeric($thumbnail_id) ){
 				
-				// Get Image Meta Data
-				if( isset( $post_image['meta'] ) ){
-					// If it already has been queried, get fro post object
+				/**
+				 * If the metadata is provided already as an argument
+				 * Use the metadata already provided
+				 */
+				if( is_array( $metadata ) && !empty( $metadata ) ){
+					$image_meta = $metadata;
+				} else if( isset( $post_image['meta'] ) && !empty( $post_image['meta'] ) ){
+					// If it has already been aquired, get from post object
 					$image_meta = $post_image['meta'];
 				} else if( !isset( $image_meta ) ){
 					// Otherwise get from database
@@ -326,9 +331,31 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 					
 			}
 
-			// Set the value into the post object
-			$post_image['sizes'][$image_key]['url'] = $custom_image_url;
-			
+			/**
+			 * When requesting for metadata, a file key
+			 * Whereas for a normal request, a url key
+			 */
+			if( $metadata == false ){ 
+				// Set the url into the post object
+				$post_image['sizes'][$image_key]['url'] = $custom_image_url;
+			} else {
+				// Set the filename into the post object
+				$post_image['sizes'][$image_key]['file'] = basename( $custom_image_url );
+				
+				// Get the file mime type, store as variable '$filetype'
+				if( !isset( $filetype ) ){
+					// Get the image filename
+					$wp_upload_dir = wp_upload_dir();
+					$filename = $wp_upload_dir['basedir'] . '/' . $metadata['file'];
+					$filetype_array = wp_check_filetype( $filename );
+					$filetype = $filetype_array['type'];
+				}
+
+				// Set the mime type
+				$post_image['sizes'][$image_key]['mime-type'] = $filetype;
+
+			}
+
 			/**
 			 * @todo Get the actual image dimension if not a hard crop.
 			 */
@@ -337,7 +364,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0 ){
 
 		}
 
-	} // END foreeach
+	endforeach;
 
 	return $post_image;
 

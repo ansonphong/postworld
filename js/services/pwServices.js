@@ -1171,6 +1171,7 @@ postworld.factory('pwImages',
 			var defaultVars = {
 				width:0,
 				height:0,
+				priority:false,
 			};
 			vars = array_replace_recursive( defaultVars, vars );
 
@@ -1178,7 +1179,6 @@ postworld.factory('pwImages',
 			 * Make a new array, without the keys
 			 * So that it can be properly sorted as an Array
 			 */
-			
 			var imageArray = [];
 			angular.forEach( imageSizes, function( img, key ){
 				// Calculate the image area
@@ -1207,7 +1207,9 @@ postworld.factory('pwImages',
 
 				// Check Width
 				var passWidth = false;
-				if( hasWidth ){
+				if( vars.priority == 'height' )
+					passWidth = true;
+				else if( hasWidth ){
 					if( img['width'] >= vars['width'] ){
 						passWidth = true;
 					}
@@ -1216,7 +1218,9 @@ postworld.factory('pwImages',
 				
 				// Check Height
 				var passHeight = false;
-				if( hasHeight ){
+				if( vars.priority == 'width' )
+					passHeight = true;
+				else if( hasHeight ){
 					if( img['height'] >= vars['height'] ){
 						passHeight = true;
 					}

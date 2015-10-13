@@ -176,6 +176,7 @@ postworld.directive('pwImageSrc',
  * @param Object pwSmartImage A Postworld post image object
  * @param Object smartImageOverride An override to use instead if it's found
  * @param none smartImageDynamic If this attribute is present, update the image when the source or screen change. May cause performance issues if many images use this
+ * @param string smartImagePriority Optional. Options: height|width Priority is given to the defined dimension when deciding on image size
  *
  * @example
  * 		<img pw-smart-image="post.image" smart-image-override="post.image.alt">
@@ -210,6 +211,10 @@ postworld.directive('pwSmartImage',
 						imageObj = overrideImageObj;
 					}
 				}
+
+				// Select priority if provided
+				var priority = !_.isUndefined( attrs.smartImagePriority ) ?
+					attrs.smartImagePriority : false;
 		
 				// Get image sizes from the 'sizes' subobject
 				var imageSizes = $_.get( imageObj, 'sizes' );
@@ -225,6 +230,7 @@ postworld.directive('pwSmartImage',
 						{
 							width: elementWidth,
 							height: elementHeight,
+							priority: priority
 						}
 					);
 
