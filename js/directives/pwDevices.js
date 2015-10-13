@@ -195,12 +195,13 @@ postworld.directive('pwSmartImage',
 				var elementWidth = element[0].offsetWidth * devicePixelRatio;
 				var elementHeight = element[0].offsetHeight * devicePixelRatio;
 				
-				/*
-				$log.debug( 'element', element );
-				$log.debug( 'elementWidth', elementWidth );
-				$log.debug( 'elementHeight', elementHeight );
-				*/
-
+				// 
+				if( !_.isUndefined( attrs.smartImageShowDebug ) ){
+					//$log.debug( 'pwSmartImage : element', element );
+					$log.debug( 'pwSmartImage : elementWidth', elementWidth );
+					$log.debug( 'pwSmartImage : elementHeight', elementHeight );
+				}
+				
 				// Get the image object from provided expression
 				var imageObj = $scope.$eval( attrs.pwSmartImage );
 
@@ -243,18 +244,20 @@ postworld.directive('pwSmartImage',
 
 			}
 
-			function setImgUrl(){
+			function setImgUrl( imgUrl ){
 				// Detect what type of element
 				var elementTag = element[0].tagName;
 
-				var imgUrl = getImgUrl();
-				if( _.isEmpty( imgUrl ) )
-					return false;
-
+				if( imgUrl == null ){
+					var imgUrl = getImgUrl();
+					if( _.isEmpty( imgUrl ) )
+						return false;
+				}
+				
 				if( elementTag === 'IMG' )
-					element.attr( 'src', getImgUrl() );
+					element.attr( 'src', imgUrl );
 				else
-					element.css( 'background-image', 'url('+getImgUrl()+')' );
+					element.css( 'background-image', 'url('+imgUrl+')' );
 			}
 
 			// Timeout for DOM to initialize
@@ -303,15 +306,18 @@ postworld.directive('pwSmartImage',
 						return $scope.$eval( attrs.pwSmartImage )
 					},
 					function(val){
-						setImgUrl();
+						/**
+						 * Clear image URL, and then timeout,
+						 * Waiting 0ms for potential DOM changes to initialize.
+						 */
+						setImgUrl('');
+						$timeout( function(){
+							setImgUrl();		
+						}, 0 );
 					}
 				);
 
-
 			}
-
-			
-
 			
 		}
 
