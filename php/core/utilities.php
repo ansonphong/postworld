@@ -1519,10 +1519,16 @@ function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
 
 }
 
+/**
+ * Sorts an associative array by the value of a specified key.
+ *
+ * @param A_ARRAY $array
+ * @param string $key Key to order by.
+ * @param string $order How to order, SORT_DESC|SORT_ASC
+ *
+ * @example pw_array_order_by( $items, $score_key, SORT_DESC );
+ */
 function pw_array_order_by(){
-	// Orders items in an array by key
-	// $ordered = pw_array_order_by( $items, $order_key, SORT_DESC / SORT_ASC )
-
 	$args = func_get_args();
 	$data = array_shift($args);
 	foreach ($args as $n => $field) {
