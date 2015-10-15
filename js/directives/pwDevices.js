@@ -176,6 +176,7 @@ postworld.directive('pwImageSrc',
  * @param Object pwSmartImage A Postworld post image object
  * @param Object smartImageOverride An override to use instead if it's found
  * @param none smartImageDynamic If this attribute is present, update the image when the source or screen change. May cause performance issues if many images use this
+ * @param string smartImagePriority Optional. Options: height|width Priority is given to the defined dimension when deciding on image size
  *
  * @example
  * 		<img pw-smart-image="post.image" smart-image-override="post.image.alt">
@@ -194,12 +195,13 @@ postworld.directive('pwSmartImage',
 				var elementWidth = element[0].offsetWidth * devicePixelRatio;
 				var elementHeight = element[0].offsetHeight * devicePixelRatio;
 				
-				/*
-				$log.debug( 'element', element );
-				$log.debug( 'elementWidth', elementWidth );
-				$log.debug( 'elementHeight', elementHeight );
-				*/
-
+				// 
+				if( !_.isUndefined( attrs.smartImageShowDebug ) ){
+					//$log.debug( 'pwSmartImage : element', element );
+					$log.debug( 'pwSmartImage : elementWidth', elementWidth );
+					$log.debug( 'pwSmartImage : elementHeight', elementHeight );
+				}
+				
 				// Get the image object from provided expression
 				var imageObj = $scope.$eval( attrs.pwSmartImage );
 
@@ -210,15 +212,26 @@ postworld.directive('pwSmartImage',
 						imageObj = overrideImageObj;
 					}
 				}
+
+				// Select priority if provided
+				var priority = !_.isUndefined( attrs.smartImagePriority ) ?
+					attrs.smartImagePriority : false;
 		
-				// Get the correctly sized image
+				// Get image sizes from the 'sizes' subobject
 				var imageSizes = $_.get( imageObj, 'sizes' );
+
+				// If it doesn't exist, assume we already have a sizes array
+				if( !_.isObject(imageSizes) && _.isObject(imageObj) )
+					imageSizes = imageObj;
+
+				// Get the correctly sized image
 				if( _.isObject( imageSizes ) ){
 					var image = $pwImages.selectImageSize(
 						imageSizes,
 						{
 							width: elementWidth,
 							height: elementHeight,
+							priority: priority
 						}
 					);
 
@@ -231,18 +244,20 @@ postworld.directive('pwSmartImage',
 
 			}
 
-			function setImgUrl(){
+			function setImgUrl( imgUrl ){
 				// Detect what type of element
 				var elementTag = element[0].tagName;
 
-				var imgUrl = getImgUrl();
-				if( _.isEmpty( imgUrl ) )
-					return false;
-
+				if( imgUrl == null ){
+					var imgUrl = getImgUrl();
+					if( _.isEmpty( imgUrl ) )
+						return false;
+				}
+				
 				if( elementTag === 'IMG' )
-					element.attr( 'src', getImgUrl() );
+					element.attr( 'src', imgUrl );
 				else
-					element.css( 'background-image', 'url('+getImgUrl()+')' );
+					element.css( 'background-image', 'url('+imgUrl+')' );
 			}
 
 			// Timeout for DOM to initialize
@@ -291,15 +306,18 @@ postworld.directive('pwSmartImage',
 						return $scope.$eval( attrs.pwSmartImage )
 					},
 					function(val){
-						setImgUrl();
+						/**
+						 * Clear image URL, and then timeout,
+						 * Waiting 0ms for potential DOM changes to initialize.
+						 */
+						setImgUrl('');
+						$timeout( function(){
+							setImgUrl();		
+						}, 0 );
 					}
 				);
 
-
 			}
-
-			
-
 			
 		}
 

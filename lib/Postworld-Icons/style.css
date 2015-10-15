@@ -1,11 +1,11 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?-lko6kx');
-	src:url('fonts/Postworld-Icons.eot?#iefix-lko6kx') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff2?-lko6kx') format('woff2'),
-		url('fonts/Postworld-Icons.ttf?-lko6kx') format('truetype'),
-		url('fonts/Postworld-Icons.woff?-lko6kx') format('woff'),
-		url('fonts/Postworld-Icons.svg?-lko6kx#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?xa3b5n');
+	src:url('fonts/Postworld-Icons.eot?xa3b5n#iefix') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff2?xa3b5n') format('woff2'),
+		url('fonts/Postworld-Icons.ttf?xa3b5n') format('truetype'),
+		url('fonts/Postworld-Icons.woff?xa3b5n') format('woff'),
+		url('fonts/Postworld-Icons.svg?xa3b5n#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -24,6 +24,12 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.pwi-unlock:before {
+	content: "\e800";
+}
+.pwi-lock:before {
+	content: "\e801";
+}
 .pwi-external-link:before {
 	content: "\e60e";
 }
@@ -446,12 +452,6 @@
 }
 .pwi-key:before {
 	content: "\e65d";
-}
-.pwi-lock:before {
-	content: "\e65f";
-}
-.pwi-unlock:before {
-	content: "\e660";
 }
 .pwi-wrench:before {
 	content: "\e661";
@@ -894,3 +894,4 @@
 .pwi-share:before {
 	content: "\e6c4";
 }
+

@@ -84,60 +84,25 @@ function pw_get_current_user($fields){
 	return pw_get_user( $user_id, $fields );
 }
 
-function pw_get_user( $user_id, $fields = false ) {
+function pw_get_user( $user_id, $fields = 'preview' ) {
 	// Gets user data from Wordpress, Postworld and Buddypress field APIs
 
 	// Set defaults
 	$single_field = false;
 
-	///// DEFINE FIELD MODELS /////
-	$wordpress_user_fields = array(
-		'ID',
-		'user_login',
-		'user_nicename',
-		'user_email',
-		'user_url',
-		'user_registered',
-		'display_name',
-		'user_firstname',
-		'user_lastname',
-		'nickname',
-		'user_description',
-		'wp_capabilities',
-		'admin_color',
-		'closedpostboxes_page',
-		'primary_blog',
-		'rich_editing',
-		'source_domain',
-		'roles',
-		'capabilities',
-		'posts_url',
-		);
-	$postworld_user_fields = array(
-		'viewed',
-		'favorites',
-		'location_city',
-		'location_region',
-		'location_country',
-		'post_points',
-		'comment_points',
-		'post_points_meta',
-		);
-	$buddypress_user_fields = array(
-		'user_profile_url',
-		'xprofile(all)',
-		);
-	$wordpress_usermeta_fields = array(
-		'usermeta(all)',
-		);
-	$postworld_avatar_fields = array(
-		'avatar(small,64)',
-		'avatar(medium,256)',
-		//'avatar(large,1024)',
-		);
-
 	$user_data = array();
 
+
+	///// PRESET FIELD MODELS /////
+	if( is_string( $fields) ){
+		$fields = pw_get_field_model('user',$fields);
+		// If the specified field model does not exist
+		if( empty( $fields ) )
+			// Set the default field model
+			$fields = pw_get_field_model('user','preview');
+	}
+
+	/*
 	// If Fields is empty or 'all', add all fields
 	if ( $fields == false || $fields == 'all')
 		$fields = array_merge($wordpress_user_fields, $postworld_user_fields, $buddypress_user_fields, $wordpress_usermeta_fields, $postworld_avatar_fields);
@@ -145,6 +110,7 @@ function pw_get_user( $user_id, $fields = false ) {
 		$fields = array( $fields );
 		$single_field = true;
 	}
+	*/
 
 	///// TRANSFER ONLY REQUESTED FIELDS!! /////
 
@@ -152,7 +118,7 @@ function pw_get_user( $user_id, $fields = false ) {
 	// Check to see if any requested fields are standard Wordpress User Fields
 	foreach ($fields as $field) {
 		// If a requested field is provided by WP get_userdata() Method, collect all the data
-		if (in_array($field, $wordpress_user_fields)) {
+		if (in_array($field, pw_get_field_model('user','wordpress') )) {
 			$wordpress_user_data = get_userdata($user_id);
 			if ((isset($wordpress_user_data))&&($wordpress_user_data)) {
 				// Transfer the requested user data into $user_data
@@ -180,7 +146,7 @@ function pw_get_user( $user_id, $fields = false ) {
 	// Check to see if requested fields are custom Postworld User Fields
 	foreach ($fields as $value) {
 		// If a requested field is custom Postworld, get the user's row in *user_meta* table
-		if ( in_array($value, $postworld_user_fields )) {
+		if ( in_array($value, pw_get_field_model('user','postworld') )) {
 			global $wpdb;
 			if( pw_dev_mode() )
 				$wpdb -> show_errors();
@@ -331,7 +297,7 @@ function pw_get_user( $user_id, $fields = false ) {
 	
 
 	// AVATAR FIELDS
-	$avatar = pw_get_avatar_sizes($user_id, $fields);
+	$avatar = pw_get_avatars( array( 'user_id' => $user_id, 'fields' => $fields ) );
 	if ( !empty($avatar) )
 		$user_data["avatar"] = $avatar;
 
@@ -386,8 +352,8 @@ function pw_get_avatars( $vars ){
    			$avatar_handle = $avatar_attributes[0];
    			$avatar_size = $avatar_attributes[1];
    			// Set Avatar Size
-   			$avatars_object[$avatar_handle]['width'] = $avatar_size;
-   			$avatars_object[$avatar_handle]['height'] = $avatar_size;
+   			$avatars_object[$avatar_handle]['width'] = (int) $avatar_size;
+   			$avatars_object[$avatar_handle]['height'] = (int) $avatar_size;
 			$avatars_object[$avatar_handle]['url'] = pw_get_avatar( array( "user_id"=> $user_id, "size" => $avatar_size ) ); //get_avatar_url( $author_id, $avatar_size );
    		}
 
