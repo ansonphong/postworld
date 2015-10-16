@@ -131,6 +131,7 @@ define( 'PW_POSTMETA_KEY',	'pw_meta', 		true ); // Case in-sensitive
 define( 'PW_USERMETA_KEY',	'pw_meta', 		true ); // Case in-sensitive
 define( 'PW_TAXMETA_KEY',	'pw_meta', 		true ); // Case in-sensitive
 define( 'PW_AVATAR_KEY',	'pw_avatar', 	true ); // Case in-sensitive
+define( 'PW_COLORS_KEY',	'pw_colors', 	true ); // Case in-sensitive
 
 ///// DEFINE PRINT FILTERS /////
 define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
@@ -312,7 +313,13 @@ include 'php/modules/slider/postworld-slider.php';
 include 'php/modules/term-feed/postworld-term-feed.php';
 include 'php/modules/user-feed/postworld-user-feed.php';
 include 'php/modules/gallery/postworld-gallery.php';
-include 'php/modules/devices/postworld-devices.php';
+
+if( pw_module_enabled( 'devices' ) )
+	include 'php/modules/devices/postworld-devices.php';
+
+if( pw_module_enabled( 'colors' ) )
+	include 'php/modules/colors/postworld-colors.php';
+
 
 ////// GET AJAX FUNCTIONS AND ACTION ////// 
 include 'php/core/ajax.php';

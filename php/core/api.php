@@ -273,26 +273,22 @@ function pw_set_wp_postmeta($vars){
 		
 		PARAMETERS:
 		$vars = array(
-			"post_id"	=>	[integer], 	(optional)
-			"sub_key"	=>	[string],	(required)
-			"value" 	=>	[mixed],	(required)
-			"meta_key" 	=>	[string] 	(optional)
+			"post_id"		=>	[integer], 	(optional)
+			"sub_key"		=>	[string],	(optional)
+			"meta_value" 	=>	[mixed],	(required)
+			"meta_key" 		=>	[string] 	(optional)
 			);
 	*/
+	global $post;
+	$default_vars = array(
+		'post_id' => $post->ID,
+		'meta_key' => pw_postmeta_key,
+		'sub_key' => null,
+		'meta_value' => null,
+		);
+	$vars = array_replace( $default_vars, $vars );
 
 	extract($vars);
-
-	///// DEFAULT POSTMETA KEY /////
-	// TODO : 	Rather than set default key
-	// 			Get all the post meta values as array
-	if( !isset( $meta_key ) )
-		$meta_key = pw_postmeta_key;
-
-	///// POST ID /////
-	if( !isset($post_id) ){
-		global $post;
-		$post_id = $post->ID;
-	}
 
 	///// USER ID /////
 	$post_id = pw_check_user_post( $post_id );
@@ -300,7 +296,7 @@ function pw_set_wp_postmeta($vars){
 		return $post_id; // Will be: array('error'=>'[Error message]')
 
 	///// SUB KEY /////
-	if( isset($sub_key) ){
+	if( !empty($sub_key) ){
 
 		///// SETUP DATA /////
 		// Check if the meta key exists

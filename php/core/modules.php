@@ -109,6 +109,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'Adds support for device detection.',
 			),
 
+		array(
+			'name'	=>	'Colors',
+			'slug'	=>	'colors',
+			'icon'	=>	'pwi-droplet',
+			'description'	=>	'Adds support for color processing.',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules

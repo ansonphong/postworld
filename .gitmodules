@@ -4,3 +4,6 @@
 [submodule "lib/Mobile-Detect"]
 	path = lib/Mobile-Detect
 	url = git@github.com:serbanghita/Mobile-Detect.git
+[submodule "lib/thephpleague/color-extractor"]
+	path = lib/thephpleague/color-extractor
+	url = git@github.com:thephpleague/color-extractor.git
