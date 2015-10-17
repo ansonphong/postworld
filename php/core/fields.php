@@ -198,6 +198,7 @@ function pw_register_core_post_field_models(){
 		array(
 			'post_path',
 			'image(full)',
+			'image(colors)',
 			'post_content',
 			'post_type_labels',
 			'gallery(ids,posts)',

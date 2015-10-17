@@ -210,7 +210,7 @@ function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 	$processed_profiles = array();
 	foreach( $profiles as $profile_key => $profile_vars ){
 		$profile_vars['hex_values'] = $hex_value;
-		pw_log( 'profile_vars', $profile_vars );
+		//pw_log( 'profile_vars', $profile_vars );
 		$processed_profiles[$profile_key] = $pw_colors->process_color_profile( $profile_vars );
 	}
 

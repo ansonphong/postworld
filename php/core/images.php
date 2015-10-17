@@ -241,7 +241,8 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 			}
 
 			// Get image colors
-			elseif( pw_in_string( $image_key, 'colors' ) && is_numeric($thumbnail_id) ){
+			elseif( $image_key == 'colors' && is_numeric($thumbnail_id) ){
+				// pw_in_string( $image_key, 'colors' )
 				//if( !isset( $post_image['colors'] ) )
 				//	$post_image['colors'] = array();
 

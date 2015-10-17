@@ -184,5 +184,14 @@ postworld.controller( 'pwUiCtrl',
 
 	}
 
+	$scope.uiStyleElement = function( element, properties ){
+		var propertiesCode = '';
+		angular.forEach( properties, function(value,key){
+			propertiesCode += key + ':' + value + ' !important;';
+		});
+		var code = "<style>" + element + "{ " + propertiesCode + " }</style>"
+		return code;
+	}
+
 
 }]);
