@@ -195,10 +195,9 @@ function pw_get_attachment_image_size( $vars ){
 function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 	global $pwSiteGlobals;
 
-	if( empty( $profiles ) )
-		$profiles = _get( $pwSiteGlobals, 'colors.color_profiles' );
+	// _get( $pwSiteGlobals, 'colors.color_profiles' );
+	$profiles = apply_filters( 'pw_color_profiles', $profiles, $thumbnail_id );
 
-	
 	// Get the images in hex format
 	$hex_value = pw_get_image_colors($thumbnail_id);
 
@@ -210,7 +209,6 @@ function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 	$processed_profiles = array();
 	foreach( $profiles as $profile_key => $profile_vars ){
 		$profile_vars['hex_values'] = $hex_value;
-		//pw_log( 'profile_vars', $profile_vars );
 		$processed_profiles[$profile_key] = $pw_colors->process_color_profile( $profile_vars );
 	}
 
@@ -218,9 +216,37 @@ function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 
 }
 
+/**
+ * Color profiles which are automatically processed
+ * When requesting an image(colors) field.
+ *
+ * Profiles can be added and filtered with pw_color_profiles filter.
+ *
+ * @see PW_Colors::process_color_profile()
+ */
+add_filter( 'pw_color_profiles', 'pw_default_color_profiles', 5, 2 );
+function pw_default_color_profiles( $profiles, $attachment_id ){
 
+	$profiles['default'] = array(
+		'order_by'		=> 'lightness',
+		'order'			=> 'DESC',
+		'processing'	=>	array(
+			'lightness_range' => array(
+				'low' => 0.2,
+				'high' => 0.8,
+				'distribute' => true,
+				'order' => 'DESC',
+				),
+			'saturation_range' => array(
+				'low' => 0.0,
+				'high' => 0.6,
+				'distribute' => false,
+				'order' => 'DESC',
+				),
+			),
+		);
 
+	return $profiles;
 
-
-
+}
 
