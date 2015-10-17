@@ -38,6 +38,11 @@ add_action( 'pw_generate_attachment_colors', 'pw_generate_attachment_colors', 10
 function pw_generate_attachment_colors( $vars ){
 	global $pwSiteGlobals;
 
+	/**
+	 * @todo Allow for on-demand variable passing
+	 * 		Rather than only pwSiteConfig vars only.
+	 */
+
 	$colors_settings = _get( $pwSiteGlobals, 'colors' );
 	if( empty( $colors_settings ) )
 		return false;
@@ -55,7 +60,7 @@ function pw_generate_attachment_colors( $vars ){
 
 	// Get existing colors entry
 	$colors = pw_get_wp_postmeta( array(
-		'post_id' => $post->ID,
+		'post_id' => $attachment_id,
 		'meta_key' => PW_COLORS_KEY,
 		));
 
@@ -64,7 +69,6 @@ function pw_generate_attachment_colors( $vars ){
 	 * Run the color extractor, and save the colors.
 	 */
 	if( empty($colors) || count($colors) != $number ){
-		
 		/**
 		 * Get a smaller image than the original if it's bigger than 640x480
 		 * Since processing larger images is time consuming.
@@ -195,7 +199,6 @@ function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 		$profiles = _get( $pwSiteGlobals, 'colors.color_profiles' );
 
 	
-
 	// Get the images in hex format
 	$hex_value = pw_get_image_colors($thumbnail_id);
 

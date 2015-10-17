@@ -307,6 +307,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-UI-JS',
 			POSTWORLD_URI.'/js/components/pwUi.js', $angularDep );
 
+		wp_enqueue_script( 'pw-colors-JS',
+			POSTWORLD_URI.'/js/components/pwColors.js', $angularDep );
+
 		wp_enqueue_script( 'pw-filterFeed-JS',
 			POSTWORLD_URI.'/js/components/editFeed.js', $angularDep );
 		
