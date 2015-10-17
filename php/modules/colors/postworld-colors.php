@@ -77,7 +77,7 @@ class PW_Colors{
 	 * This is a wrapper for getting the image colors
 	 * as well as processing the colors.
 	 */
-	public function get_image_color_meta( $vars ){
+	public function process_color_profile( $vars ){
 
 		$default_vars = array(
 			
@@ -114,7 +114,8 @@ class PW_Colors{
 			);
 		$vars = array_replace( $default_vars, $vars );
 
-		if( empty( $vars['image_path'] ) || empty( $vars['image_format'] ) )
+		if( (empty( $vars['image_path'] ) || empty( $vars['image_format'] )) &&
+			empty( $vars['hex_values'] ) )
 			return false;
 
 		/**

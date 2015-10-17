@@ -53,7 +53,6 @@ function pw_colors_meta_init( $post, $metabox ){
 
 	$colors = pw_generate_attachment_colors( array( 'attachment_id' => $post->ID ) );
 
-	//pw_log( json_encode($vars) );
 	$pw_post = pw_get_post( $post->ID, array( 'ID', 'post_type', 'image(colors)' ) );
 
 	// Apply filters for themes to over-ride

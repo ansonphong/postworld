@@ -15,7 +15,7 @@ function pw_colors_process_attachment( $metadata, $attachment_id ){
 }
 
 /**
- * Get the colors from an image
+ * Get the hexadecimal colors from an image.
  */
 function pw_get_image_colors( $attachment_id ){
 	return pw_generate_attachment_colors(array(
@@ -85,11 +85,11 @@ function pw_generate_attachment_colors( $vars ){
 		$colors = $pw_colors->extract_image_colors( $extract_vars );
 
 		// Save the colors to the postmeta table
-		pw_set_wp_postmeta( array(
+		pw_set_wp_postmeta(array(
 			'post_id' 		=> $attachment_id,
 			'meta_key' 		=> PW_COLORS_KEY,
 			'meta_value' 	=> $colors
-			) );
+			));
 
 	}
 
@@ -183,6 +183,40 @@ function pw_get_attachment_image_size( $vars ){
 	return $output;
 
 }
+
+
+/**
+ * Get processed colors.
+ */
+function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
+	global $pwSiteGlobals;
+
+	if( empty( $profiles ) )
+		$profiles = _get( $pwSiteGlobals, 'colors.color_profiles' );
+
+	
+
+	// Get the images in hex format
+	$hex_value = pw_get_image_colors($thumbnail_id);
+
+	/**
+	 * For each color profile, run the post image's colors
+	 * Through the image meta processing mechanism.
+	 */
+	$pw_colors = new PW_Colors();
+	$processed_profiles = array();
+	foreach( $profiles as $profile_key => $profile_vars ){
+		$profile_vars['hex_values'] = $hex_value;
+		pw_log( 'profile_vars', $profile_vars );
+		$processed_profiles[$profile_key] = $pw_colors->process_color_profile( $profile_vars );
+	}
+
+	return $processed_profiles;
+
+}
+
+
+
 
 
 

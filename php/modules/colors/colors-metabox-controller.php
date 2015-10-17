@@ -12,15 +12,23 @@ global $post;
 		style="position:relative;">
 
 		<table style="width:100%;">
-			<tr>
-				<?php foreach( $colors as $color ) : ?>
 
-					<td style="height:32px; background:<?php echo $color ?>">
-						
-					</td>
-
+			<?php if( empty( $pw_post['image']['colors'] ) ): ?>
+				<tr>
+					<?php foreach( $colors as $color ) : ?>
+						<td style="height:32px; background:<?php echo $color ?>"></td>
+					<?php endforeach ?>
+				</tr>
+			<?php else: ?>
+				<?php foreach( $pw_post['image']['colors'] as $profile ) : ?>
+				<tr>
+					<?php foreach( $profile['colors'] as $color ) : ?>
+						<td style="height:32px; background:<?php echo $color['hex'] ?>"></td>
+					<?php endforeach ?>
+				</tr>
 				<?php endforeach ?>
-			</tr>
+			<?php endif ?>
+
 		</table>
 
 		<?php
@@ -29,10 +37,10 @@ global $post;
 			do_action('pw_colors_metabox_templates');
 		?>
 
-		<?php if( pw_dev_mode() ): ?>
+		<?php /*if( pw_dev_mode() ): ?>
 			<hr><pre>DEV MODE</pre>
 			<?php echo json_encode( $pw_post, JSON_PRETTY_PRINT ); ?>
-		<?php endif; ?>
+		<?php endif */ ?>
 		
 	</div>	
 </div>

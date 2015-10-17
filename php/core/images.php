@@ -240,6 +240,15 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 
 			}
 
+			// Get image colors
+			elseif( pw_in_string( $image_key, 'colors' ) && is_numeric($thumbnail_id) ){
+				//if( !isset( $post_image['colors'] ) )
+				//	$post_image['colors'] = array();
+
+				$post_image['colors'] = pw_get_processed_color_profiles( $thumbnail_id );
+
+			}
+
 			// Get Image ID
 			elseif( $image_key == 'id' ){
 				$post_image['thumbnail_id'] = $thumbnail_id;
