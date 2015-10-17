@@ -8,7 +8,6 @@ global $post;
 		pw-admin-colors
 		ng-controller="pwColorsMetaboxCtrl"
 		class="pw-metabox metabox-side metabox-colors"
-		ng-cloak
 		style="position:relative;">
 
 		<table style="width:100%;">

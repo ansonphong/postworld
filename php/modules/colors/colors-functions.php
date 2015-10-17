@@ -188,9 +188,12 @@ function pw_get_attachment_image_size( $vars ){
 
 }
 
-
+/**
+ * Get base color profiles.
+ * @return A_ARRAY Color Profiles
+ */
 function pw_get_color_profiles(){
-
+	return apply_filters( 'pw_color_profiles', array() );
 }
 
 /**
@@ -199,15 +202,15 @@ function pw_get_color_profiles(){
 function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 	global $pwSiteGlobals;
 
-	// _get( $pwSiteGlobals, 'colors.color_profiles' );
-	/**
-	 * @todo Get profiles with pw_get_color_profiles() function
-	 * 			have option to edit them in Admin.
-	 */
-	$profiles = apply_filters( 'pw_color_profiles', $profiles, $thumbnail_id );
+	// If no profiles provided, get base profiles
+	if( empty( $profiles ) )
+		$profiles = pw_get_color_profiles();
+
+	// Filter profiles so themes can customize at post level
+	$profiles = apply_filters( 'pw_post_color_profiles', $profiles, $thumbnail_id );
 
 	// Get the images in hex format
-	$hex_value = pw_get_image_colors($thumbnail_id);
+	$hex_values = pw_get_image_colors($thumbnail_id);
 
 	/**
 	 * For each color profile, run the post image's colors
@@ -216,7 +219,7 @@ function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 	$pw_colors = new PW_Colors();
 	$processed_profiles = array();
 	foreach( $profiles as $profile_key => $profile_vars ){
-		$profile_vars['hex_values'] = $hex_value;
+		$profile_vars['hex_values'] = $hex_values;
 		$processed_profiles[$profile_key] = $pw_colors->process_color_profile( $profile_vars );
 	}
 
@@ -232,8 +235,8 @@ function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
  *
  * @see PW_Colors::process_color_profile()
  */
-add_filter( 'pw_color_profiles', 'pw_default_color_profiles', 5, 2 );
-function pw_default_color_profiles( $profiles, $attachment_id ){
+add_filter( 'pw_color_profiles', 'pw_default_color_profiles', 5 );
+function pw_default_color_profiles( $profiles ){
 
 	$profiles['default'] = array(
 		'order_by'		=> 'lightness',
