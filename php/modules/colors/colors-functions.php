@@ -189,6 +189,10 @@ function pw_get_attachment_image_size( $vars ){
 }
 
 
+function pw_get_color_profiles(){
+
+}
+
 /**
  * Get processed colors.
  */
@@ -196,6 +200,10 @@ function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
 	global $pwSiteGlobals;
 
 	// _get( $pwSiteGlobals, 'colors.color_profiles' );
+	/**
+	 * @todo Get profiles with pw_get_color_profiles() function
+	 * 			have option to edit them in Admin.
+	 */
 	$profiles = apply_filters( 'pw_color_profiles', $profiles, $thumbnail_id );
 
 	// Get the images in hex format
