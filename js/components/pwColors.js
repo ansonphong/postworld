@@ -21,10 +21,50 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 					return colors[index];
 					break;
 			}
-
 			return false;
+		},
+
+		/**
+		 * Selects a particular percentage point from a profile of colors.
+		 */
+		getColorPercentage: function( percentage, colorProfile ){
+
+
 
 		},
+
+		/**
+		 * Parse a single property value, and replace instances
+		 * Of
+		 */
+		parsePropertyValue: function( property, colorProfiles ){
+
+
+
+		},
+
+		/**
+		 * Parse a set of style definitions. 
+		 */
+		parseStyles: function( styleObj, colorProfiles ){
+			var styles = "";
+			angular.forEach( styleObj, function( properties, selector ){
+				styles += selector + "{";
+				angular.forEach( properties, function( value, property ){
+					styles += property + ":" + this.parsePropertyValue( value, colorProfiles ) + ";";
+				});
+				styles += "}";
+			});
+			return styles;
+		},
+
+		/**
+		 * Return style definitions prepared to be output to browser.
+		 */
+		outputStyles: function( styleObj, colorProfiles ){
+			return "<style>" + this.parseStyles(styleObj,colorProfiles) + "</style>";
+		}
+
 	}
 }]);
 
