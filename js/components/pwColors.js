@@ -34,12 +34,53 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 		},
 
 		/**
-		 * Parse a single property value, and replace instances
-		 * Of
+		 * Parse color functions embedded in property values.
+		 * hex(profile.50), rgb(profile.50), rgba(profile.50,.8) 
 		 */
-		parsePropertyValue: function( property, colorProfiles ){
+		parseColorFunctions: function( propertyInner ){
+			
+			console.log( 'parseColorFunctions(propertyInner)', propertyInner );
 
+			function hex(){
+				return 777;
+			}
+			function rgba(){
+				return 888;
+			}
 
+			return eval(propertyInner);
+
+		},
+
+		/**
+		 * Parse a single property value, and replace instances
+		 * Of content appearing between {{ }}
+		 */
+		parsePropertyValue: function( propertyValue, colorProfiles ){
+
+			//var parseColorFunctions = this.parseColorFunctions;
+
+			var newPropertyValue = propertyValue.replace( /\{\{(.*?)\}\}/g, function(x){  // this grabs replacement tags
+				// Remove the curly brackets
+				x = x.replace( '{{', '' ).replace('}}','');
+				console.log( 'REGEX', x );
+
+				function hex( val ){
+					return '#fff';
+				}
+
+				function rgba(){
+					return 'rgba(255,255,255,1)';
+				}
+				
+				var evalOutput = eval( x );
+
+				console.log( 'EVAL', evalOutput );
+				
+				return evalOutput; // x.replace( /\[(\d+)\]/g,'.$1' );  // this replaces array indexers
+			});
+
+			return newPropertyValue;// '#fff';
 
 		},
 
@@ -48,12 +89,13 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 		 */
 		parseStyles: function( styleObj, colorProfiles ){
 			var styles = "";
+			var parsePropertyValue = this.parsePropertyValue;
 			angular.forEach( styleObj, function( properties, selector ){
 				styles += selector + "{";
 				angular.forEach( properties, function( value, property ){
-					styles += property + ":" + this.parsePropertyValue( value, colorProfiles ) + ";";
+					styles += property + ":" + parsePropertyValue( value, colorProfiles ) + ";";
 				});
-				styles += "}";
+				styles += "} ";
 			});
 			return styles;
 		},
@@ -84,6 +126,10 @@ postworld.directive('pwColors', [ '$pw', '_', '$pwColors', function( $pw, $_, $p
 				rgba[3] = alpha;
 				return 'rgba('+rgba+')';
 
+			}
+
+			$scope.outputStyles = function( styleObj, colorProfiles ){
+				return $pwColors.outputStyles( styleObj, colorProfiles );
 			}
 
 		}
