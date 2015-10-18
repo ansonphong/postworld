@@ -60,25 +60,44 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 
 			//var parseColorFunctions = this.parseColorFunctions;
 
-			var newPropertyValue = propertyValue.replace( /\{\{(.*?)\}\}/g, function(x){  // this grabs replacement tags
+			// Process the contents of each double curly braces
+			var newPropertyValue = propertyValue.replace( /\{\{(.*?)\}\}/g, function(content){
 				// Remove the curly brackets
-				x = x.replace( '{{', '' ).replace('}}','');
-				console.log( 'REGEX', x );
+				content = content.replace( '{{', '' ).replace('}}','');
 
-				function hex( val ){
-					return '#fff';
-				}
+				// Check if it contains a function
+				var checkFunction = /\(([^)]+)\)/;
+				var matches = checkFunction.exec(content);
+				var hasFunction = ( matches != null );
 
-				function rgba(){
-					return 'rgba(255,255,255,1)';
-				}
-				
-				var evalOutput = eval( x );
+				// Logging
+				console.log( 'matches', matches );
+				console.log( 'hasFunction', hasFunction );
 
-				console.log( 'EVAL', evalOutput );
-				
-				return evalOutput; // x.replace( /\[(\d+)\]/g,'.$1' );  // this replaces array indexers
+				// If it has a function, package and process it with parseColorFunctions()
+
+
+				// Otherwise, examine the contents of the content, and do otherwise (?)
+
+
+				return content;
 			});
+
+			/*
+			console.log( 'REGEX', x );
+
+			function hex( val ){
+				return '#fff';
+			}
+
+			function rgba(){
+				return 'rgba(255,255,255,1)';
+			}
+			
+			var evalOutput = eval( x );
+
+			console.log( 'EVAL', evalOutput );
+			*/
 
 			return newPropertyValue;// '#fff';
 
@@ -86,6 +105,15 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 
 		/**
 		 * Parse a set of style definitions. 
+		 */
+		/* @example styleObj
+			{
+				".icon": {
+					color: "{{ hex('dynamic.100') }}",
+					background: "{{ rgba('dynamic.0') }}",
+					test:"{{ dynamic.50 }}"
+				},
+			}
 		 */
 		parseStyles: function( styleObj, colorProfiles ){
 			var styles = "";
@@ -118,6 +146,7 @@ postworld.directive('pwColors', [ '$pw', '_', '$pwColors', function( $pw, $_, $p
 					return false;
 				return $pwColors.getColorByTag( post, profile, tag ).hex;
 			}
+			
 			$scope.getRGBA = function( post, profile, tag, alpha ){
 				if( _.isEmpty( post ) || _.isNull( profile ) )
 					return false;
@@ -125,7 +154,6 @@ postworld.directive('pwColors', [ '$pw', '_', '$pwColors', function( $pw, $_, $p
 				var rgba = color.rgb;
 				rgba[3] = alpha;
 				return 'rgba('+rgba+')';
-
 			}
 
 			$scope.outputStyles = function( styleObj, colorProfiles ){
