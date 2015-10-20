@@ -191,7 +191,7 @@ postworld.directive('pwColors',
  * @param object|expression pwStyleColors (Required) A Postworld color styles object
  * 	@example See $pwcolors.parseStyles
  * @param object|expression colorProfiles (Required) Link to color profiles, such as `post.image.colors`
- * @param boolean|expression color-profiles-enable (Optional) Default true. A boolean value, whether or not to enable color output.
+ * @param boolean|expression colorProfilesEnable (Optional) Default true. A boolean value, whether or not to enable color output.
  * @param none color-profiles-dynamic If this is present, watch for changes in color profiles.
  */
 postworld.directive('pwStyleColors', [ '$pw', '_', '$pwColors', '$log', function( $pw, $_, $pwColors, $log ){
@@ -212,6 +212,15 @@ postworld.directive('pwStyleColors', [ '$pw', '_', '$pwColors', '$log', function
 			}
 
 			var updateStyles = function(){
+				// If not enabled, empty styles, return early.
+				if( !_.isUndefined( $attrs.colorProfilesEnable ) ){
+					var enable = $scope.$parent.$eval( $attrs.colorProfilesEnable );
+					if( !enable ){
+						$element.html( '' );
+						return false;
+					}
+				}
+				// Otherwise, parse the styles and output them into HTML
 				$element.html( parseStyles() );
 			}
 
