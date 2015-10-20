@@ -29,7 +29,6 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 		 * Of content appearing between {{ }}
 		 */
 		parsePropertyValue: function( propertyValue, colorProfiles ){
-
 			/**
 			 * Get a percentage through an array of colors.
 			 * Percentage is parsed as 0%, the first array index,
@@ -44,7 +43,6 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 				var index = Math.floor( decimal * (colorCount-1) );
 				return colors[index];
 			}
-
 			/**
 			 * Gets a color from a profile where the format is provided
 			 * Period deliniated, where the first value is the profile key
@@ -59,7 +57,6 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 				var colorProfile = colorProfiles[key]
 				return getColorPercentageFromProfile( parseInt(matches[1]), colorProfile.colors );
 			}
-
 			/**
 			 * Parse various color functions to return color values.
 			 * These child functions are used in the special synatax
@@ -80,7 +77,6 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 				return eval( content );
 
 			}
-
 			// Process the contents of each double curly braces
 			var newPropertyValue = propertyValue.replace( /\{\{(.*?)\}\}/g, function(content){
 				// Remove the curly brackets
@@ -100,14 +96,10 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 					content = parseColorFunctions( content );
 				}
 				// Otherwise, examine the contents of the content, and do otherwise (?)
-
 				return content;
 			});
-
 			return newPropertyValue;
-
 		},
-
 		/**
 		 * Parse a set of style definitions. 
 		 */
@@ -132,18 +124,23 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 			});
 			return styles;
 		},
-
 		/**
 		 * Return style definitions prepared to be output to browser.
 		 */
-		outputStyles: function( styleObj, colorProfiles ){
-			return "<style>" + this.parseStyles(styleObj,colorProfiles) + "</style>";
+		outputStyles: function( styleObj, colorProfiles, styleTags ){
+			if( _.isNull( styleTags ) )
+				styleTags = true;
+			if( styleTags )
+				return "<style>" + this.parseStyles(styleObj,colorProfiles) + "</style>";
+			else
+				return this.parseStyles(styleObj,colorProfiles);
 		}
-
 	}
 }]);
 
-postworld.directive('pwColors', [ '$pw', '_', '$pwColors', function( $pw, $_, $pwColors ){
+postworld.directive('pwColors',
+	[ '$pw', '_', '$pwColors', '$log',
+	function( $pw, $_, $pwColors, $log ){
 	return{
 		link: function( $scope, $element, $attrs ){
 			$scope.getHex = function( post, profile, tag ){
@@ -151,7 +148,6 @@ postworld.directive('pwColors', [ '$pw', '_', '$pwColors', function( $pw, $_, $p
 					return false;
 				return $pwColors.getColorByTag( post, profile, tag ).hex;
 			}
-
 			$scope.getRGBA = function( post, profile, tag, alpha ){
 				if( _.isEmpty( post ) || _.isNull( profile ) )
 					return false;
@@ -160,12 +156,77 @@ postworld.directive('pwColors', [ '$pw', '_', '$pwColors', function( $pw, $_, $p
 				rgba[3] = alpha;
 				return 'rgba('+rgba+')';
 			}
+			
+			/**
+			 * For use with ng-mouseover, passing $event
+			 * @example ng-mouseover="applyColorStyles($event)"
+			 */
+			/*
+			$scope.applyColorStyles = function( $event ){
+				$log.debug( 'parseColorStyles.srcElement', $event.srcElement );
+				var elem = angular.element($event.srcElement);
+				elem.css( 'background', '#fff' );
+			}
+			*/
 
+			/**
+			 * For use on style or div element using pw-compile-code directive.
+			 * For development purposes only to observe the output of styles.
+			 * For production purses, use pwStyleColors directive. 
+			 *
+			 * @example <div pw-compile-code="outputStyles(styleObj,colorProfiles)"></div>
+			 */
 			$scope.outputStyles = function( styleObj, colorProfiles ){
-				return $pwColors.outputStyles( styleObj, colorProfiles );
+				return $pwColors.outputStyles( styleObj, colorProfiles, false );
+			}
+		}
+	}
+}]);
+
+
+/**
+ * Generates and injects dynaimc style definitions
+ * For adjusting style colors based on post color profiles.
+ *
+ * @param object|expression pwStyleColors (Required) A Postworld color styles object
+ * 	@example See $pwcolors.parseStyles
+ * @param object|expression colorProfiles (Required) Link to color profiles, such as `post.image.colors`
+ * @param boolean|expression color-profiles-enable (Optional) Default true. A boolean value, whether or not to enable color output.
+ * @param none color-profiles-dynamic If this is present, watch for changes in color profiles.
+ */
+postworld.directive('pwStyleColors', [ '$pw', '_', '$pwColors', '$log', function( $pw, $_, $pwColors, $log ){
+	return{
+		scope: {
+			'styleObj': '=pwStyleColors',
+			'colorProfiles': '='
+		},
+		link: function( $scope, $element, $attrs ){
+	
+			/**
+			 * Parse styles, with or without enclosing style tags
+			 * Depending on if the current element is a style tag.
+			 */
+			var parseStyles = function(){
+				var styleTags = !( $element[0].tagName == 'STYLE' );
+				return $pwColors.outputStyles( $scope.styleObj, $scope.colorProfiles, styleTags );
+			}
+
+			var updateStyles = function(){
+				$element.html( parseStyles() );
+			}
+
+			updateStyles();
+
+			/**
+			 * If color-profiles-dynamic attribute is found
+			 * Then keep a watch on changes in the colorProfiles object for changes
+			 */
+			if( !_.isUndefined( $attrs.colorProfilesDynamic ) ){
+				$scope.$watch( 'colorProfiles', function(newVal, oldVal){
+					updateStyles();
+				});
 			}
 
 		}
 	}
-
 }]);
