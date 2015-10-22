@@ -175,8 +175,6 @@ function postworld_includes( $args ){
 		///// JAVASCRIPT LIBRARIES /////
 
 		// UNDERSCORE JS
-		//wp_enqueue_script( 'UnderscoreJS',
-		//	POSTWORLD_URI.'/lib/underscore/underscore.min.js');
 		wp_enqueue_script('underscore');
 
 		// DEEP MERGE

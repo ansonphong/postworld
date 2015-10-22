@@ -68,8 +68,6 @@ module.exports = function(grunt) {
             'lib/'+angularVersion+'/angular.min.js', // Angular.js has to go first
 
             ///// JS LIBRARIES /////
-            // Underscore
-            //'lib/underscore/underscore.min.js',
             // Deep Merge
             'lib/deepmerge/deepmerge.js',
             // PHP.js
