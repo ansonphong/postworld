@@ -257,7 +257,8 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 	// Check to see if requested fields are Buddypress User Fields
 	foreach ($fields as $value) {
 		// If a requested field is Buddypress
-		if (in_array($value, $buddypress_user_fields)) {
+		if( is_array( $buddypress_user_fields ) &&
+			in_array( $value, $buddypress_user_fields ) ){
 			
 			// Author Profile URL
 			if ($value == 'user_profile_url' && function_exists('bp_core_get_userlink')){

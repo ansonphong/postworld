@@ -174,7 +174,7 @@ function pw_enabled_modules(){
 	// If the modules option hasn't been saved yet
 	if( !get_option( PW_OPTIONS_MODULES ) )
 		// Enable the supported modules
-		$enabled_modules = pw_supported_modules();
+		$enabled_modules = apply_filters( 'pw_default_enabled_modules', pw_supported_modules() );
 	
 	// Get the theme required modules
 	$required_modules = pw_required_modules();
