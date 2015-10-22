@@ -1,27 +1,41 @@
 postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
+	/**
+	 * Get a percentage through an array of colors.
+	 * Percentage is parsed as 0%, the first array index,
+	 * 100% the last array index and everything in between.
+	 *
+	 * @param [integer] percentage (0-100) Percent through the array to return. 
+	 * @param [array] colors An array of processed color objects.
+	 */
+	var getColorPercentageFromProfile = function( percentage, colors ){
+		var colorCount = colors.length;
+		var decimal = percentage / 100;
+		var index = Math.floor( decimal * (colorCount-1) );
+		return colors[index];
+	}
+	/**
+	 * Gets a color from a profile where the format is provided
+	 * Period deliniated, where the first value is the profile key
+	 * And the second value is the percentage through that profile.
+	 *
+	 * @param string profilePercentage Example. "dynamic.100"
+	 * @return object Processed color object, with hex, rgb, and hsl keys.
+	 */
+	var getColorFromProfiles = function( colorProfiles, profilePercentage ){
+		var matches = profilePercentage.split('.');
+		var key = matches[0];
+		var colorProfile = colorProfiles[key]
+		return getColorPercentageFromProfile( parseInt(matches[1]), colorProfile.colors );
+	}
+
+
 	return{
-		getColorByTag: function( post, profile, tag ){
-			var colors = post.image.colors[profile]['colors'];
-			var index;
-			switch( tag ){
-				case 'first':
-					index = 0;
-					return colors[index]
-					break;
-				case 'second':
-					index = ( colors.length > 2 ) ? 1 : 0;
-					return colors[index]
-					break;
-				case 'second-last':
-					index = ( colors.length > 2 ) ? colors.length - 2 : colors.length - 1;
-					return colors[index]
-					break;
-				case 'last':
-					index = colors.length - 1;
-					return colors[index];
-					break;
-			}
-			return false;
+
+		/**
+		 * Public alias for the internal function.
+		 */
+		getColorFromProfiles: function(colorProfiles, profilePercentage){
+			return getColorFromProfiles(colorProfiles, profilePercentage);
 		},
 
 		/**
@@ -29,34 +43,7 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 		 * Of content appearing between {{ }}
 		 */
 		parsePropertyValue: function( propertyValue, colorProfiles ){
-			/**
-			 * Get a percentage through an array of colors.
-			 * Percentage is parsed as 0%, the first array index,
-			 * 100% the last array index and everything in between.
-			 *
-			 * @param [integer] percentage (0-100) Percent through the array to return. 
-			 * @param [array] colors An array of processed color objects.
-			 */
-			var getColorPercentageFromProfile = function( percentage, colors ){
-				var colorCount = colors.length;
-				var decimal = percentage / 100;
-				var index = Math.floor( decimal * (colorCount-1) );
-				return colors[index];
-			}
-			/**
-			 * Gets a color from a profile where the format is provided
-			 * Period deliniated, where the first value is the profile key
-			 * And the second value is the percentage through that profile.
-			 *
-			 * @param string profilePercentage Example. "dynamic.100"
-			 * @return object Processed color object, with hex, rgb, and hsl keys.
-			 */
-			var getColorFromProfile = function( profilePercentage ){
-				var matches = profilePercentage.split('.');
-				var key = matches[0];
-				var colorProfile = colorProfiles[key]
-				return getColorPercentageFromProfile( parseInt(matches[1]), colorProfile.colors );
-			}
+			
 			/**
 			 * Parse various color functions to return color values.
 			 * These child functions are used in the special synatax
@@ -65,12 +52,12 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 			var parseColorFunctions = function( content ){
 
 				function hex( profilePercentage ){
-					var c = getColorFromProfile( profilePercentage );
+					var c = getColorFromProfiles( colorProfiles, profilePercentage );
 					return c['hex'];
 				}
 
 				function rgba( profilePercentage, alpha ){
-					var c = getColorFromProfile( profilePercentage );
+					var c = getColorFromProfiles( colorProfiles, profilePercentage );
 					return 'rgba('+c.rgb[0]+','+c.rgb[1]+','+c.rgb[2]+','+alpha+')';
 				}
 
@@ -138,23 +125,53 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 	}
 }]);
 
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwColors
+ *
+ * @description Makes color profile functions available in local scope.
+ * @param colorsEnable {expression|boolean} (Optional.) Default: true. Whether or not to enable color functions.
+ */
 postworld.directive('pwColors',
 	[ '$pw', '_', '$pwColors', '$log',
 	function( $pw, $_, $pwColors, $log ){
 	return{
 		link: function( $scope, $element, $attrs ){
-			$scope.getHex = function( post, profile, tag ){
-				if( _.isEmpty( post ) || _.isNull( profile ) )
+
+			/**
+			 * Define if colors are enabled, from within the $pw.options object.
+			 */
+			$scope.colorsEnable = ( !_.isUndefined( $attrs.colorsEnableOption ) ) ?
+				$_.get( $pw.options, $attrs.colorsEnableOption ) : true;
+			
+			var getColorProfilesFromPost = function( post ){
+				return $_.get( post, 'image.colors' );
+			} 
+
+			/**
+			 * For use with ng-style directive.
+			 * @example ng-style="{background:getHex(post,'dynamic.75')}"
+			 */
+			$scope.getHex = function( post, profilePercentage ){
+				if( !$scope.colorsEnable ) return false;
+				if( _.isEmpty( post ) || _.isNull( profilePercentage ) )
 					return false;
-				return $pwColors.getColorByTag( post, profile, tag ).hex;
+				var colorProfiles = getColorProfilesFromPost(post);
+				if( colorProfiles == false ) return false;
+
+				return $pwColors.getColorFromProfiles(colorProfiles,profilePercentage).hex;
 			}
-			$scope.getRGBA = function( post, profile, tag, alpha ){
-				if( _.isEmpty( post ) || _.isNull( profile ) )
+			$scope.getRGBA = function( post, profilePercentage, alpha ){
+				if( !$scope.colorsEnable ) return false;
+				if( _.isEmpty( post ) || _.isNull( profilePercentage ) )
 					return false;
-				var color = $pwColors.getColorByTag( post, profile, tag );
+				var colorProfiles = getColorProfilesFromPost(post);
+				if( colorProfiles == false ) return false;
+
+				var color = $pwColors.getColorFromProfiles(colorProfiles,profilePercentage);
 				var rgba = color.rgb;
 				rgba[3] = alpha;
-				return 'rgba('+rgba+')';
+				return 'rgba('+rgba[0]+','+rgba[1]+','+rgba[2]+','+rgba[3]+')';
 			}
 			
 			/**
@@ -183,16 +200,18 @@ postworld.directive('pwColors',
 	}
 }]);
 
-
 /**
- * Generates and injects dynaimc style definitions
- * For adjusting style colors based on post color profiles.
+ * @ngdoc directive
+ * @name postworld.directive:pwStyleColors
  *
- * @param object|expression pwStyleColors (Required) A Postworld color styles object
+ * @description Generates and injects dynamic style definitions
+ * 	for adjusting style colors based on post color profiles.
+ *
+ * @param {object|expression} pwStyleColors (Required) A Postworld color styles object
  * 	@example See $pwcolors.parseStyles
- * @param object|expression colorProfiles (Required) Link to color profiles, such as `post.image.colors`
- * @param boolean|expression colorProfilesEnable (Optional) Default true. A boolean value, whether or not to enable color output.
- * @param none color-profiles-dynamic If this is present, watch for changes in color profiles.
+ * @param {object|expression} colorProfiles (Required) Link to color profiles, such as `post.image.colors`
+ * @param {boolean|expression} colorProfilesEnable (Optional) Default true. A boolean value, whether or not to enable color output.
+ * @param {none} color-profiles-dynamic If this is present, watch for changes in color profiles.
  */
 postworld.directive('pwStyleColors', [ '$pw', '_', '$pwColors', '$log', function( $pw, $_, $pwColors, $log ){
 	return{
