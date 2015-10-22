@@ -69,7 +69,7 @@ module.exports = function(grunt) {
 
             ///// JS LIBRARIES /////
             // Underscore
-            'lib/underscore/underscore.min.js',
+            //'lib/underscore/underscore.min.js',
             // Deep Merge
             'lib/deepmerge/deepmerge.js',
             // PHP.js

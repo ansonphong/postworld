@@ -58,6 +58,7 @@ function postworld_includes( $args ){
 		wp_deregister_script('jquery');
 	}
 
+
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
@@ -134,8 +135,11 @@ function postworld_includes( $args ){
 	
 		global $angularDep;
 		$angularDep = array(
+			'underscore',
 			'Postworld-Deploy',
 			);
+
+		wp_enqueue_script('underscore');
 
 		// ANGULAR
 		//wp_enqueue_script( 'AngularJS',
@@ -160,7 +164,7 @@ function postworld_includes( $args ){
 		global $angularDep;
 		$angularDep = array(
 			'jquery',
-			'UnderscoreJS',
+			'underscore',
 			'DeepMerge',
 			'AngularJS',
 			'AngularJS-Resource',
@@ -171,8 +175,9 @@ function postworld_includes( $args ){
 		///// JAVASCRIPT LIBRARIES /////
 
 		// UNDERSCORE JS
-		wp_enqueue_script( 'UnderscoreJS',
-			POSTWORLD_URI.'/lib/underscore/underscore.min.js');
+		//wp_enqueue_script( 'UnderscoreJS',
+		//	POSTWORLD_URI.'/lib/underscore/underscore.min.js');
+		wp_enqueue_script('underscore');
 
 		// DEEP MERGE
 		wp_enqueue_script( 'DeepMerge',
@@ -181,7 +186,6 @@ function postworld_includes( $args ){
 		// PHP.JS
 		wp_enqueue_script( 'PHP.JS',
 			POSTWORLD_URI.'/lib/php.js/php.js');
-
 
 		// HISTORY.JS
 		//wp_enqueue_script( 'History-JS',
@@ -615,16 +619,37 @@ function pwBootstrapPostworldAdmin_print() {
 		// Make all buttons type="button" if type not defined
 		pw_add_buttons_default_type();
 
-		// Bootstrap the app
-		// Must come after adding action attributes
-		?>
-		<script>
-			// Bootstrap Postworld AngularJS App
-			angular.element(document).ready(function() {
-				angular.bootstrap(document, ['postworldAdmin']);
-			});
-		</script>
-	<?php endif;
+		/**
+		 * Bootstrap the app
+		 * Must come after adding action attributes
+		 *
+		 * Two different scopes are to avoid potential
+		 * Collisions with other Javascript plugins operating
+		 * On the post screen outside of the #poststuff context.
+		 * @example WPBakery's VisualComposer
+		 */
+		$screen = get_current_screen();
+		if( $screen->base == 'post' ):
+
+			?><script>
+				// Bootstrap Postworld AngularJS App to #poststuff
+				angular.element(document).ready(function() {
+					angular.bootstrap('#poststuff', ['postworldAdmin']);
+				});
+			</script><?php
+
+		else :
+
+			?><script>
+				// Bootstrap Postworld AngularJS App
+				angular.element(document).ready(function() {
+					angular.bootstrap(document, ['postworldAdmin']);
+				});
+			</script><?php
+
+		endif;
+		
+	endif;
 }
 
 /**
