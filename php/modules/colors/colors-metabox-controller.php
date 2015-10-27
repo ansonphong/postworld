@@ -12,13 +12,13 @@ global $post;
 
 		<table style="width:100%;">
 
-			<?php if( empty( $pw_post['image']['colors'] ) ): ?>
+			<?php if( empty( $pw_post['image']['colors'] ) && is_array( $colors ) ): ?>
 				<tr>
 					<?php foreach( $colors as $color ) : ?>
 						<td style="height:32px; background:<?php echo $color ?>"></td>
 					<?php endforeach ?>
 				</tr>
-			<?php else: ?>
+			<?php elseif( is_array( $pw_post['image']['colors'] ) ): ?>
 				<?php foreach( $pw_post['image']['colors'] as $profile ) : ?>
 				<tr>
 					<?php foreach( $profile['colors'] as $color ) : ?>

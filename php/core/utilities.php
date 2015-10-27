@@ -1003,6 +1003,18 @@ function pw_switch_value( $switch ){
 
 };
 
+/**
+ * Returns the boolean value of a string.
+ *
+ * @todo Refactor for performance.
+ */
+function pw_to_bool( $value ){
+	if( gettype( $value ) === 'boolean' )
+		return $value;
+	$switch = pw_switch_value($value);
+	return ( $switch === 'on' ) ? true : false;
+}
+
 function pw_toggle_array( $args ){
 	// Takes in an
 	/*
