@@ -45,7 +45,12 @@ function pw_generate_attachment_colors( $vars ){
 
 	$colors_settings = _get( $pwSiteGlobals, 'colors' );
 	if( empty( $colors_settings ) )
-		return false;
+		// Set default color settings
+		$colors_settings = array(
+			'process_images' => true,
+			'max_size' => 640,
+			'number' => 5,
+			);
 
 	if( !_get( $colors_settings, 'process_images' ) )
 		return false;
