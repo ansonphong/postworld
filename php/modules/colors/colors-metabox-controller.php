@@ -50,10 +50,7 @@ global $post;
 	postworldAdmin.controller('pwColorsMetaboxCtrl',
 		['$scope', 'pwData', '_', '$log',
 			function( $scope, $pwData, $_, $log ) {
-
-
 	}]);
-	
 </script>
 
 <?php

@@ -38,7 +38,7 @@ function pw_metabox_init_colors(){
 
 		// Add a callback function to save any data a user enters in
 		//if( in_array( $this_post_type, $post_types ) )
-			add_action( 'save_post','pw_colors_meta_save' );
+		//add_action( 'save_post','pw_colors_meta_save' );
 
 	}
 
