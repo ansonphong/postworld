@@ -112,6 +112,9 @@ function postworld_includes( $args ){
 	// Queues up all the selected iconsets
 	pw_load_iconsets();
 
+	/**
+	 * @todo : OMIT THIS & TEST, LEGACY CODE
+	 */
 	// All Dynamic Paths and Wordpress PHP data that needs to be added to JS files
 	$jsVars = array(	'ajaxurl' 		=> admin_url( 'admin-ajax.php' ),
 						'pluginurl' 	=> WP_PLUGIN_URL,
@@ -490,13 +493,11 @@ function postworld_includes( $args ){
 		}
 		else{
 			// FAST CLICK
-			wp_enqueue_script( 'Flastclick.JS',
+			wp_enqueue_script( 'Fastclick.JS',
 				POSTWORLD_URI.'/lib/fastclick.js/fastclick.js');	
 		}
 
 		add_action( 'wp_footer', 'pw_print_scripts_package_touch' );
-
-		
 
 	}
 
