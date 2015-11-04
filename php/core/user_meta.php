@@ -64,6 +64,8 @@ function pw_get_userdatas( $user_ids, $fields = false ){
 
 
 function pw_get_users( $user_ids, $fields = 'all' ){
+	if( empty( $fields ) )
+		$fields = 'all';
 	$users_array = array();
 	foreach( $user_ids as $user_id ){
 		array_push(

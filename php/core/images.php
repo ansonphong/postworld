@@ -245,8 +245,8 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 				// pw_in_string( $image_key, 'colors' )
 				//if( !isset( $post_image['colors'] ) )
 				//	$post_image['colors'] = array();
-
-				$post_image['colors'] = pw_get_processed_color_profiles( $thumbnail_id );
+				if( pw_module_enabled('colors') )
+					$post_image['colors'] = pw_get_processed_color_profiles( $thumbnail_id );
 
 			}
 
