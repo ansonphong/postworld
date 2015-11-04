@@ -126,7 +126,7 @@ postworld.controller('pwFeedController',
 
    		// Check if there's an over-ride feed template
    		var templateId = $_.get( $pwData.feeds[$scope.feedId], 'feed_template' );
-
+   		
    		// If no fallback template
    		if( templateId == false )
    			// Generate template ID from the current feed view
@@ -137,7 +137,7 @@ postworld.controller('pwFeedController',
 
 		// Get the template path
 		var template = $pwData.pw_get_template( { subdir: 'feeds', view: templateId } )
-
+		
 		// If the template path doesn't exist
 		if( template == false )
 			// Get fallback

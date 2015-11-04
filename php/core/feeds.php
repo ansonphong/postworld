@@ -187,19 +187,47 @@ function pw_feed( $vars = array() ){
 	// Allow themes to override feed settings
 	$feed = apply_filters( PW_FEED_OVERRIDE, $feed );
 
-	///// DEFAULT : QUERY /////
-	// If the feed is empty
+	/**
+	 * If the feed is empty,
+	 * Set the default query values from the Postworld globals	
+	 */
 	if( !isset( $feed['query'] ) || empty( $feed['query'] ) ){
-		$default_query = array(
-			'post_status'		=>	'publish',
-			'post_type'			=>	'post',
-			'fields'			=>	'preview',
-			'posts_per_page'	=>	200
-			);
-		$feed['query'] = array_replace_recursive( $default_query, $pw['query'] );
+		$feed['query'] = $pw['query'];
 	}
 
-	// Run query filters
+	/**
+	 * Set the default query variables
+	 * To create a predictable and good performance result.
+	 */
+	$default_query = array(
+		'post_status'		=>	'publish',
+		'post_type'			=>	'post',
+		'fields'			=>	'preview',
+		'posts_per_page'	=>	200
+		);
+	$default_query = apply_filters( 'pw_feed_default_query', $default_query );
+	$feed['query'] = array_replace_recursive( $default_query, $feed['query'] );
+	
+	/**
+	 * Set the default field model based on the current view name.
+	 *
+	 * @example To register a field model for a view, see pw_register_post_field_model()
+	 */
+	$query_fields = pw_get_field_model( 'post', $feed['view']['current'] );
+	if( $query_fields !== false )
+		$feed['query']['fields'] = $query_fields;
+
+	/**
+	 * Set and filter the fields
+	 * @example Filter name for, list view : pw_fields_view_list, grid view: pw_fields_view_grid
+	 */
+	$feed['query']['fields'] = apply_filters( 'pw_fields_view_'.$feed['view']['current'], $feed['query']['fields'] );
+
+	/**
+	 * Prepare the query by running various filters over
+	 * Known and extendable smart query variables.
+	 * @example See filters for pw_prepare_query
+	 */
 	$feed['query'] = apply_filters( 'pw_prepare_query', $feed['query'] );
 
 	// Get the live feed data

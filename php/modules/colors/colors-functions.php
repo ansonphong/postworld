@@ -5,8 +5,8 @@
  * 
  * @see /wp-admin/includes/image.php :: wp_generate_attachment_metadata()
  */
-add_filter( 'wp_generate_attachment_metadata', 'pw_colors_process_attachment' );
-function pw_colors_process_attachment( $metadata, $attachment_id ){
+add_filter( 'wp_generate_attachment_metadata', 'pw_colors_process_attachment', 10, 2 );
+function pw_colors_process_attachment( $metadata, $attachment_id = 0 ){
 	global $pwSiteGlobals;
 	if( _get( $pwSiteGlobals, 'colors.process_images' ) ){
 		pw_generate_attachment_colors( array( 'attachment_id' => $attachment_id ) );

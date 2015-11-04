@@ -2,7 +2,6 @@
 	infinite-scroll='getNext()'
 	infinite-scroll-disabled='busy'
 	infinite-scroll-use-document-bottom="true">
-
 	<div
 		ng-repeat="post in posts()"
 		class="feed-item">
@@ -15,11 +14,8 @@
 		</div>
 	</div>
 	<div class="clearfix"></div>
-
 </div>
-
 <div class="clearfix"></div>
-
 <div
 	ng-show='busy'
 	class="text-center">

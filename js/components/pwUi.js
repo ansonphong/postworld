@@ -139,8 +139,28 @@ postworld.controller( 'pwUiCtrl',
 		$scope.$eval( key + ' = ' + JSON.stringify( newValue ) );
 	}
 
-	$scope.uiImageSrc = function( srcs ){
-		
+	/**
+	 * @return boolean If the post has an image or not.
+	 */
+	$scope.uiPostHasImage = function( post ){
+		// Return false if no image object
+		var image = $_.get( post, 'image' );		
+		if(image == false)
+			return false;
+		// Return false if no image sizes object
+		var sizes = $_.get( image, 'sizes' );
+		if( sizes == false || _.isEmpty(sizes) )
+			return false;
+		// Return false if any of the sizes urls value is null or not defined
+		var hasSizes = true;
+		angular.forEach( sizes, function( value, key ){
+			if( _.isNull( value.url ) || _.isUndefined( value.url ) )
+				hasSizes = false;
+		});
+		if( !hasSizes )
+			return false;
+		// Otherwise, assume the post has an image
+		return true;
 	}
 
 	/**
