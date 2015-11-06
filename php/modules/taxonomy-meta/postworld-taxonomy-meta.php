@@ -37,7 +37,7 @@ function postworld_activate_taxonomy_meta(){
 // Add Core supported input types
 add_filter( 'pw_admin_taxonomy_meta_input_types', 'pw_admin_core_taxonomy_meta_input_types' );
 function pw_admin_core_taxonomy_meta_input_types( $types ){
-	$types = array_merge( $types, array( 'icon', 'image-id', 'editor' ) );
+	$types = array_merge( $types, array( 'icon', 'image-id', 'editor', 'select', 'text' ) );
 	return $types;
 }
 
@@ -138,6 +138,7 @@ function pw_admin_taxonomy_meta_save_fields( $term_id ){
 
 	// Get the posted data
 	$term_meta = _get($_POST,'pw_taxonomy_meta');
+	//pw_log( 'term meta submission', $term_meta );
 
 	// If it's not an array, return here
 	if( !is_array($term_meta) )
