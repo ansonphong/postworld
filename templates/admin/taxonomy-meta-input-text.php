@@ -3,7 +3,7 @@
 	if( empty( $meta_value ) )
 		$meta_value = '';
 ?>
-<tr class="postworld form-field" ng-cloak>
+<tr class="postworld form-field">
 	<th scope="row" valign="top">
 		<?php if( _get( $vars, 'field.icon' ) ) : ?>
 			<i class="icon <?php echo $vars['field']['icon'] ?>"></i>

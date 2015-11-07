@@ -2,7 +2,7 @@
 	$meta_value = _get( $vars, 'field.meta_value' );
 	$values = _get( $vars, 'field.values' );
 ?>
-<tr class="postworld form-field" ng-cloak>
+<tr class="postworld form-field">
 	<th scope="row" valign="top">
 		<?php if( _get( $vars, 'field.icon' ) ) : ?>
 			<i class="icon <?php echo $vars['field']['icon'] ?>"></i>

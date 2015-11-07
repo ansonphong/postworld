@@ -37,7 +37,15 @@ function postworld_activate_taxonomy_meta(){
 // Add Core supported input types
 add_filter( 'pw_admin_taxonomy_meta_input_types', 'pw_admin_core_taxonomy_meta_input_types' );
 function pw_admin_core_taxonomy_meta_input_types( $types ){
-	$types = array_merge( $types, array( 'icon', 'image-id', 'editor', 'select', 'text' ) );
+	$types = array_merge( $types, array(
+		'icon',
+		'image-id',
+		'editor',
+		'select',
+		'text',
+		'number'
+		)
+	);
 	return $types;
 }
 
