@@ -57,24 +57,18 @@ function pw_generate_image_field( $name, $width, $height, $crop = 0 ){
  */
 function pw_get_custom_image_fields(){
 	global $pw;
-
 	// Get the custom image sizes global
 	$sizes = _get( $pw, 'images.sizes' );
-
 	// If empty or none set, return here
 	if( empty( $sizes ) )
 		return array();
-
 	// Require stats field
 	$fields = array( 'image(stats)' );
-
 	// Add each custom size to the fields model
 	foreach( $sizes as $k => $v ){
 		$fields[] = pw_generate_image_field( $k, $v['width'], $v['height'], $v['crop'] );
 	}
-
 	return $fields;
-
 }
 
 
@@ -97,8 +91,6 @@ function pw_generate_custom_images_sizes( $metadata, $attachment_id ){
 	 */
 	$custom_image_fields = pw_get_custom_image_fields();
 
-	//pw_log( 'custom_image_fields', $custom_image_fields );
-
 	// Return early if no custom Postworld image fields
 	if( empty($custom_image_fields) )
 		return $metadata;
@@ -116,11 +108,6 @@ function pw_generate_custom_images_sizes( $metadata, $attachment_id ){
 	return $metadata;
 
 }
-
-
-
-
-
 
 
 ////////// GET POST IMAGE //////////
