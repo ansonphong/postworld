@@ -18,7 +18,11 @@ function pw_metabox_init_layout(){
 
 	global $pwSiteGlobals;
 	global $post;
-	$post_id = (int) $_GET['post'];
+	$post_id = (int) _get( $_GET, 'post' );
+	
+	if( !$post_id )
+		return false;
+
 	$this_post_type = get_post_type( $post_id );
 
 	// Get the settings
