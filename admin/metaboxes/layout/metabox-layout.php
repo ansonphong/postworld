@@ -13,6 +13,9 @@
 add_action('admin_init','pw_metabox_init_layout');
 function pw_metabox_init_layout(){    
 
+	if( defined('DOING_AJAX') )
+		return false;
+
 	global $pwSiteGlobals;
 	global $post;
 	$post_id = (int) $_GET['post'];
