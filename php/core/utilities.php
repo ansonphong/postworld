@@ -1473,7 +1473,6 @@ function pw_sanitize_numeric_a_array( $vals = array() ){
 
 function pw_sanitize_numeric_array_of_a_arrays( $vals ){
 	// Numerically sanitize an array of associative arrays
-
 	for( $i=0; $i < count($vals);  $i++ ){
 		$vals[$i] = pw_sanitize_numeric_a_array( $vals[$i] );
 	}
