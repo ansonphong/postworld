@@ -51,7 +51,6 @@ function pw_generate_image_field( $name, $width, $height, $crop = 0 ){
 	return "image(".$name.",".$width.",".$height.",".$crop.")";
 }
 
-
 /**
  * Generates all the custom image fields for requesting a post image.
  */

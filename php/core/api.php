@@ -280,8 +280,10 @@ function pw_set_wp_postmeta($vars){
 			);
 	*/
 	global $post;
+	$default_post_id = ( gettype($post) == 'object' ) ? $post->ID : false;
+
 	$default_vars = array(
-		'post_id' => $post->ID,
+		'post_id' => $default_post_id,
 		'meta_key' => pw_postmeta_key,
 		'sub_key' => null,
 		'meta_value' => null,

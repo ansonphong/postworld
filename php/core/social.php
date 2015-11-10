@@ -169,8 +169,11 @@ function pw_get_social_share_meta( $vars ){
 	// If the image URL is not set
 	if( $image_url === false ){
 		// Get it manually
-		$featured_image_obj = pw_get_featured_image_obj( $post['ID'] );
-		$image_url = $featured_image_obj['url'];
+		$post_id = _get( $post, 'ID' );
+		if( $post_id ){
+			$featured_image_obj = pw_get_featured_image_obj( $post_id );
+			$image_url = $featured_image_obj['url'];
+		}
 	}
 		
 	if( $image_url == null )
@@ -205,7 +208,7 @@ function pw_get_social_share_meta( $vars ){
 		$title_and_site_name = $title . urlencode(" | ") . $site_name;
 	}
 	
-	$excerpt = urlencode( $post['post_excerpt'] );
+	$excerpt = urlencode( _get( $post, 'post_excerpt' ) );
 	
 	///// SOCIAL SHARE OBJECT /////
 	$s = array();
