@@ -3,7 +3,12 @@ add_action('admin_init','pw_metabox_init_colors');
 function pw_metabox_init_colors(){    
 
 	global $pwSiteGlobals;
-	$post_id = (int) $_GET['post'];
+	$post_id = _get( $_GET, 'post' );
+
+	if( !$post_id )
+		return false;
+
+	$post_id = (int) $post_id;
 	$this_post_type = get_post_type( $post_id );
 
 	// Get the settings

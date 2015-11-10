@@ -162,9 +162,9 @@ class PW_Colors{
 			if( in_array( 'rgb', $vars['color_fields'] ) ){
 				$color['rgb'] = $rgb;
 				// Add decimal values as color keys
-				//$color['red'] = $color['rgb'][0]/255;
-				//$color['green'] = $color['rgb'][1]/255;
-				//$color['blue'] = $color['rgb'][2]/255;
+				$color['red'] = $color['rgb'][0]/255;
+				$color['green'] = $color['rgb'][1]/255;
+				$color['blue'] = $color['rgb'][2]/255;
 			}
 
 			// HSL
@@ -172,9 +172,9 @@ class PW_Colors{
 			if( in_array( 'hsl', $vars['color_fields'] ) ){
 				$color['hsl'] = $hsl;
 				// Add values as keys
-				//$color['hue'] = $color['hsl'][0];
-				//$color['saturation'] = $color['hsl'][1];
-				//$color['lightness'] = $color['hsl'][2];
+				$color['hue'] = $color['hsl'][0];
+				$color['saturation'] = $color['hsl'][1];
+				$color['lightness'] = $color['hsl'][2];
 			}
 
 			$colors[] = $color;
