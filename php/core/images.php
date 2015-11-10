@@ -5,6 +5,58 @@
 $aq_resizer_include = POSTWORLD_PATH.'/lib/wordpress/aq_resizer.php';
 include_once $aq_resizer_include;
 
+
+/**
+ * Adds an image size which is automatically generated
+ * When uploading the image.
+ * This function is similar to WordPress' native add_image_size()
+ * With additional image sizing methods indispensable for image-rich sites.
+ *
+ * @param string $name The handle/key for the image.
+ * @param int $width The width of the image.
+ * @param int $height The height of the image.
+ * @param int $method The image croping/resizing method used. Options: 0/1/2
+ *		0 - WordPress standard image sizing.
+ * 		1 - WordPress standard with hard crop.
+ *		2 - Postworld Proportional Minimum
+ *			Uses width/height values as shortest dimension,
+ *			and resize proportionally, without cropping. 
+ */
+function pw_add_image_size( $name, $width, $height, $method = 0 ){
+	global $pw;
+	
+	// Create global images sizes array
+	if( !_get( $pw, 'images.sizes' ) )
+		$pw = _set( $pw, 'images.sizes', array() );
+
+	// Cast width and height as integers
+	$width = (int) $width;
+	$height = (int) $height;
+
+	// Add the size to the global registered sizes
+	$pw['images']['sizes'][$name] = array( $width, $height, $method );
+
+}
+
+/**
+ * Generates the post model field for an image
+ * From it's basic variables.
+ */
+function pw_generate_image_field( $name, $width, $height, $method = 0 ){
+	return "image(".$name.",".$width.",".$height.",".$method.")";
+}
+
+/*
+function pw_get_custom_image_fields(){
+	global $pw;
+
+	$sizes = _get( $pw, 'images.sizes' );
+
+	if( empty( $sizes ) )
+		return array();
+}
+*/
+
 ////////// GET POST IMAGE //////////
 /**
  * Get image field data.
@@ -116,7 +168,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 
 	///// PROCESS IMAGES /////
 	// Load in registered images attributes
-	$registered_images_obj = registered_images_obj();
+	$registered_images_obj = pw_registered_images_obj();
 	$post_image['sizes'] = array();
 
 	// Process each $image one at a time >> image(name,300,200,1) 
@@ -142,7 +194,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 
 			// ALL : Get all registered images
 			if( $image_key == 'all' ) {
-				$registered_images = registered_images_obj();
+				$registered_images = pw_registered_images_obj();
 
 				foreach( $registered_images as $image_key => $image_attributes ){
 					//$image_src = wp_get_attachment_image_src( get_post_thumbnail_id($post_id), $image_key );
@@ -150,7 +202,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 					$registered_images[$image_key]["url"] = $image_src[0];
 					$registered_images[$image_key]["width"] = $image_src[1];
 					$registered_images[$image_key]["height"] = $image_src[2];
-					$registered_images[$image_key]["hard_crop"] = $image_src[3];
+					$registered_images[$image_key]["method"] = (int) $image_src[3];
 					$post_image['sizes'] = array_merge( $post_image['sizes'], $registered_images );
 				}
 			}
@@ -277,7 +329,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		 * @param string $thumb_crop How the image is cropped 0/1/2
 		 *					0: Soft Crop - Normal WP Cropping
 		 *					1: Hard Crop - WP Hard Cropping, force dimensions
-		 *					2: Dynamic Crop - Use values as shortest dimension, resize proportionally, without cropping
+		 *					2: Proportional Minimum - Use values as shortest dimension, resize proportionally, without cropping
 		 *
 		 * @todo Force-require 'stats' key.
 		 */
@@ -630,28 +682,34 @@ function pw_get_image_obj( $attachment_id, $size = 'full' ){
 
 
 ///// GET OBJECT OF ALL REGISTERED IMAGE ATTRIBUTES /////
-function registered_images_obj(){
+function pw_registered_images_obj(){
 	global $_wp_additional_image_sizes;
-		$sizes = array();
-		foreach( get_intermediate_image_sizes() as $s ){
-			// Get standard image sizes
-			$sizes[ $s ] = array();
-			if( in_array( $s, array( 'thumbnail', 'medium', 'large' ) ) ){
-				$sizes[ $s ]['width'] = get_option( $s . '_size_w' );
-				$sizes[ $s ]['height'] = get_option( $s . '_size_h' );
-				$sizes[ $s ]['crop'] = get_option( $s . '_crop' );
-			}else{
-				// Get additional image sizes
-				if( isset( $_wp_additional_image_sizes ) && isset( $_wp_additional_image_sizes[ $s ] ) )
-					$sizes[ $s ] = array(
-						'width'		=>	$_wp_additional_image_sizes[ $s ]['width'],
-						'height'	=>	$_wp_additional_image_sizes[ $s ]['height'],
-						'crop'		=>	$_wp_additional_image_sizes[ $s ]['crop'],
-						);
-			}
+	$sizes = array();
+	//pw_log( 'get_intermediate_image_sizes()', get_intermediate_image_sizes() );
+	foreach( get_intermediate_image_sizes() as $s ){
+		// Get standard image sizes
+		$sizes[ $s ] = array();
+		if( in_array( $s, array( 'thumbnail', 'medium', 'large' ) ) ){
+			$sizes[ $s ]['width'] = (int) get_option( $s . '_size_w' );
+			$sizes[ $s ]['height'] = (int) get_option( $s . '_size_h' );
+			$sizes[ $s ]['crop'] = get_option( $s . '_crop' );
+		}else{
+			// Get additional image sizes
+			if( isset( $_wp_additional_image_sizes ) && isset( $_wp_additional_image_sizes[ $s ] ) )
+				$sizes[ $s ] = array(
+					'width'	=> (int)	$_wp_additional_image_sizes[ $s ]['width'],
+					'height'=> (int)	$_wp_additional_image_sizes[ $s ]['height'],
+					'crop'	=>	$_wp_additional_image_sizes[ $s ]['crop'],
+					);
 		}
-		return $sizes;
 	}
+
+	// Add the Postworld image objects registered with pw_add_image_size 
+
+	pw_log( 'sizes', $sizes );
+
+	return $sizes;
+}
 
 function grab_image($url,$saveto){
     $ch = curl_init ($url);

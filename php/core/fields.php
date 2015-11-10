@@ -168,6 +168,15 @@ function pw_register_core_post_field_models(){
 		);
 	pw_register_post_field_model( 'micro', $fields_micro );
 
+	///// IMAGE /////
+	$fields_image = array(
+		'ID',
+		'image(stats)',
+		'image(tags)',
+		'image(all)'
+		);
+	pw_register_post_field_model( 'image', $fields_image );
+
 	///// PREVIEW /////
 	$fields_preview = array_merge(
 		$fields_micro,
