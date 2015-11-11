@@ -91,6 +91,7 @@ function pw_print_term_feed( $vars ){
 			'move_galleries'	=>	true,	// Moves the galleries from the post to the feed
 			'require_image'		=>	false,	// Only posts with a featured image are used
 			'include_posts'		=>	true,	// Whether or not to keep the original posts
+			'print_empty'		=>	true,	// If no terms are found, still give output
 			),
 		);
 
@@ -124,6 +125,11 @@ function pw_print_term_feed( $vars ){
 
 	///// GET TERMS FEED /////
 	$vars['term_feed'] = pw_get_term_feed( $vars );
+
+	// Print Empty Option
+	//pw_log('term feed', $vars['term_feed']);
+	if( !$vars['options']['print_empty'] && empty( $vars['term_feed'] ) )
+		return '';
 
 	///// INSTANCE /////
 	// Generate random ID for slider Instance
