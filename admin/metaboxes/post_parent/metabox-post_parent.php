@@ -170,7 +170,10 @@ function pw_post_parent_meta_save( $post_id ){
     //pw_log( 'pw_post_parent_meta_save : ' . $post_id );
 
 	// Get the JSON string which represents the post to be saved 
-	$post = $_POST['pw_post_parent_post'];
+	$post = _get( $_POST, 'pw_post_parent_post' );
+    if( !$post )
+        return false;
+
 	// Strip slashes from the string
 	$post = stripslashes( $post );
 	// Decode the object from JSON into Array

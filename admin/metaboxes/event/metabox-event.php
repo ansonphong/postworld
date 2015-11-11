@@ -146,7 +146,10 @@ function pw_event_meta_save( $post_id ){
         return $post_id;
 
 	// Get the JSON string which represents the post to be saved 
-	$post = $_POST['pw_event_post'];
+	$post = _get( $_POST, 'pw_event_post' );
+
+	if( !$post )
+		return false;
 
 	// Strip slashes from the string
 	$post = stripslashes( $post );

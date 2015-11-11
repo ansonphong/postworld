@@ -152,11 +152,16 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 			global $wpdb;
 			if( pw_dev_mode() )
 				$wpdb -> show_errors();
-			$query = "select * from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
+			$query = "select * from " . $wpdb->pw_prefix . 'user_meta' . " where user_id=" . $user_id;
 			// Result will be output as an numerically indexed array of associative arrays, using column names as keys
-			$postworld_user_data = $wpdb -> get_results($query, ARRAY_A);
+			$postworld_user_data = $wpdb->get_results($query, ARRAY_A);
+
 			// Transfer the user data into $user_data
-			if ( is_array($postworld_user_data[0]) && isset($postworld_user_data[0]["user_id"]) ){
+			if(
+				!empty($postworld_user_data) &&
+				is_array($postworld_user_data[0]) &&
+				isset($postworld_user_data[0]["user_id"])
+				){
 				foreach ( $postworld_user_data[0] as $meta_key => $meta_value ){
 					if ( in_array( $meta_key, $fields ) ){
 						$pw_json_fields = array( "post_points_meta", "share_points_meta", "post_relationships" );
@@ -257,20 +262,20 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 
 	///// BUDDYPRESS PROFILE LINK /////
 	// Check to see if requested fields are Buddypress User Fields
-	foreach ($fields as $value) {
-		// If a requested field is Buddypress
-		if( is_array( $buddypress_user_fields ) &&
-			in_array( $value, $buddypress_user_fields ) ){
-			
-			// Author Profile URL
-			if ($value == 'user_profile_url' && function_exists('bp_core_get_userlink')){
-				$user_data['user_profile_url'] = bp_core_get_userlink($user_id, false, true);
-				//pw_log( $user_data['user_profile_url'] );
+	$buddypress_user_fields = pw_get_field_model( 'user', 'buddypress');
+	if( is_array( $buddypress_user_fields ) ){
+		foreach ($fields as $value) {
+			// If a requested field is Buddypress
+			if( in_array( $value, $buddypress_user_fields ) ){
+				// Author Profile URL
+				if ($value == 'user_profile_url' && function_exists('bp_core_get_userlink')){
+					$user_data['user_profile_url'] = bp_core_get_userlink($user_id, false, true);
+					//pw_log( $user_data['user_profile_url'] );
+				}
 			}
-
 		}
 	}
-
+	
 
 	/*
 	// DEPRECIATED as of Version 1.7.2 - use field : 'xprofile(all)'

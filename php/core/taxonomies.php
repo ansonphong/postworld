@@ -73,6 +73,9 @@ function taxonomies_outline_mixed( $taxonomy_options ){
 
 	// FOR EACH INPUT TAXONOMY
 	foreach ($taxonomy_options as $taxonomy => $options) {
+		if( !isset( $options['filter'] ) )
+			$options['filter'] = true;
+
 		$tax = taxonomies_outline( array($taxonomy), $options['max_depth'], $options['fields'], $options['filter'] );
 		$tax_outline_mixed = array_merge( $tax_outline_mixed, $tax );//array_push( $tax_outline_mixed, $tax_outline );
 	}
