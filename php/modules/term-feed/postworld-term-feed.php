@@ -127,7 +127,6 @@ function pw_print_term_feed( $vars ){
 	$vars['term_feed'] = pw_get_term_feed( $vars );
 
 	// Print Empty Option
-	//pw_log('term feed', $vars['term_feed']);
 	if( !$vars['options']['print_empty'] && empty( $vars['term_feed'] ) )
 		return '';
 
