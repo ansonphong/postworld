@@ -46,6 +46,9 @@ function postworld_includes( $args ){
 			);
 	}
 
+	// Ensure Underscore is included
+	wp_enqueue_script('underscore');
+
 	//////////////////////// INJECTIONS //////////////////////
 
 	/* JQuery is added for ngInfiniteScroll Directive, if directive is not used, then remove it */
