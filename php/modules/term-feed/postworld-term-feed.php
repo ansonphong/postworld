@@ -121,8 +121,6 @@ function pw_print_term_feed( $vars ){
 	// Allow term feed templates to filter the term feed variables
 	$vars = apply_filters( PW_TERM_FEED . $vars['template'], $vars );
 
-	//pw_log($vars);
-
 	///// GET TERMS FEED /////
 	$vars['term_feed'] = pw_get_term_feed( $vars );
 
@@ -144,9 +142,7 @@ function pw_print_term_feed( $vars ){
 	
 }
 
-
 ////////// POSTWORLD RECURSIVE TERM QUERY //////////
-
 function pw_get_term_feed( $vars ){
 	/*
 		Gets a series of terms using get_terms()
