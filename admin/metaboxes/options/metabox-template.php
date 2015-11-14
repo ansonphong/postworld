@@ -12,7 +12,7 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 <!--///// METABOX TEMPLATES /////-->
 <div
 	id="postworldMetabox"
-	class="infinite postworld"
+	class="postworld"
 	ng-cloak>
 	<div ng-controller="pwMetaboxCtrl">
 		<?php

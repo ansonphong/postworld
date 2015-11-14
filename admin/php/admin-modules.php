@@ -424,7 +424,6 @@ function pw_admin_select_icon( $vars = array( "ng_model" => "pwMeta.icon.class" 
 	return pw_ob_admin_template( 'select-icon', $vars );
 }
 
-
 function i_select_slider_settings( $vars ){
 	// DEPRECIATED
 	return pw_select_slider_settings( $vars );
