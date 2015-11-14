@@ -372,7 +372,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			}
 
 			///// JSON META KEYS /////
-			if( is_array( $post['post_meta'] ) ){
+			if( isset( $post['post_meta'] ) && is_array( $post['post_meta'] ) ){
 
 				// Parse known JSON keys from JSON strings into objects
 				global $pwSiteGlobals;
@@ -397,7 +397,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 			///// SERIALIZED ARRAY META KEYS /////
 			$serialized_meta_keys = array( "_wp_attachment_metadata" );
-			if( is_array( $post['post_meta'] ) ){
+			if( isset( $post['post_meta'] ) && is_array( $post['post_meta'] ) ){
 				foreach( $post['post_meta'] as $meta_key => $meta_value ){
 					if(
 						in_array($meta_key, $serialized_meta_keys) &&

@@ -166,7 +166,7 @@ function pw_featured_image_placement_options( $vars = array( "context" => "quick
 	
 	$vars['options_model'] = "options.featured_image.placement";
 
-	if( is_string( $vars['ng_model'] ) )
+	if( isset($vars['ng_model']) && is_string( $vars['ng_model'] ) )
 		$vars['context'] = 'custom';
 
 	switch($vars['context']){

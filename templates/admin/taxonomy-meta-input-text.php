@@ -1,6 +1,7 @@
 <?php
-	wp_enqueue_media();
-	$meta_key = $vars['field']['meta_key'];
+	$meta_value = _get( $vars, 'field.meta_value' );
+	if( empty( $meta_value ) )
+		$meta_value = '';
 ?>
 <tr class="postworld form-field">
 	<th scope="row" valign="top">
@@ -10,14 +11,12 @@
 		<label for="<?php echo $vars['input_name'] ?>"><?php echo $vars['field']['label'] ?></label>
 	</th>
 	<td>
-		<?php
-			wp_editor(
-				$vars['field']['meta_value'],
-				$meta_key,
-				array(
-					'textarea_name'	=>	$vars['input_name'],
-					) );
-		?>
+		<input
+			type="text"
+			class=""
+			name="<?php echo $vars['input_name'] ?>"
+			id="term_meta"
+			value="<?php echo $meta_value ?>">
 		<p class="description">
 			<?php echo $vars['field']['description'] ?>
 		</p>

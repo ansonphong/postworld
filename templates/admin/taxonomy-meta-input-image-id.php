@@ -15,6 +15,9 @@
 
 <tr class="postworld form-field" ng-controller="<?php echo $controller_id ?>" ng-cloak>
 	<th scope="row" valign="top">
+		<?php if( _get( $vars, 'field.icon' ) ) : ?>
+			<i class="icon <?php echo $vars['field']['icon'] ?>"></i>
+		<?php endif ?>
 		<label for="<?php echo $vars['input_name'] ?>"><?php echo $vars['field']['label'] ?></label>
 	</th>
 	<td>

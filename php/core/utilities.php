@@ -382,11 +382,12 @@ function pw_get_posted_json( $post_var ){
 	// Gets a JSON string format $_POST var
 	// And converts it into an object / array
 	global $_POST;
-    // Get the JSON string which represents the post to be saved 
-    $post = $_POST[ $post_var ];
-    
-   // pw_log( 'post from $post_var : ' . $post_var . " : " . $post  );
 
+    // Get the JSON string which represents the post to be saved 
+    $post = _get( $_POST, $post_var );
+    if( !$post )
+    	return false;
+    
     // Strip slashes from the string
     $post = stripslashes( $post );
     // Decode the object from JSON into Array
@@ -1472,7 +1473,6 @@ function pw_sanitize_numeric_a_array( $vals = array() ){
 
 function pw_sanitize_numeric_array_of_a_arrays( $vals ){
 	// Numerically sanitize an array of associative arrays
-
 	for( $i=0; $i < count($vals);  $i++ ){
 		$vals[$i] = pw_sanitize_numeric_a_array( $vals[$i] );
 	}

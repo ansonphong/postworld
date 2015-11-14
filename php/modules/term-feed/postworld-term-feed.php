@@ -91,6 +91,7 @@ function pw_print_term_feed( $vars ){
 			'move_galleries'	=>	true,	// Moves the galleries from the post to the feed
 			'require_image'		=>	false,	// Only posts with a featured image are used
 			'include_posts'		=>	true,	// Whether or not to keep the original posts
+			'print_empty'		=>	true,	// If no terms are found, still give output
 			),
 		);
 
@@ -120,10 +121,12 @@ function pw_print_term_feed( $vars ){
 	// Allow term feed templates to filter the term feed variables
 	$vars = apply_filters( PW_TERM_FEED . $vars['template'], $vars );
 
-	//pw_log($vars);
-
 	///// GET TERMS FEED /////
 	$vars['term_feed'] = pw_get_term_feed( $vars );
+
+	// Print Empty Option
+	if( !$vars['options']['print_empty'] && empty( $vars['term_feed'] ) )
+		return '';
 
 	///// INSTANCE /////
 	// Generate random ID for slider Instance
@@ -139,9 +142,7 @@ function pw_print_term_feed( $vars ){
 	
 }
 
-
 ////////// POSTWORLD RECURSIVE TERM QUERY //////////
-
 function pw_get_term_feed( $vars ){
 	/*
 		Gets a series of terms using get_terms()

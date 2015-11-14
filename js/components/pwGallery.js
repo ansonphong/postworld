@@ -512,13 +512,13 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
  		
  		// Add classes to the element
 		var elemClasses = function(){
-			/*
+			
 			$log.debug(
-				'element.scrollLeft(): ' + element.scrollLeft() + ' / ' +
+				'pwXScrollStatus :: element.scrollLeft(): ' + element.scrollLeft() + ' / ' +
 				'element.innerWidth(): ' + element.innerWidth() + ' / ' +
-				'element[0].scrollWidth: ' + element[0].scrollWidth + ' / '
+				'element[0].scrollWidth: ' + element[0].scrollWidth
 			);
-			*/
+			
 			$_.addXScrollClasses( element, {
 				scrollable: 'pw-x-scrollable',
 				scrolled: 'pw-x-scrolled'
@@ -535,9 +535,9 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 			},
 			function( val, oldVal ){
 				$log.debug(
-					'CONTAINER SCROLLWIDTH : ' + element[0].scrollWidth + ' // ' +
-					'CHILD COUNT : ' + element[0].childElementCount,
-					element );
+					'pwXScrollStatus : CONTAINER SCROLLWIDTH : ' + element[0].scrollWidth + ' // ' +
+					'pwXScrollStatus : CHILD COUNT : ' + element[0].childElementCount,
+					element[0] );
 				// Timeout for DOM to update before re-computing
 				$timeout( function(){
 					elemClasses();
