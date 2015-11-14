@@ -465,13 +465,13 @@ function postworld_includes( $args ){
 			wp_enqueue_script( 'Moment-Timezone-JS',
 				POSTWORLD_URI.'/lib/moment.js/moment-timezone.min.js', $angularDep);
 
-			// jsTimeZoneDetect : Used to detect the client's current timezone
+			// jsTimezoneDetect : Used to detect the client's current timezone
 			// Since at the time of adding this wasn't supported by Moment.js
 			// CHECK UPDATES : https://github.com/moment/moment-timezone/pull/220
 
 			// MOMENT-TIMEZONE DATA.JS
-			wp_enqueue_script( 'jsTimeZoneDetect-JS',
-				POSTWORLD_URI.'/lib/jsTimeZoneDetect/jstz.min.js', $angularDep);
+			wp_enqueue_script( 'jsTimezoneDetect-JS',
+				POSTWORLD_URI.'/lib/jsTimezoneDetect/jstz.min.js', $angularDep);
 
 			// ANGULAR-TIMER
 			// Used for doing countdowns
