@@ -1,4 +1,4 @@
-<?
+<?php
 // Import vars as options
 if( isset( $vars ) )
 	$OPTIONS = $vars;
