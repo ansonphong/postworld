@@ -65,14 +65,14 @@ function i_select_menus( $vars ){
 	// DEPRECIATED
 	return pw_select_menus( $vars );
 }
+
 function pw_select_menus( $vars ){
-	/*
-	$vars = array(
-		'options_model' => 	[string] // Angular expression, where to store the results
-		'ng_model' => 		[string] // Angular expression, where to set the option
-		'null_option' =>	[string] // What to label the null option
+	$default_vars = array(
+		'options_model' => 	'options.menus',	//[string] // Angular expression, where to store the results
+		'ng_model' 		=> 	'',					//[string] // Angular expression, where to set the option
+		'null_option' 	=>	'No Menu',			//[string] // What to label the null option
 		);
-	*/
+	$vars = array_replace($default_vars, $vars);
 	return pw_ob_admin_template( 'select-menu', $vars );
 }
 
@@ -423,7 +423,6 @@ function pw_select_icon_options( $vars ){
 function pw_admin_select_icon( $vars = array( "ng_model" => "pwMeta.icon.class" ) ){
 	return pw_ob_admin_template( 'select-icon', $vars );
 }
-
 
 function i_select_slider_settings( $vars ){
 	// DEPRECIATED

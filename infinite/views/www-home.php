@@ -15,7 +15,7 @@ SLIDER
 	function page_content_function(){
 		?>
 		<h3>Home.</h3>
-		<?
+		<?php
 	}
 
 	// Create the main layout

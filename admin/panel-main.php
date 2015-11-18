@@ -49,7 +49,7 @@
                 
                 <div class="style_list_preview placeholder"></div> 
                 <div class="style_description">
-                    <h4><? the_title(); ?></h4> 
+                    <h4><?php the_title(); ?></h4> 
                 </div>
 
             </div>
