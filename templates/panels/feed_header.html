@@ -10,9 +10,16 @@
 	<div class="row">		
 		<div class="col-md-3 form-group">
 			<select class="form-control" ng-model="feedQuery.order_by">
-				<option value="rank_score" >Rank</option>
-				<option value="post_points" >Points</option>
+				<option value="none">None</option>
+				<option value="ID">ID</option>
+				<option value="rank_score">Rank</option>
+				<option value="post_points">Points</option>
+				<option value="name">Post Slug</option>
+				<option value="title">Title</option>
 				<option value="modified">Modified</option>
+				<option value="parent">Parent</option>
+				<option value="type">Post Type</option>
+				<option value="menu_order">Menu Order</option>
 				<option value="rand">Random</option>
 				<option value="comment_count">Comment Count</option>
 				<option value="date">Date</option>
