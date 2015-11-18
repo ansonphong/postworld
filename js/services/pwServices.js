@@ -1500,6 +1500,10 @@ postworld.service('pwPostOptions',
 					name: 'None',
 				},
 				{
+					slug: 'menu_order',
+					name: 'Menu Order',
+				},
+				{
 					slug: 'ID',
 					name: 'Post ID',
 				},
