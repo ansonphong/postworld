@@ -1496,6 +1496,18 @@ postworld.service('pwPostOptions',
 					name: 'Date',
 				},
 				{
+					slug: 'none',
+					name: 'None',
+				},
+				{
+					slug: 'ID',
+					name: 'Post ID',
+				},
+				{
+					slug: 'type',
+					name: 'Post Type',
+				},
+				{
 					slug: 'rank_score',
 					name: 'Rank Score',
 				},
@@ -1514,6 +1526,14 @@ postworld.service('pwPostOptions',
 				{
 					slug: 'comment_count',
 					name: 'Comment Count',
+				},
+				{
+					slug: 'parent',
+					name: 'Post Parent ID',
+				},
+				{
+					slug: 'author',
+					name: 'Author',
 				},
 				{
 					slug: 'event_start',
