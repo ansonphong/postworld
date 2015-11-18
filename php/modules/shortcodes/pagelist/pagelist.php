@@ -29,7 +29,15 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	$query['post_type'] = $post->post_type;
 
 	// Set Post Status
-	$query['post_status'] = 'publish';
+	$query['post_status'] = array('publish');
+
+	/**
+	 * If the user has capabilities to read private pages/posts/CPTs
+	 * Widen the post status query to include private posts
+	 */
+	if( !empty( $post->post_type ) &&
+		current_user_can('read_private_'.$post->post_type.'s') )
+		$query['post_status'][] = 'private';
 
 	// Number of Posts
 	$query['posts_per_page'] = 0;
