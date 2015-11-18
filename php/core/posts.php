@@ -683,13 +683,11 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			$post_type !== 'nav_menu_item'
 			){
 			
-			//if( $post_id == 1742 )
-			//	pw_log( 'PRE', $post['post_content'] );
-
 			///// CONTENT FILTERING /////
 			// oEmbed URLs
 			// Disable this due to caching issues
-			$post['post_content'] = pw_embed_content( $post['post_content'] );
+			// Investigate the Instagram embeds load issue
+			//$post['post_content'] = pw_embed_content( $post['post_content'] );
 			
 			// Apply Shortcodes
 			//$post[$key] = do_shortcode($post[$key]);
@@ -701,12 +699,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 			// Apply all content filters
 			$post['post_content'] = apply_filters('the_content', $post['post_content']);
-
-			if( $post_id == 1742 ){
-			//	pw_log( 'POST', $post['post_content'] );
-			//	global $wp_filter;
-			//	pw_log( 'wp_filter', $wp_filter );
-			}
 
 		}
 
@@ -1264,6 +1256,7 @@ function pw_embed_url($input){
 	//pw_log( 'pw_embed_url', $input );
 
 	$url = $input[0];
+
 	$o_embed_providers = array(
 		// GENERAL
 		"twitter.com/",
@@ -1321,10 +1314,13 @@ function pw_embed_url($input){
 		}
 	}
 
+	
+
 	// If it's an o-embed provider, return embed code
 	if( $o_embed == true ){
 
 		///// CACHING LAYER /////
+		
 		//if( in_array( 'post_cache', pw_enabled_modules() ) ){
 			$cache_hash = hash( 'sha256', 'oEmbed-'.$url );
 			$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
@@ -1332,7 +1328,7 @@ function pw_embed_url($input){
 				return $get_cache['cache_content'];
 			}
 		//}
-
+		
 		/**
 		 * Get the Embed Code
 		 */
@@ -1350,7 +1346,7 @@ function pw_embed_url($input){
 	}
 	else
 		$embed = $url;
-
+	
 	return $embed;
 }
 
