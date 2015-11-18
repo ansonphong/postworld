@@ -13,17 +13,18 @@
 add_action('admin_init','pw_metabox_init_layout');
 function pw_metabox_init_layout(){    
 
-	if( defined('DOING_AJAX') )
+	if( defined('DOING_AJAX') && DOING_AJAX )
 		return false;
 
 	global $pwSiteGlobals;
 	global $post;
-	$post_id = (int) _get( $_GET, 'post' );
-	
-	if( !$post_id )
-		return false;
 
+	/*
+	$post_id = (int) _get( $_GET, 'post' );
+	if( $post_id )
+		return false;
 	$this_post_type = get_post_type( $post_id );
+	*/
 
 	// Get the settings
 	$metabox_settings = _get( $pwSiteGlobals, 'wp_admin.metabox.layout' );
