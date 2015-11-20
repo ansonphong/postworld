@@ -74,7 +74,7 @@ function pw_print_widgets( $vars = array() ){
 
 
 	if( $vars['echo'] )
-		echo $output;
+		echo $output['widgets'];
 	else
 		return $output;
 
