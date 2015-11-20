@@ -177,6 +177,8 @@ postworld.directive('pwImageSrc',
  * @param Object smartImageOverride An override to use instead if it's found
  * @param none smartImageDynamic If this attribute is present, update the image when the source or screen change. May cause performance issues if many images use this
  * @param string smartImagePriority Optional. Options: height|width Priority is given to the defined dimension when deciding on image size
+ * @param integer smartImageMinWidth Optional. Number of pixels of minimum width of image to select.
+ * @param integer smartImageMinHeight Optional. Number of pixels of minimum height of image to select.
  *
  * @example
  * 		<img pw-smart-image="post.image" smart-image-override="post.image.alt">
@@ -195,7 +197,15 @@ postworld.directive('pwSmartImage',
 				var elementWidth = element[0].offsetWidth * devicePixelRatio;
 				var elementHeight = element[0].offsetHeight * devicePixelRatio;
 				
-				// Debug Data
+				// Minimum Width
+				if( !_.isUndefined( attrs.smartImageMinWidth ) )
+					elementWidth = parseInt( attrs.smartImageMinWidth );
+				
+				// Minimum Height
+				if( !_.isUndefined( attrs.smartImageMinHeight ) )
+					elementHeight = parseInt( attrs.smartImageMinHeight );
+
+				// Show debug
 				if( !_.isUndefined( attrs.smartImageShowDebug ) ){
 					$log.debug( 'pwSmartImage : element', element[0] );
 					$log.debug( 'pwSmartImage : elementWidth', elementWidth );
@@ -240,7 +250,6 @@ postworld.directive('pwSmartImage',
 				else{
 					return '';
 				}
-				
 
 			}
 
@@ -289,10 +298,19 @@ postworld.directive('pwSmartImage',
 						};
 					},
 					function(val,oldVal){
+						//$log.debug( 'pwsmartImage : DYNAMIC', val );
+						//$log.debug( 'pwsmartImage : getImgUrl', getImgUrl() );
+
 						// Don't re-evaluate if the height/width is 0
 						if( val.width !== 0 && val.height !== 0 ){
 							//$log.debug( 'val', val );
-							setImgUrl();
+							// Timeout for DOM to initialize
+							//setImgUrl();
+
+							$timeout( function(){
+								setImgUrl();
+							}, 0 );
+
 						}
 					}, 1
 				);

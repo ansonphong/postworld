@@ -72,14 +72,12 @@ function pw_print_widgets( $vars = array() ){
 	else
 		$output = $widgets_html;
 
-
 	if( $vars['echo'] )
-		echo $output;
+		echo $output['widgets'];
 	else
 		return $output;
 
 }
-
 
 ///// POSTWORLD GET SIDEBAR /////
 // This is a slight remix of the WP code dynamic_sidebar function
