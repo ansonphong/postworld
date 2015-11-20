@@ -195,9 +195,9 @@ postworld.directive('pwSmartImage',
 				var elementWidth = element[0].offsetWidth * devicePixelRatio;
 				var elementHeight = element[0].offsetHeight * devicePixelRatio;
 				
-				// 
+				// Debug Data
 				if( !_.isUndefined( attrs.smartImageShowDebug ) ){
-					//$log.debug( 'pwSmartImage : element', element );
+					$log.debug( 'pwSmartImage : element', element[0] );
 					$log.debug( 'pwSmartImage : elementWidth', elementWidth );
 					$log.debug( 'pwSmartImage : elementHeight', elementHeight );
 				}
