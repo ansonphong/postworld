@@ -138,6 +138,11 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {'args':args};
 			return this.wpAjax('pw_query',params);
 		},
+		saveOption: function( args ) {
+			$log.debug('wp_ajax.pw_save_option',args);
+			var params = { args: args };
+			return this.wpAjax('pw_save_option',params);
+		},
 		getLiveFeed: function(args,qsArgs) {
 			$log.debug('pwData.getLiveFeed : INIT :',args);
 

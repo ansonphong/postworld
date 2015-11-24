@@ -1,25 +1,26 @@
 <?php
-	///// GET DATA /////
 	// Feeds
 	$pwFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_FEEDS ) );
 	// Feed Settings
 	$pwFeedSettings = pw_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
 	// Feed Templates
-	$htmlFeedTemplates = pw_get_templates(
+	$htmlTemplates = pw_get_templates(
 		array(
 			'subdirs' => array('feeds'),
 			'path_type' => 'url',
 			'ext'=>'html',
 			)
-		)['feeds'];	
+		);
+	$htmlFeedTemplates = $htmlTemplates['feeds'];
 	// Aux Feed Templates
-	$phpFeedTemplates = pw_get_templates(
+	$phpTemplates = pw_get_templates(
 		array(
 			'subdirs' => array('feeds'),
 			'path_type' => 'url',
 			'ext'=>'php',
 			)
-		)['feeds'];
+		);
+	$phpFeedTemplates = $phpTemplates['feeds'];
 ?>
 <script>
 	postworldAdmin.controller( 'pwFeedsDataCtrl',
@@ -48,7 +49,6 @@
 
 		// Get Taxonomy Terms
 		$pwPostOptions.taxTerms( $scope, 'taxTerms' );
-
 
 		///// TRANSFORM QUERIES /////
 		$scope.addTaxQuery = function( query ){
@@ -81,7 +81,6 @@
 		ng-cloak>
 
 		<!--{{taxTerms}}-->
-
 		
 		<h1>
 			<i class="pwi-th-small"></i>
@@ -168,7 +167,7 @@
 
 									<div
 										ng-show="uiShowView('options_'+context.name)">
-										OPTIONS
+										OPTIONS IN DEVELOPMENT - preload - load increment
 									</div>
 
 								</td>
@@ -182,8 +181,6 @@
 
 				<!-- ///// EDIT ITEMS ///// -->
 				<div ng-show="showView('editItem')">
-
-
 
 					<h3><i class="pwi-gear"></i> <?php ___('feeds.item_title'); ?></h3>
 

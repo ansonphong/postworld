@@ -213,7 +213,7 @@
 		<select
 			id="select-view"
 			class="labeled"
-			ng-options="value for value in pw.postViews"
+			ng-options="value for value in pw.postViews.feed_options"
 			ng-model="settings.view">
 		</select>
 

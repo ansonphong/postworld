@@ -14,10 +14,9 @@ postworldAdmin.directive( 'pwFeedOptions',
         	// Add Module Class
         	element.addClass('pw-feed-options');
 
-
         	///// FEED OPTIONS /////
 			$scope.feedOptions = {
-				view: $pwPostOptions.postView(),
+				view: $pwPostOptions.postView().feed_options,
 				views:{
 					grid:{
 						columns:[1,2,3,4,5,6],

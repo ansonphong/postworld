@@ -294,8 +294,7 @@ extract($OPTIONS);
 		   $menu_templates = pw_get_menu_templates();
 
 		   // Views
-		   global $pwSiteGlobals;
-		   $menu_views = $pwSiteGlobals['post_views'];
+		   $menu_views = pw_config('post_views.supported');
 		?>
 
 

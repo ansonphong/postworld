@@ -55,6 +55,22 @@ function pw_save_option(){
 		$response_data = array( 'message' => 'Not updated. Either there is an error or no changes have been made since the last save.' );
 	}
 
+	/**
+	 * Run specified callbacks.
+	 */
+	if( isset($callbacks) ){
+
+		if( in_array( 'flush_permalinks', $callbacks ) ){
+			/**
+			 * This is having to be done twice in order to be effective. (?)
+			 * @todo Fix this so it only needs to be run once.
+			 */
+			//pw_log('flush_rewrite_rules');
+			flush_rewrite_rules(false);
+		}
+
+	}
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $response_data; //$response_data;

@@ -1,9 +1,10 @@
 <?php
 ///// SAVE BUTTON /////
-function pw_save_option_button( $option_name, $option_model ){
+function pw_save_option_button( $option_name, $option_model, $callbacks=array() ){
 	$vars = array(
 		'option_name'	=>	$option_name,
 		'option_model'	=>	$option_model,
+		'callbacks'		=>	$callbacks,
 		);
 	echo pw_ob_admin_template( 'button-save-option', $vars );
 }

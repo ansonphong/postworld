@@ -1,5 +1,25 @@
 # Postworld // Changelog
 
+### Version 1.16
+- __Breaking Change__ - CONFIG - `postworld-config.php`
+    + Changed format of `post_views` key
+    + Old format example: `array('list','detail','grid','modal','full')`
+    + New format example:
+    ```
+        array(
+            'supported' => array('list','detail','grid','modal','full'),
+            'feed_options' => array('list','detail','grid'),
+            'meta' => array(
+                'list' => array(
+                    'name' => 'List'
+                    ),
+                // ...
+                )
+            )
+    ```
+    + New format allows the definition of a seperate array of views to show on the feed. 
+
+
 ### Version 1.109
 - __Breaking Change__ - JAVASCRIPT - `postworld_includes.inject` requires jQuery to be specified if it's to be used, otherwise jQuery is omitted.
 

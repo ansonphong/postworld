@@ -7,6 +7,19 @@
 //////////////////////////////////*/
 
 /**
+ * Returns a specific key from the
+ * Postworld Site Globals.
+ */
+function pw_config( $key = null ){
+	global $pwSiteGlobals;
+	$pwSiteGlobals = apply_filters( 'pw_config', $pwSiteGlobals );
+	if( $key == null )
+		return $pwSiteGlobals;
+	else
+		return _get( $pwSiteGlobals, $key );
+}
+
+/**
  * Returns the date in the requested format, a period of time ago
  * @param $period_ago [integer] Number of seconds ago to return the date of
  * @param $format [string] PHP date() format to return

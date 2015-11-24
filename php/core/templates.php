@@ -344,8 +344,7 @@ function pw_get_templates( $vars = array() ){
 	///// GET VIEWS /////
 	$post_views = ( isset( $posts['post_views'] ) ) ?
 		$posts['post_views'] :
-		$pwSiteGlobals['post_views'];
-
+		pw_config( 'post_views.supported' );
 
 	///// CONSTRUCT POSTS TEMPLATE OBJECT /////
 	$post_template_obj = array();
