@@ -2200,6 +2200,12 @@ postworld.factory( 'iOptionsData', [ '_', function( $_ ){
 						icon: 'pwi-pinterest-square',
 						selected: false,
 					},
+					{
+						name: 'Email',
+						id: 'email',
+						icon: 'pwi-mail-square',
+						selected: true,
+					},
 				],
 			},
 			'header':{

@@ -110,6 +110,14 @@ function pw_get_social_media_meta(){
 			'description' 	=> 	'Website URL',
 			'prepend_url'	=>	''
 			),
+		'email'	=>	array(
+			'icon'			=>	'pwi-mail-square',
+			'name'			=>	'Email',
+			'label'			=>	'Share by Email',
+			'share_label'	=>	'Share by Email',
+			'description' 	=> 	'Email',
+			'prepend_url'	=>	''
+			),
 		);
 
 	// Allow the theme to filter the options meta
@@ -264,6 +272,12 @@ function pw_get_social_share_meta( $vars ){
 	if( in_array( 'pinterest', $share_networks ) ){
 		$pinterest_link = 'https://pinterest.com/pin/create/button/?url='.$permalink.'&media='.$image_url.'&description='.$title_and_site_name;
 		$s = _set( $s, 'pinterest.link', $pinterest_link );
+	}
+
+	///// EMAIL LINK /////
+	if( in_array( 'email', $share_networks ) ){
+		$email_link = 'mailto:?subject='.$title_and_site_name.'&body='.$permalink;
+		$s = _set( $s, 'email.link', $email_link );
 	}
 
 	return $s;
