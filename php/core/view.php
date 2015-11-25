@@ -61,8 +61,10 @@ function pw_current_context(){
 		$context[] = '404';
 
 	// Home must come after page
-	if( is_front_page() )
+	if( is_front_page() ){
 		$context[] = 'home';
+		$context[] = 'front-page';
+	}
 
 	// TAXONOMIES
 	if( in_array( 'archive-taxonomy', $context ) ){
