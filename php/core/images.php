@@ -253,7 +253,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 					$registered_images[$image_key]["url"] = $image_src[0];
 					$registered_images[$image_key]["width"] = $image_src[1];
 					$registered_images[$image_key]["height"] = $image_src[2];
-					$registered_images[$image_key]["method"] = (int) $image_src[3];
+					$registered_images[$image_key]["crop"] = (int) $image_src[3];
 					$post_image['sizes'] = array_merge( $post_image['sizes'], $registered_images );
 				}
 			}

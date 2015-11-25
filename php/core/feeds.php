@@ -195,6 +195,8 @@ function pw_feed( $vars = array() ){
 		$feed['query'] = $pw['query'];
 	}
 
+	
+
 	/**
 	 * Set the default query variables
 	 * To create a predictable and good performance result.
@@ -207,7 +209,7 @@ function pw_feed( $vars = array() ){
 		);
 	$default_query = apply_filters( 'pw_feed_default_query', $default_query );
 	$feed['query'] = array_replace_recursive( $default_query, $feed['query'] );
-	
+		
 	/**
 	 * Set the default field model based on the current view name.
 	 *
@@ -294,7 +296,6 @@ function pw_feed( $vars = array() ){
 	//pw_log( $feed['view']['current'] . ' - ' . $feed_template );
 	//pw_log( 'feed', $feed );
 	
-
 	// Print front-loaded data
 	$output  .= '<script>';
 

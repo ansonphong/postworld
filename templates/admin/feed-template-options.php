@@ -13,6 +13,7 @@
 			<option value=""><?php ___('general.none'); ?></option>
 		</select>
 	</div>
+	<!--
 	<div class="pw-col-3">
 		<label
 			for="feed_view_options"
@@ -27,6 +28,7 @@
 			multiple>
 		</select>
 	</div>
+	-->
 
 	<!--
 	<div class="pw-col-3">

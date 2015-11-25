@@ -171,6 +171,7 @@ function pw_register_core_post_field_models(){
 	///// IMAGE /////
 	$fields_image = array(
 		'ID',
+		'post_type',
 		'image(stats)',
 		'image(tags)',
 		'image(all)'
