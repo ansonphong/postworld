@@ -85,11 +85,11 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 				
 			}
 
-			attrs.$observe( 'pwInclude', function( pwInclude ){
-				setTemplateUrl();
-			});
+			$scope.userIsLoggedIn = function(){
+				return false;
+			}
 
-			$scope.$watch('includeEnable', function(val){
+			attrs.$observe( 'pwInclude', function( pwInclude ){
 				setTemplateUrl();
 			});
 
@@ -109,6 +109,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 
 			// Watch Include Enable and hide element if it's not enabled
 			$scope.$watch('includeEnable', function( val ){
+				setTemplateUrl();
 				//$log.debug( 'pwInclude : includeEnable', val );
 				if( !_.isUndefined( val ) && !_.isNull( val ) ){
 					if( val === false )
