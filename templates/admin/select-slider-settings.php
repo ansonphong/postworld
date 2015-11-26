@@ -37,21 +37,26 @@ if( !is_array($show) )
 <div ng-controller="<?php echo $instance ?>">
 
 <?php
-	///// HEIGHT /////
-	if( in_array( 'height', $show ) ){
-	?>
-	<span class="icon-md"><i class="pwi-arrows-v"></i></span>
-	<input
-		id="input-height"
-		class="short"
-		size="3"
-		type="number"
-		ng-model="<?php echo $ng_model; ?>.height">
-		<label for="input-height"><b>%</b> height</label>
-	<hr class="thin">
-	<?php
+	///// PROPORTION /////
+	if( in_array( 'proportion', $show ) ){
+		echo pw_select_setting( array(
+			'setting' => 'proportion', 
+			'ng_model' => $ng_model.'.proportion',
+			));
+		?><hr class="thin"><?php
 	}
 ?>
+<?php
+	///// HEIGHT /////
+	if( in_array( 'height', $show ) ){
+		echo pw_select_setting( array(
+			'setting' => 'height-percent', 
+			'ng_model' => $ng_model.'.height',
+			));
+		?><hr class="thin"><?php
+	}
+	?>
+	
 <?php
 	///// INTERVAL /////
 	if( in_array( 'interval', $show ) ){
@@ -147,24 +152,6 @@ if( !is_array($show) )
 		id="select-transition"
 		ng-model="<?php echo $ng_model; ?>.transition"
 		ng-options="option.value as option.name for option in options.transition">
-	</select>
-	<hr class="thin">
-	<?php
-	}
-?>
-<?php
-	///// PROPORTION /////
-	if( in_array( 'proportion', $show ) ){
-	?>
-	<label class="inner" for="select-proportion">
-		<i class="pwi-square-thin"></i>
-		Proportion
-	</label>
-	<select
-		class="labeled"
-		id="select-proportion"
-		ng-model="<?php echo $ng_model; ?>.proportion"
-		ng-options="option.value as option.name for option in options.proportion">
 	</select>
 	<hr class="thin">
 	<?php

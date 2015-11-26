@@ -1,4 +1,20 @@
 <?php
+
+/**
+ * Utility function for including custom setting modules.
+ * Settings modules are found in templates/admin/select-{{ vars.setting }}
+ */
+function pw_select_setting( $vars = array() ){
+	$default_vars = array(
+		'ng_model' => null,
+		'setting' => null,
+		);
+	$vars = array_replace($default_vars, $vars);
+	if( empty( $vars['ng_model'] ) || empty( $vars['setting'] ) )
+		return false;
+	echo pw_ob_admin_template( 'select-'.$vars['setting'], $vars );
+}
+
 ///// SAVE BUTTON /////
 function pw_save_option_button( $option_name, $option_model, $callbacks=array() ){
 	$vars = array(

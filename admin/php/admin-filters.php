@@ -14,46 +14,6 @@ function pw_admin_options( $context = 'default', $options = array() ){
 	return $options;
 }
 
-/**
- * Add proportion admin options
- */
-add_filter('pw_admin_options', 'pw_admin_filter_add_proportions', 8);
-function pw_admin_filter_add_proportions( $options ){
-
-	$context = _get( $options, 'context' );
-	$add_to = array( 'slider', 'header-image' );
-
-	if( in_array( $context, $add_to ) )
-		$options['proportion'] = array(
-			array(
-				'value' => false,
-				'name' => 'Flexible',
-				),
-			array(
-				'value' => 2,
-				'name' => '2 : 1',
-				),
-			array(
-				'value' => 2.5,
-				'name' => '2.5 : 1',
-				),
-			array(
-				'value' => 3,
-				'name' => '3 : 1',
-				),
-			array(
-				'value' => 3.5,
-				'name' => '3.5 : 1',
-				),
-			array(
-				'value' => 4,
-				'name' => '4 : 1',
-				),
-			);
-
-	return $options;
-
-}
 
 /**
  * Add transition admin options

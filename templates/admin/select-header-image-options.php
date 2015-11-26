@@ -25,17 +25,12 @@ $options = pw_admin_options( 'header-image', $options );
 </script>
 <div ng-controller="<?php echo $instance ?>" pw-ui>
 	<?php if( in_array( 'proportion', $show ) ): ?>
-		<label class="inner" for="select-proportion">
-			<i class="pwi-square-thin"></i>
-			Proportion
-		</label>
-		<select
-			class="labeled"
-			id="select-proportion"
-			ng-model="<?php echo $ng_model; ?>.proportion"
-			ng-options="option.value as option.name for option in options.proportion">
-		</select>
-
+		<?php
+			echo pw_select_setting( array(
+				'setting' => 'proportion', 
+				'ng_model' => $ng_model.'.proportion',
+				));
+		?>
 		<hr
 			class="thin"
 			ng-show="!uiBool( <?php echo $ng_model; ?>.proportion )">
@@ -44,12 +39,12 @@ $options = pw_admin_options( 'header-image', $options );
 	<?php if( in_array('height', $show ) ): ?>
 		<!-- Show if there is no set proportion or if it's set to false/flex -->
 		<div ng-show="!uiBool( <?php echo $ng_model; ?>.proportion )">
-			<div class="icon-md"><i class="pwi-arrows-v"></i></div>
-			<input
-				id="input-height"
-				size="3"
-				ng-model="<?php echo $ng_model; ?>.height"> 
-			<label for="input-height">% height</label>
+			<?php
+				echo pw_select_setting( array(
+					'setting' => 'height-percent', 
+					'ng_model' => $ng_model.'.height',
+					));
+			?>
 		</div>
 	<?php endif; ?>
 </div>
