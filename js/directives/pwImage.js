@@ -5,8 +5,9 @@
  | .__/ \_/\_/   |_____\___/ \__,_|\__,_| |___|_| |_| |_|\__,_|\__, |\___|
  |_|                                                           |___/      
  ///////////////////////// LOAD IMAGE DIRECTIVE ////////////////////////*/
+'use strict';
 
- postworld.directive( 'pwImage', [ function($scope){
+postworld.directive( 'pwImage', [ function($scope){
 	return {
 		restrict: 'AE',
 		controller: 'pwImageCtrl',
@@ -389,7 +390,8 @@ postworld.directive('pwParallax',
       			inViewMedian = 0,
       			method = 'parent',
       			medianType = 'normal',
-      			el = element[0];
+      			el = element[0],
+      			translateY = 0;
 
       		var prefixed = {
 				transform: $_.getSupportedProp(['transform', 'msTransform', 'webkitTransform', 'mozTransform', 'oTransform'])
@@ -481,9 +483,9 @@ postworld.directive('pwParallax',
 				/**
 				 *  Set the position of the element on the vertical axis.
 				 */
-				pos = median + (inViewMedian * (elementHeight-parentHeight) );
+				translateY = median + (inViewMedian * (elementHeight-parentHeight) );
 
-				element[0].style[prefixed.transform] = 'translate3d(0px,' + pos + 'px,0px)';
+				element[0].style[prefixed.transform] = 'translate3d(0px,' + translateY + 'px,0px)';
 			}
 
 			var update = function(){
