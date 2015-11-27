@@ -364,10 +364,14 @@ postworld.directive('pwSmartImage',
  * Parallax an image.
  *
  * @param {string} pwParallax (Optional) The method to compute the parallax. Options: parent  
+ * @param {float|string} parallaxDepth (Optional) Define a depth of how far back the layer appears.
+ * @param {string} parallaxMedian (Optional) Changes how the median is calculated. Options: normal | proportional
+ * @param {expression} parallaxEnable (Optional) Toggles if parallax is enabled.
+ * @param {none} parallaxInFeed (Optional) If attribute is provided, will update after feeds init.
  *
  */
 postworld.directive('pwParallax',
-	['$log','$timeout','$window', '_',function($log, $timeout, $window, $_){
+	['$rootScope', '$log','$timeout','$window', '_',function($rootScope, $log, $timeout, $window, $_){
 	return{
 		restrict:'A',
 		scope:{
@@ -384,6 +388,7 @@ postworld.directive('pwParallax',
       			inView = 0,
       			inViewMedian = 0,
       			method = 'parent',
+      			medianType = 'normal',
       			el = element[0];
 
       		var prefixed = {
@@ -401,13 +406,17 @@ postworld.directive('pwParallax',
 				if( !_.isUndefined(attrs.parallaxDepth) )
 					depth = parseFloat(attrs.parallaxDepth);
 
+				if( !_.isUndefined(attrs.parallaxMedian) )
+					medianType = String(attrs.parallaxMedian);
+
 				switch( method ){
 					case 'parent':
-						element.css('background-position', 'center');
-						element.css('background-size', 'cover');
 						element.css('position', 'absolute');
+						element.css('left', '0');
+						element.css('right', '0');
 						element.css('width', '100%');
 						element.css('translateZ', '0');
+						element.addClass('pw-parallax');
 						element.parent().addClass('pw-parallax--parent');
 						element.parent().css('position','relative');
 						element.parent().css('overflow','hidden');
@@ -421,6 +430,7 @@ postworld.directive('pwParallax',
 
 			var getParentHeight = function(){
 				parentHeight = el.clientHeight;
+
 				/**
 				 * Set the element height based on the
 				 * parent height, times the depth of the layer.
@@ -432,7 +442,13 @@ postworld.directive('pwParallax',
 				 * Set the median point which is the point where
 				 * the image is in the middle of the parent object.
 				 */
-				median = (elementHeight*-1) + (elementHeight-parentHeight)/2;
+
+				// Use median calculation for proportionally sized parent containers
+				if( medianType === 'proportional' )
+					median = (elementHeight*-1) + (elementHeight-parentHeight)/2;
+				// Use regular median calculation
+				else
+					median = (elementHeight-parentHeight)/-2;
 
 				return parentHeight;
 			}
@@ -445,6 +461,10 @@ postworld.directive('pwParallax',
 				 */
 				var rect = el.getBoundingClientRect();
 				inView = ( window.innerHeight - rect.top ) / (window.innerHeight+parentHeight);
+
+				//if( inView < 0 ) inView = 0;
+				//if( inView > 1 ) inView = 1;
+
 				return inView;
 			}
 
@@ -457,9 +477,12 @@ postworld.directive('pwParallax',
 				 * 1 is when it's at the top of the viewport
 				 */
 				inViewMedian = ( getInView() - 0.5 ) * 2;
-				//$log.debug('parallax : inView', inView);
 
+				/**
+				 *  Set the position of the element on the vertical axis.
+				 */
 				pos = median + (inViewMedian * (elementHeight-parentHeight) );
+
 				element[0].style[prefixed.transform] = 'translate3d(0px,' + pos + 'px,0px)';
 			}
 
@@ -467,6 +490,9 @@ postworld.directive('pwParallax',
 				requestAnimationFrame(update);
 
 				if( !enable )
+					return false;
+
+				if( elementHeight === 0 )
 					return false;
 
 				/**
@@ -483,8 +509,9 @@ postworld.directive('pwParallax',
 				 * If the parent container object is visible
 				 * Update the element.
 				 */
-				if( $_.isInView( el ) )
+				if( $_.isInView( el ) ){
 					updateElementTransform();
+				}
 
 			}
 
@@ -523,9 +550,20 @@ postworld.directive('pwParallax',
 			/**
 			 * After document loads, update the element transformations.
 			 */
-			angular.element(document).ready(function () {
+			angular.element(document).ready(function(){
 				updateElementTransform();
 			});
+
+			/**
+			 * Update after feeds initialize
+			 * If parallax-in-feed is defined.
+			 */
+			if( !_.isUndefined( attrs.parallaxInFeed ) )
+				$scope.$on('pw.feedInit', function(vars){
+					$timeout( function(){
+						updateElementTransform();
+					}, 200 );
+				});
 
 		}
 	}

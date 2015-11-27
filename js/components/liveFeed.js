@@ -180,7 +180,7 @@ postworld.controller('pwFeedController',
 	};
 	
 	$scope.getNext = function() {
-		$scope.message = "";   
+		$scope.message = ""; 
 
 		$log.debug( 'pwFeed : getNext() : ' + $scope.feedId, $pwData['feeds'][$scope.feedId] );		
 		
@@ -200,6 +200,7 @@ postworld.controller('pwFeedController',
 			// Get next batch of posts
 			$scope.scrollFeed();				
 		}
+
 	};
 	
 	// Searching from Filter Feed Directives will trigger this function
@@ -234,6 +235,14 @@ postworld.controller('pwFeedController',
 		$pwData.setNonce(78);
 		$log.debug( "pwFeed : pwLiveFeed() : INIT : ID : " + $scope.feedId, $pwData.feeds[$scope.feedId] );
 
+		/**
+		 * Broadcast feed init to notify other directives
+		 * that the feed is finished, to trigger time sensitive actions.
+		 */
+		$timeout( function(){
+			$rootScope.$broadcast( 'pw.feedInit', { feed_id: $scope.feedId } );
+		}, 0 );
+
 		///// GET FEED FROM PRELOADED DATA /////
 		// If posts have already been pre-loaded
 		if( _.isArray( $pwData.feeds[$scope.feedId].posts ) &&
@@ -247,6 +256,7 @@ postworld.controller('pwFeedController',
 			$scope.updateStatus();
 			// Toggle off busy
 			$scope.setBusy(false);
+
 			// Return here to avoid AJAX call
 			return;
 		}
