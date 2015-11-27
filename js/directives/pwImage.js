@@ -520,6 +520,13 @@ postworld.directive('pwParallax',
 			// Initialize
 			$timeout( init(), 0 );
 
+			/**
+			 * After document loads, update the element transformations.
+			 */
+			angular.element(document).ready(function () {
+				updateElementTransform();
+			});
+
 		}
 	}
 }]);
