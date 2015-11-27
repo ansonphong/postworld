@@ -664,6 +664,22 @@ postworld.factory('_',
 
 		},
 
+		getSupportedProp: function(proparray) {
+			var root = document.documentElement;
+			for (var i=0; i<proparray.length; i++) { 
+				if (proparray[i] in root.style) { return proparray[i]; }
+			}
+		},
+
+		// Returns true if element is vertically within the viewport, even partially
+		isInView: function(el) {
+			var rect = el.getBoundingClientRect();
+			return (
+				rect.bottom >= 0 &&
+				rect.top <= (window.innerHeight || document.documentElement.clientHeight) 
+			);
+		},
+
 	};
 
 }]);
