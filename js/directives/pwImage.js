@@ -391,7 +391,9 @@ postworld.directive('pwParallax',
       			method = 'parent',
       			medianType = 'normal',
       			el = element[0],
-      			translateY = 0;
+      			translateY = 0,
+      			prevTranslateY = 0,
+      			rect = {};
 
       		var prefixed = {
 				transform: $_.getSupportedProp(['transform', 'msTransform', 'webkitTransform', 'mozTransform', 'oTransform'])
@@ -455,22 +457,16 @@ postworld.directive('pwParallax',
 				return parentHeight;
 			}
 
-			var getInView = function(){
+
+			var updateElementTransform = function(){
+				
 				/**
 				 * inView : Generate decimal which is a value between 0-1
 				 * 0 is value when the element is at the bottom of the viewport
 				 * 1 is the value when the element is at the top of the viewport 
 				 */
-				var rect = el.getBoundingClientRect();
+				rect = el.getBoundingClientRect();
 				inView = ( window.innerHeight - rect.top ) / (window.innerHeight+parentHeight);
-
-				//if( inView < 0 ) inView = 0;
-				//if( inView > 1 ) inView = 1;
-
-				return inView;
-			}
-
-			var updateElementTransform = function(){
 
 				/**
 				 * inViewMedian : Generate decimal between (-1)-(1)
@@ -478,14 +474,14 @@ postworld.directive('pwParallax',
 				 * -1 is when it's at the bottom of the viewport
 				 * 1 is when it's at the top of the viewport
 				 */
-				inViewMedian = ( getInView() - 0.5 ) * 2;
+				inViewMedian = ( inView - 0.5 ) * 2;
 
 				/**
 				 *  Set the position of the element on the vertical axis.
 				 */
 				translateY = median + (inViewMedian * (elementHeight-parentHeight) );
 
-				element[0].style[prefixed.transform] = 'translate3d(0px,' + translateY + 'px,0px)';
+				element[0].style[prefixed.transform] = 'translate3d(0px,' + Math.round(translateY) + 'px,0px)';
 			}
 
 			var update = function(){
@@ -527,7 +523,7 @@ postworld.directive('pwParallax',
 						return getParentHeight();
 					},
 					function(val){
-						$log.debug('parallax : parent height', val);
+						//$log.debug('parallax : parent height', val);
 						updateElementTransform();
 				});
 
@@ -570,7 +566,4 @@ postworld.directive('pwParallax',
 		}
 	}
 }]);
-
-
-
 
