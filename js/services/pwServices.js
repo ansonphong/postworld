@@ -673,6 +673,9 @@ postworld.factory('_',
 
 		// Returns true if element is vertically within the viewport, even partially
 		isInView: function(el) {
+			/**
+			 * Make more efficient using cached values 
+			 */
 			var rect = el.getBoundingClientRect();
 			return (
 				rect.bottom >= 0 &&

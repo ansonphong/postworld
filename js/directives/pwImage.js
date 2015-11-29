@@ -353,9 +353,7 @@ postworld.directive('pwSmartImage',
 		}
 
 	}
-
 }]);
-
 
 
 /**
@@ -380,12 +378,9 @@ postworld.directive('pwParallax',
 		},
 		link:function( $scope, element, attrs ){
 
-			var	prevY = 0,
-      			curY = 0,
+			var	prevYScroll = 0,
+      			yScroll = 0,
       			depth = 1.2,
-      			parentHeight = 0,
-      			elementHeight = 0,
-      			median = 0,
       			inView = 0,
       			inViewMedian = 0,
       			method = 'parent',
@@ -401,6 +396,44 @@ postworld.directive('pwParallax',
 
 			var enable = function(){
 				return ($scope.parallaxEnable !== false ) ? true : false;
+			}
+
+			/**
+			 * Store dynamic values in local variables cache, 'c'.
+			 */
+			var c = {};
+			var updateCache = function(){
+				/**
+				 * Set the median point which is the point where
+				 * the image is in the middle of the parent object.
+				 */
+				var median;
+				// Use median calculation for proportionally sized parent containers
+				if( medianType === 'proportional' )
+					median = (c.elementHeight*-1) + (c.elementHeight-c.parentHeight)/2;
+				// Use regular median calculation
+				else
+					median = (c.elementHeight-c.parentHeight)/-2;
+
+				/**
+				 * Cache object.
+				 */
+				c = {
+					elHeight: element.parent()[0].clientHeight,
+					elTopOffset: element.parent().offset().top,
+					windowHeight: window.innerHeight,
+					parentHeight: el.clientHeight,
+					elementHeight: el.clientHeight * depth,
+					median: median,
+				};
+
+				/**
+				 * Set CSS values which may have changed
+				 * due to updated cache.
+				 */
+				element.css('height', c.elementHeight+"px");
+
+				return c;
 			}
 
 			var init = function(){
@@ -432,41 +465,13 @@ postworld.directive('pwParallax',
 
 			}
 
-			var getParentHeight = function(){
-				parentHeight = el.clientHeight;
-
-				/**
-				 * Set the element height based on the
-				 * parent height, times the depth of the layer.
-				 */
-				elementHeight = parentHeight * depth;
-				element.css('height', elementHeight+"px");
-
-				/**
-				 * Set the median point which is the point where
-				 * the image is in the middle of the parent object.
-				 */
-
-				// Use median calculation for proportionally sized parent containers
-				if( medianType === 'proportional' )
-					median = (elementHeight*-1) + (elementHeight-parentHeight)/2;
-				// Use regular median calculation
-				else
-					median = (elementHeight-parentHeight)/-2;
-
-				return parentHeight;
-			}
-
-
 			var updateElementTransform = function(){
-				
 				/**
 				 * inView : Generate decimal which is a value between 0-1
 				 * 0 is value when the element is at the bottom of the viewport
 				 * 1 is the value when the element is at the top of the viewport 
 				 */
-				rect = el.getBoundingClientRect();
-				inView = ( window.innerHeight - rect.top ) / (window.innerHeight+parentHeight);
+				inView = ( window.innerHeight - (c.elTopOffset - yScroll) ) / (c.windowHeight+c.parentHeight);
 
 				/**
 				 * inViewMedian : Generate decimal between (-1)-(1)
@@ -479,7 +484,7 @@ postworld.directive('pwParallax',
 				/**
 				 *  Set the position of the element on the vertical axis.
 				 */
-				translateY = median + (inViewMedian * (elementHeight-parentHeight) );
+				translateY = c.median + (inViewMedian * (c.elementHeight-c.parentHeight) );
 
 				element[0].style[prefixed.transform] = 'translate3d(0px,' + Math.round(translateY) + 'px,0px)';
 			}
@@ -487,45 +492,41 @@ postworld.directive('pwParallax',
 			var update = function(){
 				requestAnimationFrame(update);
 
-				if( !enable )
-					return false;
-
-				if( elementHeight === 0 )
+				if( !enable || c.elementHeight === 0 )
 					return false;
 
 				/**
 				 * If the scroll position hasn't changed
 				 * Return early.
 				 */
-				curY = window.scrollY || ((window.pageYOffset || document.body.scrollTop) - (document.body.clientTop || 0));
-				if(prevY == curY)
+				yScroll = window.scrollY || ((window.pageYOffset || document.body.scrollTop) - (document.body.clientTop || 0));
+				if(prevYScroll == yScroll)
 					return false;
 				else
-					prevY = curY;
+					prevYScroll = yScroll;
 
 				/**
 				 * If the parent container object is visible
 				 * Update the element.
+				 * @note Commented out until more efficient function developed.
 				 */
-				if( $_.isInView( el ) ){
+				//if( $_.isInView( el ) ){
 					updateElementTransform();
-				}
+				//}
 
 			}
 
 			/**
-			 * As the DOM initializes, elements may change dimension
-			 * So re-evaluate as long as this is happening.
+			 * As the DOM initializes, or elements move, cached values may change
+			 * So update the parallax every time cached values are changing.
 			 */
-			if( method === 'parent' )
-				$scope.$watch(
-					function(){
-						return getParentHeight();
-					},
-					function(val){
-						//$log.debug('parallax : parent height', val);
-						updateElementTransform();
-				});
+			$scope.$watch(
+				function(){
+					return updateCache();
+				},
+				function(val){
+					updateElementTransform();
+			}, 1);
 
 			/**
 			 * Enable / disable parallax based on
