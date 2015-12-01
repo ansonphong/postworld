@@ -537,10 +537,14 @@ postworld.directive('pwParallax',
 					return enable()
 				},
 				function( enable ){
-					if( enable )
+					if( enable ){
 						angular.element($window).bind("scroll", update);
-					else
+						angular.element($window).bind("resize", update);
+					}
+					else{
 						angular.element($window).unbind("scroll", update);
+						angular.element($window).unbind("resize", update);
+					}
 			});
 			
 			// Initialize
