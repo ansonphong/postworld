@@ -171,11 +171,11 @@ postworld.controller( 'pwUiCtrl',
 	 * 
 	 * @param string containerSelector Selector for the container element.
 	 * @param string itemsSelector Selector for elements within the container
-	 * @param string className The class name to apply if it's wrapping.
+	 * @param string|array className The class name to apply if it's wrapping. If an array is provided, the second class is applied in the case that it's not wrapping.
 	 */
 	$scope.uiWrappingClass = function( containerSelector, itemsSelector, className ){
-		if( className == null )
-			className = 'is-wrapping';
+		if( _.isUndefined(className) )
+			className = ['is-wrapping','no-wrapping'];
 
 		// Get the container client width
 		var container = angular.element( containerSelector );
@@ -194,14 +194,25 @@ postworld.controller( 'pwUiCtrl',
 		for( var i = 0; i<items.length; i++ ){
 			itemsWidth += items[i].clientWidth;
 		}
-
 		//$log.debug( 'uiWrappingClass :: containerWidth : ', containerWidth );
 		//$log.debug( 'uiWrappingClass :: itemsWidth : ', itemsWidth );
 
-		if( containerWidth < itemsWidth )
-			return className;
-		else
-			return '';
+		
+		if( _.isArray( className ) ){
+			if( containerWidth < itemsWidth )
+				return className[0];
+			else
+				return className[1];
+		}
+
+		if( _.isString( className ) ){
+			if( containerWidth < itemsWidth )
+				return className;
+			else
+				return '';
+		}
+
+		
 
 	}
 
