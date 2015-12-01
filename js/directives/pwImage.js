@@ -192,6 +192,7 @@ postworld.directive('pwImageSrc',
  * @param string smartImagePriority Optional. Options: height|width Priority is given to the defined dimension when deciding on image size
  * @param integer smartImageMinWidth Optional. Number of pixels of minimum width of image to select.
  * @param integer smartImageMinHeight Optional. Number of pixels of minimum height of image to select.
+ * @param integer smartImageTimeout Optional. Number of milliseconds to re-evaluate after.
  *
  * @example
  * 		<img pw-smart-image="post.image" smart-image-override="post.image.alt">
@@ -348,6 +349,12 @@ postworld.directive('pwSmartImage',
 					}
 				);
 
+			}
+
+			else if( !_.isUndefined( attrs.smartImageTimeout ) ){
+				$timeout( function(){
+					setImgUrl();
+				}, parseInt( attrs.smartImageTimeout ) );
 			}
 			
 		}
