@@ -24,6 +24,7 @@ if( !is_array($show) )
 		'hyperlink',
 		'show_title',
 		'show_excerpt',
+		//'parallax_depth',
 		//'proportion'
 		);
 ?>
@@ -69,6 +70,22 @@ if( !is_array($show) )
 		type="number"
 		ng-model="<?php echo $ng_model; ?>.interval">
 		<label for="input-interval"><b><span tooltip="milliseconds">ms</span></b> interval</label>
+	<hr class="thin">
+	<?php
+	}
+?>
+<?php
+	///// PARALLAX DEPTH /////
+	if( in_array( 'parallax_depth', $show ) ){
+	?>
+	<span class="icon-md"><i class="pwi-images"></i></span>
+	<input
+		id="parallax-depth"
+		class="short"
+		size="3"
+		type="number"
+		ng-model="<?php echo $ng_model; ?>.parallax_depth">
+	<label for="parallax-depth">parallax depth</label>
 	<hr class="thin">
 	<?php
 	}
