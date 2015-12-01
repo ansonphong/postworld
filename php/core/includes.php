@@ -191,23 +191,8 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'PHP.JS',
 			POSTWORLD_URI.'/lib/php.js/php.js');
 
-		// HISTORY.JS
-		//wp_enqueue_script( 'History-JS',
-		//	POSTWORLD_URI.'/lib/history.js/native.history.js');	
-
 		///// THIRD PARTY LIBRARIES /////
-
-		/*
-		// CREATE.JS
-		// Development Only ( Not in Grunt File / Deploy Version )
-		wp_enqueue_script( 'CreateJS-Easel',
-			POSTWORLD_URI.'/lib/create.js/easeljs-0.7.0.min.js');
-		wp_enqueue_script( 'CreateJS-Tween',
-			POSTWORLD_URI.'/lib/create.js/tweenjs-0.5.0.min.js');
-		wp_enqueue_script( 'CreateJS-MovieClip',
-			POSTWORLD_URI.'/lib/create.js/movieclip-0.7.0.min.js');
-		*/
-		
+	
 		///// ANGULAR VERSION CONTROL /////
 
 		// ANGULAR
@@ -262,12 +247,6 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 	'pw-app-JS',
 			POSTWORLD_URI.'/js/app.js', $angularDep );
 
-		///// CREATE.JS /////
-		//if( in_array('create.js', $pw['inject']) ){	
-		// LOCAL COMPONENT
-		//wp_enqueue_script( 'Postworld-FlashCanvas',
-		//	POSTWORLD_URI.'/js/components/flashCanvas.js', $angularDep);
-		//}
 
 		// COMPONENTS
 		wp_enqueue_script( 'pw-FeedItem-JS',
