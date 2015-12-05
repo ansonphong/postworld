@@ -166,19 +166,20 @@ function pw_enabled_modules(){
 
 	global $pwSiteGlobals;
 
-	if( empty($enabled_modules) )
-		// Get the saved enabled modules array
-		// Filter must be set to false otherwise it triggers infinite recursion
-		$enabled_modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES, 'filter' => false ) );
+	// Get the saved enabled modules array
+	// Filter must be set to false otherwise it triggers infinite recursion
+	$enabled_modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES, 'filter' => false ) );
 	
-	// If the modules option hasn't been saved yet
-	if( !get_option( PW_OPTIONS_MODULES ) )
-		// Enable the supported modules
-		$enabled_modules = apply_filters( 'pw_default_enabled_modules', pw_supported_modules() );
+	pw_log( 'enabled_modules', $enabled_modules );
 	
 	// Get the theme required modules
 	$required_modules = pw_required_modules();
 
+	// If the modules option hasn't been saved yet
+	if( empty($enabled_modules) )
+		// Enable the supported modules
+		$enabled_modules = $required_modules;
+	
 	// If there are required modules
 	if( !empty( $required_modules ) ){
 		// Merge the required and enabled modules
@@ -192,8 +193,6 @@ function pw_enabled_modules(){
 	return $enabled_modules;
 
 }
-//add_filter( PW_OPTIONS_MODULES, 'pw_enabled_modules' );
-
 
 function pw_supported_modules(){
 	// Returns an array of the names of the theme supported modules

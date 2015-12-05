@@ -97,7 +97,7 @@ function pw_get_current_layout( $vars = array() ){
 
 	/// GET LAYOUT : DEFAULT LAYOUT : FALLBACK ///
 	if( !$layout || $layout['template'] == 'default' ){ //  || $layout['layout'] == 'default'
-
+		// Get from saved default layout
 		if( !empty( $pwLayouts ) )
 			$layout = _get( $pwLayouts, 'default' );
 		// Get from theme filter
