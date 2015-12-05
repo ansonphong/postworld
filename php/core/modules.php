@@ -170,8 +170,6 @@ function pw_enabled_modules(){
 	// Filter must be set to false otherwise it triggers infinite recursion
 	$enabled_modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES, 'filter' => false ) );
 	
-	pw_log( 'enabled_modules', $enabled_modules );
-	
 	// Get the theme required modules
 	$required_modules = pw_required_modules();
 

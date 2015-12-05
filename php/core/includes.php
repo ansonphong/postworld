@@ -847,7 +847,6 @@ function pwGlobals_parse(){
 }
 
 
-
 /**
  * ADD FRONTEND GLOBALS
  * These are added only for requests that are on typical front-end
