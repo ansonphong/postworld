@@ -588,10 +588,13 @@ postworld.directive('pwParallax',
  * @param {string} pwHeight Methods by which to size height. Options: window-base, window-percent, pixels
  * @param {string|float} heightValue Value by which to size, based on method.
  * @param {none} heightDynamic (Optional) Whether or not to dynamically change.
+ * @param {number} height - make entry for a fixed value to subtract from window height
+ * @param {} - option to subtract the scroll distance, in the case of ...
  *
  */
 postworld.directive('pwHeight',
-	['$rootScope', '$log','$timeout','$window', '_',function($rootScope, $log, $timeout, $window, $_){
+	['$rootScope', '$log','$timeout','$window', '_',
+	function($rootScope, $log, $timeout, $window, $_){
 	return{
 		restrict:'A',
 		link:function( $scope, element, attrs ){
@@ -618,11 +621,14 @@ postworld.directive('pwHeight',
 				$timeout( function(){
 					updateWindowBase();
 				}, 0 );
-
 			}
 			var updateWindowBase = function(){
 				updateCache();
-				var elemHeight = c.windowHeight - c.offsetTop;
+				// If any ancestors are fixed, subtract the window's y scroll value
+				var correction = ( $_.ancestorHasStyle( element, 'position', 'fixed' ) ) ?
+					$_.windowScrollY() : 0;
+				// Subtract the element's top offset from the window's height
+				var elemHeight = c.windowHeight - (c.offsetTop - correction);
 				element[0].style['height'] = elemHeight + "px";
 			}
 

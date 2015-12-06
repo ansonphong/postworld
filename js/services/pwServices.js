@@ -642,6 +642,7 @@ postworld.factory('_',
 
 		windowScrollY: function(){
 			return angular.element($window)[0].scrollY;
+			//yScroll = window.scrollY || ((window.pageYOffset || document.body.scrollTop) - (document.body.clientTop || 0));
 		},
 
 		addXScrollClasses: function( element, vars ){
@@ -682,6 +683,22 @@ postworld.factory('_',
 				rect.top <= (window.innerHeight || document.documentElement.clientHeight) 
 			);
 		},
+
+		ancestorHasStyle: function(element, property, value){
+			var node = element;
+			while( node.length > 0) {
+				// Reached the top level
+				if( node[0].tagName === 'HTML' )
+					return false;
+				// Check for position fixed
+				if( $window.getComputedStyle( node[0] )[property] == value ) {
+					return true;
+				}
+				node = node.parent();
+			}
+			return false;
+		},
+
 
 	};
 
