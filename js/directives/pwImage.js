@@ -284,10 +284,9 @@ postworld.directive('pwSmartImage',
 			}
 
 			// Timeout for DOM to initialize
-			$timeout( function(){
+			//$timeout( function(){
 				setImgUrl();		
-			}, 0 );
-
+			//}, 0 );
 
 			/**
 			 * If the smartImageDynamic attribute is present
@@ -319,7 +318,7 @@ postworld.directive('pwSmartImage',
 						if( val.width !== 0 && val.height !== 0 ){
 							//$log.debug( 'val', val );
 							// Timeout for DOM to initialize
-							//setImgUrl();
+							setImgUrl();
 
 							$timeout( function(){
 								setImgUrl();
@@ -342,10 +341,10 @@ postworld.directive('pwSmartImage',
 						 * Clear image URL, and then timeout,
 						 * Waiting 0ms for potential DOM changes to initialize.
 						 */
-						setImgUrl('');
-						$timeout( function(){
+						//setImgUrl('');
+						//$timeout( function(){
 							setImgUrl();		
-						}, 0 );
+						//}, 0 );
 					}
 				);
 
