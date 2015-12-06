@@ -599,7 +599,9 @@ postworld.directive('pwHeight',
 		restrict:'A',
 		link:function( $scope, element, attrs ){
 
-			var c = {};
+			var c = {},
+				fixedAncestor = false;
+
 			var updateCache = function(){
 				c = {
 					offsetTop: element.offset().top, //element[0].offsetTop,
@@ -617,7 +619,9 @@ postworld.directive('pwHeight',
 			/**
 			 * Window Base
 			 */
+
 			var initWindowBase = function(){
+				fixedAncestor = $_.ancestorHasStyle( element, 'position', 'fixed' );
 				$timeout( function(){
 					updateWindowBase();
 				}, 0 );
@@ -625,10 +629,9 @@ postworld.directive('pwHeight',
 			var updateWindowBase = function(){
 				updateCache();
 				// If any ancestors are fixed, subtract the window's y scroll value
-				var correction = ( $_.ancestorHasStyle( element, 'position', 'fixed' ) ) ?
-					$_.windowScrollY() : 0;
+				var scrollY = ( fixedAncestor ) ? $_.windowScrollY() : 0;
 				// Subtract the element's top offset from the window's height
-				var elemHeight = c.windowHeight - (c.offsetTop - correction);
+				var elemHeight = c.windowHeight - (c.offsetTop - scrollY);
 				element[0].style['height'] = elemHeight + "px";
 			}
 
