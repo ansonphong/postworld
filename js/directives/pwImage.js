@@ -579,3 +579,88 @@ postworld.directive('pwParallax',
 	}
 }]);
 
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwHeight
+ * @description
+ * Sizes the height of an element based on preset methods.
+ *
+ * @param {string} pwHeight Methods by which to size height. Options: window-base, window-percent, pixels
+ * @param {string|float} heightValue Value by which to size, based on method.
+ * @param {none} heightDynamic (Optional) Whether or not to dynamically change.
+ *
+ */
+postworld.directive('pwHeight',
+	['$rootScope', '$log','$timeout','$window', '_',function($rootScope, $log, $timeout, $window, $_){
+	return{
+		restrict:'A',
+		link:function( $scope, element, attrs ){
+
+			var c = {};
+			var updateCache = function(){
+				c = {
+					offsetTop: element.offset().top, //element[0].offsetTop,
+					windowHeight: $window.innerHeight,
+					//htmlTopMargin: parseInt( $window.getComputedStyle( angular.element('html')[0] )['margin-top'] ),
+				};
+				$log.debug('pwHeight : updateCache', c);
+				return c;
+			}
+
+			var isDynamic = function(){
+				return !_.isUndefined( attrs.heightDynamic );
+			}
+
+			/**
+			 * Window Base
+			 */
+			var initWindowBase = function(){
+				$timeout( function(){
+					updateWindowBase();
+				}, 0 );
+
+			}
+			var updateWindowBase = function(){
+				updateCache();
+				var elemHeight = c.windowHeight - c.offsetTop;
+				element[0].style['height'] = elemHeight + "px";
+			}
+
+			/**
+			 * Window Percent
+			 */
+			var initWindowPercent = function(){
+				element[0].style['height'] = attrs.heightValue + "vh";
+			}
+
+			/**
+			 * Pixels
+			 */
+			var initPixels = function(){
+				element[0].style['height'] = attrs.heightValue + "px";
+			}
+
+			/**
+			 * Initialize
+			 */
+			$timeout( function(){
+				// Initialize based on height method
+				switch( attrs.pwHeight ){
+					case 'window-base':
+						$log.debug('pwHeight : init', attrs.pwHeight );
+						initWindowBase();
+						angular.element($window).bind("resize", updateWindowBase);
+						break;
+					case 'window-percent':
+						initWindowPercent();
+						break;
+					case 'pixels':
+						initPixels();
+						break;
+				}
+			}, 0 );
+
+		}
+	}
+}]);
