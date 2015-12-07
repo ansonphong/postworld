@@ -1,5 +1,27 @@
 # Postworld // Changelog
 
+### Version 1.21
+- __Breaking Change__ - CONFIG - `postworld-config.php`
+    + Added manditory 'widgets' module if widgets are being used
+    + Add 'widgets' to supported and required widgets arrays
+    + Include which widgets are available under `pwSiteGlobals.widgets` key
+```
+    'widgets' => array(
+        'labels' => array(
+            'prefix' => '(ThemeName)'
+            ),
+        'supported' => array(
+            'related_posts',
+            'term_feed',
+            'feed',
+            'menu_kit',
+            'module',
+            'user'
+            ),
+        ),    
+```
+
+
 ### Version 1.16
 - __Breaking Change__ - CONFIG - `postworld-config.php`
     + Changed format of `post_views` key
