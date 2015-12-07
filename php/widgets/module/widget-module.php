@@ -13,9 +13,10 @@ class pw_module_widget extends WP_Widget {
 	 * Register widget with WordPress.
 	 */
 	public function __construct() {
+		$prefix = pw_get_widget_prefix();
 		parent::__construct(
 	 		'pw_module_widget', 	// Base ID
-			'(Postworld) Module', 	// Name
+			$prefix.' Module', 	// Name
 			array( 'description' => __( 'Adds a module to a widget from /templates/modules', 'text_domain' ), ) // Args
 		);
 	}

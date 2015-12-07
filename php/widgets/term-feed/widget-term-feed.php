@@ -13,9 +13,10 @@ class pw_term_feed_widget extends WP_Widget {
 	 * Register widget with WordPress.
 	 */
 	public function __construct() {
+		$prefix = pw_get_widget_prefix();
 		parent::__construct(
 	 		'pw_term_feed', 				// Base ID
-			'(Postworld) Term Feed', 		// Name
+			$prefix.' Term Feed', 		// Name
 			array( 'description' => __( 'A feed of taxonomy terms', 'text_domain' ), ) // Args
 		);
 	}

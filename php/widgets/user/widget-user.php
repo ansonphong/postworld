@@ -13,9 +13,10 @@ class pw_user_widget extends WP_Widget {
 	 * Register widget with WordPress.
 	 */
 	public function __construct() {
+		$prefix = pw_get_widget_prefix();
 		parent::__construct(
 	 		'pw_user', 					// Base ID
-			'(Postworld) User', 		// Name
+			$prefix.' User', 		// Name
 			array( 'description' => __( 'Display a user\'s data.', 'text_domain' ), ) // Args
 		);
 	}

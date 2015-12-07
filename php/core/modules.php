@@ -116,6 +116,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'Adds support for color processing.',
 			),
 
+		array(
+			'name'	=>	'Widgets',
+			'slug'	=>	'widgets',
+			'icon'	=>	'pwi-cubes',
+			'description'	=>	'Includes supported Postworld widgets.',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules

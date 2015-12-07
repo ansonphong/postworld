@@ -7,9 +7,10 @@ class menu_kit_widget extends WP_Widget {
 	 * Register widget with WordPress.
 	 */
 	public function __construct() {
+		$prefix = pw_get_widget_prefix();
 		parent::__construct(
 	 		'pw_menu_kit', // Base ID
-			'(Postworld) Menu Kit', // Name
+			$prefix.' Menu Kit', // Name
 			array( 'description' => __( 'Menu Kit Widget', 'text_domain' ), ) // Args
 		);
 	}

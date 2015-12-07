@@ -13,9 +13,10 @@ class pw_related_posts_widget extends WP_Widget {
 	 * Register widget with WordPress.
 	 */
 	public function __construct() {
+		$prefix = pw_get_widget_prefix();
 		parent::__construct(
 	 		'pw_related_posts', 			// Base ID
-			'(Postworld) Related Posts', 	// Name
+			$prefix.' Related Posts', 	// Name
 			array( 'description' => __( 'Display related posts.', 'text_domain' ), ) // Args
 		);
 	}

@@ -6,14 +6,34 @@
    \ V  V / | | (_| | (_| |  __/ |_\__ \
     \_/\_/  |_|\__,_|\__, |\___|\__|___/
                      |___/              
-
 //////////////// WIDGETS ////////////////*/
-include POSTWORLD_PATH.'/php/widgets/module/widget-module.php';
-include POSTWORLD_PATH.'/php/widgets/menu-kit/widget-menu-kit.php';
-include POSTWORLD_PATH.'/php/widgets/feed/widget-feed.php';
-include POSTWORLD_PATH.'/php/widgets/term-feed/widget-term-feed.php';
-include POSTWORLD_PATH.'/php/widgets/user/widget-user.php';
-include POSTWORLD_PATH.'/php/widgets/related-posts/widget-related-posts.php';
+
+function pw_get_widget_prefix(){
+	global $pwSiteGlobals;
+	$prefix = _get( $pwSiteGlobals, 'widgets.labels.prefix' );
+	if( !$prefix )
+		$prefix = '(Postworld)';
+	return $prefix;
+}
+
+if( pw_module_enabled('widgets') ){
+	$pw_supported_widgets = _get( $pwSiteGlobals, 'widgets.supported' );
+
+	if( is_array( $pw_supported_widgets ) ){
+		if( in_array( 'module', $pw_supported_widgets ) )
+			include POSTWORLD_PATH.'/php/widgets/module/widget-module.php';
+		if( in_array( 'menu_kit', $pw_supported_widgets ) )
+			include POSTWORLD_PATH.'/php/widgets/menu-kit/widget-menu-kit.php';
+		if( in_array( 'feed', $pw_supported_widgets ) )
+			include POSTWORLD_PATH.'/php/widgets/feed/widget-feed.php';
+		if( in_array( 'term_feed', $pw_supported_widgets ) )
+			include POSTWORLD_PATH.'/php/widgets/term-feed/widget-term-feed.php';
+		if( in_array( 'user', $pw_supported_widgets ) )
+			include POSTWORLD_PATH.'/php/widgets/user/widget-user.php';
+		if( in_array( 'related_posts', $pw_supported_widgets ) )
+			include POSTWORLD_PATH.'/php/widgets/related-posts/widget-related-posts.php';
+	}
+}
 
 ///// PRINT WIDGETS /////
 function pw_print_widgets( $vars = array() ){

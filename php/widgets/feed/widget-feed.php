@@ -13,9 +13,10 @@ class pw_feed_widget extends WP_Widget {
 	 * Register widget with WordPress.
 	 */
 	public function __construct() {
+		$prefix = pw_get_widget_prefix();
 		parent::__construct(
 	 		'pw_feed', 				// Base ID
-			'(Postworld) Feed', 	// Name
+			$prefix.' Feed', 		// Name
 			array( 'description' => __( 'Adds a feed from the Postworld feeds', 'text_domain' ), ) // Args
 		);
 	}
