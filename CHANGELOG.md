@@ -36,7 +36,7 @@
                 ),
             'meta' => array(
                 'list' => array(
-                    'name' => 'List'
+                    'label' => 'List'
                     ),
                 // ...
                 )
