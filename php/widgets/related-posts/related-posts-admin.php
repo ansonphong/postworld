@@ -16,6 +16,8 @@
 		  $title = __( 'Widget', 'text_domain' );
 		}
 	extract($options);
+
+	$template_options = pw_template_options( 'related_posts' );
 ?>
 
 <!--///// METABOX SCRIPTS /////-->
@@ -29,6 +31,7 @@
 		function( $scope, $pwData, $_, $log ) {
 			$log.debug( 'Init Related Posts Widget Controller : ' + '<?php echo $instance ?>' );
 			$scope.settings = <?php echo json_encode( $options['settings'] ); ?>;
+			$scope.templateOptions = <?php echo json_encode( $template_options ); ?>;
 
 			$scope.addRelatedByClause = function( type ){
 				switch( type ){
@@ -213,7 +216,7 @@
 		<select
 			id="select-view"
 			class="labeled"
-			ng-options="value for value in pw.postViews.feed_options"
+			ng-options="value.name as value.label for value in templateOptions"
 			ng-model="settings.view">
 		</select>
 

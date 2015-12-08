@@ -23,7 +23,7 @@ function pw_mode(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.21,
+		'version'		=>	1.22,
 		'db_version'	=>	1.28,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -286,6 +286,9 @@ include 'php/core/events.php';
 
 ////// STYLES //////
 include 'php/core/styles.php';
+
+////// MENUS //////
+include 'php/core/menus.php';
 
 ////// DEV //////
 include 'php/core/dev.php';

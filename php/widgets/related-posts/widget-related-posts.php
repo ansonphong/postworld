@@ -79,7 +79,7 @@ class pw_related_posts_widget extends WP_Widget {
 		include 'related-posts-admin.php';
 	}
 
-} 
+}
 add_action( 'widgets_init', create_function( '', 'register_widget( "pw_related_posts_widget" );' ) );
 
 function pw_related_posts_widget_filter( $options ){

@@ -1,4 +1,38 @@
 <?php
+
+/**
+ * Gets pre-filtered templates available for various contexts, with meta-data.
+ * 
+ * @param string $context The context for which to get views.
+ *			Options: feed | related_posts
+ */
+function pw_template_options( $context ){
+	global $pwSiteGlobals;
+	$options = array();
+	switch( $context ){
+		case 'feeds':
+		case 'related_posts':
+			// If no context views listed, use all supported views
+			$views = _get( $pwSiteGlobals, 'post_views.supported' );
+			$context_views = _get( $pwSiteGlobals, 'post_views.options.'.$context );
+			if( !empty( $context_views ) )
+				$views = $context_views;
+			/**
+			 * Form an array with meta data
+			 * Plus keys 'name' with the view slug
+			 */
+			$post_views_meta = _get( $pwSiteGlobals, 'post_views.meta' );
+			foreach( $views as $view ){
+				$view_meta = $post_views_meta[$view];
+				$view_meta['name'] = $view;
+				$options[] = $view_meta;
+			}
+			break;
+	}
+	return $options;
+
+}
+
 /**
  * Gets an actual template contents wrapped in
  * text/ng-template script type.

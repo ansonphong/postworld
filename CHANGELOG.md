@@ -30,7 +30,10 @@
     ```
         array(
             'supported' => array('list','detail','grid','modal','full'),
-            'feed_options' => array('list','detail','grid'),
+            'options' => array(
+                'feeds' => array('list','grid','full'),
+                'related_posts' => array('list'),
+                ),
             'meta' => array(
                 'list' => array(
                     'name' => 'List'
