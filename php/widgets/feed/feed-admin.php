@@ -29,42 +29,49 @@ extract($OPTIONS);
 	#widget-options .type-title { font-size: 14px; letter-spacing: 1px; color: #666; }
 	#widget-options .type-options { margin: 10px 0 0 10px; }
 </style>
+<div class="postworld">
+	<div id="widget-options" class="postworld-widget">
 
-<div id="widget-options">
+		<!-- TITLE -->
+		<label class="inner" for="<?php echo $this->get_field_id( 'show_title' ); ?>">
+			<input
+				type="checkbox"
+				value="1"
+				title="Show Title"
+				name="<?php echo $this->get_field_name('show_title'); ?>"
+				id="<?php echo $this->get_field_id('show_title'); ?>"
+				<?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
+			<?php _e( 'Title' ); ?>
+		</label>
+		<input
+			class="labeled"
+			id="<?php echo $this->get_field_id( 'title' ); ?>"
+			name="<?php echo $this->get_field_name( 'title' ); ?>"
+			type="text" value="<?php echo esc_attr( $title ); ?>" />
+		<hr class="thin">
 
-	<!-- TITLE -->
-	<label for="<?php echo $this->get_field_id( 'title' ); ?>">
-		<input type="checkbox" value="1" title="Show Title" name="<?php echo $this->get_field_name('show_title'); ?>" id="<?php echo $this->get_field_id('show_title'); ?>" <?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
-		<?php _e( 'Title:' ); ?>
-	</label>
-	<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
+		<label class="inner">
+			Feed
+		</label>
+		<select
+			class="labeled"
+			name="<?php echo $this->get_field_name('feed_id'); ?>"
+			id="<?php echo $this->get_field_id('feed_id'); ?>">
+			<?php
 
-	<!-- SELECT -->
-	<div class="type-wrapper">
+				$pw_feeds = pw_get_option( array( 'option_name'  =>  PW_OPTIONS_FEEDS ) );
 
-	<div class="type-title">
-		<label><b>Feed</b></label>
-	</div>
-
-	<div class="type-options">
-
-		<select name="<?php echo $this->get_field_name('feed_id'); ?>"  id="<?php echo $this->get_field_id('feed_id'); ?>">
-		<?php
-
-			$pw_feeds = pw_get_option( array( 'option_name'  =>  PW_OPTIONS_FEEDS ) );
-
-			if( !empty( $pw_feeds ) ){
-				foreach($pw_feeds as $feed ) {
-					$selected = '';
-					$selected = ( $feed_id == $feed['id'] ) ? 'selected="selected"' : '';
-					echo '<option value="'.$feed['id'].'" '.$selected.' >'.$feed['name'].'</option>';
+				if( !empty( $pw_feeds ) ){
+					foreach($pw_feeds as $feed ) {
+						$selected = '';
+						$selected = ( $feed_id == $feed['id'] ) ? 'selected="selected"' : '';
+						echo '<option value="'.$feed['id'].'" '.$selected.' >'.$feed['name'].'</option>';
+					}
 				}
-			}
 
-		?>
+			?>
 		</select>
+		
 
 	</div>
-
-   </div>
 </div>
