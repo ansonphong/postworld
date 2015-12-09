@@ -254,6 +254,11 @@ postworldAdmin.controller( 'pwAdminDatabaseCtrl',
 			title: 'Cleanup Orphaned Term Relationships',
 			description:'Deletes all term relationships from term_relationship tables whose term_taxonomy_id no longer exists, or where the post no longer exists.',
 			type:'cleanup_term_relationships_table'
+		},
+		{
+			title: 'Migrate WP 4.4 Taxonomy Metadata',
+			description:'Migrates data from the <i>wp_taxonomymeta</i> table to <i>wp_termmeta</i> which was introduced in WP 4.4.',
+			type:'migrate_taxonomymeta_to_termmeta'
 		}
 	];
 

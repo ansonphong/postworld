@@ -1,11 +1,12 @@
 <?php
 
+/**
+ * This function safely migrates and deletes all RSV2 lineage event meta data
+ */
 function pw_update_pw1_event_meta( $options = array() ) {
-	// This function safely migrates and deletes all RSV2 lineage event meta data
-
 	/*
 		$options = array(
-			"mode"	=>	"test / migrate",
+			"mode"	=>	[string], // Options : test | migrate
 		)
 	*/
 

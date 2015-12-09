@@ -207,6 +207,9 @@
 				</div>
 			<?php endif; ?>
 
+
+
+
 		</div>
 
 		<div class="col-md-6 pad-col-md">
@@ -251,7 +254,7 @@
 			<div class="well">
 
 				<h3>
-					<i class="pwi-circle-medium"></i>
+					<i class="icon pwi-gear"></i>
 					Taxonomy Operations
 				</h3>
 

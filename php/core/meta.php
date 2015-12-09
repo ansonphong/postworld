@@ -20,18 +20,17 @@ function pw_get_post_meta($post_id){
 	return $meta;
 }
 
-
 function pw_get_column_values( $table_name, $column, $unique = false ){
 	// Gets a 1D array of all values in a DB column
 	global $wpdb;
 
 	$distinct = ( $unique ) ? "DISTINCT" : "";
 
-	$array = $wpdb->get_col( $wpdb->prepare( 
+	$array = $wpdb->get_col(  
 		"
 		SELECT " .$distinct. " ".$column."
 		FROM 	".$table_name."
-		"));
+		");
 	return $array;
 }
 

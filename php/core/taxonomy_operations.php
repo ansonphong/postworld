@@ -251,6 +251,57 @@ function pw_taxonomy_operation_cleanup_term_relationships_table(){
 
 }
 
+
+/**
+ * WordPress 4.4 introduced native support for a termmeta table
+ * Thus making the taxonomymeta table module obsolete.
+ * This function moves the data from the taxonomymeta to termmeta
+ */
+function pw_taxonomy_operation_migrate_taxonomymeta_to_termmeta(){
+	pw_set_microtimer( 'migrate_taxonomymeta_to_termmeta' );
+
+	global $wp_version;
+	global $wpdb;
+
+	// Check for WP Version
+	if( $wp_version < 4.4 )
+		return false;
+
+	// Check for existance of wp_taxonomymeta table.
+	$table_name = $wpdb->prefix . 'taxonomymeta';
+	$check_table_name = $wpdb->get_var("SHOW TABLES LIKE '$table_name'");
+	if( $check_table_name != $table_name)
+		return false;
+	
+	// If it exists, get all the entries and load them into one array
+	$results = $wpdb->get_results( "SELECT * FROM ".$table_name, ARRAY_A );
+
+	// Move each of the items into the new wp_termmeta table
+	$items = array();
+	foreach( $results as $result ){
+		$add_meta = add_term_meta( $result['taxonomy_id'], $result['meta_key'], $result['meta_value'], true );
+		if( $add_meta )
+			$items[] = $add_meta;
+	}
+
+	// Delete the old table
+	$wpdb->query( "DROP TABLE IF EXISTS ".$table_name );
+
+	$timer = pw_get_microtimer('migrate_taxonomymeta_to_termmeta');
+
+	// Check for wp_taxonomy_table
+	return array(
+		'timer' => $timer,
+		'total_terms' => count($results),
+		'count' => count($items),
+		'items' => $items,
+		);
+
+}
+
+
+
+
 // Remove term relationships from terms that no longer exist
 
 /*
