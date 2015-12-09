@@ -588,7 +588,7 @@ postworld.directive('pwParallax',
  * @description
  * Sizes the height of an element based on preset methods.
  *
- * @param {string} pwHeight Methods by which to size height. Options: window-base, window-percent, pixels
+ * @param {string} pwHeight Methods by which to size height. Options: window-base, window-percent, pixels, proportion
  * @param {string|float} heightValue Value by which to size, based on method.
  * @param {none} heightDynamic (Optional) Whether or not to dynamically change.
  * @param {number} height - make entry for a fixed value to subtract from window height
@@ -622,7 +622,6 @@ postworld.directive('pwHeight',
 			/**
 			 * Window Base
 			 */
-
 			var initWindowBase = function(){
 				fixedAncestor = $_.ancestorHasStyle( element, 'position', 'fixed' );
 				$timeout( function(){
@@ -653,6 +652,21 @@ postworld.directive('pwHeight',
 			}
 
 			/**
+			 * Proportion
+			 */
+			var initProportion = function(){
+				$timeout( function(){
+					updateProportion();
+				}, 0 );
+			}
+			var updateProportion = function(){
+				var elementWidth = element[0].clientWidth;
+				var prop = parseInt(attrs.heightValue);
+				var elementHeight = elementWidth/prop;
+				element[0].style['height'] = elementHeight + "px";
+			}
+
+			/**
 			 * Initialize
 			 */
 			$timeout( function(){
@@ -668,6 +682,11 @@ postworld.directive('pwHeight',
 						break;
 					case 'pixels':
 						initPixels();
+						break;
+					case 'proportion':
+						$log.debug('pwHeight : init : ' + attrs.pwHeight, attrs.heightValue );
+						initProportion();
+						angular.element($window).bind("resize", updateProportion);
 						break;
 				}
 			}, 0 );

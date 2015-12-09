@@ -6,7 +6,7 @@
 
 	$default_vars = array(
 		'ng_model' => null,
-		'methods' => array( 'window-base', 'window-percent', 'pixels' ),
+		'methods' => array( 'window-base', 'window-percent', 'pixels', 'proportion' ),
 		);
 	$vars = array_replace($default_vars, $vars);
 
@@ -23,9 +23,14 @@
 			'label' => 'Pixels',
 			'value' => 'pixels'
 			),
+		array(
+			'label' => 'Proportional',
+			'value' => 'proportion'
+			),
 		);
 ?>
 
+<span class="icon-md"><i class="pwi-arrows-v"></i></span>
 <select ng-model="<?php echo $vars['ng_model'] ?>.method">
 	<?php foreach( $methods as $method ) : ?>
 		<?php if( in_array( $method['value'], $vars['methods'] ) ) : ?>
@@ -34,9 +39,11 @@
 	<?php endforeach ?>
 </select>
 
-<hr class="thin">
+Height
 
-<div ng-switch="<?php echo $vars['ng_model'] ?>.method">
+<div class="indent" ng-switch="<?php echo $vars['ng_model'] ?>.method">
+	<hr class="thin">
+
 	<div ng-switch-when="window-base">
 		<small>
 			Sized to touch the base of the window, to maximize screen area.
@@ -46,8 +53,7 @@
 		<input
 			type="number"
 			class="short"
-			ng-model="<?php echo $vars['ng_model'] ?>.value"> % 
-		Height
+			ng-model="<?php echo $vars['ng_model'] ?>.value"> <b>%</b> 
 		<small>
 			Percentage of window height.
 		</small>
@@ -56,10 +62,18 @@
 		<input
 			type="number"
 			class="short"
-			ng-model="<?php echo $vars['ng_model'] ?>.value"> px 
-		Height
+			ng-model="<?php echo $vars['ng_model'] ?>.value"> <b>px</b> 
 		<small>
 			How many pixels tall.
+		</small>
+	</div>
+	<div ng-switch-when="proportion">
+		<input
+			type="number"
+			class="short"
+			ng-model="<?php echo $vars['ng_model'] ?>.value"><b>:1</b> 
+		<small>
+			Proportion in relation to width.
 		</small>
 	</div>
 </div>

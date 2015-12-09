@@ -35,7 +35,7 @@ if( !is_array($show) )
 	});
 </script>
 
-<div ng-controller="<?php echo $instance ?>">
+<div class="postworld" ng-controller="<?php echo $instance ?>">
 
 <?php
 	///// PROPORTION /////
@@ -50,11 +50,13 @@ if( !is_array($show) )
 <?php
 	///// HEIGHT /////
 	if( in_array( 'height', $show ) ){
-		echo pw_select_setting( array(
-			'setting' => 'height-percent', 
+		echo pw_select_setting(array(
+			'setting' => 'height',
 			'ng_model' => $ng_model.'.height',
+			//'methods' => array('window-base','window-percent','pixels'),
 			));
-		?><hr class="thin"><?php
+		?>
+		<hr class="thin"><?php
 	}
 	?>
 	
