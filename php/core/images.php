@@ -365,7 +365,8 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 			// With the second image attribute representing the field model handle (micro,preview,full,etc)
 			$image_post = pw_get_post( $thumbnail_id, $image_attributes[1] );
 			// Merge the image post (post_title,post_excerpt) into the post.image object
-			$post_image = array_replace_recursive( $post_image, $image_post );
+			if( is_array( $image_post ) && !empty( $image_post ) )
+				$post_image = array_replace_recursive( $post_image, $image_post );
 		}
 		/**
 		 * CUSTOM IMAGE SIZES
