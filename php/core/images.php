@@ -142,7 +142,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 	 * Then assume the $post is a thumbnail_id
 	 */
 	if( $thumbnail_id === true ){
-		$thumbnail_id = $post;
+		$thumbnail_id = (int) $post;
 	}
 	elseif( !empty( $thumbnail_id ) ){
 		$thumbnail_id = (int) $thumbnail_id;
@@ -152,22 +152,22 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		$post['post_type'] == 'attachment'
 		){
 		// Handle Attachment Post Types
-		$thumbnail_id = $post_id;
+		$thumbnail_id = (int) $post_id;
 	} else{
 		// Handle Posts
-		$thumbnail_id = get_post_thumbnail_id( $post_id );
+		$thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 		//pw_log( 'thumbnail_id : ' . $thumbnail_id );
 	}
 
 	// If there is a set 'featured image' set the $thumbnail_url
-	if ( $thumbnail_id ){
+	if( $thumbnail_id ){
 		$thumbnail_url = wp_get_attachment_url( $thumbnail_id ,'full');
 	}
 	// If there is no set 'featured image', get fallback - first image in post
-	else {
+	else{
 		$first_image_obj = first_image_obj( $post_id );
 		// If there is an image in the post
-		if ($first_image_obj){
+		if( $first_image_obj ){
 			$thumbnail_url = $first_image_obj['url'];
 		}
 		else{

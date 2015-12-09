@@ -446,8 +446,11 @@ postworld.directive('pwParallax',
 				if( !_.isEmpty(attrs.pwParallax) )
 					method = attrs.pwParallax;
 
-				if( !_.isUndefined(attrs.parallaxDepth) )
-					depth = parseFloat(attrs.parallaxDepth);
+				if( !_.isUndefined(attrs.parallaxDepth) ){
+					var getDepth = parseFloat(attrs.parallaxDepth);
+					if( !_.isNaN( getDepth ) )
+						depth = getDepth;
+				}
 
 				if( !_.isUndefined(attrs.parallaxMedian) )
 					medianType = String(attrs.parallaxMedian);

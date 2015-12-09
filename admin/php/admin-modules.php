@@ -349,9 +349,6 @@ function i_admin_slider_options( $vars = array() ){
 	return pw_admin_slider_options( $vars );
 }
 function pw_admin_slider_options( $vars = array() ){
-	// TODO:
-	// - Create a random ID for the controller instance
-	// - Pass in unique model prefix, to allow for multiple instances
 	return pw_ob_admin_template( 'options-slider', $vars );
 }
 
