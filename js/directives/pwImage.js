@@ -591,8 +591,9 @@ postworld.directive('pwParallax',
  * @param {string} pwHeight Methods by which to size height. Options: window-base, window-percent, pixels, proportion
  * @param {string|float} heightValue Value by which to size, based on method.
  * @param {none} heightDynamic (Optional) Whether or not to dynamically change.
- * @param {number} height - make entry for a fixed value to subtract from window height
- * @param {} - option to subtract the scroll distance, in the case of ...
+ *
+ * //IN DEV @param {number} heightSubtract - make entry for a fixed value to subtract from window height
+ * //IN DEV @param {} - option to subtract the scroll distance, in the case of ...
  *
  */
 postworld.directive('pwHeight',
@@ -655,9 +656,13 @@ postworld.directive('pwHeight',
 			 * Proportion
 			 */
 			var initProportion = function(){
-				$timeout( function(){
+				if(isDynamic())
+					$timeout( function(){
+						updateProportion();
+					}, 0 );
+				else
 					updateProportion();
-				}, 0 );
+				
 			}
 			var updateProportion = function(){
 				var elementWidth = element[0].clientWidth;
@@ -666,10 +671,7 @@ postworld.directive('pwHeight',
 				element[0].style['height'] = elementHeight + "px";
 			}
 
-			/**
-			 * Initialize
-			 */
-			$timeout( function(){
+			var init = function(){
 				// Initialize based on height method
 				switch( attrs.pwHeight ){
 					case 'window-base':
@@ -689,7 +691,19 @@ postworld.directive('pwHeight',
 						angular.element($window).bind("resize", updateProportion);
 						break;
 				}
-			}, 0 );
+			}
+
+			/**
+			 * Initialize
+			 * If dynamic, add timeout for other data to initialize first
+			 */
+			if(isDynamic())
+				$timeout( function(){
+					init();
+				}, 0 );
+			else
+				init();
+			
 
 		}
 	}

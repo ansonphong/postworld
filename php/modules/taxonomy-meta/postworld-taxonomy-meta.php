@@ -6,6 +6,8 @@ include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 if( pw_module_is_enabled('taxonomy-meta') &&
 	// And the Taxonomy Metadata class doesn't exist
 	!class_exists('Taxonomy_Metadata') &&
+	// And WordPress is under version 4.4
+	$wp_version < 4.4 &&
 	// And the Taxonomy Metadata plugin isn't activated
 	!is_plugin_active( 'taxonomy-metadata/taxonomy-metadata.php' ) ){
 
