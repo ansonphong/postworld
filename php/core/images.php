@@ -673,10 +673,11 @@ function pw_get_image( $vars ){
 	$image = wp_get_attachment_metadata( $image_id );
 	$image['url'] = wp_get_attachment_url( $image_id );
 
-	foreach( $image['sizes'] as $key => $value ){
-		$image_size_meta = wp_get_attachment_image_src( $image_id, $key );
-		$image['sizes'][$key]['url'] = $image_size_meta[0];
-	}
+	if( is_array($image['sizes']) )
+		foreach( $image['sizes'] as $key => $value ){
+			$image_size_meta = wp_get_attachment_image_src( $image_id, $key );
+			$image['sizes'][$key]['url'] = $image_size_meta[0];
+		}
 
 	return $image;
 }

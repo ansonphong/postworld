@@ -17,7 +17,7 @@ function pw_default_site_options( $options ){
 			'require_login' => false,
 			),
 		'memory' => array(
-			'image_memory_limit' => '2G',
+			'image_memory_limit' => '256M',
 			),
 		'wp_core' => array(
 			'disable_wp_emojicons' => true,
