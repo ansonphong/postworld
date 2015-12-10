@@ -21,12 +21,36 @@
 		$scope['images'] = {};
 		$scope['options'] = $iOptionsData['options'];
 
+		$scope.memoryOptions = [
+			{
+				label:'256 MB',
+				value:'256M'
+			},
+			{
+				label:'512 MB',
+				value:'512M'
+			},
+			{
+				label:'1 GB',
+				value:'1G'
+			},
+			{
+				label:'2 GB',
+				value:'2G'
+			},
+			{
+				label:'3 GB',
+				value:'3G'
+			},
+
+		];
+
 	}]);
 </script>
 
 <div class="main wrap postworld" ng-cloak>
 	<h1>
-		<i class="pwi-gears"></i>
+		<i class="pwi-gear"></i>
 		Site Options
 	</h1>
 	
@@ -62,12 +86,8 @@
 								'width'			=> 	'64px',
 							 	));?>
 					</div>
-					
 				</div>
 
-			</div>
-			<div class="col-sm-6 pad-col-md">
-				
 				<!-- AVATAR IMAGE -->
 				<div class="well">
 					<div class="save-right">
@@ -91,6 +111,73 @@
 					</div>
 				</div>
 
+			</div>
+			<div class="col-sm-6 pad-col-md">
+				
+
+				<!-- SECURITY -->
+				<div class="well">
+					<div class="save-right">
+						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+					</div>
+					<h2>
+						<span class="icon-md"><i class="pwi-lock"></i></span>
+						Security
+					</h2>
+					<div class="well">
+						<label>
+							<input type="checkbox" ng-model="pwSiteOptions.security.disable_xmlrpc">
+							<b>Disable XMLRPC API</b>
+							<small>Commonly an access point for DDoS attacks.</small>
+						</label>
+						<hr class="thin">
+						<label>
+							<input type="checkbox" ng-model="pwSiteOptions.security.require_login">
+							<b>Require Login</b>
+							<small>Require login to access site.</small>
+						</label>
+					</div>
+				</div>
+
+
+				<!-- PERFORMANCE -->
+				<div class="well">
+					<div class="save-right">
+						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+					</div>
+					<h2>
+						<span class="icon-md"><i class="pwi-fire"></i></span>
+						Performance
+					</h2>
+					<div class="well">
+						<label>
+							<select
+								ng-model="pwSiteOptions.memory.image_memory_limit"
+								ng-options="option.value as option.label for option in memoryOptions">
+							</select>
+							<b>Image Memory Limit</b>
+							<small>The maximum amount of memory used for processing images.</small>
+						</label>
+					</div>
+				</div>
+
+				<!-- WORDPRESS CORE -->
+				<div class="well">
+					<div class="save-right">
+						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+					</div>
+					<h2>
+						<span class="icon-md"><i class="pwi-wordpress"></i></span>
+						WordPress Core
+					</h2>
+					<div class="well">
+						<label>
+							<input type="checkbox" ng-model="pwSiteOptions.wp_core.disable_wp_emojicons">
+							<b>Disable WP Emojicons</b>
+							<small>Increases load speed.</small>
+						</label>
+					</div>
+				</div>
 			</div>
 		</div>
 

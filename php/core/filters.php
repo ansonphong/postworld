@@ -1,4 +1,32 @@
 <?php
+/**
+ * Set default site options.
+ */
+add_filter( PW_OPTIONS_SITE, 'pw_default_site_options' );
+function pw_default_site_options( $options ){
+	if( empty( $options ) )
+		$options = array();
+
+	$default_options = array(
+		'images' => array(
+			'favicon' => false,
+			'avatar' => false,
+			),
+		'security' => array(
+			'disable_xmlrpc' => true,
+			'require_login' => false,
+			),
+		'memory' => array(
+			'image_memory_limit' => '2G',
+			),
+		'wp_core' => array(
+			'disable_wp_emojicons' => true,
+			),
+		);
+
+	return array_replace_recursive($default_options, $options);
+}
+
 
 function pw_default_modules( $modules ){
 }

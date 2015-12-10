@@ -1,5 +1,12 @@
 # Postworld // Changelog
 
+### Version 1.26
+- **Added features** to site options module, in admin under *Postworld › Site Options*
+    + Option to disable XMLRPC API site-wide
+    + Option to require login
+    + Option to set image memory limit
+    + Option to disble WP Emojicons
+
 ### Version 1.21
 - __Breaking Change__ - CONFIG - `postworld-config.php`
     + Added manditory 'widgets' module if widgets are being used

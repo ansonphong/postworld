@@ -39,7 +39,7 @@ function pw_current_background( $vars = array() ){
 	global $pw;
 
 	// If backgrounds module is not enabled, return here
-	if( !in_array( 'backgrounds', $pw['info']['modules'] ) )
+	if( !pw_module_enabled('backgrounds') )
 		return false;
 
 	// Define the default passed-in vars
