@@ -427,7 +427,8 @@ function pw_get_contexts( $types = array() ){
 	if( empty( $types ) ){
 		$types = array(
 			'default',
-			'standard',
+			'home',
+			'blog',
 			'single',
 			'archive',
 			'search',
@@ -436,6 +437,9 @@ function pw_get_contexts( $types = array() ){
 			'buddypress'
 			);
 	}
+
+	// Apply filter so themes can modify available contexts 
+	$types = apply_filters( 'pw_context_types', $types );
 
 	///// ADD STANDARD CONTEXTS /////
 	// TODO : Add Multi-language support, draw values from Language array
@@ -448,14 +452,14 @@ function pw_get_contexts( $types = array() ){
 			"icon"	=>	"pwi-circle-medium",
 			);
 
-	if( in_array( 'standard', $types ) )
+	if( in_array( 'home', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Home",
 			"name"	=>	"home",
 			"icon"	=>	"pwi-home",
 			);
 
-	if( in_array( 'standard', $types ) )
+	if( in_array( 'blog', $types ) )
 		$contexts[] = array(
 			"label"	=>	"Blog",
 			"name"	=>	"blog",

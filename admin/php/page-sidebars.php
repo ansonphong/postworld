@@ -7,12 +7,14 @@
 	}]);
 </script>
 
-<div class="postworld sidebars wrap" ng-cloak>
+<div
+	class="postworld sidebars wrap"
+	pw-ui
+	ng-cloak>
 	<div
 		pw-admin
 		pw-admin-sidebars
 		ng-controller="pwSidebarsDataCtrl">
-
 		<h1>
 			<i class="pwi-map"></i>
 			Sidebars
@@ -88,106 +90,109 @@
 
 					<hr class="thin">
 
-					<div class="pw-row">
-						<div class="pw-col-9">
-							<label
-								for="item-description"
-								class="inner"
-								tooltip="<?php ___('sidebars.description_info'); ?>"
-								tooltip-popup-delay="333">
-								<?php ___('sidebars.description'); ?>
-								<i class="pwi-info-circle"></i>
-							</label>
-							<input
-								id="item-description"
-								class="labeled"
-								type="text"
-								ng-model="selectedItem.description">
-						</div>
-						<div class="pw-col-3">
-							<label
-								for="item-class"
-								class="inner"
-								tooltip="<?php ___('sidebars.class_info'); ?>"
-								tooltip-popup-delay="333">
-								<?php ___('sidebars.class'); ?>
-								<i class="pwi-info-circle"></i>
-							</label>
-							<input
-								class="labeled"
-								id="item-class"
-								type="text"
-								ng-model="selectedItem.class">
-						</div>
+					
+					<label
+						for="item-description"
+						class="inner"
+						tooltip="<?php ___('sidebars.description_info'); ?>"
+						tooltip-popup-delay="333">
+						<?php ___('sidebars.description'); ?>
+						<i class="pwi-info-circle"></i>
+					</label>
+					<input
+						id="item-description"
+						class="labeled"
+						type="text"
+						ng-model="selectedItem.description">
+						
+					<!-- ADVANCED -->
+					<div
+						ng-show="uiShowView('sidebar_advanced')">
+
+						<hr class="thin">
+
+						<label
+							for="item-class"
+							class="inner"
+							tooltip="<?php ___('sidebars.class_info'); ?>"
+							tooltip-popup-delay="333">
+							<?php ___('sidebars.class'); ?>
+							<i class="pwi-info-circle"></i>
+						</label>
+						<input
+							class="labeled"
+							id="item-class"
+							type="text"
+							ng-model="selectedItem.class">
+
+						<hr class="thin">
+
+						<label
+							for="item-before_widget"
+							class="inner"
+							tooltip="<?php ___('sidebars.before_widget_info'); ?>"
+							tooltip-popup-delay="333">
+							<?php ___('sidebars.before_widget'); ?>
+						</label>
+						<textarea
+							id="item-before_widget"
+							msd-elastic
+							class="labeled elastic"
+							ng-model="selectedItem.before_widget">
+						</textarea>
+
+						<hr class="thin">
+
+						<label
+							for="item-after_widget"
+							class="inner"
+							tooltip="<?php ___('sidebars.after_widget_info'); ?>"
+							tooltip-popup-delay="333">
+							<?php ___('sidebars.after_widget'); ?>
+						</label>
+						<textarea
+							id="item-after_widget"
+							msd-elastic
+							class="labeled elastic"
+							ng-model="selectedItem.after_widget">
+						</textarea>
+					
+						<hr class="thin">
+
+						<label
+							for="item-before_title"
+							class="inner"
+							tooltip="<?php ___('sidebars.before_title_info'); ?>"
+							tooltip-popup-delay="333">
+							<?php ___('sidebars.before_title'); ?>
+						</label>
+						<textarea
+							id="item-before_title"
+							msd-elastic
+							class="labeled elastic"
+							ng-model="selectedItem.before_title">
+						</textarea>
+
+						<hr class="thin">
+
+						<label
+							for="item-after_title"
+							class="inner"
+							tooltip="<?php ___('sidebars.after_title_info'); ?>"
+							tooltip-popup-delay="333">
+							<?php ___('sidebars.after_title'); ?>
+						</label>
+						<textarea
+							id="item-after_title"
+							msd-elastic
+							class="labeled elastic"
+							ng-model="selectedItem.after_title">
+						</textarea>
+
 					</div>
-
-					<hr class="thin">
-
-					<label
-						for="item-before_widget"
-						class="inner"
-						tooltip="<?php ___('sidebars.before_widget_info'); ?>"
-						tooltip-popup-delay="333">
-						<?php ___('sidebars.before_widget'); ?>
-					</label>
-					<textarea
-						id="item-before_widget"
-						msd-elastic
-						class="labeled elastic"
-						ng-model="selectedItem.before_widget">
-					</textarea>
-
-					<hr class="thin">
-
-					<label
-						for="item-after_widget"
-						class="inner"
-						tooltip="<?php ___('sidebars.after_widget_info'); ?>"
-						tooltip-popup-delay="333">
-						<?php ___('sidebars.after_widget'); ?>
-					</label>
-					<textarea
-						id="item-after_widget"
-						msd-elastic
-						class="labeled elastic"
-						ng-model="selectedItem.after_widget">
-					</textarea>
-				
-					<hr class="thin">
-
-					<label
-						for="item-before_title"
-						class="inner"
-						tooltip="<?php ___('sidebars.before_title_info'); ?>"
-						tooltip-popup-delay="333">
-						<?php ___('sidebars.before_title'); ?>
-					</label>
-					<textarea
-						id="item-before_title"
-						msd-elastic
-						class="labeled elastic"
-						ng-model="selectedItem.before_title">
-					</textarea>
-
-					<hr class="thin">
-
-					<label
-						for="item-after_title"
-						class="inner"
-						tooltip="<?php ___('sidebars.after_title_info'); ?>"
-						tooltip-popup-delay="333">
-						<?php ___('sidebars.after_title'); ?>
-					</label>
-					<textarea
-						id="item-after_title"
-						msd-elastic
-						class="labeled elastic"
-						ng-model="selectedItem.after_title">
-					</textarea>
 
 					<hr class="thick">
 
-	
 					<!-- SAVE BUTTON -->
 					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SIDEBARS,'iSidebars'); ?></div>
 		
@@ -207,6 +212,15 @@
 						<?php ___('sidebars.duplicate'); ?>
 					</button>
 
+					<!-- ADVANCED BUTTON -->
+					<button
+						type="button"
+						class="button"
+						ng-click="uiToggleView('sidebar_advanced')"
+						ng-class="uiSetClass('sidebar_advanced')">
+						<i class="icon pwi-gear"></i>Advanced Options
+					</button>
+
 				</div>
 
 			</div>
@@ -214,7 +228,7 @@
 
 		</div>
 
-		<hr class="thick">
+		
 
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
@@ -223,7 +237,6 @@
 				<pre><code>iSidebars : {{ iSidebars | json }}</code></pre>
 			</div>
 		<?php endif; ?>
-
 	</div>
 
 </div>

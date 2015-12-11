@@ -102,6 +102,16 @@ function pw_related_posts_widget_filter( $options ){
 						),
 					),
 				'related_by' =>	array(
+					array(
+						'type' => 'taxonomy',
+						'weight' => 1,
+						'taxonomies'	=>	array(
+							array(
+								'taxonomy' 	=> 	'category',
+								'weight'	=>	1
+								)
+							)
+						),
 					)
 				),
 			);
