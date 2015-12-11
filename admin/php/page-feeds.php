@@ -41,7 +41,7 @@
 			$_.removeEmpty( $scope.pwFeedSettings );
 		}, 1);
 
-		// Watch Feed Settings
+		// Watch Feeds
 		$scope.$watch( 'pwFeeds', function(val){
 			// Delete empty values
 			$_.removeEmpty( $scope.pwFeeds );

@@ -68,6 +68,13 @@ function pw_init_site_options(){
 		if( !defined('MEDIA_TRASH') )
 			define('MEDIA_TRASH', true);
 
+	/**
+	 * ENABLE DEVELOPMENT MODE
+	 */
+	if( _get( $options, 'postworld.mode' ) === 'dev' )
+		if( !defined('POSTWORLD_MODE') )
+			define('POSTWORLD_MODE', 'dev');
+
 	return;
 
 }

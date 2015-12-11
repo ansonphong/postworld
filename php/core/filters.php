@@ -22,11 +22,68 @@ function pw_default_site_options( $options ){
 		'wp_core' => array(
 			'disable_wp_emojicons' => true,
 			),
+		'postworld' => array(
+			'mode' => 'prod'
+			),
 		);
 
 	return array_replace_recursive($default_options, $options);
 }
 
+
+/**
+ * Options for image memory limit settings.
+ */
+add_filter( 'pw_options_site_memory', 'pw_options_site_memory_defaults', 1 );
+function pw_options_site_memory_defaults( $options ){
+	return array(
+		array(
+			'label' => '256 MB',
+			'value' => '256M'
+			),
+		array(
+			'label' => '512 MB',
+			'value' => '512M'
+			),
+		array(
+			'label' => '1.0 GB',
+			'value' => '1024M'
+			),
+		array(
+			'label' => '1.5 GB',
+			'value' => '1536M'
+			),
+		array(
+			'label' => '2.0 GB',
+			'value' => '2048M'
+			),
+		array(
+			'label' => '2.5 GB',
+			'value' => '2560M'
+			),
+		array(
+			'label' => '3.0 GB',
+			'value' => '3072M'
+			),
+		);
+}
+
+/**
+ * Postworld Mode Options
+ */
+add_filter( 'pw_options_postworld_mode', 'pw_options_postworld_mode_defaults', 1 );
+function pw_options_postworld_mode_defaults( $options ){
+	return array(
+		array(
+			'label' => __('Production','postworld'),
+			'value' => 'prod'
+			),
+		array(
+			'label' => __('Development','postworld'),
+			'value' => 'dev'
+			),
+		);
+}
 
 function pw_default_modules( $modules ){
 }
