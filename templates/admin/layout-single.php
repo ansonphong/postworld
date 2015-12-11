@@ -91,7 +91,7 @@
 			<select
 				ng-model="<?php echo $ng_model; ?>.sidebars[location.slug].id"
 				ng-options="sidebar.id as sidebar.name for sidebar in iSidebars">
-				<option value="">--- Select Widget Area ---</option>
+				<option value="">--- Select Sidebar ---</option>
 			</select>
 
 			<button
