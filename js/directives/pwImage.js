@@ -666,7 +666,7 @@ postworld.directive('pwHeight',
 			}
 			var updateProportion = function(){
 				var elementWidth = element[0].clientWidth;
-				var prop = parseInt(attrs.heightValue);
+				var prop = parseFloat(attrs.heightValue);
 				var elementHeight = elementWidth/prop;
 				element[0].style['height'] = elementHeight + "px";
 			}

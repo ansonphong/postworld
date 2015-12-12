@@ -195,8 +195,6 @@ function pw_feed( $vars = array() ){
 		$feed['query'] = $pw['query'];
 	}
 
-	
-
 	/**
 	 * Set the default query variables
 	 * To create a predictable and good performance result.
@@ -817,7 +815,11 @@ function pw_print_menu_feed( $vars ){
  */
 function pw_get_menu_posts( $menu, $fields ){
 
-	$menu_slug = wp_get_nav_menu_object( $menu )->slug;
+	$menu_obj = wp_get_nav_menu_object( $menu );
+	if( empty($menu_obj) )
+		return false;
+
+	$menu_slug = $menu_obj->slug;
 	
 	$query = array(
 		"post_type"			=>	"nav_menu_item",
