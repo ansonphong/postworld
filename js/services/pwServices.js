@@ -1302,11 +1302,11 @@ postworld.service('pwPostOptions',
 	return{
 		taxTerms: function( $scope, taxObj ){
 
-			if ( typeof taxObj === 'undefined' )
+			if( typeof taxObj === 'undefined' )
 				taxObj = "tax_terms";
 
 			var args = $pw.config.post_options.taxonomy_outline;
-			$pwData.taxonomies_outline_mixed( args ).then(
+			$pwData.taxOutlineMixed( args ).then(
 				// Success
 				function(response) {
 					$log.debug('pwPostOptions.taxTerms : RESPONSE : ', response); 

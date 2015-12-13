@@ -20,7 +20,7 @@ get_header(); ?>
 
 <script>
 	var post_types = <?php echo json_encode( get_user_post_types() ); ?>; // {"post":"Post","attachment":"Media"} ;
-	var taxonomy = <?php echo json_encode( taxonomies_outline() ); ?>;
+	var taxonomy = <?php echo json_encode( pw_tax_outline() ); ?>;
 	<?php
 		$post_id = '178424';
 		$post_fields = array('ID','post_title', 'post_name','post_type', 'post_excerpt', 'taxonomy(category)[slug]'); //taxonomy(category)[slug]

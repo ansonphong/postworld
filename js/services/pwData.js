@@ -377,10 +377,10 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var params = {args:args};
 			return this.wpAjax('pw_get_post_edit',params);
 		},
-		taxonomies_outline_mixed: function(args) {
-			$log.debug('pwData.taxonomies_outline_mixed',args);
+		taxOutlineMixed: function(args) {
+			$log.debug('pwData.taxOutlineMixed : REQUEST',args);
 			var params = {args:args};
-			return this.wpAjax('taxonomies_outline_mixed',params);
+			return this.wpAjax('pw_tax_outline_mixed',params);
 		},
 		userQueryAutocomplete: function(args) {
 			$log.debug('pwData.userQueryAutocomplete',args);

@@ -1,17 +1,18 @@
 @font-face {
 	font-family: 'Postworld-Icons';
-	src:url('fonts/Postworld-Icons.eot?xa3b5n');
-	src:url('fonts/Postworld-Icons.eot?xa3b5n#iefix') format('embedded-opentype'),
-		url('fonts/Postworld-Icons.woff2?xa3b5n') format('woff2'),
-		url('fonts/Postworld-Icons.ttf?xa3b5n') format('truetype'),
-		url('fonts/Postworld-Icons.woff?xa3b5n') format('woff'),
-		url('fonts/Postworld-Icons.svg?xa3b5n#Postworld-Icons') format('svg');
+	src:url('fonts/Postworld-Icons.eot?qdrv1a');
+	src:url('fonts/Postworld-Icons.eot?qdrv1a#iefix') format('embedded-opentype'),
+		url('fonts/Postworld-Icons.woff2?qdrv1a') format('woff2'),
+		url('fonts/Postworld-Icons.ttf?qdrv1a') format('truetype'),
+		url('fonts/Postworld-Icons.woff?qdrv1a') format('woff'),
+		url('fonts/Postworld-Icons.svg?qdrv1a#Postworld-Icons') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
 
 [class^="pwi-"], [class*=" pwi-"] {
-	font-family: 'Postworld-Icons';
+    /* use !important to prevent issues with browser extensions that change fonts */
+	font-family: 'Postworld-Icons' !important;
 	speak: none;
 	font-style: normal;
 	font-weight: normal;
@@ -51,13 +52,13 @@
 .pwi-search:before {
 	content: "\f002";
 }
-.pwi-th-large-2:before {
+.pwi-th-large:before {
 	content: "\f009";
 }
 .pwi-th:before {
 	content: "\f00a";
 }
-.pwi-th-list-2:before {
+.pwi-th-list:before {
 	content: "\f00b";
 }
 .pwi-check:before {
@@ -185,9 +186,6 @@
 }
 .pwi-spinner-1:before {
 	content: "\f110";
-}
-.pwi-flag-o:before {
-	content: "\f11d";
 }
 .pwi-code-fork:before {
 	content: "\f126";
@@ -801,17 +799,8 @@
 .pwi-play2:before {
 	content: "\e624";
 }
-.pwi-th-small:before {
-	content: "\e61f";
-}
 .pwi-nav-round:before {
 	content: "\e638";
-}
-.pwi-th-list:before {
-	content: "\e6ca";
-}
-.pwi-th-large:before {
-	content: "\e6cc";
 }
 .pwi-home:before {
 	content: "\e65c";

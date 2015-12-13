@@ -94,11 +94,12 @@ $vars['instance'] = pw_random_string();
 
 		<!--///// MENU /////-->
 		<div  ng-show="<?php echo $vars["ng_model"] ?>.mode == 'menu'">
-			<h3><i class="pwi-nav"></i> Select Menu</h3>
+			<label class="inner"><i class="pwi-nav"></i> Select Menu</label>
 			<?php
 				echo pw_select_menus( array(
 					'options_model'	=>	'options.menus',
 					'ng_model'	=>	$vars["ng_model"].'.menu_vars.menu_id',
+					'class' => 'labeled'
 					));
 			?>
 		</div>
@@ -169,7 +170,6 @@ $vars['instance'] = pw_random_string();
 			$scope.$watch('<?php echo $vars["ng_model"] ?>.mode', function(value){
 				//$log.debug( value );
 				// Switch Query Vars
-
 				switch( value ){
 					case 'this_post':
 						$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post = true;
@@ -177,7 +177,7 @@ $vars['instance'] = pw_random_string();
 						break;
 
 					case 'query':
-						$scope.<?php echo $vars["ng_model"] ?>.slider.query_vars.this_post_only = false;
+						$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post_only = false;
 						break;
 
 				}

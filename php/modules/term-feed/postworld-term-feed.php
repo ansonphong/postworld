@@ -29,6 +29,7 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 
 	// Setup Feed Query
 	$vars = array(
+		'template' => 'term-feed-'.$atts['template'],
 		'terms' => array(
 			'taxonomies'    =>  array( $atts['taxonomy'] ),
 			'args'          =>  array(
@@ -66,6 +67,7 @@ function pw_term_feed_shortcode( $atts, $content = null, $tag ) {
 
 add_shortcode( 'terms-feed', 'pw_term_feed_shortcode' );
 add_shortcode( 'term-feed', 'pw_term_feed_shortcode' );
+add_shortcode( 'list-terms', 'pw_term_feed_shortcode' );
 
 function pw_print_term_feed( $vars ){
 

@@ -63,10 +63,9 @@ function pw_query_terms( $args ){
 
 }
 
-
 ////////// TAXONOMIES OUTLINE MIXED //////////
-function taxonomies_outline_mixed( $taxonomy_options ){
-	// Wrapper function for taxonomies_outline() Method
+function pw_tax_outline_mixed( $taxonomy_options ){
+	// Wrapper function for pw_tax_outline() Method
 	// Takes mixed options per taxonomy
 	// Returns a single object
 	$tax_outline_mixed = array();
@@ -75,14 +74,12 @@ function taxonomies_outline_mixed( $taxonomy_options ){
 	foreach ($taxonomy_options as $taxonomy => $options) {
 		if( !isset( $options['filter'] ) )
 			$options['filter'] = true;
-
-		$tax = taxonomies_outline( array($taxonomy), $options['max_depth'], $options['fields'], $options['filter'] );
+		$tax = pw_tax_outline( array($taxonomy), $options['max_depth'], $options['fields'], $options['filter'] );
 		$tax_outline_mixed = array_merge( $tax_outline_mixed, $tax );//array_push( $tax_outline_mixed, $tax_outline );
 	}
 	
 	return $tax_outline_mixed;
 }
-
 
 ////////// CALLBACK FUNCTION //////////
 	// Get Taxonomy Term Meta
@@ -93,15 +90,15 @@ function taxonomies_outline_mixed( $taxonomy_options ){
 		return $term_meta;
 	}
 
-
 ////////// TAXONOMIES OUTLINE //////////
-function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filter = false ) {
+function pw_tax_outline($taxonomies, $max_depth = 2, $fields = 'all', $filter = false ) {
 
-
+	//pw_log('pw_tax_outline():taxonomies', $taxonomies );
+	//pw_log('pw_tax_outline():fields', $fields );
 
 	// If Taxonomies is not defined or 'all'
 	// Get all Public Taxonomies
-	if (!$taxonomies || $taxonomies == 'all') {
+	if( empty($taxonomies) || $taxonomies === 'all') {
 		// QUERY TAXONOMIES
 		$taxonomy_args = array('public' => true);
 		$taxonomies = get_taxonomies($taxonomy_args, 'names');
@@ -145,12 +142,21 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 		// Sanitize numeric values
 		$tax_terms = pw_sanitize_numeric_array_of_a_arrays( $tax_terms );
 
-		//pw_log( json_encode($tax_terms) );
+		//pw_log('pw_tax_outline():tax_terms', $tax_terms );
 
-		$args = array('object' => $tax_terms, 'fields' => $fields, 'id_key' => 'term_id', 'parent_key' => 'parent', 'child_key' => 'terms', 'max_depth' => $max_depth, 'callback' => $callback, 'callback_fields' => $callback_fields, );
+		$tree_vars = array(
+			'object' => $tax_terms,
+			'fields' => $fields,
+			'id_key' => 'term_id',
+			'parent_key' => 'parent',
+			'child_key' => 'terms',
+			'max_depth' => $max_depth,
+			'callback' => $callback,
+			'callback_fields' => $callback_fields
+			);
 
-		$tax_outline[$taxonomy]['terms'] = wp_tree_obj($args);
-
+		$tax_outline[$taxonomy]['terms'] = wp_tree_obj($tree_vars);
+		//pw_log('pw_tax_outline():tax_terms - post tree', $tax_outline[$taxonomy]['terms'] );
 
 		///// SET LABEL VALUES /////
 		// Set the Outline Values
@@ -160,7 +166,8 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 	}
 
 	////////// OUTLINE FILTERS //////////
-	if ($filter != false){
+	//pw_log( 'filter', json_encode($filter) );
+	if( !empty($filter) ){
 		
 		///// LABEL GROUP FILTER /////
 		// Filters up to one level of children
@@ -169,7 +176,7 @@ function taxonomies_outline($taxonomies, $max_depth = 2, $fields = 'all', $filte
 		// For each included $field, ie. parent_slug, parent_name, parent_term_id, etc.
 		// For use with AngularJS "label group" <select> <options> comprehension expression 
 
-		if ( $filter == "label_group" ){
+		if( $filter === "label_group" ){
 			// FOR EACH TAXONOMY
 			foreach ( $tax_outline as $taxonomy => $tax_value ) {
 				

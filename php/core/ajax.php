@@ -603,21 +603,17 @@ add_action("wp_ajax_nopriv_user_query_autocomplete", "user_query_autocomplete_an
 add_action("wp_ajax_user_query_autocomplete", "user_query_autocomplete_anon");
 
 
-
-
 //---------- TAXONOMIES OUTLINE MIXED ----------//
-function taxonomies_outline_mixed_anon(){
+function pw_tax_outline_mixed_anon(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$pw_args = $args['args'];
 
-	$taxonomies_outline_mixed = taxonomies_outline_mixed( $pw_args );
+	$tax_outline_mixed = pw_tax_outline_mixed( $pw_args );
 	
-	pwAjaxRespond( $taxonomies_outline_mixed );
+	pwAjaxRespond( $tax_outline_mixed );
 }
-add_action("wp_ajax_nopriv_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
-add_action("wp_ajax_taxonomies_outline_mixed", "taxonomies_outline_mixed_anon");
-
-
+add_action("wp_ajax_nopriv_pw_tax_outline_mixed", "pw_tax_outline_mixed_anon");
+add_action("wp_ajax_pw_tax_outline_mixed", "pw_tax_outline_mixed_anon");
 
 
 //---------- SAVE POST ADMIN ----------//
