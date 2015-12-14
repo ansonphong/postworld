@@ -20,12 +20,12 @@
 			'value' => 'window-percent'
 			),
 		array(
-			'label' => 'Pixels',
-			'value' => 'pixels'
-			),
-		array(
 			'label' => 'Proportional',
 			'value' => 'proportion'
+			),
+		array(
+			'label' => 'Pixels',
+			'value' => 'pixels'
 			),
 		);
 ?>
