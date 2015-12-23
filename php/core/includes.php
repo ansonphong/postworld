@@ -36,13 +36,18 @@ function postworld_includes( $args ){
 	// Add Additional Angular Modules
 	$pw['angularModules'] = apply_filters( 'pw_angular_modules', $pw['angularModules'] );
 
+	if( is_admin() ){
+		$pw['angularModules'][] = 'colorpicker.module';
+	}
+
 	// Add Angular Modules to the Postworld Inject array
 	$pw['inject'] = array_merge( $pw['inject'], $pw['angularModules'] );
 
 	// Add Glyphicons for Admin
 	if( is_admin() ){
 		array_push( $pw['inject'],
-			'glyphicons-halflings'
+			'glyphicons-halflings',
+			'angular-bootstrap-colorpicker'
 			);
 	}
 
@@ -481,6 +486,14 @@ function postworld_includes( $args ){
 
 		add_action( 'wp_footer', 'pw_print_scripts_package_touch' );
 
+	}
+
+	// ANGULAR BOOTSTRAP COLORPICKER
+	if( in_array( 'angular-bootstrap-colorpicker', $pw['inject'] ) ){
+		wp_enqueue_script( 'angular-bootstrap-colorpicker-js',
+			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js' );
+		wp_enqueue_style( 'angular-bootstrap-colorpicker-css',
+			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css' );
 	}
 
 	// Include Admin Scripts if in Admin

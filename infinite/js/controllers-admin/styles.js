@@ -28,8 +28,8 @@ postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
 		template: '<div ng-include="itemTemplateUrl"></div>',
 		link: function( $scope, element, attrs ) {
 			
-			$log.debug( 'pwAdminStyleInput : inputObj', $scope.inputObj );
-			$log.debug( 'pwAdminStyleInput : inputModel', $scope.inputModel );
+			//$log.debug( 'pwAdminStyleInput : inputObj', $scope.inputObj );
+			//$log.debug( 'pwAdminStyleInput : inputModel', $scope.inputModel );
 
 			var templateUrl = pwData.getTemplate({
 				subdir:'admin',
