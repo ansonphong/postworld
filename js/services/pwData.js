@@ -230,18 +230,7 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 		*
 		* @returns {string} The URL of the requested template, or `false` if it doesn't exist.
 		*/
-		getTemplate: function ( meta ) { // ( subdir, post_type, view)
-			// if templates object already exists, then get value, if not, then retrieve it first
-
-			// Setup Meta (lineage)
-			/*
-			var meta = {
-				subdir: subdir,
-				post_type: post_type,
-				view: view,
-			};
-			*/
-
+		getTemplate: function( meta ){
 			///// Set Defaults /////
 			// Subdirectory
 			if( _.isUndefined(meta.subdir) )
@@ -257,12 +246,8 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 			var template = getTemplate( this, meta );
 			
 			// If it exists, add the version number to the URL
-
-			// TODO - Filter the version here, or get a filtered verion, alternate value
-
 			if( template )
-				template = template + "?ver=" + $pw['info']['theme_version']; // ( this, subdir, post_type, name )
-			// Otherwire return false
+				template = template + "?ver=" + $pw['info']['theme_version'];
 			else
 				return false;
 
@@ -271,7 +256,6 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 				template = template.replace('http://', 'https://');
 
 			return template;
-
 
 		},
 		

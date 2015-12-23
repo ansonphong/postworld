@@ -17,6 +17,82 @@ postworldAdmin.directive( 'pwAdminStyle', [ function(){
     };
 }]);
 
+postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
+	return {
+		restrict: 'A',
+		scope: {
+			inputObj:'=pwAdminStyleInput',
+			inputModel:'=',
+			options:'=inputOptions'
+		},
+		template: '<div ng-include="itemTemplateUrl"></div>',
+		link: function( $scope, element, attrs ) {
+			
+			$log.debug( 'pwAdminStyleInput : inputObj', $scope.inputObj );
+			$log.debug( 'pwAdminStyleInput : inputModel', $scope.inputModel );
+
+			var templateUrl = pwData.getTemplate({
+				subdir:'admin',
+				view:'style-input-' + $scope.inputObj.input
+			});
+			$scope.itemTemplateUrl = templateUrl;
+
+
+			$scope.backgroundColor = function( color ){
+
+				///// LESS VARIABLES /////
+				// If it's a less variable
+				if( _.isString(color) && color.charAt(0) == '@' ){
+					// Trim whitespace
+					var searchKey = color.trim();
+					// Get all characters in the string 
+					searchKey = color.substring(1);
+					// Set empty search value
+					var searchValue = '';
+					// For performance optimization
+					var keepGoing = true;
+					// Iterate through TYPES
+					if( keepGoing )
+					angular.forEach( $scope.$parent.pwStyles, function( typeValues, typeKey ){
+						// Iterate through SECTIONS
+						if( keepGoing )
+						angular.forEach( typeValues, function( sectionValues, sectionKey ){
+							// Iterate through PROPERTIES
+							if( keepGoing )
+							angular.forEach( sectionValues, function( propertyValue, propertyKey ){
+								// IF the property key matches
+								if( propertyKey == searchKey ){
+									searchValue = propertyValue;
+									keepGoing = false;
+								}
+							});
+						});
+					});
+					color = searchValue;
+				}
+
+				///// STYLE OBJECT /////
+				var style = {
+					background: color,
+				};
+
+				///// EMPTY /////
+				if( _.isEmpty( color ) ){
+					style.background = '#fff';
+					style.border = "1px dashed #ccc";
+				}
+
+				return style;
+
+			}
+
+
+
+
+		}
+	};
+})
+
 postworldAdmin.controller('pwAdminStyleCtrl',
 	[ '$scope', '$log', '$window', '$parse', 'iData', '_', 'iOptionsData',
 	function ( $scope, $log, $window, $parse, $iData, $_, $iOptionsData ) {
@@ -73,53 +149,7 @@ postworldAdmin.controller('pwAdminStyleCtrl',
 	}
 
 
-	$scope.backgroundColor = function( color ){
-
-		///// LESS VARIABLES /////
-		// If it's a less variable
-		if( _.isString(color) && color.charAt(0) == '@' ){
-			// Trim whitespace
-			var searchKey = color.trim();
-			// Get all characters in the string 
-			searchKey = color.substring(1);
-			// Set empty search value
-			var searchValue = '';
-			// For performance optimization
-			var keepGoing = true;
-			// Iterate through TYPES
-			if( keepGoing )
-			angular.forEach( $scope.pwStyles, function( typeValues, typeKey ){
-				// Iterate through SECTIONS
-				if( keepGoing )
-				angular.forEach( typeValues, function( sectionValues, sectionKey ){
-					// Iterate through PROPERTIES
-					if( keepGoing )
-					angular.forEach( sectionValues, function( propertyValue, propertyKey ){
-						// IF the property key matches
-						if( propertyKey == searchKey ){
-							searchValue = propertyValue;
-							keepGoing = false;
-						}
-					});
-				});
-			});
-			color = searchValue;
-		}
-
-		///// STYLE OBJECT /////
-		var style = {
-			background: color,
-		};
-
-		///// EMPTY /////
-		if( _.isEmpty( color ) ){
-			style.background = '#fff';
-			style.border = "1px dashed #ccc";
-		}
-
-		return style;
-
-	}
+	
 	
 	
 }]);

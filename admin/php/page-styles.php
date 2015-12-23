@@ -12,18 +12,13 @@
 	<div
 		pw-admin-style
 		ng-controller="pwStylesDataCtrl">
-
 		<h1>
 			<i class="pwi-brush"></i>
 			Styles
 		</h1>
-
 		<hr class="thick">
 
-		<!--<pre>{{ pwStyleStructure | json }}</pre>-->
-
 		<!-- ////////// VARIABLES ////////// -->
-
 		<div ng-repeat="type in pwStyleStructure">
 
 			<!-- SAVE BUTTON -->
@@ -48,56 +43,24 @@
 						
 						<!-- PROPERTIES -->
 						<div style="margin-top:10px;">
-							
 							<table>
-							
 								<tr ng-repeat="property in section.values">
-
-									<!-- PROPERTY VALUE ISN'T REGISTERING ON NG-REPEAT??? -->
 
 									<!-- EDITOR -->
 									<td ng-show="showProperty( property, 'edit' )">
 										{{ property.name }}
 										<div class="font-nano">@{{ property.key }}</div>
 									</td>
-									<td ng-show="showProperty( property, 'edit' )" style="position:relative;">
-										
-										<!--
-											TODO : 
-											Here what we want to do is
-											use a custom directive to ng-include
-											a transcluded scope templates
-											for each of the different input types.
-										-->
-
-										<!-- COLOR -->
+									<td
+										ng-show="showProperty( property, 'edit' )"
+										style="position:relative;">
+										<!-- INCLUDE INCLUDE TEMPLATE : FROM /templates/admin/style-input-{{property.input}} -->
 										<div
-											class="inner-right color-box"
-											ng-show="showProperty( property, 'edit-color' )"
-											ng-style="backgroundColor( pwStyles[ type.key ][ section.key ][ property.key ] )">
-										</div>
-
-										<!-- ICON -->
-										<div
-											class="inner-right inner-icon"
-											ng-show="property.icon">
-											<i ng-class="property.icon"></i>
-										</div>
-
-										<!-- TEXT -->
-										<input
-											ng-show="property.input == 'text' || property.input == 'color'"
-											type="text"
-											ng-model="pwStyles[ type.key ][ section.key ][ property.key ]">
-
-										<!-- SELECT -->
-										<select
-											ng-show="property.input == 'select'"
-											ng-options="value for value in {{ property.ng_options }}"
-											ng-model="pwStyles[ type.key ][ section.key ][ property.key ]">
+											pw-admin-style-input="property"
+											input-options="options"
+											input-model="pwStyles[ type.key ][ section.key ]">
 											
-										</select>
-										
+										</div>
 									</td>
 									<td ng-show="showProperty( property, 'edit' )">
 										<div class="font-micro">
