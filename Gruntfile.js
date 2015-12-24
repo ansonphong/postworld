@@ -73,7 +73,7 @@ module.exports = function(grunt) {
             // PHP.js
             'lib/php.js/php.js',
             // Angular UI Bootstrap
-            'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js', // Angular UI Boostrap
+            'lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.14.3.min.js', // Angular UI Boostrap
             
             ///// THIRD PARTY ANGULAR MODULES /////
             // Angular Infinite Scroll
@@ -98,6 +98,7 @@ module.exports = function(grunt) {
           	'lib/'+angularVersion+'/angular-resource.min.js',
             'lib/'+angularVersion+'/angular-touch.min.js',
             'lib/'+angularVersion+'/angular-aria.min.js',
+            'lib/'+angularVersion+'/angular-animate.min.js',
 
           	///// POSTWORLD /////
           	'js/*.js',

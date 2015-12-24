@@ -31,14 +31,21 @@ postworld.controller( 'pwUiCtrl',
 	}
 
 	// For use with ng-click
-	$scope.uiToggleView = function( viewId ){
-		// If the view is registered
-		if( $_.objExists( $scope, 'uiViews.'+viewId ) )
-			// Invert the value
-			$scope.uiViews[viewId] = !$scope.uiViews[viewId];
-		// If the view is not registered, start by toggling on
-		else
-			$scope.uiViews[viewId] = true;
+	$scope.uiToggleView = function( viewId, timeout ){
+		if( _.isUndefined( timeout ) )
+			timeout = 0;
+		
+		// Timeout to allow click/select events to register before hiding
+		$timeout( function(){
+			// If the view is registered
+			if( $_.objExists( $scope, 'uiViews.'+viewId ) )
+				// Invert the value
+				$scope.uiViews[viewId] = !$scope.uiViews[viewId];
+			// If the view is not registered, start by toggling on
+			else
+				$scope.uiViews[viewId] = true;
+		}, timeout );
+		
 	}
 
 	// For use with ng-show / ng-hide

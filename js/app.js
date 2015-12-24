@@ -44,6 +44,7 @@ pw.angularModules = pw.angularModules.concat([
 	'ngSanitize',
 	'ngTouch',
 	'ngAria',
+	'ngAnimate',
 	'ui.bootstrap',
 	'monospaced.elastic',
 	'angular-parallax',

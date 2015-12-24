@@ -61,10 +61,11 @@
 				type="text"
 				ng-model="searchQuery"
 				placeholder="{{ labels.search }}"
-				typeahead="qPost.post_title as qPost.post_title for qPost in getPosts($viewValue) | filter:$viewValue"
+				uib-typeahead="qPost.post_title as qPost.post_title for qPost in getPosts($viewValue)"
 				typeahead-loading="loadingQuery"
 				typeahead-on-select="addPostParent($item);"
-				ng-blur="uiToggleView('searchInput');"
+				typeahead-focus-first="false"
+				ng-blur="uiToggleView('searchInput',100)"
 				class="input-icon-left">
 		</div>
 	</div>
