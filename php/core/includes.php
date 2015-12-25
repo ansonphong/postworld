@@ -23,7 +23,7 @@ function postworld_includes( $args ){
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.3.13';
+		$angular_version = 'angular-1.4.6';
 
 	// Add injectors from Site Globals
 	$pw['inject'] = ( isset( $pwSiteGlobals['inject'] ) ) ?
@@ -220,13 +220,13 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'AngularJS-Aria',
 			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-aria.min.js');
 
-		//wp_enqueue_script( 'AngularJS-Animate',
-		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular-animate.min.js');
+		wp_enqueue_script( 'AngularJS-Animate',
+			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-animate.min.js');
 
 		///// ANGULAR THIRD PARTY MODULES /////
 		// ANGULAR UI : BOOTSTRAP
 		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.12.0.min.js' );
+			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.14.3.min.js' );
 
 		// ANGULAR : INFINITE SCROLL
 		wp_enqueue_script( 'angularJS-nInfiniteScroll', POSTWORLD_URI.'/lib/ng-infinite-scroll/ng-infinite-scroll-1.2.js', $angularDep );
