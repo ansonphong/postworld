@@ -88,7 +88,15 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 
 		background: $window.pw.background,	// Used to represent the current background object
 
-		users: $window.pw.users,			
+		users: $window.pw.users,	
+
+		rest:{
+			namespace: $pw.config.rest_api.namespace+'/v1',
+		},
+
+		restUrl: function( append ){
+			return $pw.config.paths.wp_url+'/wp-json/'+this.rest.namespace+append;
+		},
 
 		// Set Nonce Value for Wordpress Security
 		setNonce: function(val) {
@@ -172,7 +180,8 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			var params = { url:url, args:args};
 			return this.wpAjax('o_embed',params);
 		},
-		pw_get_posts: function( params ) {
+
+		getPosts: function( params ) {
 			/*
 			 params = {
 				post_ids : 	[ array ],
@@ -180,17 +189,9 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 				options: 	{ object }
 			 } 
 			*/
-			// Legacy method
-			//return this.wpAjax('pw_get_posts',params);
-
-			$log.debug('pwData.getPosts:REST : PARAMS',params);
-			
-			// Put this in a global var
-			var restNamespace = $pw.config.rest_api.namespace+'/v1';
-			var restPath = $pw.config.paths.wp_url+'/wp-json/'+restNamespace;
-
-			var url = restPath +'/posts/';
-			var config = {
+			$log.debug('pwData.getPosts : PARAMS',params);
+			var url = this.restUrl('/posts'),
+				config = {
 				params:{
 					ids: params.post_ids.join(),
 					fields: params.fields
@@ -198,11 +199,10 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			};
 			return $http.get(url,config).then(
 				function(response){
-					$log.debug( 'pwData.getPosts:REST : RESPONSE', response.data );
+					$log.debug( 'pwData.getPosts : RESPONSE', response.data );
 					return response;
 				},
 				function(response){
-					// Failed
 					$log.error('REST API Failed @ ' + url, params);
 				});
 

@@ -415,7 +415,7 @@ postworld.controller('pwFeedController',
 		$log.debug( "pw_get_posts : " , params );
 
 		$scope.setBusy(true);
-		$pwData.pw_get_posts( params ).then(
+		$pwData.getPosts( params ).then(
 			// Success
 			function(response) {
 				if (response.status === undefined) {
