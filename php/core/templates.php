@@ -141,6 +141,9 @@ function pw_get_ng_template( $vars = array() ){
  */
 function pw_get_ng_template_contents( $template_path, $template_id, $append_id = '' ){
 	
+	if( empty( $template_path ) || !file_exists( $template_path ) )
+		return false;
+	
 	$file_contents = file_get_contents( $template_path );
 
 	if( empty( $file_contents ) )

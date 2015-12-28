@@ -163,8 +163,12 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 	if( $thumbnail_id ){
 		$thumbnail_url = wp_get_attachment_url( $thumbnail_id ,'full');
 	}
-	// If there is no set 'featured image', get fallback - first image in post
+	// If there is no set 'featured image'
 	else{
+		return array();
+
+		/*
+		// Get fallback - first image in post
 		$first_image_obj = first_image_obj( $post_id );
 		// If there is an image in the post
 		if( $first_image_obj ){
@@ -173,50 +177,8 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		else{
 			$thumbnail_url = null;
 		}
-		/*
-		// If there is no image in the post, set fallbacks
-		else {
-			///// DEFAULT FALLBACK IMAGES /////
-
-			// SETUP DEFAULT IMAGE FILE NAMES : ...jpg
-			$link_format =  get_post_format( $post_id );
-			$default_type_format_thumb_filename = 	'default-'.$post['post_type'].'-'.$link_format.'-thumb.jpg';
-			$default_format_thumb_filename = 		'default-'.$link_format.'-thumb.jpg';
-			$default_thumb_filename = 				'default-thumb.jpg';
-
-			// SETUP DEFAULT IMAGE PATHS : /home/user/...
-			$theme_images_dir = 				$pw_paths['THEME_PATH'].$pw_paths['IMAGES_PATH'];
-			$default_type_format_thumb_path = 	$theme_images_dir . $default_type_format_thumb_filename;
-			$default_format_thumb_path = 		$theme_images_dir . $default_format_thumb_filename;
-			$default_thumb_path = 				$theme_images_dir . $default_thumb_filename;
-			
-			// SETUP DEFAULT IMAGE urlS : http://...
-			$theme_images_url = 				$pw_paths['THEME_URL'].$pw_paths['IMAGES_PATH'];
-			$default_type_format_thumb_url = 	$theme_images_url . $default_type_format_thumb_filename;
-			$default_format_thumb_url = 		$theme_images_url . $default_format_thumb_filename;
-			$default_thumb_url = 				$theme_images_url . $default_thumb_filename;
-			
-			// SET DEFAULT POST *TYPE + FORMAT* IMAGE PATH
-			if ( file_exists( $default_type_format_thumb_path ) ) {
-				$thumbnail_url = $default_type_format_thumb_url;
-			}
-			// SET DEFAULT POST *FORMAT* IMAGE PATH
-			elseif ( file_exists( $default_format_thumb_path ) ) {
-				$thumbnail_url = $default_format_thumb_url;
-			}
-			// SET DEFAULT POST IMAGE PATH
-			elseif ( file_exists( $default_thumb_path ) ) {
-				$thumbnail_url = $default_thumb_url;
-			}
-			// SET DEFAULT POST IMAGE PATH TO PLUGIN DEFAULT
-			else{
-				$thumbnail_url = $pw_paths['PLUGINS_URL'].$pw_paths['IMAGES_PATH'].$default_thumb_filename;
-			}
-
-		} // END else
 		*/
-
-	}// END else
+	}
 
 	///// PROCESS IMAGES /////
 	// Load in registered images attributes
