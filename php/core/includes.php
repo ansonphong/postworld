@@ -737,6 +737,11 @@ function pwSiteGlobals_include(){
 	///// FIELD MODEL /////
 	$pwSiteGlobals["fields"] = pw_field_models();
 
+	///// REST NAMESPACE /////
+	$pwSiteGlobals["rest_api"] = array(
+		'namespace' => pw_rest_namespace(),
+	);
+
 	///// PRINT JAVASCRIPT /////
 	// SITE GLOBALS
 	$pwJs  = "";

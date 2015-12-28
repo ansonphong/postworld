@@ -5,8 +5,8 @@
  * @requires $q
  * @todo Rename to $pwData
  */
-postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
-	function ( $resource, $q, $log, $window, $pw, $_ ) {	  
+postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$pw', '_',
+	function ( $resource, $http, $q, $log, $window, $pw, $_ ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
@@ -180,13 +180,32 @@ postworld.factory('pwData', [ '$resource', '$q', '$log', '$window', '$pw', '_',
 				options: 	{ object }
 			 } 
 			*/
-			
-			// $log.debug('pwData.pw_get_posts range:',idBegin, idEnd);
-			// Set Fields
-			//var params = { post_ids:postIDs, fields:fields };
+			// Legacy method
+			//return this.wpAjax('pw_get_posts',params);
 
-			$log.debug('pwData.pw_get_posts',params);
-			return this.wpAjax('pw_get_posts',params);
+			$log.debug('pwData.getPosts:REST : PARAMS',params);
+			
+			// Put this in a global var
+			var restNamespace = $pw.config.rest_api.namespace+'/v1';
+			var restPath = $pw.config.paths.wp_url+'/wp-json/'+restNamespace;
+
+			var url = restPath +'/posts/';
+			var config = {
+				params:{
+					ids: params.post_ids.join(),
+					fields: params.fields
+				}
+			};
+			return $http.get(url,config).then(
+				function(response){
+					$log.debug( 'pwData.getPosts:REST : RESPONSE', response.data );
+					return response;
+				},
+				function(response){
+					// Failed
+					$log.error('REST API Failed @ ' + url, params);
+				});
+
 		},
 		pw_get_templates: function(templates_object) {
 			// TODO Optimize by running it once and caching it
