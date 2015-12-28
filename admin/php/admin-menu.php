@@ -119,13 +119,22 @@ function pw_admin_bar_menu($wp_admin_bar){
 		'parent'	=>	$menu_name,
 	));
 
-	// Add plugins to the main frontend admin menu
+	// Add 'Plugins' to the main frontend admin menu
 	array_push($args,array(
 		'id'		=>	'plugins',
 		'title'		=>	'Plugins',
 		'href'		=>	get_admin_url(null,'plugins.php'),
 		'parent'	=>	'site-name',
 	));
+
+	// Add 'Media' to the main frontend admin menu
+	array_push($args,array(
+		'id'		=>	'media',
+		'title'		=>	'Media',
+		'href'		=>	get_admin_url(null,'upload.php'),
+		'parent'	=>	'site-name',
+	));
+
 
 	// Filter here for themes to add / modify
 	$args = apply_filters( 'pw_admin_bar_menu', $args );

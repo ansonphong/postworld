@@ -280,6 +280,12 @@ include 'php/core/embed.php';
 ////// EMBED //////
 include 'php/core/html.php';
 
+////// JSON API //////
+// Added support in WordPress 4.4
+global $wp_version;
+if( $wp_version >= 4.4 )
+	include 'php/core/rest_api.php';
+
 ////// BUDDYPRESS //////
 include 'php/core/buddypress.php';
 
