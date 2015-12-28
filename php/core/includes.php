@@ -738,9 +738,10 @@ function pwSiteGlobals_include(){
 	$pwSiteGlobals["fields"] = pw_field_models();
 
 	///// REST NAMESPACE /////
-	$pwSiteGlobals["rest_api"] = array(
-		'namespace' => pw_rest_namespace(),
-	);
+	if( function_exists('pw_rest_namespace') )
+		$pwSiteGlobals["rest_api"] = array(
+			'namespace' => pw_rest_namespace(),
+		);
 
 	///// PRINT JAVASCRIPT /////
 	// SITE GLOBALS
