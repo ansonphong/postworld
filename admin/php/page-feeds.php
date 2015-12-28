@@ -180,7 +180,7 @@
 
 
 				<!-- ///// EDIT ITEMS ///// -->
-				<div ng-show="showView('editItem')">
+				<div class="well" ng-show="showView('editItem')">
 
 					<h3><i class="pwi-gear"></i> <?php ___('feeds.item_title'); ?></h3>
 
@@ -277,36 +277,57 @@
 
 					</div>
 
-					<hr class="thin">
+					<!-- QUERY -->
+					<div class="well">
+						<h3
+							tooltip="{{ selectedItem.query | json }}"
+							tooltip-popup-delay="333">
+							<i class="pwi-search"></i> Query
+						</h3>
 
-					<h3
-						tooltip="{{ selectedItem.query | json }}"
-						tooltip-popup-delay="333">
-						<i class="pwi-search"></i> Query
-					</h3>
+						<?php echo pw_feed_query_options( array( 'ng_model' => 'selectedItem' ) ); ?>
+					</div>
 
-					<?php echo pw_feed_query_options( array( 'ng_model' => 'selectedItem' ) ); ?>
+					<!-- TEMPLATE -->
+					<div class="well">
+						<h3><i class="pwi-cube"></i> <?php ___('feeds.view.title'); ?></h3>
+						<?php echo pw_feed_template_options( array( 'ng_model' => 'selectedItem' ) ); ?>
+						<hr class="thin">
+						<?php echo pw_feed_variable_options( array( 'ng_model' => 'selectedItem' ) ); ?>
+					</div>
 
-					<div class="space-2"></div>
+					<!-- SHORTCODE -->
+					<div class="well">
+						<h3>
+							<i class="pwi-code"></i>
+							Shortcode
+						</h3>
+						<input
+							type="text"
+							class="un-disabled"
+							style="width:100%;"
+							value='[pw-feed id="{{ selectedItem.id }}"]'
+							
+							select-on-click>
+					</div>
 
-					<hr class="thin">
-					
-					<h3><i class="pwi-cube"></i> <?php ___('feeds.view.title'); ?></h3>
-					<?php echo pw_feed_template_options( array( 'ng_model' => 'selectedItem' ) ); ?>
-					<hr class="thin">
-					<?php echo pw_feed_variable_options( array( 'ng_model' => 'selectedItem' ) ); ?>
-
-					<h3>
-						<i class="pwi-code"></i>
-						Shortcode
-					</h3>
-					<input
-						type="text"
-						class="un-disabled"
-						style="width:100%;"
-						value='[pw-feed id="{{ selectedItem.id }}"]'
-						
-						select-on-click>
+					<!-- FEED JSON URL -->
+					<?php
+						global $wp_version;
+						if( $wp_version >= 4.4 ):?>
+						<div class="well">
+							<h3>
+								<i class="pwi-newspaper"></i>
+								JSON Feed
+							</h3>
+							<input
+								type="text"
+								class="un-disabled"
+								style="width:100%;"
+								value='<?php echo get_site_url() ?>/wp-json/<?php echo pw_rest_namespace() ?>/v1/feed/?id={{ selectedItem.id }}'
+								select-on-click>
+						</div>
+					<?php endif ?>
 
 					<hr class="thick">
 

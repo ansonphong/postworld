@@ -280,12 +280,6 @@ include 'php/core/embed.php';
 ////// EMBED //////
 include 'php/core/html.php';
 
-////// JSON API //////
-// Added support in WordPress 4.4
-global $wp_version;
-if( $wp_version >= 4.4 )
-	include 'php/core/rest_api.php';
-
 ////// BUDDYPRESS //////
 include 'php/core/buddypress.php';
 
@@ -319,6 +313,8 @@ include 'php/modules/slider/postworld-slider.php';
 include 'php/modules/term-feed/postworld-term-feed.php';
 include 'php/modules/user-feed/postworld-user-feed.php';
 include 'php/modules/gallery/postworld-gallery.php';
+include 'php/modules/rest-api/postworld-rest-api.php';
+
 
 if( pw_module_enabled( 'devices' ) )
 	include 'php/modules/devices/postworld-devices.php';

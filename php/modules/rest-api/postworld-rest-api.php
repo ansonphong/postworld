@@ -8,7 +8,7 @@
  * /posts/?ids=151,162,253,465,684,758&fields=preview - DONE
  * /post/?id=555&fields=full - DONE
  *
- * /feed?type=post,blog&fields=preview&max=25
+ * /feed?type=post,blog&fields=preview&max=25&id=jfk84j2
  * /feed/id/jfk84j2		// Feed based on precreated feed ID
  * 
  * /feed/date/year/2015
@@ -74,11 +74,33 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 			
 		));
 
+		register_rest_route( $namespace, '/feed', array(
+			array(
+				'methods'         => WP_REST_Server::READABLE,
+				'callback'        => array( $thisClass, 'get_feed' ),
+				'args'            => array(
+					'id' => array(
+						'type' => 'integer'
+					),
+					'fields' => array(
+						'default'	=>	'preview',
+						'type' 		=>	'string',
+						'sanitize_callback' => array( $thisClass, 'sanitize_post_fields' )
+					),
+					'type' => array(
+						'default'	=>	'post',
+						'type' 		=>	'string',
+						'sanitize_callback' => array( $thisClass, 'sanitize_post_types' )
+					),
+				),
+			),
+		));
+
 	}
 
 
 	/**
-	 * Get one item from the collection
+	 * Get a post
 	 *
 	 * @param WP_REST_Request $request Full data about the request.
 	 * @return WP_Error|WP_REST_Response
@@ -105,6 +127,35 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 			return new WP_Error( 'code', __( 'Error getting posts.', 'postworld' ) );
 		else
 			return new WP_REST_Response( $posts, 200 );
+	}
+
+
+	/**
+	 * Get a feed of posts
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_feed( $request ) {
+
+		// By Feed ID
+		if( is_string( $request['id'] ) ){		
+			$feed = pw_get_feed_by_id($request['id']);
+			if( !$feed )
+				return new WP_Error( 'code', __( 'Feed ID doesn\'t exist', 'postworld' ) );
+			$query = $feed['query'];
+			$result = pw_query( $query, $request['fields'] );
+			return $result->posts;
+		}
+
+		/*
+		if( $post_exists ){
+			$post = pw_get_post( $request['id'], $request['fields'] );
+			return new WP_REST_Response( $post, 200 );
+		} else
+			return new WP_Error( 'code', __( 'Post ID doesn\'t exist', 'postworld' ) );
+		*/
+
 	}
 	
 
@@ -133,6 +184,13 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 		$ids = explode( ',', $ids_string );
 		$ids = pw_sanitize_numeric_array( $ids );
 		return $ids;
+	}
+
+	public function sanitize_post_types( $post_type ){
+		if( !post_type_exists($post_type) )
+			return 'post';
+		else
+			return $post_type;
 	}
 
 
