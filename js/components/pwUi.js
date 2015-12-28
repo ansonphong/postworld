@@ -54,12 +54,14 @@ postworld.controller( 'pwUiCtrl',
 		return $_.getObj( $scope, 'uiViews.'+viewId );
 	}
 
-	$scope.uiFocusElement = function( element ){
+	$scope.uiFocusElement = function( element, timeout ){
+		if( _.isUndefined( timeout ) )
+			timeout = 0;
 		element = angular.element( element );
 		// Timeout incase the specified element is hidden
 		$timeout( function(){
 			element.focus();
-		}, 0 );
+		}, timeout );
 	}
 
 	// For use with ng-class
