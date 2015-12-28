@@ -313,7 +313,13 @@ include 'php/modules/slider/postworld-slider.php';
 include 'php/modules/term-feed/postworld-term-feed.php';
 include 'php/modules/user-feed/postworld-user-feed.php';
 include 'php/modules/gallery/postworld-gallery.php';
-include 'php/modules/rest-api/postworld-rest-api.php';
+
+////// JSON API //////
+// Added support in WordPress 4.4
+// It won't work in earlier versions.
+global $wp_version;
+if( $wp_version >= 4.4 )
+	include 'php/modules/rest-api/postworld-rest-api.php';
 
 
 if( pw_module_enabled( 'devices' ) )

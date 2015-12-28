@@ -8,13 +8,16 @@
  * /posts/?ids=151,162,253,465,684,758&fields=preview - DONE
  * /post/?id=555&fields=full - DONE
  *
+ * /feed?id=jfk84j2 - DONE
+ *
+ * /terms/?taxonomy=category - return terms list
+ * /term_feed/?taxonomy=category - return terms list with feed objects
+ *
  * /feed?type=post,blog&fields=preview&max=25&id=jfk84j2
- * /feed/id/jfk84j2		// Feed based on precreated feed ID
- * 
+ *
  * /feed/date/year/2015
  * /feed/
  *
- * /terms/[tax]
  * /related/[post|term]/[id]/[vars]
  * 
  */
@@ -39,9 +42,9 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 
 		register_rest_route( $namespace, '/post', array(
 			array(
-				'methods'         => WP_REST_Server::READABLE,
-				'callback'        => array( $thisClass, 'get_post' ),
-				'args'            => array(
+				'methods'	=> WP_REST_Server::READABLE,
+				'callback'	=> array( $thisClass, 'get_post' ),
+				'args'		=> array(
 					'id' => array(
 						'type' => 'integer'
 					),
@@ -56,9 +59,9 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 		
 		register_rest_route( $namespace, '/posts', array(
 			array(
-				'methods'         => WP_REST_Server::READABLE,
-				'callback'        => array( $thisClass, 'get_posts' ),
-				'args'            => array(
+				'methods'	=> WP_REST_Server::READABLE,
+				'callback'	=> array( $thisClass, 'get_posts' ),
+				'args'		=> array(
 					'ids'          => array(
 						'default'  => false,
 						'type' => 'string',
@@ -76,9 +79,9 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 
 		register_rest_route( $namespace, '/feed', array(
 			array(
-				'methods'         => WP_REST_Server::READABLE,
-				'callback'        => array( $thisClass, 'get_feed' ),
-				'args'            => array(
+				'methods'	=> WP_REST_Server::READABLE,
+				'callback'	=> array( $thisClass, 'get_feed' ),
+				'args'		=> array(
 					'id' => array(
 						'type' => 'integer'
 					),
@@ -95,6 +98,23 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 				),
 			),
 		));
+
+		
+		register_rest_route( $namespace, '/terms', array(
+			array(
+				'methods'	=> WP_REST_Server::READABLE,
+				'callback'	=> array( $thisClass, 'get_terms' ),
+				'args'		=> array(
+					'taxonomy' => array(
+						'type' => 'string',
+						'default' => 'category'
+					),
+					
+
+				),
+			),
+		));
+		
 
 	}
 
@@ -148,12 +168,28 @@ class PW_REST_Controller{ //  extends WP_REST_Controller
 			return $result->posts;
 		}
 
+	}
+
+	/**
+	 * Get terms in a taxonomy.
+	 *
+	 * @param WP_REST_Request $request Full data about the request.
+	 * @return WP_Error|WP_REST_Response
+	 */
+	public function get_terms( $request ) {
+		pw_log('get terms', (array) $request);
+		return array( 'taxonomy' => $request['taxonomy'] );
+
 		/*
-		if( $post_exists ){
-			$post = pw_get_post( $request['id'], $request['fields'] );
-			return new WP_REST_Response( $post, 200 );
-		} else
-			return new WP_Error( 'code', __( 'Post ID doesn\'t exist', 'postworld' ) );
+		// By Feed ID
+		if( is_string( $request['id'] ) ){		
+			$feed = pw_get_feed_by_id($request['id']);
+			if( !$feed )
+				return new WP_Error( 'code', __( 'Feed ID doesn\'t exist', 'postworld' ) );
+			$query = $feed['query'];
+			$result = pw_query( $query, $request['fields'] );
+			return $result->posts;
+		}
 		*/
 
 	}
