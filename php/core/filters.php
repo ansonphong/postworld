@@ -1,6 +1,34 @@
 <?php
 /**
- * Set default site options.
+ * DEFAULT FEED SETTINGS
+ * Define the default settings for feeds globally
+ * This can be overridden with the Postworld › Feeds admin panel.
+ */
+add_filter( PW_OPTIONS_FEED_SETTINGS, 'pw_default_feed_settings_filter', 5 );
+function pw_default_feed_settings_filter( $feed_settings ){
+	
+	// Create default context, if it doesn't exist
+	$context_default = _get( $feed_settings, 'context.default' );
+	if( empty( $context_default ) )
+		$feed_settings = _set( $feed_settings, 'context.default', array() );
+	// Define default feed object
+	$default_feed = array(
+		'preload' => 10,
+		'load_increment' => 10,
+		);
+	// Filter to allow theme to override default settings
+	$default_feed = apply_filters( 'pw_default_feed_settings', $default_feed );
+	// Merge defaults into settings
+	$feed_settings['context']['default'] = array_replace_recursive( $default_feed, $feed_settings['context']['default']);
+
+	return $feed_settings;
+
+}
+
+/**
+ * DEFAULT SITE SETTINGS
+ * Define the default settings for the site
+ * This can be overridden with the Postworld Site admin panel.
  */
 add_filter( PW_OPTIONS_SITE, 'pw_default_site_options' );
 function pw_default_site_options( $options ){
@@ -32,7 +60,10 @@ function pw_default_site_options( $options ){
 
 
 /**
+ * MEMORY LIMIT OPTIONS
  * Options for image memory limit settings.
+ * Use 'pw_options_site_memory' filter at a higher priority than 1
+ * to override these options.
  */
 add_filter( 'pw_options_site_memory', 'pw_options_site_memory_defaults', 1 );
 function pw_options_site_memory_defaults( $options ){
@@ -86,6 +117,7 @@ function pw_options_postworld_mode_defaults( $options ){
 }
 
 function pw_default_modules( $modules ){
+	return $modules;
 }
 add_filter( PW_OPTIONS_MODULES, 'pw_default_modules' );
 
@@ -145,6 +177,7 @@ function pw_remove_gallery_field_filters(){
  *			);
  *
  */
+add_filter( 'pw_prepare_query', 'pw_prepare_date_from' );
 function pw_prepare_date_from( $query ){
 
 	// Check if 'date_from' is set
@@ -185,12 +218,13 @@ function pw_prepare_date_from( $query ){
 	return $query;
 
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_date_from' );
+
 
 
 
 
 ///// PREPARE QUERY FILTER : POST PARENT FROM /////
+add_filter( 'pw_prepare_query', 'pw_prepare_query_post_parent_from' );
 function pw_prepare_query_post_parent_from( $query ){
 	global $post;
 	/// POST PARENT FROM FIELD ///
@@ -207,11 +241,12 @@ function pw_prepare_query_post_parent_from( $query ){
 	}
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_post_parent_from' );
+
 
 
 
 ///// PREPARE QUERY FILTER : EXCLUDE POST FROM /////
+add_filter( 'pw_prepare_query', 'pw_prepare_query_exclude_posts_from' );
 function pw_prepare_query_exclude_posts_from( $query ){
 	global $post;
 	/// POST PARENT FROM FIELD ///
@@ -225,10 +260,11 @@ function pw_prepare_query_exclude_posts_from( $query ){
 	}
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_exclude_posts_from' );
+
 
 
 ///// PREPARE QUERY FILTER : INCLUDE POST FROM /////
+add_filter( 'pw_prepare_query', 'pw_prepare_query_include_posts_from' );
 function pw_prepare_query_include_posts_from( $query ){
 	global $post;
 	/// POST PARENT FROM FIELD ///
@@ -250,10 +286,11 @@ function pw_prepare_query_include_posts_from( $query ){
 
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_include_posts_from' );
+
 
 
 ///// PREPARE QUERY FILTER : AUTHOR FROM /////
+add_filter( 'pw_prepare_query', 'pw_prepare_query_author_from' );
 function pw_prepare_query_author_from( $query ){
 	global $post;
 	/// AUTHOR FROM FIELD ///
@@ -271,10 +308,11 @@ function pw_prepare_query_author_from( $query ){
 	}
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_author_from' );
+
 
 
 ///// PREPARE QUERY FILTER : RELATED /////
+add_filter( 'pw_prepare_query', 'pw_prepare_query_related_posts' );
 function pw_prepare_query_related_posts( $query ){
 	global $post;
 	/// CHECK FOR RELATED QUERY FIELD ///
@@ -300,10 +338,11 @@ function pw_prepare_query_related_posts( $query ){
 	}
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_related_posts' );
+
 
 
 ///// PREPARE QUERY FILTER : DEFAULT POST TYPE /////
+add_filter( 'pw_prepare_query', 'pw_prepare_query_default_post_type' );
 function pw_prepare_query_default_post_type( $query ){
 	// Set the post type to 'any' if not defined
 	$post_type = pw_get_obj( $query, 'post_type' );
@@ -311,6 +350,7 @@ function pw_prepare_query_default_post_type( $query ){
 		$query['post_type'] = 'any';
 	return $query;
 }
-add_filter( 'pw_prepare_query', 'pw_prepare_query_default_post_type' );
 
-?>
+
+
+

@@ -83,7 +83,7 @@
 		<!--{{taxTerms}}-->
 		
 		<h1>
-			<i class="pwi-th-small"></i>
+			<i class="pwi-th-list"></i>
 			Feeds
 			<button class="add-new-h2" ng-click="newFeed()">Add New Feed</button>
 		</h1>
@@ -115,70 +115,93 @@
 
 			<div class="pw-col-9">
 				<!-- ///// EDIT SETTINGS ///// -->
-				<div ng-show="showView('settings')">
+				<div ng-show="showView('settings')" pw-ui ui-views="{}">
 					
 					<div class="well">
 						<!-- SAVE BUTTON -->
 						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
-		
-						<h3>Contexts</h3>
+						<h3>
+							<i class="icon pwi-crosshairs"></i>
+							Contexts
+						</h3>
 
-						<table
-							width="100%"
-							pw-ui
-							ui-views="{}">
-							<tr ng-repeat="context in contexts"
-								valign="top">
-								<th scope="row" align="left" width="25%">
-									<span
-										tooltip="{{context.name}}"
-										tooltip-popup-delay="333">
-										<i class="{{context.icon}}"></i>
-										{{context.label}}
-										</th>
-									</span>
-								<td>
+						<div class="row well" ng-repeat="context in contexts">
+							<div class="col-sm-3">
 
-									<button
-										type="button"
-										class="button"
-										ng-class="uiSetClass('template_'+context.name)"
-										ng-click="uiToggleView('template_'+context.name)">
-										<i class="pwi-th-large"></i>
-										Template
-									</button>
+								<span
+									tooltip="{{context.name}}"
+									tooltip-popup-delay="333">
+									<i class="{{context.icon}}"></i>
+									{{context.label}}
+								</span>
 
-									<button
-										type="button"
-										class="button"
-										ng-class="uiSetClass('options_'+context.name)"
-										ng-click="uiToggleView('options_'+context.name)">
-										<i class="pwi-gear"></i>
-										Options
-									</button>
+							</div>
+							<div class="col-sm-9">
+								<button
+									type="button"
+									class="button"
+									ng-class="uiSetClass('template_'+context.name)"
+									ng-click="uiToggleView('template_'+context.name)">
+									<i class="pwi-th-large"></i>
+									Template
+								</button>
 
-									<div
-										ng-show="uiShowView('template_'+context.name)">
-										<?php echo pw_feed_template_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
-										<hr class="thin">
-										<?php echo pw_feed_variable_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
-										<hr class="thin">
-									</div>
+								<button
+									type="button"
+									class="button"
+									ng-class="uiSetClass('options_'+context.name)"
+									ng-click="uiToggleView('options_'+context.name)">
+									<i class="pwi-gear"></i>
+									Options
+								</button>
 
-									<div
-										ng-show="uiShowView('options_'+context.name)">
-										OPTIONS IN DEVELOPMENT - preload - load increment
-									</div>
+								<div
+									ng-show="uiShowView('template_'+context.name)">
+									<hr class="thin">
+									<?php echo pw_feed_template_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+									<hr class="thin">
+									<?php echo pw_feed_variable_options( array( 'ng_model' => 'pwFeedSettings.context[context.name]' ) ); ?>
+									
+								</div>
 
-								</td>
-							</tr>
-						</table>
+								<div
+									ng-show="uiShowView('options_'+context.name)">
+									<hr class="thin">
+
+									<label>
+										<input
+											type="number"
+											class="short"
+											ng-model="pwFeedSettings.context[context.name].preload"
+											placeholder="{{pwFeedSettings.context.default.preload}}"
+											min="0">
+										<b>Preload</b>
+										<small>: Number of posts to preload on page load.</small>
+									</label>
+
+									<hr class="thin">
+
+									<label>
+										<input
+											type="number"
+											class="short"
+											ng-model="pwFeedSettings.context[context.name].load_increment"
+											placeholder="{{pwFeedSettings.context.default.load_increment}}"
+											min="1">
+										<b>Load Increment</b>
+										<small>: Number of posts to load at a time when infinite scrolling.</small>
+									</label>
+
+								</div>
+
+
+							</div>
+
+						</div>
 
 					</div>
 					
 				</div>
-
-
 				<!-- ///// EDIT ITEMS ///// -->
 				<div class="well" ng-show="showView('editItem')">
 

@@ -10,7 +10,7 @@
 			class="labeled"
 			ng-model="<?php echo $vars['ng_model']; ?>.view.current"
 			ng-options="value for value in feedOptions.view">
-			<option value=""><?php ___('general.none'); ?></option>
+			<option value=""><?php ___('general.default'); ?></option>
 		</select>
 	</div>
 	<!--

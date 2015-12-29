@@ -7,6 +7,7 @@ $i_language = array(
 		'cancel'	=>	'Cancel',
 		'back'		=>	'‹ Back',
 		'none'		=>	'None',
+		'default'	=>	'Default',
 
 		'views'		=>	'Views',
 		'view'		=>	'View',

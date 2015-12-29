@@ -98,6 +98,13 @@ function pw_get_field_model( $type, $name ){
 }
 
 /**
+ * Get a field model for type 'post'.
+ */
+function pw_get_post_field_model( $name ){
+	return pw_get_field_model( 'post', $name );
+}
+
+/**
  * Registers core Postworld field models
  */
 add_action( 'init', 'pw_register_core_post_field_models' );

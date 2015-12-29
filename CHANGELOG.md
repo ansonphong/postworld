@@ -1,5 +1,23 @@
 # Postworld // Changelog
 
+### Version 1.32
+- **Best Practices**, **Possible Breaking Changes**
+    + Each specified view should come with a complimentary post field model
+    + This is done by using `pw_register_post_field_model($viewname,$fields)` for each view
+    + The feed now requests fields using getPosts based on the field's current view
+    + This allows the minimum data fields to be queried per view, potentially increasing page load and server performance  
+    + Below is an example of re-purposing an existing field model `preview` and appending the `post_content` field to it, and calling it `full`.
+```php
+add_action('init','theme_register_field_models');
+function theme_register_field_models(){
+    $preview_fields = pw_get_post_field_model('preview');
+    pw_register_post_field_model('full', array_merge( $preview_fields, array(
+        'post_content'
+    )));
+}
+```
+
+
 ### Version 1.26
 - **Added features** to site options module, in admin under *Postworld › Site Options*
     + Option to disable XMLRPC API site-wide

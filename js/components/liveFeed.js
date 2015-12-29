@@ -394,13 +394,19 @@ postworld.controller('pwFeedController',
 		// Set the post IDs
 		var postIDs = feed.feed_outline.slice( idBegin, idEnd );
 
-		// Set the fields
-		var fields = $_.getObj( feed, 'query.fields' );
+		// Set the fields variable
+		var fields = false;
+		// Get from current view
+		fields = $_.get( feed, 'view.current' );
+
+		// Get from query fields
+		if( fields == false )
+			fields = $_.get( feed, 'query.fields' );
 		if( fields == false )
 			fields = 'preview';
 
 		// Set the options
-		var options = $_.getObj( feed, 'options' );
+		var options = $_.get( feed, 'options' );
 		if( options == false )
 			options = {};
 

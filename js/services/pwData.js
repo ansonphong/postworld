@@ -181,7 +181,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			return this.wpAjax('o_embed',params);
 		},
 
-		getPosts: function( params ) {
+		getPosts: function( params ){
 			/*
 			 params = {
 				post_ids : 	[ array ],
