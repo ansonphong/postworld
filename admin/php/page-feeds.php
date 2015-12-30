@@ -21,6 +21,17 @@
 			)
 		);
 	$phpFeedTemplates = $phpTemplates['feeds'];
+
+	// Contexts to customize feed settings for
+	$get_contexts = array(
+		'default',
+		'home',
+		'standard',
+		'archive',
+		'search',
+		'taxonomy',
+		'post-type'
+		);
 ?>
 <script>
 	postworldAdmin.controller( 'pwFeedsDataCtrl',
@@ -33,7 +44,7 @@
 
 		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
 		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
-		$scope.contexts = <?php echo json_encode( pw_get_contexts( array( 'default', 'standard', 'archive', 'search', 'taxonomy', 'post-type' ) ) ); ?>;
+		$scope.contexts = <?php echo json_encode( pw_get_contexts( $get_contexts ) ); ?>;
 	
 		// Watch Feed Settings
 		$scope.$watch( 'pwFeedSettings', function(val){
@@ -121,12 +132,12 @@
 						<!-- SAVE BUTTON -->
 						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
 						<h3>
-							<i class="icon pwi-crosshairs"></i>
+							<i class="icon pwi-target"></i>
 							Contexts
 						</h3>
 
-						<div class="row well" ng-repeat="context in contexts">
-							<div class="col-sm-3">
+						<div class="pw-row well" ng-repeat="context in contexts">
+							<div class="pw-col-3">
 
 								<span
 									tooltip="{{context.name}}"
@@ -136,7 +147,7 @@
 								</span>
 
 							</div>
-							<div class="col-sm-9">
+							<div class="pw-col-9">
 								<button
 									type="button"
 									class="button"
@@ -352,26 +363,28 @@
 						</div>
 					<?php endif ?>
 
-					<hr class="thick">
+					<div class="well">
 
-					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
-		
-					<!-- DELETE BUTTON -->
-					<button
-						class="button deletion"
-						ng-click="deleteItem(selectedItem,'pwFeeds')">
-						<i class="pwi-close"></i>
-						<?php ___('feeds.delete'); ?>
-					</button>
+						<!-- SAVE BUTTON -->
+						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEEDS,'pwFeeds'); ?></div>
+			
+						<!-- DELETE BUTTON -->
+						<button
+							class="button deletion"
+							ng-click="deleteItem(selectedItem,'pwFeeds')">
+							<i class="pwi-close"></i>
+							<?php ___('feeds.delete'); ?>
+						</button>
 
-					<!-- DUPLICATE BUTTON -->
-					<button
-						class="button deletion"
-						ng-click="duplicateItem(selectedItem,'pwFeeds')">
-						<i class="pwi-copy-2"></i>
-						<?php ___('feeds.duplicate'); ?>
-					</button>
+						<!-- DUPLICATE BUTTON -->
+						<button
+							class="button deletion"
+							ng-click="duplicateItem(selectedItem,'pwFeeds')">
+							<i class="pwi-copy-2"></i>
+							<?php ___('feeds.duplicate'); ?>
+						</button>
+
+					</div>
 
 				</div>
 			</div>

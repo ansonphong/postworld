@@ -34,30 +34,9 @@
 	<hr class="thick">
 
 
-	<div class="row">
-		<div class="col-md-6">
-
-			<div class="well">
-				<!-- SAVE BUTTON -->
-				<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_ICONSETS, 'pwIconsets'); ?></div>
-
-				<h3><i class="pwi-check-square"></i> <?php ___('iconsets.enabled_iconsets'); ?></h3>
-
-				<div ng-repeat="(iconKey, iconset) in ::pwRegisteredIconsets">
-
-					<label>
-						<input
-							type="checkbox"
-							checklist-model="pwIconsets.enabled"
-							checklist-value="iconKey"
-							ng-disabled="::iconsetIsRequired(iconset.slug)">
-							{{ iconset.name }}
-						<i ng-show="iconsetIsRequired(iconset.slug)">(Required)</i>
-					</label>
-
-				</div>
-
-			</div>
+	<div class="pw-row">
+	
+		<div class="pw-col-6">
 
 			<div class="well">
 				<h3><i class="pwi-code"></i> <?php ___('iconsets.icon_shortcode'); ?></h3>
@@ -106,11 +85,38 @@
 				</div>
 
 			</div>
+			
+		</div>
+
+
+		<div class="pw-col-6">
+
+			<div class="well">
+				<!-- SAVE BUTTON -->
+				<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_ICONSETS, 'pwIconsets'); ?></div>
+
+				<h3><i class="pwi-check-square"></i> <?php ___('iconsets.enabled_iconsets'); ?></h3>
+
+				<div ng-repeat="(iconKey, iconset) in ::pwRegisteredIconsets">
+
+					<label>
+						<input
+							type="checkbox"
+							checklist-model="pwIconsets.enabled"
+							checklist-value="iconKey"
+							ng-disabled="::iconsetIsRequired(iconset.slug)">
+							{{ iconset.name }}
+						<i ng-show="iconsetIsRequired(iconset.slug)">(Required)</i>
+					</label>
+
+				</div>
+
+			</div>
 
 		</div>
-	</div>
 
-	<hr class="thick">
+		
+	</div>
 
 	<?php if( pw_dev_mode() ): ?>
 		<div class="pw-dev well">

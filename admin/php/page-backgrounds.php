@@ -50,9 +50,9 @@
 			<div class="pw-col-2">
 				<ul class="list-menu">
 					<li
-						ng-click="selectItem('contexts');"
-						ng-class="menuClass('contexts')">
-						<i class="pwi-target"></i> Contexts
+						ng-click="selectItem('settings');"
+						ng-class="menuClass('settings')">
+						<i class="pwi-gear"></i> Settings
 					</li>
 				</ul>
 				
@@ -72,29 +72,31 @@
 			<div class="pw-col-10">
 
 				<!-- ///// EDIT SETTINGS ///// -->
-				<div ng-show="showView('contexts')" class="well flush-top">
+				<div ng-show="showView('settings')" class="well flush-top">
 
 					<!-- SAVE BUTTON -->
 					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_BACKGROUND_CONTEXTS, 'pwBackgroundContexts'); ?></div>
 
-					<h3>Contexts</h3>
+					<h3>
+						<i class="icon pwi-target"></i>
+						Contexts
+					</h3>
 
-					<table>
-						<tr ng-repeat="context in contexts"
-							valign="top">
-							<th scope="row" align="left">
-								<span
-									tooltip="{{context.name}}"
-									tooltip-popup-delay="333">
-									<i class="{{context.icon}}"></i>
-									{{context.label}}
-									</th>
-								</span>
-							<td>
-								<?php echo pw_background_select( array( 'context' => 'siteAdmin' ) ); ?>
-							</td>
-						</tr>
-					</table>
+					<div
+						ng-repeat="context in contexts"
+						class="pw-row well">
+						<div class="pw-col-2">
+							<span
+								tooltip="{{context.name}}"
+								tooltip-popup-delay="333">
+								<i class="{{context.icon}}"></i>
+								{{context.label}}
+							</span>
+						</div>
+						<div class="pw-col-10">
+							<?php echo pw_background_select( array( 'context' => 'siteAdmin' ) ); ?>
+						</div>
+					</div>
 
 					<?php if( pw_dev_mode() ) : ?>
 						<hr class="thick">
