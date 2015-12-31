@@ -746,6 +746,63 @@ function pw_grab_option( $option_name, $key, $disable_cache = false ){
 }
 
 
+/**
+ * SET CUSTOM DEFAULT
+ * Cherry-picks data from the 'postworld-defaults' wp_option
+ * and injects it into the subject array if the value doesn't exist.
+ * This is used in conjunction with Postworld Custom Defaults
+ * to streamline setting default values.
+ *
+ * @param array $vars Set of input values. 
+ *		['subject'] - (any) The subject to operate on, usually an array.
+ *		['type'] - (string) The primary defaults subkey, ie. 'wp_postmeta'
+ *		['default_key'] -  (string) Dot notation path to the nested key value in the defaults.
+ *		['subject_key'] - (string) Optional. Dot notation path to destination in subject, if different from key.
+ *
+ * @param any The subject with the specified key replaced with the default.
+ */
+function pw_set_custom_default( $vars ){
+	/*
+	EXAMPLE : 
+	$vars = array(
+		'subject' => $post['post_meta'],
+		'type' => 'wp_postmeta',
+		'default_key' => 'pw_meta.featured_image.display'
+		'subject_key' => 'pw_meta.featured_image.display'
+		)
+	*/
+	// Require types and values
+	if( !isset( $vars['subject'] ) || 
+		!is_array( $vars['subject'] ) ||
+		!isset( $vars['type'] ) ||
+		!is_string( $vars['type'] ) ||
+		!isset( $vars['default_key'] ) ||
+		!is_string( $vars['default_key'] ) )
+		return false;
+
+	// Assume subject key is the same as default key
+	if( !isset( $vars['subject_key'] ) || !is_string( $vars['subject_key'] ) )
+		$vars['subject_key'] = $vars['default_key'];
+	
+	// Get the array of defaults saved for specified type
+	$defaults = $custom_defaults = pw_get_option(array(
+		'option_name' => PW_OPTIONS_DEFAULTS,
+		'key' => $vars['type']
+		));
+
+	// Get the specified default value
+	$default_value = _get( $defaults, $vars['default_key'] );
+
+	// Get the specified destination value
+	$subject_value = _get( $vars['subject'], $vars['subject_key'] );
+
+	// If the subject value is empty, or the magic string 'default'
+	if( empty($subject_value) || $subject_value === 'default' )
+		$vars['subject'] = _set( $vars['subject'], $vars['subject_key'], $default_value );
+
+	return $vars['subject'];
+
+}
 
 
 
