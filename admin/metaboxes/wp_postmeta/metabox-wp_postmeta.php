@@ -3,8 +3,8 @@
  \ \      / /  _ \  |  _ \ ___  ___| |_ _ __ ___   ___| |_ __ _ 
   \ \ /\ / /| |_) | | |_) / _ \/ __| __| '_ ` _ \ / _ \ __/ _` |
    \ V  V / |  __/  |  __/ (_) \__ \ |_| | | | | |  __/ || (_| |
-    \_/\_/  |_|     |_|   \___/|___/\__|_| |_| |_|\___|\__\__,_|
-                                                                
+	\_/\_/  |_|     |_|   \___/|___/\__|_| |_| |_|\___|\__\__,_|
+																
 ///////////////////////////////////////////////////////////////*/
 
 ////////////// ADD METABOX //////////////
@@ -14,7 +14,7 @@ add_action('admin_init','pw_metabox_init_wp_postmeta');
 function pw_metabox_init_wp_postmeta(){    
 
 	global $pw;
-    global $pwSiteGlobals;
+	global $pwSiteGlobals;
 	global $post;
 
 	// Get the settings
@@ -23,46 +23,46 @@ function pw_metabox_init_wp_postmeta(){
 		return false;
 	
 	// Iterate through each of the metabox settings
-    foreach( $metabox_settings as $metabox_setting ){
-    	
-    	// Get the fields registered with the setting
-    	$fields = pw_get_obj( $metabox_setting, 'fields' );
-    	// If there's no fields provided
-    	if( !$fields )
-    		// Break to next iteration
-    		break;
+	foreach( $metabox_settings as $metabox_setting ){
+		
+		// Get the fields registered with the setting
+		$fields = pw_get_obj( $metabox_setting, 'fields' );
+		// If there's no fields provided
+		if( !$fields )
+			// Break to next iteration
+			break;
 
-    	// Get the post types registered with the setting
-    	$post_types = pw_get_obj( $metabox_setting, 'post_types' );
-    	// If post types are not set
-    	if( !$post_types )
-    		// Break to next iteration
-    		break;
+		// Get the post types registered with the setting
+		$post_types = pw_get_obj( $metabox_setting, 'post_types' );
+		// If post types are not set
+		if( !$post_types )
+			// Break to next iteration
+			break;
 
-    	///// METABOX SETTINGS /////
-    	// Define default metabox settings
-    	$default_metabox = array(
-    		'title'			=>	'Meta',
-    		'context'		=>	'normal',
-    		);
+		///// METABOX SETTINGS /////
+		// Define default metabox settings
+		$default_metabox = array(
+			'title'			=>	'Meta',
+			'context'		=>	'normal',
+			);
 
-    	// Get metabox from the site config
-    	$metabox = pw_get_obj( $metabox_setting, 'metabox' );
-    	if( !$metabox )
-    		$metabox = array();
+		// Get metabox from the site config
+		$metabox = pw_get_obj( $metabox_setting, 'metabox' );
+		if( !$metabox )
+			$metabox = array();
 
-    	// Override default metabox with site metabox
-    	$metabox = array_replace_recursive( $default_metabox, $metabox);
+		// Override default metabox with site metabox
+		$metabox = array_replace_recursive( $default_metabox, $metabox);
 
-    	// If Post Types is a string
-    	if( is_string($post_types) )
-    		// Turn into array
-    		$post_types = array( $post_types );
+		// If Post Types is a string
+		if( is_string($post_types) )
+			// Turn into array
+			$post_types = array( $post_types );
 
 
 		// Iterate through the post types
-    	foreach( $post_types as $post_type ){
-    		
+		foreach( $post_types as $post_type ){
+			
 			// Construct Variables for Callback
 			$vars = array(
 				'fields'	=>	$fields,
@@ -70,60 +70,108 @@ function pw_metabox_init_wp_postmeta(){
 
 			// Add the metabox
 			add_meta_box(
-	        	'pw_wp_postmeta_meta',
-	        	$metabox['title'],
-	        	'pw_wp_postmeta_ui',
-	        	$post_type,
-	        	$metabox['context'],
-	        	'core',
-	        	$vars //  Pass callback variables
-	        	);
+				'pw_wp_postmeta_meta',
+				$metabox['title'],
+				'pw_wp_postmeta_ui',
+				$post_type,
+				$metabox['context'],
+				'core',
+				$vars //  Pass callback variables
+				);
 
-    	} // End Foreach : Post Type
+		} // End Foreach : Post Type
 
-        // add a callback function to save any data a user enters in
-        add_action( 'save_post','pw_wp_postmeta_meta_save' );
+		// add a callback function to save any data a user enters in
+		add_action( 'save_post','pw_wp_postmeta_meta_save' );
 
-    } // End Foreach : Setting
+	} // End Foreach : Setting
 
 }
 
 ////////////// CREATE UI //////////////
 function pw_wp_postmeta_ui( $post, $vars ){
-    global $post;
-    global $pwSiteGlobals;
+	global $post;
+	global $pwSiteGlobals;
 
-    // Unpack fields into variable
-    $fieldsSrc = _get( $vars, 'args.fields' );
+	// Unpack fields into variable
+	$fields_src = _get( $vars, 'args.fields' );
 
-    // Populate previously saved postmeta into fields array
-    $fields = array();
+	// Populate previously saved postmeta into fields array
+	$fields = array();
 
-    for( $i=0; $i<count($fieldsSrc); $i++ ){
+	for( $i=0; $i<count($fields_src); $i++ ){
 
-        // Localize the current field
-        $field = $fieldsSrc[$i];
-        // Get the meta key
-        $meta_key = _get( $field, 'meta_key' );
-        // If it's empty, continue
-        if( empty($meta_key) )
-            continue;
-        // Get the meta value
-        $meta_value = get_post_meta( $post->ID, $meta_key, true );
-        // Populate the model with the meta value
-        $field['meta_value'] = $meta_value;
+		// Localize the current field
+		$field = $fields_src[$i];
 
-        // Restructure Fields Array, from array into object
-        // Using the meta_key as the primary key
-        $fields[$meta_key] = $field;
+		// Add supports key if it doesn't exist
+		if( !isset($field['supports']) )
+			$field['supports'] = array();
 
-    }
+		// Get the meta key
+		$meta_key = _get( $field, 'meta_key' );
+		// If it's empty, continue
+		if( empty($meta_key) )
+			continue;
+
+		/**
+		 * Get Meta Value
+		 */
+		if( isset($field['sub_key']) )
+			$meta_value = pw_get_wp_postmeta(array(
+				'post_id' => $post->ID,
+				'meta_key' => $field['meta_key'],
+				'sub_key' => $field['sub_key']
+				));
+		else
+			$meta_value = get_post_meta( $post->ID, $meta_key, true );
+
+		/**
+		 * Default Values
+		 */
+		// If no value set, set the default value
+
+		// If the field supports custom defaults, get from saved defaults
+		if( in_array('custom_default', $field['supports'] ) ){
+			
+			$sub_key = ( isset( $field['sub_key'] ) ) ?
+			'.'.$field['sub_key'] :
+			'';
+
+			$custom_default_value = pw_get_option(array(
+				'option_name' => PW_OPTIONS_DEFAULTS,
+				'key' => 'wp_postmeta.'.$meta_key.$sub_key
+				));
+
+			// If the saved value isn't empty
+			if( !empty( $custom_default_value ) ){
+				$field['default_value'] = $custom_default_value;
+				if( empty( $meta_value ) )
+					$meta_value = $custom_default_value;
+			}
+	
+		}
+		
+
+		// If no custom default saved, get the configured default
+		if( empty( $meta_value ) )
+			$meta_value = _get( $field, 'default_value' );
+		
+		// Populate the model with the meta value
+		$field['meta_value'] = $meta_value;
+
+		// Restructure Fields Array, from array into object
+		// Using the meta_key as the primary key
+		$fields[$meta_key] = $field;
+		
+
+	}
 
 	///// INCLUDE TEMPLATE /////
-    // Include the UI template
-    $metabox_template = pw_get_template ( 'admin', 'metabox-wp-postmeta', 'php', 'dir' );
-    
-    include 'metabox-wp_postmeta-controller.php';
+	// Include the UI template
+	$metabox_template = pw_get_template ( 'admin', 'metabox-wp-postmeta', 'php', 'dir' );
+	
+	include 'metabox-wp_postmeta-controller.php';
 
 }
 
@@ -132,35 +180,67 @@ function pw_wp_postmeta_meta_save( $post_id ){
 
 	// Stop autosave to preserve meta data
 	if ( wp_is_post_autosave( $post_id ) || wp_is_post_revision( $post_id ) )
-      return $post_id;
+	  return $post_id;
 	
-    // Security Layer 
-    if ( !current_user_can( 'edit_post', $post_id ) )
-        return $post_id;
+	// Security Layer 
+	if ( !current_user_can( 'edit_post', $post_id ) )
+		return $post_id;
 
-    // Get the fields from the http post
-    // This is the only way to know what fields to fetch
-    $pw_wp_postmeta_fields = _get( $_POST, 'pw_wp_postmeta_fields' );
-    if( !$pw_wp_postmeta_fields )
-        return false;
+	// Get the fields from the http post
+	// This is the only way to know what fields to fetch
+	$pw_wp_postmeta_fields = _get( $_POST, 'pw_wp_postmeta_fields' );
+	if( !$pw_wp_postmeta_fields )
+		return false;
 
-    $fields = json_decode( stripslashes( $pw_wp_postmeta_fields ), true );
-    
-    // Return Early if there are no fields
-    if( empty($fields) )
-        return $post_id;
+	$fields = json_decode( stripslashes( $pw_wp_postmeta_fields ), true );
+	
+	// Return Early if there are no fields
+	if( empty($fields) )
+		return $post_id;
 
-    ///// SAVE POSTMETA /////
-    foreach( $fields as $meta_key => $field ){
-        // Update Post Meta
-        update_post_meta( $post_id, $meta_key, $field['meta_value'] );
-        // If the value is provided and empty
-        if( is_string( $meta_value ) && empty( $field['meta_value'] ) )
-            // Delete post meta
-            delete_post_meta( $post_id, $meta_key );
-    }
+	///// SAVE POSTMETA /////
+	foreach( $fields as $meta_key => $field ){
 
-    return $post_id;
+		/**
+		 * Get Meta Value
+		 */
+		if( isset($field['sub_key']) )
+			pw_set_wp_postmeta(array(
+				'post_id' => $post_id,
+				'meta_key' => $field['meta_key'],
+				'sub_key' => $field['sub_key'],
+				'value' => $field['meta_value']
+				));
+		else
+			// Update Post Meta
+			update_post_meta( $post_id, $meta_key, $field['meta_value'] );
+
+		
+
+		// If the value is provided and empty and it's not a sub key
+		if( is_string( $meta_value ) &&
+			empty( $field['meta_value'] ) &&
+			!isset( $field['sub_key'] ) )
+			// Delete post meta
+			delete_post_meta( $post_id, $meta_key );
+
+		// Save the custom default
+		if(	in_array( 'custom_default', $field['supports'] ) &&
+			isset( $field['default_value'] ) &&
+			!empty( $field['default_value'] ) ){
+			$sub_key = ( isset( $field['sub_key'] ) ) ?
+				'.'.$field['sub_key'] :
+				'';
+			$set_default = pw_set_option( array(
+				'option_name' => PW_OPTIONS_DEFAULTS,
+				'key' => 'wp_postmeta.'.$meta_key.$sub_key,
+				'value' => $field['default_value']
+				));
+		}
+
+	}
+
+	return $post_id;
 
 }
 

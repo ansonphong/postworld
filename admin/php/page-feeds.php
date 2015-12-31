@@ -414,7 +414,7 @@
 					ng-repeat="option in eventOptions.timeFilter"
 					class="btn"
 					ng-model="eventInput.timeFilter"
-					btn-radio="option.value">
+					uib-btn-radio="option.value">
 					{{ option.name }}
 				</label>
 			</div>

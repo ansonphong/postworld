@@ -52,6 +52,7 @@ $pw = array(
 				'header_code'			=>	'postworld-header-code',
 				'iconsets'				=>	'postworld-iconsets',
 				'cache_iconset'			=>	'postworld-cache-iconset-',
+				'defaults'				=>	'postworld-defaults',
 				),
 			),
 		'wp_postmeta'	=>	array(
@@ -99,6 +100,7 @@ define( 'PW_OPTIONS_BACKGROUND_CONTEXTS', 	$pw['db']['wp_options']['option_name'
 define( 'PW_OPTIONS_SHORTCODES', 			$pw['db']['wp_options']['option_name']['shortcodes'] );
 define( 'PW_OPTIONS_SHORTCODE_SNIPPETS', 	$pw['db']['wp_options']['option_name']['shortcode_snippets'] );
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
+define( 'PW_OPTIONS_DEFAULTS', 				$pw['db']['wp_options']['option_name']['defaults'] );
 
 ///// DEFINE OPTION CACHES /////
 define( 'PW_CACHE_ICONSET', 	$pw['db']['wp_options']['option_name']['cache_iconset'] );

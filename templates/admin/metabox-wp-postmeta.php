@@ -1,5 +1,4 @@
-<table
-	width="100%">
+<table width="100%">
 	<?php foreach( $fields as $meta_key => $field ) : ?>
 
 		<?php
@@ -108,6 +107,64 @@
 							echo pw_select_icon_options( array(
 								'ng_model' => 'fields.'.$meta_key.'.meta_value'
 								));?>
+
+					</td>
+				</tr>
+			<?php break; ?>
+
+			<?php
+			///// RADIO BUTTONS /////
+			case 'radio-buttons': ?>
+				<tr>
+					<td valign="top">
+						<i class="<?php echo $field['icon']; ?>"></i>
+						<b><?php echo $field['label']; ?></b>
+						<?php if( !empty( $field['description'] ) ): ?>
+							<br><small><?php echo $field['description']; ?></small>
+						<?php endif; ?>
+					</td>
+					<td width="75%" valign="top">
+
+						<div class="btn-group">
+	
+							<?php foreach( $field['options'] as $option ): ?>
+
+								<?php if( in_array( 'custom_default', $field['supports'] ) && $option['value'] !== 'default' ): ?>
+									<label
+										class="btn btn-radio-default"
+										ng-model="fields.<?php echo $meta_key ?>.default_value"
+										uib-btn-radio="'<?php echo $option['value'] ?>'"
+										uib-tooltip="Set as Default" tooltip-popup-delay="333">
+										<!--  tooltip-append-to-body="true" -->
+										<i class="icon"></i>
+									</label>
+								<?php endif ?>
+
+								<label
+									class="btn"
+									ng-model="fields.<?php echo $meta_key ?>.meta_value"
+									uib-btn-radio="'<?php echo $option['value'] ?>'">
+									<?php if(!empty($option['icon'])): ?>
+										<i class="icon <?php echo $option['icon'] ?>"></i>
+									<?php endif ?>
+									<?php echo $option['label'] ?>
+								</label>
+
+							<?php endforeach ?>
+						</div>
+
+						<?php
+							foreach( $field['options'] as $option ):
+								if( _get($option,'description') ): ?>
+
+								<div ng-show="'<?php echo $option['value'] ?>' == fields.<?php echo $meta_key ?>.meta_value">
+									<hr class="thin">
+									<small><?php echo $option['description'] ?></small>
+								</div>
+
+								<?php
+								endif;
+							endforeach; ?>
 
 					</td>
 				</tr>

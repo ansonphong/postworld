@@ -11,7 +11,9 @@ $vars['instance'] = pw_random_string();
 		<div class="btn-group">
 			<label
 				ng-repeat="type in sliderOptions.slider.mode"
-				class="btn" ng-model="<?php echo $vars["ng_model"] ?>.mode" btn-radio="type.slug">
+				class="btn"
+				ng-model="<?php echo $vars["ng_model"] ?>.mode"
+				uib-btn-radio="type.slug">
 				{{ type.name }}
 			</label>
 		</div>

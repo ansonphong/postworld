@@ -39,7 +39,9 @@
 	<div class="btn-group">
 		<label
 			ng-repeat="template in galleryOptions"
-			class="btn" ng-model="<?php echo $vars['ng_model']; ?>.template" btn-radio="template.key">
+			class="btn"
+			ng-model="<?php echo $vars['ng_model']; ?>.template"
+			uib-btn-radio="template.key">
 			{{ template.name }}
 		</label>
 	</div>

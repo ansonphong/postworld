@@ -4,7 +4,7 @@
 			class="btn"
 			ng-repeat="item in <?php echo $vars['options_model']['show']; ?>"
 			ng-model="<?php echo $vars['ng_model']; ?>.label.show"
-			btn-radio="item.value">
+			uib-btn-radio="item.value">
 			{{ item.name }}
 		</label>
 	</div>
@@ -31,7 +31,7 @@
 							class="btn"
 							ng-repeat="item in <?php echo $vars['options_model']['tooltip_show']; ?>"
 							ng-model="<?php echo $vars['ng_model']; ?>.label.tooltip.show"
-							btn-radio="item.value">
+							uib-btn-radio="item.value">
 							{{ item.name }}
 						</label>
 					</div>
@@ -52,7 +52,7 @@
 							class="btn"
 							ng-repeat="item in <?php echo $vars['options_model']['highlight']; ?>"
 							ng-model="<?php echo $vars['ng_model']; ?>.label.highlight"
-							btn-radio="item.value">
+							uib-btn-radio="item.value">
 							{{ item.name }}
 						</label>
 					</div>
@@ -66,7 +66,7 @@
 							class="btn"
 							ng-repeat="item in <?php echo $vars['options_model']['new_target']; ?>"
 							ng-model="<?php echo $vars['ng_model']; ?>.new_target"
-							btn-radio="item.value">
+							uib-btn-radio="item.value">
 							{{ item.name }}
 						</label>
 					</div>

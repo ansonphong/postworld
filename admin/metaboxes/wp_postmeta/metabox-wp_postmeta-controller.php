@@ -38,6 +38,7 @@ global $post;
 			//$scope.wpPostmetaPost = <?php //echo json_encode( $pw_postmeta_post ); ?>;
 			// The input fields to add
 			$scope.fields = <?php echo json_encode( $fields ); ?>;
+
 	}]);
 	
 </script>

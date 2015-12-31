@@ -137,13 +137,13 @@
 									<label
 										class="btn"
 										ng-model="selectedItem.type"
-										btn-radio="'self-enclosing'">
+										uib-btn-radio="'self-enclosing'">
 										<?php ___('shortcodes.self_enclosing'); ?>
 									</label>
 									<label
 										class="btn"
 										ng-model="selectedItem.type"
-										btn-radio="'enclosing'">
+										uib-btn-radio="'enclosing'">
 										<?php ___('shortcodes.enclosing'); ?>
 									</label>
 								</div>

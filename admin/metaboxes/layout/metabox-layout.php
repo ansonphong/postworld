@@ -104,7 +104,7 @@ function pw_layout_meta_save( $post_id ){
 	// If it exists
 	if( $post !== false )
 		// Get the subkey
-		$meta = pw_get_obj( $post, 'post_meta.' . pw_postmeta_key . '.layout' );
+		$meta = _get( $post, 'post_meta.' . pw_postmeta_key . '.layout' );
 	else
 		// Otherwise return here
 		return false;

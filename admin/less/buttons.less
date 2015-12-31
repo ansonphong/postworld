@@ -1,3 +1,44 @@
+/**
+ * @todo : Make totally custom clone-like of btn-group here
+ * independant from bootstrap and it's classes.
+ */
 
-
-
+.btn.btn-radio-default{
+	color: fade(#000,25%);
+	padding-left: 7px;
+	padding-right: 7px;
+	.icon{
+		color:#26afe6;
+		font-style: normal;
+		font-family: "Postworld-Icons";
+		line-height: 1;
+		font-size: .66em;
+		//top: -1px;
+		position: relative;
+		&:before{
+			content: "\e6f6";
+		}
+	}
+	&.active{
+		background: #eee;
+		border-color: #bbb;
+		color: fade(#fff,100%);
+		box-shadow: none;
+		.icon{
+			line-height: 1/1.2;
+			font-size: 1.2em;
+			&:before{
+				content: "\f041";//"\e6f3"; // pushpin: "\f041" "\e62f";
+			}
+		}
+	}
+	&:hover{
+		//background: #ccc;
+		//border-color: #bbb;
+	}
+	border-right:0 !important;
+	+.btn{
+		border-left:0;
+		//padding-left:5px;
+	}
+}

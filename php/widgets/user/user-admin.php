@@ -98,7 +98,7 @@
 					class="btn btn-primary"
 					ng-repeat="option in userSelectOptions"
 					ng-model="settings.user_select"
-					btn-radio="option.slug">
+					uib-btn-radio="option.slug">
 					{{ option.name }}
 				</label>
 		    </div>
