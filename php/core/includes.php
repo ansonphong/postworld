@@ -23,7 +23,7 @@ function postworld_includes( $args ){
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.4.6';
+		$angular_version = 'angular-1.4.8';
 
 	// Add injectors from Site Globals
 	$pw['inject'] = ( isset( $pwSiteGlobals['inject'] ) ) ?
