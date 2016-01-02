@@ -44,7 +44,7 @@
 			<button
 				type="button"
 				class="button"
-				ng-click="uiToggleView('searchInput',100); uiFocusElement('#pwSearchPostParent')">
+				ng-click="uiToggleView('searchInput',200); uiFocusElement('#pwSearchPostParent')">
 				<i class="{{ labels.search_icon }}"></i>
 				{{ labels.search }}
 			</button>
@@ -65,7 +65,7 @@
 				typeahead-loading="loadingQuery"
 				typeahead-on-select="addPostParent($item);"
 				typeahead-focus-first="false"
-				ng-blur="uiToggleView('searchInput',333)"
+				ng-blur="uiToggleView('searchInput',200)"
 				class="input-icon-left">
 		</div>
 	</div>
