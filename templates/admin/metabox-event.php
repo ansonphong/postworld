@@ -190,7 +190,7 @@
 					type="text"
 					ng-model="post.post_meta[ eventKey ].location.geocode"
 					placeholder="Type Location..."
-					typeahead="address.formatted_address as address.formatted_address for address in getLocation($viewValue) | filter:$viewValue"
+					uib-typeahead="address.formatted_address as address.formatted_address for address in getLocation($viewValue)"
 					typeahead-loading="loadingLocations"
 					typeahead-on-select="addGeocode($item);"
 					placeholder=""
