@@ -29,9 +29,7 @@
 							<br><small><?php echo $field['description']; ?></small>
 						<?php endif; ?>
 					</td>
-					<td
-						width="75%">
-						
+					<td width="75%">
 						<input
 							type="text"
 							name="pw_wp_postmeta[<?php echo $field['meta_key'] ?>]"

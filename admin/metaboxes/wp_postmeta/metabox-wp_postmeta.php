@@ -154,8 +154,9 @@ function pw_wp_postmeta_ui( $post, $vars ){
 		
 
 		// If no custom default saved, get the configured default
-		if( empty( $meta_value ) )
-			$meta_value = _get( $field, 'default_value' );
+		$default_value = _get( $field, 'default_value' );
+		if( empty( $meta_value ) && !empty( $default_value ) )
+			$meta_value = $default_value;
 		
 		// Populate the model with the meta value
 		$field['meta_value'] = $meta_value;
