@@ -44,7 +44,7 @@
 			<button
 				type="button"
 				class="button"
-				ng-click="uiToggleView('searchInput',200); uiFocusElement('#pwSearchPostParent')">
+				ng-click="uiToggleView('searchInput',200); uiFocusElement('#pwSearchPostParent', 200)">
 				<i class="{{ labels.search_icon }}"></i>
 				{{ labels.search }}
 			</button>
