@@ -1,7 +1,7 @@
 /*////////////// ------- SERVICE ------- //////////////*/  
 
-postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '_', '$pw',
-	function ( $rootScope, $log, $location, $modal, $pwData, $_, $pw ) {
+postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$uibModal', 'pwData', '_', '$pw',
+	function ( $rootScope, $log, $location, $uibModal, $pwData, $_, $pw ) {
 	return{
 
 		openModal : function( meta ){
@@ -141,9 +141,9 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$modal', 'pwD
 
 			///// LAUNCH THE MODAL /////
 			//$log.debug( 'MODAL META : ', meta );
-			$log.debug( '$modal.open : modalObj : ', modalObj );
+			$log.debug( '$uibModal.open : modalObj : ', modalObj );
 
-			var modalInstance = $modal.open( modalObj );
+			var modalInstance = $uibModal.open( modalObj );
 
 			modalInstance.result.then(function (selectedItem) {
 				//$scope.post_title = post_title;

@@ -1661,8 +1661,6 @@ postworld.service('pwRoleAccess',
 
 
 
-
-
 /* ___        _      _      _____    _ _ _   
   / _ \ _   _(_) ___| | __ | ____|__| (_) |_ 
  | | | | | | | |/ __| |/ / |  _| / _` | | __|
@@ -1672,8 +1670,8 @@ postworld.service('pwRoleAccess',
 ////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 'pwData', '$pw', '_',
-	function ( $rootScope, $log, $location, $modal, pwData, $pw, $_ ) {
+postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal', 'pwData', '$pw', '_',
+	function ( $rootScope, $log, $location, $uibModal, pwData, $pw, $_ ) {
 	return{
 		openQuickEdit : function( meta ){
 			
@@ -1683,7 +1681,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$modal', 
 
 			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
 
-			var modalInstance = $modal.open({
+			var modalInstance = $uibModal.open({
 			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
 			  controller: 'quickEditInstanceCtrl',
 			  windowClass: 'quick_edit',
