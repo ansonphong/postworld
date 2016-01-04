@@ -47,14 +47,16 @@ postworld.directive( 'pwGlobals',
  * @param {expression} includeMeta Object to be assigned as $scope.meta within the included template
  * @param {expression} includePost Object to be assigned as $scope.post within the included template
  * @param {boolean} includeEnable Dynamic. Whether or not to actually enable the load the include
- * Can be used to prevent the template from loading in certain instances.
+ * 		Used to prevent the template from loading in certain instances.
+ * @param {string} includeEval Evaluated in rootScope context. If false, template will not be included.
+ *		Used to prevent the template from loading in certain instances.
  * @param {string} includeClass Class(es) to be added to the include element
  *
  * @example
 	<pre><div pw-include="galleries/gallery-frame" include-post="post"></div></pre>
  *
  */
-postworld.directive('pwInclude', function($log, $timeout, pwData) {
+postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
 	return {
 		restrict: 'EA',
 		template: '<div ng-include="includeUrl" class="pw-include" ng-class="includeClass"></div>',
@@ -63,9 +65,16 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 			includeMeta:"=",	
 			includePost:"=",	
 			includeEnable:"=",
+			includeEval:"@",
 			includeClass:"@",
 		},
 		link: function($scope, element, attrs){
+
+			var getIncludeEval = function(){
+				if(_.isUndefined( $scope.includeEval ))
+					return true;
+				return $rootScope.$eval( $scope.includeEval );
+			}
 
 			var setTemplateUrl = function(){
 				var pwInclude = attrs.pwInclude;
@@ -74,19 +83,16 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 					$log.debug( 'pwInclude : ERROR : Include must contain 2 parts, dir/basename.' )
 					return false;
 				}
-				
 				// Timeout to allow other controllers to init
 				$timeout( function(){
-					if($scope.includeEnable !== false )
+					if($scope.includeEnable !== false &&
+						getIncludeEval() !== false )
 						$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
-					else
+					else{
 						$scope.includeUrl = '';
+						$scope.$destroy();
+					}
 				}, 0 );
-				
-			}
-
-			$scope.userIsLoggedIn = function(){
-				return false;
 			}
 
 			attrs.$observe( 'pwInclude', function( pwInclude ){
@@ -119,9 +125,12 @@ postworld.directive('pwInclude', function($log, $timeout, pwData) {
 				}
 			}, 1 );
 
+
+
 		}
 	};
 });
+
 
 
 /**

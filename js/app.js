@@ -110,7 +110,7 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
  |_| \_\\__,_|_| |_|        
 */
 postworld.run( 
-	function( $rootScope, $window, $templateCache, $log, $location, $rootElement ){    
+	function( $rootScope, $window, $templateCache, $log, $location, $rootElement, $pw ){    
 
 		///// ALLOW LINK CLICKING /////
 		// Critical so that when $locationProvider is in HTML5 mode
@@ -127,6 +127,32 @@ postworld.run(
 		*/
 		//$rootScope.current_user = $window.pwGlobals.user;
 		//$log.debug('Current user: ', $rootScope.current_user );
+
+		$rootScope.isLoggedIn = function(){
+			return !_.isUndefined( $pw.user.ID );
+		}
+
+		$rootScope.isDevice = function(deviceArray){
+			$log.debug( '$rootScope.isDevice : 333', deviceArray );
+			$log.debug( '$pw.device : 333', $pw.device );
+
+			var isDevices = false;
+
+			for( var i = 0; i<deviceArray.length; i++ ){
+				// Generate ie. 'is_mobile'
+				var checkFor = 'is_'+deviceArray[i];
+				// Check if the device is true
+				var isDevice = $pw.device[checkFor];
+				// If any device is not true, break out
+				if( !isDevice )
+					break;
+				// If all devices checked out
+				if( i === (deviceArray.length-1) )
+					isDevices = true;
+			}
+			$log.debug( '$rootScope.isDevice : isDevices : 333', isDevices );
+			return isDevices;
+		}
 
 });
 
