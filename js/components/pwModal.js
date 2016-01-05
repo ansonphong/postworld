@@ -486,26 +486,19 @@ postworld.directive('pwOpenModal',
 	return {
 		restrict: 'A',
 		link: function ($scope, element, attrs) {
-			/**
-			 * Use mouseup binding, as 'click' prevents default
-			 * Such as a link opening naturally.
-			 */
-			element.bind('mouseup', function (event) {
+			element.bind('click', function (event) {
 				$log.debug( 'pwOpenModal', attrs.pwOpenModal );
 				$log.debug( 'pwOpenModal : CLICK EVENT', event );
-				// If modalEval is defined, and upon evaluation is false, end here
+				var openModal = true;
 				if( !_.isUndefined( attrs.modalEval ) ){
 					var openModal = $rootScope.$eval( attrs.modalEval );
 					$log.debug( '$scope.pwOpenModal : EVAL', openModal );
-					if( openModal === false ){
-						//$log.debug( 'pwOpenModal : GOTO : ', event.currentTarget.href );
-						return false;
-					}
 				}
-				$pwModal.openModal( $scope.$eval( attrs.pwOpenModal ) );
-				event.preventDefault();
+				if( openModal ){
+					$pwModal.openModal( $scope.$eval( attrs.pwOpenModal ) );
+					event.preventDefault();
+				}
 			});
-
 		}
 	};
 }])
