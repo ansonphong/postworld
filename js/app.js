@@ -122,22 +122,23 @@ postworld.run(
 		// TODO remove in production
 		/*
 		$rootScope.$on('$viewContentLoaded', function() {
-		$templateCache.removeAll();
+			$templateCache.removeAll();
 		});
 		*/
-		//$rootScope.current_user = $window.pwGlobals.user;
-		//$log.debug('Current user: ', $rootScope.current_user );
+
+
+		/**
+		 * @todo : Refactor these utility function into $pw,
+		 * Pass-through functions in rootScope to in service.
+		 */
 
 		$rootScope.isLoggedIn = function(){
 			return !_.isUndefined( $pw.user.ID );
 		}
-
 		$rootScope.isDevice = function(deviceArray){
-			$log.debug( '$rootScope.isDevice : 333', deviceArray );
-			$log.debug( '$pw.device : 333', $pw.device );
-
+			if( _.isString(deviceArray) )
+				deviceArray = [deviceArray];
 			var isDevices = false;
-
 			for( var i = 0; i<deviceArray.length; i++ ){
 				// Generate ie. 'is_mobile'
 				var checkFor = 'is_'+deviceArray[i];
@@ -150,8 +151,25 @@ postworld.run(
 				if( i === (deviceArray.length-1) )
 					isDevices = true;
 			}
-			$log.debug( '$rootScope.isDevice : isDevices : 333', isDevices );
 			return isDevices;
+		}
+		$rootScope.isContext = function(contextArray){
+			$log.debug('isContext: ' , contextArray );
+			if( _.isString(contextArray) )
+				contextArray = [contextArray];
+			var context = window
+			var isContext = false;
+			for( var i = 0; i<contextArray.length; i++ ){
+				isContext = _.contains( $pw.view.context, contextArray[i] );
+				// If any device is not true, break out
+				if( !isContext )
+					break;
+				// If all context checked out true
+				if( i === (contextArray.length-1) )
+					isContext = true;
+			}
+			$log.debug('isContext: ' + JSON.stringify( isContext ), contextArray );
+			return isContext;
 		}
 
 });
