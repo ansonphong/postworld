@@ -453,30 +453,62 @@ postworld.controller('pwModalInstanceCtrl',
 
 }]);
 
-postworld.directive( 'pwModalAccess', [ function($scope){
+postworld.directive( 'pwModalAccess',
+	[ 'pwModal', function( $pwModal ){
 	return {
 		restrict: 'AE',
-		controller: 'pwModalAccessCtrl',
+		//controller: 'pwModalAccessCtrl',
 		link: function( $scope, element, attrs ){
-			/*
-			// OBSERVE Attribute
-			attrs.$observe('modal', function(value) {
-				alert(value);
-			});
-			*/
+			$scope.openModal = function( meta ){
+				$pwModal.openModal( meta );
+			}
 		}
 	};
 }]);
 
-postworld.controller('pwModalAccessCtrl',
-	[ '$scope', 'pwModal', function( $scope, $pwModal ) {
 
-	$scope.openModal = function( meta ){
-		$pwModal.openModal( meta );
-	}
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwOpenModal
+ * @description
+ * Opens a modal by clicking on the element.
+ *
+ * @param Object pwOpenModal An object passed to 
+ * @param string modalEval A string evaluated in $rootScope, if false does not open modal.
+ * @todo Add modalBind for event, which would allow mousedown, click, mouseover, etc.
+ *
+ * @example
+ * 		<img pw-open-modal="{ mode:'feed', post:post }" modal-eval="!isDevice(['mobile'])">
+ *
+ */
+postworld.directive('pwOpenModal',
+	[ 'pwModal', '$log', '$rootScope', function($pwModal, $log, $rootScope){
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			/**
+			 * Use mouseup binding, as 'click' prevents default
+			 * Such as a link opening naturally.
+			 */
+			element.bind('mouseup', function (event) {
+				$log.debug( 'pwOpenModal', attrs.pwOpenModal );
+				$log.debug( 'pwOpenModal : CLICK EVENT', event );
+				// If modalEval is defined, and upon evaluation is false, end here
+				if( !_.isUndefined( attrs.modalEval ) ){
+					var openModal = $rootScope.$eval( attrs.modalEval );
+					$log.debug( '$scope.pwOpenModal : EVAL', openModal );
+					if( openModal === false ){
+						//$log.debug( 'pwOpenModal : GOTO : ', event.currentTarget.href );
+						return false;
+					}
+				}
+				$pwModal.openModal( $scope.$eval( attrs.pwOpenModal ) );
+				event.preventDefault();
+			});
 
-}]);
-
+		}
+	};
+}])
 
 
 /*__  __          _ _         __  __           _       _ 

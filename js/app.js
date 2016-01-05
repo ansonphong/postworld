@@ -154,7 +154,6 @@ postworld.run(
 			return isDevices;
 		}
 		$rootScope.isContext = function(contextArray){
-			$log.debug('isContext: ' , contextArray );
 			if( _.isString(contextArray) )
 				contextArray = [contextArray];
 			var context = window
@@ -168,7 +167,6 @@ postworld.run(
 				if( i === (contextArray.length-1) )
 					isContext = true;
 			}
-			$log.debug('isContext: ' + JSON.stringify( isContext ), contextArray );
 			return isContext;
 		}
 
