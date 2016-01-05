@@ -473,7 +473,7 @@ postworld.directive( 'pwModalAccess',
  * @description
  * Opens a modal by clicking on the element.
  *
- * @param Object pwOpenModal An object passed to 
+ * @param Object pwOpenModal An object passed to $pwModal.openModal
  * @param string modalEval A string evaluated in $rootScope, if false does not open modal.
  * @todo Add modalBind for event, which would allow mousedown, click, mouseover, etc.
  *
