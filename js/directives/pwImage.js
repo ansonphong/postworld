@@ -376,7 +376,8 @@ postworld.directive('pwSmartImage',
  *
  */
 postworld.directive('pwParallax',
-	['$rootScope', '$log','$timeout','$window', '_',function($rootScope, $log, $timeout, $window, $_){
+	['$rootScope', '$log','$timeout','$window', '_',
+	function($rootScope, $log, $timeout, $window, $_){
 	return{
 		restrict:'A',
 		scope:{
@@ -597,8 +598,8 @@ postworld.directive('pwParallax',
  *
  */
 postworld.directive('pwHeight',
-	['$rootScope', '$log','$timeout','$window', '_',
-	function($rootScope, $log, $timeout, $window, $_){
+	['$rootScope', '$log','$timeout','$window', '_', '$pw',
+	function($rootScope, $log, $timeout, $window, $_, $pw){
 	return{
 		restrict:'A',
 		link:function( $scope, element, attrs ){
@@ -677,14 +678,23 @@ postworld.directive('pwHeight',
 					case 'window-base':
 						$log.debug('pwHeight : init', attrs.pwHeight );
 						initWindowBase();
-						angular.element($window).bind("resize", updateWindowBase);
+						/**
+						 * Change event listener type on mobile browers.
+						 */
+						if( $pw.device['is_mobile'] )
+							window.addEventListener("orientationchange", updateWindowBase, false);
+						else
+							angular.element($window).bind("resize", updateWindowBase);
 						break;
+
 					case 'window-percent':
 						initWindowPercent();
 						break;
+
 					case 'pixels':
 						initPixels();
 						break;
+
 					case 'proportion':
 						$log.debug('pwHeight : init : ' + attrs.pwHeight, attrs.heightValue );
 						initProportion();

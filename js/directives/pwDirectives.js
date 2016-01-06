@@ -921,8 +921,6 @@ postworld.directive( 'pwShareLink',
 }]);
 
 
-
-
 postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
 	return{
 		scope:{
@@ -935,3 +933,30 @@ postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log,
 
 	}
 }]);
+
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwToggleClass
+ * @description Toggles a class on the element based on event.
+ * @restrict A
+ * @param string pwToggleClass The class to toggle.
+ * @param string toggleClassBind Optional, event to bind to. Default 'click'.
+ */
+postworld.directive('pwToggleClass', function ($log) {
+	return {
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			var bind = ( !_.isUndefined(attrs.toggleClassBind) ) ?
+					attrs.toggleClassBind : 'click',
+				toggleClass = ( !_.isNull(attrs.pwToggleClass) ) ?
+					attrs.pwToggleClass : 'active';
+
+			element.bind( bind, function(e){
+				$log.debug( 'pwToggleClass : toggleClass', toggleClass );
+				$log.debug( 'pwToggleClass : CLICK', e );
+				element.toggleClass( toggleClass );
+			});
+		}
+	};
+});
