@@ -117,7 +117,6 @@ postworld.run(
 		// Normal links can be clicked
 		$rootElement.off('click');
 
-
 		/////// DEV SNIPPETS /////
 		// TODO remove in production
 		/*
