@@ -1392,8 +1392,6 @@ function pw_print_post( $vars ){
 		}
 	}
 
-	pw_log('post', $pw_post);
-
 	// Use $view to over-ride $template
 	if( isset($view) )
 		$template = pw_get_post_template ( $post_id, $view, 'dir', true );

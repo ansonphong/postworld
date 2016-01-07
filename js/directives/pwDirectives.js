@@ -90,7 +90,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
 						$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
 					else{
 						$scope.includeUrl = '';
-						$scope.$destroy();
+						//$scope.$destroy();
 					}
 				}, 0 );
 			}
@@ -115,13 +115,15 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
 
 			// Watch Include Enable and hide element if it's not enabled
 			$scope.$watch('includeEnable', function( val ){
+				$log.debug( 'pwInclude : includeEnable : ' + attrs.pwInclude , val );
+
 				setTemplateUrl();
 				//$log.debug( 'pwInclude : includeEnable', val );
 				if( !_.isUndefined( val ) && !_.isNull( val ) ){
 					if( val === false )
-						element.addClass( 'ng-hide' );
+						element.css( 'display', 'none' );
 					else
-						element.removeClass( 'ng-hide' );
+						element.css( 'display', 'block' );
 				}
 			}, 1 );
 

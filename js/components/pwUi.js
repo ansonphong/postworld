@@ -101,7 +101,7 @@ postworld.controller( 'pwUiCtrl',
 		if( _.isObject( val ) && _.isEmpty( val ) )
 			return false;
 		// If it's an empty string
-		if( _.isString( val ) && _.isEmpty( val ) )
+		if( _.isString( val ) && (_.isEmpty( val ) || val == ' ' ) )
 			return false;
 		return bool; 
 	}
@@ -221,8 +221,6 @@ postworld.controller( 'pwUiCtrl',
 				return '';
 		}
 
-		
-
 	}
 
 	$scope.uiStyleElement = function( element, properties ){
@@ -233,6 +231,5 @@ postworld.controller( 'pwUiCtrl',
 		var code = "<style>" + element + "{ " + propertiesCode + " }</style>"
 		return code;
 	}
-
 
 }]);
