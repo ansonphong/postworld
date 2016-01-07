@@ -700,6 +700,12 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			// Apply all content filters
 			$post['post_content'] = apply_filters('the_content', $post['post_content']);
 
+			$post['post_content'] = trim($post['post_content']);
+			
+			// If the post content is empy, or just contains a new line break
+			if( empty($post['post_content']) || $post['post_content'] == PHP_EOL )
+				$post['post_content'] = '';
+
 		}
 
 	///// POST EXCERPT /////
@@ -1385,6 +1391,8 @@ function pw_print_post( $vars ){
 			$pw_post[$key] = $value;
 		}
 	}
+
+	pw_log('post', $pw_post);
 
 	// Use $view to over-ride $template
 	if( isset($view) )
