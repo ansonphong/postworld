@@ -90,7 +90,6 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
 						$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
 					else{
 						$scope.includeUrl = '';
-						//$scope.$destroy();
 					}
 				}, 0 );
 			}
