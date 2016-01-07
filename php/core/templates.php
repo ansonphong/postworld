@@ -110,8 +110,18 @@ function pw_get_ng_template( $vars = array() ){
 	///// ALL OTHER TEMPLATES /////
 	} else{
 
-		$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'] );
-		$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'] );
+		// Check for an override template with the device type appended
+		$device_type = pw_get_device_type();
+		if( $device_type !== false ){
+			$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'].'-'.$device_type );
+			$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'].'-'.$device_type );
+		}
+		
+		// If no device specific template, use normal template
+		if( !$template_path )
+			$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'] );
+		if( !$template_url )
+			$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'] );
 
 		// Get Fallback Vars
 		if( $template_path === false ){

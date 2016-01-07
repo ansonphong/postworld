@@ -57,6 +57,19 @@ postworld.factory( '$pw',
 		// Get the admin data, will only be present if is_admin()
 		admin: $_.get( $window, 'pw.admin' ),
 
+		// Return string, the current device type: mobile | tablet | desktop
+		getDeviceType: function(){
+			if( !_.contains( $window.pw.info.modules, 'devices') )
+				return false;
+			var device = $window.pw.device;
+			if( device.is_mobile )
+				return 'mobile';
+			else if( device.is_tablet )
+				return 'tablet';
+			else
+				return 'desktop';
+		},
+
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )
 				value = "/postworld/" + value;

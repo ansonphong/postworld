@@ -384,6 +384,18 @@ function pw_device_meta(){
 
 }
 
+function pw_get_device_type(){
+	if( !pw_module_enabled( 'devices' ) )
+		return false;
+	$device = pw_device_meta();
+	if( $device['is_mobile'] )
+		return 'mobile';
+	elseif( $device['is_tablet'] )
+		return 'tablet';
+	else
+		return 'desktop';
+}
+
 /**
  * Returns an array of strings about
  * the current user's device.

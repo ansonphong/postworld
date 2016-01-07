@@ -35,12 +35,8 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 	};
 	*/
 
-
-	// $log.debug('pwData() Registering feed_settings', feed_settings);
-	
-	var	getTemplate = function( pwData, meta ) { // (pwData,subdir,post_type,view)
-		// (this,subdir,post_type,view) -> ( this, meta )
-		var template;
+	var	getTemplate = function( pwData, meta ) {
+		var template = false;
 
 		// Localize Meta
 		var subdir = meta.subdir;
@@ -60,8 +56,15 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 				break;
 			// Get a standard template
 			default:
-				template = $_.get( $pw.templates[ subdir ], view  ); // $pw.templates[subdir][view];
+				// Check for an override template with the device type appended
+				var deviceType = $pw.getDeviceType();
+				if( deviceType !== false )
+					template = $_.get( $pw.templates[ subdir ], view + '-' + deviceType  );
+				// Get template
+				if( template === false )
+					template = $_.get( $pw.templates[ subdir ], view  ); // $pw.templates[subdir][view];
 				break;
+				
 		}
 		// $log.debug('Service: pwData Method:getTemplate template=',template);
 		return template;			
