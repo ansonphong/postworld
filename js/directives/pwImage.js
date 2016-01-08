@@ -376,8 +376,8 @@ postworld.directive('pwSmartImage',
  *
  */
 postworld.directive('pwParallax',
-	['$rootScope', '$log','$timeout','$window', '_',
-	function($rootScope, $log, $timeout, $window, $_){
+	['$rootScope', '$log','$timeout','$window', '_', '$pw',
+	function($rootScope, $log, $timeout, $window, $_, $pw){
 	return{
 		restrict:'A',
 		scope:{
@@ -395,7 +395,8 @@ postworld.directive('pwParallax',
       			el = element[0],
       			translateY = 0,
       			prevTranslateY = 0,
-      			rect = {};
+      			rect = {},
+      			frozen = ( $pw.getDeviceType() === 'mobile' );
 
       		var prefixed = {
 				transform: $_.getSupportedProp(['transform', 'msTransform', 'webkitTransform', 'mozTransform', 'oTransform'])
@@ -444,6 +445,7 @@ postworld.directive('pwParallax',
 			}
 
 			var init = function(){
+
 				if( !_.isEmpty(attrs.pwParallax) )
 					method = attrs.pwParallax;
 
@@ -476,20 +478,26 @@ postworld.directive('pwParallax',
 			}
 
 			var updateElementTransform = function(){
-				/**
-				 * inView : Generate decimal which is a value between 0-1
-				 * 0 is value when the element is at the bottom of the viewport
-				 * 1 is the value when the element is at the top of the viewport 
-				 */
-				inView = ( window.innerHeight - (c.elTopOffset - yScroll) ) / (c.windowHeight+c.parentHeight);
+				
+				if( frozen ){
+					inViewMedian = 0;
+				}
+				else{
+					/**
+					 * inView : Generate decimal which is a value between 0-1
+					 * 0 is value when the element is at the bottom of the viewport
+					 * 1 is the value when the element is at the top of the viewport 
+					 */
+					inView = ( window.innerHeight - (c.elTopOffset - yScroll) ) / (c.windowHeight+c.parentHeight);
 
-				/**
-				 * inViewMedian : Generate decimal between (-1)-(1)
-				 * 0 is when the object is in the center of the viewport
-				 * -1 is when it's at the bottom of the viewport
-				 * 1 is when it's at the top of the viewport
-				 */
-				inViewMedian = ( inView - 0.5 ) * 2;
+					/**
+					 * inViewMedian : Generate decimal between (-1)-(1)
+					 * 0 is when the object is in the center of the viewport
+					 * -1 is when it's at the bottom of the viewport
+					 * 1 is when it's at the top of the viewport
+					 */
+					inViewMedian = ( inView - 0.5 ) * 2;
+				}
 
 				/**
 				 *  Set the position of the element on the vertical axis.
@@ -536,26 +544,31 @@ postworld.directive('pwParallax',
 				},
 				function(val){
 					updateElementTransform();
-			}, 1);
+			}, 1 );
+
 
 			/**
 			 * Enable / disable parallax based on
 			 * evaluation of parallax-enable attribute expression.
 			 */
-			$scope.$watch(
-				function(){
-					return enable()
-				},
-				function( enable ){
-					if( enable ){
-						angular.element($window).bind("scroll", update);
-						angular.element($window).bind("resize", update);
-					}
-					else{
-						angular.element($window).unbind("scroll", update);
-						angular.element($window).unbind("resize", update);
-					}
-			});
+			if( !frozen ){
+				$scope.$watch(
+					function(){
+						return enable()
+					},
+					function( enable ){
+						if( enable && !frozen ){
+							angular.element($window).bind("scroll", update);
+							angular.element($window).bind("resize", update);
+						}
+						else{
+							angular.element($window).unbind("scroll", update);
+							angular.element($window).unbind("resize", update);
+						}
+				});
+			}
+			else
+				$timeout( updateElementTransform(), 1 );
 			
 			// Initialize
 			$timeout( init(), 0 );

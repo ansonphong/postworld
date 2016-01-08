@@ -80,7 +80,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
 				var pwInclude = attrs.pwInclude;
 				var parts = pwInclude.split('/');
 				if( parts.length < 2 ){
-					$log.debug( 'pwInclude : ERROR : Include must contain 2 parts, dir/basename.' )
+					$log.error( 'pwInclude : ERROR : Include must contain 2 parts, dir/basename.' )
 					return false;
 				}
 				// Timeout to allow other controllers to init
@@ -114,8 +114,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
 
 			// Watch Include Enable and hide element if it's not enabled
 			$scope.$watch('includeEnable', function( val ){
-				$log.debug( 'pwInclude : includeEnable : ' + attrs.pwInclude , val );
-
+				//$log.debug( 'pwInclude : includeEnable : ' + attrs.pwInclude , val );
 				setTemplateUrl();
 				//$log.debug( 'pwInclude : includeEnable', val );
 				if( !_.isUndefined( val ) && !_.isNull( val ) ){
