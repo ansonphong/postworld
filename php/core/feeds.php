@@ -89,7 +89,10 @@ function pw_feed( $vars = array() ){
 	} 
 	else{
 		$feed = array();
-		$feed_id = 'pwFeed_' . pw_random_string();
+		if( !isset( $vars['feed_id'] ) )
+			$feed_id = 'pwFeed_' . pw_random_string();
+		else
+			$feed_id = $vars['feed_id'];
 	}
 
 	pw_set_microtimer($feed_id);
@@ -115,7 +118,7 @@ function pw_feed( $vars = array() ){
 		$vars = array_replace_recursive( $default_vars, $vars );
 	else
 		$vars = $default_vars;
-	
+
 	extract( $vars );
 
 	//pw_set_microtimer('pw_live_feed-'.$feed_id);
