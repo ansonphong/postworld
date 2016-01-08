@@ -656,7 +656,15 @@ postworld.directive('pwHeight',
 			 * Window Percent
 			 */
 			var initWindowPercent = function(){
-				element[0].style['height'] = attrs.heightValue + "vh";
+				/**
+				 * Mobile browsers sometimes change viewport height
+				 * When initially scrolling, which creates unexpected results.
+				 * So for mobile devices, use a fixed pixel value
+				 */
+				if( $pw.getDeviceType() === 'mobile' )
+					element[0].style['height'] = ($window.innerHeight * parseInt( attrs.heightValue ) / 100) + 'px';
+				else			
+					element[0].style['height'] = attrs.heightValue + "vh";
 			}
 
 			/**
