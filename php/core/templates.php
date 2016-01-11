@@ -76,6 +76,9 @@ function pw_get_ng_template( $vars = array() ){
 
 	$append_url = '?ver='.$pw['info']['theme_version'];
 
+	// Get the device type, false if devices module not enabled
+	$device_type = pw_get_device_type();
+
 	$output = '';
 
 	///// POSTS /////
@@ -93,9 +96,19 @@ function pw_get_ng_template( $vars = array() ){
 		// And preload all post type templates
 		// For the specified view
 		foreach( $vars['post_type'] as $post_type ){
+			$template_path = false;
+			$template_url = false;
 
-			$template_path = _get( $templates_dir, $vars['subdir'].'.'.$post_type.'.'.$vars['id'] );
-			$template_url = _get( $templates_url, $vars['subdir'].'.'.$post_type.'.'.$vars['id'] );
+			// Check for an override template with the device type appended
+			if( $device_type !== false ){
+				$template_path = _get( $templates_dir, $vars['subdir'].'.'.$post_type.'.'.$vars['id'].'-'.$device_type );
+				$template_url = _get( $templates_url, $vars['subdir'].'.'.$post_type.'.'.$vars['id'].'-'.$device_type );
+			}
+
+			if( !$template_path ) 
+				$template_path = _get( $templates_dir, $vars['subdir'].'.'.$post_type.'.'.$vars['id'] );
+			if( !$template_url ) 
+				$template_url = _get( $templates_url, $vars['subdir'].'.'.$post_type.'.'.$vars['id'] );
 		
 			if( $template_path !== false )
 				$output .= pw_get_ng_template_contents(
@@ -110,7 +123,6 @@ function pw_get_ng_template( $vars = array() ){
 	} else{
 
 		// Check for an override template with the device type appended
-		$device_type = pw_get_device_type();
 		if( $device_type !== false ){
 			$template_path = _get( $templates_dir, $vars['subdir'].'.'.$vars['id'].'-'.$device_type );
 			$template_url = _get( $templates_url, $vars['subdir'].'.'.$vars['id'].'-'.$device_type );
@@ -395,6 +407,8 @@ function pw_get_templates( $vars = array() ){
 	///// CONSTRUCT POSTS TEMPLATE OBJECT /////
 	$post_template_obj = array();
 
+	$devices_module = pw_module_enabled('devices');
+
 	// Iterate through post types
 	foreach( $post_types as $post_type ){
 
@@ -405,7 +419,7 @@ function pw_get_templates( $vars = array() ){
 		foreach( $post_views as $post_view ){
 
 			/// DEVICES LAYER ///
-			if( pw_module_enabled('devices') ){
+			if( $devices_module ){
 				$devices = array( 'mobile', 'tablet', 'desktop' );
 				foreach( $devices as $device ){
 					// Define the id for the current template
