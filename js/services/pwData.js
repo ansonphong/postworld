@@ -48,7 +48,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		//$log.debug( 'getTemplate : META : ',meta);
 		//$log.debug( '$pw.templates[ subdir ]', $pw.templates[ subdir ] );
 
-		/*
+		/* 
 		 * 
 		 */
 

@@ -221,6 +221,9 @@ function pw_get_dirs($path = '.') {
 }
 
 function pw_construct_template_obj( $args ){
+	/**
+	 * @todo Generate runtime hash cache based on args
+	 */
 
 	extract($args);
 
@@ -258,7 +261,6 @@ function pw_construct_template_obj( $args ){
 	}
 	
 	//pw_log($template_object);
-
 	return $template_object;
 }
 
@@ -393,9 +395,10 @@ function pw_get_templates( $vars = array() ){
 	///// CONSTRUCT POSTS TEMPLATE OBJECT /////
 	$post_template_obj = array();
 
-	/**
-	 * Get also 
-	 */
+	/// DEVICES LAYER ///
+	$devices_module = pw_module_enabled('devices');
+	if( $devices_module )
+		$devices = array( 'mobile', 'tablet', 'desktop' );
 
 	// Iterate through post types
 	foreach( $post_types as $post_type ){
@@ -406,8 +409,23 @@ function pw_get_templates( $vars = array() ){
 		// Iterate through post views
 		foreach( $post_views as $post_view ){
 
+			/// DEVICES LAYER ///
+			if( $devices_module ){
+				foreach( $devices as $device ){
+					// Define the id for the current template
+					$device_view = $post_view . '-' . $device;
+					$device_template_id = $post_type . '-' . $device_view;
+					if( isset( $template_obj['posts'][ $device_template_id ] ) )
+						$post_template_obj[ $post_type ][ $device_view ] =
+							$template_obj['posts'][ $device_template_id ];
+					
+
+				}
+			}
+
 			// Define the id for the current template
 			$template_id = $post_type . '-' . $post_view;
+
 			// If not available, default to the 'post' post_type
 			$default_template_id = 'post' . '-' . $post_view;
 
@@ -421,9 +439,14 @@ function pw_get_templates( $vars = array() ){
 				( isset( $template_obj['posts'][ $existing_template_id ] ) ) ? 
 				$template_obj['posts'][ $existing_template_id ] : '';
 
+
+			
+
 		}
 
 	}
+	pw_log('post_template_obj', $post_template_obj);
+
 	$template_obj['posts'] = $post_template_obj;
 
 
@@ -453,6 +476,8 @@ function pw_get_templates( $vars = array() ){
 	}
 
 	//pw_log_microtimer('pw_get_templates', 'WITH POSTS');
+
+
 
 	return $template_obj;
 
