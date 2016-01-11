@@ -43,21 +43,46 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		var post_type = meta.post_type;
 		var view = meta.view;
 
+		var deviceType = $pw.getDeviceType();
+
 		//$log.debug( 'getTemplate : META : ',meta);
 		//$log.debug( '$pw.templates[ subdir ]', $pw.templates[ subdir ] );
 
+		/*
+		 * 
+		 */
+
 		switch( subdir ) {
+
 			// Get a post template; includes the post_type and view
 			case 'posts':
-				if( post_type )
-					template = $_.get( $pw.templates.posts, post_type + '.' + view ); // $pw.templates.posts[post_type][view];						
-				else 
-					template = $_.get( $pw.templates.posts, 'post.' + view ); // $pw.templates.posts['post'][view];
+				// Set default post type
+				if( !post_type )
+					post_type = 'post';
+				
+				$log.debug( 'pwData : getTemplate : deviceTemplate : deviceType ',  deviceType);
+
+				// If devices are defined
+				if( deviceType !== false ){
+					var deviceView = view + '-' + deviceType;
+					template = $_.get( $pw.templates.posts, post_type + '.' + deviceView );
+					$log.debug( 'pwData : getTemplate : deviceTemplate : template ',  template);
+				}
+				
+				// Get template, second try	
+				if( !template )
+					template = $_.get( $pw.templates.posts, post_type + '.' + view ); // $pw.templates.posts[post_type][view];
+				
+				// Get template, third try
+				if( !template ){
+					post_type = 'post';
+					template = $_.get( $pw.templates.posts, post_type + '.' + view );
+				}
 				break;
+
 			// Get a standard template
 			default:
 				// Check for an override template with the device type appended
-				var deviceType = $pw.getDeviceType();
 				if( deviceType !== false )
 					template = $_.get( $pw.templates[ subdir ], view + '-' + deviceType  );
 				// Get template
@@ -66,7 +91,9 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 				break;
 				
 		}
-		// $log.debug('Service: pwData Method:getTemplate template=',template);
+		$log.debug('pwData : getTemplate', meta);
+		$log.debug('pwData : getTemplate', template);
+
 		return template;			
 	};
 	

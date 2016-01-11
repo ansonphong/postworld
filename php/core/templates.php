@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Gets pre-filtered templates available for various contexts, with meta-data.
  * 
@@ -263,7 +262,9 @@ function pw_construct_template_obj( $args ){
 	return $template_object;
 }
 
-
+/**
+ * @todo : cache at runtime, $pw_templates, or $pw['templates']
+ */
 function pw_get_templates( $vars = array() ){
 	/*
 		$vars = array(
@@ -278,7 +279,7 @@ function pw_get_templates( $vars = array() ){
 
 	pw_set_microtimer('pw_get_templates');
 
-	global $pwSiteGlobals;
+	$pw_config = pw_config();
 	extract($vars);
 
 	// Set Defaults
@@ -292,15 +293,13 @@ function pw_get_templates( $vars = array() ){
 		$ext = 'html';
 
 	// Check to see if there is a templates folder in the child folder
-	//$has_override_templates_dir = is_dir( $pwSiteGlobals['templates']['dir']['override'] );
+	//$has_override_templates_dir = is_dir( $pw_config['templates']['dir']['override'] );
 
 	// Setup Variables
-	$default_template_dir = $pwSiteGlobals['templates']['dir']['default'];
-	$default_template_url = $pwSiteGlobals['templates']['url']['default'];
-	$override_template_dir = $pwSiteGlobals['templates']['dir']['override'];
-	$override_template_url = $pwSiteGlobals['templates']['url']['override'];
-
-
+	$default_template_dir = $pw_config['templates']['dir']['default'];
+	$default_template_url = $pw_config['templates']['url']['default'];
+	$override_template_dir = $pw_config['templates']['dir']['override'];
+	$override_template_url = $pw_config['templates']['url']['override'];
 
 	///// DEFAULT Templates Object /////
 	$default_template_obj_args = array(
@@ -365,9 +364,7 @@ function pw_get_templates( $vars = array() ){
 		return $template_obj;
 	}
 
-
 	////////// POST TEMPLATES : OBJECT STRUCTURE //////////
-
 	///// GET POST TYPES /////
 	$post_types_defined = ( isset ( $posts['post_types'] ) ) ? true : false;
 	$post_types = $post_types_defined
@@ -395,6 +392,10 @@ function pw_get_templates( $vars = array() ){
 
 	///// CONSTRUCT POSTS TEMPLATE OBJECT /////
 	$post_template_obj = array();
+
+	/**
+	 * Get also 
+	 */
 
 	// Iterate through post types
 	foreach( $post_types as $post_type ){
