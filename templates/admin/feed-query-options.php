@@ -44,7 +44,7 @@
 		<label
 			for="query-offset"
 			class="inner"
-			tooltip="<?php ___('query.offset_info'); ?>"
+			uib-tooltip="<?php ___('query.offset_info'); ?>"
 			tooltip-popup-delay="333">
 			<?php ___('query.offset'); ?>
 			<i class="pwi-info-circle"></i>
@@ -86,7 +86,7 @@
 		<label
 			for="query-posts_per_page"
 			class="inner"
-			tooltip="<?php ___('query.posts_per_page_info'); ?>"
+			uib-tooltip="<?php ___('query.posts_per_page_info'); ?>"
 			tooltip-popup-delay="333">
 			<?php ___('query.posts_per_page'); ?>
 			<i class="pwi-info-circle"></i>
@@ -129,7 +129,7 @@
 			class="labeled"
 			ng-options="item.value as item.name for item in feedOptions.query.post_parent_from"
 			ng-model="<?php echo $vars['ng_model'] ?>.query.post_parent_from"
-			tooltip="{{ selectOptionObj( 'query.post_parent_from' ).description }}"
+			uib-tooltip="{{ selectOptionObj( 'query.post_parent_from' ).description }}"
 			tooltip-placement="bottom">
 			<option value=""><?php ___('general.none'); ?></option>
 		</select>
@@ -139,7 +139,7 @@
 		<label
 			for="query-post_parent_id"
 			class="inner"
-			tooltip="<?php ___('query.post_parent_id_info'); ?>"
+			uib-tooltip="<?php ___('query.post_parent_id_info'); ?>"
 			tooltip-popup-delay="333">
 			<?php ___('query.post_parent_id'); ?>
 		</label>
@@ -161,7 +161,7 @@
 			class="labeled"
 			ng-options="item.value as item.name for item in feedOptions.query.exclude_posts_from"
 			ng-model="<?php echo $vars['ng_model'] ?>.query.exclude_posts_from"
-			tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
+			uib-tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
 			tooltip-placement="bottom">
 			<option value=""><?php ___('general.none'); ?></option>
 		</select>
@@ -178,7 +178,7 @@
 			class="labeled"
 			ng-options="item.value as item.name for item in feedOptions.query.include_posts_from"
 			ng-model="<?php echo $vars['ng_model'] ?>.query.include_posts_from"
-			tooltip="{{ selectOptionObj( 'query.include_posts_from' ).description }}"
+			uib-tooltip="{{ selectOptionObj( 'query.include_posts_from' ).description }}"
 			tooltip-placement="bottom">
 			<option value=""><?php ___('general.none'); ?></option>
 		</select>
@@ -199,7 +199,7 @@
 			class="labeled"
 			ng-options="item.value as item.name for item in feedOptions.query.author_from"
 			ng-model="<?php echo $vars['ng_model'] ?>.query.author_from"
-			tooltip="{{ selectOptionObj( 'query.author_from' ).description }}"
+			uib-tooltip="{{ selectOptionObj( 'query.author_from' ).description }}"
 			tooltip-placement="bottom">
 			<option value=""><?php ___('general.none'); ?></option>
 		</select>
@@ -209,7 +209,7 @@
 		<label
 			for="query-author"
 			class="inner"
-			tooltip="<?php ___('query.author_id_info'); ?>"
+			uib-tooltip="<?php ___('query.author_id_info'); ?>"
 			tooltip-popup-delay="333">
 			<?php ___('query.author_id'); ?>
 		</label>

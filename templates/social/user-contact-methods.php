@@ -5,7 +5,7 @@
 				continue;
 			?>
 			<a
-				tooltip="<?php echo $contact['label'] ?>"
+				uib-tooltip="<?php echo $contact['label'] ?>"
 				tooltip-placement="bottom"
 				href="<?php echo $contact['url'] ?>" class="contact-method" target="_blank">
 				<i class="icon <?php echo $contact['icon'] ?>"></i>

@@ -8,7 +8,7 @@ if( is_array( $s ) )
 		<a
 			href="<?php echo _get( $value, 'link' ); ?>"
 			target="_blank"
-			tooltip="<?php echo _get($meta,$key.'.share_label') ?>"
+			uib-tooltip="<?php echo _get($meta,$key.'.share_label') ?>"
 			tooltip-popup-delay="500"
 			tooltip-placement="bottom">
 			<i class="icon <?php echo _get($meta,$key.'.icon') ?>"></i>
