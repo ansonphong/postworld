@@ -8,7 +8,9 @@
 ///////////////////////////////////////////////////////////////*/
 
 ////////////// ADD METABOX //////////////
-// TODO : Check why this is being called twice each page view
+/**
+ * @todo Check why this is being called twice each page view (?)
+ */
 
 add_action('admin_init','pw_metabox_init_wp_postmeta');
 function pw_metabox_init_wp_postmeta(){    
