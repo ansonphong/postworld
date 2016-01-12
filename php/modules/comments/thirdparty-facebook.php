@@ -8,12 +8,6 @@
 ////////////// FACEBOOK SDK //////////////*/
 
 ///// INCLUDE FACEBOOK SDK /////
- 
-/**
- * @todo Conditionally include FB SDK, based on higher level filter
- * so other things can enable / disable it.
- */
-
 if( pw_module_enabled('comments') )
 	add_action( 'wp_footer', 'pw_include_facebook_sdk' );
 function pw_include_facebook_sdk(){
@@ -65,8 +59,6 @@ function pw_get_comments_facebook( $vars = array() ){
 	ob_end_clean();
 	return $content;
 }
-
-
 
 
 ?>
