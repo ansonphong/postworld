@@ -736,7 +736,7 @@ function pw_set_option( $vars ){
 }
 
 
-function pw_grab_option( $option_name, $key, $disable_cache = false ){
+function pw_grab_option( $option_name, $key = false, $disable_cache = false ){
 	// Quick routine method to get option subkey
 	return pw_get_option( array(
 		'option_name' => $option_name,
