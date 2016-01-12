@@ -123,6 +123,13 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'Includes supported Postworld widgets.',
 			),
 
+		array(
+			'name'	=>	'Comments',
+			'slug'	=>	'comments',
+			'icon'	=>	'pwi-bubbles',
+			'description'	=>	'Includes support for third-party comment systems.',
+			),
+
 		);
 
 	// Apply filters so themes can override / add new modules

@@ -18,8 +18,8 @@ postworldAdmin.directive( 'pwAdminOptions', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminOptionsCtrl',
-	[ '$scope', '$window', '$parse', '$log', 'iData', 'pwData', '_',
-	function ( $scope, $window, $parse, $log, $iData, $pwData, $_ ) {
+	[ '$scope', '$window', '$parse', '$log', 'pwData', '_',
+	function ( $scope, $window, $parse, $log, $pwData, $_ ) {
 
 	$scope.refreshOptions = function(){
 		//alert("UPDATE OPTIONS");

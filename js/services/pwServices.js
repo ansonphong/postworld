@@ -51,6 +51,7 @@ postworld.factory( '$pw',
 		postTypes: $window.pw.config.post_types,
 		postViews: $window.pw.config.post_views,
 		taxonomies: $window.pw.config.taxonomies,
+		comments: $window.pw.comments,
 		options: $window.pw.options,
 		device: $window.pw.device,
 

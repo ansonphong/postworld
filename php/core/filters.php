@@ -121,6 +121,7 @@ function pw_default_modules( $modules ){
 }
 add_filter( PW_OPTIONS_MODULES, 'pw_default_modules' );
 
+
 ///// GALLERY FIELD FILTERS /////
 function pw_add_gallery_field_filter( $fields ){
 	// Define the gallery field

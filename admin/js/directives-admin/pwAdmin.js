@@ -13,8 +13,8 @@ postworldAdmin.directive( 'pwAdmin', [ function($scope){
 }]);
 
 postworldAdmin.controller( 'pwAdminCtrl',
-	['$scope', '$window', '$timeout', '$log', 'iData', '_',
-	function($scope, $window, $timeout, $log, $iData, $_) {
+	['$scope', '$window', '$timeout', '$log', '_',
+	function($scope, $window, $timeout, $log, $_) {
 
 	$scope.selectedItem = {};
 

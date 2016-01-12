@@ -100,8 +100,8 @@ postworldAdmin.directive( 'pwAdminFeeds', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminFeedsCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'iData', 'pwData', '_', 'pwPostOptions',
-	function ( $scope, $log, $window, $parse, $iData, $pwData, $_, $pwPostOptions ) {
+	[ '$scope', '$log', '$window', '$parse', 'pwData', '_', 'pwPostOptions',
+	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.view = 'settings';
 

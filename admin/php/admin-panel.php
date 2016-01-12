@@ -88,6 +88,13 @@ function postworld_options_shortcodes(){
 	include 'page-shortcodes.php';
 }
 
+///// COMMENTS SCREEN /////
+function postworld_options_comments(){
+	global $theme_admin;
+	//i_include_scripts();
+	include 'page-comments.php';
+}
+
 
 
 

@@ -25,7 +25,7 @@ global $pwSiteGlobals;
 $pw = array(
 	'config' => $pwSiteGlobals,
 	'info'	=>	array(
-		'version'		=>	1.38,
+		'version'		=>	1.4,
 		'db_version'	=>	1.28,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -53,6 +53,7 @@ $pw = array(
 				'iconsets'				=>	'postworld-iconsets',
 				'cache_iconset'			=>	'postworld-cache-iconset-',
 				'defaults'				=>	'postworld-defaults',
+				'comments'				=>	'postworld-comments',
 				),
 			),
 		'wp_postmeta'	=>	array(
@@ -101,6 +102,7 @@ define( 'PW_OPTIONS_SHORTCODES', 			$pw['db']['wp_options']['option_name']['shor
 define( 'PW_OPTIONS_SHORTCODE_SNIPPETS', 	$pw['db']['wp_options']['option_name']['shortcode_snippets'] );
 define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['header_code'] );
 define( 'PW_OPTIONS_DEFAULTS', 				$pw['db']['wp_options']['option_name']['defaults'] );
+define( 'PW_OPTIONS_COMMENTS', 				$pw['db']['wp_options']['option_name']['comments'] );
 
 ///// DEFINE OPTION CACHES /////
 define( 'PW_CACHE_ICONSET', 	$pw['db']['wp_options']['option_name']['cache_iconset'] );
@@ -329,6 +331,9 @@ if( pw_module_enabled( 'devices' ) )
 
 if( pw_module_enabled( 'colors' ) )
 	include 'php/modules/colors/postworld-colors.php';
+
+if( pw_module_enabled( 'comments' ) )
+	include 'php/modules/comments/postworld-comments.php';
 
 
 ////// GET AJAX FUNCTIONS AND ACTION ////// 

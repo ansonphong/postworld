@@ -7,6 +7,14 @@ if( _get( $pw['config'], 'wp_admin.admin_bar_menu.enable' ) &&
 	current_user_can('manage_options') )
 	add_action( 'admin_bar_menu', 'pw_admin_bar_menu', 999 );
 
+function pw_admin_bar_menu_item_meta( $id ){
+	$class = ( strpos( $_SERVER['QUERY_STRING'], $id ) ) ? 'active' : '';
+
+	return array(
+		'class' => $class
+		);
+}
+
 function pw_admin_bar_menu($wp_admin_bar){
 
 	global $pw;
@@ -45,7 +53,8 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Site Options',
 			'href'		=>	$theme_url.'-site',
 			'parent' 	=>	$menu_name,
-			'meta'   	=>	array( 'class' => 'theme-menu-item' ),
+			//'meta'   	=>	array( 'class' => 'theme-menu-item' ),
+			'meta'		=>	pw_admin_bar_menu_item_meta('site')
 		));
 
 	if( in_array( 'layouts', $enabled_modules ) )
@@ -54,6 +63,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Layout',
 			'href'		=>	$theme_url.'-layout',
 			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('layout')
 		));
 	
 	if( in_array( 'sidebars', $enabled_modules ) )
@@ -62,6 +72,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Sidebars',
 			'href'		=>	$theme_url.'-sidebars',
 			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('sidebars')
 		));
 	
 	if( in_array( 'styles', $enabled_modules ) )
@@ -70,6 +81,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Styles',
 			'href'		=>	$theme_url.'-styles',
 			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('styles')
 		));
 
 	if( in_array( 'social', $enabled_modules ) )
@@ -78,6 +90,16 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Social',
 			'href'		=>	$theme_url.'-social',
 			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('social')
+		));
+
+	if( in_array( 'comments', $enabled_modules ) )
+		array_push($args,array(
+			'id'		=>	'site_comments',
+			'title'		=>	'Comments',
+			'href'		=>	$theme_url.'-comments',
+			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('comments')
 		));
 
 	if( in_array( 'feeds', $enabled_modules ) )
@@ -86,6 +108,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Feeds',
 			'href'		=>	$theme_url.'-feeds',
 			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('feeds')
 		));
 
 	if( in_array( 'backgrounds', $enabled_modules ) )
@@ -94,6 +117,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Backgrounds',
 			'href'		=>	$theme_url.'-backgrounds',
 			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('backgrounds')
 		));
 
 	if( in_array( 'iconsets', $enabled_modules ) )
@@ -102,6 +126,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 		'title'		=>	'Iconsets',
 		'href'		=>	$theme_url.'-iconsets',
 		'parent'	=>	$menu_name,
+		'meta'		=>	pw_admin_bar_menu_item_meta('iconsets')
 	));
 
 	if( in_array( 'shortcodes', $enabled_modules ) )
@@ -110,6 +135,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 			'title'		=>	'Shortcodes',
 			'href'		=>	$theme_url.'-shortcodes',
 			'parent'	=>	$menu_name,
+			'meta'		=>	pw_admin_bar_menu_item_meta('shortcodes')
 		));
 
 	array_push($args,array(
@@ -117,6 +143,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 		'title'		=>	'Database',
 		'href'		=>	$theme_url.'-database',
 		'parent'	=>	$menu_name,
+		'meta'		=>	pw_admin_bar_menu_item_meta('database')
 	));
 
 	// Add 'Plugins' to the main frontend admin menu

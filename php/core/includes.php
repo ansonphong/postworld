@@ -281,6 +281,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-Modal-JS',
 			POSTWORLD_URI.'/js/components/pwModal.js', $angularDep );
 
+		wp_enqueue_script( 'pw-Comments-JS',
+			POSTWORLD_URI.'/js/components/pwComments.js', $angularDep );
+
 		wp_enqueue_script( 'pw-Embedly-JS',
 			POSTWORLD_URI.'/js/components/pwEmbedly.js', $angularDep );
 
@@ -304,7 +307,6 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script( 'pw-filterFeed-JS',
 			POSTWORLD_URI.'/js/components/editFeed.js', $angularDep );
-		
 
 		// CONTROLLERS
 		wp_enqueue_script( 'pw-Controllers-JS',
@@ -523,27 +525,22 @@ function pw_include_admin_scripts(){
 	//wp_enqueue_script('Infinite-App', get_infinite_directory_uri().'/js/app.js', $angularDep );
 
 	// CONTROLLERS : ADMIN
-	wp_enqueue_script('Postworld-Admin-Options', get_infinite_directory_uri().'/js/controllers-admin/options.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Layouts', get_infinite_directory_uri().'/js/controllers-admin/layouts.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Styles', get_infinite_directory_uri().'/js/controllers-admin/styles.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Sidebars', get_infinite_directory_uri().'/js/controllers-admin/sidebars.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Feeds', get_infinite_directory_uri().'/js/controllers-admin/feeds.js', $angularDep );
-	//wp_enqueue_script('Postworld-Admin-Term-Feeds', get_infinite_directory_uri().'/js/controllers-admin/term-feeds.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Backgrounds', get_infinite_directory_uri().'/js/controllers-admin/backgrounds.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Iconsets', get_infinite_directory_uri().'/js/controllers-admin/iconsets.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Shortcodes', get_infinite_directory_uri().'/js/controllers-admin/shortcodes.js', $angularDep );
-	wp_enqueue_script('Postworld-Admin-Database', get_infinite_directory_uri().'/js/controllers-admin/database.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Options', 		POSTWORLD_URI.'/admin/js/controllers-admin/options.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Layouts', 		POSTWORLD_URI.'/admin/js/controllers-admin/layouts.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Styles', 		POSTWORLD_URI.'/admin/js/controllers-admin/styles.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Sidebars', 		POSTWORLD_URI.'/admin/js/controllers-admin/sidebars.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Feeds', 			POSTWORLD_URI.'/admin/js/controllers-admin/feeds.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Backgrounds',	POSTWORLD_URI.'/admin/js/controllers-admin/backgrounds.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Iconsets', 		POSTWORLD_URI.'/admin/js/controllers-admin/iconsets.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Shortcodes', 	POSTWORLD_URI.'/admin/js/controllers-admin/shortcodes.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin-Database', 		POSTWORLD_URI.'/admin/js/controllers-admin/database.js', $angularDep );
 	
 	// DIRECTIVES : ADMIN
-	wp_enqueue_script('Postworld-Admin', get_infinite_directory_uri().'/js/directives-admin/pwAdmin.js', $angularDep );
-	wp_enqueue_script('Infinite-Save-Options', get_infinite_directory_uri().'/js/directives-admin/iSaveOption.js', $angularDep );
-	wp_enqueue_script('Infinite-iData', get_infinite_directory_uri().'/js/services/iData.js', $angularDep );
+	wp_enqueue_script('Postworld-Admin', 				POSTWORLD_URI.'/admin/js/directives-admin/pwAdmin.js', $angularDep );
+	wp_enqueue_script('Infinite-Save-Options', 			POSTWORLD_URI.'/admin/js/directives-admin/iSaveOption.js', $angularDep );
 
-	// DIRECTIVES
-	wp_enqueue_script('Infinite-Directives', get_infinite_directory_uri().'/js/directives/iDirectives.js', $angularDep );
-	
 	/////// ANGULAR : JQUERY SLIDER /////
-	wp_enqueue_script( 'angularJS-jQuery-Slider', POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );
+	wp_enqueue_script( 'angularJS-jQuery-Slider', 		POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );
 	
 	///// JQUERY /////
 	// Required for Slider on Backgrounds
@@ -773,6 +770,13 @@ function pwSiteGlobals_include(){
 	$pwJs .= "pw.iconsets = ";
 	$pwJs .= json_encode( pw_get_iconsets() );
 	$pwJs .= ";";
+
+	// COMMENTS OPTIONS
+	$pwJs .= "\n\n";
+	$pwJs .= "pw.comments = ";
+	$pwJs .= json_encode( pw_grab_option( PW_OPTIONS_COMMENTS ) );
+	$pwJs .= ";";
+
 
 	// SITE LANGUAGE
 	global $pwSiteLanguage;	

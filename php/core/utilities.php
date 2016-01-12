@@ -1583,7 +1583,7 @@ function pw_reset_less_php_cache(){
 
 
 function pw_in_string( $haystack, $needle ){
-	return ( strpos( $haystack, $needle ) == false ) ? true : false;
+	return (bool) strpos( $haystack, $needle );
 }
 
 

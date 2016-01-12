@@ -1,5 +1,15 @@
 # Postworld // Changelog
 
+### Version 1.4
+- **New Core Feature**
+    + Refactored the third party system from Blogosphere into the Postworld core module *Comments*.
+    + To enable, add `comments` to supported modules, and configure the comments object under `pw.config.comments`.
+```
+$pw_config['comments'] => array(
+    'supported' => array('facebook', 'disqus'),
+);
+```
+
 ### Version 1.32
 - **Best Practices**, **Possible Breaking Changes**
     + Each specified view should come with a complimentary post field model

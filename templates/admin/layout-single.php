@@ -6,11 +6,11 @@
 
 	<!-- DROPDOWN -->
 	<div
-		dropdown
+		uib-dropdown
 		class="select-layout dropdown dropdown-layouts pull-left">
 		<!-- SELECTED ITEM -->
 		<span
-			dropdown-toggle
+			uib-dropdown-toggle
 			class="area area-select">
 			<img
 				ng-src="{{ selectedLayout( <?php echo $ng_model; ?>.template ).image }}"
@@ -28,7 +28,7 @@
 					name="{{ context.name }}"
 					value="{{ option.slug }}"
 					type="radio" />
-				<img ng-src="{{ option.image }}" title="Default" tooltip="Default" tooltip-popup-delay="200">
+				<img ng-src="{{ option.image }}" title="Default" uib-tooltip="Default" tooltip-popup-delay="200">
 			</label>
 
 			<!-- TEMPLATE OPTIONS -->
@@ -38,7 +38,7 @@
 					name="{{ context.name }}"
 					value="{{ option.slug }}"
 					type="radio" />
-				<img ng-src="{{ option.image }}" title="{{ option.label }}" width="90" height="60" tooltip="{{ option.label }}" tooltip-popup-delay="200">
+				<img ng-src="{{ option.image }}" title="{{ option.label }}" width="90" height="60" uib-tooltip="{{ option.label }}" tooltip-popup-delay="200">
 			</label>
 
 		</ul>

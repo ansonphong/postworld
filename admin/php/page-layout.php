@@ -1,9 +1,9 @@
 <script type="text/javascript">
 	//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
 	postworldAdmin.controller( 'layoutDataCtrl',
-		[ '$scope', '$window', '$parse', 'iData',
-		function($scope, $window, $parse, iData){
-			$scope.iLayoutOptions = <?php echo json_encode( i_layout_options() ); ?>;
+		[ '$scope', '$window', '$parse',
+		function($scope, $window, $parse ){
+			$scope.iLayoutOptions = <?php echo json_encode( pw_layout_options() ); ?>;
 			$scope.iSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
 			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
 			$scope.iLayouts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
@@ -27,7 +27,7 @@
 				valign="top" class="module layout context">
 				<th scope="row">
 					<span
-						tooltip="{{context.name}}"
+						uib-tooltip="{{context.name}}"
 						tooltip-popup-delay="333">
 						<i class="{{context.icon}}"></i>
 						{{context.label}}
@@ -39,7 +39,6 @@
 
 					<?php
 						echo pw_layout_single_options( array( 'context'	=>	'siteAdmin' ) );
-						//echo i_ob_include_template( 'admin/modules/layout-single.php', $vars );
 					?>
 
 				</td>

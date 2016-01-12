@@ -90,6 +90,16 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_social',
 			);
 
+	if( in_array( 'comments', $enabled_modules ) )
+		$menu['submenu']['comments'] = array(
+			'parent_slug' => $submenu_slug,
+			'page_title' => 'Comments',
+			'menu_title' => 'Comments',
+			'capability' => 'manage_options',
+			'menu_slug' => $submenu_slug.'-comments',
+			'function' => 'postworld_options_comments',
+			);
+
 	if( in_array( 'feeds', $enabled_modules ) )
 		$menu['submenu']['feeds'] = array(
 			'parent_slug' => $submenu_slug,
