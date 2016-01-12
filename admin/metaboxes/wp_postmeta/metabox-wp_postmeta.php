@@ -110,7 +110,6 @@ function pw_wp_postmeta_ui( $post, $vars ){
 
 		// Get the meta key
 		$meta_key = _get( $field, 'meta_key' );
-		// If it's empty, continue
 		if( empty($meta_key) )
 			continue;
 
@@ -128,9 +127,8 @@ function pw_wp_postmeta_ui( $post, $vars ){
 
 		/**
 		 * Default Values
+		 * If no value set, set the default value
 		 */
-		// If no value set, set the default value
-
 		// If the field supports custom defaults, get from saved defaults
 		if( in_array('custom_default', $field['supports'] ) ){
 			
@@ -138,33 +136,31 @@ function pw_wp_postmeta_ui( $post, $vars ){
 			'.'.$field['sub_key'] :
 			'';
 
-			$custom_default_value = pw_get_option(array(
+			$saved_custom_default_value = pw_get_option(array(
 				'option_name' => PW_OPTIONS_DEFAULTS,
 				'key' => 'wp_postmeta.'.$meta_key.$sub_key
 				));
 
-			// If the saved value isn't empty
-			if( !empty( $custom_default_value ) ){
-				$field['default_value'] = $custom_default_value;
-				if( empty( $meta_value ) )
-					$meta_value = $custom_default_value;
-			}
-	
+			/**
+			 * If the saved value isn't empty
+			 * overwrite the default custom default value.
+			 */
+			if( !empty( $saved_custom_default_value ) )
+				$field['custom_default_value'] = $saved_custom_default_value;
+			
 		}
-		
 
 		// If no custom default saved, get the configured default
 		$default_value = _get( $field, 'default_value' );
 		if( empty( $meta_value ) && !empty( $default_value ) )
 			$meta_value = $default_value;
-		
+
 		// Populate the model with the meta value
 		$field['meta_value'] = $meta_value;
 
 		// Restructure Fields Array, from array into object
 		// Using the meta_key as the primary key
-		$fields[$meta_key] = $field;
-		
+		$fields[$meta_key] = $field;		
 
 	}
 
@@ -216,8 +212,6 @@ function pw_wp_postmeta_meta_save( $post_id ){
 			// Update Post Meta
 			update_post_meta( $post_id, $meta_key, $field['meta_value'] );
 
-		
-
 		// If the value is provided and empty and it's not a sub key
 		if( is_string( $meta_value ) &&
 			empty( $field['meta_value'] ) &&
@@ -235,7 +229,7 @@ function pw_wp_postmeta_meta_save( $post_id ){
 			$set_default = pw_set_option( array(
 				'option_name' => PW_OPTIONS_DEFAULTS,
 				'key' => 'wp_postmeta.'.$meta_key.$sub_key,
-				'value' => $field['default_value']
+				'value' => $field['custom_default_value']
 				));
 		}
 

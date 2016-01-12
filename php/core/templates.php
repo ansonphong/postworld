@@ -33,6 +33,19 @@ function pw_template_options( $context ){
 }
 
 /**
+ * Shortform wrapper for pw_get_ng_template method.
+ */
+function pw_grab_ng_template( $subdir, $id, $post_type = false ){
+
+	return pw_get_ng_template( array(
+		'subdir' => $subdir,
+		'id' => $id,
+		'post_type' => $post_type
+		) );
+
+}
+
+/**
  * Gets an actual template contents wrapped in
  * text/ng-template script type.
  *

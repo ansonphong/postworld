@@ -130,7 +130,7 @@
 								<?php if( in_array( 'custom_default', $field['supports'] ) && $option['value'] !== 'default' ): ?>
 									<label
 										class="btn btn-radio-default"
-										ng-model="fields.<?php echo $meta_key ?>.default_value"
+										ng-model="fields.<?php echo $meta_key ?>.custom_default_value"
 										uib-btn-radio="'<?php echo $option['value'] ?>'"
 										uib-tooltip="Set as Default" tooltip-popup-delay="333">
 										<!--  tooltip-append-to-body="true" -->

@@ -396,7 +396,8 @@ postworld.directive('pwParallax',
       			translateY = 0,
       			prevTranslateY = 0,
       			rect = {},
-      			frozen = ( $pw.getDeviceType() === 'mobile' );
+      			deviceType = $pw.getDeviceType(),
+      			frozen = ( deviceType === 'mobile' || deviceType === 'tablet' );
 
       		var prefixed = {
 				transform: $_.getSupportedProp(['transform', 'msTransform', 'webkitTransform', 'mozTransform', 'oTransform'])
