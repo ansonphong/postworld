@@ -1661,6 +1661,36 @@ function pw_fields_where( $substring, $fields ){
 }
 
 
+/**
+ * Add an additional CSS class to menu item
+ * If the item's url is contained with the current URL.
+ * Useful for in-site custom links.
+ *
+ * @example To impliment on theme:
+ * 	add_filter('nav_menu_css_class' , 'pw_nav_menu_css_class' , 10 , 2);
+ */
+function pw_nav_menu_css_class($classes, $item){
+	global $pw;
+	$item_url = $item->url;
+
+	if( empty($item_url) )
+		return $classes;
+
+	/**
+	 * If the url starts with a /, implying that it's
+	 * relative to the base site url.
+	 */
+	if (substr($item_url, 0, 1) === '/'){
+		// The item's full url without protocol
+		$item_url = $_SERVER['SERVER_NAME'] . $item_url;
+	}
+	if (strpos($pw['view']['url'],$item_url) !== false) {
+		$classes[] = 'current-menu-ancestor';
+	}
+	return $classes;
+}
+
+
 ////////////////////////////////////////////////////////////////
 
 
