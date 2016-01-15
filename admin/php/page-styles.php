@@ -4,7 +4,7 @@
 		$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
 		$scope.pwStyles = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) ) ); ?>;
 		$scope.pwStyleStructure = <?php echo json_encode( apply_filters( PW_MODEL_STYLES, array() ) ); ?>;
-		$scope.pwStyleDefaults = <?php echo json_encode( apply_filters( PW_OPTIONS_STYLES, array() ) ); ?>;
+		$scope.pwStyleDefaults = <?php echo json_encode( apply_filters( PW_STYLES_DEFAULT, array() ) ); ?>;
 	}]);
 </script>
 
@@ -19,7 +19,7 @@
 		<hr class="thick">
 
 		<!-- ////////// VARIABLES ////////// -->
-		<div ng-repeat="type in pwStyleStructure">
+		<div class="well" ng-repeat="type in pwStyleStructure">
 
 			<!-- SAVE BUTTON -->
 			<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_STYLES,'pwStyles'); ?></div>
@@ -29,7 +29,7 @@
 				{{ type.name }}
 			</h2>
 
-			<table class="form-table pad">
+			<table class="form-table pad" style="margin-top:15px;">
 				<tr ng-repeat="section in type.values"
 					valign="top"
 					class="module layout">
@@ -90,9 +90,7 @@
 					</td>
 				</tr>
 			</table>
-
-			<hr class="thick">
-
+			
 		</div>
 
 		<!-- ////////// END VARIABLES ////////// -->
