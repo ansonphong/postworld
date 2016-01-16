@@ -1,9 +1,8 @@
 <?php
-
 $s = pw_get_social_share_meta( $vars );
 $meta = pw_get_social_media_meta();
 
-if( is_array( $s ) )
+if( is_array( $s ) && !empty( $s ) )
 	foreach( $s as $key => $value ): ?>
 		<a
 			href="<?php echo _get( $value, 'link' ); ?>"

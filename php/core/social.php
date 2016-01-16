@@ -162,8 +162,8 @@ function pw_get_social_share_meta( $vars ){
 	$post = pw_to_array( $vars );
 
 	// Share Networks
-	$share_networks = pw_get_option( array( "option_name" => PW_OPTIONS_SOCIAL, "key" => "share.networks" ) );
-
+	$share_networks = pw_grab_option( PW_OPTIONS_SOCIAL , 'share.networks' );
+	
 	if( !$share_networks )
 		$share_networks = apply_filters( 'pw_default_share_networks', $share_networks );
 
@@ -217,7 +217,7 @@ function pw_get_social_share_meta( $vars ){
 	}
 	
 	$excerpt = urlencode( _get( $post, 'post_excerpt' ) );
-	
+
 	///// SOCIAL SHARE OBJECT /////
 	$s = array();
 

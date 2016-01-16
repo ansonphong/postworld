@@ -53,7 +53,7 @@ postworld.directive( 'pwComments',
 				return $pwTemplatePartials.get({
 						partial:'pw.comments',
 						vars: {
-							id: 'post-' + $scope.post.ID,
+							id: $scope.post.ID,
 							title: $scope.post.post_title,
 							url: $scope.post.post_permalink,
 						},

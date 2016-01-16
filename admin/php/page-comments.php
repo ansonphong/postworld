@@ -75,6 +75,25 @@
 								<?php _ex('order','postworld') ?>
 								<small> : <?php _ex('the order in which comments appear','postworld') ?></small>
 
+								<hr class="thin">
+								<select
+									ng-model="pwComments.facebook.href_from">
+									<option value="id"><?php _ex('Post ID','postworld') ?> (<?php _ex('default','postworld') ?>)</option>
+									<option value="url"><?php _ex('URL','postworld') ?></option>
+								</select>
+								<?php _ex('href','postworld') ?>
+								<small> : <?php _ex('where to derive unique HREF identifier from','postworld') ?></small>
+
+								<hr class="thin">
+								<select
+									ng-model="pwComments.facebook.protocol">
+									<option value=""><?php _ex('Off','postworld') ?></option>
+									<option value="http"><?php _ex('HTTP','postworld') ?></option>
+									<option value="https"><?php _ex('HTTPS','postworld') ?></option>
+								</select>
+								<?php _ex('normalize protocol','postworld') ?>
+								<small> : <?php _ex('force href from a specific protocol','postworld') ?></small>
+
 								<div class="well">
 									<b><?php _ex('Note','postworld') ?> :</b> 
 									<?php _ex('A Facebook App ID is required for comments to work properly.','postworld') ?>
@@ -85,7 +104,6 @@
 								
 								</div>
 							</div>
-
 
 						</div>
 
@@ -142,7 +160,6 @@
 			<?php endif ?>
 
 		</div>
-
 		
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">

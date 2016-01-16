@@ -26,7 +26,7 @@ function pw_social_model( $model ){
 			"tripadvisor"	=>	"",
 			),
 		"share" => array(
-			"networks" => array('facebook','twitter','email'),
+			"networks" => array(), //'facebook','twitter','email'
 			),
 		"widgets" => array(
 			"facebook" => array(

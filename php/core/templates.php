@@ -576,12 +576,11 @@ function pw_get_panel_template( $panel_id, $ext = 'html', $type = 'url' ){
 /**
  * Gets the system path of a PHP module template.
  */
+
 function pw_module_template( $panel_id, $ext = 'php', $type = 'dir' ){
 	// Returns a single string for panel template from ID
 	return pw_get_template( 'modules', $panel_id, $ext, $type );
 }
-
-
 
 function pw_get_shortcode_template( $template_id, $ext = 'php', $type = 'dir' ){
 	// Returns a single string for panel template from ID
