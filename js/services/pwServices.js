@@ -71,6 +71,11 @@ postworld.factory( '$pw',
 				return 'desktop';
 		},
 
+		moduleEnabled: function( module ){
+			$log.debug('$window.pw.info.modules', $window.pw.info.modules);
+			return _.contains( $window.pw.info.modules, module );
+		},
+
 		pluginUrl: function(value){
 			if( !_.isUndefined(value) )
 				value = "/postworld/" + value;
