@@ -1,5 +1,16 @@
 # Postworld // Changelog
 
+### Version 1.42
+- **Possible Breaking Changes**
+    + Structure of `pw_get_post` input params changed to `pw_get_post( $post_id, $fields, $options )`
+    + The third param used to be `$viewer_user_id`, which now can be passed via options under the `viewer_user_id` key.
+```php
+    $options = array(
+        'cache' => null,
+        'viewer_user_id' => get_current_user_id()
+        )
+```
+
 ### Version 1.4
 - **New Core Feature**
     + Refactored the third party system from Blogosphere into the Postworld core module *Comments*.
