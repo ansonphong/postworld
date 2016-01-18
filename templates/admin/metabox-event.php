@@ -7,8 +7,8 @@
 			<h3>Event Start</h3>
 
 			<!-- DATE DROPDOWN -->
-			<span dropdown class="time dropdown">
-				<button dropdown-toggle class="button">
+			<span uib-dropdown class="time dropdown">
+				<button uib-dropdown-toggle class="button">
 					<i class="pwi-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
@@ -26,10 +26,10 @@
 
 			<!-- TIME DROPDOWN -->
 			<span
-				dropdown
+				uib-dropdown
 				class="time dropdown"
 				ng-hide="post.post_meta[ eventKey ].date.all_day">
-				<button dropdown-toggle class="button">
+				<button uib-dropdown-toggle class="button">
 					<i class="pwi-clock"></i>
 					{{ post.post_meta[ eventKey ].date.start_date_obj | date:'shortTime' }}
 				</button>
@@ -58,8 +58,8 @@
 			<h3>Event End</h3>
 
 			<!-- DATE DROPDOWN -->
-			<span dropdown class="time dropdown">
-				<button dropdown-toggle class="button">
+			<span uib-dropdown class="time dropdown">
+				<button uib-dropdown-toggle class="button">
 					<i class="pwi-calendar"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'MMMM dd, yyyy' }}
 				</button>
@@ -75,10 +75,10 @@
 
 			<!-- TIME DROPDOWN -->
 			<span
-				dropdown
+				uib-dropdown
 				class="time dropdown"
 				ng-hide="post.post_meta[ eventKey ].date.all_day">
-				<button dropdown-toggle class="button">
+				<button uib-dropdown-toggle class="button">
 					<i class="pwi-clock"></i>
 					{{ post.post_meta[ eventKey ].date.end_date_obj | date:'shortTime' }}
 				</button>

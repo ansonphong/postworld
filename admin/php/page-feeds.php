@@ -140,7 +140,7 @@
 							<div class="pw-col-3">
 
 								<span
-									tooltip="{{context.name}}"
+									uib-tooltip="{{context.name}}"
 									tooltip-popup-delay="333">
 									<i class="{{context.icon}}"></i>
 									{{context.label}}
@@ -223,7 +223,7 @@
 							<label
 								for="item-name"
 								class="inner"
-								tooltip="<?php ___('feeds.name_info'); ?>"
+								uib-tooltip="<?php ___('feeds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.name') ?>
 								<i class="pwi-info-circle"></i>
@@ -238,7 +238,7 @@
 							<label
 								for="item-id"
 								class="inner"
-								tooltip="<?php ___('feeds.id_info'); ?>"
+								uib-tooltip="<?php ___('feeds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.id') ?>
 								<i class="pwi-info-circle"></i>
@@ -246,7 +246,7 @@
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								tooltip="<?php ___('feeds.id_edit_info'); ?>"
+								uib-tooltip="<?php ___('feeds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="pwi-edit"></i>
@@ -267,7 +267,7 @@
 							<label
 								for="item-preload"
 								class="inner"
-								tooltip="<?php ___('feeds.preload_info'); ?>"
+								uib-tooltip="<?php ___('feeds.preload_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.preload'); ?>
 								<i class="pwi-info-circle"></i>
@@ -282,7 +282,7 @@
 							<label
 								for="item-load_increment"
 								class="inner"
-								tooltip="<?php ___('feeds.increment_info'); ?>"
+								uib-tooltip="<?php ___('feeds.increment_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.increment'); ?>
 								<i class="pwi-info-circle"></i>
@@ -297,7 +297,7 @@
 							<label
 								for="item-offset"
 								class="inner"
-								tooltip="<?php ___('feeds.offset_info'); ?>"
+								uib-tooltip="<?php ___('feeds.offset_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.offset'); ?>
 								<i class="pwi-info-circle"></i>
@@ -314,7 +314,7 @@
 					<!-- QUERY -->
 					<div class="well">
 						<h3
-							tooltip="{{ selectedItem.query | json }}"
+							uib-tooltip="{{ selectedItem.query | json }}"
 							tooltip-popup-delay="333">
 							<i class="pwi-search"></i> Query
 						</h3>

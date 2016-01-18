@@ -102,7 +102,7 @@
 							<label
 								for="item-name"
 								class="inner"
-								tooltip="<?php ___('feeds.name_info'); ?>"
+								uib-tooltip="<?php ___('feeds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.name') ?>
 								<i class="pwi-info-circle"></i>
@@ -117,7 +117,7 @@
 							<label
 								for="item-id"
 								class="inner"
-								tooltip="<?php ___('feeds.id_info'); ?>"
+								uib-tooltip="<?php ___('feeds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.id') ?>
 								<i class="pwi-info-circle"></i>
@@ -125,7 +125,7 @@
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								tooltip="<?php ___('feeds.id_edit_info'); ?>"
+								uib-tooltip="<?php ___('feeds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="pwi-edit"></i>
@@ -146,7 +146,7 @@
 							<label
 								for="item-preload"
 								class="inner"
-								tooltip="<?php ___('feeds.preload_info'); ?>"
+								uib-tooltip="<?php ___('feeds.preload_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.preload'); ?>
 								<i class="pwi-info-circle"></i>
@@ -161,7 +161,7 @@
 							<label
 								for="item-load_increment"
 								class="inner"
-								tooltip="<?php ___('feeds.increment_info'); ?>"
+								uib-tooltip="<?php ___('feeds.increment_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.increment'); ?>
 								<i class="pwi-info-circle"></i>
@@ -176,7 +176,7 @@
 							<label
 								for="item-offset"
 								class="inner"
-								tooltip="<?php ___('feeds.offset_info'); ?>"
+								uib-tooltip="<?php ___('feeds.offset_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('feeds.offset'); ?>
 								<i class="pwi-info-circle"></i>
@@ -193,7 +193,7 @@
 					<hr class="thin">
 
 					<h3
-						tooltip="{{ selectedItem.query | json }}"
+						uib-tooltip="{{ selectedItem.query | json }}"
 						tooltip-popup-delay="333">
 						<i class="pwi-search"></i> Query
 					</h3>
@@ -244,7 +244,7 @@
 							<label
 								for="query-offset"
 								class="inner"
-								tooltip="<?php ___('query.offset_info'); ?>"
+								uib-tooltip="<?php ___('query.offset_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('query.offset'); ?>
 								<i class="pwi-info-circle"></i>
@@ -286,7 +286,7 @@
 							<label
 								for="query-posts_per_page"
 								class="inner"
-								tooltip="<?php ___('query.posts_per_page_info'); ?>"
+								uib-tooltip="<?php ___('query.posts_per_page_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('query.posts_per_page'); ?>
 								<i class="pwi-info-circle"></i>
@@ -329,7 +329,7 @@
 								class="labeled"
 								ng-options="item.value as item.name for item in feedOptions.query.post_parent_from"
 								ng-model="selectedItem.query.post_parent_from"
-								tooltip="{{ selectOptionObj( 'query.post_parent_from' ).description }}"
+								uib-tooltip="{{ selectOptionObj( 'query.post_parent_from' ).description }}"
 								tooltip-placement="bottom">
 								<option value=""><?php ___('general.none'); ?></option>
 							</select>
@@ -339,7 +339,7 @@
 							<label
 								for="query-post_parent_id"
 								class="inner"
-								tooltip="<?php ___('query.post_parent_id_info'); ?>"
+								uib-tooltip="<?php ___('query.post_parent_id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('query.post_parent_id'); ?>
 							</label>
@@ -362,7 +362,7 @@
 								class="labeled"
 								ng-options="item.value as item.name for item in feedOptions.query.exclude_posts_from"
 								ng-model="selectedItem.query.exclude_posts_from"
-								tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
+								uib-tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
 								tooltip-placement="bottom">
 								<option value=""><?php ___('general.none'); ?></option>
 							</select>
@@ -379,7 +379,7 @@
 								class="labeled"
 								ng-options="item.value as item.name for item in feedOptions.query.include_posts_from"
 								ng-model="selectedItem.query.include_posts_from"
-								tooltip="{{ selectOptionObj( 'query.include_posts_from' ).description }}"
+								uib-tooltip="{{ selectOptionObj( 'query.include_posts_from' ).description }}"
 								tooltip-placement="bottom">
 								<option value=""><?php ___('general.none'); ?></option>
 							</select>

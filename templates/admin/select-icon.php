@@ -38,13 +38,13 @@
 
 	<!-- DROPDOWN -->
 	<div
-		dropdown
+		uib-dropdown
 		class="dropdown select-icon"
 		pw-ui
 		ng-controller="<?php echo $controller_id ?>">
 
 		<!-- SELECTED ITEM -->
-		<span dropdown-toggle>
+		<span uib-dropdown-toggle>
 			<button
 				type="button"
 				class="area-select area-select-icon"
