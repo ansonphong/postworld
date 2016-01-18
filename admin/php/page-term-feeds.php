@@ -91,7 +91,6 @@
 		
 				</div>
 
-
 				<!-- ///// EDIT SETTINGS ///// -->
 				<div ng-show="showView('editItem')">
 
