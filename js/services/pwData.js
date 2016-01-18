@@ -107,19 +107,12 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		posts: $window.pw.posts,
 
 		feeds: {},
-
-		widgets: $window.pw.widgets,
-		
+		widgets: $window.pw.widgets,		
 		templates: $pw.templates, 
-
 		partials: $window.pw.partials,		// Used to store partials
-
 		embeds: $window.pw.embeds,			// Used to store embed codes
-
 		background: $window.pw.background,	// Used to represent the current background object
-
 		users: $window.pw.users,	
-
 		rest:{
 			namespace: $pw.config.rest_api.namespace+'/v1',
 		},
@@ -209,6 +202,10 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			$log.debug('pwData.o_embed',args);
 			var params = { url:url, args:args};
 			return this.wpAjax('o_embed',params);
+		},
+
+		findPost: function( properties ){
+			return _.findWhere( this.posts, properties );
 		},
 
 		getPosts: function( params ){
@@ -684,6 +681,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			var params = { key:key };			
 			return this.wpAjax('pw_end_progress',params);
 		},
+
 		
 
    }; // END OF pwData return value

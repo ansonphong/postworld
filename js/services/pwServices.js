@@ -54,6 +54,7 @@ postworld.factory( '$pw',
 		comments: $window.pw.comments,
 		options: $window.pw.options,
 		device: $window.pw.device,
+		posts: $window.pw.posts,
 
 		// Get the admin data, will only be present if is_admin()
 		admin: $_.get( $window, 'pw.admin' ),
