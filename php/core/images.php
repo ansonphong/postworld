@@ -83,6 +83,10 @@ function pw_get_custom_image_fields(){
  */
 add_filter( 'wp_generate_attachment_metadata', 'pw_generate_custom_images_sizes', 10, 2 );
 function pw_generate_custom_images_sizes( $metadata, $attachment_id ){
+	// If it's an image it will have a sizes key, all other file types return here
+	if( !is_array( $metadata['sizes'] ) )
+		return $metadata;
+	
 	/**
 	 * Get the image with custom dimensions
 	 * Using Postworld image resizing algorithm.

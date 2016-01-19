@@ -234,6 +234,24 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 				});
 
 		},
+		getAttachment: function(vars) {
+			$log.debug('pwData.getAttachment : VARS', vars);
+			var url = this.restUrl('/post'),
+				config = {
+				params:{
+					id: vars.attachment_id,
+					fields: vars.fields
+				}
+			};
+			return $http.get(url,config).then(
+				function(response){
+					$log.debug( 'pwData.getAttachment : RESPONSE', response.data );
+					return response;
+				},
+				function(response){
+					$log.error('REST API Failed @ ' + url, params);
+				});
+		},
 		pw_get_templates: function(templates_object) {
 			// TODO Optimize by running it once and caching it
 			$log.debug('pwData.pw_get_templates',templates_object);
@@ -533,6 +551,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			var params = {args:args};
 			return this.wpAjax('pw_get_image',params);
 		},
+
 		update_option: function(args) {
 			$log.debug('pwData.set_option',args);
 			var params = {args:args};

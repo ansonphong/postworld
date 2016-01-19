@@ -1257,15 +1257,16 @@ function pw_query($args,$return_Type = 'PW_QUERY') {
 	     • ARRAY_A - Return an Associative Array
 	     • PW_QUERY (default) 
 	*/
-		$the_query = new PW_Query($args);
-		if($return_Type == 'ARRAY_A'){
-			return (array) $the_query;
-		}
-		else if($return_Type == 'JSON'){
-			return json_encode($the_query);
-		}
-		else
-			return $the_query;
+	     
+	$the_query = new PW_Query($args);
+	if($return_Type == 'ARRAY_A'){
+		return (array) $the_query;
+	}
+	else if($return_Type == 'JSON'){
+		return json_encode($the_query);
+	}
+	else
+		return $the_query;
 	
 }
 

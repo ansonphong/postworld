@@ -12,6 +12,8 @@ use League\ColorExtractor\Client as ColorExtractor;
 include_once 'colors-functions.php';
 include_once 'colors-metabox.php';
 
+// Add pw_colors to the JSON meta keys
+pw_push_config( 'db.wp_postmeta.json_meta_keys', 'pw_colors' );
 
 /**
  * Postworld Colors Class

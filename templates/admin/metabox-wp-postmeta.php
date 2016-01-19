@@ -88,6 +88,30 @@
 			<?php break; ?>
 
 			<?php
+			///// FILE ID /////
+			case 'file-id': ?>
+				<tr>
+					<td valign="top">
+						<i class="<?php echo $field['icon']; ?>"></i>
+						<b><?php echo $field['label']; ?></b>
+						<?php if( !empty( $field['description'] ) ): ?>
+							<br><small><?php echo $field['description']; ?></small>
+						<?php endif; ?>
+					</td>
+					<td
+						width="75%">
+						<?php
+							echo pw_select_file_id( array(
+								'ng_model'		=>	'fields.'.$meta_key.'.meta_value',
+								'slug'			=>	'file_'.$meta_key,
+								'label'			=>	'File',
+								//'width'			=>	'250px',
+							 	));?>
+					</td>
+				</tr>
+			<?php break; ?>
+
+			<?php
 			///// ICON /////
 			case 'icon': ?>
 				<tr>
