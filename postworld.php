@@ -26,7 +26,7 @@ global $pwSiteGlobals;
 $pw = array(
 	'config' => $pwSiteGlobals,
 	'info'	=>	array(
-		'version'		=>	1.42,
+		'version'		=>	1.43,
 		'db_version'	=>	1.28,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
