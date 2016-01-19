@@ -1,32 +1,29 @@
 <?php
+add_shortcode( 'subpages', 'pw_pagelist_shortcode' );
+add_shortcode( 'siblings', 'pw_pagelist_shortcode' );
 
-////////// CSS COLUMN PROPERTY SHORTCODE //////////
-
-///// COLUMNS /////
 function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
-	
+	global $post;
+
 	// Set the internal defaults
-	$shortcode_defaults = array(
+	$default_atts = array(
 		"class" 	=> 	"",
 		"size" 		=> 	"medium",
 		"view" 		=> 	"list-h2o",
 		"max"		=>	50,
 		"orderby"	=>	"menu_order",
+		"order"		=>	"ASC",
+		"post-type"	=>	$post->post_type,
 	);
 
 	// Get over-ride defaults from the theme
 	$shortcode_defaults = apply_filters( 'pw_pagelist_shortcode_defaults', $shortcode_defaults, $tag );
+	$atts = array_replace_recursive( $default_atts, $atts );
 
-	// Extract Shortcode Attributes, set defaults
-	$atts = shortcode_atts( $shortcode_defaults, $atts );
-	extract( $atts );
-
-	///// Generate Query /////
-	global $post;
 	$query = array();
 
 	// Set Post Type
-	$query['post_type'] = $post->post_type;
+	$query['post_type'] = $atts['post-type'];
 
 	// Set Post Status
 	$query['post_status'] = array('publish');
@@ -51,7 +48,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 
 	// Ordering
 	$query['orderby'] = $atts['orderby'];
-	$query['order'] = "ASC";
+	$query['order'] = $atts['order'];
 
 	// Generate query class
 	switch($tag){
@@ -68,12 +65,12 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	}
 	
 	// Add Max Posts
-	$query['posts_per_page'] = $max;
+	$query['posts_per_page'] = $atts['max'];
 
 	// Setup Feed Query
 	$feed_query_args = array(
 		'feed_query' => $query,
-		'view' => $view,
+		'view' => $atts['view'],
 		);
 
 	// Setup Vars
@@ -88,9 +85,5 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	return $shortcode;
 	
 }
-
-add_shortcode( 'subpages', 'pw_pagelist_shortcode' );
-add_shortcode( 'siblings', 'pw_pagelist_shortcode' );
-
 
 ?>
