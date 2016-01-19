@@ -12,12 +12,10 @@
 
 add_action('admin_init','pw_metabox_init_background');
 function pw_metabox_init_background(){    
-
-	global $pwSiteGlobals;
 	global $post;
 
 	// Get the settings
-	$metabox_settings = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.background' );
+	$metabox_settings = pw_get_obj( pw_config(), 'wp_admin.metabox.background' );
 	if( !$metabox_settings || !is_array( $metabox_settings ) )
 		return false;
 	
@@ -55,7 +53,6 @@ function pw_metabox_init_background(){
 function pw_background_meta_init( $post, $metabox ){
     global $post;
     global $pw;
-    global $pwSiteGlobals;
 
     extract( $metabox['args'] );
     //pw_log( json_encode($vars) );

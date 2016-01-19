@@ -14,13 +14,11 @@
 
 add_action('admin_init','pw_metabox_init_wp_postmeta');
 function pw_metabox_init_wp_postmeta(){    
-
 	global $pw;
-	global $pwSiteGlobals;
 	global $post;
 
 	// Get the settings
-	$metabox_settings = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.wp_postmeta' );
+	$metabox_settings = pw_get_obj( pw_config(), 'wp_admin.metabox.wp_postmeta' );
 	if( !$metabox_settings || !is_array( $metabox_settings ) )
 		return false;
 	
@@ -93,7 +91,6 @@ function pw_metabox_init_wp_postmeta(){
 ////////////// CREATE UI //////////////
 function pw_wp_postmeta_ui( $post, $vars ){
 	global $post;
-	global $pwSiteGlobals;
 
 	// Unpack fields into variable
 	$fields_src = _get( $vars, 'args.fields' );

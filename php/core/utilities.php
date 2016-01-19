@@ -20,6 +20,45 @@ function pw_config( $key = null ){
 }
 
 /**
+ * Sets a specific key in the
+ * Postworld Site Globals.
+ */
+function pw_set_config( $key, $value ){
+	global $pwSiteGlobals;
+	$pwSiteGlobals = _set( $pwSiteGlobals, $key, $value );
+	return $pwSiteGlobals;
+}
+
+/**
+ * Pushes a value to an array in the Postworld Config.
+ */
+function pw_push_config( $key, $value ){
+	global $pwSiteGlobals;
+	$pwSiteGlobals = _push( $pwSiteGlobals, $key, $value );
+	return $pwSiteGlobals;
+}
+
+/**
+ * Add a post parent metabox.
+ */
+function pw_add_metabox_post_parent( $vars ){
+	/*
+	$vars = array(
+		'labels'	=>	array(
+			'title'		=>	'Theme',
+			'search'	=>	'Search themes...'
+			),
+		'post_types' 	=> array( 'theme_version' ),
+		'query'	=>	array(
+			'post_type'			=>	'theme',
+			),
+		)
+	 */
+	return pw_push_config( 'wp_admin.metabox.post_parent', $vars );
+}
+
+
+/**
  * Returns the date in the requested format, a period of time ago
  * @param $period_ago [integer] Number of seconds ago to return the date of
  * @param $format [string] PHP date() format to return

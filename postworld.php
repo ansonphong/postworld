@@ -9,6 +9,7 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 //if( !defined( 'POSTWORLD_DIR' ) )
+define( 'POSTWORLD', true );
 define( 'POSTWORLD_DIR', dirname(__FILE__) );
 define( 'POSTWORLD_PATH', POSTWORLD_DIR );
 
