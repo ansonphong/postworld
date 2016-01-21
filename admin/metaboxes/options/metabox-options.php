@@ -15,7 +15,7 @@ function pw_postmeta_metabox_init(){
 	$post_types = pw_get_obj( pw_config(), 'wp_admin.metabox.pw_meta.post_types' );
 	// Default Post Types
 	if( !$post_types )
-		$post_types = array('post','page','art');
+		$post_types = array('post','page');
 
     foreach( $post_types as $post_type ){
         add_meta_box(
