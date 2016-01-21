@@ -4,10 +4,9 @@ if( !pw_is_admin_ajax() )
 	add_action('admin_init','pw_metabox_init_link_url');
 
 function pw_metabox_init_link_url(){    
-	global $pwSiteGlobals;
 
 	// Add to Post Types
-	$metabox_post_types = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.link_url.post_types' );
+	$metabox_post_types = pw_get_obj( pw_config(), 'wp_admin.metabox.link_url.post_types' );
 	
 	// Set the default Post Types
 	if( !$metabox_post_types )

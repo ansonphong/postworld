@@ -45,6 +45,19 @@ function pw_select_image_id( $vars = array() ){
 	return pw_ob_admin_template( 'select-image-id', $vars );
 }
 
+///// SELECT FILE ID /////
+function pw_select_file_id( $vars = array() ){
+	$defaultVars = array(
+		'ng_model'		=>	null,
+		'slug'			=>	pw_random_hash( $length = 4 ),	// [string] The unique slug where the image object is kept temporatily for display
+		'label'			=>	'File',						// [string] The label to put on the button and title
+		'remove'		=>	true,							// [bool] 	Whether or not to include a button to un-set the background image
+		'attributes'	=>	'',								// [string]	Arbitrary attributes to be added to the image object
+		);
+	$vars = array_replace_recursive( $defaultVars, $vars );
+	return pw_ob_admin_template( 'select-file-id', $vars );
+}
+
 ///// SELECT USER AUTOCOMPLETE /////
 function pw_select_user_autocomplete( $vars = array() ){
 	$defaultVars = array(

@@ -197,9 +197,16 @@ function pw_enabled_modules(){
 		// Merge the required and enabled modules
 		// Forcing required modules to be enabled
 		$enabled_modules = array_merge( $enabled_modules, $required_modules );
-	
+
 		// Remove duplicates if any
 		$enabled_modules = array_unique( $enabled_modules );
+		
+		// Remove the indexes left by array_unique
+		$m = array();
+		foreach( $enabled_modules as $key => $val ){
+			$m[] = $val;
+		}
+		$enabled_modules = $m;
 	}
 
 	return $enabled_modules;

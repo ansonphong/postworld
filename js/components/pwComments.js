@@ -12,7 +12,15 @@ postworld.directive( 'pwComments',
 	return {
 		restrict: 'AE',
 		link: function( $scope, element, attrs ){
-
+			// If no comments module is not enabled, end here
+			if( !$pw.moduleEnabled('comments') )
+				return false;
+			
+			// If no comments are enabled, end here
+			if( !$_.get( $pw, 'comments.facebook.enable' ) &&
+				!$_.get( $pw, 'comments.disqus.enable' ) )
+				return false;
+	
 			// Setup comments Cache ID variable
 			var commentsCacheId = false;
 
@@ -32,7 +40,7 @@ postworld.directive( 'pwComments',
 
 			var update = function(){
 				// If Facebook comments are enabled, re-parse after update
-				if( $pw, 'comments.facebook.enable' ){
+				if( $_.get( $pw, 'comments.facebook.enable' ) ){
 					$timeout( function(){
 						// If Facebook has initialized
 						if( typeof FB !== 'undefined' )
@@ -53,7 +61,7 @@ postworld.directive( 'pwComments',
 				return $pwTemplatePartials.get({
 						partial:'pw.comments',
 						vars: {
-							id: 'post-' + $scope.post.ID,
+							id: $scope.post.ID,
 							title: $scope.post.post_title,
 							url: $scope.post.post_permalink,
 						},

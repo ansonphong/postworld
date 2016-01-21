@@ -20,6 +20,62 @@ function pw_config( $key = null ){
 }
 
 /**
+ * Sets a specific key in the
+ * Postworld Site Globals.
+ */
+function pw_set_config( $key, $value ){
+	global $pwSiteGlobals;
+	$pwSiteGlobals = _set( $pwSiteGlobals, $key, $value );
+	return $pwSiteGlobals;
+}
+
+/**
+ * Pushes a value to an array in the Postworld Config.
+ */
+function pw_push_config( $key, $value ){
+	global $pwSiteGlobals;
+	$pwSiteGlobals = _push( $pwSiteGlobals, $key, $value );
+	return $pwSiteGlobals;
+}
+
+/**
+ * Add a post parent metabox.
+ */
+function pw_add_metabox_post_parent( $vars ){
+	/*
+	$vars = array(
+		'labels'	=>	array(
+			'title'		=>	'Theme',
+			'search'	=>	'Search themes...'
+			),
+		'post_types' 	=> array( 'theme_version' ),
+		'query'	=>	array(
+			'post_type'			=>	'theme',
+			),
+		)
+	 */
+	return pw_push_config( 'wp_admin.metabox.post_parent', $vars );
+}
+
+/**
+ * Add a WP Postmeta metabox.
+ */
+function pw_add_metabox_wp_postmeta( $vars ){
+	/*
+	$vars = array(
+		'post_types' => array('blog'),
+		'metabox'		=>	array(
+			'title'		=>	__('Post Options','postworld'),
+			'context'	=>	'normal',
+			),
+		'fields' => array(),
+		),
+	 */
+	return pw_push_config( 'wp_admin.metabox.wp_postmeta', $vars );
+}
+
+
+/**
  * Returns the date in the requested format, a period of time ago
  * @param $period_ago [integer] Number of seconds ago to return the date of
  * @param $format [string] PHP date() format to return
@@ -1660,6 +1716,105 @@ function pw_fields_where( $substring, $fields ){
 	return $matches;
 }
 
+
+/**
+ * Add an additional CSS class to menu item
+ * If the item's url is contained with the current URL.
+ * Useful for in-site custom links.
+ *
+ * @example To impliment on theme:
+ * 	add_filter('nav_menu_css_class' , 'pw_nav_menu_css_class' , 10 , 2);
+ */
+function pw_nav_menu_css_class($classes, $item){
+	global $pw;
+	$item_url = $item->url;
+
+	if( empty($item_url) )
+		return $classes;
+
+	/**
+	 * If the url starts with a /, implying that it's
+	 * relative to the base site url.
+	 */
+	if (substr($item_url, 0, 1) === '/'){
+		// The item's full url without protocol
+		$item_url = $_SERVER['SERVER_NAME'] . $item_url;
+	}
+	if (strpos($pw['view']['url'],$item_url) !== false) {
+		$classes[] = 'current-menu-ancestor';
+	}
+	return $classes;
+}
+
+/**
+ * Stop script execution with an error message.
+ *
+ * Copied from Yahnis Elsts' wp-update-server
+ * @link https://github.com/YahnisElsts/wp-update-server
+ * 
+ * @param string $message Error message.
+ * @param int $httpStatus Optional HTTP status code. Defaults to 500 (Internal Server Error).
+ */
+function pw_exit_with_error($message = '', $httpStatus = 500) {
+	$statusMessages = array(
+		// This is not a full list of HTTP status messages. We only need the errors.
+		// [Client Error 4xx]
+		400 => '400 Bad Request',
+		401 => '401 Unauthorized',
+		402 => '402 Payment Required',
+		403 => '403 Forbidden',
+		404 => '404 Not Found',
+		405 => '405 Method Not Allowed',
+		406 => '406 Not Acceptable',
+		407 => '407 Proxy Authentication Required',
+		408 => '408 Request Timeout',
+		409 => '409 Conflict',
+		410 => '410 Gone',
+		411 => '411 Length Required',
+		412 => '412 Precondition Failed',
+		413 => '413 Request Entity Too Large',
+		414 => '414 Request-URI Too Long',
+		415 => '415 Unsupported Media Type',
+		416 => '416 Requested Range Not Satisfiable',
+		417 => '417 Expectation Failed',
+		// [Server Error 5xx]
+		500 => '500 Internal Server Error',
+		501 => '501 Not Implemented',
+		502 => '502 Bad Gateway',
+		503 => '503 Service Unavailable',
+		504 => '504 Gateway Timeout',
+		505 => '505 HTTP Version Not Supported'
+	);
+	
+	if ( !isset($_SERVER['SERVER_PROTOCOL']) || $_SERVER['SERVER_PROTOCOL'] === '' ) {
+		$protocol = 'HTTP/1.1';
+	} else {
+		$protocol = $_SERVER['SERVER_PROTOCOL'];
+	}
+
+	//Output a HTTP status header.
+	if ( isset($statusMessages[$httpStatus]) ) {
+		header($protocol . ' ' . $statusMessages[$httpStatus]);
+		$title = $statusMessages[$httpStatus];
+	} else {
+		header('X-Ws-Update-Server-Error: ' . $httpStatus, true, $httpStatus);
+		$title = 'HTTP ' . $httpStatus;
+	}
+	
+	if ( $message === '' ) {
+		$message = $title;
+	}
+
+	//And a basic HTML error message.
+	printf(
+		'<html>
+			<head> <title>%1$s</title> </head>
+			<body> <h1>%1$s</h1> <p>%2$s</p> </body>
+		 </html>',
+		$title, $message
+	);
+	exit;
+}
 
 ////////////////////////////////////////////////////////////////
 

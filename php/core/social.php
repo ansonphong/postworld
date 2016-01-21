@@ -9,7 +9,7 @@
 
 // SNIPPETS
 //include(locate_template('views//taxonomy-page-setup.php'));
-
+ 
 function pw_get_social_media_meta(){
 	// Provide the unfiltered meta data for contact methods options
 
@@ -162,8 +162,8 @@ function pw_get_social_share_meta( $vars ){
 	$post = pw_to_array( $vars );
 
 	// Share Networks
-	$share_networks = pw_get_option( array( "option_name" => PW_OPTIONS_SOCIAL, "key" => "share.networks" ) );
-
+	$share_networks = pw_grab_option( PW_OPTIONS_SOCIAL , 'share.networks' );
+	
 	if( !$share_networks )
 		$share_networks = apply_filters( 'pw_default_share_networks', $share_networks );
 
@@ -217,7 +217,7 @@ function pw_get_social_share_meta( $vars ){
 	}
 	
 	$excerpt = urlencode( _get( $post, 'post_excerpt' ) );
-	
+
 	///// SOCIAL SHARE OBJECT /////
 	$s = array();
 
@@ -322,15 +322,13 @@ function pw_social_widgets( $meta = array() ){
 	// Set meta into settings
 	$settings['meta'] = $meta;
 
-
 	// Apply filters
 	$settings = apply_filters( 'pw_social_widgets', $settings );
-	//pw_log( "pw_social_widgets : " . json_encode( $settings ) );
 
 	$output = "";
 	if( is_array( $settings['networks'] ) )
-		foreach( $settings['networks'] as $network ){
-			switch( $network['network'] ){
+		foreach( $settings['networks'] as $key => $network ){
+			switch( $key ){
 				// FACEBOOK
 				case 'facebook':
 					$output .= pw_social_widget_facebook( $settings['meta'], $network );
@@ -348,58 +346,74 @@ function pw_social_widgets( $meta = array() ){
 }
 
 
-
 ////////// SOCIAL MEDIA WIDGETS //////////
+/**
+ * Add settings for this in the admin, under social - so the 'social widgets'
+ * Can be configured. This is a key feature for this, as well as artdroid, blogosphere.
+ *
+ * 
+ *
+ */
+add_filter( 'pw_social_widgets', 'pw_default_social_widget_settings', 1 );
 function pw_default_social_widget_settings( $settings = array() ){
 	global $post;
 	global $pw;
 
-	$global_settings = array(
+	$social_options = pw_grab_option( PW_OPTIONS_SOCIAL );
+
+	$default_settings = array(
 		"meta"  =>  array(
-			//"title"				=>  "",
+			//"title"			=>  "",
 			//"url"		      	=>  $pw['view']['url'],
 			"before_network"  	=>  "<span class=\"social-widget %network%\">",
 			"after_network"   	=>  "</span>"
 			),
-		"networks"  =>  array(
-			array(
-				"network"     =>  "facebook",
-				"widget"      =>  "like-button",
-				"appId"       =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.facebook_app_id' ) ),
-				"include_sdk" =>  true,
-				"settings"  =>  array(
-					"layout"    	=>  "button_count",
-					"action"    	=>  "like",
-					"show_faces"  	=>  "false",
-					"share"     	=>  "true",
-					"width"     	=>  "133",
-					"height"    	=>  "24",
-					"colorscheme" 	=> 	"light",
-					),
-				),
-			array(
-				"network"     =>  "twitter",
-				"widget"      =>  "share",
-				"include_script"=>  true,
-				"settings"    =>  array(
-					"via"       =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter' ) ), //"twitter_user",
-					"related"   =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter' ) ),
-					"hashtags"  =>  pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL, 'key' => 'networks.twitter_hashtags' ) ), //"twitter_user",
-					"size"      =>  "small",
-					"lang"      =>  "en",
-					"dnt"       =>  "true",
-					),
-				),
-
-			),
-
+		"networks"  =>  array(),
 		);
 
-	$settings = array_replace_recursive( $global_settings, $settings);
+	$settings = array_replace_recursive( $default_settings, $settings);
+
+	/**
+	 * FACEBOOK
+	 */
+
+	if( _get( $social_options, 'widgets.facebook.enable' ) )
+		$settings['networks']['facebook'] = array(
+			"name"     			=>  "Facebook",
+			"widget"     		=>  "like-button",
+			"appId"       		=>  _get( $social_options, 'networks.facebook_app_id' ),
+			"include_sdk" 		=>  true,
+			"settings"  =>  array(
+				"layout"    	=>  "button_count",
+				"action"    	=>  "like",
+				"show_faces"  	=>  "false",
+				"share"     	=>  (string) _get( $social_options, 'widgets.facebook.settings.share' ),
+				"width"     	=>  "133",
+				"height"    	=>  "24",
+				"colorscheme" 	=> 	"light",
+				),
+			);
+
+	/**
+	 * TWITTER
+	 */
+	if( _get( $social_options, 'widgets.twitter.enable' ) )
+		$settings['networks']['twitter'] = array(
+			"name"     		=>  "Twitter",
+			"widget"      =>  "share",
+			"include_script"=>  true,
+			"settings"    =>  array(
+				"via"       =>  _get( $social_options, 'networks.twitter' ),
+				"related"   =>  _get( $social_options, 'networks.twitter' ),
+				"hashtags"  =>  _get( $social_options, 'networks.twitter_hashtags' ),
+				"size"      =>  "small",
+				"lang"      =>  "en",
+				"dnt"       =>  "true",
+				),
+			);
+
 	return $settings;
 }
-add_filter( 'pw_social_widgets', 'pw_default_social_widget_settings' );
-
 
 
 
@@ -565,8 +579,6 @@ function pw_twitter_follow_button( $vars ){
                                             
 ///////// ------ FACEBOOK ------ /////////*/
 
-
-
 function pw_social_widget_facebook( $meta, $widget_settings ){
 
 	// META VALUES
@@ -730,5 +742,3 @@ function pw_social_menu( $vars = array() ){
 
 
 
-
-?>

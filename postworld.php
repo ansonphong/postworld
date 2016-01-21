@@ -9,6 +9,7 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 //if( !defined( 'POSTWORLD_DIR' ) )
+define( 'POSTWORLD', true );
 define( 'POSTWORLD_DIR', dirname(__FILE__) );
 define( 'POSTWORLD_PATH', POSTWORLD_DIR );
 
@@ -25,7 +26,7 @@ global $pwSiteGlobals;
 $pw = array(
 	'config' => $pwSiteGlobals,
 	'info'	=>	array(
-		'version'		=>	1.4,
+		'version'		=>	1.44,
 		'db_version'	=>	1.28,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -74,6 +75,7 @@ $pw = array(
 		'feed_default'		=>	'postworld-feed-default',
 		'feed_override'		=>	'postworld-feed-override',
 		'term_feed'			=>	'postworld-term-feed-',
+		'style_default'		=>	'postworld-style-defaults'
 		),
 
 	'iconsets'	=>	array(),
@@ -104,6 +106,8 @@ define( 'PW_OPTIONS_HEADER_CODE', 	$pw['db']['wp_options']['option_name']['heade
 define( 'PW_OPTIONS_DEFAULTS', 				$pw['db']['wp_options']['option_name']['defaults'] );
 define( 'PW_OPTIONS_COMMENTS', 				$pw['db']['wp_options']['option_name']['comments'] );
 
+
+
 ///// DEFINE OPTION CACHES /////
 define( 'PW_CACHE_ICONSET', 	$pw['db']['wp_options']['option_name']['cache_iconset'] );
 
@@ -118,6 +122,7 @@ define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
 define( 'PW_TERM_FEED', 		$pw['filters']['term_feed'] );
 define( 'PW_FEED_DEFAULT', 		$pw['filters']['feed_default'] );
 define( 'PW_FEED_OVERRIDE', 	$pw['filters']['feed_override'] );
+define( 'PW_STYLES_DEFAULT', 	$pw['filters']['style_default'] );
 
 ///// DEFINE META FILTER NAMES /////
 define( 'PW_POSTS', 	'pw_posts' );

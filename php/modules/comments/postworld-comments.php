@@ -16,6 +16,8 @@ function pw_module_comments_defaults( $settings ){
 			'numposts'		=>	5,
 			'colorscheme'	=>	'light',	// light, dark
 			'order_by'		=>	'social',	// social, reverse_time, time
+			'href_from'		=>	'id',		// id, url
+			'protocol' 		=>	null,		// null, http, https
 			),
 		'disqus'	=>	array(
 			'enable'	=>	false,
@@ -43,6 +45,9 @@ function pw_comment_template_partials( $template_partials ){
  * Get the embed codes for all enabled thirdparty comment systems.
  */
 function pw_get_comments_thirdparty( $vars = array() ){
+
+	//pw_log( 'pw_get_comments_thirdparty : vars', $vars );
+
 	// Gets the embed codes for all the third-party comments widgets
 	//pw_log('comments', $vars);
 	$output = '<!-- COMMENTS -->';

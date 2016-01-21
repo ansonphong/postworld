@@ -71,7 +71,7 @@ if( !is_array($show) )
 		size="3"
 		type="number"
 		ng-model="<?php echo $ng_model; ?>.interval">
-		<label for="input-interval"><b><span tooltip="milliseconds">ms</span></b> interval</label>
+		<label for="input-interval"><b><span uib-tooltip="milliseconds">ms</span></b> interval</label>
 	<hr class="thin">
 	<?php
 	}

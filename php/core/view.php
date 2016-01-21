@@ -1,16 +1,29 @@
 <?php
 
-function pw_current_context(){
-	// This function maps out the current relavant contexts of the current page
-	// The contexts are generally listed in reverse priority order
-	// So the lower down on the list, the higher priority it will get when selecting a layout
-	// As the layout selection will select the last relavant context
+/**
+ * Gets the current generated context from the
+ * Postworld globals.
+ */
+function pw_view_context(){
+	global $pw;
+	return _get($pw, 'view.context');
+}
 
+/**
+ * Maps out the current relavant contexts of the current route
+ *
+ * @note 	The contexts are generally listed in reverse priority order
+ * 			So the lower down on the list, the higher priority it will get when selecting a layout
+ * 			As the layout selection will select the last relavant context.
+ */
+function pw_current_context(){
 	$context = array();
 
-	/// ADD CONTEXTS ///
-	// List them in the order they will appear
-	// Later listings take higher priority
+	/**
+	 * ADD CONTEXTS
+	 * List them in the order they will appear
+	 * Later listings take higher priority
+	 */
 
 	if( is_archive() )
 		$context[] = 'archive';

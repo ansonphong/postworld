@@ -14,8 +14,14 @@ function pw_post_exists ( $post_id ){
 	    return false;
 }
 
+/**
+ * Gets an array of posts using pw_posts method.
+ * @param array $post_ids An array of integers, post IDs.
+ * @param string|array Postworld fields model.
+ * @param array Available options.
+ */
 function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
-	// Returns an array of specified posts
+	// 
 	/*
 		$post_ids 	= [ array ] 				// A numerical array of posts to retrieve
 		$fields 	= [ string / array ]		// pw_get_post() Field Model
@@ -57,15 +63,19 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 		$fields = pw_add_gallery_field( $fields );
 	}
 
-	///// GET POSTS /////
-	// Cycle though each $post_id
+	/**
+	 * GET POSTS
+	 * Iterate through each post ID.
+	 */
 	$posts = array();
 	$i = 0; // Iterator
 	foreach ($post_ids as $post_id) {
-		$post = pw_get_post($post_id, $fields );
+		$post = pw_get_post($post_id, $fields, $options );
 
-		///// ADD META DATA //////
-		// FEED ORDER
+		/**
+		 * ADD META DATA
+		 */
+		// If feed order field requested
 		if( is_array( $fields ) && in_array( 'feed_order', $fields ) || $fields == 'all' ){
 			$i++;
 			if( !isset( $post['feed'] ) )
@@ -96,9 +106,20 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
 
 }
 
-////////// GET POST DATA //////////
-function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
+/**
+ * GET POST DATA
+ * Gets a post based on the Postworld fields model.
+ * @param integer $post_id (Required) The ID of the post.
+ * @param string|array String of a registered field model, or array of fields.
+ * @param $options
+ *			[viewer_user_id] (integer) User ID
+ *			[cache] (boolean) Whether or not to use the cache, overrides cache module
+ */
+function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	//pw_log( "pw_get_post : " . $post_id, $fields );
+
+	if( !is_array($options) )
+		$options = array();
 
 	// Switch Modes (view/edit)
 	// 'Edit' mode toggles content display filtering (oEmbed, shortcodes, etc)
@@ -152,22 +173,21 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
-	if ( !$viewer_user_id )
-		$viewer_user_id = get_current_user_id();
+	if ( !$options['viewer_user_id'] )
+		$options['viewer_user_id'] = get_current_user_id();
 	
 	// Add User Fields of Current Logged in User who is viewing
-	if ( is_int($viewer_user_id) && $viewer_user_id != 0 ){
+	if ( is_int($options['viewer_user_id']) && $options['viewer_user_id'] != 0 ){
 		// Get User Data
-		$viewer_user_data = get_userdata( $viewer_user_id );
+		$viewer_user_data = get_userdata( $options['viewer_user_id'] );
 		// If user exists, add user fields
 		//if( $viewer_user_data != false ){
 		//	$fields = array_merge($fields, $viewer_fields);
 		//}
-	} else if ($viewer_user_id == 0){
+	} else if ($options['viewer_user_id'] == 0){
 
 	}
 	//$fields = array_merge($fields, $viewer_fields);
-
 
 	////////// VIEWER FIELDS //////////
 	// Extract viewer() fields
@@ -177,11 +197,11 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 		///// GET VIEWER DATA /////
 		// Has Viewer Voted?
 		if( in_array('has_voted', $viewer_fields) )
-			$post['viewer']['has_voted'] = pw_has_voted_on_post( $post_id, $viewer_user_id );
+			$post['viewer']['has_voted'] = pw_has_voted_on_post( $post_id, $options['viewer_user_id'] );
 
 		// View Vote Power
 		if( in_array('vote_power', $viewer_fields) )
-			$post['viewer']['vote_power'] = pw_get_user_vote_power( $viewer_user_id );
+			$post['viewer']['vote_power'] = pw_get_user_vote_power( $options['viewer_user_id'] );
 	
 		// Is Favorite
 		if( in_array('is_favorite', $viewer_fields) ){
@@ -197,9 +217,14 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 
 	}
 
-
 	///// CACHING LAYER /////
-	if( in_array( 'post_cache', pw_enabled_modules() ) ){
+	if( !isset( $options['cache'] ) )
+		$options['cache'] = null;
+	$cache_module_enabled = in_array( 'post_cache', pw_enabled_modules() );
+	$cache_enabled = ( $options['cache'] === true ||
+		( $cache_module_enabled && $options['cache'] !== false ) );
+
+	if( $cache_enabled ){
 		$cache_hash = hash( 'sha256', json_encode( array( $post_id, $fields, $mode ) ) );
 		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
 		if( !empty( $get_cache ) ){
@@ -207,7 +232,6 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 			return array_replace( $cached_post, $post );
 		}
 	}
-
 
 	////////// WP GET_POST METHOD //////////
 	// Get post data from Wordpress standard function
@@ -782,7 +806,7 @@ function pw_get_post( $post_id, $fields = 'preview', $viewer_user_id = null ){
 	$post = apply_filters( 'pw_get_post_complete_filter', $post );
 
 	///// CACHING LAYER /////
-	if( in_array( 'post_cache', pw_enabled_modules() ) )
+	if( $cache_enabled )
 		pw_set_cache( array(
 			'cache_type'	=>	'post',
 			'cache_name'	=>	'post-'.$post_id,

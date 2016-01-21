@@ -16,11 +16,10 @@
  * @param {expression} postLoading Binds a boolean to the current status of the post data loading.
  */
 postworld.directive( 'pwGetPost',
-	[ '$window', '$timeout', '_', 'pwData',
-	function( $window, $timeout, $_, $pwData ){
+	[ '$window', '$timeout', '_', 'pwData', '$log',
+	function( $window, $timeout, $_, $pwData, $log ){
 	return {
 		restrict: 'AE',
-		controller: 'pwGetPostCtrl',
 		scope:{
 			postId:"=pwGetPost",
 			postFields:"=",
@@ -38,6 +37,10 @@ postworld.directive( 'pwGetPost',
 			$scope.postLoading = true;
 
 			$scope.pwGetPost = function(){
+				$scope.postLoading = true;
+
+				$log.debug('getting post', $scope.postId);
+
 				if( _.isUndefined( $scope.postId ) ){
 					return false;
 				}

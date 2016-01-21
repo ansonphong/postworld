@@ -32,13 +32,11 @@ function pw_get_feed_by_context( $context = array() ){
 	// If no context parameter is given
 	if( empty( $context ) )
 		// Get the global context
-		$context = $pw['view']['context'];
+		$context = pw_view_context();
 
 	// Add default context to the beginning of the array
 	// This will enable the default feed setting to work globally
 	$context = array_merge( array('default'), $context );
-
-	//pw_log( "CONTEXT : " . json_encode($context) );
 
 	// Iterate through each of the contexts
 	foreach( $context as $c ){

@@ -1,7 +1,10 @@
 <?php
-
+/**
+ * SOCIAL MODEL
+ * Create the default social model.
+ */
+add_filter( PW_OPTIONS_SOCIAL, 'pw_social_model' );
 function pw_social_model( $model ){
-
 	$default_model = array(
 		"contact"	=>	array(
 			"email"			=>	"",
@@ -22,23 +25,30 @@ function pw_social_model( $model ){
 			"twitter"		=>	"",
 			"tripadvisor"	=>	"",
 			),
+		"share" => array(
+			"networks" => array(), //'facebook','twitter','email'
+			),
+		"widgets" => array(
+			"facebook" => array(
+				"enable" => true,
+				"settings" => array(
+					"share" =>  true,
+					),
+				),
+			"twitter" => array(
+				"enable" => true,
+				),
+			),
 		);
-
 	$model = array_replace_recursive( $default_model, $model );
-
 	return $model;
-
 }
 
 
-add_filter( PW_OPTIONS_SOCIAL, 'pw_social_model' );
-
-
-////////// SOCIAL ATTRIBUTES //////////
-// - Define how to handle the settings of each type
-
+/**
+ * SOCIAL META
+ */
 function pw_social_meta( $social_meta = array() ){
-
 	$social_meta	=	array(
 		array(
 			"id"	=>	"networks",
@@ -197,15 +207,6 @@ function pw_social_meta( $social_meta = array() ){
 		
 		);
 
-	$social_meta = apply_filters( 'pw_social_meta', $social_meta );
-
-	return $social_meta;
-
+	return apply_filters( 'pw_social_meta', $social_meta );
 }
 
-
-
-
-
-
-?>

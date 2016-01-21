@@ -11,12 +11,10 @@
 // TODO : Check why this is being called twice each page view
 add_action('admin_init','pw_metabox_init_post_parent');
 function pw_metabox_init_post_parent(){    
-
-	global $pwSiteGlobals;
 	global $post;
 
 	// Get the settings
-	$metabox_settings = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.post_parent' );
+	$metabox_settings = pw_get_obj( pw_config(), 'wp_admin.metabox.post_parent' );
 	if( !$metabox_settings || !is_array( $metabox_settings ) )
 		return false;
 	
@@ -99,7 +97,6 @@ function pw_metabox_init_post_parent(){
 ////////////// CREATE UI //////////////
 function pw_post_parent_meta_init( $post, $metabox ){
     global $post;
-    global $pwSiteGlobals;
 
     extract( $metabox['args'] );
 

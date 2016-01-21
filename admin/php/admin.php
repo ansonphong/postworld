@@ -163,6 +163,14 @@ function postworld_admin_menu(){
 
 	//echo json_encode($pw['modules']);
 
+	// If a custom slug is define, nest postworld under it at the bottom
+	if( $submenu_slug !== 'postworld' ){
+		$menu['menu']['parent_slug'] = $submenu_slug;
+		$menu['menu']['menu_slug'] = $submenu_slug.'-postworld';
+		$menu['submenu'][] = $menu['menu'];
+		$menu['menu'] = array();
+	}
+
 	///// APPLY FILTERS /////
 	// Allow themes to add sub menus
 	$menu['submenu'] = apply_filters( 'pw_admin_submenu', $menu['submenu'] );	
@@ -179,29 +187,30 @@ function theme_admin_menu(){
 	
 	///// MAIN MENU /////
 	// http://codex.wordpress.org/Function_Reference/add_menu_page
-    add_menu_page(
-    	$admin['menu']['page_title'],
-    	$admin['menu']['menu_title'],
-    	$admin['menu']['capability'],
-    	$admin['menu']['menu_slug'],
-    	$admin['menu']['function'],
-    	$admin['menu']['menu_icon']
-    	);
+	if( isset( $admin['menu'] ) && !empty( $admin['menu'] ) )
+		add_menu_page(
+			$admin['menu']['page_title'],
+			$admin['menu']['menu_title'],
+			$admin['menu']['capability'],
+			$admin['menu']['menu_slug'],
+			$admin['menu']['function'],
+			$admin['menu']['menu_icon']
+			);
 
-    //pw_log( "ADMIN SUBMENU" . json_encode($admin) );
+	//pw_log( "ADMIN SUBMENU" . json_encode($admin) );
 
-    ///// SUB MENUS /////
-    // http://codex.wordpress.org/Function_Reference/add_submenu_page
-    foreach( $admin['submenu'] as $key => $value ){
-    	add_submenu_page(
-	    	$value['parent_slug'],
-	    	$value['page_title'],
-	    	$value['menu_title'],
-	    	$value['capability'],
-	    	$value['menu_slug'],
-	    	$value['function']
-	    	);
-    }
+	///// SUB MENUS /////
+	// http://codex.wordpress.org/Function_Reference/add_submenu_page
+	foreach( $admin['submenu'] as $key => $value ){
+		add_submenu_page(
+			$value['parent_slug'],
+			$value['page_title'],
+			$value['menu_title'],
+			$value['capability'],
+			$value['menu_slug'],
+			$value['function']
+			);
+	}
 
 }
 
@@ -262,10 +271,10 @@ $i_layouts_model = array(
 // These contain globals accessible by the JS window object
 function i_admin_scripts(){
   $iGlobals = array(
-  	"paths"	=>	array(
-  		"ajax_url" => admin_url( 'admin-ajax.php' ),
-  		),
-  	);
+	"paths"	=>	array(
+		"ajax_url" => admin_url( 'admin-ajax.php' ),
+		),
+	);
   ?>
 	<script  type="text/javascript">
 	//<![CDATA[

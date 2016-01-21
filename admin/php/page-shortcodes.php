@@ -96,7 +96,7 @@
 							<label
 								for="item-id"
 								class="inner"
-								tooltip="<?php ___('shortcodes.id_info'); ?>"
+								uib-tooltip="<?php ___('shortcodes.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('shortcodes.id'); ?>
 								<i class="pwi-info-circle"></i>
@@ -113,7 +113,7 @@
 							<label
 								for="item-name"
 								class="inner"
-								tooltip="<?php ___('shortcodes.name_info'); ?>"
+								uib-tooltip="<?php ___('shortcodes.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('shortcodes.name'); ?>
 								<i class="pwi-info-circle"></i>

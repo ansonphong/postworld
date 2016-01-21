@@ -116,6 +116,32 @@ function _set( $obj, $key, $value ){
 	return $obj;
 }
 
+/**
+ * Pushes a value to a nested array.
+ * @param array $obj A multi-dimentional array, with keys.
+ * @param string $key Dot notation location of the array to modify.
+ * @param any $value The value to push to the specified array.
+ */
+function _push( $obj, $key, $value ){
+
+	// Get the original key value
+	$array = _get( $obj, $key );
+
+	// If it's not an array, make it an empty array
+	if( !is_array( $array ) ){
+		$array = array();
+		$obj = _set( $obj, $key, $array );
+	}
+
+	// Add the value to the array
+	$array[] = $value;
+
+	// Add it to the object
+	$obj = _set( $obj, $key, $array );
+
+	return $obj;
+
+}
 
 
 /*

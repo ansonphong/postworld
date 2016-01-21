@@ -861,12 +861,7 @@ function pwGlobals_parse(){
 	$pw["security"]["mode"] = "user";
 
 	///// PW MODULES /////
-	// Get saved modules from the DB
-	$modules = pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
-	// If no modules are saved in the DB, use the required modules
-	if( empty($modules) )
-		$modules = pw_enabled_modules();
-	$pw['info']['modules'] = $modules;
+	$pw['info']['modules'] = pw_enabled_modules();
 
 	//// THEME VERSION /////
 	$pw['info']['theme_version'] = apply_filters( PW_THEME_VERSION, $pw['info']['version'] );
@@ -874,7 +869,6 @@ function pwGlobals_parse(){
 	return;
 
 }
-
 
 /**
  * ADD FRONTEND GLOBALS

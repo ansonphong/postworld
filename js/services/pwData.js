@@ -107,19 +107,12 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		posts: $window.pw.posts,
 
 		feeds: {},
-
-		widgets: $window.pw.widgets,
-		
+		widgets: $window.pw.widgets,		
 		templates: $pw.templates, 
-
 		partials: $window.pw.partials,		// Used to store partials
-
 		embeds: $window.pw.embeds,			// Used to store embed codes
-
 		background: $window.pw.background,	// Used to represent the current background object
-
 		users: $window.pw.users,	
-
 		rest:{
 			namespace: $pw.config.rest_api.namespace+'/v1',
 		},
@@ -211,6 +204,10 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			return this.wpAjax('o_embed',params);
 		},
 
+		findPost: function( properties ){
+			return _.findWhere( this.posts, properties );
+		},
+
 		getPosts: function( params ){
 			/*
 			 params = {
@@ -236,6 +233,24 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 					$log.error('REST API Failed @ ' + url, params);
 				});
 
+		},
+		getAttachment: function(vars) {
+			$log.debug('pwData.getAttachment : VARS', vars);
+			var url = this.restUrl('/post'),
+				config = {
+				params:{
+					id: vars.attachment_id,
+					fields: vars.fields
+				}
+			};
+			return $http.get(url,config).then(
+				function(response){
+					$log.debug( 'pwData.getAttachment : RESPONSE', response.data );
+					return response;
+				},
+				function(response){
+					$log.error('REST API Failed @ ' + url, params);
+				});
 		},
 		pw_get_templates: function(templates_object) {
 			// TODO Optimize by running it once and caching it
@@ -536,6 +551,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			var params = {args:args};
 			return this.wpAjax('pw_get_image',params);
 		},
+
 		update_option: function(args) {
 			$log.debug('pwData.set_option',args);
 			var params = {args:args};
@@ -684,6 +700,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			var params = { key:key };			
 			return this.wpAjax('pw_end_progress',params);
 		},
+
 		
 
    }; // END OF pwData return value

@@ -87,7 +87,7 @@
 						class="pw-row well">
 						<div class="pw-col-2">
 							<span
-								tooltip="{{context.name}}"
+								uib-tooltip="{{context.name}}"
 								tooltip-popup-delay="333">
 								<i class="{{context.icon}}"></i>
 								{{context.label}}
@@ -129,7 +129,7 @@
 							<label
 								for="item-name"
 								class="inner"
-								tooltip="<?php ___('backgrounds.name_info'); ?>"
+								uib-tooltip="<?php ___('backgrounds.name_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('backgrounds.name'); ?>
 								<i class="pwi-info-circle"></i>
@@ -144,7 +144,7 @@
 							<label
 								for="item-id"
 								class="inner"
-								tooltip="<?php ___('backgrounds.id_info'); ?>"
+								uib-tooltip="<?php ___('backgrounds.id_info'); ?>"
 								tooltip-popup-delay="333">
 								<?php ___('backgrounds.id'); ?>
 								<i class="pwi-info-circle"></i>
@@ -152,7 +152,7 @@
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								tooltip="<?php ___('backgrounds.id_edit_info'); ?>"
+								uib-tooltip="<?php ___('backgrounds.id_edit_info'); ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="pwi-edit"></i>
@@ -173,7 +173,7 @@
 					<label
 						for="item-description"
 						class="inner"
-						tooltip="<?php ___('backgrounds.description_info'); ?>"
+						uib-tooltip="<?php ___('backgrounds.description_info'); ?>"
 						tooltip-popup-delay="333">
 						<?php ___('backgrounds.description'); ?>
 						<i class="pwi-info-circle"></i>

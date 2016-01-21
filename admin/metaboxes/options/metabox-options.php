@@ -12,8 +12,7 @@ add_action('admin_init','pw_postmeta_metabox_init');
 function pw_postmeta_metabox_init(){    
 
 	// Add to Post Types
-	global $pwSiteGlobals;
-	$post_types = pw_get_obj( $pwSiteGlobals, 'wp_admin.metabox.pw_meta.post_types' );
+	$post_types = pw_get_obj( pw_config(), 'wp_admin.metabox.pw_meta.post_types' );
 	// Default Post Types
 	if( !$post_types )
 		$post_types = array('post','page','art');

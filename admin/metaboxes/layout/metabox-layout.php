@@ -16,7 +16,6 @@ function pw_metabox_init_layout(){
 	if( defined('DOING_AJAX') && DOING_AJAX )
 		return false;
 
-	global $pwSiteGlobals;
 	global $post;
 
 	/*
@@ -27,7 +26,7 @@ function pw_metabox_init_layout(){
 	*/
 
 	// Get the settings
-	$metabox_settings = _get( $pwSiteGlobals, 'wp_admin.metabox.layout' );
+	$metabox_settings = _get( pw_config(), 'wp_admin.metabox.layout' );
 	if( !$metabox_settings || !is_array( $metabox_settings ) )
 		return false;
 	
@@ -68,7 +67,6 @@ function pw_metabox_init_layout(){
 function pw_layout_meta_init( $post, $metabox ){
 	global $post;
 	global $pw;
-	global $pwSiteGlobals;
 
 	extract( $metabox['args'] );
 	//pw_log( json_encode($vars) );

@@ -8,12 +8,6 @@
 ////////////// FACEBOOK SDK //////////////*/
 
 ///// INCLUDE FACEBOOK SDK /////
- 
-/**
- * @todo Conditionally include FB SDK, based on higher level filter
- * so other things can enable / disable it.
- */
-
 if( pw_module_enabled('comments') )
 	add_action( 'wp_footer', 'pw_include_facebook_sdk' );
 function pw_include_facebook_sdk(){
@@ -36,11 +30,6 @@ function pw_include_facebook_sdk(){
 function pw_get_comments_facebook( $vars = array() ){
 	global $pw;
 
-	// If no URL provided, get the PW global URL
-	$url = _get( $vars, 'url' );
-	if( empty( $url ) )
-		$vars['url'] = $pw['view']['url'];
-	
 	// Get the saved options array
 	$fbc = pw_grab_option( PW_OPTIONS_COMMENTS, 'facebook' );
 
@@ -48,25 +37,42 @@ function pw_get_comments_facebook( $vars = array() ){
 	if( $fbc['enable'] == false )
 		return '';
 
-	// Use output buffering to capture HTML as a string
-	ob_start(); ?>
+	// Setup default vars
+	$defaultVars = array(
+		'id'    =>  _get( $pw, 'view.post.ID' ),
+		'title' =>  _get( $pw, 'view.post.post_title' ),
+		'url'   =>  _get( $pw, 'view.url' ),
+		);
+	
+	$vars = array_replace_recursive( $defaultVars, $vars );
 
-		<div
-			class="fb-comments"
-			data-href="<?php echo $vars['url'] ?>"
-			data-numposts="<?php echo $fbc['numposts'] ?>"
-			data-colorscheme="<?php echo $fbc['colorscheme'] ?>"
-			data-order-by="<?php echo $fbc['order_by'] ?>"
-			width="100%">
-		</div>
+	/**
+	 * HREF SOURCE
+	 */
+	switch( $fbc['href_from'] ){
+		case 'id':
+			$fbc['href'] = get_site_url().'/?p='.$vars['id'];
+			break;
+		case 'url':
+			$fbc['href'] = $vars['url'];
+			break;
+	}
 
-	<?php
-	$content = ob_get_contents();
-	ob_end_clean();
-	return $content;
+	/**
+	 * NORMALIZE PROTOCOL
+	 */
+	if( $fbc['protocol'] === 'http' )
+		$fbc['href'] = str_replace( 'https://', 'http://', $fbc['href'] );
+	elseif( $fbc['protocol'] === 'https' )
+		$fbc['href'] = str_replace( 'http://', 'https://', $fbc['href'] );
+	
+	// Get Facebook comments template
+	$template = pw_get_template( 'comments', 'comments-thirdparty-facebook', 'php', 'dir' );
+
+	// Return template as string
+	return pw_ob_include( $template, $fbc );
+
 }
-
-
 
 
 ?>

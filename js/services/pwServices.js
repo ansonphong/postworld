@@ -54,6 +54,7 @@ postworld.factory( '$pw',
 		comments: $window.pw.comments,
 		options: $window.pw.options,
 		device: $window.pw.device,
+		posts: $window.pw.posts,
 
 		// Get the admin data, will only be present if is_admin()
 		admin: $_.get( $window, 'pw.admin' ),
@@ -69,6 +70,11 @@ postworld.factory( '$pw',
 				return 'tablet';
 			else
 				return 'desktop';
+		},
+
+		moduleEnabled: function( module ){
+			$log.debug('$window.pw.info.modules', $window.pw.info.modules);
+			return _.contains( $window.pw.info.modules, module );
 		},
 
 		pluginUrl: function(value){
