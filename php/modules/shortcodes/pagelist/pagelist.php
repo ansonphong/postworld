@@ -5,6 +5,9 @@ add_shortcode( 'siblings', 'pw_pagelist_shortcode' );
 function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	global $post;
 
+	if( !is_array($atts) )
+		$atts = array();
+
 	// Set the internal defaults
 	$default_atts = array(
 		"class" 	=> 	"",
