@@ -56,8 +56,6 @@ function pw_get_comments_thirdparty( $vars = array() ){
 		// Check if the service is enabled
 		$enabled = pw_grab_option( PW_OPTIONS_COMMENTS, $service.'.enable' );
 		
-		//pw_log( json_encode($enabled) );
-
 		// If not enabled
 		if( $enabled == false )
 			// Skip service
