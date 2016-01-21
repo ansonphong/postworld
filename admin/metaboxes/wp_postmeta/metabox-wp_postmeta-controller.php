@@ -21,14 +21,15 @@ global $post;
 		<!--<input type="hidden" name="pw_post_wp_postmeta" ng-value="wpPostmetaPost | json" style="width:100%;">-->
 		
 		<!-- DEV : Test Output -->
-		
-		<div class="well">
-			<h3><i class="icon pwi-code"></i> Development Mode</h3>
+		<?php if( pw_dev_mode() ): ?>
 			<div class="well">
-				<b>$scope.fields</b>
-				<pre><code>{{ fields | json }} </code></pre>
+				<h3><i class="icon pwi-code"></i> Development Mode</h3>
+				<div class="well">
+					<b>$scope.fields</b>
+					<pre><code>{{ fields | json }} </code></pre>
+				</div>
 			</div>
-		</div>
+		<?php endif ?>
 
 	</div>	
 </div>
