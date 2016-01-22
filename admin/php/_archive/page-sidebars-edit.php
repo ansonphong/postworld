@@ -1,4 +1,4 @@
-<?
+<?php
 	// Load Globals
 	global $i_admin_urls;
 

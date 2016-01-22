@@ -139,8 +139,10 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		$post_id = $post['ID'];
 	}
 
-	///// GET IMAGE TO USE /////
-	// Setup Thumbnail Image Variables
+	/**
+	 * GET IMAGE TO USE
+	 */
+
 	/**
 	 * If $thumbnail_id is a boolean and true
 	 * Then assume the $post is a thumbnail_id
@@ -160,7 +162,6 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 	} else{
 		// Handle Posts
 		$thumbnail_id = (int) get_post_thumbnail_id( $post_id );
-		//pw_log( 'thumbnail_id : ' . $thumbnail_id );
 	}
 
 	// If there is a set 'featured image' set the $thumbnail_url
@@ -170,10 +171,10 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 	// If there is no set 'featured image'
 	else{
 		return array();
-
 		/*
+		// @todo Re-impliment this with an option switch, not default
 		// Get fallback - first image in post
-		$first_image_obj = first_image_obj( $post_id );
+		$first_image_obj = pw_first_image_obj( $post_id );
 		// If there is an image in the post
 		if( $first_image_obj ){
 			$thumbnail_url = $first_image_obj['url'];
@@ -184,7 +185,9 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		*/
 	}
 
-	///// PROCESS IMAGES /////
+	/**
+	 * PROCESS IMAGES
+	 */
 	// Load in registered images attributes
 	$registered_images = pw_registered_images_obj();
 	$post_image['sizes'] = array();
@@ -198,7 +201,9 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		// Set $image_key to name of requested image
 		$image_key = $image_attributes[0];
 
-		///// REGISTERED IMAGE SIZES /////
+		/**
+		 * REGISTERED IMAGE SIZES
+		 */
 		// If image attributes contains only a handle
 		if ( count($image_attributes) == 1 ){
 
@@ -224,8 +229,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 				}
 			}
 
-			// HANDLE : Get registered image
-			// If it is a registered image format
+			// HANDLE : Get registered image if it is a registered image format
 			elseif( array_key_exists($image_key, $registered_images) ) {
 				$image_obj = pw_get_image_obj($thumbnail_id, $image_key);
 				$post_image['sizes'][$image_key]['url']	= $image_obj['url'];
@@ -258,9 +262,11 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 					$image_meta = wp_get_attachment_metadata($thumbnail_id);
 				}
 
-				// Image Tags Object
-				// Threshold Format as ['Tags'] : 'square' / 'wide' / 'tall' / 'x-wide' / 'x-tall' , etc.
-				
+				/**
+				 * IMAGE TAGS OBJECT
+				 * Threshold Format as ['Tags'] :
+				 * 'square' / 'wide' / 'tall' / 'x-wide' / 'x-tall' , etc.
+				 */
 				if( isset($image_meta) && gettype($image_meta) == 'array' )
 					$image_tags = pw_generate_image_tags( array(
 							"width" => $image_meta['width'],
@@ -448,7 +454,9 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 
 }
 
-
+/**
+ * Returns the featured image attachment post of the given post id.
+ */
 function pw_featured_image_post( $post_id = null, $fields = 'preview' ){
 	global $post;
 
@@ -466,7 +474,9 @@ function pw_featured_image_post( $post_id = null, $fields = 'preview' ){
 	return pw_get_post( $post_thumbnail_id, $fields );
 }
 
-
+/**
+ * Get the URL of the current post's featured image.
+ */
 function pw_featured_image_url( $size = 'full', $echo = true ){
 	$featured_image_post = pw_featured_image_post();
 	$url = $featured_image_post['image']['sizes'][$size]['url'];
@@ -477,10 +487,14 @@ function pw_featured_image_url( $size = 'full', $echo = true ){
 }
 
 
-///// REQUIRE IMAGE /////
+/**
+ * REQUIRE IMAGE
+ * Returns only the posts with images
+ *
+ * @param array An array of posts.
+ * @return array An array of posts with images.
+ */
 function pw_require_image( $posts = array() ){
-	// Returns only the posts with images
-
 	$new_posts = array();
 
 	// Iterate through each post
@@ -513,8 +527,9 @@ function pw_require_image( $posts = array() ){
 }
 
 
-///// GENERATE IMAGE TAGS /////
-
+/**
+ * GENERATE IMAGE TAGS
+ */
 function pw_image_tag_filters( $vars ){
 
 	/**
@@ -532,7 +547,6 @@ function pw_image_tag_filters( $vars ){
 	 * Here go through and process the default tags.
 	 */
 	extract( $vars );
-
 	$tags = array(
 		// SQUARE
 		array(
@@ -578,12 +592,6 @@ function pw_image_tag_filters( $vars ){
 			"condition" => "$width >= 2048 && $height >= 2048",
 			),
 		);
-
-	/*
-	// Merge Filters
-	// TODO : Iterate through each custom tag, and over-ride defaults with conditions
-	$tag_filters = array_merge( $default_tags, $custom_tags );
-	*/
 
 	return $tags;
 
@@ -631,7 +639,9 @@ function pw_generate_image_tags( $vars = array() ){
 
 }
 
-///// GET IMAGE /////
+/**
+ * Gets an image
+ */
 function pw_get_image( $vars ){
 	extract($vars);
 
@@ -648,9 +658,11 @@ function pw_get_image( $vars ){
 	return $image;
 }
 
-
-///// GET FIRST IMAGE : FULL SIZE : URL, WIDTH, HEIGHT & ID /////
-function first_image_obj( $post_id ) {
+/**
+ * Get the first image in a post
+ * Including the full size : URL, WIDTH, HEIGHT & ID
+ */
+function pw_first_image_obj( $post_id ) {
 	$args = array(
 		'numberposts' => 1,
 		'order' => 'ASC',
@@ -672,7 +684,7 @@ function first_image_obj( $post_id ) {
 	}
 	else {
 		return false;
-		}
+	}
 }
 
 
@@ -734,21 +746,19 @@ function pw_registered_images_obj(){
 	return $sizes;
 }
 
-function grab_image($url,$saveto){
+function pw_grab_image( $url, $saveto ){
     $ch = curl_init ($url);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_BINARYTRANSFER,1);
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
 	curl_setopt($ch,CURLOPT_FOLLOWLOCATION,1);
-	
-    $raw=curl_exec_follow($ch);;  	
-    if(curl_errno($ch))
-	{
+    $raw = pw_curl_exec_follow($ch);
+    if(curl_errno($ch)){
 	    echo 'Curl error: ' . curl_error($ch);
 		curl_close ($ch);
 		return false;
-	}    
+	}
     else {
 	   	$file_size = file_put_contents($saveto,$raw);
 		curl_close ($ch);
@@ -757,7 +767,7 @@ function grab_image($url,$saveto){
 	return false;
 }
 
-function curl_exec_follow($ch, &$maxredirect = null) {
+function pw_curl_exec_follow($ch, &$maxredirect = null) {
   
   // we emulate a browser here since some websites detect
   // us as a bot and don't let us do our job
@@ -841,7 +851,7 @@ function pw_url_to_media_library( $image_url, $post_id = 0){
 
 	// SETUP
 	$upload_dir = wp_upload_dir();
-	$image_data = file_get_contents($image_url); // grab_image($image_url,$file);
+	$image_data = file_get_contents($image_url); // pw_grab_image($image_url,$file);
 
 	$base_file_name = basename($image_url);
 	$filename = $post_id."-".$base_file_name;
@@ -885,91 +895,42 @@ function pw_url_to_media_library( $image_url, $post_id = 0){
 	return 0;
 }
 
-
-
-
-
 /**
- * Retrieve galleries from the passed post's content.
- * @param int|WP_Post $post Optional. Post ID or object.
- * @param bool        $html Whether to return HTML or data in the array.
- * @return array A list of arrays, each containing gallery data and srcs parsed
- *		         from the expanded shortcode.
+ * Returns all the attachment IDs for all
+ * gallery images in the post's galleries
+ *
+ * @param $post Post Object or ID
+ * @return array An array of attachment IDs
  */
-/*
-function pw_get_post_galleries_atts( $post ) {
-	// Based on `get_post_galleries`
-	if ( ! $post = get_post( $post ) )
-		return array();
-
-	if ( ! has_shortcode( $post->post_content, 'gallery' ) )
-		return array();
-
-	$galleries = array();
-
-	// Find all gallery shortcodes in the post
-	// And return an array of associative arrays with the shortcode attributes
-	if ( preg_match_all( '/' . get_shortcode_regex() . '/s', $post->post_content, $matches, PREG_SET_ORDER ) ) {
-		foreach ( $matches as $shortcode ) {
-			if ( 'gallery' === $shortcode[2] ) {
-				$data = shortcode_parse_atts( $shortcode[3] );
-				$data['src'] = array_values( array_unique( $srcs ) );
-				$galleries[] = $data;
-			}
-		}
-	}
-
-	return $galleries;
-}
-*/
-
-
-function pw_get_post_galleries_atts( $post ){
-	get_post_galleries( $post, false );
-
-}
-
-
 function pw_get_post_galleries_attachment_ids( $post ){
-	// Returns all the attachment IDs for all gallery images in the post's galleries
-
 	$galleries = get_post_galleries( $post, false );
-
 	if( !empty( $galleries ) ){
 		$attachment_ids = array();		
-		
 		foreach( $galleries as $gallery ){
 			$gallery_ids = explode( ',', $gallery['ids']);
 			$attachment_ids = array_merge( $attachment_ids, $gallery_ids );
 		}
-
 		$attachment_ids = array_unique( $attachment_ids );
-
 	} else{
 		$attachment_ids = array();
 	}
-
 	return $attachment_ids;
-
 }
 
-
+/**
+ * Returns all the attachment IDs for all
+ * gallery images in multiple posts galleries
+ */
 function pw_get_posts_galleries_attachment_ids( $post_ids = array() ){
-	// Does for multiple posts
-
 	if( empty($post_ids) )
 		return false;
-
 	$attachment_ids = array();
 	foreach( $post_ids as $post_id ){
 		$gallery_attachment_ids = pw_get_post_galleries_attachment_ids( $post_id );
 		$attachment_ids = array_merge( $attachment_ids, $gallery_attachment_ids );
 	}
-
 	$attachment_ids = array_unique( $attachment_ids );
-
 	return $attachment_ids;
-
 }
 
 

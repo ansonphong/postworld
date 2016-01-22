@@ -1,5 +1,4 @@
 <?php
-////////// INFINITE INCLUDES //////////
 include 'i_language.php';
 include 'admin-menu.php';
 include 'admin-modules.php';
@@ -12,18 +11,15 @@ include 'functions-ajax.php';
 include 'style-model.php';
 include 'social-model.php';
 
-////////// THEME OPTIONS //////////
 global $theme_admin;
 global $pw;
 
-function postworld_admin_menu(){
-	// TODO : Make the $pw_slug filterable
-	// So that themes can re-map the postworld options under the theme main menu
 
+function postworld_admin_menu(){
 	global $pw;	
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];
-	$submenu_slug = apply_filters( 'pw_admin_submenu_slug', $pw_slug );
+	$submenu_slug = pw_admin_submenu_slug();
 
 	$menu = array(
 		'menu' => array(
@@ -36,7 +32,6 @@ function postworld_admin_menu(){
 			'menu_icon'	=>	'dashicons-admin-generic',
 			'position' => ''
 			),
-
 		'submenu' => array(),
 		);
 
@@ -110,18 +105,6 @@ function postworld_admin_menu(){
 			'function' => 'postworld_options_feeds',
 			);
 
-	/*
-	if( in_array( 'term-feeds', $enabled_modules ) )
-		$menu['submenu']['term-feeds'] = array(
-			'parent_slug' => $submenu_slug,
-			'page_title' => 'Term Feeds',
-			'menu_title' => 'Term Feeds',
-			'capability' => 'manage_options',
-			'menu_slug' => $submenu_slug.'-term-feeds',
-			'function' => 'postworld_options_term_feeds',
-			);
-	*/
-
 	if( in_array( 'backgrounds', $enabled_modules ) )
 		$menu['submenu']['backgrounds'] = array(
 			'parent_slug' => $submenu_slug,
@@ -161,9 +144,7 @@ function postworld_admin_menu(){
 		'function' => 'postworld_options_database',
 		);
 
-	//echo json_encode($pw['modules']);
-
-	// If a custom slug is define, nest postworld under it at the bottom
+	// If a custom slug is defined, nest postworld under it at the bottom
 	if( $submenu_slug !== 'postworld' ){
 		$menu['menu']['parent_slug'] = $submenu_slug;
 		$menu['menu']['menu_slug'] = $submenu_slug.'-postworld';
@@ -171,22 +152,24 @@ function postworld_admin_menu(){
 		$menu['menu'] = array();
 	}
 
-	///// APPLY FILTERS /////
-	// Allow themes to add sub menus
+	// Apply filters to allow themes to add sub menus
 	$menu['submenu'] = apply_filters( 'pw_admin_submenu', $menu['submenu'] );	
 
 	return $menu;
 
 }
 
-///// ADD ADMIN MENU PAGE /////
-add_action( 'admin_menu', 'theme_admin_menu', 10 );
-function theme_admin_menu(){
-
+/**
+ * ADD ADMIN MENU PAGE
+ */
+add_action( 'admin_menu', 'pw_theme_admin_menu', 10 );
+function pw_theme_admin_menu(){
 	$admin = postworld_admin_menu();
 	
-	///// MAIN MENU /////
-	// http://codex.wordpress.org/Function_Reference/add_menu_page
+	/**
+	 * Main Manu
+	 * @link http://codex.wordpress.org/Function_Reference/add_menu_page
+	 */
 	if( isset( $admin['menu'] ) && !empty( $admin['menu'] ) )
 		add_menu_page(
 			$admin['menu']['page_title'],
@@ -197,10 +180,10 @@ function theme_admin_menu(){
 			$admin['menu']['menu_icon']
 			);
 
-	//pw_log( "ADMIN SUBMENU" . json_encode($admin) );
-
-	///// SUB MENUS /////
-	// http://codex.wordpress.org/Function_Reference/add_submenu_page
+	/**
+	 * Sub Menus
+	 * @link http://codex.wordpress.org/Function_Reference/add_submenu_page
+	 */
 	foreach( $admin['submenu'] as $key => $value ){
 		add_submenu_page(
 			$value['parent_slug'],
@@ -214,22 +197,27 @@ function theme_admin_menu(){
 
 }
 
+/**
+ * Admin Styles
+ */
+add_action('admin_print_styles', 'postworld_admin_icon_styles');
+function postworld_admin_icon_styles(){
+	?>
+	<style>
+		#toplevel_page_postworld .dashicons-before:before{
+			content: "\e612";
+			font-family: "Postworld-Icons"
+		}
+	</style>
+	<?php
+}
 
-///// REGISTER STYLES /////
-//wp_register_style( 'pw_admin_css', plugins_url() . '/postworld/admin/css/pw-admin.css' );
 
-
-
-///// ADMIN URLS /////
-global $i_admin_urls;
-$i_admin_urls = array(
-	'sidebars'	=>	add_query_arg( array('page' => $theme_admin['sidebars']['menu_slug']), admin_url("admin.php") ),
-	);
-
-
-///// STRUCTURE OF LAYOUT MODEL /////
-$i_layouts_model = array(
-
+/**
+ * Structure of layout model
+ */
+/*
+$pw_layouts_model = array(
 	"default"	=>	array(
 		"layout"	=>	"left-right",
 		"sidebars"	=> array(
@@ -252,59 +240,10 @@ $i_layouts_model = array(
 			),
 		),
 	"blog"	=>	array(
-		//...
 		),
 
 	);
+*/
 
 
-
-
-
-/**
- * @todo REMOVE : THIS 'i_admin_scripts' BLOCK
- * Only inserts:
- * var iGlobals = {"paths":{"ajax_url":"http:\/\/podcollective\/wp-admin\/admin-ajax.php"}};
- */
-///// ADMIN SCRIPTS /////
-// Scripts which are inserted into the header in the admin
-// These contain globals accessible by the JS window object
-function i_admin_scripts(){
-  $iGlobals = array(
-	"paths"	=>	array(
-		"ajax_url" => admin_url( 'admin-ajax.php' ),
-		),
-	);
-  ?>
-	<script  type="text/javascript">
-	//<![CDATA[
-		var iGlobals = <?php echo json_encode($iGlobals); ?>;
-	//]]>
-	</script>
-  <?php
-}
-
-// INSERT GLOBAL WINDOW SCRIPTS
-function insert_i_admin_scripts() {
-	i_admin_scripts();
-}
-add_action('admin_head', 'insert_i_admin_scripts');
-
-
-
-
-
-
-///// ADMIN STYLES /////
-add_action('admin_print_styles', 'postworld_admin_icon_styles');
-function postworld_admin_icon_styles(){
-	?>
-	<style>
-		#toplevel_page_postworld .dashicons-before:before{
-			content: "\e612";
-			font-family: "Postworld-Icons"
-		}
-	</style>
-	<?php
-}
 ?>

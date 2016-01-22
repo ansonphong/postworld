@@ -173,7 +173,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
-	if ( !$options['viewer_user_id'] )
+	if ( !isset($options['viewer_user_id']) )
 		$options['viewer_user_id'] = get_current_user_id();
 	
 	// Add User Fields of Current Logged in User who is viewing

@@ -1,4 +1,5 @@
-<?/*
+<?php
+/*
   ____      _       _           _   ____           _       
  |  _ \ ___| | __ _| |_ ___  __| | |  _ \ ___  ___| |_ ___ 
  | |_) / _ \ |/ _` | __/ _ \/ _` | | |_) / _ \/ __| __/ __|
@@ -28,8 +29,4 @@
 <script>
 pw.feeds['<?php echo $instance_id ?>'] = <?php echo json_encode( $related_feed ) ?>;  
 </script>
-<div live-feed='<?php echo $instance_id ?>'></div>
-
-<?php /*
-<pre><code><?php //echo json_encode( $options, JSON_PRETTY_PRINT); ?></code></pre>
-*/ ?>
+<div live-feed="<?php echo $instance_id ?>"></div>

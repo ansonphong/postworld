@@ -76,6 +76,16 @@ function pw_add_metabox_wp_postmeta( $vars ){
 
 
 /**
+ * Gets the submenu slug used to group admin menu items
+ * Under the desired main menu item.
+ * @return string
+ */
+function pw_admin_submenu_slug(){
+	global $pw;
+	return apply_filters( 'pw_admin_submenu_slug', $pw['info']['slug'] );
+}
+
+/**
  * Returns the date in the requested format, a period of time ago
  * @param $period_ago [integer] Number of seconds ago to return the date of
  * @param $format [string] PHP date() format to return
