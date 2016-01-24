@@ -5,6 +5,9 @@
  | |_| | |_| | | | |_| |  __/\__ \
   \___/ \__|_|_|_|\__|_|\___||___/
 //////////////////////////////////*/
+/**
+ * General/global utility functions
+ */
 
 /**
  * Returns a specific key from the
@@ -563,10 +566,11 @@ function pw_user_id_exists_alt($user_id){
 	return ( $user != false ) ? true : false;
 }
 
+/**
+ * Checks if given user has permissions to edit usermeta
+ * @param integer $user_id The ID of the user whos usermeta is being edited
+ */
 function pw_check_user_id($user_id){
-	// Checks if given user has permissions to edit usermeta
-	// $user_id = the ID of the user whos usermeta is being edited
-
 	///// USER ID /////
 	$current_user_id = get_current_user_id();
 
@@ -574,7 +578,7 @@ function pw_check_user_id($user_id){
 		$user_id = $current_user_id;
 
 	if( $user_id == 0 )
-		return array( 'error' => 'No user ID.' );
+		return new WP_Error( '400', 'No user ID.' );
 
 	// Security Layer
 	// Mode whereby the system can access user meta for special operations
@@ -583,18 +587,19 @@ function pw_check_user_id($user_id){
 		// Check if setting for current user, or if current user can edit users
 		if(	$user_id != $current_user_id &&
 			!current_user_can( 'edit_users' ) )
-			return array( 'error' => 'No permissions.' );
+			return new WP_Error( '401', 'Insufficient permissions.' );
 	
 	// If passed all tests, return user ID
 	return $user_id;
 
 }
 
+/**
+ * Checks if given user has permissions to edit a post
+ * @param integer $post_id The ID of the post being edited
+ * @return bool|integer
+ */
 function pw_check_user_post( $post_id, $mode = "edit" ){
-	// Checks if given user has permissions to edit a post
-	// $post_id = the ID of the post being edited
-
-	///// USER ID /////
 	$current_user_id = get_current_user_id();
 
 	if( isset( $post_id ) && pw_post_id_exists( $post_id )  ){
@@ -602,7 +607,7 @@ function pw_check_user_post( $post_id, $mode = "edit" ){
 		$post_author = $post->post_author;
 	}
 	else
-		return array( 'error' => 'No post ID.' );
+		return new WP_Error( '400', 'No post ID.' );
 
 	// Security Layer
 	// Check if setting for current user, or if current user can edit the post
@@ -611,9 +616,7 @@ function pw_check_user_post( $post_id, $mode = "edit" ){
 
 		// Check for custom role to edit custom post type
 		if( !current_user_can( $mode.'_others_'.$post->post_type.'s' ) )
-
-			return array( 'error' => 'No permissions.' );
-	
+			return new WP_Error( '401', 'Insufficient permissions.' );
 	
 	// If passed all tests, return post ID
 	return $post_id;
@@ -628,11 +631,11 @@ function pw_empty_array( $format ){
 		return "{}";
 }
 
-function object_to_array($data){
+function pw_object_to_array($data){
     if (is_array($data) || is_object($data)){
         $result = array();
         foreach ($data as $key => $value){
-            $result[$key] = object_to_array($value);
+            $result[$key] = pw_object_to_array($value);
         }
         return $result;
     }
@@ -754,7 +757,7 @@ function wp_tree_obj($args){
 
 	// OBJECT -> ARRAY()
 	if ( is_object($object[0]) )
-		$object = object_to_array($object);
+		$object = pw_object_to_array($object);
 
 		// ROOT
 		$settings = array(
@@ -1382,11 +1385,11 @@ function pw_get_menus(){
 }
 
 
-
-///// DEPRECIATED /////
-
+/**
+ * **DEPRECIATED**
+ * Determine the view type
+ */
 function pw_get_view_type(){
-	// Determine the view type
 	$view_type = "default";
 
 	if( is_archive() && !is_date() )
@@ -1411,9 +1414,11 @@ function pw_get_view_type(){
 	return $view_type;
 }
 
-///// DEPRECIATED /////
+/**
+ * **DEPRECIATED**
+ * Define Context Class
+ */
 function pw_current_context_class(){
-	/// DEFINE CLASS ///
 	// home / archive / blog / page / single / attachment / default
 
 	if( is_front_page() )
@@ -1450,24 +1455,24 @@ function pw_current_context_class(){
 
 }
 
+/**
+ * Return boolean wether or not BuddyPress is active.
+ */
 function pw_is_buddypress_active(){
 	global $bp;
 	return ( !empty( $bp ) && function_exists('bp_is_active') ) ? true : false;
 }
 
-
 function pw_clean_input($input) {
-
-  $search = array(
-    '@<script[^>]*?>.*?</script>@si',   // Strip out javascript
-    '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
-    '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
-    '@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
-  );
-
-    $output = preg_replace($search, '', $input);
-    return $output;
-  }
+	$search = array(
+		'@<script[^>]*?>.*?</script>@si',   // Strip out javascript
+		'@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+		'@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+		'@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
+		);
+	$output = preg_replace($search, '', $input);
+	return $output;
+}
 
 function pw_sanitize($input) {
     if (is_array($input)) {
@@ -1490,10 +1495,6 @@ function pw_sanitize_key( $key ){
 	$key = strtolower($key);
 	// Replace Spaces with Underscores ( _ )
 	$key = preg_replace('/\s+/', '_', $key);
-	
-	// Sanitize (overkill)
-	//$key = pw_sanitize($key);
-
 	return $key;
 }
 
@@ -1508,7 +1509,6 @@ function pw_sanitize_numeric( $val, $require_numeric = false ){
 		else
 			return $val;
 	}
-
 }
 
 /**
@@ -1541,13 +1541,11 @@ function pw_sanitize_numeric_array( $vals = array(), $require_numeric = false, $
  * Numerically sanitize an associative array of values
  */
 function pw_sanitize_numeric_a_array( $vals = array() ){
-
 	$sanitized = array();
 	foreach( $vals as $key => $val ){
 		$sanitized[$key] = pw_sanitize_numeric( $val );
 	}
 	return $sanitized;
-
 }
 
 function pw_sanitize_numeric_array_of_a_arrays( $vals ){
@@ -1558,18 +1556,19 @@ function pw_sanitize_numeric_array_of_a_arrays( $vals ){
 	return $vals;
 }
 
+/**
+ * Looks through the list and returns the first value
+ * That matches the key value pair listed in properties
+ *
+ * @todo Refactor to accept multipe key->value pairs
+ */
 function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
-	// Looks through the list and returns the first value
-	// That matches the key value pair listed in properties
-	// TODO : Refactor to accept multipe key->value pairs
-
 	// Get the first Key and Value
 	foreach( $key_value_pair as $get_key => $get_value ){
 		$key = $get_key;
 		$value = $get_value;
 		break;
 	}
-
 	// Search for the key/value in the given array
 	foreach( $array as $sub_array ){
 		if(	isset( $sub_array[$key] ) &&
@@ -1577,25 +1576,22 @@ function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 			return $sub_array;
 	}
 	return false;
-
 }
 
+/**
+ * Returns a list with items continaing the key->value pair removed
+ *
+ * @todo Refactor to accept multipe key->value pairs
+ * @todo Add Operator parameter, "AND" / "OR" for multiple key->value pairs
+ */
 function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
-	// Returns a list with items continaing the key->value pair removed
-	// TODO : Refactor to accept multipe key->value pairs
-	// TODO : Add Operator parameter, "AND" / "OR" for multiple key->value pairs
-
-	//pw_log('pw_reject : LIST : ' .count($list));
-
 	// Get the first Key and Value
 	foreach( $key_value_pair as $get_key => $get_value ){
 		$key = $get_key;
 		$value = $get_value;
 		break;
 	}
-
 	$new_list = array();
-
 	foreach( $list as $item ){
 		if(	isset( $item[$key] ) &&
 			$item[$key] == $value )
@@ -1603,11 +1599,7 @@ function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
 		else
 			$new_list[] = $item;
 	}
-
-	//pw_log('pw_reject : NEW LIST : ' .count($new_list));
-
 	return $new_list;
-
 }
 
 /**
@@ -1636,6 +1628,11 @@ function pw_array_order_by(){
 }
 
 
+/**
+ * Reset the LESS cache by updating updated time
+ * on a ghost file. Include this ghost file in any LESS file.
+ * Call this function after changing dynamic style variables.
+ */
 function pw_reset_less_php_cache(){
 	//global $pwGlobalsJsFile;
 	$ghost_less_file = POSTWORLD_PATH .'/less/ghost.less';
@@ -1826,8 +1823,6 @@ function pw_exit_with_error($message = '', $httpStatus = 500) {
 	exit;
 }
 
-////////////////////////////////////////////////////////////////
-
 
 /*
 function pw_get_post_types(){
@@ -1843,6 +1838,19 @@ function pw_get_post_types(){
 	//print_r($post_types);
 }
 */
+
+/**
+ * Display the classes for the post div.
+ * Like WP native post_class, without the 'class=' part,
+ * And doesn't echo, instead returns string.
+ *
+ * @param string|array $class   One or more classes to add to the class list.
+ * @param int|WP_Post  $post_id Optional. Post ID or post object. Defaults to the global `$post`.
+ * @return string A string of post classes.
+ */
+function pw_post_class( $class, $post_id ){
+	return join( ' ', get_post_class( $class, $post_id ) );
+};
 
 
 ?>

@@ -51,7 +51,7 @@
 									type="number"
 									class="short"
 									ng-model="pwComments.facebook.numposts">
-								<?php _ex('number of posts','postworld') ?>
+								<?php _ex('number of posts', 'number of facebook comments', 'postworld') ?>
 								<small>: <?php _ex('the number of most recent comments to show', 'self-explanitory', 'postworld') ?></small>
 
 								<hr class="thin">
@@ -61,7 +61,7 @@
 									<option value="dark"><?php _ex('Dark', 'color scheme', 'postworld') ?></option>
 									<option value="light"><?php _ex('Light', 'color scheme', 'postworld') ?></option>
 								</select>
-								<?php _ex('color scheme','postworld') ?>
+								<?php _ex('color scheme', 'for comment module', 'postworld') ?>
 								<small> : <?php _ex('the background color of the comment module', 'self-explanitory', 'postworld') ?></small>
 
 								<hr class="thin">
@@ -72,7 +72,7 @@
 									<option value="time"><?php _ex('Chronological', 'facebook comments', 'postworld') ?></option>
 									<option value="reverse_time"><?php _ex('Reverse Chronological', 'facebook comments', 'postworld') ?></option>
 								</select>
-								<?php _ex('order','postworld') ?>
+								<?php _ex('order', 'comment ordering', 'postworld') ?>
 								<small> : <?php _ex('the order in which comments appear', 'setting', 'postworld') ?></small>
 
 								<hr class="thin">
@@ -80,7 +80,7 @@
 									<option value="id"><?php _ex('Post ID', 'setting', 'postworld') ?> (<?php _ex('default', 'setting', 'postworld') ?>)</option>
 									<option value="url"><?php _ex('URL', 'setting', 'postworld') ?></option>
 								</select>
-								<?php _ex('href','postworld') ?>
+								<?php _ex('href', 'unique link identifier', 'postworld') ?>
 								<small> : <?php _ex('where to derive unique HREF identifier from', 'setting', 'postworld') ?></small>
 
 								<hr class="thin">
