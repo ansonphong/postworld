@@ -8,7 +8,7 @@ function i_layout_options(){
 function pw_layout_options(){
 
 	///// DEFINE OPTIONS /////
-	$iLayoutOptions = array(
+	$pwLayoutOptions = array(
 		"contexts"	=>	pw_get_contexts(),
 
 		"templates"	=>	array(
@@ -127,9 +127,9 @@ function pw_layout_options(){
 	///// FILTER /////
 	// Filter results so that themes can over-ride settings
 	// TODO : New Filter Name
-	$iLayoutOptions = apply_filters( 'i_layout_options', $iLayoutOptions );	
+	$pwLayoutOptions = apply_filters( 'i_layout_options', $pwLayoutOptions );	
 
-	return $iLayoutOptions;
+	return $pwLayoutOptions;
 
 }
 

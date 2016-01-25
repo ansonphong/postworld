@@ -21,7 +21,7 @@
 		<ul class="dropdown-menu grid" role="menu" aria-labelledby="dLabel" >
 			
 			<!-- DEFAULT TEMPLATE OPTION -->
-			<label ng-repeat="option in iLayoutOptions.templates.default"
+			<label ng-repeat="option in pwLayoutOptions.templates.default"
 				ng-hide="context.name == 'default'"
 				class="radio_image_select">
 				<input ng-model="<?php echo $ng_model; ?>.template"
@@ -33,7 +33,7 @@
 
 			<!-- TEMPLATE OPTIONS -->
 			<label class="radio_image_select"
-				ng-repeat="option in iLayoutOptions.templates.options">
+				ng-repeat="option in pwLayoutOptions.templates.options">
 				<input ng-model="<?php echo $ng_model; ?>.template"
 					name="{{ context.name }}"
 					value="{{ option.slug }}"
@@ -63,7 +63,7 @@
 			<label><b>Header</b></label>
 			<select
 					ng-model="<?php echo $ng_model; ?>.header.id"
-					ng-options="key as key for (key, value) in iTemplates.header">
+					ng-options="key as key for (key, value) in pwTemplates.header">
 					<option value="">Default</option>
 			</select>
 		</div>
@@ -72,7 +72,7 @@
 			<label><b>Footer</b></label>
 			<select
 					ng-model="<?php echo $ng_model; ?>.footer.id"
-					ng-options="key as key for (key, value) in iTemplates.footer">
+					ng-options="key as key for (key, value) in pwTemplates.footer">
 					<option value="">Default</option>
 			</select>
 		</div>
@@ -84,13 +84,13 @@
 	<div class=" sidebars" ng-show="showModule('sidebars', <?php echo $ng_model; ?>)">
 		<hr class="thin">
 		<div class="select-module"
-			ng-repeat="location in iLayoutOptions.widget_areas"
+			ng-repeat="location in pwLayoutOptions.widget_areas"
 			ng-show="showModule('sidebar-location', <?php echo $ng_model; ?>, location.slug)">
 			
 			<label><b>{{ location.name }}</b></label>
 			<select
 				ng-model="<?php echo $ng_model; ?>.sidebars[location.slug].id"
-				ng-options="sidebar.id as sidebar.name for sidebar in iSidebars">
+				ng-options="sidebar.id as sidebar.name for sidebar in pwSidebars">
 				<option value="">--- Select Sidebar ---</option>
 			</select>
 
@@ -105,11 +105,11 @@
 
 			<div
 				ng-show="uiShowView('customResponsive_'+location.slug)"
-				ng-repeat="screen_size in iLayoutOptions.screen_sizes">
+				ng-repeat="screen_size in pwLayoutOptions.screen_sizes">
 				<label style="text-align:right">{{screen_size.name}}</label>
 				<select
 					ng-model="<?php echo $ng_model; ?>.sidebars[location.slug].width[screen_size.slug]"
-					ng-options="sidebar_width.slug as sidebar_width.name for sidebar_width in iLayoutOptions.column_widths | orderBy:'name'">
+					ng-options="sidebar_width.slug as sidebar_width.name for sidebar_width in pwLayoutOptions.column_widths | orderBy:'name'">
 				</select>
 				<i ng-class="screen_size.icon" class="pwi-small"></i>
 			</div>

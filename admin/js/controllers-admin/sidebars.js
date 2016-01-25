@@ -33,7 +33,7 @@ postworldAdmin.controller('pwAdminSidebarsCtrl',
 			'after_title':  '</h3>'
 		};
 
-		$scope.iSidebars.push( newSidebar );
+		$scope.pwSidebars.push( newSidebar );
 		$scope.selectItem( newSidebar );
 	}
 

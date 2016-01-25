@@ -23,52 +23,52 @@ postworldAdmin.controller('pwAdminLayoutCtrl',
 	// Initialize Status
 	$scope.status = "done";
 
-	// Initialize iLayouts
-	if( _.isUndefined( $scope.iLayouts ) ||
-		!_.isObject( $scope.iLayouts ) || 
-		_.isEmpty( $scope.iLayouts ) )
-		$scope.iLayouts = {};
+	// Initialize pwLayouts
+	if( _.isUndefined( $scope.pwLayouts ) ||
+		!_.isObject( $scope.pwLayouts ) || 
+		_.isEmpty( $scope.pwLayouts ) )
+		$scope.pwLayouts = {};
 
 
 	// Initialize Settings Object
-	angular.forEach( $scope.iLayoutOptions.contexts, function( value ){
+	angular.forEach( $scope.pwLayoutOptions.contexts, function( value ){
 
 		// Initialize Layout Context Names
-		if( _.isUndefined( $scope.iLayouts[value.name] ) )
-			$scope.iLayouts[value.name] = {};
+		if( _.isUndefined( $scope.pwLayouts[value.name] ) )
+			$scope.pwLayouts[value.name] = {};
 	
 		// Initialize Header
-		if( _.isUndefined( $scope.iLayouts[value.name].header ) )
-			$scope.iLayouts[value.name].header = "";
+		if( _.isUndefined( $scope.pwLayouts[value.name].header ) )
+			$scope.pwLayouts[value.name].header = "";
 
 		// Initialize Sidebars
-		if( _.isUndefined( $scope.iLayouts[value.name].sidebars ) )
-			$scope.iLayouts[value.name].sidebars = {};
+		if( _.isUndefined( $scope.pwLayouts[value.name].sidebars ) )
+			$scope.pwLayouts[value.name].sidebars = {};
 
 		// Initialize Template
-		if( _.isUndefined( $scope.iLayouts[value.name].template ) ){
-			$scope.iLayouts[value.name].template = 'default';
+		if( _.isUndefined( $scope.pwLayouts[value.name].template ) ){
+			$scope.pwLayouts[value.name].template = 'default';
 			// Set the default default template
 			if( value.name == 'default' )
-				$scope.iLayouts[value.name].template = 'full-width';
+				$scope.pwLayouts[value.name].template = 'full-width';
 		}
 
 
 		// Initialize Sidebar Locations
-		angular.forEach( $scope.iLayoutOptions.widget_areas, function( sidebar_location ){
+		angular.forEach( $scope.pwLayoutOptions.widget_areas, function( sidebar_location ){
 
-			if( _.isUndefined( $scope.iLayouts[value.name].sidebars[sidebar_location.slug] ) )
-				$scope.iLayouts[value.name].sidebars[sidebar_location.slug] = {}; 
+			if( _.isUndefined( $scope.pwLayouts[value.name].sidebars[sidebar_location.slug] ) )
+				$scope.pwLayouts[value.name].sidebars[sidebar_location.slug] = {}; 
 
 
 			// Initialize Widths for Screen Sizes
-			if( _.isUndefined( $scope.iLayouts[value.name].sidebars[sidebar_location.slug].width ) )
-					$scope.iLayouts[value.name].sidebars[sidebar_location.slug].width = {}; 
+			if( _.isUndefined( $scope.pwLayouts[value.name].sidebars[sidebar_location.slug].width ) )
+					$scope.pwLayouts[value.name].sidebars[sidebar_location.slug].width = {}; 
 
 			// Populate Widths for Screen Sizes
-			angular.forEach( $scope.iLayoutOptions.screen_sizes, function( screen_size ){
-				if( _.isUndefined( $scope.iLayouts[value.name].sidebars[sidebar_location.slug].width[screen_size.slug] ) )
-				$scope.iLayouts[value.name].sidebars[sidebar_location.slug].width[screen_size.slug] = screen_size.default_sidebar_width;
+			angular.forEach( $scope.pwLayoutOptions.screen_sizes, function( screen_size ){
+				if( _.isUndefined( $scope.pwLayouts[value.name].sidebars[sidebar_location.slug].width[screen_size.slug] ) )
+				$scope.pwLayouts[value.name].sidebars[sidebar_location.slug].width[screen_size.slug] = screen_size.default_sidebar_width;
 			});
 
 
@@ -80,9 +80,9 @@ postworldAdmin.controller('pwAdminLayoutCtrl',
 	$scope.initLayoutOptions = function(){
 		// Basically merge the default option into the layout options
 		// Get the available layout templates
-		var layoutOptions = $_.getObj($scope, 'iLayoutOptions.templates.options');
+		var layoutOptions = $_.getObj($scope, 'pwLayoutOptions.templates.options');
 		// Get the 'default' layout templates
-		var defaultOption = $_.getObj($scope, 'iLayoutOptions.templates.default')[0];
+		var defaultOption = $_.getObj($scope, 'pwLayoutOptions.templates.default')[0];
 		// If we got layout options
 		if( layoutOptions ){
 			// Remove two-way data binding
@@ -129,7 +129,7 @@ postworldAdmin.controller('pwAdminLayoutCtrl',
 			/// SIDEBARS ///
 			case 'sidebars':
 				// If any sidebars are registered
-				if( $scope.iSidebars.length > 0 ){
+				if( $scope.pwSidebars.length > 0 ){
 					if( template == 'default' ||
 						template == 'full-width' ||
 						template == '' )

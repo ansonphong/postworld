@@ -1,5 +1,4 @@
 <?php
-include 'i_language.php';
 include 'admin-menu.php';
 include 'admin-modules.php';
 include 'admin-filters.php';
@@ -13,7 +12,6 @@ include 'social-model.php';
 
 global $theme_admin;
 global $pw;
-
 
 function postworld_admin_menu(){
 	global $pw;	

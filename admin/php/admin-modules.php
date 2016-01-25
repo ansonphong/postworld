@@ -372,7 +372,7 @@ function pw_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
 	switch($vars['context']){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				$vars['ng_model'] = "iLayouts[context.name]";
+				$vars['ng_model'] = "pwLayouts[context.name]";
 			break;
 		///// EDIT POST SETTINGS /////
 		case 'postAdmin':

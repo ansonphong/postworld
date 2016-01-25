@@ -39,7 +39,6 @@ function postworld_options_social(){
 ///// SIDEBARS SCREEN /////
 function postworld_options_sidebars(){
 	global $theme_admin;
-	global $i_language;
 	//i_include_scripts();
 	include 'page-sidebars.php'; 
 } 
