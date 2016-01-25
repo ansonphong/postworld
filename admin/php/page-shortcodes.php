@@ -1,27 +1,21 @@
 <?php
 	$pwShortcodes = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODES ) );
 	$pwShortcodeSnippets = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODE_SNIPPETS ) );
-
 	$enabled_modules = pw_enabled_modules();
-
 ?>
 <script>
 	postworldAdmin.controller( 'pwShortcodesDataCtrl', [ '$scope', function( $scope ){
-		
 		$scope.pwShortcodes = <?php echo json_encode( $pwShortcodes ); ?>;
 		$scope.pwShortcodeSnippets = <?php echo json_encode( $pwShortcodeSnippets ); ?>;
-
 	}]);
-
-	// INCLUDE OPTION FOR CONTENT SHORTCODE OR WRAPPING SHORTCODE, WITH BEGINNING AND END
-
-	// INCLUDE A GUIDE OF EXISTING SHORTCODES
-
-	// Do maintainance on the existing Postworld Shortcodes system
-
-	// ADD ICON SHORTCODE : [icon class="pwi-merkaba"]
-	// - List all the options, and auto-generate the shortcode optionally
-
+	<?php
+	/**
+	 *	@todo INCLUDE A GUIDE OF EXISTING SHORTCODES
+	 *	@todo Do maintainance on the existing Postworld Shortcodes system
+	 *	@todo List all the options for each shortcode,
+	 *				and auto-generate the shortcode optionally
+	*/
+	?>
 </script>
 
 <div class="postworld shortcodes wrap" ng-cloak>
@@ -33,8 +27,10 @@
 
 		<h1>
 			<i class="pwi-code"></i>
-			Shortcodes
-			<button class="add-new-h2" ng-click="newShortcode()"><?php ___('shortcodes.add_new'); ?></button>
+			<?php _e( 'Shortcodes', 'postworld' ) ?>
+			<button class="add-new-h2" ng-click="newShortcode()">
+				<?php _e( 'Add New Shortcode', 'postworld' ) ?>
+			</button>
 		</h1>
 		
 		<hr class="thick">
@@ -47,7 +43,8 @@
 					<li
 						ng-click="selectItem('settings');"
 						ng-class="menuClass('settings')">
-						<i class="pwi-gear"></i> Settings
+						<i class="pwi-gear"></i>
+						<?php _e( 'Settings', 'postworld' ) ?>
 					</li>
 				</ul>
 				<hr class="thin">
@@ -74,13 +71,13 @@
 				</div>
 
 				<!-- ///// EDIT ITEMS ///// -->
-				<div ng-show="showView('editItem')">
+				<div class="well" ng-show="showView('editItem')">
 
 					<label
 						for="item-name"
 						class="inner transparent">
 						<i class="pwi-code"></i>
-						<?php ___('shortcodes.shortcode'); ?>
+						<?php _e( 'Shortcode', 'postworld' ) ?>
 					</label>
 					<input
 						id="item-name"
@@ -89,16 +86,19 @@
 						disabled
 						ng-value="generateShortcode(selectedItem)">
 
-					<h3><i class="pwi-gear"></i> <?php ___('shortcodes.item_title'); ?></h3>
+					<h3>
+						<i class="pwi-gear"></i>
+						<?php _e( 'Shortcode Settings', 'postworld' ) ?>
+					</h3>
 
 					<div class="pw-row">
 						<div class="pw-col-4">
 							<label
 								for="item-id"
 								class="inner"
-								uib-tooltip="<?php ___('shortcodes.id_info'); ?>"
+								uib-tooltip="<?php _e( 'The ID is the unique name for the shortcode. This is used to invoke the shortcode.', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('shortcodes.id'); ?>
+								<?php _e( 'Shortcode ID', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							
@@ -113,9 +113,9 @@
 							<label
 								for="item-name"
 								class="inner"
-								uib-tooltip="<?php ___('shortcodes.name_info'); ?>"
+								uib-tooltip="<?php _e( 'Whatever you want to call it', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('shortcodes.name'); ?>
+								<?php _e( 'Shortcode Snippet Name', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<input
@@ -132,29 +132,29 @@
 						<div class="pw-col-12">
 							
 							<div class="labeled-area">
-								<label class="inner">Type</label>
+								<label class="inner"><?php _e( 'Shortcode Type', 'postworld' ) ?></label>
 								<div class="btn-group">
 									<label
 										class="btn"
 										ng-model="selectedItem.type"
 										uib-btn-radio="'self-enclosing'">
-										<?php ___('shortcodes.self_enclosing'); ?>
+										<?php _ex( 'Self-enclosing', 'shortcode', 'postworld' ) ?>
 									</label>
 									<label
 										class="btn"
 										ng-model="selectedItem.type"
 										uib-btn-radio="'enclosing'">
-										<?php ___('shortcodes.enclosing'); ?>
+										<?php _ex( 'Enclosing', 'shortcode', 'postworld' ) ?>
 									</label>
 								</div>
 
 								<!-- DESCRIPTION -->
 								&nbsp;
 								<span ng-show="selectedItem.type == 'enclosing'">
-									<?php ___('shortcodes.enclosing_description'); ?>
+									<?php _e( 'Contains two parts, a beginning and end, which enclose content', 'postworld' ) ?>
 								</span>
 								<span ng-show="selectedItem.type == 'self-enclosing'">
-									<?php ___('shortcodes.self_enclosing_description'); ?>
+									<?php _e( 'Contains one part, which is self-contained', 'postworld' ) ?>
 								</span>
 
 							</div>
@@ -172,7 +172,7 @@
 						<label
 							for="shortcode-content"
 							class="inner">
-							<?php ___('shortcodes.content'); ?>
+							<?php _e( 'Content', 'postworld' ) ?>
 						</label>
 						<textarea
 							id="shortcode-content"
@@ -187,7 +187,7 @@
 						<label
 							for="shortcode-before_content"
 							class="inner">
-							<?php ___('shortcodes.before_content'); ?>
+							<?php _e( 'Before Content', 'postworld' ) ?>
 						</label>
 						<textarea
 							id="shortcode-before_content"
@@ -199,7 +199,7 @@
 						<label
 							for="shortcode-after_content"
 							class="inner">
-							<?php ___('shortcodes.after_content'); ?>
+							<?php _e( 'After Content', 'postworld' ) ?>
 						</label>
 						<textarea
 							id="shortcode-after_content"
@@ -210,38 +210,42 @@
 
 					</div>
 
-					<hr class="thick">
+					<div class="well">
 
-					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SHORTCODE_SNIPPETS,'pwShortcodeSnippets'); ?></div>
-		
-					<!-- DELETE BUTTON -->
-					<button
-						class="button deletion"
-						ng-click="deleteItem(selectedItem,'pwShortcodeSnippets')">
-						<i class="pwi-close"></i>
-						<?php ___('shortcodes.delete'); ?>
-					</button>
+						<!-- SAVE BUTTON -->
+						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SHORTCODE_SNIPPETS,'pwShortcodeSnippets'); ?></div>
+			
+						<!-- DELETE BUTTON -->
+						<button
+							class="button deletion"
+							ng-click="deleteItem(selectedItem,'pwShortcodeSnippets')">
+							<i class="pwi-close"></i>
+							<?php _e( 'Delete Shortcode', 'postworld' ) ?>
+						</button>
 
-					<!-- DUPLICATE BUTTON -->
-					<button
-						class="button"
-						ng-click="duplicateItem(selectedItem,'pwShortcodeSnippets')">
-						<i class="pwi-copy-2"></i>
-						<?php ___('shortcodes.duplicate'); ?>
-					</button>
+						<!-- DUPLICATE BUTTON -->
+						<button
+							class="button"
+							ng-click="duplicateItem(selectedItem,'pwShortcodeSnippets')">
+							<i class="pwi-copy-2"></i>
+							<?php _e( 'Duplicate Shortcode', 'postworld' ) ?>
+						</button>
+						
+					</div>
 
 				</div>
 
 			</div>
-
 
 		</div>
 
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
 			<div class="well">
-				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<h3>
+					<i class="pwi-merkaba"></i>
+					<?php _e( 'Development Mode', 'postworld' ) ?>
+				</h3>
 				<div class="well">
 					<h3>$scope.pwShortcodeSnippets</h3>
 					<pre><code>{{ pwShortcodeSnippets | json }}</code></pre>

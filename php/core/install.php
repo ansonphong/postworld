@@ -1,6 +1,7 @@
 <?php 
-////////// INSTALL POSTWORLD ///////////
-
+/**
+ * Installs Postworld tables into the database.
+ */
 function postworld_install(){
 	global $wpdb;
 	global $pw;
@@ -181,6 +182,10 @@ function pw_db_version_is_old(){
 	// Get the new version
 	$new_version = floatval($pw['info']['db_version']);
 	// If the version of Postworld is old
+	/**
+	 * @todo Replace this with PHP version_compare() function
+	 * @link http://php.net/manual/en/function.version-compare.php
+	 */
 	$version_is_old = (bool) ( $new_version > $current_version );
 	return $version_is_old;
 }

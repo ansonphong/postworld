@@ -28,7 +28,7 @@
 
 	<h1>
 		<i class="pwi-circle-medium"></i>
-		Iconsets
+		<?php _e( 'Iconsets', 'postworld' ) ?>
 	</h1>
 
 	<hr class="thick">
@@ -39,20 +39,26 @@
 		<div class="pw-col-6">
 
 			<div class="well">
-				<h3><i class="pwi-code"></i> <?php ___('iconsets.icon_shortcode'); ?></h3>
+				<h3>
+					<i class="pwi-code"></i>
+					<?php _e( 'Icon Shortcode', 'postworld' ) ?>
+				</h3>
 
 				<div class="row">
 					<div class="col-md-6 col-lg-4">
-						<small><?php ___('iconsets.icon_shortcode_description'); ?></small>
+						<small>
+							<?php _e( "Select an icon to get it's shortcode", 'postworld' ) ?>
+						</small>
 						<?php
 							echo pw_select_icon_options( array(
-									'ng_model' => 'select.shortcodeIcon',
+								'ng_model' => 'select.shortcodeIcon',
 								)); ?>
-
 					</div>
 					<div class="col-md-6 col-lg-8">
 						<div ng-show="uiBool(select.shortcodeIcon)">
-							<small><?php ___('iconsets.shortcode_how_to'); ?></small>
+							<small>
+								<?php _e( 'To use the shortcode, paste the following text into a post', 'postworld' ) ?>
+							</small>
 							<input
 								type="text"
 								class="un-disabled"
@@ -63,7 +69,7 @@
 							<!-- ADDITIONAL ATTRIBUTES -->
 							<div ng-show="uiBool( shortcodeAttrOptions )">
 								<hr>
-								<h4>Options:</h4>
+								<h4><?php _e( 'Options', 'postworld' ) ?>:</h4>
 								<table>
 									<tr ng-repeat="(key, value) in shortcodeAttrOptions">
 										<td>
@@ -73,7 +79,7 @@
 											<select
 												ng-options="class for class in value.classes"
 												ng-model="shortcodeAtts[key]">
-												<option value="">None</option>
+												<option value=""><?php _ex( 'None', 'option', 'postworld' ) ?></option>
 											</select>
 										</td>
 									</tr>
@@ -95,7 +101,10 @@
 				<!-- SAVE BUTTON -->
 				<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_ICONSETS, 'pwIconsets'); ?></div>
 
-				<h3><i class="pwi-check-square"></i> <?php ___('iconsets.enabled_iconsets'); ?></h3>
+				<h3>
+					<i class="pwi-check-square"></i>
+					<?php _e( 'Enabled Iconsets', 'postworld' ) ?>
+				</h3>
 
 				<div ng-repeat="(iconKey, iconset) in ::pwRegisteredIconsets">
 
@@ -106,7 +115,7 @@
 							checklist-value="iconKey"
 							ng-disabled="::iconsetIsRequired(iconset.slug)">
 							{{ iconset.name }}
-						<i ng-show="iconsetIsRequired(iconset.slug)">(Required)</i>
+						<i ng-show="iconsetIsRequired(iconset.slug)">(<?php _e( 'Required', 'postworld' ) ?>)</i>
 					</label>
 
 				</div>

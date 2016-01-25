@@ -3,7 +3,7 @@
 		<label
 			for="query-post_type"
 			class="inner">
-			<?php ___('query.post_type'); ?>
+			<?php _e( 'Post Type', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_type"
@@ -17,7 +17,7 @@
 		<label
 			for="query-post_status"
 			class="inner">
-			<?php ___('query.post_status'); ?>
+			<?php _e( 'Post Status', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_status"
@@ -30,7 +30,7 @@
 		<label
 			for="query-post_class"
 			class="inner">
-			<?php ___('query.post_class'); ?>
+			<?php _e( 'Post Class', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_class"
@@ -44,9 +44,9 @@
 		<label
 			for="query-offset"
 			class="inner"
-			uib-tooltip="<?php ___('query.offset_info'); ?>"
+			uib-tooltip="<?php _e( 'How many posts to skip at the MySQL level', 'postworld' ) ?>"
 			tooltip-popup-delay="333">
-			<?php ___('query.offset'); ?>
+			<?php _e( 'Offset', 'postworld' ) ?>
 			<i class="pwi-info-circle"></i>
 		</label>
 		<input

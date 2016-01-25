@@ -12,7 +12,7 @@
 <div class="postworld wrap social" ng-cloak>
 	<h1>
 		<i class="pwi-bubbles"></i>
-		<?php _ex('Comments', 'heading', 'postworld') ?>
+		<?php _e('Comments', 'postworld') ?>
 	</h1>
 	<hr class="thick">
 
@@ -32,7 +32,7 @@
 						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_COMMENTS, 'pwComments'); ?></div>
 						<h2>
 							<i class="icon pwi-facebook"></i>
-							<?php _ex('Facebook Comments', 'heading', 'postworld') ?>
+							<?php _e('Facebook Comments', 'postworld') ?>
 						</h2>
 						
 						<div class="well">
@@ -41,7 +41,7 @@
 								<input
 									type="checkbox"
 									ng-model="pwComments.facebook.enable">
-									<?php _ex('Enable Facebook Comments', 'setting toggle', 'postworld') ?>
+									<?php _e('Enable Facebook Comments', 'postworld') ?>
 							</label>
 
 							<div
@@ -51,60 +51,60 @@
 									type="number"
 									class="short"
 									ng-model="pwComments.facebook.numposts">
-								<?php _ex('number of posts', 'number of facebook comments', 'postworld') ?>
-								<small>: <?php _ex('the number of most recent comments to show', 'self-explanitory', 'postworld') ?></small>
+								<?php _e('number of posts', 'postworld') ?>
+								<small>: <?php _e('the number of most recent comments to show', 'postworld') ?></small>
 
 								<hr class="thin">
 								
 								<select
 									ng-model="pwComments.facebook.colorscheme">
-									<option value="dark"><?php _ex('Dark', 'color scheme', 'postworld') ?></option>
-									<option value="light"><?php _ex('Light', 'color scheme', 'postworld') ?></option>
+									<option value="dark"><?php _e('Dark', 'postworld') ?></option>
+									<option value="light"><?php _e('Light', 'postworld') ?></option>
 								</select>
-								<?php _ex('color scheme', 'for comment module', 'postworld') ?>
-								<small> : <?php _ex('the background color of the comment module', 'self-explanitory', 'postworld') ?></small>
+								<?php _e('color scheme', 'postworld') ?>
+								<small> : <?php _e('the background color of the comment module', 'postworld') ?></small>
 
 								<hr class="thin">
 								
 								<select
 									ng-model="pwComments.facebook.order_by">
-									<option value="social"><?php _ex('Social Circle', 'facebook comments', 'postworld') ?></option>
-									<option value="time"><?php _ex('Chronological', 'facebook comments', 'postworld') ?></option>
-									<option value="reverse_time"><?php _ex('Reverse Chronological', 'facebook comments', 'postworld') ?></option>
+									<option value="social"><?php _e('Social Circle', 'postworld') ?></option>
+									<option value="time"><?php _e('Chronological', 'postworld') ?></option>
+									<option value="reverse_time"><?php _e('Reverse Chronological', 'postworld') ?></option>
 								</select>
-								<?php _ex('order', 'comment ordering', 'postworld') ?>
-								<small> : <?php _ex('the order in which comments appear', 'setting', 'postworld') ?></small>
+								<?php _e('order', 'postworld') ?>
+								<small> : <?php _e('the order in which comments appear', 'postworld') ?></small>
 
 								<hr class="thin">
 								<select ng-model="pwComments.facebook.href_from">
-									<option value="id"><?php _ex('Post ID', 'setting', 'postworld') ?> (<?php _ex('default', 'setting', 'postworld') ?>)</option>
-									<option value="url"><?php _ex('URL', 'setting', 'postworld') ?></option>
+									<option value="id"><?php _e('Post ID', 'postworld') ?> (<?php _e('default', 'postworld') ?>)</option>
+									<option value="url"><?php _e('URL', 'postworld') ?></option>
 								</select>
-								<?php _ex('href', 'unique link identifier', 'postworld') ?>
-								<small> : <?php _ex('where to derive unique HREF identifier from', 'setting', 'postworld') ?></small>
+								<?php _e('href', 'postworld') ?>
+								<small> : <?php _e('where to derive unique HREF identifier from', 'postworld') ?></small>
 
 								<hr class="thin">
 								<select
 									ng-model="pwComments.facebook.protocol">
-									<option value=""><?php _ex('Off', 'setting', 'postworld') ?></option>
-									<option value="http"><?php _ex('HTTP', 'setting', 'postworld') ?></option>
-									<option value="https"><?php _ex('HTTPS', 'setting', 'postworld') ?></option>
+									<option value=""><?php _e('Off', 'postworld') ?></option>
+									<option value="http"><?php _e('HTTP', 'postworld') ?></option>
+									<option value="https"><?php _e('HTTPS', 'postworld') ?></option>
 								</select>
-								<?php _ex('normalize protocol', 'settings', 'postworld') ?>
-								<small> : <?php _ex('force href from a specific protocol', 'setting', 'postworld') ?></small>
+								<?php _e('normalize protocol', 'postworld') ?>
+								<small> : <?php _e('force href from a specific protocol', 'postworld') ?></small>
 
 								<div class="well">
-									<b><?php _ex('Note', 'general', 'postworld') ?> :</b> 
-									<?php _ex('A Facebook App ID is required for comments to work properly.', 'Facebook', 'postworld') ?>
+									<b><?php _e('Note', 'postworld') ?> :</b> 
+									<?php _e('A Facebook App ID is required for comments to work properly.', 'postworld') ?>
 									<ol>
 										<li>
 											<a href="https://developers.facebook.com/apps/" target="_blank">
-												<?php _ex("Create a Facebook App", 'list-item', 'postworld') ?>
+												<?php _e("Create a Facebook App", 'postworld') ?>
 											</a>
 										</li>
 										<li>
 											<a href="<?php get_site_url(); ?>/wp-admin/admin.php?page=<?php echo pw_admin_submenu_slug() ?>-social">
-												<?php _ex("Enter your app's ID into the Facebook App ID field in Postworld Social", 'list-item', 'postworld') ?>
+												<?php _e("Enter your app's ID into the Facebook App ID field in Postworld Social", 'postworld') ?>
 											</a>
 										</li>
 									</ol>
@@ -129,7 +129,7 @@
 						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_COMMENTS, 'pwComments'); ?></div>
 						<h2>
 							<i class="icon pwi-bubbles-o"></i>
-							<?php _ex('Disqus Comments', 'heading', 'postworld') ?>
+							<?php _e('Disqus Comments', 'postworld') ?>
 						</h2>
 						
 						<div class="well">
@@ -138,7 +138,7 @@
 								<input
 									type="checkbox"
 									ng-model="pwComments.disqus.enable">
-									<?php _ex('Enable Disqus Comments', 'setting', 'postworld') ?>
+									<?php _e('Enable Disqus Comments', 'postworld') ?>
 							</label>
 
 							<div
@@ -147,19 +147,19 @@
 								<input
 									type="text"
 									ng-model="pwComments.disqus.shortname">
-									<?php _ex('shortname', 'Disqus', 'postworld') ?>
-								<small>: <?php _ex('this is the unique identifier for your site on Disqus', 'self-explanitory', 'postworld') ?></small>
+									<?php _e('shortname', 'postworld') ?>
+								<small>: <?php _e('this is the unique identifier for your site on Disqus', 'postworld') ?></small>
 								<div class="well">
-									<b><?php _ex('Note', 'general', 'postworld') ?> :</b>
-									<?php _ex('A Disqus shortname is required for comments to work properly.', 'Disqus', 'postworld') ?>
+									<b><?php _e('Note', 'general', 'postworld') ?> :</b>
+									<?php _e('A Disqus shortname is required for comments to work properly.', 'postworld') ?>
 									<ol>
 										<li>
 											<a href="https://disqus.com/admin/create/">
-												<?php _ex('Click here to create a Disqus Shortname', 'Disqus', 'postworld') ?>
+												<?php _e('Click here to create a Disqus Shortname', 'postworld') ?>
 											</a>
 										</li>
 										<li>
-											<?php _ex('Enter the Disqus shortname into the shortname field above', 'Disqus', 'postworld') ?>
+											<?php _e('Enter the Disqus shortname into the shortname field above', 'postworld') ?>
 										</li>
 									</ol>
 									

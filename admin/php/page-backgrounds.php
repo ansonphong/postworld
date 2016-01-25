@@ -35,11 +35,12 @@
 		pw-admin-backgrounds
 		ng-controller="pwBackgroundsDataCtrl"
 		ng-cloak>
-
 		<h1>
 			<i class="pwi-paint-format"></i>
-			Backgrounds
-			<button class="add-new-h2" ng-click="newBackground()"><?php ___('backgrounds.add_new'); ?></button>
+			<?php _e( 'Backgrounds', 'postworld' ) ?>
+			<button class="add-new-h2" ng-click="newBackground()">
+				<?php _e( 'Add New Background', 'postworld' ) ?>
+			</button>
 		</h1>
 
 		<hr class="thick">
@@ -113,25 +114,29 @@
 
 					<?php
 						echo pw_background_single_options( array( 'context'	=>	'siteAdmin' ) );
-						//echo i_ob_include_template( 'admin/modules/layout-single.php', $vars );
 					?>
 
 					<hr class="thick">
 
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?></div>
+					<div class="save-right">
+						<?php pw_save_option_button( PW_OPTIONS_BACKGROUNDS,'pwBackgrounds'); ?>
+					</div>
 		
 
-					<h3><i class="pwi-gear"></i> <?php ___('backgrounds.item_title'); ?></h3>
+					<h3>
+						<i class="pwi-gear"></i>
+						<?php _e( 'Background Settings', 'postworld' ) ?>
+					</h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
 							<label
 								for="item-name"
 								class="inner"
-								uib-tooltip="<?php ___('backgrounds.name_info'); ?>"
+								uib-tooltip="<?php _e( 'The name makes it easy to find', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('backgrounds.name'); ?>
+								<?php _e( 'Background Name', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<input
@@ -144,15 +149,15 @@
 							<label
 								for="item-id"
 								class="inner"
-								uib-tooltip="<?php ___('backgrounds.id_info'); ?>"
+								uib-tooltip="<?php _e( 'The ID is the unique name for the vackground. It contains only letters, numbers, and hyphens.', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('backgrounds.id'); ?>
+								<?php _e( 'Background ID', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								uib-tooltip="<?php ___('backgrounds.id_edit_info'); ?>"
+								uib-tooltip="<?php _e( 'Editing the ID may cause instances of the background to disappear.', 'postworld' ) ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="pwi-edit"></i>
@@ -173,9 +178,9 @@
 					<label
 						for="item-description"
 						class="inner"
-						uib-tooltip="<?php ___('backgrounds.description_info'); ?>"
+						uib-tooltip="<?php _e( 'The description describes the intended use of the Background.', 'postworld' ) ?>"
 						tooltip-popup-delay="333">
-						<?php ___('backgrounds.description'); ?>
+						<?php _e( 'Description', 'postworld' ) ?>
 						<i class="pwi-info-circle"></i>
 					</label>
 					<input
@@ -185,15 +190,13 @@
 						ng-model="selectedItem.description">
 
 					<hr class="thin">
-
-	
 					
 					<!-- DELETE BUTTON -->
 					<button
 						class="button deletion"
 						ng-click="deleteItem(selectedItem,'pwBackgrounds')">
 						<i class="pwi-close"></i>
-						<?php ___('backgrounds.delete'); ?>
+						<?php _e( 'Delete Background', 'postworld' ) ?>
 					</button>
 
 					<!-- DUPLICATE BUTTON -->
@@ -201,7 +204,7 @@
 						class="button"
 						ng-click="duplicateItem(selectedItem,'pwBackgrounds')">
 						<i class="pwi-copy-2"></i>
-						<?php ___('backgrounds.duplicate'); ?>
+						<?php _e( 'Duplicate Background', 'postworld' ) ?>
 					</button>
 
 

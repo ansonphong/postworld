@@ -34,72 +34,16 @@ $i_language = array(
 		'sub_clause' => 'Sub Clause',
 		),
 
-	'backgrounds'	=>	array(
-		'item_title'		=>	'Background Settings',
-		'add_new' 			=>	'Add New Background',
-		'delete'			=>	'Delete Background',
-		'duplicate'			=>	'Duplicate Background',
-
-		'name'				=>	'Background Name',
-		'name_info'			=>	'The name makes it easy to find.',
-		'id'				=>	'Background ID',
-		'id_info'			=>	'The ID is the unique name for the vackground. It contains only letters, numbers, and hyphens.',
-		'id_edit_info'		=>	'Editing the ID may cause instances of the background to disappear.',	
-		
-		'description'		=>	'Description',
-		'description_info'	=>	'The description describes the intended use of the Background.',
-		
-		'edit'				=>	'Edit Background',
-		'delete' 			=> 	'Delete Background',
-		'update' 			=> 	'Update Background',
-
-
-		),
-
-	'sidebars'	=>	array(
-		'item_title'		=>	'Sidebar Settings',
-		'add_new' 			=>	'Add New Sidebar',
-		'delete'			=>	'Delete Sidebar',
-		'duplicate'			=>	'Duplicate Sidebar',
-
-		'name'				=>	'Sidebar Name',
-		'name_info'			=>	'The name is how it appears on the widgets options page.',
-		'id'				=>	'Sidebar ID',
-		'id_info'			=>	'The ID is the unique name for the sidebar. It contains only letters, numbers, and hyphens.',
-		'id_edit_info'		=>	'Editing the ID may cause instances of the sidebar to disappear.',	
-		
-		'description'		=>	'Description',
-		'description_info'	=>	'The description describes the intended use of the sidebar in the widgets options.',
-		'edit'				=>	'Edit Sidebar',
-		'delete' 			=> 	'Delete Sidebar',
-		'update' 			=> 	'Update Sidebar',
-		
-		'class'				=> 	'Class',
-		'class_info'		=> 	'The CSS class which is applied to each widget',
-
-		'before_widget'		=> 	'Before Widget',
-		'before_widget_info'=> 	'HTML that goes before the widget',
-
-		'after_widget'		=> 	'After Widget',
-		'after_widget_info'	=> 	'HTML that goes after the widget',
-
-		'before_title'		=> 	'Before Title',
-		'before_title_info'	=> 	'HTML that goes before the title of each widget',
-
-		'after_title'		=> 	'After Title',
-		'after_title_info'	=> 	'HTML that goes after the title of each widget',
-		),
-
 	'shortcodes'	=>	array(
 		'shortcode'			=>	'Shortcode',
-		'item_title'		=>	'Shortcode Settings',
+		'item_title'		=>	'',
 		'add_new' 			=>	'Add New Shortcode',
 		'delete'			=>	'Delete Shortcode',
 		'duplicate'			=>	'Duplicate Shortcode',
 
-		'name'				=>	'Shortcode Snippet Name',
-		'id'				=>	'Shortcode ID',
-		'id_info'			=>	'The ID is the unique name for the shortcode. This is used to invoke the shortcode.',
+		'name'				=>	'',
+		'id'				=>	'',
+		'id_info'			=>	'',
 		'id_edit_info'		=>	'Editing the ID may cause instances of the shortcode to disappear.',	
 		
 		'edit'				=>	'Edit Shortcode Snippet',
@@ -112,41 +56,33 @@ $i_language = array(
 		'content'			=>	'Content',
 
 		'enclosing'			=>	'Enclosing',
-		'self_enclosing'	=>	'Self-enclosing',
+		'self_enclosing'	=>	'',
 
-		'enclosing_description'			=>	'Contains two parts, a beginning and end, which enclose content.',
-		'self_enclosing_description'	=>	'Contains one part, which is self-contained.',
+		'enclosing_description'			=>	'.',
+		'self_enclosing_description'	=>	'.',
 
-		),
-
-	'iconsets'	=>	array(
-		'icons'				=>	'Icons',
-		'icon_shortcode'	=>	'Icon Shortcode',
-		'icon_shortcode_description'	=>	'Select an icon to get it\'s shortcode',
-		'enabled_iconsets'	=>	'Enabled Iconsets',
-		'shortcode_how_to'	=>	'To use the shortcode, paste the following text into a post.'
 		),
 
 	'feeds'	=>	array(
-		'item_title'		=>	'Feed Settings',
+		'item_title'		=>	'',
 		'add_new' 			=>	'Add New Feed',
 		'delete'			=>	'Delete Feed',
 		'duplicate'			=>	'Duplicate Feed',
 
-		'name'				=>	'Feed Name',
-		'name_info'			=>	'The name is an aesthetic label for the feed.',
+		'name'				=>	'',
+		'name_info'			=>	'',
 		'id'				=>	'Feed ID',
-		'id_info'			=>	'The ID is the unique identifier for the feed. It contains only letters, numbers, and hyphens.',
-		'id_edit_info'		=>	'Editing the ID may cause instances of the feed to disappear.',	
+		'id_info'			=>	'',
+		'id_edit_info'		=>	'',	
 		
-		'preload'			=>	'Preload',
-		'preload_info'		=>	'How many posts to preload',
+		'preload'			=>	'',
+		'preload_info'		=>	'',
 
-		'increment'			=>	'Load Increment',
-		'increment_info'	=>	'How many posts to load each infinite scroll',
+		'increment'			=>	'',
+		'increment_info'	=>	'',
 
-		'offset'			=>	'Offset',
-		'offset_info'		=>	'How many posts to skip at the Javascript level',
+		'offset'			=>	'',
+		'offset_info'		=>	'',
 
 		'feed_template'		=>	'Feed Template',
 		'aux_template'		=>	'Auxiliary Template',
