@@ -1,5 +1,39 @@
 <?php 
 
+/**
+ * Runs a WordPress standard query on the input query
+ * Then returns the requested Postworld fields.
+ */
+function pw_wp_query( $query, $fields ){
+	$query['fields'] = 'ids';
+	$results = new WP_Query( $query );
+	return pw_get_posts( $results->posts, $fields );
+}
+
+/**
+ * Wrapper function for PW_Query class.
+ */
+function pw_query($args,$return_Type = 'PW_QUERY') {     
+	$the_query = new PW_Query($args);
+	switch( $return_type ){
+		case 'ARRAY_A':
+			return (array) $the_query;
+		case 'JSON':
+			return json_encode($the_query);
+		default:
+			return $the_query;
+	}
+}
+
+/**
+ * This extends WP_Query class to use Postworld fields:
+ * • Query for link_format & post_class fields from postworld_post_meta table
+ * • Sort posts by points & rank_score fields in the postworld_post_meta table
+ * • Defines which fields are returned using pw_get_posts() method
+ *
+ * @todo Refactor / remove get_posts() method
+ * @todo Update methods to be compliant with recent WordPress updates
+ */
 class PW_Query extends WP_Query {
 	 
 	/*
@@ -86,7 +120,7 @@ class PW_Query extends WP_Query {
 			}
 		}
 
-		///// event_end,  /////
+		///// event_end /////
 		if(array_key_exists('event_end',  $this->query_vars)){
 			// all events with event_start before this
 			$event_end = $this->query_vars['event_end'];
@@ -99,7 +133,7 @@ class PW_Query extends WP_Query {
 			}
 		}
 
-		///// event_before,  /////
+		///// event_before /////
 		if(array_key_exists('event_before',  $this->query_vars)){
 			// all events with event_end before this
 			$event_before = $this->query_vars['event_before'];
@@ -112,7 +146,7 @@ class PW_Query extends WP_Query {
 			}
 		}
 
-		///// event_after,  /////
+		///// event_after /////
 		if(array_key_exists('event_after',  $this->query_vars)){
 			// all events with event_start after this
 			$event_after = $this->query_vars['event_after'];
@@ -320,6 +354,11 @@ class PW_Query extends WP_Query {
 		}
 	}
 	
+
+	/**
+	 * REMOVE THIS, AND TWEAK HIGHER LEVEL FUNCTION
+	 * WHICH JUST GETS IDS 
+	 */
 	function get_posts() {
 		
 		global $wpdb, $user_ID, $_wp_using_ext_object_cache;
@@ -1235,40 +1274,7 @@ class PW_Query extends WP_Query {
 	}
 }
 
-function pw_query($args,$return_Type = 'PW_QUERY') {
-	
-	/*
-	 * Description:
-		• Similar to the functionality of WP_Query : http://codex.wordpress.org/Class_Reference/WP_Query 
-		
-		• Query by Postworld data fields link_format & post_class
-		• Sort by points & rank_score
-		• Define which fields are returned using pw_get_posts() method
-		• Can determine the return_format as JSON, PHP Associative Array or WP post objects
-		
-		
-		Process:
-		• After querying and ordering is finished, if more than IDs are required to return, use pw_get_posts() method to return specified fields
-		
-		return : PHP Object / JSON / PW_QUERY
-	 
-	  
-		 • JSON - Return a JSON Object
-	     • ARRAY_A - Return an Associative Array
-	     • PW_QUERY (default) 
-	*/
-	     
-	$the_query = new PW_Query($args);
-	if($return_Type == 'ARRAY_A'){
-		return (array) $the_query;
-	}
-	else if($return_Type == 'JSON'){
-		return json_encode($the_query);
-	}
-	else
-		return $the_query;
-	
-}
+
 
 /***********************************************************************************/
 
@@ -1647,8 +1653,7 @@ function pw_user_query( $args, $args,$return_Type = 'PW_User_Query' ){
 
 class PW_COMMENTS extends WP_Comment_Query {
 	
-	
-	
+
 	function query( $query_vars ) {
 		global $wpdb;
 

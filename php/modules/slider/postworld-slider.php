@@ -186,8 +186,8 @@ function pw_print_slider( $slider ){
 			//$query['order'] = "";
 
 			///// RUN QUERY /////
-			$slider['posts'] = (array) pw_query( $query )->posts;
-
+			//$slider['posts'] = (array) pw_query( $query )->posts;
+			$slider['posts'] = pw_wp_query( $query, $query['fields'] );
 
 		// Do not break case 'query' here, continue with this_post mode
 		case 'this_post':
@@ -243,8 +243,6 @@ function pw_print_slider( $slider ){
 				}
 				add_shortcode('gallery', 'shortcode_gallery_empty');
 			}
-
-
 
 			///// FILTERING /////
 			// HAS IMAGES

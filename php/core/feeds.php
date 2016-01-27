@@ -822,16 +822,17 @@ function pw_get_menu_posts( $menu, $fields ){
 
 	$menu_slug = $menu_obj->slug;
 	
+	$query_fields = array(
+		"ID",
+		"post_title",
+		"post_type",
+		"post_content",
+		"post_excerpt",
+		"post_meta(_all)"
+		);
+
 	$query = array(
 		"post_type"			=>	"nav_menu_item",
-		"fields"			=>	array(
-			"ID",
-			"post_title",
-			"post_type",
-			"post_content",
-			"post_excerpt",
-			"post_meta(_all)"
-			),
 		"posts_per_page"	=>	200,
 		'order'             => 'ASC',
 		'orderby' 			=> 'menu_order',
@@ -845,8 +846,9 @@ function pw_get_menu_posts( $menu, $fields ){
 			),
 		);
 
-	$menu_items = pw_query( $query )->posts;
-
+	//$menu_items = pw_query( $query )->posts;
+	$menu_items = pw_wp_query( $query, $query_fields );
+	
 	//pw_log( 'MENU ITEMS : ',  $menu_items  );
 
 	// If only the IDs are requested
