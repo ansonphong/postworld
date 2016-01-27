@@ -58,8 +58,8 @@ global $post;
 
 				return $pwData.pwQuery( query ).then(
 					function( response ){
-						$log.debug( "QUERY RESPONSE : ", response.data.posts );
-						return response.data.posts;
+						$log.debug( "QUERY RESPONSE : ", response.data );
+						return response.data;
 					},
 					function(){}
 				);

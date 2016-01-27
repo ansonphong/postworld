@@ -330,7 +330,7 @@ function pw_query_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$response_data = pw_query($params);
+	$response_data = pw_wp_query( $params, $params['fields'] );
 
 	pwAjaxRespond( $response_data );
 }

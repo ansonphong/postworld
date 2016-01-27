@@ -45,7 +45,7 @@ postworld.controller('pwQueryCtrl',
 		$pwData.pwQuery( queryVars ).then(
 			// Success
 			function(response) {
-				$scope.queryResultsModel = response.data.posts;
+				$scope.queryResultsModel = response.data;
 				$scope.queryStatusModel = "done";
 			},
 			// Failure

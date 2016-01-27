@@ -12,29 +12,6 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 	// Check feed_settigns to confirm we have valid settings
 	var validSettings = true;
 	
-	/*
-	// Set feeds and feed_data in pwData Singleton
-	//var feed_settings = $window['feed_settings'];
-	// TODO check mandatory fields
-	if (feed_settings == null) {
-		validSettings = false;
-		$log.error('Service: pwData Method:Constructor  no valid feed_settings defined');
-	}
-	*/
-	
-	/*
-	var feeds = function(){
-		var feeds = $window['pw']['feeds'];
-
-		// Deposit the feed_id into each feed
-		angular.forEach( feeds, function( value, key ){
-			if( _.isUndefined( value.feed_id ) ){
-			}
-		});
-		return ;
-	};
-	*/
-
 	var	getTemplate = function( pwData, meta ) {
 		var template = false;
 
@@ -44,13 +21,6 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		var view = meta.view;
 
 		var deviceType = $pw.getDeviceType();
-
-		//$log.debug( 'getTemplate : META : ',meta);
-		//$log.debug( '$pw.templates[ subdir ]', $pw.templates[ subdir ] );
-
-		/* 
-		 * 
-		 */
 
 		switch( subdir ) {
 
@@ -103,9 +73,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			);
 	
 	return {
-
 		posts: $window.pw.posts,
-
 		feeds: {},
 		widgets: $window.pw.widgets,		
 		templates: $pw.templates, 
@@ -113,6 +81,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		embeds: $window.pw.embeds,			// Used to store embed codes
 		background: $window.pw.background,	// Used to represent the current background object
 		users: $window.pw.users,	
+		
 		rest:{
 			namespace: $pw.config.rest_api.namespace+'/v1',
 		},
@@ -160,17 +129,17 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			);
 			return deferred.promise;		
 		},
-		///// DEPRECIATED /////
 		wp_ajax: function(fname, args) {
+			///// DEPRECIATED /////
 			return this.wpAjax;		
 		},
 		pwQuery: function( args ){
-			$log.debug('pwData.pw_query',args);
+			$log.debug('pwData.pwQuery',args);
 			var params = {'args':args};
 			return this.wpAjax('pw_query',params);
 		},
 		saveOption: function( args ) {
-			$log.debug('wp_ajax.pw_save_option',args);
+			$log.debug('pwData.saveOption',args);
 			var params = { args: args };
 			return this.wpAjax('pw_save_option',params);
 		},
@@ -295,7 +264,9 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		* @returns {string} The URL of the requested template, or `false` if it doesn't exist.
 		*/
 		getTemplate: function( meta ){
-			///// Set Defaults /////
+			/**
+			 * Set Defaults
+			 */
 			// Subdirectory
 			if( _.isUndefined(meta.subdir) )
 				return false;

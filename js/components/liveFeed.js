@@ -429,7 +429,7 @@ postworld.controller('pwFeedController',
 					return;
 				}
 				if( response.status == 200) {
-
+					//$log.debug( '$pwData.getPosts', response );
 					var newItems = response.data;
 					
 					// Used to sequence the order of post fade-in transitions 

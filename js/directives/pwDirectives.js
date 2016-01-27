@@ -233,9 +233,9 @@ postworld.directive('pwLoadPost',
 				$pwData.pwQuery( query ).then(
 					function(response) {
 						$scope.postLoading = false;
-						if( _.isArray( response.data.posts ) ){
-							if( !_.isEmpty( response.data.posts ) ){
-								$scope.post = response.data.posts[0];
+						if( _.isArray( response.data ) ){
+							if( !_.isEmpty( response.data ) ){
+								$scope.post = response.data[0];
 								setTemplateUrl();
 							}
 						}
