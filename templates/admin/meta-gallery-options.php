@@ -70,7 +70,7 @@
 				<td valign="top">
 					<img
 						style="float:left; margin-right:15px;"
-						ng-src="<?php echo get_infinite_directory_uri(); ?>/images/layouts/galleries/gallery-{{ <?php echo $vars['ng_model']; ?>.template }}.png">
+						ng-src="<?php echo postworld_directory_uri(); ?>/images/layouts/galleries/gallery-{{ <?php echo $vars['ng_model']; ?>.template }}.png">
 				</td>
 				<td>
 					{{ getSelectedOption(<?php echo $vars['ng_model']; ?>.template).description }}

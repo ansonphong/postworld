@@ -4,10 +4,24 @@
  | | | | __| | | | __| |/ _ \/ __|
  | |_| | |_| | | | |_| |  __/\__ \
   \___/ \__|_|_|_|\__|_|\___||___/
-//////////////////////////////////*/
+///////////////////////////////////////*/
+/// General/global utility functions ///
+
 /**
- * General/global utility functions
+ * Gets the URI for the Postworld directory
+ * @return string The URI
  */
+function postworld_directory_uri(){
+	$template_uri = get_template_directory_uri();
+	$template_dir = get_template_directory();
+	$postworld_dir = POSTWORLD_PATH;
+
+	// Subtract the Infinite Directory from the Template Dir
+	$relative_path = str_replace( $template_dir, '', $postworld_dir );
+
+	// Add the difference to the Template URI
+	return $template_uri . $relative_path;
+}
 
 /**
  * Returns a specific key from the
@@ -257,6 +271,19 @@ function pw_get_post_gmt_timestamp( $post_id = null ){
 	return $time;
 
 }
+
+/**
+ * Display the classes for the post div.
+ * Like WP native post_class, without the 'class=' part,
+ * And doesn't echo, instead returns string.
+ *
+ * @param string|array $class   One or more classes to add to the class list.
+ * @param int|WP_Post  $post_id Optional. Post ID or post object. Defaults to the global `$post`.
+ * @return string A string of post classes.
+ */
+function pw_post_class( $class, $post_id ){
+	return join( ' ', get_post_class( $class, $post_id ) );
+};
 
 
 /**
@@ -1839,18 +1866,56 @@ function pw_get_post_types(){
 }
 */
 
-/**
- * Display the classes for the post div.
- * Like WP native post_class, without the 'class=' part,
- * And doesn't echo, instead returns string.
- *
- * @param string|array $class   One or more classes to add to the class list.
- * @param int|WP_Post  $post_id Optional. Post ID or post object. Defaults to the global `$post`.
- * @return string A string of post classes.
- */
-function pw_post_class( $class, $post_id ){
-	return join( ' ', get_post_class( $class, $post_id ) );
-};
 
+/*
+function pw_add_terms( $terms, $taxonomy ){
+	// Adds a series of terms up to two levels of depth
+
+	foreach( $terms as $term ){
+	
+		$term_exists = term_exists( $term['term'], $taxonomy );
+
+		// Add top level terms
+		if( !$term_exists ){
+			// Insert the term
+			$term_ids = wp_insert_term(
+				$term['term'],
+				$taxonomy,
+				$term['meta']
+				);
+		} else{
+			$term_ids = $term_exists;
+		}
+
+		// Add Child Terms
+		if( isset( $term['children'] ) ){
+
+			// Iterate through each child term
+			foreach( $term['children'] as $child_term ){
+
+				// Check if Terms Exists
+				$term_exists = term_exists( $child_term['term'], $taxonomy );
+
+				if( !$term_exists ){
+					// Define the parent term
+					$child_term['meta']['parent'] = $term_ids['term_id'];
+
+					// Insert the term
+					$child_term_ids = wp_insert_term(
+						$child_term['term'],
+						$taxonomy,
+						$child_term['meta']
+						);
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+*/
 
 ?>

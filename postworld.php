@@ -173,10 +173,6 @@ include 'php/core/modules.php';
 // And before the rest of the Postworld includes
 $pw['info']['modules'] = pw_enabled_modules();	// pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
 
-////// INFINITE //////
-// Load Infinite Lineage
-include "infinite/functions.php";
-
 ////// VARIABLES //////
 include 'php/core/variables.php';
 
@@ -369,7 +365,8 @@ global $wpdb;
 if( pw_dev_mode() )
 	$wpdb->show_errors();
 
-
+add_theme_support( 'menus' );
+add_theme_support( 'post-thumbnails' );
 
 
 //To get user id from wordpress

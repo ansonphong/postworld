@@ -9,14 +9,12 @@ if( _get( $pw['config'], 'wp_admin.admin_bar_menu.enable' ) &&
 
 function pw_admin_bar_menu_item_meta( $id ){
 	$class = ( strpos( $_SERVER['QUERY_STRING'], $id ) ) ? 'active' : '';
-
 	return array(
 		'class' => $class
 		);
 }
 
 function pw_admin_bar_menu($wp_admin_bar){
-
 	global $pw;
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];
@@ -26,7 +24,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	$menu_name = 'postworld-menu';
 	$menu_title = _get( $pw['config'], 'wp_admin.admin_bar_menu.title' );
 	if( empty( $menu_title ) )
-		$menu_title = 'Postworld';
+		$menu_title = __( 'Postworld', 'postworld' );
 
 	// Primary Menu Item
 	$args = array(
@@ -42,7 +40,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 
 	array_push($args,array(
 		'id'		=>	'theme_settings',
-		'title'		=>	'Theme Settings',
+		'title'		=>	_x('Theme Settings','module','postworld'),
 		'href'		=>	$theme_url,
 		'parent'	=>	$menu_name,
 	));
@@ -50,7 +48,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'site', $enabled_modules ) )
 		array_push($args,array(
 			'id'     	=>	'site_options',
-			'title'		=>	'Site Options',
+			'title'		=>	_x('Site Options','module','postworld'),
 			'href'		=>	$theme_url.'-site',
 			'parent' 	=>	$menu_name,
 			//'meta'   	=>	array( 'class' => 'theme-menu-item' ),
@@ -60,7 +58,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'layouts', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_layout',
-			'title'		=>	'Layout',
+			'title'		=>	_x('Layout','module','postworld'),
 			'href'		=>	$theme_url.'-layout',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('layout')
@@ -69,7 +67,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'sidebars', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_sidebars',
-			'title'		=>	'Sidebars',
+			'title'		=>	_x('Sidebars','module','postworld'),
 			'href'		=>	$theme_url.'-sidebars',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('sidebars')
@@ -78,7 +76,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'styles', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_styles',
-			'title'		=>	'Styles',
+			'title'		=>	_x('Styles','module','postworld'),
 			'href'		=>	$theme_url.'-styles',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('styles')
@@ -87,7 +85,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'social', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_social',
-			'title'		=>	'Social',
+			'title'		=>	_x('Social','module','postworld'),
 			'href'		=>	$theme_url.'-social',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('social')
@@ -96,7 +94,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'comments', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_comments',
-			'title'		=>	'Comments',
+			'title'		=>	_x('Comments','module','postworld'),
 			'href'		=>	$theme_url.'-comments',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('comments')
@@ -105,7 +103,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'feeds', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_feeds',
-			'title'		=>	'Feeds',
+			'title'		=>	_x('Feeds','module','postworld'),
 			'href'		=>	$theme_url.'-feeds',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('feeds')
@@ -114,7 +112,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'backgrounds', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_backgrounds',
-			'title'		=>	'Backgrounds',
+			'title'		=>	_x('Backgrounds','module','postworld'),
 			'href'		=>	$theme_url.'-backgrounds',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('backgrounds')
@@ -123,7 +121,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'iconsets', $enabled_modules ) )
 	array_push($args,array(
 		'id'		=>	'site_iconsets',
-		'title'		=>	'Iconsets',
+		'title'		=>	_x('Iconsets','module','postworld'),
 		'href'		=>	$theme_url.'-iconsets',
 		'parent'	=>	$menu_name,
 		'meta'		=>	pw_admin_bar_menu_item_meta('iconsets')
@@ -132,7 +130,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'shortcodes', $enabled_modules ) )
 		array_push($args,array(
 			'id'		=>	'site_shortcodes',
-			'title'		=>	'Shortcodes',
+			'title'		=>	_x('Shortcodes','module','postworld'),
 			'href'		=>	$theme_url.'-shortcodes',
 			'parent'	=>	$menu_name,
 			'meta'		=>	pw_admin_bar_menu_item_meta('shortcodes')
@@ -140,7 +138,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 
 	array_push($args,array(
 		'id'		=>	'site_database',
-		'title'		=>	'Database',
+		'title'		=>	_x('Database','module','postworld'),
 		'href'		=>	$theme_url.'-database',
 		'parent'	=>	$menu_name,
 		'meta'		=>	pw_admin_bar_menu_item_meta('database')
@@ -149,7 +147,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	// Add 'Plugins' to the main frontend admin menu
 	array_push($args,array(
 		'id'		=>	'plugins',
-		'title'		=>	'Plugins',
+		'title'		=>	_x('Plugins','module','postworld'),
 		'href'		=>	get_admin_url(null,'plugins.php'),
 		'parent'	=>	'site-name',
 	));
@@ -157,7 +155,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	// Add 'Media' to the main frontend admin menu
 	array_push($args,array(
 		'id'		=>	'media',
-		'title'		=>	'Media',
+		'title'		=>	_x('Media','module','postworld'),
 		'href'		=>	get_admin_url(null,'upload.php'),
 		'parent'	=>	'site-name',
 	));

@@ -11,9 +11,7 @@
 		postworldAdmin.controller('pwBackgroundsDataCtrl',
 			[ '$scope', '$window', '_',
 			function( $scope, $window, $_ ){
-			$scope.lang = "en";
 			// Print Data
-			$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
 			$scope.pwBackgrounds = <?php echo json_encode( $pwBackgrounds ); ?>;
 			$scope.pwBackgroundsStructure = <?php echo json_encode( $pw_backgrounds_structure ); ?>;
 			$scope.contexts = <?php echo json_encode( pw_get_contexts() ); ?>;

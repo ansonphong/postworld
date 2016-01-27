@@ -1,47 +1,47 @@
 <?php
-
-////////// LAYOUT OPTIONS //////////
 function i_layout_options(){
 	// DEPRECIATED : use pw_layout_options()
 	return pw_layout_options();
 }
-function pw_layout_options(){
 
-	///// DEFINE OPTIONS /////
+/**
+ * Defines the options when selecting a layout.
+ */
+function pw_layout_options(){
 	$pwLayoutOptions = array(
 		"contexts"	=>	pw_get_contexts(),
 
 		"templates"	=>	array(
 			"default"	=>	array(
 				array(
-					'label' =>	'Default',
+					'label' =>	_x('Default','default layout','postworld'),
 					'slug'	=>	'default',
-					'image'	=>	get_infinite_directory_uri().'/images/layouts/default.png',
+					'image'	=>	postworld_directory_uri().'/images/layouts/default.png',
 					)
 				),
 			"options"	=>	array(
 				array(
-					'label' =>	'Full Width',
+					'label' =>	_x('Full Width','layout option','postworld'),
 					'slug'	=>	'full-width',
-					'image'	=>	get_infinite_directory_uri().'/images/layouts/full.png',
+					'image'	=>	postworld_directory_uri().'/images/layouts/full.png',
 					'supports' =>	array(),
 					),
 				array(
-					'label' =>	'Left Sidebar',
+					'label' =>	_x('Left Sidebar','layout option','postworld'),
 					'slug'	=>	'left-sidebar',
-					'image'	=>	get_infinite_directory_uri().'/images/layouts/left.png',
+					'image'	=>	postworld_directory_uri().'/images/layouts/left.png',
 					'supports' =>	array( 'sidebar-left' ),  // TODO : IMPLIMENT SUPPORTS
 					),
 				array(
-					'label' =>	'Right Sidebar',
+					'label' =>	_x('Right Sidebar','layout option','postworld'),
 					'slug'	=>	'right-sidebar',
-					'image'	=>	get_infinite_directory_uri().'/images/layouts/right.png',
+					'image'	=>	postworld_directory_uri().'/images/layouts/right.png',
 					'supports' =>	array( 'sidebar-right' ),
 					),
 				array(
-					'label' =>	'Left & Right Sidebars',
+					'label' =>	_x('Left & Right Sidebars','layout option','postworld'),
 					'slug'	=>	'left-right-sidebar',
-					'image'	=>	get_infinite_directory_uri().'/images/layouts/left-right.png',
+					'image'	=>	postworld_directory_uri().'/images/layouts/left-right.png',
 					'supports' =>	array( 'sidebar-left', 'sidebar-right' ),
 					),
 				),
