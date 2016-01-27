@@ -1,10 +1,31 @@
 <?php 
+function postworld_uninstall( $vars = array() ){}
+
 /**
  * Installs Postworld tables into the database.
  */
 function postworld_install(){
 	global $wpdb;
 	global $pw;
+
+	// IN DEVELOPMENT
+	$tables = pw_config('db.tables');
+	if( empty($tables) )
+		$tables = array(
+			'post_meta',
+			'post_points',
+			'comment_meta',
+			'comment_points',
+			'user_meta',
+			'user_shares',
+			'favorites',
+			'feeds',
+			'cron_logs',
+			'shares',
+			'cache',
+			'ips',
+			);
+
 
 	/* POSTS */
 	$post_meta_table_name = $wpdb->pw_prefix.'post_meta';
