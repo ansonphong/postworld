@@ -28,12 +28,12 @@ function postworld_directory_uri(){
  * Postworld Site Globals.
  */
 function pw_config( $key = null ){
-	global $pwSiteGlobals;
-	$pwSiteGlobals = apply_filters( 'pw_config', $pwSiteGlobals );
+	global $pw_config;
+	$pw_config = apply_filters( 'pw_config', $pw_config );
 	if( $key == null )
-		return $pwSiteGlobals;
+		return $pw_config;
 	else
-		return _get( $pwSiteGlobals, $key );
+		return _get( $pw_config, $key );
 }
 
 /**
@@ -41,18 +41,18 @@ function pw_config( $key = null ){
  * Postworld Site Globals.
  */
 function pw_set_config( $key, $value ){
-	global $pwSiteGlobals;
-	$pwSiteGlobals = _set( $pwSiteGlobals, $key, $value );
-	return $pwSiteGlobals;
+	global $pw_config;
+	$pw_config = _set( $pw_config, $key, $value );
+	return $pw_config;
 }
 
 /**
  * Pushes a value to an array in the Postworld Config.
  */
 function pw_push_config( $key, $value ){
-	global $pwSiteGlobals;
-	$pwSiteGlobals = _push( $pwSiteGlobals, $key, $value );
-	return $pwSiteGlobals;
+	global $pw_config;
+	$pw_config = _push( $pw_config, $key, $value );
+	return $pw_config;
 }
 
 /**
