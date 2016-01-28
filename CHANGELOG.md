@@ -4,6 +4,7 @@
 - **Possible Breaking Changes**
     + All instances of `$pwSiteGlobals` have been changed to use `pw_config()` to access configured settings, in preparation for elimination of `$pwSiteGlobals` variable altogether.
     + Any themes using `$pwSiteGlobals` need to migrate to the `pw_config($key)` method to access globally configured settings.
+    + All instances of `$pwSiteGlobals` variable need to be renamed to `$pw_config`
 
 ### Version 1.42
 - **Possible Breaking Changes**
