@@ -740,6 +740,62 @@ function initAjaxResponse() {
 
 
 
+/* *************************
+ *	Feed Functions 
+ * 
+ ************************** */
+function pw_get_live_feed_ajax() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	$vars = $args['args'];
+	$results = pw_get_live_feed ( $vars );
+	pwAjaxRespond( $results );
+}
+add_action("wp_ajax_pw_get_live_feed", "pw_get_live_feed_ajax");
+add_action("wp_ajax_nopriv_pw_get_live_feed", "pw_get_live_feed_ajax");
+/* Actions for pw_register_feed () */
+function pw_register_feed_admin() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	$func_args = $args['args'];
+	// TODO check results are ok
+	/* set the response type as JSON */
+	$results = pw_register_feed($args['args']);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+/* Actions for pw_load_feed () */
+function pw_load_feed_anon() {
+	list($response, $args, $nonce) = initAjaxResponse();
+	// $args has all function arguments. in this case it has only one argument
+	$func_args = $args['args'];
+	// TODO check results are ok
+	/* set the response type as JSON */
+	// TODO check values are correct
+	if ($func_args['feed_id']) $feed_id = $func_args['feed_id']; else $feed_id = ''; 
+	if ($func_args['preload']) $preload = $func_args['preload']; else $preload = 0;
+	$results = pw_load_feed($feed_id,$preload);
+	header('Content-Type: application/json');
+	$response['status'] = 200;
+	$response['data'] = $results;
+	echo json_encode($response);
+	// documentation says that die() should be the end...
+	die();
+}
+/* Action Hook for pw_load_feed() - Logged in users */
+add_action("wp_ajax_pw_load_feed", "pw_load_feed_anon");
+/* Action Hook for pw_load_feed() - Anonymous users */
+add_action("wp_ajax_nopriv_pw_load_feed", "pw_load_feed_anon");
+/* Action Hook for pw_register_feed() - Logged in users */
+add_action("wp_ajax_pw_register_feed", "pw_register_feed_admin");
+/* Action Hook for pw_register_feed() - Anonymous users */
+// add_action("wp_ajax_nopriv_pw_register_feed", "pw_register_feed_anon");
+
+
+
 
 /* *************************
  *	Posts Functions 

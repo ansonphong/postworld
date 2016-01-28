@@ -31,7 +31,7 @@ function pw_query($args,$return_type = 'PW_QUERY') {
  * • Sort posts by points & rank_score fields in the postworld_post_meta table
  * • Defines which fields are returned using pw_get_posts() method
  *
- * @todo Refactor / remove get_posts() method
+ * @todo Refactor / remove get_posts() method //**
  * @todo Update methods to be compliant with recent WordPress updates
  */
 class PW_Query extends WP_Query {
@@ -72,13 +72,13 @@ class PW_Query extends WP_Query {
 
 		if($orderby!=null && $orderby!=''){
 			$orderby = str_replace("date", 			$wpdb->prefix."posts.post_date", $orderby);	
-			$orderby = str_replace("rank_score", 	$wpdb->pw_prefix."post_meta.rank_score", $orderby);	
-			$orderby = str_replace("post_points", 	$wpdb->pw_prefix."post_meta.post_points", $orderby);	
+			$orderby = str_replace("rank_score", 	$wpdb->pw_prefix."post_meta.rank_score", $orderby);	//**
+			$orderby = str_replace("post_points", 	$wpdb->pw_prefix."post_meta.post_points", $orderby); //**
 			$orderby = str_replace("modified", 		$wpdb->prefix."posts.post_modified", $orderby);	
 			$orderby = str_replace("rand", 			"RAND()", $orderby);	
 			$orderby = str_replace("comment_count", $wpdb->prefix."posts.comment_count", $orderby);	
-			$orderby = str_replace("event_start", 	$wpdb->pw_prefix."post_meta.event_start", $orderby);
-			$orderby = str_replace("event_end", 	$wpdb->pw_prefix."post_meta.event_end", $orderby);
+			$orderby = str_replace("event_start", 	$wpdb->pw_prefix."post_meta.event_start", $orderby); //**
+			$orderby = str_replace("event_end", 	$wpdb->pw_prefix."post_meta.event_end", $orderby); //**
 			$orderby = "order by ".str_replace(' ', ',', $orderby);//." ".$args->order;
 			$orderby.=" ".$this->query_vars['order'];
 		}
@@ -181,7 +181,7 @@ class PW_Query extends WP_Query {
 			/**
 			 * @todo :  Here make sure all the event filters
 			 *			are from a list of pre-registered options
-			 *			Otherwise it could mess up the rest of the query.
+			 *			Otherwise it could mess up the rest of the query. //**
 			*/
 
 			$filter_count = count( $event_filters );
@@ -259,6 +259,10 @@ class PW_Query extends WP_Query {
 		return $geo_query." AND ";
 	}
 	
+
+	/**
+	 * @todo Look at the posts_where filter in WP_Query //**
+	 */
 	function prepare_where_query(){
 		
 		$where ="WHERE ";	
@@ -308,7 +312,9 @@ class PW_Query extends WP_Query {
 		return $where." AND ";
 	}
 	
-	
+	/**
+	 * @todo Look at posts_join filter in WP_Query //**
+	 */
 	function prepare_new_request($remove_tbl=false){
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
@@ -362,7 +368,10 @@ class PW_Query extends WP_Query {
 	function get_posts() {
 		
 		global $wpdb, $user_ID, $_wp_using_ext_object_cache;
-		$wpdb -> show_errors();
+	
+		if( pw_dev_mode() )
+			$wpdb -> show_errors();
+	
 		$this->parse_query();
 
 		do_action_ref_array('pre_get_posts', array(&$this));
@@ -794,6 +803,7 @@ class PW_Query extends WP_Query {
 		if ( empty($q['order']) || ((strtoupper($q['order']) != 'ASC') && (strtoupper($q['order']) != 'DESC')) )
 			$q['order'] = 'DESC';
 
+
 		// Order by
 		if ( empty($q['orderby']) ) {
 			$orderby = "$wpdb->posts.post_date " . $q['order'];
@@ -853,6 +863,8 @@ class PW_Query extends WP_Query {
 			else
 				$orderby .= " {$q['order']}";
 		}
+
+
 
 		if ( is_array( $post_type ) && count( $post_type ) > 1 ) {
 			$post_type_cap = 'multiple_post_type';
@@ -1291,6 +1303,9 @@ class PW_User_Query extends WP_User_Query {
 		return $fields;
 	}
 	
+	/**
+	 * @todo Look at posts_search_orderby filter in WP_Query //**
+	 */
 	function prepare_order_by($orderBy_Query){
 		
 		$orderby = $this->query_vars['orderby'];
@@ -1302,12 +1317,12 @@ class PW_User_Query extends WP_User_Query {
 		
 			
 			if ($orderby=='comment_points'){
-				$order_by_string.= "$wpdb->pw_prefix"."user_meta.comment_points";
+				$order_by_string.= "$wpdb->pw_prefix"."user_meta.comment_points"; //**
 			}
 			
 			
 			if ($orderby=='post_points'){	
-				$order_by_string.= "$wpdb->pw_prefix"."user_meta.post_points";
+				$order_by_string.= "$wpdb->pw_prefix"."user_meta.post_points"; //**
 			}
 			
 			if ($orderby=='display_name'){
@@ -1333,27 +1348,27 @@ class PW_User_Query extends WP_User_Query {
 		
 		if($this->query_vars['location']){
 				$location = explode(",", $this->query_vars['location']);
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[0]."' and ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[0]."' and "; //**
 				
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[1]."' and ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[1]."' and "; //**
 				
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[2]."' ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[2]."' "; //**
 		}else{
 	
 		
 			if($this->query_vars['location_country']){
 				$insertAnd =TRUE;
-				$where .=" $wpdb->pw_prefix"."user_meta.location_country='".$this->query_vars["location_country"]."' ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_country='".$this->query_vars["location_country"]."' "; //**
 			}
 			
 			if($this->query_vars['location_region']){
 					if($insertAnd ===TRUE) $where.=" and ";
-					$where .=" $wpdb->pw_prefix"."user_meta.location_region='".$this->query_vars["location_region"]."' ";
+					$where .=" $wpdb->pw_prefix"."user_meta.location_region='".$this->query_vars["location_region"]."' "; //**
 			}
 			
 			if($this->query_vars['location_city']){
 					if($insertAnd ===TRUE) $where.=" and ";
-					$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$this->query_vars["location_city"]."' ";
+					$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$this->query_vars["location_city"]."' "; //**
 			}
 		
 		}
@@ -1821,7 +1836,7 @@ class PW_COMMENTS extends WP_Comment_Query {
 
 		
 		
-		$join .= " left join  $wpdb->pw_prefix"."comment_meta on wp_comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id ";
+		$join .= " left join  $wpdb->pw_prefix"."comment_meta on wp_comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id "; //**
 		
 		$query = "SELECT $fields FROM $wpdb->comments $join WHERE $where $groupby ORDER BY $orderby $order $limits";
 		//print_r($query);

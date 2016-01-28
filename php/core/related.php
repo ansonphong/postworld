@@ -251,8 +251,10 @@ function pw_related_posts_by_taxonomy( $vars ){
 
 	///// DEFAULTS /////
 	global $post;
+	$post_id = (is_object($post)) ? $post->ID : 0;
+
 	$defaultVars = array(
-		'post_id' 	=> 	$post->ID,	// The post ID by which to find posts in relation to
+		'post_id' 	=> 	$post_id,	// The post ID by which to find posts in relation to
 		'number'	=>	0,			// Numer of posts to return (0 returns all)
 		'depth' 	=> 	0,			// Depth of posts to query (0 is max depth)
 		'order_by'	=>	'score', 	// Optional values : none / score

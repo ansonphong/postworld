@@ -345,7 +345,9 @@ function pw_insert_terms($terms_array, $input_format = ARRAY_A, $force_slugs = F
 
 function check_term_slug_exists($slug) {
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 
 	$query = "SELECT * FROM wp_terms WHERE slug = '" . $slug . "'";
 	$results = $wpdb -> get_results($query);

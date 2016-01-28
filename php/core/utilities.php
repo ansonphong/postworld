@@ -74,7 +74,41 @@ function pw_config_in_array( $needle, $haystack_key ){
  * Has a particular table.
  */
 function pw_config_db_has_table( $table ){
-	return pw_config_in_array($table, 'db.table' );
+	global $wpdb;
+	$table_name = $wpdb->pw_prefix.$table;
+	return ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name);
+
+	/*
+	$tables = pw_config('db.tables');
+	if($tables === false)
+		return true;
+	return pw_config_in_array($table, 'db.tables' );
+	*/
+}
+
+/**
+ * Which tables are configured to be created.
+ *
+ * @return array Array of table names, minus prefix.
+ */
+function pw_config_db_tables(){
+	$tables = pw_config('db.tables');
+	// Default tables, if none set
+	if( empty($tables) )
+		$tables = array(
+			'post_meta',
+			'post_points',
+			'comment_meta',
+			'comment_points',
+			'user_meta',
+			'user_shares',
+			'favorites',
+			'cron_logs',
+			'shares',
+			'cache',
+			'ips',
+			);
+	return $tables;
 }
 
 /**

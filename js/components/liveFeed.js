@@ -277,7 +277,7 @@ postworld.controller('pwFeedController',
 			// Success
 			function(response) {
 
-				$log.debug( "LIVE FEED (response) : ID : " + response.data.feed_id, response.data );
+				//$log.debug( "LIVE FEED (response) : ID : " + response.data.feed_id, response.data );
 
 				// Prevent Flicker when Template Loading
 				$timeout( function(){

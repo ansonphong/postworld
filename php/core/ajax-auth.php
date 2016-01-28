@@ -6,6 +6,9 @@
  */
 function pwAjaxAuth() {
 
+	if( !pw_config_db_has_table('ips') )
+		return true;
+
 	// Get the current action var
 	$action = _get( $_GET, 'action' );
 

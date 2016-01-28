@@ -29,4 +29,4 @@
 <script>
 pw.feeds['<?php echo $instance_id ?>'] = <?php echo json_encode( $related_feed ) ?>;  
 </script>
-<div live-feed="<?php echo $instance_id ?>"></div>
+<div pw-feed="<?php echo $instance_id ?>"></div>

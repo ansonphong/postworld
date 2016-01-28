@@ -3,28 +3,10 @@
  * Installs Postworld tables into the database.
  */
 function postworld_install(){
-	global $wpdb;
-	global $pw;
-
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-	// IN DEVELOPMENT
-	$tables = pw_config('db.tables');
-	if( empty($tables) )
-		$tables = array(
-			'post_meta',
-			'post_points',
-			'comment_meta',
-			'comment_points',
-			'user_meta',
-			'user_shares',
-			'favorites',
-			'cron_logs',
-			'shares',
-			'cache',
-			'ips',
-			);
-
+	global $wpdb;
+	
+	$tables = pw_config_db_tables();
 
 	if( in_array( 'post_meta', $tables ) ){
 		$post_meta_table_name = $wpdb->pw_prefix.'post_meta';
@@ -183,6 +165,7 @@ function postworld_install(){
 
 	
 	// Update the DB with the new postworld DB version
+	global $pw;
 	update_option( PW_DB_VERSION, $pw['info']['db_version'] );
 	
 }

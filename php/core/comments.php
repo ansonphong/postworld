@@ -7,7 +7,8 @@ function pw_get_comment_points($comment_id){
 	*/
 		
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 
 	$query = "SELECT comment_points FROM " . $wpdb->pw_prefix.'comment_meta' . " WHERE comment_id=" . $comment_id;
 	//echo ($query);
@@ -25,7 +26,8 @@ function pw_calculate_comment_points($comment_id){
 	 	return : integer (number of points)
 	 */
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 
 	//first sum points
 	$query = "select SUM(points) from ".$wpdb->pw_prefix.'comment_points'." where comment_id=" . $comment_id;
@@ -46,7 +48,10 @@ function pw_cache_comment_points($comment_id){
 		return : integer (number of points)
 	*/
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
+	
 	$total_points = pw_calculate_comment_points($comment_id);
 	 //update wp_postworld_meta
 	$query = "update ".$wpdb->pw_prefix.'comment_meta'." set comment_points=" . $total_points . " where comment_id=" . $comment_id;

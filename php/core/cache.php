@@ -625,7 +625,9 @@ function pw_clear_cron_logs ( $timestamp ){
 	
 	
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$query = "select COUNT(*) FROM $wpdb->pw_prefix"."cron_logs";
 
@@ -826,9 +828,9 @@ function pw_calculate_post_shares($post_id){
 	-Add up ( SUM ) the total number in shares column attributed to the post
 	-return : integer (number of shares)*/
 	
-	
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$query = "select SUM(shares) FROM $wpdb->pw_prefix"."shares where post_id=".$post_id;
 	$total_shares = $wpdb->get_var($query);
@@ -849,7 +851,8 @@ function pw_cache_post_shares( $post_id ){
 	pw_insert_post_meta($post_id);
 	
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$query = "update $wpdb->pw_prefix"."post_meta set post_shares=".$total_shares." where post_id=".$post_id;
 	$wpdb->query($query);
@@ -881,8 +884,12 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	*/
 
 	$output = array();
+
 	global $wpdb;
-	$wpdb -> show_errors();
+
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
+
 	if($mode =='outgoing' || $mode=='both'){
 		$user_share_report_outgoing = pw_user_share_report_outgoing($user_id);
 		$outgoing = 0;
@@ -915,8 +922,11 @@ function pw_cache_user_shares( $user_id, $mode ){
 	 
 	$user_shares = pw_calculate_user_shares($user_id,$mode);
 	//print_r($user_shares);
+
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$total_user_shares=0;
 	if(isset($user_shares['incoming'])) $total_user_shares = $user_shares['incoming'];
@@ -945,7 +955,10 @@ function pw_cache_user_shares( $user_id, $mode ){
 
 function pw_get_user_shares($user_id){
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
+	
 	$query = "select share_points_meta from $wpdb->pw_prefix"."user_meta where user_id=".$user_id;
 	return $wpdb->get_var($query);
 }
