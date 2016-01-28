@@ -735,14 +735,17 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	///// ADVANCED POST EXCERPT /////
 		// Returns the post excerpt cropped to a certain number of characters
 		// Post_content is optionally used like this:
-		// @example post_excerpt(256,post_content)
+		// @example post_excerpt(256)
 		$post_excerpt_fields = extract_linear_fields( $fields, 'post_excerpt', true );
 		if ( !empty($post_excerpt_fields) ){
 			// If the first field is a number
 			if( is_numeric( $post_excerpt_fields[0] ) ){
 				$max_chars = intval($post_excerpt_fields[0]);
-				// If the second value is 'post_content'
-				if( $post_excerpt_fields[1] == 'post_content' ){
+					
+					// If the second value is 'post_content'
+					// $post_excerpt_fields[1] == 'post_content'
+
+				if( empty( $get_post['post_excerpt'] ) ){ 
 					// Set the excerpt as the post content
 					$post_excerpt = $get_post['post_content'];
 					// Strip all shortcodes
