@@ -12,7 +12,7 @@
 		ng-controller="pwStylesDataCtrl">
 		<h1>
 			<i class="pwi-brush"></i>
-			Styles
+			<?php _ex('Styles','module','postworld') ?>
 		</h1>
 		<hr class="thick">
 

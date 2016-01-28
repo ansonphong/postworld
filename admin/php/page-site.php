@@ -5,7 +5,6 @@
 	$pwSiteOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
 	$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
 ?>
-
 <script>
 	postworldAdmin.controller( 'pwOptionsDataCtrl',
 		[ '$scope', 'iOptionsData',
@@ -20,17 +19,16 @@
 		$scope.pwHeaderCode = <?php echo $pw_header_code; ?>;
 		$scope['images'] = {};
 		$scope['options'] = $iOptionsData['options'];
-
+		
 		$scope.memoryOptions = <?php echo json_encode( apply_filters('pw_options_site_memory',array()) ) ?>;
 		$scope.postworldModeOptions = <?php echo json_encode( apply_filters('pw_options_postworld_mode',array()) ) ?>;
 
 	}]);
 </script>
-
 <div class="main wrap postworld" ng-cloak>
 	<h1>
 		<i class="pwi-gear"></i>
-		Site Options
+		<?php _e('Site Options','module','postworld') ?>
 	</h1>
 	
 	<div
@@ -51,10 +49,10 @@
 					</div>
 					<h2>
 						<span class="icon-md"><i class="pwi-image"></i></span>
-						<?php echo __('Favicon','postworld') ?>
+						<?php _e('Favicon','postworld') ?>
 					</h2>
 					<div class="well">
-						Select the favicon, which appears as the tab icon in the browser.
+						<?php _e( 'Select the favicon, which appears as the tab icon in the browser.', 'postwold' ) ?>
 						<hr class="thin">
 						<?php
 							echo pw_select_image_id( array(
@@ -74,10 +72,10 @@
 					</div>
 					<h2>
 						<span class="icon-md"><i class="pwi-image"></i></span>
-						<?php echo __('Default Avatar','postworld') ?>
+						<?php _e('Default Avatar','postworld') ?>
 					</h2>
 					<div class="well">
-						Select the default avatar image.
+						<?php _e( 'Select the default avatar image.', 'postwold' ) ?>
 						<hr class="thin">
 						<?php
 							echo pw_select_image_id( array(
@@ -101,19 +99,19 @@
 					</div>
 					<h2>
 						<span class="icon-md"><i class="pwi-lock"></i></span>
-						<?php echo __('Security','postworld') ?>
+						<?php _e('Security','postworld') ?>
 					</h2>
 					<div class="well">
 						<label>
 							<input type="checkbox" ng-model="pwSiteOptions.security.disable_xmlrpc">
-							<b><?php echo __('Disable XMLRPC API','postworld') ?></b>
-							<small>Commonly an access point for DDoS attacks.</small>
+							<b><?php _e('Disable XMLRPC API','postworld') ?></b>
+							<small><?php _ex( 'Commonly an access point for DDoS attacks.', 'XMLRPC API', 'postwold' ) ?></small>
 						</label>
 						<hr class="thin">
 						<label>
 							<input type="checkbox" ng-model="pwSiteOptions.security.require_login">
-							<b><?php echo __('Require Login','postworld') ?></b>
-							<small>Require login to access site.</small>
+							<b><?php _e('Require Login','postworld') ?></b>
+							<small><?php _e('Require login to access site.','postworld') ?></small>
 						</label>
 					</div>
 				</div>
@@ -126,7 +124,7 @@
 					</div>
 					<h2>
 						<span class="icon-md"><i class="pwi-fire"></i></span>
-						<?php echo __('Performance','postworld') ?>
+						<?php _ex('Performance', 'website performance', 'postworld') ?>
 					</h2>
 					<div class="well">
 						<label>
@@ -134,8 +132,8 @@
 								ng-model="pwSiteOptions.memory.image_memory_limit"
 								ng-options="option.value as option.label for option in memoryOptions">
 							</select>
-							<b><?php echo __('Image Memory Limit','postworld') ?></b>
-							<small>The maximum amount of memory used for processing images.</small>
+							<b><?php _e('Image Memory Limit','postworld') ?></b>
+							<small><?php _e('The maximum amount of memory used for processing images.','image memory limit option','postworld') ?></small>
 						</label>
 					</div>
 				</div>
@@ -147,13 +145,13 @@
 					</div>
 					<h2>
 						<span class="icon-md"><i class="pwi-wordpress"></i></span>
-						<?php echo __('WordPress Core','postworld') ?>
+						<?php _e('WordPress Core','postworld') ?>
 					</h2>
 					<div class="well">
 						<label>
 							<input type="checkbox" ng-model="pwSiteOptions.wp_core.disable_wp_emojicons">
-							<b><?php echo __('Disable WP Emojicons','postworld') ?></b>
-							<small>Increases load speed.</small>
+							<b><?php _e('Disable WP Emojicons','postworld') ?></b>
+							<small><?php _e('Increases load speed.','postworld') ?></small>
 						</label>
 					</div>
 				</div>
@@ -165,7 +163,7 @@
 					</div>
 					<h2>
 						<span class="icon-md"><i class="pwi-postworld"></i></span>
-						<?php echo __('Postworld','postworld') ?>
+						<?php _e('Postworld','postworld') ?>
 					</h2>
 					<div class="well">
 						<label>
@@ -173,8 +171,8 @@
 								ng-model="pwSiteOptions.postworld.mode"
 								ng-options="option.value as option.label for option in postworldModeOptions">
 							</select>
-							<b><?php echo __('Mode','postworld') ?></b>
-							<small>Keep it in production mode unless you know what you're doing.</small>
+							<b><?php _e('Mode','postworld') ?></b>
+							<small><?php _ex('Keep it in production mode unless you know what you are doing.', 'mode switch', 'postworld') ?></small>
 						</label>
 					</div>
 				</div>
@@ -188,11 +186,10 @@
 			</div>
 			<h2>
 				<i class="pwi-code"></i>
-				<?php echo __('Header Code','postworld') ?>
+				<?php _e('Header Code','postworld') ?>
 			</h2>
 			<small>
-				This code will be inserted into the page header.
-				Here is a good place to post tracking codes such as Google Analytics, or third-party additions.
+				<?php _e('This code will be inserted into the page header. Here is a good place to post tracking codes such as Google Analytics, or third-party additions.','postworld') ?>
 			</small>
 			<hr class="thin">
 			<div>
@@ -206,7 +203,7 @@
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
 			<div class="well">
-				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<h3><i class="pwi-merkaba"></i> <?php _e('Development Mode','postworld') ?></h3>
 				<pre><code>pwSiteOptions: {{ pwSiteOptions | json }}</code></pre>
 			</div>
 		<?php endif; ?>
