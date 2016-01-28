@@ -320,7 +320,7 @@ function pw_get_css_icon_classes( $vars = array() ){
 	/*
 	 * Returns an Array of all the icon css classes in a given css file
 	 */
-	$defaultVars = array(
+	$default_vars = array(
 		'prefix'	=>	'icon-',	// The CSS classes prefix
 		'add_class'	=>	'',			// Additional classes
 		'src'		=>	null,		// Absolute System Directory Path to CSS file
@@ -328,7 +328,7 @@ function pw_get_css_icon_classes( $vars = array() ){
 		'output'	=>	'array',
 		);
 
-	$vars = array_replace_recursive( $defaultVars, $vars );
+	$vars = array_replace_recursive( $default_vars, $vars );
 
 	// If no source or slug provided
 	if( empty( $vars['src'] ) )
@@ -338,7 +338,7 @@ function pw_get_css_icon_classes( $vars = array() ){
 	$file_contents = file_get_contents( $vars['src'] );
 	
 	///// PROCESS FILE /////
-	$pattern = '/\.('.$icon_prefix.'(?:\w+(?:-)?)+):before\s+{\s*content:\s*"(.+)";\s+}/';
+	$pattern = '/\.('.$vars['prefix'].'(?:\w+(?:-)?)+):before\s+{\s*content:\s*"(.+)";\s+}/';
 	preg_match_all( $pattern, $file_contents, $matches, PREG_SET_ORDER );
 
 	$icons = array();
@@ -362,7 +362,7 @@ function pw_get_css_icon_classes( $vars = array() ){
 	}
 
 	///// OUTPUT : STRING /////
-	if( $output == "string" ){
+	if( $vars['output'] === "string" ){
 		// Enable this to generate string for icon Array
 		$icons = var_export($icons, TRUE);
 		$icons = stripslashes($icons);

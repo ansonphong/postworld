@@ -199,8 +199,7 @@ include 'php/core/install.php';
 /*
 register_activation_hook( __FILE__, 'postworld_install' );
 register_activation_hook( __FILE__, 'postworld_install_data' );
-register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
-register_activation_hook( __FILE__, 'postworld_install_Triggers' );
+register_activation_hook( __FILE__, 'postworld_install_foreign_keys' );
 */
 
 //include 'php/core/debugger.php';

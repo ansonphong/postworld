@@ -13,7 +13,7 @@ function pw_wp_query( $query, $fields ){
 /**
  * Wrapper function for PW_Query class.
  */
-function pw_query($args,$return_Type = 'PW_QUERY') {     
+function pw_query($args,$return_type = 'PW_QUERY') {     
 	$the_query = new PW_Query($args);
 	switch( $return_type ){
 		case 'ARRAY_A':

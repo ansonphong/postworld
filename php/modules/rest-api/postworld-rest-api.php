@@ -165,8 +165,7 @@ class PW_REST_Controller{ // extends WP_REST_Controller
 			if( !$feed )
 				return new WP_Error( 'code', __( 'Feed ID doesn\'t exist', 'postworld' ) );
 			$query = $feed['query'];
-			$result = pw_query( $query, $request['fields'] );
-			return $result->posts;
+			return pw_wp_query( $query, $request['fields'] );
 		}
 
 	}

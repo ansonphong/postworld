@@ -183,8 +183,6 @@ function pw_print_slider( $slider ){
 					);
 			}
 
-			//$query['order'] = "";
-
 			///// RUN QUERY /////
 			//$slider['posts'] = (array) pw_query( $query )->posts;
 			$slider['posts'] = pw_wp_query( $query, $query['fields'] );

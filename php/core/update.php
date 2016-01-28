@@ -1,7 +1,6 @@
 <?php
-
 /**
- * This function safely migrates and deletes all RSV2 lineage event meta data
+ * This function safely migrates and deletes all lineage event meta data
  */
 function pw_update_pw1_event_meta( $options = array() ) {
 	/*
@@ -14,8 +13,7 @@ function pw_update_pw1_event_meta( $options = array() ) {
 	if( !is_super_admin() )
 		return false;
 
-	////////// SET DEFALUT OPTIONS //////////
-
+	// SET DEFAULT OPTIONS
 	if( !isset( $options['mode'] ) )
 		$options['mode'] = "test";
 

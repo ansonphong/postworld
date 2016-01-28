@@ -56,6 +56,28 @@ function pw_push_config( $key, $value ){
 }
 
 /**
+ * Check if needle is in an array within the Postworld Config
+ *
+ * @param any $needle A value to check for in the array.
+ * @param string $haystack_key A dot notation path to the key in Postworld Config
+ * @return any|bool The value found, or false if none or not an array 
+ */
+function pw_config_in_array( $needle, $haystack_key ){
+	$haystack = pw_config( $haystack_key );
+	if( !is_array( $haystack ) )
+		return false;
+	return in_array( $needle, $haystack );
+}
+
+/**
+ * Check if the Postworld DB configuration 
+ * Has a particular table.
+ */
+function pw_config_db_has_table( $table ){
+	return pw_config_in_array($table, 'db.table' );
+}
+
+/**
  * Add a post parent metabox.
  */
 function pw_add_metabox_post_parent( $vars ){

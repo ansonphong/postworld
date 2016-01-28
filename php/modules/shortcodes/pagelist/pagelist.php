@@ -20,7 +20,8 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	);
 
 	// Get over-ride defaults from the theme
-	$shortcode_defaults = apply_filters( 'pw_pagelist_shortcode_defaults', $shortcode_defaults, $tag );
+	$default_atts = apply_filters( 'pw_shortcode_pagelist_defaults', $default_atts, $tag );
+
 	$atts = array_replace_recursive( $default_atts, $atts );
 
 	$query = array();
@@ -43,7 +44,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	$query['posts_per_page'] = 0;
 
 	// Fields
-	$query['fields'] = pw_get_field_model( 'post', $view );
+	$query['fields'] = pw_get_field_model( 'post', $atts['view'] );
 	if( empty( $query['fields'] ) )
 		$query['fields'] = 'preview';
 
