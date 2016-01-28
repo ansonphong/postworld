@@ -396,12 +396,11 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 			}
 
 			///// JSON META KEYS /////
+			// Parse known JSON keys from JSON strings into objects
 			if( isset( $post['post_meta'] ) && is_array( $post['post_meta'] ) ){
 
-				// Parse known JSON keys from JSON strings into objects
-				global $pwSiteGlobals;
 				// Get known metakeys from the theme configuration
-				$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_postmeta.json_meta_keys' );
+				$json_meta_keys = pw_config( 'db.wp_postmeta.json_meta_keys' );
 				// If there are no set fields, define empty array
 				if( !$json_meta_keys ) $json_meta_keys = array();
 				// Add the globally defined postmeta key
@@ -835,9 +834,8 @@ function pw_set_wp_postmeta_array( $post_id, $post_meta = array() ){
 		
 		///// JSON SETUP /////
 		// Parse known object to JSON strings
-		global $pwSiteGlobals;
 		// Get known metakeys from the theme configuration
-		$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_postmeta.json_meta_keys' );
+		$json_meta_keys = pw_config('db.wp_postmeta.json_meta_keys');
 		// If there are no set fields, define empty array
 		if( !$json_meta_keys ) $json_meta_keys = array();
 		// Add the globally defined postmeta key
@@ -1264,8 +1262,7 @@ function pw_save_post($post_data){
 	
 	///// RANK SCORE /////
 	// Cache the post's rank score
-	global $pwSiteGlobals;
-	$rank_post_types = pw_get_obj( $pwSiteGlobals, 'rank.post_types' );
+	$rank_post_types = pw_config('rank.post_types');
 	if( is_array( $rank_post_types ) && in_array( $post_data['post_type'], $rank_post_types ) )
 		pw_cache_rank_score ( $post_id );
 

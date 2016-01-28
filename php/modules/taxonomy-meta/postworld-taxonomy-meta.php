@@ -59,8 +59,7 @@ function pw_init_module_taxonomy_meta(){
 		return false;
 
 	// Get the instances of taxonomy metadata in the admin
-	global $pwSiteGlobals;
-	$instances = _get( $pwSiteGlobals, 'wp_admin.taxonomy_meta' );
+	$instances = pw_config( 'wp_admin.taxonomy_meta' );
 	// If no instances defined, return here
 	if( empty($instances) )
 		return false;
@@ -96,8 +95,7 @@ function pw_admin_taxonomy_meta_fields( $tag, $taxonomy ){
 	//pw_log('pw_admin_taxonomy_meta_fields : ' . json_encode($tag) . ' : ' . json_encode($taxonomy) );
 
 	// Get the instances of taxonomy metadata in the admin
-	global $pwSiteGlobals;
-	$instances = _get( $pwSiteGlobals, 'wp_admin.taxonomy_meta' );
+	$instances = pw_config( 'wp_admin.taxonomy_meta' );
 
 	// Allow themes to add support for input types
 	$input_types = apply_filters( 'pw_admin_taxonomy_meta_input_types', array() );

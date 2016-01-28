@@ -784,12 +784,11 @@ function pw_get_user_votes_report($user_id) {
 function pw_get_user_vote_power ( $user_id ){
 	/*
 	 	• Checks to see user's WP roles with pw_get_user_role()
-		• Checks how many points the user's role can cast, from $pwSiteGlobals object
+		• Checks how many points the user's role can cast, from config
 		return : integer (the number of points the user can cast)
 	 */
 
 	global $wpdb;
-	global $pwSiteGlobals;
 
 	$current_user_role_output = pw_get_user_role($user_id);
 
@@ -801,7 +800,7 @@ function pw_get_user_vote_power ( $user_id ){
 	
 	$current_user_role = strtolower($current_user_role);
 
-	$vote_points = _get( $pwSiteGlobals, 'roles.'.$current_user_role.'.vote_points' );
+	$vote_points = pw_config( 'roles.'.$current_user_role.'.vote_points' );
 
 	if( $vote_points != false )
 		return $vote_points;

@@ -13,8 +13,7 @@ function pw_time_units(){
 }
 
 function get_postworld_uri(){
-	global $pwSiteGlobals;
-	$pw_url = pw_get_obj(  $pwSiteGlobals, 'paths.postworld.url' );
+	$pw_url = pw_config( 'paths.postworld.url' );
 	// If the Postworld URL is defined in the config
 	if( $pw_url )
 		return $pw_url;	

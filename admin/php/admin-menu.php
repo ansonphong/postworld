@@ -3,7 +3,7 @@
  * Add item to admin menu bar on the top.
  */
 global $pw;
-if( _get( $pw['config'], 'wp_admin.admin_bar_menu.enable' ) &&
+if( pw_config('wp_admin.admin_bar_menu.enable') &&
 	current_user_can('manage_options') )
 	add_action( 'admin_bar_menu', 'pw_admin_bar_menu', 999 );
 
@@ -22,7 +22,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	$theme_url = get_admin_url(null,'admin.php?page='.$submenu_slug);
 
 	$menu_name = 'postworld-menu';
-	$menu_title = _get( $pw['config'], 'wp_admin.admin_bar_menu.title' );
+	$menu_title = pw_config('wp_admin.admin_bar_menu.title');
 	if( empty( $menu_title ) )
 		$menu_title = __( 'Postworld', 'postworld' );
 

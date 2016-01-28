@@ -223,12 +223,10 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 
 
 			///// JSON META KEYS /////
+			// Parse known JSON keys from JSON strings into objects
 			if( is_array( $user_data['usermeta'] ) ){
-
-				// Parse known JSON keys from JSON strings into objects
-				global $pwSiteGlobals;
 				// Get known metakeys from the theme configuration
-				$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_usermeta.json_meta_keys' );
+				$json_meta_keys = pw_config( 'db.wp_usermeta.json_meta_keys' );
 				// If there are no set fields, define empty array
 				if( !$json_meta_keys ) $json_meta_keys = array();
 				// Add the globally defined postmeta key

@@ -22,11 +22,9 @@ function pw_mode(){
 }
 
 global $pw;
-global $pwSiteGlobals;
 $pw = array(
-	'config' => $pwSiteGlobals,
 	'info'	=>	array(
-		'version'		=>	1.46,
+		'version'		=>	1.47,
 		'db_version'	=>	1.28,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',

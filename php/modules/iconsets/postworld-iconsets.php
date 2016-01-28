@@ -213,10 +213,8 @@ function pw_admin_silent_load_iconsets($silent_load){
 }
 
 function pw_get_required_iconsets(){
-	
 	// Get required iconsets from Postworld Config
-	global $pwSiteGlobals;
-	$required_iconsets = _get( $pwSiteGlobals, 'iconsets.required' );
+	$required_iconsets = pw_config( 'iconsets.required' );
 
 	// If it's not defined, set an empty array
 	if( $required_iconsets === false )

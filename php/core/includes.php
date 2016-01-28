@@ -19,15 +19,15 @@ function postworld_includes( $args ){
 	add_action('wp_head', 'pwGlobals_print', 8 );
 
 	global $pw;
-	global $pwSiteGlobals;
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
 		$angular_version = 'angular-1.4.8';
 
 	// Add injectors from Site Globals
-	$pw['inject'] = ( isset( $pwSiteGlobals['inject'] ) ) ?
-		$pwSiteGlobals['inject'] : array();
+	$config_inject = pw_config('inject');
+	$pw['inject'] = ( !empty($config_inject) ) ?
+		$config_inject : array();
 
 	// Override with injectors from $args
 	$pw['inject'] = ( isset( $args['inject'] ) ) ?
@@ -514,8 +514,6 @@ function postworld_includes( $args ){
 	//add_action( 'init', 'pwSiteGlobals_include');
 	pwSiteGlobals_include();
 
-
-
 }
 
 function pw_include_admin_scripts(){
@@ -702,11 +700,11 @@ function pwSiteGlobals_include(){
 	// Not for user-specific globals
 
 	// ENCODE SITE GLOBALS
-	global $pwSiteGlobals;
+	$config = pw_config();
 
 	$text_direction = (is_rtl()) ? 'rtl' : 'ltr' ;
 
-	$pwSiteGlobals['site'] = array( 
+	$config['site'] = array( 
 		'name' => get_bloginfo('name'),
 		'description' => get_bloginfo('description'),
 		'wpurl' => get_bloginfo('wpurl'),
@@ -718,7 +716,7 @@ function pwSiteGlobals_include(){
 	);
 
 	///// PATHS /////
-	$pwSiteGlobals["paths"] = array(
+	$config["paths"] = array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'plugins_url' => WP_PLUGIN_URL,
 		'plugins_dir' => WP_PLUGIN_DIR,
@@ -732,17 +730,17 @@ function pwSiteGlobals_include(){
 		);
 
 	///// POST TYPES /////
-	$pwSiteGlobals["post_types"] = pw_get_post_types();
+	$config["post_types"] = pw_get_post_types();
 
 	///// TAXONOMIES /////
-	$pwSiteGlobals["taxonomies"] = pw_get_taxonomies( array(),'objects');
+	$config["taxonomies"] = pw_get_taxonomies( array(),'objects');
 
 	///// FIELD MODEL /////
-	$pwSiteGlobals["fields"] = pw_field_models();
+	$config["fields"] = pw_field_models();
 
 	///// REST NAMESPACE /////
 	if( function_exists('pw_rest_namespace') )
-		$pwSiteGlobals["rest_api"] = array(
+		$config["rest_api"] = array(
 			'namespace' => pw_rest_namespace(),
 		);
 
@@ -750,7 +748,7 @@ function pwSiteGlobals_include(){
 	// SITE GLOBALS
 	$pwJs  = "";
 	$pwJs .= "pw.config = ";
-	$pwJs .= json_encode( $pwSiteGlobals );
+	$pwJs .= json_encode( $config );
 	$pwJs .= ";";
 
 	// MODULES
@@ -792,7 +790,7 @@ function pwSiteGlobals_include(){
 	$pwJs .= ";";
 
 	// WRITE THE FILE
-	$globals_path = '/deploy/pwSiteGlobals.js';
+	$globals_path = '/deploy/postworld-config.js';
 	$pwJsFile = POSTWORLD_PATH . $globals_path;
 	$file = fopen( $pwJsFile ,"w" );
 	fwrite($file,"$pwJs");
@@ -800,7 +798,7 @@ function pwSiteGlobals_include(){
 	chmod($pwJsFile, 0755);
 
 	// ENQUEUE SCRIPT
-	wp_enqueue_script( 'pw-SiteGlobals-JS',
+	wp_enqueue_script( 'pw-Config-JS',
 		POSTWORLD_URI . $globals_path, array(), hash( 'sha256', $pwJs ) );
 	
 }
@@ -926,7 +924,7 @@ function pwAdminGlobals_include(){
 	$js .= ";";
 
 	///// WRITE JAVASCRIPT FILE /////
-	$file_path = "/deploy/pwAdminGlobals.js";
+	$file_path = "/deploy/postworld-admin-config.js";
 	$pwJsFile = POSTWORLD_PATH . $file_path;
 	$file = fopen( $pwJsFile ,"w" );
 	fwrite($file,"$js");

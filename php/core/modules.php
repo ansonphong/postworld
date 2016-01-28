@@ -51,15 +51,6 @@ function pw_registered_modules( $format = 'arrays' ){
 			'description'	=>	'',
 			),
 
-		/*
-		array(
-			'name'	=>	'Term Feeds',
-			'slug'	=>	'term-feeds',
-			'icon'	=>	'pwi-tag',
-			'description'	=>	'',
-			),
-		*/
-
 		array(
 			'name'	=>	'Backgrounds',
 			'slug'	=>	'backgrounds',
@@ -148,8 +139,11 @@ function pw_registered_modules( $format = 'arrays' ){
 	return $modules;
 }
 
+
+/**
+ * Return an array available modules
+ */
 function pw_available_modules( $format = 'arrays' ){
-	// Return an array available modules
 	// $format = [ 'arrays' / 'names' ]
 
 	$registered_modules = pw_registered_modules( $format );
@@ -175,10 +169,10 @@ function pw_available_modules( $format = 'arrays' ){
 
 }
 
+/**
+ * Returns an array of the names of the enabled modules
+ */
 function pw_enabled_modules(){
-	// Returns an array of the names of the enabled modules
-
-	global $pwSiteGlobals;
 
 	// Get the saved enabled modules array
 	// Filter must be set to false otherwise it triggers infinite recursion
@@ -213,11 +207,11 @@ function pw_enabled_modules(){
 
 }
 
+/**
+ * Returns an array of the names of the theme supported modules
+ */
 function pw_supported_modules(){
-	// Returns an array of the names of the theme supported modules
-
-	global $pwSiteGlobals;
-	$supported_modules = _get( $pwSiteGlobals, 'modules.supported' );
+	$supported_modules = pw_config('modules.supported');
 
 	if( !$supported_modules )
 		$supported_modules = pw_registered_modules('names');
@@ -225,11 +219,11 @@ function pw_supported_modules(){
 	return $supported_modules;
 }
 
+/**
+ * Returns an array of the names of the theme supported modules
+ */
 function pw_required_modules(){
-	// Returns an array of the names of the theme supported modules
-
-	global $pwSiteGlobals;
-	$required_modules = _get( $pwSiteGlobals, 'modules.required' );
+	$required_modules = pw_config('modules.required');
 
 	if( !$required_modules )
 		$required_modules = array();

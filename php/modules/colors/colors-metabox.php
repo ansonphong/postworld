@@ -1,8 +1,6 @@
 <?php
 add_action('admin_init','pw_metabox_init_colors');
 function pw_metabox_init_colors(){    
-
-	global $pwSiteGlobals;
 	$post_id = _get( $_GET, 'post' );
 
 	if( !$post_id )
@@ -12,7 +10,7 @@ function pw_metabox_init_colors(){
 	$this_post_type = get_post_type( $post_id );
 
 	// Get the settings
-	$metabox_settings = _get( $pwSiteGlobals, 'wp_admin.metabox.colors' );
+	$metabox_settings = pw_config( 'wp_admin.metabox.colors' );
 	if( empty($metabox_settings) || !is_array( $metabox_settings ) )
 		return false;
 	
@@ -52,8 +50,6 @@ function pw_metabox_init_colors(){
 ////////////// CREATE UI //////////////
 function pw_colors_meta_init( $post, $metabox ){
 	global $pw;
-	global $pwSiteGlobals;
-
 	extract( $metabox['args'] );
 
 	$colors = pw_generate_attachment_colors( array( 'attachment_id' => $post->ID ) );

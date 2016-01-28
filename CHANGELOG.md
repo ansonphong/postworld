@@ -1,5 +1,10 @@
 # Postworld // Changelog
 
+### Version 1.47
+- **Possible Breaking Changes**
+    + All instances of `$pwSiteGlobals` have been changed to use `pw_config()` to access configured settings, in preparation for elimination of `$pwSiteGlobals` variable altogether.
+    + Any themes using `$pwSiteGlobals` need to migrate to the `pw_config($key)` method to access globally configured settings.
+
 ### Version 1.42
 - **Possible Breaking Changes**
     + Structure of `pw_get_post` input params changed to `pw_get_post( $post_id, $fields, $options )`

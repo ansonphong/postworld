@@ -5,9 +5,8 @@ wp-config.php
 
 # Postworld #
 #############
-deploy/pwSiteGlobals.js
-deploy/pwAdminGlobals.js
-pwSiteGlobals.js
+deploy/postworld-config.js
+deploy/postworld-admin-config.js
 log/*.txt
 
 # Compiled source #

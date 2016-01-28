@@ -272,23 +272,21 @@ function pw_has_runtime_cache( $key ){
 ////////////////////////////////////////////////////////////////////
 
 
-
+/**
+ * Cycles through each post in each post_type scheduled for Rank Score caching
+ * Calculates and caches each post's current rank with pw_cache_rank_score() method
+ * Tracks progress with the Postworld Progress API
+ */
 function pw_cache_all_rank_scores( $post_types = array() ){
 	$fnName = 'pw_cache_all_rank_scores';
-	/*
-	 • Cycles through each post in each post_type scheduled for Rank Score caching
-	 • Calculates and caches each post's current rank with pw_cache_rank_score() method
-	 • Tracks progress with the Postworld Progress API
-	 */
-	//set_time_limit (300);
-
-	/// SETUP ///
+	
 	global $wpdb;
-	$wpdb->show_errors();
-	global $pwSiteGlobals;
+	
+	if( pw_dev_mode() )
+		$wpdb->show_errors();
 
 	if( empty( $post_types ) )
-		$post_types = _get( $pwSiteGlobals, 'rank.post_types' );
+		$post_types = pw_config('rank.post_types');
 
 	if( empty( $post_types ) )
 		return false;
@@ -408,9 +406,7 @@ function pw_cache_all_post_points() {
 	 */
 		 
 	global $wpdb;
-	global $pwSiteGlobals;
-
-	$post_types = _get( $pwSiteGlobals, 'points.post_types' );
+	$post_types = pw_config('points.post_types');
 
 	if( empty($post_types) )
 		return array( 'error' => 'No post types defined in Postworld Config.' );
@@ -615,27 +611,6 @@ function pw_cache_all_comment_points(){
 	
 }
 
-
-/*
-function pw_cache_all_feeds (){
-	//• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
-	//return : cron_logs Object (store in table wp_postworld_cron_logs)
-	global $pwSiteGlobals;
-	$feeds_options = $pwSiteGlobals['feeds']['cache_feeds'];
-	$cron_logs = array();
-	$number_of_feeds = count($feeds_options);
-	//print_r($number_of_feeds);
-	for ($i=0; $i <$number_of_feeds ; $i++) {
-		$time_start = date("Y-m-d H:i:s"); 
-		$cache_output = pw_cache_feed($feeds_options[$i]);
-		$time_end = date("Y-m-d H:i:s");
-		$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end,$cache_output['number_of_posts'] , 'pw_cache_all_feeds', $feeds_options[$i],$cache_output['feed_query']);
-		$cron_logs[]=$current_cron_log_object;
-	}
-	return $cron_logs;	
-}
-*/
-
 function pw_clear_cron_logs ( $timestamp ){
 	/*  • Count number of rows in wp_postworld_cron_logs (rows_before)
 		• Deletes all rows which are before the specified timestamp (rows_removed)
@@ -786,11 +761,6 @@ function pw_cache_shares ( $cache_all = FALSE ){
 
 }
 
-/*	
-//TODO : to be specified
-function cache_user_post_shares($user_id){
-	pw_cache_user_shares($user_id, 'incoming');
-}*/
 
 function pw_get_most_recent_cache_shares_log(){
 	global $wpdb;

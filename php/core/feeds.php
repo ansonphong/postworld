@@ -248,8 +248,6 @@ function pw_feed( $vars = array() ){
 		$widgets = pw_get_sidebar( $sidebar_id );
 	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
 
-	//pw_log( "widgets : " . json_encode($widgets) );
-
 	///// GENERATE OUTPUT /////
 	$output = '';
 
@@ -289,12 +287,6 @@ function pw_feed( $vars = array() ){
 	}
 
 	// PRELOAD BLOCKS
-	// templates/blocks/widget-grid.html
-	
-	//pw_log($feed_ng_template);
-	//pw_log( $feed['view']['current'] . ' - ' . $feed_template );
-	//pw_log( 'feed', $feed );
-	
 	// Print front-loaded data
 	$output  .= '<script>';
 
@@ -324,16 +316,15 @@ function pw_feed( $vars = array() ){
 	}
 
 	//pw_log_microtimer('pw_live_feed-'.$feed_id);
-
 	//pw_log_microtimer($feed_id);
 
-	///// OUTPUT /////
-	if( $echo )
+	if( $echo ){
 		echo $output;
-	else
+		return;
+	}
+	else{
 		return $output;
-
-	return;
+	}
 }
 
 
@@ -868,104 +859,3 @@ function pw_gallery_feed( $vars = array() ){
 
 }
 
-
-
-
-
-function get_panel_ids(){
-	global $pwSiteGlobals;
-	$override_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['panels']['dir']['override'] ); //['override_panel_template_abs_path']);
-	$default_file_names = 	list_dir_file_names( $pwSiteGlobals['template_paths']['panels']['dir']['default'] ); //['default_panel_template_abs_path'] );
-
-	$final_panel_names = array();
-	for ($i=0; $i <count($default_file_names) ; $i++) {
-		$final_panel_names[] = str_replace(".html", "", $default_file_names[$i]);
-	}
-
-	for ($i=0; $i < count($override_file_names); $i++) {
-		$name = str_replace(".html", "", $override_file_names[$i] );
-		if(!in_array($name,$final_panel_names)){
-			$final_panel_names[] = $name;
-		}
-	}
-
-	return $final_panel_names;
-}
-
-
-
-function get_comment_ids(){
-	global $pwSiteGlobals;
-	$override_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['override'] ); //['override_comment_template_abs_path']);
-	$default_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['default'] );//['default_comment_template_abs_path']);
-
-
-	$final_comment_names = array();
-	for ($i=0; $i <count($default_file_names) ; $i++) {
-		$final_comment_names[] = str_replace(".html", "", $default_file_names[$i]);
-	}
-
-	for ($i=0; $i < count($override_file_names); $i++) {
-		$name = str_replace(".html", "", $override_file_names[$i] );
-		if(!in_array($name,$final_comment_names)){
-			$final_comment_names[] = $name;
-		}
-	}
-
-	return $final_comment_names;
-}
-
-
-function list_dir_file_names($directory){
-
-	$names_array=array();
-	//echo("<br>".$directory."<br>");
-	if (is_dir($directory)){
-		//echo 'is directoruuu';
-
-	$dir = new RecursiveDirectoryIterator($directory,
-			    FilesystemIterator::SKIP_DOTS);
-
-			// Flatten the recursive iterator, folders come before their files
-			$it  = new RecursiveIteratorIterator($dir,
-			    RecursiveIteratorIterator::SELF_FIRST);
-
-			// Maximum depth is 1 level deeper than the base folder
-			$it->setMaxDepth(1);
-
-
-			// Basic loop displaying different messages based on file or folder
-			foreach ($it as $fileinfo) {
-			    if ($fileinfo->isFile()) {
-			    	//echo $fileinfo->getFilename();
-			        //$names_array[]= $url_path.($fileinfo->getFilename());
-					$names_array[]= $fileinfo->getFilename();
-			    }
-			}
-	}
-
-	return $names_array;
-}
-
-
-
-
-//convert object to array $array =  (array) $yourObject;
-class pw_query_args{
-	public $post_type;
-	public $link_format;//pw
-	public $post_class;//pw
-	public $author;
-	public $author_name;
-	public $year;
-	public $month;
-	public $tax_query;
-	public $s;
-	public $orderby='date';
-	public $order='DESC';
-	public $posts_per_page="-1";
-	public $fields;
-}
-
-
-?>

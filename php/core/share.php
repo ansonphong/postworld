@@ -69,8 +69,7 @@ function pw_set_share ( $user_id, $post_id ){
 		$user_ip = pw_get_client_ip();
 		$current_share = pw_get_share($user_id,$post_id);
 
-		global $pwSiteGlobals;
-		$ip_history = (int) $pwSiteGlobals['shares']['tracker']['ip_history']; // Integer - number of IPs to store in post share history
+		$ip_history = (int) pw_config( 'shares.tracker.ip_history' ); // Integer - number of IPs to store in post share history
 		if( isset($ip_history) )
 			$ip_history = (int) 100;
 

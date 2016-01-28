@@ -9,15 +9,14 @@
 //////////////// WIDGETS ////////////////*/
 
 function pw_get_widget_prefix(){
-	global $pwSiteGlobals;
-	$prefix = _get( $pwSiteGlobals, 'widgets.labels.prefix' );
+	$prefix = pw_config( 'widgets.labels.prefix' );
 	if( !$prefix )
 		$prefix = '(Postworld)';
 	return $prefix;
 }
 
 if( pw_module_enabled('widgets') ){
-	$pw_supported_widgets = _get( $pwSiteGlobals, 'widgets.supported' );
+	$pw_supported_widgets = pw_config( 'widgets.supported' );
 
 	if( is_array( $pw_supported_widgets ) ){
 		if( in_array( 'module', $pw_supported_widgets ) )

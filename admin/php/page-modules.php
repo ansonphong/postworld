@@ -7,7 +7,7 @@
 		<i class="pwi-postworld"></i>
 		<?php _e( 'Postworld', 'postworld' ) ?>
 		<span class="pw-version" style="font-size:.66em; font-weight: lighter;">
-			v<?php echo $pw['info']['version'] ?>
+			v<?php echo (string) $pw['info']['version'] ?>
 		</span>
 	</h1>
 	
