@@ -731,6 +731,20 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 		}
 
+	///// ADVANCED POST CONTENT /////
+		$post_content_fields = extract_linear_fields( $fields, 'post_content', true );
+		if ( !empty($post_content_fields) ){
+			$post_content = $get_post['post_content'];
+			if ( preg_match( '/<!--more(.*?)?-->/', $post_content, $matches ) ) {
+				$post_content_parts = explode( $matches[0], $post_content, 2 );
+				$post_content = $post_content_parts[0];
+				$post['post_content_more'] = true;
+			}
+			else{
+				$post['post_content_more'] = false;
+			}
+			$post['post_content'] = apply_filters( 'the_content', $post_content );
+		}
 
 	///// ADVANCED POST EXCERPT /////
 		// Returns the post excerpt cropped to a certain number of characters
