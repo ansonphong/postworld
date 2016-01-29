@@ -114,9 +114,9 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
  * @param $options
  *			[viewer_user_id] (integer) User ID
  *			[cache] (boolean) Whether or not to use the cache, overrides cache module
+ * @todo Refactor in a class structure, using pw_get_post as a wrapper function.
  */
 function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
-	//pw_log( "pw_get_post : " . $post_id, $fields );
 
 	if( !is_array($options) )
 		$options = array();
