@@ -2489,7 +2489,7 @@ Contains utility helper functions.
 
 ------
 
-### tree_obj ( *$object, $parent, $depth, $settings* )
+### pw_make_tree_obj ( *$object, $parent, $depth, $settings* )
 
 #### Parameters :
 
@@ -2644,7 +2644,7 @@ $heirarchy = wp_tree_obj( $args );
 ------
 
 
-### extract_linear_fields ( *$fields_array, $query_string* )
+### pw_extract_linear_fields ( *$fields_array, $query_string* )
 
 #### Description :
 - Extracts nested comma deliniated values starting with `$query_string` from `$fields_array`
@@ -2670,7 +2670,7 @@ $fields = array(
 	"taxonomy(post_tag)"
 	);
 
-$linear_fields = json_encode( extract_linear_fields( $fields,'taxonomy' ) );
+$linear_fields = json_encode( pw_extract_linear_fields( $fields,'taxonomy' ) );
 
 ```
 
@@ -2684,7 +2684,7 @@ Result :
 
 ------
 
-### extract_hierarchical_fields ( *$fields_array, $query_string* )
+### pw_extract_hierarchical_fields ( *$fields_array, $query_string* )
 
 #### Description :
 - Extracts nested comma deliniated values starting with `$query_string` from `$fields_array`
@@ -2711,7 +2711,7 @@ $fields = array(
 	"taxonomy(post_tag)"
 	);
 
-$hierarchical_fields = json_encode( extract_hierarchical_fields( $fields, 'taxonomy' ) );
+$hierarchical_fields = json_encode( pw_extract_hierarchical_fields( $fields, 'taxonomy' ) );
 
 ```
 

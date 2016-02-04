@@ -191,7 +191,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// VIEWER FIELDS //////////
 	// Extract viewer() fields
-	$viewer_fields = extract_linear_fields( $fields, 'viewer', true );
+	$viewer_fields = pw_extract_linear_fields( $fields, 'viewer', true );
 
 	if ( !empty($viewer_fields) ){
 		///// GET VIEWER DATA /////
@@ -314,7 +314,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	
 	////////// AUTHOR DATA //////////
 		// Extract author() fields
-		$relationships = extract_linear_fields( $fields, 'is_relationship', true );
+		$relationships = pw_extract_linear_fields( $fields, 'is_relationship', true );
 		if ( !empty($relationships) ){
 			if( !isset($post['viewer']) )
 				$post['viewer'] = array();
@@ -347,7 +347,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	////////// META DATA //////////
 		
 		// Extract meta fields
-		$post_meta_fields = extract_linear_fields( $fields, 'post_meta', true );
+		$post_meta_fields = pw_extract_linear_fields( $fields, 'post_meta', true );
 		if ( !empty($post_meta_fields) ){
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
@@ -433,7 +433,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// AUTHOR DATA //////////
 		// Extract author() fields
-		$author_fields = extract_linear_fields( $fields, 'author', true );
+		$author_fields = pw_extract_linear_fields( $fields, 'author', true );
 
 		if ( !empty($author_fields) ){
 
@@ -500,7 +500,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// GALLERY //////////
 		// Extract meta fields
-		$gallery_fields = extract_linear_fields( $fields, 'gallery', true );
+		$gallery_fields = pw_extract_linear_fields( $fields, 'gallery', true );
 		if ( !empty($gallery_fields) ){
 			$post['gallery'] = array();
 			// TODO : If already has post_content from get_post, feed post_content directly
@@ -526,7 +526,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// TAXONOMIES //////////
 	// Extract taxonomy() fields
-	$taxonomy_fields = extract_hierarchical_fields( $fields, 'taxonomy' );
+	$taxonomy_fields = pw_extract_hierarchical_fields( $fields, 'taxonomy' );
 
 	// ALL : If *all* taxonomies requested via taxonomy(all)
 	/*
@@ -640,7 +640,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 
 	////////// PARENT POST //////////
-		$parent_post_fields = extract_linear_fields( $fields, 'parent_post', true );
+		$parent_post_fields = pw_extract_linear_fields( $fields, 'parent_post', true );
 		if ( !empty($parent_post_fields) ){
 			$post['parent_post'] = array();
 			if( $get_post['post_parent'] != 0 )
@@ -732,7 +732,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		}
 
 	///// ADVANCED POST CONTENT /////
-		$post_content_fields = extract_linear_fields( $fields, 'post_content', true );
+		$post_content_fields = pw_extract_linear_fields( $fields, 'post_content', true );
 		if ( !empty($post_content_fields) ){
 			$post_content = $get_post['post_content'];
 			if ( preg_match( '/<!--more(.*?)?-->/', $post_content, $matches ) ) {
@@ -750,7 +750,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		// Returns the post excerpt cropped to a certain number of characters
 		// Post_content is optionally used like this:
 		// @example post_excerpt(256)
-		$post_excerpt_fields = extract_linear_fields( $fields, 'post_excerpt', true );
+		$post_excerpt_fields = pw_extract_linear_fields( $fields, 'post_excerpt', true );
 		if ( !empty($post_excerpt_fields) ){
 			// If the first field is a number
 			if( is_numeric( $post_excerpt_fields[0] ) ){
@@ -778,7 +778,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	///// COMMENTS /////
 		// 	Gets comments associated with the post
 		//	comments(3,all,comment_date_gmt)
-		$comment_linear_fields = extract_linear_fields( $fields, 'comments', true );
+		$comment_linear_fields = pw_extract_linear_fields( $fields, 'comments', true );
 		if ( !empty( $comment_linear_fields ) ){
 
 			$comments_query = array(

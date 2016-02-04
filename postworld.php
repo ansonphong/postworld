@@ -24,7 +24,7 @@ function pw_mode(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.47,
+		'version'		=>	1.48,
 		'db_version'	=>	1.28,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -182,7 +182,6 @@ require_once 'lib/h2o/h2o.php';
 
 // GLOBAL VARIABLES
 global $pw_settings;
-global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
 

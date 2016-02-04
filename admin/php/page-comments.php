@@ -1,8 +1,7 @@
 <?php
 	$supported_comments = pw_config('comments.supported');
-	if( $supported_comments == false ){
-		$supported_comments = array('facebook','disqus');
-	}
+	if( !$supported_comments )
+		$supported_comments = array('facebook','disqus','wordpress');
 ?>
 <script>
 	postworldAdmin.controller( 'pwCommentsDataCtrl',function( $scope ){
@@ -26,6 +25,26 @@
 			<?php if( in_array( 'facebook', $supported_comments ) ): ?>
 
 				<div class="col-lg-6 pad-col-lg">
+
+					<!-- WORDPRESS COMMENTS -->
+					<div class="well">
+						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_COMMENTS, 'pwComments'); ?></div>
+						<h2>
+							<i class="icon pwi-wordpress"></i>
+							<?php _e('WordPress Comments', 'postworld') ?>
+						</h2>
+						
+						<div class="well">
+
+							<label>
+								<input
+									type="checkbox"
+									ng-model="pwComments.wordpress.enable">
+									<?php _e('Enable WordPress Comments', 'postworld') ?>
+							</label>
+						</div>
+					</div>
+
 
 					<!-- FACEBOOK COMMENTS -->
 					<div class="well">

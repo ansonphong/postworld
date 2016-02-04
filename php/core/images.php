@@ -126,7 +126,7 @@ function pw_generate_custom_images_sizes( $metadata, $attachment_id ){
 function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false ){
 
 	// Extract image() fields
-	$images = extract_fields( $fields, 'image' );
+	$images = pw_extract_fields( $fields, 'image' );
 
 	// Check if there are images to process
 	if( empty($images) )
@@ -196,7 +196,7 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 	foreach ($images as $image) :
 
 		// Extract image attributes from parenthesis
-		$image_attributes = extract_parenthesis_values($image, true);
+		$image_attributes = pw_extract_parenthesis_values($image, true);
 
 		// Set $image_key to name of requested image
 		$image_key = $image_attributes[0];

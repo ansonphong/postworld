@@ -1,5 +1,9 @@
 # Postworld // Changelog
 
+### Version 1.48
+- **Breaking Changes** - Comments
+    + Changed `load-comments` directive attribute to `pw-comments`
+
 ### Version 1.47
 - **Possible Breaking Changes**
     + All instances of `$pwSiteGlobals` have been changed to use `pw_config()` to access configured settings, in preparation for elimination of `$pwSiteGlobals` variable altogether.

@@ -1315,11 +1315,9 @@ class PW_User_Query extends WP_User_Query {
 			
 			$order_by_string = '';
 		
-			
-			if ($orderby=='comment_points'){
+			if($orderby=='comment_points'){
 				$order_by_string.= "$wpdb->pw_prefix"."user_meta.comment_points"; //**
 			}
-			
 			
 			if ($orderby=='post_points'){	
 				$order_by_string.= "$wpdb->pw_prefix"."user_meta.post_points"; //**
@@ -1835,9 +1833,10 @@ class PW_COMMENTS extends WP_Comment_Query {
 			$groupby = 'GROUP BY ' . $groupby;
 
 		
-		
-		$join .= " left join  $wpdb->pw_prefix"."comment_meta on wp_comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id "; //**
-		
+		if( pw_config_in_db_tables('comment_meta') ){
+			$join .= " left join  $wpdb->pw_prefix"."comment_meta on wp_comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id "; //**
+		}
+
 		$query = "SELECT $fields FROM $wpdb->comments $join WHERE $where $groupby ORDER BY $orderby $order $limits";
 		//print_r($query);
 		if ( $count )

@@ -112,6 +112,17 @@ function pw_config_db_tables(){
 }
 
 /**
+ * Tells whether or not the specified table is configured.
+ *
+ * @param string $table Table shortname, ie. 'post_meta' for wp_postworld_post_meta
+ * @return boolean
+ */
+function pw_config_in_db_tables( $table ){
+	return in_array( $table, pw_config_db_tables() );
+}
+
+
+/**
  * Add a post parent metabox.
  */
 function pw_add_metabox_post_parent( $vars ){
@@ -763,7 +774,7 @@ function pw_get_post_types( $args = array(), $fields = 'default' ){
 
 
 //////////// BRANCH : Create a recursive branch from a flat object ////////////
-function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
+function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 	extract($settings);
 
 	///// DEFAULTS /////
@@ -798,7 +809,7 @@ function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 				}
 			}
 			// Perform callback
-			if ( $callback ){
+			if( isset($callback) ){
 				// If $callback_fields is included, pass that to the callback
 				if (is_array($callback_fields)){
 					// Get the live variable values of the callback array inputs 
@@ -820,7 +831,7 @@ function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 				$branch_child = array_merge($branch_child, $callback_data);
 			}
 	 		// Run Branch recursively and find children
-	 		$children = tree_obj($object, $object[$i][$id_key], $depth+1, $settings);
+	 		$children = pw_make_tree_obj($object, $object[$i][$id_key], $depth+1, $settings);
 	 		// If there are children, merge them into the branch_child as sub Array
 	 		if (!empty($children)){
 		 		$branch_child[$child_key] = $children;
@@ -853,13 +864,13 @@ function wp_tree_obj($args){
 			'callback_fields' => $callback_fields,
 			);
 
-		$tree_obj = tree_obj( $object, 0, 0, $settings );
+		$tree_obj = pw_make_tree_obj( $object, 0, 0, $settings );
 
 	return $tree_obj;
 }
 
 
-function extract_parenthesis_values ( $input, $force_array = true ){
+function pw_extract_parenthesis_values ( $input, $force_array = true ){
 	// Extracts comma deliniated values which are contained in parenthesis
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
@@ -886,7 +897,7 @@ function extract_parenthesis_values ( $input, $force_array = true ){
 }
 
 
-function extract_bracket_values ( $input, $force_array = true ){
+function pw_extract_bracket_values ( $input, $force_array = true ){
 	// Extracts comma deliniated values which are contained in square brackets
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
@@ -915,7 +926,7 @@ function extract_bracket_values ( $input, $force_array = true ){
 }
 
 
-function extract_fields( $fields_array, $query_string ){
+function pw_extract_fields( $fields_array, $query_string ){
 	// Extracts values starting with $query_string from $fields_array
 	// and returns them in a new Array.
 
@@ -932,10 +943,10 @@ function extract_fields( $fields_array, $query_string ){
 }
 
 
-function extract_linear_fields( $fields_array, $query_string, $force_array = true ){
+function pw_extract_linear_fields( $fields_array, $query_string, $force_array = true ){
 	// Extracts nested comma deliniated values starting with $query_string from $fields_array
 	// and returns them in a new Array.
-	$fields_request = extract_fields( $fields_array, $query_string );
+	$fields_request = pw_extract_fields( $fields_array, $query_string );
 
 	if (!empty($fields_request)){
 		$extract_fields = array();
@@ -956,12 +967,12 @@ function extract_linear_fields( $fields_array, $query_string, $force_array = tru
 
 
 
-function extract_hierarchical_fields( $fields_array, $query_string ){
+function pw_extract_hierarchical_fields( $fields_array, $query_string ){
 	// Extracts nested comma deliniated values starting with $query_string from $fields_array
 	// And nests inside it fields which are with it in square brackets
 	// and returns them in a new Array.
 
-	$fields_request = extract_fields( $fields_array, $query_string );
+	$fields_request = pw_extract_fields( $fields_array, $query_string );
 	// RESULT : ["taxonomy(category)[id,name]","taxonomy(topic,section)[id,slug]"]
 
 	if (!empty($fields_request)){
@@ -972,11 +983,11 @@ function extract_hierarchical_fields( $fields_array, $query_string ){
 		// Process each request one at a time >> author(display_name,user_name,posts_url) 
 		foreach ($fields_request as $field_request){
 
-			$root_values = extract_parenthesis_values($field_request, true);
+			$root_values = pw_extract_parenthesis_values($field_request, true);
 
 			///// PROCESS SUB-VALUES /////
 			// If there are sub-fields defined inside [square,brackets]
-				$sub_values = extract_bracket_values($field_request, true);
+				$sub_values = pw_extract_bracket_values($field_request, true);
 
 				// Cycle through each sub-value and apply it to the root field
 				foreach ($root_values as $value) {

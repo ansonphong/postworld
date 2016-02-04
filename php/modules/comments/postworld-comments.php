@@ -23,6 +23,9 @@ function pw_module_comments_defaults( $settings ){
 			'enable'	=>	false,
 			'shortname'	=>	'',		// site identifier
 			),
+		'wordpress' => array(
+			'enable' => false,
+			),
 		);
 	$settings = array_replace_recursive( $default_settings, $settings );
 	return $settings;

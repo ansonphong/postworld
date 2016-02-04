@@ -1,6 +1,10 @@
 <?php
 
 function pw_get_comment_points($comment_id){
+	if( !pw_config_in_db_tables('comment_meta') ||
+		!pw_config_in_db_tables('comment_points') )
+		return 0;
+
 	/*
 		Get the total number of points of the given comment from the points column in wp_postworld_comment_meta
 		return : integer (number of points) 
@@ -20,6 +24,10 @@ function pw_get_comment_points($comment_id){
 } 
 
 function pw_calculate_comment_points($comment_id){
+	if( !pw_config_in_db_tables('comment_meta') ||
+		!pw_config_in_db_tables('comment_points') )
+		return false;
+
 	/* 
 		Adds up the points from the specified comment, stored in wp_postworld_comment_points
 		Stores the result in the points column in wp_postworld_comment_meta 
@@ -42,6 +50,10 @@ function pw_calculate_comment_points($comment_id){
 
 function pw_cache_comment_points($comment_id){
 	
+	if( !pw_config_in_db_tables('comment_meta') ||
+		!pw_config_in_db_tables('comment_points') )
+		return false;
+
 	/*
 		Calculates given post's current points with pw_calculate_comment_points()
 		Stores points it in wp_postworld_post_meta table_ in the post_points column
@@ -70,6 +82,10 @@ function pw_cache_comment_points($comment_id){
 
 
 function pw_insert_comment_meta($comment_id,$total_points=0){
+
+	if( !pw_config_in_db_tables('comment_meta') )
+		return false;
+
 	/*
 	 This function gets comment data inserts a record in wp_postworld_comment_meta table
 	 * Parameters:
@@ -234,7 +250,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 
 function pw_get_comments( $query, $fields = 'all', $tree = true ){
 
-	$wp_comments = pw_new_get_comments($query); //get_comments( $query );
+	$wp_comments = pw_new_get_comments($query);
 	if (!$wp_comments) return false;
 
 	$wp_comments = (array) $wp_comments;
@@ -375,7 +391,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		///// COMMENT EXCERPT /////
 			// This must come after the content is filtered so that embedded content can be removed
 			// comment_excerpt(100)
-			$comment_excerpt_fields = extract_linear_fields( $fields, 'comment_excerpt', true );
+			$comment_excerpt_fields = pw_extract_linear_fields( $fields, 'comment_excerpt', true );
 			if ( !empty( $comment_excerpt_fields ) ){
 				// If a number is provided in the first field
 				if( is_numeric( $comment_excerpt_fields[0] ) ){
@@ -413,7 +429,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		    //'callback_fields' => $callback_fields,
 		    );
 
-		$comments_tree = tree_obj( $comments_data, 0, 0, $settings );
+		$comments_tree = pw_make_tree_obj( $comments_data, 0, 0, $settings );
 		if ($comments_tree){
 			$comments_data = $comments_tree;
 		}

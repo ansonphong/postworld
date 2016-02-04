@@ -79,12 +79,20 @@ postworld.directive('ngShowMore', function ($timeout,$animate) {
 });
 
 
-postworld.directive('loadComments', function() {
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwComments
+ *
+ * @restrict EA
+ * @description Loads in the comments template and data.
+ *
+ */
+postworld.directive('pwComments', function() {
 	return {
-		restrict: 'A',
+		restrict: 'EA',
 		replace: true,
 		controller: 'pwCommentsTreeController',
-		template: '<div ng-include="templateUrl" class="comments"></div>',
+		template: '<div ng-include="templateUrl" class="pw-comments"></div>',
 		scope: {
 			postId : '=',
 			commentsDynamic:'@'
@@ -113,7 +121,7 @@ postworld.controller('pwCommentsTreeController',
 		$scope.commentsLoaded = false;
 		$scope.key = 0;
 		$scope.commentsCount = 0;
-		$scope.loadCommentsInstance = $attrs.loadComments;
+		$scope.loadCommentsInstance = $attrs.pwComments;
 		//$scope.pluginUrl = jsVars.pluginurl;
 		$scope.templateLoaded = false;
 		$log.debug('Comments post ID is:', $scope.postId);
@@ -142,25 +150,6 @@ postworld.controller('pwCommentsTreeController',
 		else {
 			$scope.templateUrl = $pw.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
 			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
-		}
-
-		///// WATCH POST ID /////
-		// If the comments are dynamic, for instance a changing post ID
-		if( $_.stringToBool( $scope.commentsDynamic ) ){
-			var firstLoad = true;
-			$scope.$watch( 'postId', function( val, oldVal ){
-				if( firstLoad ){
-					firstLoad = false;
-					return;
-				}
-				// Reload comments on each change
-				$scope.loadComments();
-			});
-
-		}
-		else {
-			// Load in comments
-			$scope.loadComments();
 		}
 			
 		$scope.loadComments = function () {
@@ -205,8 +194,7 @@ postworld.controller('pwCommentsTreeController',
 	};
 	
 	$scope.OpenClose = function(child) {
-		if (parseInt(child.comment_points)>$scope.minPoints) child.minimized = false;
-		else child.minimized = true;
+		child.minimized = !(parseInt(child.comment_points)>$scope.minPoints);
 	};
 	
 	$scope.trustHtml = function(child) {
@@ -590,6 +578,26 @@ postworld.controller('pwCommentsTreeController',
 		//child.roles.isGuest
 
 	}
+
+
+	///// WATCH POST ID /////
+		// If the comments are dynamic, for instance a changing post ID
+		if( $_.stringToBool( $scope.commentsDynamic ) ){
+			var firstLoad = true;
+			$scope.$watch( 'postId', function( val, oldVal ){
+				if( firstLoad ){
+					firstLoad = false;
+					return;
+				}
+				// Reload comments on each change
+				$scope.loadComments();
+			});
+
+		}
+		else {
+			// Load in comments
+			$scope.loadComments();
+		}
 
 
 }]);
