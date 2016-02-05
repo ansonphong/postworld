@@ -107,7 +107,6 @@ function pw_get_option_obj($vars){
 
 }
 
-
 function pw_update_option( $option, $value ){
 	if( current_user_can('manage_options') ){
 		update_option( $option, $value );
@@ -115,6 +114,254 @@ function pw_update_option( $option, $value ){
 	}
 	else
 		return array('error'=>'No access.');
+}
+
+
+/**
+ * Provides the standard re-usable options
+ * in a multi-dimentional array.
+ */
+function pw_get_options_data(){
+
+	$options = array(
+
+		'general' => array(
+			'none'  => false,
+			'doubleSwitch' => array(
+				array(
+					'value' => true,
+					'name' => _x( 'Yes', 'switch yes/no', 'postworld' ),
+				),
+				array(
+					'value' => false,
+					'name' => _x( 'No', 'switch yes/no', 'postworld' ),
+				),
+			),
+			'tripleSwitch' => array(
+				array(
+					'value' => "default",
+					'name' => _x( 'Default', 'default option', 'postworld' ),
+				),
+				array(
+					'value' => true,
+					'name' => _x( 'Yes', 'switch yes/no', 'postworld' ),
+				),
+				array(
+					'value' => false,
+					'name' => _x( 'No', 'switch yes/no', 'postworld' ),
+				),
+			),
+			'customSwitch' => array(
+				array(
+					'value' => false,
+					'name' => _x( 'None', 'switch', 'postworld' ),
+				),
+				array(
+					'value' => 'custom',
+					'name' => _x( 'Custom', 'switch', 'postworld' ),
+				)
+			),
+			'defaultAndCustomDoubleSwitch' => array(
+				array(
+					'value' => "default",
+					'name' => _x( 'Default', 'default option', 'postworld' ),
+				),
+				array(
+					'value' => false,
+					'name' => _x( 'No', 'switch yes/no', 'postworld' ),
+				),
+				array(
+					'value' => true,
+					'name' => _x( 'Yes', 'switch yes/no', 'postworld' ),
+				),
+				array(
+					'value' => 'custom',
+					'name' => _x( 'Custom', 'switch', 'postworld' ),
+				)
+			),
+			'defaultCustomSwitch' => array(
+				array(
+					'value' => 'default',
+					'name' => _x( 'Default', 'default option', 'postworld' ),
+				),
+				array(
+					'value' => 'custom',
+					'name' => _x( 'Custom', 'switch', 'postworld' ),
+				)
+			),
+		),
+
+		'style' => array(
+			'backgroundPosition' => array(
+				'parallax',
+				'center top',
+				'center center',
+				'center bottom',
+				'left top',
+				'left center',
+				'left bottom',
+				'right top',
+				'right center',
+				'right bottom',
+				'initial',
+			),
+			'backgroundAttachment' => array(
+				'scroll',
+				'fixed',
+				'local',
+			),
+			'backgroundRepeat' => array(
+				'repeat',
+				'repeat-x',
+				'repeat-y',
+				'no-repeat',
+			),
+			'backgroundSize' => array(
+				'cover',
+				'contain',
+			),
+			'textAlign' => array(
+				'left',
+				'center',
+				'right',
+			),
+		),
+
+		'share' => array(
+			'meta' => array(
+				array(
+					'name' => _x( 'Facebook', 'social network', 'postworld' ),
+					'id' => 'facebook',
+					'icon' => 'pwi-facebook-square',
+					'selected' => true,
+				),
+				array(
+					'name' => _x( 'Twitter', 'social network', 'postworld' ),
+					'id' => 'twitter',
+					'icon' => 'pwi-twitter-square',
+					'selected' => true,
+				),
+				array(
+					'name' => _x( 'Reddit', 'social network', 'postworld' ),
+					'id' => 'reddit',
+					'icon' => 'pwi-reddit-square',
+					'selected' => true,
+				),
+				array(
+					'name' => _x( 'Tumblr', 'social network', 'postworld' ),
+					'id' => 'tumblr',
+					'icon' => 'pwi-tumblr-square',
+					'selected' => false,
+				),
+				array(
+					'name' => _x( 'Google Plus', 'social network', 'postworld' ),
+					'id' => 'google_plus',
+					'icon' => 'pwi-google-plus-square',
+					'selected' => true,
+				),
+				array(
+					'name' => _x( 'Pinterest', 'social network', 'postworld' ),
+					'id' => 'pinterest',
+					'icon' => 'pwi-pinterest-square',
+					'selected' => false,
+				),
+				array(
+					'name' => _x( 'Email', 'sharing option', 'postworld' ),
+					'id' => 'email',
+					'icon' => 'pwi-mail-square',
+					'selected' => true,
+				),
+			),
+		),
+		'header' => array(
+			'type' => array(
+				array(
+					'slug' => 'default',
+					'name' => 'Default',
+				),
+				array(
+					'slug' => 'featured_image',
+					'name' => 'Featured Image',
+				),
+				array(
+					'slug' => 'slider',
+					'name' => 'Slider',
+				),
+			),
+		),
+		'featured_image' => array(
+			'placement' => array(
+				array(
+					'slug' => 'none',
+					'name' => 'None',
+				),
+				array(
+					'slug' => 'header',
+					'name' => 'In Header',
+				),
+				array(
+					'slug' => 'content',
+					'name' => 'In Content',
+				),
+			),
+		),
+		'slider' => array(
+			'transition' => array(
+				array(
+					'slug' => false,
+					'name' => 'No Transition',
+				),
+				array(
+					'slug' => 'fade',
+					'name' => 'Fade',
+				),
+				array(
+					'slug' => 'slide',
+					'name' => 'Slide',
+				),
+			)
+		),
+		'post_content' => array(
+			'columns' => array(
+				array(
+					'value' => 1,
+					'name' => '1 Column',
+				),
+				array(
+					'value' => 2,
+					'name' => '2 Columns',
+				),
+				array(
+					'value' => 3,
+					'name' => '3 Columns',
+				),
+			),
+		),
+		'link_url' => array(
+			'show_label' => array(
+				array(
+					'value' => 'default',
+					'name' => 'Default',
+				),
+				array(
+					'value' => false,
+					'name' => 'No',
+				),
+				array(
+					'value' => true,
+					'name' => 'Yes',
+				),
+				array(
+					'value' => 'custom',
+					'name' => 'Custom',
+				),
+			),
+		),
+
+	);
+
+	return apply_filters( 'pw_options_data', $options );
+
 }
 
 

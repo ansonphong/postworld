@@ -769,6 +769,12 @@ function pwSiteGlobals_include(){
 	$pwJs .= json_encode( apply_filters( PW_GLOBAL_OPTIONS, array() ) );
 	$pwJs .= ";";
 
+	// OPTIONS META
+	$pwJs .= "\n\n";
+	$pwJs .= "pw.optionsMeta = ";
+	$pwJs .= json_encode( pw_get_options_meta() );
+	$pwJs .= ";";
+
 	// ICON SETS
 	$pwJs .= "\n\n";
 	$pwJs .= "pw.iconsets = ";

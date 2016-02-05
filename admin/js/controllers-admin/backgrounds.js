@@ -17,8 +17,8 @@ postworldAdmin.directive( 'pwAdminBackgrounds', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminBackgroundsCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'pwData', '_', 'pwPostOptions', 'pwOptionsData',
-	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions, $pwOptionsData ) {
+	[ '$scope', '$log', '$window', '$parse', 'pwData', '_', 'pwPostOptions', 
+	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.view = 'settings';
 
@@ -76,7 +76,7 @@ postworldAdmin.controller('pwAdminBackgroundsCtrl',
 	}
 
 
-	$scope.optionsMeta = $pwOptionsData.options;
+	$scope.optionsMeta = $pw.optionsMeta;
 
 
 	

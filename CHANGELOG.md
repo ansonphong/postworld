@@ -1,5 +1,10 @@
 # Postworld // Changelog
 
+### Version 1.49
+- **Breaking Changes**
+    + `pwOptionsData` service/factory removed
+    + Replace all instances of `$pwOptionsData['options']` with `$pw.optionsMeta` 
+
 ### Version 1.48
 - **Breaking Changes** - Comments
     + Changed `load-comments` directive attribute to `pw-comments`

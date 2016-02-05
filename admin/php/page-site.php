@@ -6,9 +6,7 @@
 	$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
 ?>
 <script>
-	postworldAdmin.controller( 'pwOptionsDataCtrl',
-		[ '$scope', 'pwOptionsData',
-		function( $scope, $pwOptionsData ){
+	postworldAdmin.controller( 'pwOptionsDataCtrl', function( $scope ){
 
 		// Set default empty value as object, not array
 		var siteOptions = <?php echo json_encode( $pwSiteOptions ); ?>;
@@ -18,12 +16,12 @@
 		$scope.pwSiteOptions = siteOptions;
 		$scope.pwHeaderCode = <?php echo $pw_header_code; ?>;
 		$scope['images'] = {};
-		$scope['options'] = $pwOptionsData['options'];
+		$scope['options'] = $pw.optionsMeta;
 		
 		$scope.memoryOptions = <?php echo json_encode( apply_filters('pw_options_site_memory',array()) ) ?>;
 		$scope.postworldModeOptions = <?php echo json_encode( apply_filters('pw_options_postworld_mode',array()) ) ?>;
 
-	}]);
+	});
 </script>
 <div class="main wrap postworld" ng-cloak>
 	<h1>
