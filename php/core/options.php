@@ -121,7 +121,7 @@ function pw_update_option( $option, $value ){
  * Provides the standard re-usable options
  * in a multi-dimentional array.
  */
-function pw_get_options_data(){
+function pw_get_options_meta(){
 
 	$options = array(
 
