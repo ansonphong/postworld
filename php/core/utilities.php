@@ -773,20 +773,26 @@ function pw_get_post_types( $args = array(), $fields = 'default' ){
 }
 
 
-//////////// BRANCH : Create a recursive branch from a flat object ////////////
-function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings ){
-	extract($settings);
-
-	///// DEFAULTS /////
-	if (empty($max_depth))	$max_depth = 10;
-	if (empty($fields))		$fields = array('name');
-	if (empty($id_key))		$id_key = 'id';
-	if (empty($parent_key))	$parent_key = 'parent';
-	if (empty($child_key))	$child_key = 'children';
+/**
+ * BRANCH : Create a recursive branch from a flat object
+ * @todo Refactor not using extract, use default array merge method.
+ */
+function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings = array() ){
+	$default_settings = array(
+		'fields' => array('name'),
+		'id_key' => 'id',
+		'parent_key' => 'parent',
+		'child_key' => 'children',
+		'max_depth' => 10,
+		'callback' => null,
+		'callback_fields' => null,
+		);
+	$s = array_replace( $default_settings, $settings );
 
 	///// LOCAL BRANCH /////
-	// Check Depth
-	if($depth > $max_depth) return ''; // Make sure not to have an endless recursion
+	// Check Depth to prevent endless recursion
+	if( $depth > $s['max_depth'])
+		return '';
 
 	 // Setup Local Branch
 	 $branch = array();
@@ -794,47 +800,47 @@ function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 	 // Cycle through each item in the Object
 	 for($i=0, $ni=count($object); $i < $ni; $i++){
 	 	// If the current item is the same as the current cycling parent, add the data
-	 	if( $object[$i][$parent_key] == $parent ){
+	 	if( $object[$i][ $s['parent_key'] ] == $parent ){
 	 		// Setup / Clear Branch Child Array
 			$branch_child = array();
 			// Get all fields
-			if( $fields == 'all' ){
+			if( $s['fields'] == 'all' ){
 				$branch_child = $object[$i];
 			}
 			// Get an array of particular fields
-			else if( gettype($fields) == 'array' ){
+			else if( gettype($s['fields']) == 'array' ){
 				// Transfer individual fields
-				foreach ($fields as $field) {
+				foreach ($s['fields'] as $field) {
 					$branch_child[$field] = $object[$i][$field];
 				}
 			}
 			// Perform callback
-			if( isset($callback) ){
+			if( isset($s['callback']) && !empty($s['callback']) ){
 				// If $callback_fields is included, pass that to the callback
-				if (is_array($callback_fields)){
+				if( is_array( $s['callback_fields'] ) ){
 					// Get the live variable values of the callback array inputs 
 					$callback_fields_live = array();
-					foreach( $callback_fields as $field_name ){
+					foreach( $s['callback_fields'] as $field_name ){
 						// Replace field request with the actual value.
 						// Example : id >> 24
 						// Derived from the original $object
 						$field_value = $object[ $i ][ $field_name ];
 						array_push( $callback_fields_live, $field_value );
 					}
-					$callback_data = call_user_func_array($callback,array($callback_fields_live));
+					$callback_data = call_user_func_array( $s['callback'], array($callback_fields_live) );
 				}
 				// Otherwise run the callback with no inputs
 				else {
-					$callback_data = call_user_func($callback);
+					$callback_data = call_user_func( $callback );
 				}
 				// Merge back the result of the callback
-				$branch_child = array_merge($branch_child, $callback_data);
+				$branch_child = array_merge( $branch_child, $callback_data );
 			}
 	 		// Run Branch recursively and find children
-	 		$children = pw_make_tree_obj($object, $object[$i][$id_key], $depth+1, $settings);
+	 		$children = pw_make_tree_obj( $object, $object[$i][ $s['id_key'] ], $depth+1, $settings );
 	 		// If there are children, merge them into the branch_child as sub Array
 	 		if (!empty($children)){
-		 		$branch_child[$child_key] = $children;
+		 		$branch_child[ $s['child_key'] ] = $children;
 	 		}
 	 		// Push Branch Child data to Local Branch
 		 	array_push($branch, $branch_child);
@@ -846,7 +852,7 @@ function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 
 ////////// WP OBJECT TREE //////////
 // Generates a hierarchical tree from a flat Wordpress object
-function wp_tree_obj($args){
+function wp_tree_obj( $args ){
 	extract($args);
 
 	// OBJECT -> ARRAY()
@@ -952,7 +958,7 @@ function pw_extract_linear_fields( $fields_array, $query_string, $force_array = 
 		$extract_fields = array();
 		// Process each request one at a time >> author(display_name,user_name,posts_url) 
 		foreach ($fields_request as $field_request) 
-			$extract_fields = array_merge( $extract_fields, extract_parenthesis_values($field_request, true) );
+			$extract_fields = array_merge( $extract_fields, pw_extract_parenthesis_values($field_request, true) );
 
 		// If only one value, return string
 		if ( count($extract_fields) == 1 && $force_array == false )

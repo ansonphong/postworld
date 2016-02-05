@@ -1,5 +1,38 @@
 <?php
 
+/**
+ * Get all of the native WordPress discussion/comment settings
+ * And returns them in an associative array with the option names as keys.
+ * @return array
+ */
+function pw_get_wp_comment_settings(){
+
+	return array(
+		'default_comment_status' => (string) get_option( 'default_comment_status', 'open' ),
+		'require_name_email' => (bool) get_option( 'require_name_email', true ),
+		'comment_registration' => (bool) get_option( 'comment_registration', true ),
+		'comment_registration' => (bool) get_option( 'comment_registration', true ),
+
+		'close_comments_for_old_posts' => (bool) get_option( 'close_comments_for_old_posts', false ),
+		'close_comments_days_old' => (int) get_option( 'close_comments_days_old', 14 ),
+		'thread_comments' => (bool) get_option( 'thread_comments', true ),
+		'thread_comments_depth' => (bool) get_option( 'thread_comments_depth', 5 ),
+
+		'page_comments' => (bool) get_option( 'page_comments', false ),
+		'comments_per_page' => (int) get_option( 'comments_per_page', 50 ),
+		'comment_order' => (string) get_option( 'comment_order', 'asc' ),
+
+		'comments_notify' => (bool) get_option( 'comments_notify', true ),
+		'moderation_notify' => (bool) get_option( 'moderation_notify', true ),
+
+		'comment_max_links' => (int) get_option( 'comment_max_links', 2 ),
+		'moderation_keys' => (string) get_option( 'moderation_keys', '' ),
+		'blacklist_keys' => (string) get_option( 'blacklist_keys', '' ),
+		);
+
+}
+
+
 function pw_get_comment_points($comment_id){
 	if( !pw_config_in_db_tables('comment_meta') ||
 		!pw_config_in_db_tables('comment_points') )

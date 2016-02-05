@@ -1320,7 +1320,6 @@ postworld.service('pwPostOptions',
 
 	return{
 		taxTerms: function( $scope, taxObj ){
-
 			if( typeof taxObj === 'undefined' )
 				taxObj = "tax_terms";
 
@@ -2107,10 +2106,8 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 }]);
 
 
-
-
 ///// SERVICE /////
-postworld.factory( 'iOptionsData', [ '_', function( $_ ){
+postworld.factory( 'pwOptionsData', [ '_', function( $_ ){
 	return {
 		options: {
 			'general':{

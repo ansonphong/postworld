@@ -94,14 +94,14 @@ postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
 })
 
 postworldAdmin.controller('pwAdminStyleCtrl',
-	[ '$scope', '$log', '$window', '$parse', '_', 'iOptionsData',
-	function ( $scope, $log, $window, $parse, $_, $iOptionsData ) {
+	[ '$scope', '$log', '$window', '$parse', '_', 'pwOptionsData',
+	function ( $scope, $log, $window, $parse, $_, $pwOptionsData ) {
 	// Initialize Status
 	$scope.status = "done";
 	//$log.debug( "CTRL" );
 
 	// Localize the core option set
-	$scope.options = $iOptionsData.options;
+	$scope.options = $pwOptionsData.options;
 
 	$scope.resetStyleDefaults = function(){
 		$scope.pwStyles = angular.fromJson( angular.toJson( $scope.pwStyleDefaults ) );

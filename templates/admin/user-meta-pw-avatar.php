@@ -3,9 +3,9 @@
 ?>
 <script type="text/javascript">
 	postworldAdmin.controller( 'pwUsermetaAvatarCtrl',
-		[ '$scope', '_', 'iOptionsData',
-		function( $scope, $_, $iOptionsData ){
-		$scope['options'] = $iOptionsData['options'];
+		[ '$scope', '_', 'pwOptionsData',
+		function( $scope, $_, $pwOptionsData ){
+		$scope['options'] = $pwOptionsData['options'];
 		$scope.pwAvatar = <?php echo json_encode($vars) ?>;
 
 		// TODO : Fix issue with digest cycle not updating hidden form field

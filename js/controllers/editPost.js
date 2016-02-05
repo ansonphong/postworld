@@ -18,7 +18,7 @@
 postworld.directive( 'pwEditPost', [ function($scope){
 	return {
 		restrict: 'AE',
-		controller: 'editPost',
+		controller: 'editPostController',
 		link: function( $scope, element, attrs ){
 			// Init Edit Post Object
 			$scope.initEditPost = {};
@@ -98,18 +98,17 @@ postworld.directive( 'pwEditPost', [ function($scope){
 	};
 }]);
 
-postworld.controller('editPost',
+postworld.controller('editPostController',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
 	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window',
-	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', 'iOptionsData', '$pw',
+	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', 'pwOptionsData', '$pw',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window,
-		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $iOptionsData, $pw ) {
+		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $pwOptionsData, $pw ) {
 
-	$scope['options'] = $iOptionsData['options'];
+	$scope['options'] = $pwOptionsData['options'];
 
 	$log.debug( "$scope.mode @ init", $scope.mode );
-
 	$log.debug( "$scope.meta @ init", $scope.meta );
 
 	$timeout( function(){
