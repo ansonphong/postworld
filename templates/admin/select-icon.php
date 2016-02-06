@@ -63,7 +63,7 @@
 				ng-click="uiFocusElement('#filterString')"
 				ng-hide="uiBool(<?php echo $vars['ng_model']; ?>)">
 				<i class="pwi-target"></i>
-				Select an Icon
+				<?php _e( 'Select an Icon', 'postworld' ) ?>
 			</button>
 		</span>
 
