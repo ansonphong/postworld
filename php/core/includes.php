@@ -524,7 +524,7 @@ function pw_include_admin_scripts(){
 		wp_enqueue_script('Postworld-Admin', POSTWORLD_URI.'/deploy/postworld-admin.min.js', $angularDep, $pw['info']['version'] );
 	}
 	else{
-		// CONTROLLERS : ADMIN
+	// CONTROLLERS : ADMIN
 		wp_enqueue_script('Postworld-Admin-Layouts', 		POSTWORLD_URI.'/admin/js/controllers-admin/layouts.js', $angularDep );
 		wp_enqueue_script('Postworld-Admin-Styles', 		POSTWORLD_URI.'/admin/js/controllers-admin/styles.js', $angularDep );
 		wp_enqueue_script('Postworld-Admin-Sidebars', 		POSTWORLD_URI.'/admin/js/controllers-admin/sidebars.js', $angularDep );
