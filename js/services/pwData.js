@@ -528,16 +528,20 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			var params = {args:args};
 			return this.wpAjax('pw_update_option',params);
 		},
+		/*
 		set_option_obj: function(args) {
 			$log.debug('pwData.set_option_obj',args);
 			var params = {args:args};
 			return this.wpAjax('pw_set_option_obj',params);
 		},
+		*/
+		/*
 		get_option_obj: function(args) {
 			$log.debug('pwData.get_option_obj',args);
 			var params = {args:args};
 			return this.wpAjax('pw_get_option_obj',params);
 		},
+		*/
 		get_menus: function(args) {
 			$log.debug('pwData.get_menus',args);
 			var params = {args:args};

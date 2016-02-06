@@ -381,14 +381,15 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		);
 	};
 
+	/*
 	$scope.setOptionObj = function( vars ){
-		/*
-		var vars = {
-			option_name: option_name,
-			subkey: subkey,
-			value: value,
-		};
-		*/
+		
+		// var vars = {
+		//	option_name: option_name,
+		//	subkey: subkey,
+		//	value: value,
+		// };
+		
 		
 		// Error Checking
 		if( !$scope.errorCheck() )
@@ -414,6 +415,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			}
 		);
 	};
+	*/
 
 
 	$scope.emitSelectedMedia = function( key ){

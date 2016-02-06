@@ -36,6 +36,7 @@ $pw = array(
 	'db' =>	array(
 		'wp_options'	=>	array(
 			'option_name'	=>	array(
+				'core'					=>	'postworld-core',
 				'modules'				=>	'postworld-modules',
 				'site'					=>	'postworld-site',
 				'layouts'				=>	'postworld-layouts',
@@ -87,6 +88,7 @@ $pw = array(
 
 ///// DEFINE OPTION NAMES /////
 // Used in 'wp_options' table as 'option_name' key
+define( 'PW_OPTIONS_CORE', 					$pw['db']['wp_options']['option_name']['core'] );
 define( 'PW_OPTIONS_MODULES', 				$pw['db']['wp_options']['option_name']['modules'] );
 define( 'PW_OPTIONS_SITE', 					$pw['db']['wp_options']['option_name']['site'] );
 define( 'PW_OPTIONS_LAYOUTS', 				$pw['db']['wp_options']['option_name']['layouts'] );

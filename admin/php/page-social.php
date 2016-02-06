@@ -1,5 +1,5 @@
 <script>
-	postworldAdmin.controller( 'pwSocialDataCtrl', function( $scope ){
+	postworldAdmin.controller( 'pwSocialDataCtrl', function( $scope, $pw ){
 		// Social Option Values
 		$scope.pwSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
 		$scope['options'] = $pw.optionsMeta;

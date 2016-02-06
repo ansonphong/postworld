@@ -4,6 +4,9 @@
 - **Breaking Changes**
     + `pwOptionsData` service/factory removed
     + Replace all instances of `$pwOptionsData['options']` with `$pw.optionsMeta` 
+- **Breaking Changes**
+    + Removed all instances of PHP methods `pw_set_option_obj`, and `pw_get_option_obj` and their respective Javascript counterparts
+    + Use `pw_set_option` and `pw_get_option` in it's place
 
 ### Version 1.48
 - **Breaking Changes** - Comments

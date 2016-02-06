@@ -1,6 +1,6 @@
 <script>
 	postworldAdmin.controller( 'pwModulesCtrl',
-		[ '$scope', '_', '$log', function( $scope, $_, $log ){
+		[ '$scope', '_', '$log', '$pw', function( $scope, $_, $log, $pw ){
 
 		$scope.pwModules = <?php echo json_encode( pw_enabled_modules() ); ?>;
 		$scope['options'] = $pw.optionsMeta;

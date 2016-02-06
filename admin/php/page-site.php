@@ -6,7 +6,7 @@
 	$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
 ?>
 <script>
-	postworldAdmin.controller( 'pwOptionsDataCtrl', function( $scope ){
+	postworldAdmin.controller( 'pwOptionsDataCtrl', function( $scope, $pw ){
 
 		// Set default empty value as object, not array
 		var siteOptions = <?php echo json_encode( $pwSiteOptions ); ?>;
@@ -30,7 +30,6 @@
 	</h1>
 	
 	<div
-		pw-admin-options
 		ng-cloak
 		ng-controller="pwOptionsDataCtrl">
 

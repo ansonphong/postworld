@@ -525,7 +525,6 @@ function pw_include_admin_scripts(){
 	}
 	else{
 		// CONTROLLERS : ADMIN
-		wp_enqueue_script('Postworld-Admin-Options', 		POSTWORLD_URI.'/admin/js/controllers-admin/options.js', $angularDep );
 		wp_enqueue_script('Postworld-Admin-Layouts', 		POSTWORLD_URI.'/admin/js/controllers-admin/layouts.js', $angularDep );
 		wp_enqueue_script('Postworld-Admin-Styles', 		POSTWORLD_URI.'/admin/js/controllers-admin/styles.js', $angularDep );
 		wp_enqueue_script('Postworld-Admin-Sidebars', 		POSTWORLD_URI.'/admin/js/controllers-admin/sidebars.js', $angularDep );
@@ -537,7 +536,7 @@ function pw_include_admin_scripts(){
 		
 		// DIRECTIVES : ADMIN
 		wp_enqueue_script('Postworld-Admin', 				POSTWORLD_URI.'/admin/js/directives-admin/pwAdmin.js', $angularDep );
-		wp_enqueue_script('Infinite-Save-Options', 			POSTWORLD_URI.'/admin/js/directives-admin/iSaveOption.js', $angularDep );
+		wp_enqueue_script('Postworld-Save-Options', 		POSTWORLD_URI.'/admin/js/directives-admin/pwSaveOption.js', $angularDep );
 
 		/////// ANGULAR : JQUERY SLIDER /////
 		wp_enqueue_script( 'angularJS-jQuery-Slider', 		POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );

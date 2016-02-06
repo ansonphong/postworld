@@ -94,8 +94,8 @@ postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
 })
 
 postworldAdmin.controller('pwAdminStyleCtrl',
-	[ '$scope', '$log', '$window', '$parse', '_', 
-	function ( $scope, $log, $window, $parse, $_ ) {
+	[ '$scope', '$log', '$window', '$parse', '_', '$pw', 
+	function ( $scope, $log, $window, $parse, $_, $pw ) {
 	// Initialize Status
 	$scope.status = "done";
 	//$log.debug( "CTRL" );
