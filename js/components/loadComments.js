@@ -101,7 +101,7 @@ postworld.directive('pwComments', function() {
 });
 
 postworld.controller('pwCommentsTreeController',
-	[ '$scope', '$timeout', '$pwComments', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '_',
+	[ '$scope', '$timeout', '$pwComments', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '$_',
 	function ($scope, $timeout, $pwComments, $rootScope, $sce, $attrs, pwData, $log, $window, $pw, $_ ) {
 		$scope.json = '';
 

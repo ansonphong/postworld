@@ -1,6 +1,6 @@
 ///// GALLERY VIEWER /////
 postworld.directive( 'pwGalleryViewer',
-	[ 'pwData', '$pw', '$log', '_', '$document', '$timeout', 'pwPosts',
+	[ 'pwData', '$pw', '$log', '$_', '$document', '$timeout', 'pwPosts',
 	function( $pwData, $pw, $log, $_, $document, $timeout, $pwPosts ){
 	return {
 		restrict: 'AE',
@@ -355,7 +355,7 @@ postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
 
 
 postworld.controller( 'pwInfiniteGalleryCtrl',
-	[ '$scope', '$log', '_', '$pw', 'pwData', 'pwPosts',
+	[ '$scope', '$log', '$_', '$pw', 'pwData', 'pwPosts',
 	function( $scope, $log, $_, $pw, $pwData, $pwPosts ){
 
 	$scope.infiniteGallery = {
@@ -504,7 +504,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 
 
  postworld.directive('pwXScrollStatus', [
- 	'$window', '$log', '$timeout', '_',
+ 	'$window', '$log', '$timeout', '$_',
  	function( $window, $log, $timeout, $_ ) {
  	return {
  		restrict: 'A',
@@ -589,7 +589,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
  * Forked from ng-infinite-scroll - v1.0.0 - 2013-05-13
  */
 postworld.directive('infiniteXScroll', [
-	'$rootScope', '$window', '$timeout', '$log', '_',
+	'$rootScope', '$window', '$timeout', '$log', '$_',
 	function($rootScope, $window, $timeout, $log, $_ ) {
 		return {
 			link: function(scope, elem, attrs) {
@@ -801,7 +801,7 @@ postworld.directive('infiniteXScroll', [
 /* BASED ON : ng-infinite-scroll - v1.0.0 - 2013-05-13 */
 
 postworld.directive('infiniteYScroll', [
-	'$rootScope', '$window', '$timeout', '$log', '_', function( $rootScope, $window, $timeout, $log, $_ ) {
+	'$rootScope', '$window', '$timeout', '$log', '$_', function( $rootScope, $window, $timeout, $log, $_ ) {
 		return {
 			link: function(scope, elem, attrs) {
 
@@ -932,7 +932,7 @@ postworld.directive('infiniteYScroll', [
 
 /*
 postworld.directive('infiniteScroll', [
-	'$rootScope', '$window', '$timeout', '$log', '_', function($rootScope, $window, $timeout, $log, $_) {
+	'$rootScope', '$window', '$timeout', '$log', '$_', function($rootScope, $window, $timeout, $log, $_) {
 		return {
 			link: function(scope, elem, attrs) {
 				var checkWhenEnabled, container, handler, scrollDistance, scrollEnabled;

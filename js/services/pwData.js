@@ -5,7 +5,7 @@
  * @requires $q
  * @todo Rename to $pwData
  */
-postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$pw', '_',
+postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$pw', '$_',
 	function ( $resource, $http, $q, $log, $window, $pw, $_ ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;

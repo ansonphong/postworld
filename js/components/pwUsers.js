@@ -20,7 +20,7 @@ postworld.directive('pwEditAvatar', function() {
 });
 
 postworld.controller( 'editAvatarCtrl',
-	[ '$scope', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+	[ '$scope', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '$_',
 	function( $scope, $rootScope, $pwData, $timeout, $log, $pwUsers, $_ ) {
 
 	$scope.status = "empty";
@@ -199,7 +199,7 @@ postworld.directive('pwUserLogin', function() {
 });
 
 postworld.controller('pwUserLoginCtrl',
-	[ '$scope', '$pw', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+	[ '$scope', '$pw', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '$_',
 	function( $scope, $pw, $rootScope, $pwData, $timeout, $log, pwUsers, $_ ) {
 	
 	$scope.view = $pw.view;
@@ -225,7 +225,7 @@ postworld.directive('pwUserSignup', function() {
 });
 
 postworld.controller('pwUserSignupCtrl',
-	[ '$scope', '$pw', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+	[ '$scope', '$pw', '$rootScope', 'pwData', '$timeout', '$log', 'pwUsers', '$_',
 	function( $scope, $pw, $rootScope, $pwData, $timeout, $log, pwUsers, $_ ) {
 	
 	// Localize Site data
@@ -520,7 +520,7 @@ postworld.directive('pwUserActivate', function() {
 });
 
 postworld.controller('pwUserActivateCtrl',
-	[ '$scope', '$pw', '$rootScope', '$location', 'pwData', '$timeout', '$log', 'pwUsers', '_', '$window', 
+	[ '$scope', '$pw', '$rootScope', '$location', 'pwData', '$timeout', '$log', 'pwUsers', '$_', '$window', 
 	function( $scope, $pw, $rootScope, $location, $pwData, $timeout, $log, $pwUsers, $_, $window ) {
 
 	///// INIT /////
@@ -689,7 +689,7 @@ postworld.directive('pwUserPasswordReset', function() {
 
 
 postworld.controller( 'pwUserPasswordResetCtrl',
-	[ '$scope', '$rootScope', '$window', 'pwData', '$timeout', '$log', 'pwUsers', '_',
+	[ '$scope', '$rootScope', '$window', 'pwData', '$timeout', '$log', 'pwUsers', '$_',
 	function( $scope, $rootScope, $window, $pwData, $timeout, $log, $pwUsers, $_ ){
 
 	///// INIT /////

@@ -17,7 +17,7 @@ postworldAdmin.directive( 'pwAdminTermFeeds', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminTermFeedsCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'pwData', '_', 'pwPostOptions',
+	[ '$scope', '$log', '$window', '$parse', 'pwData', '$_', 'pwPostOptions',
 	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.view = 'settings';

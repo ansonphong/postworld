@@ -1,7 +1,7 @@
 <script type="text/javascript">
 	//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
 	postworldAdmin.controller('pwIconsetsDataCtrl',
-		[ '$scope', '$window', '_',
+		[ '$scope', '$window', '$_',
 		function( $scope, $window, $_ ){
 
 		$scope.pwRegisteredIconsets = <?php echo json_encode( pw_get_registered_iconsets() ) ?>;		

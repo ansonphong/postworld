@@ -7,7 +7,7 @@
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
 postworld.directive( 'pwPostActions',
-    [ '$pw', '$log', '_',
+    [ '$pw', '$log', '$_',
     function( $pw, $log, $_ ){
     return {
         restrict: 'AE',
@@ -25,7 +25,7 @@ postworld.directive( 'pwPostActions',
 }]);
 
 postworld.controller('postActions',
-    [ "$scope", "pwData", "_",
+    [ "$scope", "pwData", "$_",
     function($scope, pwData, $_ ) {
 
     $scope.$watch( "post.viewer",
@@ -224,7 +224,7 @@ postworld.directive( 'pwAdminPostMenu', [ function($scope){
 }]);
 
 postworld.controller('adminPostDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '_', '$timeout', '$pw',
+    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '$_', '$timeout', '$pw',
     function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout, $pw ) {
 
     ///// MENU OPTIONS /////

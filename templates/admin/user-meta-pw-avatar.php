@@ -3,7 +3,7 @@
 ?>
 <script type="text/javascript">
 	postworldAdmin.controller( 'pwUsermetaAvatarCtrl',
-		[ '$scope', '_', '$pw',
+		[ '$scope', '$_', '$pw',
 		function( $scope, $_, $pw ){
 		$scope['options'] = $pw.optionsMeta;
 		$scope.pwAvatar = <?php echo json_encode($vars) ?>;

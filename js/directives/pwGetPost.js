@@ -16,7 +16,7 @@
  * @param {expression} postLoading Binds a boolean to the current status of the post data loading.
  */
 postworld.directive( 'pwGetPost',
-	[ '$window', '$timeout', '_', 'pwData', '$log',
+	[ '$window', '$timeout', '$_', 'pwData', '$log',
 	function( $window, $timeout, $_, $pwData, $log ){
 	return {
 		restrict: 'AE',

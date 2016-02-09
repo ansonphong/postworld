@@ -1,5 +1,5 @@
 'use strict';
-postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $log, $_ ) {
+postworld.directive('feedItem', [ '$timeout', '$log', '$_', function( $timeout, $log, $_ ) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -16,7 +16,7 @@ postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $
 }]);
 
 postworld.controller('pwFeedItemCtrl',
-	[ '$scope', '$location', '$log', 'pwData', '$attrs', '_',
+	[ '$scope', '$location', '$log', 'pwData', '$attrs', '$_',
 	function( $scope, $location, $log, $pwData, $attrs, $_ ) {
 		
 	///// INIT /////
@@ -92,7 +92,7 @@ postworld.directive( 'pwGrid', [ function($scope){
 }]);
 
 postworld.controller('pwGridCtrl',
-	[ "$scope", "$window", "_", "$log", "pwImages",
+	[ "$scope", "$window", "$_", "$log", "pwImages",
 	function($scope, $window,  $_, $log, $pwImages ) {
 
 	////////// GRIDS //////////
@@ -173,7 +173,7 @@ postworld.directive( 'pwGridItem', [ function($scope){
 }]);
 
 postworld.controller('pwGridItemCtrl',
-	[ "$scope", "$window", "_", "$log", "pwImages",
+	[ "$scope", "$window", "$_", "$log", "pwImages",
 	function($scope, $window,  $_, $log, $pwImages ) {
 
 	////////// ALIAS FUNCTIONS //////////

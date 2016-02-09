@@ -76,7 +76,7 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
 
 
 postworld.directive('pwSelectUser',
-    [ '$log', '_', '$pw', 'pwData', function( $log, $_, $pw, $pwData ){
+    [ '$log', '$_', '$pw', 'pwData', function( $log, $_, $pw, $pwData ){
 
         return{
             link: function( $scope, element, attrs ){

@@ -9,7 +9,7 @@
 	<script type="text/javascript">
 		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
 		postworldAdmin.controller('pwBackgroundsDataCtrl',
-			[ '$scope', '$window', '_',
+			[ '$scope', '$window', '$_',
 			function( $scope, $window, $_ ){
 			// Print Data
 			$scope.pwBackgrounds = <?php echo json_encode( $pwBackgrounds ); ?>;

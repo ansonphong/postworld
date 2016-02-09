@@ -17,7 +17,7 @@
  * @param {string|boolean} userDynamic If the user ID is expected to change.
  */
 postworld.directive( 'pwUsers',
-	[ '_', 'pwData', '$log', '$timeout',
+	[ '$_', 'pwData', '$log', '$timeout',
 	function( $_, $pwData, $log, $timeout ){
 	return {
 		scope:{
@@ -74,7 +74,7 @@ postworld.directive( 'pwUsers',
  * @param {expression} pwCurrentUser An expression to bind the logged in user to.
  */
 postworld.directive( 'pwCurrentUser',
-	[ '_', 'pwData', '$log', '$pw',
+	[ '$_', 'pwData', '$log', '$pw',
 	function( $_, $pwData, $log, $pw ){
 	return {
 		scope:{

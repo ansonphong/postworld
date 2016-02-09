@@ -17,7 +17,7 @@ postworldAdmin.directive( 'pwAdminLayout', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminLayoutCtrl',
-	[ '$scope', '$log', '$window', '$parse', '_',
+	[ '$scope', '$log', '$window', '$parse', '$_',
 	function ( $scope, $log, $window, $parse, $_ ) {
 
 	// Initialize Status

@@ -36,7 +36,7 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 /*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
 
 postworld.directive( 'oEmbed',
-	[ '$sce', '$log', '$timeout', 'pwData', '_',
+	[ '$sce', '$log', '$timeout', 'pwData', '$_',
 	function( $sce, $log, $timeout, $pwData, $_ ){
 
 	return { 
@@ -101,7 +101,7 @@ postworld.directive( 'oEmbed',
 }]);
 
 postworld.controller('pwOEmbedNewCtrl',
-	[ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '_', '$timeout', '$rootScope', 'oEmbedServe',
+	[ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '$_', '$timeout', '$rootScope', 'oEmbedServe',
 	function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout, $rootScope, $oEmbedServe ) {
 
 		$scope.getAutoplay = function(){
@@ -151,7 +151,7 @@ postworld.controller('pwOEmbedNewCtrl',
 
 /*////////// ------------ O-EMBED SERVICE ------------ //////////*/  
 postworld.factory( 'oEmbedServe',
-	[ '$log', '$sce', '_', 'pwData', '$timeout', '$rootScope',
+	[ '$log', '$sce', '$_', 'pwData', '$timeout', '$rootScope',
 	function( $log, $sce, $_, $pwData, $timeout, $rootScope ){
 
 	var cacheEmbed = function( embedId, embedCode ){

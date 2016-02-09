@@ -1,5 +1,5 @@
 postworldAdmin.directive( 'pwSaveOption',
-	['$window', '$timeout', '$parse', '$log', 'pwData', '_',
+	['$window', '$timeout', '$parse', '$log', 'pwData', '$_',
 	function($window, $timeout, $parse, $log, $pwData, $_) {
 
 	return {

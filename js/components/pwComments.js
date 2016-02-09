@@ -6,7 +6,7 @@
  * @param {expression} commentsEnable An expression which resolves a boolean, if false will disable directive. 
  */
 postworld.directive( 'pwComments',
-	[ '_', '$pw', 'pwData', 'pwTemplatePartials', '$log', '$timeout',
+	[ '$_', '$pw', 'pwData', 'pwTemplatePartials', '$log', '$timeout',
 	function( $_, $pw, $pwData, $pwTemplatePartials, $log, $timeout ){
 
 	return {

@@ -101,7 +101,7 @@ postworld.directive( 'pwEditPost', [ function($scope){
 postworld.controller('editPostController',
 	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
 	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window',
-	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', '$pw',
+	'pwRoleAccess', 'pwQuickEdit', '$_', '$sce', 'pwTemplatePartials', '$pw',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window,
 		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $pw ) {
@@ -893,26 +893,11 @@ postworld.controller('editPostController',
 //////// ----- EVENT DATA/TIME CONTROLLER ----- ////////*/
 
 postworld.directive( 'pwEventInput',
-	[
-	'$rootScope',
-	'pwPostOptions',
-	'pwEditPostFilters',
-	'$timeout',
-	'$filter',
-	'pwData',
-	'$log',
-	'_',
-	'pwDate',
+	[ '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout',
+	'$filter', 'pwData', '$log', '$_', 'pwDate',
 	function(
-		$rootScope,
-		$pwPostOptions,
-		$pwEditPostFilters,
-		$timeout,
-		$filter, 
-		$pwData,
-		$log,
-		$_,
-		$pwDate
+		$rootScope, $pwPostOptions, $pwEditPostFilters, $timeout,
+		$filter,  $pwData, $log, $_, $pwDate
 		){
 	return {
 		restrict: 'AE',

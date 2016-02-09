@@ -28,7 +28,7 @@ postworld.directive( 'pwQuery', [ function($scope){
 }]);
 
 postworld.controller('pwQueryCtrl',
-	['$scope', '$log', '$window', '$timeout', '_', 'pwData',
+	['$scope', '$log', '$window', '$timeout', '$_', 'pwData',
 	function($scope, $log, $window, $timeout, $_, $pwData) {
 
 	// Create query model if it doesn't exist
@@ -118,7 +118,7 @@ postworld.directive( 'pwTermFeed', [ function($scope){
 }]);
 
 postworld.controller('pwTermFeedCtrl',
-	['$scope', '$log', '$window', '$timeout', '_', 'pwData',
+	['$scope', '$log', '$window', '$timeout', '$_', 'pwData',
 	function($scope, $log, $window, $timeout, $_, $pwData) {
 
 	// Create query model if it doesn't exist

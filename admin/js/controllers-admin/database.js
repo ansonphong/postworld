@@ -17,7 +17,7 @@ postworldAdmin.directive( 'pwAdminDatabase', [ function(){
 }]);
 
 postworldAdmin.controller( 'pwAdminDatabaseCtrl',
-	[ '$scope', '$log', '$window', 'pwData', '_', '$timeout', 
+	[ '$scope', '$log', '$window', 'pwData', '$_', '$timeout', 
 	function ( $scope, $log, $window, $pwData, $_, $timeout ) {
 	
 	///// BUSY /////

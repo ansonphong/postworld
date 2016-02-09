@@ -36,7 +36,7 @@ global $post;
 <script>
 	///// CONTROLLER /////
 	postworldAdmin.controller('pwLayoutMetaboxCtrl',
-		['$scope', 'pwData', '_', '$log',
+		['$scope', 'pwData', '$_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
 			/// LOAD IN DATA SOURCES ///

@@ -35,7 +35,7 @@
 ?>
 <script>
 	postworldAdmin.controller( 'pwFeedsDataCtrl',
-		[ '$scope', '_', '$timeout', 'pwPostOptions',
+		[ '$scope', '$_', '$timeout', 'pwPostOptions',
 		function( $scope, $_, $timeout, $pwPostOptions ){
 		$scope.pwFeeds = <?php echo json_encode( $pwFeeds ); ?>;
 		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;

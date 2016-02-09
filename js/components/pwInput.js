@@ -65,7 +65,7 @@ postworld.directive( 'pwTextarea', [ function($scope){
 }]);
 
 postworld.controller('pwTextareaCtrl',
-	[ "$scope", "$window", "_", "$log", 
+	[ "$scope", "$window", "$_", "$log", 
 	function($scope, $window,  $_, $log ) {
 
 		///// Filter Text Contents /////

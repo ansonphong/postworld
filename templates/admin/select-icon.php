@@ -9,7 +9,7 @@
 <script>
 	// TODO : MAKE MODAL WINDOW FOR SELECTING ICONS, PASS IN DATA
 	postworldAdmin.controller( '<?php echo $controller_id ?>', [
-		'$scope', 'pwIconsets', '$log', '_',
+		'$scope', 'pwIconsets', '$log', '$_',
 		function( $scope, $pwIconsets, $log, $_ ){
 		$scope.customIconOptions = <?php echo json_encode( $icons ) ?>;
 		$scope.iconsets = $pwIconsets.array();

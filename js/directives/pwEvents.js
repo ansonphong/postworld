@@ -15,7 +15,7 @@
  */
 postworld.directive('pwEvent',
 	[
-		'_',
+		'$_',
 		'pwDate',
 		'$log',
 

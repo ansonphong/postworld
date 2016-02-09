@@ -20,7 +20,7 @@
  *
  */
 postworld.directive( 'pwGlobals',
-	[ '$pw', '_', '$log',
+	[ '$pw', '$_', '$log',
 	function( $pw, $_, $log ){
 	return{
 		restrict:"A",
@@ -149,7 +149,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
  * 
  */
 postworld.directive('pwLoadPost',
-	[ '$log', '$timeout', 'pwData', '_',
+	[ '$log', '$timeout', 'pwData', '$_',
 	function( $log, $timeout, $pwData, $_ ) {
 	return {
 		restrict: 'A',
@@ -839,7 +839,7 @@ postworld.directive('pwScrollfix', function( $window, $log, $timeout ) {
 //////////////////// ADMIN ////////////////////
 ////////// TEMPLATES //////////
 postworld.directive( 'pwAdminTemplates',
-	[ '$pw', '_', '$log',
+	[ '$pw', '$_', '$log',
 	function( $pw, $_, $log ){
 	return{
 		scope:{
@@ -855,7 +855,7 @@ postworld.directive( 'pwAdminTemplates',
 
 ////////// SIDEBARS //////////
 postworld.directive( 'pwSidebars',
-	[ '$pw', '_', '$log',
+	[ '$pw', '$_', '$log',
 	function( $pw, $_, $log ){
 	return{
 		scope:{
@@ -885,7 +885,7 @@ postworld.directive( 'pwSidebars',
 	 </pre>
  */
 postworld.directive( 'pwShareLink',
-	[ '$pw', '_', '$log',
+	[ '$pw', '$_', '$log',
 	function( $pw, $_, $log ){
 	return{
 		scope:{
@@ -921,7 +921,7 @@ postworld.directive( 'pwShareLink',
 }]);
 
 
-postworld.directive('pwDataGet', [ '$log', '_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
+postworld.directive('pwDataGet', [ '$log', '$_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
 	return{
 		scope:{
 			pwDataGet:"@",

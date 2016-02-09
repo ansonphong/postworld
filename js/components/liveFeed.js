@@ -69,7 +69,7 @@ postworld.directive('liveFeed', function($log) {
 });
 
 postworld.controller('pwFeedController',
-	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_', '$window', '$pw',
+	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '$_', '$window', '$pw',
 	function( $scope, $rootScope, $location, $log, $attrs, $timeout, $pwData, $route, $_, $window, $pw ) {
 	
 	// Initialize

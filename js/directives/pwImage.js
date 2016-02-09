@@ -69,7 +69,7 @@ postworld.directive( 'pwImage',
  *
  */
 postworld.directive('pwImageSrc',
-	[ '$pw', '$log', '_', '$window', '$filter',
+	[ '$pw', '$log', '$_', '$window', '$filter',
 	function( $pw, $log, $_, $window, $filter ) {
 	return {
 		restrict:'A',
@@ -190,7 +190,7 @@ postworld.directive('pwImageSrc',
  *
  */
 postworld.directive('pwSmartImage',
-	[ '$pw', '$log', '_', '$window', '$filter', 'pwImages', '$timeout',
+	[ '$pw', '$log', '$_', '$window', '$filter', 'pwImages', '$timeout',
 	function( $pw, $log, $_, $window, $filter, $pwImages, $timeout ) {
 	return {
 		restrict:'A',
@@ -367,7 +367,7 @@ postworld.directive('pwSmartImage',
  *
  */
 postworld.directive('pwParallax',
-	['$rootScope', '$log','$timeout','$window', '_', '$pw',
+	['$rootScope', '$log','$timeout','$window', '$_', '$pw',
 	function($rootScope, $log, $timeout, $window, $_, $pw){
 	return{
 		restrict:'A',
@@ -603,7 +603,7 @@ postworld.directive('pwParallax',
  *
  */
 postworld.directive('pwHeight',
-	['$rootScope', '$log','$timeout','$window', '_', '$pw',
+	['$rootScope', '$log','$timeout','$window', '$_', '$pw',
 	function($rootScope, $log, $timeout, $window, $_, $pw){
 	return{
 		restrict:'A',
