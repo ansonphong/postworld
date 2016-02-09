@@ -1,5 +1,9 @@
 # Postworld // Changelog
 
+### Version 1.50
+- **Breaking Changes** - Comments Refactor
+    + Changed JS `var load_comments` to `pw.comments`
+
 ### Version 1.49
 - **Breaking Changes**
     + `pwOptionsData` service/factory removed

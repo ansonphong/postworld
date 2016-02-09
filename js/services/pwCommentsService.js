@@ -27,30 +27,25 @@ LIMIT 0 , 30
  *   
  */
 
-postworld.factory('pwCommentsService', function ($resource, $q, $log,pwData) {	  
+postworld.factory('pwCommentsService', function( $resource, $q, $log, pwData, $window ) {	  
 	// Check feed_settigns to confirm we have valid settings
 	var validSettings = true;
+
 	// Set feed_settings and feed_data in pwData Singleton
-	var comments_settings = window['load_comments'];
-	// TODO check mandatory fields
-	if (comments_settings == null) {
-		validSettings = false;
-		$log.error('pwCommentsService() no valid comments_settings defined');
-	}
+	var commentsSettings = $window.pw.comments;
+	var commentsData = {};
 	
-	var comments_data = {};
-	
-	$log.debug('pwCommentsService() Registering comments_settings', comments_settings);
+	$log.debug('pwCommentsService() Registering commentsSettings', commentsSettings);
 		
     return {
-    	comments_settings: comments_settings,
+    	commentsSettings: commentsSettings,
     	comments_data: comments_data,
 		pw_get_comment: function(args) {
 			if (!args.comment_id) throw {message:'pw_get_comment - no id defined'};
 			return pwData.wpAjax('pw_get_comment',args);
 		},
 		pw_get_comments: function(feed) {
-			var settings = this.comments_settings[feed];
+			var settings = this.commentsSettings[feed];
 			if (!settings) throw {message:'comments settings not initialized properly'};
 			if (!settings.query) throw {message:'query for comments settings is not initialized properly'};
 			$log.debug('pwCommentsService.pw_get_comments',settings);

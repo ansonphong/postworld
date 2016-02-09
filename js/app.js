@@ -36,6 +36,7 @@ pw.feeds = {};
 pw.widgets = {};
 pw.admin = {};
 pw.embeds = {};
+pw.comments = {};
 
 // Add Standard Modules
 pw.angularModules = pw.angularModules.concat([
