@@ -1,18 +1,18 @@
 /**
  * @ngdoc service
- * @name postworld.pwData
+ * @name postworld.$pwData
  * @requires $resource
  * @requires $q
  * @todo Rename to $pwData
  */
-postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$pw', '$_',
+postworld.factory('$pwData', [ '$resource', '$http', '$q', '$log', '$window', '$pw', '$_',
 	function ( $resource, $http, $q, $log, $window, $pw, $_ ) {	  
 	// Used for Wordpress Security http://codex.wordpress.org/Glossary#Nonce
 	var nonce = 0;
 	// Check feed_settigns to confirm we have valid settings
 	var validSettings = true;
 	
-	var	getTemplate = function( pwData, meta ) {
+	var	getTemplate = function( $pwData, meta ) {
 		var template = false;
 
 		// Localize Meta
@@ -102,7 +102,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		/**
 		* @ngdoc method
 		* @name postworld.service#wpAjax
-		* @methodOf postworld.pwData
+		* @methodOf postworld.$pwData
 		* @description A simplified wrapper for doing easy AJAX calls to Wordpress PHP functions.
 		* @param {string} fname The name of the server function.
 		* @param {string|array|object} args Arguments for the function.
@@ -255,7 +255,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		/**
 		* @ngdoc method
 		* @name postworld.service#getTemplate
-		* @methodOf postworld.pwData
+		* @methodOf postworld.$pwData
 		* @description Retreives the URL of a requested template.
 		* @param {object} meta
 		*	Post type key is optional. 
@@ -574,7 +574,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 		/**
 		* @ngdoc method
 		* @name postworld.service#setWpUsermeta
-		* @methodOf postworld.pwData
+		* @methodOf postworld.$pwData
 		* @description Sets user meta values in the WordPress database.
 		* @param {object} args See example.
 		*	
@@ -587,7 +587,7 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 			sub_key: 'key.subkey',
 			value:'Hello'
 		};
-		pwData.setWpUsermeta(args).then({
+		$pwData.setWpUsermeta(args).then({
 			function(response){
 				// Success
 			},
@@ -657,9 +657,9 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 				feed.posts = newPosts;
 			}
 
-			$log.debug( "pwData.insertFeed : ID : " + feedId, feed );
+			$log.debug( "$pwData.insertFeed : ID : " + feedId, feed );
 
-			// Add it to the central pwData service
+			// Add it to the central $pwData service
 			this.feeds[feedId] = feed;
 			return true;
 		},
@@ -678,5 +678,5 @@ postworld.factory('pwData', [ '$resource', '$http', '$q', '$log', '$window', '$p
 
 		
 
-   }; // END OF pwData return value
+   }; // END OF $pwData return value
 }]);

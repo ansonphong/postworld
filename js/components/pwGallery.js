@@ -1,6 +1,6 @@
 ///// GALLERY VIEWER /////
 postworld.directive( 'pwGalleryViewer',
-	[ 'pwData', '$pw', '$log', '$_', '$document', '$timeout', 'pwPosts',
+	[ '$pwData', '$pw', '$log', '$_', '$document', '$timeout', 'pwPosts',
 	function( $pwData, $pw, $log, $_, $document, $timeout, $pwPosts ){
 	return {
 		restrict: 'AE',
@@ -355,7 +355,7 @@ postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
 
 
 postworld.controller( 'pwInfiniteGalleryCtrl',
-	[ '$scope', '$log', '$_', '$pw', 'pwData', 'pwPosts',
+	[ '$scope', '$log', '$_', '$pw', '$pwData', 'pwPosts',
 	function( $scope, $log, $_, $pw, $pwData, $pwPosts ){
 
 	$scope.infiniteGallery = {
@@ -408,7 +408,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 			var galleryInstance = 'gallery-' + $scope.post.ID;
 			// Set instance name into the scope so it's accessible in the DOM
 			$scope.infiniteGallery.instance = galleryInstance;
-			// Insert the feed into the pwData.feeds
+			// Insert the feed into the $pwData.feeds
 			$pwData.insertFeed( galleryInstance, { posts: $scope.infiniteGallery.posts } );
 			// Log in Console
 			$log.debug( "pwInfiniteGallery : INSERTED FEED : " + galleryInstance, $scope.infiniteGallery.posts );

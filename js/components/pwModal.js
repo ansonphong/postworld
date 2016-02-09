@@ -1,6 +1,6 @@
 /*////////////// ------- SERVICE ------- //////////////*/  
 
-postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$uibModal', 'pwData', '$_', '$pw',
+postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$uibModal', '$pwData', '$_', '$pw',
 	function ( $rootScope, $log, $location, $uibModal, $pwData, $_, $pw ) {
 	return{
 
@@ -166,7 +166,7 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$uibModal', '
 
 ////////// MODAL INSTANCE CONTROL //////////
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '$_', 'pwPosts', '$browser', '$modalStack', '$pw',  // 'pwQuickEdit',
+	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', '$pwData', '$timeout', '$_', 'pwPosts', '$browser', '$modalStack', '$pw',  // 'pwQuickEdit',
 	function( $scope, $rootScope, $document, $window, $location, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts, $browser, $modalStack, $pw ) { // , $pwQuickEdit
 
 	// $modalInstance - switch modal template
@@ -408,7 +408,7 @@ postworld.controller('pwModalInstanceCtrl',
 	}; 
 
 	// WATCH : FOR TRASHED
-	// TODO : Set Parent post_status = trash via pwData.feeds
+	// TODO : Set Parent post_status = trash via $pwData.feeds
 	// Watch on the value of post_status
 	$scope.$watch( "post.post_status", function (){
 		if( $_.getObj( $scope, 'post.post_status' ) == 'trash'  )
@@ -514,8 +514,8 @@ postworld.directive('pwOpenModal',
 
 
 postworld.controller('mediaModalInstanceCtrl',
-    [ '$scope', '$sce', '$modalInstance', 'meta', 'pwData', '$pw',
-    function( $scope, $sce, $modalInstance, meta, pwData, $pw ) { 
+    [ '$scope', '$sce', '$modalInstance', 'meta', '$pwData', '$pw',
+    function( $scope, $sce, $modalInstance, meta, $pwData, $pw ) { 
 
 
     // Import the passed post object into the Modal Scope
@@ -534,7 +534,7 @@ postworld.controller('mediaModalInstanceCtrl',
     var args = { "link_url": link_url };
 
     // MEDIA GET
-    pwData.wpAjax('ajax_oembed_get', args ).then(
+    $pwData.wpAjax('ajax_oembed_get', args ).then(
         // Success
         function(response) {    
             $scope.oEmbed = $sce.trustAsHtml( response.data );

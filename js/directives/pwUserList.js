@@ -35,7 +35,7 @@ postworld.directive( 'pwUserList', [ function($scope){
 }]);
 
 postworld.controller( 'pwUserListCtrl',
-	[ '$scope', '$window', '$timeout', 'pwData', '$log',
+	[ '$scope', '$window', '$timeout', '$pwData', '$log',
 	function( $scope, $window, $timeout, $pwData, $log ) {
 
 	//$scope.$parent.attend_event_users = {'test':true}; 

@@ -17,7 +17,7 @@ postworldAdmin.directive( 'pwAdminBackgrounds', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminBackgroundsCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'pwData', '$_', 'pwPostOptions', '$pw', 
+	[ '$scope', '$log', '$window', '$parse', '$pwData', '$_', 'pwPostOptions', '$pw', 
 	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions, $pw ) {
 	
 	$scope.view = 'settings';

@@ -15,7 +15,7 @@ postworld.directive( 'pwUserAutocomplete', [ '$log', '$_', function( $log, $_ ){
 }]);
 
 postworld.controller( 'UserAutocompleteController',
-	[ '$scope', 'pwData', '$log', '$_',
+	[ '$scope', '$pwData', '$log', '$_',
 	function( $scope, $pwData, $log, $_ ){
 
 		$scope.queryList = function( searchTerm ) {
@@ -87,7 +87,7 @@ postworld.controller( 'UserAutocompleteController',
 			|___/                                                |_|                   
 //////////////////////////// TAGS AUTOCOMPLETE CONTROLLER ////////////////////////////*/
 
-postworld.directive('pwInputTags', [ '$filter', 'pwData', '$log', '$_', '$timeout',
+postworld.directive('pwInputTags', [ '$filter', '$pwData', '$log', '$_', '$timeout',
 	function( $filter, $pwData, $log, $_, $timeout ){
 	return {
 		restrict: 'AE',

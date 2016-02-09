@@ -1,5 +1,5 @@
 postworldAdmin.directive( 'pwSaveOption',
-	['$window', '$timeout', '$parse', '$log', 'pwData', '$_',
+	['$window', '$timeout', '$parse', '$log', '$pwData', '$_',
 	function($window, $timeout, $parse, $log, $pwData, $_) {
 
 	return {
@@ -38,7 +38,7 @@ postworldAdmin.directive( 'pwSaveOption',
 				$pwData.saveOption( vars ).then(
 					// Success
 					function(response) {
-						$log.debug('pwData.saveOption : RESPONSE : ', response);
+						$log.debug('$pwData.saveOption : RESPONSE : ', response);
 
 						/* ///// NOT REQUIRED /////
 						// Get the object value from the response

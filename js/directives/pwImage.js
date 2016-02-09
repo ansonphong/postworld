@@ -8,7 +8,7 @@
 'use strict';
 
 postworld.directive( 'pwImage',
-	[ '$window', '$timeout', 'pwData', '$log',
+	[ '$window', '$timeout', '$pwData', '$log',
 	function( $window, $timeout, $pwData, $log ) {
 	return {
 		restrict: 'AE',

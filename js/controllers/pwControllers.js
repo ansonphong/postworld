@@ -15,7 +15,7 @@
  * @description
  * Provides service functions to post templates.
  */
-postworld.directive( 'pwPost', [ function( $scope ){
+postworld.directive( 'pwPost', function(){
 	return {
 		restrict: 'AE',
 		controller: 'postController',
@@ -28,11 +28,11 @@ postworld.directive( 'pwPost', [ function( $scope ){
 
 		}
 	};
-}]);
+});
 
 
 postworld.controller('postController',
-	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "pwEditPostFilters", "$_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", "$compile", "pwTemplatePartials",
+	[ "$scope", "$rootScope", "$window", "$sce", "$pwData", "pwEditPostFilters", "$_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", "$compile", "pwTemplatePartials",
 	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout, $compile, $pwTemplatePartials ) {
 
 
@@ -256,7 +256,7 @@ postworld.directive( 'pwFeedPost', [ function( $scope ){
 }]);
 
 postworld.controller('pwFeedPostCtrl',
-	[ "$scope", "$rootScope", "$window", "$sce", "pwData", "$_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", 
+	[ "$scope", "$rootScope", "$window", "$sce", "$pwData", "$_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", 
 	function($scope, $rootScope, $window, $sce, $pwData, $_, $log, $pwImages, $pw, $pwPosts, $timeout ) {
 
 	///// ACTION : POST UPDATED /////

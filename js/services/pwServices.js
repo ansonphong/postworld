@@ -732,7 +732,7 @@ postworld.factory('$_',
   |_|      |_|                                   */
 
 postworld.factory('pwPosts',
-	[ '$rootScope', '$log','$window', 'pwData', '$_', '$pw',
+	[ '$rootScope', '$log','$window', '$pwData', '$_', '$pw',
 	function ( $rootScope, $log, $window, $pwData, $_, $pw ) {  
 
 	///// FACTORY DECLARATIONS /////
@@ -1028,7 +1028,7 @@ postworld.factory('pwPosts',
    | |  __/ | | | | | |_) | | (_| | ||  __/ |  __/ (_| | |  | |_| | (_| | \__ \
    |_|\___|_| |_| |_| .__/|_|\__,_|\__\___| |_|   \__,_|_|   \__|_|\__,_|_|___/ */
 
-postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '$_', '$timeout', '$rootScope',
+postworld.factory( 'pwTemplatePartials', [ '$pw', '$pwData', '$log', '$_', '$timeout', '$rootScope',
 	function( $pw, $pwData, $log, $_, $timeout, $rootScope ){
 
 	var evalCallbacks = function( vars ){
@@ -1102,7 +1102,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '$_', '$time
 						// Get the response data
 						var partialHtml = response.data;
 
-						// Cache the data in the pwData partials cache path
+						// Cache the data in the $pwData partials cache path
 						$pwData.partials = $_.setObj( $pwData.partials, cachePath, partialHtml );
 
 						// Evaluate Callbacks
@@ -1315,7 +1315,7 @@ postworld.factory('pwImages',
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
 postworld.service('pwPostOptions',
-		[ '$window','$log', 'pwData', '$_', '$pw',
+		[ '$window','$log', '$pwData', '$_', '$pw',
 		function( $window, $log, $pwData, $_, $pw ) {
 
 	return{
@@ -1689,8 +1689,8 @@ postworld.service('pwRoleAccess',
 ////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal', 'pwData', '$pw', '$_',
-	function ( $rootScope, $log, $location, $uibModal, pwData, $pw, $_ ) {
+postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal', '$pwData', '$pw', '$_',
+	function ( $rootScope, $log, $location, $uibModal, $pwData, $pw, $_ ) {
 	return{
 		openQuickEdit : function( meta ){
 			
@@ -1701,7 +1701,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
 			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
 
 			var modalInstance = $uibModal.open({
-			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
+			  templateUrl: $pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
 			  controller: 'quickEditInstanceCtrl',
 			  windowClass: 'quick_edit',
 			  resolve: {
@@ -1725,7 +1725,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
 
 		trashPost : function ( post_id, $scope ){
 			if ( window.confirm("Are you sure you want to trash : \n" + $scope.post.post_title) ) {
-				pwData.pw_trash_post( post_id ).then(
+				$pwData.pw_trash_post( post_id ).then(
 					// Success
 					function(response) {
 						if (response.status==200) {

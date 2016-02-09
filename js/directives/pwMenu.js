@@ -24,7 +24,7 @@ postworld.directive( 'pwMenus', [ function($scope){
 }]);
 
 postworld.controller( 'pwMenusCtrl',
-	[ '$scope', '$window', '$timeout', 'pwData', '$log', '$_', '$pw',
+	[ '$scope', '$window', '$timeout', '$pwData', '$log', '$_', '$pw',
 	function( $scope, $window, $timeout, $pwData, $log, $_, $pw ) {
 
 	$scope.getMenus = function(){

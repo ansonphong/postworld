@@ -9,7 +9,7 @@
 //////////////////////// INPUT SEARCH //////////////////////*/
 
 postworld.controller('inputSearch',
-    ['$scope','$window','$timeout','pwData',
+    ['$scope','$window','$timeout','$pwData',
     function($scope, $window, $timeout, $pwData) {
     $scope.input = {};
     $scope.submit = function(){
@@ -76,7 +76,7 @@ postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilt
 
 
 postworld.directive('pwSelectUser',
-    [ '$log', '$_', '$pw', 'pwData', function( $log, $_, $pw, $pwData ){
+    [ '$log', '$_', '$pw', '$pwData', function( $log, $_, $pw, $pwData ){
 
         return{
             link: function( $scope, element, attrs ){

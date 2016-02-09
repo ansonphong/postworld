@@ -101,8 +101,8 @@ postworld.directive('pwComments', function() {
 });
 
 postworld.controller('pwCommentsTreeController',
-	[ '$scope', '$timeout', '$pwComments', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '$_',
-	function ($scope, $timeout, $pwComments, $rootScope, $sce, $attrs, pwData, $log, $window, $pw, $_ ) {
+	[ '$scope', '$timeout', '$pwComments', '$rootScope', '$sce', '$attrs', '$pwData', '$log', '$window', '$pw', '$_',
+	function ($scope, $timeout, $pwComments, $rootScope, $sce, $attrs, $pwData, $log, $window, $pw, $_ ) {
 		$scope.json = '';
 
 		if ( $pw.user  )
@@ -144,7 +144,7 @@ postworld.controller('pwCommentsTreeController',
 		// Get Templates
 		if (settings.view) {
 			var template = 'comments-'+settings.view;
-			$scope.templateUrl = pwData.pw_get_template( { subdir: 'comments', view: template } );
+			$scope.templateUrl = $pwData.pw_get_template( { subdir: 'comments', view: template } );
 			$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
 		}
 		else {
@@ -254,7 +254,7 @@ postworld.controller('pwCommentsTreeController',
 		child.voteStatus = "busy";
 
 		// AJAX Call 
-		pwData.setCommentPoints ( args ).then(
+		$pwData.setCommentPoints ( args ).then(
 			// ON : SUCCESS
 			function(response) {    
 				//alert( JSON.stringify(response.data) );

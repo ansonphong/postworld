@@ -74,7 +74,7 @@ postworld.directive( 'flashCanvas',
 }]);
 
 postworld.controller('flashCanvasCtrl',
-	['$scope', '$rootScope', '$window', '$timeout', '$_', 'pwData', '$log', 'flashData', '$pw',
+	['$scope', '$rootScope', '$window', '$timeout', '$_', '$pwData', '$log', 'flashData', '$pw',
 	function($scope, $rootScope, $window, $timeout, $_, $pwData, $log, $flashData, $pw ) {
 	   
 	$scope.loadFlashScript = function( file ){

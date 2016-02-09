@@ -104,7 +104,7 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 }]);
 
 postworld.controller( 'wpMediaLibraryCtrl',
-	[ '$scope', '$rootScope', '$window', '$timeout', '$log', 'pwData', '$_',
+	[ '$scope', '$rootScope', '$window', '$timeout', '$log', '$pwData', '$_',
 	function( $scope, $rootScope, $window, $timeout, $log, $pwData, $_ ) {
 
 	$scope.mediaLoading = false;

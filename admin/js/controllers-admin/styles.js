@@ -17,7 +17,7 @@ postworldAdmin.directive( 'pwAdminStyle', [ function(){
     };
 }]);
 
-postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
+postworldAdmin.directive('pwAdminStyleInput', function( $pwData, $log){
 	return {
 		restrict: 'A',
 		scope: {
@@ -31,7 +31,7 @@ postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
 			//$log.debug( 'pwAdminStyleInput : inputObj', $scope.inputObj );
 			//$log.debug( 'pwAdminStyleInput : inputModel', $scope.inputModel );
 
-			var templateUrl = pwData.getTemplate({
+			var templateUrl = $pwData.getTemplate({
 				subdir:'admin',
 				view:'style-input-' + $scope.inputObj.input
 			});

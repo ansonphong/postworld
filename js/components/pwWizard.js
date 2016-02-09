@@ -26,7 +26,7 @@ postworld.directive( 'pwWizard', [ function($scope){
 }]);
 
 postworld.controller('pwWizardCtrl',
-	['$scope', '$rootScope', '$window', '$timeout', '$_', 'pwData', '$log','$modal','pwWizardData',
+	['$scope', '$rootScope', '$window', '$timeout', '$_', '$pwData', '$log','$modal','pwWizardData',
 	function($scope, $rootScope, $window, $timeout, $_, $pwData, $log, $modal, $pwWizardData) {
 
 	// Localize the current view from PW Globals

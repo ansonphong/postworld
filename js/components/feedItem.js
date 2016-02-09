@@ -16,7 +16,7 @@ postworld.directive('feedItem', [ '$timeout', '$log', '$_', function( $timeout, 
 }]);
 
 postworld.controller('pwFeedItemCtrl',
-	[ '$scope', '$location', '$log', 'pwData', '$attrs', '$_',
+	[ '$scope', '$location', '$log', '$pwData', '$attrs', '$_',
 	function( $scope, $location, $log, $pwData, $attrs, $_ ) {
 		
 	///// INIT /////

@@ -15,7 +15,7 @@
  */
 
 postworld.directive( 'pwBackground',
- 	[ '$window', '$timeout', 'pwData', 'pwPosts', '$log', '$_',
+ 	[ '$window', '$timeout', '$pwData', 'pwPosts', '$log', '$_',
  	function( $window, $timeout, $pwData, $pwPosts, $log, $_ ){
 	return {
 		restrict: 'AE',
@@ -212,6 +212,6 @@ postworld.directive( 'pwBackground',
 }]);
 /*
 postworld.controller( 'pwBackgroundCtrl',
-	[ '$scope', '$window', '$timeout', 'pwData', '$log', '$_',
+	[ '$scope', '$window', '$timeout', '$pwData', '$log', '$_',
 	function( $scope, $window, $timeout, $pwData, $log, $_ ) {
 }]);*/

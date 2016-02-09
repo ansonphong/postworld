@@ -17,7 +17,7 @@ postworldAdmin.directive( 'pwAdminTermFeeds', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminTermFeedsCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'pwData', '$_', 'pwPostOptions',
+	[ '$scope', '$log', '$window', '$parse', '$pwData', '$_', 'pwPostOptions',
 	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.view = 'settings';
@@ -49,8 +49,8 @@ postworldAdmin.controller('pwAdminTermFeedsCtrl',
 			},
 
 			//blocks:{},
-			feed_template: 'feed-list',	// Get HTML feeds from pwData
-			aux_template: 'seo-list',		// Get PHP feeds from pwData
+			feed_template: 'feed-list',	// Get HTML feeds from $pwData
+			aux_template: 'seo-list',		// Get PHP feeds from $pwData
 		};
 
 		$scope.pwTermFeeds.push( newTermFeed );

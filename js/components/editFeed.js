@@ -1,7 +1,7 @@
 'use strict';
 
 postworld.directive('editFeed',
-	[ '$rootScope', '$log', 'pwData', '$_', '$pw', '$timeout', 'pwPosts',
+	[ '$rootScope', '$log', '$pwData', '$_', '$pw', '$timeout', 'pwPosts',
 	function( $rootScope, $log, $pwData, $_, $pw, $timeout, $pwPosts ) {
 	return {
 		restrict: 'EA',
@@ -294,7 +294,7 @@ postworld.directive('editFeed',
 
 
 postworld.controller('pwFilterFeedController',
-	function pwFilterFeedController($scope, $rootScope, $location, $log, pwData, $attrs, $window, pwPostOptions) {    	
+	function pwFilterFeedController($scope, $rootScope, $location, $log, $pwData, $attrs, $window, pwPostOptions) {    	
 		var firstTime = true;
 		// Set Panel Template
 
@@ -311,7 +311,7 @@ postworld.controller('pwFilterFeedController',
 			return;
 		}
 
-		//$scope.feed = pwData.feeds[$scope.feedId];
+		//$scope.feed = $pwData.feeds[$scope.feedId];
 
 		// DEFAULTS
 		//$scope.feed.query.author_name = "";
@@ -322,13 +322,13 @@ postworld.controller('pwFilterFeedController',
 
 		// Get Default View Name
 		/*
-		if (pwData.feeds[FeedID].panels[$attrs.filterFeed])
-				template = pwData.feeds[FeedID].panels[$attrs.filterFeed];			   	
+		if( $pwData.feeds[FeedID].panels[$attrs.filterFeed])
+				template = $pwData.feeds[FeedID].panels[$attrs.filterFeed];			   	
 		*/
 
-		//$scope.templateUrl = pwData.pw_get_template( { subdir: 'feed-filters', view: $attrs.filterFeed } );
+		//$scope.templateUrl = $pwData.pw_get_template( { subdir: 'feed-filters', view: $attrs.filterFeed } );
 		//$log.debug( 'pwFilterFeedController : templateUrl : ', $scope.templateUrl );
-		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl,pwData.feeds);
+		// $log.debug('pwFilterFeedController() Set Initial Panel Template',FeedID, template, $scope.templateUrl, $pwData.feeds);
 
 
 		// UPDATE AUTHOR NAME FROM AUTOCOMPLETE
@@ -412,7 +412,7 @@ postworld.controller('pwFilterFeedController',
 	}
 );
 
-postworld.directive('registerFeed', function($log, pwData) {
+postworld.directive('registerFeed', function($log, $pwData) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -421,7 +421,7 @@ postworld.directive('registerFeed', function($log, pwData) {
 });
 
 postworld.controller('pwRegisterFeedController',
-	function ($scope, $location, $log, pwData, $attrs) {
+	function ($scope, $location, $log, $pwData, $attrs) {
 		$scope.args= {};
 		$scope.args.write_cache = false;
 		$scope.args.feed_id = '';
@@ -429,8 +429,8 @@ postworld.controller('pwRegisterFeedController',
 			$scope.args.feed_query = $scope.$parent.feed.query;
 			$log.debug('pwRegisterFeedController.pwRegisterFeed For',$scope.args);
 			// TODO set Nonce from UI
-			pwData.setNonce(78);
-			pwData.pw_register_feed($scope.args).then(
+			$pwData.setNonce(78);
+			$pwData.pw_register_feed($scope.args).then(
 				// Success
 				function(response) {
 					if (response.status === undefined) {

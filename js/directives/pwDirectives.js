@@ -56,7 +56,7 @@ postworld.directive( 'pwGlobals',
 	<pre><div pw-include="galleries/gallery-frame" include-post="post"></div></pre>
  *
  */
-postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
+postworld.directive('pwInclude', function($log, $timeout, $pwData, $rootScope) {
 	return {
 		restrict: 'EA',
 		template: '<div ng-include="includeUrl" class="pw-include" ng-class="includeClass"></div>',
@@ -87,7 +87,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
 				$timeout( function(){
 					if($scope.includeEnable !== false &&
 						getIncludeEval() !== false )
-						$scope.includeUrl = pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
+						$scope.includeUrl = $pwData.pw_get_template( { subdir: parts[0], view: parts[1] } );
 					else{
 						$scope.includeUrl = '';
 					}
@@ -149,7 +149,7 @@ postworld.directive('pwInclude', function($log, $timeout, pwData, $rootScope) {
  * 
  */
 postworld.directive('pwLoadPost',
-	[ '$log', '$timeout', 'pwData', '$_',
+	[ '$log', '$timeout', '$pwData', '$_',
 	function( $log, $timeout, $pwData, $_ ) {
 	return {
 		restrict: 'A',
@@ -921,13 +921,13 @@ postworld.directive( 'pwShareLink',
 }]);
 
 
-postworld.directive('pwDataGet', [ '$log', '$_', 'pwData', '$pw', function( $log, $_, $pwData, $pw ){
+postworld.directive('pwDataGet', [ '$log', '$_', '$pwData', '$pw', function( $log, $_, $pwData, $pw ){
 	return{
 		scope:{
 			pwDataGet:"@",
 		},
 		link: function( $scope, element, attrs ){
-			$log.debug("ACTIVATE : pwDataGet", element);
+			$log.debug("ACTIVATE : $pwDataGet", element);
 			element.html( JSON.stringify( $_.get( $pwData, $scope.pwDataGet ) ) );
 		}
 

@@ -40,7 +40,7 @@ global $post;
 <script>
 	///// CONTROLLER /////
 	postworldAdmin.controller('pwPostParentMetaboxCtrl',
-		['$scope', 'pwData', '$_', '$log',
+		['$scope', '$pwData', '$_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
 			// This is the post object which is saved

@@ -7,13 +7,13 @@
 
 ////////// -------- MEDIA EMBED CONTROLLER -------- //////////*/   
 /*
-var mediaEmbed = function ( $scope, $sce, pwData ) {
+var mediaEmbed = function ( $scope, $sce, $pwData ) {
 
 	$scope.oEmbed = "";
 	$scope.oEmbedGet = function (link_url) {
 		var args = { "link_url":link_url };
 		var oEmbed = "";
-		pwData.wpAjax('ajax_oembed_get', args ).then(
+		$pwData.wpAjax('ajax_oembed_get', args ).then(
 			// Success
 			function(response) {    
 				$scope.oEmbed = $sce.trustAsHtml(response.data);
@@ -36,7 +36,7 @@ var mediaEmbed = function ( $scope, $sce, pwData ) {
 /*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
 
 postworld.directive( 'oEmbed',
-	[ '$sce', '$log', '$timeout', 'pwData', '$_',
+	[ '$sce', '$log', '$timeout', '$pwData', '$_',
 	function( $sce, $log, $timeout, $pwData, $_ ){
 
 	return { 
@@ -101,7 +101,7 @@ postworld.directive( 'oEmbed',
 }]);
 
 postworld.controller('pwOEmbedNewCtrl',
-	[ '$scope', '$attrs', '$sce', 'pwData', '$log', '$pw', 'pwPosts', '$_', '$timeout', '$rootScope', 'oEmbedServe',
+	[ '$scope', '$attrs', '$sce', '$pwData', '$log', '$pw', 'pwPosts', '$_', '$timeout', '$rootScope', 'oEmbedServe',
 	function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout, $rootScope, $oEmbedServe ) {
 
 		$scope.getAutoplay = function(){
@@ -151,11 +151,11 @@ postworld.controller('pwOEmbedNewCtrl',
 
 /*////////// ------------ O-EMBED SERVICE ------------ //////////*/  
 postworld.factory( 'oEmbedServe',
-	[ '$log', '$sce', '$_', 'pwData', '$timeout', '$rootScope',
+	[ '$log', '$sce', '$_', '$pwData', '$timeout', '$rootScope',
 	function( $log, $sce, $_, $pwData, $timeout, $rootScope ){
 
 	var cacheEmbed = function( embedId, embedCode ){
-		// Cache the embed code in the pwData service 
+		// Cache the embed code in the $pwData service 
 		$pwData['embeds'][ embedId ] = embedCode;
 	};
 
@@ -184,7 +184,7 @@ postworld.factory( 'oEmbedServe',
 				if ( embedCode == false )
 					return false;
 				
-				// Cache the embed code in the pwData service 
+				// Cache the embed code in the $pwData service 
 				cacheEmbed( embedId, embedCode );
 
 			},

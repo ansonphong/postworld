@@ -25,8 +25,8 @@ postworld.directive( 'pwPostActions',
 }]);
 
 postworld.controller('postActions',
-    [ "$scope", "pwData", "$_",
-    function($scope, pwData, $_ ) {
+    [ "$scope", "$pwData", "$_",
+    function($scope, $pwData, $_ ) {
 
     $scope.$watch( "post.viewer",
         function (){
@@ -76,7 +76,7 @@ postworld.controller('postActions',
             "post_id" : $scope.post.ID,
         };
         // AJAX Call 
-        pwData.setPostRelationship( args ).then(
+        $pwData.setPostRelationship( args ).then(
             // ON : SUCCESS
             function(response) {    
                 //SET FAVORITE
@@ -131,8 +131,8 @@ postworld.directive( 'pwPostVote', [ function($scope){
 }]);
 
 postworld.controller('postVote',
-    [ '$window', '$rootScope', '$scope', '$log', 'pwData',
-    function( $window, $rootScope, $scope, $log, pwData ) {
+    [ '$window', '$rootScope', '$scope', '$log', '$pwData',
+    function( $window, $rootScope, $scope, $log, $pwData ) {
 
 
     // SWITCH CSS CLASSES BASED ON VOTE
@@ -180,7 +180,7 @@ postworld.controller('postVote',
 
         // AJAX Call 
         $log.debug('pwPostVote : VOTE SUBMIT : ', vars );
-        pwData.setPostPoints ( vars ).then(
+        $pwData.setPostPoints ( vars ).then(
             // ON : SUCCESS
             function(response) {
                 // RESPONSE.DATA FORMAT : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
