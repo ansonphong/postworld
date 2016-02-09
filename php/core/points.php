@@ -572,10 +572,10 @@ function pw_insert_comment_points( $comment_id, $user_id, $points ){
 
 	global $wpdb;
 
-	pw_log('pw_insert_comment_points');
-	pw_log('pw_insert_comment_points : comment_id :', $comment_id);
-	pw_log('pw_insert_comment_points : user_id :', $user_id);
-	pw_log('pw_insert_comment_points : points :', $points);
+	//pw_log('pw_insert_comment_points');
+	//pw_log('pw_insert_comment_points : comment_id :', $comment_id);
+	//pw_log('pw_insert_comment_points : user_id :', $user_id);
+	//pw_log('pw_insert_comment_points : points :', $points);
 
 	$comment_post_id = pw_get_comment_post_id( $comment_id );
 	$comment_author_id = pw_get_comment_author_id( $comment_id );

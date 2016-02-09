@@ -87,7 +87,7 @@ function pw_set_image_memory_limit( $limit ){
 	global $pw;
 	$options = $pw['site_options'];
 	$image_memory_limit = _get( $options, 'memory.image_memory_limit' );
-	pw_log('image_memory_limit', $image_memory_limit);
+	//pw_log('image_memory_limit', $image_memory_limit);
 	return $image_memory_limit;
 }
 

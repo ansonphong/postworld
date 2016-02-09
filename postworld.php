@@ -370,4 +370,3 @@ add_theme_support( 'post-thumbnails' );
 //To get user id from wordpress
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 
-?>

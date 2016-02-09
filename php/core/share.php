@@ -19,7 +19,7 @@ function pw_share_watch(){
 			pw_set_share( $user_id, $post_id );
 			// Redirect browser to the post's permalink
 			$permalink = get_permalink( $post_id );
-			pw_log($permalink);
+			//pw_log($permalink);
 			wp_redirect( $permalink ); //get_site_url()
 		}
 	}

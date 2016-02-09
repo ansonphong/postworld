@@ -1,5 +1,4 @@
 <?php 
-
 /**
  * Runs a WordPress standard query on the input query
  * Then returns the requested Postworld fields.
@@ -148,6 +147,7 @@ class PW_Query extends WP_Query {
 
 		///// event_after /////
 		if(array_key_exists('event_after',  $this->query_vars)){
+			//pw_log( 'PW_Query : event_after', $this->query_vars['event_after'] );
 			// all events with event_start after this
 			$event_after = $this->query_vars['event_after'];
 
@@ -1857,4 +1857,31 @@ function pw_new_get_comments($args=''){
 	$query = new PW_COMMENTS;
 	return $query->query( $args );
 }
-?>
+
+
+
+
+
+
+
+
+/*
+add_filter( 'posts_where', 'pw_theme_posts_where' );
+function pw_theme_posts_where( $where ){
+	pw_log( 'WHERE', $where );
+	return $where;
+}
+add_filter( 'posts_join', 'pw_theme_posts_join' );
+function pw_theme_posts_join( $join ){
+	pw_log( 'JOIN', $join );
+	return $join;
+}
+*/
+// FILTER : posts_orderby : ORDERBY
+// FILTER : posts_fields : SELECT
+// FILTER : posts_clauses : ALL CLAUSES **!!
+// FILTER : posts_results : POSTS AFTER QUERYING
+// @todo Make class, construct add filters, force to IDs
+//			Then after the query, use pw_get_posts
+
+
