@@ -101,8 +101,8 @@ postworld.directive('pwComments', function() {
 });
 
 postworld.controller('pwCommentsTreeController',
-	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '_',
-	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw, $_ ) {
+	[ '$scope', '$timeout', '$pwComments', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '_',
+	function ($scope, $timeout, $pwComments, $rootScope, $sce, $attrs, pwData, $log, $window, $pw, $_ ) {
 		$scope.json = '';
 
 		if ( $pw.user  )
@@ -125,7 +125,7 @@ postworld.controller('pwCommentsTreeController',
 		//$scope.pluginUrl = jsVars.pluginurl;
 		$scope.templateLoaded = false;
 		$log.debug('Comments post ID is:', $scope.postId);
-		var settings = pwCommentsService.comments_settings[$scope.loadCommentsInstance];
+		var settings = $pwComments.commentsSettings[$scope.loadCommentsInstance];
 
 		// Set the Post ID
 		if ( $scope.postId ) {
@@ -148,10 +148,9 @@ postworld.controller('pwCommentsTreeController',
 			$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
 		}
 		else {
-			$scope.templateUrl = $pw.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
-			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
+			$scope.templateUrl = $pw.config.templates.url['default']+'/comments/comment-default.html';
 		}
-			
+
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;
@@ -159,7 +158,7 @@ postworld.controller('pwCommentsTreeController',
 
 			$log.debug('loadComments : REQUEST : ', $scope.loadCommentsInstance );
 
-			pwCommentsService.pw_get_comments($scope.loadCommentsInstance).then(function(value) {
+			$pwComments.pw_get_comments($scope.loadCommentsInstance).then(function(value) {
 				$log.debug('loadComments : RESPONSE : ', value.data );
 				$scope.treedata = {children: value.data};
 				$scope.commentsLoaded = true;
@@ -328,7 +327,7 @@ postworld.controller('pwCommentsTreeController',
 			args.comment_id = child.comment_ID;
 			args.fields = 'edit';
 			// Should we set editInProgress here?
-			pwCommentsService.pw_get_comment(args).then(
+			$pwComments.pw_get_comment(args).then(
 				// success
 				function(response) {
 					if ((response.status==200)&&(response.data)) {
@@ -381,7 +380,7 @@ postworld.controller('pwCommentsTreeController',
 		}
 		
 		args.return_value = 'data';  		
-		pwCommentsService.pw_save_comment(args).then(
+		$pwComments.pw_save_comment(args).then(
 			function(response) {
 				if ((response.status==200)&&(response.data)) {
 					// reset form and hide it
@@ -429,7 +428,7 @@ postworld.controller('pwCommentsTreeController',
 			
 			args.return_value = 'data';
 
-			pwCommentsService.pw_save_comment(args).then(
+			$pwComments.pw_save_comment(args).then(
 				function(response) {
 					if ((response.status==200)&&(response.data)) {
 						
@@ -473,7 +472,7 @@ postworld.controller('pwCommentsTreeController',
 			var args = {};
 			args.comment_id = child.comment_ID;
 			
-			pwCommentsService.pw_delete_comment(args).then(
+			$pwComments.pw_delete_comment(args).then(
 				function(response) {
 					if ((response.status==200)&&(response.data)) {
 						
@@ -504,14 +503,11 @@ postworld.controller('pwCommentsTreeController',
 			);
 	};
 
-
 	$scope.flagComment = function(child){
-
 		var args = {
 			"comment_ID" : child.comment_ID,
 		};
-
-		pwCommentsService.flag_comment(args).then(
+		$pwComments.flag_comment(args).then(
 				function(response) {
 					if ((response.status==200)&&(response.data == true)) {
 						alert( "Comment flagged for moderation." );          
@@ -524,7 +520,6 @@ postworld.controller('pwCommentsTreeController',
 				}
 			);
 	};
-
 
 	$scope.removeChild = function (child) {
 		function walk(target) {

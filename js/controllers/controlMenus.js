@@ -455,8 +455,8 @@ postworld.controller('adminPostDropdown',
 ////////// ------------ ADMIN COMMENTS DROPDOWN ------------ //////////*/   
 
 postworld.controller( 'adminCommentDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwCommentsService', '$pw',
-    function($scope, $rootScope, $location, $window, $log, pwCommentsService, $pw){
+    [ '$scope', '$rootScope', '$location', '$window', '$log', '$pw',
+    function($scope, $rootScope, $location, $window, $log, $pw){
 
     var comment = $scope.child;
 

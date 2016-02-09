@@ -3,6 +3,8 @@
 ### Version 1.50
 - **Breaking Changes** - Comments Refactor
     + Changed JS `var load_comments` to `pw.comments`
+- **Breaking Changes** - Renamed `_` service to `$_`
+    + Change all instances of dependency injection of `'_'` to `'$_'`
 
 ### Version 1.49
 - **Breaking Changes**

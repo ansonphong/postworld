@@ -780,13 +780,6 @@ function pwSiteGlobals_include(){
 	$pwJs .= json_encode( pw_get_iconsets() );
 	$pwJs .= ";";
 
-	// COMMENTS OPTIONS
-	$pwJs .= "\n\n";
-	$pwJs .= "pw.comments = ";
-	$pwJs .= json_encode( pw_grab_option( PW_OPTIONS_COMMENTS ) );
-	$pwJs .= ";";
-
-
 	// SITE LANGUAGE
 	global $pwSiteLanguage;	
 	$pwJs .= "\n\n";

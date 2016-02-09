@@ -25,10 +25,31 @@ function pw_module_comments_defaults( $settings ){
 			),
 		'wordpress' => array(
 			'enable' => false,
+			// Native WP Comment settings are added to JS via core/includes 
 			),
 		);
 	$settings = array_replace_recursive( $default_settings, $settings );
 	return $settings;
+}
+
+/**
+ * Pass the comments options to Javascript if the module is enabled.
+ */
+add_filter( PW_GLOBAL_OPTIONS, 'pw_module_comments_options' );
+function pw_module_comments_options( $options ){
+	if( !pw_module_enabled('comments') )
+		return $options;
+
+	// Get the saved comment options
+	$comments_options = pw_grab_option( PW_OPTIONS_COMMENTS );
+
+	// Merge in the native WordPress comment settings, to pass them to JS
+	if( is_array($comments_options['wordpress']) )
+		$comments_options['wordpress'] = array_replace( pw_get_wp_comment_settings(), $comments_options['wordpress'] );
+	
+	$options['comments'] = $comments_options;
+
+	return $options;
 }
 
 
