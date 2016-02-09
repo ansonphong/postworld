@@ -1,5 +1,9 @@
 <?php
 /**
+ * @todo properly impliment comment switch.
+ */
+
+/**
  * Third party comment handling.
  */
 include "thirdparty-facebook.php";

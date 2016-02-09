@@ -48,35 +48,7 @@
  * Performance http://tech.small-improvements.com/2013/09/10/angularjs-performance-with-large-lists/
  */
 
-postworld.directive('ngShowMore', function ($timeout,$animate) {
-	//console.log('at least we got in directive');
-	function link(scope, element, attrs) {
-					scope.child.showMore = false;
-					scope.child.tall = false;
-					//console.log(scope.child.comment_ID,scope.child.comment_content.length);
-			if (scope.child.comment_content.length>600) {
-							scope.child.showMore = true;
-							scope.child.tall = true;				
-			} ;
-					//  this needs to perform better, so it is replaced with the above function
-					/*
-				$timeout(function(){
-						scope.child.showMore = false;
-						scope.child.tall = false;
-						scope.child.height = element.height();
-						if (scope.child.height>60) { 
-							scope.child.showMore = true;
-							scope.child.tall = true;
-							} 
-				});
-				*/
-							 
-			}	
-	return {
-		restrict: 'A',
-		link: link,
-	};
-});
+
 
 
 /**
@@ -95,7 +67,8 @@ postworld.directive('pwComments', function() {
 		template: '<div ng-include="templateUrl" class="pw-comments"></div>',
 		scope: {
 			postId : '=',
-			commentsDynamic:'@'
+			commentsDynamic:'@',
+			commentsInstance:'@pwComments',
 		}
 	};
 });
@@ -103,12 +76,11 @@ postworld.directive('pwComments', function() {
 postworld.controller('pwCommentsTreeController',
 	[ '$scope', '$timeout', '$pwComments', '$rootScope', '$sce', '$attrs', '$pwData', '$log', '$window', '$pw', '$_',
 	function ($scope, $timeout, $pwComments, $rootScope, $sce, $attrs, $pwData, $log, $window, $pw, $_ ) {
-		$scope.json = '';
-
-		if ( $pw.user  )
-			$scope.user_id = $pw.user['data'].ID;
-		else
-			$scope.user_id = 0;
+		
+		// If comments are globally disabled, end here
+		var commentsEnabled = $_.get( $pw, 'options.comments.wordpress.enable' );
+		if( !commentsEnabled )
+			return false;
 
 		if( _.isUndefined( $scope.commentsDynamic ) || _.isNull( $scope.commentsDynamic )  )
 			$scope.commentsDynamic = false;
@@ -121,11 +93,10 @@ postworld.controller('pwCommentsTreeController',
 		$scope.commentsLoaded = false;
 		$scope.key = 0;
 		$scope.commentsCount = 0;
-		$scope.loadCommentsInstance = $attrs.pwComments;
 		//$scope.pluginUrl = jsVars.pluginurl;
 		$scope.templateLoaded = false;
 		$log.debug('Comments post ID is:', $scope.postId);
-		var settings = $pwComments.commentsSettings[$scope.loadCommentsInstance];
+		var settings = $pwComments.commentsSettings[$scope.commentsInstance];
 
 		// Set the Post ID
 		if ( $scope.postId ) {
@@ -156,9 +127,9 @@ postworld.controller('pwCommentsTreeController',
 			settings.query.orderby = $scope.orderBy;
 			settings.query.post_id = $scope.postId;
 
-			$log.debug('loadComments : REQUEST : ', $scope.loadCommentsInstance );
+			$log.debug('loadComments : REQUEST : ', $scope.commentsInstance );
 
-			$pwComments.pw_get_comments($scope.loadCommentsInstance).then(function(value) {
+			$pwComments.pw_get_comments($scope.commentsInstance).then(function(value) {
 				$log.debug('loadComments : RESPONSE : ', value.data );
 				$scope.treedata = {children: value.data};
 				$scope.commentsLoaded = true;
@@ -599,6 +570,37 @@ postworld.controller('pwCommentsTreeController',
 
 
 
+
+
+postworld.directive('ngShowMore', function ($timeout,$animate) {
+	//console.log('at least we got in directive');
+	function link(scope, element, attrs) {
+					scope.child.showMore = false;
+					scope.child.tall = false;
+					//console.log(scope.child.comment_ID,scope.child.comment_content.length);
+			if (scope.child.comment_content.length>600) {
+							scope.child.showMore = true;
+							scope.child.tall = true;				
+			} ;
+					//  this needs to perform better, so it is replaced with the above function
+					/*
+				$timeout(function(){
+						scope.child.showMore = false;
+						scope.child.tall = false;
+						scope.child.height = element.height();
+						if (scope.child.height>60) { 
+							scope.child.showMore = true;
+							scope.child.tall = true;
+							} 
+				});
+				*/
+							 
+			}	
+	return {
+		restrict: 'A',
+		link: link,
+	};
+});
 
 
 
