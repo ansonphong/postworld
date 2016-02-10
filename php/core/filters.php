@@ -122,7 +122,9 @@ function pw_default_modules( $modules ){
 add_filter( PW_OPTIONS_MODULES, 'pw_default_modules' );
 
 
-///// GALLERY FIELD FILTERS /////
+/**
+ * GALLERY FIELD FILTERS
+ */
 function pw_add_gallery_field_filter( $fields ){
 	// Define the gallery field
 	$gallery_field = 'gallery(ids,posts)';
@@ -222,9 +224,9 @@ function pw_prepare_date_from( $query ){
 
 
 
-
-
-///// PREPARE QUERY FILTER : POST PARENT FROM /////
+/**
+ * PREPARE QUERY FILTER : POST PARENT FROM
+ */
 add_filter( 'pw_prepare_query', 'pw_prepare_query_post_parent_from' );
 function pw_prepare_query_post_parent_from( $query ){
 	global $post;
@@ -245,8 +247,9 @@ function pw_prepare_query_post_parent_from( $query ){
 
 
 
-
-///// PREPARE QUERY FILTER : EXCLUDE POST FROM /////
+/**
+ * PREPARE QUERY FILTER : EXCLUDE POST FROM
+ */
 add_filter( 'pw_prepare_query', 'pw_prepare_query_exclude_posts_from' );
 function pw_prepare_query_exclude_posts_from( $query ){
 	global $post;
@@ -263,8 +266,9 @@ function pw_prepare_query_exclude_posts_from( $query ){
 }
 
 
-
-///// PREPARE QUERY FILTER : INCLUDE POST FROM /////
+/**
+ * PREPARE QUERY FILTER : INCLUDE POST FROM
+ */
 add_filter( 'pw_prepare_query', 'pw_prepare_query_include_posts_from' );
 function pw_prepare_query_include_posts_from( $query ){
 	global $post;
@@ -280,7 +284,7 @@ function pw_prepare_query_include_posts_from( $query ){
 				break;
 		}
 		// Set the post type to 'any' if not defined
-		$post_type = pw_get_obj( $query, 'post_type' );
+		$post_type = _get( $query, 'post_type' );
 		if( $post_type == null || !isset( $post_type ) )
 			$query['post_type'] = 'any';
 	}
@@ -289,8 +293,9 @@ function pw_prepare_query_include_posts_from( $query ){
 }
 
 
-
-///// PREPARE QUERY FILTER : AUTHOR FROM /////
+/**
+ * PREPARE QUERY FILTER : AUTHOR FROM
+ */
 add_filter( 'pw_prepare_query', 'pw_prepare_query_author_from' );
 function pw_prepare_query_author_from( $query ){
 	global $post;
@@ -312,7 +317,9 @@ function pw_prepare_query_author_from( $query ){
 
 
 
-///// PREPARE QUERY FILTER : RELATED /////
+/**
+ * PREPARE QUERY FILTER : RELATED
+ */
 add_filter( 'pw_prepare_query', 'pw_prepare_query_related_posts' );
 function pw_prepare_query_related_posts( $query ){
 	global $post;
@@ -342,13 +349,35 @@ function pw_prepare_query_related_posts( $query ){
 
 
 
-///// PREPARE QUERY FILTER : DEFAULT POST TYPE /////
+/**
+ * PREPARE QUERY FILTER : DEFAULT POST TYPE
+ */
 add_filter( 'pw_prepare_query', 'pw_prepare_query_default_post_type' );
 function pw_prepare_query_default_post_type( $query ){
 	// Set the post type to 'any' if not defined
-	$post_type = pw_get_obj( $query, 'post_type' );
+	$post_type = _get( $query, 'post_type' );
 	if( $post_type == null || empty( $post_type ) || !isset( $post_type ) )
 		$query['post_type'] = 'any';
+	return $query;
+}
+
+/**
+ * PREPARE QUERY FILTER : DEFAULT ORDER BY
+ */
+add_filter( 'pw_prepare_query', 'pw_prepare_query_default_order_by' );
+function pw_prepare_query_default_order_by( $query ){
+	$post_type = _get( $query, 'post_type' );
+	$orderby = _get( $query, 'orderby' );
+
+	// PAGES : Set the default order and orderby for page-only queries
+	if( $post_type === 'page' && empty( $orderby ) ){
+		$query['orderby'] = 'menu_order title';
+
+		$order = _get( $query, 'order' );
+		if( empty($order) )
+			$query['order'] = 'ASC';
+	}
+	
 	return $query;
 }
 
