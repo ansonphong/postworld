@@ -117,6 +117,9 @@ function pw_feed( $vars = array() ){
 	else
 		$vars = $default_vars;
 
+	/**
+	 * @todo Remove extract method, refactor/check keyed/array variables
+	 */
 	extract( $vars );
 
 	//pw_set_microtimer('pw_live_feed-'.$feed_id);
@@ -562,16 +565,13 @@ function pw_print_feed( $vars ){
 		$load_feed = pw_load_feed( $vars['feed_id'], $vars['posts'], $vars['fields'] );
 		$posts = $load_feed['posts'];
 
-	} else if( isset($vars['feed_query']) ) {
-
-		// LOAD A FRESH QUERY
-		$feed_query = $vars['feed_query'];
+	} else if( isset( $vars['query'] ) ) {
 
 		if( isset($vars['fields']) )
 			// Override fields
-			$feed_query['fields'] = $vars['fields'];
+			$vars['query']['fields'] = $vars['fields'];
 
-		$pw_query = pw_query( $feed_query );
+		$pw_query = pw_query( $vars['query'] );
 		//return json_encode($pw_query);
 		$posts = $pw_query->posts;
 
@@ -580,7 +580,7 @@ function pw_print_feed( $vars ){
 
 	} else {
 		// RETURN ERROR
-		return array('error' => 'No feed_id or feed_query defined.');
+		return array('error' => 'No feed_id or feed query defined.');
 	}
 
 	$pw_post = array();
@@ -600,14 +600,19 @@ function pw_print_feed( $vars ){
 		else if( isset($vars['template']) )
 			$template_path = $vars['template'];
 
+		// If no template, print notice for developer
+		if( !file_exists($template_path) ){
+			if( pw_dev_mode() )
+				echo 'pw_print_feed() : No template path : ' . $template_path;
+			return false;	
+		}
+		
 		// Initialize h2o template engine
 		$h2o = new h2o( $template_path );
 
 		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
 		$pw_post['post'] = $post;
 		//$pw_post['post_json'] = json_encode($post);
-
-		//pw_log( 'post', $post );
 
 		// Add rendered HTML to the return data
 		$post_html .= $h2o->render($pw_post);

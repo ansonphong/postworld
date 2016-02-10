@@ -1740,7 +1740,7 @@ __feed_id__ : *string*
 - Feed ID of the registered Feed to print
 - If supplied, `feed_query` is ignored
 
-__feed_query__ : *Array*
+__query__ : *Array*
 - Postworld Query args input directly into `pw_query()`
 
 __posts__ : *array*
@@ -1748,8 +1748,8 @@ __posts__ : *array*
 
 __fields__ : *string/Array* (optional) (default:null)
 - Fields to pass to `pw_get_post()`
-- Defaults to null, which falls back to fields defined in the registered `feed_query['fields']`
-- Overrides `feed_query['fields]`
+- Defaults to null, which falls back to fields defined in the registered `query['fields']`
+- Overrides `query['fields]`
 
 __view__ : *string* (optional)
 - Which Postworld `view` template to use
@@ -1777,7 +1777,7 @@ echo pw_print_feed( $print_feed_args );
 ```php
 ///// PRINT LOAD FEED /////
 $print_feed_args = array(
-	'feed_query'  =>  array(
+	'query'  =>  array(
 		'post_type' =>  array('blog'),
 		'posts_per_page'  =>  '3',
 		'fields'  =>  array('ID','post_title', 'post_excerpt','post_permalink'),

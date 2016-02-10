@@ -48,8 +48,6 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	if( empty( $query['fields'] ) )
 		$query['fields'] = 'preview';
 
-	//pw_log( 'fields:'.$view, $query['fields'] );
-
 	// Ordering
 	$query['orderby'] = $atts['orderby'];
 	$query['order'] = $atts['order'];
@@ -71,15 +69,12 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Add Max Posts
 	$query['posts_per_page'] = $atts['max'];
 
-	// Setup Feed Query
-	$feed_query_args = array(
-		'feed_query' => $query,
-		'view' => $atts['view'],
-		);
-
 	// Setup Vars
 	$vars = $atts;
-	$vars['feed'] = $feed_query_args;
+	$vars['feed'] = array(
+		'query' => $query,
+		'view' => $atts['view'],
+		);
 	$vars['tag'] = $tag;
 
 	$template = pw_get_shortcode_template( 'subpages' );
@@ -89,5 +84,3 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	return $shortcode;
 	
 }
-
-?>
