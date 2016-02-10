@@ -1,5 +1,4 @@
 <?php
-
 function pw_get_feed_by_id( $feed_id ){
 	$feeds = pw_get_option( array( 'option_name'	=>	PW_OPTIONS_FEEDS ) );
 	if( empty( $feeds ) )
@@ -305,9 +304,9 @@ function pw_feed( $vars = array() ){
 	// HTML
 	$output .= '<'.$element.' '.$directive.'="'.$feed_id.'" class="'.$classes.'" '.$attributes.'></'.$element.'>';
 
-
 	///// AUXILLARY FEED /////
 	if( !empty($aux_template) ){
+
 		// Get the specified template path
 		$template = pw_get_template ( 'feeds', $aux_template, 'php', 'dir' );
 		// If a template is found
@@ -347,11 +346,9 @@ function pw_get_ng_template_fallback_filter( $vars ){
 
 
 function pw_get_live_feed ( $vars ){
-
-	// TODO : Cleanup logic pattern in this function
-
-	//pw_log($vars);
-
+	/**
+	 * @todo Cleanup logic pattern in this function
+	 */
 	extract($vars);
 
 	// Defaults
