@@ -134,8 +134,6 @@ function pw_get_current_layout( $vars = array() ){
 	// Apply filter so that $layout can be over-ridden
 	$layout = apply_filters( 'pw_layout', $layout );
 
-	pw_log( 'current layout', $layout );
-
 	return $layout;
 
 }

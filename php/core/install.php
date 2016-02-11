@@ -167,7 +167,7 @@ function postworld_install(){
 	// Update the DB with the new postworld DB version
 	global $pw;
 	update_option( PW_DB_VERSION, $pw['info']['db_version'] );
-	
+
 }
 
 function postworld_uninstall(){
@@ -179,25 +179,23 @@ function postworld_uninstall(){
 	//$wpdb->query("DROP TABLE IF EXISTS $table");
 }
 
-function pw_db_version_is_old(){
-	// Return true if running an old version of the DB
+/**
+ * Check if DB requires an update
+ * @return bool Return true if running an old version of the DB, otherwise false
+ */
+function pw_db_requires_update(){
 	global $pw;
 	// Get the current version
-	$current_version = floatval( get_option( PW_DB_VERSION, 0 ) );
+	$current_version = get_option( PW_DB_VERSION, 0 );
 	// Get the new version
-	$new_version = floatval($pw['info']['db_version']);
-	// If the version of Postworld is old
-	/**
-	 * @todo Replace this with PHP version_compare() function
-	 * @link http://php.net/manual/en/function.version-compare.php
-	 */
-	$version_is_old = (bool) ( $new_version > $current_version );
-	return $version_is_old;
+	$new_version = $pw['info']['db_version'];
+
+	$version_compare = version_compare( $new_version, $current_version );
+
+	return ( $version_compare === 1 );
 }
 
-if( pw_db_version_is_old() ){
+if( pw_db_requires_update() ){
 	postworld_install();
 }
 
-
-?>

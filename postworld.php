@@ -21,11 +21,12 @@ function pw_mode(){
 		POSTWORLD_MODE : 'deploy';
 }
 
+
 global $pw;
 $pw = array(
 	'info'	=>	array(
 		'version'		=>	1.51,
-		'db_version'	=>	1.28,
+		'db_version'	=>	1.29,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -366,6 +367,12 @@ if( pw_dev_mode() )
 add_theme_support( 'menus' );
 add_theme_support( 'post-thumbnails' );
 
+/*
+pw_log( 'VERSION COMPARE : 2 - 1 ', version_compare( '2', '1' ) );
+pw_log( 'VERSION COMPARE : 1 - 2 ', version_compare( '1', '2' ) );
+pw_log( 'VERSION COMPARE : 2 - 2 ', version_compare( '2', '2' ) );
+pw_log( 'VERSION COMPARE : 2.22.22 - 2.22 ', version_compare( '2.22.22', '2.22' ) );
+*/
 
 //To get user id from wordpress
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
