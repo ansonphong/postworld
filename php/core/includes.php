@@ -872,8 +872,17 @@ function pwGlobals_parse(){
  * requests, such as posts, archives and pages.
  * Hook into the 'wp' action, which only runs on frontend requests.
  */
-add_action( 'wp', 'pwGlobals_frontend_parse', 10, 2 );
-function pwGlobals_frontend_parse(){
+add_action( 'wp', 'pwGlobals_frontend_parse', 10 );
+function pwGlobals_frontend_parse( $vars ){
+
+	/**
+	 * Return early if it's not a real request
+	 */
+	if( empty( $vars->query_vars ) &&
+		empty( $vars->query_string ) &&
+		empty( $vars->request ) )
+		return;
+
 	/////////// USER / PAGE SPECIFIC GLOBALS //////////
 	global $pw;
 	global $wp_query;

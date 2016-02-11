@@ -297,7 +297,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	////////// POSTWORLD //////////
 		// Get post row from Postworld Meta table, as an Array
 		$pw_post_meta = pw_get_post_meta($post_id);
-		if ( !empty($pw_post_meta) ){
+		if( !empty($pw_post_meta) ){
 			// Cycle though each PW $pw_post_meta value
 			// If it's in $fields, transfer it to $post
 			foreach($pw_post_meta as $key => $value ){
@@ -311,11 +311,11 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		if( in_array('post_points', $fields) ){
 			$post['post_points'] = pw_get_post_points( $post_id );
 		}
-	
+
 	////////// AUTHOR DATA //////////
 		// Extract author() fields
 		$relationships = pw_extract_linear_fields( $fields, 'is_relationship', true );
-		if ( !empty($relationships) ){
+		if( !empty($relationships) ){
 			if( !isset($post['viewer']) )
 				$post['viewer'] = array();
 			foreach ($relationships as $relationship ) {
@@ -325,10 +325,10 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// DATE & TIME //////////
 		// Post Time Ago
-		if ( in_array('time_ago', $fields) )
+		if( in_array('time_ago', $fields) )
 			$post['time_ago'] = time_ago( strtotime ( $get_post['post_date_gmt'] ) );
 		// Post Timestamp
-		if ( in_array('post_timestamp', $fields) )
+		if( in_array('post_timestamp', $fields) )
 			$post['post_timestamp'] = (int) strtotime( $get_post['post_date_gmt'] ) ;
 
 
@@ -340,15 +340,22 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 			'fields'	=>	$fields,
 			));
 		
-		if ( !empty($avatars) )
+		if( !empty($avatars) )
 			$post["avatar"] = $avatars;
 
+	////////// POST STATS ///////////
+		if( in_array('stats', $fields) ){
+			$wp_post = $GLOBALS['post'];
+			$post['stats'] = array();
+			$post['stats']['is_current_post'] = ( $wp_post->ID == $post_id );
+			$post['stats']['is_current_post_parent'] = ( $wp_post->post_parent == $post_id );
+		}
 
 	////////// META DATA //////////
 		
 		// Extract meta fields
 		$post_meta_fields = pw_extract_linear_fields( $fields, 'post_meta', true );
-		if ( !empty($post_meta_fields) ){
+		if( !empty($post_meta_fields) ){
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
 
@@ -435,7 +442,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		// Extract author() fields
 		$author_fields = pw_extract_linear_fields( $fields, 'author', true );
 
-		if ( !empty($author_fields) ){
+		if( !empty($author_fields) ){
 
    			////////// GET AUTHOR FIELDS DATA //////////
 
@@ -501,7 +508,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	////////// GALLERY //////////
 		// Extract meta fields
 		$gallery_fields = pw_extract_linear_fields( $fields, 'gallery', true );
-		if ( !empty($gallery_fields) ){
+		if( !empty($gallery_fields) ){
 			$post['gallery'] = array();
 			// TODO : If already has post_content from get_post, feed post_content directly
 			// 		  To bypass recursive query of the post_content
@@ -641,7 +648,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// PARENT POST //////////
 		$parent_post_fields = pw_extract_linear_fields( $fields, 'parent_post', true );
-		if ( !empty($parent_post_fields) ){
+		if( !empty($parent_post_fields) ){
 			$post['parent_post'] = array();
 			if( $get_post['post_parent'] != 0 )
 				$post['parent_post'] = pw_get_post( $get_post['post_parent'], $parent_post_fields[0] );
@@ -665,7 +672,8 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// CHILD POSTS KARMA COUNT //////////
 		// Gets a sum of all the karma on all child posts
-		if( in_array( 'child_posts_karma_count', $fields ) ){
+		if( in_array( 'child_posts_karma_count', $fields ) &&
+			pw_config_db_has_table( 'post_meta' ) ){
 			global $wpdb;
 			$pw_post_meta_table = $wpdb->pw_prefix . "post_meta";
 			$post['child_posts_karma_count'] = $wpdb->get_var(
@@ -751,7 +759,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		// Post_content is optionally used like this:
 		// @example post_excerpt(256)
 		$post_excerpt_fields = pw_extract_linear_fields( $fields, 'post_excerpt', true );
-		if ( !empty($post_excerpt_fields) ){
+		if( !empty($post_excerpt_fields) ){
 			// If the first field is a number
 			if( is_numeric( $post_excerpt_fields[0] ) ){
 				$max_chars = intval($post_excerpt_fields[0]);
@@ -779,7 +787,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		// 	Gets comments associated with the post
 		//	comments(3,all,comment_date_gmt)
 		$comment_linear_fields = pw_extract_linear_fields( $fields, 'comments', true );
-		if ( !empty( $comment_linear_fields ) ){
+		if( !empty( $comment_linear_fields ) ){
 
 			$comments_query = array(
 				'post_id' => $post_id,

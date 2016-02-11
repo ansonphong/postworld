@@ -23,7 +23,7 @@ function pw_get_current_layout( $vars = array() ){
 	global $pw;
 
 	// If layouts module is not activated, return false
-	if( !in_array( 'layouts', $pw['info']['modules'] ) )
+	if( !pw_module_enabled('layouts') )
 		return false;
 
 	// An array with the current context(s)
@@ -41,8 +41,16 @@ function pw_get_current_layout( $vars = array() ){
 		$pwLayouts = apply_filters( 'pw_default_layouts', array() );
 	}
 
+	// Check if it's a single context request
+	$is_single = (
+		in_array( 'single', $contexts ) ||
+		in_array( 'page', $contexts ) ||
+		isset($vars['post_id'])
+		);
+
 	/// GET LAYOUT : FROM POSTMETA : OVERRIDE ///
-	if( in_array( 'single', $contexts ) || in_array( 'page', $contexts ) || isset($vars['post_id']) ){
+	if( $is_single ){
+
 		/// DEFINE POST ID ///
 		global $post;
 		// Get use provided vars.post_id to override current post
@@ -78,11 +86,6 @@ function pw_get_current_layout( $vars = array() ){
 	}
 
 	/// GET LAYOUT : FROM POST PARENT ///
-	// Check if it's a single context request
-	$is_single = (
-		in_array( 'single', $contexts ) ||
-		isset($vars['post_id'])
-		);
 	// Check if the template value is default
 	$is_default = ( _get( $layout, 'template' ) === 'default' );
 	// If it's eligible for a post parent layout
@@ -130,6 +133,8 @@ function pw_get_current_layout( $vars = array() ){
 
 	// Apply filter so that $layout can be over-ridden
 	$layout = apply_filters( 'pw_layout', $layout );
+
+	pw_log( 'current layout', $layout );
 
 	return $layout;
 

@@ -1,8 +1,6 @@
 <?php
 //////////////////// REGISTER SIDEBARS ////////////////////
-global $pw;
-
-if( in_array( 'sidebars', $pw['info']['modules'] ) )
+if( pw_module_enabled('sidebars') )
 	add_action( 'widgets_init', 'pw_register_sidebars' );
 
 function pw_register_sidebars(){

@@ -8,9 +8,7 @@
 ////////////////////////////////////////////////////////////*/
 //////////////////// REGISTER SHORTCODES ////////////////////
 
-global $pw;
-
-if( in_array( 'shortcodes', $pw['info']['modules'] ) )
+if( pw_module_enabled('shortcodes') )
 	add_action( 'init', 'pw_register_shortcodes' );
 
 function pw_register_shortcodes(){
@@ -205,7 +203,7 @@ function pw_shortcode_count( $content, $tag ){
 }
 
 
-if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
+if( pw_module_enabled('shortcodes') ){
 
 	add_shortcode( 'pw-icon', 	'pw_icons_shortcode' );
 
