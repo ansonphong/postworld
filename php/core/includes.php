@@ -877,11 +877,15 @@ function pwGlobals_frontend_parse( $vars ){
 
 	/**
 	 * Return early if it's not a real request
+	 * @todo Investigate why this is running multiple times
+	 * @note Hidden as it breaks various functionality, including pw_view_content()
 	 */
+	/*
 	if( empty( $vars->query_vars ) &&
 		empty( $vars->query_string ) &&
 		empty( $vars->request ) )
 		return;
+	*/
 
 	/////////// USER / PAGE SPECIFIC GLOBALS //////////
 	global $pw;
