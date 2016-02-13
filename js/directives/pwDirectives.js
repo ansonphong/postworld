@@ -662,7 +662,6 @@ postworld.directive( 'pwLanguage', [function(){
 }]);
 
 postworld.controller('pwLanguageCtrl',
-		['$scope','$window',
 		function($scope, $window) {
 
 			$scope.lang = 'en';
@@ -680,7 +679,7 @@ postworld.controller('pwLanguageCtrl',
 		};
 		*/
 
-}]);
+});
 
 
 

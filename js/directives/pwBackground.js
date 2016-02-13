@@ -212,6 +212,5 @@ postworld.directive( 'pwBackground',
 }]);
 /*
 postworld.controller( 'pwBackgroundCtrl',
-	[ '$scope', '$window', '$timeout', '$pwData', '$log', '$_',
 	function( $scope, $window, $timeout, $pwData, $log, $_ ) {
-}]);*/
+});*/

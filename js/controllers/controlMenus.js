@@ -25,7 +25,6 @@ postworld.directive( 'pwPostActions',
 }]);
 
 postworld.controller('postActions',
-    [ "$scope", "$pwData", "$_",
     function($scope, $pwData, $_ ) {
 
     $scope.$watch( "post.viewer",
@@ -111,7 +110,7 @@ postworld.controller('postActions',
 
     };
 
-}]);
+});
 
 
 
@@ -131,7 +130,6 @@ postworld.directive( 'pwPostVote', [ function($scope){
 }]);
 
 postworld.controller('postVote',
-    [ '$window', '$rootScope', '$scope', '$log', '$pwData',
     function( $window, $rootScope, $scope, $log, $pwData ) {
 
 
@@ -205,7 +203,7 @@ postworld.controller('postVote',
 
     }
 
-}]);
+});
 
 
 /*   _       _           _         ____                      _                     
@@ -454,7 +452,6 @@ postworld.controller('adminPostDropdown',
 ////////// ------------ ADMIN COMMENTS DROPDOWN ------------ //////////*/   
 
 postworld.controller( 'adminCommentDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', '$pw',
     function($scope, $rootScope, $location, $window, $log, $pw){
 
     var comment = $scope.child;
@@ -535,4 +532,4 @@ postworld.controller( 'adminCommentDropdown',
 
 
 
-}]);
+});

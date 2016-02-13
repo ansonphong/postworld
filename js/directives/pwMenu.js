@@ -7,7 +7,7 @@
  ///////////////////////// MENU LOADING DIRECTIVE ////////////////////////*/
 
 // Gets the site menus and populates into the local scope
-postworld.directive( 'pwMenus', [ function($scope){
+postworld.directive( 'pwMenus', function($scope){
 	return {
 		restrict: 'AE',
 		controller: 'pwMenusCtrl',
@@ -21,10 +21,9 @@ postworld.directive( 'pwMenus', [ function($scope){
 			//});
 		}
 	};
-}]);
+});
 
 postworld.controller( 'pwMenusCtrl',
-	[ '$scope', '$window', '$timeout', '$pwData', '$log', '$_', '$pw',
 	function( $scope, $window, $timeout, $pwData, $log, $_, $pw ) {
 
 	$scope.getMenus = function(){
@@ -52,5 +51,4 @@ postworld.controller( 'pwMenusCtrl',
 	};
 	$scope.getMenus();
 
-
-}]);
+});

@@ -7,7 +7,7 @@
 
 //////// ---- PW QUERY DIRECTIVE ------ //////*/
 
-postworld.directive( 'pwQuery', [ function($scope){
+postworld.directive( 'pwQuery', function($scope){
 	return {
 		restrict: 'A',
 		controller: 'pwQueryCtrl',
@@ -25,10 +25,9 @@ postworld.directive( 'pwQuery', [ function($scope){
 
 		}
 	};
-}]);
+});
 
 postworld.controller('pwQueryCtrl',
-	['$scope', '$log', '$window', '$timeout', '$_', '$pwData',
 	function($scope, $log, $window, $timeout, $_, $pwData) {
 
 	// Create query model if it doesn't exist
@@ -85,7 +84,7 @@ postworld.controller('pwQueryCtrl',
     });
 
 
-}]);
+});
 
 
 
@@ -97,7 +96,7 @@ postworld.controller('pwQueryCtrl',
  |_|                                                            
 ///////////// ----- PW TERMS FEED DIRECTIVE ------- //////////*/
 
-postworld.directive( 'pwTermFeed', [ function($scope){
+postworld.directive( 'pwTermFeed', function($scope){
 	return {
 		restrict: 'A',
 		controller: 'pwTermFeedCtrl',
@@ -115,10 +114,9 @@ postworld.directive( 'pwTermFeed', [ function($scope){
 
 		}
 	};
-}]);
+});
 
 postworld.controller('pwTermFeedCtrl',
-	['$scope', '$log', '$window', '$timeout', '$_', '$pwData',
 	function($scope, $log, $window, $timeout, $_, $pwData) {
 
 	// Create query model if it doesn't exist
@@ -154,4 +152,4 @@ postworld.controller('pwTermFeedCtrl',
 	});
 
 
-}]);
+});

@@ -15,7 +15,6 @@ postworld.directive( 'pwUserAutocomplete', [ '$log', '$_', function( $log, $_ ){
 }]);
 
 postworld.controller( 'UserAutocompleteController',
-	[ '$scope', '$pwData', '$log', '$_',
 	function( $scope, $pwData, $log, $_ ){
 
 		$scope.queryList = function( searchTerm ) {
@@ -76,7 +75,7 @@ postworld.controller( 'UserAutocompleteController',
 		*/
 
 
-}]);
+});
 
 
 /*_____                    _         _                                  _      _       

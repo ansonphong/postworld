@@ -1,8 +1,8 @@
 <script>
-	postworld.controller( '<?php echo $instance; ?>', [ '$scope', function( $scope ){
+	postworld.controller( '<?php echo $instance; ?>', function( $scope ){
 		$scope.vars = <?php echo json_encode($vars); ?>;
    		$scope.termFeed = <?php echo json_encode($term_feed); ?>;
-	}]);
+	});
 </script>
 <div ng-controller="<?php echo $instance; ?>">
 	<div

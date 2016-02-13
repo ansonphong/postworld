@@ -32,7 +32,7 @@
 
 ?>
 <script>
-	postworld.controller('galleryOptionsData',[ '$scope', '$_', function($scope,$_){
+	postworld.controller('galleryOptionsData',function($scope,$_){
 		
 		var galleryOptionsMeta = <?php echo json_encode( $gallery_templates ) ?>;
 		var galleryOptionsKeys = <?php echo json_encode( $vars['gallery_options'] ) ?>;
@@ -50,7 +50,7 @@
 			 return _.findWhere( $scope.galleryOptions, { key: objectKey } );
 		};
 
-	}]);
+	});
 </script>
 
 <div ng-controller="galleryOptionsData">
