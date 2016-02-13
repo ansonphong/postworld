@@ -190,7 +190,7 @@ postworld.directive('pwImageSrc',
  *
  */
 postworld.directive('pwSmartImage',
-	[ '$pw', '$log', '$_', '$window', '$filter', 'pwImages', '$timeout',
+	[ '$pw', '$log', '$_', '$window', '$filter', '$pwImages', '$timeout',
 	function( $pw, $log, $_, $window, $filter, $pwImages, $timeout ) {
 	return {
 		restrict:'A',

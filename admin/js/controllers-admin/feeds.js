@@ -7,7 +7,6 @@
 /////////////////////////*/
 
 postworldAdmin.directive( 'pwFeedOptions',
-	[ '$pwData', '$_', 'pwPostOptions',
 	function( $pwData, $_, $pwPostOptions ){
     return { 
         link:function( $scope, element, attrs ){
@@ -87,7 +86,7 @@ postworldAdmin.directive( 'pwFeedOptions',
 
         }
     };
-}]);
+});
 
 postworldAdmin.directive( 'pwAdminFeeds', [ function(){
     return { 
@@ -100,7 +99,6 @@ postworldAdmin.directive( 'pwAdminFeeds', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminFeedsCtrl',
-	[ '$scope', '$log', '$window', '$parse', '$pwData', '$_', 'pwPostOptions',
 	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.view = 'settings';
@@ -201,4 +199,4 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 	}, 1);
 
 	
-}]);
+});

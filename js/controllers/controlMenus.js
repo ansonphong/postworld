@@ -224,7 +224,6 @@ postworld.directive( 'pwAdminPostMenu', [ function($scope){
 }]);
 
 postworld.controller('adminPostDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '$_', '$timeout', '$pw',
     function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout, $pw ) {
 
     ///// MENU OPTIONS /////
@@ -443,7 +442,7 @@ postworld.controller('adminPostDropdown',
 
     };
 
-}]);
+});
 
 
 /*   _       _           _         ____                      _                     

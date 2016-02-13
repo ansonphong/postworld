@@ -12,8 +12,7 @@
 <script>
 	///// LINK URL CONTROLLER /////
 	postworldAdmin.controller('pwLinkUrlCtrl',
-		['$scope', 'pwEditPostFilters', 'pwPostOptions',
-			function($scope, $pwEditPostFilters, $pwPostOptions ) {
+		function($scope, $pwEditPostFilters, $pwPostOptions ) {
 
 		$scope.post = {
 			link_url: '<?php echo ( $link_url != '') ? $link_url : ''; ?>',
@@ -30,7 +29,7 @@
 				$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url );
 			});
 
-	}]);
+	});
 </script>
 
 <div class="postworld">

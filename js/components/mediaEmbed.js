@@ -101,7 +101,7 @@ postworld.directive( 'oEmbed',
 }]);
 
 postworld.controller('pwOEmbedNewCtrl',
-	[ '$scope', '$attrs', '$sce', '$pwData', '$log', '$pw', 'pwPosts', '$_', '$timeout', '$rootScope', 'oEmbedServe',
+	[ '$scope', '$attrs', '$sce', '$pwData', '$log', '$pw', '$pwPosts', '$_', '$timeout', '$rootScope', 'oEmbedServe',
 	function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout, $rootScope, $oEmbedServe ) {
 
 		$scope.getAutoplay = function(){

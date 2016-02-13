@@ -1,6 +1,6 @@
 ///// GALLERY VIEWER /////
 postworld.directive( 'pwGalleryViewer',
-	[ '$pwData', '$pw', '$log', '$_', '$document', '$timeout', 'pwPosts',
+	[ '$pwData', '$pw', '$log', '$_', '$document', '$timeout', '$pwPosts',
 	function( $pwData, $pw, $log, $_, $document, $timeout, $pwPosts ){
 	return {
 		restrict: 'AE',
@@ -355,7 +355,7 @@ postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
 
 
 postworld.controller( 'pwInfiniteGalleryCtrl',
-	[ '$scope', '$log', '$_', '$pw', '$pwData', 'pwPosts',
+	[ '$scope', '$log', '$_', '$pw', '$pwData', '$pwPosts',
 	function( $scope, $log, $_, $pw, $pwData, $pwPosts ){
 
 	$scope.infiniteGallery = {

@@ -48,7 +48,7 @@ global $post;
 <script>
 	///// CONTROLLER /////
 	postworldAdmin.controller('pwColorsMetaboxCtrl',
-		['$scope', 'pwData', '_', '$log',
+		['$scope', '$pwData', '$_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 	}]);
 </script>

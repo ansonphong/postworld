@@ -15,7 +15,7 @@
  */
 
 postworld.directive( 'pwBackground',
- 	[ '$window', '$timeout', '$pwData', 'pwPosts', '$log', '$_',
+ 	[ '$window', '$timeout', '$pwData', '$pwPosts', '$log', '$_',
  	function( $window, $timeout, $pwData, $pwPosts, $log, $_ ){
 	return {
 		restrict: 'AE',

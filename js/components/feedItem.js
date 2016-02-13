@@ -92,7 +92,7 @@ postworld.directive( 'pwGrid', [ function($scope){
 }]);
 
 postworld.controller('pwGridCtrl',
-	[ "$scope", "$window", "$_", "$log", "pwImages",
+	[ "$scope", "$window", "$_", "$log", "$pwImages",
 	function($scope, $window,  $_, $log, $pwImages ) {
 
 	////////// GRIDS //////////
@@ -173,7 +173,7 @@ postworld.directive( 'pwGridItem', [ function($scope){
 }]);
 
 postworld.controller('pwGridItemCtrl',
-	[ "$scope", "$window", "$_", "$log", "pwImages",
+	[ "$scope", "$window", "$_", "$log", "$pwImages",
 	function($scope, $window,  $_, $log, $pwImages ) {
 
 	////////// ALIAS FUNCTIONS //////////

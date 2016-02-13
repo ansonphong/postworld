@@ -25,7 +25,7 @@
 
 	///// CONTROLLER /////
 	postworldAdmin.controller('<?php echo $instance ?>Ctrl',
-		['$scope', 'pwData', '_', '$log',
+		['$scope', '$pwData', '$_', '$log',
 		function( $scope, $pwData, $_, $log ) {
 
 			$log.debug( 'Init User Widget Controller : ' + '<?php echo $instance ?>' );

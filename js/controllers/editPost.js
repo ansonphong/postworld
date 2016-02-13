@@ -99,9 +99,6 @@ postworld.directive( 'pwEditPost', [ function($scope){
 }]);
 
 postworld.controller('editPostController',
-	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', '$pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window',
-	'pwRoleAccess', 'pwQuickEdit', '$_', '$sce', 'pwTemplatePartials', '$pw',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window,
 		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $pw ) {
@@ -880,7 +877,7 @@ postworld.controller('editPostController',
 	}
 
 
-}]);
+});
 
 
 /*
@@ -893,8 +890,6 @@ postworld.controller('editPostController',
 //////// ----- EVENT DATA/TIME CONTROLLER ----- ////////*/
 
 postworld.directive( 'pwEventInput',
-	[ '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout',
-	'$filter', '$pwData', '$log', '$_', 'pwDate',
 	function(
 		$rootScope, $pwPostOptions, $pwEditPostFilters, $timeout,
 		$filter,  $pwData, $log, $_, $pwDate
@@ -1069,22 +1064,7 @@ postworld.directive( 'pwEventInput',
 		}
 
 	};
-}]);
-
-
-
-
-/*   _         _   _                     _         _                                  _      _       
-	/ \  _   _| |_| |__   ___  _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
-   / _ \| | | | __| '_ \ / _ \| '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
-  / ___ \ |_| | |_| | | | (_) | |     / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
- /_/   \_\__,_|\__|_| |_|\___/|_|    /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
-																			   |_|                   
-////////// ------------ AUTHOR AUTOCOMPLETE CONTROLLER ------------ //////////*/
-
-
-
-
+});
 
 
 
@@ -1095,24 +1075,19 @@ postworld.directive( 'pwEventInput',
  |____/ \__,_|\__\___| |_|   |_|\___|_|\_\___|_|   
 
 ////////// ------------ DATE PICKER CONTROLLER ------------ //////////*/   
-var DatepickerDemoCtrl = function ($scope, $timeout) {
+postworld.controller( 'DatepickerDemoCtrl', function($scope, $timeout){
+	$scope.today = function() {
+		$scope.dt = new Date();
+	  };
+	  $scope.today();
+	  $scope.showWeeks = false;
 
-  $scope.today = function() {
-	$scope.dt = new Date();
-  };
-  $scope.today();
-  $scope.showWeeks = false;
+	  $scope.clear = function () {
+		$scope.dt = null;
+	  };
 
-  $scope.clear = function () {
-	$scope.dt = null;
-  };
-
-  $scope.dateOptions = {
-	'year-format': "'yy'",
-	'starting-day': 1
-  };
-
-};
-
-
-
+	  $scope.dateOptions = {
+		'year-format': "'yy'",
+		'starting-day': 1
+	  };
+});

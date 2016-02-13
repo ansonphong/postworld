@@ -34,7 +34,7 @@ postworld.directive( 'pwSearchFields', [function(){
         };
 }]);
 
-postworld.controller('searchFields', ['$scope', 'pwPostOptions', 'pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
+postworld.controller('searchFields', ['$scope', '$pwPostOptions', '$pwEditPostFilters', function($scope, $pwPostOptions, $pwEditPostFilters) {
 
     // POST TYPE OPTIONS
     $scope.post_type_options = $pwPostOptions.postType('read');

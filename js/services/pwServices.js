@@ -9,7 +9,6 @@
 //////////////////*/
 
 postworld.factory( '$pw',
-	['$resource','$q','$log','$window', '$_', '$location',
 	function ($resource, $q, $log, $window, $_, $location ) {   
 
 	// TEMPLATES
@@ -232,7 +231,7 @@ postworld.factory( '$pw',
 		
 	};
 
-}]);
+});
 
 
 /*                      _                                  
@@ -250,7 +249,6 @@ postworld.factory( '$pw',
  * @todo Rename to $_
  */
 postworld.factory('$_',
-	[ '$rootScope', '$log','$window', '$timeout', 
 	function ( $rootScope, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
@@ -721,7 +719,7 @@ postworld.factory('$_',
 
 	};
 
-}]);
+});
 
 
 /* _                      ____           _       
@@ -731,8 +729,7 @@ postworld.factory('$_',
  (   / (_) | .__/ \_/\_/ |_|   \___/|___/\__|___/
   |_|      |_|                                   */
 
-postworld.factory('pwPosts',
-	[ '$rootScope', '$log','$window', '$pwData', '$_', '$pw',
+postworld.factory('$pwPosts',
 	function ( $rootScope, $log, $window, $pwData, $_, $pw ) {  
 
 	///// FACTORY DECLARATIONS /////
@@ -1019,7 +1016,7 @@ postworld.factory('pwPosts',
 		
 	};
 
-}]);
+});
 
 
 /*_____                    _       _         ____            _   _       _     
@@ -1028,7 +1025,7 @@ postworld.factory('pwPosts',
    | |  __/ | | | | | |_) | | (_| | ||  __/ |  __/ (_| | |  | |_| | (_| | \__ \
    |_|\___|_| |_| |_| .__/|_|\__,_|\__\___| |_|   \__,_|_|   \__|_|\__,_|_|___/ */
 
-postworld.factory( 'pwTemplatePartials', [ '$pw', '$pwData', '$log', '$_', '$timeout', '$rootScope',
+postworld.factory( '$pwTemplatePartials',
 	function( $pw, $pwData, $log, $_, $timeout, $rootScope ){
 
 	var evalCallbacks = function( vars ){
@@ -1126,7 +1123,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', '$pwData', '$log', '$_', '$tim
 
 		},
 	}
-}]);
+});
 
 
 /* _                      ___                                 
@@ -1136,8 +1133,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', '$pwData', '$log', '$_', '$tim
  (   / (_) | .__/ \_/\_/ |___|_| |_| |_|\__,_|\__, |\___||___/
   |_|      |_|                                |___/           */
 
-postworld.factory('pwImages',
-	[ '$log','$window', '$_', '$pw',
+postworld.factory('$pwImages',
 	function ( $log, $window, $_, $pw ) {  
 
 	///// UNIVERSALS /////
@@ -1302,7 +1298,7 @@ postworld.factory('pwImages',
 
 	};
 
-}]);
+});
 
 
 /*
@@ -1314,9 +1310,8 @@ postworld.factory('pwImages',
   |_|                                 |_|                          
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
-postworld.service('pwPostOptions',
-		[ '$window','$log', '$pwData', '$_', '$pw',
-		function( $window, $log, $pwData, $_, $pw ) {
+postworld.service('$pwPostOptions',
+	function( $window, $log, $pwData, $_, $pw ) {
 
 	return{
 		taxTerms: function( $scope, taxObj ){
@@ -1636,7 +1631,7 @@ postworld.service('pwPostOptions',
 		},
 
 	}
-}]);
+});
 
 
 /* _        ____       _         _                         
@@ -1647,8 +1642,7 @@ postworld.service('pwPostOptions',
   |_|                                                      
 
 /*///////// ------- SERVICE : PW USERS ------- /////////*/  
-postworld.service('pwRoleAccess',
-	['$log', '$window', '$_', '$pw',
+postworld.service('$pwRoleAccess',
 	function ($log, $window, $_, $pw) {
 	return{
 		setRoleAccess : function($scope){
@@ -1676,7 +1670,7 @@ postworld.service('pwRoleAccess',
 
 		},
 	}
-}]);
+});
 
 
 
@@ -1689,7 +1683,7 @@ postworld.service('pwRoleAccess',
 ////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal', '$pwData', '$pw', '$_',
+postworld.service('$pwQuickEdit',
 	function ( $rootScope, $log, $location, $uibModal, $pwData, $pw, $_ ) {
 	return{
 		openQuickEdit : function( meta ){
@@ -1757,7 +1751,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
 			}
 		},
 	}
-}]);
+});
 
 
 
@@ -1771,8 +1765,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
  (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__| |_|   |_|_|\__\___|_|  |___/
   |_|                                                                          
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
-postworld.service('pwEditPostFilters',
-	['$log', '$_', '$window', 'pwPostOptions', '$pw',
+postworld.service('$pwEditPostFilters',
 	function ($log, $_, $window, $pwPostOptions, $pw ) {
 
 	return {
@@ -1954,7 +1947,7 @@ postworld.service('pwEditPostFilters',
 		  });
 		},
 	};
-}]);
+});
 
 
 
@@ -1968,7 +1961,7 @@ postworld.service('pwEditPostFilters',
 //////////// ------------ POSTWORLD DATE SERVICES ------------ ////////////*/  
 
 
-postworld.service('pwDate', [ '$log', '$_', '$window', function ($log, $_, $window) {
+postworld.service('$pwDate', function ($log, $_, $window) {
 	return {
 
 		setDateRange: function( set, dateObj, offset ){
@@ -2103,7 +2096,7 @@ postworld.service('pwDate', [ '$log', '$_', '$window', function ($log, $_, $wind
 
 
 	};
-}]);
+});
 
 
 

@@ -29,7 +29,7 @@ postworld.directive( 'pwEmbedlyExtract', [ function($scope){
 }]);
 
 postworld.controller( 'pwEmbedlyExtractCtrl',
-	[ '$scope', '$window', '$timeout', '$log', '$pwData', 'embedly', 'pwEditPostFilters', '$_',
+	[ '$scope', '$window', '$timeout', '$log', '$pwData', 'embedly', '$pwEditPostFilters', '$_',
 	function( $scope, $window, $timeout, $log, $pwData, $embedly, $pwEditPostFilters, $_ ) {
 
 	///// INIT STATES ////

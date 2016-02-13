@@ -159,7 +159,6 @@
 <script>
 	///// CONTROLLER /////
 	postworldAdmin.controller('<?php echo $vars["instance"] ?>',
-		['$scope', '$log', 'pwPostOptions', '$_',
 			function( $scope, $log, $pwPostOptions, $_ ){
 
 			// Get tax outline by AJAX
@@ -218,5 +217,5 @@
 
 			});
 
-	}]);
+	});
 </script>

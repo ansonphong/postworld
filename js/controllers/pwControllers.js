@@ -32,8 +32,7 @@ postworld.directive( 'pwPost', function(){
 
 
 postworld.controller('postController',
-	[ "$scope", "$rootScope", "$window", "$sce", "$pwData", "pwEditPostFilters", "$_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", "$compile", "pwTemplatePartials",
-	function($scope, $rootScope, $window, $sce, $pwData, pwEditPostFilters, $_, $log, $pwImages, $pw, $pwPosts, $timeout, $compile, $pwTemplatePartials ) {
+	function($scope, $rootScope, $window, $sce, $pwData, $_, $log, $pwImages, $pw, $pwPosts, $timeout, $compile, $pwTemplatePartials ) {
 
 
 	///// GET DEFAULT POST /////
@@ -238,11 +237,11 @@ postworld.controller('postController',
 
 	
 
-}]);
+});
 
 
 'use strict';
-postworld.directive( 'pwFeedPost', [ function( $scope ){
+postworld.directive( 'pwFeedPost', function( $scope ){
 	return {
 		restrict: 'AE',
 		controller: 'pwFeedPostCtrl',
@@ -253,10 +252,9 @@ postworld.directive( 'pwFeedPost', [ function( $scope ){
 			//});
 		}
 	};
-}]);
+});
 
 postworld.controller('pwFeedPostCtrl',
-	[ "$scope", "$rootScope", "$window", "$sce", "$pwData", "$_", "$log", "pwImages", "$pw", "pwPosts", "$timeout", 
 	function($scope, $rootScope, $window, $sce, $pwData, $_, $log, $pwImages, $pw, $pwPosts, $timeout ) {
 
 	///// ACTION : POST UPDATED /////
@@ -302,11 +300,11 @@ postworld.controller('pwFeedPostCtrl',
 	});
 
 
-}]);
+});
 
 
 
-postworld.directive( 'pwCompile', [ '$log', '$compile', '$sce', function(  $log, $compile, $sce ){
+postworld.directive( 'pwCompile', function(  $log, $compile, $sce ){
 	return {
 		restrict: 'AE',
 		//controller: 'postController',
@@ -327,7 +325,7 @@ postworld.directive( 'pwCompile', [ '$log', '$compile', '$sce', function(  $log,
 			*/
 		}
 	};
-}]);
+});
 
 
 

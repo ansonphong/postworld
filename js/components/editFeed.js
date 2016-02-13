@@ -1,7 +1,7 @@
 'use strict';
 
 postworld.directive('editFeed',
-	[ '$rootScope', '$log', '$pwData', '$_', '$pw', '$timeout', 'pwPosts',
+	[ '$rootScope', '$log', '$pwData', '$_', '$pw', '$timeout', '$pwPosts',
 	function( $rootScope, $log, $pwData, $_, $pw, $timeout, $pwPosts ) {
 	return {
 		restrict: 'EA',
@@ -294,7 +294,7 @@ postworld.directive('editFeed',
 
 
 postworld.controller('pwFilterFeedController',
-	function pwFilterFeedController($scope, $rootScope, $location, $log, $pwData, $attrs, $window, pwPostOptions) {    	
+	function pwFilterFeedController( $scope, $rootScope, $location, $log, $pwData, $attrs, $window, $pwPostOptions ) {    	
 		var firstTime = true;
 		// Set Panel Template
 
@@ -317,7 +317,7 @@ postworld.controller('pwFilterFeedController',
 		//$scope.feed.query.author_name = "";
 
 		// Taxonomy Object Model
-		$scope.taxInput = pwPostOptions.taxInputModel();
+		$scope.taxInput = $pwPostOptions.taxInputModel();
 
 
 		// Get Default View Name

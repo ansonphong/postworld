@@ -1,5 +1,25 @@
 # Postworld // Changelog
 
+### Version 1.51
+- **Breaking Changes** - Renamed `pwPosts` service to `$pwPosts`
+    + Change all instances of dependency injection of `'pwPosts'` to `'$pwPosts'`
+- **Breaking Changes** - Renamed `pwImages` service to `$pwImages`
+    + Change all instances of dependency injection of `'pwImages'` to `'$pwImages'`
+- **Breaking Changes** - Renamed `pwModal` service to `$pwModal`
+    + Change all instances of dependency injection of `'pwModal'` to `'$pwModal'`
+- **Breaking Changes** - Renamed `pwEditPostFilters` service to `$pwEditPostFilters`
+    + Change all instances of dependency injection of `'pwEditPostFilters'` to `'$pwEditPostFilters'`
+- **Breaking Changes** - Renamed `pwDate` service to `$pwDate`
+    + Change all instances of dependency injection of `'pwDate'` to `'$pwDate'`
+- **Breaking Changes** - Renamed `pwTemplatePartials` service to `$pwTemplatePartials`
+    + Change all instances of dependency injection of `'pwTemplatePartials'` to `'$pwTemplatePartials'`
+- **Breaking Changes** - Renamed `pwPostOptions` service to `$pwPostOptions`
+    + Change all instances of dependency injection of `'pwPostOptions'` to `'$pwPostOptions'`
+- **Breaking Changes** - Renamed `pwRoleAccess` service to `$pwRoleAccess`
+    + Change all instances of dependency injection of `'pwRoleAccess'` to `'$pwRoleAccess'`
+- **Breaking Changes** - Renamed `pwQuickEdit` service to `$pwQuickEdit`
+    + Change all instances of dependency injection of `'pwQuickEdit'` to `'$pwQuickEdit'`
+
 ### Version 1.50
 - **Breaking Changes** - Comments Refactor
     + Changed JS `var load_comments` to `pw.comments`
