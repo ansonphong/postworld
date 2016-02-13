@@ -19,6 +19,9 @@
     + Change all instances of dependency injection of `'pwRoleAccess'` to `'$pwRoleAccess'`
 - **Breaking Changes** - Renamed `pwQuickEdit` service to `$pwQuickEdit`
     + Change all instances of dependency injection of `'pwQuickEdit'` to `'$pwQuickEdit'`
+- **Breaking Changes** - Renamed `oEmbedServe` service to `$oEmbedServe`
+    + Change all instances of dependency injection of `'oEmbedServe'` to `'$oEmbedServe'`
+
 
 ### Version 1.50
 - **Breaking Changes** - Comments Refactor

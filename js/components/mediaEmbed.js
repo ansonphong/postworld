@@ -36,12 +36,9 @@ var mediaEmbed = function ( $scope, $sce, $pwData ) {
 /*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
 
 postworld.directive( 'oEmbed',
-	[ '$sce', '$log', '$timeout', '$pwData', '$_',
 	function( $sce, $log, $timeout, $pwData, $_ ){
-
 	return { 
 		restrict: 'AE',
-		
 		scope : {
 			url: 		"@oEmbed",
 			autoplay: 	"@embedAutoplay",
@@ -50,7 +47,7 @@ postworld.directive( 'oEmbed',
 		},
 		
 		//template : '',
-		controller: 'pwOEmbedNewCtrl',
+		controller: 'oEmbedController',
 		link : function ($scope, element, attrs){
 
 			// WATCH : O-Embed Link Url for changes
@@ -98,10 +95,9 @@ postworld.directive( 'oEmbed',
 		}
 	};
 
-}]);
+});
 
-postworld.controller('pwOEmbedNewCtrl',
-	[ '$scope', '$attrs', '$sce', '$pwData', '$log', '$pw', '$pwPosts', '$_', '$timeout', '$rootScope', 'oEmbedServe',
+postworld.controller('oEmbedController',
 	function ($scope, $attrs, $sce, $pwData, $log, $pw, $pwPosts, $_, $timeout, $rootScope, $oEmbedServe ) {
 
 		$scope.getAutoplay = function(){
@@ -138,7 +134,7 @@ postworld.controller('pwOEmbedNewCtrl',
 
 		}
 
-}]);
+});
 
 
 /*            _____           _              _ 
@@ -150,8 +146,7 @@ postworld.controller('pwOEmbedNewCtrl',
 */
 
 /*////////// ------------ O-EMBED SERVICE ------------ //////////*/  
-postworld.factory( 'oEmbedServe',
-	[ '$log', '$sce', '$_', '$pwData', '$timeout', '$rootScope',
+postworld.factory( '$oEmbedServe',
 	function( $log, $sce, $_, $pwData, $timeout, $rootScope ){
 
 	var cacheEmbed = function( embedId, embedCode ){
@@ -225,4 +220,4 @@ postworld.factory( 'oEmbedServe',
 
 	}	
 
-}]);
+});

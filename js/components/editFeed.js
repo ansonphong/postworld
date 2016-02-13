@@ -1,7 +1,6 @@
 'use strict';
 
 postworld.directive('editFeed',
-	[ '$rootScope', '$log', '$pwData', '$_', '$pw', '$timeout', '$pwPosts',
 	function( $rootScope, $log, $pwData, $_, $pw, $timeout, $pwPosts ) {
 	return {
 		restrict: 'EA',
@@ -288,7 +287,7 @@ postworld.directive('editFeed',
 
 		},
 	};
-}]);
+});
 
 
 

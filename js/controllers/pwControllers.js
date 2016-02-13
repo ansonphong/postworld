@@ -241,7 +241,7 @@ postworld.controller('postController',
 
 
 'use strict';
-postworld.directive( 'pwFeedPost', function( $scope ){
+postworld.directive( 'pwFeedPost', function(){
 	return {
 		restrict: 'AE',
 		controller: 'pwFeedPostCtrl',
