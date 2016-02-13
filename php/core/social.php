@@ -325,6 +325,8 @@ function pw_social_widgets( $meta = array() ){
 	// Apply filters
 	$settings = apply_filters( 'pw_social_widgets', $settings );
 
+	//pw_log( 'networks', $settings['networks'] );
+
 	$output = "";
 	if( is_array( $settings['networks'] ) )
 		foreach( $settings['networks'] as $key => $network ){
@@ -347,13 +349,6 @@ function pw_social_widgets( $meta = array() ){
 
 
 ////////// SOCIAL MEDIA WIDGETS //////////
-/**
- * Add settings for this in the admin, under social - so the 'social widgets'
- * Can be configured. This is a key feature for this, as well as artdroid, blogosphere.
- *
- * 
- *
- */
 add_filter( 'pw_social_widgets', 'pw_default_social_widget_settings', 1 );
 function pw_default_social_widget_settings( $settings = array() ){
 	global $post;
@@ -413,6 +408,7 @@ function pw_default_social_widget_settings( $settings = array() ){
 			);
 
 	return $settings;
+
 }
 
 
