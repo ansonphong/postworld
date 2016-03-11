@@ -959,7 +959,7 @@ postworld.factory('$pwPosts',
 				return false;
 
 			// Get the 'fields' value of the post
-			var fields = $_.getObj( post, 'fields' );
+			var fields = $_.get( post, 'fields' );
 			if( fields == false )
 				fields = 'all';
 
@@ -1113,7 +1113,7 @@ postworld.factory( '$pwTemplatePartials',
 
 			}
 
-			var partialData = $_.getObj( $pwData.partials, cachePath );
+			var partialData = $_.get( $pwData.partials, cachePath );
 
 			// Evaluate Callbacks
 			//vars.firstRun = false;
@@ -1424,7 +1424,7 @@ postworld.service('$pwPostOptions',
 			if( _.isArray( postType ) )
 				postType = postType[0];
 			// Get the options from site globals
-			var postClassOptions = $_.getObj( $pw.config, 'post_options.post_class' );
+			var postClassOptions = $_.get( $pw.config, 'post_options.post_class' );
 			// If none found, return false
 			if( !postClassOptions )
 				return {
@@ -1435,28 +1435,28 @@ postworld.service('$pwPostOptions',
 			if( _.isEmpty( postType ) )
 				return postClassOptions;
 			// Get the post type subobject
-			var postClassSet = $_.getObj( postClassOptions, postType );
+			var postClassSet = $_.get( postClassOptions, postType );
 			// If no subobject of specified post type
 			if( !postClassSet )
 				// Try default 'post' settings
-				postClassSet = $_.getObj( postClassOptions, 'post' );
+				postClassSet = $_.get( postClassOptions, 'post' );
 			return postClassSet;
 		},
 
 		postView: function(){
-			return $_.getObj( $pw.config, 'post_views' );
+			return $_.get( $pw.config, 'post_views' );
 		},
 
 		linkFormat: function(){
-			return $_.getObj( $pw.config, 'post_options.link_format' );
+			return $_.get( $pw.config, 'post_options.link_format' );
 		},
 
 		linkFormatMeta: function(){
-			return $_.getObj( $pw.config, 'post_options.link_format_meta' );
+			return $_.get( $pw.config, 'post_options.link_format_meta' );
 		},
 
 		postYear: function(){
-			return $_.getObj( $pw.config, 'post_options.year' );
+			return $_.get( $pw.config, 'post_options.year' );
 		},
 
 		postMonth: function(){
@@ -1619,7 +1619,7 @@ postworld.service('$pwPostOptions',
 		taxInputModel: function(){
 			// TAXONOMY OBJECT MODEL
 			// Makes empty array in the taxInput object for each taxonomy inputs
-			var taxonomies = $_.getObj( $pw.config, 'post_options.taxonomies' );
+			var taxonomies = $_.get( $pw.config, 'post_options.taxonomies' );
 			if( !taxonomies )
 				return false;
 
