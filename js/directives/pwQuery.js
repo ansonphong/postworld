@@ -7,7 +7,7 @@
 
 //////// ---- PW QUERY DIRECTIVE ------ //////*/
 
-postworld.directive( 'pwQuery', function($scope){
+postworld.directive( 'pwQuery', function(){
 	return {
 		restrict: 'A',
 		controller: 'pwQueryCtrl',
@@ -18,10 +18,6 @@ postworld.directive( 'pwQuery', function($scope){
 			queryId:"=queryId"
 		},
 		link: function( $scope, element, attrs ){
-			// OBSERVE Attribute
-			//attrs.$observe('postsModel', function(value) {
-			//	alert(value);
-			//});
 
 		}
 	};
@@ -96,7 +92,7 @@ postworld.controller('pwQueryCtrl',
  |_|                                                            
 ///////////// ----- PW TERMS FEED DIRECTIVE ------- //////////*/
 
-postworld.directive( 'pwTermFeed', function($scope){
+postworld.directive( 'pwTermFeed', function(){
 	return {
 		restrict: 'A',
 		controller: 'pwTermFeedCtrl',

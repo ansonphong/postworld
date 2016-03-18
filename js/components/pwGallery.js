@@ -335,7 +335,7 @@ postworld.directive( 'pwGalleryViewer',
 }]);
 
 
-postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
+postworld.directive( 'pwInfiniteGallery', function(){
 	return {
 		restrict: 'AE',
 		controller: 'pwInfiniteGalleryCtrl',
@@ -351,7 +351,7 @@ postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
 
 		}
 	};
-}]);
+});
 
 
 postworld.controller( 'pwInfiniteGalleryCtrl',

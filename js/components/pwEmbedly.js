@@ -6,7 +6,7 @@
                                       |___/                                     
 //////////////// -------- EMBEDLY EXTRACT DIRECTIVE  -------- /////////////////*/
 
-postworld.directive( 'pwEmbedlyExtract', [ function($scope){
+postworld.directive( 'pwEmbedlyExtract', function(){
 	return {
 		restrict: 'AE',
 		controller: 'pwEmbedlyExtractCtrl',
@@ -26,7 +26,7 @@ postworld.directive( 'pwEmbedlyExtract', [ function($scope){
 			*/
 		}
 	};
-}]);
+});
 
 postworld.controller( 'pwEmbedlyExtractCtrl',
 	[ '$scope', '$window', '$timeout', '$log', '$pwData', 'embedly', '$pwEditPostFilters', '$_',

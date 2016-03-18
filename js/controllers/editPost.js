@@ -15,7 +15,7 @@
  * Provides local scope with functionality for easily
  * loading, editing and saving posts.
  */
-postworld.directive( 'pwEditPost', [ function($scope){
+postworld.directive( 'pwEditPost', function(){
 	return {
 		restrict: 'AE',
 		controller: 'editPostController',
@@ -96,7 +96,7 @@ postworld.directive( 'pwEditPost', [ function($scope){
 
 		}
 	};
-}]);
+});
 
 postworld.controller('editPostController',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,

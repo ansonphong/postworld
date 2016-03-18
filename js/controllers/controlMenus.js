@@ -122,12 +122,12 @@ postworld.controller('postActions',
  |_|   \___/|___/\__|    \_/ \___/ \__\___|
                                                                                           
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
-postworld.directive( 'pwPostVote', [ function($scope){
+postworld.directive( 'pwPostVote', function(){
     return {
         restrict: 'AE',
         controller: 'postVote',
     };
-}]);
+});
 
 postworld.controller('postVote',
     function( $window, $rootScope, $scope, $log, $pwData ) {
@@ -214,12 +214,12 @@ postworld.controller('postVote',
                                                   |_|                              
 ////////// ------------ ADMIN POSTS DROPDOWN ------------ //////////*/   
 
-postworld.directive( 'pwAdminPostMenu', [ function($scope){
+postworld.directive( 'pwAdminPostMenu', function(){
     return {
         restrict: 'AE',
         controller: 'adminPostDropdown',
     };
-}]);
+});
 
 postworld.controller('adminPostDropdown',
     function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout, $pw ) {

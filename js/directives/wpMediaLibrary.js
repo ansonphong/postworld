@@ -29,7 +29,7 @@ file_frame = wp.media.frames.file_frame = wp.media({
 });
 */
 
-postworld.directive( 'wpMediaLibrary', [ function($scope){
+postworld.directive( 'wpMediaLibrary', function(){
 	return {
 		restrict: 'AE',
 		controller: 'wpMediaLibraryCtrl',
@@ -101,7 +101,7 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 
 		}
 	};
-}]);
+});
 
 postworld.controller( 'wpMediaLibraryCtrl',
 	function( $scope, $rootScope, $window, $timeout, $log, $pwData, $_ ) {

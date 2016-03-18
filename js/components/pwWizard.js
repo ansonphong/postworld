@@ -6,7 +6,7 @@
                                   																		
 //////// ---- WIZARD ---- ////////*/
 
-postworld.directive( 'pwWizard', function($scope){
+postworld.directive( 'pwWizard', function(){
 	return {
 		restrict: 'A',
 		controller: 'pwWizardCtrl',
