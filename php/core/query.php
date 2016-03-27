@@ -82,7 +82,7 @@ class PW_Query extends WP_Query {
 			$orderby.=" ".$this->query_vars['order'];
 		}
 		else
-			$orderby = 'order by wp_posts.post_date '.$this->query_vars['order'];
+			$orderby = 'order by '.$wpdb->prefix.'posts.post_date '.$this->query_vars['order'];
 		
 		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
 			if(array_key_exists('offset',  $this->query_vars))
@@ -316,6 +316,7 @@ class PW_Query extends WP_Query {
 	 * @todo Look at posts_join filter in WP_Query //**
 	 */
 	function prepare_new_request($remove_tbl=false){
+		global $wpdb;
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
 
@@ -337,8 +338,8 @@ class PW_Query extends WP_Query {
 		//$where.=" AND ";
 		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
-		$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
-			$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
+		$this->request = str_replace('SELECT', 'SELECT '.$wpdb->prefix.'postworld_post_meta.* , ', $this->request);
+			$this->request = str_replace('FROM '.$wpdb->prefix.'posts','FROM '.$wpdb->prefix.'posts left join  '.$wpdb->prefix.'postworld_post_meta on '.$wpdb->prefix.'posts.ID = '.$wpdb->prefix.'postworld_post_meta.post_id ', $this->request);
 			$this->request = str_replace('WHERE', $where, $this->request);
 			$strposOfOrderBy = strpos($this->request, "ORDER BY");
 			$this->request =  substr($this->request ,0,$strposOfOrderBy);
@@ -1376,13 +1377,13 @@ class PW_User_Query extends WP_User_Query {
 	
 	
 	function prepare_new_request($remove_tbl=false){
-		
+		global $wpdb;
 		$this->query_orderby = $this->prepare_order_by($this->query_orderby);
 		$this->query_where = str_replace('WHERE', $this->prepare_where_query(), $this->query_where);
-		$this->query_from = str_replace('FROM wp_users','FROM wp_users left join  wp_postworld_user_meta on wp_users.ID = wp_postworld_user_meta.user_id ', $this->query_from);
+		$this->query_from = str_replace('FROM '.$wpdb->prefix.'users','FROM '.$wpdb->prefix.'users left join  '.$wpdb->pw_prefix.'user_meta on '.$wpdb->prefix.'users.ID = '.$wpdb->pw_prefix.'user_meta.user_id ', $this->query_from);
 		
 		if($remove_tbl===false )
-		$this->query_fields = str_replace('SELECT', 'SELECT wp_postworld_user_meta.* , ', $this->query_fields);
+		$this->query_fields = str_replace('SELECT', 'SELECT '.$wpdb->pw_prefix.'user_meta.* , ', $this->query_fields);
 			
 		//$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
 		//$this->request = str_replace('WHERE', $where, $this->request);
@@ -1834,7 +1835,7 @@ class PW_COMMENTS extends WP_Comment_Query {
 
 		
 		if( pw_config_in_db_tables('comment_meta') ){
-			$join .= " left join  $wpdb->pw_prefix"."comment_meta on wp_comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id "; //**
+			$join .= " left join  $wpdb->pw_prefix"."comment_meta on ".$wpdb->prefix."comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id "; //**
 		}
 
 		$query = "SELECT $fields FROM $wpdb->comments $join WHERE $where $groupby ORDER BY $orderby $order $limits";
