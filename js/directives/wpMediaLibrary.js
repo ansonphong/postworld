@@ -201,7 +201,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		}
 
 		// Create the media frame.
-		$scope.file_frame = wp.media.frames.file_frame = wp.media( mediaLibraryFrame );
+		$scope.file_frame = window.wp.media.frames.file_frame = wp.media( mediaLibraryFrame );
 
 		// When an image is selected, run a callback.
 		$scope.file_frame.on( 'select', function() {
