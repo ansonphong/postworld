@@ -159,6 +159,25 @@ function pw_shortcode( $atts, $content=null, $tag ) {
 	return do_shortcode($shortcode);
 }
 
+/**
+ * Visual Composer Shortcode
+ */
+function pw_vc_shortcode( $atts, $content, $tag ){
+
+	$vars = array(
+		'atts' => $atts,
+		'content' => $content,
+		'tag' => $tag
+		);
+
+	$template_path = pw_get_shortcode_template( $tag );
+	
+	$output = pw_ob_include( $template_path, $vars );
+
+	return do_shortcode($output);
+
+}
+
 function pw_skip_shortcode( $string ){
 	$string = str_replace("[", "&#91;", $string);
 	$string = str_replace("]", "&#93;", $string);
