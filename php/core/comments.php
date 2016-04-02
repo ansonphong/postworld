@@ -1,6 +1,46 @@
 <?php
 
 /**
+ * Enable or disable comments based on admin settings.
+ */
+add_filter( 'pw_enable_wp_comments', 'pw_enable_wp_comments_filter', 1 );
+function pw_enable_wp_comments_filter($bool){
+	return pw_grab_option( PW_OPTIONS_COMMENTS, 'wordpress.enable' );
+}
+
+/**
+ * Returns the comments form as a string, so it can be injected into templates.
+ */
+function pw_comment_form( $args, $post_id ){
+	$comments_enabled = apply_filters('pw_enable_wp_comments', true);
+	if(!$comments_enabled)
+		return false;
+
+	ob_start();
+	comment_form( $args, $post_id );
+	$output = ob_get_contents();
+	ob_end_clean();
+	return $output;
+
+}
+
+/**
+ * Returns the comments template as a string, so it can be injected into templates.
+ */
+function pw_comments_template( $file, $separate_comments = false ){
+	$comments_enabled = apply_filters('pw_enable_wp_comments', true);
+	if(!$comments_enabled)
+		return false;
+	ob_start();
+	comments_template($file, $separate_comments);
+	$output = ob_get_contents();
+	ob_end_clean();
+	return $output;
+}
+
+
+
+/**
  * Get all of the native WordPress discussion/comment settings
  * And returns them in an associative array with the option names as keys.
  * @return array
