@@ -4,6 +4,10 @@
 
 	if( empty( $vars['show'] ) )
 		$vars['show'] = array(
+			'immersion' => array(
+				'enable' => false,
+				'show_for' => array('frame','horizontal','vertical')
+				),
 			'vertical' => array(
 				'show_title',
 				'show_caption',
@@ -29,6 +33,7 @@
 			'description' => __( 'All galleries in the post are merged into a single vertical infinite scrolling gallery.' ),
 			),
 		);
+	$gallery_templates = apply_filters( 'pw_gallery_templates', $gallery_templates );
 
 ?>
 <script>
@@ -36,6 +41,8 @@
 		
 		var galleryOptionsMeta = <?php echo json_encode( $gallery_templates ) ?>;
 		var galleryOptionsKeys = <?php echo json_encode( $vars['gallery_options'] ) ?>;
+
+		var showOptions = <?php echo json_encode($vars['show']) ?>;
 
 		$scope.galleryOptions = [];
 		angular.forEach( galleryOptionsMeta, function( value,key ){
@@ -49,6 +56,18 @@
 			 // Return the option where the slug equals the selected value
 			 return _.findWhere( $scope.galleryOptions, { key: objectKey } );
 		};
+
+		$scope.showGalleryView = function( view ){
+			switch( view ){
+				case 'showImmersion':
+					var showFor = $_.get( showOptions, 'immersion.show_for' ),
+						galleryTemplate = $scope.<?php echo $vars['ng_model']; ?>.template;
+					if( $_.isInArray( galleryTemplate, showFor ) )
+						return true;
+					break;
+			}
+			return false;
+		}
 
 	});
 </script>
@@ -126,5 +145,20 @@
 		</table>
 
 		<div style="clear:both;"></div>
+
+		<?php if( _get( $vars, 'show.immersion.enable' ) ) : ?>
+			<div ng-if="showGalleryView('showImmersion')">
+				<hr class="thin">
+				<label>
+					<input type="checkbox" ng-model="<?php echo $vars['ng_model']; ?>.immersive">
+					<b>Make gallery immersive</b>
+					<small>: Hides other content to immerse browser in the gallery. </small>
+				</label>
+			</div>
+		<?php endif ?>
+
 	</div>
+
+
+
 </div>
