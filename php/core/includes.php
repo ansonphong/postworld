@@ -152,17 +152,13 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script('underscore');
 
-		// ANGULAR
-		//wp_enqueue_script( 'AngularJS',
-		//	POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
-
 		if( isset( $args['js_deploy'] ) && !is_admin() ){
 			// CUSTOM DEPLOY JS
 			wp_enqueue_script( "Deploy-JS", $args['js_deploy'], array(), $pw['info']['version'] );
 		}
 		else{
 			// POSTWORLD
-			wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array(), $pw['info']['version'] );
+			wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array('underscore'), $pw['info']['version'] );
 			wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 			wp_enqueue_script(  'Postworld-Deploy' );
 		}
