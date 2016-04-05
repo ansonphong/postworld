@@ -27,7 +27,7 @@ function pw_comment_form( $args, $post_id ){
 /**
  * Returns the comments template as a string, so it can be injected into templates.
  */
-function pw_comments_template( $file, $separate_comments = false ){
+function pw_comments_template( $file = '/comments.php', $separate_comments = false ){
 	$comments_enabled = apply_filters('pw_enable_wp_comments', true);
 	if(!$comments_enabled)
 		return false;
