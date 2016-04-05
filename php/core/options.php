@@ -259,7 +259,7 @@ function pw_get_options_meta(){
 
 	);
 
-	return apply_filters( 'pw_options_data', $options );
+	return apply_filters( 'pw_options_meta', $options );
 
 }
 
