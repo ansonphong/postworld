@@ -236,6 +236,9 @@ if( pw_module_enabled('shortcodes') ){
 	add_shortcode( 'br', 'pw_shortcode' );
 	add_shortcode( 'hr', 'pw_shortcode' );
 
+	// BUTTONS
+	add_shortcode( 'button', 'pw_shortcode' );
+
 	/*
 	add_shortcode( 'h1', 'pw_shortcode' );
 	add_shortcode( 'h2', 'pw_shortcode' );
