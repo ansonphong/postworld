@@ -57,7 +57,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	switch($tag){
 		case "subpages":
 			if( $atts['post-id'] !== false )
-				$query['post_parent'] = $atts['post-id'];
+				$query['post_parent'] = (int) $atts['post-id'];
 			else
 				// Set parent as current post ID
 				$query['post_parent'] = $post->ID;
