@@ -17,6 +17,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 		"orderby"	=>	"menu_order",
 		"order"		=>	"ASC",
 		"post-type"	=>	$post->post_type,
+		"post-id"	=>	false,
 	);
 
 	// Get over-ride defaults from the theme
@@ -55,8 +56,11 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Generate query class
 	switch($tag){
 		case "subpages":
-			// Set parent as current post ID
-			$query['post_parent'] = $post->ID;
+			if( $atts['post-id'] !== false )
+				$query['post_parent'] = $atts['post-id'];
+			else
+				// Set parent as current post ID
+				$query['post_parent'] = $post->ID;
 			break;
 		case "siblings":
 			// Set parent as current post ID
