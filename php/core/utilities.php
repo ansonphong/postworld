@@ -23,6 +23,13 @@ function postworld_directory_uri(){
 	return $template_uri . $relative_path;
 }
 
+function pw_access_protected($obj, $prop) {
+  $reflection = new ReflectionClass($obj);
+  $property = $reflection->getProperty($prop);
+  $property->setAccessible(true);
+  return $property->getValue($obj);
+}
+
 /**
  * Returns a specific key from the
  * Postworld Site Globals.
