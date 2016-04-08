@@ -132,7 +132,7 @@ function pw_print_slider( $slider ){
 			///// SETUP QUERY /////
 
 			// Localize Query
-			$query = $slider['query'];
+			$query = _get($slider,'query');
 			
 			// POST STATUS
 			// Set Post Status
