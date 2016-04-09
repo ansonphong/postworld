@@ -36,10 +36,14 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	/**
 	 * If the user has capabilities to read private pages/posts/CPTs
 	 * Widen the post status query to include private posts
+	 *
+	 * @todo Include a switch in Site Options for this (Show private posts to admins)
 	 */
+	/*
 	if( !empty( $post->post_type ) &&
 		current_user_can('read_private_'.$post->post_type.'s') )
 		$query['post_status'][] = 'private';
+	*/
 
 	// Number of Posts
 	$query['posts_per_page'] = 0;
