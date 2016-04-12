@@ -13,7 +13,7 @@
 function pw_register_footer_script( $script ){
 	$GLOBALS['pw_footer_scripts'][] = $script;
 }
-add_action('wp_print_footer_scripts','pw_print_footer_scripts');
+add_action('wp_print_footer_scripts','pw_print_footer_scripts', 100);
 function pw_print_footer_scripts(){
 	foreach($GLOBALS['pw_footer_scripts'] as $script){
 		echo $script;
@@ -28,13 +28,21 @@ function pw_print_footer_scripts(){
  * @param array $vars['vars'] A series of key value pairs which are output to $scope as JSON
  */
 function pw_make_ng_controller( $vars = array() ){
-	$output ="<script>\n";
+	$include_script_tags = _get( $vars, 'include_script_tags' );
+	$output = '';
+
+	if( $include_script_tags )
+		$output .="<script>\n";
+
 	$output .= "postworld.controller('".$vars['controller']."',function(\$scope){\n";
 	foreach( $vars['vars'] as $key => $value ){
 		$output .= "\$scope.".$key." = ".json_encode($value).";\n";
 	}
 	$output .= "})\n";
-	$output .="</script>\n";
+
+	if( $include_script_tags )
+		$output .="</script>\n";
+
 	return $output;
 }
 
@@ -42,7 +50,9 @@ function pw_make_ng_controller( $vars = array() ){
  * Prints an Angular controller in the footer of the page.
  */
 function pw_print_ng_controller($vars){
+	$vars['include_script_tags'] = true;
 	$script = pw_make_ng_controller($vars);
+	//wp_add_inline_script( $vars['controller'].pw_random_string(), $script );
 	pw_register_footer_script( $script );
 }
 
