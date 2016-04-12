@@ -16,7 +16,6 @@ function pw_register_footer_script( $script ){
 add_action('wp_print_footer_scripts','pw_print_footer_scripts');
 function pw_print_footer_scripts(){
 	foreach($GLOBALS['pw_footer_scripts'] as $script){
-		pw_log('SCRIPT', $script);
 		echo $script;
 		echo "\n";
 	}
