@@ -126,7 +126,7 @@ function pw_feed( $vars = array() ){
 	///// DEFAULT FEED /////
 	$default_feed = array(
 		'feed_outline'		=>	array(),
-		'preload'			=>	10,
+		'preload'			=>	get_option('posts_per_page', 10),
 		'load_increment' 	=> 	10,
 		'offset'			=>	0,
 		'order_by'			=>	'-post_date',
