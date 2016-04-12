@@ -57,16 +57,6 @@ function postworld_includes( $vars ){
 
 	//////////////////////// INJECTIONS //////////////////////
 
-	/* JQuery is added for ngInfiniteScroll Directive, if directive is not used, then remove it */
-	//wp_deregister_script('jquery');
-	//wp_register_script('jquery', "http" . ($_SERVER['SERVER_PORT'] == 443 ? "s" : "") . "://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", false, null);
-	
-	if( in_array( 'jquery', $pw['inject'] ) || is_admin() ){
-		wp_enqueue_script('jquery','');
-	} else{
-		wp_deregister_script('jquery');
-	}
-
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
@@ -508,12 +498,14 @@ function pw_include_admin_scripts(){
 
 	///// JQUERY /////
 	// Required for Slider on Backgrounds
-	// @todo : Load only when on Backgrounds admin page
-	wp_enqueue_script( 'jquery' );
-	wp_enqueue_script( 'jquery-ui-core' );
-	wp_enqueue_script( 'jquery-ui-slider' );
-	wp_enqueue_script( 'jquery-ui-widget' );
-	wp_enqueue_script( 'jquery-ui-mouse' );
+	if( pw_module_enabled('backgrounds') &&
+		strpos( $_SERVER['QUERY_STRING'], 'backgrounds' ) ){
+		wp_enqueue_script( 'jquery' );
+		wp_enqueue_script( 'jquery-ui-core' );
+		wp_enqueue_script( 'jquery-ui-slider' );
+		wp_enqueue_script( 'jquery-ui-widget' );
+		wp_enqueue_script( 'jquery-ui-mouse' );
+	}
 
 }
 
