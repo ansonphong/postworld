@@ -16,6 +16,9 @@ define( 'POSTWORLD_PATH', POSTWORLD_DIR );
 global $wpdb;
 $wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
+// Empty array for footer scripts to be held in
+$GLOBALS['pw_footer_scripts'] = array();
+
 function pw_mode(){
 	return ( defined('POSTWORLD_MODE') ) ?
 		POSTWORLD_MODE : 'deploy';

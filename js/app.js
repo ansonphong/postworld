@@ -32,7 +32,6 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
 'use strict';
 pw.partials = {};
 pw.templates = {};
-pw.feeds = {};
 pw.widgets = {};
 pw.admin = {};
 pw.embeds = {};

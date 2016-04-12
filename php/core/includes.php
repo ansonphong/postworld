@@ -8,8 +8,9 @@
  *
  * @since 0.1
  */
-function postworld_includes( $args ){
-	extract( $args );
+function postworld_includes( $vars ){
+
+	$in_footer = pw_config('includes.js.in_footer');
 
 	// Add hook for admin <head></head>
 	add_action('admin_print_scripts', 'pwGlobals_print', 8 );
@@ -29,9 +30,9 @@ function postworld_includes( $args ){
 	$pw['inject'] = ( !empty($config_inject) ) ?
 		$config_inject : array();
 
-	// Override with injectors from $args
-	$pw['inject'] = ( isset( $args['inject'] ) ) ?
-		$args['inject'] : $pw['inject'];
+	// Override with injectors from $vars
+	$pw['inject'] = ( isset( $vars['inject'] ) ) ?
+		$vars['inject'] : $pw['inject'];
 
 	// Add Additional Angular Modules
 	$pw['angularModules'] = apply_filters( 'pw_angular_modules', $pw['angularModules'] );
@@ -66,12 +67,15 @@ function postworld_includes( $args ){
 		wp_deregister_script('jquery');
 	}
 
-
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
-			wp_enqueue_script( 'Masonry-JS',
-				POSTWORLD_URI.'/deploy/package-masonry.min.js');	
+			wp_enqueue_script(
+				'Masonry-JS',
+				POSTWORLD_URI.'/deploy/package-masonry.min.js',
+				array('underscore'),
+				$pw['info']['version'],
+				$in_footer);
 		}
 		else{
 			wp_enqueue_script( 'Masonry-JS',
@@ -87,36 +91,6 @@ function postworld_includes( $args ){
 		//array_push( $angularDep, 'google-maps' );
 	}
 
-	/*
-	///// DEPRECIATED /////
-
-	// + Font Awesome 3
-	if( in_array( 'font-awesome-3', $pw['inject'] ) ){
-		wp_enqueue_style( 'font-awesome-3',
-			"//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" );
-			// Todo : parse from LESS
-			//POSTWORLD_URI.'/lib/font-awesome-3/css/font-awesome.min.css' );
-	}
-
-	// + ICOMOON
-	if( in_array( 'icomoon', $pw['inject'] ) ){
-		wp_enqueue_style( 'icomoon',
-			POSTWORLD_URI.'/lib/icomoon/style.css' );
-	}
-
-	// + ICON X
-	if( in_array( 'icon-x', $pw['inject'] ) ){
-		wp_enqueue_style( 'icon-x',
-			POSTWORLD_URI.'/lib/icon-x/icon-x.css' );
-	}
-
-	// + GLYPHICONS
-	if( in_array( 'glyphicons-halflings', $pw['inject'] ) ){
-		wp_enqueue_style( 'glyphicons-halflings',
-			POSTWORLD_URI.'/lib/glyphicons/glyphicons-halflings.css' );
-	}
-	*/
-
 	// Queues up all the selected iconsets
 	pw_load_iconsets();
 
@@ -129,16 +103,6 @@ function postworld_includes( $args ){
 						'user_id'		=> get_current_user_id(),
 						'is_admin'		=> is_admin(),
 					);
-	
-
-	//////////---------- LIBRARY INCLUDES ----------//////////
-
-	//BOOTSTRAP CSS
-	// Removed - move be added in theme
-	//wp_enqueue_style( "bootstrap-CSS", POSTWORLD_URI.'/lib/bootstrap/bootstrap.min.css' );
-	//wp_enqueue_style( "Angular-Strap-Animation", POSTWORLD_URI.'/lib/angular-strap-2.0.0-rc.2/css/angular-motion.min.css' );
-
-
 
 	//////////---------- POSTWORLD INCLUDES ----------//////////
 	///// DEPLOY FILE INCLUDES /////
@@ -152,13 +116,18 @@ function postworld_includes( $args ){
 
 		wp_enqueue_script('underscore');
 
-		if( isset( $args['js_deploy'] ) && !is_admin() ){
+		if( isset( $vars['js_deploy'] ) && !is_admin() ){
 			// CUSTOM DEPLOY JS
-			wp_enqueue_script( "Deploy-JS", $args['js_deploy'], array(), $pw['info']['version'] );
+			wp_enqueue_script( "Deploy-JS", $vars['js_deploy'], array(), $pw['info']['version'] );
 		}
 		else{
 			// POSTWORLD
-			wp_register_script( "Postworld-Deploy", POSTWORLD_URI.'/deploy/postworld.min.js', array('underscore'), $pw['info']['version'] );
+			wp_register_script(
+				"Postworld-Deploy",
+				POSTWORLD_URI.'/deploy/postworld.min.js',
+				array('underscore'),
+				$pw['info']['version'],
+				$in_footer );
 			wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 			wp_enqueue_script(  'Postworld-Deploy' );
 		}
@@ -247,7 +216,6 @@ function postworld_includes( $args ){
 		// TODO : blob through the dirs and get all the js files, auto-include in foreach
 		wp_enqueue_script( 	'pw-app-JS',
 			POSTWORLD_URI.'/js/app.js', $angularDep );
-
 
 		// COMPONENTS
 		wp_enqueue_script( 'pw-FeedItem-JS',
@@ -386,7 +354,6 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
 			POSTWORLD_URI.'/js/directives/wpMediaLibrary.js', $angularDep );
 		
-
 		// This is causing issues
 		//wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
 
@@ -548,8 +515,6 @@ function pw_include_admin_scripts(){
 	wp_enqueue_script( 'jquery-ui-widget' );
 	wp_enqueue_script( 'jquery-ui-mouse' );
 
-	
-
 }
 
 ///// WINDOW JAVASCRIPT DATA INJECTION /////
@@ -568,6 +533,7 @@ function pwGlobals_print() {
 		pw.user = <?php echo json_encode( pw_current_user() ); ?>;
 		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
 		pw.device = <?php echo json_encode( pw_device_meta() ); ?>;
+		pw.feeds = {};
 	/* ]]> */</script><?php
 }
 
@@ -654,6 +620,7 @@ function pwBootstrapPostworldAdmin_print() {
 function pw_add_forms_action_attribute(){
 	?>
 	<script>
+
 		// Force an action attribute for every form element which doesn't have one.
 		function pw_add_forms_action_attr(){
 			jQuery('form').attr('action', function(){
@@ -662,7 +629,8 @@ function pw_add_forms_action_attribute(){
 			});
 		}
 		// Initialize
-		angular.element(document).ready(function() {
+		//angular.element(document).ready(function() {
+		jQuery( document ).ready(function() {
 			pw_add_forms_action_attr();
 		});
 	</script>
@@ -792,8 +760,12 @@ function pwSiteGlobals_include(){
 	chmod($pwJsFile, 0755);
 
 	// ENQUEUE SCRIPT
-	wp_enqueue_script( 'pw-Config-JS',
-		POSTWORLD_URI . $globals_path, array(), hash( 'sha256', $pwJs ) );
+	wp_enqueue_script(
+		'pw-Config-JS',
+		POSTWORLD_URI . $globals_path,
+		array(),
+		hash( 'sha256', $pwJs ),
+		pw_config('includes.js.in_footer') );
 	
 }
 

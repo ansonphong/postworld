@@ -8,6 +8,47 @@
 /// General/global utility functions ///
 
 /**
+ * Prints pre-defined scripts to the footer
+ */
+function pw_register_footer_script( $script ){
+	$GLOBALS['pw_footer_scripts'][] = $script;
+}
+add_action('wp_print_footer_scripts','pw_print_footer_scripts');
+function pw_print_footer_scripts(){
+	foreach($GLOBALS['pw_footer_scripts'] as $script){
+		pw_log('SCRIPT', $script);
+		echo $script;
+		echo "\n";
+	}
+}
+
+/**
+ * Inject PHP data into an arbitrary Angular Controller.
+ *
+ * @param string $vars['controller'] The name of the Angular controller
+ * @param array $vars['vars'] A series of key value pairs which are output to $scope as JSON
+ */
+function pw_make_ng_controller( $vars = array() ){
+	$output ="<script>\n";
+	$output .= "postworld.controller('".$vars['controller']."',function(\$scope){\n";
+	foreach( $vars['vars'] as $key => $value ){
+		$output .= "\$scope.".$key." = ".json_encode($value).";\n";
+	}
+	$output .= "})\n";
+	$output .="</script>\n";
+	return $output;
+}
+
+/**
+ * Prints an Angular controller in the footer of the page.
+ */
+function pw_print_ng_controller($vars){
+	$script = pw_make_ng_controller($vars);
+	pw_register_footer_script( $script );
+}
+
+
+/**
  * Gets the URI for the Postworld directory
  * @return string The URI
  */
