@@ -75,8 +75,8 @@ postworld.factory( '$pwColors', [ '$pw', '$_', function( $pw, $_ ){
 				var hasFunction = ( matches != null );
 
 				// Logging
-				console.log( 'matches', matches );
-				console.log( 'hasFunction', hasFunction );
+				//console.log( 'matches', matches );
+				//console.log( 'hasFunction', hasFunction );
 
 				// If it has a function, package and process it with parseColorFunctions()
 				if( hasFunction ){
