@@ -37,38 +37,40 @@
 
 ?>
 <script>
-	postworld.controller('galleryOptionsData',function($scope,$_){
-		
-		var galleryOptionsMeta = <?php echo json_encode( $gallery_templates ) ?>;
-		var galleryOptionsKeys = <?php echo json_encode( $vars['gallery_options'] ) ?>;
+	jQuery( document ).ready(function() {
+		postworld.controller('galleryOptionsData',function($scope,$_){
+			
+			var galleryOptionsMeta = <?php echo json_encode( $gallery_templates ) ?>;
+			var galleryOptionsKeys = <?php echo json_encode( $vars['gallery_options'] ) ?>;
 
-		var showOptions = <?php echo json_encode($vars['show']) ?>;
+			var showOptions = <?php echo json_encode($vars['show']) ?>;
 
-		$scope.galleryOptions = [];
-		angular.forEach( galleryOptionsMeta, function( value,key ){
-			if( $_.inArray( key, galleryOptionsKeys ) ){
-				value['key'] = key;
-				$scope.galleryOptions.push(value);
+			$scope.galleryOptions = [];
+			angular.forEach( galleryOptionsMeta, function( value,key ){
+				if( $_.inArray( key, galleryOptionsKeys ) ){
+					value['key'] = key;
+					$scope.galleryOptions.push(value);
+				}
+			});
+
+			$scope.getSelectedOption = function( objectKey ){
+				 // Return the option where the slug equals the selected value
+				 return _.findWhere( $scope.galleryOptions, { key: objectKey } );
+			};
+
+			$scope.showGalleryView = function( view ){
+				switch( view ){
+					case 'showImmersion':
+						var showFor = $_.get( showOptions, 'immersion.show_for' ),
+							galleryTemplate = $scope.<?php echo $vars['ng_model']; ?>.template;
+						if( $_.isInArray( galleryTemplate, showFor ) )
+							return true;
+						break;
+				}
+				return false;
 			}
+
 		});
-
-		$scope.getSelectedOption = function( objectKey ){
-			 // Return the option where the slug equals the selected value
-			 return _.findWhere( $scope.galleryOptions, { key: objectKey } );
-		};
-
-		$scope.showGalleryView = function( view ){
-			switch( view ){
-				case 'showImmersion':
-					var showFor = $_.get( showOptions, 'immersion.show_for' ),
-						galleryTemplate = $scope.<?php echo $vars['ng_model']; ?>.template;
-					if( $_.isInArray( galleryTemplate, showFor ) )
-						return true;
-					break;
-			}
-			return false;
-		}
-
 	});
 </script>
 

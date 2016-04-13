@@ -1,5 +1,5 @@
 ///// SERVICE /////
-postworld.factory( 'pwIconsets', [ '$pw', '$_', function( $pw, $_ ){
+postworld.factory( '$pwIconsets', function( $pw, $_ ){
 	return {
 		get: function( iconset ){
 			// Returns the iconsets object, and if a key is specified as 'iconset', just that key
@@ -17,4 +17,4 @@ postworld.factory( 'pwIconsets', [ '$pw', '$_', function( $pw, $_ ){
 			return array;
 		},
 	};
-}]);
+});

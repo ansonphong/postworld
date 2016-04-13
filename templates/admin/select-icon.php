@@ -1,47 +1,28 @@
 <?php
-	global $pw;
-	$pwInject = $pw['inject'];
-	// Get icons if they're defined
-	$icons = _get( $vars, 'icons' );
-	$controller_id = 'iconDataCtrl_'.pw_random_string();
+global $pw;
+$pwInject = $pw['inject'];
+// Get icons if they're defined
+$icons = _get( $vars, 'icons' );
+$controller_id = 'iconDataCtrl_'.pw_random_string();
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => $controller_id,
+	'vars' => array(
+		'customIconOptions' => $icons,
+		),
+	));
+
 ?>
 
-<script>
-	// TODO : MAKE MODAL WINDOW FOR SELECTING ICONS, PASS IN DATA
-	postworldAdmin.controller( '<?php echo $controller_id ?>', [
-		'$scope', 'pwIconsets', '$log', '$_',
-		function( $scope, $pwIconsets, $log, $_ ){
-		$scope.customIconOptions = <?php echo json_encode( $icons ) ?>;
-		$scope.iconsets = $pwIconsets.array();
-		//$log.debug( 'iconsets', $scope.iconsets );
-
-		$scope.filterIconset = function( iconsetClasses ){
-			if( _.isEmpty($scope.filterString) )
-				return true;
-			return $_.stringInArray( $scope.filterString, iconsetClasses );
-		}
-
-		$scope.filterIcons = function( className ){
-			if( _.isEmpty($scope.filterString) )
-				return true;
-			return $_.inString( $scope.filterString, className );
-		}
-
-		$scope.iconSelectedClass = function( iconClass, selectedIcon ){
-			return ( iconClass === selectedIcon ) ? 'selected' : '';
-		}
-
-	}]);
-</script>
-
-<div class="postworld">
+<div class="postworld" ng-controller="<?php echo $controller_id ?>">
 
 	<!-- DROPDOWN -->
 	<div
 		uib-dropdown
 		class="dropdown select-icon"
 		pw-ui
-		ng-controller="<?php echo $controller_id ?>">
+		pw-admin-icon-data>
 
 		<!-- SELECTED ITEM -->
 		<span uib-dropdown-toggle>
@@ -83,6 +64,8 @@
 					</li>
 				</ul>
 			<?php endif; ?>
+
+
 
 			<?php
 			///// REGISTERED ICONSETS /////

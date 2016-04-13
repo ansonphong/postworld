@@ -7,33 +7,22 @@
 /////////////////////////////////////////*/
 //global $post;
 //echo $post->ID;
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwLinkUrlDataCtrl',
+	'vars' => array(
+		'post' => array(
+			'link_url' 		=> ( $link_url != '') ? $link_url : '',
+			'link_format' 	=> ( $link_format != '') ? $link_format : '',
+			),
+		),
+	));
+
 ?>
 
-<script>
-	///// LINK URL CONTROLLER /////
-	postworldAdmin.controller('pwLinkUrlCtrl',
-		function($scope, $pwEditPostFilters, $pwPostOptions ) {
-
-		$scope.post = {
-			link_url: '<?php echo ( $link_url != '') ? $link_url : ''; ?>',
-			link_format: '<?php echo ( $link_format != '') ? $link_format : ''; ?>',
-		};
-
-		// Get Link Format Meta
-		$scope.link_format_meta = $pwPostOptions.linkFormatMeta();
-
-		// LINK_URL WATCH : Watch for changes in link_url
-		// Evaluate the link_format
-		$scope.$watchCollection('[post.link_url, post.link_format]',
-			function (){
-				$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url );
-			});
-
-	});
-</script>
-
 <div class="postworld">
-	<div class="pw-metabox" ng-controller="pwLinkUrlCtrl">
+	<div class="pw-metabox" pw-admin-link-url ng-controller="pwLinkUrlDataCtrl">
 
 		<!-- LINK URL -->
 		<input

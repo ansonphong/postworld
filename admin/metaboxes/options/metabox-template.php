@@ -7,6 +7,15 @@
 /////////////////////////////////////////*/
 global $post;
 $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTMETA_KEY ) );
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwMetaboxCtrl',
+	'vars' => array(
+		'pwMeta' => $pwMeta,
+		),
+	));
+
 ?>
 
 <!--///// METABOX TEMPLATES /////-->
@@ -34,15 +43,6 @@ $pwMeta = pw_get_postmeta( array( 'post_id' => $post->ID, 'meta_key' => PW_POSTM
 	</div>	
 </div>
 
-<!--///// METABOX SCRIPTS /////-->
-<script>
-	///// CONTROLLER /////
-	postworldAdmin.controller('pwMetaboxCtrl',
-		['$scope',
-			function( $scope ) {
-			$scope.pwMeta = <?php echo json_encode($pwMeta); ?>;
-	}]);
-</script>
 <?php
 	// Print the Javascript(s)
 	do_action('pw_admin_options_metabox_scripts');

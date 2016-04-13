@@ -1,19 +1,22 @@
 <?php
-	wp_enqueue_media();
-	$controller_id = $vars['field']['meta_key'].'_'.pw_random_string(8);
-	$term_id = $vars['term']->term_id;
-	$meta_key = $vars['field']['meta_key'];
-?>
-<script type="text/javascript">
-	postworldAdmin.controller( '<?php echo $controller_id ?>',
-		[ '$scope', '$_',
-		function( $scope, $_ ){
-		var imageId = Number( <?php echo json_encode( $vars['field']['meta_value'] ) ?> );
-		$scope.imageObj = { imageId: imageId };
-	}]);
-</script>
+wp_enqueue_media();
+$controller_id = $vars['field']['meta_key'].'_'.pw_random_string(8);
+$term_id = $vars['term']->term_id;
+$meta_key = $vars['field']['meta_key'];
 
-<tr class="postworld form-field" ng-controller="<?php echo $controller_id ?>" ng-cloak>
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => $controller_id,
+	'vars' => array(
+		'imageObj' => array(
+			'imageId' => (int) $vars['field']['meta_value'],
+			),
+		),
+	));
+
+?>
+
+<tr class="postworld form-field" ng-controller="<?php echo $controller_id ?>">
 	<th scope="row" valign="top">
 		<?php if( _get( $vars, 'field.icon' ) ) : ?>
 			<i class="icon <?php echo $vars['field']['icon'] ?>"></i>

@@ -14,7 +14,6 @@
 
 		$scope.shortcodeAttrOptions = <?php echo json_encode( apply_filters( 'pw_icon_shortcode_attr_options', array() ) ) ?>;
 
-
 	}]);
 </script>
 

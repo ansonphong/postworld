@@ -393,8 +393,13 @@ function postworld_includes( $vars ){
 		in_array( 'timer', $pw['inject'] ) ){
 
 		if( pw_mode() === 'deploy' ){
-			wp_enqueue_script( 'Postworld-Package-Angular-Moment',
-				POSTWORLD_URI.'/deploy/package-angular-moment.min.js' );
+			wp_enqueue_script(
+				'Postworld-Package-Angular-Moment',
+				POSTWORLD_URI.'/deploy/package-angular-moment.min.js',
+				array(),
+				$pw['info']['version'],
+				$in_footer
+				);
 		}
 		else{
 			// MOMENT.JS
@@ -430,8 +435,12 @@ function postworld_includes( $vars ){
 	// + TOUCH PACKAGE
 	if( in_array( 'package-touch', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
-			wp_enqueue_script( 'Postworld-Package-Touch',
-				POSTWORLD_URI.'/deploy/package-touch.min.js' );
+			wp_enqueue_script(
+				'Postworld-Package-Touch',
+				POSTWORLD_URI.'/deploy/package-touch.min.js',
+				array(),
+				$pw['info']['version'],
+				$in_footer );
 		}
 		else{
 			// FAST CLICK
@@ -445,10 +454,21 @@ function postworld_includes( $vars ){
 
 	// ANGULAR BOOTSTRAP COLORPICKER
 	if( in_array( 'angular-bootstrap-colorpicker', $pw['inject'] ) ){
-		wp_enqueue_script( 'angular-bootstrap-colorpicker-js',
-			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js' );
-		wp_enqueue_style( 'angular-bootstrap-colorpicker-css',
-			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css' );
+
+		wp_enqueue_script(
+			'angular-bootstrap-colorpicker-js',
+			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
+			array(),
+			$pw['info']['version'],
+			$in_footer );
+
+		wp_enqueue_style(
+			'angular-bootstrap-colorpicker-css',
+			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
+			array(),
+			$pw['info']['version'],
+			$in_footer );
+	
 	}
 
 	// Include Admin Scripts if in Admin
@@ -472,9 +492,15 @@ function postworld_includes( $vars ){
 function pw_include_admin_scripts(){
 	global $angularDep;
 	global $pw;
+	$in_footer = pw_config('includes.js.in_footer');
 	
 	if( pw_mode() === 'deploy' ){
-		wp_enqueue_script('Postworld-Admin', POSTWORLD_URI.'/deploy/postworld-admin.min.js', $angularDep, $pw['info']['version'] );
+		wp_enqueue_script(
+			'Postworld-Admin',
+			POSTWORLD_URI.'/deploy/postworld-admin.min.js',
+			$angularDep,
+			$pw['info']['version'],
+			$in_footer );
 	}
 	else{
 	// CONTROLLERS : ADMIN
@@ -557,8 +583,10 @@ function pwBootstrapPostworldAdmin_print() {
 		}
 
 	// If nothing triggered bootstrapping
-	if( !$do_boostrap  )
-		return false;
+	//if( !$do_boostrap  )
+	//	return false;
+
+	pw_log('pwBootstrapPostworldAdmin_print');
 
 	if( is_admin() ):
 		// Add missing action attributes to form elements
@@ -581,7 +609,7 @@ function pwBootstrapPostworldAdmin_print() {
 
 			?><script>
 				// Bootstrap Postworld AngularJS App to #poststuff
-				angular.element(document).ready(function() {
+				jQuery( document ).ready(function() {
 					angular.bootstrap('#poststuff', ['postworldAdmin']);
 				});
 			</script><?php
@@ -590,8 +618,9 @@ function pwBootstrapPostworldAdmin_print() {
 
 			?><script>
 				// Bootstrap Postworld AngularJS App
-				angular.element(document).ready(function() {
+				jQuery( document ).ready(function() {
 					angular.bootstrap(document, ['postworldAdmin']);
+					console.log('BOOTSTRAPPED ADMIN');
 				});
 			</script><?php
 
@@ -637,7 +666,7 @@ function pw_add_buttons_default_type(){
 	?>
 	<script>
 		// Force an action attribute for every form element which doesn't have one.
-		angular.element(document).ready(function() {
+		jQuery( document ).ready(function() {
 			jQuery('button').attr('type', function(){
 				if( typeof jQuery(this).attr('type') === 'undefined' )
 					jQuery(this).attr('type', 'button');

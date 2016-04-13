@@ -14,6 +14,7 @@ function pw_register_footer_script( $script ){
 	$GLOBALS['pw_footer_scripts'][] = $script;
 }
 add_action('wp_print_footer_scripts','pw_print_footer_scripts', 100);
+add_action('admin_print_footer_scripts','pw_print_footer_scripts', 100);
 function pw_print_footer_scripts(){
 	foreach($GLOBALS['pw_footer_scripts'] as $script){
 		echo $script;
@@ -29,12 +30,16 @@ function pw_print_footer_scripts(){
  */
 function pw_make_ng_controller( $vars = array() ){
 	$include_script_tags = _get( $vars, 'include_script_tags' );
+
+	if( !isset($vars['app']) )
+		$vars['app'] = 'postworld'; // postworld | postworldAdmin
+
 	$output = '';
 
 	if( $include_script_tags )
 		$output .="<script>\n";
 
-	$output .= "postworld.controller('".$vars['controller']."',function(\$scope){\n";
+	$output .= $vars['app'].".controller('".$vars['controller']."',function(\$scope){\n";
 	foreach( $vars['vars'] as $key => $value ){
 		$output .= "\$scope.".$key." = ".json_encode($value).";\n";
 	}

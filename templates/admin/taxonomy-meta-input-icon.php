@@ -2,16 +2,30 @@
 	$controller_id = $vars['field']['meta_key'].'_'.pw_random_string(8);
 	$term_id = $vars['term']->term_id;
 	$meta_key = $vars['field']['meta_key'];
+
+	pw_print_ng_controller(array(
+		'app' => 'postworldAdmin',
+		'controller' => $controller_id,
+		'vars' => array(
+			'iconObj' => array(
+				'className' => $vars['field']['meta_value']
+				),
+			),
+		));
+
 ?>
+<?php /*
 <script type="text/javascript">
-	postworldAdmin.controller( '<?php echo $controller_id ?>',
-		[ '$scope', '$_',
-		function( $scope, $_ ){
-		var className = <?php echo json_encode( $vars['field']['meta_value'] ) ?>;
-		$scope.iconObj = { className: className };
-	}]);
+	jQuery( document ).ready(function() {
+		postworldAdmin.controller( '<?php echo $controller_id ?>', function( $scope ){
+			var className = <?php echo json_encode( $vars['field']['meta_value'] ) ?>;
+			$scope.iconObj = { className: className };
+		});
+	});
 </script>
-<tr class="postworld form-field" ng-controller="<?php echo $controller_id ?>" ng-cloak>
+*/ ?>
+
+<tr class="postworld form-field" ng-controller="<?php echo $controller_id ?>">
 	<th scope="row" valign="top">
 		<?php if( _get( $vars, 'field.icon' ) ) : ?>
 			<i class="icon <?php echo $vars['field']['icon'] ?>"></i>

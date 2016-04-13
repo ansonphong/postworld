@@ -8,6 +8,15 @@
 ///////////////////////////////////////////////////////////////*/
 
 global $post;
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwWpPostmetaMetaboxCtrl',
+	'vars' => array(
+		'fields' => $fields,
+		),
+	));
+
 ?>
 
 <!--///// METABOX WRAPPER /////-->
@@ -33,21 +42,6 @@ global $post;
 
 	</div>	
 </div>
-
-<!--///// METABOX SCRIPTS /////-->
-<script>
-	///// CONTROLLER /////
-	postworldAdmin.controller('pwWpPostmetaMetaboxCtrl',
-		['$scope', '$pwData', '$_', '$log',
-			function( $scope, $pwData, $_, $log ) {
-			// This is the post object which is saved
-			//$scope.wpPostmetaPost = <?php //echo json_encode( $pw_postmeta_post ); ?>;
-			// The input fields to add
-			$scope.fields = <?php echo json_encode( $fields ); ?>;
-
-	}]);
-	
-</script>
 
 <?php
 	// Action hook to print the Javascript(s)

@@ -6,6 +6,35 @@
 									  
 //////////////////////////////////////*/
 
+postworldAdmin.directive('pwAdminIconData',
+	function( $pwIconsets, $log, $_ ){
+	return{
+		restrict: 'A',
+		link: function ($scope, element, attrs) {
+			
+			$scope.iconsets = $pwIconsets.array();
+
+			$scope.filterIconset = function( iconsetClasses ){
+				if( _.isEmpty($scope.filterString) )
+					return true;
+				return $_.stringInArray( $scope.filterString, iconsetClasses );
+			}
+
+			$scope.filterIcons = function( className ){
+				if( _.isEmpty($scope.filterString) )
+					return true;
+				return $_.inString( $scope.filterString, className );
+			}
+
+			$scope.iconSelectedClass = function( iconClass, selectedIcon ){
+				return ( iconClass === selectedIcon ) ? 'selected' : '';
+			}
+
+		}
+	};
+});
+
+
 postworldAdmin.directive( 'pwAdminIconsets', [ function(){
 	return { 
 		controller: 'pwAdminIconsetsCtrl',

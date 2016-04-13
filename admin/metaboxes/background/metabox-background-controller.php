@@ -7,6 +7,29 @@
                        |___/                             
 ////////////////////////////////////////////////////////*/
 global $post;
+
+$fields = array('ID','post_meta('.pw_postmeta_key.')');
+
+$background_post = pw_get_post( $post->ID, $fields );
+
+if( _get( $background_post, 'post_meta.'.pw_postmeta_key.'.background' ) === false )
+	$background_post = _set( $background_post, 'post_meta.'.pw_postmeta_key.'.background', array('_'=>0) );
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwBackgroundMetaboxCtrl',
+	'vars' => array(
+		'pwBackgrounds' => pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) ),
+		'pw_background_post' => $background_post,
+		// @todo DELETE
+		'context' => array(
+			'name' => 'single',
+			'label' => 'Single',
+			'icon' => 'pwi-circle-medium',
+			)
+		),
+	));
+
 ?>
 
 <!--///// METABOX WRAPPER /////-->
@@ -33,38 +56,6 @@ global $post;
 		-->
 	</div>	
 </div>
-
-<!--///// METABOX SCRIPTS /////-->
-<script>
-
-	///// CONTROLLER /////
-	postworldAdmin.controller('pwBackgroundMetaboxCtrl',
-		['$scope', '$pwData', '$_', '$log',
-			function( $scope, $pwData, $_, $log ) {
-
-			/// LOAD IN DATA SOURCES ///
-			$scope.pwBackgrounds = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) ) ); ?>;
-			$scope.pw_background_post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') ) ); ?>;
-
-			// Create background object
-			if( !$_.objExists( $scope.pw_background_post, 'post_meta.<?php echo pw_postmeta_key; ?>.background' ) )
-				$scope.pw_background_post = $_.set( $scope.pw_background_post, 'post_meta.<?php echo pw_postmeta_key; ?>.background', {} );
-
-			// TODO : Add a PW global for pw_postmeta_key and pw_usermeta_key, use that global here
-
-			// ADD : If 'default' template selected, delete the background object
-			// If no template selected, display as 'default'
-
-			// Provide context for the backgrounds controller
-			$scope.context = {
-				name: 'single',
-				label: 'Single',
-				icon: 'pwi-circle-medium',
-			};
-
-	}]);
-	
-</script>
 
 <?php
 	// Action hook to print the Javascript(s)

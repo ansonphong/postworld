@@ -1,4 +1,4 @@
-postworldAdmin.directive( 'pwAdmin', [ function($scope){
+postworldAdmin.directive( 'pwAdmin', function(){
 	return {
 		restrict: 'A',
 		controller: 'pwAdminCtrl',
@@ -10,7 +10,7 @@ postworldAdmin.directive( 'pwAdmin', [ function($scope){
 			*/
 		}
 	};
-}]);
+});
 
 postworldAdmin.controller( 'pwAdminCtrl',
 	['$scope', '$window', '$timeout', '$log', '$_',
@@ -78,3 +78,64 @@ postworldAdmin.controller( 'pwAdminCtrl',
 	}
 
 }]);
+
+
+postworldAdmin.directive('pwAdminLinkUrl',
+	function ($pwEditPostFilters, $pwPostOptions) {
+	return {
+		restrict: 'A',
+		link: function( $scope, element, attrs ){
+			// Get Link Format Meta
+			$scope.link_format_meta = $pwPostOptions.linkFormatMeta();
+
+			// LINK_URL WATCH : Watch for changes in link_url
+			// Evaluate the link_format
+			$scope.$watchCollection('[post.link_url, post.link_format]',
+				function (){
+					$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url );
+				});
+		}
+	};
+});
+
+
+postworldAdmin.directive('pwAdminPostParent',
+	function ($pwData, $_, $log) {
+	return {
+		restrict: 'A',
+		link: function( $scope, element, attrs ){
+
+			$scope.getPosts = function( val ) {
+				var query = $scope.query;
+				query.s = val;
+
+				return $pwData.pwQuery( query ).then(
+					function( response ){
+						$log.debug( "QUERY RESPONSE : ", response.data );
+						return response.data;
+					},
+					function(){}
+				);
+			};
+
+			$scope.addPostParent = function( item ){
+				$log.debug( "PW METABOX : POST PARENT : addPostParent( $item ) : ", item );
+				// Set the ID as the post parent
+				$scope.ppPost['post_parent'] = item.ID;
+				// Populate the parent post object
+				$scope.parent_post = item;
+			}
+
+			$scope.removePostParent = function(){
+				// Clear the post_parent field from the post
+				$scope.ppPost['post_parent'] = 0;
+				// Clear the post_parent object
+				$scope.parent_post = false;
+				//alert('remove');
+			}
+
+
+		}
+	};
+});
+

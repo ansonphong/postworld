@@ -8,6 +8,23 @@
 ////////////////////////////////////////////////////*/
 
 global $post;
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwPostParentMetaboxCtrl',
+	'vars' => array(
+		// The post object which is saved
+		'ppPost' => $pw_post,
+		// The variables by which parent posts autocomplete are queried
+		'query' => $query,
+		// Labels for the UI
+		'labels' => $labels,
+		// The post which is selected as the post parent
+		'parent_post' => $pw_parent_post
+
+		),
+	));
+
 ?>
 
 <!--///// METABOX WRAPPER /////-->
@@ -15,7 +32,7 @@ global $post;
 	id="pwPostParentMetabox"
 	class="postworld pw-metabox metabox-post-parent"
 	ng-cloak>
-	<div ng-controller="pwPostParentMetaboxCtrl">
+	<div pw-admin-post-parent ng-controller="pwPostParentMetaboxCtrl">
 		<?php
 			// Include the UI template
 			$metabox_template = pw_get_template ( 'admin', 'metabox-post_parent', 'php', 'dir' );
@@ -36,54 +53,6 @@ global $post;
 	</div>	
 </div>
 
-<!--///// METABOX SCRIPTS /////-->
-<script>
-	///// CONTROLLER /////
-	postworldAdmin.controller('pwPostParentMetaboxCtrl',
-		['$scope', '$pwData', '$_', '$log',
-			function( $scope, $pwData, $_, $log ) {
-
-			// This is the post object which is saved
-			$scope.ppPost = <?php echo json_encode( $pw_post ); ?>;
-			// The variables by which parent posts autocomplete are queried
-			$scope.query = <?php echo json_encode( $query ); ?>;
-			// Labels for the UI
-			$scope.labels = <?php echo json_encode( $labels ); ?>;
-			// The post which is selected as the post parent
-			$scope.parent_post = <?php echo json_encode( $pw_parent_post ); ?>;
-
-			$scope.getPosts = function( val ) {
-				var query = $scope.query;
-				query.s = val;
-
-				return $pwData.pwQuery( query ).then(
-					function( response ){
-						$log.debug( "QUERY RESPONSE : ", response.data );
-						return response.data;
-					},
-					function(){}
-				);
-			};
-
-			$scope.addPostParent = function( item ){
-				$log.debug( "PW METABOX : POST PARENT : addPostParent( $item ) : ", item );
-				// Set the ID as the post parent
-				$scope.ppPost['post_parent'] = item.ID;
-				// Populate the parent post object
-				$scope.parent_post = item;
-			}
-
-			$scope.removePostParent = function(){
-				// Clear the post_parent field from the post
-				$scope.ppPost['post_parent'] = 0;
-				// Clear the post_parent object
-				$scope.parent_post = false;
-				//alert('remove');
-			}
-
-	}]);
-	
-</script>
 
 <?php
 	// Action hook to print the Javascript(s)
