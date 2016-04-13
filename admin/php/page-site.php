@@ -1,29 +1,30 @@
 <?php
-	// Enable Media Library
-	wp_enqueue_media();
-	///// GET OPTIONS /////
-	$pwSiteOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
-	$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
+// Enable Media Library
+wp_enqueue_media();
+
+$pwSiteOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
+// Set default empty value as object, not array
+if( empty($pwSiteOptions) )
+	$pwSiteOptions = array( '_' => 0 );
+
+$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
+
+pw_print_ng_controller(array(
+	'app' => 'postworld',
+	'controller' => 'pwOptionsDataCtrl',
+	'vars' => array(
+		'pwSiteOptions' => $pwSiteOptions,
+		'pwHeaderCode' => $pw_header_code,
+		'images' => array('_'=>0),
+		'memoryOptions' => apply_filters('pw_options_site_memory',array()),
+		'postworldModeOptions' => apply_filters('pw_options_postworld_mode',array()),
+
+		),
+	));
+
 ?>
-<script>
-	postworldAdmin.controller( 'pwOptionsDataCtrl', function( $scope, $pw ){
 
-		// Set default empty value as object, not array
-		var siteOptions = <?php echo json_encode( $pwSiteOptions ); ?>;
-		if( _.isEmpty( siteOptions ) )
-			siteOptions = {};
-
-		$scope.pwSiteOptions = siteOptions;
-		$scope.pwHeaderCode = <?php echo $pw_header_code; ?>;
-		$scope['images'] = {};
-		$scope['options'] = $pw.optionsMeta;
-		
-		$scope.memoryOptions = <?php echo json_encode( apply_filters('pw_options_site_memory',array()) ) ?>;
-		$scope.postworldModeOptions = <?php echo json_encode( apply_filters('pw_options_postworld_mode',array()) ) ?>;
-
-	});
-</script>
-<div class="main wrap postworld" ng-cloak>
+<div pw-admin-options class="main wrap postworld" ng-cloak>
 	<h1>
 		<i class="pwi-gear"></i>
 		<?php _e('Site Options','module','postworld') ?>

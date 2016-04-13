@@ -1,11 +1,12 @@
 <?php
-	$pwSidebars = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwSidebarsDataCtrl',
+	'vars' => array(
+		'pwSidebars' => pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ),
+		),
+	));
 ?>
-<script>
-	postworldAdmin.controller( 'pwSidebarsDataCtrl', [ '$scope', function( $scope ){
-		$scope.pwSidebars = <?php echo json_encode( $pwSidebars ); ?>;
-	}]);
-</script>
 
 <div
 	class="postworld sidebars wrap"

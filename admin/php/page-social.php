@@ -1,12 +1,13 @@
-<script>
-	postworldAdmin.controller( 'pwSocialDataCtrl', function( $scope, $pw ){
-		// Social Option Values
-		$scope.pwSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
-		$scope['options'] = $pw.optionsMeta;
-		// Social Meta Data
-		$scope.socialMeta = <?php echo json_encode( pw_social_meta() ); ?>;
-	});
-</script>
+<?php
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwSocialDataCtrl',
+	'vars' => array(
+		'pwSocial' => pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ),
+		'socialMeta' => pw_social_meta(),
+		),
+	));
+?>
 
 <div class="postworld wrap social" ng-cloak>
 
@@ -18,6 +19,7 @@
 	<hr class="thick">
 
 	<div
+		pw-admin-options
 		pw-admin-social
 		ng-controller="pwSocialDataCtrl"
 		ng-cloak>

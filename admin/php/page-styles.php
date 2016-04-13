@@ -1,10 +1,16 @@
-<script type="text/javascript">
-	postworldAdmin.controller('pwStylesDataCtrl', [ '$scope', '$window', function( $scope, $window ){
-		$scope.pwStyles = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) ) ); ?>;
-		$scope.pwStyleStructure = <?php echo json_encode( apply_filters( PW_MODEL_STYLES, array() ) ); ?>;
-		$scope.pwStyleDefaults = <?php echo json_encode( apply_filters( PW_STYLES_DEFAULT, array() ) ); ?>;
-	}]);
-</script>
+<?php
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwStylesDataCtrl',
+	'vars' => array(
+		'pwStyles' => pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) ),
+		'pwStyleStructure' => apply_filters( PW_MODEL_STYLES, array() ),
+		'pwStyleDefaults' => apply_filters( PW_STYLES_DEFAULT, array() ),
+		),
+	));
+
+?>
 
 <div class="postworld styles wrap" ng-cloak>
 	<div

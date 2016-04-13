@@ -1,13 +1,17 @@
 <?php
-	$supported_comments = pw_config('comments.supported');
-	if( !$supported_comments )
-		$supported_comments = array('facebook','disqus','wordpress');
+$supported_comments = pw_config('comments.supported');
+if( !$supported_comments )
+	$supported_comments = array('facebook','disqus','wordpress');
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwCommentsDataCtrl',
+	'vars' => array(
+		'pwComments' => pw_get_option( array( 'option_name' => PW_OPTIONS_COMMENTS ) ),
+		),
+	));
+
 ?>
-<script>
-	postworldAdmin.controller( 'pwCommentsDataCtrl',function( $scope ){
-		$scope.pwComments = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_COMMENTS ) ) ); ?>;
-	});
-</script>
 <div class="postworld wrap social" ng-cloak>
 	<h1>
 		<i class="pwi-bubbles"></i>

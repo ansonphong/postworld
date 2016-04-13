@@ -1,8 +1,9 @@
 <script>
+jQuery( document ).ready(function() {
 	postworldAdmin.controller( 'shareSocialCtrl', [ '$scope', '$_', '$filter', '$log', function($scope, $_, $filter, $log){
 		
 		$scope.setNetworkIds = function( networkIds ){
-			if( $_.getObj( $scope.$parent.<?php echo $vars['model_var'];?>, "<?php echo $vars['model_key'];?>" ) == false )
+			if( $_.get( $scope.$parent.<?php echo $vars['model_var'];?>, "<?php echo $vars['model_key'];?>" ) == false )
 				$scope.$parent.<?php echo $vars['model_var'];?> = $_.setObj( $scope.$parent.<?php echo $vars['model_var'];?>, "<?php echo $vars['model_key'];?>", networkIds );
 			else
 				$scope.$parent.<?php echo $vars['ng_model'];?> = networkIds;
@@ -11,23 +12,23 @@
 		};
 
 		$scope.getOptionsModel = function(){
-			return $_.getObj( $scope, "<?php echo $vars['options_model']; ?>" );
+			return $_.get( $scope, "<?php echo $vars['options_model']; ?>" );
 		}
 
 		$scope.getSelectedNetworks = function () {
-		    return $filter('filter')( $_.getObj( $scope, "<?php echo $vars['options_model'] ?>" ), { selected: true });
+		    return $filter('filter')( $_.get( $scope, "<?php echo $vars['options_model'] ?>" ), { selected: true });
 		}
 
 		$scope.shareSocialCtrlInit = function(){
 			// Get the saved settings 
-			var savedSettings = $_.getObj( $scope.$parent, "<?php echo $vars['ng_model']; ?>" );
+			var savedSettings = $_.get( $scope.$parent, "<?php echo $vars['ng_model']; ?>" );
 			// If no settings are saved, set defaults
 			if( savedSettings == false ){
 				savedSettings = $scope.selectedNetworkIds();
 			}
 			// Translate the settings into the options model
 			var metaValues = [];
-			angular.forEach( $_.getObj( $scope, "<?php echo $vars['options_model']; ?>" ), function(meta){
+			angular.forEach( $_.get( $scope, "<?php echo $vars['options_model']; ?>" ), function(meta){
 				if( $_.inArray( meta['id'], savedSettings ) )
 					meta['selected'] = true;
 				else
@@ -58,6 +59,8 @@
 			}, 1
 		);
 	}]);
+
+});
 </script>
 
 <div ng-controller="shareSocialCtrl" ng-init="shareSocialCtrlInit()">

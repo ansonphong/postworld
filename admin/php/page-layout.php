@@ -1,14 +1,15 @@
-<script type="text/javascript">
-	//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
-	postworldAdmin.controller( 'layoutDataCtrl',
-		[ '$scope', '$window', '$parse',
-		function($scope, $window, $parse ){
-			$scope.pwLayoutOptions = <?php echo json_encode( pw_layout_options() ); ?>;
-			$scope.pwSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
-			$scope.pwTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
-			$scope.pwLayouts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
-	}]);
-</script>
+<?php
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwAdminLayoutDataCtrl',
+	'vars' => array(
+		'pwLayoutOptions' => pw_layout_options(),
+		'pwSidebars' => pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ),
+		'pwTemplates' => pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ),
+		'pwLayouts' => pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ),
+		),
+	));
+?>
 
 <div class="layout wrap postworld" ng-cloak>
 	<h1>
@@ -18,7 +19,7 @@
 	<hr class="thick">
 	<div
 		pw-admin-layout
-		ng-controller="layoutDataCtrl"
+		ng-controller="pwAdminLayoutDataCtrl"
 		ng-cloak>
 
 		<table class="form-table">
