@@ -50,7 +50,7 @@ postworld.directive('pwTextarea', function() {
 
 
 
-postworld.directive( 'pwTextarea', [ function($scope){
+postworld.directive( 'pwTextarea', function(){
 	return {
 		restrict: 'A',
 		controller: 'pwTextareaCtrl',
@@ -62,10 +62,10 @@ postworld.directive( 'pwTextarea', [ function($scope){
 		link: function( $scope, element, attrs ){
 		}
 	};
-}]);
+});
 
 postworld.controller('pwTextareaCtrl',
-	[ "$scope", "$window", "_", "$log", 
+	[ "$scope", "$window", "$_", "$log", 
 	function($scope, $window,  $_, $log ) {
 
 		///// Filter Text Contents /////

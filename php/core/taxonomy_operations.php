@@ -185,13 +185,15 @@ function pw_taxonomy_operation_cleanup_term_taxonomy_table(){
  * In the term_taxonomy table, or whose posts don't exist.
  */
 function pw_taxonomy_operation_cleanup_term_relationships_table(){
-
 	pw_set_microtimer( 'cleanup_term_relationships_table' );
-	
 	global $wpdb;
 
-	// Increase memory limit, in case of large tables
-	ini_set('memory_limit','2G');
+	/**
+	 * Increase memory limit
+	 * If this function is failing due to memory issues
+	 * in the case of larger tables, Admin can un-comment this line
+	 */
+	// ini_set('memory_limit','2G');
 
 	/**
 	 * Get all the rows in the wp_term_relationships table

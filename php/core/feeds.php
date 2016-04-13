@@ -1,5 +1,4 @@
 <?php
-
 function pw_get_feed_by_id( $feed_id ){
 	$feeds = pw_get_option( array( 'option_name'	=>	PW_OPTIONS_FEEDS ) );
 	if( empty( $feeds ) )
@@ -117,6 +116,9 @@ function pw_feed( $vars = array() ){
 	else
 		$vars = $default_vars;
 
+	/**
+	 * @todo Remove extract method, refactor/check keyed/array variables
+	 */
 	extract( $vars );
 
 	//pw_set_microtimer('pw_live_feed-'.$feed_id);
@@ -124,7 +126,7 @@ function pw_feed( $vars = array() ){
 	///// DEFAULT FEED /////
 	$default_feed = array(
 		'feed_outline'		=>	array(),
-		'preload'			=>	10,
+		'preload'			=>	get_option('posts_per_page', 10),
 		'load_increment' 	=> 	10,
 		'offset'			=>	0,
 		'order_by'			=>	'-post_date',
@@ -248,8 +250,6 @@ function pw_feed( $vars = array() ){
 		$widgets = pw_get_sidebar( $sidebar_id );
 	$has_widgets = ( is_array($widgets) && !empty($widgets) ) ? true : false;
 
-	//pw_log( "widgets : " . json_encode($widgets) );
-
 	///// GENERATE OUTPUT /////
 	$output = '';
 
@@ -289,12 +289,6 @@ function pw_feed( $vars = array() ){
 	}
 
 	// PRELOAD BLOCKS
-	// templates/blocks/widget-grid.html
-	
-	//pw_log($feed_ng_template);
-	//pw_log( $feed['view']['current'] . ' - ' . $feed_template );
-	//pw_log( 'feed', $feed );
-	
 	// Print front-loaded data
 	$output  .= '<script>';
 
@@ -310,9 +304,9 @@ function pw_feed( $vars = array() ){
 	// HTML
 	$output .= '<'.$element.' '.$directive.'="'.$feed_id.'" class="'.$classes.'" '.$attributes.'></'.$element.'>';
 
-
 	///// AUXILLARY FEED /////
 	if( !empty($aux_template) ){
+
 		// Get the specified template path
 		$template = pw_get_template ( 'feeds', $aux_template, 'php', 'dir' );
 		// If a template is found
@@ -324,16 +318,15 @@ function pw_feed( $vars = array() ){
 	}
 
 	//pw_log_microtimer('pw_live_feed-'.$feed_id);
-
 	//pw_log_microtimer($feed_id);
 
-	///// OUTPUT /////
-	if( $echo )
+	if( $echo ){
 		echo $output;
-	else
+		return;
+	}
+	else{
 		return $output;
-
-	return;
+	}
 }
 
 
@@ -353,11 +346,9 @@ function pw_get_ng_template_fallback_filter( $vars ){
 
 
 function pw_get_live_feed ( $vars ){
-
-	// TODO : Cleanup logic pattern in this function
-
-	//pw_log($vars);
-
+	/**
+	 * @todo Cleanup logic pattern in this function
+	 */
 	extract($vars);
 
 	// Defaults
@@ -440,8 +431,7 @@ function pw_feed_outline ( $query ){
 		
 	///// GET FEED OUTLINE /////
 	$query["fields"] = "ids";
-	$query_results = pw_query( $query );
-	$post_ids = (array) $query_results->posts;
+	$post_ids = pw_query_posts( $query );
 	$post_ids = pw_sanitize_numeric_array( $post_ids );
 
 	///// CACHING LAYER /////
@@ -562,164 +552,6 @@ function pw_merge_galleries( $posts, $options ){
 }
 
 
-
-/*
-1-pw_get_templates
-2-load_feed
-3-pw_cache_feed
-4-pw_register_feed
-5-pw_get_feed
-*/
-
-function add_new_feed( $feed_id, $feed_query ){
-	global $wpdb;
-	$wpdb->show_errors();
-	$query = "insert into $wpdb->pw_prefix"."feeds values('$feed_id','".json_encode($feed_query)."',null,null,null,null)";
-	//echo $query;
-	$wpdb->query($query);
-}
-
-function pw_register_feed ( $args ){
-	/*
-		Description:
-
-		Registers the feed in feeds table
-		Process:
-
-		If the feed_id doesn't appear in the wp_postworld_feeds table :
-
-		Create a new row
-		Enable write_cache
-		Store $args['feed_query'] in the feed_query column in Postworld feeds table as a JSON Object
-
-		If write_cache is true, run pw_cache_feed(feed_id)
-
-		return : $args Array
-
-		Parameters : $args
-
-		feed_id : string
-
-		feed_query : array
-
-		default : none
-		The query object which is stored in feed_query in feeds table, which is input directly into pw_query
-		write_cache : boolean
-
-		If the feed_id is new to the feeds table, set write_cache = true
-		false (default) - Wait for cron job to update feed outline later, just update feed_query
-		true - Cache the feed with method : run pw_cache_feed( $feed_id )
-		Usage :
-
-		$args = array (
-		    'feed_id' => 'front_page_feed',
-		    'write_cache'  => true,
-		    'feed_query' => array(
-		        // pw_query() $args
-		    )
-		);
-		pw_register_feed ($args);
-
-	 */
-	global $wpdb;
-	$wpdb->show_errors();
-
-
-	 if($args['feed_id']){
-	 	$feed_row = pw_get_feed($args['feed_id']);
-		// echo json_encode($feed_row);
-		if(!$feed_row){
-			add_new_feed($args['feed_id'],$args['feed_query']);
-				$args['write_cache'] =  TRUE;
-				pw_cache_feed($args['feed_id']);
-
-		}else{
-			// echo ($args['write_cache']);
-			//update feed query
-			update_feed_query($args['feed_id'], $args['feed_query']);
-			if (array_key_exists('write_cache', $args)){
-				if( $args['write_cache'] ===  TRUE){
-					pw_cache_feed($args['feed_id']);
-				}
-			}
-		}
-	 }
-	return $args;
-}
-
-function update_feed_query($feed_id, $feed_query){
-
-	global $wpdb;
-	$wpdb->show_errors();
-	$query = "update $wpdb->pw_prefix"."feeds set feed_query='".json_encode($feed_query)."' where feed_id='".$feed_id."'";
-	//echo $query;
-	$wpdb->query($query);
-}
-
-function pw_cache_feed ( $feed_id ){
-
-	$feed_row = pw_get_feed($feed_id);
-	if(!is_null($feed_row)){
-
-		//echo ($feed_row->feed_query);
-		$time_start = date("Y-m-d H:i:s");
-
-		$feed_query_finalized  = finalize_feed_query($feed_row->feed_query);
-
-		$feed_outline = pw_feed_outline($feed_query_finalized);
-		$time_end = date("Y-m-d H:i:s");
-		$timer = (strtotime( $time_end )-strtotime( $time_start))*1000;
-		//echo json_encode($feed_outline);
-		global $wpdb;
-		$wpdb->show_errors();
-		$query = "update $wpdb->pw_prefix"."feeds set feed_outline='".implode(",", $feed_outline)."',feed_json=null,time_start='$time_start',time_end='$time_end',timer='$timer' where feed_id='".$feed_id."'";
-		//echo $query;
-		$wpdb->query($query);
-		return array('number_of_posts'=>count($feed_outline), 'feed_query'=> $feed_row->feed_query);
-	}
-}
-
-function finalize_feed_query($feed_query_stringified){
-	$pw_query_args = (array)json_decode($feed_query_stringified);
-	if(isset($pw_query_args["tax_query"]))
-		$pw_query_args["tax_query"][0]= get_object_vars(($pw_query_args["tax_query"][0])) ;
-
-	return $pw_query_args;
-}
-
-function pw_get_feed ( $feed_id ){
-	global $wpdb;
-	$wpdb->show_errors();
-	$query = "select * from $wpdb->pw_prefix"."feeds where feed_id='".$feed_id."'";
-	$feed_row = $wpdb->get_row($query);
-	return $feed_row;
-}
-
-function pw_load_feed ( $feed_id, $preload=0, $fields=null ){
-
-	$feed_row = (array) pw_get_feed($feed_id);
-	if($feed_row){
-		$feed_row['feed_outline'] = array_map("intval", explode(",", $feed_row['feed_outline']));
-
-		if($preload > 0){
-			// Get the top preload post IDs
-			$preload_posts = array_slice( $feed_row['feed_outline'], 0, $preload );
-
-			if( $fields == null ){
-				// Get the default fields
-				$feed_query = (array)json_decode($feed_row['feed_query']);
-				$fields = $feed_query['fields'];
-			}
-
-			$feed_row['posts'] = pw_get_posts($preload_posts,$fields);
-		}
-
-	}
-
-	return (array)$feed_row;
-
-}
-
 function pw_print_feed( $vars ){
 
 	// Load a cached feed
@@ -729,25 +561,22 @@ function pw_print_feed( $vars ){
 		$load_feed = pw_load_feed( $vars['feed_id'], $vars['posts'], $vars['fields'] );
 		$posts = $load_feed['posts'];
 
-	} else if( isset($vars['feed_query']) ) {
-
-		// LOAD A FRESH QUERY
-		$feed_query = $vars['feed_query'];
+	} else if( isset( $vars['query'] ) ) {
 
 		if( isset($vars['fields']) )
 			// Override fields
-			$feed_query['fields'] = $vars['fields'];
+			$vars['query']['fields'] = $vars['fields'];
 
-		$pw_query = pw_query( $feed_query );
+		//$pw_query = pw_query( $vars['query'] );
 		//return json_encode($pw_query);
-		$posts = $pw_query->posts;
+		$posts = pw_query_posts( $vars['query'] );// $pw_query->posts;
 
 	} else if( isset( $vars['posts'] ) ) {
 		$posts = $vars['posts'];
 
 	} else {
 		// RETURN ERROR
-		return array('error' => 'No feed_id or feed_query defined.');
+		return array('error' => 'No feed_id or feed query defined.');
 	}
 
 	$pw_post = array();
@@ -767,14 +596,19 @@ function pw_print_feed( $vars ){
 		else if( isset($vars['template']) )
 			$template_path = $vars['template'];
 
+		// If no template, print notice for developer
+		if( !file_exists($template_path) ){
+			if( pw_dev_mode() )
+				echo 'pw_print_feed() : No template path : ' . $template_path;
+			return false;	
+		}
+		
 		// Initialize h2o template engine
 		$h2o = new h2o( $template_path );
 
 		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
 		$pw_post['post'] = $post;
 		//$pw_post['post_json'] = json_encode($post);
-
-		//pw_log( 'post', $post );
 
 		// Add rendered HTML to the return data
 		$post_html .= $h2o->render($pw_post);
@@ -822,16 +656,17 @@ function pw_get_menu_posts( $menu, $fields ){
 
 	$menu_slug = $menu_obj->slug;
 	
+	$query_fields = array(
+		"ID",
+		"post_title",
+		"post_type",
+		"post_content",
+		"post_excerpt",
+		"post_meta(_all)"
+		);
+
 	$query = array(
 		"post_type"			=>	"nav_menu_item",
-		"fields"			=>	array(
-			"ID",
-			"post_title",
-			"post_type",
-			"post_content",
-			"post_excerpt",
-			"post_meta(_all)"
-			),
 		"posts_per_page"	=>	200,
 		'order'             => 'ASC',
 		'orderby' 			=> 'menu_order',
@@ -845,8 +680,9 @@ function pw_get_menu_posts( $menu, $fields ){
 			),
 		);
 
-	$menu_items = pw_query( $query )->posts;
-
+	//$menu_items = pw_query( $query )->posts;
+	$menu_items = pw_wp_query( $query, $query_fields );
+	
 	//pw_log( 'MENU ITEMS : ',  $menu_items  );
 
 	// If only the IDs are requested
@@ -1008,7 +844,7 @@ function pw_gallery_feed( $vars = array() ){
 	}
 	/// USE PW QUERY ///
 	else if( !empty( $vars['query'] ) ){
-		$posts = pw_query( $vars['query'] )->posts;
+		$posts = pw_query_posts( $vars['query'] );
 	}
 	/// RETURN FALSE ///
 	else{
@@ -1024,104 +860,3 @@ function pw_gallery_feed( $vars = array() ){
 
 }
 
-
-
-
-
-function get_panel_ids(){
-	global $pwSiteGlobals;
-	$override_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['panels']['dir']['override'] ); //['override_panel_template_abs_path']);
-	$default_file_names = 	list_dir_file_names( $pwSiteGlobals['template_paths']['panels']['dir']['default'] ); //['default_panel_template_abs_path'] );
-
-	$final_panel_names = array();
-	for ($i=0; $i <count($default_file_names) ; $i++) {
-		$final_panel_names[] = str_replace(".html", "", $default_file_names[$i]);
-	}
-
-	for ($i=0; $i < count($override_file_names); $i++) {
-		$name = str_replace(".html", "", $override_file_names[$i] );
-		if(!in_array($name,$final_panel_names)){
-			$final_panel_names[] = $name;
-		}
-	}
-
-	return $final_panel_names;
-}
-
-
-
-function get_comment_ids(){
-	global $pwSiteGlobals;
-	$override_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['override'] ); //['override_comment_template_abs_path']);
-	$default_file_names =	list_dir_file_names( $pwSiteGlobals['template_paths']['comments']['dir']['default'] );//['default_comment_template_abs_path']);
-
-
-	$final_comment_names = array();
-	for ($i=0; $i <count($default_file_names) ; $i++) {
-		$final_comment_names[] = str_replace(".html", "", $default_file_names[$i]);
-	}
-
-	for ($i=0; $i < count($override_file_names); $i++) {
-		$name = str_replace(".html", "", $override_file_names[$i] );
-		if(!in_array($name,$final_comment_names)){
-			$final_comment_names[] = $name;
-		}
-	}
-
-	return $final_comment_names;
-}
-
-
-function list_dir_file_names($directory){
-
-	$names_array=array();
-	//echo("<br>".$directory."<br>");
-	if (is_dir($directory)){
-		//echo 'is directoruuu';
-
-	$dir = new RecursiveDirectoryIterator($directory,
-			    FilesystemIterator::SKIP_DOTS);
-
-			// Flatten the recursive iterator, folders come before their files
-			$it  = new RecursiveIteratorIterator($dir,
-			    RecursiveIteratorIterator::SELF_FIRST);
-
-			// Maximum depth is 1 level deeper than the base folder
-			$it->setMaxDepth(1);
-
-
-			// Basic loop displaying different messages based on file or folder
-			foreach ($it as $fileinfo) {
-			    if ($fileinfo->isFile()) {
-			    	//echo $fileinfo->getFilename();
-			        //$names_array[]= $url_path.($fileinfo->getFilename());
-					$names_array[]= $fileinfo->getFilename();
-			    }
-			}
-	}
-
-	return $names_array;
-}
-
-
-
-
-//convert object to array $array =  (array) $yourObject;
-class pw_query_args{
-	public $post_type;
-	public $link_format;//pw
-	public $post_class;//pw
-	public $author;
-	public $author_name;
-	public $year;
-	public $month;
-	public $tax_query;
-	public $s;
-	public $orderby='date';
-	public $order='DESC';
-	public $posts_per_page="-1";
-	public $fields;
-}
-
-
-?>

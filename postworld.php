@@ -16,18 +16,20 @@ define( 'POSTWORLD_PATH', POSTWORLD_DIR );
 global $wpdb;
 $wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
+// Empty array for footer scripts to be held in
+$GLOBALS['pw_footer_scripts'] = array();
+
 function pw_mode(){
 	return ( defined('POSTWORLD_MODE') ) ?
 		POSTWORLD_MODE : 'deploy';
 }
 
+
 global $pw;
-global $pwSiteGlobals;
 $pw = array(
-	'config' => $pwSiteGlobals,
 	'info'	=>	array(
-		'version'		=>	1.44,
-		'db_version'	=>	1.28,
+		'version'		=>	1.55,
+		'db_version'	=>	1.29,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
 		),
@@ -38,6 +40,7 @@ $pw = array(
 	'db' =>	array(
 		'wp_options'	=>	array(
 			'option_name'	=>	array(
+				'core'					=>	'postworld-core',
 				'modules'				=>	'postworld-modules',
 				'site'					=>	'postworld-site',
 				'layouts'				=>	'postworld-layouts',
@@ -89,6 +92,7 @@ $pw = array(
 
 ///// DEFINE OPTION NAMES /////
 // Used in 'wp_options' table as 'option_name' key
+define( 'PW_OPTIONS_CORE', 					$pw['db']['wp_options']['option_name']['core'] );
 define( 'PW_OPTIONS_MODULES', 				$pw['db']['wp_options']['option_name']['modules'] );
 define( 'PW_OPTIONS_SITE', 					$pw['db']['wp_options']['option_name']['site'] );
 define( 'PW_OPTIONS_LAYOUTS', 				$pw['db']['wp_options']['option_name']['layouts'] );
@@ -173,10 +177,6 @@ include 'php/core/modules.php';
 // And before the rest of the Postworld includes
 $pw['info']['modules'] = pw_enabled_modules();	// pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
 
-////// INFINITE //////
-// Load Infinite Lineage
-include "infinite/functions.php";
-
 ////// VARIABLES //////
 include 'php/core/variables.php';
 
@@ -188,7 +188,6 @@ require_once 'lib/h2o/h2o.php';
 
 // GLOBAL VARIABLES
 global $pw_settings;
-global $pw_queries;
 global $wp_rewrite;
 $wp_rewrite = new WP_Rewrite();
 
@@ -203,8 +202,7 @@ include 'php/core/install.php';
 /*
 register_activation_hook( __FILE__, 'postworld_install' );
 register_activation_hook( __FILE__, 'postworld_install_data' );
-register_activation_hook( __FILE__, 'postworld_install_Foreign_keys' );
-register_activation_hook( __FILE__, 'postworld_install_Triggers' );
+register_activation_hook( __FILE__, 'postworld_install_foreign_keys' );
 */
 
 //include 'php/core/debugger.php';
@@ -258,6 +256,7 @@ include 'php/core/posts.php';
 
 ////// QUERY FUNCTIONS //////
 include 'php/core/query.php';
+include 'php/core/query_posts.php';
 
 ////// WIDGETS //////
 include 'php/core/widgets.php';
@@ -369,10 +368,16 @@ global $wpdb;
 if( pw_dev_mode() )
 	$wpdb->show_errors();
 
+add_theme_support( 'menus' );
+add_theme_support( 'post-thumbnails' );
 
-
+/*
+pw_log( 'VERSION COMPARE : 2 - 1 ', version_compare( '2', '1' ) );
+pw_log( 'VERSION COMPARE : 1 - 2 ', version_compare( '1', '2' ) );
+pw_log( 'VERSION COMPARE : 2 - 2 ', version_compare( '2', '2' ) );
+pw_log( 'VERSION COMPARE : 2.22.22 - 2.22 ', version_compare( '2.22.22', '2.22' ) );
+*/
 
 //To get user id from wordpress
 //require_once(realpath(__DIR__.'/../../..').'/wp-includes/pluggable.php' );
 
-?>

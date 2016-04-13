@@ -15,10 +15,10 @@
  * Provides local scope with functionality for easily
  * loading, editing and saving posts.
  */
-postworld.directive( 'pwEditPost', [ function($scope){
+postworld.directive( 'pwEditPost', function(){
 	return {
 		restrict: 'AE',
-		controller: 'editPost',
+		controller: 'editPostController',
 		link: function( $scope, element, attrs ){
 			// Init Edit Post Object
 			$scope.initEditPost = {};
@@ -96,20 +96,16 @@ postworld.directive( 'pwEditPost', [ function($scope){
 
 		}
 	};
-}]);
+});
 
-postworld.controller('editPost',
-	['$scope', '$rootScope', 'pwPostOptions', 'pwEditPostFilters', '$timeout', '$filter',
-	'embedly', 'pwData', '$log', '$route', '$routeParams', '$location', '$http', '$window',
-	'pwRoleAccess', 'pwQuickEdit', '_', '$sce', 'pwTemplatePartials', 'iOptionsData', '$pw',
+postworld.controller('editPostController',
 	function($scope, $rootScope, $pwPostOptions, $pwEditPostFilters, $timeout, $filter, $embedly,
 		$pwData, $log, $route, $routeParams, $location, $http, $window,
-		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $iOptionsData, $pw ) {
+		$pwRoleAccess, $pwQuickEdit, $_, $sce, $pwTemplatePartials, $pw ) {
 
-	$scope['options'] = $iOptionsData['options'];
+	$scope['options'] = $pw.optionsMeta;
 
 	$log.debug( "$scope.mode @ init", $scope.mode );
-
 	$log.debug( "$scope.meta @ init", $scope.meta );
 
 	$timeout( function(){
@@ -881,7 +877,7 @@ postworld.controller('editPost',
 	}
 
 
-}]);
+});
 
 
 /*
@@ -894,26 +890,9 @@ postworld.controller('editPost',
 //////// ----- EVENT DATA/TIME CONTROLLER ----- ////////*/
 
 postworld.directive( 'pwEventInput',
-	[
-	'$rootScope',
-	'pwPostOptions',
-	'pwEditPostFilters',
-	'$timeout',
-	'$filter',
-	'pwData',
-	'$log',
-	'_',
-	'pwDate',
 	function(
-		$rootScope,
-		$pwPostOptions,
-		$pwEditPostFilters,
-		$timeout,
-		$filter, 
-		$pwData,
-		$log,
-		$_,
-		$pwDate
+		$rootScope, $pwPostOptions, $pwEditPostFilters, $timeout,
+		$filter,  $pwData, $log, $_, $pwDate
 		){
 	return {
 		restrict: 'AE',
@@ -1085,22 +1064,7 @@ postworld.directive( 'pwEventInput',
 		}
 
 	};
-}]);
-
-
-
-
-/*   _         _   _                     _         _                                  _      _       
-	/ \  _   _| |_| |__   ___  _ __     / \  _   _| |_ ___   ___ ___  _ __ ___  _ __ | | ___| |_ ___ 
-   / _ \| | | | __| '_ \ / _ \| '__|   / _ \| | | | __/ _ \ / __/ _ \| '_ ` _ \| '_ \| |/ _ \ __/ _ \
-  / ___ \ |_| | |_| | | | (_) | |     / ___ \ |_| | || (_) | (_| (_) | | | | | | |_) | |  __/ ||  __/
- /_/   \_\__,_|\__|_| |_|\___/|_|    /_/   \_\__,_|\__\___/ \___\___/|_| |_| |_| .__/|_|\___|\__\___|
-																			   |_|                   
-////////// ------------ AUTHOR AUTOCOMPLETE CONTROLLER ------------ //////////*/
-
-
-
-
+});
 
 
 
@@ -1111,24 +1075,19 @@ postworld.directive( 'pwEventInput',
  |____/ \__,_|\__\___| |_|   |_|\___|_|\_\___|_|   
 
 ////////// ------------ DATE PICKER CONTROLLER ------------ //////////*/   
-var DatepickerDemoCtrl = function ($scope, $timeout) {
+postworld.controller( 'DatepickerDemoCtrl', function($scope, $timeout){
+	$scope.today = function() {
+		$scope.dt = new Date();
+	  };
+	  $scope.today();
+	  $scope.showWeeks = false;
 
-  $scope.today = function() {
-	$scope.dt = new Date();
-  };
-  $scope.today();
-  $scope.showWeeks = false;
+	  $scope.clear = function () {
+		$scope.dt = null;
+	  };
 
-  $scope.clear = function () {
-	$scope.dt = null;
-  };
-
-  $scope.dateOptions = {
-	'year-format': "'yy'",
-	'starting-day': 1
-  };
-
-};
-
-
-
+	  $scope.dateOptions = {
+		'year-format': "'yy'",
+		'starting-day': 1
+	  };
+});

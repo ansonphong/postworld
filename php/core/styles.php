@@ -44,11 +44,10 @@ function pw_less_vars( $vars, $handle ) {
 	}
 
 	///// Directory Paths /////
-	global $pwSiteGlobals;
 
 	$vars['template-url'] = pw_less_prepare_url( get_template_directory_uri() ); 
 	$vars['theme-url'] = $vars['template-url'];
-	$vars['postworld-url'] = pw_less_prepare_url( _get( $pwSiteGlobals, 'paths.postworld.url' ) );
+	$vars['postworld-url'] = pw_less_prepare_url( pw_config('paths.postworld.url') );
 
 	///// CACHE /////
 	$phpLessVarsCache = $vars;

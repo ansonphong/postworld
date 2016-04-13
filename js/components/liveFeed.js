@@ -69,7 +69,7 @@ postworld.directive('liveFeed', function($log) {
 });
 
 postworld.controller('pwFeedController',
-	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', 'pwData', '$route', '_', '$window', '$pw',
+	[ '$scope', '$rootScope', '$location', '$log', '$attrs', '$timeout', '$pwData', '$route', '$_', '$window', '$pw',
 	function( $scope, $rootScope, $location, $log, $attrs, $timeout, $pwData, $route, $_, $window, $pw ) {
 	
 	// Initialize
@@ -277,7 +277,7 @@ postworld.controller('pwFeedController',
 			// Success
 			function(response) {
 
-				$log.debug( "LIVE FEED (response) : ID : " + response.data.feed_id, response.data );
+				//$log.debug( "LIVE FEED (response) : ID : " + response.data.feed_id, response.data );
 
 				// Prevent Flicker when Template Loading
 				$timeout( function(){
@@ -429,7 +429,7 @@ postworld.controller('pwFeedController',
 					return;
 				}
 				if( response.status == 200) {
-
+					//$log.debug( '$pwData.getPosts', response );
 					var newItems = response.data;
 					
 					// Used to sequence the order of post fade-in transitions 

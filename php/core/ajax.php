@@ -203,30 +203,6 @@ function pw_get_menus_ajax(){
 add_action("wp_ajax_pw_get_menus", "pw_get_menus_ajax");
 
 
-//---------- PW SET OPTION OBJECT ----------//
-function pw_set_option_obj_ajax(){
-	list($response, $args, $nonce) = initAjaxResponse();
-	$params = $args['args'];
-
-	$response_data = pw_set_option_obj( $params ); 
-	pwAjaxRespond( $response_data );
-}
-add_action("wp_ajax_nopriv_pw_set_option_obj", "pw_set_option_obj_ajax");
-add_action("wp_ajax_pw_set_option_obj", "pw_set_option_obj_ajax");
-
-
-//---------- PW GET OPTION OBJECT ----------//
-function pw_get_option_obj_ajax(){
-	list($response, $args, $nonce) = initAjaxResponse();
-	$params = $args['args'];
-
-	$response_data = pw_get_option_obj( $params ); 
-	pwAjaxRespond( $response_data );
-}
-add_action("wp_ajax_nopriv_pw_get_option_obj", "pw_get_option_obj_ajax");
-add_action("wp_ajax_pw_get_option_obj", "pw_get_option_obj_ajax");
-
-
 //---------- PW UPDATE OPTION ----------//
 function pw_update_option_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
@@ -330,7 +306,7 @@ function pw_query_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
 
-	$response_data = pw_query($params);
+	$response_data = pw_wp_query( $params, $params['fields'] );
 
 	pwAjaxRespond( $response_data );
 }
@@ -740,12 +716,10 @@ function initAjaxResponse() {
 
 
 
-
 /* *************************
  *	Feed Functions 
  * 
  ************************** */
-
 function pw_get_live_feed_ajax() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	$vars = $args['args'];
@@ -754,10 +728,7 @@ function pw_get_live_feed_ajax() {
 }
 add_action("wp_ajax_pw_get_live_feed", "pw_get_live_feed_ajax");
 add_action("wp_ajax_nopriv_pw_get_live_feed", "pw_get_live_feed_ajax");
-
-
 /* Actions for pw_register_feed () */
-
 function pw_register_feed_admin() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
@@ -772,9 +743,7 @@ function pw_register_feed_admin() {
 	// documentation says that die() should be the end...
 	die();
 }
-
 /* Actions for pw_load_feed () */
-
 function pw_load_feed_anon() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
@@ -792,23 +761,20 @@ function pw_load_feed_anon() {
 	// documentation says that die() should be the end...
 	die();
 }
-
 /* Action Hook for pw_load_feed() - Logged in users */
 add_action("wp_ajax_pw_load_feed", "pw_load_feed_anon");
-
 /* Action Hook for pw_load_feed() - Anonymous users */
 add_action("wp_ajax_nopriv_pw_load_feed", "pw_load_feed_anon");
-
 /* Action Hook for pw_register_feed() - Logged in users */
 add_action("wp_ajax_pw_register_feed", "pw_register_feed_admin");
-
 /* Action Hook for pw_register_feed() - Anonymous users */
 // add_action("wp_ajax_nopriv_pw_register_feed", "pw_register_feed_anon");
 
 
+
+
 /* *************************
  *	Posts Functions 
- * 
  ************************** */
 
 
@@ -953,11 +919,13 @@ function pw_get_comment_anon() {
 	if ($args['fields']) $fields = $args['fields'];
 	else $fields = 'all';
 	
-	if ($args['viewer_user_id']) $viewer_user_id = $args['viewer_user_id'];
-	else $viewer_user_id = null;
+	if( isset( $args['viewer_user_id'] ) )
+		$viewer_user_id = $args['viewer_user_id'];
+	else
+		$viewer_user_id = null;
 	
 	/* set the response type as JSON */
-	$results = pw_get_comment($comment_id, $fields, $viewer_user_id);
+	$results = pw_get_comment( $comment_id, $fields, $viewer_user_id );
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $results;
@@ -1001,88 +969,86 @@ add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
 //add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
 
 
+/**
+ * @todo 	should we use wp_new_comment instead of : ???
+ * 			wp_insert_comment http://codex.wordpress.org/Function_Reference/wp_new_comment
+ */
+add_action("wp_ajax_pw_save_comment", "pw_save_comment_ajax");
+add_action("wp_ajax_nopriv_pw_get_comments", "pw_get_comments_anon");
 
- /* Actions for pw_save_comment () */
-
-function pw_save_comment_loggedIn() {
+function pw_save_comment_ajax() {
 	list($response, $args, $nonce) = initAjaxResponse();
-	// $args has all function arguments. in this case it has only one argument
-	if($args['comment_data']) $commentdata = $args['comment_data'];
-	else ErrorReturn($response, 400, 'missing argument comment_data');
-	// had to rename it to return_value, since return in ajax javascript is a reserved word 
-	if ($args['return_value']) $return = $args['return_value'];
-	else $return = null;
-	
-	// TODO should we use wp_new_comment instead of wp_insert_comment http://codex.wordpress.org/Function_Reference/wp_new_comment?
+
+	if( _get( $args, 'comment_data' ) )
+		$comment = $args['comment_data'];
+	else
+		ErrorReturn($response, 400, 'missing argument comment_data');
+
 	// Sanitize
-	$commentdata = apply_filters('preprocess_comment', $commentdata);
+	$comment = apply_filters('preprocess_comment', $comment);
 	
-	//wp_filter_nohtml_kses( $data )
-	
+	// Localize User ID
+	$user_id = get_current_user_id();
+
 	// If comment ID is provided
-	if ( $commentdata['comment_ID'] ){
+	if( _get( $comment, 'comment_ID' ) ){
 	// Check to see if comment already exists
-		$current_comment = get_comment( $commentdata['comment_ID'], "ARRAY_A" );
+		$get_comment = get_comment( $comment['comment_ID'], "ARRAY_A" );
 		// If comment exists
-		if( $current_comment != null ){
-			$user_ID = $current_comment["user_id"];
-			// If user doesn't have access to moderate
-			if ( !current_user_can( 'moderate_comments' ) )
-				return array( "error" => "No access to moderate comments." );
+		if( !empty( $get_comment ) ){
+			// If is other user's comment and user doesn't have access to moderate
+			if( $user_id != $get_comment["user_id"] &&
+				!current_user_can( 'moderate_comments' ) )
+				return new WP_Error( 403, __( "No access to moderate comments.", "postworld" ) );
 		}
 
-	} else{
+	} else {
 		// Get User ID, it must be real, since this function is called for logged in users only
-		$user_ID = get_current_user_id();
-		if (!$user_ID) ErrorReturn($response, 400, 'User must be authenticated to perform this action');
-		$commentdata['user_id'] = $user_ID;
+		
+		if( empty($user_id) )
+			ErrorReturn($response, 400, 'User must be authenticated to perform this action');
+		$comment['user_id'] = $user_id;
 	}
 
-	// Get Author Info
-	$user_data = get_userdata( $user_ID );
-	if ($user_data->display_name) {
-		$commentdata['comment_author'] = $user_data->display_name; 
-	} else if ($user_data->user_nicename) {
-		$commentdata['comment_author'] = $user_data->user_nicename; 
-	} else 
-		$commentdata['comment_author'] = $user_data->user_login; 
-	
-	if ($user_data->user_email) {
-		$commentdata['comment_author_email'] = $user_data->user_email; 
-	}
-	  
-	if ($user_data->user_url) {
-		$commentdata['comment_author_url'] = $user_data->user_url; 
+	// If user is logged in, get data from their user profile
+	if( !empty( $user_id ) ){
+		$user_data = get_userdata( $user_id );
+		if( $user_data->display_name ) {
+			$comment['comment_author'] = $user_data->display_name; 
+		} else if ($user_data->user_nicename) {
+			$comment['comment_author'] = $user_data->user_nicename; 
+		} else 
+			$comment['comment_author'] = $user_data->user_login; 
+
+		if ($user_data->user_email) {
+			$comment['comment_author_email'] = $user_data->user_email; 
+		}
+		$comment['comment_author_url'] = ( isset($user_data->user_url) ) ? $user_data->user_url : '';
 	}
 
 	// Get IP, Agent
-	$commentdata['comment_author_IP'] = preg_replace( '/[^0-9a-fA-F:., ]/', '',$_SERVER['REMOTE_ADDR'] );
-	$commentdata['comment_agent']     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 ) : '';
+	$comment['comment_author_IP'] = preg_replace( '/[^0-9a-fA-F:., ]/', '',$_SERVER['REMOTE_ADDR'] );
+	$comment['comment_agent']     = isset( $_SERVER['HTTP_USER_AGENT'] ) ? substr( $_SERVER['HTTP_USER_AGENT'], 0, 254 ) : '';
 	
 	// Get Date
-	// $commentdata['comment_date']     = current_time('mysql');
-	$commentdata['comment_date_gmt'] = current_time('mysql', 1);
-
+	$comment['comment_date_gmt'] = current_time('mysql', 1);
 
 	// Sanitize
-	$commentdata = wp_filter_comment($commentdata);
-	$commentdata['comment_approved'] = wp_allow_comment($commentdata);	
+	$comment = wp_filter_comment($comment);
+	$comment['comment_approved'] = wp_allow_comment($comment);	
 	
 	// Remove HTML
-	$commentdata['comment_content'] = wp_filter_nohtml_kses( $commentdata['comment_content'] );
+	$comment['comment_content'] = wp_filter_nohtml_kses( $comment['comment_content'] );
 
-	$results = pw_save_comment($commentdata,$return);
-	header('Content-Type: application/json');
-	$response['status'] = 200;
-	$response['data'] = $results;
-	echo json_encode($response);
-	// documentation says that die() should be the end...
-	die();
+	$return = pw_save_comment( $comment, _get( $args, 'return_value' ) );
+
+	pwAjaxRespond( $return );
 }
 
- /* Actions for pw_delete_comment () */
 
-function pw_delete_comment_loggedIn() {
+/* Actions for pw_delete_comment () */
+
+function pw_delete_comment_ajax() {
 	list($response, $args, $nonce) = initAjaxResponse();
 	// $args has all function arguments. in this case it has only one argument
 	if($args['comment_id']) $comment_id = $args['comment_id'];
@@ -1106,15 +1072,9 @@ function pw_delete_comment_loggedIn() {
 
 
 /* Action Hook for pw_delete_comment() - Logged in users */
-add_action("wp_ajax_pw_delete_comment", "pw_delete_comment_loggedIn");
-
- 
-/* Action Hook for pw_save_comment() - Logged in users */
-add_action("wp_ajax_pw_save_comment", "pw_save_comment_loggedIn");
+add_action("wp_ajax_pw_delete_comment", "pw_delete_comment_ajax");
 
 
-/* Action Hook for pw_get_comments() - Logged In users */
-add_action("wp_ajax_pw_get_comments", "pw_get_comments_anon");
 
 
 /* *************************

@@ -4,19 +4,93 @@
  | | | | __| | | | __| |/ _ \/ __|
  | |_| | |_| | | | |_| |  __/\__ \
   \___/ \__|_|_|_|\__|_|\___||___/
-//////////////////////////////////*/
+///////////////////////////////////////*/
+/// General/global utility functions ///
+
+/**
+ * Prints pre-defined scripts to the footer
+ */
+function pw_register_footer_script( $script ){
+	$GLOBALS['pw_footer_scripts'][] = $script;
+}
+add_action('wp_print_footer_scripts','pw_print_footer_scripts', 100);
+function pw_print_footer_scripts(){
+	foreach($GLOBALS['pw_footer_scripts'] as $script){
+		echo $script;
+		echo "\n";
+	}
+}
+
+/**
+ * Inject PHP data into an arbitrary Angular Controller.
+ *
+ * @param string $vars['controller'] The name of the Angular controller
+ * @param array $vars['vars'] A series of key value pairs which are output to $scope as JSON
+ */
+function pw_make_ng_controller( $vars = array() ){
+	$include_script_tags = _get( $vars, 'include_script_tags' );
+	$output = '';
+
+	if( $include_script_tags )
+		$output .="<script>\n";
+
+	$output .= "postworld.controller('".$vars['controller']."',function(\$scope){\n";
+	foreach( $vars['vars'] as $key => $value ){
+		$output .= "\$scope.".$key." = ".json_encode($value).";\n";
+	}
+	$output .= "})\n";
+
+	if( $include_script_tags )
+		$output .="</script>\n";
+
+	return $output;
+}
+
+/**
+ * Prints an Angular controller in the footer of the page.
+ */
+function pw_print_ng_controller($vars){
+	$vars['include_script_tags'] = true;
+	$script = pw_make_ng_controller($vars);
+	//wp_add_inline_script( $vars['controller'].pw_random_string(), $script );
+	pw_register_footer_script( $script );
+}
+
+
+/**
+ * Gets the URI for the Postworld directory
+ * @return string The URI
+ */
+function postworld_directory_uri(){
+	$template_uri = get_template_directory_uri();
+	$template_dir = get_template_directory();
+	$postworld_dir = POSTWORLD_PATH;
+
+	// Subtract the Infinite Directory from the Template Dir
+	$relative_path = str_replace( $template_dir, '', $postworld_dir );
+
+	// Add the difference to the Template URI
+	return $template_uri . $relative_path;
+}
+
+function pw_access_protected($obj, $prop) {
+  $reflection = new ReflectionClass($obj);
+  $property = $reflection->getProperty($prop);
+  $property->setAccessible(true);
+  return $property->getValue($obj);
+}
 
 /**
  * Returns a specific key from the
  * Postworld Site Globals.
  */
 function pw_config( $key = null ){
-	global $pwSiteGlobals;
-	$pwSiteGlobals = apply_filters( 'pw_config', $pwSiteGlobals );
+	global $pw_config;
+	$pw_config = apply_filters( 'pw_config', $pw_config );
 	if( $key == null )
-		return $pwSiteGlobals;
+		return $pw_config;
 	else
-		return _get( $pwSiteGlobals, $key );
+		return _get( $pw_config, $key );
 }
 
 /**
@@ -24,19 +98,86 @@ function pw_config( $key = null ){
  * Postworld Site Globals.
  */
 function pw_set_config( $key, $value ){
-	global $pwSiteGlobals;
-	$pwSiteGlobals = _set( $pwSiteGlobals, $key, $value );
-	return $pwSiteGlobals;
+	global $pw_config;
+	$pw_config = _set( $pw_config, $key, $value );
+	return $pw_config;
 }
 
 /**
  * Pushes a value to an array in the Postworld Config.
  */
 function pw_push_config( $key, $value ){
-	global $pwSiteGlobals;
-	$pwSiteGlobals = _push( $pwSiteGlobals, $key, $value );
-	return $pwSiteGlobals;
+	global $pw_config;
+	$pw_config = _push( $pw_config, $key, $value );
+	return $pw_config;
 }
+
+/**
+ * Check if needle is in an array within the Postworld Config
+ *
+ * @param any $needle A value to check for in the array.
+ * @param string $haystack_key A dot notation path to the key in Postworld Config
+ * @return any|bool The value found, or false if none or not an array 
+ */
+function pw_config_in_array( $needle, $haystack_key ){
+	$haystack = pw_config( $haystack_key );
+	if( !is_array( $haystack ) )
+		return false;
+	return in_array( $needle, $haystack );
+}
+
+/**
+ * Check if the Postworld DB configuration 
+ * Has a particular table.
+ */
+function pw_config_db_has_table( $table ){
+	global $wpdb;
+	$table_name = $wpdb->pw_prefix.$table;
+	return ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name);
+
+	/*
+	$tables = pw_config('db.tables');
+	if($tables === false)
+		return true;
+	return pw_config_in_array($table, 'db.tables' );
+	*/
+}
+
+/**
+ * Which tables are configured to be created.
+ *
+ * @return array Array of table names, minus prefix.
+ */
+function pw_config_db_tables(){
+	$tables = pw_config('db.tables');
+	// Default tables, if none set
+	if( empty($tables) )
+		$tables = array(
+			'post_meta',
+			'post_points',
+			'comment_meta',
+			'comment_points',
+			'user_meta',
+			'user_shares',
+			'favorites',
+			'cron_logs',
+			'shares',
+			'cache',
+			'ips',
+			);
+	return $tables;
+}
+
+/**
+ * Tells whether or not the specified table is configured.
+ *
+ * @param string $table Table shortname, ie. 'post_meta' for wp_postworld_post_meta
+ * @return boolean
+ */
+function pw_config_in_db_tables( $table ){
+	return in_array( $table, pw_config_db_tables() );
+}
+
 
 /**
  * Add a post parent metabox.
@@ -74,6 +215,16 @@ function pw_add_metabox_wp_postmeta( $vars ){
 	return pw_push_config( 'wp_admin.metabox.wp_postmeta', $vars );
 }
 
+
+/**
+ * Gets the submenu slug used to group admin menu items
+ * Under the desired main menu item.
+ * @return string
+ */
+function pw_admin_submenu_slug(){
+	global $pw;
+	return apply_filters( 'pw_admin_submenu_slug', $pw['info']['slug'] );
+}
 
 /**
  * Returns the date in the requested format, a period of time ago
@@ -244,6 +395,19 @@ function pw_get_post_gmt_timestamp( $post_id = null ){
 	return $time;
 
 }
+
+/**
+ * Display the classes for the post div.
+ * Like WP native post_class, without the 'class=' part,
+ * And doesn't echo, instead returns string.
+ *
+ * @param string|array $class   One or more classes to add to the class list.
+ * @param int|WP_Post  $post_id Optional. Post ID or post object. Defaults to the global `$post`.
+ * @return string A string of post classes.
+ */
+function pw_post_class( $class, $post_id ){
+	return join( ' ', get_post_class( $class, $post_id ) );
+};
 
 
 /**
@@ -553,10 +717,11 @@ function pw_user_id_exists_alt($user_id){
 	return ( $user != false ) ? true : false;
 }
 
+/**
+ * Checks if given user has permissions to edit usermeta
+ * @param integer $user_id The ID of the user whos usermeta is being edited
+ */
 function pw_check_user_id($user_id){
-	// Checks if given user has permissions to edit usermeta
-	// $user_id = the ID of the user whos usermeta is being edited
-
 	///// USER ID /////
 	$current_user_id = get_current_user_id();
 
@@ -564,7 +729,7 @@ function pw_check_user_id($user_id){
 		$user_id = $current_user_id;
 
 	if( $user_id == 0 )
-		return array( 'error' => 'No user ID.' );
+		return new WP_Error( '400', 'No user ID.' );
 
 	// Security Layer
 	// Mode whereby the system can access user meta for special operations
@@ -573,18 +738,19 @@ function pw_check_user_id($user_id){
 		// Check if setting for current user, or if current user can edit users
 		if(	$user_id != $current_user_id &&
 			!current_user_can( 'edit_users' ) )
-			return array( 'error' => 'No permissions.' );
+			return new WP_Error( '401', 'Insufficient permissions.' );
 	
 	// If passed all tests, return user ID
 	return $user_id;
 
 }
 
+/**
+ * Checks if given user has permissions to edit a post
+ * @param integer $post_id The ID of the post being edited
+ * @return bool|integer
+ */
 function pw_check_user_post( $post_id, $mode = "edit" ){
-	// Checks if given user has permissions to edit a post
-	// $post_id = the ID of the post being edited
-
-	///// USER ID /////
 	$current_user_id = get_current_user_id();
 
 	if( isset( $post_id ) && pw_post_id_exists( $post_id )  ){
@@ -592,7 +758,7 @@ function pw_check_user_post( $post_id, $mode = "edit" ){
 		$post_author = $post->post_author;
 	}
 	else
-		return array( 'error' => 'No post ID.' );
+		return new WP_Error( '400', 'No post ID.' );
 
 	// Security Layer
 	// Check if setting for current user, or if current user can edit the post
@@ -601,9 +767,7 @@ function pw_check_user_post( $post_id, $mode = "edit" ){
 
 		// Check for custom role to edit custom post type
 		if( !current_user_can( $mode.'_others_'.$post->post_type.'s' ) )
-
-			return array( 'error' => 'No permissions.' );
-	
+			return new WP_Error( '401', 'Insufficient permissions.' );
 	
 	// If passed all tests, return post ID
 	return $post_id;
@@ -618,11 +782,11 @@ function pw_empty_array( $format ){
 		return "{}";
 }
 
-function object_to_array($data){
+function pw_object_to_array($data){
     if (is_array($data) || is_object($data)){
         $result = array();
         foreach ($data as $key => $value){
-            $result[$key] = object_to_array($value);
+            $result[$key] = pw_object_to_array($value);
         }
         return $result;
     }
@@ -666,20 +830,26 @@ function pw_get_post_types( $args = array(), $fields = 'default' ){
 }
 
 
-//////////// BRANCH : Create a recursive branch from a flat object ////////////
-function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
-	extract($settings);
-
-	///// DEFAULTS /////
-	if (empty($max_depth))	$max_depth = 10;
-	if (empty($fields))		$fields = array('name');
-	if (empty($id_key))		$id_key = 'id';
-	if (empty($parent_key))	$parent_key = 'parent';
-	if (empty($child_key))	$child_key = 'children';
+/**
+ * BRANCH : Create a recursive branch from a flat object
+ * @todo Refactor not using extract, use default array merge method.
+ */
+function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings = array() ){
+	$default_settings = array(
+		'fields' => array('name'),
+		'id_key' => 'id',
+		'parent_key' => 'parent',
+		'child_key' => 'children',
+		'max_depth' => 10,
+		'callback' => null,
+		'callback_fields' => null,
+		);
+	$s = array_replace( $default_settings, $settings );
 
 	///// LOCAL BRANCH /////
-	// Check Depth
-	if($depth > $max_depth) return ''; // Make sure not to have an endless recursion
+	// Check Depth to prevent endless recursion
+	if( $depth > $s['max_depth'])
+		return '';
 
 	 // Setup Local Branch
 	 $branch = array();
@@ -687,47 +857,47 @@ function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 	 // Cycle through each item in the Object
 	 for($i=0, $ni=count($object); $i < $ni; $i++){
 	 	// If the current item is the same as the current cycling parent, add the data
-	 	if( $object[$i][$parent_key] == $parent ){
+	 	if( $object[$i][ $s['parent_key'] ] == $parent ){
 	 		// Setup / Clear Branch Child Array
 			$branch_child = array();
 			// Get all fields
-			if( $fields == 'all' ){
+			if( $s['fields'] == 'all' ){
 				$branch_child = $object[$i];
 			}
 			// Get an array of particular fields
-			else if( gettype($fields) == 'array' ){
+			else if( gettype($s['fields']) == 'array' ){
 				// Transfer individual fields
-				foreach ($fields as $field) {
+				foreach ($s['fields'] as $field) {
 					$branch_child[$field] = $object[$i][$field];
 				}
 			}
 			// Perform callback
-			if ( $callback ){
+			if( isset($s['callback']) && !empty($s['callback']) ){
 				// If $callback_fields is included, pass that to the callback
-				if (is_array($callback_fields)){
+				if( is_array( $s['callback_fields'] ) ){
 					// Get the live variable values of the callback array inputs 
 					$callback_fields_live = array();
-					foreach( $callback_fields as $field_name ){
+					foreach( $s['callback_fields'] as $field_name ){
 						// Replace field request with the actual value.
 						// Example : id >> 24
 						// Derived from the original $object
 						$field_value = $object[ $i ][ $field_name ];
 						array_push( $callback_fields_live, $field_value );
 					}
-					$callback_data = call_user_func_array($callback,array($callback_fields_live));
+					$callback_data = call_user_func_array( $s['callback'], array($callback_fields_live) );
 				}
 				// Otherwise run the callback with no inputs
 				else {
-					$callback_data = call_user_func($callback);
+					$callback_data = call_user_func( $callback );
 				}
 				// Merge back the result of the callback
-				$branch_child = array_merge($branch_child, $callback_data);
+				$branch_child = array_merge( $branch_child, $callback_data );
 			}
 	 		// Run Branch recursively and find children
-	 		$children = tree_obj($object, $object[$i][$id_key], $depth+1, $settings);
+	 		$children = pw_make_tree_obj( $object, $object[$i][ $s['id_key'] ], $depth+1, $settings );
 	 		// If there are children, merge them into the branch_child as sub Array
 	 		if (!empty($children)){
-		 		$branch_child[$child_key] = $children;
+		 		$branch_child[ $s['child_key'] ] = $children;
 	 		}
 	 		// Push Branch Child data to Local Branch
 		 	array_push($branch, $branch_child);
@@ -739,12 +909,12 @@ function tree_obj( $object, $parent = 0, $depth = 0, $settings ){
 
 ////////// WP OBJECT TREE //////////
 // Generates a hierarchical tree from a flat Wordpress object
-function wp_tree_obj($args){
+function wp_tree_obj( $args ){
 	extract($args);
 
 	// OBJECT -> ARRAY()
 	if ( is_object($object[0]) )
-		$object = object_to_array($object);
+		$object = pw_object_to_array($object);
 
 		// ROOT
 		$settings = array(
@@ -757,13 +927,13 @@ function wp_tree_obj($args){
 			'callback_fields' => $callback_fields,
 			);
 
-		$tree_obj = tree_obj( $object, 0, 0, $settings );
+		$tree_obj = pw_make_tree_obj( $object, 0, 0, $settings );
 
 	return $tree_obj;
 }
 
 
-function extract_parenthesis_values ( $input, $force_array = true ){
+function pw_extract_parenthesis_values ( $input, $force_array = true ){
 	// Extracts comma deliniated values which are contained in parenthesis
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
@@ -790,7 +960,7 @@ function extract_parenthesis_values ( $input, $force_array = true ){
 }
 
 
-function extract_bracket_values ( $input, $force_array = true ){
+function pw_extract_bracket_values ( $input, $force_array = true ){
 	// Extracts comma deliniated values which are contained in square brackets
 	// Returns an Array of values that were previously comma deliniated,
 	// unless $force_array is set TRUE.
@@ -819,7 +989,7 @@ function extract_bracket_values ( $input, $force_array = true ){
 }
 
 
-function extract_fields( $fields_array, $query_string ){
+function pw_extract_fields( $fields_array, $query_string ){
 	// Extracts values starting with $query_string from $fields_array
 	// and returns them in a new Array.
 
@@ -836,16 +1006,16 @@ function extract_fields( $fields_array, $query_string ){
 }
 
 
-function extract_linear_fields( $fields_array, $query_string, $force_array = true ){
+function pw_extract_linear_fields( $fields_array, $query_string, $force_array = true ){
 	// Extracts nested comma deliniated values starting with $query_string from $fields_array
 	// and returns them in a new Array.
-	$fields_request = extract_fields( $fields_array, $query_string );
+	$fields_request = pw_extract_fields( $fields_array, $query_string );
 
 	if (!empty($fields_request)){
 		$extract_fields = array();
 		// Process each request one at a time >> author(display_name,user_name,posts_url) 
 		foreach ($fields_request as $field_request) 
-			$extract_fields = array_merge( $extract_fields, extract_parenthesis_values($field_request, true) );
+			$extract_fields = array_merge( $extract_fields, pw_extract_parenthesis_values($field_request, true) );
 
 		// If only one value, return string
 		if ( count($extract_fields) == 1 && $force_array == false )
@@ -860,12 +1030,12 @@ function extract_linear_fields( $fields_array, $query_string, $force_array = tru
 
 
 
-function extract_hierarchical_fields( $fields_array, $query_string ){
+function pw_extract_hierarchical_fields( $fields_array, $query_string ){
 	// Extracts nested comma deliniated values starting with $query_string from $fields_array
 	// And nests inside it fields which are with it in square brackets
 	// and returns them in a new Array.
 
-	$fields_request = extract_fields( $fields_array, $query_string );
+	$fields_request = pw_extract_fields( $fields_array, $query_string );
 	// RESULT : ["taxonomy(category)[id,name]","taxonomy(topic,section)[id,slug]"]
 
 	if (!empty($fields_request)){
@@ -876,11 +1046,11 @@ function extract_hierarchical_fields( $fields_array, $query_string ){
 		// Process each request one at a time >> author(display_name,user_name,posts_url) 
 		foreach ($fields_request as $field_request){
 
-			$root_values = extract_parenthesis_values($field_request, true);
+			$root_values = pw_extract_parenthesis_values($field_request, true);
 
 			///// PROCESS SUB-VALUES /////
 			// If there are sub-fields defined inside [square,brackets]
-				$sub_values = extract_bracket_values($field_request, true);
+				$sub_values = pw_extract_bracket_values($field_request, true);
 
 				// Cycle through each sub-value and apply it to the root field
 				foreach ($root_values as $value) {
@@ -1372,11 +1542,11 @@ function pw_get_menus(){
 }
 
 
-
-///// DEPRECIATED /////
-
+/**
+ * **DEPRECIATED**
+ * Determine the view type
+ */
 function pw_get_view_type(){
-	// Determine the view type
 	$view_type = "default";
 
 	if( is_archive() && !is_date() )
@@ -1401,9 +1571,11 @@ function pw_get_view_type(){
 	return $view_type;
 }
 
-///// DEPRECIATED /////
+/**
+ * **DEPRECIATED**
+ * Define Context Class
+ */
 function pw_current_context_class(){
-	/// DEFINE CLASS ///
 	// home / archive / blog / page / single / attachment / default
 
 	if( is_front_page() )
@@ -1440,24 +1612,24 @@ function pw_current_context_class(){
 
 }
 
+/**
+ * Return boolean wether or not BuddyPress is active.
+ */
 function pw_is_buddypress_active(){
 	global $bp;
 	return ( !empty( $bp ) && function_exists('bp_is_active') ) ? true : false;
 }
 
-
 function pw_clean_input($input) {
-
-  $search = array(
-    '@<script[^>]*?>.*?</script>@si',   // Strip out javascript
-    '@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
-    '@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
-    '@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
-  );
-
-    $output = preg_replace($search, '', $input);
-    return $output;
-  }
+	$search = array(
+		'@<script[^>]*?>.*?</script>@si',   // Strip out javascript
+		'@<[\/\!]*?[^<>]*?>@si',            // Strip out HTML tags
+		'@<style[^>]*?>.*?</style>@siU',    // Strip style tags properly
+		'@<![\s\S]*?--[ \t\n\r]*>@'         // Strip multi-line comments
+		);
+	$output = preg_replace($search, '', $input);
+	return $output;
+}
 
 function pw_sanitize($input) {
     if (is_array($input)) {
@@ -1480,10 +1652,6 @@ function pw_sanitize_key( $key ){
 	$key = strtolower($key);
 	// Replace Spaces with Underscores ( _ )
 	$key = preg_replace('/\s+/', '_', $key);
-	
-	// Sanitize (overkill)
-	//$key = pw_sanitize($key);
-
 	return $key;
 }
 
@@ -1498,7 +1666,6 @@ function pw_sanitize_numeric( $val, $require_numeric = false ){
 		else
 			return $val;
 	}
-
 }
 
 /**
@@ -1531,13 +1698,11 @@ function pw_sanitize_numeric_array( $vals = array(), $require_numeric = false, $
  * Numerically sanitize an associative array of values
  */
 function pw_sanitize_numeric_a_array( $vals = array() ){
-
 	$sanitized = array();
 	foreach( $vals as $key => $val ){
 		$sanitized[$key] = pw_sanitize_numeric( $val );
 	}
 	return $sanitized;
-
 }
 
 function pw_sanitize_numeric_array_of_a_arrays( $vals ){
@@ -1548,18 +1713,19 @@ function pw_sanitize_numeric_array_of_a_arrays( $vals ){
 	return $vals;
 }
 
+/**
+ * Looks through the list and returns the first value
+ * That matches the key value pair listed in properties
+ *
+ * @todo Refactor to accept multipe key->value pairs
+ */
 function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
-	// Looks through the list and returns the first value
-	// That matches the key value pair listed in properties
-	// TODO : Refactor to accept multipe key->value pairs
-
 	// Get the first Key and Value
 	foreach( $key_value_pair as $get_key => $get_value ){
 		$key = $get_key;
 		$value = $get_value;
 		break;
 	}
-
 	// Search for the key/value in the given array
 	foreach( $array as $sub_array ){
 		if(	isset( $sub_array[$key] ) &&
@@ -1567,25 +1733,22 @@ function pw_find_where( $array, $key_value_pair = array( "key" => "value" ) ){
 			return $sub_array;
 	}
 	return false;
-
 }
 
+/**
+ * Returns a list with items continaing the key->value pair removed
+ *
+ * @todo Refactor to accept multipe key->value pairs
+ * @todo Add Operator parameter, "AND" / "OR" for multiple key->value pairs
+ */
 function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
-	// Returns a list with items continaing the key->value pair removed
-	// TODO : Refactor to accept multipe key->value pairs
-	// TODO : Add Operator parameter, "AND" / "OR" for multiple key->value pairs
-
-	//pw_log('pw_reject : LIST : ' .count($list));
-
 	// Get the first Key and Value
 	foreach( $key_value_pair as $get_key => $get_value ){
 		$key = $get_key;
 		$value = $get_value;
 		break;
 	}
-
 	$new_list = array();
-
 	foreach( $list as $item ){
 		if(	isset( $item[$key] ) &&
 			$item[$key] == $value )
@@ -1593,11 +1756,7 @@ function pw_reject( $list, $key_value_pair = array( "key" => "value" ) ){
 		else
 			$new_list[] = $item;
 	}
-
-	//pw_log('pw_reject : NEW LIST : ' .count($new_list));
-
 	return $new_list;
-
 }
 
 /**
@@ -1626,6 +1785,11 @@ function pw_array_order_by(){
 }
 
 
+/**
+ * Reset the LESS cache by updating updated time
+ * on a ghost file. Include this ghost file in any LESS file.
+ * Call this function after changing dynamic style variables.
+ */
 function pw_reset_less_php_cache(){
 	//global $pwGlobalsJsFile;
 	$ghost_less_file = POSTWORLD_PATH .'/less/ghost.less';
@@ -1816,7 +1980,41 @@ function pw_exit_with_error($message = '', $httpStatus = 500) {
 	exit;
 }
 
-////////////////////////////////////////////////////////////////
+
+/**
+ * Checks array_key_exists() on multiple values.
+ *
+ * @param array $keys An array of keys to check for.
+ * @param $array $array A key->value paired array to check keys for.
+ * @param bool $match_all If false, any match will return true. If true, will require all to match.
+ */
+function pw_array_keys_exist( $keys, $array, $match_all = false ){
+	foreach( $keys as $key ){
+		// (bool) Check if the key exists in the array keys
+		$has_match = array_key_exists( $key, $array );
+
+		if( !$match_all ){
+			if( $has_match === true )
+				return true;
+			else
+				continue;
+		}
+
+		if( $match_all ){
+			if( $has_match === false )
+				return false;
+			else
+				continue;
+		}
+
+	}
+
+	if( $match_all )
+		return true;
+	else
+		return false;
+
+}
 
 
 /*
@@ -1834,5 +2032,56 @@ function pw_get_post_types(){
 }
 */
 
+
+/*
+function pw_add_terms( $terms, $taxonomy ){
+	// Adds a series of terms up to two levels of depth
+
+	foreach( $terms as $term ){
+	
+		$term_exists = term_exists( $term['term'], $taxonomy );
+
+		// Add top level terms
+		if( !$term_exists ){
+			// Insert the term
+			$term_ids = wp_insert_term(
+				$term['term'],
+				$taxonomy,
+				$term['meta']
+				);
+		} else{
+			$term_ids = $term_exists;
+		}
+
+		// Add Child Terms
+		if( isset( $term['children'] ) ){
+
+			// Iterate through each child term
+			foreach( $term['children'] as $child_term ){
+
+				// Check if Terms Exists
+				$term_exists = term_exists( $child_term['term'], $taxonomy );
+
+				if( !$term_exists ){
+					// Define the parent term
+					$child_term['meta']['parent'] = $term_ids['term_id'];
+
+					// Insert the term
+					$child_term_ids = wp_insert_term(
+						$child_term['term'],
+						$taxonomy,
+						$child_term['meta']
+						);
+
+				}
+
+			}
+
+		}
+
+	}
+
+}
+*/
 
 ?>

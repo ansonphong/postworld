@@ -1,5 +1,37 @@
 <?php 
+/**
+ * Runs a WordPress standard query on the input query
+ * Then returns the requested Postworld fields.
+ */
+function pw_wp_query( $query, $fields ){
+	$query['fields'] = 'ids';
+	$results = new WP_Query( $query );
+	return pw_get_posts( $results->posts, $fields );
+}
 
+/**
+ * Wrapper function for PW_Query class.
+ */
+function pw_query($args,$return_type = 'PW_QUERY') {     
+	$the_query = new PW_Query($args);
+	switch( $return_type ){
+		case 'ARRAY_A':
+			return (array) $the_query;
+		case 'JSON':
+			return json_encode($the_query);
+		default:
+			return $the_query;
+	}
+}
+
+/**
+ * This extends WP_Query class to use Postworld fields:
+ * • Query for link_format & post_class fields from postworld_post_meta table
+ * • Sort posts by points & rank_score fields in the postworld_post_meta table
+ * • Defines which fields are returned using pw_get_posts() method
+ *
+ * @todo Destroy PW_Query class altogether, replace with WP_Query filters
+ */
 class PW_Query extends WP_Query {
 	 
 	/*
@@ -38,18 +70,18 @@ class PW_Query extends WP_Query {
 
 		if($orderby!=null && $orderby!=''){
 			$orderby = str_replace("date", 			$wpdb->prefix."posts.post_date", $orderby);	
-			$orderby = str_replace("rank_score", 	$wpdb->pw_prefix."post_meta.rank_score", $orderby);	
-			$orderby = str_replace("post_points", 	$wpdb->pw_prefix."post_meta.post_points", $orderby);	
+			$orderby = str_replace("rank_score", 	$wpdb->pw_prefix."post_meta.rank_score", $orderby);	//**
+			$orderby = str_replace("post_points", 	$wpdb->pw_prefix."post_meta.post_points", $orderby); //**
 			$orderby = str_replace("modified", 		$wpdb->prefix."posts.post_modified", $orderby);	
 			$orderby = str_replace("rand", 			"RAND()", $orderby);	
 			$orderby = str_replace("comment_count", $wpdb->prefix."posts.comment_count", $orderby);	
-			$orderby = str_replace("event_start", 	$wpdb->pw_prefix."post_meta.event_start", $orderby);
-			$orderby = str_replace("event_end", 	$wpdb->pw_prefix."post_meta.event_end", $orderby);
+			$orderby = str_replace("event_start", 	$wpdb->pw_prefix."post_meta.event_start", $orderby); //**
+			$orderby = str_replace("event_end", 	$wpdb->pw_prefix."post_meta.event_end", $orderby); //**
 			$orderby = "order by ".str_replace(' ', ',', $orderby);//." ".$args->order;
 			$orderby.=" ".$this->query_vars['order'];
 		}
 		else
-			$orderby = 'order by wp_posts.post_date '.$this->query_vars['order'];
+			$orderby = 'order by '.$wpdb->prefix.'posts.post_date '.$this->query_vars['order'];
 		
 		if($this->query_vars['posts_per_page']!=null && $this->query_vars['posts_per_page']!='' && $this->query_vars['posts_per_page']>-1 ){
 			if(array_key_exists('offset',  $this->query_vars))
@@ -66,6 +98,10 @@ class PW_Query extends WP_Query {
 		$related_query = "related_post = ".$related_post;
 		return $related_query." AND ";
 	}
+
+
+
+
 
 	function prepare_time_query(){
 		///// event_start,  /////
@@ -86,7 +122,7 @@ class PW_Query extends WP_Query {
 			}
 		}
 
-		///// event_end,  /////
+		///// event_end /////
 		if(array_key_exists('event_end',  $this->query_vars)){
 			// all events with event_start before this
 			$event_end = $this->query_vars['event_end'];
@@ -99,7 +135,7 @@ class PW_Query extends WP_Query {
 			}
 		}
 
-		///// event_before,  /////
+		///// event_before /////
 		if(array_key_exists('event_before',  $this->query_vars)){
 			// all events with event_end before this
 			$event_before = $this->query_vars['event_before'];
@@ -112,8 +148,9 @@ class PW_Query extends WP_Query {
 			}
 		}
 
-		///// event_after,  /////
+		///// event_after /////
 		if(array_key_exists('event_after',  $this->query_vars)){
+			//pw_log( 'PW_Query : event_after', $this->query_vars['event_after'] );
 			// all events with event_start after this
 			$event_after = $this->query_vars['event_after'];
 
@@ -147,7 +184,7 @@ class PW_Query extends WP_Query {
 			/**
 			 * @todo :  Here make sure all the event filters
 			 *			are from a list of pre-registered options
-			 *			Otherwise it could mess up the rest of the query.
+			 *			Otherwise it could mess up the rest of the query. //**
 			*/
 
 			$filter_count = count( $event_filters );
@@ -196,6 +233,10 @@ class PW_Query extends WP_Query {
 		return $time_query." AND ";
 	}
 
+
+
+
+
 	function prepare_geo_query(){
 		///// GEO LATITUDE /////
 
@@ -224,7 +265,16 @@ class PW_Query extends WP_Query {
 		if($geo_query == "") return " AND ";
 		return $geo_query." AND ";
 	}
+
+
+
+
+
 	
+
+	/**
+	 * @todo Look at the posts_where filter in WP_Query //**
+	 */
 	function prepare_where_query(){
 		
 		$where ="WHERE ";	
@@ -274,8 +324,11 @@ class PW_Query extends WP_Query {
 		return $where." AND ";
 	}
 	
-	
+	/**
+	 * @todo Look at posts_join filter in WP_Query //**
+	 */
 	function prepare_new_request($remove_tbl=false){
+		global $wpdb;
 		$orderBy = $this->prepare_order_by();
 		$where = $this->prepare_where_query();
 
@@ -297,8 +350,8 @@ class PW_Query extends WP_Query {
 		//$where.=" AND ";
 		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
-		$this->request = str_replace('SELECT', 'SELECT wp_postworld_post_meta.* , ', $this->request);
-			$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
+		$this->request = str_replace('SELECT', 'SELECT '.$wpdb->prefix.'postworld_post_meta.* , ', $this->request);
+			$this->request = str_replace('FROM '.$wpdb->prefix.'posts','FROM '.$wpdb->prefix.'posts left join  '.$wpdb->prefix.'postworld_post_meta on '.$wpdb->prefix.'posts.ID = '.$wpdb->prefix.'postworld_post_meta.post_id ', $this->request);
 			$this->request = str_replace('WHERE', $where, $this->request);
 			$strposOfOrderBy = strpos($this->request, "ORDER BY");
 			$this->request =  substr($this->request ,0,$strposOfOrderBy);
@@ -320,10 +373,18 @@ class PW_Query extends WP_Query {
 		}
 	}
 	
+
+	/**
+	 * REMOVE THIS, AND TWEAK HIGHER LEVEL FUNCTION
+	 * WHICH JUST GETS IDS 
+	 */
 	function get_posts() {
 		
 		global $wpdb, $user_ID, $_wp_using_ext_object_cache;
-		$wpdb -> show_errors();
+	
+		if( pw_dev_mode() )
+			$wpdb -> show_errors();
+	
 		$this->parse_query();
 
 		do_action_ref_array('pre_get_posts', array(&$this));
@@ -755,6 +816,7 @@ class PW_Query extends WP_Query {
 		if ( empty($q['order']) || ((strtoupper($q['order']) != 'ASC') && (strtoupper($q['order']) != 'DESC')) )
 			$q['order'] = 'DESC';
 
+
 		// Order by
 		if ( empty($q['orderby']) ) {
 			$orderby = "$wpdb->posts.post_date " . $q['order'];
@@ -814,6 +876,8 @@ class PW_Query extends WP_Query {
 			else
 				$orderby .= " {$q['order']}";
 		}
+
+
 
 		if ( is_array( $post_type ) && count( $post_type ) > 1 ) {
 			$post_type_cap = 'multiple_post_type';
@@ -1235,40 +1299,7 @@ class PW_Query extends WP_Query {
 	}
 }
 
-function pw_query($args,$return_Type = 'PW_QUERY') {
-	
-	/*
-	 * Description:
-		• Similar to the functionality of WP_Query : http://codex.wordpress.org/Class_Reference/WP_Query 
-		
-		• Query by Postworld data fields link_format & post_class
-		• Sort by points & rank_score
-		• Define which fields are returned using pw_get_posts() method
-		• Can determine the return_format as JSON, PHP Associative Array or WP post objects
-		
-		
-		Process:
-		• After querying and ordering is finished, if more than IDs are required to return, use pw_get_posts() method to return specified fields
-		
-		return : PHP Object / JSON / PW_QUERY
-	 
-	  
-		 • JSON - Return a JSON Object
-	     • ARRAY_A - Return an Associative Array
-	     • PW_QUERY (default) 
-	*/
-	     
-	$the_query = new PW_Query($args);
-	if($return_Type == 'ARRAY_A'){
-		return (array) $the_query;
-	}
-	else if($return_Type == 'JSON'){
-		return json_encode($the_query);
-	}
-	else
-		return $the_query;
-	
-}
+
 
 /***********************************************************************************/
 
@@ -1285,6 +1316,9 @@ class PW_User_Query extends WP_User_Query {
 		return $fields;
 	}
 	
+	/**
+	 * @todo Look at posts_search_orderby filter in WP_Query //**
+	 */
 	function prepare_order_by($orderBy_Query){
 		
 		$orderby = $this->query_vars['orderby'];
@@ -1294,14 +1328,12 @@ class PW_User_Query extends WP_User_Query {
 			
 			$order_by_string = '';
 		
-			
-			if ($orderby=='comment_points'){
-				$order_by_string.= "$wpdb->pw_prefix"."user_meta.comment_points";
+			if($orderby=='comment_points'){
+				$order_by_string.= "$wpdb->pw_prefix"."user_meta.comment_points"; //**
 			}
 			
-			
 			if ($orderby=='post_points'){	
-				$order_by_string.= "$wpdb->pw_prefix"."user_meta.post_points";
+				$order_by_string.= "$wpdb->pw_prefix"."user_meta.post_points"; //**
 			}
 			
 			if ($orderby=='display_name'){
@@ -1327,27 +1359,27 @@ class PW_User_Query extends WP_User_Query {
 		
 		if($this->query_vars['location']){
 				$location = explode(",", $this->query_vars['location']);
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[0]."' and ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[0]."' and "; //**
 				
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[1]."' and ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[1]."' and "; //**
 				
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[2]."' ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[2]."' "; //**
 		}else{
 	
 		
 			if($this->query_vars['location_country']){
 				$insertAnd =TRUE;
-				$where .=" $wpdb->pw_prefix"."user_meta.location_country='".$this->query_vars["location_country"]."' ";
+				$where .=" $wpdb->pw_prefix"."user_meta.location_country='".$this->query_vars["location_country"]."' "; //**
 			}
 			
 			if($this->query_vars['location_region']){
 					if($insertAnd ===TRUE) $where.=" and ";
-					$where .=" $wpdb->pw_prefix"."user_meta.location_region='".$this->query_vars["location_region"]."' ";
+					$where .=" $wpdb->pw_prefix"."user_meta.location_region='".$this->query_vars["location_region"]."' "; //**
 			}
 			
 			if($this->query_vars['location_city']){
 					if($insertAnd ===TRUE) $where.=" and ";
-					$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$this->query_vars["location_city"]."' ";
+					$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$this->query_vars["location_city"]."' "; //**
 			}
 		
 		}
@@ -1357,13 +1389,13 @@ class PW_User_Query extends WP_User_Query {
 	
 	
 	function prepare_new_request($remove_tbl=false){
-		
+		global $wpdb;
 		$this->query_orderby = $this->prepare_order_by($this->query_orderby);
 		$this->query_where = str_replace('WHERE', $this->prepare_where_query(), $this->query_where);
-		$this->query_from = str_replace('FROM wp_users','FROM wp_users left join  wp_postworld_user_meta on wp_users.ID = wp_postworld_user_meta.user_id ', $this->query_from);
+		$this->query_from = str_replace('FROM '.$wpdb->prefix.'users','FROM '.$wpdb->prefix.'users left join  '.$wpdb->pw_prefix.'user_meta on '.$wpdb->prefix.'users.ID = '.$wpdb->pw_prefix.'user_meta.user_id ', $this->query_from);
 		
 		if($remove_tbl===false )
-		$this->query_fields = str_replace('SELECT', 'SELECT wp_postworld_user_meta.* , ', $this->query_fields);
+		$this->query_fields = str_replace('SELECT', 'SELECT '.$wpdb->pw_prefix.'user_meta.* , ', $this->query_fields);
 			
 		//$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
 		//$this->request = str_replace('WHERE', $where, $this->request);
@@ -1647,8 +1679,7 @@ function pw_user_query( $args, $args,$return_Type = 'PW_User_Query' ){
 
 class PW_COMMENTS extends WP_Comment_Query {
 	
-	
-	
+
 	function query( $query_vars ) {
 		global $wpdb;
 
@@ -1815,9 +1846,10 @@ class PW_COMMENTS extends WP_Comment_Query {
 			$groupby = 'GROUP BY ' . $groupby;
 
 		
-		
-		$join .= " left join  $wpdb->pw_prefix"."comment_meta on wp_comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id ";
-		
+		if( pw_config_in_db_tables('comment_meta') ){
+			$join .= " left join  $wpdb->pw_prefix"."comment_meta on ".$wpdb->prefix."comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id "; //**
+		}
+
 		$query = "SELECT $fields FROM $wpdb->comments $join WHERE $where $groupby ORDER BY $orderby $order $limits";
 		//print_r($query);
 		if ( $count )
@@ -1838,4 +1870,7 @@ function pw_new_get_comments($args=''){
 	$query = new PW_COMMENTS;
 	return $query->query( $args );
 }
-?>
+
+
+
+

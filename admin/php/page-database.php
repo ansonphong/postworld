@@ -9,19 +9,14 @@
 		);
 	//pw_set_cache( $data );
 ?>
-
 <script type="text/javascript">
-	//////////////////// DATA CONTROLLER ////////////////////
 	postworldAdmin.controller('pwDatabaseDataCtrl',
-		[ '$scope', '$window', '_', 'pwData',
-		function( $scope, $window, $_, $pwData ){
-			
-		$scope.cacheTypeReadout = <?php echo json_encode(pw_get_cache_types_readout()); ?>;
+		function( $scope ){
+		$scope.cacheTypeReadout = <?php echo json_encode(pw_get_cache_types_readout()) ?>;
 		$scope.progress = <?php echo json_encode( pw_get_progress() ) ?>;
 		if( _.isEmpty( $scope.progress ) )
 			$scope.progress = {};
-
-	}]);
+	});
 </script>
 
 <div
@@ -34,13 +29,10 @@
 
 	<h1>
 		<i class="pwi-database"></i>
-		Database
+		<?php _e('Database', 'postworld') ?>
 	</h1>
 
 	<hr class="thick">
-
-	<!-- ADD "UPDATE" CACHE STATUS BUTTON - icon spins while updating -->
-	<!-- ADD CLEAR ALL CACHES BUTTON -->
 
 	<div class="row">
 		<div class="col-md-6 pad-col-md">
@@ -59,13 +51,13 @@
 
 				<h3>
 					<i class="pwi-cube"></i>
-					Cache : Status
+					<?php _e('Cache Status', 'postworld') ?>
 				</h3>
 
 				<div ng-show="cacheTypeReadoutIsEmpty()" class="well">
 					<b>
 						<i class="pwi-notification"></i>
-						Cache is empty.
+						<?php _e('Cache is empty.', 'postworld') ?>
 					</b>
 				</div>
 
@@ -74,8 +66,8 @@
 					class="wp-list-table widefat">
 					<thead>
 						<tr>
-							<th width="33%">Type</th>
-							<th width="33%">Count</th>
+							<th width="33%"><?php _e('Type', 'postworld') ?></th>
+							<th width="33%"><?php _ex('Count', 'noun', 'postworld') ?></th>
 							<th width="33%">
 								<button
 									type="button"
@@ -83,7 +75,7 @@
 									ng-click="truncateCache()"
 									ng-disabled="busy.cacheTypeReadout">
 									<i class="pwi-trash"></i>
-									Delete All
+									<?php _e('Delete All', 'postworld') ?>
 								</button>
 								
 							</th>
@@ -103,7 +95,7 @@
 								ng-click="deleteCacheType(readout.cache_type)"
 								ng-disabled="busy.cacheTypeReadout">
 								<i class="pwi-trash"></i>
-								Delete Cache
+								<?php _e('Delete Cache', 'postworld') ?>
 							</button>
 						</td>
 					</tr>
@@ -112,20 +104,25 @@
 			</div>
 
 			<?php if( pw_module_enabled( 'rank_score' ) ):?>
-				<!-- TODO : Using rank_score to toggle this is an over-simplification -->
-				<!-- TODO : Activate each section by -->
-
+				<?php
+				/**
+				 * @todo Using rank_score to toggle this is an over-simplification
+				 * @todo Activate each section by enabled modules
+				 */
+				?>
 				<!-- POST RANK -->
 				<div class="well">
 					<h3>
 						<i class="icon pwi-circle-medium"></i>
-						Update Caches
+						<?php _e('Update Caches', 'postworld') ?>
 					</h3>
 
+					<?php /*
 					<!--
 					If it keeps spinning even after the maximum PHP process time,
 					you may need to increase the maximum allowed process time in your PHP configuration.
 					-->
+					*/ ?>
 
 					<!-- POSTMETA TABLE -->
 					<div
@@ -156,7 +153,7 @@
 							type="button"
 							ng-show="isBusy(xCacheType.functionName)"
 							ng-click="endProgress( xCacheType.functionName )">
-							<i class="icon pwi-close"></i> Stop
+							<i class="icon pwi-close"></i> <?php _e('Stop', 'postworld') ?>
 						</button>
 
 						<div ng-show="isBusy(xCacheType.functionName)">
@@ -189,12 +186,14 @@
 
 						</div>
 
+						<?php /*
 						<!--
 						<div ng-show="isBusy(xCacheType.functionName)">
 							<hr class="thin">
 							<b>{{ progress[xCacheType.functionName] | json }}</b>
 						</div>
 						-->
+						*/ ?>
 
 					</div>
 
@@ -207,9 +206,6 @@
 				</div>
 			<?php endif; ?>
 
-
-
-
 		</div>
 
 		<div class="col-md-6 pad-col-md">
@@ -218,7 +214,7 @@
 
 				<h3>
 					<i class="pwi-lightning"></i>
-					Cleanup Metadata
+					<?php _e('Cleanup Metadata', 'postworld') ?>
 				</h3>
 
 				<!-- POSTMETA TABLE -->
@@ -236,14 +232,18 @@
 								ng-class="uiBoolClass(busy['cleanup_'+cleanupTable.type],'icon-spin')">
 							</i>
 						</span>
-						Cleanup {{cleanupTable.name}}
+						<?php _e('Cleanup', 'postworld') ?>
+						{{cleanupTable.name}}
 					</button>
 					<hr class="thin">
-					<small>Delete orphaned rows in the <b>{{ cleanupTable.name }}</b> database table</small>
+					<small>
+						<?php _e('Delete orphaned rows in database table', 'postworld') ?> :
+						<b>{{ cleanupTable.name }}</b> 
+					</small>
 					<div ng-show="uiBool( cleanupMetaReadout[cleanupTable.type] )">
 						<hr class="thin">
-						Time : <b>{{ cleanupMetaReadout[cleanupTable.type].timer }} seconds</b> //
-						Cleaned items: <b>{{ cleanupMetaReadout[cleanupTable.type].cleaned_items_count }}</b> // 
+						<?php _e('Time', 'postworld') ?> : <b>{{ cleanupMetaReadout[cleanupTable.type].timer }} seconds</b> //
+						<?php _e('Cleaned items', 'postworld') ?> : <b>{{ cleanupMetaReadout[cleanupTable.type].cleaned_items_count }}</b> // 
 						{{ cleanupMetaReadout[cleanupTable.type].cleaned_items | json }}
 					</div>
 				</div>
@@ -255,7 +255,7 @@
 
 				<h3>
 					<i class="icon pwi-gear"></i>
-					Taxonomy Operations
+					<?php _e('Taxonomy Operations', 'postworld') ?>
 				</h3>
 
 				<!-- POSTMETA TABLE -->
@@ -279,9 +279,9 @@
 					<small> {{ taxOp.description }} </small>
 					<div ng-show="uiBool( taxOpReadout[taxOp.type] )">
 						<hr class="thin">
-						Time : <b>{{ taxOpReadout[taxOp.type].timer }} seconds</b> //
-						Total Rows: <b>{{ taxOpReadout[taxOp.type].total_terms }}</b> // 
-						Repaired Rows: <b>{{ taxOpReadout[taxOp.type].count }}</b> // 
+						<?php _e('Time', 'postworld') ?> : <b>{{ taxOpReadout[taxOp.type].timer }} seconds</b> //
+						<?php _ex('Total Rows', 'database rows', 'postworld') ?> : <b>{{ taxOpReadout[taxOp.type].total_terms }}</b> // 
+						<?php _ex('Repaired Rows', 'database rows', 'postworld') ?> : <b>{{ taxOpReadout[taxOp.type].count }}</b> // 
 						{{ taxOpReadout[taxOp.type].items | json }}
 					</div>
 				</div>

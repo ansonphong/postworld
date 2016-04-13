@@ -5,7 +5,7 @@
 		<label
 			for="grid_columns"
 			class="inner">
-			<?php ___('general.grid'); ?> <?php ___('general.columns'); ?>
+			<?php _e( 'Grid Columns', 'postworld') ?>
 		</label>
 		<select
 			id="grid_columns"

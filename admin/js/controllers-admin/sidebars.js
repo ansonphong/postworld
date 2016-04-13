@@ -18,7 +18,7 @@ postworldAdmin.directive( 'pwAdminSidebars', [ function(){
 }]);
 
 postworldAdmin.controller('pwAdminSidebarsCtrl',
-	[ '$scope', '$log', '$window', '$parse', 'pwData', '_', 'pwPostOptions',
+	[ '$scope', '$log', '$window', '$parse', '$pwData', '$_', '$pwPostOptions',
 	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions ) {
 	
 	$scope.newSidebar = function(){
@@ -33,7 +33,7 @@ postworldAdmin.controller('pwAdminSidebarsCtrl',
 			'after_title':  '</h3>'
 		};
 
-		$scope.iSidebars.push( newSidebar );
+		$scope.pwSidebars.push( newSidebar );
 		$scope.selectItem( newSidebar );
 	}
 

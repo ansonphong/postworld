@@ -25,7 +25,7 @@
 
 	///// CONTROLLER /////
 	postworldAdmin.controller('<?php echo $instance ?>Ctrl',
-		['$scope', 'pwData', '_', '$log',
+		['$scope', '$pwData', '$_', '$log',
 		function( $scope, $pwData, $_, $log ) {
 
 			$log.debug( 'Init User Widget Controller : ' + '<?php echo $instance ?>' );
@@ -82,7 +82,7 @@
 				name="<?php echo $this->get_field_name('show_title'); ?>"
 				id="<?php echo $this->get_field_id('show_title'); ?>"
 				<?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
-			<?php _e( 'Title:' ); ?>
+			<?php _e( 'title', 'title of widget', 'postworld' ); ?>
 		</label>
 		<input
 			class="widefat"

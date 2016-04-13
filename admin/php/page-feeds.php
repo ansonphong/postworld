@@ -35,7 +35,6 @@
 ?>
 <script>
 	postworldAdmin.controller( 'pwFeedsDataCtrl',
-		[ '$scope', '_', '$timeout', 'pwPostOptions',
 		function( $scope, $_, $timeout, $pwPostOptions ){
 		$scope.pwFeeds = <?php echo json_encode( $pwFeeds ); ?>;
 		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;
@@ -80,7 +79,7 @@
 				);
 		}
 
-	}]);
+	});
 </script>
 
 <div class="postworld feeds wrap" ng-cloak>
@@ -95,8 +94,10 @@
 		
 		<h1>
 			<i class="pwi-th-list"></i>
-			Feeds
-			<button class="add-new-h2" ng-click="newFeed()">Add New Feed</button>
+			<?php _e( 'Feeds', 'postworld' ) ?>
+			<button class="add-new-h2" ng-click="newFeed()">
+				<?php _e( 'Add New Feed', 'postworld' ) ?>
+			</button>
 		</h1>
 
 		<hr class="thick">
@@ -109,7 +110,8 @@
 					<li
 						ng-click="selectItem('settings');"
 						ng-class="menuClass('settings')">
-						<i class="pwi-gear"></i> Settings
+						<i class="pwi-gear"></i>
+						<?php _e( 'Settings', 'postworld' ) ?>
 					</li>
 				</ul>
 				<hr class="thin">
@@ -133,7 +135,7 @@
 						<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_FEED_SETTINGS,'pwFeedSettings'); ?></div>
 						<h3>
 							<i class="icon pwi-target"></i>
-							Contexts
+							<?php _e( 'Contexts', 'postworld' ) ?>
 						</h3>
 
 						<div class="pw-row well" ng-repeat="context in contexts">
@@ -154,7 +156,7 @@
 									ng-class="uiSetClass('template_'+context.name)"
 									ng-click="uiToggleView('template_'+context.name)">
 									<i class="pwi-th-large"></i>
-									Template
+									<?php _e( 'Template', 'postworld' ) ?>
 								</button>
 
 								<button
@@ -163,7 +165,7 @@
 									ng-class="uiSetClass('options_'+context.name)"
 									ng-click="uiToggleView('options_'+context.name)">
 									<i class="pwi-gear"></i>
-									Options
+									<?php _e( 'Options', 'postworld' ) ?>
 								</button>
 
 								<div
@@ -186,8 +188,8 @@
 											ng-model="pwFeedSettings.context[context.name].preload"
 											placeholder="{{pwFeedSettings.context.default.preload}}"
 											min="0">
-										<b>Preload</b>
-										<small>: Number of posts to preload on page load.</small>
+										<b><?php _e( 'Preload', 'postworld' ) ?></b>
+										<small>: <?php _e( 'Number of posts to preload on page load', 'postworld' ) ?></small>
 									</label>
 
 									<hr class="thin">
@@ -199,12 +201,11 @@
 											ng-model="pwFeedSettings.context[context.name].load_increment"
 											placeholder="{{pwFeedSettings.context.default.load_increment}}"
 											min="1">
-										<b>Load Increment</b>
-										<small>: Number of posts to load at a time when infinite scrolling.</small>
+										<b><?php _e( 'Load Increment', 'postworld' ) ?></b>
+										<small>: <?php _e( 'Number of posts to load at a time when infinite scrolling', 'postworld' ) ?></small>
 									</label>
 
 								</div>
-
 
 							</div>
 
@@ -216,16 +217,19 @@
 				<!-- ///// EDIT ITEMS ///// -->
 				<div class="well" ng-show="showView('editItem')">
 
-					<h3><i class="pwi-gear"></i> <?php ___('feeds.item_title'); ?></h3>
+					<h3>
+						<i class="pwi-gear"></i>
+						<?php _e( 'Feed Settings', 'postworld' ) ?>
+					</h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
 							<label
 								for="item-name"
 								class="inner"
-								uib-tooltip="<?php ___('feeds.name_info'); ?>"
+								uib-tooltip="<?php _e( 'The name is an aesthetic label for the feed.', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.name') ?>
+								<?php _e( 'Feed Name', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<input
@@ -238,15 +242,15 @@
 							<label
 								for="item-id"
 								class="inner"
-								uib-tooltip="<?php ___('feeds.id_info'); ?>"
+								uib-tooltip="<?php _e( 'The ID is the unique identifier for the feed. It contains only letters, numbers, and hyphens.', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.id') ?>
+								<?php _e( 'Feed ID', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								uib-tooltip="<?php ___('feeds.id_edit_info'); ?>"
+								uib-tooltip="<?php _e( 'Editing the ID may cause instances of the feed to disappear', 'postworld' ) ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="pwi-edit"></i>
@@ -267,9 +271,9 @@
 							<label
 								for="item-preload"
 								class="inner"
-								uib-tooltip="<?php ___('feeds.preload_info'); ?>"
+								uib-tooltip="<?php _e( 'How many posts to preload', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.preload'); ?>
+								<?php _e( 'Preload', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<input
@@ -282,9 +286,9 @@
 							<label
 								for="item-load_increment"
 								class="inner"
-								uib-tooltip="<?php ___('feeds.increment_info'); ?>"
+								uib-tooltip="<?php _e( 'How many posts to load each infinite scroll', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.increment'); ?>
+								<?php _e( 'Load Increment', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<input
@@ -297,9 +301,9 @@
 							<label
 								for="item-offset"
 								class="inner"
-								uib-tooltip="<?php ___('feeds.offset_info'); ?>"
+								uib-tooltip="<?php _e( 'How many posts to skip at the Javascript level', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('feeds.offset'); ?>
+								<?php _e( 'Offset', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<input
@@ -316,15 +320,18 @@
 						<h3
 							uib-tooltip="{{ selectedItem.query | json }}"
 							tooltip-popup-delay="333">
-							<i class="pwi-search"></i> Query
+							<i class="pwi-search"></i>
+							<?php _e( 'Query', 'postworld' ) ?>
 						</h3>
-
 						<?php echo pw_feed_query_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 					</div>
 
 					<!-- TEMPLATE -->
 					<div class="well">
-						<h3><i class="pwi-cube"></i> <?php ___('feeds.view.title'); ?></h3>
+						<h3>
+							<i class="pwi-cube"></i>
+							<?php _e( 'Template', 'postworld' ) ?>
+						</h3>
 						<?php echo pw_feed_template_options( array( 'ng_model' => 'selectedItem' ) ); ?>
 						<hr class="thin">
 						<?php echo pw_feed_variable_options( array( 'ng_model' => 'selectedItem' ) ); ?>
@@ -334,7 +341,7 @@
 					<div class="well">
 						<h3>
 							<i class="pwi-code"></i>
-							Shortcode
+							<?php _e( 'Shortcode', 'postworld' ) ?>
 						</h3>
 						<input
 							type="text"
@@ -352,7 +359,7 @@
 						<div class="well">
 							<h3>
 								<i class="pwi-newspaper"></i>
-								JSON Feed
+								<?php _e( 'JSON Feed', 'postworld' ) ?>
 							</h3>
 							<input
 								type="text"
@@ -373,7 +380,7 @@
 							class="button deletion"
 							ng-click="deleteItem(selectedItem,'pwFeeds')">
 							<i class="pwi-close"></i>
-							<?php ___('feeds.delete'); ?>
+							<?php _e( 'Delete Feed', 'postworld' ) ?>
 						</button>
 
 						<!-- DUPLICATE BUTTON -->
@@ -381,7 +388,7 @@
 							class="button deletion"
 							ng-click="duplicateItem(selectedItem,'pwFeeds')">
 							<i class="pwi-copy-2"></i>
-							<?php ___('feeds.duplicate'); ?>
+							<?php _e( 'Duplicate Feed', 'postworld' ) ?>
 						</button>
 
 					</div>
@@ -393,7 +400,10 @@
 		<?php if( pw_dev_mode() ) : ?>
 			<hr class="thick">
 			<div class="pw-dev well">
-				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<h3>
+					<i class="pwi-merkaba"></i>
+					<?php _e( 'Development Mode', 'postworld' ) ?>
+				</h3>
 				<div class="well">
 					<h3>$scope.pwFeedSettings</h3>
 					<pre><code>{{ pwFeedSettings | json }}</code></pre>
@@ -405,6 +415,7 @@
 				</div>
 			</div>
 
+			<?php /*
 			<!--
 			RADIO BUTTONS
 			<b><i class="pwi-calendar"></i> Events Filter</b>
@@ -419,10 +430,9 @@
 				</label>
 			</div>
 			-->
+			*/ ?>
 				
 		<?php endif; ?>
-
-
 
 	</div>
 

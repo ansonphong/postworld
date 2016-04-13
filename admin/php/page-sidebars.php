@@ -1,9 +1,9 @@
 <?php
-	$iSidebars = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
+	$pwSidebars = pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) );
 ?>
 <script>
 	postworldAdmin.controller( 'pwSidebarsDataCtrl', [ '$scope', function( $scope ){
-		$scope.iSidebars = <?php echo json_encode( $iSidebars ); ?>;
+		$scope.pwSidebars = <?php echo json_encode( $pwSidebars ); ?>;
 	}]);
 </script>
 
@@ -17,8 +17,10 @@
 		ng-controller="pwSidebarsDataCtrl">
 		<h1>
 			<i class="pwi-map"></i>
-			Sidebars
-			<button class="add-new-h2" ng-click="newSidebar()"><?php ___('sidebars.add_new'); ?></button>
+			<?php _e( 'Sidebars', 'postworld' ) ?>
+			<button class="add-new-h2" ng-click="newSidebar()">
+				<?php _e( 'Add New Sidebar', 'postworld' ) ?>
+			</button>
 		</h1>
 		
 		<hr class="thick">
@@ -29,7 +31,7 @@
 			<div class="pw-col-3">
 				<ul class="list-menu">
 					<li
-						ng-repeat="item in iSidebars"
+						ng-repeat="item in pwSidebars"
 						ng-click="selectItem(item)"
 						ng-class="menuClass(item)">
 						{{ item.name }}
@@ -40,18 +42,21 @@
 
 			<!-- ///// EDIT SETTINGS ///// -->
 			<div class="pw-col-9">
-				<div ng-show="showView('editItem')">
+				<div class="well" ng-show="showView('editItem')">
 
-					<h3><i class="pwi-gear"></i> <?php ___('sidebars.item_title'); ?></h3>
+					<h3>
+						<i class="pwi-gear"></i>
+						<?php _e( 'Sidebar Settings', 'postworld' ) ?>
+					</h3>
 
 					<div class="pw-row">
 						<div class="pw-col-6">
 							<label
 								for="item-name"
 								class="inner"
-								uib-tooltip="<?php ___('sidebars.name_info'); ?>"
+								uib-tooltip="<?php _e( 'The name is how it appears on the widgets options page', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('sidebars.name'); ?>
+								<?php _e( 'Sidebar Name', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<input
@@ -64,15 +69,15 @@
 							<label
 								for="item-id"
 								class="inner"
-								uib-tooltip="<?php ___('sidebars.id_info'); ?>"
+								uib-tooltip="<?php _e( 'The ID is the unique name for the sidebar. It contains only letters, numbers, and hyphens.', 'postworld' ) ?>"
 								tooltip-popup-delay="333">
-								<?php ___('sidebars.id'); ?>
+								<?php _e( 'Sidebar ID', 'postworld' ) ?>
 								<i class="pwi-info-circle"></i>
 							</label>
 							<button
 								class="inner inner-bottom-right inner-controls"
 								ng-click="enableInput('#item-id');focusInput('#item-id')"
-								uib-tooltip="<?php ___('sidebars.id_edit_info'); ?>"
+								uib-tooltip="<?php _e( 'Editing the ID may cause instances of the sidebar to disappear', 'postworld' ) ?>"
 								tooltip-placement="left"
 								tooltip-popup-delay="333">
 								<i class="pwi-edit"></i>
@@ -90,13 +95,12 @@
 
 					<hr class="thin">
 
-					
 					<label
 						for="item-description"
 						class="inner"
-						uib-tooltip="<?php ___('sidebars.description_info'); ?>"
+						uib-tooltip="<?php _e( 'Describes the intended use of the sidebar', 'postworld' ) ?>"
 						tooltip-popup-delay="333">
-						<?php ___('sidebars.description'); ?>
+						<?php _e( 'Description', 'postworld' ) ?>
 						<i class="pwi-info-circle"></i>
 					</label>
 					<input
@@ -108,15 +112,14 @@
 					<!-- ADVANCED -->
 					<div
 						ng-show="uiShowView('sidebar_advanced')">
-
 						<hr class="thin">
 
 						<label
 							for="item-class"
 							class="inner"
-							uib-tooltip="<?php ___('sidebars.class_info'); ?>"
+							uib-tooltip="<?php _e( 'The CSS class which is applied to each widget', 'postworld' ) ?>"
 							tooltip-popup-delay="333">
-							<?php ___('sidebars.class'); ?>
+							<?php _e( 'Class', 'postworld' ) ?>
 							<i class="pwi-info-circle"></i>
 						</label>
 						<input
@@ -130,9 +133,9 @@
 						<label
 							for="item-before_widget"
 							class="inner"
-							uib-tooltip="<?php ___('sidebars.before_widget_info'); ?>"
+							uib-tooltip="<?php _e( 'HTML that goes before the widget', 'postworld' ) ?>"
 							tooltip-popup-delay="333">
-							<?php ___('sidebars.before_widget'); ?>
+							<?php _e( 'Before Widget', 'postworld' ) ?>
 						</label>
 						<textarea
 							id="item-before_widget"
@@ -146,9 +149,9 @@
 						<label
 							for="item-after_widget"
 							class="inner"
-							uib-tooltip="<?php ___('sidebars.after_widget_info'); ?>"
+							uib-tooltip="<?php _e( 'HTML that goes after the widget', 'postworld' ) ?>"
 							tooltip-popup-delay="333">
-							<?php ___('sidebars.after_widget'); ?>
+							<?php _e( 'After Widget', 'postworld' ) ?>
 						</label>
 						<textarea
 							id="item-after_widget"
@@ -162,9 +165,9 @@
 						<label
 							for="item-before_title"
 							class="inner"
-							uib-tooltip="<?php ___('sidebars.before_title_info'); ?>"
+							uib-tooltip="<?php _e( 'HTML that goes before the title of each widget', 'postworld' ) ?>"
 							tooltip-popup-delay="333">
-							<?php ___('sidebars.before_title'); ?>
+							<?php _e( 'Before Title', 'postworld' ) ?>
 						</label>
 						<textarea
 							id="item-before_title"
@@ -178,9 +181,9 @@
 						<label
 							for="item-after_title"
 							class="inner"
-							uib-tooltip="<?php ___('sidebars.after_title_info'); ?>"
+							uib-tooltip="<?php _e( 'HTML that goes after the title of each widget', 'postworld' ) ?>"
 							tooltip-popup-delay="333">
-							<?php ___('sidebars.after_title'); ?>
+							<?php _e( 'After Title', 'postworld' ) ?>
 						</label>
 						<textarea
 							id="item-after_title"
@@ -191,50 +194,55 @@
 
 					</div>
 
-					<hr class="thick">
+					<div class="well">
 
-					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_SIDEBARS,'iSidebars'); ?></div>
-		
-					<!-- DELETE BUTTON -->
-					<button
-						class="button deletion"
-						ng-click="deleteItem(selectedItem,'iSidebars')">
-						<i class="pwi-close"></i>
-						<?php ___('sidebars.delete'); ?>
-					</button>
+						<!-- SAVE BUTTON -->
+						<div class="save-right">
+							<?php pw_save_option_button( PW_OPTIONS_SIDEBARS,'pwSidebars'); ?>
+						</div>
+			
+						<!-- DELETE BUTTON -->
+						<button
+							class="button deletion"
+							ng-click="deleteItem(selectedItem,'pwSidebars')">
+							<i class="pwi-close"></i>
+							<?php _e( 'Delete Sidebar', 'postworld' ) ?>
+						</button>
 
-					<!-- DUPLICATE BUTTON -->
-					<button
-						class="button"
-						ng-click="duplicateItem(selectedItem,'iSidebars')">
-						<i class="pwi-copy-2"></i>
-						<?php ___('sidebars.duplicate'); ?>
-					</button>
+						<!-- DUPLICATE BUTTON -->
+						<button
+							class="button"
+							ng-click="duplicateItem(selectedItem,'pwSidebars')">
+							<i class="pwi-copy-2"></i>
+							<?php _e( 'Duplicate Sidebar', 'postworld' ) ?>
+						</button>
 
-					<!-- ADVANCED BUTTON -->
-					<button
-						type="button"
-						class="button"
-						ng-click="uiToggleView('sidebar_advanced')"
-						ng-class="uiSetClass('sidebar_advanced')">
-						<i class="icon pwi-gear"></i>Advanced Options
-					</button>
+						<!-- ADVANCED BUTTON -->
+						<button
+							type="button"
+							class="button"
+							ng-click="uiToggleView('sidebar_advanced')"
+							ng-class="uiSetClass('sidebar_advanced')">
+							<i class="icon pwi-gear"></i>
+							<?php _e( 'Advanced Options', 'postworld' ) ?>
+						</button>
+
+					</div>
 
 				</div>
 
 			</div>
 
-
 		</div>
-
-		
 
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
 			<div class="well">
-				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
-				<pre><code>iSidebars : {{ iSidebars | json }}</code></pre>
+				<h3>
+					<i class="pwi-merkaba"></i>
+					<?php _e( 'Development Mode', 'postworld' ) ?>
+				</h3>
+				<pre><code>pwSidebars : {{ pwSidebars | json }}</code></pre>
 			</div>
 		<?php endif; ?>
 	</div>

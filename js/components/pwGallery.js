@@ -1,6 +1,6 @@
 ///// GALLERY VIEWER /////
 postworld.directive( 'pwGalleryViewer',
-	[ 'pwData', '$pw', '$log', '_', '$document', '$timeout', 'pwPosts',
+	[ '$pwData', '$pw', '$log', '$_', '$document', '$timeout', '$pwPosts',
 	function( $pwData, $pw, $log, $_, $document, $timeout, $pwPosts ){
 	return {
 		restrict: 'AE',
@@ -335,7 +335,7 @@ postworld.directive( 'pwGalleryViewer',
 }]);
 
 
-postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
+postworld.directive( 'pwInfiniteGallery', function(){
 	return {
 		restrict: 'AE',
 		controller: 'pwInfiniteGalleryCtrl',
@@ -351,11 +351,11 @@ postworld.directive( 'pwInfiniteGallery', [ function( $scope ){
 
 		}
 	};
-}]);
+});
 
 
 postworld.controller( 'pwInfiniteGalleryCtrl',
-	[ '$scope', '$log', '_', '$pw', 'pwData', 'pwPosts',
+	[ '$scope', '$log', '$_', '$pw', '$pwData', '$pwPosts',
 	function( $scope, $log, $_, $pw, $pwData, $pwPosts ){
 
 	$scope.infiniteGallery = {
@@ -408,7 +408,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 			var galleryInstance = 'gallery-' + $scope.post.ID;
 			// Set instance name into the scope so it's accessible in the DOM
 			$scope.infiniteGallery.instance = galleryInstance;
-			// Insert the feed into the pwData.feeds
+			// Insert the feed into the $pwData.feeds
 			$pwData.insertFeed( galleryInstance, { posts: $scope.infiniteGallery.posts } );
 			// Log in Console
 			$log.debug( "pwInfiniteGallery : INSERTED FEED : " + galleryInstance, $scope.infiniteGallery.posts );
@@ -504,7 +504,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
 
 
  postworld.directive('pwXScrollStatus', [
- 	'$window', '$log', '$timeout', '_',
+ 	'$window', '$log', '$timeout', '$_',
  	function( $window, $log, $timeout, $_ ) {
  	return {
  		restrict: 'A',
@@ -589,7 +589,7 @@ postworld.controller( 'pwInfiniteGalleryCtrl',
  * Forked from ng-infinite-scroll - v1.0.0 - 2013-05-13
  */
 postworld.directive('infiniteXScroll', [
-	'$rootScope', '$window', '$timeout', '$log', '_',
+	'$rootScope', '$window', '$timeout', '$log', '$_',
 	function($rootScope, $window, $timeout, $log, $_ ) {
 		return {
 			link: function(scope, elem, attrs) {
@@ -801,7 +801,7 @@ postworld.directive('infiniteXScroll', [
 /* BASED ON : ng-infinite-scroll - v1.0.0 - 2013-05-13 */
 
 postworld.directive('infiniteYScroll', [
-	'$rootScope', '$window', '$timeout', '$log', '_', function( $rootScope, $window, $timeout, $log, $_ ) {
+	'$rootScope', '$window', '$timeout', '$log', '$_', function( $rootScope, $window, $timeout, $log, $_ ) {
 		return {
 			link: function(scope, elem, attrs) {
 
@@ -932,7 +932,7 @@ postworld.directive('infiniteYScroll', [
 
 /*
 postworld.directive('infiniteScroll', [
-	'$rootScope', '$window', '$timeout', '$log', '_', function($rootScope, $window, $timeout, $log, $_) {
+	'$rootScope', '$window', '$timeout', '$log', '$_', function($rootScope, $window, $timeout, $log, $_) {
 		return {
 			link: function(scope, elem, attrs) {
 				var checkWhenEnabled, container, handler, scrollDistance, scrollEnabled;

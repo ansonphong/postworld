@@ -902,28 +902,28 @@ __live_poll_while_writing__ : *boolean*
 Javascript :
 
 ``` javascript
-load_comments['post_single'] = {
+pw.comments['post_single'] = {
     query : {
-        post_id : 133925, // 21853, // 133925, // 166220, // 21853, // 166220,
+        post_id : 133925,
         status: 'approve',
-      orderby : 'comment_date',
-        },
+        orderby : 'comment_date',
+      },
     fields : 'all',
     tree : true,
     order_options : {
         'comment_points' : 'Points',
         'comment_date' : 'Date'
-        },
+      },
     min_points : 0,
     live_poll: 60,
-   live_poll_while_writing: false,
+    live_poll_while_writing: false,
 };
 ```
 
 HTML : 
 
 ``` HTML
-<div load-comments="post_single"></div>
+<div pw-comments="post_single"></div>
 ```
 
 ------

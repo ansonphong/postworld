@@ -146,40 +146,44 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 
 	// POSTWORLD USER FIELDS
 	// Check to see if requested fields are custom Postworld User Fields
-	foreach ($fields as $value) {
-		// If a requested field is custom Postworld, get the user's row in *user_meta* table
-		if ( in_array($value, pw_get_field_model('user','postworld') )) {
-			global $wpdb;
-			if( pw_dev_mode() )
-				$wpdb -> show_errors();
-			$query = "select * from " . $wpdb->pw_prefix . 'user_meta' . " where user_id=" . $user_id;
-			// Result will be output as an numerically indexed array of associative arrays, using column names as keys
-			$postworld_user_data = $wpdb->get_results($query, ARRAY_A);
+	if( pw_config_in_db_tables('user_meta') ){
+		foreach ($fields as $value) {
+			// If a requested field is custom Postworld, get the user's row in *user_meta* table
+			if ( in_array($value, pw_get_field_model('user','postworld') )) {
+				global $wpdb;
+				
+				if( pw_dev_mode() )
+					$wpdb -> show_errors();
 
-			// Transfer the user data into $user_data
-			if(
-				!empty($postworld_user_data) &&
-				is_array($postworld_user_data[0]) &&
-				isset($postworld_user_data[0]["user_id"])
-				){
-				foreach ( $postworld_user_data[0] as $meta_key => $meta_value ){
-					if ( in_array( $meta_key, $fields ) ){
-						$pw_json_fields = array( "post_points_meta", "share_points_meta", "post_relationships" );
-						// Decode the JSON encoded DB fields
-						if ( in_array( $meta_key, $pw_json_fields ) )
-							$meta_value = json_decode( $meta_value );
-						$user_data[$meta_key] = $meta_value;
+				$query = "select * from " . $wpdb->pw_prefix . 'user_meta' . " where user_id=" . $user_id;
+				// Result will be output as an numerically indexed array of associative arrays, using column names as keys
+				$postworld_user_data = $wpdb->get_results($query, ARRAY_A);
+
+				// Transfer the user data into $user_data
+				if(
+					!empty($postworld_user_data) &&
+					is_array($postworld_user_data[0]) &&
+					isset($postworld_user_data[0]["user_id"])
+					){
+					foreach ( $postworld_user_data[0] as $meta_key => $meta_value ){
+						if ( in_array( $meta_key, $fields ) ){
+							$pw_json_fields = array( "post_points_meta", "share_points_meta", "post_relationships" );
+							// Decode the JSON encoded DB fields
+							if ( in_array( $meta_key, $pw_json_fields ) )
+								$meta_value = json_decode( $meta_value );
+							$user_data[$meta_key] = $meta_value;
+						}
 					}
 				}
+				break;
 			}
-			break;
 		}
 	}
 
 
 	///// WORDPRESS USER META /////
 
-		$usermeta_fields = extract_linear_fields( $fields, 'usermeta', true );
+		$usermeta_fields = pw_extract_linear_fields( $fields, 'usermeta', true );
 		if ( !empty($usermeta_fields) ){
 
 			/**
@@ -223,12 +227,10 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 
 
 			///// JSON META KEYS /////
+			// Parse known JSON keys from JSON strings into objects
 			if( is_array( $user_data['usermeta'] ) ){
-
-				// Parse known JSON keys from JSON strings into objects
-				global $pwSiteGlobals;
 				// Get known metakeys from the theme configuration
-				$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_usermeta.json_meta_keys' );
+				$json_meta_keys = pw_config( 'db.wp_usermeta.json_meta_keys' );
 				// If there are no set fields, define empty array
 				if( !$json_meta_keys ) $json_meta_keys = array();
 				// Add the globally defined postmeta key
@@ -281,7 +283,7 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 	// DEPRECIATED as of Version 1.7.2 - use field : 'xprofile(all)'
 	////////// BUDDYPRESS CUSTOM PROFILE FIELDS //////////
 	// Extract meta fields
-	$buddypress_fields = extract_linear_fields( $fields, 'buddypress', true );
+	$buddypress_fields = pw_extract_linear_fields( $fields, 'buddypress', true );
 	if ( !empty($buddypress_fields) && function_exists('bp_get_profile_field_data') ){
 
 		$user_data["buddypress"] = array();
@@ -299,7 +301,7 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 
 
 	///// BUDDYPRESS XPROFILE FIELDS /////
-	$xProfile_fields = extract_linear_fields( $fields, 'xprofile', true );
+	$xProfile_fields = pw_extract_linear_fields( $fields, 'xprofile', true );
 	if ( !empty( $xProfile_fields ) )
 		$user_data['xprofile'] = pw_get_xprofile( $user_id, $xProfile_fields );
 	
@@ -348,12 +350,12 @@ function pw_get_avatars( $vars ){
 	extract( $vars );
 
 	// Extract avatar() fields
-	$avatars = extract_fields( $fields, 'avatar' );
+	$avatars = pw_extract_fields( $fields, 'avatar' );
 	$avatars_object = array();
 	// Get each avatar() image
 	foreach ($avatars as $avatar) {
 		// Extract image attributes from parenthesis
-   		$avatar_attributes = extract_parenthesis_values($avatar, true);
+   		$avatar_attributes = pw_extract_parenthesis_values($avatar, true);
    		// Check format
    		if ( count($avatar_attributes) == 2 && !is_numeric( $avatar_attributes[0]) && is_numeric( $avatar_attributes[1]) ){
    			// Setup Values

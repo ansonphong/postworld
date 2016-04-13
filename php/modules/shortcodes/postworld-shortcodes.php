@@ -8,9 +8,7 @@
 ////////////////////////////////////////////////////////////*/
 //////////////////// REGISTER SHORTCODES ////////////////////
 
-global $pw;
-
-if( in_array( 'shortcodes', $pw['info']['modules'] ) )
+if( pw_module_enabled('shortcodes') )
 	add_action( 'init', 'pw_register_shortcodes' );
 
 function pw_register_shortcodes(){
@@ -161,6 +159,20 @@ function pw_shortcode( $atts, $content=null, $tag ) {
 	return do_shortcode($shortcode);
 }
 
+/**
+ * Visual Composer Shortcode
+ */
+function pw_vc_shortcode( $atts, $content, $tag ){
+	$vars = array(
+		'atts' => $atts,
+		'content' => $content,
+		'tag' => $tag
+		);
+	$template_path = pw_get_shortcode_template( $tag );
+	$output = pw_ob_include( $template_path, $vars );
+	return do_shortcode($output);
+}
+
 function pw_skip_shortcode( $string ){
 	$string = str_replace("[", "&#91;", $string);
 	$string = str_replace("]", "&#93;", $string);
@@ -205,7 +217,7 @@ function pw_shortcode_count( $content, $tag ){
 }
 
 
-if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
+if( pw_module_enabled('shortcodes') ){
 
 	add_shortcode( 'pw-icon', 	'pw_icons_shortcode' );
 
@@ -223,6 +235,9 @@ if( in_array( 'shortcodes', $pw['info']['modules'] ) ){
 	// HTML
 	add_shortcode( 'br', 'pw_shortcode' );
 	add_shortcode( 'hr', 'pw_shortcode' );
+
+	// BUTTONS
+	add_shortcode( 'button', 'pw_shortcode' );
 
 	/*
 	add_shortcode( 'h1', 'pw_shortcode' );

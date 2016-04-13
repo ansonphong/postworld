@@ -4,10 +4,7 @@
 add_action( 'show_user_profile', 'pw_avatar_profile_field' );
 add_action( 'edit_user_profile', 'pw_avatar_profile_field' );
 function pw_avatar_profile_field( $user ) { 
-
-	// Get the settings
-	global $pwSiteGlobals;
-	$settings = _get( $pwSiteGlobals, 'wp_admin.user_meta.pw_avatar' );
+	$settings = pw_config('wp_admin.user_meta.pw_avatar');
 	if( $settings == false )
 		return false;
 
@@ -43,12 +40,12 @@ function pw_avatar_profile_field_save( $user_id ) {
 
 }
 
+/**
+ * Returns the configured Postworld Avatar User Meta Key
+ */
 function pw_get_avatar_meta_key(){
-	// Returns the configured Postworld Avatar User Meta Key
-
-	global $pwSiteGlobals;
 	// Get config override
-	$avatar_meta_key = _get( $pwSiteGlobals, 'wp_admin.user_meta.pw_avatar.meta_key' );
+	$avatar_meta_key = pw_config('wp_admin.user_meta.pw_avatar.meta_key');
 	// Set default
 	if( !$avatar_meta_key )
 		$avatar_meta_key = PW_AVATAR_KEY;

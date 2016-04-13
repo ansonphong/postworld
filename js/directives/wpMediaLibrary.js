@@ -29,7 +29,7 @@ file_frame = wp.media.frames.file_frame = wp.media({
 });
 */
 
-postworld.directive( 'wpMediaLibrary', [ function($scope){
+postworld.directive( 'wpMediaLibrary', function(){
 	return {
 		restrict: 'AE',
 		controller: 'wpMediaLibraryCtrl',
@@ -101,10 +101,9 @@ postworld.directive( 'wpMediaLibrary', [ function($scope){
 
 		}
 	};
-}]);
+});
 
 postworld.controller( 'wpMediaLibraryCtrl',
-	[ '$scope', '$rootScope', '$window', '$timeout', '$log', 'pwData', '_',
 	function( $scope, $rootScope, $window, $timeout, $log, $pwData, $_ ) {
 
 	$scope.mediaLoading = false;
@@ -381,14 +380,15 @@ postworld.controller( 'wpMediaLibraryCtrl',
 		);
 	};
 
+	/*
 	$scope.setOptionObj = function( vars ){
-		/*
-		var vars = {
-			option_name: option_name,
-			subkey: subkey,
-			value: value,
-		};
-		*/
+		
+		// var vars = {
+		//	option_name: option_name,
+		//	subkey: subkey,
+		//	value: value,
+		// };
+		
 		
 		// Error Checking
 		if( !$scope.errorCheck() )
@@ -414,6 +414,7 @@ postworld.controller( 'wpMediaLibraryCtrl',
 			}
 		);
 	};
+	*/
 
 
 	$scope.emitSelectedMedia = function( key ){
@@ -554,9 +555,6 @@ postworld.controller( 'wpMediaLibraryCtrl',
 
 	}
 
-}]);
-
-
-
+});
 
 

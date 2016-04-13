@@ -5,7 +5,7 @@
 ?>
 <script type="text/javascript">
 	postworldAdmin.controller( '<?php echo $controller_id ?>',
-		[ '$scope', '_',
+		[ '$scope', '$_',
 		function( $scope, $_ ){
 		var className = <?php echo json_encode( $vars['field']['meta_value'] ) ?>;
 		$scope.iconObj = { className: className };

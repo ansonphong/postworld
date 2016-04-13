@@ -13,7 +13,7 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 }]);
 
 postworld.controller( 'pwUiCtrl',
-	[ '$scope', '$timeout', '_', '$log', '$pw',
+	[ '$scope', '$timeout', '$_', '$log', '$pw',
 	function( $scope, $timeout, $_, $log, $pw ){
 
 	$scope.uiLoggedIn = function(){

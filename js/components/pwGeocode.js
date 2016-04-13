@@ -52,7 +52,7 @@ postworld.controller('pwGeoAutocompleteCtrl', ['$rootScope', '$scope','$http', '
                                                    |_|              
 ///////// ---------------- GEOCODE INPUT ---------------- /////////*/
 
-postworld.directive( 'pwGeoInput', [ '$log', '_', function( $log, $_ ){
+postworld.directive( 'pwGeoInput', [ '$log', '$_', function( $log, $_ ){
     return { 
         controller: 'pwGeoInputCtrl',
         scope:{
@@ -74,7 +74,7 @@ postworld.directive( 'pwGeoInput', [ '$log', '_', function( $log, $_ ){
 }]);
 
 postworld.controller('pwGeoInputCtrl',
-	['$scope', '$window', '$timeout', '_', '$log',
+	['$scope', '$window', '$timeout', '$_', '$log',
 	function($scope, $window, $timeout, $_, $log ) {
 
 	$scope.geocodeInputs = function( geocode ){

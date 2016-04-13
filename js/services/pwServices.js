@@ -9,7 +9,6 @@
 //////////////////*/
 
 postworld.factory( '$pw',
-	['$resource','$q','$log','$window', '_', '$location',
 	function ($resource, $q, $log, $window, $_, $location ) {   
 
 	// TEMPLATES
@@ -51,8 +50,8 @@ postworld.factory( '$pw',
 		postTypes: $window.pw.config.post_types,
 		postViews: $window.pw.config.post_views,
 		taxonomies: $window.pw.config.taxonomies,
-		comments: $window.pw.comments,
 		options: $window.pw.options,
+		optionsMeta: $window.pw.optionsMeta,
 		device: $window.pw.device,
 		posts: $window.pw.posts,
 
@@ -232,7 +231,7 @@ postworld.factory( '$pw',
 		
 	};
 
-}]);
+});
 
 
 /*                      _                                  
@@ -249,8 +248,7 @@ postworld.factory( '$pw',
  * @name postworld.$_
  * @todo Rename to $_
  */
-postworld.factory('_',
-	[ '$rootScope', '$log','$window', '$timeout', 
+postworld.factory('$_',
 	function ( $rootScope, $log, $window, $timeout ) {   
 	// DECLARATIONS
 
@@ -721,7 +719,7 @@ postworld.factory('_',
 
 	};
 
-}]);
+});
 
 
 /* _                      ____           _       
@@ -731,8 +729,7 @@ postworld.factory('_',
  (   / (_) | .__/ \_/\_/ |_|   \___/|___/\__|___/
   |_|      |_|                                   */
 
-postworld.factory('pwPosts',
-	[ '$rootScope', '$log','$window', 'pwData', '_', '$pw',
+postworld.factory('$pwPosts',
 	function ( $rootScope, $log, $window, $pwData, $_, $pw ) {  
 
 	///// FACTORY DECLARATIONS /////
@@ -962,7 +959,7 @@ postworld.factory('pwPosts',
 				return false;
 
 			// Get the 'fields' value of the post
-			var fields = $_.getObj( post, 'fields' );
+			var fields = $_.get( post, 'fields' );
 			if( fields == false )
 				fields = 'all';
 
@@ -1019,7 +1016,7 @@ postworld.factory('pwPosts',
 		
 	};
 
-}]);
+});
 
 
 /*_____                    _       _         ____            _   _       _     
@@ -1028,7 +1025,7 @@ postworld.factory('pwPosts',
    | |  __/ | | | | | |_) | | (_| | ||  __/ |  __/ (_| | |  | |_| | (_| | \__ \
    |_|\___|_| |_| |_| .__/|_|\__,_|\__\___| |_|   \__,_|_|   \__|_|\__,_|_|___/ */
 
-postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeout', '$rootScope',
+postworld.factory( '$pwTemplatePartials',
 	function( $pw, $pwData, $log, $_, $timeout, $rootScope ){
 
 	var evalCallbacks = function( vars ){
@@ -1102,7 +1099,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
 						// Get the response data
 						var partialHtml = response.data;
 
-						// Cache the data in the pwData partials cache path
+						// Cache the data in the $pwData partials cache path
 						$pwData.partials = $_.setObj( $pwData.partials, cachePath, partialHtml );
 
 						// Evaluate Callbacks
@@ -1116,7 +1113,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
 
 			}
 
-			var partialData = $_.getObj( $pwData.partials, cachePath );
+			var partialData = $_.get( $pwData.partials, cachePath );
 
 			// Evaluate Callbacks
 			//vars.firstRun = false;
@@ -1126,7 +1123,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
 
 		},
 	}
-}]);
+});
 
 
 /* _                      ___                                 
@@ -1136,8 +1133,7 @@ postworld.factory( 'pwTemplatePartials', [ '$pw', 'pwData', '$log', '_', '$timeo
  (   / (_) | .__/ \_/\_/ |___|_| |_| |_|\__,_|\__, |\___||___/
   |_|      |_|                                |___/           */
 
-postworld.factory('pwImages',
-	[ '$log','$window', '_', '$pw',
+postworld.factory('$pwImages',
 	function ( $log, $window, $_, $pw ) {  
 
 	///// UNIVERSALS /////
@@ -1302,7 +1298,7 @@ postworld.factory('pwImages',
 
 	};
 
-}]);
+});
 
 
 /*
@@ -1314,13 +1310,11 @@ postworld.factory('pwImages',
   |_|                                 |_|                          
 
 ////////// ------------ EDIT POST OPTIONS SERVICE ------------ //////////*/  
-postworld.service('pwPostOptions',
-		[ '$window','$log', 'pwData', '_', '$pw',
-		function( $window, $log, $pwData, $_, $pw ) {
+postworld.service('$pwPostOptions',
+	function( $window, $log, $pwData, $_, $pw ) {
 
 	return{
 		taxTerms: function( $scope, taxObj ){
-
 			if( typeof taxObj === 'undefined' )
 				taxObj = "tax_terms";
 
@@ -1430,7 +1424,7 @@ postworld.service('pwPostOptions',
 			if( _.isArray( postType ) )
 				postType = postType[0];
 			// Get the options from site globals
-			var postClassOptions = $_.getObj( $pw.config, 'post_options.post_class' );
+			var postClassOptions = $_.get( $pw.config, 'post_options.post_class' );
 			// If none found, return false
 			if( !postClassOptions )
 				return {
@@ -1441,28 +1435,28 @@ postworld.service('pwPostOptions',
 			if( _.isEmpty( postType ) )
 				return postClassOptions;
 			// Get the post type subobject
-			var postClassSet = $_.getObj( postClassOptions, postType );
+			var postClassSet = $_.get( postClassOptions, postType );
 			// If no subobject of specified post type
 			if( !postClassSet )
 				// Try default 'post' settings
-				postClassSet = $_.getObj( postClassOptions, 'post' );
+				postClassSet = $_.get( postClassOptions, 'post' );
 			return postClassSet;
 		},
 
 		postView: function(){
-			return $_.getObj( $pw.config, 'post_views' );
+			return $_.get( $pw.config, 'post_views' );
 		},
 
 		linkFormat: function(){
-			return $_.getObj( $pw.config, 'post_options.link_format' );
+			return $_.get( $pw.config, 'post_options.link_format' );
 		},
 
 		linkFormatMeta: function(){
-			return $_.getObj( $pw.config, 'post_options.link_format_meta' );
+			return $_.get( $pw.config, 'post_options.link_format_meta' );
 		},
 
 		postYear: function(){
-			return $_.getObj( $pw.config, 'post_options.year' );
+			return $_.get( $pw.config, 'post_options.year' );
 		},
 
 		postMonth: function(){
@@ -1625,7 +1619,7 @@ postworld.service('pwPostOptions',
 		taxInputModel: function(){
 			// TAXONOMY OBJECT MODEL
 			// Makes empty array in the taxInput object for each taxonomy inputs
-			var taxonomies = $_.getObj( $pw.config, 'post_options.taxonomies' );
+			var taxonomies = $_.get( $pw.config, 'post_options.taxonomies' );
 			if( !taxonomies )
 				return false;
 
@@ -1637,7 +1631,7 @@ postworld.service('pwPostOptions',
 		},
 
 	}
-}]);
+});
 
 
 /* _        ____       _         _                         
@@ -1648,8 +1642,7 @@ postworld.service('pwPostOptions',
   |_|                                                      
 
 /*///////// ------- SERVICE : PW USERS ------- /////////*/  
-postworld.service('pwRoleAccess',
-	['$log', '$window', '_', '$pw',
+postworld.service('$pwRoleAccess',
 	function ($log, $window, $_, $pw) {
 	return{
 		setRoleAccess : function($scope){
@@ -1677,7 +1670,7 @@ postworld.service('pwRoleAccess',
 
 		},
 	}
-}]);
+});
 
 
 
@@ -1690,8 +1683,8 @@ postworld.service('pwRoleAccess',
 ////////// ------------ QUICK EDIT ------------ //////////*/  
 
 /*///////// ------- SERVICE : PW QUICK EDIT ------- /////////*/  
-postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal', 'pwData', '$pw', '_',
-	function ( $rootScope, $log, $location, $uibModal, pwData, $pw, $_ ) {
+postworld.service('$pwQuickEdit',
+	function ( $rootScope, $log, $location, $uibModal, $pwData, $pw, $_ ) {
 	return{
 		openQuickEdit : function( meta ){
 			
@@ -1702,7 +1695,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
 			$log.debug( "Launch Quick Edit : META : " + meta, meta.post );
 
 			var modalInstance = $uibModal.open({
-			  templateUrl: pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
+			  templateUrl: $pwData.pw_get_template( { subdir: 'modals', view: 'modal-edit-post' } ),
 			  controller: 'quickEditInstanceCtrl',
 			  windowClass: 'quick_edit',
 			  resolve: {
@@ -1726,7 +1719,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
 
 		trashPost : function ( post_id, $scope ){
 			if ( window.confirm("Are you sure you want to trash : \n" + $scope.post.post_title) ) {
-				pwData.pw_trash_post( post_id ).then(
+				$pwData.pw_trash_post( post_id ).then(
 					// Success
 					function(response) {
 						if (response.status==200) {
@@ -1758,7 +1751,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
 			}
 		},
 	}
-}]);
+});
 
 
 
@@ -1772,8 +1765,7 @@ postworld.service('pwQuickEdit', [ '$rootScope', '$log', '$location', '$uibModal
  (   / (_) |_____\__,_|_|\__| |_|   \___/|___/\__| |_|   |_|_|\__\___|_|  |___/
   |_|                                                                          
 ////////// ------------ EDIT POST FILTERS SERVICE ------------ //////////*/  
-postworld.service('pwEditPostFilters',
-	['$log', '_', '$window', 'pwPostOptions', '$pw',
+postworld.service('$pwEditPostFilters',
 	function ($log, $_, $window, $pwPostOptions, $pw ) {
 
 	return {
@@ -1955,7 +1947,7 @@ postworld.service('pwEditPostFilters',
 		  });
 		},
 	};
-}]);
+});
 
 
 
@@ -1969,7 +1961,7 @@ postworld.service('pwEditPostFilters',
 //////////// ------------ POSTWORLD DATE SERVICES ------------ ////////////*/  
 
 
-postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $window) {
+postworld.service('$pwDate', function ($log, $_, $window) {
 	return {
 
 		setDateRange: function( set, dateObj, offset ){
@@ -2104,253 +2096,7 @@ postworld.service('pwDate', [ '$log', '_', '$window', function ($log, $_, $windo
 
 
 	};
-}]);
-
-
-
-
-///// SERVICE /////
-postworld.factory( 'iOptionsData', [ '_', function( $_ ){
-	return {
-		options: {
-			'general':{
-				'none' : false,
-				'doubleSwitch':[
-					{
-						value: true,
-						name: "Yes",
-					},
-					{
-						value: false,
-						name: "No",
-					},
-				],
-				'tripleSwitch':[
-					{
-						value: "default",
-						name: "Default",
-					},
-					{
-						value: true,
-						name: "Yes",
-					},
-					{
-						value: false,
-						name: "No",
-					},
-				],
-				'customSwitch':[
-					{
-						value: false,
-						name: "None",
-					},
-					{
-						value: 'custom',
-						name: 'Custom',
-					}
-				],
-				'defaultAndCustomDoubleSwitch':[
-					{
-						value: "default",
-						name: "Default",
-					},
-					{
-						value: false,
-						name: "No",
-					},
-					{
-						value: true,
-						name: "Yes",
-					},
-					{
-						value: 'custom',
-						name: 'Custom',
-					}
-				],
-				'defaultCustomSwitch':[
-					{
-						value: 'default',
-						name: 'Default',
-					},
-					{
-						value: 'custom',
-						name: 'Custom',
-					}
-				],
-			},
-
-			'style':{
-				'backgroundPosition':[
-					'parallax',
-					'center top',
-					'center center',
-					'center bottom',
-					'left top',
-					'left center',
-					'left bottom',
-					'right top',
-					'right center',
-					'right bottom',
-					'initial',
-				],
-				'backgroundAttachment':[
-					'scroll',
-					'fixed',
-					'local',
-				],
-				'backgroundRepeat':[
-					'repeat',
-					'repeat-x',
-					'repeat-y',
-					'no-repeat',
-				],
-				'backgroundSize':[
-					'cover',
-					'contain',
-				],
-				'textAlign':[
-					'left',
-					'center',
-					'right',
-				],
-			},
-
-			'share':{
-				meta:[
-					{
-						name: 'Facebook',
-						id: 'facebook',
-						icon: 'pwi-facebook-square',
-						selected: true,
-					},
-					{
-						name: 'Twitter',
-						id: 'twitter',
-						icon: 'pwi-twitter-square',
-						selected: true,
-					},
-					{
-						name: 'Reddit',
-						id: 'reddit',
-						icon: 'pwi-reddit-square',
-						selected: true,
-					},
-					{
-						name: 'Tumblr',
-						id: 'tumblr',
-						icon: 'pwi-tumblr-square',
-						selected: false,
-					},
-					{
-						name: 'Google Plus',
-						id: 'google_plus',
-						icon: 'pwi-google-plus-square',
-						selected: true,
-					},
-					{
-						name: 'Pinterest',
-						id: 'pinterest',
-						icon: 'pwi-pinterest-square',
-						selected: false,
-					},
-					{
-						name: 'Email',
-						id: 'email',
-						icon: 'pwi-mail-square',
-						selected: true,
-					},
-				],
-			},
-			'header':{
-				'type':[
-					{
-						slug: 'default',
-						name: 'Default',
-					},
-					{
-						slug: 'featured_image',
-						name: 'Featured Image',
-					},
-					{
-						slug: 'slider',
-						name: 'Slider',
-					},
-				],
-			},
-			'featured_image':{
-				'placement':[
-					{
-						slug: 'none',
-						name: 'None',
-					},
-					{
-						slug: 'header',
-						name: 'In Header',
-					},
-					{
-						slug: 'content',
-						name: 'In Content',
-					},
-				],
-			},
-			'slider':{
-				'transition':[
-					{
-						slug: false,
-						name: 'No Transition',
-					},
-					{
-						slug: 'fade',
-						name: 'Fade',
-					},
-					{
-						slug: 'slide',
-						name: 'Slide',
-					},
-				]
-			},
-			'post_content':{
-				columns:[
-					{
-						value: 1,
-						name: '1 Column',
-					},
-					{
-						value: 2,
-						name: '2 Columns',
-					},
-					{
-						value: 3,
-						name: '3 Columns',
-					},
-				],
-			},
-			'link_url':{
-				show_label:[
-					{
-						value: 'default',
-						name: 'Default',
-					},
-					{
-						value: false,
-						name: 'No',
-					},
-					{
-						value: true,
-						name: 'Yes',
-					},
-					{
-						value: 'custom',
-						name: 'Custom',
-					},
-				],
-			},
-
-		},
-
-	}
-
-}]);
+});
 
 
 

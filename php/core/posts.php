@@ -114,9 +114,9 @@ function pw_get_posts( $post_ids, $fields = 'preview', $options = array() ) {
  * @param $options
  *			[viewer_user_id] (integer) User ID
  *			[cache] (boolean) Whether or not to use the cache, overrides cache module
+ * @todo Refactor in a class structure, using pw_get_post as a wrapper function.
  */
 function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
-	//pw_log( "pw_get_post : " . $post_id, $fields );
 
 	if( !is_array($options) )
 		$options = array();
@@ -173,7 +173,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	///// ADD VIEWER USER /////
 	// Check if the $viewer_user_id is supplied - if not, get it
-	if ( !$options['viewer_user_id'] )
+	if ( !isset($options['viewer_user_id']) )
 		$options['viewer_user_id'] = get_current_user_id();
 	
 	// Add User Fields of Current Logged in User who is viewing
@@ -191,7 +191,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// VIEWER FIELDS //////////
 	// Extract viewer() fields
-	$viewer_fields = extract_linear_fields( $fields, 'viewer', true );
+	$viewer_fields = pw_extract_linear_fields( $fields, 'viewer', true );
 
 	if ( !empty($viewer_fields) ){
 		///// GET VIEWER DATA /////
@@ -297,7 +297,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	////////// POSTWORLD //////////
 		// Get post row from Postworld Meta table, as an Array
 		$pw_post_meta = pw_get_post_meta($post_id);
-		if ( !empty($pw_post_meta) ){
+		if( !empty($pw_post_meta) ){
 			// Cycle though each PW $pw_post_meta value
 			// If it's in $fields, transfer it to $post
 			foreach($pw_post_meta as $key => $value ){
@@ -311,11 +311,11 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		if( in_array('post_points', $fields) ){
 			$post['post_points'] = pw_get_post_points( $post_id );
 		}
-	
+
 	////////// AUTHOR DATA //////////
 		// Extract author() fields
-		$relationships = extract_linear_fields( $fields, 'is_relationship', true );
-		if ( !empty($relationships) ){
+		$relationships = pw_extract_linear_fields( $fields, 'is_relationship', true );
+		if( !empty($relationships) ){
 			if( !isset($post['viewer']) )
 				$post['viewer'] = array();
 			foreach ($relationships as $relationship ) {
@@ -325,10 +325,10 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// DATE & TIME //////////
 		// Post Time Ago
-		if ( in_array('time_ago', $fields) )
+		if( in_array('time_ago', $fields) )
 			$post['time_ago'] = time_ago( strtotime ( $get_post['post_date_gmt'] ) );
 		// Post Timestamp
-		if ( in_array('post_timestamp', $fields) )
+		if( in_array('post_timestamp', $fields) )
 			$post['post_timestamp'] = (int) strtotime( $get_post['post_date_gmt'] ) ;
 
 
@@ -340,15 +340,22 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 			'fields'	=>	$fields,
 			));
 		
-		if ( !empty($avatars) )
+		if( !empty($avatars) )
 			$post["avatar"] = $avatars;
 
+	////////// POST STATS ///////////
+		if( in_array('stats', $fields) ){
+			$wp_post = $GLOBALS['post'];
+			$post['stats'] = array();
+			$post['stats']['is_current_post'] = ( $wp_post->ID == $post_id );
+			$post['stats']['is_current_post_parent'] = ( $wp_post->post_parent == $post_id );
+		}
 
 	////////// META DATA //////////
 		
 		// Extract meta fields
-		$post_meta_fields = extract_linear_fields( $fields, 'post_meta', true );
-		if ( !empty($post_meta_fields) ){
+		$post_meta_fields = pw_extract_linear_fields( $fields, 'post_meta', true );
+		if( !empty($post_meta_fields) ){
 			// CYCLE THROUGH AND FIND EACH REQUESTED FIELD
 			foreach ($post_meta_fields as $post_meta_field ) {
 
@@ -396,12 +403,11 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 			}
 
 			///// JSON META KEYS /////
+			// Parse known JSON keys from JSON strings into objects
 			if( isset( $post['post_meta'] ) && is_array( $post['post_meta'] ) ){
 
-				// Parse known JSON keys from JSON strings into objects
-				global $pwSiteGlobals;
 				// Get known metakeys from the theme configuration
-				$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_postmeta.json_meta_keys' );
+				$json_meta_keys = pw_config( 'db.wp_postmeta.json_meta_keys' );
 				// If there are no set fields, define empty array
 				if( !$json_meta_keys ) $json_meta_keys = array();
 				// Add the globally defined postmeta key
@@ -434,9 +440,9 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// AUTHOR DATA //////////
 		// Extract author() fields
-		$author_fields = extract_linear_fields( $fields, 'author', true );
+		$author_fields = pw_extract_linear_fields( $fields, 'author', true );
 
-		if ( !empty($author_fields) ){
+		if( !empty($author_fields) ){
 
    			////////// GET AUTHOR FIELDS DATA //////////
 
@@ -501,8 +507,8 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// GALLERY //////////
 		// Extract meta fields
-		$gallery_fields = extract_linear_fields( $fields, 'gallery', true );
-		if ( !empty($gallery_fields) ){
+		$gallery_fields = pw_extract_linear_fields( $fields, 'gallery', true );
+		if( !empty($gallery_fields) ){
 			$post['gallery'] = array();
 			// TODO : If already has post_content from get_post, feed post_content directly
 			// 		  To bypass recursive query of the post_content
@@ -527,7 +533,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// TAXONOMIES //////////
 	// Extract taxonomy() fields
-	$taxonomy_fields = extract_hierarchical_fields( $fields, 'taxonomy' );
+	$taxonomy_fields = pw_extract_hierarchical_fields( $fields, 'taxonomy' );
 
 	// ALL : If *all* taxonomies requested via taxonomy(all)
 	/*
@@ -641,8 +647,8 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 
 	////////// PARENT POST //////////
-		$parent_post_fields = extract_linear_fields( $fields, 'parent_post', true );
-		if ( !empty($parent_post_fields) ){
+		$parent_post_fields = pw_extract_linear_fields( $fields, 'parent_post', true );
+		if( !empty($parent_post_fields) ){
 			$post['parent_post'] = array();
 			if( $get_post['post_parent'] != 0 )
 				$post['parent_post'] = pw_get_post( $get_post['post_parent'], $parent_post_fields[0] );
@@ -666,7 +672,8 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 	////////// CHILD POSTS KARMA COUNT //////////
 		// Gets a sum of all the karma on all child posts
-		if( in_array( 'child_posts_karma_count', $fields ) ){
+		if( in_array( 'child_posts_karma_count', $fields ) &&
+			pw_config_db_has_table( 'post_meta' ) ){
 			global $wpdb;
 			$pw_post_meta_table = $wpdb->pw_prefix . "post_meta";
 			$post['child_posts_karma_count'] = $wpdb->get_var(
@@ -732,16 +739,35 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 
 		}
 
-	///// POST EXCERPT /////
+	///// ADVANCED POST CONTENT /////
+		$post_content_fields = pw_extract_linear_fields( $fields, 'post_content', true );
+		if ( !empty($post_content_fields) ){
+			$post_content = $get_post['post_content'];
+			if ( preg_match( '/<!--more(.*?)?-->/', $post_content, $matches ) ) {
+				$post_content_parts = explode( $matches[0], $post_content, 2 );
+				$post_content = $post_content_parts[0];
+				$post['post_content_more'] = true;
+			}
+			else{
+				$post['post_content_more'] = false;
+			}
+			$post['post_content'] = apply_filters( 'the_content', $post_content );
+		}
+
+	///// ADVANCED POST EXCERPT /////
 		// Returns the post excerpt cropped to a certain number of characters
-		// Post_content is optionally used
-		$post_excerpt_fields = extract_linear_fields( $fields, 'post_excerpt', true );
-		if ( !empty($post_excerpt_fields) ){
+		// Post_content is optionally used like this:
+		// @example post_excerpt(256)
+		$post_excerpt_fields = pw_extract_linear_fields( $fields, 'post_excerpt', true );
+		if( !empty($post_excerpt_fields) ){
 			// If the first field is a number
 			if( is_numeric( $post_excerpt_fields[0] ) ){
 				$max_chars = intval($post_excerpt_fields[0]);
-				// If the second value is 'post_content'
-				if( $post_excerpt_fields[1] == 'post_content' ){
+					
+					// If the second value is 'post_content'
+					// $post_excerpt_fields[1] == 'post_content'
+
+				if( empty( $get_post['post_excerpt'] ) ){ 
 					// Set the excerpt as the post content
 					$post_excerpt = $get_post['post_content'];
 					// Strip all shortcodes
@@ -760,8 +786,8 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 	///// COMMENTS /////
 		// 	Gets comments associated with the post
 		//	comments(3,all,comment_date_gmt)
-		$comment_linear_fields = extract_linear_fields( $fields, 'comments', true );
-		if ( !empty( $comment_linear_fields ) ){
+		$comment_linear_fields = pw_extract_linear_fields( $fields, 'comments', true );
+		if( !empty( $comment_linear_fields ) ){
 
 			$comments_query = array(
 				'post_id' => $post_id,
@@ -835,9 +861,8 @@ function pw_set_wp_postmeta_array( $post_id, $post_meta = array() ){
 		
 		///// JSON SETUP /////
 		// Parse known object to JSON strings
-		global $pwSiteGlobals;
 		// Get known metakeys from the theme configuration
-		$json_meta_keys = pw_get_obj( $pwSiteGlobals, 'db.wp_postmeta.json_meta_keys' );
+		$json_meta_keys = pw_config('db.wp_postmeta.json_meta_keys');
 		// If there are no set fields, define empty array
 		if( !$json_meta_keys ) $json_meta_keys = array();
 		// Add the globally defined postmeta key
@@ -1264,8 +1289,7 @@ function pw_save_post($post_data){
 	
 	///// RANK SCORE /////
 	// Cache the post's rank score
-	global $pwSiteGlobals;
-	$rank_post_types = pw_get_obj( $pwSiteGlobals, 'rank.post_types' );
+	$rank_post_types = pw_config('rank.post_types');
 	if( is_array( $rank_post_types ) && in_array( $post_data['post_type'], $rank_post_types ) )
 		pw_cache_rank_score ( $post_id );
 

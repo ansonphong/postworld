@@ -3,7 +3,7 @@
 		<label
 			for="query-post_type"
 			class="inner">
-			<?php ___('query.post_type'); ?>
+			<?php _e( 'Post Type', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_type"
@@ -17,7 +17,7 @@
 		<label
 			for="query-post_status"
 			class="inner">
-			<?php ___('query.post_status'); ?>
+			<?php _e( 'Post Status', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_status"
@@ -30,23 +30,23 @@
 		<label
 			for="query-post_class"
 			class="inner">
-			<?php ___('query.post_class'); ?>
+			<?php _e( 'Post Class', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_class"
 			class="labeled"
 			ng-options="key as value for (key, value) in postClassOptions()"
 			ng-model="<?php echo $vars['ng_model'] ?>.query.post_class">
-			<option value="">Any</option>
+			<option value=""><?php _ex( 'Any', 'option', 'postworld' ) ?></option>
 		</select>
 	</div>
 	<div class="pw-col-3">
 		<label
 			for="query-offset"
 			class="inner"
-			uib-tooltip="<?php ___('query.offset_info'); ?>"
+			uib-tooltip="<?php _e( 'How many posts to skip at the MySQL level', 'postworld' ) ?>"
 			tooltip-popup-delay="333">
-			<?php ___('query.offset'); ?>
+			<?php _e( 'Offset', 'postworld' ) ?>
 			<i class="pwi-info-circle"></i>
 		</label>
 		<input
@@ -59,7 +59,7 @@
 		<label
 			for="query-orderby"
 			class="inner">
-			<?php ___('query.orderby'); ?>
+			<?php _e( 'Order By', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-orderby"
@@ -73,7 +73,7 @@
 		<label
 			for="query-order"
 			class="inner">
-			<?php ___('query.order'); ?>
+			<?php _e( 'Order', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-order"
@@ -86,9 +86,9 @@
 		<label
 			for="query-posts_per_page"
 			class="inner"
-			uib-tooltip="<?php ___('query.posts_per_page_info'); ?>"
+			uib-tooltip="<?php _e( 'Maximum number of posts', 'postworld' ) ?>"
 			tooltip-popup-delay="333">
-			<?php ___('query.posts_per_page'); ?>
+			<?php _e( 'Maximum Posts', 'postworld' ) ?>
 			<i class="pwi-info-circle"></i>
 		</label>
 		<input
@@ -103,14 +103,15 @@
 			for="query-event_filter"
 			class="inner">
 			<i class="pwi-calendar"></i>
-			<?php ___('query.event_filter'); ?>
+			<?php _e( 'Event Filter', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-event_filter"
 			class="labeled"
 			ng-options="item.value as item.name for item in feedOptions.query.event_filter"
 			ng-model="<?php echo $vars['ng_model'] ?>.query.event_filter">
-			<option value=""><?php ___('general.none'); ?></option>
+			<option value=""><?php _ex( 'None', 'option', 'postworld' ) ?></option>
+
 		</select>
 	</div>
 
@@ -122,7 +123,7 @@
 			for="query-post_parent_from"
 			class="inner">
 			<i class="pwi-flow-children"></i>
-			<?php ___('query.post_parent'); ?>
+			<?php _e( 'Post Parent', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_parent_from"
@@ -131,7 +132,9 @@
 			ng-model="<?php echo $vars['ng_model'] ?>.query.post_parent_from"
 			uib-tooltip="{{ selectOptionObj( 'query.post_parent_from' ).description }}"
 			tooltip-placement="bottom">
-			<option value=""><?php ___('general.none'); ?></option>
+			<option value="">
+				<?php _ex( 'None', 'option', 'postworld' ) ?>
+			</option>
 		</select>
 	</div>
 
@@ -139,9 +142,9 @@
 		<label
 			for="query-post_parent_id"
 			class="inner"
-			uib-tooltip="<?php ___('query.post_parent_id_info'); ?>"
+			uib-tooltip="<?php _e( 'Enter the ID of the parent post', 'postworld' ) ?>"
 			tooltip-popup-delay="333">
-			<?php ___('query.post_parent_id'); ?>
+			<?php _e( 'Post Parent ID', 'postworld' ) ?>
 		</label>
 		<input
 			id="query-post_parent_id"
@@ -154,7 +157,7 @@
 		<label
 			for="query-exclude_posts_from"
 			class="inner">
-			<?php ___('query.exclude_posts'); ?>
+			<?php _e( 'Exlude Posts', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-exclude_posts_from"
@@ -163,7 +166,7 @@
 			ng-model="<?php echo $vars['ng_model'] ?>.query.exclude_posts_from"
 			uib-tooltip="{{ selectOptionObj( 'query.exclude_posts_from' ).description }}"
 			tooltip-placement="bottom">
-			<option value=""><?php ___('general.none'); ?></option>
+			<option value=""><?php _ex( 'None', 'option', 'postworld' ) ?></option>
 		</select>
 	</div>
 
@@ -171,7 +174,7 @@
 		<label
 			for="query-include_posts_from"
 			class="inner">
-			<?php ___('query.include_posts'); ?>
+			<?php _e( 'Include Posts', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-include_posts_from"
@@ -180,7 +183,7 @@
 			ng-model="<?php echo $vars['ng_model'] ?>.query.include_posts_from"
 			uib-tooltip="{{ selectOptionObj( 'query.include_posts_from' ).description }}"
 			tooltip-placement="bottom">
-			<option value=""><?php ___('general.none'); ?></option>
+			<option value=""><?php _ex( 'None', 'option', 'postworld' ) ?></option>
 		</select>
 	</div>
 
@@ -192,7 +195,7 @@
 			for="query-author_from"
 			class="inner">
 			<i class="pwi-user"></i>
-			<?php ___('query.author_from'); ?>
+			<?php _e( 'Author', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-author_from"
@@ -201,7 +204,7 @@
 			ng-model="<?php echo $vars['ng_model'] ?>.query.author_from"
 			uib-tooltip="{{ selectOptionObj( 'query.author_from' ).description }}"
 			tooltip-placement="bottom">
-			<option value=""><?php ___('general.none'); ?></option>
+			<option value=""><?php _ex( 'None', 'option', 'postworld' ) ?></option>
 		</select>
 	</div>
 
@@ -209,9 +212,9 @@
 		<label
 			for="query-author"
 			class="inner"
-			uib-tooltip="<?php ___('query.author_id_info'); ?>"
+			uib-tooltip="<?php _e( 'The user ID of the author', 'postworld' ) ?>"
 			tooltip-popup-delay="333">
-			<?php ___('query.author_id'); ?>
+			<?php _e( 'Author ID', 'postworld' ) ?>
 		</label>
 		<input
 			id="query-author"
@@ -228,7 +231,8 @@
 	type="button"
 	class="button"
 	ng-click="addTaxQuery(<?php echo $vars['ng_model'] ?>.query)">
-	<i class="pwi-plus"></i> Taxonomy Query
+	<i class="pwi-plus"></i>
+	<?php _e( 'Taxonomy Query', 'postworld' ) ?>
 </button>
 
 <hr class="thin">
@@ -242,7 +246,7 @@
 			<label
 				for="query-taxonomy"
 				class="inner">
-				<?php ___('query.taxonomy'); ?>
+				<?php _e( 'Taxonomy', 'postworld' ) ?>
 			</label>
 
 			<select
@@ -250,7 +254,7 @@
 				id="select-feature_tax"
 				ng-model="taxQuery.taxonomy"
 				ng-options="key as tax.labels.name for (key,tax) in taxTerms">
-				<option value="">Select Taxonomy</option>
+				<option value=""><?php _e( 'Select Taxonomy', 'postworld' ) ?></option>
 			</select>
 
 		</div>
@@ -258,7 +262,8 @@
 		<div class="pw-col-3">
 
 			<label for="select-feature_term" class="inner">
-				<i class="pwi-search"></i> term
+				<i class="pwi-search"></i>
+				<?php _ex( 'Term', 'as in taxonomy term', 'postworld' ) ?>
 			</label>
 			<select
 				class="labeled"
@@ -266,7 +271,9 @@
 				ng-model="taxQuery.terms"
 				ng-options="term.term_id as term.name group by term.parent_name for term in taxTerms[ taxQuery.taxonomy ].terms"
 				multiple>
-				<option value="">Select Term</option>
+				<option value="">
+					<?php _ex( 'Select Term', 'as in taxonomy term', 'postworld' ) ?>
+				</option>
 			</select>
 
 		</div>
@@ -276,17 +283,16 @@
 				<input
 					type="checkbox"
 					ng-model="taxQuery.include_children">
-				Include Children
+				<?php _ex( 'Include Children', 'as in child posts', 'postworld' ) ?>
 			</label>
 
 			<hr class="thin">
-
-			Operator:
+			<?php _ex( 'Operator', 'logical operator', 'postworld' ) ?> :
 			<select
 				ng-model="taxQuery.operator">
-				<option value="IN">IN</option>
-				<option value="NOT IN">NOT IN</option>
-				<option value="AND">AND</option>
+				<option value="IN"><?php _ex( 'IN', 'logical operator', 'postworld' ) ?></option>
+				<option value="NOT IN"><?php _ex( 'NOT IN', 'logical operator', 'postworld' ) ?></option>
+				<option value="AND"><?php _ex( 'AND', 'logical operator', 'postworld' ) ?></option>
 			</select>
 
 		</div>

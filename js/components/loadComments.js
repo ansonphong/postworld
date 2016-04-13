@@ -48,59 +48,39 @@
  * Performance http://tech.small-improvements.com/2013/09/10/angularjs-performance-with-large-lists/
  */
 
-postworld.directive('ngShowMore', function ($timeout,$animate) {
-	//console.log('at least we got in directive');
-	function link(scope, element, attrs) {
-					scope.child.showMore = false;
-					scope.child.tall = false;
-					//console.log(scope.child.comment_ID,scope.child.comment_content.length);
-			if (scope.child.comment_content.length>600) {
-							scope.child.showMore = true;
-							scope.child.tall = true;				
-			} ;
-					//  this needs to perform better, so it is replaced with the above function
-					/*
-				$timeout(function(){
-						scope.child.showMore = false;
-						scope.child.tall = false;
-						scope.child.height = element.height();
-						if (scope.child.height>60) { 
-							scope.child.showMore = true;
-							scope.child.tall = true;
-							} 
-				});
-				*/
-							 
-			}	
-	return {
-		restrict: 'A',
-		link: link,
-	};
-});
 
 
-postworld.directive('loadComments', function() {
+
+/**
+ * @ngdoc directive
+ * @name postworld.directive:pwComments
+ *
+ * @restrict EA
+ * @description Loads in the comments template and data.
+ *
+ */
+postworld.directive('pwComments', function() {
 	return {
-		restrict: 'A',
+		restrict: 'EA',
 		replace: true,
 		controller: 'pwCommentsTreeController',
-		template: '<div ng-include="templateUrl" class="comments"></div>',
+		template: '<div ng-include="templateUrl" class="pw-comments"></div>',
 		scope: {
 			postId : '=',
-			commentsDynamic:'@'
+			commentsDynamic:'@',
+			commentsInstance:'@pwComments',
 		}
 	};
 });
 
 postworld.controller('pwCommentsTreeController',
-	[ '$scope', '$timeout', 'pwCommentsService', '$rootScope', '$sce', '$attrs', 'pwData', '$log', '$window', '$pw', '_',
-	function ($scope, $timeout, pwCommentsService, $rootScope, $sce, $attrs, pwData, $log, $window, $pw, $_ ) {
-		$scope.json = '';
-
-		if ( $pw.user  )
-			$scope.user_id = $pw.user['data'].ID;
-		else
-			$scope.user_id = 0;
+	[ '$scope', '$timeout', '$pwComments', '$rootScope', '$sce', '$attrs', '$pwData', '$log', '$window', '$pw', '$_',
+	function ($scope, $timeout, $pwComments, $rootScope, $sce, $attrs, $pwData, $log, $window, $pw, $_ ) {
+		
+		// If comments are globally disabled, end here
+		var commentsEnabled = $_.get( $pw, 'options.comments.wordpress.enable' );
+		if( !commentsEnabled )
+			return false;
 
 		if( _.isUndefined( $scope.commentsDynamic ) || _.isNull( $scope.commentsDynamic )  )
 			$scope.commentsDynamic = false;
@@ -113,11 +93,10 @@ postworld.controller('pwCommentsTreeController',
 		$scope.commentsLoaded = false;
 		$scope.key = 0;
 		$scope.commentsCount = 0;
-		$scope.loadCommentsInstance = $attrs.loadComments;
 		//$scope.pluginUrl = jsVars.pluginurl;
 		$scope.templateLoaded = false;
 		$log.debug('Comments post ID is:', $scope.postId);
-		var settings = pwCommentsService.comments_settings[$scope.loadCommentsInstance];
+		var settings = $pwComments.commentsSettings[$scope.commentsInstance];
 
 		// Set the Post ID
 		if ( $scope.postId ) {
@@ -136,41 +115,21 @@ postworld.controller('pwCommentsTreeController',
 		// Get Templates
 		if (settings.view) {
 			var template = 'comments-'+settings.view;
-			$scope.templateUrl = pwData.pw_get_template( { subdir: 'comments', view: template } );
+			$scope.templateUrl = $pwData.pw_get_template( { subdir: 'comments', view: template } );
 			$log.debug('pwLoadCommentsController Set Post Template to ',$scope.templateUrl);
 		}
 		else {
-			$scope.templateUrl = $pw.paths.plugin_url+'/postworld/templates/comments/comments-default.html';
-			// this template fires the loadComments function, so there is no possibility that loadComments will run first.
+			$scope.templateUrl = $pw.config.templates.url['default']+'/comments/comment-default.html';
 		}
 
-		///// WATCH POST ID /////
-		// If the comments are dynamic, for instance a changing post ID
-		if( $_.stringToBool( $scope.commentsDynamic ) ){
-			var firstLoad = true;
-			$scope.$watch( 'postId', function( val, oldVal ){
-				if( firstLoad ){
-					firstLoad = false;
-					return;
-				}
-				// Reload comments on each change
-				$scope.loadComments();
-			});
-
-		}
-		else {
-			// Load in comments
-			$scope.loadComments();
-		}
-			
 		$scope.loadComments = function () {
 			$scope.commentsLoaded = false;
 			settings.query.orderby = $scope.orderBy;
 			settings.query.post_id = $scope.postId;
 
-			$log.debug('loadComments : REQUEST : ', $scope.loadCommentsInstance );
+			$log.debug('loadComments : REQUEST : ', $scope.commentsInstance );
 
-			pwCommentsService.pw_get_comments($scope.loadCommentsInstance).then(function(value) {
+			$pwComments.pw_get_comments($scope.commentsInstance).then(function(value) {
 				$log.debug('loadComments : RESPONSE : ', value.data );
 				$scope.treedata = {children: value.data};
 				$scope.commentsLoaded = true;
@@ -205,8 +164,7 @@ postworld.controller('pwCommentsTreeController',
 	};
 	
 	$scope.OpenClose = function(child) {
-		if (parseInt(child.comment_points)>$scope.minPoints) child.minimized = false;
-		else child.minimized = true;
+		child.minimized = !(parseInt(child.comment_points)>$scope.minPoints);
 	};
 	
 	$scope.trustHtml = function(child) {
@@ -267,7 +225,7 @@ postworld.controller('pwCommentsTreeController',
 		child.voteStatus = "busy";
 
 		// AJAX Call 
-		pwData.setCommentPoints ( args ).then(
+		$pwData.setCommentPoints ( args ).then(
 			// ON : SUCCESS
 			function(response) {    
 				//alert( JSON.stringify(response.data) );
@@ -340,7 +298,7 @@ postworld.controller('pwCommentsTreeController',
 			args.comment_id = child.comment_ID;
 			args.fields = 'edit';
 			// Should we set editInProgress here?
-			pwCommentsService.pw_get_comment(args).then(
+			$pwComments.pw_get_comment(args).then(
 				// success
 				function(response) {
 					if ((response.status==200)&&(response.data)) {
@@ -393,7 +351,7 @@ postworld.controller('pwCommentsTreeController',
 		}
 		
 		args.return_value = 'data';  		
-		pwCommentsService.pw_save_comment(args).then(
+		$pwComments.pw_save_comment(args).then(
 			function(response) {
 				if ((response.status==200)&&(response.data)) {
 					// reset form and hide it
@@ -441,7 +399,7 @@ postworld.controller('pwCommentsTreeController',
 			
 			args.return_value = 'data';
 
-			pwCommentsService.pw_save_comment(args).then(
+			$pwComments.pw_save_comment(args).then(
 				function(response) {
 					if ((response.status==200)&&(response.data)) {
 						
@@ -485,7 +443,7 @@ postworld.controller('pwCommentsTreeController',
 			var args = {};
 			args.comment_id = child.comment_ID;
 			
-			pwCommentsService.pw_delete_comment(args).then(
+			$pwComments.pw_delete_comment(args).then(
 				function(response) {
 					if ((response.status==200)&&(response.data)) {
 						
@@ -516,14 +474,11 @@ postworld.controller('pwCommentsTreeController',
 			);
 	};
 
-
 	$scope.flagComment = function(child){
-
 		var args = {
 			"comment_ID" : child.comment_ID,
 		};
-
-		pwCommentsService.flag_comment(args).then(
+		$pwComments.flag_comment(args).then(
 				function(response) {
 					if ((response.status==200)&&(response.data == true)) {
 						alert( "Comment flagged for moderation." );          
@@ -536,7 +491,6 @@ postworld.controller('pwCommentsTreeController',
 				}
 			);
 	};
-
 
 	$scope.removeChild = function (child) {
 		function walk(target) {
@@ -592,10 +546,61 @@ postworld.controller('pwCommentsTreeController',
 	}
 
 
+	///// WATCH POST ID /////
+		// If the comments are dynamic, for instance a changing post ID
+		if( $_.stringToBool( $scope.commentsDynamic ) ){
+			var firstLoad = true;
+			$scope.$watch( 'postId', function( val, oldVal ){
+				if( firstLoad ){
+					firstLoad = false;
+					return;
+				}
+				// Reload comments on each change
+				$scope.loadComments();
+			});
+
+		}
+		else {
+			// Load in comments
+			$scope.loadComments();
+		}
+
+
 }]);
 
 
 
+
+
+postworld.directive('ngShowMore', function ($timeout,$animate) {
+	//console.log('at least we got in directive');
+	function link(scope, element, attrs) {
+					scope.child.showMore = false;
+					scope.child.tall = false;
+					//console.log(scope.child.comment_ID,scope.child.comment_content.length);
+			if (scope.child.comment_content.length>600) {
+							scope.child.showMore = true;
+							scope.child.tall = true;				
+			} ;
+					//  this needs to perform better, so it is replaced with the above function
+					/*
+				$timeout(function(){
+						scope.child.showMore = false;
+						scope.child.tall = false;
+						scope.child.height = element.height();
+						if (scope.child.height>60) { 
+							scope.child.showMore = true;
+							scope.child.tall = true;
+							} 
+				});
+				*/
+							 
+			}	
+	return {
+		restrict: 'A',
+		link: link,
+	};
+});
 
 
 

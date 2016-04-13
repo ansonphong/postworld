@@ -132,7 +132,7 @@ function pw_print_slider( $slider ){
 			///// SETUP QUERY /////
 
 			// Localize Query
-			$query = $slider['query'];
+			$query = _get($slider,'query');
 			
 			// POST STATUS
 			// Set Post Status
@@ -183,11 +183,9 @@ function pw_print_slider( $slider ){
 					);
 			}
 
-			//$query['order'] = "";
-
 			///// RUN QUERY /////
-			$slider['posts'] = (array) pw_query( $query )->posts;
-
+			//$slider['posts'] = (array) pw_query( $query )->posts;
+			$slider['posts'] = pw_query_posts( $query );
 
 		// Do not break case 'query' here, continue with this_post mode
 		case 'this_post':
@@ -243,8 +241,6 @@ function pw_print_slider( $slider ){
 				}
 				add_shortcode('gallery', 'shortcode_gallery_empty');
 			}
-
-
 
 			///// FILTERING /////
 			// HAS IMAGES

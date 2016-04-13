@@ -28,6 +28,6 @@
 	};	
 </script>
 
-<div live-feed='featured-posts' class="grid feed view"></div>
+<div pw-feed='featured-posts' class="grid feed view"></div>
 
 <!-- ////////// END FEED ////////// -->

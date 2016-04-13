@@ -79,6 +79,10 @@ function pw_clear_menu_caches(){
  * @param string $operator (Optional) Operator on which to query.
  */
 function pw_get_cache( $fields, $operator = 'AND' ){
+
+	if( !pw_config_in_db_tables('cache') )
+		return false;
+
 	global $wpdb;
 	$table_name = $wpdb->pw_prefix . 'cache';
 	$supported_fields = array( 'cache_name', 'cache_hash' );
@@ -142,6 +146,9 @@ function pw_get_cache( $fields, $operator = 'AND' ){
  */
 function pw_set_cache( $data ){
 
+	if( !pw_config_in_db_tables('cache') )
+		return false;
+
 	global $pw;
 	global $wpdb;
 	
@@ -189,6 +196,10 @@ function pw_set_cache( $data ){
 }
 
 function pw_delete_cache( $where ){
+
+	if( !pw_config_in_db_tables('cache') )
+		return false;
+
 	global $pw;
 	global $wpdb;
 	return $wpdb->delete(
@@ -198,6 +209,10 @@ function pw_delete_cache( $where ){
 }
 
 function pw_truncate_cache(){
+
+	if( !pw_config_in_db_tables('cache') )
+		return false;
+
 	global $pw;
 	global $wpdb;
 	return $wpdb->query("TRUNCATE TABLE `" . $wpdb->pw_prefix . "cache`");
@@ -227,6 +242,10 @@ function pw_get_cache_hash_content( $cache_hash ){
 
 
 function pw_get_cache_types_readout(){
+
+	if( !pw_config_in_db_tables('cache') )
+		return false;
+
 	// Returns an array containing the counts of each of the cache types
 	// ie. [{"cache_type":"feed","type_count":"4"},{"cache_type":"term-feed","type_count":"2"}]
 	global $wpdb;
@@ -272,23 +291,21 @@ function pw_has_runtime_cache( $key ){
 ////////////////////////////////////////////////////////////////////
 
 
-
+/**
+ * Cycles through each post in each post_type scheduled for Rank Score caching
+ * Calculates and caches each post's current rank with pw_cache_rank_score() method
+ * Tracks progress with the Postworld Progress API
+ */
 function pw_cache_all_rank_scores( $post_types = array() ){
 	$fnName = 'pw_cache_all_rank_scores';
-	/*
-	 • Cycles through each post in each post_type scheduled for Rank Score caching
-	 • Calculates and caches each post's current rank with pw_cache_rank_score() method
-	 • Tracks progress with the Postworld Progress API
-	 */
-	//set_time_limit (300);
-
-	/// SETUP ///
+	
 	global $wpdb;
-	$wpdb->show_errors();
-	global $pwSiteGlobals;
+	
+	if( pw_dev_mode() )
+		$wpdb->show_errors();
 
 	if( empty( $post_types ) )
-		$post_types = _get( $pwSiteGlobals, 'rank.post_types' );
+		$post_types = pw_config('rank.post_types');
 
 	if( empty( $post_types ) )
 		return false;
@@ -408,9 +425,7 @@ function pw_cache_all_post_points() {
 	 */
 		 
 	global $wpdb;
-	global $pwSiteGlobals;
-
-	$post_types = _get( $pwSiteGlobals, 'points.post_types' );
+	$post_types = pw_config('points.post_types');
 
 	if( empty($post_types) )
 		return array( 'error' => 'No post types defined in Postworld Config.' );
@@ -615,28 +630,10 @@ function pw_cache_all_comment_points(){
 	
 }
 
-
-/*
-function pw_cache_all_feeds (){
-	//• Run pw_cache_feed() method for each feed registered for feed caching in WP Options
-	//return : cron_logs Object (store in table wp_postworld_cron_logs)
-	global $pwSiteGlobals;
-	$feeds_options = $pwSiteGlobals['feeds']['cache_feeds'];
-	$cron_logs = array();
-	$number_of_feeds = count($feeds_options);
-	//print_r($number_of_feeds);
-	for ($i=0; $i <$number_of_feeds ; $i++) {
-		$time_start = date("Y-m-d H:i:s"); 
-		$cache_output = pw_cache_feed($feeds_options[$i]);
-		$time_end = date("Y-m-d H:i:s");
-		$current_cron_log_object = pw_create_cron_log_object($time_start, $time_end,$cache_output['number_of_posts'] , 'pw_cache_all_feeds', $feeds_options[$i],$cache_output['feed_query']);
-		$cron_logs[]=$current_cron_log_object;
-	}
-	return $cron_logs;	
-}
-*/
-
 function pw_clear_cron_logs ( $timestamp ){
+	if( !pw_config_in_db_tables('cron_logs') )
+		return false;
+
 	/*  • Count number of rows in wp_postworld_cron_logs (rows_before)
 		• Deletes all rows which are before the specified timestamp (rows_removed)
 		• Count number of rows after clearing (rows_after)
@@ -650,7 +647,9 @@ function pw_clear_cron_logs ( $timestamp ){
 	
 	
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$query = "select COUNT(*) FROM $wpdb->pw_prefix"."cron_logs";
 
@@ -786,13 +785,11 @@ function pw_cache_shares ( $cache_all = FALSE ){
 
 }
 
-/*	
-//TODO : to be specified
-function cache_user_post_shares($user_id){
-	pw_cache_user_shares($user_id, 'incoming');
-}*/
 
 function pw_get_most_recent_cache_shares_log(){
+	if( !pw_config_in_db_tables('cron_logs') )
+		return false;
+
 	global $wpdb;
 	$wpdb->show_errors();
 	$query="SELECT * FROM $wpdb->pw_prefix"."cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'pw_cache_shares')";
@@ -801,6 +798,9 @@ function pw_get_most_recent_cache_shares_log(){
 }
 
 function pw_get_recent_shares_post_ids($last_time){
+	if( !pw_config_in_db_tables('shares') )
+		return false;
+
 	 global $wpdb;	
 	 $wpdb->show_errors();
 	 $query = "select DISTINCT  post_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
@@ -811,6 +811,9 @@ function pw_get_recent_shares_post_ids($last_time){
 }	
 
 function pw_get_recent_shares_author_ids($last_time){
+	if( !pw_config_in_db_tables('shares') )
+		return false;
+
 	 global $wpdb;	
 	 $wpdb->show_errors();
 	 $query = "select DISTINCT  author_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
@@ -819,6 +822,9 @@ function pw_get_recent_shares_author_ids($last_time){
 }	
 
 function pw_get_recent_shares_user_ids($last_time){
+	if( !pw_config_in_db_tables('shares') )
+		return false;
+
 	 global $wpdb;	
 	 $wpdb->show_errors();
 	 $query = "select DISTINCT user_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
@@ -850,15 +856,18 @@ function pw_get_all_user_ids_as_array(){
 
 //////////////// POST SHARES /////////////////////
 function pw_calculate_post_shares($post_id){
+	if( !pw_config_in_db_tables('shares') )
+		return false;
+
 	/*Calculates the total number of shares to the given post
 	Process
 	-Lookup the given post_id in the Shares table
 	-Add up ( SUM ) the total number in shares column attributed to the post
 	-return : integer (number of shares)*/
 	
-	
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$query = "select SUM(shares) FROM $wpdb->pw_prefix"."shares where post_id=".$post_id;
 	$total_shares = $wpdb->get_var($query);
@@ -868,6 +877,9 @@ function pw_calculate_post_shares($post_id){
 }
 
 function pw_cache_post_shares( $post_id ){
+
+	if( !pw_config_in_db_tables('post_meta') )
+		return false;
 
 	/*Caches the total number of shares to the given post
 	Process
@@ -879,7 +891,8 @@ function pw_cache_post_shares( $post_id ){
 	pw_insert_post_meta($post_id);
 	
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$query = "update $wpdb->pw_prefix"."post_meta set post_shares=".$total_shares." where post_id=".$post_id;
 	$wpdb->query($query);
@@ -911,8 +924,12 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 	*/
 
 	$output = array();
+
 	global $wpdb;
-	$wpdb -> show_errors();
+
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
+
 	if($mode =='outgoing' || $mode=='both'){
 		$user_share_report_outgoing = pw_user_share_report_outgoing($user_id);
 		$outgoing = 0;
@@ -934,6 +951,10 @@ function pw_calculate_user_shares( $user_id, $mode='both' ){
 }
 
 function pw_cache_user_shares( $user_id, $mode ){
+
+	if( !pw_config_in_db_tables('user_meta') )
+		return false;
+
 	/*
 	Caches the total number of shares relating to a given user
 	Process
@@ -945,8 +966,11 @@ function pw_cache_user_shares( $user_id, $mode ){
 	 
 	$user_shares = pw_calculate_user_shares($user_id,$mode);
 	//print_r($user_shares);
+
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 	
 	$total_user_shares=0;
 	if(isset($user_shares['incoming'])) $total_user_shares = $user_shares['incoming'];
@@ -974,8 +998,15 @@ function pw_cache_user_shares( $user_id, $mode ){
 }
 
 function pw_get_user_shares($user_id){
+
+	if( !pw_config_in_db_tables('user_meta') )
+		return false;
+
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
+	
 	$query = "select share_points_meta from $wpdb->pw_prefix"."user_meta where user_id=".$user_id;
 	return $wpdb->get_var($query);
 }

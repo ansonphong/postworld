@@ -1,6 +1,4 @@
 <?php
-////////// INFINITE INCLUDES //////////
-include 'i_language.php';
 include 'admin-menu.php';
 include 'admin-modules.php';
 include 'admin-filters.php';
@@ -9,21 +7,16 @@ include 'functions-sidebars.php';
 include 'functions-styles.php';
 include 'functions-layouts.php';
 include 'functions-ajax.php';
-include 'style-model.php';
 include 'social-model.php';
 
-////////// THEME OPTIONS //////////
 global $theme_admin;
 global $pw;
 
 function postworld_admin_menu(){
-	// TODO : Make the $pw_slug filterable
-	// So that themes can re-map the postworld options under the theme main menu
-
 	global $pw;	
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];
-	$submenu_slug = apply_filters( 'pw_admin_submenu_slug', $pw_slug );
+	$submenu_slug = pw_admin_submenu_slug();
 
 	$menu = array(
 		'menu' => array(
@@ -36,15 +29,14 @@ function postworld_admin_menu(){
 			'menu_icon'	=>	'dashicons-admin-generic',
 			'position' => ''
 			),
-
 		'submenu' => array(),
 		);
 
 	if( in_array( 'site', $enabled_modules ) )
 		$menu['submenu']['site'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Site Options',
-			'menu_title' => 'Site Options',
+			'page_title' => _x('Site Options','module','postworld'),
+			'menu_title' => _x('Site Options','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-site',
 			'function' => 'postworld_options_site',
@@ -53,8 +45,8 @@ function postworld_admin_menu(){
 	if( in_array( 'layouts', $enabled_modules ) )
 		$menu['submenu']['layout'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Layout',
-			'menu_title' => 'Layout',
+			'page_title' => _x('Layout','module','postworld'),
+			'menu_title' => _x('Layout','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-layout',
 			'function' => 'postworld_options_layout',
@@ -63,8 +55,8 @@ function postworld_admin_menu(){
 	if( in_array( 'sidebars', $enabled_modules ) )
 		$menu['submenu']['sidebars'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Sidebars',
-			'menu_title' => 'Sidebars',
+			'page_title' => _x('Sidebars','module','postworld'),
+			'menu_title' => _x('Sidebars','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-sidebars',
 			'function' => 'postworld_options_sidebars',
@@ -73,8 +65,8 @@ function postworld_admin_menu(){
 	if( in_array( 'styles', $enabled_modules ) )
 		$menu['submenu']['styles'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Styles',
-			'menu_title' => 'Styles',
+			'page_title' => _x('Styles','module','postworld'),
+			'menu_title' => _x('Styles','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-styles',
 			'function' => 'postworld_options_styles',
@@ -83,8 +75,8 @@ function postworld_admin_menu(){
 	if( in_array( 'social', $enabled_modules ) )
 		$menu['submenu']['social'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Social',
-			'menu_title' => 'Social',
+			'page_title' => _x('Social','module','postworld'),
+			'menu_title' => _x('Social','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-social',
 			'function' => 'postworld_options_social',
@@ -93,8 +85,8 @@ function postworld_admin_menu(){
 	if( in_array( 'comments', $enabled_modules ) )
 		$menu['submenu']['comments'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Comments',
-			'menu_title' => 'Comments',
+			'page_title' => _x('Comments','module','postworld'),
+			'menu_title' => _x('Comments','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-comments',
 			'function' => 'postworld_options_comments',
@@ -103,30 +95,18 @@ function postworld_admin_menu(){
 	if( in_array( 'feeds', $enabled_modules ) )
 		$menu['submenu']['feeds'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Feeds',
-			'menu_title' => 'Feeds',
+			'page_title' => _x('Feeds','module','postworld'),
+			'menu_title' => _x('Feeds','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-feeds',
 			'function' => 'postworld_options_feeds',
 			);
 
-	/*
-	if( in_array( 'term-feeds', $enabled_modules ) )
-		$menu['submenu']['term-feeds'] = array(
-			'parent_slug' => $submenu_slug,
-			'page_title' => 'Term Feeds',
-			'menu_title' => 'Term Feeds',
-			'capability' => 'manage_options',
-			'menu_slug' => $submenu_slug.'-term-feeds',
-			'function' => 'postworld_options_term_feeds',
-			);
-	*/
-
 	if( in_array( 'backgrounds', $enabled_modules ) )
 		$menu['submenu']['backgrounds'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Backgrounds',
-			'menu_title' => 'Backgrounds',
+			'page_title' => _x('Backgrounds','module','postworld'),
+			'menu_title' => _x('Backgrounds','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-backgrounds',
 			'function' => 'postworld_options_backgrounds',
@@ -135,8 +115,8 @@ function postworld_admin_menu(){
 	if( in_array( 'iconsets', $enabled_modules ) )
 		$menu['submenu']['iconsets'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Iconsets',
-			'menu_title' => 'Iconsets',
+			'page_title' => _x('Iconsets','module','postworld'),
+			'menu_title' => _x('Iconsets','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-iconsets',
 			'function' => 'postworld_options_iconsets',
@@ -145,8 +125,8 @@ function postworld_admin_menu(){
 	if( in_array( 'shortcodes', $enabled_modules ) )
 		$menu['submenu']['shortcodes'] = array(
 			'parent_slug' => $submenu_slug,
-			'page_title' => 'Shortcodes',
-			'menu_title' => 'Shortcodes',
+			'page_title' => _x('Shortcodes','module','postworld'),
+			'menu_title' => _x('Shortcodes','module','postworld'),
 			'capability' => 'manage_options',
 			'menu_slug' => $submenu_slug.'-shortcodes',
 			'function' => 'postworld_options_shortcodes',
@@ -154,16 +134,14 @@ function postworld_admin_menu(){
 
 	$menu['submenu']['database'] = array(
 		'parent_slug' => $submenu_slug,
-		'page_title' => 'Database',
-		'menu_title' => 'Database',
+		'page_title' => _x('Database','module','postworld'),
+		'menu_title' => _x('Database','module','postworld'),
 		'capability' => 'manage_options',
 		'menu_slug' => $submenu_slug.'-database',
 		'function' => 'postworld_options_database',
 		);
 
-	//echo json_encode($pw['modules']);
-
-	// If a custom slug is define, nest postworld under it at the bottom
+	// If a custom slug is defined, nest postworld under it at the bottom
 	if( $submenu_slug !== 'postworld' ){
 		$menu['menu']['parent_slug'] = $submenu_slug;
 		$menu['menu']['menu_slug'] = $submenu_slug.'-postworld';
@@ -171,22 +149,24 @@ function postworld_admin_menu(){
 		$menu['menu'] = array();
 	}
 
-	///// APPLY FILTERS /////
-	// Allow themes to add sub menus
+	// Apply filters to allow themes to add sub menus
 	$menu['submenu'] = apply_filters( 'pw_admin_submenu', $menu['submenu'] );	
 
 	return $menu;
 
 }
 
-///// ADD ADMIN MENU PAGE /////
-add_action( 'admin_menu', 'theme_admin_menu', 10 );
-function theme_admin_menu(){
-
+/**
+ * ADD ADMIN MENU PAGE
+ */
+add_action( 'admin_menu', 'pw_theme_admin_menu', 10 );
+function pw_theme_admin_menu(){
 	$admin = postworld_admin_menu();
 	
-	///// MAIN MENU /////
-	// http://codex.wordpress.org/Function_Reference/add_menu_page
+	/**
+	 * Main Manu
+	 * @link http://codex.wordpress.org/Function_Reference/add_menu_page
+	 */
 	if( isset( $admin['menu'] ) && !empty( $admin['menu'] ) )
 		add_menu_page(
 			$admin['menu']['page_title'],
@@ -197,10 +177,10 @@ function theme_admin_menu(){
 			$admin['menu']['menu_icon']
 			);
 
-	//pw_log( "ADMIN SUBMENU" . json_encode($admin) );
-
-	///// SUB MENUS /////
-	// http://codex.wordpress.org/Function_Reference/add_submenu_page
+	/**
+	 * Sub Menus
+	 * @link http://codex.wordpress.org/Function_Reference/add_submenu_page
+	 */
 	foreach( $admin['submenu'] as $key => $value ){
 		add_submenu_page(
 			$value['parent_slug'],
@@ -214,22 +194,27 @@ function theme_admin_menu(){
 
 }
 
+/**
+ * Admin Styles
+ */
+add_action('admin_print_styles', 'postworld_admin_icon_styles');
+function postworld_admin_icon_styles(){
+	?>
+	<style>
+		#toplevel_page_postworld .dashicons-before:before{
+			content: "\e612";
+			font-family: "Postworld-Icons"
+		}
+	</style>
+	<?php
+}
 
-///// REGISTER STYLES /////
-//wp_register_style( 'pw_admin_css', plugins_url() . '/postworld/admin/css/pw-admin.css' );
 
-
-
-///// ADMIN URLS /////
-global $i_admin_urls;
-$i_admin_urls = array(
-	'sidebars'	=>	add_query_arg( array('page' => $theme_admin['sidebars']['menu_slug']), admin_url("admin.php") ),
-	);
-
-
-///// STRUCTURE OF LAYOUT MODEL /////
-$i_layouts_model = array(
-
+/**
+ * Structure of layout model
+ */
+/*
+$pw_layouts_model = array(
 	"default"	=>	array(
 		"layout"	=>	"left-right",
 		"sidebars"	=> array(
@@ -252,59 +237,10 @@ $i_layouts_model = array(
 			),
 		),
 	"blog"	=>	array(
-		//...
 		),
 
 	);
+*/
 
 
-
-
-
-/**
- * @todo REMOVE : THIS 'i_admin_scripts' BLOCK
- * Only inserts:
- * var iGlobals = {"paths":{"ajax_url":"http:\/\/podcollective\/wp-admin\/admin-ajax.php"}};
- */
-///// ADMIN SCRIPTS /////
-// Scripts which are inserted into the header in the admin
-// These contain globals accessible by the JS window object
-function i_admin_scripts(){
-  $iGlobals = array(
-	"paths"	=>	array(
-		"ajax_url" => admin_url( 'admin-ajax.php' ),
-		),
-	);
-  ?>
-	<script  type="text/javascript">
-	//<![CDATA[
-		var iGlobals = <?php echo json_encode($iGlobals); ?>;
-	//]]>
-	</script>
-  <?php
-}
-
-// INSERT GLOBAL WINDOW SCRIPTS
-function insert_i_admin_scripts() {
-	i_admin_scripts();
-}
-add_action('admin_head', 'insert_i_admin_scripts');
-
-
-
-
-
-
-///// ADMIN STYLES /////
-add_action('admin_print_styles', 'postworld_admin_icon_styles');
-function postworld_admin_icon_styles(){
-	?>
-	<style>
-		#toplevel_page_postworld .dashicons-before:before{
-			content: "\e612";
-			font-family: "Postworld-Icons"
-		}
-	</style>
-	<?php
-}
 ?>

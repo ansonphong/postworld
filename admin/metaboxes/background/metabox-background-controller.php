@@ -39,7 +39,7 @@ global $post;
 
 	///// CONTROLLER /////
 	postworldAdmin.controller('pwBackgroundMetaboxCtrl',
-		['$scope', 'pwData', '_', '$log',
+		['$scope', '$pwData', '$_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
 			/// LOAD IN DATA SOURCES ///
@@ -48,7 +48,7 @@ global $post;
 
 			// Create background object
 			if( !$_.objExists( $scope.pw_background_post, 'post_meta.<?php echo pw_postmeta_key; ?>.background' ) )
-				$scope.pw_background_post = $_.setObj( $scope.pw_background_post, 'post_meta.<?php echo pw_postmeta_key; ?>.background', {} );
+				$scope.pw_background_post = $_.set( $scope.pw_background_post, 'post_meta.<?php echo pw_postmeta_key; ?>.background', {} );
 
 			// TODO : Add a PW global for pw_postmeta_key and pw_usermeta_key, use that global here
 

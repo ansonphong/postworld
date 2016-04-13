@@ -12,11 +12,11 @@ function pw_roles_allowed_admin_access(){
 	// Allow themes to customize the allowed roles
 	$allowed_roles = apply_filters( 'pw_roles_allowed_admin_access', array('administrator', 'editor') );
 	// Redirect users without allowed roles to the home page
-    $redirect = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : home_url( '/' );
-    
-    // Allow anonymous AJAX Requests
-    if( !pw_user_has_roles( $allowed_roles ) && !defined('DOING_AJAX') && DOING_AJAX !== true )
-        exit( wp_redirect( $redirect ) );
+	$redirect = isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : home_url( '/' );
+	
+	// Allow anonymous AJAX Requests
+	if( !pw_user_has_roles( $allowed_roles ) && !defined('DOING_AJAX') && DOING_AJAX !== true )
+		exit( wp_redirect( $redirect ) );
 }
 
 /**
@@ -28,23 +28,23 @@ function pw_roles_allowed_admin_access(){
  * @return [bool]
  */
 function pw_user_has_roles( $roles, $user_id = null ) {
-    if ( is_numeric( $user_id ) )
+	if ( is_numeric( $user_id ) )
 		$user = get_userdata( $user_id );
-    else
-        $user = wp_get_current_user();
+	else
+		$user = wp_get_current_user();
  
-    if ( empty( $user ) )
+	if ( empty( $user ) )
 		return false;
  
- 	if( is_string( $roles ) )
- 		$roles = array($roles);
+	if( is_string( $roles ) )
+		$roles = array($roles);
 
- 	foreach( $roles as $role ){
- 		if( in_array( $role, (array) $user->roles ) )
- 			return true;
- 	}
+	foreach( $roles as $role ){
+		if( in_array( $role, (array) $user->roles ) )
+			return true;
+	}
 
-    return false;
+	return false;
 }
 
 /**
@@ -267,12 +267,10 @@ function pw_auth_user( $vars = array() ){
 
 /////----- INSERT NEW USER -----/////
 function pw_insert_user( $userdata ){
-	global $pwSiteGlobals;
 
-	if( isset( $pwSiteGlobals['role']['levels']['default'] ) )
-		$userdata['role'] = $pwSiteGlobals['role']['levels']['default'];	
-	else
-		$userdata['role'] = 'subscriber';
+	$default_role_levels = pw_config( 'role.levels.default' );
+	$userdata['role'] = ( !empty( $default_role_levels ) ) ? 
+		$default_role_levels : 'subscriber';
 
 	$user_id = wp_insert_user( $userdata );
 
@@ -360,7 +358,7 @@ function pw_activate_user( $auth_key ){
 	);
 
 	// Set the Activated Role
-	$role = pw_get_obj( $pwSiteGlobals, 'role.levels.activated' );
+	$role = pw_config('role.levels.activated');
 	if( !$role )
 		$role = 'contributor';
 
@@ -375,8 +373,8 @@ function pw_activate_user( $auth_key ){
 		wp_update_user($args);
 
 		// Delete the activation key !!!
-    	delete_user_meta( $user->ID, 'activation_key' );
-    	
+		delete_user_meta( $user->ID, 'activation_key' );
+		
 		return $user;
 	}
 	else
@@ -398,7 +396,7 @@ function pw_activate_autologin( $activation_key, $redirect = "" ){
 	$users = $user_query->get_results();
 	$user = ( isset( $users[0] ) ) ?
 		$users[0] : array();
-    //echo json_encode( $users );
+	//echo json_encode( $users );
 
 	///// SECRITY LAYER /////
 	// Return false if more than one user returned
@@ -410,49 +408,48 @@ function pw_activate_autologin( $activation_key, $redirect = "" ){
 
 
 	///// LOG THE USER IN /////
-    // If a user is found with this activation key
-    if( !empty( $user ) ){
+	// If a user is found with this activation key
+	if( !empty( $user ) ){
 
-    	///// CONTEXT /////
-    	// Get context from usermeta array
-    	global $pw;
-    	$pw['security']['mode'] = "system";
+		///// CONTEXT /////
+		// Get context from usermeta array
+		global $pw;
+		$pw['security']['mode'] = "system";
 
-    	$usermeta = array(
-    		"user_id"	=>	$user->ID,
+		$usermeta = array(
+			"user_id"	=>	$user->ID,
 			"sub_key"	=>	'signup.context',
 			//"meta_key" 	=>	[string] 	(optional)
-    		);
-    	$signup_context = pw_get_wp_usermeta( $usermeta );
+			);
+		$signup_context = pw_get_wp_usermeta( $usermeta );
 
-    	// Get the site config for various contexts
-    	if( isset( $signup_context ) ){
-    		global $pwSiteGlobals;
-	    	$redirect_config = pw_get_obj( $pwSiteGlobals, 'signup.context.'.$signup_context.'.redirect' );
-	    	// Get Default
-	    	if( !isset( $redirect_config ) )
-	    		$redirect_config = pw_get_obj( $pwSiteGlobals, 'signup.context.default.redirect' );
-    	}
-    	
-    	// If the context and redirect are configured
-    	if( isset($redirect_config) )
-    		$redirect = $redirect_config;
+		// Get the site config for various contexts
+		if( isset( $signup_context ) ){
+			$redirect_config = pw_config( 'signup.context.'.$signup_context.'.redirect' );
+			// Get Default
+			if( !isset( $redirect_config ) )
+				$redirect_config = pw_config( 'signup.context.default.redirect' );
+		}
+		
+		// If the context and redirect are configured
+		if( isset($redirect_config) )
+			$redirect = $redirect_config;
 
-    	// Login User
+		// Login User
 		wp_clear_auth_cookie();
-	    wp_set_current_user ( $user->ID );
-	    wp_set_auth_cookie  ( $user->ID );
+		wp_set_current_user ( $user->ID );
+		wp_set_auth_cookie  ( $user->ID );
 
-	    // Redirect
-	    if( !empty( $redirect ) )
-		    wp_redirect( $redirect );
+		// Redirect
+		if( !empty( $redirect ) )
+			wp_redirect( $redirect );
 
-    }
-    else {
-    	return false;
-    }
+	}
+	else {
+		return false;
+	}
 
-    return true;
+	return true;
 
 }
 
@@ -632,7 +629,7 @@ function pw_get_avatar( $vars ){
 	 *	$vars = array(
 	 *		'user_id' 	=> 	1,
 	 *		'size'		=>	64,
- 	 *
+	 *
 	 *		'width' 	=> 	64, 	// Optional
 	 *		'height' 	=> 	64		// Optional
 	 *		);
@@ -720,10 +717,10 @@ function pw_get_avatar( $vars ){
 function pw_user_login( $user_id, $redirect = '/' ) {
 	// Login User
 	wp_clear_auth_cookie();
-    wp_set_current_user ( $user_id );
-    wp_set_auth_cookie  ( $user_id );
-    // Redirect
-    wp_safe_redirect( $redirect );
+	wp_set_current_user ( $user_id );
+	wp_set_auth_cookie  ( $user_id );
+	// Redirect
+	wp_safe_redirect( $redirect );
 }
 
 

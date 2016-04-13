@@ -9,7 +9,7 @@
 <script>
 	// TODO : MAKE MODAL WINDOW FOR SELECTING ICONS, PASS IN DATA
 	postworldAdmin.controller( '<?php echo $controller_id ?>', [
-		'$scope', 'pwIconsets', '$log', '_',
+		'$scope', 'pwIconsets', '$log', '$_',
 		function( $scope, $pwIconsets, $log, $_ ){
 		$scope.customIconOptions = <?php echo json_encode( $icons ) ?>;
 		$scope.iconsets = $pwIconsets.array();
@@ -63,7 +63,7 @@
 				ng-click="uiFocusElement('#filterString')"
 				ng-hide="uiBool(<?php echo $vars['ng_model']; ?>)">
 				<i class="pwi-target"></i>
-				Select an Icon
+				<?php _e( 'Select an Icon', 'postworld' ) ?>
 			</button>
 		</span>
 

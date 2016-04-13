@@ -17,7 +17,7 @@ postworldAdmin.directive( 'pwAdminStyle', [ function(){
     };
 }]);
 
-postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
+postworldAdmin.directive('pwAdminStyleInput', function( $pwData, $log){
 	return {
 		restrict: 'A',
 		scope: {
@@ -31,7 +31,7 @@ postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
 			//$log.debug( 'pwAdminStyleInput : inputObj', $scope.inputObj );
 			//$log.debug( 'pwAdminStyleInput : inputModel', $scope.inputModel );
 
-			var templateUrl = pwData.getTemplate({
+			var templateUrl = $pwData.getTemplate({
 				subdir:'admin',
 				view:'style-input-' + $scope.inputObj.input
 			});
@@ -94,14 +94,14 @@ postworldAdmin.directive('pwAdminStyleInput', function(pwData, $log){
 })
 
 postworldAdmin.controller('pwAdminStyleCtrl',
-	[ '$scope', '$log', '$window', '$parse', '_', 'iOptionsData',
-	function ( $scope, $log, $window, $parse, $_, $iOptionsData ) {
+	[ '$scope', '$log', '$window', '$parse', '$_', '$pw', 
+	function ( $scope, $log, $window, $parse, $_, $pw ) {
 	// Initialize Status
 	$scope.status = "done";
 	//$log.debug( "CTRL" );
 
 	// Localize the core option set
-	$scope.options = $iOptionsData.options;
+	$scope.options = $pw.optionsMeta;
 
 	$scope.resetStyleDefaults = function(){
 		$scope.pwStyles = angular.fromJson( angular.toJson( $scope.pwStyleDefaults ) );

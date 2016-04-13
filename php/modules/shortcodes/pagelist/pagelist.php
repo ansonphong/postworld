@@ -5,6 +5,9 @@ add_shortcode( 'siblings', 'pw_pagelist_shortcode' );
 function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	global $post;
 
+	if( !is_array($atts) )
+		$atts = array();
+
 	// Set the internal defaults
 	$default_atts = array(
 		"class" 	=> 	"",
@@ -14,10 +17,12 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 		"orderby"	=>	"menu_order",
 		"order"		=>	"ASC",
 		"post-type"	=>	$post->post_type,
+		"post-id"	=>	false,
 	);
 
 	// Get over-ride defaults from the theme
-	$shortcode_defaults = apply_filters( 'pw_pagelist_shortcode_defaults', $shortcode_defaults, $tag );
+	$default_atts = apply_filters( 'pw_shortcode_pagelist_defaults', $default_atts, $tag );
+
 	$atts = array_replace_recursive( $default_atts, $atts );
 
 	$query = array();
@@ -31,20 +36,22 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	/**
 	 * If the user has capabilities to read private pages/posts/CPTs
 	 * Widen the post status query to include private posts
+	 *
+	 * @todo Include a switch in Site Options for this (Show private posts to admins)
 	 */
+	/*
 	if( !empty( $post->post_type ) &&
 		current_user_can('read_private_'.$post->post_type.'s') )
 		$query['post_status'][] = 'private';
+	*/
 
 	// Number of Posts
 	$query['posts_per_page'] = 0;
 
 	// Fields
-	$query['fields'] = pw_get_field_model( 'post', $view );
+	$query['fields'] = pw_get_field_model( 'post', $atts['view'] );
 	if( empty( $query['fields'] ) )
 		$query['fields'] = 'preview';
-
-	//pw_log( 'fields:'.$view, $query['fields'] );
 
 	// Ordering
 	$query['orderby'] = $atts['orderby'];
@@ -53,8 +60,11 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Generate query class
 	switch($tag){
 		case "subpages":
-			// Set parent as current post ID
-			$query['post_parent'] = $post->ID;
+			if( $atts['post-id'] !== false )
+				$query['post_parent'] = (int) $atts['post-id'];
+			else
+				// Set parent as current post ID
+				$query['post_parent'] = $post->ID;
 			break;
 		case "siblings":
 			// Set parent as current post ID
@@ -67,23 +77,18 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 	// Add Max Posts
 	$query['posts_per_page'] = $atts['max'];
 
-	// Setup Feed Query
-	$feed_query_args = array(
-		'feed_query' => $query,
-		'view' => $atts['view'],
-		);
-
 	// Setup Vars
 	$vars = $atts;
-	$vars['feed'] = $feed_query_args;
+	$vars['feed'] = array(
+		'query' => $query,
+		'view' => $atts['view'],
+		);
 	$vars['tag'] = $tag;
 
-	$template = pw_get_shortcode_template( 'subpages' );
+	$template = pw_get_shortcode_template( 'pagelist' );
 	
 	$shortcode = pw_ob_include( $template, $vars );
 
 	return $shortcode;
 	
 }
-
-?>

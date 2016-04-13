@@ -1,7 +1,5 @@
 <script type="text/javascript">
 	postworldAdmin.controller('pwStylesDataCtrl', [ '$scope', '$window', function( $scope, $window ){
-		$scope.lang = "en";
-		$scope.language = <?php global $i_style_language; echo json_encode( $i_style_language ); ?>;
 		$scope.pwStyles = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) ) ); ?>;
 		$scope.pwStyleStructure = <?php echo json_encode( apply_filters( PW_MODEL_STYLES, array() ) ); ?>;
 		$scope.pwStyleDefaults = <?php echo json_encode( apply_filters( PW_STYLES_DEFAULT, array() ) ); ?>;
@@ -14,7 +12,7 @@
 		ng-controller="pwStylesDataCtrl">
 		<h1>
 			<i class="pwi-brush"></i>
-			Styles
+			<?php _ex('Styles','module','postworld') ?>
 		</h1>
 		<hr class="thick">
 

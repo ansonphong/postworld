@@ -1,5 +1,5 @@
 'use strict';
-postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $log, $_ ) {
+postworld.directive('feedItem', function( $timeout, $log, $_ ) {
 	return {
 		restrict: 'A',
 		replace: true,
@@ -13,10 +13,9 @@ postworld.directive('feedItem', [ '$timeout', '$log', '_', function( $timeout, $
 			}
 		},
 	};
-}]);
+});
 
 postworld.controller('pwFeedItemCtrl',
-	[ '$scope', '$location', '$log', 'pwData', '$attrs', '_',
 	function( $scope, $location, $log, $pwData, $attrs, $_ ) {
 		
 	///// INIT /////
@@ -64,7 +63,7 @@ postworld.controller('pwFeedItemCtrl',
 		$scope.itemTemplateUrl = $pwData.pw_get_template( { subdir:'posts', post_type: type, view: vars.view } );
 	});		  		      	
 
-}]);
+});
 
 
 
@@ -76,7 +75,7 @@ postworld.controller('pwFeedItemCtrl',
 
 ////////// GRID FEED CONTROLLER //////////*/
 
-postworld.directive( 'pwGrid', [ function($scope){
+postworld.directive( 'pwGrid', function(){
 	return {
 		restrict: 'AE',
 		controller: 'pwGridCtrl',
@@ -89,10 +88,9 @@ postworld.directive( 'pwGrid', [ function($scope){
 			//});
 		}
 	};
-}]);
+});
 
 postworld.controller('pwGridCtrl',
-	[ "$scope", "$window", "_", "$log", "pwImages",
 	function($scope, $window,  $_, $log, $pwImages ) {
 
 	////////// GRIDS //////////
@@ -144,7 +142,7 @@ postworld.controller('pwGridCtrl',
 	};
 
 
-}]);
+});
 
 
 
@@ -159,7 +157,7 @@ postworld.controller('pwGridCtrl',
 // For use inside a feed template
 // Largely a localized alias for the functions in pwGrid
 
-postworld.directive( 'pwGridItem', [ function($scope){
+postworld.directive( 'pwGridItem', function(){
 	return {
 		restrict: 'AE',
 		controller: 'pwGridItemCtrl',
@@ -170,10 +168,9 @@ postworld.directive( 'pwGridItem', [ function($scope){
 			//});
 		}
 	};
-}]);
+});
 
 postworld.controller('pwGridItemCtrl',
-	[ "$scope", "$window", "_", "$log", "pwImages",
 	function($scope, $window,  $_, $log, $pwImages ) {
 
 	////////// ALIAS FUNCTIONS //////////
@@ -218,5 +215,5 @@ postworld.controller('pwGridItemCtrl',
 	}
 
 
-}]);
+});
 

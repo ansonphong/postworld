@@ -6,7 +6,7 @@
 ?>
 <script type="text/javascript">
 	postworldAdmin.controller( '<?php echo $controller_id ?>',
-		[ '$scope', '_',
+		[ '$scope', '$_',
 		function( $scope, $_ ){
 		var imageId = Number( <?php echo json_encode( $vars['field']['meta_value'] ) ?> );
 		$scope.imageObj = { imageId: imageId };

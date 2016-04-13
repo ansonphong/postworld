@@ -40,7 +40,7 @@ global $post;
 <script>
 	///// CONTROLLER /////
 	postworldAdmin.controller('pwPostParentMetaboxCtrl',
-		['$scope', 'pwData', '_', '$log',
+		['$scope', '$pwData', '$_', '$log',
 			function( $scope, $pwData, $_, $log ) {
 
 			// This is the post object which is saved
@@ -58,8 +58,8 @@ global $post;
 
 				return $pwData.pwQuery( query ).then(
 					function( response ){
-						$log.debug( "QUERY RESPONSE : ", response.data.posts );
-						return response.data.posts;
+						$log.debug( "QUERY RESPONSE : ", response.data );
+						return response.data;
 					},
 					function(){}
 				);

@@ -1,5 +1,6 @@
 <?php
 	$uploads_dir = wp_upload_dir();
+	wp_enqueue_media();
 ?>
 <button
 	type="button"

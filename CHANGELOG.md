@@ -1,5 +1,60 @@
 # Postworld // Changelog
 
+### Version 1.55
+- **Breaking Changes** - Replaced all instances of `pw_query` with `pw_query_posts`
+    +  On sites using custom Postworld post_meta including `geo` and `event` data querying, this may require extra testing and bugfixes in the new updated class. `ATTN: @phongmedia` 
+- **Breaking Changes** - Renamed Template
+    + Renamed `templates/shortcodes/subpages.php` to `templates/shortcodes/pagelist.php`
+
+### Version 1.51
+- **Breaking Changes** - Renamed `pwPosts` service to `$pwPosts`
+    + Change all instances of dependency injection of `'pwPosts'` to `'$pwPosts'`
+- **Breaking Changes** - Renamed `pwImages` service to `$pwImages`
+    + Change all instances of dependency injection of `'pwImages'` to `'$pwImages'`
+- **Breaking Changes** - Renamed `pwModal` service to `$pwModal`
+    + Change all instances of dependency injection of `'pwModal'` to `'$pwModal'`
+- **Breaking Changes** - Renamed `pwEditPostFilters` service to `$pwEditPostFilters`
+    + Change all instances of dependency injection of `'pwEditPostFilters'` to `'$pwEditPostFilters'`
+- **Breaking Changes** - Renamed `pwDate` service to `$pwDate`
+    + Change all instances of dependency injection of `'pwDate'` to `'$pwDate'`
+- **Breaking Changes** - Renamed `pwTemplatePartials` service to `$pwTemplatePartials`
+    + Change all instances of dependency injection of `'pwTemplatePartials'` to `'$pwTemplatePartials'`
+- **Breaking Changes** - Renamed `pwPostOptions` service to `$pwPostOptions`
+    + Change all instances of dependency injection of `'pwPostOptions'` to `'$pwPostOptions'`
+- **Breaking Changes** - Renamed `pwRoleAccess` service to `$pwRoleAccess`
+    + Change all instances of dependency injection of `'pwRoleAccess'` to `'$pwRoleAccess'`
+- **Breaking Changes** - Renamed `pwQuickEdit` service to `$pwQuickEdit`
+    + Change all instances of dependency injection of `'pwQuickEdit'` to `'$pwQuickEdit'`
+- **Breaking Changes** - Renamed `oEmbedServe` service to `$oEmbedServe`
+    + Change all instances of dependency injection of `'oEmbedServe'` to `'$oEmbedServe'`
+
+
+### Version 1.50
+- **Breaking Changes** - Comments Refactor
+    + Changed JS `var load_comments` to `pw.comments`
+- **Breaking Changes** - Renamed `_` service to `$_`
+    + Change all instances of dependency injection of `'_'` to `'$_'`
+- **Breaking Changes** - Renamed `pwData` service to `$pwData`
+    + Change all instances of dependency injection of `'pwData'` to `'$pwData'`
+
+### Version 1.49
+- **Breaking Changes**
+    + `pwOptionsData` service/factory removed
+    + Replace all instances of `$pwOptionsData['options']` with `$pw.optionsMeta` 
+- **Breaking Changes**
+    + Removed all instances of PHP methods `pw_set_option_obj`, and `pw_get_option_obj` and their respective Javascript counterparts
+    + Use `pw_set_option` and `pw_get_option` in it's place
+
+### Version 1.48
+- **Breaking Changes** - Comments
+    + Changed `load-comments` directive attribute to `pw-comments`
+
+### Version 1.47
+- **Possible Breaking Changes**
+    + All instances of `$pwSiteGlobals` have been changed to use `pw_config()` to access configured settings, in preparation for elimination of `$pwSiteGlobals` variable altogether.
+    + Any themes using `$pwSiteGlobals` need to migrate to the `pw_config($key)` method to access globally configured settings.
+    + All instances of `$pwSiteGlobals` variable need to be renamed to `$pw_config`
+
 ### Version 1.42
 - **Possible Breaking Changes**
     + Structure of `pw_get_post` input params changed to `pw_get_post( $post_id, $fields, $options )`

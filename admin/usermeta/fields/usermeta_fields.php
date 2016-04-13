@@ -4,10 +4,8 @@
 add_action( 'show_user_profile', 'pw_user_meta_field_input' );
 add_action( 'edit_user_profile', 'pw_user_meta_field_input' );
 function pw_user_meta_field_input( $user ) { 
-
 	// Get the settings
-	global $pwSiteGlobals;
-	$fields = _get( $pwSiteGlobals, 'wp_admin.user_meta.fields' );
+	$fields = pw_config('wp_admin.user_meta.fields');
 	if( $fields == false )
 		return false;
 

@@ -15,7 +15,7 @@
  * @return {object} Populates $scope.postShareReport
  */
 postworld.directive('pwPostShareReport',
-	['$window','$timeout','pwData', '$pw', '$log', '_',
+	['$window','$timeout','$pwData', '$pw', '$log', '$_',
 	function( $window, $timeout, $pwData, $pw, $log, $_ ) {
 	return {
 		scope:{
@@ -65,7 +65,7 @@ postworld.directive('pwPostShareReport',
  * @return {object} Populates $scope.postShareReport
  */
 postworld.directive('pwUserShareReport',
-	['$window','$timeout','pwData', '_', '$pw', '$log',
+	['$window','$timeout','$pwData', '$_', '$pw', '$log',
 	function($window, $timeout, $pwData, $_, $pw, $log ) {
 		return {
 			scope:{

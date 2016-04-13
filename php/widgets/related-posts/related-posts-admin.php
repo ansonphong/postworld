@@ -1,4 +1,5 @@
-<?/*
+<?php
+/*
   ____      _       _           _   ____           _       
  |  _ \ ___| | __ _| |_ ___  __| | |  _ \ ___  ___| |_ ___ 
  | |_) / _ \ |/ _` | __/ _ \/ _` | | |_) / _ \/ __| __/ __|
@@ -27,7 +28,7 @@
 
 	///// CONTROLLER /////
 	postworldAdmin.controller('<?php echo $instance ?>Ctrl',
-		['$scope', 'pwData', '_', '$log',
+		['$scope', '$pwData', '$_', '$log',
 		function( $scope, $pwData, $_, $log ) {
 			$log.debug( 'Init Related Posts Widget Controller : ' + '<?php echo $instance ?>' );
 			$scope.settings = <?php echo json_encode( $options['settings'] ); ?>;
@@ -132,7 +133,7 @@
 				name="<?php echo $this->get_field_name('show_title'); ?>"
 				id="<?php echo $this->get_field_id('show_title'); ?>"
 				<?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
-			<?php _e( 'Title' ); ?>
+			<?php _e( 'title', 'title of widget', 'postworld' ); ?>
 		</label>
 		<input
 			class="labeled"
@@ -145,23 +146,23 @@
 		<div class="row gutter-sm">
 			<div class="col-sm-6">
 				<label class="inner">
-					<?php ___('general.number'); ?>
+					<?php _e( 'Number', 'postworld' ) ?>
 				</label>
 				<input
 					type="number"
 					class="labeled"
 					ng-model="settings.number">
-				<small><?php ___('related_posts.number_info'); ?></small>
+				<small><?php _e( 'The number of related posts to show', 'postworld' ) ?></small>
 			</div>
 			<div class="col-sm-6">
 				<label class="inner">
-					<?php ___('general.depth'); ?>
+					<?php _e( 'Depth', 'postworld' ) ?>
 				</label>
 				<input
 					type="number"
 					class="labeled"
 					ng-model="settings.depth">
-				<small><?php ___('related_posts.depth_info'); ?></small>
+				<small><?php _e( 'Higher number for slower, more accurate results, 0 searches all posts', 'postworld' ) ?></small>
 			</div>
 		</div>
 
@@ -170,7 +171,7 @@
 		<label
 			for="query-post_type"
 			class="inner">
-			<?php ___('query.post_type'); ?>
+			<?php _e( 'Post Type', 'postworld' ) ?>
 		</label>
 		<select
 			id="query-post_type"
@@ -185,7 +186,7 @@
 		<div class="row gutter-sm">
 			<div class="col-sm-3">
 				<label class="inner">
-					<?php ___('general.within'); ?>
+					<?php _ex( 'Within', 'within X period of time', 'postworld' ) ?>
 				</label>
 				<input
 					type="number"
@@ -194,14 +195,14 @@
 			</div>
 			<div class="col-sm-9">
 				<label class="inner">
-					<?php ___('general.period'); ?>
+				<?php _ex( 'Period', 'time period', 'postworld' ) ?>
 				</label>
 				<select
 					class="labeled"
 					ng-model="settings.query.date_from.after_ago.period">
-					<option value="year">Year(s)</option>
-					<option value="month">Month(s)</option>
-					<option value="day">Day(s)</option>
+					<option value="year"><?php _e( 'Year(s)', 'postworld' ) ?></option>
+					<option value="month"><?php _e( 'Month(s)', 'postworld' ) ?></option>
+					<option value="day"><?php _e( 'Day(s)', 'postworld' ) ?></option>
 				</select>
 			</div>
 		</div>
@@ -211,7 +212,7 @@
 		<label
 			for="select-view"
 			class="inner">
-			<?php ___('general.view'); ?>
+			<?php _e( 'View', 'postworld' ) ?>
 		</label>
 		<select
 			id="select-view"
@@ -220,7 +221,6 @@
 			ng-model="settings.view">
 		</select>
 
-
 		<hr class="thin">
 
 		<button
@@ -228,7 +228,7 @@
 			class="button button-primary"
 			ng-click="addRelatedByClause('taxonomy')">
 			<i class="pwi-plus-thin"></i>
-			<?php ___('taxonomy.plural'); ?>
+			<?php _e( 'Taxonomies', 'postworld' ) ?>
 		</button>
 
 		<!--///// RELATED BY CLAUSES /////-->
@@ -240,7 +240,7 @@
 					class="button"
 					ng-click="addSubClause(clause)">
 					<i class="pwi-plus-thin"></i>
-					<?php ___('related_posts.sub_clause'); ?>
+					<?php _ex( 'Sub Clause', 'search clause', 'postworld' ) ?>
 				</button>
 				<button
 					type="button"
@@ -263,7 +263,7 @@
 
 				<div class="row gutter-sm">
 					<div class="col-sm-6">
-						<label class="inner"><?php ___('taxonomy.singular'); ?></label>
+						<label class="inner"><?php _e( 'Taxonomy', 'postworld' ) ?></label>
 						<select
 							id="query-post_type"
 							class="labeled"
@@ -280,7 +280,7 @@
 							ng-click="removeSubClause(clause,subClause)">
 							<i class="pwi-close-thin"></i>
 						</button>
-						<label class="inner">Weight</label>
+						<label class="inner"><?php _ex( 'Weight', 'weight as in search relavance', 'postworld' ) ?></label>
 						<input
 							type="number"
 							class="labeled"
@@ -296,13 +296,12 @@
 			<hr>
 			<pre><code>{{ settings | json }}</code></pre>
 		<?php endif; ?>
-
+		
 		<!-- HIDDEN INPUTS -->
 		<input
 			type="hidden"
 			name="<?php echo $this->get_field_name( 'settings' ); ?>"
 			value="{{ settings | json }}">
-
 
 	</div>
 </div>

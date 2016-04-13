@@ -1,6 +1,6 @@
 /*////////////// ------- SERVICE ------- //////////////*/  
 
-postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$uibModal', 'pwData', '_', '$pw',
+postworld.service('$pwModal', [ '$rootScope', '$log', '$location', '$uibModal', '$pwData', '$_', '$pw',
 	function ( $rootScope, $log, $location, $uibModal, $pwData, $_, $pw ) {
 	return{
 
@@ -166,11 +166,10 @@ postworld.service('pwModal', [ '$rootScope', '$log', '$location', '$uibModal', '
 
 ////////// MODAL INSTANCE CONTROL //////////
 postworld.controller('pwModalInstanceCtrl',
-	[ '$scope', '$rootScope', '$document', '$window', '$location', '$modalInstance', 'meta', '$log', 'pwData', '$timeout', '_', 'pwPosts', '$browser', '$modalStack', '$pw',  // 'pwQuickEdit',
-	function( $scope, $rootScope, $document, $window, $location, $modalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts, $browser, $modalStack, $pw ) { // , $pwQuickEdit
+	function( $scope, $rootScope, $document, $window, $location, $uibModalInstance, meta, $log, $pwData, $timeout, $_, $pwPosts, $browser, $uibModalStack, $pw ){
 
-	// $modalInstance - switch modal template
-	//$log.debug( '>>> $modalInstance <<<', $modalInstance );
+	// $uibModalInstance - switch modal template
+	//$log.debug( '>>> $uibModalInstance <<<', $uibModalInstance );
 
 	///// SET META /////
 	$scope.meta = meta;
@@ -381,14 +380,14 @@ postworld.controller('pwModalInstanceCtrl',
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
 	$scope.close = function () {
-		$modalInstance.dismiss('close');
+		$uibModalInstance.dismiss('close');
 	};
 
 	// MODAL CLOSE
 	// Will close the modal if mode is 'edit'
 	$scope.closeIfEditMode = function ( mode ) {
 		if( mode == 'edit' )
-			$modalInstance.dismiss('close');
+			$uibModalInstance.dismiss('close');
 	};
 
 	// MODAL FORWARD IF NEW MODE
@@ -408,12 +407,12 @@ postworld.controller('pwModalInstanceCtrl',
 	}; 
 
 	// WATCH : FOR TRASHED
-	// TODO : Set Parent post_status = trash via pwData.feeds
+	// TODO : Set Parent post_status = trash via $pwData.feeds
 	// Watch on the value of post_status
 	$scope.$watch( "post.post_status", function (){
 		if( $_.getObj( $scope, 'post.post_status' ) == 'trash'  )
 			// Close Modal
-			$modalInstance.dismiss('close');
+			$uibModalInstance.dismiss('close');
 	}); 
 
 
@@ -451,10 +450,10 @@ postworld.controller('pwModalInstanceCtrl',
 	});
 
 
-}]);
+});
 
 postworld.directive( 'pwModalAccess',
-	[ 'pwModal', function( $pwModal ){
+	[ '$pwModal', function( $pwModal ){
 	return {
 		restrict: 'AE',
 		//controller: 'pwModalAccessCtrl',
@@ -482,7 +481,7 @@ postworld.directive( 'pwModalAccess',
  *
  */
 postworld.directive('pwOpenModal',
-	[ 'pwModal', '$log', '$rootScope', function($pwModal, $log, $rootScope){
+	[ '$pwModal', '$log', '$rootScope', function($pwModal, $log, $rootScope){
 	return {
 		restrict: 'A',
 		link: function ($scope, element, attrs) {
@@ -514,8 +513,8 @@ postworld.directive('pwOpenModal',
 
 
 postworld.controller('mediaModalInstanceCtrl',
-    [ '$scope', '$sce', '$modalInstance', 'meta', 'pwData', '$pw',
-    function( $scope, $sce, $modalInstance, meta, pwData, $pw ) { 
+    [ '$scope', '$sce', '$uibModalInstance', 'meta', '$pwData', '$pw',
+    function( $scope, $sce, $uibModalInstance, meta, $pwData, $pw ) { 
 
 
     // Import the passed post object into the Modal Scope
@@ -523,7 +522,7 @@ postworld.controller('mediaModalInstanceCtrl',
 
     /*
     $scope.ok = function () {
-        $modalInstance.close($scope.selected.item);
+        $uibModalInstance.close($scope.selected.item);
         // RETURN THIS VALUE TO PAGE
     };
     */
@@ -534,7 +533,7 @@ postworld.controller('mediaModalInstanceCtrl',
     var args = { "link_url": link_url };
 
     // MEDIA GET
-    pwData.wpAjax('ajax_oembed_get', args ).then(
+    $pwData.wpAjax('ajax_oembed_get', args ).then(
         // Success
         function(response) {    
             $scope.oEmbed = $sce.trustAsHtml( response.data );
@@ -548,7 +547,7 @@ postworld.controller('mediaModalInstanceCtrl',
 
     // MODAL CLOSE
     $scope.close = function () {
-        $modalInstance.dismiss('close');
+        $uibModalInstance.dismiss('close');
     };
 
 

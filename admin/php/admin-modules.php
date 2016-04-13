@@ -269,8 +269,8 @@ function i_link_url_options( $vars ){
 	// DEPRECIATED
 	return pw_link_url_options( $vars );
 }
-function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 
+function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 	if( !isset($vars['options_model']) )
 		$vars['options_model'] = array();
 
@@ -307,41 +307,6 @@ function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 
 }
 
-function option_check( $option, $test ){
-	if( $option == $test )
-		return " checked ";
-	else
-		return null;
-}
-
-function radio_select( $option_name, $options, $attributes = '' ){
-	foreach( $options as $option ){
-		$checked = '';
-		$checked = option_check( get_option($option_name), $option['slug'] );
-		echo '<label><input name="'. $option_name .'" type="radio" value="'. $option['slug'] .'" ' . $checked . ' ' . $attributes . '/>' . $option['label'] . '</label>';
-	}
-}
-
-function radio_image_select( $option_name, $options, $attributes = '' ){
-	$html = "";
-	$vars = array(
-		'option_name'	=>	$option_name,
-		'options'		=>	$options,
-		'attributes'	=>	$attributes,
-		);
-
-	foreach( $options as $option ){
-		$vars['option'] = $option;
-		$vars['checked'] = '';
-		$vars['checked'] = option_check( get_option( $vars['option_name'] ), $vars['option']['slug'] );
-		$html .= i_ob_include_template( 'admin/modules/radio-image.php', $vars );
-	}
-
-	return $html;
-
-}
-
-
 
 function i_select_featured_image_options( $vars ){
 	// DEPRECIATED
@@ -372,7 +337,7 @@ function pw_layout_single_options( $vars = array( "context" => "quickEdit" ) ){
 	switch($vars['context']){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
-				$vars['ng_model'] = "iLayouts[context.name]";
+				$vars['ng_model'] = "pwLayouts[context.name]";
 			break;
 		///// EDIT POST SETTINGS /////
 		case 'postAdmin':

@@ -1,4 +1,4 @@
-postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
+postworld.factory( '$pwColors', [ '$pw', '$_', function( $pw, $_ ){
 	/**
 	 * Get a percentage through an array of colors.
 	 * Percentage is parsed as 0%, the first array index,
@@ -75,8 +75,8 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
 				var hasFunction = ( matches != null );
 
 				// Logging
-				console.log( 'matches', matches );
-				console.log( 'hasFunction', hasFunction );
+				//console.log( 'matches', matches );
+				//console.log( 'hasFunction', hasFunction );
 
 				// If it has a function, package and process it with parseColorFunctions()
 				if( hasFunction ){
@@ -130,10 +130,10 @@ postworld.factory( '$pwColors', [ '$pw', '_', function( $pw, $_ ){
  * @name postworld.directive:pwColors
  *
  * @description Makes color profile functions available in local scope.
- * @param colorsEnable {expression|boolean} (Optional.) Default: true. Whether or not to enable color functions.
+ * @param colorsEnable [expression] Optional. Default: true. Boolean, whether or not to enable color functions.
  */
 postworld.directive('pwColors',
-	[ '$pw', '_', '$pwColors', '$log',
+	[ '$pw', '$_', '$pwColors', '$log',
 	function( $pw, $_, $pwColors, $log ){
 	return{
 		link: function( $scope, $element, $attrs ){
@@ -213,7 +213,7 @@ postworld.directive('pwColors',
  * @param {boolean|expression} colorProfilesEnable (Optional) Default true. A boolean value, whether or not to enable color output.
  * @param {none} color-profiles-dynamic If this is present, watch for changes in color profiles.
  */
-postworld.directive('pwStyleColors', [ '$pw', '_', '$pwColors', '$log', function( $pw, $_, $pwColors, $log ){
+postworld.directive('pwStyleColors', [ '$pw', '$_', '$pwColors', '$log', function( $pw, $_, $pwColors, $log ){
 	return{
 		scope: {
 			'styleObj': '=pwStyleColors',

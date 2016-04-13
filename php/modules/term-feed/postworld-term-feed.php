@@ -243,8 +243,7 @@ function pw_get_term_feed( $vars ){
 						)
 				);
 
-			$query_results = pw_query( $query );
-			$posts = pw_to_array( $query_results->posts );
+			$posts = pw_wp_query( $query, $vars['query']['fields'] );
 			
 			////// OPTION : INCLUDE GALLERIES /////
 			// Iterate through each post and check if it has a gallery

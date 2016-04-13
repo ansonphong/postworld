@@ -1,17 +1,18 @@
 <?php
-
+/**
+ * Get Contact Methods from the Postworld Config
+ */
 function pw_contact_methods_config(){
-	// Get Contact Methods from the Postworld Config
-	global $pwSiteGlobals;
-	$contact_methods = _get( $pwSiteGlobals, 'wp_admin.user_meta.contact_methods' );
+	$contact_methods = pw_config('wp_admin.user_meta.contact_methods');
 	if( !$contact_methods || !is_array( $contact_methods ) )
 		return false;
 	return $contact_methods;
 }
 
+/**
+ * Get the contact methods meta which has been configured for the site
+ */
 function pw_get_contact_methods_meta(){
-	// Get the contact methods meta which has been configured for the site
-
 	// The configured contact methods
 	// ie. array( 'twitter', 'facebook', 'instagram' )
 	$contact_methods_config = pw_contact_methods_config();
@@ -37,9 +38,10 @@ function pw_get_contact_methods_meta(){
 
 }
 
+/**
+ * Get the contact method meta data which the user has saved
+ */
 function pw_user_contact_methods( $user_id ){
-	// Get the contact method meta data which the user has saved
-
 	// Get the available configured contact methods
 	$contact_methods_meta = pw_get_contact_methods_meta();
 	// Get User
@@ -89,10 +91,10 @@ function pw_user_contact_methods( $user_id ){
 
 }
 
-
+/**
+ * Build a menu from the contact methods the user has saved
+ */
 function pw_contact_methods_user_menu( $user_id ){
-	// Build a menu from the contact methods the user has saved
-
 	// Get the user saved contact methods
 	$contact_methods = pw_user_contact_methods( $user_id );
 

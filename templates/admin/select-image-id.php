@@ -1,3 +1,6 @@
+<?php
+	wp_enqueue_media();
+?>
 <button
 	type="button"
 	class="button button-primary"

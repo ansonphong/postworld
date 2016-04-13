@@ -3,17 +3,17 @@
 	postworldAdmin.controller( 'layoutDataCtrl',
 		[ '$scope', '$window', '$parse',
 		function($scope, $window, $parse ){
-			$scope.iLayoutOptions = <?php echo json_encode( pw_layout_options() ); ?>;
-			$scope.iSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
-			$scope.iTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
-			$scope.iLayouts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
+			$scope.pwLayoutOptions = <?php echo json_encode( pw_layout_options() ); ?>;
+			$scope.pwSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
+			$scope.pwTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
+			$scope.pwLayouts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
 	}]);
 </script>
 
 <div class="layout wrap postworld" ng-cloak>
 	<h1>
 		<i class="pwi-th-large"></i>
-		Layouts
+		<?php _e( 'Layouts', 'postworld' ) ?>
 	</h1>
 	<hr class="thick">
 	<div
@@ -22,7 +22,7 @@
 		ng-cloak>
 
 		<table class="form-table">
-			<tr ng-repeat="context in iLayoutOptions.contexts"
+			<tr ng-repeat="context in pwLayoutOptions.contexts"
 				ng-class="context.name"
 				valign="top" class="module layout context">
 				<th scope="row">
@@ -35,7 +35,7 @@
 					</span>
 				<td>
 					<!-- SAVE BUTTON -->
-					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_LAYOUTS, 'iLayouts'); ?></div>
+					<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_LAYOUTS, 'pwLayouts'); ?></div>
 
 					<?php
 						echo pw_layout_single_options( array( 'context'	=>	'siteAdmin' ) );
@@ -50,13 +50,13 @@
 			<div class="pw-dev well">
 				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
 				<div class="well">
-					<h3>$scope.iLayouts</h3>
-					<pre><code>{{ iLayouts | json }}</code></pre>
+					<h3>$scope.pwLayouts</h3>
+					<pre><code>{{ pwLayouts | json }}</code></pre>
 				</div>
 
 				<div class="well">
-					<h3>$scope.iLayoutOptions</h3>
-					<pre><code>{{ iLayoutOptions | json }}</code></pre>
+					<h3>$scope.pwLayoutOptions</h3>
+					<pre><code>{{ pwLayoutOptions | json }}</code></pre>
 				</div>
 			</div>
 		<?php endif; ?>

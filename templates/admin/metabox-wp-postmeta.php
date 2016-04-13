@@ -33,7 +33,7 @@
 						<input
 							type="text"
 							name="pw_wp_postmeta[<?php echo $field['meta_key'] ?>]"
-							placeholder="<?php echo $field['placeholder'] ?>"
+							placeholder="<?php echo _get( $field, 'placeholder' ) ?>"
 							ng-model="fields.<?php echo $meta_key ?>.meta_value"
 							style="width:100%">
 					</td>

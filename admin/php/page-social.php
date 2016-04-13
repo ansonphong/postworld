@@ -1,20 +1,18 @@
 <script>
-	postworldAdmin.controller( 'pwSocialDataCtrl',
-		[ '$scope', 'iOptionsData', function( $scope, $iOptionsData ){
+	postworldAdmin.controller( 'pwSocialDataCtrl', function( $scope, $pw ){
 		// Social Option Values
 		$scope.pwSocial = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SOCIAL ) ) ); ?>;
-		$scope['options'] = $iOptionsData['options'];
-
+		$scope['options'] = $pw.optionsMeta;
 		// Social Meta Data
 		$scope.socialMeta = <?php echo json_encode( pw_social_meta() ); ?>;
-	}]);
+	});
 </script>
 
 <div class="postworld wrap social" ng-cloak>
 
 	<h1>
 		<i class="pwi-profile"></i>
-		Social
+		<?php _ex('Social','module','postworld' )?>
 	</h1>
 	
 	<hr class="thick">
@@ -31,9 +29,9 @@
 			</div>
 			<h2>
 				<i class="pwi-share"></i>
-				Sharing
+				<?php _ex('Sharing','social sharing','postworld' )?>
 			</h2>
-			<small>Include share links on each post for the following networks:</small>
+			<small><?php _e('Include share links on each post for the following networks:','postworld' )?></small>
 			<hr class="thin">
 			<?php echo pw_share_social_options(); ?>
 			<div style="clear:both"></div>
@@ -47,22 +45,22 @@
 			</div>
 			<h2>
 				<i class="pwi-cube"></i>
-				Social Widgets
+				<?php _ex('Social Widgets','like button, tweet button, etc','postworld' )?>
 			</h2>
-			<small>Customize which sharing widgets appear on each post.</small>
+			<small><?php _ex('Customize which sharing widgets appear on each post.','like button, tweet button, etc','postworld' )?></small>
 			<hr class="thin">
 			
 			<div class="well">
 				<label>
 					<input type="checkbox" ng-model="pwSocial.widgets.facebook.enable">
 					<i class="icon pwi-facebook"></i>
-					<b>Facebook Like Button</b>
+					<b><?php _e('Facebook Like Button','postworld' )?></b>
 				</label>
 				<div class="indent" ng-show="pwSocial.widgets.facebook.enable">
 					<hr class="thin">
 					<label>
 						<input type="checkbox" ng-model="pwSocial.widgets.facebook.settings.share">
-						Include <i>share</i> button
+						<?php _ex('Include share button','next to facebook like button','postworld' )?>
 					</label>
 				</div>
 			</div>
@@ -71,12 +69,11 @@
 				<label>
 					<input type="checkbox" ng-model="pwSocial.widgets.twitter.enable">
 					<i class="icon pwi-twitter"></i>
-					<b>Twitter Tweet Button</b>
+					<b><?php _e('Twitter Tweet Button','postworld' )?></b>
 				</label>
 			</div>
 
 		</div>
-
 
 		<!-- FIELDS -->
 		<div class="well">
@@ -115,7 +112,7 @@
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
 			<div class="well">
-				<h3><i class="pwi-merkaba"></i> Dev Mode</h3>
+				<h3><i class="pwi-merkaba"></i> <?php _e('Development Mode','postworld') ?></h3>
 				<pre><code>PW_OPTIONS_SOCIAL : wp_options.<?php echo PW_OPTIONS_SOCIAL ?> : $scope.pwSocial : {{ pwSocial | json }}</code></pre>
 				<pre><code>socialMeta : {{ socialMeta | json }}</code></pre>
 			</div>

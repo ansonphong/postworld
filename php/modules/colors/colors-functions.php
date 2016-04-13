@@ -7,8 +7,7 @@
  */
 add_filter( 'wp_generate_attachment_metadata', 'pw_colors_process_attachment', 10, 2 );
 function pw_colors_process_attachment( $metadata, $attachment_id = 0 ){
-	global $pwSiteGlobals;
-	if( _get( $pwSiteGlobals, 'colors.process_images' ) ){
+	if( pw_config('colors.process_images') ){
 		pw_generate_attachment_colors( array( 'attachment_id' => $attachment_id ) );
 	}
 	return $metadata;
@@ -36,14 +35,12 @@ function pw_get_image_colors( $attachment_id ){
  */
 add_action( 'pw_generate_attachment_colors', 'pw_generate_attachment_colors', 10, 1 );
 function pw_generate_attachment_colors( $vars ){
-	global $pwSiteGlobals;
-
 	/**
 	 * @todo Allow for on-demand variable passing
 	 * 		Rather than only pwSiteConfig vars only.
 	 */
 
-	$colors_settings = _get( $pwSiteGlobals, 'colors' );
+	$colors_settings = pw_config( 'colors' );
 	if( empty( $colors_settings ) )
 		// Set default color settings
 		$colors_settings = array(
@@ -205,8 +202,6 @@ function pw_get_color_profiles(){
  * Get processed colors.
  */
 function pw_get_processed_color_profiles( $thumbnail_id, $profiles = array() ){
-	global $pwSiteGlobals;
-
 	// If no profiles provided, get base profiles
 	if( empty( $profiles ) )
 		$profiles = pw_get_color_profiles();

@@ -6,9 +6,6 @@
  |_|  \___|\___|\__,_|    \_/\_/  |_|\__,_|\__, |\___|\__|
 										   |___/
 ////////////////// FEED WIDGET - ADMIN //////////////////*/
-?>
-<?php
-global $pwSiteGlobals;
 
 if ( isset( $OPTIONS[ 'title' ] ) ) {
 	  $title = $OPTIONS[ 'title' ];
@@ -17,7 +14,6 @@ if ( isset( $OPTIONS[ 'title' ] ) ) {
 	  $title = __( 'Widget', 'text_domain' );
 	}
 extract($OPTIONS);
-
 
 // Term Feed Templates
 $templates = pw_get_templates(
@@ -30,7 +26,7 @@ $templates = pw_get_templates(
 $templates = $templates['term-feeds'];
 
 // Filter which templates are available for widgets
-$show_templates = _get( $pwSiteGlobals, 'widgets.settings.term_feed.views' );
+$show_templates = pw_config( 'widgets.settings.term_feed.views' );
 
 // If none specified, show all
 if( empty( $show_templates ) ){
@@ -54,7 +50,7 @@ if( empty( $show_templates ) ){
 				name="<?php echo $this->get_field_name('show_title'); ?>"
 				id="<?php echo $this->get_field_id('show_title'); ?>"
 				<?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
-			<?php _e( 'Title' ); ?>
+			<?php _e( 'title', 'title of widget', 'postworld' ); ?>
 		</label>
 		<input
 			class="labeled"

@@ -7,7 +7,7 @@
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
 
 postworld.directive( 'pwPostActions',
-    [ '$pw', '$log', '_',
+    [ '$pw', '$log', '$_',
     function( $pw, $log, $_ ){
     return {
         restrict: 'AE',
@@ -25,8 +25,7 @@ postworld.directive( 'pwPostActions',
 }]);
 
 postworld.controller('postActions',
-    [ "$scope", "pwData", "_",
-    function($scope, pwData, $_ ) {
+    function($scope, $pwData, $_ ) {
 
     $scope.$watch( "post.viewer",
         function (){
@@ -76,7 +75,7 @@ postworld.controller('postActions',
             "post_id" : $scope.post.ID,
         };
         // AJAX Call 
-        pwData.setPostRelationship( args ).then(
+        $pwData.setPostRelationship( args ).then(
             // ON : SUCCESS
             function(response) {    
                 //SET FAVORITE
@@ -111,7 +110,7 @@ postworld.controller('postActions',
 
     };
 
-}]);
+});
 
 
 
@@ -123,16 +122,15 @@ postworld.controller('postActions',
  |_|   \___/|___/\__|    \_/ \___/ \__\___|
                                                                                           
 ////////// ------------ POST ACTIONS CONTROLLER ------------ //////////*/
-postworld.directive( 'pwPostVote', [ function($scope){
+postworld.directive( 'pwPostVote', function(){
     return {
         restrict: 'AE',
         controller: 'postVote',
     };
-}]);
+});
 
 postworld.controller('postVote',
-    [ '$window', '$rootScope', '$scope', '$log', 'pwData',
-    function( $window, $rootScope, $scope, $log, pwData ) {
+    function( $window, $rootScope, $scope, $log, $pwData ) {
 
 
     // SWITCH CSS CLASSES BASED ON VOTE
@@ -180,7 +178,7 @@ postworld.controller('postVote',
 
         // AJAX Call 
         $log.debug('pwPostVote : VOTE SUBMIT : ', vars );
-        pwData.setPostPoints ( vars ).then(
+        $pwData.setPostPoints ( vars ).then(
             // ON : SUCCESS
             function(response) {
                 // RESPONSE.DATA FORMAT : {"point_type":"post","user_id":1,"id":178472,"points_added":6,"points_total":"3"}
@@ -205,7 +203,7 @@ postworld.controller('postVote',
 
     }
 
-}]);
+});
 
 
 /*   _       _           _         ____                      _                     
@@ -216,15 +214,14 @@ postworld.controller('postVote',
                                                   |_|                              
 ////////// ------------ ADMIN POSTS DROPDOWN ------------ //////////*/   
 
-postworld.directive( 'pwAdminPostMenu', [ function($scope){
+postworld.directive( 'pwAdminPostMenu', function(){
     return {
         restrict: 'AE',
         controller: 'adminPostDropdown',
     };
-}]);
+});
 
 postworld.controller('adminPostDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwModal', 'pwQuickEdit', '_', '$timeout', '$pw',
     function( $scope, $rootScope, $location, $window, $log, $pwModal, $pwQuickEdit, $_, $timeout, $pw ) {
 
     ///// MENU OPTIONS /////
@@ -443,7 +440,7 @@ postworld.controller('adminPostDropdown',
 
     };
 
-}]);
+});
 
 
 /*   _       _           _         ____                      _                     
@@ -455,8 +452,7 @@ postworld.controller('adminPostDropdown',
 ////////// ------------ ADMIN COMMENTS DROPDOWN ------------ //////////*/   
 
 postworld.controller( 'adminCommentDropdown',
-    [ '$scope', '$rootScope', '$location', '$window', '$log', 'pwCommentsService', '$pw',
-    function($scope, $rootScope, $location, $window, $log, pwCommentsService, $pw){
+    function($scope, $rootScope, $location, $window, $log, $pw){
 
     var comment = $scope.child;
 
@@ -536,4 +532,4 @@ postworld.controller( 'adminCommentDropdown',
 
 
 
-}]);
+});

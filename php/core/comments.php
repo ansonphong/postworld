@@ -1,13 +1,91 @@
 <?php
 
+/**
+ * Enable or disable comments based on admin settings.
+ */
+add_filter( 'pw_enable_wp_comments', 'pw_enable_wp_comments_filter', 1 );
+function pw_enable_wp_comments_filter($bool){
+	return pw_grab_option( PW_OPTIONS_COMMENTS, 'wordpress.enable' );
+}
+
+/**
+ * Returns the comments form as a string, so it can be injected into templates.
+ */
+function pw_comment_form( $args, $post_id ){
+	$comments_enabled = apply_filters('pw_enable_wp_comments', true);
+	if(!$comments_enabled)
+		return false;
+
+	ob_start();
+	comment_form( $args, $post_id );
+	$output = ob_get_contents();
+	ob_end_clean();
+	return $output;
+
+}
+
+/**
+ * Returns the comments template as a string, so it can be injected into templates.
+ */
+function pw_comments_template( $file = '/comments.php', $separate_comments = false ){
+	$comments_enabled = apply_filters('pw_enable_wp_comments', true);
+	if(!$comments_enabled)
+		return false;
+	ob_start();
+	comments_template($file, $separate_comments);
+	$output = ob_get_contents();
+	ob_end_clean();
+	return $output;
+}
+
+
+
+/**
+ * Get all of the native WordPress discussion/comment settings
+ * And returns them in an associative array with the option names as keys.
+ * @return array
+ */
+function pw_get_wp_comment_settings(){
+
+	return array(
+		'default_comment_status' => (string) get_option( 'default_comment_status', 'open' ),
+		'require_name_email' => (bool) get_option( 'require_name_email', true ),
+		'comment_registration' => (bool) get_option( 'comment_registration', true ),
+		'comment_registration' => (bool) get_option( 'comment_registration', true ),
+
+		'close_comments_for_old_posts' => (bool) get_option( 'close_comments_for_old_posts', false ),
+		'close_comments_days_old' => (int) get_option( 'close_comments_days_old', 14 ),
+		'thread_comments' => (bool) get_option( 'thread_comments', true ),
+		'thread_comments_depth' => (bool) get_option( 'thread_comments_depth', 5 ),
+
+		'page_comments' => (bool) get_option( 'page_comments', false ),
+		'comments_per_page' => (int) get_option( 'comments_per_page', 50 ),
+		'comment_order' => (string) get_option( 'comment_order', 'asc' ),
+
+		'comments_notify' => (bool) get_option( 'comments_notify', true ),
+		'moderation_notify' => (bool) get_option( 'moderation_notify', true ),
+
+		'comment_max_links' => (int) get_option( 'comment_max_links', 2 ),
+		'moderation_keys' => (string) get_option( 'moderation_keys', '' ),
+		'blacklist_keys' => (string) get_option( 'blacklist_keys', '' ),
+		);
+
+}
+
+
 function pw_get_comment_points($comment_id){
+	if( !pw_config_in_db_tables('comment_meta') ||
+		!pw_config_in_db_tables('comment_points') )
+		return 0;
+
 	/*
 		Get the total number of points of the given comment from the points column in wp_postworld_comment_meta
 		return : integer (number of points) 
 	*/
 		
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 
 	$query = "SELECT comment_points FROM " . $wpdb->pw_prefix.'comment_meta' . " WHERE comment_id=" . $comment_id;
 	//echo ($query);
@@ -19,13 +97,18 @@ function pw_get_comment_points($comment_id){
 } 
 
 function pw_calculate_comment_points($comment_id){
+	if( !pw_config_in_db_tables('comment_meta') ||
+		!pw_config_in_db_tables('comment_points') )
+		return false;
+
 	/* 
 		Adds up the points from the specified comment, stored in wp_postworld_comment_points
 		Stores the result in the points column in wp_postworld_comment_meta 
 	 	return : integer (number of points)
 	 */
 	global $wpdb;
-	$wpdb -> show_errors();
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
 
 	//first sum points
 	$query = "select SUM(points) from ".$wpdb->pw_prefix.'comment_points'." where comment_id=" . $comment_id;
@@ -40,13 +123,20 @@ function pw_calculate_comment_points($comment_id){
 
 function pw_cache_comment_points($comment_id){
 	
+	if( !pw_config_in_db_tables('comment_meta') ||
+		!pw_config_in_db_tables('comment_points') )
+		return false;
+
 	/*
 		Calculates given post's current points with pw_calculate_comment_points()
 		Stores points it in wp_postworld_post_meta table_ in the post_points column
 		return : integer (number of points)
 	*/
 	global $wpdb;
-	$wpdb -> show_errors();
+	
+	if( pw_dev_mode() )
+		$wpdb -> show_errors();
+	
 	$total_points = pw_calculate_comment_points($comment_id);
 	 //update wp_postworld_meta
 	$query = "update ".$wpdb->pw_prefix.'comment_meta'." set comment_points=" . $total_points . " where comment_id=" . $comment_id;
@@ -65,6 +155,10 @@ function pw_cache_comment_points($comment_id){
 
 
 function pw_insert_comment_meta($comment_id,$total_points=0){
+
+	if( !pw_config_in_db_tables('comment_meta') )
+		return false;
+
 	/*
 	 This function gets comment data inserts a record in wp_postworld_comment_meta table
 	 * Parameters:
@@ -229,7 +323,7 @@ function pw_get_comment ( $comment_id, $fields = "all", $viewer_user_id = null )
 
 function pw_get_comments( $query, $fields = 'all', $tree = true ){
 
-	$wp_comments = pw_new_get_comments($query); //get_comments( $query );
+	$wp_comments = pw_new_get_comments($query);
 	if (!$wp_comments) return false;
 
 	$wp_comments = (array) $wp_comments;
@@ -370,7 +464,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		///// COMMENT EXCERPT /////
 			// This must come after the content is filtered so that embedded content can be removed
 			// comment_excerpt(100)
-			$comment_excerpt_fields = extract_linear_fields( $fields, 'comment_excerpt', true );
+			$comment_excerpt_fields = pw_extract_linear_fields( $fields, 'comment_excerpt', true );
 			if ( !empty( $comment_excerpt_fields ) ){
 				// If a number is provided in the first field
 				if( is_numeric( $comment_excerpt_fields[0] ) ){
@@ -408,7 +502,7 @@ function pw_get_comments( $query, $fields = 'all', $tree = true ){
 		    //'callback_fields' => $callback_fields,
 		    );
 
-		$comments_tree = tree_obj( $comments_data, 0, 0, $settings );
+		$comments_tree = pw_make_tree_obj( $comments_data, 0, 0, $settings );
 		if ($comments_tree){
 			$comments_data = $comments_tree;
 		}

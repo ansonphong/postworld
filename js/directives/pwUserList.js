@@ -6,7 +6,7 @@
  |_|                                                        
 ///////////////////////// LIST USERS DIRECTIVE ////////////////////////*/
 
-postworld.directive( 'pwUserList', [ function($scope){
+postworld.directive( 'pwUserList', function(){
 	return {
 		restrict: 'AE',
 		controller: 'pwUserListCtrl',
@@ -32,10 +32,9 @@ postworld.directive( 'pwUserList', [ function($scope){
 			
 		}
 	};
-}]);
+});
 
 postworld.controller( 'pwUserListCtrl',
-	[ '$scope', '$window', '$timeout', 'pwData', '$log',
 	function( $scope, $window, $timeout, $pwData, $log ) {
 
 	//$scope.$parent.attend_event_users = {'test':true}; 
@@ -247,9 +246,5 @@ postworld.controller( 'pwUserListCtrl',
 	
 
 
-}]);
-
-
-
-
+});
 
