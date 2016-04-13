@@ -185,7 +185,7 @@ function pw_print_slider( $slider ){
 
 			///// RUN QUERY /////
 			//$slider['posts'] = (array) pw_query( $query )->posts;
-			$slider['posts'] = pw_wp_query( $query, $query['fields'] );
+			$slider['posts'] = pw_query_posts( $query );
 
 		// Do not break case 'query' here, continue with this_post mode
 		case 'this_post':

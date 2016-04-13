@@ -28,7 +28,7 @@ function pw_mode(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.53,
+		'version'		=>	1.55,
 		'db_version'	=>	1.29,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -256,7 +256,7 @@ include 'php/core/posts.php';
 
 ////// QUERY FUNCTIONS //////
 include 'php/core/query.php';
-include 'php/core/query_new.php';
+include 'php/core/query_posts.php';
 
 ////// WIDGETS //////
 include 'php/core/widgets.php';

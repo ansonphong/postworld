@@ -1,5 +1,11 @@
 # Postworld // Changelog
 
+### Version 1.55
+- **Breaking Changes** - Replaced all instances of `pw_query` with `pw_query_posts`
+    +  On sites using custom Postworld post_meta including `geo` and `event` data querying, this may require extra testing and bugfixes in the new updated class. `ATTN: @phongmedia` 
+- **Breaking Changes** - Renamed Template
+    + Renamed `templates/shortcodes/subpages.php` to `templates/shortcodes/pagelist.php`
+
 ### Version 1.51
 - **Breaking Changes** - Renamed `pwPosts` service to `$pwPosts`
     + Change all instances of dependency injection of `'pwPosts'` to `'$pwPosts'`

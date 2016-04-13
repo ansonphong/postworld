@@ -25,8 +25,7 @@ function pw_update_pw1_event_meta( $options = array() ) {
 		'post_type'	=>	'event',
 		'fields' => array( "ID", "post_title" ),
 		);
-	$query_results = pw_query( $query );
-	$posts = $query_results->posts;
+	$posts = pw_query_posts( $query );
 	$post_ids = array();
 	foreach( $posts as $post ){
 		$post_ids[] = $post['ID'];

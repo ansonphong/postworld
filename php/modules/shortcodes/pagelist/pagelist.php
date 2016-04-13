@@ -85,7 +85,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 		);
 	$vars['tag'] = $tag;
 
-	$template = pw_get_shortcode_template( 'subpages' );
+	$template = pw_get_shortcode_template( 'pagelist' );
 	
 	$shortcode = pw_ob_include( $template, $vars );
 

@@ -431,8 +431,7 @@ function pw_feed_outline ( $query ){
 		
 	///// GET FEED OUTLINE /////
 	$query["fields"] = "ids";
-	$query_results = pw_query( $query );
-	$post_ids = (array) $query_results->posts;
+	$post_ids = pw_query_posts( $query );
 	$post_ids = pw_sanitize_numeric_array( $post_ids );
 
 	///// CACHING LAYER /////
@@ -568,9 +567,9 @@ function pw_print_feed( $vars ){
 			// Override fields
 			$vars['query']['fields'] = $vars['fields'];
 
-		$pw_query = pw_query( $vars['query'] );
+		//$pw_query = pw_query( $vars['query'] );
 		//return json_encode($pw_query);
-		$posts = $pw_query->posts;
+		$posts = pw_query_posts( $vars['query'] );// $pw_query->posts;
 
 	} else if( isset( $vars['posts'] ) ) {
 		$posts = $vars['posts'];
@@ -845,7 +844,7 @@ function pw_gallery_feed( $vars = array() ){
 	}
 	/// USE PW QUERY ///
 	else if( !empty( $vars['query'] ) ){
-		$posts = pw_query( $vars['query'] )->posts;
+		$posts = pw_query_posts( $vars['query'] );
 	}
 	/// RETURN FALSE ///
 	else{
