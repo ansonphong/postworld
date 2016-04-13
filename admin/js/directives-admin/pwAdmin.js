@@ -2,15 +2,10 @@ postworldAdmin.directive( 'pwAdmin', function(){
 	return {
 		restrict: 'A',
 		controller: 'pwAdminCtrl',
-		link: function( $scope, element, attrs ){
-			/*
-			// OBSERVE Attribute
-			attrs.$observe('var', function(value) {
-			});
-			*/
-		}
+		link: function( $scope, element, attrs ){}
 	};
 });
+
 
 postworldAdmin.controller( 'pwAdminCtrl',
 	['$scope', '$window', '$timeout', '$log', '$_',
@@ -80,6 +75,17 @@ postworldAdmin.controller( 'pwAdminCtrl',
 }]);
 
 
+postworldAdmin.directive( 'pwAdminOptions', function($pw){
+	return {
+		restrict: 'A',
+		controller: 'pwAdminCtrl',
+		link: function( $scope, element, attrs ){
+			$scope['options'] = $pw.optionsMeta;
+		}
+	};
+});
+
+
 postworldAdmin.directive('pwAdminLinkUrl',
 	function ($pwEditPostFilters, $pwPostOptions) {
 	return {
@@ -94,6 +100,32 @@ postworldAdmin.directive('pwAdminLinkUrl',
 				function (){
 					$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url );
 				});
+		}
+	};
+});
+
+postworldAdmin.directive('pwAdminGalleryOptions', function( $_ ){
+	return {
+		restrict: 'A',
+		link: function( $scope, element, attrs ){
+
+			$scope.getSelectedOption = function( objectKey ){
+				 // Return the option where the slug equals the selected value
+				 return _.findWhere( $scope.galleryOptions, { key: objectKey } );
+			};
+
+			$scope.showGalleryView = function( view ){
+				switch( view ){
+					case 'showImmersion':
+						var showFor = $_.get( $scope.showOptions, 'immersion.show_for' ),
+							galleryTemplate = $_.get( $scope, $scope.galleryModel + '.template' );
+						if( $_.isInArray( galleryTemplate, showFor ) )
+							return true;
+						break;
+				}
+				return false;
+			}
+
 		}
 	};
 });

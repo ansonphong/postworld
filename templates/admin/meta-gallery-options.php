@@ -1,80 +1,64 @@
 <?php
-	if( empty( $vars['gallery_options'] ) )
-		$vars['gallery_options'] = array('inline','frame','horizontal','vertical'); 
+if( empty( $vars['gallery_options'] ) )
+	$vars['gallery_options'] = array('inline','frame','horizontal','vertical'); 
 
-	if( empty( $vars['show'] ) )
-		$vars['show'] = array(
-			'immersion' => array(
-				'enable' => false,
-				'show_for' => array('frame','horizontal','vertical')
-				),
-			'vertical' => array(
-				'show_title',
-				'show_caption',
-				'width'
-				),
-			); 
-
-	$gallery_templates = array(
-		'inline' =>	array(
-			'name' => _x( 'Inline', 'gallery type', 'postworld' ),
-			'description' => __( 'Galleries appear inline with the post content as a grid of images.', 'postworld' ),
-			),
-		'frame' => array(
-			'name' => _x( 'Frame', 'gallery type', 'postworld' ),
-			'description' => __( 'All galleries in the post are merged into a single frame gallery.' ),
-			),
-		'horizontal' => array(
-			'name' => _x( 'Horizontal', 'gallery type', 'postworld' ),
-			'description' => __( 'All galleries in the post are merged into a single horizontal infinite scrolling gallery.' ),
+if( empty( $vars['show'] ) )
+	$vars['show'] = array(
+		'immersion' => array(
+			'enable' => false,
+			'show_for' => array('frame','horizontal','vertical')
 			),
 		'vertical' => array(
-			'name' => _x( 'Vertical', 'gallery type', 'postworld' ),
-			'description' => __( 'All galleries in the post are merged into a single vertical infinite scrolling gallery.' ),
+			'show_title',
+			'show_caption',
+			'width'
 			),
-		);
-	$gallery_templates = apply_filters( 'pw_gallery_templates', $gallery_templates );
+		); 
+
+$gallery_templates = array(
+	'inline' =>	array(
+		'name' => _x( 'Inline', 'gallery type', 'postworld' ),
+		'description' => __( 'Galleries appear inline with the post content as a grid of images.', 'postworld' ),
+		),
+	'frame' => array(
+		'name' => _x( 'Frame', 'gallery type', 'postworld' ),
+		'description' => __( 'All galleries in the post are merged into a single frame gallery.' ),
+		),
+	'horizontal' => array(
+		'name' => _x( 'Horizontal', 'gallery type', 'postworld' ),
+		'description' => __( 'All galleries in the post are merged into a single horizontal infinite scrolling gallery.' ),
+		),
+	'vertical' => array(
+		'name' => _x( 'Vertical', 'gallery type', 'postworld' ),
+		'description' => __( 'All galleries in the post are merged into a single vertical infinite scrolling gallery.' ),
+		),
+	);
+$gallery_templates = apply_filters( 'pw_gallery_templates', $gallery_templates );
+
+
+/**
+ * Prepare gallery options and export to Angular
+ */
+$gallery_options = array();
+foreach( $gallery_templates as $key => $value ){
+	if( in_array( $key, $vars['gallery_options'] ) ){
+			$value['key'] = $key;
+			$gallery_options[] = $value;
+		}
+}
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'galleryOptionsData',
+	'vars' => array(
+		'galleryOptions' => $gallery_options,
+		'showOptions' => $vars['show'],
+		'galleryModel' => $vars['ng_model'],
+		),
+	));
 
 ?>
-<script>
-	jQuery( document ).ready(function() {
-		postworld.controller('galleryOptionsData',function($scope,$_){
-			
-			var galleryOptionsMeta = <?php echo json_encode( $gallery_templates ) ?>;
-			var galleryOptionsKeys = <?php echo json_encode( $vars['gallery_options'] ) ?>;
 
-			var showOptions = <?php echo json_encode($vars['show']) ?>;
-
-			$scope.galleryOptions = [];
-			angular.forEach( galleryOptionsMeta, function( value,key ){
-				if( $_.inArray( key, galleryOptionsKeys ) ){
-					value['key'] = key;
-					$scope.galleryOptions.push(value);
-				}
-			});
-
-			$scope.getSelectedOption = function( objectKey ){
-				 // Return the option where the slug equals the selected value
-				 return _.findWhere( $scope.galleryOptions, { key: objectKey } );
-			};
-
-			$scope.showGalleryView = function( view ){
-				switch( view ){
-					case 'showImmersion':
-						var showFor = $_.get( showOptions, 'immersion.show_for' ),
-							galleryTemplate = $scope.<?php echo $vars['ng_model']; ?>.template;
-						if( $_.isInArray( galleryTemplate, showFor ) )
-							return true;
-						break;
-				}
-				return false;
-			}
-
-		});
-	});
-</script>
-
-<div ng-controller="galleryOptionsData">
+<div pw-admin-gallery-options ng-controller="galleryOptionsData">
 
 	<div class="btn-group">
 		<label
@@ -153,8 +137,8 @@
 				<hr class="thin">
 				<label>
 					<input type="checkbox" ng-model="<?php echo $vars['ng_model']; ?>.immersive">
-					<b>Make gallery immersive</b>
-					<small>: Hides other content to immerse browser in the gallery. </small>
+					<b><?php _e( 'Make gallery immersive', 'postwold' ) ?></b>
+					<small>: <?php _e( 'Hides other content to immerse browser in the gallery.', 'postwold' ) ?> </small>
 				</label>
 			</div>
 		<?php endif ?>

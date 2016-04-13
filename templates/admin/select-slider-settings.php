@@ -27,13 +27,16 @@ if( !is_array($show) )
 		//'parallax_depth',
 		//'proportion'
 		);
-?>
 
-<script>
-	postworld.controller( '<?php echo $instance ?>', function($scope){
-		$scope.options = <?php echo json_encode( $options ) ?>;
-	});
-</script>
+pw_print_ng_controller(array(
+	'app' => 'postworld',
+	'controller' => $instance,
+	'vars' => array(
+		'options' => $options,
+		),
+	));
+
+?>
 
 <div class="postworld" ng-controller="<?php echo $instance ?>">
 

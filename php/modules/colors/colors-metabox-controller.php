@@ -1,12 +1,7 @@
-<?php
-global $post;
-?>
-
 <!--///// METABOX WRAPPER /////-->
 <div id="pwColorsMetabox" class="postworld">
 	<div
 		pw-admin-colors
-		ng-controller="pwColorsMetaboxCtrl"
 		class="pw-metabox metabox-side metabox-colors"
 		style="position:relative;">
 
@@ -30,28 +25,10 @@ global $post;
 
 		</table>
 
-		<?php
-			//echo pw_colors_single_options( array( 'context'	=>	'postAdmin' ) );
-			// Action Hook
-			do_action('pw_colors_metabox_templates');
-		?>
-
-		<?php /*if( pw_dev_mode() ): ?>
-			<hr><pre>DEV MODE</pre>
-			<?php echo json_encode( $pw_post, JSON_PRETTY_PRINT ); ?>
-		<?php endif */ ?>
+		<?php do_action('pw_colors_metabox_templates') ?>
 		
 	</div>	
 </div>
-
-<!--///// METABOX SCRIPTS /////-->
-<script>
-	///// CONTROLLER /////
-	postworldAdmin.controller('pwColorsMetaboxCtrl',
-		['$scope', '$pwData', '$_', '$log',
-			function( $scope, $pwData, $_, $log ) {
-	}]);
-</script>
 
 <?php
 	// Action hook to print the Javascript(s)
