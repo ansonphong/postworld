@@ -10,6 +10,7 @@
  */
 function pw_query_posts( $vars ){
 
+	// Setup series of query filters which enable advanded Postworld Querying
 	add_filter( 'posts_where', 'pw_query_posts_where', 10, 2 );
 	add_filter( 'posts_join', 'pw_query_posts_join', 10, 2 );
 	add_filter( 'posts_orderby', 'pw_query_posts_orderby', 10, 2 );
@@ -18,13 +19,27 @@ function pw_query_posts( $vars ){
 	$pw_fields = ( isset($vars['fields']) ) ? $vars['fields'] : 'micro';
 	$vars['fields'] = 'ids';
 
+	// Get the Post IDs from the Query
 	$wp_query = new WP_Query();
-	$query_result = $wp_query->query($vars);
+	$post_ids = $wp_query->query($vars);
+
+	// Prepend the sticky posts if requested
+	if( _get( $vars, 'show_sticky_posts' ) ){
+		// Get the sticky posts
+		$sticky_posts = get_option( 'sticky_posts', array() );
+		// If Sticky Posts
+		if(!empty($sticky_posts)){
+			// Remove the sticky posts from the post ids
+			$post_ids = array_diff( $post_ids, $sticky_posts );
+			// Prepend the sticky posts to the beginning
+			$post_ids = array_merge( $sticky_posts, $post_ids );
+		}
+	}
 
 	if( $pw_fields == 'ids' )
-		return $query_result;
+		return $post_ids;
 	else
-		return pw_get_posts( $query_result, $pw_fields );
+		return pw_get_posts( $post_ids, $pw_fields );
 
 }
 
