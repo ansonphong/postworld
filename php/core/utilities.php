@@ -1981,6 +1981,42 @@ function pw_exit_with_error($message = '', $httpStatus = 500) {
 }
 
 
+/**
+ * Checks array_key_exists() on multiple values.
+ *
+ * @param array $keys An array of keys to check for.
+ * @param $array $array A key->value paired array to check keys for.
+ * @param bool $match_all If false, any match will return true. If true, will require all to match.
+ */
+function pw_array_keys_exist( $keys, $array, $match_all = false ){
+	foreach( $keys as $key ){
+		// (bool) Check if the key exists in the array keys
+		$has_match = array_key_exists( $key, $array );
+
+		if( !$match_all ){
+			if( $has_match === true )
+				return true;
+			else
+				continue;
+		}
+
+		if( $match_all ){
+			if( $has_match === false )
+				return false;
+			else
+				continue;
+		}
+
+	}
+
+	if( $match_all )
+		return true;
+	else
+		return false;
+
+}
+
+
 /*
 function pw_get_post_types(){
 	$args = array(

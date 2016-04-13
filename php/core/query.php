@@ -30,8 +30,7 @@ function pw_query($args,$return_type = 'PW_QUERY') {
  * • Sort posts by points & rank_score fields in the postworld_post_meta table
  * • Defines which fields are returned using pw_get_posts() method
  *
- * @todo Refactor / remove get_posts() method //**
- * @todo Update methods to be compliant with recent WordPress updates
+ * @todo Destroy PW_Query class altogether, replace with WP_Query filters
  */
 class PW_Query extends WP_Query {
 	 
@@ -99,6 +98,10 @@ class PW_Query extends WP_Query {
 		$related_query = "related_post = ".$related_post;
 		return $related_query." AND ";
 	}
+
+
+
+
 
 	function prepare_time_query(){
 		///// event_start,  /////
@@ -230,6 +233,10 @@ class PW_Query extends WP_Query {
 		return $time_query." AND ";
 	}
 
+
+
+
+
 	function prepare_geo_query(){
 		///// GEO LATITUDE /////
 
@@ -258,6 +265,11 @@ class PW_Query extends WP_Query {
 		if($geo_query == "") return " AND ";
 		return $geo_query." AND ";
 	}
+
+
+
+
+
 	
 
 	/**
@@ -1860,29 +1872,5 @@ function pw_new_get_comments($args=''){
 }
 
 
-
-
-
-
-
-
-/*
-add_filter( 'posts_where', 'pw_theme_posts_where' );
-function pw_theme_posts_where( $where ){
-	pw_log( 'WHERE', $where );
-	return $where;
-}
-add_filter( 'posts_join', 'pw_theme_posts_join' );
-function pw_theme_posts_join( $join ){
-	pw_log( 'JOIN', $join );
-	return $join;
-}
-*/
-// FILTER : posts_orderby : ORDERBY
-// FILTER : posts_fields : SELECT
-// FILTER : posts_clauses : ALL CLAUSES **!!
-// FILTER : posts_results : POSTS AFTER QUERYING
-// @todo Make class, construct add filters, force to IDs
-//			Then after the query, use pw_get_posts
 
 

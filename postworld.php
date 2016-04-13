@@ -256,6 +256,7 @@ include 'php/core/posts.php';
 
 ////// QUERY FUNCTIONS //////
 include 'php/core/query.php';
+include 'php/core/query_new.php';
 
 ////// WIDGETS //////
 include 'php/core/widgets.php';
