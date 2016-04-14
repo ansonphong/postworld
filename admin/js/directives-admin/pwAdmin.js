@@ -104,6 +104,20 @@ postworldAdmin.directive('pwAdminLinkUrl',
 	};
 });
 
+
+postworldAdmin.directive('pwAdminMetaboxEvent',
+	function () {
+	return {
+		restrict: 'A',
+		link: function( $scope, element, attrs ){
+			$scope.removeTimeZone = function(){
+				delete $scope.post.post_meta[ $scope.eventKey ].timezone;
+			}
+		}
+	};
+});
+
+
 postworldAdmin.directive('pwAdminModules',
 	function ( $_ ) {
 	return {

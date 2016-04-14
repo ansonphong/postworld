@@ -8,6 +8,16 @@
 //////////////////////////////////////////////////*/
 global $post;
 global $pw_event_post;
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwEventMetaboxCtrl',
+	'vars' => array(
+		'post' => $pw_event_post,
+		'eventKey' => $event_postmeta_key,
+		),
+	));
+
 ?>
 
 <!--///// METABOX WRAPPER /////-->
@@ -15,7 +25,7 @@ global $pw_event_post;
 	id="pwEventMetabox"
 	class="postworld pw-metabox"
 	ng-cloak>
-	<div ng-controller="pwEventMetaboxCtrl">
+	<div pw-admin-metabox-event ng-controller="pwEventMetaboxCtrl">
 		<?php
 			// Include the UI template
 			$metabox_template = pw_get_template ( 'admin', 'metabox-event', 'php', 'dir' );
@@ -39,22 +49,6 @@ global $pw_event_post;
 
 	</div>	
 </div>
-
-<!--///// METABOX SCRIPTS /////-->
-<script>
-	///// CONTROLLER /////
-	postworldAdmin.controller('pwEventMetaboxCtrl',
-		['$scope',
-			function( $scope ) {
-			$scope.post = <?php echo json_encode($pw_event_post); ?>;
-			$scope.eventKey = <?php echo json_encode( $event_postmeta_key ); ?>;
-	
-			$scope.removeTimeZone = function(){
-				delete $scope.post.post_meta[ $scope.eventKey ].timezone;
-			}
-
-	}]);
-</script>
 
 <?php
 	// Action hook to print the Javascript(s)
