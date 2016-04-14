@@ -9,7 +9,7 @@ pw_print_ng_controller(array(
 	));
 ?>
 
-<div class="postworld wrap social" ng-cloak>
+<div class="postworld wrap social postworld-social" ng-cloak>
 
 	<h1>
 		<i class="pwi-profile"></i>
@@ -21,6 +21,7 @@ pw_print_ng_controller(array(
 	<div
 		pw-admin-options
 		pw-admin-social
+		pw-ui
 		ng-controller="pwSocialDataCtrl"
 		ng-cloak>
 
@@ -35,7 +36,15 @@ pw_print_ng_controller(array(
 			</h2>
 			<small><?php _e('Include share links on each post for the following networks:','postworld' )?></small>
 			<hr class="thin">
-			<?php echo pw_share_social_options(); ?>
+
+			<div class="share-networks">
+				<label ng-repeat="network in options.share.meta" ng-class="{'active':uiInArray(network.id,pwSocial.share.networks)}">
+					<input type="checkbox" checklist-model="pwSocial.share.networks"  checklist-value="network.id">
+					<i class="icon" ng-class="network.icon"></i>
+					<span>{{network.name}}</span>
+				</label>
+			</div>
+
 			<div style="clear:both"></div>
 		</div>
 

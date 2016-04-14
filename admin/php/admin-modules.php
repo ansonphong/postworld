@@ -178,18 +178,14 @@ function pw_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 	return pw_ob_admin_template( 'meta-content-columns', $vars );
 }
 
+
 function i_share_social_options(){
 	// DEPRECIATED
 	return pw_share_social_options();
 }
 function pw_share_social_options(){
-	$vars = array();
-	$vars['options_model'] = "options.share.meta";
-	$vars['model_var'] = "pwSocial";
-	$vars['model_key'] = "share.networks";
-	$vars['ng_model'] = $vars['model_var'] . '.' . $vars['model_key'];
-
-	return pw_ob_admin_template( 'share-social', $vars );
+	// DEPRECIATED
+	return false;
 }
 
 

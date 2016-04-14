@@ -13,7 +13,6 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 }]);
 
 postworld.controller( 'pwUiCtrl',
-	[ '$scope', '$timeout', '$_', '$log', '$pw',
 	function( $scope, $timeout, $_, $log, $pw ){
 
 	$scope.uiLoggedIn = function(){
@@ -111,6 +110,9 @@ postworld.controller( 'pwUiCtrl',
 		return $scope.uiBool( val );
 	}
 
+	$scope.uiInArray = function( needle, haystack ){
+		return $_.isInArray( needle, haystack );
+	}
 
 	////////// UI ELEMENT : STYLING //////////
 
@@ -232,4 +234,4 @@ postworld.controller( 'pwUiCtrl',
 		return code;
 	}
 
-}]);
+});

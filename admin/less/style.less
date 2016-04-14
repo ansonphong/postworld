@@ -46,6 +46,37 @@
 	///// WIDGETS /////
 	@import 'widgets.less';
 
+
+
+	&.postworld-social{
+		.share-networks{
+			input{
+				display: none;
+			}
+			label{
+				position: relative;
+				display: block;
+				float: left;
+				padding: 10px 15px 10px 15px;
+				margin-right: 5px;
+				margin-bottom: 5px;
+				border-radius: 3px;
+				font-weight: bold;
+				&.active{
+					background: #444;
+					color: #eee;
+				}
+				.icon{
+					position: relative;
+					top: 3px;
+					margin-right: 5px;
+					opacity: .66;
+				}
+			}
+		}
+	}
+
+
 	button.add-new-h2{
 		line-height:1.4em;
 		cursor: pointer;
