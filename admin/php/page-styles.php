@@ -63,7 +63,6 @@ pw_print_ng_controller(array(
 											pw-admin-style-input="property"
 											input-options="options"
 											input-model="pwStyles[ type.key ][ section.key ]">
-											
 										</div>
 									</td>
 									<td ng-show="showProperty( property, 'edit' )">
