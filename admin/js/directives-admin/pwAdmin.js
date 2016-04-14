@@ -104,6 +104,36 @@ postworldAdmin.directive('pwAdminLinkUrl',
 	};
 });
 
+postworldAdmin.directive('pwAdminModules',
+	function ( $_ ) {
+	return {
+		restrict: 'A',
+		link: function( $scope, element, attrs ){
+			
+			$scope.modulesInit = function(){
+				$_.arrayFromObjectWatch( $scope, 'pwModules', 'selectedModules' );
+			}
+			$scope.modulesInit();
+
+			// Every time the selected modules changes
+			$scope.$watch( 'selectedModules', function(val){
+				// Force required modules to be enabled
+				angular.forEach( $scope.requiredModules, function( moduleName ){
+					$scope.selectedModules[ moduleName ] = true;
+				});
+			});
+
+			$scope.isRequired = function( value ){
+				return $_.isInArray( value, $scope.requiredModules );
+			}
+
+		}
+	};
+});
+
+
+
+
 postworldAdmin.directive('pwAdminGalleryOptions', function( $_ ){
 	return {
 		restrict: 'A',

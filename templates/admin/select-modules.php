@@ -1,33 +1,21 @@
-<script>
-	postworldAdmin.controller( 'pwModulesCtrl',
-		[ '$scope', '$_', '$log', '$pw', function( $scope, $_, $log, $pw ){
+<?php
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwModulesCtrl',
+	'vars' => array(
+		'pwModules' => pw_enabled_modules(),
+		'availableModules' => pw_available_modules(),
+		'supportedModules' => pw_supported_modules(),
+		'requiredModules' => pw_required_modules(),
+		),
+	));
+?>
 
-		$scope.pwModules = <?php echo json_encode( pw_enabled_modules() ); ?>;
-		$scope['options'] = $pw.optionsMeta;
-		$scope.availableModules = <?php echo json_encode( pw_available_modules() ); ?>;
-		$scope.supportedModules = <?php echo json_encode( pw_supported_modules() ); ?>;
-		$scope.requiredModules = <?php echo json_encode( pw_required_modules() ); ?>;
-		
-		$scope.modulesInit = function(){
-			$_.arrayFromObjectWatch( $scope, 'pwModules', 'selectedModules' );
-		}
-
-		// Every time the selected modules changes
-		$scope.$watch( 'selectedModules', function(val){
-			// Force required modules to be enabled
-			angular.forEach( $scope.requiredModules, function( moduleName ){
-				$scope.selectedModules[ moduleName ] = true;
-			});
-		});
-
-		$scope.isRequired = function( value ){
-			return $_.isInArray( value, $scope.requiredModules );
-		}
-
-	}]);
-</script>
-
-<div class="well" ng-controller="pwModulesCtrl" ng-init="modulesInit()">
+<div
+	pw-admin-options
+	pw-admin-modules
+	ng-controller="pwModulesCtrl"
+	class="well">
 
 	<div class="save-right">
 		<?php pw_save_option_button( PW_OPTIONS_MODULES, 'pwModules'); ?>

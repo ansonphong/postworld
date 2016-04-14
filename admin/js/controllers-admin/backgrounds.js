@@ -20,6 +20,7 @@ postworldAdmin.controller('pwAdminBackgroundsCtrl',
 	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions, $pw ) {
 	
 	$scope.view = 'settings';
+	$scope.optionsMeta = $pw.optionsMeta;
 
 	$scope.newBackground = function(){
 		var newBackground = {
@@ -75,8 +76,12 @@ postworldAdmin.controller('pwAdminBackgroundsCtrl',
 	}
 
 
-	$scope.optionsMeta = $pw.optionsMeta;
 
+	// Watch Background Contexts
+	$scope.$watch( 'pwBackgroundContexts', function(val){
+		// Delete empty values
+		$_.removeEmpty( $scope.pwBackgroundContexts );
+	}, 1);
 
 	
 });

@@ -100,7 +100,7 @@ postworldAdmin.directive( 'pwAdminFeeds', [ function(){
 
 postworldAdmin.controller('pwAdminFeedsCtrl',
 	function ( $scope, $log, $window, $parse, $pwData, $_, $pwPostOptions ) {
-	
+
 	$scope.view = 'settings';
 
 	////////// FUNCTIONS //////////
@@ -197,6 +197,43 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 		if( $_.getObj( $scope, 'selectedItem.query.include_posts_from' ) == null )
 			delete $scope.selectedItem.query.include_posts_from;
 	}, 1);
+
+
+
+	// Watch Feed Settings
+	$scope.$watch( 'pwFeedSettings', function(val){
+		// Delete empty values
+		$_.removeEmpty( $scope.pwFeedSettings );
+	}, 1);
+
+	// Watch Feeds
+	$scope.$watch( 'pwFeeds', function(val){
+		// Delete empty values
+		$_.removeEmpty( $scope.pwFeeds );
+	}, 1);
+
+	// Get Taxonomy Terms
+	$pwPostOptions.taxTerms( $scope, 'taxTerms' );
+
+	///// TRANSFORM QUERIES /////
+	$scope.addTaxQuery = function( query ){
+		if( !$_.objExists( query, 'tax_query' ) )
+			query.tax_query = [];
+		var addTaxQuery = {
+			query_id: $_.randomString(8),
+			include_children: true,
+			operator: 'IN',
+			field: 'term_id'
+		};
+		query.tax_query.push(addTaxQuery);
+	}
+	$scope.removeTaxQuery = function( query, taxQuery ){
+		query.tax_query = _.reject(
+			query.tax_query,
+			function( thisQuery ){ return ( thisQuery.query_id == taxQuery.query_id ); }
+			);
+	}
+
 
 	
 });

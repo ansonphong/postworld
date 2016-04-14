@@ -1,33 +1,27 @@
 <?php
-	// Enable Media Library
-	wp_enqueue_media();
+// Enable Media Library
+wp_enqueue_media();
 
-	$pwBackgrounds = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) );
-	$pw_backgrounds_structure = apply_filters( PW_MODEL_BACKGROUNDS, array() );
+$pwBackgrounds = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUNDS ) );
+$pw_backgrounds_structure = apply_filters( PW_MODEL_BACKGROUNDS, array() );
+
+$background_contexts = pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUND_CONTEXTS ) );
+if( empty( $background_contexts ) )
+	$background_contexts = array( '_' => 0 );
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwBackgroundsDataCtrl',
+	'vars' => array(
+		'pwBackgrounds' => $pwBackgrounds,
+		'pwBackgroundsStructure' => $pw_backgrounds_structure,
+		'contexts' => pw_get_contexts(),
+		'pwBackgroundContexts' => $background_contexts,
+		),
+	));
+
 ?>
 <div class="postworld styles wrap">
-	<script type="text/javascript">
-		//////////////////// LAYOUT VIEW CONTROLLER ////////////////////
-		postworldAdmin.controller('pwBackgroundsDataCtrl',
-			[ '$scope', '$window', '$_',
-			function( $scope, $window, $_ ){
-			// Print Data
-			$scope.pwBackgrounds = <?php echo json_encode( $pwBackgrounds ); ?>;
-			$scope.pwBackgroundsStructure = <?php echo json_encode( $pw_backgrounds_structure ); ?>;
-			$scope.contexts = <?php echo json_encode( pw_get_contexts() ); ?>;
-		
-			$scope.pwBackgroundContexts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_BACKGROUND_CONTEXTS ) ) ); ?>;
-			if( _.isEmpty( $scope.pwBackgroundContexts ) )
-				$scope.pwBackgroundContexts = {};
-			
-			// Watch Background Contexts
-			$scope.$watch( 'pwBackgroundContexts', function(val){
-				// Delete empty values
-				$_.removeEmpty( $scope.pwBackgroundContexts );
-			}, 1);
-
-		}]);
-	</script>
 	<div
 		pw-admin
 		pw-admin-backgrounds

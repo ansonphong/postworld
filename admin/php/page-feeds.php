@@ -1,86 +1,57 @@
 <?php
-	// Feeds
-	$pwFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_FEEDS ) );
-	// Feed Settings
-	$pwFeedSettings = pw_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
-	// Feed Templates
-	$htmlTemplates = pw_get_templates(
-		array(
-			'subdirs' => array('feeds'),
-			'path_type' => 'url',
-			'ext'=>'html',
-			)
-		);
-	$htmlFeedTemplates = $htmlTemplates['feeds'];
-	// Aux Feed Templates
-	$phpTemplates = pw_get_templates(
-		array(
-			'subdirs' => array('feeds'),
-			'path_type' => 'url',
-			'ext'=>'php',
-			)
-		);
-	$phpFeedTemplates = $phpTemplates['feeds'];
+// Feeds
+$pwFeeds = pw_get_option( array( 'option_name' => PW_OPTIONS_FEEDS ) );
+// Feed Settings
+$pwFeedSettings = pw_get_option( array( 'option_name' => PW_OPTIONS_FEED_SETTINGS ) );
+if( empty($pwFeedSettings) )
+	$pwFeedSettings = array( '_' => 0 );
 
-	// Contexts to customize feed settings for
-	$get_contexts = array(
-		'default',
-		'home',
-		'standard',
-		'archive',
-		'search',
-		'taxonomy',
-		'post-type'
-		);
+// Feed Templates
+$htmlTemplates = pw_get_templates(
+	array(
+		'subdirs' => array('feeds'),
+		'path_type' => 'url',
+		'ext'=>'html',
+		)
+	);
+$htmlFeedTemplates = $htmlTemplates['feeds'];
+// Aux Feed Templates
+$phpTemplates = pw_get_templates(
+	array(
+		'subdirs' => array('feeds'),
+		'path_type' => 'url',
+		'ext'=>'php',
+		)
+	);
+$phpFeedTemplates = $phpTemplates['feeds'];
+
+// Contexts to customize feed settings for
+$get_contexts = array(
+	'default',
+	'home',
+	'standard',
+	'archive',
+	'search',
+	'taxonomy',
+	'post-type'
+	);
+
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwFeedsDataCtrl',
+	'vars' => array(
+		'pwFeeds' => $pwFeeds,
+		'pwFeedSettings' => $pwFeedSettings,
+		'htmlFeedTemplates' => $htmlFeedTemplates,
+		'phpFeedTemplates' => $phpFeedTemplates,
+		'contexts' => pw_get_contexts( $get_contexts ),
+
+
+		),
+	));
+
 ?>
-<script>
-	postworldAdmin.controller( 'pwFeedsDataCtrl',
-		function( $scope, $_, $timeout, $pwPostOptions ){
-		$scope.pwFeeds = <?php echo json_encode( $pwFeeds ); ?>;
-		$scope.pwFeedSettings = <?php echo json_encode( $pwFeedSettings ); ?>;
-		if( _.isEmpty($scope.pwFeedSettings) )
-			$scope.pwFeedSettings = {};
-
-		$scope.htmlFeedTemplates = <?php echo json_encode( $htmlFeedTemplates ); ?>;
-		$scope.phpFeedTemplates = <?php echo json_encode( $phpFeedTemplates ); ?>;
-		$scope.contexts = <?php echo json_encode( pw_get_contexts( $get_contexts ) ); ?>;
-	
-		// Watch Feed Settings
-		$scope.$watch( 'pwFeedSettings', function(val){
-			// Delete empty values
-			$_.removeEmpty( $scope.pwFeedSettings );
-		}, 1);
-
-		// Watch Feeds
-		$scope.$watch( 'pwFeeds', function(val){
-			// Delete empty values
-			$_.removeEmpty( $scope.pwFeeds );
-		}, 1);
-
-		// Get Taxonomy Terms
-		$pwPostOptions.taxTerms( $scope, 'taxTerms' );
-
-		///// TRANSFORM QUERIES /////
-		$scope.addTaxQuery = function( query ){
-			if( !$_.objExists( query, 'tax_query' ) )
-				query.tax_query = [];
-			var addTaxQuery = {
-				query_id: $_.randomString(8),
-				include_children: true,
-				operator: 'IN',
-				field: 'term_id'
-			};
-			query.tax_query.push(addTaxQuery);
-		}
-		$scope.removeTaxQuery = function( query, taxQuery ){
-			query.tax_query = _.reject(
-				query.tax_query,
-				function( thisQuery ){ return ( thisQuery.query_id == taxQuery.query_id ); }
-				);
-		}
-
-	});
-</script>
 
 <div class="postworld feeds wrap" ng-cloak>
 	<div

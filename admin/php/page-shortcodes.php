@@ -1,22 +1,25 @@
 <?php
-	$pwShortcodes = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODES ) );
-	$pwShortcodeSnippets = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODE_SNIPPETS ) );
-	$enabled_modules = pw_enabled_modules();
+$pwShortcodes = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODES ) );
+$pwShortcodeSnippets = pw_get_option( array( 'option_name' => PW_OPTIONS_SHORTCODE_SNIPPETS ) );
+$enabled_modules = pw_enabled_modules();
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwShortcodesDataCtrl',
+	'vars' => array(
+		'pwShortcodes' => $pwShortcodes,
+		'pwShortcodeSnippets' => $pwShortcodeSnippets
+		),
+	));
+
+/**
+ *	@todo INCLUDE A GUIDE OF EXISTING SHORTCODES
+ *	@todo Do maintainance on the existing Postworld Shortcodes system
+ *	@todo List all the options for each shortcode,
+ *				and auto-generate the shortcode optionally
+*/
+
 ?>
-<script>
-	postworldAdmin.controller( 'pwShortcodesDataCtrl', [ '$scope', function( $scope ){
-		$scope.pwShortcodes = <?php echo json_encode( $pwShortcodes ); ?>;
-		$scope.pwShortcodeSnippets = <?php echo json_encode( $pwShortcodeSnippets ); ?>;
-	}]);
-	<?php
-	/**
-	 *	@todo INCLUDE A GUIDE OF EXISTING SHORTCODES
-	 *	@todo Do maintainance on the existing Postworld Shortcodes system
-	 *	@todo List all the options for each shortcode,
-	 *				and auto-generate the shortcode optionally
-	*/
-	?>
-</script>
 
 <div class="postworld shortcodes wrap" ng-cloak>
 	<div

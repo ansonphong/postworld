@@ -1,23 +1,28 @@
 <?php
-	global $wpdb;
-	// DEV TEST CACHE INPUT
-	$data = array(
-		'cache_type' => 'test',
-		'cache_name' => pw_random_string(8),
-		'cache_hash' => pw_random_hash(16),
-		'cache_content' => 'JSON'
-		);
-	//pw_set_cache( $data );
+global $wpdb;
+// DEV TEST CACHE INPUT
+$data = array(
+	'cache_type' => 'test',
+	'cache_name' => pw_random_string(8),
+	'cache_hash' => pw_random_hash(16),
+	'cache_content' => 'JSON'
+	);
+//pw_set_cache( $data );
+
+$progress = pw_get_progress();
+if( empty( $progress ) )
+	$progress = array( '_' => 0 );
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwDatabaseDataCtrl',
+	'vars' => array(
+		'cacheTypeReadout' => pw_get_cache_types_readout(),
+		'progress' => $progress,
+		),
+	));
+
 ?>
-<script type="text/javascript">
-	postworldAdmin.controller('pwDatabaseDataCtrl',
-		function( $scope ){
-		$scope.cacheTypeReadout = <?php echo json_encode(pw_get_cache_types_readout()) ?>;
-		$scope.progress = <?php echo json_encode( pw_get_progress() ) ?>;
-		if( _.isEmpty( $scope.progress ) )
-			$scope.progress = {};
-	});
-</script>
 
 <div
 	pw-admin
