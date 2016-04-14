@@ -463,11 +463,8 @@ function postworld_includes( $vars ){
 			$in_footer );
 
 		wp_enqueue_style(
-			'angular-bootstrap-colorpicker-css',
-			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css',
-			array(),
-			$pw['info']['version'],
-			$in_footer );
+			'angular-bootstrap-colorpicker',
+			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/css/colorpicker.min.css' );
 	
 	}
 

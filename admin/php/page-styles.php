@@ -1,5 +1,4 @@
 <?php
-
 pw_print_ng_controller(array(
 	'app' => 'postworldAdmin',
 	'controller' => 'pwStylesDataCtrl',
@@ -9,7 +8,6 @@ pw_print_ng_controller(array(
 		'pwStyleDefaults' => apply_filters( PW_STYLES_DEFAULT, array() ),
 		),
 	));
-
 ?>
 
 <div class="postworld styles wrap" ng-cloak>
