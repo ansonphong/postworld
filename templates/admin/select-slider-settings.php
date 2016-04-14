@@ -32,7 +32,7 @@ pw_print_ng_controller(array(
 	'app' => 'postworld',
 	'controller' => $instance,
 	'vars' => array(
-		'options' => $options,
+		'sliderOptions' => $options,
 		),
 	));
 
@@ -164,7 +164,7 @@ pw_print_ng_controller(array(
 		class="labeled"
 		id="select-transition"
 		ng-model="<?php echo $ng_model; ?>.transition"
-		ng-options="option.value as option.name for option in options.transition">
+		ng-options="option.value as option.name for option in sliderOptions.transition">
 	</select>
 	<hr class="thin">
 <?php endif ?>

@@ -7,7 +7,33 @@
              |___/                 
 ///////////////////////////////////*/
 global $post;
+
+$pw_layout_post = pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') );
+
+$layout_value = _get( $pw_layout_post, 'post_meta.'.pw_postmeta_key.'.layout' );
+if( empty( $layout_value ) )
+	$pw_layout_post = _set( $pw_layout_post, 'post_meta.'.pw_postmeta_key.'.layout', array('template'=>'default') );
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => 'pwLayoutMetaboxCtrl',
+	'vars' => array(
+		'pwLayoutOptions' => pw_layout_options(),
+		'pwSidebars' => pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ),
+		'pwTemplates' => pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ),
+		'pwLayouts' => pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ),
+		'pw_layout_post' => $pw_layout_post,
+		// Provide context for the layouts controller
+		'context' => array(
+			'name' => 'single',
+			'label' => 'Single',
+			'icon' => 'pwi-circle-medium',
+			),
+		),
+	));
+
 ?>
+
 
 <!--///// METABOX WRAPPER /////-->
 <div id="pwLayoutMetabox" class="postworld">
@@ -32,44 +58,6 @@ global $post;
 	</div>	
 </div>
 
-<!--///// METABOX SCRIPTS /////-->
-<script>
-	///// CONTROLLER /////
-	postworldAdmin.controller('pwLayoutMetaboxCtrl',
-		['$scope', '$pwData', '$_', '$log',
-			function( $scope, $pwData, $_, $log ) {
-
-			/// LOAD IN DATA SOURCES ///
-			$scope.pwLayoutOptions = <?php echo json_encode( pw_layout_options() ); ?>;
-			$scope.pwSidebars = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_SIDEBARS ) ) ); ?>;
-			$scope.pwTemplates = <?php echo json_encode( pw_get_templates( array( 'ext' => 'php', 'type' => 'dir' ) ) ); ?>;
-			$scope.pwLayouts = <?php echo json_encode( pw_get_option( array( 'option_name' => PW_OPTIONS_LAYOUTS ) ) ); ?>;
-			$scope.pw_layout_post = <?php echo json_encode( pw_get_post( $post->ID, array('ID','post_meta('.pw_postmeta_key.')') ) ); ?>;
-
-			// Create layout object
-			if( !$_.objExists( $scope.pw_layout_post, 'post_meta.<?php echo pw_postmeta_key; ?>.layout' ) )
-				$scope.pw_layout_post = $_.setObj( $scope.pw_layout_post, 'post_meta.<?php echo pw_postmeta_key; ?>.layout', {} );
-
-			// If the Layout object is empty
-			if( _.isEmpty( $_.get( $scope.pw_layout_post, 'post_meta.pw_meta.layout' ) ) )
-				// Make it an object
-				$scope.pw_layout_post = $_.set( $scope.pw_layout_post, 'post_meta.pw_meta.layout', { template : 'default' } );
-
-			// TODO : Add a PW global for pw_postmeta_key and pw_usermeta_key, use that global here
-
-			// ADD : If 'default' template selected, delete the layout object
-			// If no template selected, display as 'default'
-
-			// Provide context for the layouts controller
-			$scope.context = {
-				name: 'single',
-				label: 'Single',
-				icon: 'pwi-circle-medium',
-			};
-
-	}]);
-	
-</script>
 
 <?php
 	// Action hook to print the Javascript(s)

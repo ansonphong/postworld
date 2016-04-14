@@ -1,9 +1,89 @@
 <?php
 	if( !isset( $vars['ng_model'] ) )
 		$vars['ng_model'] = "pwMeta.header.slider";
-	$vars['instance'] = pw_random_string();
+	$vars['instance'] = 'sliderOptions_' . pw_random_string();
 ?>
-<div ng-controller="<?php echo $vars["instance"] ?>">
+
+<?php
+
+pw_print_ng_controller(array(
+	'app' => 'postworldAdmin',
+	'controller' => $vars["instance"],
+	'vars' => array(
+		'sliderOptions' => array(
+			'slider' => array(
+				'mode' => array(
+					array(
+						'slug' => 'this_post',
+						'name' => 'This Post',
+						),
+					array(
+						'slug' => 'query',
+						'name' => 'Query',
+						),
+					array(
+						'slug' => 'menu',
+						'name' => 'Menu',
+						),
+					),
+				'transition' => array(
+					array(
+						'slug' => false,
+						'name' => 'No',
+						),
+					array(
+						'slug' => 'fade',
+						'name' => 'Fade',
+						),
+					array(
+						'slug' => 'slide',
+						'name' => 'Slide',
+						),
+					),
+
+				),
+			),
+		),
+	));
+
+?>
+
+<script>
+	///// CONTROLLER /////
+	jQuery( document ).ready(function() {
+
+		postworldAdmin.directive('pwAdminSliderOptions', function( $log, $pwPostOptions, $_ ){
+			return{
+				link: function( $scope, element, attrs ){
+					// Get tax outline by AJAX
+					$pwPostOptions.taxTerms( $scope, 'tax_terms' );
+
+					// Watch value : pwMeta.header.slider.mode
+					$scope.$watch('<?php echo $vars["ng_model"] ?>.mode', function(value){
+						// Switch Query Vars
+						switch( value ){
+							case 'this_post':
+								$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post = true;
+								$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post_only = true;
+								break;
+
+							case 'query':
+								$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post_only = false;
+								break;
+
+						}
+
+
+					});
+				}
+			}
+
+		});
+
+	});
+</script>
+
+<div pw-admin-slider-options ng-controller="<?php echo $vars["instance"] ?>">
 	<div class="well">
 		<h3>
 			<i class="pwi-gear"></i>
@@ -155,67 +235,3 @@
 	<code><pre>{{ pwMeta.header.slider | json }}</pre></code>
 	-->
 </div>
-
-<script>
-	///// CONTROLLER /////
-	postworldAdmin.controller('<?php echo $vars["instance"] ?>',
-			function( $scope, $log, $pwPostOptions, $_ ){
-
-			// Get tax outline by AJAX
-			$pwPostOptions.taxTerms( $scope, 'tax_terms' );
-
-			// Define Options
-			$scope.sliderOptions = {
-				'slider':{
-					'mode':[
-						{
-							slug: 'this_post',
-							name: 'This Post',
-						},
-						{
-							slug: 'query',
-							name: 'Query',
-						},
-						{
-							slug: 'menu',
-							name: 'Menu',
-						},
-					],
-					'transition':[
-						{
-							slug: false,
-							name: 'No',
-						},
-						{
-							slug: 'fade',
-							name: 'Fade',
-						},
-						{
-							slug: 'slide',
-							name: 'Slide',
-						},
-					]
-				},
-			};
-
-			// Watch value : pwMeta.header.slider.mode
-			$scope.$watch('<?php echo $vars["ng_model"] ?>.mode', function(value){
-				//$log.debug( value );
-				// Switch Query Vars
-				switch( value ){
-					case 'this_post':
-						$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post = true;
-						$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post_only = true;
-						break;
-
-					case 'query':
-						$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post_only = false;
-						break;
-
-				}
-
-
-			});
-
-	});
-</script>
