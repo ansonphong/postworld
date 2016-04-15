@@ -27,8 +27,7 @@
 	console.log( 'Init Related Posts Widget Script : ' + '<?php echo $instance ?>' );
 
 	///// CONTROLLER /////
-	postworldAdmin.controller('<?php echo $instance ?>Ctrl',
-		['$scope', '$pwData', '$_', '$log',
+	postworldAdmin.controller('<?php echo $instance ?>',
 		function( $scope, $pwData, $_, $log ) {
 			$log.debug( 'Init Related Posts Widget Controller : ' + '<?php echo $instance ?>' );
 			$scope.settings = <?php echo json_encode( $options['settings'] ); ?>;
@@ -108,9 +107,9 @@
 				}
 			}
 			
-	}]);
+	});
 
-	pwRegisterController( '<?php echo $instance ?>Ctrl', 'postworldAdmin' );
+	pwRegisterController( '<?php echo $instance ?>', 'postworldAdmin' );
 	pwCompileElement( 'body', '<?php echo $instance ?>' );
 
 </script>
@@ -122,7 +121,7 @@
 	<div
 		class="postworld-widget postworld-widget-related-posts"
 		pw-feed-options
-		ng-controller="<?php echo $instance ?>Ctrl">
+		ng-controller="<?php echo $instance ?>">
 
 		<!-- TITLE -->
 		<label class="inner" for="<?php echo $this->get_field_id( 'show_title' ); ?>">
