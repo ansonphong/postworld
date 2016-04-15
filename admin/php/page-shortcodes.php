@@ -38,7 +38,7 @@ pw_print_ng_controller(array(
 		
 		<hr class="thick">
 
-		<div class="pw-row">
+		<div class="pw-row pw-cloak">
 
 			<!-- ///// ITEMS MENU ///// -->
 			<div class="pw-col-3">

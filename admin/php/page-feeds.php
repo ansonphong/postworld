@@ -36,7 +36,6 @@ $get_contexts = array(
 	'post-type'
 	);
 
-
 pw_print_ng_controller(array(
 	'app' => 'postworldAdmin',
 	'controller' => 'pwFeedsDataCtrl',
@@ -53,15 +52,12 @@ pw_print_ng_controller(array(
 
 ?>
 
-<div class="postworld feeds wrap" ng-cloak>
+<div class="postworld feeds wrap">
 	<div
 		pw-admin
 		pw-admin-feeds
 		pw-feed-options
-		ng-controller="pwFeedsDataCtrl"
-		ng-cloak>
-
-		<!--{{taxTerms}}-->
+		ng-controller="pwFeedsDataCtrl">
 		
 		<h1>
 			<i class="pwi-th-list"></i>
@@ -73,7 +69,7 @@ pw_print_ng_controller(array(
 
 		<hr class="thick">
 
-		<div class="pw-row">
+		<div class="pw-row pw-cloak">
 
 			<!-- ///// ITEMS MENU ///// -->
 			<div class="pw-col-3">

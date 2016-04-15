@@ -8,10 +8,7 @@ pw_print_ng_controller(array(
 	));
 ?>
 
-<div
-	class="postworld sidebars wrap"
-	pw-ui
-	ng-cloak>
+<div class="postworld postworld-sidebars wrap" pw-ui>
 	<div
 		pw-admin
 		pw-admin-sidebars
@@ -26,7 +23,7 @@ pw_print_ng_controller(array(
 		
 		<hr class="thick">
 
-		<div class="pw-row">
+		<div class="pw-row pw-cloak">
 
 			<!-- ///// ITEMS MENU ///// -->
 			<div class="pw-col-3">

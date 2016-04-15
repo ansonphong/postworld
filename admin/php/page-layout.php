@@ -11,7 +11,7 @@ pw_print_ng_controller(array(
 	));
 ?>
 
-<div class="layout wrap postworld" ng-cloak>
+<div class="postworld postworld-layout wrap">
 	<h1>
 		<i class="pwi-th-large"></i>
 		<?php _e( 'Layouts', 'postworld' ) ?>
@@ -20,7 +20,7 @@ pw_print_ng_controller(array(
 	<div
 		pw-admin-layout
 		ng-controller="pwAdminLayoutDataCtrl"
-		ng-cloak>
+		class="pw-cloak">
 
 		<table class="form-table">
 			<tr ng-repeat="context in pwLayoutOptions.contexts"

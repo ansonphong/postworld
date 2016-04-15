@@ -9,7 +9,7 @@ pw_print_ng_controller(array(
 	));
 ?>
 
-<div class="postworld wrap social postworld-social" ng-cloak>
+<div class="postworld postworld-social wrap social">
 
 	<h1>
 		<i class="pwi-profile"></i>
@@ -23,7 +23,7 @@ pw_print_ng_controller(array(
 		pw-admin-social
 		pw-ui
 		ng-controller="pwSocialDataCtrl"
-		ng-cloak>
+		class="pw-cloak">
 
 		<!-- SHARE SOCIAL -->
 		<div class="well">

@@ -1,3 +1,7 @@
+jQuery( document ).ready(function() {
+	jQuery('head').append('<style type="text/css">.pw-cloak{opacity:1 !important;}</style>');
+});
+
 postworldAdmin.directive( 'pwAdmin', function(){
 	return {
 		restrict: 'A',

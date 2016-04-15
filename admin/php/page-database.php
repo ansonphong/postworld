@@ -28,7 +28,6 @@ pw_print_ng_controller(array(
 	pw-admin
 	pw-admin-database
 	ng-controller="pwDatabaseDataCtrl"
-	ng-cloak
 	pw-ui
 	class="postworld">
 
@@ -39,7 +38,7 @@ pw_print_ng_controller(array(
 
 	<hr class="thick">
 
-	<div class="row">
+	<div class="row pw-cloak">
 		<div class="col-md-6 pad-col-md">
 
 			<div class="well">

@@ -15,7 +15,7 @@ pw_print_ng_controller(array(
 	'vars' => array(
 		'pwSiteOptions' => $pwSiteOptions,
 		'pwHeaderCode' => $pw_header_code,
-		'images' => array('_'=>0),
+		'images' => array( '_' => 0 ),
 		'memoryOptions' => apply_filters('pw_options_site_memory',array()),
 		'postworldModeOptions' => apply_filters('pw_options_postworld_mode',array()),
 
@@ -24,15 +24,13 @@ pw_print_ng_controller(array(
 
 ?>
 
-<div pw-admin-options class="main wrap postworld" ng-cloak>
+<div pw-admin-options class="main wrap postworld">
 	<h1>
 		<i class="pwi-gear"></i>
 		<?php _e('Site Options','module','postworld') ?>
 	</h1>
 	
-	<div
-		ng-cloak
-		ng-controller="pwOptionsDataCtrl">
+	<div ng-controller="pwOptionsDataCtrl" class="pw-cloak">
 
 		<!--///// THEME OPTIONS /////-->
 		<hr class="thick">

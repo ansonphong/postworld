@@ -12,7 +12,7 @@ pw_print_ng_controller(array(
 	));
 
 ?>
-<div class="postworld wrap social" ng-cloak>
+<div class="postworld wrap social">
 	<h1>
 		<i class="pwi-bubbles"></i>
 		<?php _e('Comments', 'postworld') ?>
@@ -22,7 +22,7 @@ pw_print_ng_controller(array(
 	<div
 		pw-admin-comments
 		ng-controller="pwCommentsDataCtrl"
-		ng-cloak>
+		class="pw-cloak">
 
 		<div class="row">
 

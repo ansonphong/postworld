@@ -46,6 +46,13 @@
 	///// WIDGETS /////
 	@import 'widgets.less';
 
+
+	&.pw-cloak, .pw-cloak{
+		transition: .5s ease all;
+		opacity: 0;
+	}
+
+
 	&.postworld-social{
 		.share-networks{
 			input{
@@ -180,6 +187,11 @@
 
 		&.flush-top{
 			margin-top:0;
+		}
+
+		.well .small{
+			display: inline-block;
+			padding: 0;
 		}
 
 	}

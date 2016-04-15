@@ -25,8 +25,7 @@ pw_print_ng_controller(array(
 	<div
 		pw-admin
 		pw-admin-backgrounds
-		ng-controller="pwBackgroundsDataCtrl"
-		ng-cloak>
+		ng-controller="pwBackgroundsDataCtrl">
 		<h1>
 			<i class="pwi-paint-format"></i>
 			<?php _e( 'Backgrounds', 'postworld' ) ?>
@@ -37,7 +36,7 @@ pw_print_ng_controller(array(
 
 		<hr class="thick">
 
-		<div class="pw-row">
+		<div class="pw-row pw-cloak">
 
 			<!-- ///// ITEMS MENU ///// -->
 			<div class="pw-col-2">
@@ -221,7 +220,6 @@ pw_print_ng_controller(array(
 				</div>
 			</div>
 		<?php endif; ?>
-
 
 	</div>
 
