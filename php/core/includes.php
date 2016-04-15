@@ -583,8 +583,6 @@ function pwBootstrapPostworldAdmin_print() {
 	//if( !$do_boostrap  )
 	//	return false;
 
-	pw_log('pwBootstrapPostworldAdmin_print');
-
 	if( is_admin() ):
 		// Add missing action attributes to form elements
 		pw_add_forms_action_attribute();

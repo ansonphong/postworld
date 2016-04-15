@@ -75,7 +75,7 @@ function pw_query_posts_join( $join, $this ){
 		$join = 'JOIN ' . $wpdb->pw_prefix.'post_meta ON '.$wpdb->prefix.'posts.ID = '.$wpdb->pw_prefix.'post_meta.post_id';
 	}
 
-	pw_log( 'QUERY : JOIN', $join );
+	//pw_log( 'QUERY : JOIN', $join );
 	
 	return $join;
 }
@@ -101,7 +101,8 @@ function pw_query_posts_orderby( $orderby, $this ){
 		$orderby = $wpdb->pw_prefix.'post_meta'.".".$query['orderby']." ".$query['order'];	
 	}
 
-	pw_log( 'QUERY : ORDER BY', $orderby );
+	//pw_log( 'QUERY : ORDER BY', $orderby );
+	
 	return $orderby;
 }
 
@@ -184,7 +185,7 @@ function pw_query_posts_where( $where, $this ){
 	$time_query = pw_prepare_time_query( $query );
 	$where = pw_query_combine_where_clauses( $where, $time_query );
 	
-	pw_log('TIME QUERY', $time_query);
+	//pw_log('TIME QUERY', $time_query);
 
 	/**
 	 * Add custom where clause based on GEO query vars
@@ -192,10 +193,8 @@ function pw_query_posts_where( $where, $this ){
 	$geo_query = pw_prepare_geo_query( $query );
 	$where = pw_query_combine_where_clauses( $where, $geo_query );
 
-	pw_log('TIME QUERY', $geo_query);
-
-
-	pw_log('WHERE CLAUSE', $where);
+	//pw_log('TIME QUERY', $geo_query);
+	//pw_log('WHERE CLAUSE', $where);
 
 	return $where;
 }
