@@ -9,8 +9,6 @@
 	});
 </script>
 
-<?php //echo json_encode($pwAvatar) ?>
-
 <h3><i class="pwi-postworld"></i> Avatar</h3>
 
 <div>

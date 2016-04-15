@@ -14,16 +14,6 @@
 		));
 
 ?>
-<?php /*
-<script type="text/javascript">
-	jQuery( document ).ready(function() {
-		postworldAdmin.controller( '<?php echo $controller_id ?>', function( $scope ){
-			var className = <?php echo json_encode( $vars['field']['meta_value'] ) ?>;
-			$scope.iconObj = { className: className };
-		});
-	});
-</script>
-*/ ?>
 
 <tr class="postworld form-field" ng-controller="<?php echo $controller_id ?>">
 	<th scope="row" valign="top">
