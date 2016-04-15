@@ -154,10 +154,6 @@
 
 			</div>
 
-			<!--
-			<hr class="thin">
-			{{ settings }}
-			-->
 		</div>
 
 		<hr class="thin">
