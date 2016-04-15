@@ -262,8 +262,7 @@
 		<div class="pw-col-3">
 
 			<label for="select-feature_term" class="inner">
-				<i class="pwi-search"></i>
-				<?php _ex( 'Term', 'as in taxonomy term', 'postworld' ) ?>
+				<?php _ex( 'Term(s)', 'as in taxonomy term', 'postworld' ) ?>
 			</label>
 			<select
 				class="labeled"
@@ -271,9 +270,6 @@
 				ng-model="taxQuery.terms"
 				ng-options="term.term_id as term.name group by term.parent_name for term in taxTerms[ taxQuery.taxonomy ].terms"
 				multiple>
-				<option value="">
-					<?php _ex( 'Select Term', 'as in taxonomy term', 'postworld' ) ?>
-				</option>
 			</select>
 
 		</div>

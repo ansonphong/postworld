@@ -40,7 +40,6 @@ if( empty( $show_templates ) ){
 <div class="postworld">
 	<div class="postworld-widget postworld-widget-term-feed">
 
-
 		<!-- TITLE -->
 		<label class="inner" for="<?php echo $this->get_field_id( 'show_title' ); ?>">
 			<input

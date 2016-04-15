@@ -4,18 +4,18 @@
  | | | / __|/ _ \ '__|
  | |_| \__ \  __/ |   
   \___/|___/\___|_|   
-                      
+					  
 ///// USER - ADMIN /////*/
 ?>
 <?php
 	$instance = 'pwUserWidget_'.pw_random_string(8);
 	if ( isset( $options[ 'title' ] ) ) {
-		  $title = $options[ 'title' ];
+			$title = $options[ 'title' ];
 		}
 		else {
-		  $title = __( 'Widget', 'text_domain' );
+			$title = __( 'Widget', 'text_domain' );
 		}
-	extract($options);
+	extract( $options );
 ?>
 
 <!--///// METABOX SCRIPTS /////-->
@@ -24,8 +24,7 @@
 	console.log( 'Init User Widget Script : ' + '<?php echo $instance ?>' );
 
 	///// CONTROLLER /////
-	postworldAdmin.controller('<?php echo $instance ?>Ctrl',
-		['$scope', '$pwData', '$_', '$log',
+	postworldAdmin.controller('<?php echo $instance ?>',
 		function( $scope, $pwData, $_, $log ) {
 
 			$log.debug( 'Init User Widget Controller : ' + '<?php echo $instance ?>' );
@@ -59,9 +58,9 @@
 				$scope.user = {};
 			}
 
-	}]);
+	});
 
-	pwRegisterController( '<?php echo $instance ?>Ctrl', 'postworldAdmin' );
+	pwRegisterController( '<?php echo $instance ?>', 'postworldAdmin' );
 	pwCompileElement( 'body', '<?php echo $instance ?>' );
 
 </script>
@@ -71,10 +70,10 @@
 	class="postworld">
 	<div
 		class="postworld-widget postworld-widget-user"
-		ng-controller="<?php echo $instance ?>Ctrl">
+		ng-controller="<?php echo $instance ?>">
 
 		<!-- TITLE -->
-		<label for="<?php echo $this->get_field_id( 'title' ); ?>">
+		<label class="inner" for="<?php echo $this->get_field_id( 'show_title' ); ?>">
 			<input
 				type="checkbox"
 				value="1"
@@ -85,7 +84,7 @@
 			<?php _e( 'title', 'title of widget', 'postworld' ); ?>
 		</label>
 		<input
-			class="widefat"
+			class="labeled"
 			id="<?php echo $this->get_field_id( 'title' ); ?>"
 			name="<?php echo $this->get_field_name( 'title' ); ?>"
 			type="text" value="<?php echo esc_attr( $title ); ?>" />
@@ -101,18 +100,26 @@
 					uib-btn-radio="option.slug">
 					{{ option.name }}
 				</label>
-		    </div>
-		    
-		    <!-- SELECT : SPECIFIC USER -->
-			<div ng-show="settings.user_select == 'user_id'">
+			</div>
+			
+			<!-- SELECT : CURRENT USER -->
+			<div ng-if="settings.user_select == 'current_author'">
+				<hr class="thin">
+				<small>
+					The author of the currently viewed page will be shown.
+				</small>
+			</div>
+
+			<!-- SELECT : SPECIFIC USER -->
+			<div ng-if="settings.user_select == 'user_id'">
 				
 				<hr class="thin">
 
 				<!-- SELECT : SELECTED A USER -->
 				<div ng-hide="userIsSelected()">
 
-		         	<div class="labeled">
-						<label class="inner">Select User</label>
+					<div class="labeled">
+						<label class="inner">Type Username</label>
 						<span class='container-fluid'>
 							<?php echo pw_select_user_autocomplete(array(
 								'class'		=>	'labeled',
@@ -151,16 +158,21 @@
 			<hr class="thin">
 			{{ settings }}
 			-->
-	   </div>
-
-	   	<!-- SELECT -->
-		<div class="type-wrapper">
-			<b>View :</b> 
-			<select
-				ng-options="key as key for (key , value) in viewOptions"
-				ng-model="settings.view">
-			</select>
 		</div>
+
+		<hr class="thin">
+
+		<!-- SELECT -->
+		<label
+			for="<?php echo $this->get_field_id('taxonomy'); ?>"
+			class="inner">
+			View
+		</label>
+		<select
+			class="labeled"
+			ng-options="key as key for (key , value) in viewOptions"
+			ng-model="settings.view">
+		</select>
 
 		<!-- HIDDEN INPUTS -->
 		<input
