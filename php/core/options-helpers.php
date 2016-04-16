@@ -38,6 +38,7 @@ function pw_site_logo( $size = 'full', $format = 'url' ){
 
 
 function pw_site_favicon( $size = 'thumbnail' ){
+	// Depreciated -- Use native WordPress customizer
 
 	return pw_get_image_option(
 		array(

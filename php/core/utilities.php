@@ -41,7 +41,11 @@ function pw_make_ng_controller( $vars = array() ){
 
 	$output .= $vars['app'].".controller('".$vars['controller']."',function(\$scope){\n";
 	foreach( $vars['vars'] as $key => $value ){
-		$output .= "\$scope.".$key." = ".json_encode($value).";\n";
+		if( is_string( $value ) )
+			$print_value = $value;
+		else 
+			$print_value = json_encode($value);
+		$output .= "\$scope.".$key." = ".$print_value.";\n";
 	}
 	$output .= "})\n";
 

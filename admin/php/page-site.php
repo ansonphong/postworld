@@ -10,7 +10,7 @@ if( empty($pwSiteOptions) )
 $pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
 
 pw_print_ng_controller(array(
-	'app' => 'postworld',
+	'app' => 'postworldAdmin',
 	'controller' => 'pwOptionsDataCtrl',
 	'vars' => array(
 		'pwSiteOptions' => $pwSiteOptions,
@@ -38,6 +38,12 @@ pw_print_ng_controller(array(
 		<div class="row">
 			<div class="col-sm-6 pad-col-md">
 
+				<?php
+				/**
+				 * This is now natively supported by WordPress core
+				 * In the theme customizer
+				 */
+				/*
 				<!-- FAVICON -->
 				<div class="well">
 					<div class="save-right">
@@ -60,6 +66,8 @@ pw_print_ng_controller(array(
 							 	));?>
 					</div>
 				</div>
+
+				*/ ?>
 
 				<!-- AVATAR IMAGE -->
 				<div class="well">
