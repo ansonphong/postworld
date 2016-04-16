@@ -28,7 +28,7 @@ function pw_mode(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.56,
+		'version'		=>	1.57,
 		'db_version'	=>	1.29,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -303,11 +303,15 @@ include 'php/core/menus.php';
 ////// DEV //////
 include 'php/core/dev.php';
 
+////// CUSTOMIZE //////
+include 'php/core/customize.php';
+
 ////// ADMIN //////
 include 'admin/postworld_admin.php';
 
 ////// ADMIN OPITONS //////
 include 'admin/php/admin.php';
+
 
 ////// MODULES //////
 include 'php/modules/site/postworld-site.php';

@@ -7,6 +7,16 @@
 ///////////////////////////////////////*/
 /// General/global utility functions ///
 
+
+
+function pw_typecast_if_boolean( $value ){
+	if( $value == 'true' )
+		$value = true;
+	elseif( $value == 'false' )
+		$value = false;
+	return $value; 
+}
+
 /**
  * Prints pre-defined scripts to the footer
  */
@@ -41,10 +51,7 @@ function pw_make_ng_controller( $vars = array() ){
 
 	$output .= $vars['app'].".controller('".$vars['controller']."',function(\$scope){\n";
 	foreach( $vars['vars'] as $key => $value ){
-		if( is_string( $value ) )
-			$print_value = $value;
-		else 
-			$print_value = json_encode($value);
+		$print_value = json_encode($value);
 		$output .= "\$scope.".$key." = ".$print_value.";\n";
 	}
 	$output .= "})\n";

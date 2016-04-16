@@ -7,7 +7,7 @@ $pwSiteOptions = pw_get_option( array( 'option_name' => PW_OPTIONS_SITE ) );
 if( empty($pwSiteOptions) )
 	$pwSiteOptions = array( '_' => 0 );
 
-$pw_header_code = json_encode( get_option( PW_OPTIONS_HEADER_CODE, '' ) );
+$pw_header_code = get_option( PW_OPTIONS_HEADER_CODE, '' );
 
 pw_print_ng_controller(array(
 	'app' => 'postworldAdmin',
