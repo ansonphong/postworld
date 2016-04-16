@@ -1801,21 +1801,6 @@ function pw_array_order_by(){
 }
 
 
-/**
- * Reset the LESS cache by updating updated time
- * on a ghost file. Include this ghost file in any LESS file.
- * Call this function after changing dynamic style variables.
- */
-function pw_reset_less_php_cache(){
-	//global $pwGlobalsJsFile;
-	$ghost_less_file = POSTWORLD_PATH .'/less/ghost.less';
-	$file = fopen( $ghost_less_file ,"w" );
-	fwrite($file,"// Reset PHP LESS Cache"); // . date("Y-m-d H:i:s"));
-	fclose($file);
-	//if( file_exists( $pwGlobalsJsFile ) )
-	//	chmod($pwGlobalsJsFile, 0755);
-	return true;
-}
 
 
 function pw_in_string( $haystack, $needle ){

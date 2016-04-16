@@ -1,5 +1,26 @@
 <?php
 
+function pw_sanitize_color_value( $value ){
+	pw_reset_less_php_cache();
+	return $value;
+}
+
+/**
+ * Reset the LESS cache by updating updated time
+ * on a ghost file. Include this ghost file in any LESS file.
+ * Call this function after changing dynamic style variables.
+ */
+function pw_reset_less_php_cache(){
+	//global $pwGlobalsJsFile;
+	$ghost_less_file = POSTWORLD_PATH .'/less/ghost.less';
+	$file = fopen( $ghost_less_file ,"w" );
+	fwrite($file,"// Reset PHP LESS Cache"); // . date("Y-m-d H:i:s"));
+	fclose($file);
+	//if( file_exists( $pwGlobalsJsFile ) )
+	//	chmod($pwGlobalsJsFile, 0755);
+	return true;
+}
+
 // Prepare URL for Less Variable
 function pw_less_prepare_url( $url ){
 	if( function_exists( 'pw_wrap_quotes' ) )  
@@ -96,5 +117,3 @@ function pw_inject_default_styles_DEV( $styles ){
 	return $styles;
 }
 */
-
-?>

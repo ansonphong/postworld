@@ -1,5 +1,46 @@
 <?php
 
+/**
+ * Make a constant definition so that theme functionality can be altered
+ * Depending on if WordPress is doing a customize preview.
+ */
+add_action('customize_preview_init','pw_customize_preview_init');
+function pw_customize_preview_init(){
+	if( !defined( 'PW_DOING_CUSTOMIZER' ) )
+		define( 'PW_DOING_CUSTOMIZER', true );
+}
+
+
+/**
+ * Automates the process of properly adding a WP Customizer
+ * setting and control for color values.
+ *
+ * Assumes that the color is stored in 
+ */
+function pw_wp_customize_add_color_setting( $wp_customize, $vars ){
+
+	$setting_id = $vars['option_definition'].'['.$vars['subkey'].']';
+
+	$wp_customize->add_setting( $setting_id, array(
+		'default' => pw_grab_option( constant( $vars['option_definition'] ), $vars['subkey'] ),
+		'type' => 'postworld',
+		'capability' => 'edit_theme_options',
+		'transport' => '',
+		'sanitize_callback' => 'pw_sanitize_color_value',
+	));
+	$wp_customize->add_control( new WP_Customize_Color_Control($wp_customize, $vars['subkey'], array(
+		'label'    => $vars['label'],
+		'description' => _get($vars,'description'),
+		'section'  => $vars['section'],
+		'settings' => $setting_id,
+	)));
+
+}
+
+
+/**
+ * This happens upon saving & publishing customized settings.
+ */
 add_action( 'customize_update_postworld', 'pw_customize_update', 10, 2 );
 function pw_customize_update( $value, $setting ){
 	
@@ -17,14 +58,14 @@ function pw_customize_update( $value, $setting ){
 		'value' => $value,
 		) );
 
-
+	/*
 	pw_log( 'pw_customize_update : value', $value );
 	pw_log( 'pw_customize_update : value type', gettype($value) );
 	pw_log( 'pw_customize_update : setting', $setting );
 	pw_log( 'pw_customize_update : setting->id', $setting->id );
 	pw_log( 'pw_customize_update : setting->value()', $setting->value() );
 	pw_log( 'pw_customize_update : setting->post_value()', $setting->post_value() );
-	
+	*/
 
 }
 
