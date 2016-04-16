@@ -92,6 +92,45 @@ pw_print_ng_controller(array(
 					</div>
 				</div>
 
+				<!-- WORDPRESS CORE -->
+				<div class="well">
+					<div class="save-right">
+						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+					</div>
+					<h2>
+						<span class="icon-md"><i class="pwi-wordpress"></i></span>
+						<?php _e('WordPress Core','postworld') ?>
+					</h2>
+					<div class="well">
+						<label>
+							<input type="checkbox" ng-model="pwSiteOptions.wp_core.disable_wp_emojicons">
+							<b><?php _e('Disable WP Emojicons','postworld') ?></b>
+							<small><?php _e('Increases load speed.','postworld') ?></small>
+						</label>
+					</div>
+				</div>
+
+
+				<div class="well">
+					<div class="save-right">
+						<?php pw_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
+					</div>
+					<h2>
+						<i class="pwi-code"></i>
+						<?php _e('Header Code','postworld') ?>
+					</h2>
+					<small>
+						<?php _e('This code will be inserted into the page header. Here is a good place to post tracking codes such as Google Analytics, or third-party additions.','postworld') ?>
+					</small>
+					<hr class="thin">
+					<div>
+						<textarea
+							msd-elastic
+							class="form-control"
+							ng-model="pwHeaderCode"></textarea>
+					</div>
+				</div>
+
 			</div>
 			<div class="col-sm-6 pad-col-md">
 				
@@ -142,24 +181,6 @@ pw_print_ng_controller(array(
 					</div>
 				</div>
 
-				<!-- WORDPRESS CORE -->
-				<div class="well">
-					<div class="save-right">
-						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
-					</div>
-					<h2>
-						<span class="icon-md"><i class="pwi-wordpress"></i></span>
-						<?php _e('WordPress Core','postworld') ?>
-					</h2>
-					<div class="well">
-						<label>
-							<input type="checkbox" ng-model="pwSiteOptions.wp_core.disable_wp_emojicons">
-							<b><?php _e('Disable WP Emojicons','postworld') ?></b>
-							<small><?php _e('Increases load speed.','postworld') ?></small>
-						</label>
-					</div>
-				</div>
-
 				<!-- POSTWORLD MODE -->
 				<div class="well">
 					<div class="save-right">
@@ -184,25 +205,6 @@ pw_print_ng_controller(array(
 			</div>
 		</div>
 
-		<div class="well">
-			<div class="save-right">
-				<?php pw_save_option_button( PW_OPTIONS_HEADER_CODE, 'pwHeaderCode'); ?>
-			</div>
-			<h2>
-				<i class="pwi-code"></i>
-				<?php _e('Header Code','postworld') ?>
-			</h2>
-			<small>
-				<?php _e('This code will be inserted into the page header. Here is a good place to post tracking codes such as Google Analytics, or third-party additions.','postworld') ?>
-			</small>
-			<hr class="thin">
-			<div>
-				<textarea
-					msd-elastic
-					class="form-control"
-					ng-model="pwHeaderCode"></textarea>
-			</div>
-		</div>
 
 		<?php if( pw_dev_mode() ): ?>
 			<hr class="thick">
