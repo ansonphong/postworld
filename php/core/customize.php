@@ -2,9 +2,29 @@
 
 add_action( 'customize_update_postworld', 'pw_customize_update', 10, 2 );
 function pw_customize_update( $value, $setting ){
+	
+	// Extract the option definition from the setting ID
+	$option_definition = pw_extract_option_definition( $setting->id );
+
+	// If malformed ID, or undefined option, end here
+	if( $option_definition === false )
+		return false;
+
+	// Set the value into the Database
+	pw_set_option( array(
+		'option_name' => $option_definition['option_name'],
+		'key' => $option_definition['key'],
+		'value' => $value,
+		) );
+
 
 	pw_log( 'pw_customize_update : value', $value );
+	pw_log( 'pw_customize_update : value type', gettype($value) );
 	pw_log( 'pw_customize_update : setting', $setting );
+	pw_log( 'pw_customize_update : setting->id', $setting->id );
+	pw_log( 'pw_customize_update : setting->value()', $setting->value() );
+	pw_log( 'pw_customize_update : setting->post_value()', $setting->post_value() );
+	
 
 }
 
@@ -18,7 +38,7 @@ function pw_customize_update( $value, $setting ){
  */
 add_action( 'customize_preview_postworld', 'pw_customize_preview', 10, 2 );
 function pw_customize_preview( $setting ){
-	pw_log( 'pw_customize_preview : setting -> id', $setting->id );
+	//pw_log( 'pw_customize_preview : setting -> id', $setting->id );
 	
 	/**
 	 * Get and sanitize the value

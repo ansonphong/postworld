@@ -724,8 +724,8 @@ function pw_set_option( $vars ){
 	*/
 
 	// If no option name or value is set, return
-	if( empty( $vars['option_name'] ) || 
-		empty( $vars['value'] ) )
+	if( !isset( $vars['option_name'] ) || 
+		!isset( $vars['value'] ) )
 		return false;
 
 	extract($vars);
