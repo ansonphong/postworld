@@ -26,11 +26,11 @@ class PW_Customize_Manager{
 	/**
 	 * Automates the process of properly adding a WP Customizer
 	 * setting and control for regular setting types.
-	 * text | select | checkbox
+	 * text | select | checkbox | etc...
 	 */
 	public function add_control_setting( $wp_customize, $vars ){
 
-		// Require fields
+		// Required fields
 		if( !isset( $vars['option_definition'] ) ||
 			!isset( $vars['subkey'] ) ||
 			!isset( $vars['type'] ) ||
@@ -39,6 +39,9 @@ class PW_Customize_Manager{
 
 		// Get the default value from the database
 		$default_value = pw_grab_option( constant( $vars['option_definition'] ), $vars['subkey'] );
+
+		if( $vars['subkey'] == 'colors.header.header-background-opacity' )
+			pw_log( 'colors.header.header-background-opacity', $default_value );
 
 		// Set default variables
 		$default_vars = array(
@@ -54,7 +57,10 @@ class PW_Customize_Manager{
 			);
 		$vars = array_replace( $default_vars, $vars );
 
+		// Define the shared setting ID
 		$setting_id = $vars['option_definition'].'['.$vars['subkey'].']';
+
+		// Add the setting
 		$wp_customize->add_setting( $setting_id, array(
 			'type' 				=> 'postworld',
 			'default' 			=> $vars['default'],
@@ -63,6 +69,7 @@ class PW_Customize_Manager{
 			'sanitize_callback' => $vars['sanitize_callback'],
 		));
 
+		// Add the coorosponding control
 		$wp_customize->add_control( $setting_id, array(
 			'type'			=> $vars['type'],
 			'priority'		=> $vars['priority'],

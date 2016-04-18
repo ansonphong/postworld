@@ -41,6 +41,7 @@ function pw_less_vars( $vars, $handle ) {
 
 	////////// IMPORT STYLES //////////
 	$pwStyles = pw_get_option( array( 'option_name' => PW_OPTIONS_STYLES ) );
+	//pw_log( 'pwStyles', $pwStyles );
 
 	///// Bootstrap Vars /////
 	//$vars['body-bg'] = $pwStyles['element']['body']['background-color'];
@@ -66,7 +67,6 @@ function pw_less_vars( $vars, $handle ) {
 	}
 
 	///// Directory Paths /////
-
 	$vars['template-url'] = pw_less_prepare_url( get_template_directory_uri() ); 
 	$vars['theme-url'] = $vars['template-url'];
 	$vars['postworld-url'] = pw_less_prepare_url( pw_config('paths.postworld.url') );
