@@ -1,6 +1,7 @@
 <?php
 
-function pw_sanitize_color_value( $value ){
+function pw_sanitize_hex_color_value( $value ){
+	$value = sanitize_hex_color( $value );
 	pw_reset_less_php_cache();
 	return $value;
 }

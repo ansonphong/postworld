@@ -10,30 +10,36 @@ function pw_customize_preview_init(){
 		define( 'PW_DOING_CUSTOMIZER', true );
 }
 
-
 /**
- * Automates the process of properly adding a WP Customizer
- * setting and control for color values.
- *
- * Assumes that the color is stored in 
+ * Adds support to WP Customize for Postworld settings and methods.
  */
-function pw_wp_customize_add_color_setting( $wp_customize, $vars ){
+class PW_Customize_Manager{
 
-	$setting_id = $vars['option_definition'].'['.$vars['subkey'].']';
+	/**
+	 * Automates the process of properly adding a WP Customizer
+	 * setting and control for color values.
+	 *
+	 * Assumes that the color is stored in 
+	 */
+	public function add_color_setting( $wp_customize, $vars ){
 
-	$wp_customize->add_setting( $setting_id, array(
-		'default' => pw_grab_option( constant( $vars['option_definition'] ), $vars['subkey'] ),
-		'type' => 'postworld',
-		'capability' => 'edit_theme_options',
-		'transport' => '',
-		'sanitize_callback' => 'pw_sanitize_color_value',
-	));
-	$wp_customize->add_control( new WP_Customize_Color_Control($wp_customize, $vars['subkey'], array(
-		'label'    => $vars['label'],
-		'description' => _get($vars,'description'),
-		'section'  => $vars['section'],
-		'settings' => $setting_id,
-	)));
+		$setting_id = $vars['option_definition'].'['.$vars['subkey'].']';
+
+		$wp_customize->add_setting( $setting_id, array(
+			'default' => pw_grab_option( constant( $vars['option_definition'] ), $vars['subkey'] ),
+			'type' => 'postworld',
+			'capability' => 'edit_theme_options',
+			'transport' => '',
+			'sanitize_callback' => 'pw_sanitize_hex_color_value',
+		));
+		$wp_customize->add_control( new WP_Customize_Color_Control($wp_customize, $vars['subkey'], array(
+			'label'    => $vars['label'],
+			'description' => _get($vars,'description'),
+			'section'  => $vars['section'],
+			'settings' => $setting_id,
+		)));
+
+	}
 
 }
 
