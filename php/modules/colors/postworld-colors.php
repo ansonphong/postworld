@@ -23,7 +23,91 @@ class PW_Colors{
 
 	function __construct(){
 
+		add_filter( 'pw_colors_get_color_tags_'.'hex', array( $this, 'generate_color_tags_hex' ), 10, 2 );
+
+		add_filter( 'pw_colors_get_color_tags_'.'obj', array( $this, 'generate_color_tags_obj' ), 10, 2 );
+
 	}
+
+	/**
+	 * Generate Color Tags from Hexidecimal values.
+	 * Basically, converts hexdecimal value into color object and passes to object filter.
+	 */
+	public function generate_color_tags_hex( $tags, $color ){
+		$obj = $this->hex_to_obj( $color );
+		return apply_filters( 'pw_colors_get_color_tags_'.'obj', $tags, $obj );
+	}
+
+
+	/**
+	 * Generate Color Tags from Color Object.
+	 *
+	 * @param array $tags An array of tags being filtered.
+	 * @param array $color A multi-dimentional array of cross-sections of the same color value
+	 *		@example array( 'hex' => '#000', 'hsl' => array(0,0,0) )
+	 * @return An array of filtered color tags.
+	 */
+	public function generate_color_tags_obj( $tags, $color ){
+
+
+		/**
+		 * TAGS FROM RGB
+		 *
+		 * @todo Add more tags here, for green, blue, aqua, maroon, etc...
+		 */
+		$red = $color['rgb'][0];
+		$green = $color['rgb'][1];
+		$blue = $color['rgb'][2];
+
+		// RED
+		if( $red > (($green+$blue)*2) )
+			$tags[] = 'red';
+
+
+
+		/**
+		 * TAGS FROM HSL
+		 */
+		$hue = $color['hsl'][0]; 			// (0-360)
+		$saturation = $color['hsl'][1]; 	// (0-1)
+		$lightness = $color['hsl'][2]; 		// (0-1)
+
+		/**
+		 * HUE TAGS
+		 */
+		if( $saturation > 0 ){
+			if( ($hue > 274 && $hue < 360) || ($hue >= 0 && $hue <= 48 ) )
+				$tags[] = 'warm';
+			else
+				$tags[] = 'cool';
+		}
+
+		/**
+		 * SATURATION TAGS
+		 */
+		if( $saturation >= .666 )
+			$tags[] = 'saturated';
+		if( $saturation <= .333 )
+			$tags[] = 'desaturated';
+
+		/**
+		 * LIGHTNESS TAGS
+		 */
+		if( $lightness > 0.5 )
+			$tags[] = 'light';
+		else
+			$tags[] = 'dark';
+
+		if( $lightness >= 0.75 )
+			$tags[] = 'lighter';
+
+		if( $lightness <= 0.25 )
+			$tags[] = 'darker';
+
+		return $tags;
+
+	}
+
 
 	/**
 	 * Uses PHP League's ColorExtractor class to
@@ -478,8 +562,25 @@ class PW_Colors{
 
 	}
 
-	public function get_color_tags(){
+	/**
+	 * Enabled for a flexible self-generated type-based color tagging system.
+	 * 
+	 * @param $color The color value, in the color value type defined in the second parameter.
+	 * @param $type The type of color data being passed.
+	 */
+	public function get_color_tags( $color, $type = 'hex' ){
+		return apply_filters( 'pw_colors_get_color_tags_'.$type, array(), $color );
+	}
 
+	/**
+	 * Converts a hexidecimal color value into a multi-dimensional color array.
+	 */
+	public function hex_to_obj( $hex ){
+		return array(
+			'hex' 	=>	$hex,
+			'hsl' 	=>	$this->hex_to_hsl( $hex ),
+			'rgb'	=>	$this->hex_to_rgb( $hex ),
+			);
 	}
 
 	/**

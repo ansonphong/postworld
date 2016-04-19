@@ -40,9 +40,6 @@ class PW_Customize_Manager{
 		// Get the default value from the database
 		$default_value = pw_grab_option( constant( $vars['option_definition'] ), $vars['subkey'] );
 
-		if( $vars['subkey'] == 'colors.header.header-background-opacity' )
-			pw_log( 'colors.header.header-background-opacity', $default_value );
-
 		// Set default variables
 		$default_vars = array(
 			'default'			=>	$default_value,
