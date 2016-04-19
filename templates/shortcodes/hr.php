@@ -1,1 +1,1 @@
-<hr>
+<hr class="<?php echo _get($atts,'class') ?>">
