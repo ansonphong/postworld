@@ -360,7 +360,12 @@ function pw_set_wp_postmeta($vars){
 /**
  * Wrapper function to make pw_get_wp_postmeta easier to use.
  */
-function pw_grab_postmeta( $post_id, $meta_key, $sub_key ){
+function pw_grab_postmeta( $post_id = 0, $meta_key = PW_POSTMETA_KEY, $sub_key = null ){
+	if( $post_id === 0 ){
+		global $post;
+		$post_id = $post->ID;
+	}
+
 	return pw_get_wp_postmeta( array(
 		"post_id"	=>	$post_id,
 		"meta_key" 	=>	$meta_key,
@@ -384,7 +389,7 @@ function pw_get_wp_postmeta($vars){
 
 	///// SET DEFAULTS /////
 	if( !isset( $vars['meta_key'] ) )
-		$vars['meta_key'] = pw_postmeta_key;
+		$vars['meta_key'] = PW_POSTMETA_KEY;
 
 	if( !isset( $vars['post_id'] ) ){
 		global $post;
