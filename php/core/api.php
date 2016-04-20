@@ -357,12 +357,23 @@ function pw_set_wp_postmeta($vars){
 
 }
 
+/**
+ * Wrapper function to make pw_get_wp_postmeta easier to use.
+ */
+function pw_grab_postmeta( $post_id, $meta_key, $sub_key ){
+	return pw_get_wp_postmeta( array(
+		"post_id"	=>	$post_id,
+		"meta_key" 	=>	$meta_key,
+		"sub_key"	=>	$sub_key
+		));
+}
 
+/**
+ * Gets meta key for the given post under the given key
+ * in the `wp_postmeta` table.
+ */
 function pw_get_wp_postmeta($vars){
 	/*
-	- Gets meta key for the given post under the given key
-		in the `wp_postmeta` table
-	
 		PARAMETERS:
 		$vars = array(
 			"post_id"	=>	[integer], 	(optional)
@@ -381,11 +392,6 @@ function pw_get_wp_postmeta($vars){
 	}
 
 	extract($vars);
-
-	///// USER ID /////
-	$user_id = pw_check_user_post( $post_id );
-	if( !is_numeric($post_id) )
-		return $post_id;
 
 	///// KEY /////
 	if( !isset($sub_key) )
