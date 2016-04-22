@@ -2,6 +2,8 @@
 /**
  * POSTWORLD SCRIPTS
  * Manages the concatination of multiple Javascript files.
+ *
+ * @todo Manage the deletion of cached JS files.
  */
 $GLOBALS['postworld_scripts'] = array();
 
