@@ -66,6 +66,7 @@ function postworld_includes( $vars ){
 		if( pw_mode() === 'deploy' ){
 
 			// DEPRECIATED METHOD
+			
 			/*
 			wp_enqueue_script(
 				'Masonry-JS',
@@ -74,6 +75,7 @@ function postworld_includes( $vars ){
 				$pw['info']['version'],
 				$in_footer);
 			*/
+			
 			
 			pw_register_script( array(
 				'group' => 'postworld',
@@ -131,17 +133,17 @@ function postworld_includes( $vars ){
 			// POSTWORLD
 
 			// DEPRECIATED METHOD
-
+			/*
 			wp_register_script(
 				"Postworld-Deploy",
 				POSTWORLD_URI.'/deploy/postworld.min.js',
 				array('underscore'),
 				$pw['info']['version'],
 				$in_footer );
-			//wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
+			wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
 			wp_enqueue_script(  'Postworld-Deploy' );
+			*/
 			
-			/*
 			pw_register_script( array(
 				'group' => 'postworld',
 				'handle' => 'postworld-core',
@@ -150,8 +152,7 @@ function postworld_includes( $vars ){
 				'in_footer' => $in_footer,
 				'priority' => 100,
 				));
-				*/
-
+			
 		}
 
 	}
@@ -236,7 +237,7 @@ function postworld_includes( $vars ){
 		
 		/////// POSTWORLD APP /////	
 		// TODO : blob through the dirs and get all the js files, auto-include in foreach
-		wp_enqueue_script( 	'pw-app-JS',
+		wp_enqueue_script( 	POSTWORLD_APP,
 			POSTWORLD_URI.'/js/app.js', $angularDep );
 
 		// COMPONENTS
@@ -396,7 +397,6 @@ function postworld_includes( $vars ){
 
 		if( pw_mode() === 'deploy' ){
 
-			
 			wp_enqueue_script( 'Postworld-Package-Angular-FullCalendar',
 				POSTWORLD_URI.'/deploy/package-angular-fullcalendar.min.js' );
 			
@@ -438,22 +438,24 @@ function postworld_includes( $vars ){
 
 		if( pw_mode() === 'deploy' ){
 
-			wp_enqueue_script(
+			
+			/*wp_enqueue_script(
 				'Postworld-Package-Angular-Moment',
 				POSTWORLD_URI.'/deploy/package-angular-moment.min.js',
 				array(),
 				$pw['info']['version'],
 				$in_footer
-				);
+				);*/
+				
 
-			/*
+			
 			pw_register_script( array(
 				'group' => 'postworld',
 				'handle' => 'package-angular-moment',
 				'file' => POSTWORLD_DIR . '/deploy/package-angular-moment.min.js',
 				'version' => $pw['info']['version'],
 				'priority' => 250,
-				));*/
+				));
 
 
 		}
@@ -492,16 +494,15 @@ function postworld_includes( $vars ){
 	if( in_array( 'package-touch', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
 
-			
+			/*
 			wp_enqueue_script(
 				'Postworld-Package-Touch',
 				POSTWORLD_URI.'/deploy/package-touch.min.js',
 				array(),
 				$pw['info']['version'],
 				$in_footer );
+			*/
 			
-
-			/*
 			pw_register_script( array(
 				'group' => 'postworld',
 				'handle' => 'package-touch',
@@ -509,7 +510,7 @@ function postworld_includes( $vars ){
 				'version' => $pw['info']['version'],
 				'priority' => 250,
 				));
-				*/
+				
 
 		}
 		else{
@@ -528,7 +529,7 @@ function postworld_includes( $vars ){
 		wp_enqueue_script(
 			'angular-bootstrap-colorpicker-js',
 			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
-			array(),
+			array('Postworld-Admin'),
 			$pw['info']['version'],
 			$in_footer );
 
@@ -693,7 +694,6 @@ function pwBootstrapPostworldAdmin_print() {
 				// Bootstrap Postworld AngularJS App
 				jQuery( document ).ready(function() {
 					angular.bootstrap(document, ['postworldAdmin']);
-					console.log('BOOTSTRAPPED ADMIN');
 				});
 			</script><?php
 
@@ -860,23 +860,24 @@ function pwSiteGlobals_include(){
 
 	// ENQUEUE SCRIPT
 	// DEPRECIATED METHOD
-	/*
-	wp_enqueue_script(
-		'pw-Config-JS',
-		POSTWORLD_URI . $globals_path,
-		array(),
-		hash( 'sha256', $pwJs ),
-		pw_config('includes.js.in_footer') );
-	*/
-
-	pw_register_script( array(
-		'group' => 'postworld',
-		'handle' => 'postworld-config',
-		'file' => POSTWORLD_DIR . $globals_path,
-		'version' => $pw['info']['version'],
-		'in_footer' => pw_config('includes.js.in_footer'),
-		'priority' => 200,
-		));
+	
+	if( pw_dev_mode() )
+		wp_enqueue_script(
+			'pw-Config-JS',
+			POSTWORLD_URI . $globals_path,
+			array( POSTWORLD_APP ),
+			hash( 'sha256', $pwJs ),
+			pw_config('includes.js.in_footer') );
+	else
+		pw_register_script( array(
+			'group' => 'postworld',
+			'handle' => 'postworld-config',
+			'file' => POSTWORLD_DIR . $globals_path,
+			'version' => $pw['info']['version'],
+			'in_footer' => pw_config('includes.js.in_footer'),
+			'priority' => 200,
+			));
+	
 
 	
 }

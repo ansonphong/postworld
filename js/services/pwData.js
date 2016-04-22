@@ -290,6 +290,7 @@ postworld.factory('$pwData', [ '$resource', '$http', '$q', '$log', '$window', '$
 			if( $pw.view['protocol'] == 'https' )
 				template = template.replace('http://', 'https://');
 
+			//$log.debug( '$pwData.getTemplate()', template );
 			return template;
 
 		},

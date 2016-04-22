@@ -12,6 +12,7 @@ License: GPL2
 define( 'POSTWORLD', true );
 define( 'POSTWORLD_DIR', dirname(__FILE__) );
 define( 'POSTWORLD_PATH', POSTWORLD_DIR );
+define( 'POSTWORLD_APP', 'postworld-app' );
 
 global $wpdb;
 $wpdb->pw_prefix = $wpdb->prefix . "postworld_";
