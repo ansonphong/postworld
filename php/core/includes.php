@@ -8,6 +8,10 @@
  *
  * @since 0.1
  */
+/**
+ * @todo Structure this in a modular way, where it's not spaghetti & codeballs
+ */
+
 function postworld_includes( $vars ){
 
 	$in_footer = pw_config('includes.js.in_footer');
@@ -60,12 +64,25 @@ function postworld_includes( $vars ){
 	// + MASONRY
 	if( in_array( 'masonry.js', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
+
+			// DEPRECIATED METHOD
+			/*
 			wp_enqueue_script(
 				'Masonry-JS',
 				POSTWORLD_URI.'/deploy/package-masonry.min.js',
 				array('underscore'),
 				$pw['info']['version'],
 				$in_footer);
+			*/
+			
+			pw_register_script( array(
+				'group' => 'postworld',
+				'handle' => 'package-masonry',
+				'file' => POSTWORLD_DIR . '/deploy/package-masonry.min.js',
+				'version' => $pw['info']['version'],
+				'priority' => 50,
+				));
+
 		}
 		else{
 			wp_enqueue_script( 'Masonry-JS',
@@ -101,7 +118,7 @@ function postworld_includes( $vars ){
 		global $angularDep;
 		$angularDep = array(
 			'underscore',
-			'Postworld-Deploy',
+			//'Postworld-Deploy',
 			);
 
 		wp_enqueue_script('underscore');
@@ -112,14 +129,26 @@ function postworld_includes( $vars ){
 		}
 		else{
 			// POSTWORLD
-			wp_register_script(
+
+			// DEPRECIATED METHOD
+			/*wp_register_script(
 				"Postworld-Deploy",
 				POSTWORLD_URI.'/deploy/postworld.min.js',
 				array('underscore'),
 				$pw['info']['version'],
-				$in_footer );
-			wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
-			wp_enqueue_script(  'Postworld-Deploy' );
+				$in_footer );*/
+			//wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
+			//wp_enqueue_script(  'Postworld-Deploy' );
+			
+			pw_register_script( array(
+				'group' => 'postworld',
+				'handle' => 'postworld-core',
+				'file' => POSTWORLD_DIR . '/deploy/postworld.min.js',
+				'version' => $pw['info']['version'],
+				'in_footer' => $in_footer,
+				'priority' => 100,
+				));
+
 		}
 
 	}
@@ -363,10 +392,22 @@ function postworld_includes( $vars ){
 	if( in_array( 'ui.calendar', $pw['inject'] ) ){
 
 		if( pw_mode() === 'deploy' ){
+
+			
 			wp_enqueue_script( 'Postworld-Package-Angular-FullCalendar',
 				POSTWORLD_URI.'/deploy/package-angular-fullcalendar.min.js' );
-		}
-		else{
+			
+			/*
+			pw_register_script( array(
+				'group' => 'postworld',
+				'handle' => 'package-angular-fullcalendar',
+				'file' => POSTWORLD_DIR . '/deploy/package-angular-fullcalendar.min.js',
+				'version' => $pw['info']['version'],
+				'priority' => 250,
+				));
+			*/
+
+		} else{
 			// Full Calendar
 			wp_enqueue_script( 'Full-Calendar-Moment-JS',
 				POSTWORLD_URI.'/lib/fullcalendar-2.2.5/lib/moment.min.js' );
@@ -393,13 +434,24 @@ function postworld_includes( $vars ){
 		in_array( 'timer', $pw['inject'] ) ){
 
 		if( pw_mode() === 'deploy' ){
-			wp_enqueue_script(
+
+			/*wp_enqueue_script(
 				'Postworld-Package-Angular-Moment',
 				POSTWORLD_URI.'/deploy/package-angular-moment.min.js',
 				array(),
 				$pw['info']['version'],
 				$in_footer
-				);
+				);*/
+
+			pw_register_script( array(
+				'group' => 'postworld',
+				'handle' => 'package-angular-moment',
+				'file' => POSTWORLD_DIR . '/deploy/package-angular-moment.min.js',
+				'version' => $pw['info']['version'],
+				'priority' => 250,
+				));
+
+
 		}
 		else{
 			// MOMENT.JS
@@ -435,12 +487,24 @@ function postworld_includes( $vars ){
 	// + TOUCH PACKAGE
 	if( in_array( 'package-touch', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
+
+			/*
 			wp_enqueue_script(
 				'Postworld-Package-Touch',
 				POSTWORLD_URI.'/deploy/package-touch.min.js',
 				array(),
 				$pw['info']['version'],
 				$in_footer );
+			*/
+
+			pw_register_script( array(
+				'group' => 'postworld',
+				'handle' => 'package-touch',
+				'file' => POSTWORLD_DIR . '/deploy/package-touch.min.js',
+				'version' => $pw['info']['version'],
+				'priority' => 250,
+				));
+
 		}
 		else{
 			// FAST CLICK
@@ -483,6 +547,14 @@ function postworld_includes( $vars ){
 	// After all Plugins and Theme Loaded
 	//add_action( 'init', 'pwSiteGlobals_include');
 	pwSiteGlobals_include();
+
+	/**
+	 * Enqueue the Postworld group of scripts
+	 */
+	pw_enqueue_script( array(
+		'group' => 'postworld',
+		'in_footer' => $in_footer,
+		));
 
 }
 
@@ -673,6 +745,7 @@ function pw_add_buttons_default_type(){
 
 ///// PARSE pwSiteGlobals /////
 function pwSiteGlobals_include(){
+	global $pw;
 
 	///// DYNAMICALLY GENERATED JAVASCRIPT /////
 	// This method can only be used for site-wide globals
@@ -775,13 +848,32 @@ function pwSiteGlobals_include(){
 	fclose($file);
 	chmod($pwJsFile, 0755);
 
+	/**
+	 * @todo Include the theme version!
+	 */
+
 	// ENQUEUE SCRIPT
+	// DEPRECIATED METHOD
+	/*
 	wp_enqueue_script(
 		'pw-Config-JS',
 		POSTWORLD_URI . $globals_path,
 		array(),
 		hash( 'sha256', $pwJs ),
 		pw_config('includes.js.in_footer') );
+	*/
+
+	pw_register_script( array(
+		'group' => 'postworld',
+		'handle' => 'postworld-config',
+		'file' => POSTWORLD_DIR . $globals_path,
+		'version' => $pw['info']['version'],
+		'in_footer' => pw_config('includes.js.in_footer'),
+		'priority' => 200,
+		));
+	
+	
+
 	
 }
 
@@ -844,7 +936,7 @@ function pwGlobals_parse(){
 	$pw['info']['modules'] = pw_enabled_modules();
 
 	//// THEME VERSION /////
-	$pw['info']['theme_version'] = apply_filters( PW_THEME_VERSION, $pw['info']['version'] );
+	$pw['info']['site_version'] = pw_site_version();
 
 	return;
 

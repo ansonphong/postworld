@@ -86,7 +86,7 @@ function pw_get_ng_template( $vars = array() ){
 
 	//pw_log( 'pw_get_ng_template, post_type', $vars['post_type'] );
 
-	$append_url = '?ver='.$pw['info']['theme_version'];
+	$append_url = '?ver='.$pw['info']['site_version'];
 
 	// Get the device type, false if devices module not enabled
 	$device_type = pw_get_device_type();

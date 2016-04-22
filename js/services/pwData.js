@@ -282,7 +282,7 @@ postworld.factory('$pwData', [ '$resource', '$http', '$q', '$log', '$window', '$
 			
 			// If it exists, add the version number to the URL
 			if( template )
-				template = template + "?ver=" + $pw['info']['theme_version'];
+				template = template + "?ver=" + $pw['info']['site_version'];
 			else
 				return false;
 

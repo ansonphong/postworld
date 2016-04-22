@@ -28,7 +28,7 @@ function pw_mode(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.58,
+		'version'		=>	1.59,
 		'db_version'	=>	1.29,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -147,7 +147,7 @@ define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
 
 ///// VERSIONS /////
 define( 'PW_DB_VERSION', 'postworld-db-version' );
-define( 'PW_THEME_VERSION', 'postworld-theme-version' );
+define( 'PW_VERSIONS', 'postworld-versions' );
 
 // MUST BE DEFINED BY THE THEME
 //define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
@@ -305,6 +305,9 @@ include 'php/core/dev.php';
 
 ////// CUSTOMIZE //////
 include 'php/core/customize.php';
+
+////// SCRIPTS //////
+include 'php/core/scripts.php';
 
 ////// ADMIN //////
 include 'admin/postworld_admin.php';
