@@ -131,15 +131,17 @@ function postworld_includes( $vars ){
 			// POSTWORLD
 
 			// DEPRECIATED METHOD
-			/*wp_register_script(
+
+			wp_register_script(
 				"Postworld-Deploy",
 				POSTWORLD_URI.'/deploy/postworld.min.js',
 				array('underscore'),
 				$pw['info']['version'],
-				$in_footer );*/
+				$in_footer );
 			//wp_localize_script( 'Postworld-Deploy', 'jsVars', $jsVars);
-			//wp_enqueue_script(  'Postworld-Deploy' );
+			wp_enqueue_script(  'Postworld-Deploy' );
 			
+			/*
 			pw_register_script( array(
 				'group' => 'postworld',
 				'handle' => 'postworld-core',
@@ -148,6 +150,7 @@ function postworld_includes( $vars ){
 				'in_footer' => $in_footer,
 				'priority' => 100,
 				));
+				*/
 
 		}
 
@@ -435,21 +438,22 @@ function postworld_includes( $vars ){
 
 		if( pw_mode() === 'deploy' ){
 
-			/*wp_enqueue_script(
+			wp_enqueue_script(
 				'Postworld-Package-Angular-Moment',
 				POSTWORLD_URI.'/deploy/package-angular-moment.min.js',
 				array(),
 				$pw['info']['version'],
 				$in_footer
-				);*/
+				);
 
+			/*
 			pw_register_script( array(
 				'group' => 'postworld',
 				'handle' => 'package-angular-moment',
 				'file' => POSTWORLD_DIR . '/deploy/package-angular-moment.min.js',
 				'version' => $pw['info']['version'],
 				'priority' => 250,
-				));
+				));*/
 
 
 		}
@@ -488,15 +492,16 @@ function postworld_includes( $vars ){
 	if( in_array( 'package-touch', $pw['inject'] ) ){
 		if( pw_mode() === 'deploy' ){
 
-			/*
+			
 			wp_enqueue_script(
 				'Postworld-Package-Touch',
 				POSTWORLD_URI.'/deploy/package-touch.min.js',
 				array(),
 				$pw['info']['version'],
 				$in_footer );
-			*/
+			
 
+			/*
 			pw_register_script( array(
 				'group' => 'postworld',
 				'handle' => 'package-touch',
@@ -504,6 +509,7 @@ function postworld_includes( $vars ){
 				'version' => $pw['info']['version'],
 				'priority' => 250,
 				));
+				*/
 
 		}
 		else{
@@ -871,8 +877,6 @@ function pwSiteGlobals_include(){
 		'in_footer' => pw_config('includes.js.in_footer'),
 		'priority' => 200,
 		));
-	
-	
 
 	
 }
