@@ -78,7 +78,7 @@ function postworld_includes( $vars ){
 			
 			
 			pw_register_script( array(
-				'group' => 'postworld',
+				'group' => POSTWORLD_APP,
 				'handle' => 'package-masonry',
 				'file' => POSTWORLD_DIR . '/deploy/package-masonry.min.js',
 				'version' => $pw['info']['version'],
@@ -145,7 +145,7 @@ function postworld_includes( $vars ){
 			*/
 			
 			pw_register_script( array(
-				'group' => 'postworld',
+				'group' => POSTWORLD_APP,
 				'handle' => 'postworld-core',
 				'file' => POSTWORLD_DIR . '/deploy/postworld.min.js',
 				'version' => $pw['info']['version'],
@@ -402,7 +402,7 @@ function postworld_includes( $vars ){
 			
 			/*
 			pw_register_script( array(
-				'group' => 'postworld',
+				'group' => POSTWORLD_APP,
 				'handle' => 'package-angular-fullcalendar',
 				'file' => POSTWORLD_DIR . '/deploy/package-angular-fullcalendar.min.js',
 				'version' => $pw['info']['version'],
@@ -450,7 +450,7 @@ function postworld_includes( $vars ){
 
 			
 			pw_register_script( array(
-				'group' => 'postworld',
+				'group' => POSTWORLD_APP,
 				'handle' => 'package-angular-moment',
 				'file' => POSTWORLD_DIR . '/deploy/package-angular-moment.min.js',
 				'version' => $pw['info']['version'],
@@ -504,7 +504,7 @@ function postworld_includes( $vars ){
 			*/
 			
 			pw_register_script( array(
-				'group' => 'postworld',
+				'group' => POSTWORLD_APP,
 				'handle' => 'package-touch',
 				'file' => POSTWORLD_DIR . '/deploy/package-touch.min.js',
 				'version' => $pw['info']['version'],
@@ -529,7 +529,7 @@ function postworld_includes( $vars ){
 		wp_enqueue_script(
 			'angular-bootstrap-colorpicker-js',
 			POSTWORLD_URI.'/lib/angular-bootstrap-colorpicker/js/bootstrap-colorpicker-module.min.js',
-			array('Postworld-Admin'),
+			array( POSTWORLD_APP ),
 			$pw['info']['version'],
 			$in_footer );
 
@@ -559,7 +559,7 @@ function postworld_includes( $vars ){
 	 * Enqueue the Postworld group of scripts
 	 */
 	pw_enqueue_script( array(
-		'group' => 'postworld',
+		'group' => POSTWORLD_APP,
 		'in_footer' => $in_footer,
 		));
 
@@ -574,7 +574,7 @@ function pw_include_admin_scripts(){
 		wp_enqueue_script(
 			'Postworld-Admin',
 			POSTWORLD_URI.'/deploy/postworld-admin.min.js',
-			$angularDep,
+			array( POSTWORLD_APP ),
 			$pw['info']['version'],
 			$in_footer );
 	}
@@ -870,7 +870,7 @@ function pwSiteGlobals_include(){
 			pw_config('includes.js.in_footer') );
 	else
 		pw_register_script( array(
-			'group' => 'postworld',
+			'group' => POSTWORLD_APP,
 			'handle' => 'postworld-config',
 			'file' => POSTWORLD_DIR . $globals_path,
 			'version' => $pw['info']['version'],
