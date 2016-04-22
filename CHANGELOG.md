@@ -1,5 +1,10 @@
 # Postworld // Changelog
 
+### Version 1.600
+- Added `PW_Scripts` class, which allows concatination of javascript files, to minimize site loading dependencies, and increase site load speed.
+    + See `core/includes.php` for examples.
+    + May cause issues with theme scripts - test upon upgrading
+
 ### Version 1.55
 - **Breaking Changes** - Replaced all instances of `pw_query` with `pw_query_posts`
     +  On sites using custom Postworld post_meta including `geo` and `event` data querying, this may require extra testing and bugfixes in the new updated class. `ATTN: @phongmedia` 
