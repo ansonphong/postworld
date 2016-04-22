@@ -574,7 +574,7 @@ function pw_include_admin_scripts(){
 		wp_enqueue_script(
 			'Postworld-Admin',
 			POSTWORLD_URI.'/deploy/postworld-admin.min.js',
-			$angularDep,
+			array( POSTWORLD_APP ),
 			$pw['info']['version'],
 			$in_footer );
 	}
