@@ -162,7 +162,7 @@ function postworld_includes( $vars ){
 		// Build Angular Dependancies
 		global $angularDep;
 		$angularDep = array(
-			'jquery',
+			//'jquery',
 			'underscore',
 			'DeepMerge',
 			'AngularJS',
@@ -602,7 +602,7 @@ function pw_include_admin_scripts(){
 	// Required for Slider on Backgrounds
 	if( pw_module_enabled('backgrounds') &&
 		strpos( $_SERVER['QUERY_STRING'], 'backgrounds' ) ){
-		wp_enqueue_script( 'jquery' );
+		//wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-slider' );
 		wp_enqueue_script( 'jquery-ui-widget' );
