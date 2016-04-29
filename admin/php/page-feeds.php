@@ -52,6 +52,8 @@ pw_print_ng_controller(array(
 
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld feeds wrap">
 	<div
 		pw-admin
@@ -59,8 +61,8 @@ pw_print_ng_controller(array(
 		pw-feed-options
 		ng-controller="pwFeedsDataCtrl">
 		
-		<h1>
-			<i class="pwi-th-list"></i>
+		<h1 class="primary">
+			<i class="icon pwi-th-list"></i>
 			<?php _e( 'Feeds', 'postworld' ) ?>
 			<button class="add-new-h2" ng-click="newFeed()">
 				<?php _e( 'Add New Feed', 'postworld' ) ?>

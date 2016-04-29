@@ -9,10 +9,12 @@ pw_print_ng_controller(array(
 	));
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld postworld-social wrap social">
 
-	<h1>
-		<i class="pwi-profile"></i>
+	<h1 class="primary">
+		<i class="icon pwi-profile"></i>
 		<?php _ex('Social','module','postworld' )?>
 	</h1>
 	

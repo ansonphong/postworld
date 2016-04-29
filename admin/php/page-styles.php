@@ -10,12 +10,14 @@ pw_print_ng_controller(array(
 	));
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld styles wrap">
 	<div
 		pw-admin-style
 		ng-controller="pwStylesDataCtrl">
-		<h1>
-			<i class="pwi-brush"></i>
+		<h1 class="primary">
+			<i class="icon pwi-brush"></i>
 			<?php _ex('Styles','module','postworld') ?>
 		</h1>
 		<hr class="thick">

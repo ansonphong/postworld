@@ -1,12 +1,16 @@
 <?php
 	global $pw;
 ?>
-<div class="postworld modules" ng-cloak>
 
-	<h1>
-		<i class="pwi-postworld"></i>
-		<?php _e( 'Postworld', 'postworld' ) ?>
+<?php do_action( 'postworld_admin_header' ) ?>
+
+<div class="postworld modules wrap" ng-cloak>
+
+	<h1 class="primary">
+		<i class="icon pwi-cubes"></i>
+		<?php _e( 'Modules', 'postworld' ) ?>
 		<span class="pw-version" style="font-size:.66em; font-weight: lighter;">
+			• Postworld
 			v<?php echo (string) $pw['info']['version'] ?>
 		</span>
 	</h1>
@@ -14,6 +18,11 @@
 	<hr class="thick">
 	
 	<div class="pw-cloak">
+
+		<div>
+			<!-- MODULES -->
+			<?php echo pw_select_modules(); ?>
+		</div>
 
 		<div class="well">
 			<h2>
@@ -29,10 +38,7 @@
 			</div>
 		</div>
 
-		<div>
-			<!-- MODULES -->
-			<?php echo pw_select_modules(); ?>
-		</div>
+		
 
 	</div>
 

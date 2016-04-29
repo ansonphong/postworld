@@ -16,15 +16,17 @@ pw_print_ng_controller(array(
 	));
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div
 	pw-admin
 	pw-admin-iconsets
 	pw-ui
 	ng-controller="pwIconsetsDataCtrl"
-	class="postworld">
+	class="postworld wrap">
 
-	<h1>
-		<i class="pwi-circle-medium"></i>
+	<h1 class="primary">
+		<i class="icon pwi-circle-medium"></i>
 		<?php _e( 'Iconsets', 'postworld' ) ?>
 	</h1>
 

@@ -24,9 +24,12 @@ pw_print_ng_controller(array(
 
 ?>
 
-<div pw-admin-options class="main wrap postworld">
-	<h1>
-		<i class="pwi-gear"></i>
+<?php do_action( 'postworld_admin_header' ) ?>
+
+<div pw-admin-options class="postworld wrap">
+
+	<h1 class="primary">
+		<i class="icon pwi-gear"></i>
 		<?php _e('Site Options','module','postworld') ?>
 	</h1>
 	
@@ -70,27 +73,29 @@ pw_print_ng_controller(array(
 				*/ ?>
 
 				<!-- AVATAR IMAGE -->
-				<div class="well">
-					<div class="save-right">
-						<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
-					</div>
-					<h2>
-						<span class="icon-md"><i class="pwi-image"></i></span>
-						<?php _e('Default Avatar','postworld') ?>
-					</h2>
+				<?php if( pw_config('wp_admin.user_meta.pw_avatar') ): ?>
 					<div class="well">
-						<?php _e( 'Select the default avatar image.', 'postwold' ) ?>
-						<hr class="thin">
-						<?php
-							echo pw_select_image_id( array(
-								'ng_model'		=>	'pwSiteOptions.images.avatar',
-								'slug'			=>	'avatar',
-								'label'			=>	'Default Avatar',
-								'display'		=>	true,
-								'width'			=> 	'256px',
-							 	));?>
+						<div class="save-right">
+							<?php pw_save_option_button( PW_OPTIONS_SITE, 'pwSiteOptions'); ?>
+						</div>
+						<h2>
+							<span class="icon-md"><i class="pwi-image"></i></span>
+							<?php _e('Default Avatar','postworld') ?>
+						</h2>
+						<div class="well">
+							<?php _e( 'Select the default avatar image.', 'postwold' ) ?>
+							<hr class="thin">
+							<?php
+								echo pw_select_image_id( array(
+									'ng_model'		=>	'pwSiteOptions.images.avatar',
+									'slug'			=>	'avatar',
+									'label'			=>	'Default Avatar',
+									'display'		=>	true,
+									'width'			=> 	'256px',
+								 	));?>
+						</div>
 					</div>
-				</div>
+				<?php endif ?>
 
 				<!-- WORDPRESS CORE -->
 				<div class="well">

@@ -21,13 +21,16 @@ pw_print_ng_controller(array(
 	));
 
 ?>
+
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld styles wrap">
 	<div
 		pw-admin
 		pw-admin-backgrounds
 		ng-controller="pwBackgroundsDataCtrl">
-		<h1>
-			<i class="pwi-paint-format"></i>
+		<h1 class="primary">
+			<i class="icon pwi-paint-format"></i>
 			<?php _e( 'Backgrounds', 'postworld' ) ?>
 			<button class="add-new-h2" ng-click="newBackground()">
 				<?php _e( 'Add New Background', 'postworld' ) ?>

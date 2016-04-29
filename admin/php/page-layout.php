@@ -11,12 +11,16 @@ pw_print_ng_controller(array(
 	));
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld postworld-layout wrap">
-	<h1>
-		<i class="pwi-th-large"></i>
+	<h1 class="primary">
+		<i class="icon pwi-th-large"></i>
 		<?php _e( 'Layouts', 'postworld' ) ?>
 	</h1>
+
 	<hr class="thick">
+	
 	<div
 		pw-admin-layout
 		ng-controller="pwAdminLayoutDataCtrl"

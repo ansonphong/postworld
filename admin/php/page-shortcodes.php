@@ -21,6 +21,8 @@ pw_print_ng_controller(array(
 
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld shortcodes wrap" ng-cloak>
 	<div
 		pw-admin
@@ -28,8 +30,8 @@ pw_print_ng_controller(array(
 		pw-ui
 		ng-controller="pwShortcodesDataCtrl">
 
-		<h1>
-			<i class="pwi-code"></i>
+		<h1 class="primary">
+			<i class="icon pwi-code"></i>
 			<?php _e( 'Shortcodes', 'postworld' ) ?>
 			<button class="add-new-h2" ng-click="newShortcode()">
 				<?php _e( 'Add New Shortcode', 'postworld' ) ?>

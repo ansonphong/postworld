@@ -8,13 +8,15 @@ pw_print_ng_controller(array(
 	));
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld postworld-sidebars wrap" pw-ui>
 	<div
 		pw-admin
 		pw-admin-sidebars
 		ng-controller="pwSidebarsDataCtrl">
-		<h1>
-			<i class="pwi-map"></i>
+		<h1 class="primary">
+			<i class="icon pwi-map"></i>
 			<?php _e( 'Sidebars', 'postworld' ) ?>
 			<button class="add-new-h2" ng-click="newSidebar()">
 				<?php _e( 'Add New Sidebar', 'postworld' ) ?>

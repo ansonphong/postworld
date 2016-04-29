@@ -24,6 +24,8 @@ pw_print_ng_controller(array(
 
 ?>
 
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div
 	pw-admin
 	pw-admin-database
@@ -31,8 +33,8 @@ pw_print_ng_controller(array(
 	pw-ui
 	class="postworld">
 
-	<h1>
-		<i class="pwi-database"></i>
+	<h1 class="primary">
+		<i class="icon pwi-database"></i>
 		<?php _e('Database', 'postworld') ?>
 	</h1>
 

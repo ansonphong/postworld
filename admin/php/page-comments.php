@@ -12,9 +12,12 @@ pw_print_ng_controller(array(
 	));
 
 ?>
+
+<?php do_action( 'postworld_admin_header' ) ?>
+
 <div class="postworld wrap social">
-	<h1>
-		<i class="pwi-bubbles"></i>
+	<h1 class="primary">
+		<i class="icon pwi-bubbles"></i>
 		<?php _e('Comments', 'postworld') ?>
 	</h1>
 	<hr class="thick">
