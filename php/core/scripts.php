@@ -62,6 +62,7 @@ class PW_Scripts{
 			'version' 		=> $GLOBALS['wp_version'],
 			'priority' 		=> 100, 		// Order which it's placed within the group
 			'file'			=> null, 		// Path to file
+			'minify'		=> false,		// Whether or not to minify the file
 			);
 		$script = array_replace($default_script, $script);
 
@@ -179,7 +180,15 @@ class PW_Scripts{
 				if( file_exists( $script['file'] ) ){
 					$content .= "// SCRIPT : " . $script['handle'] . " / PRIORITY : " . $script['priority'];
 					$content .= PHP_EOL;
-					$content .= file_get_contents( $script['file'] );
+
+					// Get the contents of the file
+					$file_contents = file_get_contents( $script['file'] );
+
+					// If minify is enabled, minify it
+					$content .= ( $script['minify'] ) ? 
+						$this->minify( $file_contents ) :
+						$file_contents;
+					
 					$content .= PHP_EOL . PHP_EOL . PHP_EOL;
 				}
 			}
@@ -230,6 +239,17 @@ class PW_Scripts{
 			unlink( $file );
 		}
 		return;
+	}
+
+	/**
+	 * Minify the input content
+	 * @link https://github.com/matthiasmullie/minify/issues/83
+	 */
+	public function minify( $content ){
+		$path = POSTWORLD_DIR . '/lib';
+		include_once( $path. '/JShrink/Minifier.php');
+		return \JShrink\Minifier::minify($content);
+
 	}
 
 }

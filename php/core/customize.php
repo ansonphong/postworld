@@ -105,7 +105,6 @@ class PW_Customize_Manager{
 
 	}
 
-
 	/**
 	 * This happens upon saving & publishing customized settings.
 	 */
@@ -127,9 +126,6 @@ class PW_Customize_Manager{
 			) );
 
 		/*
-		pw_log( 'pw_customize_update : value', $value );
-		pw_log( 'pw_customize_update : value type', gettype($value) );
-		pw_log( 'pw_customize_update : setting', $setting );
 		pw_log( 'pw_customize_update : setting->id', $setting->id );
 		pw_log( 'pw_customize_update : setting->value()', $setting->value() );
 		pw_log( 'pw_customize_update : setting->post_value()', $setting->post_value() );
