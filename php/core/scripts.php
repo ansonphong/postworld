@@ -3,7 +3,10 @@
  * POSTWORLD SCRIPTS
  * Manages the concatination of multiple Javascript files.
  *
- * @todo Manage the deletion of cached JS files.
+ * @todo Make function to flush all cached JS files, call it on admin settings save.
+ * @todo Detect when settings are changed and clear.
+ * @todo Manage the deletion of cached JS files based on time, so they auto-renew.
+ * 			- ie. Delete all files older than 24 hours.
  */
 $GLOBALS['postworld_scripts'] = array();
 
@@ -23,6 +26,17 @@ function pw_enqueue_script( $vars ){
 	$pw_scripts->enqueue( $vars );
 }
 
+/**
+ * Deletes all the cached script files matching the
+ * specified pattern of prefix and extension.
+ *
+ * @param string $prefix The beginning of the filenames to delete.
+ * @param string $extension The file extension of postfix of the files to delete.
+ */
+function pw_scripts_flush( $prefix = '', $extension = '.js' ){
+	$pw_scripts = new PW_Scripts();
+	$pw_scripts->flush( $prefix, $extension );
+}
 
 /**
  * Used for combining multiple JS script files
@@ -82,6 +96,7 @@ class PW_Scripts{
 			'in_footer' => true,		// Whether or not to put in footer
 			'deps'		=> array(),		// Dependencies
 			'version'	=> pw_site_version(),
+			'expire'	=> 60*60*24,	// After how many seconds to expire
 			);
 		$vars = array_replace( $default_vars, $vars );
 
@@ -98,14 +113,54 @@ class PW_Scripts{
 		// Generate hash from array
 		$scripts_hash = hash( 'adler32', json_encode( $scripts ) );
 
-		// Generate the filename
-		$filename = $vars['group'] . '-' . $scripts_hash . '.js';
+		// Generate the filename as "[group]--[hash]--[time].js"
+		$group_prefix = $vars['group'] . '--';
+		$hash_prefix =  $group_prefix . $scripts_hash . '--';
+		$filename = $hash_prefix . time() . '.js';
 		$file_path = $scripts_dir . '/' . $filename;
 
 		/**
-		 * Combine the scripts and save them to a JS file
+		 * Check if the current file version exists in the cache directory.
+		 * If files are found, check if they haven't expired yet
+		 * And if they're good, get the file path.
 		 */
-		if( !file_exists($file_path) ){
+		$files = $this->glob( $hash_prefix, '.js' );
+		$regenerate = false;
+		if( !empty( $files ) ){
+			foreach( $files as $file ){
+				/**
+				 * Get the timestamp component of the filename
+				 * and compare it to the current time 
+				 */
+				$basename = basename( $file, '.js' );
+				$parts = explode( '--', $basename );
+				// Get the last [time] segment of the filename
+				$time_index = count($parts)-1;
+				$file_time = intval( $parts[ $time_index ] );
+
+				// If any of the files in the group are expired
+				if( time() > $file_time + $vars['expire'] ){
+					// Regenerate the file
+					$regenerate = true;
+					// Flush all existing JS files in the current group
+					$this->flush( $vars['group'] . '--', '.js' );
+					break;
+				}
+				// Otherwise, set the current filename as the file.
+				else{
+					$file_path = $file;
+				}
+			}
+		} else{
+			$regenerate = true;
+		}
+
+
+		/**
+		 * If no file is found which matches
+		 * Combine the scripts and save them to a new JS file.
+		 */
+		if( $regenerate ){
 
 			// If the scripts directory doesn't exist, create it
 			if (!file_exists($scripts_dir)){
@@ -119,15 +174,17 @@ class PW_Scripts{
 			pw_sort_array_of_arrays( $scripts, 'priority', 'ASC' );
 
 			// Get the contents of all the scripts and add them to a string
-			$scripts_contents = '';
+			$content = '';
 			foreach( $scripts as $handle => $script ){
 				if( file_exists( $script['file'] ) ){
-					$scripts_contents .= "// SCRIPT : " . $script['handle'] . " / PRIORITY : " . $script['priority'] . PHP_EOL;
-					$scripts_contents .= file_get_contents( $script['file'] ) . PHP_EOL . PHP_EOL . PHP_EOL;
+					$content .= "// SCRIPT : " . $script['handle'] . " / PRIORITY : " . $script['priority'];
+					$content .= PHP_EOL;
+					$content .= file_get_contents( $script['file'] );
+					$content .= PHP_EOL . PHP_EOL . PHP_EOL;
 				}
 			}
 			// Write all the scripts to a new file
-			$put_contents = file_put_contents( $file_path, $scripts_contents );
+			$put_contents = file_put_contents( $file_path, $content );
 
 		}
 
@@ -142,7 +199,6 @@ class PW_Scripts{
 			$vars['version'],
 			$vars['in_footer']
 			);
-
 	}
 
 	/**
@@ -152,7 +208,6 @@ class PW_Scripts{
 	 * @return string Absolute system path to the scripts directory.
 	 */
 	static function get_scripts_dir( $type = 'dir' ){
-
 		if( $type === 'dir' )
 			$key = 'basedir';
 		elseif( $type === 'url' )
@@ -161,5 +216,20 @@ class PW_Scripts{
 		return _get( wp_upload_dir(), $key ) . '/'. apply_filters( 'pw_scripts_cache_dir', pw_admin_submenu_slug() . '-cache' );
 	}
 
-}
+	public function glob( $prefix = '', $extension = '.js' ){
+		$scripts_dir = $this->get_scripts_dir();
+		return glob( $scripts_dir . '/' . $prefix . '*' . $extension );
+	}
 
+	/**
+	 * Deletes all the matching files in the scripts directory.
+	 */
+	public function flush( $prefix = '', $extension = '.js' ){
+		$files = $this->glob( $prefix, $extension );
+		foreach( $files as $file ){
+			unlink( $file );
+		}
+		return;
+	}
+
+}

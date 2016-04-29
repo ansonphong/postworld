@@ -110,7 +110,8 @@ class PW_Customize_Manager{
 	 * This happens upon saving & publishing customized settings.
 	 */
 	public function customize_update( $value, $setting ){
-		
+		$this->flush_scripts();
+
 		// Extract the option definition from the setting ID
 		$option_definition = $this->extract_option_definition( $setting->id );
 
@@ -145,6 +146,8 @@ class PW_Customize_Manager{
 	 * And 'search.show_search' is a subkey within that array
 	 */
 	public function customize_preview( $setting ){
+		$this->flush_scripts();
+
 		/**
 		 * Get and sanitize the value
 		 */
@@ -205,5 +208,11 @@ class PW_Customize_Manager{
 
 	}
 
+	/**
+	 * Clears all the cached script files.
+	 */
+	private function flush_scripts(){
+		pw_scripts_flush('','.js');
+	}
 
 }
