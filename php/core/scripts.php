@@ -34,6 +34,9 @@ function pw_enqueue_script( $vars ){
  * @param string $extension The file extension of postfix of the files to delete.
  */
 function pw_scripts_flush( $prefix = '', $extension = '.js' ){
+	if( $prefix === null )
+		$prefix = '';
+	
 	$pw_scripts = new PW_Scripts();
 	$pw_scripts->flush( $prefix, $extension );
 }
@@ -222,7 +225,7 @@ class PW_Scripts{
 		elseif( $type === 'url' )
 			$key = 'baseurl';
 
-		return _get( wp_upload_dir(), $key ) . '/'. apply_filters( 'pw_scripts_cache_dir', pw_admin_submenu_slug() . '-cache' );
+		return _get( wp_upload_dir(), $key ) . '/'. apply_filters( 'pw_scripts_cache_dir', pw_theme_slug() . '-cache' );
 	}
 
 	public function glob( $prefix = '', $extension = '.js' ){
@@ -249,7 +252,6 @@ class PW_Scripts{
 		$path = POSTWORLD_DIR . '/lib';
 		include_once( $path. '/JShrink/Minifier.php');
 		return \JShrink\Minifier::minify($content);
-
 	}
 
 }

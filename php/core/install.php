@@ -1,5 +1,15 @@
 <?php 
 /**
+ * Updates or Installs Postworld
+ */
+add_action( 'after_setup_theme', 'postworld_update_install', 8 );
+function postworld_update_install(){
+	if( pw_db_requires_update() ){
+		postworld_install();
+	}	
+}
+
+/**
  * Installs Postworld tables into the database.
  */
 function postworld_install(){
@@ -193,9 +203,5 @@ function pw_db_requires_update(){
 	$version_compare = version_compare( $new_version, $current_version );
 
 	return ( $version_compare === 1 );
-}
-
-if( pw_db_requires_update() ){
-	postworld_install();
 }
 

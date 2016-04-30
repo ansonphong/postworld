@@ -71,6 +71,11 @@ function pw_save_option(){
 
 	}
 
+	/**
+	 * In all instances, flush cached javascript files.
+	 */
+	pw_scripts_flush( null, '.js' );
+
 	header('Content-Type: application/json');
 	$response['status'] = 200;
 	$response['data'] = $response_data; //$response_data;

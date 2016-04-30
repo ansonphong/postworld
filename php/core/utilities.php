@@ -8,36 +8,6 @@
 /// General/global utility functions ///
 
 /**
- * Gets the current site version, including current version
- * of Postworld as well as the current version of WordPress
- * also filterable so the current theme version can be added.
- *
- * @return string The site version.
- */
-function pw_site_version(){
-	global $pw;
-	$versions = array(
-		'wordpress' => $GLOBALS['wp_version'],
-		'postworld' => $GLOBALS['pw']['info']['version'],
-		);
-
-	// Apply filters so that the theme and plugins can add their versions
-	$versions = apply_filters( PW_VERSIONS, $versions );
-
-	// Generate a string with the versions
-	$version_string = '';
-	$i = 0;
-	foreach( $versions as $key => $value ){
-		if( $i > 0 )
-			$version_string .= '--';
-		$version_string .= $key . '-' . $value;
-		$i++;
-	}
-
-	return $version_string; 
-}
-
-/**
  * Sorts an array of associative arrays by one of the key values.
  *
  * @example sort_array_of_array($inventory, 'price');
@@ -281,13 +251,15 @@ function pw_add_metabox_wp_postmeta( $vars ){
 
 
 /**
+ * ** DEPRECIATED **
+ * @use pw_theme_slug()
+ *
  * Gets the submenu slug used to group admin menu items
  * Under the desired main menu item.
  * @return string
  */
 function pw_admin_submenu_slug(){
-	global $pw;
-	return apply_filters( 'pw_admin_submenu_slug', $pw['info']['slug'] );
+	return pw_theme_slug();
 }
 
 /**

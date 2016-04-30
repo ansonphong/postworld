@@ -18,8 +18,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	global $pw;
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];
-	$submenu_slug = apply_filters( 'pw_admin_submenu_slug', $pw_slug );
-	$theme_url = get_admin_url(null,'admin.php?page='.$submenu_slug);
+	$theme_url = get_admin_url( null, 'admin.php?page=' . pw_theme_slug() );
 
 	$menu_name = 'postworld-menu';
 	$menu_title = pw_config('wp_admin.admin_bar_menu.title');

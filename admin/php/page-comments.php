@@ -129,7 +129,7 @@ pw_print_ng_controller(array(
 											</a>
 										</li>
 										<li>
-											<a href="<?php get_site_url(); ?>/wp-admin/admin.php?page=<?php echo pw_admin_submenu_slug() ?>-social">
+											<a href="<?php get_site_url(); ?>/wp-admin/admin.php?page=<?php echo pw_theme_slug() ?>-social">
 												<?php _e("Enter your app's ID into the Facebook App ID field in Postworld Social", 'postworld') ?>
 											</a>
 										</li>
