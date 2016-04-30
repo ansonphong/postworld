@@ -16,7 +16,7 @@ function postworld_admin_menu(){
 	global $pw;	
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];
-	$submenu_slug = pw_admin_submenu_slug();
+	$submenu_slug = pw_theme_slug();
 
 	$menu = array(
 		'menu' => array(

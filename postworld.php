@@ -29,7 +29,7 @@ function pw_mode(){
 global $pw;
 $pw = array(
 	'info'	=>	array(
-		'version'		=>	1.601,
+		'version'		=>	1.602,
 		'db_version'	=>	1.29,
 		'mode'	=>	pw_mode(),
 		'slug'	=>	'postworld',
@@ -216,6 +216,9 @@ register_activation_hook( __FILE__, 'postworld_install_foreign_keys' );
 
 ////// META FUNCTIONS //////
 //include 'php/core/meta.php';
+
+////// THEME //////
+include 'php/core/theme.php';
 
 ////// SOCIAL //////
 include 'php/core/language.php';
