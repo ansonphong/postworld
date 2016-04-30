@@ -1,5 +1,21 @@
 # Postworld // Changelog
 
+### Version 1.602
+- Added `postworld_init`, `postworld_config` and `postworld_loaded` action hooks
+- In process of restructuring loading
+- Themes should register themselves with postworld.
+
+To register a theme, include this before loading Postworld:
+```
+add_action( 'postworld_config', 'my_register_theme' );
+function my_register_theme(){
+    pw_register_theme(array(
+        'slug' => 'mytheme',
+        'version' => '1.0.0',
+        ));
+};
+```
+
 ### Version 1.600
 - Added `PW_Scripts` class, which allows concatination of javascript files, to minimize site loading dependencies, and increase site load speed.
     + See `core/includes.php` for examples.

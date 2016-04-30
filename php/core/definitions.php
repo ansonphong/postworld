@@ -2,9 +2,10 @@
 /**
  * Setup core definitions
  */
-// @todo - REFACTOR THIS FILE USING THEME SLUG
+// @todo - REFACTOR THIS FILE SO ALL VARIABLES USE THEME SLUG
 // @todo - LOOK FOR ANY STRAY FILTER NAMES THAT NEED CONSTANTS
 // @todo - DEVELOP THEME MIGRATIONS TO RENAME DB KEYS AND DATABASE TABLES
+// @todo - IN THIS ORDER : OPTIONS, POSTMETA, TERMMETA, USERMETA, DB TABLES
 
 add_action( 'postworld_config', 'postworld_definitions', 11 );
 function postworld_definitions(){
@@ -31,37 +32,34 @@ function postworld_definitions(){
 	$GLOBALS['pw']['iconsets'] = array();
 
 	///// DEFINE MODEL FILTER NAMES /////
-	define( 'PW_FIELD_MODELS', 		'postworld-model-fields' );
-	define( 'PW_POST_FIELD_MODELS', 'postworld-model-post-fields' );
-	define( 'PW_USER_FIELD_MODELS', 'postworld-model-user-fields' );
+	define( 'PW_FIELD_MODELS', 		$theme_slug.'-model-fields' );
+	define( 'PW_POST_FIELD_MODELS', $theme_slug.'-model-post-fields' );
+	define( 'PW_USER_FIELD_MODELS', $theme_slug.'-model-user-fields' );
 
-	define( 'PW_MODEL_STYLES', 		'postworld-model-styles' );
-	define( 'PW_MODEL_BACKGROUNDS', 'postworld-model-backgrounds' );
+	define( 'PW_MODEL_STYLES', 		$theme_slug.'-model-styles' );
+	define( 'PW_MODEL_BACKGROUNDS', $theme_slug.'-model-backgrounds' );
 
-	define( 'PW_TERM_FEED', 		'postworld-term-feed-' );
-	define( 'PW_FEED_DEFAULT', 		'postworld-feed-default' );
-	define( 'PW_FEED_OVERRIDE', 	'postworld-feed-override' );
-	define( 'PW_STYLES_DEFAULT', 	'postworld-style-defaults' );
+	define( 'PW_TERM_FEED', 		$theme_slug.'-term-feed-' );
+	define( 'PW_FEED_DEFAULT', 		$theme_slug.'-feed-default' );
+	define( 'PW_FEED_OVERRIDE', 	$theme_slug.'-feed-override' );
+	define( 'PW_STYLES_DEFAULT', 	$theme_slug.'-style-defaults' );
 
 	///// DEFINE META FILTER NAMES /////
 	define( 'PW_POSTS', 	'pw_posts' );
 	define( 'PW_USERS', 	'pw_users' );
-	define( 'PW_POSTMETA', 	'postworld-postmeta' );
-	define( 'PW_USERMETA', 	'postworld-usermeta' );
-	define( 'PW_MODULES', 	'postworld-modules-filter' );
+	define( 'PW_POSTMETA', 	$theme_slug.'-postmeta' );
+	define( 'PW_USERMETA', 	$theme_slug.'-usermeta' );
+	define( 'PW_MODULES', 	$theme_slug.'-modules-filter' );
 
 	///// DEFINE PRINT FILTERS /////
-	define( 'PW_GLOBAL_OPTIONS',	'postworld-global-options' ); // Case in-sensitive
+	define( 'PW_GLOBAL_OPTIONS',	$theme_slug.'-global-options' ); // Case in-sensitive
 
 	///// VERSIONS /////
-	define( 'PW_DB_VERSION', 'postworld-db-version' );
-	define( 'PW_VERSIONS', 'postworld-versions' );
+	define( 'PW_DB_VERSION', $theme_slug.'-db-version' );
+	define( 'PW_VERSIONS', $theme_slug.'-versions' );
 
 	// MUST BE DEFINED BY THE THEME
 	//define( 'PW_OPTIONS_STYLES', 	'postworld-styles-theme' );
-
-
-
 
 	/**
 	 * Define the META keys.
