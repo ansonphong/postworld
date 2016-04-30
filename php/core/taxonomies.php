@@ -374,8 +374,6 @@ function pw_get_child_terms_meta( $term_query, $taxonomy ){
 }
 
 
-
-
 /*
  * Replace Taxonomy slug with Post Type slug in url
  * Version: 1.1

@@ -12,7 +12,7 @@ function pw_time_units(){
 	return compact("ONE_MINUTE", "ONE_HOUR", "ONE_DAY", "ONE_WEEK", "ONE_MONTH", "ONE_YEAR");
 }
 
-function get_postworld_uri(){
+function pw_get_postworld_uri(){
 	$pw_url = pw_config( 'paths.postworld.url' );
 	// If the Postworld URL is defined in the config
 	if( $pw_url )
@@ -21,6 +21,3 @@ function get_postworld_uri(){
 	else
 		return plugins_url().'/postworld/';
 }
-
-
-?>

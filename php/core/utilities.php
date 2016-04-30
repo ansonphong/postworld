@@ -5,7 +5,17 @@
  | |_| | |_| | | | |_| |  __/\__ \
   \___/ \__|_|_|_|\__|_|\___||___/
 ///////////////////////////////////////*/
-/// General/global utility functions ///
+/**
+ * @todo Cleanup and document the functions in this file.
+ */
+
+/**
+ * Gets the current Postworld Mode
+ */
+function pw_mode(){
+	return ( defined('POSTWORLD_MODE') ) ?
+		POSTWORLD_MODE : 'deploy';
+}
 
 /**
  * Sorts an array of associative arrays by one of the key values.
@@ -2104,5 +2114,3 @@ function pw_add_terms( $terms, $taxonomy ){
 
 }
 */
-
-?>

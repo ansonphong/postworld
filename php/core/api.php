@@ -7,27 +7,21 @@
  /_/   \_\_|  |___| (_)  \___/ \__|_|_|_|\__|_|\___||___/
                                                          
 /////////////////////////////////////////////////////////*/
-
-function pw_get_obj( $obj, $key ){
-	// DEPRECIATED
-	return _get( $obj, $key );
-}
+/**
+ * @todo Cleanup and improve function documentation.
+ */
 
 /**
  * Gets the sub-key value from an associative array
- * @param $obj [array] An associative array
- * @param $key [string] A string denoting which subkey to retreive
+ *
+ * @param array $obj An associative array
+ * @param string $key A string denoting which subkey to retreive
  *			- ie. "key.subkey.subsubkey"
- * @return [mixed] The object at the specified subkey, false if it doesn't exist
+ * @return mixed The object at the specified subkey, false if it doesn't exist
+ *
+ * @todo Revisit this so it returns an undefined value, not false 
  */
 function _get( $obj, $key ){
-	// Checks to see if a key exists in an object,
-	// and returns it if it does exist. Otherwise return false.
-
-	/*	PARAMETERS:
-		$obj 	= 	[array]
-		$key 	= 	[string] ie. ( "key.subkey.subsubkey" )
-	*/
 
 	// If the obj is not an array, return false
 	if( !is_array( $obj ) )
@@ -55,29 +49,16 @@ function _get( $obj, $key ){
 
 }
 
-function pw_set_obj( $obj, $key, $value ){
-	// DEPRECIATED
-	return _set( $obj, $key, $value );
-}
-
 /**
  * Sets the sub-key value of an associative array
- * Creating any neccessary keys along the way if they don't yet exist
- * @param $obj [array] An associative array
- * @param $key [string] A period deliniated string denoting which subkey to set
+ * even if it or it's parent(s) doesn't exist yet.
+ * @param array $obj An associative array
+ * @param string $key A period deliniated string denoting which subkey to set
  *			- ie. "key.subkey.subsubkey"
- * @param $value [mixed] The value which to set
- * @return [mixed] The object with the new value set
+ * @param mixed $value The value which to set
+ * @return mixed The object with the new value set
  */
 function _set( $obj, $key, $value ){
-	// Sets the value of an object,
-	// even if it or it's parent(s) doesn't exist.
-	
-	/*	PARAMETERS:
-		$obj 	= 	[array]
-		$key 	= 	[string] 
-		$value 	= 	[string/array/object]
-	*/
 
 	///// KEY PARTS /////
 	// FROM : "key.subkey.sub.subkey"
@@ -152,22 +133,13 @@ function _push( $obj, $key, $value ){
  /_/   \_\_|  |___| (_)  \___/|___/\___|_|    |_|  |_|\___|\__\__,_|
 
 ////////////////////////////////////////////////////////////////////*/
+ /**
+  * Sets meta key for the given user under the given key
+  * in the `wp_usermeta` table.
+  * Object values passed in can be passed as PHP objects or Arrays,
+  * and they will automatically be converted and stored as JSON
+  */
 function pw_set_wp_usermeta( $vars ){
-	/*
-		- Sets meta key for the given user under the given key
-			in the `wp_usermeta` table
-		- Object values passed in can be passed as PHP objects or Arrays,
-			and they will automatically be converted and stored as JSON
-		
-		PARAMETERS:
-		$vars = array(
-			"user_id"	=>	[integer], 	(optional)
-			"sub_key"	=>	[string],	(optional)
-			"value" 	=>	[mixed],	(required)
-			"meta_key" 	=>	[string] 	(optional)
-			);
-	*/
-
 	$default_vars = array(
 		'user_id'	=>	get_current_user_id(),
 		'meta_key'	=>	PW_USERMETA_KEY,
@@ -219,30 +191,27 @@ function pw_set_wp_usermeta( $vars ){
 		$meta_value = $value;
 
 	}
-	
-	//pw_log( 'pw_set_wp_usermeta : $update_user_meta : ' . $user_id . ' / ' . $meta_key .' / '. $meta_value );
-
 	// Set user meta
 	$update_user_meta = update_user_meta( $user_id, $meta_key, $meta_value );
 
-	// BOOLEAN : True on successful update, false on failure.
+	// Boolean, true on successful update, false on failure.
 	return $update_user_meta;
 
 }
 
-
+/**
+ * Gets meta key for the given user under the `pw_meta` key
+ * in the `wp_usermeta` table.
+ */
 function pw_get_wp_usermeta($vars){
 	/*
-	- Gets meta key for the given user under the `pw_meta` key
-		in the `wp_usermeta` table
-	
-		PARAMETERS:
-		$vars = array(
-			"user_id"	=>	[integer], 	(optional)
-			"sub_key"	=>	[string],
-			"format" 	=>	[string] 	"JSON" / "ARRAY" (default),
-			"meta_key" 	=>	[string] 	(optional)
-			);
+	PARAMETERS:
+	$vars = array(
+		"user_id"	=>	[integer], 	(optional)
+		"sub_key"	=>	[string],
+		"format" 	=>	[string] 	"JSON" / "ARRAY" (default),
+		"meta_key" 	=>	[string] 	(optional)
+		);
 	*/
 
 	extract($vars);
@@ -289,21 +258,21 @@ function pw_get_wp_usermeta($vars){
                                                                    
 ////////////////////////////////////////////////////////////////////*/
 
-
+/**
+ * Sets meta key for the given post under the given key
+ * in the `wp_postmeta` table.
+ * Object values passed in can be passed as PHP objects or Arrays,
+ * and they will automatically be converted and stored as JSON
+ */
 function pw_set_wp_postmeta($vars){
-	/*
-		- Sets meta key for the given post under the given key
-			in the `wp_postmeta` table
-		- Object values passed in can be passed as PHP objects or Arrays,
-			and they will automatically be converted and stored as JSON
-		
-		PARAMETERS:
-		$vars = array(
-			"post_id"		=>	[integer], 	(optional)
-			"sub_key"		=>	[string],	(optional)
-			"meta_value" 	=>	[mixed],	(required)
-			"meta_key" 		=>	[string] 	(optional)
-			);
+	/*	
+	PARAMETERS:
+	$vars = array(
+		"post_id"		=>	[integer], 	(optional)
+		"sub_key"		=>	[string],	(optional)
+		"meta_value" 	=>	[mixed],	(required)
+		"meta_key" 		=>	[string] 	(optional)
+		);
 	*/
 	global $post;
 	$default_post_id = ( gettype($post) == 'object' ) ? $post->ID : false;
@@ -841,7 +810,18 @@ function pw_set_custom_default( $vars ){
 
 }
 
+//////////////////////////////////////////////////////////////
+//////////////////// GRAVEYARD //////////////////////////////
+////////////////////////////////////////////////////////////
 
+/**
+ * DEPRECIATED - use _get()
+ */
+function pw_get_obj( $obj, $key ){
+	return _get( $obj, $key );
+}
 
-
-?>
+function pw_set_obj( $obj, $key, $value ){
+	// DEPRECIATED
+	return _set( $obj, $key, $value );
+}
