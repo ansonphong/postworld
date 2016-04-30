@@ -9,12 +9,15 @@ Author URI: http://phong.com
 License: GPL2
 ******************************************/
 /**
- * Action hook, firing right before Postworld is loaded
+ * Action hook, fires right before Postworld is loaded
  * @since Postworld 1.602
  */
 do_action('postworld_init');
 
-//if( !defined( 'POSTWORLD_DIR' ) )
+/**
+ * @todo Rename from 'pw' to 'postworld' for less chance of collisions.
+ */
+$GLOBALS['pw'] = array();
 define( 'POSTWORLD', true );
 define( 'POSTWORLD_DIR', dirname(__FILE__) );
 define( 'POSTWORLD_PATH', POSTWORLD_DIR );
@@ -37,24 +40,30 @@ include 'php/core/theme.php';
 do_action('postworld_config');
 
 
-include 'php/core/filters.php';
-
 ////// PW GLOBALS //////
 // @todo MOVE INTO CONFIG
 // This must come after the API functions
 // And before the rest of the Postworld includes
 $pw['info']['modules'] = pw_enabled_modules();	// pw_get_option( array( 'option_name' => PW_OPTIONS_MODULES ) );
 
-
-
-////// VARIABLES //////
+include 'php/core/filters.php';
 include 'php/core/variables.php';
-
-////// PATHS //////
 define( 'POSTWORLD_URI', pw_get_postworld_uri() );
 
-////// H2O //////
+
+/**
+ * H2O templating Engine
+ * @todo Enable / Disable in postworld-config
+ */
 require_once 'lib/h2o/h2o.php';
+
+/**
+ * Add support for LESS CSS pre-processing.
+ * @todo Enable / Disable in postworld-config
+ */
+require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
+
+
 
 // GLOBAL VARIABLES
 /*
@@ -149,11 +158,6 @@ include 'php/core/share.php';
 include 'php/core/meta.php';
 include 'php/core/includes.php';
 include 'php/core/update.php';
-
-/**
- * Add support for LESS CSS pre-processing.
- */
-require_once( POSTWORLD_PATH.'/lib/wp-less/wp-less.php' );
 
 ///// ADD HEADER CODE /////
 add_action('wp_head','pw_add_header_code');

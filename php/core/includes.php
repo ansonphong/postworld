@@ -39,14 +39,14 @@ function postworld_includes( $vars ){
 		$vars['inject'] : $pw['inject'];
 
 	// Add Additional Angular Modules
-	$pw['angularModules'] = apply_filters( 'pw_angular_modules', $pw['angularModules'] );
+	$pw['angular_modules'] = apply_filters( 'pw_angular_modules', $pw['angular_modules'] );
 
 	if( is_admin() ){
-		$pw['angularModules'][] = 'colorpicker.module';
+		$pw['angular_modules'][] = 'colorpicker.module';
 	}
 
 	// Add Angular Modules to the Postworld Inject array
-	$pw['inject'] = array_merge( $pw['inject'], $pw['angularModules'] );
+	$pw['inject'] = array_merge( $pw['inject'], $pw['angular_modules'] );
 
 	// Add Glyphicons for Admin
 	if( is_admin() ){
@@ -617,7 +617,7 @@ function pwGlobals_print() {
 	global $pw;
 	?><script type="text/javascript">/* <![CDATA[ */
 		pw = {};
-		pw.angularModules = <?php echo json_encode( $pw['angularModules'] ) ?>;
+		pw.angularModules = <?php echo json_encode( $pw['angular_modules'] ) ?>;
 		pw.info = <?php echo json_encode( $pw['info'] ); ?>;
 		pw.view = <?php echo json_encode( pw_current_view() ); ?>;
 		pw.query = <?php echo json_encode( _get( $pw, 'query' ) ); ?>;

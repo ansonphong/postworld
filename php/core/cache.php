@@ -208,13 +208,17 @@ function pw_delete_cache( $where ){
 		);
 }
 
+/**
+ * Deletes all caches and truncates the entire cache table
+ */
 function pw_truncate_cache(){
-
-	if( !pw_config_in_db_tables('cache') )
-		return false;
-
-	global $pw;
 	global $wpdb;
+	// Delete all the Script Caches for added measure
+	pw_scripts_flush();
+	// If cache table is not enabled, end here
+	if( !pw_config_in_db_tables('cache') )
+		return false;	
+	// Truncate the table
 	return $wpdb->query("TRUNCATE TABLE `" . $wpdb->pw_prefix . "cache`");
 }
 

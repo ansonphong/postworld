@@ -13,6 +13,8 @@ global $theme_admin;
 global $pw;
 
 function postworld_admin_menu(){
+	pw_log( 'postworld_admin_menu' );
+	
 	global $pw;	
 	$enabled_modules = pw_enabled_modules();
 	$pw_slug = $pw['info']['slug'];

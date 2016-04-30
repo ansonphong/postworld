@@ -2,6 +2,10 @@
 /**
  * Setup core definitions
  */
+// @todo - REFACTOR THIS FILE USING THEME SLUG
+// @todo - LOOK FOR ANY STRAY FILTER NAMES THAT NEED CONSTANTS
+// @todo - DEVELOP THEME MIGRATIONS TO RENAME DB KEYS AND DATABASE TABLES
+
 add_action( 'postworld_config', 'postworld_definitions', 11 );
 function postworld_definitions(){
 
@@ -17,56 +21,27 @@ function postworld_definitions(){
 	global $wpdb;
 	$wpdb->pw_prefix = $wpdb->prefix . "postworld_";
 
-	/**
-	 * @todo Rename from 'pw' to 'postworld' for less chance of collisions.
-	 */
-	$GLOBALS['pw'] = array(
-		'info'	=>	array(
-			'version'		=>	1.602,
-			'db_version'	=>	1.29,
-			'mode'	=>	pw_mode(),
-			'slug'	=>	'postworld',
-			),
-		'angularModules'	=>	array(),
-		'vars'	=>	array(
-			),
-
-		'models'	=>	array(
-			'fields'			=>	'postworld-model-fields',
-			'post_fields'		=>	'postworld-model-post-fields',
-			'user_fields'		=>	'postworld-model-user-fields',
-			'styles'			=>	'postworld-model-styles',
-			'backgrounds'		=>	'postworld-model-backgrounds',
-			),
-		'filters'	=>	array(
-			'feed_default'		=>	'postworld-feed-default',
-			'feed_override'		=>	'postworld-feed-override',
-			'term_feed'			=>	'postworld-term-feed-',
-			'style_default'		=>	'postworld-style-defaults'
-			),
-
-		'iconsets'	=>	array(),
-		'fields' => array(
-			'post'	=> array(),
-			'user'	=>	array(),
-			),
-
+	$GLOBALS['pw']['info'] = array(
+		'version'		=>	1.602,
+		'db_version'	=>	1.29,
+		'mode'	=>	pw_mode(),
+		'slug'	=>	'postworld',
 		);
-
-	global $pw;
+	$GLOBALS['pw']['angular_modules'] = array();
+	$GLOBALS['pw']['iconsets'] = array();
 
 	///// DEFINE MODEL FILTER NAMES /////
-	define( 'PW_FIELD_MODELS', 		$pw['models']['fields'] );
-	define( 'PW_POST_FIELD_MODELS', $pw['models']['post_fields'] );
-	define( 'PW_USER_FIELD_MODELS', $pw['models']['user_fields'] );
+	define( 'PW_FIELD_MODELS', 		'postworld-model-fields' );
+	define( 'PW_POST_FIELD_MODELS', 'postworld-model-post-fields' );
+	define( 'PW_USER_FIELD_MODELS', 'postworld-model-user-fields' );
 
-	define( 'PW_MODEL_STYLES', 		$pw['models']['styles'] );
-	define( 'PW_MODEL_BACKGROUNDS', $pw['models']['backgrounds'] );
+	define( 'PW_MODEL_STYLES', 		'postworld-model-styles' );
+	define( 'PW_MODEL_BACKGROUNDS', 'postworld-model-backgrounds' );
 
-	define( 'PW_TERM_FEED', 		$pw['filters']['term_feed'] );
-	define( 'PW_FEED_DEFAULT', 		$pw['filters']['feed_default'] );
-	define( 'PW_FEED_OVERRIDE', 	$pw['filters']['feed_override'] );
-	define( 'PW_STYLES_DEFAULT', 	$pw['filters']['style_default'] );
+	define( 'PW_TERM_FEED', 		'postworld-term-feed-' );
+	define( 'PW_FEED_DEFAULT', 		'postworld-feed-default' );
+	define( 'PW_FEED_OVERRIDE', 	'postworld-feed-override' );
+	define( 'PW_STYLES_DEFAULT', 	'postworld-style-defaults' );
 
 	///// DEFINE META FILTER NAMES /////
 	define( 'PW_POSTS', 	'pw_posts' );

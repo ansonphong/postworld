@@ -33,10 +33,10 @@ function pw_enqueue_script( $vars ){
  * @param string $prefix The beginning of the filenames to delete.
  * @param string $extension The file extension of postfix of the files to delete.
  */
-function pw_scripts_flush( $prefix = '', $extension = '.js' ){
+function pw_scripts_flush( $prefix = null, $extension = '.js' ){
 	if( $prefix === null )
 		$prefix = '';
-	
+
 	$pw_scripts = new PW_Scripts();
 	$pw_scripts->flush( $prefix, $extension );
 }

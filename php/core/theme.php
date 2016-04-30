@@ -1,20 +1,26 @@
 <?php
 /**
+ * The default theme model.
+ *
+ * @since Postworld 1.602
+ */
+function pw_default_theme(){
+	return array(
+		'slug' => 'postworld',
+		'version' => '0.0.0',
+		);
+}
+
+/**
  * Registers a theme within Postworld.
  *
  * @since Postworld 1.602
  */
-add_action( 'after_setup_theme', 'pw_register_theme', 2 );
-function pw_register_theme(){
-
+function pw_register_theme( $theme = array() ){
 	// Set the default theme name
-	$default_theme = array(
-		'slug' => 'postworld',
-		'version' => '0.0.0',
-		);
+	$theme = array_replace( pw_default_theme(), $theme );
 	
-	// Allow theme to register itself and add theme to the globals
-	$theme = apply_filters( 'pw_register_theme', $default_theme );
+	// Add theme to the globals
 	$GLOBALS['pw']['theme'] = $theme;
 
 	// Generate the option_name for the theme version
@@ -48,7 +54,10 @@ function pw_register_theme(){
  * @since Postworld 1.602
  */
 function pw_theme(){
-	return _get( $GLOBALS['pw'], 'theme' );
+	$theme = _get( $GLOBALS['pw'], 'theme' );
+	if( $theme === false )
+		$theme = pw_default_theme();
+	return $theme;
 }
 
 /**
@@ -57,7 +66,7 @@ function pw_theme(){
  * @since Postworld 1.602
  */
 function pw_theme_slug(){
-	return _get( $GLOBALS['pw'], 'theme.slug' );
+	return _get( pw_theme(), 'slug' );
 }
 
 /**
@@ -66,7 +75,7 @@ function pw_theme_slug(){
  * @since Postworld 1.602
  */
 function pw_theme_version(){
-	return _get( $GLOBALS['pw'], 'theme.version' );
+	return _get( pw_theme(), 'version' );
 }
 
 /**
