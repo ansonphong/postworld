@@ -2,11 +2,17 @@
 /**
  * Add item to admin menu bar on the top.
  */
-global $pw;
-if( pw_config('wp_admin.admin_bar_menu.enable') &&
-	current_user_can('manage_options') )
-	add_action( 'admin_bar_menu', 'pw_admin_bar_menu', 999 );
+add_action('init','pw_add_admin_bar_menu');
+function pw_add_admin_bar_menu(){
+	if( pw_config('wp_admin.admin_bar_menu.enable') &&
+		current_user_can('manage_options') ){
+		add_action( 'admin_bar_menu', 'pw_admin_bar_menu', 999 );
+	}
+}
 
+/**
+ * Add active class to the selected menu item.
+ */
 function pw_admin_bar_menu_item_meta( $id ){
 	$class = ( strpos( $_SERVER['QUERY_STRING'], $id ) ) ? 'active' : '';
 	return array(
@@ -14,10 +20,11 @@ function pw_admin_bar_menu_item_meta( $id ){
 		);
 }
 
+/**
+ * Adds a Postworld/Theme branded menu dropdown to the Admin Bar
+ */
 function pw_admin_bar_menu($wp_admin_bar){
-	global $pw;
 	$enabled_modules = pw_enabled_modules();
-	$pw_slug = $pw['info']['slug'];
 	$theme_url = get_admin_url( null, 'admin.php?page=' . pw_theme_slug() );
 
 	$menu_name = 'postworld-menu';

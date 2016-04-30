@@ -10,7 +10,7 @@ add_action( 'postworld_config', 'postworld_definitions', 11 );
 function postworld_definitions(){
 
 	// Localize the registered theme slug
-	$theme_slug = 'postworld';// pw_theme_slug();
+	$theme_slug = pw_theme_slug();
 
 	// Used for the core PW_Scripts grouping
 	define( 'POSTWORLD_APP', $theme_slug.'-app' );
