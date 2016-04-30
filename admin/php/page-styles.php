@@ -30,20 +30,20 @@ pw_print_ng_controller(array(
 				<!-- SAVE BUTTON -->
 				<div class="save-right"><?php pw_save_option_button( PW_OPTIONS_STYLES,'pwStyles'); ?></div>
 
-				<h2>
-					<i class="{{ type.icon }}"></i>
+				<h4>
+					<i class="icon {{ type.icon }}"></i>
 					{{ type.name }}
-				</h2>
+				</h4>
 
 				<table class="form-table pad" style="margin-top:15px;">
 					<tr ng-repeat="section in type.values"
 						valign="top"
 						class="module layout">
 						<th scope="row">
-							<h3>
-								<i class="{{ section.icon }}"></i>
+							<h5>
+								<i class="icon {{ section.icon }}"></i>
 								{{ section.name }}
-							</h3>
+							</h5>
 						</th>
 						<td class="align-top">
 							
