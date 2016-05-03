@@ -19,9 +19,17 @@ function pw_default_theme(){
 function pw_register_theme( $theme = array() ){
 	// Set the default theme name
 	$theme = array_replace( pw_default_theme(), $theme );
-	
 	// Add theme to the globals
 	$GLOBALS['pw']['theme'] = $theme;
+}
+
+/**
+ * Runs theme upgrades and updates current theme version in DB.
+ */
+add_action( 'after_setup_theme', 'pw_upgrade_theme' );
+function pw_upgrade_theme(){
+
+	$theme = pw_theme();
 
 	// Generate the option_name for the theme version
 	$option_name = pw_theme_version_option_name();
@@ -38,7 +46,7 @@ function pw_register_theme( $theme = array() ){
 	// If the theme version has increased, run upgrades
 	if( version_compare( $previous_version, $current_version ) === -1 ){
 
-		// @todo run this from an auxillary function on after_setup_theme action hook
+		pw_log('DO THEME UPGRADE');
 
 		// Do action on theme upgrade
 		$upgrade_action = $theme['slug'] . '_theme_upgrade';
@@ -53,7 +61,6 @@ function pw_register_theme( $theme = array() ){
 	}
 
 }
-
 
 /**
  * Gets the current registered theme.

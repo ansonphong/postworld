@@ -42,13 +42,18 @@ include 'php/core/modules.php';
 include 'php/core/theme.php';
 
 /**
- * Action hook, after Postworld API is loaded
+ * Action hook to register the current theme.
+ *
+ * @since Postworld 1.602
+ */
+do_action( 'postworld_register_theme' );
+
+/**
  * A good hook to configure everything.
  * This is where the theme can populate the Postworld Config.
  *
  * @since Postworld 1.602
  */
-
 do_action( POSTWORLD_CONFIG );
 
 /**

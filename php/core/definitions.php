@@ -32,6 +32,9 @@ function postworld_definitions(){
 	// Empty array for footer scripts to be held in
 	$GLOBALS['pw_footer_scripts'] = array();
 
+	// Define the Javascript App name
+	define( 'POSTWORLD_APP', 		$theme_slug.'-app' );
+
 	///// DEFINE MODEL FILTER NAMES /////
 	define( 'PW_FIELD_MODELS', 		$theme_slug.'-model-fields' );
 	define( 'PW_POST_FIELD_MODELS', $theme_slug.'-model-post-fields' );
