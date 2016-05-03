@@ -268,4 +268,3 @@ function pw_set_post_meta($post_id, $post_meta){
 	}
 	
 }
-?>
