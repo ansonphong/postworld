@@ -14,7 +14,7 @@ function pw_metabox_init_post_parent(){
 	global $post;
 
 	// Get the settings
-	$metabox_settings = pw_get_obj( pw_config(), 'wp_admin.metabox.post_parent' );
+	$metabox_settings = pw_config('wp_admin.metabox.post_parent');
 	if( !$metabox_settings || !is_array( $metabox_settings ) )
 		return false;
 	

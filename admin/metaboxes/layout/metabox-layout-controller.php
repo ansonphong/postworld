@@ -52,7 +52,7 @@ pw_print_ng_controller(array(
 		<input type="hidden" name="pw_layout_post" ng-value="pw_layout_post | json" style="width:100%;">
 		
 		<?php if( pw_dev_mode() ): ?>
-			<hr><pre>pw_layout_post.post_meta.pw_meta.layout : {{ pw_layout_post.post_meta.pw_meta.layout | json }}</pre>
+			<hr><pre>pw_layout_post.post_meta.<?php echo PW_POSTMETA_KEY ?>.layout : {{ pw_layout_post.post_meta.<?php echo PW_POSTMETA_KEY ?>.layout | json }}</pre>
 		<?php endif; ?>
 		
 	</div>	

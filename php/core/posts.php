@@ -407,7 +407,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 			if( isset( $post['post_meta'] ) && is_array( $post['post_meta'] ) ){
 
 				// Get known metakeys from the theme configuration
-				$json_meta_keys = pw_config( 'db.wp_postmeta.json_meta_keys' );
+				$json_meta_keys = pw_config( 'database.wp_postmeta.json_meta_keys' );
 				// If there are no set fields, define empty array
 				if( !$json_meta_keys ) $json_meta_keys = array();
 				// Add the globally defined postmeta key
@@ -862,7 +862,7 @@ function pw_set_wp_postmeta_array( $post_id, $post_meta = array() ){
 		///// JSON SETUP /////
 		// Parse known object to JSON strings
 		// Get known metakeys from the theme configuration
-		$json_meta_keys = pw_config('db.wp_postmeta.json_meta_keys');
+		$json_meta_keys = pw_config('database.wp_postmeta.json_meta_keys');
 		// If there are no set fields, define empty array
 		if( !$json_meta_keys ) $json_meta_keys = array();
 		// Add the globally defined postmeta key

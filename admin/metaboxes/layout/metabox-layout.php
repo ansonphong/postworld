@@ -26,7 +26,7 @@ function pw_metabox_init_layout(){
 	*/
 
 	// Get the settings
-	$metabox_settings = _get( pw_config(), 'wp_admin.metabox.layout' );
+	$metabox_settings = pw_config('wp_admin.metabox.layout');
 	if( !$metabox_settings || !is_array( $metabox_settings ) )
 		return false;
 	

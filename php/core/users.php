@@ -290,7 +290,7 @@ function pw_insert_user( $userdata ){
 				"user_id"	=>	$user_id,
 				"sub_key"	=>	"signup.context",
 				"value" 	=>	$userdata['context'],
-				//"meta_key" 	=>	// default: 'pw_meta'
+				//"meta_key" 	=>	// default: PW_USERMETA_KEY
 				);
 			pw_set_wp_usermeta( $usermeta );
 		}

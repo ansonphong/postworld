@@ -15,18 +15,28 @@ License: GPL2
 do_action('postworld_init');
 
 /**
- * @todo Rename from 'pw' to 'postworld' for less chance of collisions.
+ * @todo Rename from 'pw' to 'postworld' for less chance of collisions
+ * 			as some scripts use $pw as a local variable for 'password'.
  */
 $GLOBALS['pw'] = array();
+
+/**
+ * Setup definitions required for loading API.
+ */
 define( 'POSTWORLD', true );
 define( 'POSTWORLD_DIR', dirname(__FILE__) );
 define( 'POSTWORLD_PATH', POSTWORLD_DIR );
+define( 'POSTWORLD_CONFIG', 'postworld_config' );
+$GLOBALS[ POSTWORLD_CONFIG ] = array();
 
 /**
- * Load high priority core API functions
+ * Load core Postworld API functions and classes
  */
 include 'php/core/utilities.php';
+include 'php/core/config.php';
+include 'php/core/config-defaults.php';
 include 'php/core/api.php';
+include 'php/core/variables.php';
 include 'php/core/definitions.php';
 include 'php/core/modules.php';
 include 'php/core/theme.php';
@@ -34,10 +44,12 @@ include 'php/core/theme.php';
 /**
  * Action hook, after Postworld API is loaded
  * A good hook to configure everything.
+ * This is where the theme can populate the Postworld Config.
+ *
  * @since Postworld 1.602
  */
-do_action('postworld_config');
 
+do_action( POSTWORLD_CONFIG );
 
 /**
  * PW GLOBALS
@@ -48,7 +60,7 @@ do_action('postworld_config');
 $pw['info']['modules'] = pw_enabled_modules();
 
 include 'php/core/filters.php';
-include 'php/core/variables.php';
+
 define( 'POSTWORLD_URI', pw_get_postworld_uri() );
 
 /**

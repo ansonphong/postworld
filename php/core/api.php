@@ -215,7 +215,7 @@ function pw_get_wp_usermeta($vars){
 	*/
 
 	extract($vars);
-	$meta_key = pw_usermeta_key;
+	$meta_key = PW_USERMETA_KEY;
 
 	///// USER ID /////
 	// Security check to see if user can access user meta
@@ -773,8 +773,8 @@ function pw_set_custom_default( $vars ){
 	$vars = array(
 		'subject' => $post['post_meta'],
 		'type' => 'wp_postmeta',
-		'default_key' => 'pw_meta.featured_image.display'
-		'subject_key' => 'pw_meta.featured_image.display'
+		'default_key' => PW_POSTMETA_KEY.'.featured_image.display'
+		'subject_key' => PW_POSTMETA_KEY.'.featured_image.display'
 		)
 	*/
 	// Require types and values

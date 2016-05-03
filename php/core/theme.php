@@ -32,10 +32,17 @@ function pw_register_theme( $theme = array() ){
 	// Get the current version of the theme
 	$current_version = $theme['version'];
 
+	pw_log('PREVIOUS VERSION', $previous_version );
+	pw_log('CURRENT VERSION', $current_version );
+
 	// If the theme version has increased, run upgrades
 	if( version_compare( $previous_version, $current_version ) === -1 ){
+
+		// @todo run this from an auxillary function on after_setup_theme action hook
+
 		// Do action on theme upgrade
-		do_action( $theme['slug'] . '_theme_upgrade', array(
+		$upgrade_action = $theme['slug'] . '_theme_upgrade';
+		do_action( $upgrade_action, array(
 			'previous_version' => $previous_version,
 			'current_version' => $current_version,
 			));

@@ -18,7 +18,7 @@ function pw_metabox_init_wp_postmeta(){
 	global $post;
 
 	// Get the settings
-	$metabox_settings = pw_get_obj( pw_config(), 'wp_admin.metabox.wp_postmeta' );
+	$metabox_settings = pw_config('wp_admin.metabox.wp_postmeta');
 	if( !$metabox_settings || !is_array( $metabox_settings ) )
 		return false;
 	

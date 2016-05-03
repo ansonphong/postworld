@@ -58,7 +58,7 @@ function pw_get_current_layout( $vars = array() ){
 		$post_id = ( empty( $get_post_id ) ) ?
 			$post->ID : $vars['post_id'];
 
-		// Check for layout override in : post_meta.pw_meta.layout
+		// Check for layout override in : post_meta.PW_POSTMETA_KEY.layout
 		$postmeta_layout = pw_get_wp_postmeta( array(
 			'post_id' => $post_id,
 			'sub_key' => 'layout'
