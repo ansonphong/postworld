@@ -59,13 +59,13 @@ function _get( $obj, $key ){
  * @return mixed The object with the new value set
  */
 function _set( $obj, $key, $value ){
-
+	/* // For Debuggin'
 	if( !is_array($obj) ){
 		pw_log( '_SET : NOT ARRAY : OBJ', $obj );
 		pw_log( '_SET : NOT ARRAY : KEY', $key );
 		pw_log( '_SET : NOT ARRAY : VALUE', $value );
 	}
-
+	*/
 	///// KEY PARTS /////
 	// FROM : "key.subkey.sub.subkey"
 	// TO 	: array( "key", "subkey", "subkey" )
