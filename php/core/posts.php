@@ -675,7 +675,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		if( in_array( 'child_posts_karma_count', $fields ) &&
 			pw_config_db_has_table( 'post_meta' ) ){
 			global $wpdb;
-			$pw_post_meta_table = $wpdb->pw_prefix . "post_meta";
+			$pw_post_meta_table = $wpdb->postworld_prefix . "post_meta";
 			$post['child_posts_karma_count'] = $wpdb->get_var(
 				"SELECT SUM(post_points)
 				FROM $pw_post_meta_table

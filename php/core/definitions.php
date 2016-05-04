@@ -24,10 +24,10 @@ function postworld_definitions(){
 	$GLOBALS['pw']['iconsets'] = array();
 
 	/**
-	 * @todo Prefix this with the theme slug.
+	 * Add variable on $wpdb for prefix on the Postworld tables.
+	 * ie. wp_postworld_post_meta || wp_themeslug_post_meta
 	 */
-	global $wpdb;
-	$wpdb->pw_prefix = $wpdb->prefix . "postworld_";
+	$GLOBALS['wpdb']->postworld_prefix = $wpdb->prefix . $theme_slug . "_";
 
 	// Empty array for footer scripts to be held in
 	$GLOBALS['pw_footer_scripts'] = array();

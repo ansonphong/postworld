@@ -70,13 +70,13 @@ class PW_Query extends WP_Query {
 
 		if($orderby!=null && $orderby!=''){
 			$orderby = str_replace("date", 			$wpdb->prefix."posts.post_date", $orderby);	
-			$orderby = str_replace("rank_score", 	$wpdb->pw_prefix."post_meta.rank_score", $orderby);	//**
-			$orderby = str_replace("post_points", 	$wpdb->pw_prefix."post_meta.post_points", $orderby); //**
+			$orderby = str_replace("rank_score", 	$wpdb->postworld_prefix."post_meta.rank_score", $orderby);	//**
+			$orderby = str_replace("post_points", 	$wpdb->postworld_prefix."post_meta.post_points", $orderby); //**
 			$orderby = str_replace("modified", 		$wpdb->prefix."posts.post_modified", $orderby);	
 			$orderby = str_replace("rand", 			"RAND()", $orderby);	
 			$orderby = str_replace("comment_count", $wpdb->prefix."posts.comment_count", $orderby);	
-			$orderby = str_replace("event_start", 	$wpdb->pw_prefix."post_meta.event_start", $orderby); //**
-			$orderby = str_replace("event_end", 	$wpdb->pw_prefix."post_meta.event_end", $orderby); //**
+			$orderby = str_replace("event_start", 	$wpdb->postworld_prefix."post_meta.event_start", $orderby); //**
+			$orderby = str_replace("event_end", 	$wpdb->postworld_prefix."post_meta.event_end", $orderby); //**
 			$orderby = "order by ".str_replace(' ', ',', $orderby);//." ".$args->order;
 			$orderby.=" ".$this->query_vars['order'];
 		}
@@ -1329,11 +1329,11 @@ class PW_User_Query extends WP_User_Query {
 			$order_by_string = '';
 		
 			if($orderby=='comment_points'){
-				$order_by_string.= "$wpdb->pw_prefix"."user_meta.comment_points"; //**
+				$order_by_string.= "$wpdb->postworld_prefix"."user_meta.comment_points"; //**
 			}
 			
 			if ($orderby=='post_points'){	
-				$order_by_string.= "$wpdb->pw_prefix"."user_meta.post_points"; //**
+				$order_by_string.= "$wpdb->postworld_prefix"."user_meta.post_points"; //**
 			}
 			
 			if ($orderby=='display_name'){
@@ -1359,27 +1359,27 @@ class PW_User_Query extends WP_User_Query {
 		
 		if($this->query_vars['location']){
 				$location = explode(",", $this->query_vars['location']);
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[0]."' and "; //**
+				$where .=" $wpdb->postworld_prefix"."user_meta.location_city='".$location[0]."' and "; //**
 				
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[1]."' and "; //**
+				$where .=" $wpdb->postworld_prefix"."user_meta.location_city='".$location[1]."' and "; //**
 				
-				$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$location[2]."' "; //**
+				$where .=" $wpdb->postworld_prefix"."user_meta.location_city='".$location[2]."' "; //**
 		}else{
 	
 		
 			if($this->query_vars['location_country']){
 				$insertAnd =TRUE;
-				$where .=" $wpdb->pw_prefix"."user_meta.location_country='".$this->query_vars["location_country"]."' "; //**
+				$where .=" $wpdb->postworld_prefix"."user_meta.location_country='".$this->query_vars["location_country"]."' "; //**
 			}
 			
 			if($this->query_vars['location_region']){
 					if($insertAnd ===TRUE) $where.=" and ";
-					$where .=" $wpdb->pw_prefix"."user_meta.location_region='".$this->query_vars["location_region"]."' "; //**
+					$where .=" $wpdb->postworld_prefix"."user_meta.location_region='".$this->query_vars["location_region"]."' "; //**
 			}
 			
 			if($this->query_vars['location_city']){
 					if($insertAnd ===TRUE) $where.=" and ";
-					$where .=" $wpdb->pw_prefix"."user_meta.location_city='".$this->query_vars["location_city"]."' "; //**
+					$where .=" $wpdb->postworld_prefix"."user_meta.location_city='".$this->query_vars["location_city"]."' "; //**
 			}
 		
 		}
@@ -1392,10 +1392,10 @@ class PW_User_Query extends WP_User_Query {
 		global $wpdb;
 		$this->query_orderby = $this->prepare_order_by($this->query_orderby);
 		$this->query_where = str_replace('WHERE', $this->prepare_where_query(), $this->query_where);
-		$this->query_from = str_replace('FROM '.$wpdb->prefix.'users','FROM '.$wpdb->prefix.'users left join  '.$wpdb->pw_prefix.'user_meta on '.$wpdb->prefix.'users.ID = '.$wpdb->pw_prefix.'user_meta.user_id ', $this->query_from);
+		$this->query_from = str_replace('FROM '.$wpdb->prefix.'users','FROM '.$wpdb->prefix.'users left join  '.$wpdb->postworld_prefix.'user_meta on '.$wpdb->prefix.'users.ID = '.$wpdb->postworld_prefix.'user_meta.user_id ', $this->query_from);
 		
 		if($remove_tbl===false )
-		$this->query_fields = str_replace('SELECT', 'SELECT '.$wpdb->pw_prefix.'user_meta.* , ', $this->query_fields);
+		$this->query_fields = str_replace('SELECT', 'SELECT '.$wpdb->postworld_prefix.'user_meta.* , ', $this->query_fields);
 			
 		//$this->request = str_replace('FROM wp_posts','FROM wp_posts left join  wp_postworld_post_meta on wp_posts.ID = wp_postworld_post_meta.post_id ', $this->request);
 		//$this->request = str_replace('WHERE', $where, $this->request);
@@ -1847,7 +1847,7 @@ class PW_COMMENTS extends WP_Comment_Query {
 
 		
 		if( pw_config_in_db_tables('comment_meta') ){
-			$join .= " left join  $wpdb->pw_prefix"."comment_meta on ".$wpdb->prefix."comments.comment_ID = $wpdb->pw_prefix"."comment_meta.comment_id "; //**
+			$join .= " left join  $wpdb->postworld_prefix"."comment_meta on ".$wpdb->prefix."comments.comment_ID = $wpdb->postworld_prefix"."comment_meta.comment_id "; //**
 		}
 
 		$query = "SELECT $fields FROM $wpdb->comments $join WHERE $where $groupby ORDER BY $orderby $order $limits";

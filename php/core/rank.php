@@ -6,7 +6,7 @@ function pw_get_rank_score( $post_id, $method = null ){
 	*/
 	global $wpdb;
 	$wpdb->show_errors();
-	$query ="select rank_score from $wpdb->pw_prefix"."post_meta where post_id=".$post_id;
+	$query ="select rank_score from $wpdb->postworld_prefix"."post_meta where post_id=".$post_id;
 	$rank_score = $wpdb->get_var($query);
 	if($rank_score == null)
 		$rank_score = 0;
@@ -48,7 +48,7 @@ function pw_cache_rank_score ( $post_id ){
 	pw_insert_post_meta( $post_id );
 
 	$query = "
-		UPDATE $wpdb->pw_prefix"."post_meta
+		UPDATE $wpdb->postworld_prefix"."post_meta
 		SET rank_score=".$post_rank_score."
 		WHERE post_id=".$post_id;
 	$result = $wpdb->query( $query );

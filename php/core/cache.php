@@ -84,7 +84,7 @@ function pw_get_cache( $fields, $operator = 'AND' ){
 		return false;
 
 	global $wpdb;
-	$table_name = $wpdb->pw_prefix . 'cache';
+	$table_name = $wpdb->postworld_prefix . 'cache';
 	$supported_fields = array( 'cache_name', 'cache_hash' );
 	$suported_operators = array( 'AND', 'OR' );
 
@@ -189,7 +189,7 @@ function pw_set_cache( $data ){
 
 	///// INSERT /////
 	return $wpdb->insert(
-		$wpdb->pw_prefix . 'cache',
+		$wpdb->postworld_prefix . 'cache',
 		$data
 		);
 
@@ -203,7 +203,7 @@ function pw_delete_cache( $where ){
 	global $pw;
 	global $wpdb;
 	return $wpdb->delete(
-		$wpdb->pw_prefix . 'cache',
+		$wpdb->postworld_prefix . 'cache',
 		$where
 		);
 }
@@ -219,7 +219,7 @@ function pw_truncate_cache(){
 	if( !pw_config_in_db_tables('cache') )
 		return false;	
 	// Truncate the table
-	return $wpdb->query("TRUNCATE TABLE `" . $wpdb->pw_prefix . "cache`");
+	return $wpdb->query("TRUNCATE TABLE `" . $wpdb->postworld_prefix . "cache`");
 }
 
 function pw_delete_cache_type( $type ){
@@ -253,7 +253,7 @@ function pw_get_cache_types_readout(){
 	// Returns an array containing the counts of each of the cache types
 	// ie. [{"cache_type":"feed","type_count":"4"},{"cache_type":"term-feed","type_count":"2"}]
 	global $wpdb;
-	$table_name = $wpdb->pw_prefix . 'cache';
+	$table_name = $wpdb->postworld_prefix . 'cache';
 	$query = '
 		SELECT cache_type, count(distinct cache_hash) as type_count
 		FROM '.$table_name.'
@@ -655,7 +655,7 @@ function pw_clear_cron_logs ( $timestamp ){
 	if( pw_dev_mode() )
 		$wpdb -> show_errors();
 	
-	$query = "select COUNT(*) FROM $wpdb->pw_prefix"."cron_logs";
+	$query = "select COUNT(*) FROM $wpdb->postworld_prefix"."cron_logs";
 
 	$total_logs = $wpdb-> get_var($query);
 
@@ -664,7 +664,7 @@ function pw_clear_cron_logs ( $timestamp ){
 	}
 	else{
 	
-		$query ="DELETE FROM $wpdb->pw_prefix"."cron_logs WHERE time_end < '".$timestamp."'";
+		$query ="DELETE FROM $wpdb->postworld_prefix"."cron_logs WHERE time_end < '".$timestamp."'";
 
 		$deleted_rows = $wpdb->query($query);
 
@@ -796,7 +796,7 @@ function pw_get_most_recent_cache_shares_log(){
 
 	global $wpdb;
 	$wpdb->show_errors();
-	$query="SELECT * FROM $wpdb->pw_prefix"."cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->pw_prefix"."cron_logs where function_type = 'pw_cache_shares')";
+	$query="SELECT * FROM $wpdb->postworld_prefix"."cron_logs  WHERE time_start = (SELECT MAX(time_start) FROM $wpdb->postworld_prefix"."cron_logs where function_type = 'pw_cache_shares')";
 	$row = $wpdb->get_row($query);	
 	return $row;
 }
@@ -807,7 +807,7 @@ function pw_get_recent_shares_post_ids($last_time){
 
 	 global $wpdb;	
 	 $wpdb->show_errors();
-	 $query = "select DISTINCT  post_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+	 $query = "select DISTINCT  post_id from  $wpdb->postworld_prefix"."shares where last_time>='$last_time'";
 	
 	 $post_ids = $wpdb->get_results($query);
 	  
@@ -820,7 +820,7 @@ function pw_get_recent_shares_author_ids($last_time){
 
 	 global $wpdb;	
 	 $wpdb->show_errors();
-	 $query = "select DISTINCT  author_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+	 $query = "select DISTINCT  author_id from  $wpdb->postworld_prefix"."shares where last_time>='$last_time'";
 	 $user_ids = $wpdb->get_results($query);
 	 return $user_ids;
 }	
@@ -831,7 +831,7 @@ function pw_get_recent_shares_user_ids($last_time){
 
 	 global $wpdb;	
 	 $wpdb->show_errors();
-	 $query = "select DISTINCT user_id from  $wpdb->pw_prefix"."shares where last_time>='$last_time'";
+	 $query = "select DISTINCT user_id from  $wpdb->postworld_prefix"."shares where last_time>='$last_time'";
 	 $author_ids = $wpdb->get_results($query);
 	 return $author_ids;
 }	
@@ -873,7 +873,7 @@ function pw_calculate_post_shares($post_id){
 	if( pw_dev_mode() )
 		$wpdb -> show_errors();
 	
-	$query = "select SUM(shares) FROM $wpdb->pw_prefix"."shares where post_id=".$post_id;
+	$query = "select SUM(shares) FROM $wpdb->postworld_prefix"."shares where post_id=".$post_id;
 	$total_shares = $wpdb->get_var($query);
 	if($total_shares)
 		return $total_shares;
@@ -898,7 +898,7 @@ function pw_cache_post_shares( $post_id ){
 	if( pw_dev_mode() )
 		$wpdb -> show_errors();
 	
-	$query = "update $wpdb->pw_prefix"."post_meta set post_shares=".$total_shares." where post_id=".$post_id;
+	$query = "update $wpdb->postworld_prefix"."post_meta set post_shares=".$total_shares." where post_id=".$post_id;
 	$wpdb->query($query);
 	return $total_shares;
 }
@@ -995,7 +995,7 @@ function pw_cache_user_shares( $user_id, $mode ){
 		$old_shares = $user_shares;		
 	}
 	//$total_user_shares = ($user_shares['incoming']+$user_shares['outgoing']);
-	$query = "update $wpdb->pw_prefix"."user_meta set share_points=".$total_user_shares.",share_points_meta='".json_encode($old_shares)."' where user_id=".$user_id;
+	$query = "update $wpdb->postworld_prefix"."user_meta set share_points=".$total_user_shares.",share_points_meta='".json_encode($old_shares)."' where user_id=".$user_id;
 	$wpdb->query( $query );
 
 	return $total_user_shares;	 
@@ -1011,7 +1011,7 @@ function pw_get_user_shares($user_id){
 	if( pw_dev_mode() )
 		$wpdb -> show_errors();
 	
-	$query = "select share_points_meta from $wpdb->pw_prefix"."user_meta where user_id=".$user_id;
+	$query = "select share_points_meta from $wpdb->postworld_prefix"."user_meta where user_id=".$user_id;
 	return $wpdb->get_var($query);
 }
 

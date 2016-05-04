@@ -155,7 +155,7 @@ function pw_get_user( $user_id, $fields = 'preview' ) {
 				if( pw_dev_mode() )
 					$wpdb -> show_errors();
 
-				$query = "select * from " . $wpdb->pw_prefix . 'user_meta' . " where user_id=" . $user_id;
+				$query = "select * from " . $wpdb->postworld_prefix . 'user_meta' . " where user_id=" . $user_id;
 				// Result will be output as an numerically indexed array of associative arrays, using column names as keys
 				$postworld_user_data = $wpdb->get_results($query, ARRAY_A);
 
@@ -478,7 +478,7 @@ function pw_update_user($userdata) {
 
 		if ($insertComma === FALSE) {
 		} else {
-			$query = "update $wpdb->pw_prefix" . "user_meta set $set where user_id=" . $user_id;
+			$query = "update $wpdb->postworld_prefix" . "user_meta set $set where user_id=" . $user_id;
 			//echo $query;
 			$wpdb -> query($query);
 
@@ -502,7 +502,7 @@ function pw_add_favorite($post_id, $user_id) {
 	global $wpdb;
 	if( pw_dev_mode() )
 		$wpdb -> show_errors();
-	$query = "SELECT * FROM  $wpdb->pw_prefix"."favorites WHERE post_id=$post_id AND user_id=$user_id";
+	$query = "SELECT * FROM  $wpdb->postworld_prefix"."favorites WHERE post_id=$post_id AND user_id=$user_id";
 	$results = $wpdb->get_results($query);
 	
 	// If an entry with the same values doesn't already exist
@@ -531,7 +531,7 @@ function pw_delete_favorite($post_id, $user_id) {
 	global $wpdb;
 	if( pw_dev_mode() )
 		$wpdb->show_errors();
-	$query = "DELETE from " . $wpdb->pw_prefix."favorites" . " WHERE post_id=" . $post_id . " AND user_id=" . $user_id;
+	$query = "DELETE from " . $wpdb->postworld_prefix."favorites" . " WHERE post_id=" . $post_id . " AND user_id=" . $user_id;
 	$wpdb->query($query);
 }
 
@@ -925,7 +925,7 @@ function pw_update_post_relationship($user_id, $relationship = null) {
 	global $wpdb;
 	if( pw_dev_mode() )
 		$wpdb -> show_errors();
-	$query = "update $wpdb->pw_prefix" . "user_meta set post_relationships='" . json_encode($relationship) . "' where user_id=" . $user_id;
+	$query = "update $wpdb->postworld_prefix" . "user_meta set post_relationships='" . json_encode($relationship) . "' where user_id=" . $user_id;
 	$wpdb -> query($query);
 }
 
@@ -942,7 +942,7 @@ function pw_insert_user_meta($user_id) {
 		//$user_role = pw_get_user_role($user_id);
 		//if($relationship === null) $relationship='null';
 
-		$query = "INSERT INTO `$wpdb->pw_prefix"."user_meta`
+		$query = "INSERT INTO `$wpdb->postworld_prefix"."user_meta`
 					(`user_id`,
 					`post_points`,
 					`post_points_meta`,
@@ -960,7 +960,7 @@ function pw_insert_user_meta($user_id) {
 								";
 
 		/*
-		 $query = "insert into $wpdb->pw_prefix"."user_meta (`user_id`,
+		 $query = "insert into $wpdb->postworld_prefix"."user_meta (`user_id`,
 		 `user_role`,
 		 `viewed`,
 		 `favorites`,

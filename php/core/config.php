@@ -58,7 +58,7 @@ function pw_config_in_array( $needle, $haystack_key ){
  */
 function pw_config_db_has_table( $table ){
 	global $wpdb;
-	$table_name = $wpdb->pw_prefix.$table;
+	$table_name = $wpdb->postworld_prefix.$table;
 	return ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name);
 
 	/*

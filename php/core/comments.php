@@ -87,7 +87,7 @@ function pw_get_comment_points($comment_id){
 	if( pw_dev_mode() )
 		$wpdb -> show_errors();
 
-	$query = "SELECT comment_points FROM " . $wpdb->pw_prefix.'comment_meta' . " WHERE comment_id=" . $comment_id;
+	$query = "SELECT comment_points FROM " . $wpdb->postworld_prefix.'comment_meta' . " WHERE comment_id=" . $comment_id;
 	//echo ($query);
 	$comment_points = $wpdb -> get_var($query);
 	if ($comment_points == null)
@@ -111,7 +111,7 @@ function pw_calculate_comment_points($comment_id){
 		$wpdb -> show_errors();
 
 	//first sum points
-	$query = "select SUM(points) from ".$wpdb->pw_prefix.'comment_points'." where comment_id=" . $comment_id;
+	$query = "select SUM(points) from ".$wpdb->postworld_prefix.'comment_points'." where comment_id=" . $comment_id;
 	$points_total = $wpdb -> get_var($query);
 	//echo("\npoints cal" . $points_total);
 	if($points_total==null || $points_total =='') $points_total=0;
@@ -139,7 +139,7 @@ function pw_cache_comment_points($comment_id){
 	
 	$total_points = pw_calculate_comment_points($comment_id);
 	 //update wp_postworld_meta
-	$query = "update ".$wpdb->pw_prefix.'comment_meta'." set comment_points=" . $total_points . " where comment_id=" . $comment_id;
+	$query = "update ".$wpdb->postworld_prefix.'comment_meta'." set comment_points=" . $total_points . " where comment_id=" . $comment_id;
 	$result =$wpdb -> query($query);
 	//echo(json_encode($result));
 	
@@ -171,7 +171,7 @@ function pw_insert_comment_meta($comment_id,$total_points=0){
 	$wpdb-> show_errors();
 	
 	 
-	$query = "select * from ".$wpdb->pw_prefix."comment_meta where comment_id=".$comment_id;
+	$query = "select * from ".$wpdb->postworld_prefix."comment_meta where comment_id=".$comment_id;
 	$row = $wpdb->get_row($query);
 	
 	if($row ==null){
@@ -183,7 +183,7 @@ function pw_insert_comment_meta($comment_id,$total_points=0){
 		
 		//$comment_data =  get_comment( $comment_id, ARRAY_A );
 		//echo json_encode($post_data);
-		$query = "insert into ".$wpdb->pw_prefix.'comment_meta'." values("
+		$query = "insert into ".$wpdb->postworld_prefix.'comment_meta'." values("
 				.$comment_id.","
 				.pw_get_comment_post_id($comment_id).","
 				.$total_points

@@ -240,73 +240,18 @@ function pw_date_unit_at_ago( $unit, $multiplier, $period ){
 }
 
 
-function pw_get_all_comment_ids(){
-	global $wpdb;
-	$query = "
-		SELECT comment_ID
-		FROM ".$wpdb->comments . "
-		WHERE comment_approved = 1";
-	$comments = $wpdb->get_results( $query );
-	$ids = array();
-	foreach( $comments as $comment ){
-		$ids[] = $comment->comment_ID;
-	}
-	return $ids;
-}
-
-function pw_get_all_user_ids(){
-	global $wpdb;
-	$query = "SELECT ID FROM ".$wpdb->users;
-	$users = $wpdb->get_results( $query );
-	$ids = array();
-	foreach( $users as $user ){
-		$ids[] = $post->ID;
-	}
-	return $ids;
-}
-
-function pw_get_all_post_ids_in_post_type( $post_type, $post_status = '' ){
-	// Returns a 1D array of all the post IDs in a post type
-	global $wpdb;
-
-	$post_status_query = ( !empty($post_status) && is_string($post_status) ) ?
-		" AND post_status='" . $post_status . "'" :
-		"";
-
-	$query = "
-		SELECT ID
-		FROM ".$wpdb->posts."
-		WHERE post_type ='".$post_type."'"
-		. $post_status_query;
-
-	$posts = $wpdb->get_results( $query );
-
-	$ids = array();
-	foreach( $posts as $post ){
-		$ids[] = $post->ID;
-	}
-	return $ids;
-}
-
 function pw_get_post_gmt_timestamp( $post_id = null ){
-
 	if( $post_id == null )
 		return 0;
-
 	global $wpdb;
-
 	$post = $wpdb->get_row( "SELECT post_date_gmt FROM $wpdb->posts WHERE ID = " . $post_id, ARRAY_A);
-	
 	if ( empty( $post ) )
 		return 0;
-
 	$time = $post['post_date_gmt'];
-
 	$time = mysql2date( 'U', $time, false );
-
 	return $time;
-
 }
+
 
 /**
  * Display the classes for the post div.

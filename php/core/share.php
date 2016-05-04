@@ -102,7 +102,7 @@ function pw_update_share($user_id, $post_id, $ips_list,$added_shares,$last_time=
 	global $wpdb;
 	$wpdb->show_errors();
 	
-	$query = "UPDATE $wpdb->pw_prefix"."shares SET recent_ips='".json_encode($ips_list)."',shares=shares+".$added_shares;
+	$query = "UPDATE $wpdb->postworld_prefix"."shares SET recent_ips='".json_encode($ips_list)."',shares=shares+".$added_shares;
 	if($last_time){$query.=" ,last_time='".$last_time."'";}
 	$query.=" where user_id=".$user_id." and post_id=".$post_id;
 	$wpdb->query( $query );
@@ -113,7 +113,7 @@ function pw_add_share($user_id,$post_id,$post_author,$ips_list,$last_time){
 
 	global $wpdb;
 	$wpdb->show_errors();
-	$query = "INSERT INTO $wpdb->pw_prefix"."shares VALUES(".$user_id.",".$post_id.",".$post_author.",'".json_encode($ips_list)."',1,'".$last_time."')";
+	$query = "INSERT INTO $wpdb->postworld_prefix"."shares VALUES(".$user_id.",".$post_id.",".$post_author.",'".json_encode($ips_list)."',1,'".$last_time."')";
 	$wpdb->query( $query );
 	return;
 }
@@ -128,7 +128,7 @@ function pw_process_share_row( $row ){
 function pw_get_share($user_id,$post_id){
 	global $wpdb;	
 	$wpdb ->show_errors();
-	$query = "SELECT * FROM $wpdb->pw_prefix"."shares WHERE post_id=$post_id AND user_id=$user_id";
+	$query = "SELECT * FROM $wpdb->postworld_prefix"."shares WHERE post_id=$post_id AND user_id=$user_id";
 	$row = $wpdb->get_row( $query );
 	$row = pw_process_share_row( $row );
 	return $row;
@@ -156,7 +156,7 @@ function pw_user_share_report_outgoing( $user_id){
 	$wpdb->show_errors();
 	
 	// Lookup all posts shared by user ID in User Shares table, column user_id
-	$query = "SELECT * FROM $wpdb->pw_prefix"."shares WHERE user_id=".$user_id;
+	$query = "SELECT * FROM $wpdb->postworld_prefix"."shares WHERE user_id=".$user_id;
 	$results = $wpdb->get_results( $query );
 	
 	$output = array();
@@ -276,13 +276,13 @@ function pw_user_share_report_incoming( $user_id ){
 	$output=array();
 
 	// Lookup all shared posts owned by the user ID from User Shares table, column author_id
-	$query = "SELECT post_id, sum(shares) AS total_shares FROM $wpdb->pw_prefix"."shares WHERE author_id=".$user_id." GROUP BY post_id";
+	$query = "SELECT post_id, sum(shares) AS total_shares FROM $wpdb->postworld_prefix"."shares WHERE author_id=".$user_id." GROUP BY post_id";
 	$results = $wpdb->get_results( $query );
 	
 	$output = array();
 	if($results){
 		foreach ($results as $row ) {
-			$query="SELECT * FROM $wpdb->pw_prefix"."shares WHERE post_id=".$row->post_id;
+			$query="SELECT * FROM $wpdb->postworld_prefix"."shares WHERE post_id=".$row->post_id;
 			$posts_shares_by_id=$wpdb->get_results($query); 
 			$generalData = array('post_id'=>$row->post_id,'total_shares'=>$row->total_shares);
 			$generalData['user_shares']=array();
@@ -353,7 +353,7 @@ function pw_post_share_report ( $post_id ){
 	$wpdb->show_errors();
 	
 	// Collect data from Shares table on the given post
-	$query = "select * from $wpdb->pw_prefix"."shares where post_id=".$post_id;
+	$query = "select * from $wpdb->postworld_prefix"."shares where post_id=".$post_id;
 	$results = $wpdb->get_results( $query );
 	$output = array();
 	if($results){

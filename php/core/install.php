@@ -19,7 +19,7 @@ function postworld_install(){
 	$tables = pw_config_db_tables();
 
 	if( in_array( 'post_meta', $tables ) ){
-		$post_meta_table_name = $wpdb->pw_prefix.'post_meta';
+		$post_meta_table_name = $wpdb->postworld_prefix.'post_meta';
 		dbDelta(
 			"CREATE TABLE $post_meta_table_name (
 				post_id BIGINT(20) unsigned NOT NULL,
@@ -40,7 +40,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'post_points', $tables ) ){
-		$post_points_table_name = $wpdb->pw_prefix.'post_points';
+		$post_points_table_name = $wpdb->postworld_prefix.'post_points';
 		dbDelta(
 			"CREATE TABLE $post_points_table_name (
 				post_id BIGINT(20) unsigned NOT NULL,
@@ -52,7 +52,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'comment_meta', $tables ) ){
-		$comment_meta_table_name = $wpdb->pw_prefix.'comment_meta';
+		$comment_meta_table_name = $wpdb->postworld_prefix.'comment_meta';
 		dbDelta(
 			"CREATE TABLE $comment_meta_table_name (
 				comment_id mediumint(8) NOT NULL,
@@ -63,7 +63,7 @@ function postworld_install(){
 	}
 	
 	if( in_array( 'comment_points', $tables ) ){
-		$comment_points_table_name = $wpdb->pw_prefix.'comment_points';
+		$comment_points_table_name = $wpdb->postworld_prefix.'comment_points';
 		dbDelta(
 			"CREATE TABLE $comment_points_table_name (
 				comment_id BIGINT(20) UNSIGNED NOT NULL,
@@ -78,7 +78,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'user_meta', $tables ) ){
-		$user_meta_table_name = $wpdb->pw_prefix.'user_meta';
+		$user_meta_table_name = $wpdb->postworld_prefix.'user_meta';
 		dbDelta(
 			"CREATE TABLE $user_meta_table_name (
 				user_id BIGINT(20) UNSIGNED NOT NULL,
@@ -98,7 +98,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'user_shares', $tables ) ){
-		$user_shares_table_name = $wpdb->pw_prefix.'user_shares';
+		$user_shares_table_name = $wpdb->postworld_prefix.'user_shares';
 		dbDelta(
 			"CREATE TABLE $user_shares_table_name (
 				user_id BIGINT(20) UNSIGNED NOT NULL,
@@ -109,7 +109,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'favorites', $tables ) ){
-		$favorites_table_name = $wpdb->pw_prefix.'favorites';
+		$favorites_table_name = $wpdb->postworld_prefix.'favorites';
 		dbDelta(
 			"CREATE TABLE $favorites_table_name (
 				user_id BIGINT(20) UNSIGNED NOT NULL,
@@ -120,7 +120,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'cron_logs', $tables ) ){
-		$cron_logs_table_name = $wpdb->pw_prefix.'cron_logs';
+		$cron_logs_table_name = $wpdb->postworld_prefix.'cron_logs';
 		dbDelta(
 			"CREATE TABLE $cron_logs_table_name (
 				cron_run_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -136,7 +136,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'shares', $tables ) ){
-		$shares_table_name = $wpdb->pw_prefix.'shares';
+		$shares_table_name = $wpdb->postworld_prefix.'shares';
 		dbDelta(
 			"CREATE TABLE $shares_table_name (
 				user_id BIGINT(20) UNSIGNED NOT NULL,
@@ -149,7 +149,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'cache', $tables ) ){
-		$cache_table_name = $wpdb->pw_prefix.'cache';
+		$cache_table_name = $wpdb->postworld_prefix.'cache';
 		dbDelta(
 			"CREATE TABLE $cache_table_name (
 				cache_id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -163,7 +163,7 @@ function postworld_install(){
 	}
 
 	if( in_array( 'ips', $tables ) ){
-		$ips_table_name = $wpdb->pw_prefix.'ips';
+		$ips_table_name = $wpdb->postworld_prefix.'ips';
 		dbDelta(
 			"CREATE TABLE $ips_table_name (
 				ipv4 INT UNSIGNED,

@@ -29,12 +29,12 @@ function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
 	// Define the table and column names to work with
 	switch( $point_type ){
 		case 'post':
-			$table_name = $wpdb->pw_prefix."post_points";
+			$table_name = $wpdb->postworld_prefix."post_points";
 			$points_column = 'post_points';
 			$id_column ='post_id';
 			break;
 		case 'comment':
-			$table_name = $wpdb->pw_prefix."comment_points";
+			$table_name = $wpdb->postworld_prefix."comment_points";
 			$points_column = 'points';
 			$id_column = 'comment_id';
 			break;
@@ -143,7 +143,7 @@ function pw_get_post_points($post_id) {
 	
 	$query = "
 		SELECT *
-		FROM " . $wpdb->pw_prefix.'post_meta' . "
+		FROM " . $wpdb->postworld_prefix.'post_meta' . "
 		WHERE post_id=" . $post_id;
 
 	$row = $wpdb->get_row($query);
@@ -167,7 +167,7 @@ function pw_calculate_post_points( $post_id ) {
 
 	$query = "
 		SELECT SUM(post_points)
-		FROM ".$wpdb->pw_prefix.'post_points'."
+		FROM ".$wpdb->postworld_prefix.'post_points'."
 		WHERE post_id=" . $post_id;
 
 	$points_total = $wpdb->get_var( $query );
@@ -195,7 +195,7 @@ function pw_cache_post_points ( $post_id ){
 	$total_points = pw_calculate_post_points($post_id);
 
 	$query = "
-		UPDATE ".$wpdb->pw_prefix.'post_meta'."
+		UPDATE ".$wpdb->postworld_prefix.'post_meta'."
 		SET post_points=" . $total_points . "
 		WHERE post_id=" . $post_id;
 
@@ -233,7 +233,7 @@ function pw_insert_post_meta( $post_id, $points=0, $rank_score=0, $favorites=0, 
 		$post_data = get_post( $post_id, ARRAY_A );
 
 		$query = "
-			INSERT INTO ".$wpdb->pw_prefix.'post_meta'." 
+			INSERT INTO ".$wpdb->postworld_prefix.'post_meta'." 
 				(`post_id`,
 				`author_id`,
 				`post_class`,
@@ -275,7 +275,7 @@ function pw_get_user_post_points( $user_id ){
 
 	$query = "
 		SELECT post_points
-		FROM ".$wpdb->pw_prefix.'user_meta'."
+		FROM ".$wpdb->postworld_prefix.'user_meta'."
 		WHERE user_id=".$user_id;
 
 	$user_votes_points = $wpdb->get_var($query);
@@ -301,7 +301,7 @@ function pw_get_user_post_points_meta ( $user_id ){
 
 	$query = "
 		SELECT post_points_meta
-		FROM ".$wpdb->pw_prefix.'user_meta'."
+		FROM ".$wpdb->postworld_prefix.'user_meta'."
 		WHERE user_id=".$user_id;
 	$user_post_points_meta = $wpdb -> get_var($query);
 	if ($user_post_points_meta != null) {
@@ -349,7 +349,7 @@ function pw_calculate_user_posts_points( $user_id ){
 	pw_insert_user_meta( $user_id );
 
 	$query = "
-		UPDATE ".$wpdb->pw_prefix.'user_meta'."
+		UPDATE ".$wpdb->postworld_prefix.'user_meta'."
 		SET post_points=".$total_user_points.", post_points_meta='".json_encode($post_points_meta)."'
 		WHERE user_id=".$user_id;
 	
@@ -381,7 +381,7 @@ function pw_get_user_comments_points ( $user_id ){
 
 	$query = "
 		SELECT comment_points
-		FROM ".$wpdb->pw_prefix.'user_meta'."
+		FROM ".$wpdb->postworld_prefix.'user_meta'."
 		WHERE user_id=".$user_id;
 	$total_points = $wpdb -> get_var($query);
 	
@@ -406,7 +406,7 @@ function pw_calculate_user_comments_points ( $user_id ){
 	//$total_comment_points = pw_get_user_comments_points($user_id);
 	$query = "
 		SELECT SUM(points)
-		FROM ".$wpdb->pw_prefix.'comment_points'."
+		FROM ".$wpdb->postworld_prefix.'comment_points'."
 		WHERE comment_author_id=".$user_id;
 	$total_comment_points = $wpdb->get_var($query);
 	
@@ -414,7 +414,7 @@ function pw_calculate_user_comments_points ( $user_id ){
 		$total_comment_points=0;
 	
 	$query = "
-		UPDATE ".$wpdb->pw_prefix.'user_meta'."
+		UPDATE ".$wpdb->postworld_prefix.'user_meta'."
 		SET comment_points=".$total_comment_points."
 		WHERE user_id=".$user_id;
 	$wpdb->query($query);
@@ -459,7 +459,7 @@ function pw_get_post_points_meta($user_id){
 	global $wpdb;	
 	$query = "
 		SELECT post_points_meta
-		FROM $wpdb->pw_prefix"."user_meta
+		FROM $wpdb->postworld_prefix"."user_meta
 		WHERE user_id=".$user_id;
 	return $wpdb -> get_var($query);
 }
@@ -471,7 +471,7 @@ function pw_cache_post_points_meta($user_id, $post_points_meta_object){
 
 	global $wpdb;	
 	$query = "
-		UPDATE $wpdb->pw_prefix"."user_meta 
+		UPDATE $wpdb->postworld_prefix"."user_meta 
 		SET post_points_meta ='".$post_points_meta_object ."'
 		WHERE user_id=".$user_id;
 	$wpdb ->query($query);		
@@ -503,7 +503,7 @@ function pw_insert_post_points( $post_id, $user_id, $points ){
 
 	global $wpdb;
 	$wpdb->insert(
-		$wpdb->pw_prefix.'post_points',
+		$wpdb->postworld_prefix.'post_points',
 		array(
 			'post_id' 		=> 	$post_id,
 			'user_id'		=>	$user_id,
@@ -522,7 +522,7 @@ function pw_update_post_points( $post_id, $user_id, $points ){
 	global $wpdb;
 
 	$wpdb->update(
-		$wpdb->pw_prefix."post_points",
+		$wpdb->postworld_prefix."post_points",
 		// DATA
 		array(
 			'post_points' => $points
@@ -558,7 +558,7 @@ function pw_update_comment_points($comment_id, $user_id, $points){
 
 	global $wpdb;
 	$query = "
-		UPDATE $wpdb->pw_prefix"."comment_points
+		UPDATE $wpdb->postworld_prefix"."comment_points
 		SET points=".$points."
 		WHERE comment_id=".$comment_id."
 		AND user_id=".$user_id;
@@ -581,7 +581,7 @@ function pw_insert_comment_points( $comment_id, $user_id, $points ){
 	$comment_author_id = pw_get_comment_author_id( $comment_id );
 
 	$wpdb->insert(
-		$wpdb->pw_prefix."comment_points",
+		$wpdb->postworld_prefix."comment_points",
 		array(
 			'comment_id'		=>	$comment_id,
 			'user_id'			=>	$user_id,
@@ -611,14 +611,14 @@ function pw_get_points_row( $point_type, $id, $user_id ){
 		case 'post':
 			$query = "
 				SELECT *
-				FROM ".$wpdb->pw_prefix.'post_points'."
+				FROM ".$wpdb->postworld_prefix.'post_points'."
 				WHERE post_id=" . $id . "
 				AND user_id=" . $user_id;
 			break;
 		case 'comment':
 			$query = "
 				SELECT *
-				FROM ".$wpdb->pw_prefix.'comment_points'."
+				FROM ".$wpdb->postworld_prefix.'comment_points'."
 				WHERE comment_id=" . $id . "
 				AND user_id=" . $user_id;
 			break;
@@ -653,7 +653,7 @@ function pw_has_voted_on_post( $post_id, $user_id ) {
 
 	$query = "
 		SELECT *
-		FROM ".$wpdb->pw_prefix.'post_points'."
+		FROM ".$wpdb->postworld_prefix.'post_points'."
 		WHERE post_id=" . $post_id . "
 		AND user_id=" . $user_id;
 
@@ -680,7 +680,7 @@ function pw_has_voted_on_comment ( $comment_id, $user_id ){
 
 	$query = "
 		SELECT *
-		FROM ".$wpdb->pw_prefix.'comment_points'."
+		FROM ".$wpdb->postworld_prefix.'comment_points'."
 		WHERE comment_id=" . $comment_id . "
 		AND user_id=" . $user_id;
 	$commentPointsRow = $wpdb -> get_row($query);
@@ -719,7 +719,7 @@ function pw_get_user_points_voted_to_posts($user_id, $breakdown=FALSE) {
 		$query = "
 			SELECT SUM(post_points)
 			AS total_points
-			FROM ".$wpdb->pw_prefix.'post_meta'."
+			FROM ".$wpdb->postworld_prefix.'post_meta'."
 			WHERE author_id=" . $user_id;
 
 		$total_points = $wpdb -> get_var($query);
@@ -734,8 +734,8 @@ function pw_get_user_points_voted_to_posts($user_id, $breakdown=FALSE) {
 		$query = "
 			SELECT post_id,author_id ,(post_points)
 			AS total_points, wp_posts.post_type
-			FROM $wpdb->pw_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->pw_prefix"."post_meta.post_id
-			AND wp_posts.post_author = $wpdb->pw_prefix"."post_meta.author_id)
+			FROM $wpdb->postworld_prefix"."post_meta left join wp_posts on (wp_posts.ID = $wpdb->postworld_prefix"."post_meta.post_id
+			AND wp_posts.post_author = $wpdb->postworld_prefix"."post_meta.author_id)
 			WHERE author_id=$user_id ";
 
 		$user_votes_points_breakdown = $wpdb->get_results( $query );
@@ -764,7 +764,7 @@ function pw_get_user_votes_on_posts( $user_id, $fields, $direction = null ) {
 
 	$query = "
 		SELECT *
-		FROM ".$wpdb->pw_prefix.'post_points'."
+		FROM ".$wpdb->postworld_prefix.'post_points'."
 		WHERE user_id=" . $user_id;
 	//echo($query);
 	$user_votes_per_post = $wpdb -> get_results($query);
@@ -814,7 +814,7 @@ function pw_get_user_votes_report($user_id) {
 	$query = "
 		SELECT SUM(post_points)
 		AS total_points, COUNT(*) AS total_posts
-		FROM ".$wpdb->pw_prefix.'post_points'."
+		FROM ".$wpdb->postworld_prefix.'post_points'."
 		WHERE user_id=" . $user_id;
 
 	$total_points = $wpdb->get_results($query);
@@ -878,7 +878,7 @@ function pw_post_meta_exists($post_id){
 	global $wpdb;	
 	$query = "
 		SELECT *
-		FROM ".$wpdb->pw_prefix."post_meta
+		FROM ".$wpdb->postworld_prefix."post_meta
 		WHERE post_id=".$post_id;
 	$row = $wpdb->get_row($query);
 	return ( $row == null ) ? false : true;

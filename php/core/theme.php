@@ -40,9 +40,6 @@ function pw_upgrade_theme(){
 	// Get the current version of the theme
 	$current_version = $theme['version'];
 
-	pw_log('PREVIOUS VERSION', $previous_version );
-	pw_log('CURRENT VERSION', $current_version );
-
 	// If the theme version has increased, run upgrades
 	if( version_compare( $previous_version, $current_version ) === -1 ){
 

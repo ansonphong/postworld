@@ -68,7 +68,7 @@ function pw_insert_cron_log($cron_log){
 
 	///// INSERT /////
 	$wpdb->insert(
-		$wpdb->pw_prefix . 'cron_logs',
+		$wpdb->postworld_prefix . 'cron_logs',
 		$cron_log
 		);
 

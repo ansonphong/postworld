@@ -15,7 +15,7 @@ $pw_post_meta_fields = array(
 
 function pw_get_post_meta($post_id){
 	global $wpdb;
-	$post_meta_table = $wpdb->pw_prefix.'post_meta';
+	$post_meta_table = $wpdb->postworld_prefix.'post_meta';
 	$meta = $wpdb->get_row("SELECT * FROM $post_meta_table WHERE post_id = $post_id", ARRAY_A);
 	return $meta;
 }
@@ -68,7 +68,7 @@ function pw_delete_wp_usermeta_by_id( $user_id ){
 add_action( 'delete_post', 'pw_delete_pw_postmeta_by_id' );
 function pw_delete_pw_postmeta_by_id( $post_id ){
 	global $wpdb;
-	return pw_delete_rows_by_post_id( $wpdb->pw_prefix . 'post_meta',  $post_id );
+	return pw_delete_rows_by_post_id( $wpdb->postworld_prefix . 'post_meta',  $post_id );
 }
 
 
@@ -95,7 +95,7 @@ function pw_cleanup_meta( $type ){
 			$item_ids = pw_get_column_values( $wpdb->postmeta, 'post_id', true );
 			break;
 		case 'postworld_postmeta':
-			$item_ids = pw_get_column_values( $wpdb->pw_prefix . 'post_meta', 'post_id', true );
+			$item_ids = pw_get_column_values( $wpdb->postworld_prefix . 'post_meta', 'post_id', true );
 			break;
 		case 'usermeta':
 			$item_ids = pw_get_column_values( $wpdb->usermeta, 'user_id', true );
@@ -189,7 +189,7 @@ function pw_set_post_meta($post_id, $post_meta){
 	// Add a new record if it doesn't exist
 	pw_insert_post_meta($post_id);
 
-	$query = "update $wpdb->pw_prefix"."post_meta set ";
+	$query = "update $wpdb->postworld_prefix"."post_meta set ";
 	$insertComma = FALSE;
 
 	// POST AUTHOR AS AUTHOR ID

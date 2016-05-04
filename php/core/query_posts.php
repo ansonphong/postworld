@@ -72,7 +72,7 @@ function pw_query_posts_join( $join, $this ){
 	 * JOIN the wp_posts with wp_postworld_post_meta
 	 */
 	if( $has_keys || $has_orderby ){
-		$join = 'JOIN ' . $wpdb->pw_prefix.'post_meta ON '.$wpdb->prefix.'posts.ID = '.$wpdb->pw_prefix.'post_meta.post_id';
+		$join = 'JOIN ' . $wpdb->postworld_prefix.'post_meta ON '.$wpdb->prefix.'posts.ID = '.$wpdb->postworld_prefix.'post_meta.post_id';
 	}
 
 	//pw_log( 'QUERY : JOIN', $join );
@@ -98,7 +98,7 @@ function pw_query_posts_orderby( $orderby, $this ){
 	$has_orderby = (bool) ( isset( $query['orderby'] ) && in_array( $query['orderby'], $orderby_values ) );
 
 	if( $has_orderby ){
-		$orderby = $wpdb->pw_prefix.'post_meta'.".".$query['orderby']." ".$query['order'];	
+		$orderby = $wpdb->postworld_prefix.'post_meta'.".".$query['orderby']." ".$query['order'];	
 	}
 
 	//pw_log( 'QUERY : ORDER BY', $orderby );

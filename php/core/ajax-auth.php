@@ -37,7 +37,7 @@ function pwAjaxAuth() {
 	// If it isn't authorized
 	if( $auth == false ){
 		global $wpdb;
-		$ip_table = $wpdb->pw_prefix.'ips';
+		$ip_table = $wpdb->postworld_prefix.'ips';
 		$ipv4 = ip2long( $_SERVER['REMOTE_ADDR'] );
 
 		// Count the number of times the IP is listed
