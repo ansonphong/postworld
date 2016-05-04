@@ -6,7 +6,7 @@ add_action( 'after_setup_theme', 'postworld_update_install', 8 );
 function postworld_update_install(){
 	if( pw_db_requires_update() ){
 		postworld_install();
-	}	
+	}
 }
 
 /**

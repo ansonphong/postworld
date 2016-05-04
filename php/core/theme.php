@@ -25,8 +25,11 @@ function pw_register_theme( $theme = array() ){
 
 /**
  * Runs theme upgrades and updates current theme version in DB.
+ *
+ * This is a high priority action which must be run before Postworld Install
+ * In the case that DB tables are being renamed, etc.
  */
-add_action( 'after_setup_theme', 'pw_upgrade_theme' );
+add_action( 'after_setup_theme', 'pw_upgrade_theme', 2 );
 function pw_upgrade_theme(){
 
 	$theme = pw_theme();

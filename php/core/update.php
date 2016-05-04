@@ -201,5 +201,3 @@ function pw_update_pw1_event_meta( $options = array() ) {
 
 	return $report;
 }
-
-?>
