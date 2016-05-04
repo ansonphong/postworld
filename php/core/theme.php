@@ -17,10 +17,8 @@ function pw_default_theme(){
  * @since Postworld 1.602
  */
 function pw_register_theme( $theme = array() ){
-	// Set the default theme name
-	$theme = array_replace( pw_default_theme(), $theme );
-	// Add theme to the globals
-	$GLOBALS['pw']['theme'] = $theme;
+	// Set defaults and add theme to the globals
+	$GLOBALS['pw']['theme'] = array_replace( pw_default_theme(), $theme );
 }
 
 /**
@@ -31,36 +29,27 @@ function pw_register_theme( $theme = array() ){
  */
 add_action( 'after_setup_theme', 'pw_upgrade_theme', 2 );
 function pw_upgrade_theme(){
-
+	// Localize the current registered theme
 	$theme = pw_theme();
-
 	// Generate the option_name for the theme version
 	$option_name = pw_theme_version_option_name();
-
 	// Get the previous version of the theme, the last time it was run
 	$previous_version = get_option( $option_name, '0' );
-
 	// Get the current version of the theme
 	$current_version = $theme['version'];
 
 	// If the theme version has increased, run upgrades
 	if( version_compare( $previous_version, $current_version ) === -1 ){
-
-		pw_log('DO THEME UPGRADE');
-
 		// Do action on theme upgrade
 		$upgrade_action = $theme['slug'] . '_theme_upgrade';
 		do_action( $upgrade_action, array(
 			'previous_version' => $previous_version,
 			'current_version' => $current_version,
 			));
-
 		// Update the database to the current version of Artdroid
 		update_option( $option_name, $current_version );
-
 		// Refresh the browser
 		pw_refresh();
-
 	}
 
 }
