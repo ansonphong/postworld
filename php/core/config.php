@@ -119,7 +119,6 @@ function pw_add_metabox_post_parent( $vars ){
 			),
 		)
 	 */
-	//pw_log( 'pw_add_metabox_post_parent', $vars );
 	return pw_push_config( 'wp_admin.metabox.post_parent', $vars );
 }
 
