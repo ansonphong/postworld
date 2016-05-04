@@ -8,13 +8,13 @@
  */
 function pw_config( $key = null, $value = null ){
 	if( $key === null ){
-		return $GLOBALS[ POSTWORLD_CONFIG ];
+		return $GLOBALS[POSTWORLD_CONFIG];
 	}
 	elseif( $key !== null && $value === null ){
-		return _get( $GLOBALS[ POSTWORLD_CONFIG ], $key );
+		return _get( $GLOBALS[POSTWORLD_CONFIG], $key );
 	}
 	elseif( $value !== null ){
-		$GLOBALS[ POSTWORLD_CONFIG ] = _set( $GLOBALS[ POSTWORLD_CONFIG ], $key, $value );
+		$GLOBALS[POSTWORLD_CONFIG] = _set( $GLOBALS[POSTWORLD_CONFIG], $key, $value );
 		return pw_config( $key );
 	}
 }
@@ -24,18 +24,16 @@ function pw_config( $key = null, $value = null ){
  * Postworld Site Globals.
  */
 function pw_set_config( $key, $value ){
-	global $pw_config;
-	$pw_config = _set( $pw_config, $key, $value );
-	return $pw_config;
+	$GLOBALS[POSTWORLD_CONFIG] = _set( $GLOBALS[POSTWORLD_CONFIG], $key, $value );
+	return $GLOBALS[POSTWORLD_CONFIG];
 }
 
 /**
  * Pushes a value to an array in the Postworld Config.
  */
 function pw_push_config( $key, $value ){
-	global $pw_config;
-	$pw_config = _push( $pw_config, $key, $value );
-	return $pw_config;
+	$GLOBALS[POSTWORLD_CONFIG] = _push( $GLOBALS[POSTWORLD_CONFIG], $key, $value );
+	return $GLOBALS[POSTWORLD_CONFIG];
 }
 
 /**
@@ -121,6 +119,7 @@ function pw_add_metabox_post_parent( $vars ){
 			),
 		)
 	 */
+	//pw_log( 'pw_add_metabox_post_parent', $vars );
 	return pw_push_config( 'wp_admin.metabox.post_parent', $vars );
 }
 

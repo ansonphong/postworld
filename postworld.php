@@ -54,7 +54,7 @@ do_action( 'postworld_register_theme' );
  *
  * @since Postworld 1.602
  */
-do_action( POSTWORLD_CONFIG );
+do_action( 'postworld_config' );
 
 /**
  * PW GLOBALS

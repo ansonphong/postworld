@@ -98,7 +98,7 @@ function my_register_theme(){
     + Refactored the third party system from Blogosphere into the Postworld core module *Comments*.
     + To enable, add `comments` to supported modules, and configure the comments object under `pw.config.comments`.
 ```
-$pw_config['comments'] => array(
+$GLOBALS[POSTWORLD_CONFIG]['comments'] => array(
     'supported' => array('facebook', 'disqus'),
 );
 ```
