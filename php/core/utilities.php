@@ -18,6 +18,14 @@ function pw_mode(){
 }
 
 /**
+ * Refreshes the page.
+ */
+function pw_refresh(){
+	header("Refresh:0");
+	exit;
+}
+
+/**
  * Sorts an array of associative arrays by one of the key values.
  *
  * @example sort_array_of_array($inventory, 'price');

@@ -111,7 +111,7 @@ class PW_Database{
 	 * @return mixed The result of the DB query operation.
 	 */
 	public function search_and_replace( $vars = array() ){
-
+		global $wpdb;
 		$default_vars = array(
 			'table_name' => null,
 			'column_name' => null,
@@ -138,8 +138,7 @@ class PW_Database{
 		}
 
 		extract($vars);
-
-		global $wpdb;
+		
 		$query = "
 			UPDATE " . $table_name . "
 			SET " . $column_name . " =

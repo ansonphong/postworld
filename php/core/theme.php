@@ -55,6 +55,9 @@ function pw_upgrade_theme(){
 		// Update the database to the current version of Artdroid
 		update_option( $option_name, $current_version );
 
+		// Refresh the browser
+		pw_refresh();
+
 	}
 
 }

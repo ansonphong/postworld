@@ -285,7 +285,7 @@ function pw_print_slider( $slider ){
 			$slider['posts'] = ( !$menu_id ) ?
 				array() :
 				pw_get_menu_posts( $menu_id, $fields );
-			//pw_log('slider[posts]',$slider['posts']);
+			//pw_log('mode:menu // slider[posts]',$slider['posts']);
 			break;
 			
 	}
