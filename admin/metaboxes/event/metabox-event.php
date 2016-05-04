@@ -41,7 +41,7 @@ function pw_event_meta_init(){
     global $post;
 
     // Get the Postworld event postmeta key
-    $event_postmeta_key = _get( pw_config(), 'db.wp_postmeta.meta_keys.event' );
+    $event_postmeta_key = _get( pw_config(), 'database.wp_postmeta.meta_keys.event' );
     if( !$event_postmeta_key )
     	$event_postmeta_key = 'pw_event';
 

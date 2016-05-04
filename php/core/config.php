@@ -65,7 +65,7 @@ function pw_config_db_has_table( $table ){
 	$tables = pw_config('database.tables');
 	if($tables === false)
 		return true;
-	return pw_config_in_array($table, 'db.tables' );
+	return pw_config_in_array($table, 'database.tables' );
 	*/
 }
 

@@ -60,6 +60,12 @@ function _get( $obj, $key ){
  */
 function _set( $obj, $key, $value ){
 
+	if( !is_array($obj) ){
+		pw_log( '_SET : NOT ARRAY : OBJ', $obj );
+		pw_log( '_SET : NOT ARRAY : KEY', $key );
+		pw_log( '_SET : NOT ARRAY : VALUE', $value );
+	}
+
 	///// KEY PARTS /////
 	// FROM : "key.subkey.sub.subkey"
 	// TO 	: array( "key", "subkey", "subkey" )
