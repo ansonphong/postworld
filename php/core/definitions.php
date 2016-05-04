@@ -1,13 +1,15 @@
 <?php
 /**
- * Setup core definitions
+ * Setup core definitions.
+ *
+ * @todo Make a $wpdb->postworld object with the names of the tables
+ *			ie. $wpdb->postworld->cache, for 'wp_[postworldprefix]_cache'
+ * @todo Search codebase for core filter names that need constants.
  */
-// @todo - REFACTOR THIS FILE SO ALL VARIABLES USE THEME SLUG
-// @todo - LOOK FOR ANY STRAY FILTER NAMES THAT NEED CONSTANTS
-// @todo - DEVELOP THEME MIGRATIONS TO RENAME DB KEYS AND DATABASE TABLES
-// @todo - IN THIS ORDER : OPTIONS, POSTMETA, TERMMETA, USERMETA, DB TABLES
 add_action( POSTWORLD_CONFIG, 'postworld_definitions', 11 );
 function postworld_definitions(){
+	global $wpdb;
+
 	// Localize the registered theme slug
 	$theme_slug = pw_theme_slug();
 
@@ -27,7 +29,7 @@ function postworld_definitions(){
 	 * Add variable on $wpdb for prefix on the Postworld tables.
 	 * ie. wp_postworld_post_meta || wp_themeslug_post_meta
 	 */
-	$GLOBALS['wpdb']->postworld_prefix = $wpdb->prefix . $theme_slug . "_";
+	$wpdb->postworld_prefix = $wpdb->prefix . $theme_slug . "_";
 
 	// Empty array for footer scripts to be held in
 	$GLOBALS['pw_footer_scripts'] = array();
@@ -35,7 +37,9 @@ function postworld_definitions(){
 	// Define the Javascript App name
 	define( 'POSTWORLD_APP', 		$theme_slug.'-app' );
 
-	///// DEFINE MODEL FILTER NAMES /////
+	/**
+	 * DEFINE MODEL FILTER NAMES
+	 */
 	define( 'PW_FIELD_MODELS', 		$theme_slug.'-model-fields' );
 	define( 'PW_POST_FIELD_MODELS', $theme_slug.'-model-post-fields' );
 	define( 'PW_USER_FIELD_MODELS', $theme_slug.'-model-user-fields' );
@@ -48,17 +52,23 @@ function postworld_definitions(){
 	define( 'PW_FEED_OVERRIDE', 	$theme_slug.'-feed-override' );
 	define( 'PW_STYLES_DEFAULT', 	$theme_slug.'-style-defaults' );
 
-	///// DEFINE META FILTER NAMES /////
+	/**
+	 * DEFINE META FILTER NAMES
+	 */
 	define( 'PW_POSTS', 	$theme_slug.'-posts' );
 	define( 'PW_USERS', 	$theme_slug.'-users' );
 	define( 'PW_POSTMETA', 	$theme_slug.'-postmeta' );
 	define( 'PW_USERMETA', 	$theme_slug.'-usermeta' );
 	define( 'PW_MODULES', 	$theme_slug.'-modules-filter' );
 
-	///// DEFINE PRINT FILTERS /////
+	/**
+	 * DEFINE PRINT FILTERS
+	 */
 	define( 'PW_GLOBAL_OPTIONS',	$theme_slug.'-global-options' ); // Case in-sensitive
 
-	///// VERSIONS /////
+	/**
+	 * VERSIONS
+	 */
 	define( 'PW_DB_VERSION', $theme_slug.'-db-version' );
 	define( 'PW_VERSIONS', $theme_slug.'-versions' );
 

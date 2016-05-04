@@ -83,9 +83,20 @@ class PW_Database{
 	}
 
 	/**
+	 * Check if a database table exists.
+	 * @return boolean
+	 */
+	public function table_exists( $table_name ){
+		global $wpdb;
+		return ($wpdb->get_var("SHOW TABLES LIKE '".$table_name."'") == $table_name);
+	}
+
+	/**
 	 * Renames a table.
 	 */
 	public function rename_table( $oldname, $newname ){
+		if( !$this->table_exists($oldname) )
+			return false;
 		global $wpdb;
 		$query = "RENAME TABLE " . $oldname . " TO " . $newname;
 		return $wpdb->query( $query );
