@@ -1,29 +1,21 @@
 <?php
-
-///// POSTWORLD SLIDER /////
-
 function pw_gallery_shortcode( $atts, $content = null, $tag ) {
-
 	$shortcode = pw_print_gallery( $atts );	
-
 	return $shortcode;
-
 }
 
 function pw_print_gallery( $gallery ){
-
-	///// Setup /////
 	$gallery_defaults = array(
 		"template"		=> "gallery-inline",
 		"id" 			=> hash( "md5", "1" ),
-		"ids"			=> "", // The IDs of the attachments
+		"ids"			=> "", // [string] Comma delimited IDs of the attachments
 		"class" 		=> "gallery-slider",
 		"columns"		=>	3,
 		);
 
 	$gallery = array_replace_recursive( $gallery_defaults, $gallery );
 
-	///// TEMPLATES ////
+	// Templates
 	$default_template = "gallery-inline";
 	$template_id = $gallery['template'];
 	$templates = pw_get_templates(
@@ -80,5 +72,3 @@ function pw_print_gallery( $gallery ){
 	
 }
 
-
-?>

@@ -142,6 +142,7 @@ include 'php/modules/slider/postworld-slider.php';
 include 'php/modules/term-feed/postworld-term-feed.php';
 include 'php/modules/user-feed/postworld-user-feed.php';
 include 'php/modules/gallery/postworld-gallery.php';
+include 'php/modules/visual-composer/postworld-visual-composer.php';
 //include 'php/modules/security-ip/security-ip.php';
 
 /**
