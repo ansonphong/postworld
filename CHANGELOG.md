@@ -5,6 +5,7 @@
     + All instances of `pw_meta` keys must be replaced with the constant `PW_POSTMETA_KEY` or it's respective key for usermeta and term meta, see `postworld/php/core/definitions.php` for core definitions reference.
 - **Breaking Changes** - Renamed `$GLOBALS['pw_config']` variable to `$GLOBALS['postworld_config']` and completely changed conventions for defining configuration - see `postworld/php/core/config-defaults.php`
 - **Breaking Changes** - Renamed `$GLOBALS['postworld_config']['db']` key from `db` to `database`. All instances must be renamed to : `$GLOBALS['postworld_config']['database']`
+- `pw_config($key,$value)` method now takes two parameters, if only `$key` is provided, it will just return the current value. If `$value` is provided, it will set the value of the specified key.
 
 ### Version 1.602
 - Added `postworld_init`, `postworld_config` and `postworld_loaded` action hooks

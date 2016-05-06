@@ -14,7 +14,7 @@ if( !pw_is_admin_ajax() )
 function pw_metabox_init_event(){    
 
 	// Add to Post Types
-	$metabox_post_types = pw_get_obj( pw_config(), 'wp_admin.metabox.event.post_types' );
+	$metabox_post_types = pw_config('wp_admin.metabox.event.post_types');
 	
 	// Set the default Post Types
 	if( !$metabox_post_types )
