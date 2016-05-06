@@ -6,24 +6,33 @@ include 'visual-composer-shortcodes.php';
  */
 add_action( 'vc_before_init', 'pw_vc_init', 5 );
 function pw_vc_init(){
+
+	// If module is not enabled or VC not active, end here
 	if( !pw_module_enabled('visual_composer') ||
 		!pw_vc_is_active() )
 		return false;
 
-	// Define the default shortcodes being activated
+	// Fire Action Hook
 	do_action('pw_vc_init');
 
-	// Get the configured supported shortcodes 
-	$supported_shortcodes = pw_module_config('visual_composer.shortcodes.supported');
+	// Localize frontent disabled option
+	$disable_frontend = pw_module_config('visual_composer.disable_frontend');
 
-	foreach( $supported_shortcodes as $shortcode ){
-		do_action( 'pw_vc_shortcode_'.$shortcode );
+	// Map Postworld core shortcodes if in admin or frontend
+	if( (is_admin() || !$disable_frontend) && is_user_logged_in() ){
+		// Get the configured supported shortcodes 
+		$supported_shortcodes = pw_module_config('visual_composer.shortcodes.supported');
+		// Collect all the parameters
+		$elements = apply_filters( 'pw_vc_map_shortcodes', array() );
+		foreach ($elements as $key => $params){
+			vc_map( $params );
+		}
 	}
-
+	
 	/**
 	 * Disable frontend editor.
 	 */
-	if( pw_module_config('visual_composer.disable_frontend') &&
+	if( $disable_frontend &&
 		function_exists( 'vc_disable_frontend' ) ){
 		vc_disable_frontend();
 	}
@@ -35,19 +44,15 @@ function pw_vc_init(){
 	if( function_exists('vc_set_as_theme') )
 		vc_set_as_theme();
 
-	/**
-	 * Initialize Visual Composer
-	 */
-	$pw_vc = new PW_Visual_Composer();
-	$pw_vc->init();
-
 }
 
 /**
- * Returns a boolean, whether or not Visual Composer is active.
+ * Detect if WPBakery Visual Composer is active.
+ *
+ * @return boolean
  */
 function pw_vc_is_active(){
-	return PW_Visual_Composer::is_active();
+	return defined('WPB_VC_VERSION');
 }
 
 /**
@@ -67,44 +72,35 @@ function pw_vc_map( $params ){
 }
 
 /**
- * Postworld Visual Composer Class
+ * Visual Composer Shortcode
+ * Used when registering a shortcode.
+ * Uses the template from /templates/shortcodes/[tagname].php
  */
-class PW_Visual_Composer{
+function pw_vc_shortcode( $atts, $content, $tag ){
+	$vars = array(
+		'atts' => $atts,
+		'content' => $content,
+		'tag' => $tag
+		);
+	$template_path = pw_get_shortcode_template( $tag );
+	$output = pw_ob_include( $template_path, $vars );
+	return do_shortcode($output);
+}
 
-	public function init(){
-		/**
-		 * Register Visual Composer VC Mapping
-		 */
-		//do_action();
+/**
+ * Check if Visual Composer is being used on a particular post.
+ *
+ * @param integer $post_id The ID of the post to check.
+ * @return boolean
+ */
+function pw_vc_enabled_on_post( $post_id = null ){
+	global $post;
 
-	}
+	if( $post_id === null || empty( $post_id ) )
+		$post_id = $post->ID;
 
-	/**
-	 * Detect if WPBakery Visual Composer is active.
-	 *
-	 * @return boolean
-	 */
-	public static function is_active(){
-		return defined('WPB_VC_VERSION');
-	}
-
-	/**
-	 * Check if Visual Composer is being used on a particular post.
-	 *
-	 * @param integer $post_id The ID of the post to check.
-	 * @return boolean
-	 */
-	public static function enabled_on_post( $post_id = null ){
-		global $post;
-
-		if( $post_id === null || empty( $post_id ) )
-			$post_id = $post->ID;
-
-		if( pw_vc_is_active() )
-			return pw_to_bool( get_post_meta( $post_id, '_wpb_vc_js_status', true ) );
-		else
-			return false;
-	}
-
-
+	if( pw_vc_is_active() )
+		return pw_to_bool( get_post_meta( $post_id, '_wpb_vc_js_status', true ) );
+	else
+		return false;
 }

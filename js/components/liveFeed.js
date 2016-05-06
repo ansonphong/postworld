@@ -42,7 +42,7 @@ postworld.directive('pwFeed', function($log) {
 		restrict: 'A',
 		replace: true,
 		controller: 'pwFeedController',
-       	template: '<div ng-include="templateUrl" class="feed"></div>',
+		template: '<div ng-include="templateUrl" class="feed"></div>',
 		scope : {
 			feedId: '@pwFeed',
 		},
@@ -58,7 +58,7 @@ postworld.directive('liveFeed', function($log) {
 		restrict: 'A',
 		replace: true,
 		controller: 'pwFeedController',
-       	template: '<div ng-include="templateUrl" class="feed"></div>',
+		template: '<div ng-include="templateUrl" class="feed"></div>',
 		scope : {
 			feedId: '@liveFeed',
 		},
@@ -122,17 +122,17 @@ postworld.controller('pwFeedController',
 
 	//$log.debug( 'pwFeed : BOOT : feedId : ' + $scope.feedId, $scope.feed() );
 
-   	$scope.updateTemplateUrl = function(){
+	$scope.updateTemplateUrl = function(){
 
-   		// Check if there's an over-ride feed template
-   		var templateId = $_.get( $pwData.feeds[$scope.feedId], 'feed_template' );
-   		
-   		// If no fallback template
-   		if( templateId == false )
-   			// Generate template ID from the current feed view
+		// Check if there's an over-ride feed template
+		var templateId = $_.get( $pwData.feeds[$scope.feedId], 'feed_template' );
+
+		// If no fallback template
+		if( templateId == false )
+			// Generate template ID from the current feed view
 			var templateId = 'feed-' + $pwData.getFeedView( $scope.feedId );
-   		
-   		// Define fallback template ID
+		
+		// Define fallback template ID
 		var templateIdFallback = 'feed-list';
 
 		// Get the template path
@@ -143,14 +143,16 @@ postworld.controller('pwFeedController',
 			// Get fallback
 			template = $pwData.pw_get_template( { subdir: 'feeds', view: templateIdFallback } )
 
+
+
 		// Set into the scope, this is picked up by the ng-include
 		$scope.templateUrl = template; //$pwData.pw_get_template( { subdir: 'feeds', view: template } );	   	
 
-   	}
-   	// TODO : Run this on view change
-   	// Currently only the post templates are changing on view change
-   	// This must also change
-   	$scope.updateTemplateUrl();
+	}
+	// TODO : Run this on view change
+	// Currently only the post templates are changing on view change
+	// This must also change
+	$scope.updateTemplateUrl();
 
 	$scope.setDefault = function( exp, defaultVal ){
 		var value = $scope.$eval( exp );

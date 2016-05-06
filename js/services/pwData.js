@@ -565,6 +565,7 @@ postworld.factory('$pwData', [ '$resource', '$http', '$q', '$log', '$window', '$
 			var currentView = $_.get( this.feeds, feedId + '.view.current' );
 			var defaultView = 'list';
 			var view =  ( currentView ) ? currentView : defaultView;
+			
 			return view;
 		},
 		

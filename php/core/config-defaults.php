@@ -401,7 +401,7 @@ function postworld_config_defaults(){
 		'disable_frontend' => true,
 		'shortcodes' => array(
 			'supported' => array(
-				'feed'
+				'pw-feed'
 				),
 			),
 		));

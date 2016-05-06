@@ -4,19 +4,22 @@
  *
  * @todo Enable full feed customization within VC.
  */
-add_action( 'pw_vc_shortcode_'.'feed', 'pw_vc_map_shortcode_feed' );
-function pw_vc_map_shortcode_feed(){
+add_filter( 'pw_vc_map_shortcodes', 'pw_vc_map_shortcode_feed' );
+function pw_vc_map_shortcode_feed( $elements ){
 
+	// Get the custom user-created Postworld Feeds
 	$feeds = pw_grab_option( PW_OPTIONS_FEEDS );
-	pw_log( 'FEEDS', $feeds );
 
 	// Extrapolate the feed ID and Title into array
+	$options = array();
+	foreach( $feeds as $feed ){
+		$options[ $feed['name'] ] = $feed['id'];
+	}
 
-	//foreach()
-
-	pw_vc_map( array(
+	// Add it to the elements to be mapped
+	$elements['pw-feed'] = array(
 		'name' => pw_theme_name() . ' ' . __( 'Feed', 'postworld' ),
-		'base' => 'pw_feed',
+		'base' => 'pw-feed',
 		'icon' => 'vc_icon-vc-gitem-image',
 		'category' => __( 'Post', 'postworld' ),
 		'description' => __( 'Inserts a custom feed.', 'postworld' ),
@@ -27,16 +30,15 @@ function pw_vc_map_shortcode_feed(){
 				'type' => 'dropdown',
 				'heading' => __( 'Feed', 'postworld' ),
 				'description' => __( 'Select which feed to display.', 'postworld' ),
-				'param_name' => 'feed_id',
+				'param_name' => 'id',
 				'save_always' => true,
 				'std' => null,
-				'value' => array(
-					__('Image','postworld') => 'image',
-					__('Video','postworld') => 'video',
-					),
+				'value' => $options,
 				),
 
 			),
-		));
+		);
+
+	return $elements;
 
 }

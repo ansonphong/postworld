@@ -12,7 +12,9 @@ postworldAdmin.directive( 'pwFeedOptions',
         link:function( $scope, element, attrs ){
         	// Add Module Class
         	element.addClass('pw-feed-options');
-
+        	/**
+        	 * @todo Get options data from PHP, not hard-coded in Javascript
+        	 */
         	///// FEED OPTIONS /////
 			$scope.feedOptions = {
 				view: $pwPostOptions.postView()['options'].feeds,
@@ -106,9 +108,12 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 	////////// FUNCTIONS //////////
 	$scope.newFeed = function(){
 		var feedId = "feed_" + $_.makeHash( 8 );
+		/**
+		 * @todo Get default feed data from php/theme config/options
+		 */
 		var newFeed = {
 			id: feedId,
-			name: "New Feed",
+			name: "Custom Feed",
 			preload: 10,
 			load_increment: 10,
 			offset: 0,
@@ -126,15 +131,13 @@ postworldAdmin.controller('pwAdminFeedsCtrl',
 				// link_format:
 				// s:
 				// tax_query: // TODO : select tax, manually enter slug
-				
 				// post__not_in : << With options like post_parent to exclude current post
-
 				offset:0,
 				posts_per_page: 200, 
 			},
 			//blocks:{},
-			feed_template: 'feed-list',	// Get HTML feeds from $pwData
-			aux_template: 'seo-list',		// Get PHP feeds from $pwData
+			//feed_template: 'feed-list',	// Get HTML feeds from $pwData
+			//aux_template: 'seo-list',		// Get PHP feeds from $pwData
 		};
 
 		$scope.pwFeeds.push( newFeed );
