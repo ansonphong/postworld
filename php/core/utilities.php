@@ -295,10 +295,9 @@ function pw_set_microtimer( $timer_id ){
  */
 function pw_get_microtimer( $timer_id ){
 	// Gets the microtime of a timer ID, in seconds
-	global $pw_microtimer;
-	$timer = _get( $pw_microtimer, $timer_id );
-	if( $timer_time !== false )
-		return pw_microtime_diff( $timer );//$current_time - $timer_time;
+	$timer = _get( $GLOBALS['pw_microtimer'], $timer_id );
+	if( $timer !== false )
+		return pw_microtime_diff( $timer ); //$current_time - $timer_time;
 	else
 		return false;
 }

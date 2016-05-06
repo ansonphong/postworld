@@ -7,6 +7,36 @@ function postworld_config_defaults(){
 
 	extract( pw_time_units() );
 
+	$GLOBALS[ POSTWORLD_CONFIG ]['modules'] = array(
+		'required'	=>	array(),
+		'supported'	=>	array(),
+		'settings' => array(),
+		);
+
+	pw_config_required_modules(array(
+		'site',
+		));
+
+	pw_config_supported_modules(array(
+		'site',
+		'layouts',
+		'sidebars',
+		'styles',
+		'social',
+		'feeds',
+		'backgrounds',
+		'iconsets',
+		'taxonomy_meta',
+		'shortcodes',
+		'devices',
+		'post_cache',
+		'layout_cache',
+		'colors',
+		'widgets',
+		'comments',
+		'visual_composer',
+		));
+
 	$GLOBALS[ POSTWORLD_CONFIG ]['templates'] = array(
 		'dir'	=>	array(
 			'default'	=>	get_template_directory() . '/postworld/templates/' ,
@@ -15,30 +45,6 @@ function postworld_config_defaults(){
 		'url'	=>	array(
 			'default'	=>	get_template_directory_uri() . '/postworld/templates/',
 			'override'	=>	get_stylesheet_directory_uri() . '/views/',
-			),
-		);
-
-	$GLOBALS[ POSTWORLD_CONFIG ]['modules'] = array(
-		'required'	=>	array(
-			'site',
-			),
-		'supported'	=>	array(
-			'site',
-			'layouts',
-			'sidebars',
-			'styles',
-			'social',
-			'feeds',
-			'backgrounds',
-			'iconsets',
-			'taxonomy-meta',
-			'shortcodes',
-			'devices',
-			'post_cache',
-			'layout_cache',
-			'colors',
-			'widgets',
-			'comments'
 			),
 		);
 
@@ -69,12 +75,6 @@ function postworld_config_defaults(){
 
 	$GLOBALS[ POSTWORLD_CONFIG ]['user_meta'] = array(
 			'pw_avatar'	=>	false,
-			);
-
-	$GLOBALS[ POSTWORLD_CONFIG ]['iconsets'] = array(
-			'required'	=>	array(
-				'postworld-icons',
-				),
 			);
 
 	$GLOBALS[ POSTWORLD_CONFIG ]['edit_post'] = array(
@@ -385,5 +385,10 @@ function postworld_config_defaults(){
 			),
 		);
 
+	pw_config_module('iconsets', array(
+		'required'	=>	array(
+			'postworld-icons',
+			),
+		));
 
 }

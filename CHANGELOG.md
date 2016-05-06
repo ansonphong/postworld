@@ -1,5 +1,15 @@
 # Postworld // Changelog
 
+### Version 1.604
+- **Breaking Changes** - Changed the slug for the `taxonomy-meta` module to conform with standard format of underscores, all slugs referrencing this module must be renamed to `taxonomy_meta`
+- **Breaking Changes** - Changed the method for configuring modules, introducing `pw_module_config($module, $subkey)`, and `pw_config_module($module, $config)` to respectively get and set module configurations. Module configurations are stored under `$postworld_config.modules.[$module]`. All configurations of the following modules must be changed to use this method:
+    + `comments`
+    + `colors`
+    + `widgets`
+    + `visual_composer`
+    + `iconsets`
+
+
 ### Version 1.603
 - **Breaking Changes** - All instances of `pw_meta` db keys are now automatically prefixed with the slug set by the theme, with the default `postworld` and so by default becomes `postworld_meta`
     + All instances of `pw_meta` keys must be replaced with the constant `PW_POSTMETA_KEY` or it's respective key for usermeta and term meta, see `postworld/php/core/definitions.php` for core definitions reference.

@@ -7,32 +7,41 @@
     \_/\_/  |_|\__,_|\__, |\___|\__|___/
                      |___/              
 //////////////// WIDGETS ////////////////*/
+/**
+ * @todo Move the widgets files into /php/modules/widgets/
+ */
 
 function pw_get_widget_prefix(){
-	$prefix = pw_config( 'widgets.labels.prefix' );
+	$prefix = pw_module_config( 'widgets.labels.prefix' );
 	if( !$prefix )
 		$prefix = '(Postworld)';
 	return $prefix;
 }
 
-if( pw_module_enabled('widgets') ){
-	$pw_supported_widgets = pw_config( 'widgets.supported' );
-
-	if( is_array( $pw_supported_widgets ) ){
-		if( in_array( 'module', $pw_supported_widgets ) )
-			include POSTWORLD_PATH.'/php/widgets/module/widget-module.php';
-		if( in_array( 'menu_kit', $pw_supported_widgets ) )
-			include POSTWORLD_PATH.'/php/widgets/menu-kit/widget-menu-kit.php';
-		if( in_array( 'feed', $pw_supported_widgets ) )
-			include POSTWORLD_PATH.'/php/widgets/feed/widget-feed.php';
-		if( in_array( 'term_feed', $pw_supported_widgets ) )
-			include POSTWORLD_PATH.'/php/widgets/term-feed/widget-term-feed.php';
-		if( in_array( 'user', $pw_supported_widgets ) )
-			include POSTWORLD_PATH.'/php/widgets/user/widget-user.php';
-		if( in_array( 'related_posts', $pw_supported_widgets ) )
-			include POSTWORLD_PATH.'/php/widgets/related-posts/widget-related-posts.php';
+/**
+ * Add the widgets which are supported by the theme.
+ */
+add_action( 'widgets_init', 'pw_module_widgets_init', 5 );
+function pw_module_widgets_init(){
+	if( pw_module_enabled('widgets') ){
+		$pw_supported_widgets = pw_module_config( 'widgets.supported' );
+		if( is_array( $pw_supported_widgets ) ){
+			if( in_array( 'module', $pw_supported_widgets ) )
+				include POSTWORLD_PATH.'/php/widgets/module/widget-module.php';
+			if( in_array( 'menu_kit', $pw_supported_widgets ) )
+				include POSTWORLD_PATH.'/php/widgets/menu-kit/widget-menu-kit.php';
+			if( in_array( 'feed', $pw_supported_widgets ) )
+				include POSTWORLD_PATH.'/php/widgets/feed/widget-feed.php';
+			if( in_array( 'term_feed', $pw_supported_widgets ) )
+				include POSTWORLD_PATH.'/php/widgets/term-feed/widget-term-feed.php';
+			if( in_array( 'user', $pw_supported_widgets ) )
+				include POSTWORLD_PATH.'/php/widgets/user/widget-user.php';
+			if( in_array( 'related_posts', $pw_supported_widgets ) )
+				include POSTWORLD_PATH.'/php/widgets/related-posts/widget-related-posts.php';
+		}
 	}
 }
+
 
 ///// PRINT WIDGETS /////
 function pw_print_widgets( $vars = array() ){
@@ -98,13 +107,14 @@ function pw_print_widgets( $vars = array() ){
 
 }
 
-///// POSTWORLD GET SIDEBAR /////
-// This is a slight remix of the WP code dynamic_sidebar function
-// The main difference is near the end, rather than simply calling the sidebar functions
-// Output Buffering is used to capture the HTML output by the sidebar function
-// And the HTML for the sidebars is returned in an array.
-// This allows the contents of sidebars to be passed around as variables.
-
+/**
+ * POSTWORLD GET SIDEBAR
+ * This is a slight remix of the WP code dynamic_sidebar function
+ * The main difference is near the end, rather than simply calling the sidebar functions
+ * Output Buffering is used to capture the HTML output by the sidebar function
+ * And the HTML for the sidebars is returned in an array.
+ * This allows the contents of sidebars to be passed around as variables.
+ */
 function pw_get_sidebar($index = 1) {
 	global $wp_registered_sidebars, $wp_registered_widgets;
 
@@ -327,8 +337,3 @@ function pw_get_widget_objs( $sidebar_id ){
 }
 
 
-
-
-
-
-?>

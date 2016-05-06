@@ -3,7 +3,7 @@
 // Load the is_plugin_active() function
 include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 // If the Postworld taxonomy-meta module is enabled
-if( pw_module_is_enabled('taxonomy-meta') &&
+if( pw_module_is_enabled('taxonomy_meta') &&
 	// And the Taxonomy Metadata class doesn't exist
 	!class_exists('Taxonomy_Metadata') &&
 	// And WordPress is under version 4.4
@@ -55,7 +55,7 @@ function pw_init_module_taxonomy_meta(){
 	// Initialize Taxonomy Meta module
 
 	// If the module isn't enabled, return here
-	if( !pw_module_is_enabled('taxonomy-meta') )
+	if( !pw_module_is_enabled('taxonomy_meta') )
 		return false;
 
 	// Get the instances of taxonomy metadata in the admin

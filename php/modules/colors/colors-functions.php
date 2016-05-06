@@ -7,7 +7,7 @@
  */
 add_filter( 'wp_generate_attachment_metadata', 'pw_colors_process_attachment', 10, 2 );
 function pw_colors_process_attachment( $metadata, $attachment_id = 0 ){
-	if( pw_config('colors.process_images') ){
+	if( pw_module_config('colors', 'process_images') ){
 		pw_generate_attachment_colors( array( 'attachment_id' => $attachment_id ) );
 	}
 	return $metadata;
@@ -40,7 +40,7 @@ function pw_generate_attachment_colors( $vars ){
 	 * 		Rather than only pwSiteConfig vars only.
 	 */
 
-	$colors_settings = pw_config( 'colors' );
+	$colors_settings = pw_module_config( 'colors' );
 	if( empty( $colors_settings ) )
 		// Set default color settings
 		$colors_settings = array(
