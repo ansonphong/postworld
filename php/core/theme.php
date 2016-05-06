@@ -6,6 +6,7 @@
  */
 function pw_default_theme(){
 	return array(
+		'name' => 'Postworld',
 		'slug' => 'postworld',
 		'version' => '0.0.0',
 		);
@@ -64,6 +65,15 @@ function pw_theme(){
 	if( $theme === false )
 		$theme = pw_default_theme();
 	return $theme;
+}
+
+/**
+ * Gets the current registered theme name.
+ *
+ * @since Postworld 1.604
+ */
+function pw_theme_name(){
+	return _get( pw_theme(), 'name' );
 }
 
 /**

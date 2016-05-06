@@ -391,4 +391,19 @@ function postworld_config_defaults(){
 			),
 		));
 
+	pw_config_module('colors', array(
+		'process_images' => true,
+		'max_size' => 640,
+		'number' => 5,
+		));
+
+	pw_config_module('visual_composer', array(
+		'disable_frontend' => true,
+		'shortcodes' => array(
+			'supported' => array(
+				'feed'
+				),
+			),
+		));
+
 }
