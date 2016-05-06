@@ -81,6 +81,7 @@ function postworld_definitions(){
 	define( 'PW_TAXMETA_KEY',	$theme_slug.'_meta', 		true ); // Case in-sensitive
 	define( 'PW_AVATAR_KEY',	$theme_slug.'_avatar', 		true ); // Case in-sensitive
 	define( 'PW_COLORS_KEY',	$theme_slug.'_colors', 		true ); // Case in-sensitive
+	define( 'PW_EVENT_KEY',		$theme_slug.'_event', 		true ); // Case in-sensitive
 
 	/**
 	 * Define the OPTIONS keys.

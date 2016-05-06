@@ -3,7 +3,7 @@
 ### Version 1.603
 - **Breaking Changes** - All instances of `pw_meta` db keys are now automatically prefixed with the slug set by the theme, with the default `postworld` and so by default becomes `postworld_meta`
     + All instances of `pw_meta` keys must be replaced with the constant `PW_POSTMETA_KEY` or it's respective key for usermeta and term meta, see `postworld/php/core/definitions.php` for core definitions reference.
-- **Breaking Changes** - Renamed `$GLOBALS['pw_config']` variable to `$GLOBALS['postworld_config']` and completely changed conventions for defining configuration - see ArtDroid `postworld-config.php`
+- **Breaking Changes** - Renamed `$GLOBALS['pw_config']` variable to `$GLOBALS['postworld_config']` and completely changed conventions for defining configuration - see `postworld/php/core/config-defaults.php`
 - **Breaking Changes** - Renamed `$GLOBALS['postworld_config']['db']` key from `db` to `database`. All instances must be renamed to : `$GLOBALS['postworld_config']['database']`
 
 ### Version 1.602
