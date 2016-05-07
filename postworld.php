@@ -95,6 +95,7 @@ include 'php/core/rank.php';
 include 'php/core/templates.php';
 include 'php/core/template_partials.php';
 include 'php/core/feeds.php';
+include 'php/core/feed_options.php';
 include 'php/core/cron.php';
 include 'php/core/user_meta.php';
 include 'php/core/users.php';

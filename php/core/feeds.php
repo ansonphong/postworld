@@ -860,3 +860,4 @@ function pw_gallery_feed( $vars = array() ){
 
 }
 
+
