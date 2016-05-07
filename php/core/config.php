@@ -19,6 +19,7 @@ function pw_config( $key = null, $value = null ){
 	}
 }
 
+
 /**
  * Sets a specific key in the
  * Postworld Site Globals.
@@ -28,6 +29,7 @@ function pw_set_config( $key, $value ){
 	return $GLOBALS[POSTWORLD_CONFIG];
 }
 
+
 /**
  * Pushes a value to an array in the Postworld Config.
  */
@@ -35,6 +37,7 @@ function pw_push_config( $key, $value ){
 	$GLOBALS[POSTWORLD_CONFIG] = _push( $GLOBALS[POSTWORLD_CONFIG], $key, $value );
 	return $GLOBALS[POSTWORLD_CONFIG];
 }
+
 
 /**
  * Check if needle is in an array within the Postworld Config
@@ -59,6 +62,7 @@ function pw_config_in_array( $needle, $haystack_key ){
 function pw_config_supported_modules( $modules ){
 	return pw_set_config( 'modules.supported', $modules );
 }
+
 
 /**
  * Sets the configration for the required modules.
@@ -87,6 +91,7 @@ function pw_config_db_has_table( $table ){
 	*/
 }
 
+
 /**
  * Which tables are configured to be created.
  *
@@ -111,6 +116,7 @@ function pw_config_db_tables(){
 			);
 	return $tables;
 }
+
 
 /**
  * Tells whether or not the specified table is configured.
@@ -142,6 +148,7 @@ function pw_add_metabox_post_parent( $vars ){
 	return pw_push_config( 'wp_admin.metabox.post_parent', $vars );
 }
 
+
 /**
  * Add a WP Postmeta metabox.
  * @todo Refactor this convention to use array keys, so they can be removed/modified
@@ -160,6 +167,7 @@ function pw_config_metabox_wp_postmeta( $vars ){
 	return pw_push_config( 'wp_admin.metabox.wp_postmeta', $vars );
 }
 
+
 /**
  * Gets the configuration for a Postworld module.
  * From $postworld_config.modules.[module_name]
@@ -176,6 +184,7 @@ function pw_module_config( $module = null, $subkey = null ){
 		return pw_config( 'modules.settings.'.$module.'.'.$subkey );
 }
 
+
 /**
  * Sets the configuration for a Postworld Module
  * In $postworld_config.modules.[module_name]
@@ -189,6 +198,7 @@ function pw_config_module( $module, $config = null ){
 	return false;
 }
 
+
 /**
  * Gets or sets the configuration for a Postworld Metabox
  *
@@ -199,6 +209,6 @@ function pw_metabox_config( $metabox, $config = null ){
 	if( !is_array($config) )
 		return pw_config( 'wp_admin.metabox.'.$metabox );
 	else
-		return pw_push_config( 'wp_admin.metabox.'.$metabox, $config );
+		return pw_config( 'wp_admin.metabox.'.$metabox, $config );
 }
 
