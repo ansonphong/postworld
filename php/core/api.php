@@ -700,6 +700,8 @@ function pw_get_option( $vars ){
 }
 
 function pw_set_option( $vars ){
+	do_action('pw_set_option', $vars );
+	
 	// Modifies a sub key stored in the specified option name
 	//	From `wp_options` table
 	/*

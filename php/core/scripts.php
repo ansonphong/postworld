@@ -42,6 +42,19 @@ function pw_scripts_flush( $prefix = null, $extension = '.js' ){
 }
 
 /**
+ * Flush cached scripts on common actions which might alter JS configurations
+ */
+add_action( 'wp_update_nav_menu', 'pw_scripts_flush_action' );
+add_action( 'wp_update_nav_menu_item', 'pw_scripts_flush_action' );
+add_action( 'wp_create_nav_menu', 'pw_scripts_flush_action' );
+add_action( 'wp_delete_nav_menu', 'pw_scripts_flush_action' );
+add_action( 'update_option', 'pw_scripts_flush_action' );
+add_action( 'pw_set_option', 'pw_scripts_flush_action' );
+function pw_scripts_flush_action(){
+	pw_scripts_flush();
+}
+
+/**
  * Used for combining multiple JS script files
  * Into a single file to be included on the site. 
  */
