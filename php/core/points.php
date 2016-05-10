@@ -9,7 +9,7 @@
  * @return [array] A report of the current status of the post points
  */
 function pw_set_points ( $point_type = 'post', $id = 0, $set_points ){
-	if( !pw_config_in_db_tables('comment_points') )
+	if( !pw_config_in_db_tables($point_type.'_points') )
 		return false;
 
 	global $wpdb;

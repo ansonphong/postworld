@@ -1327,19 +1327,20 @@ class PW_User_Query extends WP_User_Query {
 		if($orderby!=null && $orderby!=''){
 			
 			$order_by_string = '';
-		
-			if($orderby=='comment_points'){
+	
+			if( $orderby=='comment_points' &&
+				pw_config_in_db_tables('user_meta') ){
 				$order_by_string.= "$wpdb->postworld_prefix"."user_meta.comment_points"; //**
 			}
 			
-			if ($orderby=='post_points'){	
+			if ($orderby=='post_points' &&
+				pw_config_in_db_tables('user_meta') ){	
 				$order_by_string.= "$wpdb->postworld_prefix"."user_meta.post_points"; //**
 			}
 			
 			if ($orderby=='display_name'){
 				$order_by_string.= "wp_users.display_name";
 			}
-			
 			
 			if($order_by_string===''){ return $orderBy_Query;}
 			else return "order by $order_by_string ".$this->query_vars['order'];

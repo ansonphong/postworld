@@ -508,7 +508,7 @@ function pw_add_favorite($post_id, $user_id) {
 	// If an entry with the same values doesn't already exist
 	if( is_null($results) || count($results) === 0 ){
 		$wpdb->insert(
-			$wpdb -> pw_prefix . 'favorites',
+			$wpdb->postworld_prefix . 'favorites',
 			array(
 				'user_id' 	=> $user_id,
 				'post_id' 	=> $post_id,
@@ -751,7 +751,7 @@ function pw_get_user_location($user_id) {
 	if( pw_dev_mode() )
 		$wpdb->show_errors();
 
-	$query = "select " . user_fields_names::$LOCATION_CITY . ", " . user_fields_names::$LOCATION_COUNTRY . ", " . user_fields_names::$LOCATION_REGION . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
+	$query = "select " . user_fields_names::$LOCATION_CITY . ", " . user_fields_names::$LOCATION_COUNTRY . ", " . user_fields_names::$LOCATION_REGION . " from " . $wpdb->postworld_prefix . 'user_meta' . " where user_id=" . $user_id;
 	//echo($query);
 	$location_obj = $wpdb -> get_results($query);
 
@@ -934,7 +934,7 @@ function pw_insert_user_meta($user_id) {
 	if( pw_dev_mode() )
 		$wpdb->show_errors();
 
-	$query = "select * from " . $wpdb -> pw_prefix . "user_meta where user_id=" . $user_id;
+	$query = "select * from " . $wpdb->postworld_prefix . "user_meta where user_id=" . $user_id;
 	$row = $wpdb -> get_row($query);
 
 	if ($row == null) {
@@ -1110,7 +1110,7 @@ function pw_get_relationship_from_user_meta($user_id) {
 	global $wpdb;
 	if( pw_dev_mode() )
 		$wpdb->show_errors();
-	$query = "select " . user_fields_names::$POST_RELATIONSHIPS . " from " . $wpdb -> pw_prefix . 'user_meta' . " where user_id=" . $user_id;
+	$query = "select " . user_fields_names::$POST_RELATIONSHIPS . " from " . $wpdb->postworld_prefix . 'user_meta' . " where user_id=" . $user_id;
 	//echo($query);
 	$relationshp = $wpdb -> get_var($query);
 	return $relationshp;
