@@ -1,7 +1,7 @@
 <?php
 /******************************************
 Plugin Name: Postworld
-Plugin URI: htp://phong.com/
+Plugin URI: https://phong.com
 Description: Wordpress API extension, with AngularJS client-side framework, LESS support, and standard libraries for developers to display posts in creative ways.
 Version: 1.6
 Author: phong

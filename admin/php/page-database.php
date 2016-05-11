@@ -31,7 +31,7 @@ pw_print_ng_controller(array(
 	pw-admin-database
 	ng-controller="pwDatabaseDataCtrl"
 	pw-ui
-	class="postworld">
+	class="postworld wrap">
 
 	<h1 class="primary">
 		<i class="icon pwi-database"></i>

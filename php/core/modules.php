@@ -8,117 +8,107 @@
 function pw_registered_modules( $format = 'arrays' ){
 
 	$modules = array(
-
 		array(
 			'name'			=>	'Site Options',
 			'slug'			=>	'site',
 			'icon'			=>	'pwi-globe',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'			=>	'Layouts',
 			'slug'			=>	'layouts',
 			'icon'			=>	'pwi-th-large',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Sidebars',
 			'slug'	=>	'sidebars',
 			'icon'	=>	'pwi-map',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'			=>	'Styles',
 			'slug'			=>	'styles',
 			'icon'			=>	'pwi-brush',
 			'description'	=>	'',
 			),
-		
 		array(
 			'name'	=>	'Social',
 			'slug'	=>	'social',
 			'icon'	=>	'pwi-heart',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Feeds',
 			'slug'	=>	'feeds',
 			'icon'	=>	'pwi-file',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Backgrounds',
 			'slug'	=>	'backgrounds',
 			'icon'	=>	'pwi-paint-format',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Iconsets',
 			'slug'	=>	'iconsets',
 			'icon'	=>	'pwi-circle-medium',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Shortcodes',
 			'slug'	=>	'shortcodes',
 			'icon'	=>	'pwi-code',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Rank Score',
 			'slug'	=>	'rank_score',
 			'icon'	=>	'pwi-bars',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Post Cache',
 			'slug'	=>	'post_cache',
 			'icon'	=>	'pwi-cube',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Layout Cache',
 			'slug'	=>	'layout_cache',
 			'icon'	=>	'pwi-cubes',
 			'description'	=>	'',
 			),
-
 		array(
 			'name'	=>	'Devices',
 			'slug'	=>	'devices',
 			'icon'	=>	'pwi-mobile',
 			'description'	=>	'Adds support for device detection.',
 			),
-
 		array(
 			'name'	=>	'Colors',
 			'slug'	=>	'colors',
 			'icon'	=>	'pwi-droplet',
 			'description'	=>	'Adds support for color processing.',
 			),
-
 		array(
 			'name'	=>	'Widgets',
 			'slug'	=>	'widgets',
 			'icon'	=>	'pwi-cubes',
 			'description'	=>	'Includes supported Postworld widgets.',
 			),
-
 		array(
 			'name'	=>	'Comments',
 			'slug'	=>	'comments',
 			'icon'	=>	'pwi-bubbles',
 			'description'	=>	'Includes support for third-party comment systems.',
+			),
+		array(
+			'name'	=>	'Visual Composer',
+			'slug'	=>	'visual_composer',
+			'icon'	=>	'pwi-circle-medium',
+			'description'	=>	'Adds Postworld modules into Visual Composer.',
 			),
 
 		);

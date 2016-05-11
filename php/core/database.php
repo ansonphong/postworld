@@ -2,7 +2,7 @@
 class PW_Database{
 
 	/**
-	 * Renames all values under the meta_key column
+	 * Renames all values under the meta_key column in the wp_postmeta table
 	 * From an old value to a new value.
 	 * Generally used for migrations where the key name is changing.
 	 *
@@ -22,7 +22,27 @@ class PW_Database{
 	}
 
 	/**
-	 * Renames all values under the meta_key column
+	 * Renames all values under the meta_key column in the wp_usermeta table
+	 * From an old value to a new value.
+	 * Generally used for migrations where the key name is changing.
+	 *
+	 * @param string $oldname Current/old key name to change, ie. 'biography'
+	 * @param string $newname New name of the key, ie. 'myprefixed_biography'
+	 *
+	 * @return mixed The result of the DB query operation.
+	 */
+	public function rename_usermeta_keys( $oldname, $newname ){
+		global $wpdb;
+		return $this->replace( array(
+			'table_name' => $wpdb->usermeta,
+			'column_name' => 'meta_key',
+			'old_value' => $oldname,
+			'new_value' => $newname,
+			));
+	}
+
+	/**
+	 * Renames all values under the meta_key column in the wp_termmeta table
 	 * From an old value to a new value.
 	 * Generally used for migrations where the key name is changing.
 	 *

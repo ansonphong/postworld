@@ -51,8 +51,8 @@ function pw_event_meta_filter( $post ){
 
 	///// GET CUSTOM VARS /////
 	$vars = array(
-		'start_date_key' 	=> 'post_meta.pw_event.date.start_date',
-		'end_date_key'		=> 'post_meta.pw_event.date.end_date'
+		'start_date_key' 	=> 'post_meta.'.PW_EVENT_KEY.'.date.start_date',
+		'end_date_key'		=> 'post_meta.'.PW_EVENT_KEY.'.date.end_date'
 		);
 	$vars = apply_filters( 'pw_event_meta_filter_vars', $vars );
 
@@ -105,7 +105,7 @@ function pw_event_meta_filter( $post ){
 	}
 
 	///// TIME LINE /////
-	if( _get( $post, 'post_meta.pw_event.date.all_day' ) )
+	if( _get( $post, 'post_meta.'.PW_EVENT_KEY.'.date.all_day' ) )
 		$meta['time_line'] = 'All Day';
 	else{
 		$format = 'g:i a';

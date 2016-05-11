@@ -93,13 +93,8 @@ function postworld_config_defaults(){
 
 
 	$GLOBALS[ POSTWORLD_CONFIG ]['post_options'] = array(
-	
-		//'month'	=>	$pwUniversalLanguage['months'][$lang],
-
 		'year'	=>	array( '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016' ),
-
 		'taxonomies'	=> array( 'category', 'post_tag' ),
-
 		'taxonomy_outline'	=>	array(
 			'category' => array(
 				'max_depth' => 2,

@@ -14,7 +14,7 @@ if( !pw_is_admin_ajax() )
 function pw_metabox_init_event(){    
 
 	// Add to Post Types
-	$metabox_post_types = pw_get_obj( pw_config(), 'wp_admin.metabox.event.post_types' );
+	$metabox_post_types = pw_config('wp_admin.metabox.event.post_types');
 	
 	// Set the default Post Types
 	if( !$metabox_post_types )
@@ -41,7 +41,7 @@ function pw_event_meta_init(){
     global $post;
 
     // Get the Postworld event postmeta key
-    $event_postmeta_key = _get( pw_config(), 'database.wp_postmeta.meta_keys.event' );
+    $event_postmeta_key = pw_config('database.wp_postmeta.meta_keys.event');
     if( !$event_postmeta_key )
     	$event_postmeta_key = 'pw_event';
 
