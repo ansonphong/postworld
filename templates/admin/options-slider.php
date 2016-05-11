@@ -2,9 +2,6 @@
 	if( !isset( $vars['ng_model'] ) )
 		$vars['ng_model'] = "pwMeta.header.slider";
 	$vars['instance'] = 'sliderOptions_' . pw_random_string();
-?>
-
-<?php
 
 pw_print_ng_controller(array(
 	'app' => 'postworldAdmin',
@@ -46,42 +43,10 @@ pw_print_ng_controller(array(
 		),
 	));
 
+pw_ob_admin_footer_script('options-slider-scripts', $vars);
+
 ?>
 
-<script>
-	///// CONTROLLER /////
-	jQuery( document ).ready(function() {
-
-		postworldAdmin.directive('pwAdminSliderOptions', function( $log, $pwPostOptions, $_ ){
-			return{
-				link: function( $scope, element, attrs ){
-					// Get tax outline by AJAX
-					$pwPostOptions.taxTerms( $scope, 'tax_terms' );
-
-					// Watch value : pwMeta.header.slider.mode
-					$scope.$watch('<?php echo $vars["ng_model"] ?>.mode', function(value){
-						// Switch Query Vars
-						switch( value ){
-							case 'this_post':
-								$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post = true;
-								$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post_only = true;
-								break;
-
-							case 'query':
-								$scope.<?php echo $vars["ng_model"] ?>.query_vars.this_post_only = false;
-								break;
-
-						}
-
-
-					});
-				}
-			}
-
-		});
-
-	});
-</script>
 
 <div pw-admin-slider-options ng-controller="<?php echo $vars["instance"] ?>">
 	<div class="well">

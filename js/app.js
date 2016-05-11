@@ -94,7 +94,7 @@ postworld.config(function ($routeProvider, $locationProvider, $provide, $logProv
 	// $routeProvider.otherwise({redirectTo: '/home/'});
 
 	// SHOW / HIDE DEBUG LOGS IN CONSOLE
-	var debugEnabled = ( window.pw.info.mode == 'dev' ) ? true : false;
+	var debugEnabled = ( window.pw.info.mode === 'dev' ) ? true : false;
 	$logProvider.debugEnabled( debugEnabled );
 
 	$locationProvider.html5Mode( window.pw.view.location_provider.html_5_mode );

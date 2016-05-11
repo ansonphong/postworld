@@ -54,6 +54,40 @@ function pw_typecast_if_boolean( $value ){
 }
 
 /**
+ * Outputs the specified script template to the footer.
+ */
+function pw_ob_admin_footer_script( $template_id, $vars = array() ){
+	$output = pw_ob_admin_template( $template_id, $vars );
+	return pw_register_footer_script( $output );
+}
+
+/**
+ * Used to begin wrapping a script which is to be placed
+ * Into the footer using pw_register_footer_script()
+ * This must be closed with pw_end_footer_script();
+ */
+function pw_start_footer_script(){
+	// End any existing output buffering
+	ob_end_clean();
+	// Start a fresh output buffering
+	ob_start();
+	return;
+}
+
+/**
+ * Used to end wrapping a script which is to be placed
+ * Into the footer using pw_register_footer_script()
+ * This must be follow with pw_start_footer_script();
+ */
+function pw_end_footer_script(){
+	$output = ob_get_contents();
+	// End output buffering
+	ob_end_clean();
+	pw_register_footer_script( $output );
+	return;
+}
+
+/**
  * Prints pre-defined scripts to the footer
  */
 function pw_register_footer_script( $script ){
