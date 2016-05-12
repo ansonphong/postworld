@@ -39,12 +39,14 @@ function postworld_config_defaults(){
 
 	$GLOBALS[ POSTWORLD_CONFIG ]['templates'] = array(
 		'dir'	=>	array(
-			'default'	=>	get_template_directory() . '/postworld/templates/' ,
-			'override'	=>	get_stylesheet_directory() . '/views/',
+			'default'		=>	get_template_directory() . '/postworld/templates/' ,
+			'override'		=>	get_template_directory() . '/views/',
+			'child_theme'	=>	get_stylesheet_directory() . '/views/',
 			),
 		'url'	=>	array(
-			'default'	=>	get_template_directory_uri() . '/postworld/templates/',
-			'override'	=>	get_stylesheet_directory_uri() . '/views/',
+			'default'		=>	get_template_directory_uri() . '/postworld/templates/',
+			'override'		=>	get_template_directory_uri() . '/views/',
+			'child_theme'	=>	get_stylesheet_directory_uri() . '/views/',
 			),
 		);
 

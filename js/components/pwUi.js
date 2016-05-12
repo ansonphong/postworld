@@ -50,7 +50,7 @@ postworld.controller( 'pwUiCtrl',
 	// For use with ng-show / ng-hide
 	$scope.uiShowView = function( viewId ){
 		// If the view is registered
-		return $_.getObj( $scope, 'uiViews.'+viewId );
+		return $_.get( $scope, 'uiViews.'+viewId );
 	}
 
 	$scope.uiFocusElement = function( element, timeout ){
