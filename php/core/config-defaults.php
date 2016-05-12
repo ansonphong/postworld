@@ -14,7 +14,7 @@ function postworld_config_defaults(){
 			),
 		'url'	=>	array(
 			'default'	=>	get_template_directory_uri() . '/postworld/templates/',
-			'override'	=>	get_stylesheet_directory_uri() . '/views/',
+			'override'	=>	get_template_directory_uri() . '/views/',
 			),
 		);
 
