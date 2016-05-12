@@ -778,7 +778,7 @@ function pwSiteGlobals_include(){
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'plugins_url' => WP_PLUGIN_URL,
 		'plugins_dir' => WP_PLUGIN_DIR,
-		"theme_dir"	=>	get_stylesheet_directory(),
+		"theme_dir"	=>	get_template_directory(),
 		"home_url" => get_bloginfo( 'url' ),
 		"wp_url" => get_bloginfo( 'wpurl' ),
 		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
