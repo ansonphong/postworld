@@ -774,17 +774,17 @@ function pwSiteGlobals_include(){
 	);
 
 	///// PATHS /////
-	$config["paths"] = array(
+	$config['paths'] = array(
 		'ajax_url' => admin_url( 'admin-ajax.php' ),
 		'plugins_url' => WP_PLUGIN_URL,
 		'plugins_dir' => WP_PLUGIN_DIR,
-		"theme_dir"	=>	get_template_directory(),
-		"home_url" => get_bloginfo( 'url' ),
-		"wp_url" => get_bloginfo( 'wpurl' ),
-		"stylesheet_directory" => get_bloginfo( 'stylesheet_directory' ),
-		"template_url" => get_bloginfo( 'template_url' ),
-		"postworld_url" => POSTWORLD_URI,
-		"postworld_dir" => POSTWORLD_PATH,
+		'theme_dir'	=>	get_template_directory(),
+		'home_url' => get_bloginfo( 'url' ),
+		'wp_url' => get_bloginfo( 'wpurl' ),
+		'stylesheet_directory' => get_bloginfo( 'stylesheet_directory' ),
+		'template_url' => get_bloginfo( 'template_url' ),
+		'postworld_url' => POSTWORLD_URI,
+		'postworld_dir' => POSTWORLD_PATH,
 		);
 
 	///// POST TYPES /////
@@ -855,12 +855,9 @@ function pwSiteGlobals_include(){
 	chmod($pwJsFile, 0755);
 
 	/**
-	 * @todo Include the theme version!
+	 * @todo Include the theme version.
 	 */
 
-	// ENQUEUE SCRIPT
-	// DEPRECIATED METHOD
-	
 	if( pw_dev_mode() )
 		wp_enqueue_script(
 			'pw-Config-JS',
@@ -1113,5 +1110,3 @@ function pw_print_scripts_package_touch(){
 		}, false);
 	</script><?php
 }
-
-?>
