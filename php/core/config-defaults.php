@@ -5,8 +5,6 @@
 add_action( POSTWORLD_CONFIG, 'postworld_config_defaults', 1 );
 function postworld_config_defaults(){
 
-	extract( pw_time_units() );
-
 	$GLOBALS[ POSTWORLD_CONFIG ]['modules'] = array(
 		'required'	=>	array(),
 		'supported'	=>	array(),
@@ -191,7 +189,7 @@ function postworld_config_defaults(){
 
 		);
 
-
+	extract( pw_time_units() );
 	$GLOBALS[ POSTWORLD_CONFIG ]['rank'] = array(
 		'post_types'		=> array('post'),
 		'cache_interval'	=> 'fifteen_minutes',

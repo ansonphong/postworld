@@ -153,7 +153,7 @@ function pw_add_metabox_post_parent( $vars ){
  * Add a WP Postmeta metabox.
  * @todo Refactor this convention to use array keys, so they can be removed/modified
  */
-function pw_config_metabox_wp_postmeta( $vars ){
+function pw_add_metabox_wp_postmeta( $vars ){
 	/*
 	$vars = array(
 		'post_types' => array('blog'),
