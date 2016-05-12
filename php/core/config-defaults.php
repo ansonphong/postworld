@@ -10,7 +10,7 @@ function postworld_config_defaults(){
 	$GLOBALS[ POSTWORLD_CONFIG ]['templates'] = array(
 		'dir'	=>	array(
 			'default'	=>	get_template_directory() . '/postworld/templates/' ,
-			'override'	=>	get_stylesheet_directory() . '/views/',
+			'override'	=>	get_template_directory() . '/views/',
 			),
 		'url'	=>	array(
 			'default'	=>	get_template_directory_uri() . '/postworld/templates/',
