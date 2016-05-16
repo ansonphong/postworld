@@ -54,7 +54,7 @@ function pw_admin_bar_menu($wp_admin_bar){
 	if( in_array( 'site', $enabled_modules ) )
 		array_push($args,array(
 			'id'     	=>	'site_options',
-			'title'		=>	_x('Site Options','module','postworld'),
+			'title'		=>	__('Site Options','postworld'),
 			'href'		=>	$theme_url.'-site',
 			'parent' 	=>	$menu_name,
 			//'meta'   	=>	array( 'class' => 'theme-menu-item' ),

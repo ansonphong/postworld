@@ -10,7 +10,7 @@
 		<i class="icon pwi-cubes"></i>
 		<?php _e( 'Modules', 'postworld' ) ?>
 		<span class="pw-version" style="font-size:.66em; font-weight: lighter;">
-			• Postworld
+			&bullet; Postworld
 			v<?php echo (string) $pw['info']['version'] ?>
 		</span>
 	</h1>

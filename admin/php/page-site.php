@@ -30,7 +30,7 @@ pw_print_ng_controller(array(
 
 	<h1 class="primary">
 		<i class="icon pwi-gear"></i>
-		<?php _e('Site Options','module','postworld') ?>
+		<?php _e('Site Options','postworld') ?>
 	</h1>
 	
 	<div ng-controller="pwOptionsDataCtrl" class="pw-cloak">
@@ -181,7 +181,7 @@ pw_print_ng_controller(array(
 								ng-options="option.value as option.label for option in memoryOptions">
 							</select>
 							<b><?php _e('Image Memory Limit','postworld') ?></b>
-							<small><?php _e('The maximum amount of memory used for processing images.','image memory limit option','postworld') ?></small>
+							<small><?php _e('The maximum amount of memory used for processing images.','postworld') ?></small>
 						</label>
 					</div>
 				</div>

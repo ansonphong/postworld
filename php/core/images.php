@@ -769,7 +769,6 @@ function pw_grab_image( $url, $saveto ){
 }
 
 function pw_curl_exec_follow($ch, &$maxredirect = null) {
-  
   // we emulate a browser here since some websites detect
   // us as a bot and don't let us do our job
   $user_agent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.7.5)".

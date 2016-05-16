@@ -77,11 +77,11 @@
 			<input
 				type="checkbox"
 				value="1"
-				title="Show Title"
+				title="<?php _e( 'Show Title', 'postworld' ); ?>"
 				name="<?php echo $this->get_field_name('show_title'); ?>"
 				id="<?php echo $this->get_field_id('show_title'); ?>"
 				<?php if( !empty($show_title) && $show_title == '1' ){ echo 'checked="checked"'; } ?> >
-			<?php _e( 'title', 'title of widget', 'postworld' ); ?>
+			<?php _e( 'title', 'postworld' ); ?>
 		</label>
 		<input
 			class="labeled"

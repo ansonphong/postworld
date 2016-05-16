@@ -5,7 +5,8 @@
 	?>
 	<a href="<?php echo $post_parent['post_permalink'] ?>">
 	<h2>
-		<?php echo $post_parent['post_title'] ?> ›
+		<?php echo $post_parent['post_title'] ?>
+		&rsaquo;
 	</h2>
 	</a>
 <?php } ?>

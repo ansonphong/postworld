@@ -666,7 +666,7 @@ class PW_Query extends WP_Query {
 			$n = !empty($q['exact']) ? '' : '%';
 			$searchand = '';
 			foreach( (array) $q['search_terms'] as $term ) {
-				$term = esc_sql( like_escape( $term ) );
+				$term = esc_sql( wpdb::esc_like( $term ) );
 				$search .= "{$searchand}(($wpdb->posts.post_title LIKE '{$n}{$term}{$n}') OR ($wpdb->posts.post_content LIKE '{$n}{$term}{$n}'))";
 				$searchand = ' AND ';
 			}
