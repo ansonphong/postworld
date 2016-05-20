@@ -1,5 +1,8 @@
 # Postworld // Changelog
 
+### Version 1.605
+- Changed to load jQuery before Angular in Dev Mode, fixes bugs with Masonry Angular Directive
+
 ### Version 1.604
 - **Breaking Changes** - Changed the slug for the `taxonomy-meta` module to conform with standard format of underscores, all slugs referrencing this module must be renamed to `taxonomy_meta`
 - **Breaking Changes** - Changed the method for configuring modules, introducing `pw_module_config($module, $subkey)`, and `pw_config_module($module, $config)` to respectively get and set module configurations. Module configurations are stored under `$postworld_config.modules.[$module]`. All configurations of the following modules must be changed to use this method:

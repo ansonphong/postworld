@@ -120,6 +120,7 @@ function postworld_includes( $vars ){
 		global $angularDep;
 		$angularDep = array(
 			'underscore',
+			'jquery',
 			//'Postworld-Deploy',
 			);
 
@@ -162,7 +163,7 @@ function postworld_includes( $vars ){
 		// Build Angular Dependancies
 		global $angularDep;
 		$angularDep = array(
-			//'jquery',
+			'jquery',
 			'underscore',
 			'DeepMerge',
 			'AngularJS',
