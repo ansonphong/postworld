@@ -195,8 +195,8 @@ function pw_register_core_post_field_models(){
 			'image(all)',
 			'image(stats)',
 			'image(tags)',
-			'post_points',
-			'rank_score',
+			//'post_points',
+			//'rank_score',
 			'edit_post_link',
 			'taxonomy(all)',
 			'author(ID,display_name,user_nicename,posts_url,user_profile_url)',
@@ -204,7 +204,7 @@ function pw_register_core_post_field_models(){
 			'post_format',
 			'post_meta(all)',
 			'feed_order',
-			'viewer(has_voted,is_favorite,is_view_later)',
+			//'viewer(has_voted,is_favorite,is_view_later)',
 			)
 		);
 	pw_register_post_field_model( 'preview', $fields_preview );
@@ -369,5 +369,3 @@ function pw_register_core_user_field_models(){
 
 }
 
-
-?>

@@ -54,10 +54,20 @@ function pw_typecast_if_boolean( $value ){
 }
 
 /**
- * Outputs the specified script template to the footer.
+ * Outputs the specified admin template to the footer.
  */
 function pw_ob_admin_footer_script( $template_id, $vars = array() ){
 	$output = pw_ob_admin_template( $template_id, $vars );
+	return pw_register_footer_script( $output );
+}
+
+/**
+ * Outputs the specified template to the footer.
+ *
+ * @param string $template_path Template path relative to theme, ie. 'views/sliders/slider-scripts.php'
+ */
+function pw_ob_footer_script( $template_path, $vars ){
+	$output = pw_ob_include_template( $template_path, $vars );
 	return pw_register_footer_script( $output );
 }
 

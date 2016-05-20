@@ -118,7 +118,7 @@ $vars = array(
     'user_id'   =>  1,
     'sub_key'   =>  'siteOptions.colors.background',
     'value'     =>  '@blue',
-    'meta_key'  =>  'pw_meta'
+    'meta_key'  =>  PW_USERMETA_KEY
     );
 pw_set_wp_usermeta( $vars )
 ```
@@ -159,7 +159,7 @@ __sub_key__ : *string* (optional)
 ```php
 $vars = array(
     'user_id'   =>  1,
-    'meta_key'  =>  'pw_meta',
+    'meta_key'  =>  PW_USERMETA_KEY,
     "sub_key"   =>  'siteOptions.colors.background',
     );
 $value = pw_get_wp_usermeta( $vars );
@@ -195,7 +195,7 @@ __meta_key__ : *string* (optional)
 ```php
 $vars = array(
     'user_id'   =>  1,
-    'meta_key'  =>  'pw_meta',
+    'meta_key'  =>  PW_POSTMETA_KEY,
     'sub_key'   =>  'postOptions.colors.background',
     'value'     =>  '@orange'
     );
@@ -238,7 +238,7 @@ __sub_key__ : *string* (optional)
 ```php
 $vars = array(
     'post_id'   =>  55,
-    'meta_key'  =>  'pw_meta',
+    'meta_key'  =>  PW_POSTMETA_KEY,
     "sub_key"   =>  'postOptions.colors.background',
     );
 $value = pw_get_wp_postmeta( $vars );

@@ -628,6 +628,7 @@ function pwGlobals_print() {
 		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
 		pw.device = <?php echo json_encode( pw_device_meta() ); ?>;
 		pw.feeds = {};
+		pw.widgets = {};
 	/* ]]> */</script><?php
 }
 

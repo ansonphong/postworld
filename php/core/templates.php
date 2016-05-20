@@ -657,5 +657,3 @@ function pw_get_menu_templates(){
 	return $templates;
 
 }
-
-?>

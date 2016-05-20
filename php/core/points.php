@@ -597,13 +597,8 @@ function pw_insert_comment_points( $comment_id, $user_id, $points ){
 
 
 function pw_get_points_row( $point_type, $id, $user_id ){
-
-	if( !pw_config_in_db_tables('comment_points') )
+	if( !pw_config_in_db_tables($point_type.'_points') )
 		return false;
-
-	//pw_log('pw_get_points_row : ', $point_type);
-	//pw_log('pw_get_points_row : id : ', $id);
-	//pw_log('pw_get_points_row : user_id : ', $user_id);
 
 	global $wpdb;
 
@@ -626,8 +621,6 @@ function pw_get_points_row( $point_type, $id, $user_id ){
 
 	$points_row = $wpdb->get_row( $query, 'ARRAY_A' );
 	
-	//pw_log('pw_get_points_row : points_row : ', $points_row);
-
 	if( $points_row )
 		return $points_row;
 	else
@@ -641,29 +634,25 @@ function pw_set_post_points( $post_id, $set_points ) {
 	return $post_points;
 }
 
-
+/**
+ * Check wp_postworld_points to see if the user has voted on the post
+ *
+ * @return integer The number of points
+ */
 function pw_has_voted_on_post( $post_id, $user_id ) {
-	/*
-	 • Check wp_postworld_points to see if the user has voted on the post
-	 • Return the number of points
-	 return : integer
-	 */
-	
+	if( !pw_config_in_db_tables('post_points') )
+		return false;
 	global $wpdb;
-
 	$query = "
 		SELECT *
 		FROM ".$wpdb->postworld_prefix.'post_points'."
 		WHERE post_id=" . $post_id . "
 		AND user_id=" . $user_id;
-
 	$row = $wpdb -> get_row($query);
-
 	if ( $row != null )
-		return $row->post_points;
+		return (int) $row->post_points;
 	else
 		return 0;
-
 }
 
 /*Later*/
@@ -693,6 +682,9 @@ function pw_has_voted_on_comment ( $comment_id, $user_id ){
 
 
 function pw_get_user_points_voted_to_posts($user_id, $breakdown=FALSE) {
+	if( !pw_config_in_db_tables('post_meta') ||
+		!pw_config_in_db_tables('post_points') )
+		return false;
 	/*
 	 * 
 	 * Parameters: $user_id 
