@@ -125,18 +125,17 @@ function pw_download_image_option( $vars = array( "context" => "quickEdit" ) ){
 				$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".image.download";
 			break;
 
+		///// QUICK EDIT SETTINGS /////
+		case 'quickEdit':
+				$vars['options_model'] = "options.general.tripleSwitch";
+				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".image.download";
+			break;
+
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
 		default:
 				$vars['options_model'] = "options.general.tripleSwitch";
 				$vars['ng_model'] = "pwMeta.image.download";
-			break;
-
-		///// QUICK EDIT SETTINGS /////
-		case 'quickEdit':
-		default:
-				$vars['options_model'] = "options.general.tripleSwitch";
-				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".image.download";
 			break;
 	}
 
@@ -161,12 +160,10 @@ function pw_content_columns_option( $vars = array( "context" => "quickEdit" ) ){
 			break;
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
-		default:
 			$vars['ng_model'] = "pwMeta.post_content.columns";
 			break;
 		///// QUICK EDIT SETTINGS /////
 		case 'quickEdit':
-		default:
 			$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".post_content.columns";
 			break;
 
@@ -203,12 +200,10 @@ function pw_featured_image_placement_options( $vars = array( "context" => "quick
 			break;
 		///// PER-POST ADMIN SETTINGS /////
 		case 'postAdmin':
-		default:
 			$vars['ng_model'] = "pwMeta.featured_image.placement";
 			break;
 		///// QUICK EDIT SETTINGS /////
 		case 'quickEdit':
-		default:
 			$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".featured_image.placement";
 			break;
 		///// CUSTOM NG MODEL /////
@@ -248,7 +243,6 @@ function pw_gallery_options( $vars = array( "context" => "quickEdit", 'gallery_o
 				break;
 			///// PER-POST ADMIN SETTINGS /////
 			case 'postAdmin':
-			default:
 					$vars['ng_model'] = "pwMeta.gallery";
 				break;
 			///// QUICK EDIT SETTINGS /////
@@ -279,19 +273,18 @@ function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 				$vars['options_model']['highlight'] = "options.general.doubleSwitch";
 				$vars['options_model']['new_target'] = "options.general.doubleSwitch";
 			break;
-		///// PER-POST ADMIN SETTINGS /////
-		case 'postAdmin':
-		default:
-				$vars['ng_model'] = "pwMeta.link_url";
+		///// QUICK EDIT SETTINGS /////
+		case 'quickEdit':
+				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".link_url";
 				$vars['options_model']['show'] = "options.general.defaultAndCustomDoubleSwitch";
 				$vars['options_model']['tooltip_show'] = "options.general.defaultCustomSwitch";
 				$vars['options_model']['highlight'] = "options.general.tripleSwitch";
 				$vars['options_model']['new_target'] = "options.general.tripleSwitch";
 			break;
-		///// QUICK EDIT SETTINGS /////
-		case 'quickEdit':
+		///// PER-POST ADMIN SETTINGS /////
+		case 'postAdmin':
 		default:
-				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".link_url";
+				$vars['ng_model'] = "pwMeta.link_url";
 				$vars['options_model']['show'] = "options.general.defaultAndCustomDoubleSwitch";
 				$vars['options_model']['tooltip_show'] = "options.general.defaultCustomSwitch";
 				$vars['options_model']['highlight'] = "options.general.tripleSwitch";

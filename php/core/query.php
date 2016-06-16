@@ -1594,7 +1594,7 @@ class PW_User_Query extends WP_User_Query {
 }
 
 
-function pw_user_query( $args, $args,$return_Type = 'PW_User_Query' ){
+function pw_user_query( $args, $return_type = 'PW_User_Query' ){
 		/*
 		 
 		  Description:
@@ -1667,10 +1667,10 @@ function pw_user_query( $args, $args,$return_Type = 'PW_User_Query' ){
 		 */
 		 
 		$the_query = new PW_User_Query($args);
-		if($return_Type == 'ARRAY_A'){
+		if($return_type == 'ARRAY_A'){
 			return (array) $the_query;
 		}
-		else if($return_Type == 'JSON'){
+		else if($return_type == 'JSON'){
 			return json_encode($the_query);
 		}
 		else
