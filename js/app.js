@@ -30,9 +30,12 @@ ASCII Art by : http://patorjk.com/software/taag/#p=display&f=Standard
  */
 
 'use strict';
+
+/**
+ * Migrate these into includes.php, pwGlobals_print() method
+ */
 pw.partials = {};
 pw.templates = {};
-pw.widgets = {};
 pw.admin = {};
 pw.embeds = {};
 pw.comments = {};

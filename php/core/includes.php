@@ -120,6 +120,7 @@ function postworld_includes( $vars ){
 		global $angularDep;
 		$angularDep = array(
 			'underscore',
+			'jquery',
 			//'Postworld-Deploy',
 			);
 
@@ -162,7 +163,7 @@ function postworld_includes( $vars ){
 		// Build Angular Dependancies
 		global $angularDep;
 		$angularDep = array(
-			//'jquery',
+			'jquery',
 			'underscore',
 			'DeepMerge',
 			'AngularJS',
@@ -628,6 +629,7 @@ function pwGlobals_print() {
 		pw.users = <?php echo json_encode( apply_filters( PW_USERS, array() ) ); ?>;
 		pw.device = <?php echo json_encode( pw_device_meta() ); ?>;
 		pw.feeds = {};
+		pw.widgets = {};
 	/* ]]> */</script><?php
 }
 

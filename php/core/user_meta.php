@@ -1107,14 +1107,14 @@ function pw_get_post_relationships($user_id = null, $relationship = null) {
 }
 
 function pw_get_relationship_from_user_meta($user_id) {
+	if( !pw_config_in_db_tables('user_meta') )
+		return false;
 	global $wpdb;
 	if( pw_dev_mode() )
 		$wpdb->show_errors();
 	$query = "select " . user_fields_names::$POST_RELATIONSHIPS . " from " . $wpdb->postworld_prefix . 'user_meta' . " where user_id=" . $user_id;
-	//echo($query);
 	$relationshp = $wpdb -> get_var($query);
 	return $relationshp;
-
 }
 
 function pw_count_user_posts( $author_id ){
