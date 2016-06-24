@@ -79,6 +79,11 @@ function _set( $obj, $key, $value ){
 		$value 	= 	[string/array/object]
 	*/
 
+	if( !is_array($obj) ){
+		//pw_log('_set error, obj not array:', $obj);
+		return $obj;
+	}
+
 	///// KEY PARTS /////
 	// FROM : "key.subkey.sub.subkey"
 	// TO 	: array( "key", "subkey", "subkey" )
