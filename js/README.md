@@ -499,7 +499,7 @@ __run__ : *boolean*
 #### Usage
 
 ```html
-<div o-embed="post.link_url" autoplay="true">
+<div o-embed="post.post_meta.postworld_link_url" autoplay="true">
   <div class="o-embed" ng-bind-html="oEmbed"></div>
 </div>
 ```

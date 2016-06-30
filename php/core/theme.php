@@ -86,6 +86,15 @@ function pw_theme_slug(){
 }
 
 /**
+ * Gets the theme's prefix like 'themeslug_'
+ *
+ * @since Postworld 1.7.1
+ */
+function pw_theme_prefix(){
+	return pw_theme_slug() . '_';
+}
+
+/**
  * Gets the current registered theme version.
  *
  * @since Postworld 1.602

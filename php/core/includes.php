@@ -751,18 +751,18 @@ function pw_add_buttons_default_type(){
 	<?php
 }
 
-///// PARSE pwSiteGlobals /////
 function pwSiteGlobals_include(){
 	global $pw;
 
 	///// DYNAMICALLY GENERATED JAVASCRIPT /////
-	// This method can only be used for site-wide globals
-	// Not for user-specific globals
+	// This method is only used for site-wide globals
+	// Not for user-specific globals.
 
-	// ENCODE SITE GLOBALS
 	$config = pw_config();
 
 	$text_direction = (is_rtl()) ? 'rtl' : 'ltr' ;
+
+	$config['theme'] = pw_theme();
 
 	$config['site'] = array( 
 		'name' => get_bloginfo('name'),

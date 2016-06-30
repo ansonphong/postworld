@@ -11,11 +11,6 @@
 	<img src="{{post.avatar.small.url}}" width="{{post.avatar.small.width/2}}" height="{{post.avatar.small.height/2}}"><a href="{{post.author.profile_url}}">{{post.author.display_name}}</a>
 	<br><br>
 
-	<div ng-switch="post.link_format">
-		<ANY ng-switch-when="video">VIDEO EMBED : {{post.link_url}}</ANY>
-		<div ng-switch-default></div>
-	</div>
-
 	<br>
 	<img src="{{post.image.medium.url}}" style="float:right; margin:0 0 20px 20px;">
 	

@@ -89,17 +89,14 @@ postworldAdmin.directive( 'pwAdminOptions', function($pw){
 	};
 });
 
-
 postworldAdmin.directive('pwAdminLinkUrl',
-	function ($pwEditPostFilters, $pwPostOptions) {
+	function ($pw, $pwEditPostFilters, $pwPostOptions) {
 	return {
 		restrict: 'A',
 		link: function( $scope, element, attrs ){
 			// Get Link Format Meta
 			$scope.link_format_meta = $pwPostOptions.linkFormatMeta();
-
-			// LINK_URL WATCH : Watch for changes in link_url
-			// Evaluate the link_format
+			// LINK_URL WATCH : Watch for changes in link_url evaluate the link_format
 			$scope.$watchCollection('[post.link_url, post.link_format]',
 				function (){
 					$scope.post.link_format = $pwEditPostFilters.evalPostFormat( $scope.post.link_url );
@@ -107,7 +104,6 @@ postworldAdmin.directive('pwAdminLinkUrl',
 		}
 	};
 });
-
 
 postworldAdmin.directive('pwAdminMetaboxEvent',
 	function () {

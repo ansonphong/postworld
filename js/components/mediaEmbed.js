@@ -6,32 +6,6 @@
  |_|  |_|\___|\__,_|_|\__,_| |_____|_| |_| |_|_.__/ \___|\__,_|
 
 ////////// -------- MEDIA EMBED CONTROLLER -------- //////////*/   
-/*
-var mediaEmbed = function ( $scope, $sce, $pwData ) {
-
-	$scope.oEmbed = "";
-	$scope.oEmbedGet = function (link_url) {
-		var args = { "link_url":link_url };
-		var oEmbed = "";
-		$pwData.wpAjax('ajax_oembed_get', args ).then(
-			// Success
-			function(response) {    
-				$scope.oEmbed = $sce.trustAsHtml(response.data);
-			},
-			// Failure
-			function(response) {
-				//alert("error");
-			}
-		);
-	};
-	// Run oEmbedGet on Media
-	if(
-		$scope.post.link_format == 'video' ||
-		$scope.post.link_format == 'audio'
-		)
-		$scope.oEmbed = $scope.oEmbedGet( $scope.post.link_url );
-};
-*/
 
 /*////////// ------------ O-EMBED DIRECTIVE ------------ //////////*/  
 

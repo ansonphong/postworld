@@ -237,8 +237,6 @@ function pw_insert_post_meta( $post_id, $points=0, $rank_score=0, $favorites=0, 
 				(`post_id`,
 				`author_id`,
 				`post_class`,
-				`link_format`,
-				`link_url`,
 				`post_points`,
 				`rank_score`,
 				`post_shares`

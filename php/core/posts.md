@@ -84,8 +84,6 @@ __POSTWORLD__
 - __post_points__
 - __rank_score__
 - __post_class__
-- __link_url__
-- __link_format__
 - __geo_latitude__
 - __geo_longitude__
 - __event_start__
@@ -258,8 +256,6 @@ echo $post_html;
 - All fields in `wp_insert_post()` Method
 - Postworld __Post Meta__ Fields:
   - __post_class__
-  - __link_format__
-  - __link_url__
   - __author_id__
 
 __return__ :
@@ -327,9 +323,7 @@ $post_data = array(
   'tax_input'      => [ array( 'taxonomy_name' => array( 'term', 'term2', 'term3' ) ) ] // support for custom taxonomies. 
 
   ///// POSTWORLD INPUTS /////
-  'link_url'       => [ <URL> ],
   'post_class'     => [ 'author' | 'contributor' ],
-  'link_format'    => [ 'standard' | 'video' | 'audio' ]
   'event_start'    => [ integer | UNIX timestamp ]
   'event_end'      => [ integer | UNIX timestamp ]
   'geo_latitude'   => [ number ]

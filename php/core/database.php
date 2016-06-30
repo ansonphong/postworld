@@ -1,4 +1,5 @@
 <?php
+
 class PW_Database{
 
 	/**
@@ -169,16 +170,31 @@ class PW_Database{
 
 	}
 
+	/**
+	 * Returns an array of associative arrays with all the values
+	 * In a table in the following format : [{column:'value'},{column:'value'}]
+	 */
+	public function get_all_table_values( $table_name ){
+		if( !$this->table_exists( $table_name ) )
+			return false;
+		global $wpdb;
+		return $wpdb->get_results( "SELECT * FROM ".$table_name );
+	}
+
+	/**
+	 * Drop/delete a table if it exists.
+	 */
+	public function drop_table( $table_name ){
+		global $wpdb;
+		return $wpdb->query( "DROP TABLE IF EXISTS ".$table_name );
+	}
+
 }
-
-
-
 
 /**
  * GENERAL DB RELATED FUNCTIONS
  * @todo Refactor into PW_Database Class
  */
-
 
 function pw_get_all_comment_ids(){
 	global $wpdb;

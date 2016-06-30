@@ -3,8 +3,6 @@
 global $pw_post_meta_fields;
 $pw_post_meta_fields = array(
 	'post_class',
-	'link_format',
-	'link_url',
 	'post_author',
 	'event_start',
 	'event_end',
@@ -13,7 +11,9 @@ $pw_post_meta_fields = array(
 	'related_post'
 	);
 
-function pw_get_post_meta($post_id){
+function pw_get_post_meta( $post_id ){
+	if( !pw_config_in_db_tables('post_meta') )
+		return array();
 	global $wpdb;
 	$post_meta_table = $wpdb->postworld_prefix.'post_meta';
 	$meta = $wpdb->get_row("SELECT * FROM $post_meta_table WHERE post_id = $post_id", ARRAY_A);
@@ -161,31 +161,38 @@ function pw_cleanup_meta( $type ){
 
 }
 
-function pw_set_post_meta($post_id, $post_meta){
-	/*
-	  • Used to set Postworld values in the wp_postworld_
 
-		Parameters:
-		All parameters, except post_id, are optional.
-		
-		$post_id : integer (required)
-		
-		$post_meta : Array
-		     • post_class
-		     • link_format
-		     • link_url
-		
-		Usage:
-		$post_meta = array(
-		     'post_id' => integer,
-		     'post_class' => string,
-		     'link_format' => string,
-		     'link_url' => string
-		);
-	 */
-	 
-	global $wpdb;
+/**
+ * Set data in the wp_postmeta table, 
+ */
+function pw_set_post_meta_pw_postmeta( $post_id, $post_meta ){
+
+}
+
+
+/**
+ * Used to set Postworld values in the wp_postworld_post_meta table
+ *
+ * @param int $post_id
+ * @param array $post_meta Key value pairs, where key is the column in the _post_meta table
+ */
+function pw_set_post_meta($post_id, $post_meta){
 	
+	// If post_meta table isn't being used
+	// Enter the data prefixed with theme slug into wp_postmeta
+	if( !pw_config_in_db_tables('post_meta') ){
+		$key_prefix = pw_theme_slug().'_';
+		foreach( $post_meta as $key => $value ){
+			pw_set_wp_postmeta( array(
+				'post_id' => $post_id,
+				'meta_key' => $key_prefix.$key,
+				'meta_value' => $value,
+				));
+		}
+		return true;
+	}
+
+	global $wpdb;
 	// Add a new record if it doesn't exist
 	pw_insert_post_meta($post_id);
 
@@ -203,20 +210,6 @@ function pw_set_post_meta($post_id, $post_meta){
 	if( isset($post_meta['post_class']) ){
 		if($insertComma === TRUE) $query.=" , ";
 		$query .= "post_class='".$post_meta['post_class']."' ";
-		$insertComma = TRUE;
-	}
-
-	// LINK FORMAT
-	if( isset($post_meta['link_format']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "link_format='".$post_meta['link_format']."' ";
-		$insertComma = TRUE;
-	}
-
-	// LINK URL
-	if( isset($post_meta['link_url']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "link_url='".$post_meta['link_url']."' ";
 		$insertComma = TRUE;
 	}
 
@@ -263,7 +256,6 @@ function pw_set_post_meta($post_id, $post_meta){
 	else{
 		$query.= " where post_id=".$post_id ;
 	 	$wpdb->query($query);
-	 	//pw_log($query);
 	 	return $post_id;
 	}
 	

@@ -1,11 +1,7 @@
-/*////////////// ------- SERVICE ------- //////////////*/  
-
 postworld.service('$pwModal', [ '$rootScope', '$log', '$location', '$uibModal', '$pwData', '$_', '$pw',
 	function ( $rootScope, $log, $location, $uibModal, $pwData, $_, $pw ) {
-	return{
-
+	return {
 		openModal : function( meta ){
-			
 			// Log
 			$log.debug( "$pwModal.openModal : INIT : meta : ", meta );
 
@@ -69,18 +65,6 @@ postworld.service('$pwModal', [ '$rootScope', '$log', '$location', '$uibModal', 
 					// Disable Key Bindings
 					meta.keybindings = false;
 
-				break;
-
-				///// MEDIA /////
-				case "media":
-					modalObj = {
-						controller: 	"mediaModalInstanceCtrl",
-						windowClass: 	"modal-media",
-					};
-					modalObj.templateUrl = $pwData.pw_get_template({
-						subdir: 'modals',
-						view: 	'modal-media'
-					});
 				break;
 
 				///// VIEW /////
@@ -500,57 +484,5 @@ postworld.directive('pwOpenModal',
 			});
 		}
 	};
-}])
-
-
-/*__  __          _ _         __  __           _       _ 
- |  \/  | ___  __| (_) __ _  |  \/  | ___   __| | __ _| |
- | |\/| |/ _ \/ _` | |/ _` | | |\/| |/ _ \ / _` |/ _` | |
- | |  | |  __/ (_| | | (_| | | |  | | (_) | (_| | (_| | |
- |_|  |_|\___|\__,_|_|\__,_| |_|  |_|\___/ \__,_|\__,_|_|
-
-////////// ------------ MEDIA MODAL ------------ //////////*/                                                         
-
-
-postworld.controller('mediaModalInstanceCtrl',
-    [ '$scope', '$sce', '$uibModalInstance', 'meta', '$pwData', '$pw',
-    function( $scope, $sce, $uibModalInstance, meta, $pwData, $pw ) { 
-
-
-    // Import the passed post object into the Modal Scope
-    $scope.post = meta.post;
-
-    /*
-    $scope.ok = function () {
-        $uibModalInstance.close($scope.selected.item);
-        // RETURN THIS VALUE TO PAGE
-    };
-    */
-    $scope.status = "loading";
-
-    $scope.oEmbed = '';
-    var link_url = $scope.post.link_url;
-    var args = { "link_url": link_url };
-
-    // MEDIA GET
-    $pwData.wpAjax('ajax_oembed_get', args ).then(
-        // Success
-        function(response) {    
-            $scope.oEmbed = $sce.trustAsHtml( response.data );
-            $scope.status = "done";
-        },
-        // Failure
-        function(response) {
-            $scope.status = "error";
-        }
-    );
-
-    // MODAL CLOSE
-    $scope.close = function () {
-        $uibModalInstance.dismiss('close');
-    };
-
-
 }]);
-
 

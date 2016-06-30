@@ -1,5 +1,9 @@
 # Postworld // Changelog
 
+### 1.7.1
+- Changed to new versioning system
+- **Breaking Changes** - Removed `link_url` and `link_format` columns from postworld_post_meta tables. Replaced with `PW_LINK_URL_KEY` and `PW_LINK_FORMAT_KEY` meta-key references, and stored in the `wp_postmeta` table
+
 ### Version 1.605
 - Changed to load jQuery before Angular in Dev Mode, fixes bugs with Masonry Angular Directive
 

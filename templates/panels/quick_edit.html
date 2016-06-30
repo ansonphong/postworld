@@ -27,7 +27,6 @@
           
         </div>
 
-
         <!-- BUTTONS -->
         <div class="col-sm-2 last">
 
@@ -72,7 +71,7 @@
 
             <!-- LINK URL -->
               <label class="inner">LINK URL</label>
-              <input class="labeled" type="url" ng-model="post.link_url" placeholder="http://">
+              <input class="labeled" type="url" ng-model="post.post_meta.artdroid_link_url" placeholder="http://">
             
             <!-- POST FORMAT -->
             <div class="link_format">
@@ -82,8 +81,8 @@
                     <i class="{{format.icon}}"></i> <span ng-bind="format.name"></span>
                   </label>
               </span>
-              <span ng-show="post.link_url.length">
-                <span  style="float:right; padding:5px 10px;"><a href="{{post.link_url}}" target="_blank">View <i class="pwi-external-link"></i></a></span>
+              <span ng-show="post.post_meta.artdroid_link_url.length">
+                <span  style="float:right; padding:5px 10px;"><a href="{{post.post_meta.artdroid_link_url}}" target="_blank">View <i class="pwi-external-link"></i></a></span>
               </span>
             </div>
 
@@ -166,7 +165,6 @@
             </div>
           </div>
           <!--///// END EDITORS ONLY /////-->
-
 
         </div>
 

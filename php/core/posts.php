@@ -298,8 +298,6 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		// Get post row from Postworld Meta table, as an Array
 		$pw_post_meta = pw_get_post_meta($post_id);
 		if( !empty($pw_post_meta) ){
-			// Cycle though each PW $pw_post_meta value
-			// If it's in $fields, transfer it to $post
 			foreach($pw_post_meta as $key => $value ){
 				if( in_array($key, $fields) ){
 					$post[$key] = $pw_post_meta[$key];
@@ -898,7 +896,6 @@ function pw_insert_post ( $postarr, $wp_error = TRUE ){
 		All fields in wp_insert_post() Method
 		post_class
 		link_format
-		link_url
 		external_image
 		 
 	return :
@@ -1409,21 +1406,6 @@ function pw_embed_content($content){
 	return preg_replace_callback('$(https?://[a-z0-9_./?=&#-]+)(?![^<>]*>)$i', 'pw_embed_url', $content." ");
 }
 
-
-function pw_embed_link_url( $post_id ){
-	// Returns the embed code if a given post ID contains a link_url and it's media
-
-	$fields = array( 'ID', 'link_url', 'link_format' );
-	$post = pw_get_post( $post_id, $fields );
-
-	$embed_formats = array( 'video', 'audio' );
-
-	if( in_array( $post['link_format'], $embed_formats )  ){
-		return wp_oembed_get( $post['link_url'] );
-	}
-	else
-		return false;
-}
 
 function pw_print_post( $vars ){
 	extract($vars);

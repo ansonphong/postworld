@@ -5,9 +5,6 @@
  | |___| | | | |   <  | |_| |  _ <| |___ 
  |_____|_|_| |_|_|\_\  \___/|_| \_\_____|
 /////////////////////////////////////////*/
-//global $post;
-//echo $post->ID;
-
 pw_print_ng_controller(array(
 	'app' => 'postworldAdmin',
 	'controller' => 'pwLinkUrlDataCtrl',
@@ -20,7 +17,6 @@ pw_print_ng_controller(array(
 	));
 
 ?>
-
 <div class="postworld">
 	<div class="pw-metabox" pw-admin-link-url ng-controller="pwLinkUrlDataCtrl">
 
@@ -34,7 +30,6 @@ pw_print_ng_controller(array(
 			ng-model="post.link_url"
 			placeholder="http://">
 	
-
 		<!-- LINK FORMAT -->
 		<div class="link_format">
 
@@ -45,22 +40,18 @@ pw_print_ng_controller(array(
 						name="link_format"
 						value="{{format.slug}}"
 						ng-model="post.link_format"
-						/> <!-- disabled  -->
+						/>
 					<label>
 						<i class="{{format.icon}}"></i> <span ng-bind="format.name"></span>
 					</label>
 			</span>
 
 			<!--
-			<span ng-show="post.link_url.length">
+			<span ng-show="post.link_url">
 				<span  style="float:right; padding:5px 10px;"><a href="{{post.link_url}}" target="_blank">View <i class="pwi-external-link"></i></a></span>
 			</span>
 			-->
+
 		</div>
-
-	<!--{{ post | json }}-->
-
 	</div>
-	
 </div>
-
