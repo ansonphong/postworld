@@ -101,8 +101,16 @@ class PW_Scripts{
 	}
 
 	/**
+	 * Gets the registered scripts in the defined group slug.
+	 */
+	public function get_scripts_in_group( $group ){
+		return _get( $GLOBALS['postworld_scripts'], $group );
+	}
+
+	/**
 	 * Finally combines and enqueues all registered files
 	 * In the selected context.
+	 * @todo This function is a bit of a spaghetti factory, refactor into modular methods
 	 */
 	public function enqueue( $vars = array() ){
 		global $pw;
@@ -114,116 +122,151 @@ class PW_Scripts{
 			'deps'		=> array(),		// Dependencies
 			'version'	=> pw_site_version(),
 			'expire'	=> 60*60*24,	// After how many seconds to expire
+			'merge_files'	=> true 	// If false, enqueue all files and do not merge into single file
 			);
 		$vars = array_replace( $default_vars, $vars );
 
 		// Get the registered scripts in the specified group
-		$scripts = _get( $GLOBALS['postworld_scripts'], $vars['group'] );
-		if( empty( $scripts ) )
-			return false;
-
-		/**
-		 * Check if a cached file already exists
-		 */
+		$scripts = $this->get_scripts_in_group( $vars['group'] );
+		// Get the scripts directory
 		$scripts_dir = $this->get_scripts_dir();
 
-		// Generate hash from array
-		$scripts_hash = hash( 'adler32', json_encode( $scripts ) );
-
-		// Generate the filename as "[group]--[hash]--[time].js"
-		$group_prefix = $vars['group'] . '--';
-		$hash_prefix =  $group_prefix . $scripts_hash . '--';
-		$filename = $hash_prefix . time() . '.js';
-		$file_path = $scripts_dir . '/' . $filename;
 
 		/**
-		 * Check if the current file version exists in the cache directory.
-		 * If files are found, check if they haven't expired yet
-		 * And if they're good, get the file path.
+		 * If we are merging all the files
 		 */
-		$files = $this->glob( $hash_prefix, '.js' );
-		$regenerate = false;
-		if( !empty( $files ) ){
-			foreach( $files as $file ){
-				/**
-				 * Get the timestamp component of the filename
-				 * and compare it to the current time 
-				 */
-				$basename = basename( $file, '.js' );
-				$parts = explode( '--', $basename );
-				// Get the last [time] segment of the filename
-				$time_index = count($parts)-1;
-				$file_time = intval( $parts[ $time_index ] );
+		if( $vars['merge_files'] ){
 
-				// If any of the files in the group are expired
-				if( time() > $file_time + $vars['expire'] ){
-					// Regenerate the file
-					$regenerate = true;
-					// Flush all existing JS files in the current group
-					$this->flush( $vars['group'] . '--', '.js' );
-					break;
+			/**
+			 * Check if a cached file already exists
+			 */
+
+			// Generate hash from array
+			$scripts_hash = hash( 'adler32', json_encode( $scripts ) );
+
+			// Generate the filename as "[group]--[hash]--[time].js"
+			$group_prefix = $vars['group'] . '--';
+			$hash_prefix =  $group_prefix . $scripts_hash . '--';
+			$filename = $hash_prefix . time() . '.js';
+			$file_path = $scripts_dir . '/' . $filename;
+
+			/**
+			 * Check if the current file version exists in the cache directory.
+			 * If files are found, check if they haven't expired yet
+			 * And if they're good, get the file path.
+			 */
+			$files = $this->glob( $hash_prefix, '.js' );
+			$regenerate = false;
+			if( !empty( $files ) ){
+				foreach( $files as $file ){
+					/**
+					 * Get the timestamp component of the filename
+					 * and compare it to the current time 
+					 */
+					$basename = basename( $file, '.js' );
+					$parts = explode( '--', $basename );
+					// Get the last [time] segment of the filename
+					$time_index = count($parts)-1;
+					$file_time = intval( $parts[ $time_index ] );
+
+					// If any of the files in the group are expired
+					if( time() > $file_time + $vars['expire'] ){
+						// Regenerate the file
+						$regenerate = true;
+						// Flush all existing JS files in the current group
+						$this->flush( $vars['group'] . '--', '.js' );
+						break;
+					}
+					// Otherwise, set the current filename as the file.
+					else{
+						$file_path = $file;
+					}
 				}
-				// Otherwise, set the current filename as the file.
-				else{
-					$file_path = $file;
-				}
+			} else{
+				$regenerate = true;
 			}
-		} else{
-			$regenerate = true;
+
+
+			/**
+			 * If no file is found which matches
+			 * Combine the scripts and save them to a new JS file.
+			 */
+			if( $regenerate && $vars['merge_files'] ){
+
+				// If the scripts directory doesn't exist, create it
+				if (!file_exists($scripts_dir)){
+					$mkdir = mkdir($scripts_dir, 0777, true);
+					// If the directory can't be created, end here 
+					if( !$mkdir ){
+						error_log( 'Postworld unable to create directory to cache scripts at ' . $scripts_dir . ' Destination has file permissions code: ' . fileperms($scripts_dir ) );
+						$vars['merge_files'] = false;
+					}
+				}
+
+				// Sort all scripts by order of priority
+				pw_sort_array_of_arrays( $scripts, 'priority', 'ASC' );
+
+				// Get the contents of all the scripts and add them to a string
+				$content = '';
+				foreach( $scripts as $handle => $script ){
+					if( file_exists( $script['file'] ) ){
+						$content .= "// SCRIPT : " . $script['handle'] . " / PRIORITY : " . $script['priority'];
+						$content .= PHP_EOL;
+
+						// Get the contents of the file
+						$file_contents = file_get_contents( $script['file'] );
+
+						// If minify is enabled, minify it
+						$content .= ( $script['minify'] ) ? 
+							$this->minify( $file_contents ) :
+							$file_contents;
+						
+						$content .= PHP_EOL . PHP_EOL . PHP_EOL;
+					}
+				}
+				// Write all the scripts to a new file
+				$put_contents = file_put_contents( $file_path, $content );
+
+				// If the file put operation was not successful, send an error
+				if( $put_contents === false ){
+					error_log( 'Postworld unable to create file to cache scripts at ' . $file_path . ' Destination has file permissions code: ' . fileperms($file_path ) );
+					$vars['merge_files'] = false;
+				}
+
+			}
+
 		}
 
+		
 
 		/**
-		 * If no file is found which matches
-		 * Combine the scripts and save them to a new JS file.
+		 * If all files have been merged
+		 * Then include just the single merged file
 		 */
-		if( $regenerate ){
+		if( $vars['merge_files'] ){
+			// Generate the URL of the file from the Path
+			$file_url = str_replace( _get( wp_upload_dir(), 'basedir' ), _get( wp_upload_dir(), 'baseurl' ), $file_path );
+			// Enqueue the script in WordPress
+			wp_enqueue_script(
+				$vars['group'],
+				$file_url,
+				$vars['deps'],
+				$vars['version'],
+				$vars['in_footer']
+				);
+			return true;
+		}
 
-			// If the scripts directory doesn't exist, create it
-			if (!file_exists($scripts_dir)){
-				$mkdir = mkdir($scripts_dir, 0777, true);
-				// If the directory can't be created, end here 
-				if( !$mkdir )
-					return false;
-			}
+		/**
+		 * Enqueue all the files seperately
+		 */
+		else{
 
-			// Sort all scripts by order of priority
-			pw_sort_array_of_arrays( $scripts, 'priority', 'ASC' );
-
-			// Get the contents of all the scripts and add them to a string
-			$content = '';
-			foreach( $scripts as $handle => $script ){
-				if( file_exists( $script['file'] ) ){
-					$content .= "// SCRIPT : " . $script['handle'] . " / PRIORITY : " . $script['priority'];
-					$content .= PHP_EOL;
-
-					// Get the contents of the file
-					$file_contents = file_get_contents( $script['file'] );
-
-					// If minify is enabled, minify it
-					$content .= ( $script['minify'] ) ? 
-						$this->minify( $file_contents ) :
-						$file_contents;
-					
-					$content .= PHP_EOL . PHP_EOL . PHP_EOL;
-				}
-			}
-			// Write all the scripts to a new file
-			$put_contents = file_put_contents( $file_path, $content );
+			//$scripts
+			// $scripts_dir
 
 		}
 
-		// Generate the URL of the file from the Path
-		$file_url = str_replace( _get( wp_upload_dir(), 'basedir' ), _get( wp_upload_dir(), 'baseurl' ), $file_path );
-
-		// Enqueue the script in WordPress
-		wp_enqueue_script(
-			$vars['group'],
-			$file_url,
-			$vars['deps'],
-			$vars['version'],
-			$vars['in_footer']
-			);
 	}
 
 	/**
