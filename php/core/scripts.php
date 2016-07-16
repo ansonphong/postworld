@@ -44,12 +44,14 @@ function pw_scripts_flush( $prefix = null, $extension = '.js' ){
 /**
  * Flush cached scripts on common actions which might alter JS configurations
  */
+/*
 add_action( 'wp_update_nav_menu', 'pw_scripts_flush_action' );
 add_action( 'wp_update_nav_menu_item', 'pw_scripts_flush_action' );
 add_action( 'wp_create_nav_menu', 'pw_scripts_flush_action' );
 add_action( 'wp_delete_nav_menu', 'pw_scripts_flush_action' );
 add_action( 'update_option', 'pw_scripts_flush_action' );
 add_action( 'pw_set_option', 'pw_scripts_flush_action' );
+*/
 function pw_scripts_flush_action(){
 	pw_scripts_flush();
 }
@@ -168,7 +170,7 @@ class PW_Scripts{
 					$file_time = intval( $parts[ $time_index ] );
 
 					// If any of the files in the group are expired
-					if( time() > $file_time + $vars['expire'] ){
+					if( time() > $file_time + intval( $vars['expire'] ) ){
 						// Regenerate the file
 						$regenerate = true;
 						// Flush all existing JS files in the current group
@@ -246,6 +248,12 @@ class PW_Scripts{
 		if( $vars['merge_files'] ){
 			// Generate the URL of the file from the Path
 			$file_url = str_replace( _get( wp_upload_dir(), 'basedir' ), _get( wp_upload_dir(), 'baseurl' ), $file_path );
+
+			if( !file_exists($file_path) )
+				pw_log( 'FILE DOES NOT EXIST', $file_path );
+			else
+				pw_log( 'FILE DOES EXIST', $file_path );
+
 			// Enqueue the script in WordPress
 			wp_enqueue_script(
 				$vars['group'],

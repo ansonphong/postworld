@@ -47,6 +47,9 @@ function pw_save_option(){
 		// Reset PHP LESS Cache
 		pw_reset_less_php_cache();
 
+	// Flush Saved Scripts
+	pw_scripts_flush();
+
 	if( $update_option == true ){
 		// Return with the Option Value
 		$response_data = get_option( $option_name );

@@ -3,17 +3,23 @@ if( empty( $vars['gallery_options'] ) )
 	$vars['gallery_options'] = array('inline','frame','horizontal','vertical'); 
 
 if( empty( $vars['show'] ) )
-	$vars['show'] = array(
+	$vars['show'] = array();	
+
+$vars['show'] = array_merge_recursive( array(
 		'immersion' => array(
 			'enable' => false,
 			'show_for' => array('frame','horizontal','vertical')
+			),
+		'inline' => array(
+			'show_featured_image',
 			),
 		'vertical' => array(
 			'show_title',
 			'show_caption',
 			'width'
 			),
-		); 
+		), $vars['show'] );
+
 
 $gallery_templates = array(
 	'inline' =>	array(
@@ -96,6 +102,18 @@ pw_print_ng_controller(array(
 							<small> : <?php _e( 'Percentage height of the window to size the horizontal scroll gallery', 'postworld' ) ?></small>
 						</div>
 					<?php endif; ?>
+
+					<?php if( in_array( 'inline', $vars['gallery_options'] ) ) : ?>
+						<!-- Y SCROLL OPTIONS -->
+						<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'inline'">
+							<?php if( in_array( 'show_featured_image', $vars['show']['inline'] ) ): ?>
+								<hr class="thin">
+								<input type="checkbox" ng-model="<?php echo $vars['ng_model']; ?>.inline.show_featured_image" id="inline-show-featured-image">
+								<label for="inline-show-featured-image"><b><?php _ex( 'Show Featured Image', 'option', 'postworld' ) ?></b></label>
+							<?php endif ?>
+						</div>
+					<?php endif; ?>
+
 
 					<?php if( in_array( 'vertical', $vars['gallery_options'] ) ) : ?>
 						<!-- Y SCROLL OPTIONS -->
