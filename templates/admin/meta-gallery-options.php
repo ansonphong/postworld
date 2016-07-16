@@ -10,9 +10,6 @@ $vars['show'] = array_merge_recursive( array(
 			'enable' => false,
 			'show_for' => array('frame','horizontal','vertical')
 			),
-		'inline' => array(
-			'show_featured_image',
-			),
 		'vertical' => array(
 			'show_title',
 			'show_caption',
@@ -103,18 +100,6 @@ pw_print_ng_controller(array(
 						</div>
 					<?php endif; ?>
 
-					<?php if( in_array( 'inline', $vars['gallery_options'] ) ) : ?>
-						<!-- Y SCROLL OPTIONS -->
-						<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'inline'">
-							<?php if( in_array( 'show_featured_image', $vars['show']['inline'] ) ): ?>
-								<hr class="thin">
-								<input type="checkbox" ng-model="<?php echo $vars['ng_model']; ?>.inline.show_featured_image" id="inline-show-featured-image">
-								<label for="inline-show-featured-image"><b><?php _ex( 'Show Featured Image', 'option', 'postworld' ) ?></b></label>
-							<?php endif ?>
-						</div>
-					<?php endif; ?>
-
-
 					<?php if( in_array( 'vertical', $vars['gallery_options'] ) ) : ?>
 						<!-- Y SCROLL OPTIONS -->
 						<div ng-show="<?php echo $vars['ng_model']; ?>.template == 'vertical'">
@@ -140,9 +125,15 @@ pw_print_ng_controller(array(
 								<label for="v-show-caption"><b><?php _ex( 'Show Caption', 'option', 'postworld' ) ?></b></label>
 							<?php endif ?>
 
-
 						</div>
 					<?php endif; ?>
+
+					<!-- CUSTOM THEME-ADDED OPTIONS FOR EACH GALLERY TYPE -->
+					<?php foreach( $vars['gallery_options'] as $gallery_option ): ?>
+						<div ng-show="<?php echo $vars['ng_model']; ?>.template == '<?php echo $gallery_option ?>'">
+							<?php do_action( 'pw_admin_gallery_'.$gallery_option.'_options', $vars ); ?>
+						</div>
+					<?php endforeach ?>
 
 				</td>
 			</tr>	
