@@ -131,7 +131,6 @@ class PW_Scripts{
 		// Get the scripts directory
 		$scripts_dir = $this->get_scripts_dir();
 
-
 		/**
 		 * If we are merging all the files
 		 */
@@ -140,7 +139,6 @@ class PW_Scripts{
 			/**
 			 * Check if a cached file already exists
 			 */
-
 			// Generate hash from array
 			$scripts_hash = hash( 'adler32', json_encode( $scripts ) );
 
@@ -198,7 +196,9 @@ class PW_Scripts{
 					$mkdir = mkdir($scripts_dir, 0777, true);
 					// If the directory can't be created, end here 
 					if( !$mkdir ){
-						error_log( 'Postworld unable to create directory to cache scripts at ' . $scripts_dir . ' Destination has file permissions code: ' . fileperms($scripts_dir ) );
+						$error_message = 'Postworld unable to create directory to cache scripts at ' . $scripts_dir . ' Destination has file permissions code: ' . fileperms($scripts_dir );
+						error_log( $error_message );
+						pw_log(  $error_message );
 						$vars['merge_files'] = false;
 					}
 				}
@@ -220,7 +220,7 @@ class PW_Scripts{
 						$content .= ( $script['minify'] ) ? 
 							$this->minify( $file_contents ) :
 							$file_contents;
-						
+					
 						$content .= PHP_EOL . PHP_EOL . PHP_EOL;
 					}
 				}
@@ -229,15 +229,15 @@ class PW_Scripts{
 
 				// If the file put operation was not successful, send an error
 				if( $put_contents === false ){
-					error_log( 'Postworld unable to create file to cache scripts at ' . $file_path . ' Destination has file permissions code: ' . fileperms($file_path ) );
+					$error_message = 'Postworld unable to create file to cache scripts at ' . $file_path . ' Destination has file permissions code: ' . fileperms($file_path );
+					error_log( $error_message );
+					pw_log( $error_message );
 					$vars['merge_files'] = false;
 				}
 
 			}
 
 		}
-
-		
 
 		/**
 		 * If all files have been merged
@@ -254,17 +254,22 @@ class PW_Scripts{
 				$vars['version'],
 				$vars['in_footer']
 				);
-			return true;
 		}
 
 		/**
 		 * Enqueue all the files seperately
 		 */
 		else{
-
-			//$scripts
-			// $scripts_dir
-
+			foreach($scripts as $script_slug => $val) {
+				// Generate URL from system path
+				$script_url = str_replace( ABSPATH, get_site_url(), $val['file']  ) ;
+				wp_enqueue_script(
+					$script_slug,
+					$script_url,
+					$vars['deps'],
+					$vars['version'],
+					$vars['in_footer'] );
+			}
 		}
 
 	}
