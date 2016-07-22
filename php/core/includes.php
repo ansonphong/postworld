@@ -14,6 +14,7 @@
 
 function postworld_includes( $vars ){
 
+	$site_version = pw_site_version();
 	$in_footer = pw_config('includes.js.in_footer');
 
 	// Add hook for admin <head></head>
@@ -177,209 +178,105 @@ function postworld_includes( $vars ){
 		// UNDERSCORE JS
 		wp_enqueue_script('underscore');
 
-		// DEEP MERGE
-		wp_enqueue_script( 'DeepMerge',
-			POSTWORLD_URI.'/lib/deepmerge/deepmerge.js');
+		$include_scripts = array(
 
-		// PHP.JS
-		wp_enqueue_script( 'PHP.JS',
-			POSTWORLD_URI.'/lib/php.js/php.js');
+			'core' => array(
+				// Core Libraries
+				'DeepMerge' => POSTWORLD_URI.'/lib/deepmerge/deepmerge.js',
+				'PHP.JS' => POSTWORLD_URI.'/lib/php.js/php.js',
+				'AngularJS' => POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js',
 
-		///// THIRD PARTY LIBRARIES /////
-	
-		///// ANGULAR VERSION CONTROL /////
+				// Angular Services
+				'AngularJS-Resource' => POSTWORLD_URI.'/lib/'.$angular_version.'/angular-resource.min.js',
+				'AngularJS-Route' => POSTWORLD_URI.'/lib/'.$angular_version.'/angular-route.min.js',
+				'AngularJS-Sanitize' => POSTWORLD_URI.'/lib/'.$angular_version.'/angular-sanitize.min.js',
+				'AngularJS-Touch' => POSTWORLD_URI.'/lib/'.$angular_version.'/angular-touch.min.js',
+				'AngularJS-Aria' => POSTWORLD_URI.'/lib/'.$angular_version.'/angular-aria.min.js',
+				'AngularJS-Animate' => POSTWORLD_URI.'/lib/'.$angular_version.'/angular-animate.min.js'
+				),
 
-		// ANGULAR
-		wp_enqueue_script( 'AngularJS',
-			POSTWORLD_URI.'/lib/'.$angular_version.'/angular.min.js');
+			'angular_thirdparty' => array(
+				'AngularJS-UI-Bootstrap' => POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.14.3.min.js',
+				'angularJS-nInfiniteScroll' => POSTWORLD_URI.'/lib/ng-infinite-scroll/ng-infinite-scroll-1.2.js',
+				'angularJS-Parallax' => POSTWORLD_URI.'/lib/angular-parallax/angular-parallax.js',
+				'angularJS-Elastic' => POSTWORLD_URI.'/lib/angular-elastic/angular-elastic.js',
+				'angularJS-Masonry' => POSTWORLD_URI.'/lib/angular-masonry/angular-masonry.js',
+				'angularJS-ChecklistModel' => POSTWORLD_URI.'/lib/checklist-model/checklist-model.js'
+				),
 
-		// ANGULAR SERVICES
-		wp_enqueue_script( 'AngularJS-Resource',
-			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-resource.min.js');
+			'postworld_core' => array(
+				POSTWORLD_APP => POSTWORLD_URI.'/js/app.js',
 
-		wp_enqueue_script( 'AngularJS-Route',
-			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-route.min.js');
+				// Components
+				'pw-FeedItem-JS' => POSTWORLD_URI.'/js/components/feedItem.js',
+				'pw-TreeView-JS' => POSTWORLD_URI.'/js/components/treeview.js',
+				'pw-LoadComments-JS' => POSTWORLD_URI.'/js/components/loadComments.js',
+				'pw-inputSearch-JS' => POSTWORLD_URI.'/js/components/inputSearch.js',
+				'pw-LiveFeed-JS' => POSTWORLD_URI.'/js/components/liveFeed.js',
+				'pw-MediaEmbed-JS' => POSTWORLD_URI.'/js/components/mediaEmbed.js',
+				'pw-Users-JS' => POSTWORLD_URI.'/js/components/pwUsers.js',
+				'pw-Modal-JS' => POSTWORLD_URI.'/js/components/pwModal.js',
+				'pw-Comments-JS' => POSTWORLD_URI.'/js/components/pwComments.js',
+				'pw-Embedly-JS' => POSTWORLD_URI.'/js/components/pwEmbedly.js',
+				'pw-Input-JS' => POSTWORLD_URI.'/js/components/pwInput.js',
+				'pw-InfiniteGallery-JS' => POSTWORLD_URI.'/js/components/pwGallery.js',
+				'pw-geocode-JS' => POSTWORLD_URI.'/js/components/pwGeocode.js',
+				'pw-timezone-JS' => POSTWORLD_URI.'/js/components/pwTimezone.js',
+				'pw-UI-JS' => POSTWORLD_URI.'/js/components/pwUi.js',
+				'pw-colors-JS' => POSTWORLD_URI.'/js/components/pwColors.js',
+				'pw-filterFeed-JS' => POSTWORLD_URI.'/js/components/editFeed.js',
 
-		wp_enqueue_script( 'AngularJS-Sanitize',
-			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-sanitize.min.js');
+				// Controllers
+				'pw-Controllers-JS' => POSTWORLD_URI.'/js/controllers/pwControllers.js',
+				'pw-controlMenus-JS' => POSTWORLD_URI.'/js/controllers/controlMenus.js',
+				'pw-editPost-JS' => POSTWORLD_URI.'/js/controllers/editPost.js',
+				'pw-autoComplete-JS' => POSTWORLD_URI.'/js/controllers/autoComplete.js',
+				'pw-Widgets-JS' => POSTWORLD_URI.'/js/controllers/pwWidgets.js',
 
-		wp_enqueue_script( 'AngularJS-Touch',
-			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-touch.min.js');
+				// Filters
+				'pw-Filters-JS' => POSTWORLD_URI.'/js/filters/pwFilters.js',
 
-		wp_enqueue_script( 'AngularJS-Aria',
-			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-aria.min.js');
+				// Services
+				'pw-pwData-JS' => POSTWORLD_URI.'/js/services/pwData.js',
+				'pw-Services-JS' => POSTWORLD_URI.'/js/services/pwServices.js',
+				'pw-Iconsets-JS' => POSTWORLD_URI.'/js/services/pwIconsets.js',
+				'pw-pwCommentsService-JS' => POSTWORLD_URI.'/js/services/pwCommentsService.js',
 
-		wp_enqueue_script( 'AngularJS-Animate',
-			POSTWORLD_URI.'/lib/'.$angular_version.'/angular-animate.min.js');
+				// Directives
+				'pw-Directives-JS' => POSTWORLD_URI.'/js/directives/pwDirectives.js',
+				'pw-Directives-ListUsers' => POSTWORLD_URI.'/js/directives/pwUserList.js',
+				'pw-Directives-pwQuery' => POSTWORLD_URI.'/js/directives/pwQuery.js',
+				'pw-Directives-pwGetPost' => POSTWORLD_URI.'/js/directives/pwGetPost.js',
+				'pw-Directives-pwUsers' => POSTWORLD_URI.'/js/directives/pwUsers.js',
+				'pw-Directives-pwImage' => POSTWORLD_URI.'/js/directives/pwImage.js',
+				'pw-Directives-Background' => POSTWORLD_URI.'/js/directives/pwBackground.js',
+				'pw-Directives-pwMenu' => POSTWORLD_URI.'/js/directives/pwMenu.js',
+				'pw-Directives-pwWindow' => POSTWORLD_URI.'/js/directives/pwWindow.js',
+				'pw-Directives-pwDevices' => POSTWORLD_URI.'/js/directives/pwDevices.js',
+				'pw-Directives-pwEvents' => POSTWORLD_URI.'/js/directives/pwEvents.js',
+				'pw-WpDirectives-Media-Library-JS' => POSTWORLD_URI.'/js/directives/wpMediaLibrary.js',
 
-		///// ANGULAR THIRD PARTY MODULES /////
-		// ANGULAR UI : BOOTSTRAP
-		wp_enqueue_script( 'AngularJS-UI-Bootstrap',
-			POSTWORLD_URI.'/lib/angular-ui-bootstrap/ui-bootstrap-tpls-0.14.3.min.js' );
+				// Modules
+				'pw-Modules-Compile' => POSTWORLD_URI.'/js/modules/pwCompile.js',
 
-		// ANGULAR : INFINITE SCROLL
-		wp_enqueue_script( 'angularJS-nInfiniteScroll', POSTWORLD_URI.'/lib/ng-infinite-scroll/ng-infinite-scroll-1.2.js', $angularDep );
-		
-		// ANGULAR : PARALLAX
-		wp_enqueue_script( 'angularJS-Parallax',
-			POSTWORLD_URI.'/lib/angular-parallax/angular-parallax.js', $angularDep );
+				// Wizard
+				'pw-Wizard' => POSTWORLD_URI.'/js/components/pwWizard.js',
 
-		// ANGULAR : ELASTIC
-		wp_enqueue_script( 'angularJS-Elastic',
-			POSTWORLD_URI.'/lib/angular-elastic/angular-elastic.js', $angularDep );
+				),
+			);
 
-		// ANGULAR : MASONRY
-		wp_enqueue_script( 'angularJS-Masonry',
-			POSTWORLD_URI.'/lib/angular-masonry/angular-masonry.js', $angularDep );
-
-		// ANGULAR : CHECKLIST MODEL
-		wp_enqueue_script( 'angularJS-ChecklistModel',
-			POSTWORLD_URI.'/lib/checklist-model/checklist-model.js', $angularDep );
-		
-		/////// POSTWORLD APP /////	
-		// TODO : blob through the dirs and get all the js files, auto-include in foreach
-		wp_enqueue_script( 	POSTWORLD_APP,
-			POSTWORLD_URI.'/js/app.js', $angularDep );
-
-		// COMPONENTS
-		wp_enqueue_script( 'pw-FeedItem-JS',
-			POSTWORLD_URI.'/js/components/feedItem.js', $angularDep );
-
-		wp_enqueue_script( 'pw-TreeView-JS',
-			POSTWORLD_URI.'/js/components/treeview.js', $angularDep );
-
-		//wp_enqueue_script( 'pw-Ya-TreeView-JS',
-		//	POSTWORLD_URI.'/js/components/ya-treeview.js', $angularDep );
-
-		wp_enqueue_script( 'pw-LoadComments-JS',
-			POSTWORLD_URI.'/js/components/loadComments.js', $angularDep );
-		
-		wp_enqueue_script( 'pw-inputSearch-JS',
-			POSTWORLD_URI.'/js/components/inputSearch.js', $angularDep );
-
-		wp_enqueue_script( 'pw-LiveFeed-JS',
-			POSTWORLD_URI.'/js/components/liveFeed.js', $angularDep );
-
-		wp_enqueue_script( 'pw-MediaEmbed-JS',
-			POSTWORLD_URI.'/js/components/mediaEmbed.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Users-JS',
-			POSTWORLD_URI.'/js/components/pwUsers.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Modal-JS',
-			POSTWORLD_URI.'/js/components/pwModal.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Comments-JS',
-			POSTWORLD_URI.'/js/components/pwComments.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Embedly-JS',
-			POSTWORLD_URI.'/js/components/pwEmbedly.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Input-JS',
-			POSTWORLD_URI.'/js/components/pwInput.js', $angularDep );
-
-		wp_enqueue_script( 'pw-InfiniteGallery-JS',
-			POSTWORLD_URI.'/js/components/pwGallery.js', $angularDep );
-
-		wp_enqueue_script( 'pw-geocode-JS',
-			POSTWORLD_URI.'/js/components/pwGeocode.js', $angularDep );
-
-		wp_enqueue_script( 'pw-timezone-JS',
-			POSTWORLD_URI.'/js/components/pwTimezone.js', $angularDep );
-
-		wp_enqueue_script( 'pw-UI-JS',
-			POSTWORLD_URI.'/js/components/pwUi.js', $angularDep );
-
-		wp_enqueue_script( 'pw-colors-JS',
-			POSTWORLD_URI.'/js/components/pwColors.js', $angularDep );
-
-		wp_enqueue_script( 'pw-filterFeed-JS',
-			POSTWORLD_URI.'/js/components/editFeed.js', $angularDep );
-
-		// CONTROLLERS
-		wp_enqueue_script( 'pw-Controllers-JS',
-			POSTWORLD_URI.'/js/controllers/pwControllers.js', $angularDep );
-
-		wp_enqueue_script( 'pw-controlMenus-JS',
-			POSTWORLD_URI.'/js/controllers/controlMenus.js', $angularDep );
-
-		wp_enqueue_script( 'pw-editPost-JS',
-			POSTWORLD_URI.'/js/controllers/editPost.js', $angularDep );
-
-		wp_enqueue_script( 'pw-autoComplete-JS',
-			POSTWORLD_URI.'/js/controllers/autoComplete.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Widgets-JS',
-			POSTWORLD_URI.'/js/controllers/pwWidgets.js', $angularDep );
-
-
-		// FILTERS
-		wp_enqueue_script( 	'pw-Filters-JS',
-			POSTWORLD_URI.'/js/filters/pwFilters.js', $angularDep );
-		
-		
-		// SERVICES
-		wp_enqueue_script( 'pw-pwData-JS',
-			POSTWORLD_URI.'/js/services/pwData.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Services-JS',
-			POSTWORLD_URI.'/js/services/pwServices.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Iconsets-JS',
-			POSTWORLD_URI.'/js/services/pwIconsets.js', $angularDep );
-
-		wp_enqueue_script( 'pw-pwCommentsService-JS',
-			POSTWORLD_URI.'/js/services/pwCommentsService.js', $angularDep );
-		
-
-		// DIRECTIVES
-		wp_enqueue_script( 'pw-Directives-JS',
-			POSTWORLD_URI.'/js/directives/pwDirectives.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Directives-ListUsers',
-			POSTWORLD_URI.'/js/directives/pwUserList.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Directives-pwQuery',
-			POSTWORLD_URI.'/js/directives/pwQuery.js', $angularDep );
-			
-		wp_enqueue_script( 'pw-Directives-pwGetPost',
-			POSTWORLD_URI.'/js/directives/pwGetPost.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Directives-pwUsers',
-			POSTWORLD_URI.'/js/directives/pwUsers.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Directives-pwImage',
-			POSTWORLD_URI.'/js/directives/pwImage.js', $angularDep );
-	
-		wp_enqueue_script( 'pw-Directives-Background',
-			POSTWORLD_URI.'/js/directives/pwBackground.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Directives-pwMenu',
-			POSTWORLD_URI.'/js/directives/pwMenu.js', $angularDep );
-		
-		wp_enqueue_script( 'pw-Directives-pwWindow',
-			POSTWORLD_URI.'/js/directives/pwWindow.js', $angularDep );
-		
-		wp_enqueue_script( 'pw-Directives-pwDevices',
-			POSTWORLD_URI.'/js/directives/pwDevices.js', $angularDep );
-
-		wp_enqueue_script( 'pw-Directives-pwEvents',
-			POSTWORLD_URI.'/js/directives/pwEvents.js', $angularDep );
-		
-		// MODULES
-		wp_enqueue_script( 'pw-Modules-Compile',
-			POSTWORLD_URI.'/js/modules/pwCompile.js', $angularDep );
-		
-		// WIZARD
-		wp_enqueue_script( 'pw-Wizard',
-			POSTWORLD_URI.'/js/components/pwWizard.js', $angularDep );
-
-		// WORDPRESS DIRECTIVES
-		wp_enqueue_script( 'pw-WpDirectives-Media-Library-JS',
-			POSTWORLD_URI.'/js/directives/wpMediaLibrary.js', $angularDep );
-		
-		// This is causing issues
-		//wp_localize_script( 'pw-pwCommentsService-JS', 'jsVars', $jsVars);
+		/**
+		 * ENQUEUE SCRIPTS
+		 */
+		foreach( $include_scripts['core'] as $script_key => $script_location ){
+			wp_enqueue_script( $script_key, $script_location, false, $site_version, $in_footer );
+		}
+		foreach( $include_scripts['angular_thirdparty'] as $script_key => $script_location ){
+			wp_enqueue_script( $script_key, $script_location, $angularDep, $site_version, $in_footer );
+		}
+		foreach( $include_scripts['postworld_core'] as $script_key => $script_location ){
+			wp_enqueue_script( $script_key, $script_location, $angularDep, $site_version, $in_footer );
+		}
 
 	}
 
