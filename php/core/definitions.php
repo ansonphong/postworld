@@ -17,10 +17,10 @@ function postworld_definitions(){
 	 * Postworld Info
 	 */
 	$GLOBALS['pw']['info'] = array(
-		'version'		=>	'1.7.2',
+		'version'		=>	'1.7.3',
 		'db_version'	=>	'1.32',
-		'mode'	=>	pw_mode(),
-		'slug'	=>	'postworld',
+		'mode'			=>	pw_mode(),
+		'slug'			=>	'postworld',
 		);
 	$GLOBALS['pw']['angular_modules'] = array();
 	$GLOBALS['pw']['iconsets'] = array();

@@ -31,6 +31,8 @@ function pw_refresh(){
  * @example sort_array_of_array($inventory, 'price');
  */
 function pw_sort_array_of_arrays(&$array, $subfield, $order = 'ASC' ){
+	if( !is_array($array) )
+		return false;
 	if( $order == 'ASC' )
 		$order = SORT_ASC;
 	else
