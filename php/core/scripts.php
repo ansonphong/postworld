@@ -44,11 +44,11 @@ function pw_scripts_flush( $prefix = null, $extension = '.js' ){
 /**
  * Flush cached scripts on common actions which might alter JS configurations
  */
-/*
 add_action( 'wp_update_nav_menu', 'pw_scripts_flush_action' );
 add_action( 'wp_update_nav_menu_item', 'pw_scripts_flush_action' );
 add_action( 'wp_create_nav_menu', 'pw_scripts_flush_action' );
 add_action( 'wp_delete_nav_menu', 'pw_scripts_flush_action' );
+/*
 add_action( 'update_option', 'pw_scripts_flush_action' );
 add_action( 'pw_set_option', 'pw_scripts_flush_action' );
 */
@@ -132,6 +132,9 @@ class PW_Scripts{
 		$scripts = $this->get_scripts_in_group( $vars['group'] );
 		// Get the scripts directory
 		$scripts_dir = $this->get_scripts_dir();
+		// If group empty, exit here
+		if( empty( $scripts ) )
+			return false;
 
 		/**
 		 * If we are merging all the files
