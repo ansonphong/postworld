@@ -252,10 +252,12 @@ class PW_Scripts{
 			// Generate the URL of the file from the Path
 			$file_url = str_replace( _get( wp_upload_dir(), 'basedir' ), _get( wp_upload_dir(), 'baseurl' ), $file_path );
 
+			/*
 			if( !file_exists($file_path) )
 				pw_log( 'FILE DOES NOT EXIST', $file_path );
 			else
 				pw_log( 'FILE DOES EXIST', $file_path );
+			*/
 
 			// Enqueue the script in WordPress
 			wp_enqueue_script(
