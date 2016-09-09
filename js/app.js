@@ -133,7 +133,6 @@ postworld.run(
 		 * @todo : Refactor these utility function into $pw,
 		 * Pass-through functions in rootScope to in service.
 		 */
-
 		$rootScope.isLoggedIn = function(){
 			return !_.isUndefined( $pw.user.ID );
 		}

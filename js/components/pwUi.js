@@ -13,7 +13,7 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 }]);
 
 postworld.controller( 'pwUiCtrl',
-	function( $scope, $timeout, $_, $log, $pw, $pwTemplatePartials ){
+	function( $scope, $timeout, $_, $log, $pw, $pwTemplatePartials, $rootScope ){
 
 	$scope.uiLoggedIn = function(){
 		return !_.isEmpty( $pw['user'] );
@@ -233,12 +233,16 @@ postworld.controller( 'pwUiCtrl',
 		return $pwTemplatePartials.get( vars );
 	}
 
+	$scope.uiIsDevice = function( devices ){
+		return $rootScope.isDevice( devices );
+	}
+
 	/**
-	 * Is Device?
+	 * Is Either Device?
 	 * @param array devices An array of devices to check if it is, ie. ['mobile', 'tablet', 'desktop']
 	 * @return boolean Whether or not the current device is one of those provided.
 	 */
-	$scope.uiIsDevice = function( devices ){
+	$scope.uiIsEitherDevice = function( devices ){
 		if(!$pw.device)
 			return false;
 		var device = $pw.device,
