@@ -24,8 +24,12 @@ postworld.factory( '$pwColors', [ '$pw', '$_', function( $pw, $_ ){
 	var getColorFromProfiles = function( colorProfiles, profilePercentage ){
 		var matches = profilePercentage.split('.');
 		var key = matches[0];
-		var colorProfile = colorProfiles[key]
-		return getColorPercentageFromProfile( parseInt(matches[1]), colorProfile.colors );
+		var colorProfile = $_.get( colorProfiles, key );
+
+		if( colorProfile === false )
+			return false;
+		else
+			return getColorPercentageFromProfile( parseInt(matches[1]), colorProfile.colors );
 	}
 
 
@@ -58,7 +62,10 @@ postworld.factory( '$pwColors', [ '$pw', '$_', function( $pw, $_ ){
 
 				function rgba( profilePercentage, alpha ){
 					var c = getColorFromProfiles( colorProfiles, profilePercentage );
-					return 'rgba('+c.rgb[0]+','+c.rgb[1]+','+c.rgb[2]+','+alpha+')';
+					if( $_.isArray( c ) )
+						return 'rgba('+c.rgb[0]+','+c.rgb[1]+','+c.rgb[2]+','+alpha+')';
+					else
+						return '';
 				}
 
 				return eval( content );
