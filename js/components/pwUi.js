@@ -13,7 +13,7 @@ postworld.directive( 'pwUi', [ '$log', function( $log ){
 }]);
 
 postworld.controller( 'pwUiCtrl',
-	function( $scope, $timeout, $_, $log, $pw ){
+	function( $scope, $timeout, $_, $log, $pw, $pwTemplatePartials ){
 
 	$scope.uiLoggedIn = function(){
 		return !_.isEmpty( $pw['user'] );
@@ -232,6 +232,12 @@ postworld.controller( 'pwUiCtrl',
 		});
 		var code = "<style>" + element + "{ " + propertiesCode + " }</style>"
 		return code;
+	}
+
+	///// GET TEMPLATE PARTIAL /////
+	// Alias of the template partials
+	$scope.uiGetTemplatePartial = function( vars ){
+		return $pwTemplatePartials.get( vars );
 	}
 
 });
