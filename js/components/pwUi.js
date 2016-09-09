@@ -19,8 +19,6 @@ postworld.controller( 'pwUiCtrl',
 		return !_.isEmpty( $pw['user'] );
 	}
 
-	////////// UI ELEMENT : DISPLAY //////////
-
 	$scope.uiToggleElementDisplay = function( element ){
 		element = angular.element( element );
 		if( element.css('display') == 'none' )
@@ -29,11 +27,9 @@ postworld.controller( 'pwUiCtrl',
 			element.css('display', 'none');
 	}
 
-	// For use with ng-click
 	$scope.uiToggleView = function( viewId, timeout ){
 		if( _.isUndefined( timeout ) )
 			timeout = 0;
-		
 		// Timeout to allow click/select events to register before hiding
 		$timeout( function(){
 			// If the view is registered
@@ -44,7 +40,6 @@ postworld.controller( 'pwUiCtrl',
 			else
 				$scope.uiViews[viewId] = true;
 		}, timeout );
-		
 	}
 
 	// For use with ng-show / ng-hide
@@ -234,10 +229,28 @@ postworld.controller( 'pwUiCtrl',
 		return code;
 	}
 
-	///// GET TEMPLATE PARTIAL /////
-	// Alias of the template partials
 	$scope.uiGetTemplatePartial = function( vars ){
 		return $pwTemplatePartials.get( vars );
+	}
+
+	/**
+	 * Is Device?
+	 * @param array devices An array of devices to check if it is, ie. ['mobile', 'tablet', 'desktop']
+	 * @return boolean Whether or not the current device is one of those provided.
+	 */
+	$scope.uiIsDevice = function( devices ){
+		if(!$pw.device)
+			return false;
+		var device = $pw.device,
+			isDevice = false;
+		angular.forEach( devices, function( thisDevice ){
+			if( $_.inArray( thisDevice, ['mobile', 'tablet', 'desktop'] ) ){
+				var deviceKey = 'is_'+thisDevice; 
+				if( device[deviceKey] == true )
+					isDevice = true;
+			}
+		});
+		return isDevice;
 	}
 
 });
