@@ -1,4 +1,5 @@
 <?php
+add_shortcode( 'pagelist', 'pw_pagelist_shortcode' );
 add_shortcode( 'subpages', 'pw_pagelist_shortcode' );
 add_shortcode( 'siblings', 'pw_pagelist_shortcode' );
 
@@ -18,6 +19,7 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 		"order"		=>	"ASC",
 		"post-type"	=>	$post->post_type,
 		"post-id"	=>	false,
+		"include"	=>	"",
 	);
 
 	// Get over-ride defaults from the theme
@@ -71,6 +73,11 @@ function pw_pagelist_shortcode( $atts, $content = null, $tag ) {
 			$query['post_parent'] = $post->post_parent;
 			// Exclude the current page
 			$query['post__not_in'] = array($post->ID);
+			break;
+		case "pagelist":
+			if( !empty($atts['include']) ){
+				$query['post__in'] = pw_integer_string_to_array( $atts['include'] );
+			}
 			break;
 	}
 	

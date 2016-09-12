@@ -466,6 +466,7 @@ function postworld_includes( $vars ){
 function pw_include_admin_scripts(){
 	global $angularDep;
 	global $pw;
+	$site_version = pw_site_version();
 	$in_footer = pw_config('includes.js.in_footer');
 	
 	if( pw_mode() === 'deploy' ){
@@ -473,26 +474,34 @@ function pw_include_admin_scripts(){
 			'Postworld-Admin',
 			POSTWORLD_URI.'/deploy/postworld-admin.min.js',
 			array( POSTWORLD_APP ),
-			$pw['info']['version'],
+			$site_version,
 			$in_footer );
 	}
 	else{
-	// CONTROLLERS : ADMIN
-		wp_enqueue_script('Postworld-Admin-Layouts', 		POSTWORLD_URI.'/admin/js/controllers-admin/layouts.js', $angularDep );
-		wp_enqueue_script('Postworld-Admin-Styles', 		POSTWORLD_URI.'/admin/js/controllers-admin/styles.js', $angularDep );
-		wp_enqueue_script('Postworld-Admin-Sidebars', 		POSTWORLD_URI.'/admin/js/controllers-admin/sidebars.js', $angularDep );
-		wp_enqueue_script('Postworld-Admin-Feeds', 			POSTWORLD_URI.'/admin/js/controllers-admin/feeds.js', $angularDep );
-		wp_enqueue_script('Postworld-Admin-Backgrounds',	POSTWORLD_URI.'/admin/js/controllers-admin/backgrounds.js', $angularDep );
-		wp_enqueue_script('Postworld-Admin-Iconsets', 		POSTWORLD_URI.'/admin/js/controllers-admin/iconsets.js', $angularDep );
-		wp_enqueue_script('Postworld-Admin-Shortcodes', 	POSTWORLD_URI.'/admin/js/controllers-admin/shortcodes.js', $angularDep );
-		wp_enqueue_script('Postworld-Admin-Database', 		POSTWORLD_URI.'/admin/js/controllers-admin/database.js', $angularDep );
-		
-		// DIRECTIVES : ADMIN
-		wp_enqueue_script('Postworld-Admin', 				POSTWORLD_URI.'/admin/js/directives-admin/pwAdmin.js', $angularDep );
-		wp_enqueue_script('Postworld-Save-Options', 		POSTWORLD_URI.'/admin/js/directives-admin/pwSaveOption.js', $angularDep );
+	
+		$admin_scripts = array(
+			'admin_core' => array(
+				// CONTROLLERS : ADMIN
+				'Postworld-Admin-Layouts' => POSTWORLD_URI.'/admin/js/controllers-admin/layouts.js',
+				'Postworld-Admin-Styles' => POSTWORLD_URI.'/admin/js/controllers-admin/styles.js',
+				'Postworld-Admin-Sidebars' => POSTWORLD_URI.'/admin/js/controllers-admin/sidebars.js',
+				'Postworld-Admin-Feeds' => POSTWORLD_URI.'/admin/js/controllers-admin/feeds.js',
+				'Postworld-Admin-Backgrounds' => POSTWORLD_URI.'/admin/js/controllers-admin/backgrounds.js',
+				'Postworld-Admin-Iconsets' => POSTWORLD_URI.'/admin/js/controllers-admin/iconsets.js',
+				'Postworld-Admin-Shortcodes' => POSTWORLD_URI.'/admin/js/controllers-admin/shortcodes.js',
+				'Postworld-Admin-Database' => POSTWORLD_URI.'/admin/js/controllers-admin/database.js',
+				// DIRECTIVES : ADMIN
+				'Postworld-Admin' => POSTWORLD_URI.'/admin/js/directives-admin/pwAdmin.js',
+				'Postworld-Save-Options' => POSTWORLD_URI.'/admin/js/directives-admin/pwSaveOption.js',
+				// ANGULAR : JQUERY SLIDER
+				'angularJS-jQuery-Slider' => POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js',
+				),
+			);
 
-		/////// ANGULAR : JQUERY SLIDER /////
-		wp_enqueue_script( 'angularJS-jQuery-Slider', 		POSTWORLD_URI.'/lib/angular-jquery-slider/slider.js', $angularDep );
+
+		foreach( $admin_scripts['admin_core'] as $script_key => $script_location ){
+			wp_enqueue_script( $script_key, $script_location, false, $site_version, $in_footer );
+		}
 		
 	}
 

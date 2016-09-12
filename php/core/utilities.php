@@ -1624,6 +1624,30 @@ function pw_sanitize_numeric_array_of_a_arrays( $vals ){
 }
 
 /**
+ * Converts a string containing delimited integers
+ * into an array of integers.
+ *
+ * @param string $string A string of comma delimited integers
+ * @param string $delimited The boundary string.
+ *
+ * @return array An array of integers 
+ */
+function pw_integer_string_to_array( $string, $delimiter = "," ){
+	if( !is_string( $string ) )
+		return false;
+	if( empty( $string ) )
+		return array();
+
+	$string_parts = explode( $delimiter, $string);
+	$integers = array();
+	foreach ($string_parts as $string_part){
+		$integers[] = intval( trim($string_part) );
+	}
+
+	return $integers;
+}
+
+/**
  * Looks through the list and returns the first value
  * That matches the key value pair listed in properties
  *
