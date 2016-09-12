@@ -98,7 +98,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"youtube",
 					"name"			=>	__("YouTube","postworld"),
-					"icon"			=>	"pwi-circle-medium",
+					"icon"			=>	"pwi-youtube-square",
 					"description"	=>	__("Your YouTube username, not URL","postworld"),
 					"prepend_url"	=>	"https://www.youtube.com/user/",
 					"_public"		=>	true,
@@ -122,7 +122,7 @@ function pw_social_meta( $social_meta = array() ){
 				array(
 					"id"			=>	"linkedin",
 					"name"			=>	__("LinkedIn","postworld"),
-					"icon"			=>	"pwi-circle-medium",
+					"icon"			=>	"pwi-linkedin-square",
 					"description"	=>	__("URL of your LinkedIn Profile","postworld"),
 					"prepend_url"	=>	"",
 					"_public"		=>	true,
@@ -132,6 +132,14 @@ function pw_social_meta( $social_meta = array() ){
 					"name"			=>	__("Trip Advisor","postworld"),
 					"icon"			=>	"pwi-circle-medium",
 					"description"	=>	__("URL of your Tripadvisor Page","postworld"),
+					"prepend_url"	=>	"",
+					"_public"		=>	true,
+					),
+				array(
+					"id"			=>	"wattpad",
+					"name"			=>	__("Wattpad","postworld"),
+					"icon"			=>	"pwi-wattpad-square",
+					"description"	=>	__("URL of your Wattpad Page","postworld"),
 					"prepend_url"	=>	"",
 					"_public"		=>	true,
 					),

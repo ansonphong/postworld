@@ -97,8 +97,6 @@ function pw_print_term_feed( $vars ){
 			),
 		);
 
-	//pw_log( "PRINT TERM FEED : VARS : " . json_encode( $vars ) );
-
 	$vars = array_replace_recursive( $default_vars, $vars ); 
 
 	///// TEMPLATES ////

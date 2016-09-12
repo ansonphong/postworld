@@ -87,7 +87,7 @@ function pw_get_social_media_meta(){
 			'prepend_url'	=>	''
 			),
 		'youtube'	=>	array(
-			'icon'			=>	'pwi-circle-medium',
+			'icon'			=>	'pwi-youtube-square',
 			'name'			=>	'YouTube',
 			'label'			=>	'On YouTube',
 			'share_label'	=>	'Share On YouTube',
