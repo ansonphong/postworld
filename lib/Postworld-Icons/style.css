@@ -1,11 +1,11 @@
 @font-face {
   font-family: 'Postworld-Icons';
-  src:  url('fonts/Postworld-Icons.eot?nwtwhu');
-  src:  url('fonts/Postworld-Icons.eot?nwtwhu#iefix') format('embedded-opentype'),
-    url('fonts/Postworld-Icons.woff2?nwtwhu') format('woff2'),
-    url('fonts/Postworld-Icons.ttf?nwtwhu') format('truetype'),
-    url('fonts/Postworld-Icons.woff?nwtwhu') format('woff'),
-    url('fonts/Postworld-Icons.svg?nwtwhu#Postworld-Icons') format('svg');
+  src:  url('fonts/Postworld-Icons.eot?d9bq63');
+  src:  url('fonts/Postworld-Icons.eot?d9bq63#iefix') format('embedded-opentype'),
+    url('fonts/Postworld-Icons.woff2?d9bq63') format('woff2'),
+    url('fonts/Postworld-Icons.ttf?d9bq63') format('truetype'),
+    url('fonts/Postworld-Icons.woff?d9bq63') format('woff'),
+    url('fonts/Postworld-Icons.svg?d9bq63#Postworld-Icons') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -34,6 +34,9 @@
 .pwi-external-link:before {
   content: "\e60e";
 }
+.pwi-youtube-square:before {
+  content: "\e905";
+}
 .pwi-linkedin:before {
   content: "\e901";
 }
@@ -54,15 +57,6 @@
 }
 .pwi-youtube:before {
   content: "\e618";
-}
-.pwi-youtube-square .path1:before {
-  content: "\e619";
-  color: rgb(0, 0, 0);
-}
-.pwi-youtube-square .path2:before {
-  content: "\e627";
-  margin-left: -1em;
-  color: rgb(255, 255, 255);
 }
 .pwi-search:before {
   content: "\f002";
