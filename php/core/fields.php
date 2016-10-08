@@ -200,6 +200,7 @@ function pw_register_core_post_field_models(){
 			'post_format',
 			'post_meta(all)',
 			'feed_order',
+			'stats',
 			//'viewer(has_voted,is_favorite,is_view_later)',
 			)
 		);

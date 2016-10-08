@@ -347,6 +347,7 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 			$post['stats'] = array();
 			$post['stats']['is_current_post'] = ( $wp_post->ID == $post_id );
 			$post['stats']['is_current_post_parent'] = ( $wp_post->post_parent == $post_id );
+			$post['stats']['has_gallery'] = ( has_shortcode( $get_post['post_content'], 'gallery' ) );
 		}
 
 	////////// META DATA //////////
