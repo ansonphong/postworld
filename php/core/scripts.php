@@ -312,9 +312,11 @@ class PW_Scripts{
 	 */
 	public function flush( $prefix = '', $extension = '.js' ){
 		$files = $this->glob( $prefix, $extension );
-		foreach( $files as $file ){
-			if( file_exists($file) )
-				unlink( $file );
+		if( is_array($files) ){
+			foreach( $files as $file ){
+				if( file_exists($file) )
+					unlink( $file );
+			}
 		}
 		return;
 	}

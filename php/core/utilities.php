@@ -21,8 +21,10 @@ function pw_mode(){
  * Refreshes the page.
  */
 function pw_refresh(){
-	header("Refresh:0");
-	exit;
+	if( !headers_sent() ){
+		header("Refresh:0");
+		exit;
+	}
 }
 
 /**
