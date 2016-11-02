@@ -451,11 +451,11 @@ function pw_file_hash( $src, $type = 'sha256' ){
 
 // Recursively count array
 function pw_count_r($array, $i = 0){
-    foreach($array as $k){
-        if(is_array($k)){ $i += pw_count_r($k, 1); }
-        else{ $i++; }
-    }
-    return $i;
+	foreach($array as $k){
+		if(is_array($k)){ $i += pw_count_r($k, 1); }
+		else{ $i++; }
+	}
+	return $i;
 }
 
 function pw_filter_count( $filter_hook ){
@@ -528,20 +528,20 @@ function pw_get_posted_json( $post_var ){
 	// And converts it into an object / array
 	global $_POST;
 
-    // Get the JSON string which represents the post to be saved 
-    $post = _get( $_POST, $post_var );
-    if( !$post )
-    	return false;
-    
-    // Strip slashes from the string
-    $post = stripslashes( $post );
-    // Decode the object from JSON into Array
-    $post = json_decode( $post, true );
-    // If the post is empty, or the decode fails
-    if( empty($post) )
-        return false;
-    else
-        return $post;
+	// Get the JSON string which represents the post to be saved 
+	$post = _get( $_POST, $post_var );
+	if( !$post )
+		return false;
+	
+	// Strip slashes from the string
+	$post = stripslashes( $post );
+	// Decode the object from JSON into Array
+	$post = json_decode( $post, true );
+	// If the post is empty, or the decode fails
+	if( empty($post) )
+		return false;
+	else
+		return $post;
 }
 
 function pw_unique_key( $posts, $key = 'ID' ){
@@ -581,7 +581,7 @@ function pw_print_code( $var ){
 }
 
 function pw_is_associative( $arr ){
-    return array_keys($arr) !== range(0, count($arr) - 1);
+	return array_keys($arr) !== range(0, count($arr) - 1);
 }
 
 function pw_core_print_generation_time() {
@@ -622,9 +622,9 @@ function pw_post_id_exists_alt( $post_id ){
 
 
 function pw_user_id_exists_alt($user_id){
-    //global $wpdb;
-    //$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));
-    //if($count == 1){ return true; } else { return false; }
+	//global $wpdb;
+	//$count = $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM $wpdb->users WHERE ID = '$user_id'"));
+	//if($count == 1){ return true; } else { return false; }
 	$user = get_user_by( "id", $user_id );
 	return ( $user != false ) ? true : false;
 }
@@ -695,14 +695,14 @@ function pw_empty_array( $format ){
 }
 
 function pw_object_to_array($data){
-    if (is_array($data) || is_object($data)){
-        $result = array();
-        foreach ($data as $key => $value){
-            $result[$key] = pw_object_to_array($value);
-        }
-        return $result;
-    }
-    return $data;
+	if (is_array($data) || is_object($data)){
+		$result = array();
+		foreach ($data as $key => $value){
+			$result[$key] = pw_object_to_array($value);
+		}
+		return $result;
+	}
+	return $data;
 }
 
 
@@ -768,9 +768,9 @@ function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings = array()
 
 	 // Cycle through each item in the Object
 	 for($i=0, $ni=count($object); $i < $ni; $i++){
-	 	// If the current item is the same as the current cycling parent, add the data
-	 	if( $object[$i][ $s['parent_key'] ] == $parent ){
-	 		// Setup / Clear Branch Child Array
+		// If the current item is the same as the current cycling parent, add the data
+		if( $object[$i][ $s['parent_key'] ] == $parent ){
+			// Setup / Clear Branch Child Array
 			$branch_child = array();
 			// Get all fields
 			if( $s['fields'] == 'all' ){
@@ -805,15 +805,15 @@ function pw_make_tree_obj( $object, $parent = 0, $depth = 0, $settings = array()
 				// Merge back the result of the callback
 				$branch_child = array_merge( $branch_child, $callback_data );
 			}
-	 		// Run Branch recursively and find children
-	 		$children = pw_make_tree_obj( $object, $object[$i][ $s['id_key'] ], $depth+1, $settings );
-	 		// If there are children, merge them into the branch_child as sub Array
-	 		if (!empty($children)){
-		 		$branch_child[ $s['child_key'] ] = $children;
-	 		}
-	 		// Push Branch Child data to Local Branch
-		 	array_push($branch, $branch_child);
-	 	}
+			// Run Branch recursively and find children
+			$children = pw_make_tree_obj( $object, $object[$i][ $s['id_key'] ], $depth+1, $settings );
+			// If there are children, merge them into the branch_child as sub Array
+			if (!empty($children)){
+				$branch_child[ $s['child_key'] ] = $children;
+			}
+			// Push Branch Child data to Local Branch
+			array_push($branch, $branch_child);
+		}
 	 }
 	 return $branch;
 }
@@ -912,7 +912,7 @@ function pw_extract_fields( $fields_array, $query_string ){
 	foreach ($fields_array as $field) {
 		if ( strpos( $field, $query_string ) !== FALSE )
 			// Push $field into $values_array
-		    array_push($values_array, $field);
+			array_push($values_array, $field);
 	}
 	return $values_array;
 }
@@ -1023,7 +1023,7 @@ function pw_get_avatar_url( $user_id, $avatar_size ){
 		$avatar_img = get_avatar( $user_id, $avatar_size );
 		// Remove the image tag
 		preg_match("/src='(.*?)'/i", $avatar_img, $matches);
-	    return $matches[1];
+		return $matches[1];
 	}
 }
 
@@ -1033,54 +1033,54 @@ function post_time_ago($post_id) {
 }
 
 function time_ago($timestamp){
-    //type cast, current time, difference in timestamps
-    $timestamp      = (int) $timestamp;
-    $current_time   = time();
-    $diff           = $current_time - $timestamp;
-    
-    //intervals in seconds
-    $intervals      = array (
-        'year' => 31556926, 'month' => 2629744, 'week' => 604800, 'day' => 86400, 'hour' => 3600, 'minute'=> 60
-    );
-    
-    //now we just find the difference
-    if ($diff == 0){
-        return 'just now';
-    }    
+	//type cast, current time, difference in timestamps
+	$timestamp      = (int) $timestamp;
+	$current_time   = time();
+	$diff           = $current_time - $timestamp;
+	
+	//intervals in seconds
+	$intervals      = array (
+		'year' => 31556926, 'month' => 2629744, 'week' => 604800, 'day' => 86400, 'hour' => 3600, 'minute'=> 60
+	);
+	
+	//now we just find the difference
+	if ($diff == 0){
+		return 'just now';
+	}    
 
-    if ($diff < 60){
-        return $diff == 1 ? $diff . ' second ago' : $diff . ' seconds ago';
-    }        
+	if ($diff < 60){
+		return $diff == 1 ? $diff . ' second ago' : $diff . ' seconds ago';
+	}        
 
-    if ($diff >= 60 && $diff < $intervals['hour']){
-        $diff = floor($diff/$intervals['minute']);
-        return $diff == 1 ? $diff . ' minute ago' : $diff . ' minutes ago';
-    }        
+	if ($diff >= 60 && $diff < $intervals['hour']){
+		$diff = floor($diff/$intervals['minute']);
+		return $diff == 1 ? $diff . ' minute ago' : $diff . ' minutes ago';
+	}        
 
-    if ($diff >= $intervals['hour'] && $diff < $intervals['day']){
-        $diff = floor($diff/$intervals['hour']);
-        return $diff == 1 ? $diff . ' hour ago' : $diff . ' hours ago';
-    }    
+	if ($diff >= $intervals['hour'] && $diff < $intervals['day']){
+		$diff = floor($diff/$intervals['hour']);
+		return $diff == 1 ? $diff . ' hour ago' : $diff . ' hours ago';
+	}    
 
-    if ($diff >= $intervals['day'] && $diff < $intervals['week']){
-        $diff = floor($diff/$intervals['day']);
-        return $diff == 1 ? $diff . ' day ago' : $diff . ' days ago';
-    }    
+	if ($diff >= $intervals['day'] && $diff < $intervals['week']){
+		$diff = floor($diff/$intervals['day']);
+		return $diff == 1 ? $diff . ' day ago' : $diff . ' days ago';
+	}    
 
-    if ($diff >= $intervals['week'] && $diff < $intervals['month']){
-        $diff = floor($diff/$intervals['week']);
-        return $diff == 1 ? $diff . ' week ago' : $diff . ' weeks ago';
-    }    
+	if ($diff >= $intervals['week'] && $diff < $intervals['month']){
+		$diff = floor($diff/$intervals['week']);
+		return $diff == 1 ? $diff . ' week ago' : $diff . ' weeks ago';
+	}    
 
-    if ($diff >= $intervals['month'] && $diff < $intervals['year']){
-        $diff = floor($diff/$intervals['month']);
-        return $diff == 1 ? $diff . ' month ago' : $diff . ' months ago';
-    }    
+	if ($diff >= $intervals['month'] && $diff < $intervals['year']){
+		$diff = floor($diff/$intervals['month']);
+		return $diff == 1 ? $diff . ' month ago' : $diff . ' months ago';
+	}    
 
-    if ($diff >= $intervals['year']){
-        $diff = floor($diff/$intervals['year']);
-        return $diff == 1 ? $diff . ' year ago' : $diff . ' years ago';
-    }
+	if ($diff >= $intervals['year']){
+		$diff = floor($diff/$intervals['year']);
+		return $diff == 1 ? $diff . ' year ago' : $diff . ' years ago';
+	}
 }
 
 function username_exists_by_id($user_id){
@@ -1096,9 +1096,9 @@ function post_exists_by_id($post_id){
 
 function pw_crop_string_to_word( $string, $max_chars = 200, $suffix = "..." ){
 	if (strlen($string) > $max_chars) {
-	    $string = substr($string, 0, $max_chars);
-	    $string = substr($string, 0, strrpos($string, ' '));        
-	    $string .= $suffix;
+		$string = substr($string, 0, $max_chars);
+		$string = substr($string, 0, strrpos($string, ' '));        
+		$string .= $suffix;
 	}
 	return $string;
 	//return substr($string, 0, strrpos(substr($string, 0, $max_chars), ' '));
@@ -1206,11 +1206,11 @@ function pw_toggle_array( $args ){
 			// Remove $value from $input
 			$new_input = array();
 			foreach ( $input as $input_item) { 
-	            if ( $input_item != $value ) { 
-	                array_push( $new_input, $input_item ); 
-	            }
-	        }
-	        $input = $new_input;
+				if ( $input_item != $value ) { 
+					array_push( $new_input, $input_item ); 
+				}
+			}
+			$input = $new_input;
 
 			break;
 		case "toggle":
@@ -1359,15 +1359,15 @@ function pw_get_post_ids( $posts ){
  */
 function pw_strip_shortcode($code, $content)
 {
-    global $shortcode_tags;
+	global $shortcode_tags;
 
-    $stack = $shortcode_tags;
-    $shortcode_tags = array($code => 1);
+	$stack = $shortcode_tags;
+	$shortcode_tags = array($code => 1);
 
-    $content = strip_shortcodes($content);
+	$content = strip_shortcodes($content);
 
-    $shortcode_tags = $stack;
-    return $content;
+	$shortcode_tags = $stack;
+	return $content;
 }
 
 // Strips the site URL from a URL
@@ -1382,7 +1382,7 @@ function pw_strip_site_url( $url ){
 
 // Wraps quotes around a string
 function pw_wrap_quotes( $string ){
-    return "\"" . $string . "\"";
+	return "\"" . $string . "\"";
 }
 
 function pw_random_hash(  $length = 8  ){
@@ -1398,17 +1398,17 @@ function pw_random_string( $length = 8 ){
 
 function pw_to_array($obj){
 	// Recursively makes an object into an Associative Array
-    if (is_object($obj)) $obj = (array)$obj;
-    if (is_array($obj)) {
-        $new = array();
-        foreach ($obj as $key => $val) {
-            $new[$key] = pw_to_array($val);
-        }
-    } else {
-        $new = $obj;
-    }
+	if (is_object($obj)) $obj = (array)$obj;
+	if (is_array($obj)) {
+		$new = array();
+		foreach ($obj as $key => $val) {
+			$new[$key] = pw_to_array($val);
+		}
+	} else {
+		$new = $obj;
+	}
 
-    return $new;
+	return $new;
 }
 
 function pw_body_classes(){
@@ -1544,19 +1544,19 @@ function pw_clean_input($input) {
 }
 
 function pw_sanitize($input) {
-    if (is_array($input)) {
-        foreach($input as $var=>$val) {
-            $output[$var] = pw_sanitize($val);
-        }
-    }
-    else {
-        if (get_magic_quotes_gpc()) {
-            $input = stripslashes($input);
-        }
-        $input  = pw_clean_input($input);
-        $output = mysql_real_escape_string($input);
-    }
-    return $output;
+	if (is_array($input)) {
+		foreach($input as $var=>$val) {
+			$output[$var] = pw_sanitize($val);
+		}
+	}
+	else {
+		if (get_magic_quotes_gpc()) {
+			$input = stripslashes($input);
+		}
+		$input  = pw_clean_input($input);
+		$output = mysql_real_escape_string($input);
+	}
+	return $output;
 }
 
 function pw_sanitize_key( $key ){
@@ -1766,17 +1766,17 @@ function pw_theme_sanitize_tel( $tel, $area_code = '1' ){
  * @return bool
  */
 function is_blog_page() {
-    global $post;
+	global $post;
 
-    //Post type must be 'post'.
-    $post_type = get_post_type($post);
+	//Post type must be 'post'.
+	$post_type = get_post_type($post);
 
-    //Check all blog-related conditional tags, as well as the current post type, 
-    //to determine if we're viewing a blog page.
-    return (
-        ( is_home() || is_archive() || is_single() )
-        && ($post_type == 'post')
-    ) ? true : false ;
+	//Check all blog-related conditional tags, as well as the current post type, 
+	//to determine if we're viewing a blog page.
+	return (
+		( is_home() || is_archive() || is_single() )
+		&& ($post_type == 'post')
+	) ? true : false ;
 
 }
 
@@ -1934,8 +1934,85 @@ function pw_array_keys_exist( $keys, $array, $match_all = false ){
 		return true;
 	else
 		return false;
-
 }
+
+
+/**
+ * Gets the mime type of a file based on it's file extension
+ */
+function pw_mime_content_type( $filename ){
+
+	$mime_types = array(
+
+		'txt' => 'text/plain',
+		'htm' => 'text/html',
+		'html' => 'text/html',
+		'php' => 'text/html',
+		'css' => 'text/css',
+		'js' => 'application/javascript',
+		'json' => 'application/json',
+		'xml' => 'application/xml',
+		'swf' => 'application/x-shockwave-flash',
+		'flv' => 'video/x-flv',
+
+		// images
+		'png' => 'image/png',
+		'jpe' => 'image/jpeg',
+		'jpeg' => 'image/jpeg',
+		'jpg' => 'image/jpeg',
+		'gif' => 'image/gif',
+		'bmp' => 'image/bmp',
+		'ico' => 'image/vnd.microsoft.icon',
+		'tiff' => 'image/tiff',
+		'tif' => 'image/tiff',
+		'svg' => 'image/svg+xml',
+		'svgz' => 'image/svg+xml',
+
+		// archives
+		'zip' => 'application/zip',
+		'rar' => 'application/x-rar-compressed',
+		'exe' => 'application/x-msdownload',
+		'msi' => 'application/x-msdownload',
+		'cab' => 'application/vnd.ms-cab-compressed',
+
+		// audio/video
+		'mp3' => 'audio/mpeg',
+		'qt' => 'video/quicktime',
+		'mov' => 'video/quicktime',
+
+		// adobe
+		'pdf' => 'application/pdf',
+		'psd' => 'image/vnd.adobe.photoshop',
+		'ai' => 'application/postscript',
+		'eps' => 'application/postscript',
+		'ps' => 'application/postscript',
+
+		// ms office
+		'doc' => 'application/msword',
+		'rtf' => 'application/rtf',
+		'xls' => 'application/vnd.ms-excel',
+		'ppt' => 'application/vnd.ms-powerpoint',
+
+		// open office
+		'odt' => 'application/vnd.oasis.opendocument.text',
+		'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+	);
+
+	$ext = strtolower(array_pop(explode('.',$filename)));
+	if (array_key_exists($ext, $mime_types)) {
+		return $mime_types[$ext];
+	}
+	elseif (function_exists('finfo_open')) {
+		$finfo = finfo_open(FILEINFO_MIME);
+		$mimetype = finfo_file($finfo, $filename);
+		finfo_close($finfo);
+		return $mimetype;
+	}
+	else {
+		return 'application/octet-stream';
+	}
+}
+
 
 
 /*

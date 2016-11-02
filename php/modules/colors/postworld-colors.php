@@ -136,7 +136,7 @@ class PW_Colors{
 			return false;
 
 		if( empty( $vars['image_format'] ) )
-			$vars['image_format'] = mime_content_type( $vars['image_path'] );
+			$vars['image_format'] = pw_mime_content_type( basename( $vars['image_path'] ) );
 
 		$client = new ColorExtractor;
 		switch( $vars['image_format'] ){
