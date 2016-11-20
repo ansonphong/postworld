@@ -350,8 +350,8 @@ class PW_Query extends WP_Query {
 		//$where.=" AND ";
 		//echo($this->query_vars['fields']);
 		if($remove_tbl==false )
-		$this->request = str_replace('SELECT', 'SELECT '.$wpdb->prefix.'postworld_post_meta.* , ', $this->request);
-			$this->request = str_replace('FROM '.$wpdb->prefix.'posts','FROM '.$wpdb->prefix.'posts left join  '.$wpdb->prefix.'postworld_post_meta on '.$wpdb->prefix.'posts.ID = '.$wpdb->prefix.'postworld_post_meta.post_id ', $this->request);
+		$this->request = str_replace('SELECT', 'SELECT '.$wpdb->postworld_prefix.'post_meta.* , ', $this->request);
+			$this->request = str_replace('FROM '.$wpdb->prefix.'posts','FROM '.$wpdb->prefix.'posts left join  '.$wpdb->postworld_prefix.'post_meta on '.$wpdb->prefix.'posts.ID = '.$wpdb->postworld_prefix.'post_meta.post_id ', $this->request);
 			$this->request = str_replace('WHERE', $where, $this->request);
 			$strposOfOrderBy = strpos($this->request, "ORDER BY");
 			$this->request =  substr($this->request ,0,$strposOfOrderBy);
