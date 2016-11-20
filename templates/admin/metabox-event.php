@@ -302,7 +302,7 @@
 			<hr class="thin">
 
 			<div
-				pw-event="post.post_meta.pw_event"
+				pw-event="post.post_meta[ eventKey ]"
 				event-obj="eventData">
 			
 				<div ng-show="uiBool(post.post_meta[ eventKey ].timezone.time_zone_name)">		
