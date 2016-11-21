@@ -177,6 +177,7 @@ function postworld_includes( $vars ){
 
 		// UNDERSCORE JS
 		wp_enqueue_script('underscore');
+		wp_enqueue_script('jquery');
 
 		$include_scripts = array(
 
