@@ -126,6 +126,7 @@ function postworld_includes( $vars ){
 			);
 
 		wp_enqueue_script('underscore');
+		wp_enqueue_script('jquery');
 
 		if( isset( $vars['js_deploy'] ) && !is_admin() ){
 			// CUSTOM DEPLOY JS
