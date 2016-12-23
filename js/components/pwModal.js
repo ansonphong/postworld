@@ -361,6 +361,16 @@ postworld.controller('pwModalInstanceCtrl',
 		});
 	}
 
+	/**
+	 * Broadcast the modal closing event from the rootScope
+	 */
+	$scope.$on('modal.closing', function(event,data){
+		$rootScope.$broadcast('uibModalClose', {
+			instance: $uibModalInstance,
+		});
+		$log.debug('$broadcast : uibModalClose');
+	})
+
 	///// STANDARD FUNCTIONS /////
 	// MODAL CLOSE
 	$scope.close = function () {
