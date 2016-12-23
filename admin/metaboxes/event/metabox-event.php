@@ -173,5 +173,3 @@ function pw_event_meta_save( $post_id ){
 
 
  
-
-?>

@@ -126,6 +126,7 @@ postworld.controller( 'pwUiCtrl',
 		return style;
 	}
 
+	// Requires jQuery to be loaded
 	$scope.uiToggleElementClass = function( className, selector ){
 		// If $event is passed as the second parameter
 		if( !_.isUndefined( selector.currentTarget ) )

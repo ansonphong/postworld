@@ -176,7 +176,7 @@ function pw_set_post_meta_pw_postmeta( $post_id, $post_meta ){
  * @param int $post_id
  * @param array $post_meta Key value pairs, where key is the column in the _post_meta table
  */
-function pw_set_post_meta($post_id, $post_meta){
+function pw_set_post_meta( $post_id, $post_meta ){
 	
 	// If post_meta table isn't being used
 	// Enter the data prefixed with theme slug into wp_postmeta
@@ -192,71 +192,60 @@ function pw_set_post_meta($post_id, $post_meta){
 		return true;
 	}
 
-	global $wpdb;
-	// Add a new record if it doesn't exist
-	pw_insert_post_meta($post_id);
 
-	$query = "update $wpdb->postworld_prefix"."post_meta set ";
-	$insertComma = FALSE;
+	global $wpdb;
+
+	// Add a new record if it doesn't exist
+	//pw_insert_post_meta($post_id);
+
+	// Init Data array
+	$data = array();
 
 	// POST AUTHOR AS AUTHOR ID
 	if( isset($post_meta['post_author']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "author_id='".$post_meta['post_author']."' ";
-		$insertComma = TRUE;
+		$data['author_id'] = $post_meta['post_author'];
 	}
 
 	// POST CLASS
 	if( isset($post_meta['post_class']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "post_class='".$post_meta['post_class']."' ";
-		$insertComma = TRUE;
+		$data['post_class'] = $post_meta['post_class'];
 	}
 
 	// EVENT START
 	if( isset($post_meta['event_start']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "event_start='".$post_meta['event_start']."' ";
-		$insertComma = TRUE;
+		$data['event_start'] = $post_meta['event_start'];
 	}
 
 	// EVENT END
 	if( isset($post_meta['event_end']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "event_end='".$post_meta['event_end']."' ";
-		$insertComma = TRUE;
+		$data['event_end'] = $post_meta['event_end'];
 	}
 
 	// GEO LATITUDE
 	if( isset($post_meta['geo_latitude']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "geo_latitude='".$post_meta['geo_latitude']."' ";
-		$insertComma = TRUE;
+		$data['geo_latitude'] = $post_meta['geo_latitude'];
 	}
 
 	// GEO LONGITUDE
 	if( isset($post_meta['geo_longitude']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "geo_longitude='".$post_meta['geo_longitude']."' ";
-		$insertComma = TRUE;
+		$data['geo_longitude'] = $post_meta['geo_longitude'];
 	}
 
 	// RELATED POST
 	if( isset($post_meta['related_post']) ){
-		if($insertComma === TRUE) $query.=" , ";
-		$query .= "related_post='".$post_meta['related_post']."' ";
-		$insertComma = TRUE;
+		$data['related_post'] = $post_meta['related_post'];
 	}
 
+	// Replace DB row
+	if( !empty($data) ){
+		$table_name = $wpdb->postworld_prefix."post_meta";
+		$data['post_id'] = $post_id;
+		$result = $wpdb->replace(
+			$table_name,
+			$data
+			);
+	}
 
-	if( $insertComma == FALSE ){
-		return false;
-	}
-	
-	else{
-		$query.= " where post_id=".$post_id ;
-	 	$wpdb->query($query);
-	 	return $post_id;
-	}
-	
+ 	return $post_id;
+
 }
