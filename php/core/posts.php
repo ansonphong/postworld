@@ -1340,6 +1340,7 @@ function pw_embed_url($input){
 		"qik.com/",
 		"revision3.com/",
 		"jest.com/",
+		"twitch.tv/",
 
 		// PRESENTATIONS
 		"screenr.com/",

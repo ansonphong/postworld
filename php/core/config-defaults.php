@@ -143,7 +143,7 @@ function postworld_config_defaults(){
 				array(
 					'name'		=>	'Video',
 					'slug'		=>	'video',
-					'domains'	=>	array('youtube.com/','youtu.be/','vimeo.com/','hulu.com/','ted.com/','sapo.pt/','dailymotion.com','blip.tv/','ustream.tv/',),
+					'domains'	=>	array('youtube.com/','youtu.be/','vimeo.com/','hulu.com/','ted.com/','sapo.pt/','dailymotion.com','blip.tv/','ustream.tv/', 'twitch.tv/', ),
 					'icon'		=>	'pwi-play-fill'
 				),
 				array(

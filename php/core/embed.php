@@ -1,7 +1,14 @@
 <?php
 
+function pw_add_oembed_twitch(){
+	wp_oembed_add_provider( 'http://*twitch.tv/*', 'https://api.twitch.tv/v4/oembed');
+	wp_oembed_add_provider( 'http://*twitch.tv/*/b/*', 'https://api.twitch.tv/v4/oembed');
+}
+add_action('init','pw_add_oembed_twitch');
+
+// Adds some variables to wp_oembed_get
 function pw_oembed_get( $vars = array() ){
-	// Adds some variables to wp_oembed_get
+	//pw_log( 'pw_oembed_get', $vars );
 
 	$defaultVars = array(
 		'url'		=>	'',
@@ -34,7 +41,9 @@ function pw_oembed_get( $vars = array() ){
 	// GET OEMBED
 	$oEmbed = wp_oembed_get( $vars['url'] );
 
-	//pw_log( json_encode($vars) );
+	pw_log( 'oEmbed VARS', $vars );
+
+	pw_log( 'oEmbed RESULT', $oEmbed );
 
 	/// YOUTUBE ///
 	if (strpos($oEmbed, 'youtube') !== false) {

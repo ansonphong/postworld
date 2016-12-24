@@ -264,12 +264,14 @@ function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 	if( !isset($vars['options_model']) )
 		$vars['options_model'] = array();
 
+	if( !isset($vars['show_options']) )
+		$vars['show_options'] = array();
+
 	switch( $vars['context'] ){
 		///// SITE-WIDE SETTINGS /////
 		case 'siteAdmin': 
 				$vars['ng_model'] = "pwOptions.posts.post.post_meta.".PW_POSTMETA_KEY.".link_url";
 				$vars['options_model']['show'] = "options.general.customSwitch";
-				$vars['options_model']['tooltip_show'] = "options.general.none";
 				$vars['options_model']['highlight'] = "options.general.doubleSwitch";
 				$vars['options_model']['new_target'] = "options.general.doubleSwitch";
 			break;
@@ -277,7 +279,6 @@ function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 		case 'quickEdit':
 				$vars['ng_model'] = "post.post_meta.".PW_POSTMETA_KEY.".link_url";
 				$vars['options_model']['show'] = "options.general.defaultAndCustomDoubleSwitch";
-				$vars['options_model']['tooltip_show'] = "options.general.defaultCustomSwitch";
 				$vars['options_model']['highlight'] = "options.general.tripleSwitch";
 				$vars['options_model']['new_target'] = "options.general.tripleSwitch";
 			break;
@@ -286,7 +287,6 @@ function pw_link_url_options( $vars = array( "context" => "quickEdit" ) ){
 		default:
 				$vars['ng_model'] = "pwMeta.link_url";
 				$vars['options_model']['show'] = "options.general.defaultAndCustomDoubleSwitch";
-				$vars['options_model']['tooltip_show'] = "options.general.defaultCustomSwitch";
 				$vars['options_model']['highlight'] = "options.general.tripleSwitch";
 				$vars['options_model']['new_target'] = "options.general.tripleSwitch";
 			break;

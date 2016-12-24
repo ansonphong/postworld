@@ -17,7 +17,7 @@ function postworld_definitions(){
 	 * Postworld Info
 	 */
 	$GLOBALS['pw']['info'] = array(
-		'version'		=>	'1.7.6',
+		'version'		=>	'1.7.7',
 		'db_version'	=>	'1.32',
 		'mode'			=>	pw_mode(),
 		'slug'			=>	'postworld',
