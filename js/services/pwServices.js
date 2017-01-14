@@ -366,6 +366,9 @@ postworld.factory('$_',
 			else
 				return false;
 		},
+		isEmptyString: function( val ){
+			return (_.isString( val ) && (_.isEmpty( val ) || !val.replace(/\s/g, '').length ))
+		},
 		stringInArray: function( value, array ){
 			if( !_.isArray( array ) )
 				return false;

@@ -95,7 +95,7 @@ postworld.controller( 'pwUiCtrl',
 		if( _.isObject( val ) && _.isEmpty( val ) )
 			return false;
 		// If it's an empty string
-		if( _.isString( val ) && (_.isEmpty( val ) || val == ' ' ) )
+		if( $_.isEmptyString(val) )
 			return false;
 		return bool; 
 	}
