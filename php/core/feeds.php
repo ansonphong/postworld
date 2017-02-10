@@ -552,8 +552,7 @@ function pw_merge_galleries( $posts, $options ){
 }
 
 
-function pw_print_feed( $vars ){
-
+function pw_print_feed( $vars = array() ){
 	// Load a cached feed
 	if( isset($vars['feed_id']) ){
 		// LOAD A CACHED FEED
@@ -605,6 +604,10 @@ function pw_print_feed( $vars ){
 		
 		// Initialize h2o template engine
 		$h2o = new h2o( $template_path );
+
+		// Inject additional vars if defined
+		if( isset( $vars['vars'] ) )
+			$pw_post['vars'] = $vars['vars'];
 
 		// Seed the post data with 'post' for use in template, ie. {{post.post_title}}
 		$pw_post['post'] = $post;
