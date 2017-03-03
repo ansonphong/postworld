@@ -2077,6 +2077,43 @@ function pw_mime_content_type( $filename ){
 }
 
 
+/**
+ * Get Current Post Type in Any Setting
+ */
+function pw_get_current_post_type() {
+    global $post, $typenow, $current_screen;
+    $get_post_id = $_GET['post'];
+
+    // Check to see if a post object exists
+    if ($post && $post->post_type)
+        return $post->post_type;
+
+    // Check if the current type is set
+    elseif ($typenow)
+        return $typenow;
+
+    // Check to see if the current screen is set
+    elseif ($current_screen && $current_screen->post_type)
+        return $current_screen->post_type;
+
+    // Check if we're on a post editing page and post ID is defined
+    elseif ( !empty( $get_post_id ) ){
+    	$get_post = get_post( $get_post_id );
+    	if( $get_post->post_type )
+    		return $get_post->post_type;
+    }
+
+    // Finally make a last ditch effort to check the URL query for type
+    elseif (isset($_REQUEST['post_type']))
+        return sanitize_key($_REQUEST['post_type']);
+
+	
+
+
+    return null;
+    
+}
+
 
 /*
 function pw_get_post_types(){

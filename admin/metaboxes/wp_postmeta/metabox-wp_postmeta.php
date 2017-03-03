@@ -16,6 +16,8 @@ add_action('admin_init','pw_metabox_init_wp_postmeta');
 function pw_metabox_init_wp_postmeta(){    
 	global $pw;
 	global $post;
+	global $wp;
+	$current_post_type = pw_get_current_post_type();
 
 	// Get the settings
 	$metabox_settings = pw_config('wp_admin.metabox.wp_postmeta');
@@ -62,10 +64,36 @@ function pw_metabox_init_wp_postmeta(){
 
 		// Iterate through the post types
 		foreach( $post_types as $post_type ){
-			
+
+			/**
+			 * Apply post-types filter to fields
+			 * subtractively multiplying the fields post type setting
+			 * So if you want the field to only appear on a specific post type
+			 * Make a post_types key in the field, and add an array of post types
+			 * to exlusively filter that field on.
+			 */
+			if( !empty( $fields ) ){
+				$filtered_fields = array();
+				foreach( $fields as $field ){
+					$check_post_types = _get( $field, 'post_types' );
+					// If post types are not defined, add the field
+					if( empty($check_post_types) ){
+						$filtered_fields[] = $field;
+					}
+					// If the current post type is in the array, add the field
+					elseif( in_array( $current_post_type, $check_post_types ) ){
+						$filtered_fields[] = $field;
+					}
+				}
+			}
+			else{
+				$filtered_fields = $fields;
+			}
+
+
 			// Construct Variables for Callback
 			$vars = array(
-				'fields'	=>	$fields,
+				'fields'	=>	$filtered_fields,
 				);
 
 			// Add the metabox
