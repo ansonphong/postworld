@@ -185,6 +185,9 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		*/
 	}
 
+	// Add the image ID to the post image array
+	$post_image['ID'] = $thumbnail_id;
+
 	/**
 	 * PROCESS IMAGES
 	 */
@@ -449,6 +452,8 @@ function pw_get_post_image( $post, $fields, $thumbnail_id = 0, $metadata = false
 		}
 
 	endforeach;
+
+
 
 	return $post_image;
 
