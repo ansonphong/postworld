@@ -69,7 +69,7 @@ Height
 	</div>
 	<div ng-switch-when="proportion">
 		<input
-			type="number"
+			type="text"
 			class="short"
 			ng-model="<?php echo $vars['ng_model'] ?>.value"><b>:1</b> 
 		<small>
