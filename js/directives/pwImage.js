@@ -597,6 +597,7 @@ postworld.directive('pwParallax',
  * @param {string} pwHeight Methods by which to size height. Options: window-base, window-percent, pixels, proportion
  * @param {string|float} heightValue Value by which to size, based on method.
  * @param {none} heightDynamic (Optional) Whether or not to dynamically change.
+ * @param {none} heightMax (Optional) Maximum number of pixels height.
  *
  * //IN DEV @param {number} heightSubtract - make entry for a fixed value to subtract from window height
  * //IN DEV @param {} - option to subtract the scroll distance, in the case of ...
@@ -627,6 +628,22 @@ postworld.directive('pwHeight',
 			}
 
 			/**
+			 * Sanitize Height
+			 */
+			var sanitizeHeight = function(heightValue){
+				heightValue = parseFloat(heightValue);
+				var heightMax = $_.get( attrs, 'heightMax' );
+				if( heightMax !== false ){
+					heightMax = parseFloat( heightMax );
+					if( heightValue > heightMax && heightMax !== 0 ){
+						heightValue = heightMax;
+					}
+				}
+				$log.debug( 'sanitizeHeight : ' +  heightValue );
+				return heightValue;
+			}
+
+			/**
 			 * Window Base
 			 */
 			var initWindowBase = function(){
@@ -640,7 +657,7 @@ postworld.directive('pwHeight',
 				// If any ancestors are fixed, subtract the window's y scroll value
 				var scrollY = ( fixedAncestor ) ? $_.windowScrollY() : 0;
 				// Subtract the element's top offset from the window's height
-				var elemHeight = c.windowHeight - (c.offsetTop - scrollY);
+				var elemHeight = sanitizeHeight( c.windowHeight - (c.offsetTop - scrollY) );
 				element[0].style['height'] = elemHeight + "px";
 			}
 
@@ -648,22 +665,14 @@ postworld.directive('pwHeight',
 			 * Window Percent
 			 */
 			var initWindowPercent = function(){
-				/**
-				 * Mobile browsers sometimes change viewport height
-				 * When initially scrolling, which creates unexpected results.
-				 * So for mobile devices, use a fixed pixel value
-				 */
-				if( $pw.getDeviceType() === 'mobile' )
-					element[0].style['height'] = ($window.innerHeight * parseInt( attrs.heightValue ) / 100) + 'px';
-				else			
-					element[0].style['height'] = attrs.heightValue + "vh";
+				element[0].style['height'] = sanitizeHeight($window.innerHeight * parseInt( attrs.heightValue ) / 100) + 'px';
 			}
 
 			/**
 			 * Pixels
 			 */
 			var initPixels = function(){
-				element[0].style['height'] = attrs.heightValue + "px";
+				element[0].style['height'] = sanitizeHeight(attrs.heightValue) + "px";
 			}
 
 			/**
@@ -676,13 +685,12 @@ postworld.directive('pwHeight',
 					}, 0 );
 				else
 					updateProportion();
-				
 			}
 			var updateProportion = function(){
 				var elementWidth = element[0].clientWidth;
 				var prop = parseFloat(attrs.heightValue);
 				var elementHeight = elementWidth/prop;
-				element[0].style['height'] = elementHeight + "px";
+				element[0].style['height'] = sanitizeHeight(elementHeight) + "px";
 			}
 
 			var init = function(){

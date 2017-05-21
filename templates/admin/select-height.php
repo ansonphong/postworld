@@ -76,4 +76,14 @@ Height
 			Proportion in relation to width.
 		</small>
 	</div>
+
+	<hr class="thin">
+	<input
+		type="text"
+		class="short"
+		ng-model="<?php echo $vars['ng_model'] ?>.max"><b>px</b> 
+	<small>
+		Maximum Height
+	</small>
+
 </div>
