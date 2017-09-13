@@ -1,6 +1,6 @@
 module.exports = function(grunt) {
 
-  var angular_version = 'angular-1.3.0-beta.13';
+  var angular_version = 'angular-1.3.0';
 
   // Project configuration.
   grunt.initConfig({
@@ -29,7 +29,7 @@ module.exports = function(grunt) {
 
             
             // Underscore
-            'lib/underscore/underscore.min.js',
+            //'lib/underscore/underscore.min.js',
 
             // Deep Merge
             'lib/deepmerge/deepmerge.js',

@@ -2,7 +2,7 @@
 
 // Define Angular Dependancies
 global $angularDep;
-$angularDep = array('jquery','UnderscoreJS','DeepMerge','AngularJS','AngularJS-Resource','AngularJS-Route', 'AngularJS-Sanitize', 'UnderscoreJS');
+$angularDep = array('jquery','underscore','DeepMerge','AngularJS','AngularJS-Resource','AngularJS-Route', 'AngularJS-Sanitize'); //'UnderscoreJS'
 
 function postworld_includes( $args ){
 
@@ -13,7 +13,7 @@ function postworld_includes( $args ){
 
 	// Default Angular Version
 	if( empty( $angular_version ) )
-		$angular_version = 'angular-1.3.0-beta.13';
+		$angular_version = 'angular-1.3.0';
 
 	// Injections
 	global $pwInject;
@@ -118,8 +118,8 @@ function postworld_includes( $args ){
 		///// JAVASCRIPT LIBRARIES /////
 
 		// UNDERSCORE JS
-		wp_enqueue_script( 'UnderscoreJS',
-			WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
+		//wp_enqueue_script( 'UnderscoreJS', WP_PLUGIN_URL.'/postworld/lib/underscore/underscore.min.js');
+		wp_enqueue_script( 'underscore' );
 
 		// DEEP MERGE
 		wp_enqueue_script( 'DeepMerge',
@@ -252,11 +252,9 @@ function postworld_includes( $args ){
 		wp_enqueue_script( 'pw-FeedItem-JS',
 			WP_PLUGIN_URL.'/postworld/js/components/feedItem.js', $angularDep );
 
-		wp_enqueue_script( 'pw-TreeView-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/treeview.js', $angularDep );
+		//wp_enqueue_script( 'pw-TreeView-JS', WP_PLUGIN_URL.'/postworld/js/components/treeview.js', $angularDep );
 
-		wp_enqueue_script( 'pw-Ya-TreeView-JS',
-			WP_PLUGIN_URL.'/postworld/js/components/ya-treeview.js', $angularDep );
+		//wp_enqueue_script( 'pw-Ya-TreeView-JS', WP_PLUGIN_URL.'/postworld/js/components/ya-treeview.js', $angularDep );
 
 		wp_enqueue_script( 'pw-LoadComments-JS',
 			WP_PLUGIN_URL.'/postworld/js/components/loadComments.js', $angularDep );
