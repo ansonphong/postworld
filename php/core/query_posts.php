@@ -46,14 +46,14 @@ function pw_query_posts( $vars ){
 /**
  * Generate custom Postworld JOIN clauses for WP_Query
  */
-function pw_query_posts_join( $join, $this ){
+function pw_query_posts_join( $join, $this_ ){
 	global $wpdb;
 	
 	if( !pw_config_in_db_tables( 'post_meta' ) )
 		return $join;
 
 	// Localize current query vars
-	$query = pw_access_protected( $this, 'query' );
+	$query = pw_access_protected( $this_, 'query' );
 
 	/**
 	 * Define conditions on which to join the
@@ -84,11 +84,11 @@ function pw_query_posts_join( $join, $this ){
 /**
  * Generate custom Postworld ORDERBY clauses for WP_Query
  */
-function pw_query_posts_orderby( $orderby, $this ){
+function pw_query_posts_orderby( $orderby, $this_ ){
 	global $wpdb;
 
 	// Localize current query vars
-	$query = pw_access_protected( $this, 'query' );
+	$query = pw_access_protected( $this_, 'query' );
 
 	if( !isset( $query['order'] ) )
 		$query['order'] = 'DESC';
@@ -156,9 +156,9 @@ function pw_query_conditions( $subkey = null ){
 /**
  * Generate custom Postworld WHERE clauses for WP_Query
  */
-function pw_query_posts_where( $where, $this ){	
+function pw_query_posts_where( $where, $this_ ){	
 
-	$query = pw_access_protected( $this, 'query' );
+	$query = pw_access_protected( $this_, 'query' );
 
 	/**
 	 * Define conditions on which to add custom where clause
