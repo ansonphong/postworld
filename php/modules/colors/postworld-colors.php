@@ -552,7 +552,7 @@ class PW_Colors{
 	 */
 	public function get_hsl( $color ){
 		// Return the HSL value from HSL
-		if( isset( $color['hsl'] ) && is_array( $color['hsl'] ) && count( $color['hsl'] == 3 ) ){
+		if( isset( $color['hsl'] ) && is_array( $color['hsl'] ) && count( $color['hsl'] ) == 3 ){
 			return $color['hsl'];
 		// Return the HSL value from RGB
 		} elseif( isset( $color['rgb'] ) && is_array( $color['rgb'] ) && count( $color['rgb'] == 3 ) ){
