@@ -72,6 +72,9 @@ function pw_print_widgets( $vars = array() ){
 	// Get array of widget outputs
 	$sidebar_widgets = pw_get_sidebar( $vars['sidebar'] );
 
+	if(!is_array($sidebar_widgets))
+		$sidebar_widgets = array();
+
 	// If no widgets returned and show empty is false
 	if( empty( $sidebar_widgets ) && !empty( $vars['show_empty'] ) )
 		return false;
