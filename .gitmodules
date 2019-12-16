@@ -1,6 +1,6 @@
 [submodule "lib/wp-prism"]
 	path = lib/wp-prism
-	url = git@github.com:phongmedia/wp-prism.git
+	url = git@github.com:ansonphong/wp-prism.git
 [submodule "lib/Mobile-Detect"]
 	path = lib/Mobile-Detect
 	url = git@github.com:serbanghita/Mobile-Detect.git
