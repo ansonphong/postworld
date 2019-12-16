@@ -229,7 +229,10 @@ function pw_get_post( $post_id, $fields = 'preview', $options = array() ){
 		$get_cache = pw_get_cache( array( 'cache_hash' => $cache_hash ) );
 		if( !empty( $get_cache ) ){
 			$cached_post = json_decode($get_cache['cache_content'], true);
-			return array_replace( $cached_post, $post );
+			//pw_log("pw_get_post : pw_config.post_cache.omit_post_types : ", pw_config( 'post_cache.omit_post_types' ));
+			if(!in_array($get_post['post_type'], pw_config( 'post_cache.omit_post_types' )) ){
+				return array_replace( $cached_post, $post );
+			}
 		}
 	}
 

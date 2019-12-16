@@ -122,10 +122,10 @@ function pw_get_current_layout( $vars = array() ){
 
 		// @todo : Set this with a better technique.
 		// Fill in default header and footer
-		if( empty( $layout['header']['id'] ) )
-			$layout['header']['id'] = _get( $default_layout, 'header.id' );
-		if( empty( $layout['footer']['id'] ) )
-			$layout['footer']['id'] = _get( $default_layout, 'footer.id' );
+		//if( empty( $layout['header']['id'] ) )
+		//	$layout['header']['id'] = _get( $default_layout, 'header.id' );
+		//if( empty( $layout['footer']['id'] ) )
+		//	$layout['footer']['id'] = _get( $default_layout, 'footer.id' );
 	}
 
 	// Autocorrect layout in case of migrations
