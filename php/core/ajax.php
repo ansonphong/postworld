@@ -165,7 +165,7 @@ add_action("wp_ajax_nopriv_pw_set_wp_usermeta", "pw_set_wp_usermeta_ajax");
 add_action("wp_ajax_pw_set_wp_usermeta", "pw_set_wp_usermeta_ajax");
 
 
-//---------- PW GET TEMPLATE PARTIAL ----------//
+//---------- PW GET TERM FEED ----------//
 function pw_get_term_feed_ajax(){
 	list($response, $args, $nonce) = initAjaxResponse();
 	$params = $args['args'];
