@@ -48,6 +48,10 @@ function postworld_config_defaults(){
 			),
 		);
 
+	$GLOBALS[ POSTWORLD_CONFIG ]['post_cache'] = array(
+		'omit_post_types' => array('page'),
+	);
+
 	$GLOBALS[ POSTWORLD_CONFIG ]['post_views'] = array(
 		'supported' => array('list','modal','grid','full'),
 		'options' => array(
