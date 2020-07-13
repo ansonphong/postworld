@@ -7,6 +7,3 @@
 [submodule "lib/thephpleague/color-extractor"]
 	path = lib/thephpleague/color-extractor
 	url = git@github.com:thephpleague/color-extractor.git
-[submodule "lib/angular-bootstrap-colorpicker"]
-	path = lib/angular-bootstrap-colorpicker
-	url = git@github.com:buberdds/angular-bootstrap-colorpicker.git
