@@ -410,4 +410,8 @@ function postworld_config_defaults(){
 			),
 		));
 
+	pw_config_module('admin', array(
+		'enable_classic_editor' => true,
+		));
+
 }

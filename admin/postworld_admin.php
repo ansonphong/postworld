@@ -1,4 +1,7 @@
 <?php
+////////// CLASSIC EDITOR //////////
+include 'php/classic-editor.php';
+
 ////////// METABOXES //////////
 include 'metaboxes/options/metabox-options.php';
 include 'metaboxes/link_url/metabox-link_url.php';
