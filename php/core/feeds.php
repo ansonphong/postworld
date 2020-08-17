@@ -12,7 +12,7 @@ function pw_get_feed_by_id( $feed_id ){
 }
 
 function pw_get_feed_by_context( $context = array() ){
-	// Gets a context-absed feed settings for the given context array
+	// Gets context-based feed settings for the given context array
 
 	global $pw;
 	$feed = array();
@@ -32,6 +32,8 @@ function pw_get_feed_by_context( $context = array() ){
 	if( empty( $context ) )
 		// Get the global context
 		$context = pw_view_context();
+
+	//echo("CONTEXT : ".json_encode($context));
 
 	// Add default context to the beginning of the array
 	// This will enable the default feed setting to work globally
